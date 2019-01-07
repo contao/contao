@@ -307,8 +307,8 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$arrClipboard = $arrClipboard[$this->strTable];
 		}
 
-		$this->import('Files');
-		$this->import('BackendUser', 'User');
+		$this->import(Files::class, 'Files');
+		$this->import(BackendUser::class, 'User');
 
 		$arrFound = array();
 		$for = $session['search'][$this->strTable]['value'];
@@ -596,7 +596,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not creatable.');
 		}
 
-		$this->import('Files');
+		$this->import(Files::class, 'Files');
 		$strFolder = Input::get('pid', true);
 
 		if ($strFolder == '' || !file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
@@ -665,7 +665,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$arrClipboard[$this->strTable] = array();
 		$objSession->set('CLIPBOARD', $arrClipboard);
 
-		$this->import('Files');
+		$this->import(Files::class, 'Files');
 
 		// Calculate the destination path
 		$destination = str_replace(\dirname($source), $strFolder, $source);
@@ -817,7 +817,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$arrClipboard[$this->strTable] = array();
 		$objSession->set('CLIPBOARD', $arrClipboard);
 
-		$this->import('Files');
+		$this->import(Files::class, 'Files');
 
 		// Copy folders
 		if (is_dir($this->strRootDir . '/' . $source))
@@ -982,7 +982,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 		}
 
-		$this->import('Files');
+		$this->import(Files::class, 'Files');
 
 		// Delete the folder or file
 		if (is_dir($this->strRootDir . '/' . $source))
@@ -1094,7 +1094,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Instantiate the uploader
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 		$class = $this->User->uploader;
 
 		// See #4086
@@ -1928,7 +1928,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('File "' . $this->intId . '" does not exist.');
 		}
 
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		// Check user permission
 		if (!$this->User->hasAccess('f5', 'fop'))
@@ -1975,7 +1975,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 					// Purge the script cache (see #7005)
 					if ($objFile->extension == 'css' || $objFile->extension == 'scss' || $objFile->extension == 'less')
 					{
-						$this->import('Automator');
+						$this->import(Automator::class, 'Automator');
 						$this->Automator->purgeScriptCache();
 					}
 
@@ -2023,7 +2023,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				// Purge the script cache (see #7005)
 				if (\in_array($objFile->extension, array('css', 'scss', 'less', 'js')))
 				{
-					$this->import('Automator');
+					$this->import(Automator::class, 'Automator');
 					$this->Automator->purgeScriptCache();
 				}
 			}
@@ -2147,7 +2147,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$objFolder = new Folder($this->intId);
 			$objFolder->protect();
 
-			$this->import('Automator');
+			$this->import(Automator::class, 'Automator');
 			$this->Automator->generateSymlinks();
 
 			$this->log('Folder "'.$this->intId.'" has been protected', __METHOD__, TL_FILES);
@@ -2157,7 +2157,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$objFolder = new Folder($this->intId);
 			$objFolder->unprotect();
 
-			$this->import('Automator');
+			$this->import(Automator::class, 'Automator');
 			$this->Automator->generateSymlinks();
 
 			$this->log('The protection from folder "'.$this->intId.'" has been removed', __METHOD__, TL_FILES);
@@ -2190,7 +2190,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				return;
 			}
 
-			$this->import('Files');
+			$this->import(Files::class, 'Files');
 
 			// Trigger the save_callback
 			if (\is_array($arrData['save_callback']))
@@ -2407,7 +2407,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			return '';
 		}
 
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 		$this->loadLanguageFile('tl_files');
 
 		// Check the permission to synchronize
@@ -2530,8 +2530,8 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$arrClipboard = $arrClipboard[$this->strTable];
 		}
 
-		$this->import('Files');
-		$this->import('BackendUser', 'User');
+		$this->import(Files::class, 'Files');
+		$this->import(BackendUser::class, 'User');
 
 		return $this->generateTree($this->strRootDir.'/'.$strFolder, ($level * 20), false, $this->isProtectedPath($strFolder), ($blnClipboard ? $arrClipboard : false));
 	}
@@ -2986,7 +2986,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		// Do not allow file operations on root folders
 		if (Input::get('act') == 'edit' || Input::get('act') == 'paste' || Input::get('act') == 'delete')
 		{
-			$this->import('BackendUser', 'User');
+			$this->import(BackendUser::class, 'User');
 
 			if (!$this->User->isAdmin && \in_array($strFile, $this->User->filemounts))
 			{

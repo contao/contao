@@ -222,7 +222,7 @@ class tl_style_sheet extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -258,7 +258,7 @@ class tl_style_sheet extends Contao\Backend
 			return;
 		}
 
-		$this->import('StyleSheets');
+		$this->import('Contao\StyleSheets', 'StyleSheets');
 
 		foreach ($session as $id)
 		{

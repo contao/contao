@@ -110,8 +110,8 @@ class MetaWizard extends Widget
 		$count = 0;
 		$return = '';
 
-		$this->import('Database');
-		$this->import('BackendUser', 'User');
+		$this->import(Database::class, 'Database');
+		$this->import(BackendUser::class, 'User');
 
 		// Only show the root page languages (see #7112, #7667)
 		$objRootLangs = $this->Database->query("SELECT REPLACE(language, '-', '_') AS language FROM tl_page WHERE type='root'");

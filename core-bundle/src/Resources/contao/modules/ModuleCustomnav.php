@@ -72,7 +72,7 @@ class ModuleCustomnav extends Module
 		// Get all groups of the current front end user
 		if (FE_USER_LOGGED_IN)
 		{
-			$this->import('FrontendUser', 'User');
+			$this->import(FrontendUser::class, 'User');
 			$groups = $this->User->groups;
 		}
 

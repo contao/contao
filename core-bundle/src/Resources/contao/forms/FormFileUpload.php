@@ -205,7 +205,7 @@ class FormFileUpload extends Widget implements \uploadable
 				// Overwrite the upload folder with user's home directory
 				if ($this->useHomeDir && FE_USER_LOGGED_IN)
 				{
-					$this->import('FrontendUser', 'User');
+					$this->import(FrontendUser::class, 'User');
 
 					if ($this->User->assignDir && $this->User->homeDir)
 					{
@@ -227,7 +227,7 @@ class FormFileUpload extends Widget implements \uploadable
 				// Store the file if the upload folder exists
 				if ($strUploadFolder != '' && is_dir($rootDir . '/' . $strUploadFolder))
 				{
-					$this->import('Files');
+					$this->import(Files::class, 'Files');
 
 					// Do not overwrite existing files
 					if ($this->doNotOverwrite && file_exists($rootDir . '/' . $strUploadFolder . '/' . $file['name']))

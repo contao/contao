@@ -52,7 +52,7 @@ abstract class Frontend extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 	}
 
 	/**

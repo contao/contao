@@ -39,7 +39,7 @@ class Messages extends Backend
 	 */
 	public function maintenanceCheck()
 	{
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		if (!$this->User->hasAccess('maintenance', 'modules'))
 		{

@@ -258,7 +258,7 @@ class DC_File extends DataContainer implements \editable
 			}
 		}
 
-		$this->import('Files');
+		$this->import(Files::class, 'Files');
 
 		// Check whether the target file is writeable
 		if (!$this->Files->is_writeable('system/config/localconfig.php'))

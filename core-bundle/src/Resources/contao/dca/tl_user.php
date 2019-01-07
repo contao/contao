@@ -492,7 +492,7 @@ class tl_user extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -723,7 +723,7 @@ class tl_user extends Contao\Backend
 
 			if (\is_array($arrPurge))
 			{
-				$this->import('Automator');
+				$this->import('Contao\Automator', 'Automator');
 
 				if (\in_array('purge_session', $arrPurge))
 				{

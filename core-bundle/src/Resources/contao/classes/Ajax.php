@@ -90,7 +90,7 @@ class Ajax extends Backend
 				$bemod[Input::post('id')] = (int) Input::post('state');
 				$objSessionBag->set('backend_modules', $bemod);
 
-				$this->import('BackendUser', 'User');
+				$this->import(BackendUser::class, 'User');
 
 				$navigation = $this->User->navigation();
 
@@ -383,7 +383,7 @@ class Ajax extends Backend
 
 			// Toggle subpalettes
 			case 'toggleSubpalette':
-				$this->import('BackendUser', 'User');
+				$this->import(BackendUser::class, 'User');
 
 				// Check whether the field is a selector field and allowed for regular users (thanks to Fabian Mihailowitsch) (see #4427)
 				if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || ($GLOBALS['TL_DCA'][$dc->table]['fields'][Input::post('field')]['exclude'] && !$this->User->hasAccess($dc->table . '::' . Input::post('field'), 'alexf')))

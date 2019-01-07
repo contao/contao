@@ -12,6 +12,7 @@ namespace Contao\Database;
 
 use Contao\Config;
 use Contao\Controller;
+use Contao\Database;
 use Contao\DcaExtractor;
 use Contao\System;
 use Symfony\Component\Finder\SplFileInfo;
@@ -343,7 +344,7 @@ class Installer extends Controller
 	 */
 	public function getFromDb()
 	{
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 		$tables = preg_grep('/^tl_/', $this->Database->listTables(null, true));
 
 		if (empty($tables))

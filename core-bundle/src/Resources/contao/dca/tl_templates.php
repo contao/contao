@@ -303,7 +303,7 @@ class tl_templates extends Contao\Backend
 					}
 					else
 					{
-						$this->import('Files');
+						$this->import('Contao\Files', 'Files');
 						$this->Files->copy($strOriginal, $strTarget);
 						$this->redirect($this->getReferer());
 					}

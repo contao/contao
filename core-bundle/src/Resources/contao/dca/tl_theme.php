@@ -237,7 +237,7 @@ class tl_theme extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -305,7 +305,7 @@ class tl_theme extends Contao\Backend
 
 		if ($objSession->get('style_sheet_update_all'))
 		{
-			$this->import('StyleSheets');
+			$this->import('Contao\StyleSheets', 'StyleSheets');
 			$this->StyleSheets->updateStyleSheets();
 		}
 

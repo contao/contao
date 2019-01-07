@@ -56,7 +56,7 @@ class BackendMain extends Backend
 		/** @var AuthorizationCheckerInterface $authorizationChecker */
 		$authorizationChecker = $container->get('security.authorization_checker');
 
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 		parent::__construct();
 
 		if (!$authorizationChecker->isGranted('ROLE_USER'))

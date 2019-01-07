@@ -59,7 +59,7 @@ class ModuleCloseAccount extends Module
 	 */
 	protected function compile()
 	{
-		$this->import('FrontendUser', 'User');
+		$this->import(FrontendUser::class, 'User');
 
 		// Initialize the password widget
 		$arrField = array

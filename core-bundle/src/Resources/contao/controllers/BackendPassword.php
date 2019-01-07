@@ -34,7 +34,7 @@ class BackendPassword extends Backend
 	 */
 	public function __construct()
 	{
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 		parent::__construct();
 
 		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))

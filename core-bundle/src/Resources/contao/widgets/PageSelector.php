@@ -48,7 +48,7 @@ class PageSelector extends Widget
 	 */
 	public function __construct($arrAttributes=null)
 	{
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 		parent::__construct($arrAttributes);
 	}
 
@@ -59,7 +59,7 @@ class PageSelector extends Widget
 	 */
 	public function generate()
 	{
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');

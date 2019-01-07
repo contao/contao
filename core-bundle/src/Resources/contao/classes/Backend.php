@@ -35,7 +35,7 @@ abstract class Backend extends Controller
 	protected function __construct()
 	{
 		parent::__construct();
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 		$this->setStaticUrls();
 	}
 
@@ -301,7 +301,7 @@ abstract class Backend extends Controller
 			}
 		}
 
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || $this->User->hasAccess($module, 'modules');
 
 		// Check whether the current user has access to the current module
@@ -1143,7 +1143,7 @@ abstract class Backend extends Controller
 	 */
 	public function createPageList()
 	{
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		if ($this->User->isAdmin)
 		{
@@ -1253,7 +1253,7 @@ abstract class Backend extends Controller
 			$strFilter = 'gif,jpg,jpeg,png';
 		}
 
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		if ($this->User->isAdmin)
 		{

@@ -71,7 +71,7 @@ class ModulePersonalData extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$this->import('FrontendUser', 'User');
+		$this->import(FrontendUser::class, 'User');
 
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
 

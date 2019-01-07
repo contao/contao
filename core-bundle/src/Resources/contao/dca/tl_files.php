@@ -268,7 +268,7 @@ class tl_files extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -762,7 +762,7 @@ class tl_files extends Contao\Backend
 					$blnUnprotected = true;
 					$objFolder->unprotect();
 
-					$this->import('Automator');
+					$this->import('Contao\Automator', 'Automator');
 					$this->Automator->generateSymlinks();
 				}
 			}
@@ -773,7 +773,7 @@ class tl_files extends Contao\Backend
 					$blnUnprotected = false;
 					$objFolder->protect();
 
-					$this->import('Automator');
+					$this->import('Contao\Automator', 'Automator');
 					$this->Automator->generateSymlinks();
 				}
 			}

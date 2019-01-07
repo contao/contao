@@ -608,7 +608,7 @@ class tl_style extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -674,7 +674,7 @@ class tl_style extends Contao\Backend
 			return;
 		}
 
-		$this->import('StyleSheets');
+		$this->import('Contao\StyleSheets', 'StyleSheets');
 
 		foreach ($session as $id)
 		{
@@ -727,7 +727,7 @@ class tl_style extends Contao\Backend
 					   ->execute(time(), $data['pid']);
 
 		// Update the CSS file
-		$this->import('StyleSheets');
+		$this->import('Contao\StyleSheets', 'StyleSheets');
 		$this->StyleSheets->updateStyleSheet($data['pid']);
 	}
 

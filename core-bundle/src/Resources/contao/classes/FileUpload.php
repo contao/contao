@@ -174,7 +174,7 @@ class FileUpload extends Backend
 				// Move the file to its destination
 				else
 				{
-					$this->import('Files');
+					$this->import(Files::class, 'Files');
 					$strNewFile = $strTarget . '/' . $file['name'];
 
 					// Set CHMOD and resize if neccessary

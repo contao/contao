@@ -43,7 +43,7 @@ class ContentGallery extends ContentElement
 		// Use the home directory of the current user as file source
 		if ($this->useHomeDir && FE_USER_LOGGED_IN)
 		{
-			$this->import('FrontendUser', 'User');
+			$this->import(FrontendUser::class, 'User');
 
 			if ($this->User->assignDir && $this->User->homeDir)
 			{

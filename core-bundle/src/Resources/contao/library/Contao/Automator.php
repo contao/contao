@@ -133,7 +133,7 @@ class Automator extends System
 		}
 
 		// Recreate the internal style sheets
-		$this->import('StyleSheets');
+		$this->import(StyleSheets::class, 'StyleSheets');
 		$this->StyleSheets->updateStyleSheets();
 
 		// Also empty the page cache so there are no links to deleted scripts

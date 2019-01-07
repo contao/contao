@@ -107,7 +107,7 @@ abstract class System
 	 */
 	protected function __construct()
 	{
-		$this->import('Config');
+		$this->import(Config::class, 'Config');
 	}
 
 	/**

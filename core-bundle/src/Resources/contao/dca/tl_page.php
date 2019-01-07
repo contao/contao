@@ -710,7 +710,7 @@ class tl_page extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -1052,7 +1052,7 @@ class tl_page extends Contao\Backend
 			return;
 		}
 
-		$this->import('Automator');
+		$this->import('Contao\Automator', 'Automator');
 
 		foreach ($session as $id)
 		{
@@ -1267,7 +1267,7 @@ class tl_page extends Contao\Backend
 
 		$varValue = Contao\StringUtil::standardize($varValue); // see #5096
 
-		$this->import('Automator');
+		$this->import('Contao\Automator', 'Automator');
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);
 
 		// Alias exists

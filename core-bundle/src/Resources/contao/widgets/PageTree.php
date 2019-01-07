@@ -54,7 +54,7 @@ class PageTree extends Widget
 	 */
 	public function __construct($arrAttributes=null)
 	{
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 		parent::__construct($arrAttributes);
 
 		// Prepare the order field

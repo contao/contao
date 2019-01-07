@@ -15,6 +15,7 @@ use Contao\Controller;
 use Contao\Database;
 use Contao\Dbafs;
 use Contao\File;
+use Contao\Files;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\System;
@@ -38,7 +39,7 @@ class Updater extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 	}
 
 	/**
@@ -113,7 +114,7 @@ class Updater extends Controller
 		}
 
 		// Delete system/modules/news/Comments.php
-		$this->import('Files');
+		$this->import(Files::class, 'Files');
 		$this->Files->delete('system/modules/news/Comments.php');
 	}
 

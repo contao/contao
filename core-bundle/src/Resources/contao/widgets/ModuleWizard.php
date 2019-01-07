@@ -37,7 +37,7 @@ class ModuleWizard extends Widget
 	 */
 	public function generate()
 	{
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 
 		$arrButtons = array('edit', 'copy', 'delete', 'enable', 'drag');
 

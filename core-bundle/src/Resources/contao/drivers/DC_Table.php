@@ -1523,7 +1523,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 		}
 
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data) VALUES (?, ?, ?, ?, ?, ?)")
 									  ->execute($this->User->id, time(), $this->strTable, 'DELETE FROM '.$this->strTable.' WHERE id='.$this->intId, $affected, serialize($data));
@@ -2307,7 +2307,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		$return = '';
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
@@ -2707,7 +2707,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		$return = '';
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
@@ -4121,7 +4121,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// List all records of the child table
 		if (!Input::get('act') || Input::get('act') == 'paste' || Input::get('act') == 'select')
 		{
-			$this->import('BackendUser', 'User');
+			$this->import(BackendUser::class, 'User');
 
 			// Header
 			$imagePasteNew = Image::getHtml('new.svg', $GLOBALS['TL_LANG'][$this->strTable]['pastenew'][0]);

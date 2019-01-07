@@ -29,7 +29,7 @@ class StyleSheets extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Files');
+		$this->import(Files::class, 'Files');
 		$this->strRootDir = System::getContainer()->getParameter('kernel.project_dir');
 	}
 
@@ -52,7 +52,7 @@ class StyleSheets extends Backend
 		// Delete the CSS file
 		if (Input::get('act') == 'delete')
 		{
-			$this->import('Files');
+			$this->import(Files::class, 'Files');
 			$this->Files->delete('assets/css/' . $objStyleSheet->name . '.css');
 		}
 

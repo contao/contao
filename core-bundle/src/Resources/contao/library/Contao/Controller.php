@@ -2005,7 +2005,7 @@ abstract class Controller extends System
 	{
 		@trigger_error('Using Controller::removeOldFeeds() has been deprecated and will no longer work in Contao 5.0. Use Automator::purgeXmlFiles() instead.', E_USER_DEPRECATED);
 
-		$this->import('Automator');
+		$this->import(Automator::class, 'Automator');
 		$this->Automator->purgeXmlFiles($blnReturn);
 	}
 

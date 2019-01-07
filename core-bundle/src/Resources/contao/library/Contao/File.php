@@ -148,7 +148,7 @@ class File extends System
 			throw new \Exception(sprintf('Directory "%s" is not a file', $strFile));
 		}
 
-		$this->import('Files');
+		$this->import(Files::class, 'Files');
 
 		$this->strFile = $strFile;
 	}

@@ -77,7 +77,7 @@ class ModuleLogin extends Module
 			/** @var PageModel $objPage */
 			global $objPage;
 
-			$this->import('FrontendUser', 'User');
+			$this->import(FrontendUser::class, 'User');
 
 			$strRedirect = Environment::get('base').Environment::get('request');
 

@@ -189,7 +189,7 @@ class ModuleSearch extends Module
 			// Sort out protected pages
 			if (Config::get('indexProtected'))
 			{
-				$this->import('FrontendUser', 'User');
+				$this->import(FrontendUser::class, 'User');
 
 				foreach ($arrResult as $k=>$v)
 				{

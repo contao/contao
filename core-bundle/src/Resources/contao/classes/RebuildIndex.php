@@ -42,7 +42,7 @@ class RebuildIndex extends Backend implements \executable
 			return '';
 		}
 
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		$time = time();
 		$arrUser = array(''=>'-');
@@ -110,7 +110,7 @@ class RebuildIndex extends Backend implements \executable
 			}
 
 			// Truncate the search tables
-			$this->import('Automator');
+			$this->import(Automator::class, 'Automator');
 			$this->Automator->purgeSearchTables();
 
 			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');

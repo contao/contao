@@ -674,7 +674,7 @@ class Theme extends Backend
 			$this->Database->unlockTables();
 
 			// Update the style sheets
-			$this->import('StyleSheets');
+			$this->import(StyleSheets::class, 'StyleSheets');
 			$this->StyleSheets->updateStyleSheets();
 
 			// Notify the user
@@ -700,7 +700,7 @@ class Theme extends Backend
 		$objSession = System::getContainer()->get('session');
 		$objSession->remove('uploaded_themes');
 
-		$this->import('Automator');
+		$this->import(Automator::class, 'Automator');
 		$this->Automator->generateSymlinks();
 
 		$this->redirect(str_replace('&key=importTheme', '', Environment::get('request')));

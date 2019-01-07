@@ -542,7 +542,7 @@ class Form extends Hybrid
 		// Add a log entry
 		if (FE_USER_LOGGED_IN)
 		{
-			$this->import('FrontendUser', 'User');
+			$this->import(FrontendUser::class, 'User');
 			$this->log('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".', __METHOD__, TL_FORMS);
 		}
 		else

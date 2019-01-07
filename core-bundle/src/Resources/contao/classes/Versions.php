@@ -60,7 +60,7 @@ class Versions extends Controller
 	 */
 	public function __construct($strTable, $intPid)
 	{
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 		parent::__construct();
 
 		$this->loadDataContainer($strTable);
@@ -745,7 +745,7 @@ class Versions extends Controller
 			return $this->strUsername;
 		}
 
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		return $this->User->username;
 	}
@@ -762,7 +762,7 @@ class Versions extends Controller
 			return $this->intUserId;
 		}
 
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		return $this->User->id;
 	}

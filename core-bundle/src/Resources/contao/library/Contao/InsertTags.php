@@ -288,7 +288,7 @@ class InsertTags extends Controller
 				case 'user':
 					if (FE_USER_LOGGED_IN)
 					{
-						$this->import('FrontendUser', 'User');
+						$this->import(FrontendUser::class, 'User');
 						$value = $this->User->{$elements[1]};
 
 						if ($value == '')
@@ -394,7 +394,7 @@ class InsertTags extends Controller
 								break;
 							}
 
-							$this->import('FrontendUser', 'User');
+							$this->import(FrontendUser::class, 'User');
 							$elements[1] = $this->User->loginPage;
 						}
 

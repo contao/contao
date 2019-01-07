@@ -59,7 +59,7 @@ class FileSelector extends Widget
 	 */
 	public function __construct($arrAttributes=null)
 	{
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 		parent::__construct($arrAttributes);
 	}
 
@@ -70,7 +70,7 @@ class FileSelector extends Widget
 	 */
 	public function generate()
 	{
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 		$this->convertValuesToPaths();
 
 		if ($this->extensions != '')
@@ -323,7 +323,7 @@ class FileSelector extends Widget
 				break;
 
 			case 'Table':
-				$this->import('Database');
+				$this->import(Database::class, 'Database');
 
 				if (!$this->Database->fieldExists($this->strField, $this->strTable))
 				{

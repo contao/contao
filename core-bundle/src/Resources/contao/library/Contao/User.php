@@ -161,7 +161,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	protected function __construct()
 	{
 		parent::__construct();
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 	}
 
 	/**

@@ -85,7 +85,7 @@ class Folder extends System
 			throw new \Exception(sprintf('File "%s" is not a directory', $strFolder));
 		}
 
-		$this->import('Files');
+		$this->import(Files::class, 'Files');
 		$this->strFolder = $strFolder;
 
 		// Create the folder if it does not exist
