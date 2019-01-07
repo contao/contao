@@ -17,15 +17,18 @@ use Contao\Environment;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\System;
-use Contao\TestCase\DatabaseTrait;
+use Contao\TestCase\ContaoDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 class RoutingTest extends WebTestCase
 {
-    use DatabaseTrait;
+    use ContaoDatabaseTrait;
 
-    public static function setUpBeforeClass()
+    /**
+     * {@inheritdoc}
+     */
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 

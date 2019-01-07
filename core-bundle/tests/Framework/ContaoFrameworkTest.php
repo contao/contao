@@ -57,7 +57,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_scope', 'frontend');
         $request->setSession($session);
 
-        $framework = $this->createConfiguredFramework($this->mockRouter('/index.html'), $request);
+        $framework = $this->mockFramework($this->mockRouter('/index.html'), $request);
         $framework->setContainer($this->mockContainer());
         $framework->initialize();
 
@@ -90,7 +90,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_contao_referer_id', 'foobar');
         $request->setLocale('de');
 
-        $framework = $this->createConfiguredFramework($this->mockRouter('/contao/login'), $request);
+        $framework = $this->mockFramework($this->mockRouter('/contao/login'), $request);
         $framework->setContainer($this->mockContainer());
         $framework->initialize();
 
@@ -115,10 +115,10 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testInitializesTheFrameworkWithoutARequest(): void
     {
-        $framework = $this->createConfiguredFramework($this->mockRouter('/contao/login'));
+        $framework = $this->mockFramework($this->mockRouter('/contao/login'));
         $framework->setContainer($this->mockContainer());
 
-        /** @var MockObject $config */
+        /** @var Config|MockObject $config */
         $config = $framework->getAdapter(Config::class);
         $config
             ->expects($this->once())
@@ -154,7 +154,7 @@ class ContaoFrameworkTest extends TestCase
         $container = $this->mockContainer();
         $container->set('routing.loader', $routingLoader);
 
-        $framework = $this->createConfiguredFramework(new Router($container, []), $request);
+        $framework = $this->mockFramework(new Router($container, []), $request);
         $framework->setContainer($container);
         $framework->initialize();
 
@@ -183,7 +183,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_contao_referer_id', 'foobar');
 
-        $framework = $this->createConfiguredFramework($this->mockRouter('/contao/login'), $request);
+        $framework = $this->mockFramework($this->mockRouter('/contao/login'), $request);
         $framework->setContainer($this->mockContainer());
         $framework->initialize();
 
@@ -205,7 +205,7 @@ class ContaoFrameworkTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testInitializesTheFrameworkAfterRequestIsSet()
+    public function testInitializesTheFrameworkAfterRequestIsSet(): void
     {
         $request = new Request();
         $request->setLocale('de');
@@ -219,7 +219,7 @@ class ContaoFrameworkTest extends TestCase
         $container = $this->mockContainer();
         $container->set('routing.loader', $routingLoader);
 
-        $framework = $this->createConfiguredFramework(new Router($container, []));
+        $framework = $this->mockFramework(new Router($container, []));
         $framework->setContainer($container);
         $framework->initialize();
 
@@ -256,7 +256,6 @@ class ContaoFrameworkTest extends TestCase
     public function testDoesNotInitializeTheFrameworkTwice(): void
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
-
         $scopeMatcher
             ->expects($this->once())
             ->method('isBackendRequest')
@@ -269,7 +268,7 @@ class ContaoFrameworkTest extends TestCase
             ->willReturn(false)
         ;
 
-        $framework = $this->createConfiguredFramework(null, null, $scopeMatcher);
+        $framework = $this->mockFramework(null, null, $scopeMatcher);
         $framework->setContainer($this->mockContainer());
         $framework->setRequest(new Request());
         $framework->initialize();
@@ -278,6 +277,8 @@ class ContaoFrameworkTest extends TestCase
         $this->assertNull(TL_MODE);
 
         $framework->initialize();
+
+        $this->addToAssertionCount(1);  // does not throw an exception
     }
 
     public function testOverridesTheErrorLevel(): void
@@ -286,7 +287,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_contao_referer_id', 'foobar');
 
-        $framework = $this->createConfiguredFramework($this->mockRouter('/contao/login'), $request);
+        $framework = $this->mockFramework($this->mockRouter('/contao/login'), $request);
         $framework->setContainer($this->mockContainer());
 
         $errorReporting = error_reporting();
@@ -317,7 +318,7 @@ class ContaoFrameworkTest extends TestCase
         $request->setMethod('POST');
         $request->request->set('REQUEST_TOKEN', 'foobar');
 
-        $framework = $this->createConfiguredFramework($this->mockRouter('/contao/login'), $request);
+        $framework = $this->mockFramework($this->mockRouter('/contao/login'), $request);
         $framework->setContainer($this->mockContainer());
         $framework->initialize();
 
@@ -536,7 +537,7 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testFailsIfTheContainerIsNotSet(): void
     {
-        $framework = $this->createConfiguredFramework($this->mockRouter('/contao/login'));
+        $framework = $this->mockFramework($this->mockRouter('/contao/login'));
 
         $this->expectException('LogicException');
 
@@ -568,7 +569,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_scope', 'frontend');
         $request->setSession($session);
 
-        $framework = $this->createConfiguredFramework($this->mockRouter('/index.html'));
+        $framework = $this->mockFramework($this->mockRouter('/index.html'));
         $framework->setContainer($this->mockContainer());
         $framework->setRequest($request);
         $framework->initialize();
@@ -581,7 +582,7 @@ class ContaoFrameworkTest extends TestCase
     public function testCreatesAnObjectInstance(): void
     {
         /** @var ContaoFramework $framework */
-        $framework = $this->createConfiguredFramework();
+        $framework = $this->mockFramework();
 
         $class = LegacyClass::class;
         $instance = $framework->createInstance($class, [1, 2]);
@@ -593,7 +594,7 @@ class ContaoFrameworkTest extends TestCase
     public function testCreateASingeltonObjectInstance(): void
     {
         /** @var ContaoFramework $framework */
-        $framework = $this->createConfiguredFramework();
+        $framework = $this->mockFramework();
 
         $class = LegacySingletonClass::class;
         $instance = $framework->createInstance($class, [1, 2]);
@@ -605,7 +606,7 @@ class ContaoFrameworkTest extends TestCase
     public function testCreatesAdaptersForLegacyClasses(): void
     {
         /** @var ContaoFramework $framework */
-        $framework = $this->createConfiguredFramework();
+        $framework = $this->mockFramework();
         $adapter = $framework->getAdapter(LegacyClass::class);
 
         $ref = new \ReflectionClass($adapter);
@@ -675,7 +676,7 @@ class ContaoFrameworkTest extends TestCase
             ],
         ];
 
-        $framework = $this->createConfiguredFramework($this->mockRouter('/index.html'));
+        $framework = $this->mockFramework($this->mockRouter('/index.html'));
         $framework->setContainer($container);
         $framework->setRequest($request);
         $framework->setHookListeners($listeners);
@@ -745,7 +746,7 @@ class ContaoFrameworkTest extends TestCase
         return $router;
     }
 
-    private function createConfiguredFramework(RouterInterface $router = null, Request $request = null, ScopeMatcher $scopeMatcher = null): ContaoFramework
+    private function mockFramework(RouterInterface $router = null, Request $request = null, ScopeMatcher $scopeMatcher = null): ContaoFramework
     {
         $framework = new ContaoFramework(
             null,

@@ -132,4 +132,3 @@ before_install:
       php vendor/bin/phpunit --colors=always
     }
   - mysql -e "CREATE database contao_test"
-  - mysql contao_test < core-bundle/tests/Functional/app/Resources/contao_test.sql

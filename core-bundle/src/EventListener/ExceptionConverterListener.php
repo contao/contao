@@ -125,7 +125,6 @@ class ExceptionConverterListener
     private function hasRootPages(): bool
     {
         $qb = $this->connection->createQueryBuilder();
-
         $qb
             ->select('COUNT(*)')
             ->from('tl_page')
