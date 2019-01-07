@@ -1563,7 +1563,7 @@ abstract class Controller extends System
 				$arrMeta = Frontend::getMetaData($objModel->meta, $GLOBALS['TL_LANGUAGE']);
 			}
 
-			Controller::loadDataContainer('tl_files');
+			self::loadDataContainer('tl_files');
 
 			// Add any missing fields
 			foreach (array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']) as $k)

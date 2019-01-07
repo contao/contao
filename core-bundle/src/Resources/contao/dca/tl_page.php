@@ -386,7 +386,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'rgxp'=>'friendly', 'decodeEntities'=>true, 'placeholder'=>Config::get('adminEmail'), 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'rgxp'=>'friendly', 'decodeEntities'=>true, 'placeholder'=>Contao\Config::get('adminEmail'), 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'dateFormat' => array
@@ -395,7 +395,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('helpwizard'=>true, 'decodeEntities'=>true, 'placeholder'=>Config::get('dateFormat'), 'tl_class'=>'w50'),
+			'eval'                    => array('helpwizard'=>true, 'decodeEntities'=>true, 'placeholder'=>Contao\Config::get('dateFormat'), 'tl_class'=>'w50'),
 			'explanation'             => 'dateFormat',
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
@@ -405,7 +405,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'placeholder'=>Config::get('timeFormat'), 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'placeholder'=>Contao\Config::get('timeFormat'), 'tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'datimFormat' => array
@@ -414,7 +414,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'placeholder'=>Config::get('datimFormat'), 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'placeholder'=>Contao\Config::get('datimFormat'), 'tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'validAliasCharacters' => array
@@ -424,7 +424,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'select',
 			'options_callback'        => function ()
 			{
-				return System::getContainer()->get('contao.slug.valid_characters')->getOptions();
+				return Contao\System::getContainer()->get('contao.slug.valid_characters')->getOptions();
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -561,7 +561,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'cuser' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['cuser'],
-			'default'                 => (int) Config::get('defaultUser'),
+			'default'                 => (int) Contao\Config::get('defaultUser'),
 			'search'                  => true,
 			'exclude'                 => true,
 			'inputType'               => 'select',
@@ -573,7 +573,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'cgroup' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['cgroup'],
-			'default'                 => (int) Config::get('defaultGroup'),
+			'default'                 => (int) Contao\Config::get('defaultGroup'),
 			'search'                  => true,
 			'exclude'                 => true,
 			'inputType'               => 'select',
@@ -585,7 +585,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'chmod' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['chmod'],
-			'default'                 => Config::get('defaultChmod'),
+			'default'                 => Contao\Config::get('defaultChmod'),
 			'exclude'                 => true,
 			'inputType'               => 'chmod',
 			'eval'                    => array('tl_class'=>'clr'),
@@ -691,7 +691,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 );
 
 // Disable the articles link in the modal window
-if (Input::get('popup'))
+if (Contao\Input::get('popup'))
 {
 	unset($GLOBALS['TL_DCA']['tl_page']['list']['operations']['articles']);
 }
@@ -701,7 +701,7 @@ if (Input::get('popup'))
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_page extends Backend
+class tl_page extends Contao\Backend
 {
 
 	/**
@@ -726,13 +726,13 @@ class tl_page extends Backend
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		$session = $objSession->all();
 
 		// Set the default page user and group
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $this->User->id;
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) $this->User->groups[0];
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Contao\Config::get('defaultUser') ?: $this->User->id;
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Contao\Config::get('defaultGroup') ?: (int) $this->User->groups[0];
 
 		// Restrict the page tree
 		if (empty($this->User->pagemounts) || !\is_array($this->User->pagemounts))
@@ -765,19 +765,19 @@ class tl_page extends Backend
 
 				$row = $objPage->row();
 
-				if ($this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $row))
+				if ($this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE, $row))
 				{
 					$edit_all[] = $id;
 				}
 
 				// Mounted pages cannot be deleted
-				if ($this->User->isAllowed(BackendUser::CAN_DELETE_PAGE, $row) && !$this->User->hasAccess($id, 'pagemounts'))
+				if ($this->User->isAllowed(Contao\BackendUser::CAN_DELETE_PAGE, $row) && !$this->User->hasAccess($id, 'pagemounts'))
 				{
 					$delete_all[] = $id;
 				}
 			}
 
-			$session['CURRENT']['IDS'] = (Input::get('act') == 'deleteAll') ? $delete_all : $edit_all;
+			$session['CURRENT']['IDS'] = (Contao\Input::get('act') == 'deleteAll') ? $delete_all : $edit_all;
 		}
 
 		// Set allowed clipboard IDs
@@ -796,7 +796,7 @@ class tl_page extends Backend
 					continue;
 				}
 
-				if ($this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
+				if ($this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
 				{
 					$clipboard[] = $id;
 				}
@@ -809,36 +809,36 @@ class tl_page extends Backend
 		$objSession->replace($session);
 
 		// Check permissions to save and create new
-		if (Input::get('act') == 'edit')
+		if (Contao\Input::get('act') == 'edit')
 		{
 			$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=(SELECT pid FROM tl_page WHERE id=?)")
 									  ->limit(1)
-									  ->execute(Input::get('id'));
+									  ->execute(Contao\Input::get('id'));
 
-			if ($objPage->numRows && !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
+			if ($objPage->numRows && !$this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
 			{
 				$GLOBALS['TL_DCA']['tl_page']['config']['closed'] = true;
 			}
 		}
 
 		// Check current action
-		if (Input::get('act') && Input::get('act') != 'paste')
+		if (Contao\Input::get('act') && Contao\Input::get('act') != 'paste')
 		{
 			$permission = 0;
-			$cid = CURRENT_ID ?: Input::get('id');
+			$cid = CURRENT_ID ?: Contao\Input::get('id');
 			$ids = ($cid != '') ? array($cid) : array();
 
 			// Set permission
-			switch (Input::get('act'))
+			switch (Contao\Input::get('act'))
 			{
 				case 'edit':
 				case 'toggle':
-					$permission = BackendUser::CAN_EDIT_PAGE;
+					$permission = Contao\BackendUser::CAN_EDIT_PAGE;
 					break;
 
 				case 'move':
-					$permission = BackendUser::CAN_EDIT_PAGE_HIERARCHY;
-					$ids[] = Input::get('sid');
+					$permission = Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY;
+					$ids[] = Contao\Input::get('sid');
 					break;
 
 				case 'create':
@@ -846,38 +846,38 @@ class tl_page extends Backend
 				case 'copyAll':
 				case 'cut':
 				case 'cutAll':
-					$permission = BackendUser::CAN_EDIT_PAGE_HIERARCHY;
+					$permission = Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY;
 
 					// Check the parent page in "paste into" mode
-					if (Input::get('mode') == 2)
+					if (Contao\Input::get('mode') == 2)
 					{
-						$ids[] = Input::get('pid');
+						$ids[] = Contao\Input::get('pid');
 					}
 					// Check the parent's parent page in "paste after" mode
 					else
 					{
 						$objPage = $this->Database->prepare("SELECT pid FROM tl_page WHERE id=?")
 												  ->limit(1)
-												  ->execute(Input::get('pid'));
+												  ->execute(Contao\Input::get('pid'));
 
 						$ids[] = $objPage->pid;
 					}
 					break;
 
 				case 'delete':
-					$permission = BackendUser::CAN_DELETE_PAGE;
+					$permission = Contao\BackendUser::CAN_DELETE_PAGE;
 					break;
 			}
 
 			// Check user permissions
-			if (Input::get('act') != 'show')
+			if (Contao\Input::get('act') != 'show')
 			{
 				$pagemounts = array();
 
 				// Get all allowed pages for the current user
 				foreach ($this->User->pagemounts as $root)
 				{
-					if (Input::get('act') != 'delete')
+					if (Contao\Input::get('act') != 'delete')
 					{
 						$pagemounts[] = array($root);
 					}
@@ -893,9 +893,9 @@ class tl_page extends Backend
 				$pagemounts = array_unique($pagemounts);
 
 				// Do not allow to paste after pages on the root level (pagemounts)
-				if ((Input::get('act') == 'cut' || Input::get('act') == 'cutAll') && Input::get('mode') == 1 && \in_array(Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
+				if ((Contao\Input::get('act') == 'cut' || Contao\Input::get('act') == 'cutAll') && Contao\Input::get('mode') == 1 && \in_array(Contao\Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to paste page ID ' . Input::get('id') . ' after mounted page ID ' . Input::get('pid') . ' (root level).');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to paste page ID ' . Contao\Input::get('id') . ' after mounted page ID ' . Contao\Input::get('pid') . ' (root level).');
 				}
 
 				$error = false;
@@ -912,7 +912,7 @@ class tl_page extends Backend
 					}
 
 					// Get the page object
-					$objPage = PageModel::findById($id);
+					$objPage = Contao\PageModel::findById($id);
 
 					if ($objPage === null)
 					{
@@ -928,9 +928,9 @@ class tl_page extends Backend
 
 					// Check the type of the first page (not the following parent pages)
 					// In "edit multiple" mode, $ids contains only the parent ID, therefore check $id != $_GET['pid'] (see #5620)
-					if ($i == 0 && $id != Input::get('pid') && Input::get('act') != 'create' && !$this->User->hasAccess($objPage->type, 'alpty'))
+					if ($i == 0 && $id != Contao\Input::get('pid') && Contao\Input::get('act') != 'create' && !$this->User->hasAccess($objPage->type, 'alpty'))
 					{
-						$this->log('Not enough permissions to  '. Input::get('act') .' '. $objPage->type .' pages', __METHOD__, TL_ERROR);
+						$this->log('Not enough permissions to  '. Contao\Input::get('act') .' '. $objPage->type .' pages', __METHOD__, TL_ERROR);
 
 						$error = true;
 						break;
@@ -940,7 +940,7 @@ class tl_page extends Backend
 				// Redirect if there is an error
 				if ($error)
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' page ID ' . $cid . ' or paste after/into page ID ' . Input::get('pid') . '.');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' page ID ' . $cid . ' or paste after/into page ID ' . Contao\Input::get('pid') . '.');
 				}
 			}
 		}
@@ -951,31 +951,31 @@ class tl_page extends Backend
 	 */
 	public function addBreadcrumb()
 	{
-		Backend::addPagesBreadcrumb();
+		Contao\Backend::addPagesBreadcrumb();
 	}
 
 	/**
 	 * Make new top-level pages root pages
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 */
-	public function setRootType(DataContainer $dc)
+	public function setRootType(Contao\DataContainer $dc)
 	{
-		if (Input::get('act') != 'create')
+		if (Contao\Input::get('act') != 'create')
 		{
 			return;
 		}
 
 		// Insert into
-		if (Input::get('pid') == 0)
+		if (Contao\Input::get('pid') == 0)
 		{
 			$GLOBALS['TL_DCA']['tl_page']['fields']['type']['default'] = 'root';
 		}
-		elseif (Input::get('mode') == 1)
+		elseif (Contao\Input::get('mode') == 1)
 		{
 			$objPage = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
 									  ->limit(1)
-									  ->execute(Input::get('pid'));
+									  ->execute(Contao\Input::get('pid'));
 
 			if ($objPage->pid == 0)
 			{
@@ -987,14 +987,14 @@ class tl_page extends Backend
 	/**
 	 * Make sure that top-level pages are root pages
 	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return mixed
 	 *
 	 * @throws Exception
 	 */
-	public function checkRootType($varValue, DataContainer $dc)
+	public function checkRootType($varValue, Contao\DataContainer $dc)
 	{
 		if ($varValue != 'root' && $dc->activeRecord->pid == 0)
 		{
@@ -1009,23 +1009,23 @@ class tl_page extends Backend
 	 */
 	public function showFallbackWarning()
 	{
-		if (Input::get('act') != '')
+		if (Contao\Input::get('act') != '')
 		{
 			return;
 		}
 
-		$messages = new \Messages();
-		Message::addRaw($messages->languageFallback());
+		$messages = new Contao\Messages();
+		Contao\Message::addRaw($messages->languageFallback());
 	}
 
 	/**
 	 * Make the redirect page mandatory if the page is a logout page
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @throws Exception
 	 */
-	public function makeRedirectPageMandatory(DataContainer $dc)
+	public function makeRedirectPageMandatory(Contao\DataContainer $dc)
 	{
 		$objPage = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
 								  ->limit(1)
@@ -1043,7 +1043,7 @@ class tl_page extends Backend
 	public function generateSitemap()
 	{
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		$session = $objSession->get('sitemap_updater');
 
@@ -1070,38 +1070,38 @@ class tl_page extends Backend
 	 * (delete/deleteAll). Since duplicated pages are unpublished by default,
 	 * it is not necessary to schedule updates on copyAll as well.
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 */
-	public function scheduleUpdate(DataContainer $dc)
+	public function scheduleUpdate(Contao\DataContainer $dc)
 	{
 		// Return if there is no ID
-		if (!$dc->activeRecord || !$dc->activeRecord->id || Input::get('act') == 'copy')
+		if (!$dc->activeRecord || !$dc->activeRecord->id || Contao\Input::get('act') == 'copy')
 		{
 			return;
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		// Store the ID in the session
 		$session = $objSession->get('sitemap_updater');
-		$session[] = PageModel::findWithDetails($dc->activeRecord->id)->rootId;
+		$session[] = Contao\PageModel::findWithDetails($dc->activeRecord->id)->rootId;
 		$objSession->set('sitemap_updater', array_unique($session));
 	}
 
 	/**
 	 * Auto-generate a page alias if it has not been set yet
 	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return string
 	 *
 	 * @throws Exception
 	 */
-	public function generateAlias($varValue, DataContainer $dc)
+	public function generateAlias($varValue, Contao\DataContainer $dc)
 	{
-		$objPage = PageModel::findWithDetails($dc->id);
+		$objPage = Contao\PageModel::findWithDetails($dc->id);
 
 		$aliasExists = function (string $alias) use ($dc, $objPage): bool
 		{
@@ -1118,20 +1118,20 @@ class tl_page extends Backend
 
 			if ($objPage->type == 'root')
 			{
-				$strCurrentDomain = Input::post('dns');
-				$strCurrentLanguage = Input::post('language');
+				$strCurrentDomain = Contao\Input::post('dns');
+				$strCurrentLanguage = Contao\Input::post('language');
 			}
 
 			while ($objAliasIds->next())
 			{
-				$objAliasPage = PageModel::findWithDetails($objAliasIds->id);
+				$objAliasPage = Contao\PageModel::findWithDetails($objAliasIds->id);
 
 				if ($objAliasPage->domain != $strCurrentDomain)
 				{
 					continue;
 				}
 
-				if (Config::get('addLanguageToUrl') && $objAliasPage->rootLanguage != $strCurrentLanguage)
+				if (Contao\Config::get('addLanguageToUrl') && $objAliasPage->rootLanguage != $strCurrentLanguage)
 				{
 					continue;
 				}
@@ -1146,18 +1146,18 @@ class tl_page extends Backend
 		// Generate an alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate
+			$varValue = Contao\System::getContainer()->get('contao.slug')->generate
 			(
 				$dc->activeRecord->title,
 				$dc->activeRecord->id,
 				function ($alias) use ($objPage, $aliasExists)
 				{
-					return $aliasExists((Config::get('folderUrl') ? $objPage->folderUrl : '') . $alias);
+					return $aliasExists((Contao\Config::get('folderUrl') ? $objPage->folderUrl : '') . $alias);
 				}
 			);
 
 			// Generate folder URL aliases (see #4933)
-			if (Config::get('folderUrl') && $objPage->folderUrl != '')
+			if (Contao\Config::get('folderUrl') && $objPage->folderUrl != '')
 			{
 				$varValue = $objPage->folderUrl . $varValue;
 			}
@@ -1173,9 +1173,9 @@ class tl_page extends Backend
 	/**
 	 * Automatically create an article in the main column of a new page
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 */
-	public function generateArticle(DataContainer $dc)
+	public function generateArticle(Contao\DataContainer $dc)
 	{
 		// Return if there is no active record (override all)
 		if (!$dc->activeRecord)
@@ -1190,7 +1190,7 @@ class tl_page extends Backend
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = Contao\System::getContainer()->get('session')->getBag('contao_backend');
 
 		$new_records = $objSessionBag->get('new_records');
 
@@ -1225,9 +1225,9 @@ class tl_page extends Backend
 	/**
 	 * Purge the search index if a page is being deleted
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 */
-	public function purgeSearchIndex(DataContainer $dc)
+	public function purgeSearchIndex(Contao\DataContainer $dc)
 	{
 		if (!$dc->id)
 		{
@@ -1250,14 +1250,14 @@ class tl_page extends Backend
 	/**
 	 * Check the sitemap alias
 	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return mixed
 	 *
 	 * @throws Exception
 	 */
-	public function checkFeedAlias($varValue, DataContainer $dc)
+	public function checkFeedAlias($varValue, Contao\DataContainer $dc)
 	{
 		// No change or empty value
 		if ($varValue == $dc->value || $varValue == '')
@@ -1265,7 +1265,7 @@ class tl_page extends Backend
 			return $varValue;
 		}
 
-		$varValue = StringUtil::standardize($varValue); // see #5096
+		$varValue = Contao\StringUtil::standardize($varValue); // see #5096
 
 		$this->import('Automator');
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);
@@ -1282,14 +1282,14 @@ class tl_page extends Backend
 	/**
 	 * Prevent circular references
 	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return mixed
 	 *
 	 * @throws Exception
 	 */
-	public function checkJumpTo($varValue, DataContainer $dc)
+	public function checkJumpTo($varValue, Contao\DataContainer $dc)
 	{
 		if ($varValue == $dc->id)
 		{
@@ -1314,14 +1314,14 @@ class tl_page extends Backend
 	/**
 	 * Make sure there is only one fallback per domain (thanks to Andreas Schempp)
 	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return mixed
 	 *
 	 * @throws Exception
 	 */
-	public function checkFallback($varValue, DataContainer $dc)
+	public function checkFallback($varValue, Contao\DataContainer $dc)
 	{
 		if ($varValue == '')
 		{
@@ -1359,11 +1359,11 @@ class tl_page extends Backend
 	/**
 	 * Returns all allowed page types as array
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getPageTypes(DataContainer $dc)
+	public function getPageTypes(Contao\DataContainer $dc)
 	{
 		$arrOptions = array();
 
@@ -1412,18 +1412,18 @@ class tl_page extends Backend
 	/**
 	 * Add an image to each page in the tree
 	 *
-	 * @param array         $row
-	 * @param string        $label
-	 * @param DataContainer $dc
-	 * @param string        $imageAttribute
-	 * @param boolean       $blnReturnImage
-	 * @param boolean       $blnProtected
+	 * @param array                $row
+	 * @param string               $label
+	 * @param Contao\DataContainer $dc
+	 * @param string               $imageAttribute
+	 * @param boolean              $blnReturnImage
+	 * @param boolean              $blnProtected
 	 *
 	 * @return string
 	 */
-	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
+	public function addIcon($row, $label, Contao\DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
 	{
-		return Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected);
+		return Contao\Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected);
 	}
 
 	/**
@@ -1440,7 +1440,7 @@ class tl_page extends Backend
 	 */
 	public function editPage($row, $href, $label, $title, $icon, $attributes)
 	{
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 	/**
@@ -1463,7 +1463,7 @@ class tl_page extends Backend
 			return '';
 		}
 
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 	/**
@@ -1486,9 +1486,9 @@ class tl_page extends Backend
 			return '';
 		}
 
-		$objSubpages = PageModel::findByPid($row['id']);
+		$objSubpages = Contao\PageModel::findByPid($row['id']);
 
-		return ($objSubpages !== null && $objSubpages->count() > 0 && $this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($objSubpages !== null && $objSubpages->count() > 0 && $this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 	/**
@@ -1505,21 +1505,21 @@ class tl_page extends Backend
 	 */
 	public function cutPage($row, $href, $label, $title, $icon, $attributes)
 	{
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 	/**
 	 * Return the paste page button
 	 *
-	 * @param DataContainer $dc
-	 * @param array         $row
-	 * @param string        $table
-	 * @param boolean       $cr
-	 * @param array         $arrClipboard
+	 * @param Contao\DataContainer $dc
+	 * @param array                $row
+	 * @param string               $table
+	 * @param boolean              $cr
+	 * @param array                $arrClipboard
 	 *
 	 * @return string
 	 */
-	public function pastePage(DataContainer $dc, $row, $table, $cr, $arrClipboard=null)
+	public function pastePage(Contao\DataContainer $dc, $row, $table, $cr, $arrClipboard=null)
 	{
 		$disablePA = false;
 		$disablePI = false;
@@ -1532,11 +1532,11 @@ class tl_page extends Backend
 		}
 
 		// Prevent adding non-root pages on top-level
-		if (Input::get('mode') != 'create' && $row['pid'] == 0)
+		if (Contao\Input::get('mode') != 'create' && $row['pid'] == 0)
 		{
 			$objPage = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
 									  ->limit(1)
-									  ->execute(Input::get('id'));
+									  ->execute(Contao\Input::get('id'));
 
 			if ($objPage->type != 'root')
 			{
@@ -1555,7 +1555,7 @@ class tl_page extends Backend
 			// Disable "paste into" button if there is no permission 2 (move) or 1 (create) for the current page
 			if (!$disablePI)
 			{
-				if (!$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row) || (Input::get('mode') == 'create' && !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $row)))
+				if (!$this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row) || (Contao\Input::get('mode') == 'create' && !$this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE, $row)))
 				{
 					$disablePI = true;
 				}
@@ -1564,10 +1564,10 @@ class tl_page extends Backend
 			// Disable "paste after" button if there is no permission 2 (move) or 1 (create) for the parent page
 			if (!$disablePA)
 			{
-				/** @var PageModel $objModel */
-				$objModel = Model::getClassFromTable($table);
+				/** @var Contao\PageModel $objModel */
+				$objModel = Contao\Model::getClassFromTable($table);
 
-				if (($objPage = $objModel::findById($row['pid'])) !== null && (!$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()) || (Input::get('mode') == 'create' && !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))))
+				if (($objPage = $objModel::findById($row['pid'])) !== null && (!$this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()) || (Contao\Input::get('mode') == 'create' && !$this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE, $objPage->row()))))
 				{
 					$disablePA = true;
 				}
@@ -1583,15 +1583,15 @@ class tl_page extends Backend
 		$return = '';
 
 		// Return the buttons
-		$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id']));
-		$imagePasteInto = Image::getHtml('pasteinto.svg', sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1], $row['id']));
+		$imagePasteAfter = Contao\Image::getHtml('pasteafter.svg', sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id']));
+		$imagePasteInto = Contao\Image::getHtml('pasteinto.svg', sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1], $row['id']));
 
 		if ($row['id'] > 0)
 		{
-			$return = $disablePA ? Image::getHtml('pasteafter_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> ';
+			$return = $disablePA ? Contao\Image::getHtml('pasteafter_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.Contao\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> ';
 		}
 
-		return $return.($disablePI ? Image::getHtml('pasteinto_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ');
+		return $return.($disablePI ? Contao\Image::getHtml('pasteinto_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.Contao\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ');
 	}
 
 	/**
@@ -1610,7 +1610,7 @@ class tl_page extends Backend
 	{
 		$root = func_get_arg(7);
 
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !\in_array($row['id'], $root))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !\in_array($row['id'], $root))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 	/**
@@ -1631,31 +1631,31 @@ class tl_page extends Backend
 			return '';
 		}
 
-		return ($row['type'] == 'regular' || $row['type'] == 'error_401' || $row['type'] == 'error_403' || $row['type'] == 'error_404') ? '<a href="' . $this->addToUrl($href.'&amp;pn='.$row['id']) . '" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($row['type'] == 'regular' || $row['type'] == 'error_401' || $row['type'] == 'error_403' || $row['type'] == 'error_404') ? '<a href="' . $this->addToUrl($href.'&amp;pn='.$row['id']) . '" title="'.Contao\StringUtil::specialchars($title).'">'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 	/**
 	 * Automatically generate the folder URL aliases
 	 *
-	 * @param array         $arrButtons
-	 * @param DataContainer $dc
+	 * @param array                $arrButtons
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function addAliasButton($arrButtons, DataContainer $dc)
+	public function addAliasButton($arrButtons, Contao\DataContainer $dc)
 	{
 		// Generate the aliases
-		if (Input::post('FORM_SUBMIT') == 'tl_select' && isset($_POST['alias']))
+		if (Contao\Input::post('FORM_SUBMIT') == 'tl_select' && isset($_POST['alias']))
 		{
 			/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-			$objSession = System::getContainer()->get('session');
+			$objSession = Contao\System::getContainer()->get('session');
 
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'];
 
 			foreach ($ids as $id)
 			{
-				$objPage = PageModel::findWithDetails($id);
+				$objPage = Contao\PageModel::findWithDetails($id);
 
 				if ($objPage === null)
 				{
@@ -1688,7 +1688,7 @@ class tl_page extends Backend
 				}
 
 				// Initialize the version manager
-				$objVersions = new Versions('tl_page', $id);
+				$objVersions = new Contao\Versions('tl_page', $id);
 				$objVersions->initialize();
 
 				// Store the new alias
@@ -1722,9 +1722,9 @@ class tl_page extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Input::get('tid')))
+		if (\strlen(Contao\Input::get('tid')))
 		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -1741,28 +1741,28 @@ class tl_page extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		if (!$this->User->hasAccess($row['type'], 'alpty') || ($objPage = PageModel::findById($row['id'])) === null || !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))
+		if (!$this->User->hasAccess($row['type'], 'alpty') || ($objPage = Contao\PageModel::findById($row['id'])) === null || !$this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE, $objPage->row()))
 		{
-			return Image::getHtml($icon) . ' ';
+			return Contao\Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
+		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
 	}
 
 	/**
 	 * Disable/enable a user group
 	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
+	 * @param integer              $intId
+	 * @param boolean              $blnVisible
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
+		Contao\Input::setGet('id', $intId);
+		Contao\Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -1805,7 +1805,7 @@ class tl_page extends Backend
 			}
 		}
 
-		$objVersions = new Versions('tl_page', $intId);
+		$objVersions = new Contao\Versions('tl_page', $intId);
 		$objVersions->initialize();
 
 		// Trigger the save_callback

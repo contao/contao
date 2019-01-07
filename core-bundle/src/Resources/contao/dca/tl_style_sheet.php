@@ -213,7 +213,7 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_style_sheet extends Backend
+class tl_style_sheet extends Contao\Backend
 {
 
 	/**
@@ -249,7 +249,7 @@ class tl_style_sheet extends Backend
 	public function updateStyleSheet()
 	{
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		$session = $objSession->get('style_sheet_updater');
 
@@ -285,13 +285,13 @@ class tl_style_sheet extends Backend
 		}
 
 		// Return if there is no ID
-		if (!$id || Input::get('act') == 'copy')
+		if (!$id || Contao\Input::get('act') == 'copy')
 		{
 			return;
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		// Store the ID in the session
 		$session = $objSession->get('style_sheet_updater');
@@ -309,7 +309,7 @@ class tl_style_sheet extends Backend
 	public function listStyleSheet($row)
 	{
 		$cc = '';
-		$media = StringUtil::deserialize($row['media']);
+		$media = Contao\StringUtil::deserialize($row['media']);
 
 		if ($row['cc'] != '')
 		{
@@ -373,6 +373,6 @@ class tl_style_sheet extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_style_sheet') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_style_sheet') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 }

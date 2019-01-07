@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-System::loadLanguageFile('tl_user');
+Contao\System::loadLanguageFile('tl_user');
 
 $GLOBALS['TL_DCA']['tl_user_group'] = array
 (
@@ -184,7 +184,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'eval'                    => array('multiple'=>true),
 			'options_callback' => function ()
 			{
-				return System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+				return Contao\System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
 			},
 			'sql'                     => "blob NULL"
 		),
@@ -257,7 +257,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_user_group extends Backend
+class tl_user_group extends Contao\Backend
 {
 
 	/**
@@ -280,7 +280,7 @@ class tl_user_group extends Backend
 	public function addIcon($row, $label)
 	{
 		$image = 'group';
-		$time = Date::floorToMinute();
+		$time = Contao\Date::floorToMinute();
 
 		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
 
@@ -289,7 +289,7 @@ class tl_user_group extends Backend
 			$image .= '_';
 		}
 
-		return sprintf('<div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="%s.svg" data-icon-disabled="%s.svg">%s</div>', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl(), Backend::getTheme(), $image, $disabled ? $image : rtrim($image, '_'), rtrim($image, '_') . '_', $label);
+		return sprintf('<div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="%s.svg" data-icon-disabled="%s.svg">%s</div>', Contao\System::getContainer()->get('contao.assets.assets_context')->getStaticUrl(), Contao\Backend::getTheme(), $image, $disabled ? $image : rtrim($image, '_'), rtrim($image, '_') . '_', $label);
 	}
 
 	/**
@@ -332,7 +332,7 @@ class tl_user_group extends Backend
 		$processed = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
+		$files = Contao\System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
 
 		foreach ($files as $file)
 		{
@@ -345,7 +345,7 @@ class tl_user_group extends Backend
 
 			$strTable = $file->getBasename('.php');
 
-			System::loadLanguageFile($strTable);
+			Contao\System::loadLanguageFile($strTable);
 			$this->loadDataContainer($strTable);
 		}
 
@@ -366,7 +366,7 @@ class tl_user_group extends Backend
 
 					if ($vv['exclude'] || $vv['orig_exclude'])
 					{
-						$arrReturn[$k][StringUtil::specialchars($k.'::'.$kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span style="color:#999;padding-left:3px">[' . $kk . ']</span>' : $kk;
+						$arrReturn[$k][Contao\StringUtil::specialchars($k.'::'.$kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span style="color:#999;padding-left:3px">[' . $kk . ']</span>' : $kk;
 					}
 				}
 			}
@@ -391,9 +391,9 @@ class tl_user_group extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Input::get('tid')))
+		if (\strlen(Contao\Input::get('tid')))
 		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -410,23 +410,23 @@ class tl_user_group extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
 	}
 
 	/**
 	 * Disable/enable a user group
 	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
+	 * @param integer              $intId
+	 * @param boolean              $blnVisible
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
+		Contao\Input::setGet('id', $intId);
+		Contao\Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -469,7 +469,7 @@ class tl_user_group extends Backend
 			}
 		}
 
-		$objVersions = new Versions('tl_user_group', $intId);
+		$objVersions = new Contao\Versions('tl_user_group', $intId);
 		$objVersions->initialize();
 
 		// Reverse the logic (user groups have disable=1)

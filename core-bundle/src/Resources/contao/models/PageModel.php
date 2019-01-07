@@ -884,7 +884,7 @@ class PageModel extends Model
 		else
 		{
 			// Load all parent pages
-			$objParentPage = PageModel::findParentsById($pid);
+			$objParentPage = self::findParentsById($pid);
 
 			if ($objParentPage !== null)
 			{

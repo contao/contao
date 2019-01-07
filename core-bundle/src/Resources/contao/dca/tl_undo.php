@@ -117,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_undo extends Backend
+class tl_undo extends Contao\Backend
 {
 
 	/**
@@ -149,9 +149,9 @@ class tl_undo extends Backend
 		$GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root'] = $objSteps->numRows ? $objSteps->fetchEach('id') : array(0);
 
 		// Redirect if there is an error
-		if (Input::get('act') && !\in_array(Input::get('id'), $GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root']))
+		if (Contao\Input::get('act') && !\in_array(Contao\Input::get('id'), $GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root']))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' undo step ID ' . Input::get('id') . '.');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' undo step ID ' . Contao\Input::get('id') . '.');
 		}
 	}
 
@@ -163,12 +163,12 @@ class tl_undo extends Backend
 	 */
 	public function showDeletedRecords($data, $row)
 	{
-		$arrData = StringUtil::deserialize($row['data']);
+		$arrData = Contao\StringUtil::deserialize($row['data']);
 
 		foreach ($arrData as $strTable=>$arrTableData)
 		{
-			System::loadLanguageFile($strTable);
-			Controller::loadDataContainer($strTable);
+			Contao\System::loadLanguageFile($strTable);
+			Contao\Controller::loadDataContainer($strTable);
 
 			foreach ($arrTableData as $arrRow)
 			{
@@ -176,7 +176,7 @@ class tl_undo extends Backend
 
 				foreach ($arrRow as $i=>$v)
 				{
-					if (\is_array(StringUtil::deserialize($v)))
+					if (\is_array(Contao\StringUtil::deserialize($v)))
 					{
 						continue;
 					}

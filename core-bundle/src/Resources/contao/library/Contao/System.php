@@ -462,7 +462,7 @@ abstract class System
 			$GLOBALS['TL_LANG']['MSC']['deleteConfirm'] = str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['deleteConfirm']);
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = self::getContainer()->getParameter('kernel.project_dir');
 
 		// Local configuration file
 		if (file_exists($rootDir . '/system/config/langconfig.php'))
@@ -483,7 +483,7 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
-			$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+			$rootDir = self::getContainer()->getParameter('kernel.project_dir');
 
 			if (is_dir($rootDir . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
 			{
@@ -566,7 +566,7 @@ abstract class System
 
 		asort($arrAux);
 
-		$arrBackendLanguages = System::getContainer()->getParameter('contao.locales');
+		$arrBackendLanguages = self::getContainer()->getParameter('contao.locales');
 
 		foreach (array_keys($arrAux) as $strKey)
 		{
@@ -781,7 +781,7 @@ abstract class System
 	{
 		@trigger_error('Using System::readPhpFileWithoutTags() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\PhpFileLoader instead.', E_USER_DEPRECATED);
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = self::getContainer()->getParameter('kernel.project_dir');
 
 		// Convert to absolute path
 		if (strpos($strName, $rootDir . '/') === false)
@@ -810,7 +810,7 @@ abstract class System
 	{
 		@trigger_error('Using System::convertXlfToPhp() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\XliffFileLoader instead.', E_USER_DEPRECATED);
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = self::getContainer()->getParameter('kernel.project_dir');
 
 		// Convert to absolute path
 		if (strpos($strName, $rootDir . '/') === false)

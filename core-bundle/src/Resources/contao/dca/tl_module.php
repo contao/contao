@@ -458,7 +458,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => function ()
 			{
-				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+				return Contao\System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(Contao\BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -685,7 +685,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module extends Backend
+class tl_module extends Contao\Backend
 {
 
 	/**
@@ -744,7 +744,7 @@ class tl_module extends Backend
 	{
 		$return = array();
 
-		System::loadLanguageFile('tl_member');
+		Contao\System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
 		foreach ($GLOBALS['TL_DCA']['tl_member']['fields'] as $k=>$v)
@@ -798,7 +798,7 @@ class tl_module extends Backend
 
 		while ($objLayout->next())
 		{
-			$arrCustom = StringUtil::deserialize($objLayout->sections);
+			$arrCustom = Contao\StringUtil::deserialize($objLayout->sections);
 
 			// Add the custom layout sections
 			if (!empty($arrCustom) && \is_array($arrCustom))
@@ -813,7 +813,7 @@ class tl_module extends Backend
 			}
 		}
 
-		return Backend::convertLayoutSectionIdsToAssociativeArray($arrSections);
+		return Contao\Backend::convertLayoutSectionIdsToAssociativeArray($arrSections);
 	}
 
 	/**
@@ -829,11 +829,11 @@ class tl_module extends Backend
 	/**
 	 * Return all module templates as array
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getModuleTemplates(DataContainer $dc)
+	public function getModuleTemplates(Contao\DataContainer $dc)
 	{
 		return $this->getTemplateGroup('mod_' . $dc->activeRecord->type);
 	}
@@ -937,17 +937,17 @@ class tl_module extends Backend
 	/**
 	 * Dynamically add flags to the "multiSRC" field
 	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return mixed
 	 */
-	public function setMultiSrcFlags($varValue, DataContainer $dc)
+	public function setMultiSrcFlags($varValue, Contao\DataContainer $dc)
 	{
 		if ($dc->activeRecord && $dc->activeRecord->type == 'randomImage')
 		{
 			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['isGallery'] = true;
-			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
+			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Contao\Config::get('validImageTypes');
 		}
 
 		return $varValue;
@@ -956,12 +956,12 @@ class tl_module extends Backend
 	/**
 	 * Dynamically change attributes of the "pages" field
 	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return mixed
 	 */
-	public function setPagesFlags($varValue, DataContainer $dc)
+	public function setPagesFlags($varValue, Contao\DataContainer $dc)
 	{
 		if ($dc->activeRecord && $dc->activeRecord->type == 'search')
 		{

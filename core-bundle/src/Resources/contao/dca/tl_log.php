@@ -137,7 +137,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_log extends Backend
+class tl_log extends Contao\Backend
 {
 
 	/**

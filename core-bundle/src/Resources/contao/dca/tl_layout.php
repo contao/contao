@@ -498,7 +498,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_layout extends Backend
+class tl_layout extends Contao\Backend
 {
 
 	/**
@@ -531,17 +531,17 @@ class tl_layout extends Backend
 	/**
 	 * Return all style sheets of the current theme
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getStyleSheets(DataContainer $dc)
+	public function getStyleSheets(Contao\DataContainer $dc)
 	{
 		$intPid = $dc->activeRecord->pid;
 
-		if (Input::get('act') == 'overrideAll')
+		if (Contao\Input::get('act') == 'overrideAll')
 		{
-			$intPid = Input::get('id');
+			$intPid = Contao\Input::get('id');
 		}
 
 		$objStyleSheet = $this->Database->prepare("SELECT id, name FROM tl_style_sheet WHERE pid=?")
@@ -627,13 +627,13 @@ class tl_layout extends Backend
 	/**
 	 * Add a link to edit the stylesheets of the theme
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return string
 	 */
-	public function styleSheetLink(DataContainer $dc)
+	public function styleSheetLink(Contao\DataContainer $dc)
 	{
-		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])).'\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>';
+		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'title\':\''.Contao\StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])).'\',\'url\':this.href});return false">' . Contao\Image::getHtml('edit.svg') . '</a>';
 	}
 
 	/**
@@ -650,7 +650,7 @@ class tl_layout extends Backend
 			return '';
 		}
 
-		$array = StringUtil::deserialize($value);
+		$array = Contao\StringUtil::deserialize($value);
 
 		if (empty($array) || !\is_array($array))
 		{

@@ -258,7 +258,7 @@ class Folder extends System
 		// Create the parent folder if it does not exist
 		if (!is_dir($this->strRootDir . '/' . $strParent))
 		{
-			new Folder($strParent);
+			new self($strParent);
 		}
 
 		$return = $this->Files->rename($this->strFolder, $strNewName);
@@ -304,7 +304,7 @@ class Folder extends System
 		// Create the parent folder if it does not exist
 		if (!is_dir($this->strRootDir . '/' . $strParent))
 		{
-			new Folder($strParent);
+			new self($strParent);
 		}
 
 		$this->Files->rcopy($this->strFolder, $strNewName);
@@ -500,7 +500,7 @@ class Folder extends System
 
 			if (is_dir($this->strRootDir . '/' . $this->strFolder . '/' . $strFile))
 			{
-				$objFolder = new Folder($this->strFolder . '/' . $strFile);
+				$objFolder = new self($this->strFolder . '/' . $strFile);
 				$intSize += $objFolder->size;
 			}
 			else

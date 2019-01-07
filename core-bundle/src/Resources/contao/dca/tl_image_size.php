@@ -210,7 +210,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_image_size extends Backend
+class tl_image_size extends Contao\Backend
 {
 
 	/**
@@ -275,7 +275,7 @@ class tl_image_size extends Backend
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = Contao\System::getContainer()->get('session')->getBag('contao_backend');
 
 		$arrNew = $objSessionBag->get('new_records');
 
@@ -288,11 +288,11 @@ class tl_image_size extends Backend
 
 				while ($objGroup->next())
 				{
-					$arrThemes = StringUtil::deserialize($objGroup->themes);
+					$arrThemes = Contao\StringUtil::deserialize($objGroup->themes);
 
 					if (\is_array($arrThemes) && \in_array('image_sizes', $arrThemes))
 					{
-						$arrImageSizes = StringUtil::deserialize($objGroup->imageSizes, true);
+						$arrImageSizes = Contao\StringUtil::deserialize($objGroup->imageSizes, true);
 						$arrImageSizes[] = $insertId;
 
 						$this->Database->prepare("UPDATE tl_user_group SET imageSizes=? WHERE id=?")
@@ -308,11 +308,11 @@ class tl_image_size extends Backend
 										   ->limit(1)
 										   ->execute($this->User->id);
 
-				$arrThemes = StringUtil::deserialize($objUser->themes);
+				$arrThemes = Contao\StringUtil::deserialize($objUser->themes);
 
 				if (\is_array($arrThemes) && \in_array('image_sizes', $arrThemes))
 				{
-					$arrImageSizes = StringUtil::deserialize($objUser->imageSizes, true);
+					$arrImageSizes = Contao\StringUtil::deserialize($objUser->imageSizes, true);
 					$arrImageSizes[] = $insertId;
 
 					$this->Database->prepare("UPDATE tl_user SET imageSizes=? WHERE id=?")
@@ -358,7 +358,7 @@ class tl_image_size extends Backend
 	 */
 	public function showJsLibraryHint()
 	{
-		if ($_POST || Input::get('act') != 'edit')
+		if ($_POST || Contao\Input::get('act') != 'edit')
 		{
 			return;
 		}
@@ -369,8 +369,8 @@ class tl_image_size extends Backend
 			return;
 		}
 
-		System::loadLanguageFile('tl_layout');
-		Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_image_size']['picturefill'], $GLOBALS['TL_LANG']['tl_layout']['picturefill'][0]));
+		Contao\System::loadLanguageFile('tl_layout');
+		Contao\Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_image_size']['picturefill'], $GLOBALS['TL_LANG']['tl_layout']['picturefill'][0]));
 	}
 
 	/**
@@ -387,6 +387,6 @@ class tl_image_size extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_image_size') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_image_size') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 }

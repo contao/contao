@@ -52,7 +52,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'inputType'               => 'select',
 			'options_callback' => function ()
 			{
-				return System::getTimeZones();
+				return Contao\System::getTimeZones();
 			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50')
 		),

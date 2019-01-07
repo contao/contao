@@ -33,10 +33,10 @@ $GLOBALS['BE_MOD'] = array
 		'themes' => array
 		(
 			'tables'      => array('tl_theme', 'tl_module', 'tl_style_sheet', 'tl_style', 'tl_layout', 'tl_image_size', 'tl_image_size_item'),
-			'importTheme' => array('Theme', 'importTheme'),
-			'exportTheme' => array('Theme', 'exportTheme'),
-			'import'      => array('StyleSheets', 'importStyleSheet'),
-			'export'      => array('StyleSheets', 'exportStyleSheet')
+			'importTheme' => array('Contao\Theme', 'importTheme'),
+			'exportTheme' => array('Contao\Theme', 'exportTheme'),
+			'import'      => array('Contao\StyleSheets', 'importStyleSheet'),
+			'export'      => array('Contao\StyleSheets', 'exportStyleSheet')
 		),
 		'page' => array
 		(
@@ -96,7 +96,7 @@ $GLOBALS['BE_MOD'] = array
 		),
 		'maintenance' => array
 		(
-			'callback'                => 'ModuleMaintenance'
+			'callback'                => 'Contao\ModuleMaintenance'
 		),
 		'undo' => array
 		(
@@ -120,36 +120,36 @@ $GLOBALS['FE_MOD'] = array
 (
 	'navigationMenu' => array
 	(
-		'navigation'     => 'ModuleNavigation',
-		'customnav'      => 'ModuleCustomnav',
-		'breadcrumb'     => 'ModuleBreadcrumb',
-		'quicknav'       => 'ModuleQuicknav',
-		'quicklink'      => 'ModuleQuicklink',
-		'booknav'        => 'ModuleBooknav',
-		'articlenav'     => 'ModuleArticlenav',
-		'sitemap'        => 'ModuleSitemap'
+		'navigation'     => 'Contao\ModuleNavigation',
+		'customnav'      => 'Contao\ModuleCustomnav',
+		'breadcrumb'     => 'Contao\ModuleBreadcrumb',
+		'quicknav'       => 'Contao\ModuleQuicknav',
+		'quicklink'      => 'Contao\ModuleQuicklink',
+		'booknav'        => 'Contao\ModuleBooknav',
+		'articlenav'     => 'Contao\ModuleArticlenav',
+		'sitemap'        => 'Contao\ModuleSitemap'
 	),
 	'user' => array
 	(
-		'login'          => 'ModuleLogin',
-		'logout'         => 'ModuleLogout',
-		'personalData'   => 'ModulePersonalData',
-		'registration'   => 'ModuleRegistration',
-		'changePassword' => 'ModuleChangePassword',
-		'lostPassword'   => 'ModulePassword',
-		'closeAccount'   => 'ModuleCloseAccount'
+		'login'          => 'Contao\ModuleLogin',
+		'logout'         => 'Contao\ModuleLogout',
+		'personalData'   => 'Contao\ModulePersonalData',
+		'registration'   => 'Contao\ModuleRegistration',
+		'changePassword' => 'Contao\ModuleChangePassword',
+		'lostPassword'   => 'Contao\ModulePassword',
+		'closeAccount'   => 'Contao\ModuleCloseAccount'
 	),
 	'application' => array
 	(
-		'form'           => 'Form',
-		'search'         => 'ModuleSearch'
+		'form'           => 'Contao\Form',
+		'search'         => 'Contao\ModuleSearch'
 	),
 	'miscellaneous' => array
 	(
-		'articlelist'    => 'ModuleArticleList',
-		'randomImage'    => 'ModuleRandomImage',
-		'html'           => 'ModuleHtml',
-		'rssReader'      => 'ModuleRssReader'
+		'articlelist'    => 'Contao\ModuleArticleList',
+		'randomImage'    => 'Contao\ModuleRandomImage',
+		'html'           => 'Contao\ModuleHtml',
+		'rssReader'      => 'Contao\ModuleRssReader'
 	)
 );
 
@@ -158,122 +158,122 @@ $GLOBALS['TL_CTE'] = array
 (
 	'texts' => array
 	(
-		'headline'        => 'ContentHeadline',
-		'text'            => 'ContentText',
-		'html'            => 'ContentHtml',
-		'list'            => 'ContentList',
-		'table'           => 'ContentTable',
-		'code'            => 'ContentCode',
-		'markdown'        => 'ContentMarkdown'
+		'headline'        => 'Contao\ContentHeadline',
+		'text'            => 'Contao\ContentText',
+		'html'            => 'Contao\ContentHtml',
+		'list'            => 'Contao\ContentList',
+		'table'           => 'Contao\ContentTable',
+		'code'            => 'Contao\ContentCode',
+		'markdown'        => 'Contao\ContentMarkdown'
 	),
 	'accordion' => array
 	(
-		'accordionSingle' => 'ContentAccordion',
-		'accordionStart'  => 'ContentAccordionStart',
-		'accordionStop'   => 'ContentAccordionStop'
+		'accordionSingle' => 'Contao\ContentAccordion',
+		'accordionStart'  => 'Contao\ContentAccordionStart',
+		'accordionStop'   => 'Contao\ContentAccordionStop'
 	),
 	'slider' => array
 	(
-		'sliderStart'     => 'ContentSliderStart',
-		'sliderStop'      => 'ContentSliderStop'
+		'sliderStart'     => 'Contao\ContentSliderStart',
+		'sliderStop'      => 'Contao\ContentSliderStop'
 	),
 	'links' => array
 	(
-		'hyperlink'       => 'ContentHyperlink',
-		'toplink'         => 'ContentToplink'
+		'hyperlink'       => 'Contao\ContentHyperlink',
+		'toplink'         => 'Contao\ContentToplink'
 	),
 	'media' => array
 	(
-		'image'           => 'ContentImage',
-		'gallery'         => 'ContentGallery',
-		'player'          => 'ContentMedia',
-		'youtube'         => 'ContentYouTube',
-		'vimeo'           => 'ContentVimeo'
+		'image'           => 'Contao\ContentImage',
+		'gallery'         => 'Contao\ContentGallery',
+		'player'          => 'Contao\ContentMedia',
+		'youtube'         => 'Contao\ContentYouTube',
+		'vimeo'           => 'Contao\ContentVimeo'
 	),
 	'files' => array
 	(
-		'download'        => 'ContentDownload',
-		'downloads'       => 'ContentDownloads'
+		'download'        => 'Contao\ContentDownload',
+		'downloads'       => 'Contao\ContentDownloads'
 	),
 	'includes' => array
 	(
-		'article'         => 'ContentArticle',
-		'alias'           => 'ContentAlias',
-		'form'            => 'Form',
-		'module'          => 'ContentModule',
-		'teaser'          => 'ContentTeaser'
+		'article'         => 'Contao\ContentArticle',
+		'alias'           => 'Contao\ContentAlias',
+		'form'            => 'Contao\Form',
+		'module'          => 'Contao\ContentModule',
+		'teaser'          => 'Contao\ContentTeaser'
 	)
 );
 
 // Back end form fields
 $GLOBALS['BE_FFL'] = array
 (
-	'text'           => 'TextField',
-	'password'       => 'Password',
-	'textStore'      => 'TextStore',
-	'textarea'       => 'TextArea',
-	'select'         => 'SelectMenu',
-	'checkbox'       => 'CheckBox',
-	'checkboxWizard' => 'CheckBoxWizard',
-	'radio'          => 'RadioButton',
-	'radioTable'     => 'RadioTable',
-	'inputUnit'      => 'InputUnit',
-	'trbl'           => 'TrblField',
-	'chmod'          => 'ChmodTable',
-	'pageTree'       => 'PageTree',
-	'pageSelector'   => 'PageSelector',
-	'fileTree'       => 'FileTree',
-	'fileSelector'   => 'FileSelector',
-	'fileUpload'     => 'Upload',
-	'tableWizard'    => 'TableWizard',
-	'listWizard'     => 'ListWizard',
-	'optionWizard'   => 'OptionWizard',
-	'moduleWizard'   => 'ModuleWizard',
-	'keyValueWizard' => 'KeyValueWizard',
-	'imageSize'      => 'ImageSize',
-	'timePeriod'     => 'TimePeriod',
-	'metaWizard'     => 'MetaWizard',
-	'sectionWizard'  => 'SectionWizard'
+	'text'           => 'Contao\TextField',
+	'password'       => 'Contao\Password',
+	'textStore'      => 'Contao\TextStore',
+	'textarea'       => 'Contao\TextArea',
+	'select'         => 'Contao\SelectMenu',
+	'checkbox'       => 'Contao\CheckBox',
+	'checkboxWizard' => 'Contao\CheckBoxWizard',
+	'radio'          => 'Contao\RadioButton',
+	'radioTable'     => 'Contao\RadioTable',
+	'inputUnit'      => 'Contao\InputUnit',
+	'trbl'           => 'Contao\TrblField',
+	'chmod'          => 'Contao\ChmodTable',
+	'pageTree'       => 'Contao\PageTree',
+	'pageSelector'   => 'Contao\PageSelector',
+	'fileTree'       => 'Contao\FileTree',
+	'fileSelector'   => 'Contao\FileSelector',
+	'fileUpload'     => 'Contao\Upload',
+	'tableWizard'    => 'Contao\TableWizard',
+	'listWizard'     => 'Contao\ListWizard',
+	'optionWizard'   => 'Contao\OptionWizard',
+	'moduleWizard'   => 'Contao\ModuleWizard',
+	'keyValueWizard' => 'Contao\KeyValueWizard',
+	'imageSize'      => 'Contao\ImageSize',
+	'timePeriod'     => 'Contao\TimePeriod',
+	'metaWizard'     => 'Contao\MetaWizard',
+	'sectionWizard'  => 'Contao\SectionWizard'
 );
 
 // Front end form fields
 $GLOBALS['TL_FFL'] = array
 (
-    'explanation'   => 'FormExplanation',
-    'html'          => 'FormHtml',
-    'fieldsetStart' => 'FormFieldsetStart',
-    'fieldsetStop'  => 'FormFieldsetStop',
-    'text'          => 'FormTextField',
-    'password'      => 'FormPassword',
-    'textarea'      => 'FormTextArea',
-    'select'        => 'FormSelectMenu',
-    'radio'         => 'FormRadioButton',
-    'checkbox'      => 'FormCheckBox',
-    'upload'        => 'FormFileUpload',
-    'hidden'        => 'FormHidden',
-    'captcha'       => 'FormCaptcha',
-    'submit'        => 'FormSubmit',
+    'explanation'   => 'Contao\FormExplanation',
+    'html'          => 'Contao\FormHtml',
+    'fieldsetStart' => 'Contao\FormFieldsetStart',
+    'fieldsetStop'  => 'Contao\FormFieldsetStop',
+    'text'          => 'Contao\FormTextField',
+    'password'      => 'Contao\FormPassword',
+    'textarea'      => 'Contao\FormTextArea',
+    'select'        => 'Contao\FormSelectMenu',
+    'radio'         => 'Contao\FormRadioButton',
+    'checkbox'      => 'Contao\FormCheckBox',
+    'upload'        => 'Contao\FormFileUpload',
+    'hidden'        => 'Contao\FormHidden',
+    'captcha'       => 'Contao\FormCaptcha',
+    'submit'        => 'Contao\FormSubmit',
 );
 
 // Page types
 $GLOBALS['TL_PTY'] = array
 (
-	'regular'   => 'PageRegular',
-	'forward'   => 'PageForward',
-	'redirect'  => 'PageRedirect',
-	'root'      => 'PageRoot',
-	'logout'    => 'PageLogout',
-	'error_401' => 'PageError401',
-	'error_403' => 'PageError403',
-	'error_404' => 'PageError404'
+	'regular'   => 'Contao\PageRegular',
+	'forward'   => 'Contao\PageForward',
+	'redirect'  => 'Contao\PageRedirect',
+	'root'      => 'Contao\PageRoot',
+	'logout'    => 'Contao\PageLogout',
+	'error_401' => 'Contao\PageError401',
+	'error_403' => 'Contao\PageError403',
+	'error_404' => 'Contao\PageError404'
 );
 
 // Maintenance
 $GLOBALS['TL_MAINTENANCE'] = array
 (
-	'Maintenance',
-	'RebuildIndex',
-	'PurgeData'
+	'Contao\Maintenance',
+	'Contao\RebuildIndex',
+	'Contao\PurgeData'
 );
 
 // Purge jobs
@@ -283,22 +283,22 @@ $GLOBALS['TL_PURGE'] = array
 	(
 		'index' => array
 		(
-			'callback' => array('Automator', 'purgeSearchTables'),
+			'callback' => array('Contao\Automator', 'purgeSearchTables'),
 			'affected' => array('tl_search', 'tl_search_index')
 		),
 		'undo' => array
 		(
-			'callback' => array('Automator', 'purgeUndoTable'),
+			'callback' => array('Contao\Automator', 'purgeUndoTable'),
 			'affected' => array('tl_undo')
 		),
 		'versions' => array
 		(
-			'callback' => array('Automator', 'purgeVersionTable'),
+			'callback' => array('Contao\Automator', 'purgeVersionTable'),
 			'affected' => array('tl_version')
 		),
 		'log' => array
 		(
-			'callback' => array('Automator', 'purgeSystemLog'),
+			'callback' => array('Contao\Automator', 'purgeSystemLog'),
 			'affected' => array('tl_log')
 		)
 	),
@@ -306,27 +306,27 @@ $GLOBALS['TL_PURGE'] = array
 	(
 		'images' => array
 		(
-			'callback' => array('Automator', 'purgeImageCache'),
-			'affected' => array(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.image.target_dir')))
+			'callback' => array('Contao\Automator', 'purgeImageCache'),
+			'affected' => array(Contao\StringUtil::stripRootDir(Contao\System::getContainer()->getParameter('contao.image.target_dir')))
 		),
 		'scripts' => array
 		(
-			'callback' => array('Automator', 'purgeScriptCache'),
+			'callback' => array('Contao\Automator', 'purgeScriptCache'),
 			'affected' => array('assets/js', 'assets/css')
 		),
 		'pages' => array
 		(
-			'callback' => array('Automator', 'purgePageCache'),
+			'callback' => array('Contao\Automator', 'purgePageCache'),
 			'affected' => array('%s/http_cache')
 		),
 		'search' => array
 		(
-			'callback' => array('Automator', 'purgeSearchCache'),
+			'callback' => array('Contao\Automator', 'purgeSearchCache'),
 			'affected' => array('%s/contao/search')
 		),
 		'temp' => array
 		(
-			'callback' => array('Automator', 'purgeTempFolder'),
+			'callback' => array('Contao\Automator', 'purgeTempFolder'),
 			'affected' => array('system/tmp')
 		)
 	),
@@ -334,11 +334,11 @@ $GLOBALS['TL_PURGE'] = array
 	(
 		'xml' => array
 		(
-			'callback' => array('Automator', 'generateXmlFiles')
+			'callback' => array('Contao\Automator', 'generateXmlFiles')
 		),
 		'symlinks' => array
 		(
-			'callback' => array('Automator', 'generateSymlinks')
+			'callback' => array('Contao\Automator', 'generateSymlinks')
 		)
 	)
 );
@@ -370,11 +370,11 @@ $GLOBALS['TL_CRON'] = array
 	'weekly' => array(),
 	'daily' => array
 	(
-		'purgeTempFolder' => array('Automator', 'purgeTempFolder'),
-		'purgeSearchCache' => array('Automator', 'purgeSearchCache'),
-		'generateSitemap' => array('Automator', 'generateSitemap'),
-		'purgeRegistrations' => array('Automator', 'purgeRegistrations'),
-		'purgeOptInTokens' => array('Automator', 'purgeOptInTokens')
+		'purgeTempFolder' => array('Contao\Automator', 'purgeTempFolder'),
+		'purgeSearchCache' => array('Contao\Automator', 'purgeSearchCache'),
+		'generateSitemap' => array('Contao\Automator', 'generateSitemap'),
+		'purgeRegistrations' => array('Contao\Automator', 'purgeRegistrations'),
+		'purgeOptInTokens' => array('Contao\Automator', 'purgeOptInTokens')
 	),
 	'hourly' => array(),
 	'minutely' => array()
@@ -385,8 +385,8 @@ $GLOBALS['TL_HOOKS'] = array
 (
 	'getSystemMessages' => array
 	(
-		array('Messages', 'maintenanceCheck'),
-		array('Messages', 'languageFallback')
+		array('Contao\Messages', 'maintenanceCheck'),
+		array('Contao\Messages', 'languageFallback')
 	)
 );
 
