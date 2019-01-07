@@ -221,7 +221,7 @@ EOF
         $container = $this->mockContainer();
         $container->set('assets.packages', $packages);
 
-        \System::setContainer($container);
+        System::setContainer($container);
 
         $template = new FrontendTemplate();
         $template->asset('/path/to/asset', 'package_name');

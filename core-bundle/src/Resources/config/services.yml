@@ -130,7 +130,6 @@ services:
     contao.framework:
         class: Contao\CoreBundle\Framework\ContaoFramework
         arguments:
-            - ~
             - "@router"
             - "@contao.routing.scope_matcher"
             - "%kernel.project_dir%"
@@ -349,6 +348,7 @@ services:
         class: Contao\CoreBundle\Routing\Enhancer\InputEnhancer
         arguments:
             - "@contao.framework"
+            - "%contao.prepend_locale%"
 
     contao.routing.legacy_matcher:
         class: Contao\CoreBundle\Routing\Matcher\LegacyMatcher
@@ -356,6 +356,8 @@ services:
         arguments:
             - "@contao.framework"
             - "@contao.routing.legacy_matcher.inner"
+            - "%contao.url_suffix%"
+            - "%contao.prepend_locale%"
 
     contao.routing.legacy_route_provider:
         class: Contao\CoreBundle\Routing\LegacyRouteProvider
@@ -370,7 +372,7 @@ services:
             - "@contao.routing.route_provider"
             - "@contao.routing.final_matcher"
         calls:
-            - [addRouteFilter, ["@contao.routing.publishing_filter"]]
+            - ["addRouteFilter", ["@contao.routing.publishing_filter"]]
         public: true
 
     contao.routing.page_router:
@@ -383,7 +385,7 @@ services:
             - "@event_dispatcher"
             - "@contao.routing.route_provider"
         calls:
-            - [addRouteEnhancer, ["@contao.routing.input_enhancer"]]
+            - ["addRouteEnhancer", ["@contao.routing.input_enhancer"]]
         tags:
             - { name: router, priority: 20 }
 
@@ -403,7 +405,8 @@ services:
         arguments:
             - "@contao.framework"
             - "@database_connection"
-            - ~
+            - "%contao.url_suffix%"
+            - "%contao.prepend_locale%"
 
     contao.routing.scope_matcher:
         class: Contao\CoreBundle\Routing\ScopeMatcher

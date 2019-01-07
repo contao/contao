@@ -338,7 +338,6 @@ class ContaoFrameworkTest extends TestCase
         $request->request->set('REQUEST_TOKEN', 'invalid');
 
         $framework = new ContaoFramework(
-            null,
             $this->mockRouter('/contao/login'),
             $this->mockScopeMatcher(),
             $this->getTempDir(),
@@ -376,7 +375,6 @@ class ContaoFrameworkTest extends TestCase
         $request->headers->set('X-Requested-With', 'XMLHttpRequest');
 
         $framework = new ContaoFramework(
-            null,
             $this->mockRouter('/contao/login'),
             $this->mockScopeMatcher(),
             $this->getTempDir(),
@@ -414,7 +412,6 @@ class ContaoFrameworkTest extends TestCase
         $request->request->set('REQUEST_TOKEN', 'foobar');
 
         $framework = new ContaoFramework(
-            null,
             $this->mockRouter('/contao/login'),
             $this->mockScopeMatcher(),
             $this->getTempDir(),
@@ -458,7 +455,6 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_route', 'dummy');
 
         $framework = new ContaoFramework(
-            null,
             $this->mockRouter('/contao/login'),
             $this->mockScopeMatcher(),
             $this->getTempDir(),
@@ -495,7 +491,6 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_route', $route);
 
         $framework = new ContaoFramework(
-            null,
             $this->mockRouter('/contao/login'),
             $this->mockScopeMatcher(),
             $this->getTempDir(),
@@ -749,7 +744,6 @@ class ContaoFrameworkTest extends TestCase
     private function mockFramework(RouterInterface $router = null, Request $request = null, ScopeMatcher $scopeMatcher = null): ContaoFramework
     {
         $framework = new ContaoFramework(
-            null,
             $router ?? $this->mockRouter('/'),
             $scopeMatcher ?? $this->mockScopeMatcher(),
             $this->getTempDir(),

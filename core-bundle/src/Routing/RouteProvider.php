@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Model;
 use Contao\Model\Collection;
@@ -40,21 +39,21 @@ class RouteProvider implements RouteProviderInterface
     private $database;
 
     /**
-     * @var PageModel|Adapter
+     * @var string
      */
-    private $pageAdapter;
+    private $urlSuffix;
 
     /**
-     * @var Config|Adapter
+     * @var bool
      */
-    private $configAdapter;
+    private $prependLocale;
 
-    public function __construct(ContaoFrameworkInterface $framework, Connection $database)
+    public function __construct(ContaoFrameworkInterface $framework, Connection $database, string $urlSuffix, bool $prependLocale)
     {
         $this->framework = $framework;
         $this->database = $database;
-        $this->pageAdapter = $framework->getAdapter(PageModel::class);
-        $this->configAdapter = $framework->getAdapter(Config::class);
+        $this->urlSuffix = $urlSuffix;
+        $this->prependLocale = $prependLocale;
     }
 
     /**
@@ -63,6 +62,7 @@ class RouteProvider implements RouteProviderInterface
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         $this->framework->initialize();
+
         $pathInfo = rawurldecode($request->getPathInfo());
 
         // The request string must not contain "auto_item" (see #4012)
@@ -70,12 +70,9 @@ class RouteProvider implements RouteProviderInterface
             return new RouteCollection();
         }
 
-        if (
-            '/' === $pathInfo
-            || ($this->configAdapter->get('addLanguageToUrl') && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))
-        ) {
-            $routes = [];
+        $routes = [];
 
+        if ('/' === $pathInfo || ($this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))) {
             $this->addRoutesForRootPages($this->findRootPages(), $routes);
 
             return $this->createCollectionForRoutes($routes, $request->getLanguages());
@@ -87,7 +84,6 @@ class RouteProvider implements RouteProviderInterface
             return new RouteCollection();
         }
 
-        $routes = [];
         $candidates = $this->getAliasCandidates($pathInfo);
         $pages = $this->findPages($candidates);
 
@@ -109,12 +105,15 @@ class RouteProvider implements RouteProviderInterface
             throw new RouteNotFoundException('Route name does not match a page ID');
         }
 
-        $routes = [];
-        $page = $this->pageAdapter->findByPk($ids[0]);
+        /** @var PageModel $pageModel */
+        $pageModel = $this->framework->getAdapter(PageModel::class);
+        $page = $pageModel->findByPk($ids[0]);
 
         if (null === $page) {
             throw new RouteNotFoundException(sprintf('Page ID "%s" not found', $ids[0]));
         }
+
+        $routes = [];
 
         $this->addRoutesForPage($page, $routes);
 
@@ -128,17 +127,13 @@ class RouteProvider implements RouteProviderInterface
     {
         $this->framework->initialize();
 
+        /** @var PageModel $pageModel */
+        $pageModel = $this->framework->getAdapter(PageModel::class);
+
         if (null === $names) {
-            $pages = $this->pageAdapter->findAll();
+            $pages = $pageModel->findAll();
         } else {
-            $ids = $this->getPageIdsFromNames($names);
-
-            if (empty($ids)) {
-                return [];
-            }
-
-            $table = $this->pageAdapter->getTable();
-            $pages = $this->pageAdapter->findBy("$table.id IN (".implode(',', $ids).')', []);
+            $pages = $pageModel->findMultipleByIds($this->getPageIdsFromNames($names));
         }
 
         if (!$pages instanceof Collection) {
@@ -155,11 +150,10 @@ class RouteProvider implements RouteProviderInterface
 
     private function removeSuffixAndLanguage(string $pathInfo): ?string
     {
-        $urlSuffix = $this->configAdapter->get('urlSuffix');
-        $suffixLength = \strlen($urlSuffix);
+        $suffixLength = \strlen($this->urlSuffix);
 
         if (0 !== $suffixLength) {
-            if (substr($pathInfo, -$suffixLength) !== $urlSuffix) {
+            if (substr($pathInfo, -$suffixLength) !== $this->urlSuffix) {
                 return null;
             }
 
@@ -170,7 +164,7 @@ class RouteProvider implements RouteProviderInterface
             $pathInfo = substr($pathInfo, 1);
         }
 
-        if ($this->configAdapter->get('addLanguageToUrl')) {
+        if ($this->prependLocale) {
             $matches = [];
 
             if (!preg_match('@^([a-z]{2}(-[A-Z]{2})?)/(.+)$@', $pathInfo, $matches)) {
@@ -196,7 +190,10 @@ class RouteProvider implements RouteProviderInterface
             return [$pathInfo];
         }
 
-        if (!$this->configAdapter->get('folderUrl')) {
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
+
+        if (!$config->get('folderUrl')) {
             return [substr($pathInfo, 0, $pos)];
         }
 
@@ -253,16 +250,16 @@ class RouteProvider implements RouteProviderInterface
 
         $defaults = $this->getRouteDefaults($page);
         $defaults['parameters'] = '';
-        $requirements = ['parameters' => '(/.+)?'];
-        $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->configAdapter->get('urlSuffix'));
-        $table = $this->pageAdapter->getTable();
 
-        if ($this->configAdapter->get('addLanguageToUrl')) {
+        $requirements = ['parameters' => '(/.+)?'];
+        $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->urlSuffix);
+
+        if ($this->prependLocale) {
             $path = '/{_locale}'.$path;
             $requirements['_locale'] = $page->rootLanguage;
         }
 
-        $routes[$table.'.'.$page->id] = new Route(
+        $routes['tl_page.'.$page->id] = new Route(
             $path,
             $defaults,
             $requirements,
@@ -285,14 +282,13 @@ class RouteProvider implements RouteProviderInterface
         $path = '/';
         $requirements = [];
         $defaults = $this->getRouteDefaults($page);
-        $table = $this->pageAdapter->getTable();
 
-        if ($this->configAdapter->get('addLanguageToUrl')) {
+        if ($this->prependLocale) {
             $path = '/{_locale}'.$path;
             $requirements['_locale'] = $page->rootLanguage;
         }
 
-        $routes[$table.'.'.$page->id.'.root'] = new Route(
+        $routes['tl_page.'.$page->id.'.root'] = new Route(
             $path,
             $defaults,
             $requirements,
@@ -301,22 +297,27 @@ class RouteProvider implements RouteProviderInterface
             null
         );
 
-        if ($page->rootIsFallback && $this->configAdapter->get('addLanguageToUrl')) {
-            if (!$this->configAdapter->get('doNotRedirectEmpty')) {
-                $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
-                $defaults['path'] = '/'.$page->language.'/';
-                $defaults['permanent'] = true;
-            }
-
-            $routes[$table.'.'.$page->id.'.fallback'] = new Route(
-                '/',
-                $defaults,
-                [],
-                [],
-                $page->domain,
-                null
-            );
+        if (!$page->rootIsFallback || !$this->prependLocale) {
+            return;
         }
+
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
+
+        if (!$config->get('doNotRedirectEmpty')) {
+            $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
+            $defaults['path'] = '/'.$page->language.'/';
+            $defaults['permanent'] = true;
+        }
+
+        $routes['tl_page.'.$page->id.'.fallback'] = new Route(
+            '/',
+            $defaults,
+            [],
+            [],
+            $page->domain,
+            null
+        );
     }
 
     /**
@@ -339,10 +340,9 @@ class RouteProvider implements RouteProviderInterface
     private function getPageIdsFromNames(array $names): array
     {
         $ids = [];
-        $table = $this->pageAdapter->getTable();
 
         foreach ($names as $name) {
-            if (0 !== strncmp($name, $table.'.', 8)) {
+            if (0 !== strncmp($name, 'tl_page.', 8)) {
                 continue;
             }
 
@@ -444,18 +444,19 @@ class RouteProvider implements RouteProviderInterface
             }
         }
 
-        $table = $this->pageAdapter->getTable();
         $conditions = [];
 
         if (!empty($ids)) {
-            $conditions[] = $table.'.id IN ('.implode(',', $ids).')';
+            $conditions[] = 'tl_page.id IN ('.implode(',', $ids).')';
         }
 
         if (!empty($aliases)) {
-            $conditions[] = $table.'.alias IN ('.implode(',', $aliases).')';
+            $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
         }
 
-        $pages = $this->pageAdapter->findBy([implode(' OR ', $conditions)], []);
+        /** @var PageModel $pageModel */
+        $pageModel = $this->framework->getAdapter(PageModel::class);
+        $pages = $pageModel->findBy([implode(' OR ', $conditions)], []);
 
         if ($pages instanceof Collection) {
             return $pages->getModels();
@@ -473,11 +474,11 @@ class RouteProvider implements RouteProviderInterface
             !empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
             && \is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
         ) {
-            /** @var System $systemAdapter */
-            $systemAdapter = $this->framework->getAdapter(System::class);
+            /** @var System $system */
+            $system = $this->framework->getAdapter(System::class);
 
             foreach ($GLOBALS['TL_HOOKS']['getRootPageFromUrl'] as $callback) {
-                $page = $systemAdapter->importStatic($callback[0])->{$callback[1]}();
+                $page = $system->importStatic($callback[0])->{$callback[1]}();
 
                 if ($page instanceof PageModel) {
                     return [$page];
@@ -485,9 +486,11 @@ class RouteProvider implements RouteProviderInterface
             }
         }
 
+        /** @var PageModel $pageModel */
+        $pageModel = $this->framework->getAdapter(PageModel::class);
+
         // Include pages with alias "index" or "/" (see #8498, #8560 and #1210)
-        $table = $this->pageAdapter->getTable();
-        $pages = $this->pageAdapter->findBy(["$table.type='root' OR $table.alias='index' OR $table.alias='/'"], []);
+        $pages = $pageModel->findBy(["tl_page.type='root' OR tl_page.alias='index' OR tl_page.alias='/'"], []);
 
         if ($pages instanceof Collection) {
             return $pages->getModels();

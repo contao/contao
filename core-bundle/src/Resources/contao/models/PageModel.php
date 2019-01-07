@@ -518,13 +518,9 @@ class PageModel extends Model
 	 * @param array $arrOptions An optional options array
 	 *
 	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
-	 *
-	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0.
 	 */
 	public static function findByAliases($arrAliases, array $arrOptions=array())
 	{
-		@trigger_error('Using PageModel::findByAliases() has been deprecated and will no longer work Contao 5.0.', E_USER_DEPRECATED);
-
 		if (empty($arrAliases) || !\is_array($arrAliases))
 		{
 			return null;
@@ -564,13 +560,9 @@ class PageModel extends Model
 	 * @param array $arrOptions An optional options array
 	 *
 	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
-	 *
-	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0.
 	 */
 	public static function findPublishedByIdOrAlias($varId, array $arrOptions=array())
 	{
-		@trigger_error('Using PageModel::findPublishedByIdOrAlias() has been deprecated and will no longer work Contao 5.0.', E_USER_DEPRECATED);
-
 		$t = static::$strTable;
 		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("$t.alias=?") : array("$t.id=?");
 
@@ -720,13 +712,9 @@ class PageModel extends Model
 	 * @param array $arrOptions An optional options array
 	 *
 	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no parent pages
-	 *
-	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0.
 	 */
 	public static function findPublishedRootPages(array $arrOptions=array())
 	{
-		@trigger_error('Using PageModel::findPublishedRootPages() has been deprecated and will no longer work Contao 5.0.', E_USER_DEPRECATED);
-
 		$t = static::$strTable;
 		$arrColumns = array("$t.type=?");
 

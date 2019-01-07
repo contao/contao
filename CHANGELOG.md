@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Use the Symfony CMF router (see #95).
  * Increase the back end preview image dimensions (see #246).
  * Add the "contao.slug" service (see #222).
  * Add the "contao.opt-in" service (see #196).

@@ -21,11 +21,6 @@ use Symfony\Component\Finder\SplFileInfo;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * @var bool
-     */
-    private $debug;
-
-    /**
      * @var string
      */
     private $projectDir;
@@ -35,9 +30,8 @@ class Configuration implements ConfigurationInterface
      */
     private $defaultLocale;
 
-    public function __construct(bool $debug, string $projectDir, string $defaultLocale)
+    public function __construct(string $projectDir, string $defaultLocale)
     {
-        $this->debug = $debug;
         $this->projectDir = $projectDir;
         $this->defaultLocale = $defaultLocale;
     }

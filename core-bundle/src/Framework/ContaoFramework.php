@@ -25,7 +25,6 @@ use Contao\TemplateLoader;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -75,15 +74,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
-    /**
-     * @param RequestStack|null $requestStack Deprecated since Contao 4.7, to be removed in Contao 5.0
-     */
-    public function __construct(?RequestStack $requestStack, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
+    public function __construct(RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
     {
-        if (null !== $requestStack) {
-            @trigger_error('Injecting the request stack in the Contao framework is no longer supported since Contao 4.7. Use ContaoFramework::setRequest() instead.', E_USER_DEPRECATED);
-        }
-
         $this->router = $router;
         $this->scopeMatcher = $scopeMatcher;
         $this->rootDir = $rootDir;

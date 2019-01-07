@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Enhancer;
 
 use Contao\Config;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Input;
 use Contao\PageModel;
@@ -29,20 +28,14 @@ class InputEnhancer implements RouteEnhancerInterface
     private $framework;
 
     /**
-     * @var Input|Adapter
+     * @var bool
      */
-    private $inputAdapter;
+    private $prependLocale;
 
-    /**
-     * @var Config|Adapter
-     */
-    private $configAdapter;
-
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFrameworkInterface $framework, bool $prependLocale)
     {
         $this->framework = $framework;
-        $this->inputAdapter = $framework->getAdapter(Input::class);
-        $this->configAdapter = $framework->getAdapter(Config::class);
+        $this->prependLocale = $prependLocale;
     }
 
     /**
@@ -56,18 +49,23 @@ class InputEnhancer implements RouteEnhancerInterface
 
         $this->framework->initialize();
 
-        if (!empty($defaults['_locale']) && $this->configAdapter->get('addLanguageToUrl')) {
-            $this->inputAdapter->setGet('language', $defaults['_locale']);
+        /** @var Input $input */
+        $input = $this->framework->getAdapter(Input::class);
+
+        if ($this->prependLocale && !empty($defaults['_locale'])) {
+            $input->setGet('language', $defaults['_locale']);
         }
 
         if (empty($defaults['parameters'])) {
             return $defaults;
         }
 
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
         $fragments = explode('/', substr($defaults['parameters'], 1));
 
         // Add the second fragment as auto_item if the number of fragments is even
-        if ($this->configAdapter->get('useAutoItem') && 0 !== \count($fragments) % 2) {
+        if ($config->get('useAutoItem') && 0 !== \count($fragments) % 2) {
             array_unshift($fragments, 'auto_item');
         }
 
@@ -86,7 +84,7 @@ class InputEnhancer implements RouteEnhancerInterface
             // Abort if the request contains an auto_item keyword (duplicate content) (see #4012)
             if (
                 isset($GLOBALS['TL_AUTO_ITEM'])
-                && $this->configAdapter->get('useAutoItem')
+                && $config->get('useAutoItem')
                 && \in_array($fragments[$i], $GLOBALS['TL_AUTO_ITEM'], true)
             ) {
                 throw new ResourceNotFoundException(
@@ -94,7 +92,7 @@ class InputEnhancer implements RouteEnhancerInterface
                 );
             }
 
-            $this->inputAdapter->setGet(urldecode($fragments[$i]), urldecode($fragments[$i + 1] ?? ''), true);
+            $input->setGet(urldecode($fragments[$i]), urldecode($fragments[$i + 1] ?? ''), true);
         }
 
         return $defaults;

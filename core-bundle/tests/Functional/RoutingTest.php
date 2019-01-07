@@ -908,10 +908,7 @@ class RoutingTest extends WebTestCase
         ];
     }
 
-    /**
-     * @dataProvider getRootAliasesWithLocale
-     */
-    public function testRendersNotRootPageFoundWithoutPageEntries(): void
+    public function testThrowsANotRootPageFoundExceptionsIfThereAreNoPages(): void
     {
         static::getConnection()->exec('TRUNCATE tl_page');
 

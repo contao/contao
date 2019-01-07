@@ -35,38 +35,21 @@ class LegacyMatcherTest extends TestCase
     {
         unset($GLOBALS['TL_HOOKS']['getPageIdFromUrl']);
 
-        $config = $this->mockAdapter(['get']);
-        $config
-            ->expects($this->never())
-            ->method('get')
-        ;
-
         $matcher = new LegacyMatcher(
-            $this->mockFrameworkWithAdapters($config),
-            $this->mockRequestMatcher($this->once())
+            $this->mockContaoFramework(),
+            $this->mockRequestMatcher($this->once()),
+            '.html',
+            false
         );
 
         $matcher->matchRequest($this->createMock(Request::class));
     }
 
     /**
-     * @dataProvider matchRequestWithoutFolderUrlProvider
+     * @dataProvider getRequestData
      */
     public function testMatchesRequestWithoutFolderUrl(string $requestPath, ?string $language, string $urlSuffix, bool $useAutoItem, string $resultPath, ...$hooks): void
     {
-        $config = [
-            'folderUrl' => false,
-            'useAutoItem' => $useAutoItem,
-            'addLanguageToUrl' => null !== $language,
-            'urlSuffix' => $urlSuffix,
-        ];
-
-        $framework = $this->mockFrameworkWithAdapters(
-            $this->mockConfigAdapter($config),
-            $language,
-            $hooks
-        );
-
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->once())
@@ -76,9 +59,18 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = $hooks;
 
+        $config = [
+            'folderUrl' => false,
+            'useAutoItem' => $useAutoItem,
+        ];
+
+        $framework = $this->mockFrameworkWithAdapters($this->mockConfigAdapter($config), $language, $hooks);
+
         $matcher = new LegacyMatcher(
             $framework,
-            $this->mockRequestMatcher($this->once(), $resultPath)
+            $this->mockRequestMatcher($this->once(), $resultPath),
+            $urlSuffix,
+            null !== $language
         );
 
         $matcher->matchRequest($request);
@@ -93,7 +85,7 @@ class LegacyMatcherTest extends TestCase
      * 5. Expected path after hooks
      * 6. One or more hook arrays with class, method, input array and option output array.
      */
-    public function matchRequestWithoutFolderUrlProvider(): \Generator
+    public function getRequestData(): \Generator
     {
         yield [
             '/foo.html',
@@ -201,8 +193,6 @@ class LegacyMatcherTest extends TestCase
         $config = [
             'folderUrl' => true,
             'useAutoItem' => false,
-            'addLanguageToUrl' => false,
-            'urlSuffix' => '.html',
         ];
 
         $framework = $this->mockFrameworkWithAdapters(
@@ -249,7 +239,7 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
-        $matcher = new LegacyMatcher($framework, $matcher);
+        $matcher = new LegacyMatcher($framework, $matcher, '.html', false);
         $matcher->matchRequest($request);
     }
 
@@ -258,8 +248,6 @@ class LegacyMatcherTest extends TestCase
         $config = [
             'folderUrl' => true,
             'useAutoItem' => false,
-            'addLanguageToUrl' => false,
-            'urlSuffix' => '.html',
         ];
 
         $framework = $this->mockFrameworkWithAdapters(
@@ -307,7 +295,7 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
-        $matcher = new LegacyMatcher($framework, $matcher);
+        $matcher = new LegacyMatcher($framework, $matcher, '.html', false);
         $matcher->matchRequest($request);
     }
 
@@ -316,8 +304,6 @@ class LegacyMatcherTest extends TestCase
         $config = [
             'folderUrl' => true,
             'useAutoItem' => false,
-            'addLanguageToUrl' => false,
-            'urlSuffix' => '.html',
         ];
 
         $framework = $this->mockFrameworkWithAdapters(
@@ -366,7 +352,7 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
-        $matcher = new LegacyMatcher($framework, $matcher);
+        $matcher = new LegacyMatcher($framework, $matcher, '.html', false);
         $matcher->matchRequest($request);
     }
 
@@ -375,8 +361,6 @@ class LegacyMatcherTest extends TestCase
         $config = [
             'folderUrl' => true,
             'useAutoItem' => false,
-            'addLanguageToUrl' => false,
-            'urlSuffix' => '.html',
         ];
 
         $framework = $this->mockFrameworkWithAdapters(
@@ -426,7 +410,7 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
-        $matcher = new LegacyMatcher($framework, $matcher);
+        $matcher = new LegacyMatcher($framework, $matcher, '.html', false);
         $matcher->matchRequest($request);
     }
 
@@ -435,8 +419,6 @@ class LegacyMatcherTest extends TestCase
         $config = [
             'folderUrl' => true,
             'useAutoItem' => true,
-            'addLanguageToUrl' => false,
-            'urlSuffix' => '.html',
         ];
 
         $framework = $this->mockFrameworkWithAdapters(
@@ -486,20 +468,15 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
-        $matcher = new LegacyMatcher($framework, $matcher);
+        $matcher = new LegacyMatcher($framework, $matcher, '.html', false);
         $matcher->matchRequest($request);
     }
 
     public function testThrowsExceptionIfUrlSuffixDoesNotMatch(): void
     {
-        $this->expectException(ResourceNotFoundException::class);
-        $this->expectExceptionMessage('URL suffix does not match');
-
         $config = [
             'folderUrl' => false,
             'useAutoItem' => false,
-            'addLanguageToUrl' => false,
-            'urlSuffix' => '.html',
         ];
 
         $framework = $this->mockFrameworkWithAdapters($this->mockConfigAdapter($config));
@@ -513,20 +490,19 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
 
-        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()));
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()), '.html', false);
+
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('URL suffix does not match');
+
         $matcher->matchRequest($request);
     }
 
     public function testThrowsExceptionIfLanguageIsMissing(): void
     {
-        $this->expectException(ResourceNotFoundException::class);
-        $this->expectExceptionMessage('Locale does not match');
-
         $config = [
             'folderUrl' => false,
             'useAutoItem' => false,
-            'addLanguageToUrl' => true,
-            'urlSuffix' => '.html',
         ];
 
         $framework = $this->mockFrameworkWithAdapters($this->mockConfigAdapter($config));
@@ -540,20 +516,19 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
 
-        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()));
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()), '.html', true);
+
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('Locale does not match');
+
         $matcher->matchRequest($request);
     }
 
     public function testThrowsExceptionIfHookReturnsAnEmptyAlias(): void
     {
-        $this->expectException(ResourceNotFoundException::class);
-        $this->expectExceptionMessage('Page alias is empty');
-
         $config = [
             'folderUrl' => false,
             'useAutoItem' => false,
-            'addLanguageToUrl' => false,
-            'urlSuffix' => '.html',
         ];
 
         $framework = $this->mockFrameworkWithAdapters(
@@ -571,7 +546,11 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
-        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()));
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()), '.html', false);
+
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('Page alias is empty');
+
         $matcher->matchRequest($request);
     }
 
@@ -652,7 +631,6 @@ class LegacyMatcherTest extends TestCase
     private function mockConfigAdapter(array $config): Adapter
     {
         $configAdapter = $this->mockAdapter(['get']);
-
         $configAdapter
             ->method('get')
             ->willReturnCallback(

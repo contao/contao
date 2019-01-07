@@ -13,18 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing\Enhancer;
 
 use Contao\Config;
-use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class InputEnhancerTest extends TestCase
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -40,37 +40,37 @@ class InputEnhancerTest extends TestCase
             ->method('initialize')
         ;
 
-        $enhancer = new InputEnhancer($framework);
+        $enhancer = new InputEnhancer($framework, false);
         $enhancer->enhance([], $this->createMock(Request::class));
     }
 
     /**
-     * @dataProvider localeInUrlProvider
+     * @dataProvider getLocales
      */
-    public function testAddsLocaleToInputIfEnabled(bool $addLanguageToUrl, string $locale): void
+    public function testAddsLocaleToInputIfEnabled(bool $prependLocale, string $locale): void
     {
         $input = $this->mockAdapter(['setGet']);
         $input
-            ->expects($addLanguageToUrl ? $this->once() : $this->never())
+            ->expects($prependLocale ? $this->once() : $this->never())
             ->method('setGet')
             ->with('language', $locale)
         ;
 
-        $framework = $this->mockContaoFrameworkWithInputAndConfig($input, $addLanguageToUrl);
+        $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $defaults = [
             'pageModel' => $this->createMock(PageModel::class),
             '_locale' => $locale,
         ];
 
-        $enhancer = new InputEnhancer($framework);
+        $enhancer = new InputEnhancer($framework, $prependLocale);
         $enhancer->enhance($defaults, $this->createMock(Request::class));
     }
 
     /**
      * @return (bool|string)[][]
      */
-    public function localeInUrlProvider(): array
+    public function getLocales(): array
     {
         return [
             [false, 'en'],
@@ -88,18 +88,18 @@ class InputEnhancerTest extends TestCase
             ->method('setGet')
         ;
 
-        $framework = $this->mockContaoFrameworkWithInputAndConfig($input, true);
+        $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $defaults = [
             'pageModel' => $this->createMock(PageModel::class),
         ];
 
-        $enhancer = new InputEnhancer($framework);
+        $enhancer = new InputEnhancer($framework, true);
         $enhancer->enhance($defaults, $this->createMock(Request::class));
     }
 
     /**
-     * @dataProvider parameterProvider
+     * @dataProvider getParameters
      */
     public function testAddsParametersToInput(string $parameters, bool $useAutoItem, array ...$setters): void
     {
@@ -118,21 +118,26 @@ class InputEnhancerTest extends TestCase
             ->withConsecutive(...$setters)
         ;
 
-        $framework = $this->mockContaoFrameworkWithInputAndConfig($input, false, $useAutoItem);
+        $adapters = [
+            Input::class => $input,
+            Config::class => $this->mockConfiguredAdapter(['get' => $useAutoItem]),
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
 
         $defaults = [
             'pageModel' => $this->createMock(PageModel::class),
             'parameters' => $parameters,
         ];
 
-        $enhancer = new InputEnhancer($framework);
+        $enhancer = new InputEnhancer($framework, false);
         $enhancer->enhance($defaults, $this->createMock(Request::class));
     }
 
     /**
      * @return (bool|string|string[])[][]
      */
-    public function parameterProvider(): array
+    public function getParameters(): array
     {
         return [
             ['/foo/bar', false, ['foo', 'bar']],
@@ -147,7 +152,7 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsExceptionIfParameterIsInQuery(): void
     {
-        $framework = $this->mockContaoFrameworkWithInputAndConfig();
+        $framework = $this->mockContaoFramework();
 
         $defaults = [
             'pageModel' => $this->createMock(PageModel::class),
@@ -156,16 +161,24 @@ class InputEnhancerTest extends TestCase
 
         $_GET = ['foo' => 'baz'];
 
+        $enhancer = new InputEnhancer($framework, false);
+
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Duplicate parameter "foo" in path');
 
-        $enhancer = new InputEnhancer($framework);
         $enhancer->enhance($defaults, $this->createMock(Request::class));
     }
 
     public function testThrowsExceptionOnDuplicateAutoItem(): void
     {
-        $framework = $this->mockContaoFrameworkWithInputAndConfig(null, false, true);
+        $input = $this->mockAdapter(['setGet']);
+        $input
+            ->expects($this->once())
+            ->method('setGet')
+            ->with('auto_item', 'foo')
+        ;
+
+        $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $defaults = [
             'pageModel' => $this->createMock(PageModel::class),
@@ -174,46 +187,11 @@ class InputEnhancerTest extends TestCase
 
         $GLOBALS['TL_AUTO_ITEM'] = ['bar'];
 
+        $enhancer = new InputEnhancer($framework, false);
+
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('"bar" is an auto_item keyword (duplicate content)');
 
-        $enhancer = new InputEnhancer($framework);
         $enhancer->enhance($defaults, $this->createMock(Request::class));
-    }
-
-    /**
-     * @return ContaoFrameworkInterface|MockObject
-     */
-    private function mockContaoFrameworkWithInputAndConfig(Adapter $input = null, bool $addLanguageToUrl = false, bool $useAutoItem = false): ContaoFrameworkInterface
-    {
-        $config = $this->mockAdapter(['get']);
-        $config
-            ->method('get')
-            ->willReturnCallback(
-                function ($param) use ($addLanguageToUrl, $useAutoItem) {
-                    if ('addLanguageToUrl' === $param) {
-                        return $addLanguageToUrl;
-                    }
-
-                    if ('useAutoItem' === $param) {
-                        return $useAutoItem;
-                    }
-
-                    return null;
-                }
-            )
-        ;
-
-        if (null === $input) {
-            $input = $this->mockAdapter(['get', 'setGet', 'post', 'setPost']);
-        }
-
-        $framework = $this->mockContaoFramework([Input::class => $input, Config::class => $config]);
-        $framework
-            ->expects($this->once())
-            ->method('initialize')
-        ;
-
-        return $framework;
     }
 }
