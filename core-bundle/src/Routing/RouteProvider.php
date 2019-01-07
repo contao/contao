@@ -133,7 +133,13 @@ class RouteProvider implements RouteProviderInterface
         if (null === $names) {
             $pages = $pageModel->findAll();
         } else {
-            $pages = $pageModel->findMultipleByIds($this->getPageIdsFromNames($names));
+            $ids = $this->getPageIdsFromNames($names);
+
+            if (empty($ids)) {
+                return [];
+            }
+
+            $pages = $pageModel->findBy('tl_page.id IN ('.implode(',', $ids).')', []);
         }
 
         if (!$pages instanceof Collection) {

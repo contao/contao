@@ -74,11 +74,11 @@ class RouteProviderTest extends TestCase
 
     public function testGetsRoutesByNames(): void
     {
-        $pageAdapter = $this->mockAdapter(['findMultipleByIds']);
+        $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findMultipleByIds')
-            ->with([17, 21])
+            ->method('findBy')
+            ->with('tl_page.id IN (17,21)')
             ->willReturn(
                 new Collection(
                     [
@@ -110,12 +110,10 @@ class RouteProviderTest extends TestCase
 
     public function testReturnsEmptyArrayForGetRoutesByNamesWithoutPageIds(): void
     {
-        $pageAdapter = $this->mockAdapter(['findMultipleByIds']);
+        $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
-            ->expects($this->once())
-            ->method('findMultipleByIds')
-            ->with([])
-            ->willReturn(null)
+            ->expects($this->never())
+            ->method('findBy')
         ;
 
         $provider = $this->mockRouteProvider($this->mockFramework($pageAdapter));
