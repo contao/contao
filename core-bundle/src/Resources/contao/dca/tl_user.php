@@ -599,7 +599,7 @@ class tl_user extends Backend
 	public function addIcon($row, $label, DataContainer $dc, $args)
 	{
 		$image = $row['admin'] ? 'admin' : 'user';
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 
 		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
 
@@ -702,7 +702,7 @@ class tl_user extends Backend
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 		}
 
-		$router = \System::getContainer()->get('router');
+		$router = System::getContainer()->get('router');
 		$url = $router->generate('contao_backend', array('_switch_user'=>$row['username']));
 
 		return '<a href="'.$url.'" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';

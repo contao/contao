@@ -94,7 +94,7 @@ class ZipWriter
 	public function __construct($strFile)
 	{
 		$this->strFile = $strFile;
-		$this->strRootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$this->strRootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Create temporary file
 		if (!$this->strTemp = tempnam($this->strRootDir . '/' . self::TEMPORARY_FOLDER, 'zip'))
@@ -252,12 +252,12 @@ class ZipWriter
 			// Create folder
 			if (!is_dir($this->strRootDir . '/' . $strFolder))
 			{
-				new \Folder($strFolder);
+				new Folder($strFolder);
 			}
 		}
 
 		// Rename file
-		\Files::getInstance()->rename(self::TEMPORARY_FOLDER . '/' . basename($this->strTemp), $this->strFile);
+		Files::getInstance()->rename(self::TEMPORARY_FOLDER . '/' . basename($this->strTemp), $this->strFile);
 	}
 
 	/**

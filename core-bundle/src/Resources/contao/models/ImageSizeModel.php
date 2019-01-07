@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes image sizes
  *
@@ -40,19 +42,19 @@ namespace Contao;
  * @method static ImageSizeModel|null findOneByResizeMode($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByZoom($val, array $opt=array())
  *
- * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByPid($val, array $opt=array())
- * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByName($val, array $opt=array())
- * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByCssClass($val, array $opt=array())
- * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findBySizes($val, array $opt=array())
- * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByDensities($val, array $opt=array())
- * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByWidth($val, array $opt=array())
- * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByHeight($val, array $opt=array())
- * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByResizeMode($val, array $opt=array())
- * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findByZoom($val, array $opt=array())
- * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|ImageSizeModel[]|ImageSizeModel|null findAll(array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByPid($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByName($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByCssClass($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findBySizes($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByDensities($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByWidth($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByHeight($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByResizeMode($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByZoom($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())

@@ -110,7 +110,7 @@ class StringUtil
 		$arrEmptyTags = array('area', 'base', 'br', 'col', 'hr', 'img', 'input', 'frame', 'link', 'meta', 'param');
 
 		$strString = preg_replace('/[\t\n\r]+/', ' ', $strString);
-		$strString = strip_tags($strString, \Config::get('allowedTags'));
+		$strString = strip_tags($strString, Config::get('allowedTags'));
 		$strString = preg_replace('/ +/', ' ', $strString);
 
 		// Seperate tags and text
@@ -233,7 +233,7 @@ class StringUtil
 
 		if ($strCharset === null)
 		{
-			$strCharset = \Config::get('characterSet');
+			$strCharset = Config::get('characterSet');
 		}
 
 		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
@@ -325,7 +325,7 @@ class StringUtil
 			return $strString;
 		}
 
-		$arrEmails = static::extractEmail($strString, \Config::get('allowedTags'));
+		$arrEmails = static::extractEmail($strString, Config::get('allowedTags'));
 
 		foreach ($arrEmails as $strEmail)
 		{
@@ -367,7 +367,7 @@ class StringUtil
 		{
 			$strEmail = str_replace('mailto:', '', $strEmail);
 
-			if (\Validator::isEmail($strEmail))
+			if (Validator::isEmail($strEmail))
 			{
 				$arrEmails[] = $strEmail;
 			}
@@ -391,7 +391,7 @@ class StringUtil
 		{
 			$strEmail = str_replace('&lt;', '<', $strEmail);
 
-			if (\Validator::isEmail($strEmail))
+			if (Validator::isEmail($strEmail))
 			{
 				$arrEmails[] = $strEmail;
 			}
@@ -568,7 +568,7 @@ class StringUtil
 				{
 					if (!array_key_exists($matches[1], $arrData))
 					{
-						\System::getContainer()
+						System::getContainer()
 							->get('monolog.logger.contao')
 							->log(LogLevel::INFO, sprintf('Tried to parse unknown simple token "%s".', $matches[1]))
 						;
@@ -595,7 +595,7 @@ class StringUtil
 
 			if (!array_key_exists($strToken, $arrData))
 			{
-				\System::getContainer()
+				System::getContainer()
 					->get('monolog.logger.contao')
 					->log(LogLevel::INFO, sprintf('Tried to evaluate unknown simple token "%s".', $strToken))
 				;
@@ -774,7 +774,7 @@ class StringUtil
 				continue;
 			}
 
-			$file = \FilesModel::findByPath($paths[$i+3]);
+			$file = FilesModel::findByPath($paths[$i+3]);
 
 			if ($file !== null)
 			{
@@ -810,7 +810,7 @@ class StringUtil
 				continue;
 			}
 
-			$file = \FilesModel::findByUuid($paths[$i+4]);
+			$file = FilesModel::findByUuid($paths[$i+4]);
 
 			if ($file !== null)
 			{
@@ -1111,7 +1111,7 @@ class StringUtil
 	 */
 	public static function stripRootDir($path)
 	{
-		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 		$length = \strlen($rootDir);
 
 		if (strncmp($path, $rootDir, $length) !== 0 || \strlen($path) <= $length || ($path[$length] !== '/' && $path[$length] !== '\\'))

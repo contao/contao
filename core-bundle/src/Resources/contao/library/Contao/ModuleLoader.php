@@ -55,7 +55,7 @@ class ModuleLoader
 	{
 		@trigger_error('Using ModuleLoader::getActive() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-		$bundles = array_keys(\System::getContainer()->getParameter('kernel.bundles'));
+		$bundles = array_keys(System::getContainer()->getParameter('kernel.bundles'));
 
 		foreach (static::$legacy as $bundleName => $module)
 		{

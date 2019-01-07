@@ -83,11 +83,11 @@ class PageError401 extends Frontend
 		}
 		else
 		{
-			$objRootPage = \PageModel::findPublishedById(\is_int($objRootPage) ? $objRootPage : $objRootPage->id);
+			$objRootPage = PageModel::findPublishedById(\is_int($objRootPage) ? $objRootPage : $objRootPage->id);
 		}
 
 		// Look for a 401 page
-		$obj401 = \PageModel::find401ByPid($objRootPage->id);
+		$obj401 = PageModel::find401ByPid($objRootPage->id);
 
 		// Die if there is no page at all
 		if (null === $obj401)
@@ -98,7 +98,7 @@ class PageError401 extends Frontend
 		// Forward to another page
 		if ($obj401->autoforward && $obj401->jumpTo)
 		{
-			$objNextPage = \PageModel::findPublishedById($obj401->jumpTo);
+			$objNextPage = PageModel::findPublishedById($obj401->jumpTo);
 
 			if (null === $objNextPage)
 			{

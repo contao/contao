@@ -303,7 +303,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 		try
 		{
-			$userChecker = \System::getContainer()->get('contao.security.user_checker');
+			$userChecker = System::getContainer()->get('contao.security.user_checker');
 			$userChecker->checkPreAuth($this);
 			$userChecker->checkPostAuth($this);
 		}
@@ -325,7 +325,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function findBy($strColumn, $varValue)
 	{
-		$objResult = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE " . \Database::quoteIdentifier($strColumn) . "=?")
+		$objResult = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($strColumn) . "=?")
 									->limit(1)
 									->execute($varValue);
 
@@ -362,7 +362,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	{
 		@trigger_error('Using User::regenerateSessionId() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
 
-		$container = \System::getContainer();
+		$container = System::getContainer();
 		$strategy = $container->getParameter('security.authentication.session_strategy.strategy');
 
 		// Regenerate the session ID to harden against session fixation attacks
@@ -407,7 +407,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	{
 		@trigger_error('Using User::logout() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
 
-		throw new RedirectResponseException(\System::getContainer()->get('security.logout_url_generator')->getLogoutUrl());
+		throw new RedirectResponseException(System::getContainer()->get('security.logout_url_generator')->getLogoutUrl());
 	}
 
 	/**
@@ -425,7 +425,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		$groups = \StringUtil::deserialize($this->arrData['groups']);
+		$groups = StringUtil::deserialize($this->arrData['groups']);
 
 		// No groups assigned
 		if (empty($groups) || !\is_array($groups))
@@ -463,7 +463,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	public static function loadUserByUsername($username)
 	{
 		/** @var Request $request */
-		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request === null)
 		{
@@ -489,7 +489,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 				return null;
 			}
 
-			if ($user->findBy('username', \Input::post('username')) === false)
+			if ($user->findBy('username', Input::post('username')) === false)
 			{
 				return null;
 			}

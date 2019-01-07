@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
 use FOS\HttpCache\ResponseTagger;
 
 /**
@@ -154,12 +155,12 @@ abstract class ContentElement extends Frontend
 	 */
 	public function __construct($objElement, $strColumn='main')
 	{
-		if ($objElement instanceof Model || $objElement instanceof Model\Collection)
+		if ($objElement instanceof Model || $objElement instanceof Collection)
 		{
 			/** @var ContentModel $objModel */
 			$objModel = $objElement;
 
-			if ($objModel instanceof Model\Collection)
+			if ($objModel instanceof Collection)
 			{
 				$objModel = $objModel->current();
 			}
@@ -170,14 +171,14 @@ abstract class ContentElement extends Frontend
 		parent::__construct();
 
 		$this->arrData = $objElement->row();
-		$this->cssID = \StringUtil::deserialize($objElement->cssID, true);
+		$this->cssID = StringUtil::deserialize($objElement->cssID, true);
 
 		if ($this->customTpl != '' && TL_MODE == 'FE')
 		{
 			$this->strTemplate = $this->customTpl;
 		}
 
-		$arrHeadline = \StringUtil::deserialize($objElement->headline);
+		$arrHeadline = StringUtil::deserialize($objElement->headline);
 		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		$this->strColumn = $strColumn;
@@ -245,7 +246,7 @@ abstract class ContentElement extends Frontend
 			return '';
 		}
 
-		$this->Template = new \FrontendTemplate($this->strTemplate);
+		$this->Template = new FrontendTemplate($this->strTemplate);
 		$this->Template->setData($this->arrData);
 
 		$this->compile();

@@ -36,7 +36,7 @@ class ModuleSearch extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['search'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -46,7 +46,7 @@ class ModuleSearch extends Module
 			return $objTemplate->parse();
 		}
 
-		$this->pages = \StringUtil::deserialize($this->pages);
+		$this->pages = StringUtil::deserialize($this->pages);
 
 		return parent::generate();
 	}
@@ -59,32 +59,32 @@ class ModuleSearch extends Module
 		// Mark the x and y parameter as used (see #4277)
 		if (isset($_GET['x']))
 		{
-			\Input::get('x');
-			\Input::get('y');
+			Input::get('x');
+			Input::get('y');
 		}
 
 		// Trigger the search module from a custom form
-		if (!isset($_GET['keywords']) && \Input::post('FORM_SUBMIT') == 'tl_search')
+		if (!isset($_GET['keywords']) && Input::post('FORM_SUBMIT') == 'tl_search')
 		{
-			$_GET['keywords'] = \Input::post('keywords');
-			$_GET['query_type'] = \Input::post('query_type');
-			$_GET['per_page'] = \Input::post('per_page');
+			$_GET['keywords'] = Input::post('keywords');
+			$_GET['query_type'] = Input::post('query_type');
+			$_GET['per_page'] = Input::post('per_page');
 		}
 
 		$blnFuzzy = $this->fuzzy;
-		$strQueryType = \Input::get('query_type') ?: $this->queryType;
+		$strQueryType = Input::get('query_type') ?: $this->queryType;
 
-		$strKeywords = trim(\Input::get('keywords'));
+		$strKeywords = trim(Input::get('keywords'));
 
 		$this->Template->uniqueId = $this->id;
 		$this->Template->queryType = $strQueryType;
-		$this->Template->keyword = \StringUtil::specialchars($strKeywords);
+		$this->Template->keyword = StringUtil::specialchars($strKeywords);
 		$this->Template->keywordLabel = $GLOBALS['TL_LANG']['MSC']['keywords'];
 		$this->Template->optionsLabel = $GLOBALS['TL_LANG']['MSC']['options'];
-		$this->Template->search = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchLabel']);
-		$this->Template->matchAll = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAll']);
-		$this->Template->matchAny = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
-		$this->Template->action = ampersand(\Environment::get('indexFreeRequest'));
+		$this->Template->search = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchLabel']);
+		$this->Template->matchAll = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAll']);
+		$this->Template->matchAny = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
+		$this->Template->action = ampersand(Environment::get('indexFreeRequest'));
 		$this->Template->advanced = ($this->searchType == 'advanced');
 
 		// Redirect page
@@ -145,7 +145,7 @@ class ModuleSearch extends Module
 				return;
 			}
 
-			$strCachePath = \StringUtil::stripRootDir(\System::getContainer()->getParameter('kernel.cache_dir'));
+			$strCachePath = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
 
 			$arrResult = null;
 			$strChecksum = md5($strKeywords . $strQueryType . $varRootId . $blnFuzzy);
@@ -153,9 +153,9 @@ class ModuleSearch extends Module
 			$strCacheFile = $strCachePath . '/contao/search/' . $strChecksum . '.json';
 
 			// Load the cached result
-			if (file_exists(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $strCacheFile))
+			if (file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $strCacheFile))
 			{
-				$objFile = new \File($strCacheFile);
+				$objFile = new File($strCacheFile);
 
 				if ($objFile->mtime > time() - 1800)
 				{
@@ -172,7 +172,7 @@ class ModuleSearch extends Module
 			{
 				try
 				{
-					$objSearch = \Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy);
+					$objSearch = Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy);
 					$arrResult = $objSearch->fetchAllAssoc();
 				}
 				catch (\Exception $e)
@@ -181,13 +181,13 @@ class ModuleSearch extends Module
 					$arrResult = array();
 				}
 
-				\File::putContent($strCacheFile, json_encode($arrResult));
+				File::putContent($strCacheFile, json_encode($arrResult));
 			}
 
 			$query_endtime = microtime(true);
 
 			// Sort out protected pages
-			if (\Config::get('indexProtected'))
+			if (Config::get('indexProtected'))
 			{
 				$this->import('FrontendUser', 'User');
 
@@ -201,7 +201,7 @@ class ModuleSearch extends Module
 						}
 						else
 						{
-							$groups = \StringUtil::deserialize($v['groups']);
+							$groups = StringUtil::deserialize($v['groups']);
 
 							if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, $this->User->groups)))
 							{
@@ -236,13 +236,13 @@ class ModuleSearch extends Module
 			if ($this->perPage > 0)
 			{
 				$id = 'page_s' . $this->id;
-				$page = \Input::get($id) ?? 1;
-				$per_page = \Input::get('per_page') ?: $this->perPage;
+				$page = Input::get($id) ?? 1;
+				$per_page = Input::get('per_page') ?: $this->perPage;
 
 				// Do not index or cache the page if the page number is outside the range
 				if ($page < 1 || $page > max(ceil($count/$per_page), 1))
 				{
-					throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+					throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 				}
 
 				$from = (($page - 1) * $per_page) + 1;
@@ -251,7 +251,7 @@ class ModuleSearch extends Module
 				// Pagination menu
 				if ($to < $count || $from > 1)
 				{
-					$objPagination = new \Pagination($count, $per_page, \Config::get('maxPaginationLinks'), $id);
+					$objPagination = new Pagination($count, $per_page, Config::get('maxPaginationLinks'), $id);
 					$this->Template->pagination = $objPagination->generate("\n  ");
 				}
 
@@ -261,18 +261,18 @@ class ModuleSearch extends Module
 			// Get the results
 			for ($i=($from-1); $i<$to && $i<$count; $i++)
 			{
-				$objTemplate = new \FrontendTemplate($this->searchTpl);
+				$objTemplate = new FrontendTemplate($this->searchTpl);
 				$objTemplate->setData($arrResult[$i]);
 				$objTemplate->href = $arrResult[$i]['url'];
 				$objTemplate->link = $arrResult[$i]['title'];
-				$objTemplate->url = \StringUtil::specialchars(urldecode($arrResult[$i]['url']), true, true);
-				$objTemplate->title = \StringUtil::specialchars(\StringUtil::stripInsertTags($arrResult[$i]['title']));
+				$objTemplate->url = StringUtil::specialchars(urldecode($arrResult[$i]['url']), true, true);
+				$objTemplate->title = StringUtil::specialchars(StringUtil::stripInsertTags($arrResult[$i]['title']));
 				$objTemplate->class = (($i == ($from - 1)) ? 'first ' : '') . (($i == ($to - 1) || $i == ($count - 1)) ? 'last ' : '') . (($i % 2 == 0) ? 'even' : 'odd');
 				$objTemplate->relevance = sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format($arrResult[$i]['relevance'] / $arrResult[0]['relevance'] * 100, 2) . '%');
 
 				$arrContext = array();
-				$strText = \StringUtil::stripInsertTags($arrResult[$i]['text']);
-				$arrMatches = \StringUtil::trimsplit(',', $arrResult[$i]['matches']);
+				$strText = StringUtil::stripInsertTags($arrResult[$i]['text']);
+				$arrMatches = StringUtil::trimsplit(',', $arrResult[$i]['matches']);
 
 				// Get the context
 				foreach ($arrMatches as $strWord)
@@ -289,7 +289,7 @@ class ModuleSearch extends Module
 				// Shorten the context and highlight all keywords
 				if (!empty($arrContext))
 				{
-					$objTemplate->context = trim(\StringUtil::substrHtml(implode('…', $arrContext), $this->totalLength));
+					$objTemplate->context = trim(StringUtil::substrHtml(implode('…', $arrContext), $this->totalLength));
 					$objTemplate->context = preg_replace('/(?<=^|\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan})(' . implode('|', array_map('preg_quote', $arrMatches)) . ')(?=\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}|$)/ui', '<mark class="highlight">$1</mark>', $objTemplate->context);
 
 					$objTemplate->hasContext = true;

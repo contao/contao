@@ -41,14 +41,14 @@ class BackendPopup extends Backend
 		$this->import('BackendUser', 'User');
 		parent::__construct();
 
-		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
 		{
 			throw new AccessDeniedException('Access denied');
 		}
 
-		\System::loadLanguageFile('default');
+		System::loadLanguageFile('default');
 
-		$strFile = \Input::get('src', true);
+		$strFile = Input::get('src', true);
 		$strFile = base64_decode($strFile);
 		$strFile = ltrim(rawurldecode($strFile), '/');
 
@@ -74,7 +74,7 @@ class BackendPopup extends Backend
 		}
 
 		// Limit preview to the files directory
-		if (!preg_match('@^' . preg_quote(\Config::get('uploadPath'), '@') . '@i', $this->strFile))
+		if (!preg_match('@^' . preg_quote(Config::get('uploadPath'), '@') . '@i', $this->strFile))
 		{
 			die('Invalid path');
 		}
@@ -94,37 +94,37 @@ class BackendPopup extends Backend
 		}
 
 		// Open the download dialogue
-		if (\Input::get('download'))
+		if (Input::get('download'))
 		{
-			$objFile = new \File($this->strFile);
+			$objFile = new File($this->strFile);
 			$objFile->sendToBrowser();
 		}
 
-		$objTemplate = new \BackendTemplate('be_popup');
+		$objTemplate = new BackendTemplate('be_popup');
 
 		// Add the resource (see #6880)
-		if (($objModel = \FilesModel::findByPath($this->strFile)) === null)
+		if (($objModel = FilesModel::findByPath($this->strFile)) === null)
 		{
-			if (\Dbafs::shouldBeSynchronized($this->strFile))
+			if (Dbafs::shouldBeSynchronized($this->strFile))
 			{
-				$objModel = \Dbafs::addResource($this->strFile);
+				$objModel = Dbafs::addResource($this->strFile);
 			}
 		}
 
 		if ($objModel !== null)
 		{
-			$objTemplate->uuid = \StringUtil::binToUuid($objModel->uuid); // see #5211
+			$objTemplate->uuid = StringUtil::binToUuid($objModel->uuid); // see #5211
 		}
 
 		// Add the file info
 		if (is_dir($rootDir . '/' . $this->strFile))
 		{
-			$objFile = new \Folder($this->strFile);
+			$objFile = new Folder($this->strFile);
 			$objTemplate->filesize = $this->getReadableSize($objFile->size) . ' (' . number_format($objFile->size, 0, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']) . ' Byte)';
 		}
 		else
 		{
-			$objFile = new \File($this->strFile);
+			$objFile = new File($this->strFile);
 
 			// Image
 			if ($objFile->isImage)
@@ -137,36 +137,36 @@ class BackendPopup extends Backend
 			}
 
 			// Meta data
-			if (($objModel = \FilesModel::findByPath($this->strFile)) instanceof FilesModel)
+			if (($objModel = FilesModel::findByPath($this->strFile)) instanceof FilesModel)
 			{
-				$arrMeta = \StringUtil::deserialize($objModel->meta);
+				$arrMeta = StringUtil::deserialize($objModel->meta);
 
 				if (\is_array($arrMeta))
 				{
-					\System::loadLanguageFile('languages');
+					System::loadLanguageFile('languages');
 
 					$objTemplate->meta = $arrMeta;
 					$objTemplate->languages = (object) $GLOBALS['TL_LANG']['LNG'];
 				}
 			}
 
-			$objTemplate->href = ampersand(\Environment::get('request'), true) . '&amp;download=1';
+			$objTemplate->href = ampersand(Environment::get('request'), true) . '&amp;download=1';
 			$objTemplate->filesize = $this->getReadableSize($objFile->filesize) . ' (' . number_format($objFile->filesize, 0, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']) . ' Byte)';
 		}
 
 		$objTemplate->icon = $objFile->icon;
 		$objTemplate->mime = $objFile->mime;
-		$objTemplate->ctime = \Date::parse(\Config::get('datimFormat'), $objFile->ctime);
-		$objTemplate->mtime = \Date::parse(\Config::get('datimFormat'), $objFile->mtime);
-		$objTemplate->atime = \Date::parse(\Config::get('datimFormat'), $objFile->atime);
-		$objTemplate->path = \StringUtil::specialchars($this->strFile);
-		$objTemplate->theme = \Backend::getTheme();
-		$objTemplate->base = \Environment::get('base');
+		$objTemplate->ctime = Date::parse(Config::get('datimFormat'), $objFile->ctime);
+		$objTemplate->mtime = Date::parse(Config::get('datimFormat'), $objFile->mtime);
+		$objTemplate->atime = Date::parse(Config::get('datimFormat'), $objFile->atime);
+		$objTemplate->path = StringUtil::specialchars($this->strFile);
+		$objTemplate->theme = Backend::getTheme();
+		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = \StringUtil::specialchars($this->strFile);
-		$objTemplate->charset = \Config::get('characterSet');
+		$objTemplate->title = StringUtil::specialchars($this->strFile);
+		$objTemplate->charset = Config::get('characterSet');
 		$objTemplate->labels = (object) $GLOBALS['TL_LANG']['MSC'];
-		$objTemplate->download = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fileDownload']);
+		$objTemplate->download = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fileDownload']);
 
 		return $objTemplate->getResponse();
 	}

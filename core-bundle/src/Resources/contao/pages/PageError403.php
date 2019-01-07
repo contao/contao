@@ -83,11 +83,11 @@ class PageError403 extends Frontend
 		}
 		else
 		{
-			$objRootPage = \PageModel::findPublishedById(\is_int($objRootPage) ? $objRootPage : $objRootPage->id);
+			$objRootPage = PageModel::findPublishedById(\is_int($objRootPage) ? $objRootPage : $objRootPage->id);
 		}
 
 		// Look for a 403 page
-		$obj403 = \PageModel::find403ByPid($objRootPage->id);
+		$obj403 = PageModel::find403ByPid($objRootPage->id);
 
 		// Die if there is no page at all
 		if (null === $obj403)
@@ -98,7 +98,7 @@ class PageError403 extends Frontend
 		// Forward to another page
 		if ($obj403->autoforward && $obj403->jumpTo)
 		{
-			$objNextPage = \PageModel::findPublishedById($obj403->jumpTo);
+			$objNextPage = PageModel::findPublishedById($obj403->jumpTo);
 
 			if (null === $objNextPage)
 			{

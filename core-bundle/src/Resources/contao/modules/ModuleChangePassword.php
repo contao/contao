@@ -35,7 +35,7 @@ class ModuleChangePassword extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['changePassword'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -66,7 +66,7 @@ class ModuleChangePassword extends Module
 
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
-		\System::loadLanguageFile('tl_member');
+		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
 		// Old password widget
@@ -86,14 +86,14 @@ class ModuleChangePassword extends Module
 		$row = 0;
 		$strFields = '';
 		$doNotSubmit = false;
-		$objMember = \MemberModel::findByPk($this->User->id);
+		$objMember = MemberModel::findByPk($this->User->id);
 		$strFormId = 'tl_change_password_' . $this->id;
 		$strTable = $objMember->getTable();
-		$session = \System::getContainer()->get('session');
+		$session = System::getContainer()->get('session');
 		$flashBag = $session->getFlashBag();
 
 		// Initialize the versioning (see #8301)
-		$objVersions = new \Versions($strTable, $objMember->id);
+		$objVersions = new Versions($strTable, $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
 		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
@@ -138,7 +138,7 @@ class ModuleChangePassword extends Module
 			$$strVar = $objWidget;
 
 			// Validate the widget
-			if (\Input::post('FORM_SUBMIT') == $strFormId)
+			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
 				$objWidget->validate();
 
@@ -163,7 +163,7 @@ class ModuleChangePassword extends Module
 		$this->Template->hasError = $doNotSubmit;
 
 		// Store the new password
-		if (\Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
+		if (Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
 		{
 			$objMember->tstamp = time();
 			$objMember->password = $objNewPassword->value;
@@ -203,8 +203,8 @@ class ModuleChangePassword extends Module
 		}
 
 		$this->Template->formId = $strFormId;
-		$this->Template->action = \Environment::get('indexFreeRequest');
-		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
+		$this->Template->action = Environment::get('indexFreeRequest');
+		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
 	}
 }

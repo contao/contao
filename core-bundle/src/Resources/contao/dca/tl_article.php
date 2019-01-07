@@ -564,7 +564,7 @@ class tl_article extends Backend
 	public function addIcon($row, $label)
 	{
 		$image = 'articles';
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 
 		$unpublished = ($row['start'] != '' && $row['start'] > $time) || ($row['stop'] != '' && $row['stop'] < $time);
 

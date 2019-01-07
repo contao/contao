@@ -29,10 +29,10 @@ class ContentTable extends ContentElement
 	 */
 	protected function compile()
 	{
-		$rows = \StringUtil::deserialize($this->tableitems);
+		$rows = StringUtil::deserialize($this->tableitems);
 
 		$this->Template->id = 'table_' . $this->id;
-		$this->Template->summary = \StringUtil::specialchars($this->summary);
+		$this->Template->summary = StringUtil::specialchars($this->summary);
 		$this->Template->useHeader = $this->thead ? true : false;
 		$this->Template->useFooter = $this->tfoot ? true : false;
 		$this->Template->useLeftTh = $this->tleft ? true : false;
@@ -53,9 +53,9 @@ class ContentTable extends ContentElement
 					$co = 'TS_TABLE_' . $this->id;
 					$so = ($this->sortOrder == 'descending') ? 'desc' : 'asc';
 
-					if (\Input::cookie($co) == '')
+					if (Input::cookie($co) == '')
 					{
-						\System::setCookie($co, $i . '|' . $so, 0);
+						System::setCookie($co, $i . '|' . $so, 0);
 					}
 				}
 

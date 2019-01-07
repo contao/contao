@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -32,7 +33,7 @@ class FrontendIndex extends Frontend
 		$this->import('FrontendUser', 'User');
 		parent::__construct();
 
-		$objTokenChecker = \System::getContainer()->get('contao.security.token_checker');
+		$objTokenChecker = System::getContainer()->get('contao.security.token_checker');
 
 		// Check whether a user is logged in
 		\define('BE_USER_LOGGED_IN', $objTokenChecker->hasBackendUser() && $objTokenChecker->isPreviewMode());
@@ -64,15 +65,15 @@ class FrontendIndex extends Frontend
 		// Throw a 404 error if the request is not a Contao request (see #2864)
 		elseif ($pageId === false)
 		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
-		$pageModel = \PageModel::findPublishedByIdOrAlias($pageId);
+		$pageModel = PageModel::findPublishedByIdOrAlias($pageId);
 
 		// Throw a 404 error if the page could not be found
 		if ($pageModel === null)
 		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		return $this->renderPage($pageModel);
@@ -81,7 +82,7 @@ class FrontendIndex extends Frontend
 	/**
 	 * Render a page
 	 *
-	 * @param Model\Collection|PageModel[]|PageModel $pageModel
+	 * @param Collection|PageModel[]|PageModel $pageModel
 	 *
 	 * @return Response
 	 *
@@ -96,7 +97,7 @@ class FrontendIndex extends Frontend
 		$objPage = $pageModel;
 
 		// Check the URL and language of each page if there are multiple results
-		if ($objPage instanceof Model\Collection && $objPage->count() > 1)
+		if ($objPage instanceof Collection && $objPage->count() > 1)
 		{
 			@trigger_error('Using FrontendIndex::renderPage() with a model collection has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
 
@@ -120,7 +121,7 @@ class FrontendIndex extends Frontend
 				}
 			}
 
-			$strHost = \Environment::get('host');
+			$strHost = Environment::get('host');
 
 			// Look for a root page whose domain name matches the host name
 			if (isset($arrPages[$strHost]))
@@ -135,17 +136,17 @@ class FrontendIndex extends Frontend
 			// Throw an exception if there are no matches (see #1522)
 			if (empty($arrLangs))
 			{
-				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 			}
 
 			// Use the first result (see #4872)
-			if (!\Config::get('addLanguageToUrl'))
+			if (!Config::get('addLanguageToUrl'))
 			{
 				$objNewPage = current($arrLangs);
 			}
 
 			// Try to find a page matching the language parameter
-			elseif (($lang = \Input::get('language')) && isset($arrLangs[$lang]))
+			elseif (($lang = Input::get('language')) && isset($arrLangs[$lang]))
 			{
 				$objNewPage = $arrLangs[$lang];
 			}
@@ -159,7 +160,7 @@ class FrontendIndex extends Frontend
 			// Throw an exception if there is no matching page (see #1522)
 			else
 			{
-				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 			}
 
 			// Store the page object
@@ -170,14 +171,14 @@ class FrontendIndex extends Frontend
 		}
 
 		// Throw a 500 error if the result is still ambiguous
-		if ($objPage instanceof Model\Collection && $objPage->count() > 1)
+		if ($objPage instanceof Collection && $objPage->count() > 1)
 		{
-			$this->log('More than one page matches ' . \Environment::get('base') . \Environment::get('request'), __METHOD__, TL_ERROR);
-			throw new \LogicException('More than one page found: ' . \Environment::get('uri'));
+			$this->log('More than one page matches ' . Environment::get('base') . Environment::get('request'), __METHOD__, TL_ERROR);
+			throw new \LogicException('More than one page found: ' . Environment::get('uri'));
 		}
 
 		// Make sure $objPage is a Model
-		if ($objPage instanceof Model\Collection)
+		if ($objPage instanceof Collection)
 		{
 			$objPage = $objPage->current();
 		}
@@ -185,12 +186,12 @@ class FrontendIndex extends Frontend
 		// If the page has an alias, it can no longer be called via ID (see #7661)
 		if ($objPage->alias != '')
 		{
-			$language = \Config::get('addLanguageToUrl') ? '[a-z]{2}(-[A-Z]{2})?/' : '';
-			$suffix = \Config::get('urlSuffix') ? preg_quote(\Config::get('urlSuffix'), '#') : '$';
+			$language = Config::get('addLanguageToUrl') ? '[a-z]{2}(-[A-Z]{2})?/' : '';
+			$suffix = Config::get('urlSuffix') ? preg_quote(Config::get('urlSuffix'), '#') : '$';
 
-			if (preg_match('#^' . $language . $objPage->id . '(' . $suffix . '|/)#', \Environment::get('relativeRequest')))
+			if (preg_match('#^' . $language . $objPage->id . '(' . $suffix . '|/)#', Environment::get('relativeRequest')))
 			{
-				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 			}
 		}
 
@@ -199,7 +200,7 @@ class FrontendIndex extends Frontend
 		{
 			$hasItem = false;
 
-			if (\Config::get('useAutoItem'))
+			if (Config::get('useAutoItem'))
 			{
 				$hasItem = isset($_GET['auto_item']);
 			}
@@ -217,7 +218,7 @@ class FrontendIndex extends Frontend
 
 			if (!$hasItem)
 			{
-				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 			}
 		}
 
@@ -238,51 +239,51 @@ class FrontendIndex extends Frontend
 		// Set the admin e-mail address
 		if ($objPage->adminEmail != '')
 		{
-			list($GLOBALS['TL_ADMIN_NAME'], $GLOBALS['TL_ADMIN_EMAIL']) = \StringUtil::splitFriendlyEmail($objPage->adminEmail);
+			list($GLOBALS['TL_ADMIN_NAME'], $GLOBALS['TL_ADMIN_EMAIL']) = StringUtil::splitFriendlyEmail($objPage->adminEmail);
 		}
 		else
 		{
-			list($GLOBALS['TL_ADMIN_NAME'], $GLOBALS['TL_ADMIN_EMAIL']) = \StringUtil::splitFriendlyEmail(\Config::get('adminEmail'));
+			list($GLOBALS['TL_ADMIN_NAME'], $GLOBALS['TL_ADMIN_EMAIL']) = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
 		}
 
 		// Exit if the root page has not been published (see #2425)
 		// Do not try to load the 404 page, it can cause an infinite loop!
 		if (!BE_USER_LOGGED_IN && !$objPage->rootIsPublic)
 		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Check wether the language matches the root page language
-		if (\Config::get('addLanguageToUrl') && isset($_GET['language']) && \Input::get('language') != $objPage->rootLanguage)
+		if (Config::get('addLanguageToUrl') && isset($_GET['language']) && Input::get('language') != $objPage->rootLanguage)
 		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Check whether there are domain name restrictions
 		if ($objPage->domain != '')
 		{
 			// Load an error 404 page object
-			if ($objPage->domain != \Environment::get('host'))
+			if ($objPage->domain != Environment::get('host'))
 			{
-				$this->log('Page ID "' . $objPage->id . '" was requested via "' . \Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . \Environment::get('base') . \Environment::get('request') . ')', __METHOD__, TL_ERROR);
-				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+				$this->log('Page ID "' . $objPage->id . '" was requested via "' . Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . Environment::get('base') . Environment::get('request') . ')', __METHOD__, TL_ERROR);
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 			}
 		}
 
 		// Authenticate the user if the page is protected
 		if ($objPage->protected)
 		{
-			$container = \System::getContainer();
+			$container = System::getContainer();
 			$token = $container->get('security.token_storage')->getToken();
 
 			if ($container->get('security.authentication.trust_resolver')->isAnonymous($token))
 			{
-				throw new InsufficientAuthenticationException('Not authenticated: ' . \Environment::get('uri'));
+				throw new InsufficientAuthenticationException('Not authenticated: ' . Environment::get('uri'));
 			}
 
 			if (!$container->get('security.authorization_checker')->isGranted('ROLE_MEMBER'))
 			{
-				throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));
+				throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
 			}
 
 			$arrGroups = $objPage->groups; // required for empty()
@@ -291,7 +292,7 @@ class FrontendIndex extends Frontend
 			if (empty($arrGroups) || !\is_array($arrGroups) || !\count(array_intersect($arrGroups, $this->User->groups)))
 			{
 				$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
-				throw new AccessDeniedException('Access denied: ' . \Environment::get('uri'));
+				throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
 			}
 		}
 

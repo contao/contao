@@ -49,7 +49,7 @@ class ContentYouTube extends ContentElement
 	 */
 	protected function compile()
 	{
-		$size = \StringUtil::deserialize($this->playerSize);
+		$size = StringUtil::deserialize($this->playerSize);
 
 		if (!\is_array($size) || empty($size[0]) || empty($size[1]))
 		{
@@ -61,7 +61,7 @@ class ContentYouTube extends ContentElement
 		}
 
 		$params = array();
-		$options = \StringUtil::deserialize($this->youtubeOptions);
+		$options = StringUtil::deserialize($this->youtubeOptions);
 		$domain = 'https://www.youtube.com';
 
 		if (\is_array($options))

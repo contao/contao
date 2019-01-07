@@ -50,7 +50,7 @@ class Search
 	 */
 	public static function indexPage($arrData)
 	{
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		$arrSet['tstamp'] = time();
 		$arrSet['url'] = $arrData['url'];
@@ -130,7 +130,7 @@ class Search
 		{
 			foreach ($GLOBALS['TL_HOOKS']['indexPage'] as $callback)
 			{
-				\System::importStatic($callback[0])->{$callback[1]}($strContent, $arrData, $arrSet);
+				System::importStatic($callback[0])->{$callback[1]}($strContent, $arrData, $arrSet);
 			}
 		}
 
@@ -152,13 +152,13 @@ class Search
 		// Get the description
 		if (preg_match('/<meta[^>]+name="description"[^>]+content="([^"]*)"[^>]*>/i', $strHead, $tags))
 		{
-			$arrData['description'] = trim(preg_replace('/ +/', ' ', \StringUtil::decodeEntities($tags[1])));
+			$arrData['description'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($tags[1])));
 		}
 
 		// Get the keywords
 		if (preg_match('/<meta[^>]+name="keywords"[^>]+content="([^"]*)"[^>]*>/i', $strHead, $tags))
 		{
-			$arrData['keywords'] = trim(preg_replace('/ +/', ' ', \StringUtil::decodeEntities($tags[1])));
+			$arrData['keywords'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($tags[1])));
 		}
 
 		// Read the title and alt attributes
@@ -173,7 +173,7 @@ class Search
 
 		// Put everything together
 		$arrSet['text'] = $arrData['title'] . ' ' . $arrData['description'] . ' ' . $strBody . ' ' . $arrData['keywords'];
-		$arrSet['text'] = trim(preg_replace('/ +/', ' ', \StringUtil::decodeEntities($arrSet['text'])));
+		$arrSet['text'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($arrSet['text'])));
 
 		// Calculate the checksum
 		$arrSet['checksum'] = md5($arrSet['text']);
@@ -310,7 +310,7 @@ class Search
 	public static function searchFor($strKeywords, $blnOrSearch=false, $arrPid=array(), $intRows=0, $intOffset=0, $blnFuzzy=false)
 	{
 		// Clean the keywords
-		$strKeywords = \StringUtil::decodeEntities($strKeywords);
+		$strKeywords = StringUtil::decodeEntities($strKeywords);
 		$strKeywords = Utf8::strtolower($strKeywords);
 
 		// Check keyword string
@@ -509,7 +509,7 @@ class Search
 		}
 
 		// Return result
-		$objResultStmt = \Database::getInstance()->prepare($strQuery);
+		$objResultStmt = Database::getInstance()->prepare($strQuery);
 
 		if ($intRows > 0)
 		{
@@ -526,7 +526,7 @@ class Search
 	 */
 	public static function removeEntry($strUrl)
 	{
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		$objResult = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
 								 ->execute($strUrl);

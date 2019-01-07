@@ -70,8 +70,8 @@ class FrontendUser extends User
 	{
 		parent::__construct();
 
-		$this->strIp = \Environment::get('ip');
-		$this->strHash = \Input::cookie($this->strCookie);
+		$this->strIp = Environment::get('ip');
+		$this->strHash = Input::cookie($this->strCookie);
 	}
 
 	/**
@@ -86,7 +86,7 @@ class FrontendUser extends User
 			return static::$objInstance;
 		}
 
-		$objToken = \System::getContainer()->get('security.token_storage')->getToken();
+		$objToken = System::getContainer()->get('security.token_storage')->getToken();
 
 		// Load the user from the security storage
 		if ($objToken !== null && is_a($objToken->getUser(), static::class))
@@ -95,7 +95,7 @@ class FrontendUser extends User
 		}
 
 		// Check for an authenticated user in the session
-		$strUser = \System::getContainer()->get('contao.security.token_checker')->getFrontendUsername();
+		$strUser = System::getContainer()->get('contao.security.token_checker')->getFrontendUsername();
 
 		if ($strUser !== null)
 		{
@@ -160,7 +160,7 @@ class FrontendUser extends User
 	{
 		@trigger_error('Using FrontendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return \System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+		return System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
 	}
 
 	/**
@@ -175,7 +175,7 @@ class FrontendUser extends User
 	{
 		@trigger_error('Using FrontendUser::login() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return \System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+		return System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
 	}
 
 	/**
@@ -221,7 +221,7 @@ class FrontendUser extends User
 		{
 			if (!is_numeric($v))
 			{
-				$this->$k = \StringUtil::deserialize($v);
+				$this->$k = StringUtil::deserialize($v);
 			}
 		}
 
@@ -234,7 +234,7 @@ class FrontendUser extends User
 		}
 
 		// Skip inactive groups
-		if (($objGroups = \MemberGroupModel::findAllActive()) !== null)
+		if (($objGroups = MemberGroupModel::findAllActive()) !== null)
 		{
 			$this->groups = array_intersect($this->groups, $objGroups->fetchEach('id'));
 		}
@@ -242,7 +242,7 @@ class FrontendUser extends User
 		// Get the group login page
 		if ($this->groups[0] > 0)
 		{
-			$objGroup = \MemberGroupModel::findPublishedById($this->groups[0]);
+			$objGroup = MemberGroupModel::findPublishedById($this->groups[0]);
 
 			if ($objGroup !== null && $objGroup->redirect && $objGroup->jumpTo)
 			{

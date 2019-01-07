@@ -125,8 +125,8 @@ class Email
 	 */
 	public function __construct(\Swift_Mailer $objMailer = null)
 	{
-		$this->objMailer = $objMailer ?: \System::getContainer()->get('swiftmailer.mailer');
-		$this->strCharset = \Config::get('characterSet');
+		$this->objMailer = $objMailer ?: System::getContainer()->get('swiftmailer.mailer');
+		$this->strCharset = Config::get('characterSet');
 
 		// Instantiate Swift_Message
 		$this->objMessage = new \Swift_Message();
@@ -150,7 +150,7 @@ class Email
 				break;
 
 			case 'text':
-				$this->strText = \StringUtil::decodeEntities($varValue);
+				$this->strText = StringUtil::decodeEntities($varValue);
 				break;
 
 			case 'html':
@@ -385,12 +385,12 @@ class Email
 			{
 				if ($this->strImageDir == '')
 				{
-					$this->strImageDir = \System::getContainer()->getParameter('kernel.project_dir') . '/';
+					$this->strImageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 				}
 
 				$arrCid = array();
 				$arrMatches = array();
-				$strBase = \Environment::get('base');
+				$strBase = Environment::get('base');
 
 				// Thanks to @ofriedrich and @aschempp (see #4562)
 				preg_match_all('/<[a-z][a-z0-9]*\b[^>]*((src=|background=|url\()["\']??)(.+\.(jpe?g|png|gif|bmp|tiff?|swf))(["\' ]??(\)??))[^>]*>/Ui', $this->strHtml, $arrMatches);
@@ -439,7 +439,7 @@ class Email
 		// Add the administrator e-mail as default sender
 		if ($this->strSender == '')
 		{
-			list($this->strSenderName, $this->strSender) = \StringUtil::splitFriendlyEmail(\Config::get('adminEmail'));
+			list($this->strSenderName, $this->strSender) = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
 		}
 
 		// Sender
@@ -461,7 +461,7 @@ class Email
 		// Log failures
 		if (!empty($this->arrFailures))
 		{
-			\System::log('E-mail address rejected: ' . implode(', ', $this->arrFailures), __METHOD__, $this->strLogFile);
+			System::log('E-mail address rejected: ' . implode(', ', $this->arrFailures), __METHOD__, $this->strLogFile);
 		}
 
 		// Return if no e-mails have been sent
@@ -486,7 +486,7 @@ class Email
 			$strMessage .= ', BCC to ' . implode(', ', array_keys($arrBcc));
 		}
 
-		\System::log($strMessage, __METHOD__, $this->strLogFile);
+		System::log($strMessage, __METHOD__, $this->strLogFile);
 
 		return true;
 	}
@@ -506,16 +506,16 @@ class Email
 		{
 			if (!\is_array($varRecipients))
 			{
-				$varRecipients = \StringUtil::splitCsv($varRecipients);
+				$varRecipients = StringUtil::splitCsv($varRecipients);
 			}
 
 			// Support friendly name addresses and internationalized domain names
 			foreach ($varRecipients as $v)
 			{
-				list($strName, $strEmail) = \StringUtil::splitFriendlyEmail($v);
+				list($strName, $strEmail) = StringUtil::splitFriendlyEmail($v);
 
 				$strName = trim($strName, ' "');
-				$strEmail = \Idna::encodeEmail($strEmail);
+				$strEmail = Idna::encodeEmail($strEmail);
 
 				if ($strName != '')
 				{

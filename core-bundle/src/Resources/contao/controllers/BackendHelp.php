@@ -35,13 +35,13 @@ class BackendHelp extends Backend
 		$this->import('BackendUser', 'User');
 		parent::__construct();
 
-		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
 		{
 			throw new AccessDeniedException('Access denied');
 		}
 
-		\System::loadLanguageFile('default');
-		\System::loadLanguageFile('modules');
+		System::loadLanguageFile('default');
+		System::loadLanguageFile('modules');
 	}
 
 	/**
@@ -51,13 +51,13 @@ class BackendHelp extends Backend
 	 */
 	public function run()
 	{
-		$table = \Input::get('table');
-		$field = \Input::get('field');
+		$table = Input::get('table');
+		$field = Input::get('field');
 
-		\System::loadLanguageFile($table);
+		System::loadLanguageFile($table);
 		$this->loadDataContainer($table);
 
-		$objTemplate = new \BackendTemplate('be_help');
+		$objTemplate = new BackendTemplate('be_help');
 		$objTemplate->rows = array();
 		$objTemplate->explanation = '';
 
@@ -75,7 +75,7 @@ class BackendHelp extends Backend
 			elseif (\is_array($arrData['options_callback']))
 			{
 				$this->import($arrData['options_callback'][0]);
-				$options = $this->{$arrData['options_callback'][0]}->{$arrData['options_callback'][1]}(new \DC_Table($table));
+				$options = $this->{$arrData['options_callback'][0]}->{$arrData['options_callback'][1]}(new DC_Table($table));
 			}
 			elseif (\is_callable($arrData['options_callback']))
 			{
@@ -130,7 +130,7 @@ class BackendHelp extends Backend
 		// Add an explanation
 		if (isset($arrData['explanation']))
 		{
-			\System::loadLanguageFile('explain');
+			System::loadLanguageFile('explain');
 			$key = $arrData['explanation'];
 
 			if (!\is_array($GLOBALS['TL_LANG']['XPL'][$key]))
@@ -143,11 +143,11 @@ class BackendHelp extends Backend
 			}
 		}
 
-		$objTemplate->theme = \Backend::getTheme();
-		$objTemplate->base = \Environment::get('base');
+		$objTemplate->theme = Backend::getTheme();
+		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizardTitle']);
-		$objTemplate->charset = \Config::get('characterSet');
+		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizardTitle']);
+		$objTemplate->charset = Config::get('characterSet');
 		$objTemplate->headline = $arrData['label'][0] ?: $field;
 		$objTemplate->helpWizard = $GLOBALS['TL_LANG']['MSC']['helpWizard'];
 

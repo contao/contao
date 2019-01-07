@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes form fields
  *
@@ -87,43 +89,43 @@ namespace Contao;
  * @method static FormFieldModel|null findOneByImageSubmit($val, array $opt=array())
  * @method static FormFieldModel|null findOneBySingleSRC($val, array $opt=array())
  *
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByPid($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findBySorting($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByInvisible($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByType($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByName($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByLabel($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByText($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByHtml($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByOptions($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByMandatory($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByRgxp($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByPlaceholder($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByMinlength($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByMaxlength($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findBySize($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByMultiple($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByMSize($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByExtensions($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByStoreFile($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByUploadFolder($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByUseHomeDir($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByDoNotOverwrite($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByFsType($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByClass($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByValue($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByAccesskey($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByTabindex($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByFSize($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByCustomTpl($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByAddSubmit($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findBySlabel($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findByImageSubmit($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findBySingleSRC($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|FormFieldModel[]|FormFieldModel|null findAll(array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByPid($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findBySorting($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByInvisible($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByType($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByName($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByLabel($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByText($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByHtml($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByOptions($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByMandatory($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByRgxp($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByPlaceholder($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByMinlength($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByMaxlength($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findBySize($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByMultiple($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByMSize($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByExtensions($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByStoreFile($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByUploadFolder($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByUseHomeDir($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByDoNotOverwrite($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByFsType($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByClass($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByValue($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByAccesskey($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByTabindex($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByFSize($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByCustomTpl($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByAddSubmit($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findBySlabel($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByImageSubmit($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findBySingleSRC($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
@@ -178,7 +180,7 @@ class FormFieldModel extends Model
 	 * @param integer $intPid     The form ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|FormFieldModel[]|FormFieldModel|null A collection of models or null if there are no form fields
+	 * @return Collection|FormFieldModel[]|FormFieldModel|null A collection of models or null if there are no form fields
 	 */
 	public static function findPublishedByPid($intPid, array $arrOptions=array())
 	{

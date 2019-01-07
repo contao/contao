@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes style sheets
  *
@@ -46,17 +48,17 @@ namespace Contao;
  * @method static StyleSheetModel|null findOneByMediaQuery($val, array $opt=array())
  * @method static StyleSheetModel|null findOneByVars($val, array $opt=array())
  *
- * @method static Model\Collection|StyleSheetModel[]|StyleSheetModel|null findByPid($val, array $opt=array())
- * @method static Model\Collection|StyleSheetModel[]|StyleSheetModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|StyleSheetModel[]|StyleSheetModel|null findByDisablePie($val, array $opt=array())
- * @method static Model\Collection|StyleSheetModel[]|StyleSheetModel|null findByEmbedImages($val, array $opt=array())
- * @method static Model\Collection|StyleSheetModel[]|StyleSheetModel|null findByCc($val, array $opt=array())
- * @method static Model\Collection|StyleSheetModel[]|StyleSheetModel|null findByMedia($val, array $opt=array())
- * @method static Model\Collection|StyleSheetModel[]|StyleSheetModel|null findByMediaQuery($val, array $opt=array())
- * @method static Model\Collection|StyleSheetModel[]|StyleSheetModel|null findByVars($val, array $opt=array())
- * @method static Model\Collection|StyleSheetModel[]|StyleSheetModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|StyleSheetModel[]|StyleSheetModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|StyleSheetModel[]|StyleSheetModel|null findAll(array $opt=array())
+ * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByPid($val, array $opt=array())
+ * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByDisablePie($val, array $opt=array())
+ * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByEmbedImages($val, array $opt=array())
+ * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByCc($val, array $opt=array())
+ * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByMedia($val, array $opt=array())
+ * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByMediaQuery($val, array $opt=array())
+ * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByVars($val, array $opt=array())
+ * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
@@ -85,7 +87,7 @@ class StyleSheetModel extends Model
 	 *
 	 * @param array $arrIds An array of style sheet IDs
 	 *
-	 * @return Model\Collection|StyleSheetModel[]|StyleSheetModel|null A collection of models or null if there are no style sheets
+	 * @return Collection|StyleSheetModel[]|StyleSheetModel|null A collection of models or null if there are no style sheets
 	 */
 	public static function findByIds($arrIds)
 	{
@@ -94,7 +96,7 @@ class StyleSheetModel extends Model
 			return null;
 		}
 
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 		$arrIds = array_map('\intval', $arrIds);
 
 		$objResult = $objDatabase->execute("SELECT *, (SELECT tstamp FROM tl_theme WHERE tl_theme.id=tl_style_sheet.pid) AS tstamp3, (SELECT MAX(tstamp) FROM tl_style WHERE tl_style.pid=tl_style_sheet.id) AS tstamp2, (SELECT COUNT(*) FROM tl_style WHERE tl_style.selector='@font-face' AND tl_style.invisible='' AND tl_style.pid=tl_style_sheet.id) AS hasFontFace FROM tl_style_sheet WHERE id IN (" . implode(',', $arrIds) . ") ORDER BY " . $objDatabase->findInSet('id', $arrIds));

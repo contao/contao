@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Front end module "random image".
  *
@@ -20,7 +22,7 @@ class ModuleRandomImage extends Module
 
 	/**
 	 * Files object
-	 * @var Model\Collection|FilesModel
+	 * @var Collection|FilesModel
 	 */
 	protected $objFiles;
 
@@ -37,14 +39,14 @@ class ModuleRandomImage extends Module
 	 */
 	public function generate()
 	{
-		$this->multiSRC = \StringUtil::deserialize($this->multiSRC);
+		$this->multiSRC = StringUtil::deserialize($this->multiSRC);
 
 		if (empty($this->multiSRC) || !\is_array($this->multiSRC))
 		{
 			return '';
 		}
 
-		$this->objFiles = \FilesModel::findMultipleByUuids($this->multiSRC);
+		$this->objFiles = FilesModel::findMultipleByUuids($this->multiSRC);
 
 		if ($this->objFiles === null)
 		{
@@ -66,7 +68,7 @@ class ModuleRandomImage extends Module
 		while ($objFiles->next())
 		{
 			// Continue if the files has been processed or does not exist
-			if (isset($images[$objFiles->path]) || !file_exists(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFiles->path))
+			if (isset($images[$objFiles->path]) || !file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFiles->path))
 			{
 				continue;
 			}
@@ -74,7 +76,7 @@ class ModuleRandomImage extends Module
 			// Single files
 			if ($objFiles->type == 'file')
 			{
-				$objFile = new \File($objFiles->path);
+				$objFile = new File($objFiles->path);
 
 				if (!$objFile->isImage)
 				{
@@ -87,7 +89,7 @@ class ModuleRandomImage extends Module
 					'id'         => $objFiles->id,
 					'name'       => $objFile->basename,
 					'singleSRC'  => $objFiles->path,
-					'title'      => \StringUtil::specialchars($objFile->basename),
+					'title'      => StringUtil::specialchars($objFile->basename),
 					'filesModel' => $objFiles->current()
 				);
 			}
@@ -95,7 +97,7 @@ class ModuleRandomImage extends Module
 			// Folders
 			else
 			{
-				$objSubfiles = \FilesModel::findByPid($objFiles->uuid, array('order' => 'name'));
+				$objSubfiles = FilesModel::findByPid($objFiles->uuid, array('order' => 'name'));
 
 				if ($objSubfiles === null)
 				{
@@ -110,7 +112,7 @@ class ModuleRandomImage extends Module
 						continue;
 					}
 
-					$objFile = new \File($objSubfiles->path);
+					$objFile = new File($objSubfiles->path);
 
 					if (!$objFile->isImage)
 					{
@@ -123,7 +125,7 @@ class ModuleRandomImage extends Module
 						'id'         => $objSubfiles->id,
 						'name'       => $objFile->basename,
 						'singleSRC'  => $objSubfiles->path,
-						'title'      => \StringUtil::specialchars($objFile->basename),
+						'title'      => StringUtil::specialchars($objFile->basename),
 						'filesModel' => $objSubfiles->current()
 					);
 				}

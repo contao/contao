@@ -146,7 +146,7 @@ class FormTextField extends Widget
 				{
 					try
 					{
-						return \Idna::decodeUrl($this->varValue);
+						return Idna::decodeUrl($this->varValue);
 					}
 					catch (\InvalidArgumentException $e)
 					{
@@ -155,7 +155,7 @@ class FormTextField extends Widget
 				}
 				elseif ($this->rgxp == 'email' || $this->rgxp == 'friendly')
 				{
-					return \Idna::decodeEmail($this->varValue);
+					return Idna::decodeEmail($this->varValue);
 				}
 				else
 				{
@@ -246,13 +246,13 @@ class FormTextField extends Widget
 		{
 			try
 			{
-				$varInput = \Idna::encodeUrl($varInput);
+				$varInput = Idna::encodeUrl($varInput);
 			}
 			catch (\InvalidArgumentException $e) {}
 		}
 		elseif ($this->rgxp == 'email' || $this->rgxp == 'friendly')
 		{
-			$varInput = \Idna::encodeEmail($varInput);
+			$varInput = Idna::encodeEmail($varInput);
 		}
 
 		return parent::validator($varInput);
@@ -271,7 +271,7 @@ class FormTextField extends Widget
 						$this->strId,
 						($this->hideInput ? ' password' : ''),
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
-						\StringUtil::specialchars($this->value),
+						StringUtil::specialchars($this->value),
 						$this->getAttributes(),
 						$this->strTagEnding);
 	}

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
 use Contao\Model\Registry;
 
 /**
@@ -38,17 +39,17 @@ use Contao\Model\Registry;
  * @method static OptInModel|null findOneByEmailSubject($val, array $opt=array())
  * @method static OptInModel|null findOneByEmailText($val, array $opt=array())
  *
- * @method static Model\Collection|OptInModel[]|OptInModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|OptInModel[]|OptInModel|null findByToken($val, array $opt=array())
- * @method static Model\Collection|OptInModel[]|OptInModel|null findByCreatedOn($val, array $opt=array())
- * @method static Model\Collection|OptInModel[]|OptInModel|null findByConfirmedOn($val, array $opt=array())
- * @method static Model\Collection|OptInModel[]|OptInModel|null findByRemoveOn($val, array $opt=array())
- * @method static Model\Collection|OptInModel[]|OptInModel|null findByEmail($val, array $opt=array())
- * @method static Model\Collection|OptInModel[]|OptInModel|null findByEmailSubject($val, array $opt=array())
- * @method static Model\Collection|OptInModel[]|OptInModel|null findByEmailText($val, array $opt=array())
- * @method static Model\Collection|OptInModel[]|OptInModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|OptInModel[]|OptInModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|OptInModel[]|OptInModel|null findAll(array $opt=array())
+ * @method static Collection|OptInModel[]|OptInModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|OptInModel[]|OptInModel|null findByToken($val, array $opt=array())
+ * @method static Collection|OptInModel[]|OptInModel|null findByCreatedOn($val, array $opt=array())
+ * @method static Collection|OptInModel[]|OptInModel|null findByConfirmedOn($val, array $opt=array())
+ * @method static Collection|OptInModel[]|OptInModel|null findByRemoveOn($val, array $opt=array())
+ * @method static Collection|OptInModel[]|OptInModel|null findByEmail($val, array $opt=array())
+ * @method static Collection|OptInModel[]|OptInModel|null findByEmailSubject($val, array $opt=array())
+ * @method static Collection|OptInModel[]|OptInModel|null findByEmailText($val, array $opt=array())
+ * @method static Collection|OptInModel[]|OptInModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|OptInModel[]|OptInModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|OptInModel[]|OptInModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -76,7 +77,7 @@ class OptInModel extends Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|OptInModel[]|OptInModel|null A collection of models or null if there are no expired tokens
+	 * @return Collection|OptInModel[]|OptInModel|null A collection of models or null if there are no expired tokens
 	 */
 	public static function findExpiredTokens(array $arrOptions=array())
 	{
@@ -97,7 +98,7 @@ class OptInModel extends Model
 	public static function findOneByRelatedTableAndId($strTable, $intId, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=? AND relId=?)")
 								 ->execute($strTable, $intId);
@@ -125,7 +126,7 @@ class OptInModel extends Model
 	 */
 	public function delete()
 	{
-		\Database::getInstance()->prepare("DELETE FROM tl_opt_in_related WHERE pid=?")
+		Database::getInstance()->prepare("DELETE FROM tl_opt_in_related WHERE pid=?")
 								->execute($this->id);
 
 		return parent::delete();
@@ -139,7 +140,7 @@ class OptInModel extends Model
 	public function getRelatedRecords()
 	{
 		$arrRelated = array();
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		$objRelated = $objDatabase->prepare("SELECT * FROM tl_opt_in_related WHERE pid=?")
 								  ->execute($this->id);
@@ -161,7 +162,7 @@ class OptInModel extends Model
 	 */
 	public function setRelatedRecords(array $arrRelated)
 	{
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		$objCount = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_opt_in_related WHERE pid=?")
 								->execute($this->id);
@@ -181,5 +182,3 @@ class OptInModel extends Model
 		}
 	}
 }
-
-class_alias(OptInModel::class, 'OptInModel');

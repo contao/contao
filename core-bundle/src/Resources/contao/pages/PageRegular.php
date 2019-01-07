@@ -64,11 +64,11 @@ class PageRegular extends Frontend
 
 		$locale = str_replace('-', '_', $objPage->language);
 
-		$container = \System::getContainer();
+		$container = System::getContainer();
 		$container->get('request_stack')->getCurrentRequest()->setLocale($locale);
 		$container->get('translator')->setLocale($locale);
 
-		\System::loadLanguageFile('default');
+		System::loadLanguageFile('default');
 
 		// Static URLs
 		$this->setStaticUrls();
@@ -108,7 +108,7 @@ class PageRegular extends Frontend
 		// Initialize modules and sections
 		$arrCustomSections = array();
 		$arrSections = array('header', 'left', 'right', 'main', 'footer');
-		$arrModules = \StringUtil::deserialize($objLayout->modules);
+		$arrModules = StringUtil::deserialize($objLayout->modules);
 
 		$arrModuleIds = array();
 
@@ -122,7 +122,7 @@ class PageRegular extends Frontend
 		}
 
 		// Get all modules in a single DB query
-		$objModules = \ModuleModel::findMultipleByIds($arrModuleIds);
+		$objModules = ModuleModel::findMultipleByIds($arrModuleIds);
 
 		if ($objModules !== null || $arrModules[0]['mod'] == 0) // see #4137
 		{
@@ -217,7 +217,7 @@ class PageRegular extends Frontend
 		}
 
 		// Assign the title and description
-		$this->Template->title = \StringUtil::stripInsertTags($this->replaceInsertTags($objLayout->titleTag)); // see #7097
+		$this->Template->title = StringUtil::stripInsertTags($this->replaceInsertTags($objLayout->titleTag)); // see #7097
 		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ', '', ''), $objPage->description);
 
 		// Body onload and body classes
@@ -238,20 +238,20 @@ class PageRegular extends Frontend
 	 */
 	protected function getPageLayout($objPage)
 	{
-		$blnMobile = ($objPage->mobileLayout && \Environment::get('agent')->mobile);
+		$blnMobile = ($objPage->mobileLayout && Environment::get('agent')->mobile);
 
 		// Override the autodetected value
-		if (\Input::cookie('TL_VIEW') == 'mobile')
+		if (Input::cookie('TL_VIEW') == 'mobile')
 		{
 			$blnMobile = true;
 		}
-		elseif (\Input::cookie('TL_VIEW') == 'desktop')
+		elseif (Input::cookie('TL_VIEW') == 'desktop')
 		{
 			$blnMobile = false;
 		}
 
 		$intId = ($blnMobile && $objPage->mobileLayout) ? $objPage->mobileLayout : $objPage->layout;
-		$objLayout = \LayoutModel::findByPk($intId);
+		$objLayout = LayoutModel::findByPk($intId);
 
 		// Die if there is no layout
 		if (null === $objLayout)
@@ -275,11 +275,11 @@ class PageRegular extends Frontend
 	 */
 	protected function createTemplate($objPage, $objLayout)
 	{
-		$this->Template = new \FrontendTemplate($objPage->template);
+		$this->Template = new FrontendTemplate($objPage->template);
 		$this->Template->viewport = '';
 		$this->Template->framework = '';
 
-		$arrFramework = \StringUtil::deserialize($objLayout->framework);
+		$arrFramework = StringUtil::deserialize($objLayout->framework);
 
 		// Generate the CSS framework
 		if (\is_array($arrFramework) && \in_array('layout.css', $arrFramework))
@@ -294,7 +294,7 @@ class PageRegular extends Frontend
 			// Wrapper
 			if ($objLayout->static)
 			{
-				$arrSize = \StringUtil::deserialize($objLayout->width);
+				$arrSize = StringUtil::deserialize($objLayout->width);
 
 				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
 				{
@@ -306,7 +306,7 @@ class PageRegular extends Frontend
 			// Header
 			if ($objLayout->rows == '2rwh' || $objLayout->rows == '3rw')
 			{
-				$arrSize = \StringUtil::deserialize($objLayout->headerHeight);
+				$arrSize = StringUtil::deserialize($objLayout->headerHeight);
 
 				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
 				{
@@ -319,7 +319,7 @@ class PageRegular extends Frontend
 			// Left column
 			if ($objLayout->cols == '2cll' || $objLayout->cols == '3cl')
 			{
-				$arrSize = \StringUtil::deserialize($objLayout->widthLeft);
+				$arrSize = StringUtil::deserialize($objLayout->widthLeft);
 
 				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
 				{
@@ -331,7 +331,7 @@ class PageRegular extends Frontend
 			// Right column
 			if ($objLayout->cols == '2clr' || $objLayout->cols == '3cl')
 			{
-				$arrSize = \StringUtil::deserialize($objLayout->widthRight);
+				$arrSize = StringUtil::deserialize($objLayout->widthRight);
 
 				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
 				{
@@ -349,7 +349,7 @@ class PageRegular extends Frontend
 			// Footer
 			if ($objLayout->rows == '2rwf' || $objLayout->rows == '3rw')
 			{
-				$arrSize = \StringUtil::deserialize($objLayout->footerHeight);
+				$arrSize = StringUtil::deserialize($objLayout->footerHeight);
 
 				if (isset($arrSize['value']) && $arrSize['value'] != '' && $arrSize['value'] >= 0)
 				{
@@ -360,7 +360,7 @@ class PageRegular extends Frontend
 			// Add the layout specific CSS
 			if ($strFramework != '')
 			{
-				$this->Template->framework = \Template::generateInlineStyle($strFramework) . "\n";
+				$this->Template->framework = Template::generateInlineStyle($strFramework) . "\n";
 			}
 		}
 
@@ -384,7 +384,7 @@ class PageRegular extends Frontend
 			$GLOBALS['TL_JAVASCRIPT'] = array();
 		}
 
-		$container = \System::getContainer();
+		$container = System::getContainer();
 		$rootDir = $container->getParameter('kernel.project_dir');
 
 		// jQuery scripts
@@ -403,12 +403,12 @@ class PageRegular extends Frontend
 						$cache->save($hash);
 					}
 
-					$this->Template->mooScripts .= \Template::generateScriptTag('https://code.jquery.com/jquery-' . PackageUtil::getNormalizedVersion('contao-components/jquery') . '.min.js', false, false, $hash->get()) . "\n";
+					$this->Template->mooScripts .= Template::generateScriptTag('https://code.jquery.com/jquery-' . PackageUtil::getNormalizedVersion('contao-components/jquery') . '.min.js', false, false, $hash->get()) . "\n";
 
 					// Local fallback (thanks to DyaGa)
 					if ($objLayout->jSource == 'j_fallback')
 					{
-						$this->Template->mooScripts .= \Template::generateInlineScript('window.jQuery || document.write(\'<script src="' . \Controller::addAssetsUrlTo('assets/jquery/js/jquery.min.js') .'">\x3C/script>\')') . "\n";
+						$this->Template->mooScripts .= Template::generateInlineScript('window.jQuery || document.write(\'<script src="' . Controller::addAssetsUrlTo('assets/jquery/js/jquery.min.js') .'">\x3C/script>\')') . "\n";
 					}
 				}
 				catch (\OutOfBoundsException $e)
@@ -433,17 +433,17 @@ class PageRegular extends Frontend
 
 					if (version_compare($version, '1.5.1', '>'))
 					{
-						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools.min.js') . "\n";
+						$this->Template->mooScripts .= Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools.min.js') . "\n";
 					}
 					else
 					{
-						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools-yui-compressed.js') . "\n";
+						$this->Template->mooScripts .= Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools-yui-compressed.js') . "\n";
 					}
 
 					// Local fallback (thanks to DyaGa)
 					if ($objLayout->mooSource == 'moo_fallback')
 					{
-						$this->Template->mooScripts .= \Template::generateInlineScript('window.MooTools || document.write(\'<script src="' . \Controller::addAssetsUrlTo('assets/mootools/js/mootools-core.min.js') . '">\x3C/script>\')') . "\n";
+						$this->Template->mooScripts .= Template::generateInlineScript('window.MooTools || document.write(\'<script src="' . Controller::addAssetsUrlTo('assets/mootools/js/mootools-core.min.js') . '">\x3C/script>\')') . "\n";
 					}
 
 					$GLOBALS['TL_JAVASCRIPT'][] = 'assets/mootools/js/mootools-more.min.js|static';
@@ -486,7 +486,7 @@ class PageRegular extends Frontend
 		if ($objLayout->sections != '')
 		{
 			$arrPositions = array();
-			$arrSections = \StringUtil::deserialize($objLayout->sections);
+			$arrSections = StringUtil::deserialize($objLayout->sections);
 
 			if (!empty($arrSections) && \is_array($arrSections))
 			{
@@ -502,8 +502,8 @@ class PageRegular extends Frontend
 		// Default settings
 		$this->Template->layout = $objLayout;
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
-		$this->Template->charset = \Config::get('characterSet');
-		$this->Template->base = \Environment::get('base');
+		$this->Template->charset = Config::get('characterSet');
+		$this->Template->base = Environment::get('base');
 		$this->Template->isRTL = false;
 	}
 
@@ -517,13 +517,13 @@ class PageRegular extends Frontend
 	{
 		$strStyleSheets = '';
 		$strCcStyleSheets = '';
-		$arrStyleSheets = \StringUtil::deserialize($objLayout->stylesheet);
-		$arrFramework = \StringUtil::deserialize($objLayout->framework);
+		$arrStyleSheets = StringUtil::deserialize($objLayout->stylesheet);
+		$arrFramework = StringUtil::deserialize($objLayout->framework);
 
 		// Google web fonts
 		if ($objLayout->webfonts != '')
 		{
-			$strStyleSheets .= \Template::generateStyleTag('https://fonts.googleapis.com/css?family=' . str_replace('|', '%7C', $objLayout->webfonts), 'all') . "\n";
+			$strStyleSheets .= Template::generateStyleTag('https://fonts.googleapis.com/css?family=' . str_replace('|', '%7C', $objLayout->webfonts), 'all') . "\n";
 		}
 
 		// Add the Contao CSS framework style sheets
@@ -547,13 +547,13 @@ class PageRegular extends Frontend
 		// User style sheets
 		if (\is_array($arrStyleSheets) && \strlen($arrStyleSheets[0]))
 		{
-			$objStylesheets = \StyleSheetModel::findByIds($arrStyleSheets);
+			$objStylesheets = StyleSheetModel::findByIds($arrStyleSheets);
 
 			if ($objStylesheets !== null)
 			{
 				while ($objStylesheets->next())
 				{
-					$media = implode(',', \StringUtil::deserialize($objStylesheets->media));
+					$media = implode(',', StringUtil::deserialize($objStylesheets->media));
 
 					// Overwrite the media type with a custom media query
 					if ($objStylesheets->mediaQuery != '')
@@ -569,16 +569,16 @@ class PageRegular extends Frontend
 						// External style sheet
 						if ($objStylesheets->type == 'external')
 						{
-							$objFile = \FilesModel::findByPk($objStylesheets->singleSRC);
+							$objFile = FilesModel::findByPk($objStylesheets->singleSRC);
 
 							if ($objFile !== null)
 							{
-								$strStyleSheet = \Template::generateStyleTag(\Controller::addFilesUrlTo($objFile->path), $media, null);
+								$strStyleSheet = Template::generateStyleTag(Controller::addFilesUrlTo($objFile->path), $media, null);
 							}
 						}
 						else
 						{
-							$strStyleSheet = \Template::generateStyleTag(\Controller::addAssetsUrlTo('assets/css/' . $objStylesheets->name . '.css'), $media, max($objStylesheets->tstamp, $objStylesheets->tstamp2, $objStylesheets->tstamp3));
+							$strStyleSheet = Template::generateStyleTag(Controller::addAssetsUrlTo('assets/css/' . $objStylesheets->name . '.css'), $media, max($objStylesheets->tstamp, $objStylesheets->tstamp2, $objStylesheets->tstamp3));
 						}
 
 						if ($objStylesheets->cc)
@@ -593,7 +593,7 @@ class PageRegular extends Frontend
 						// External style sheet
 						if ($objStylesheets->type == 'external')
 						{
-							$objFile = \FilesModel::findByPk($objStylesheets->singleSRC);
+							$objFile = FilesModel::findByPk($objStylesheets->singleSRC);
 
 							if ($objFile !== null)
 							{
@@ -609,7 +609,7 @@ class PageRegular extends Frontend
 			}
 		}
 
-		$arrExternal = \StringUtil::deserialize($objLayout->external);
+		$arrExternal = StringUtil::deserialize($objLayout->external);
 
 		// External style sheets
 		if (!empty($arrExternal) && \is_array($arrExternal))
@@ -617,7 +617,7 @@ class PageRegular extends Frontend
 			// Consider the sorting order (see #5038)
 			if ($objLayout->orderExt != '')
 			{
-				$tmp = \StringUtil::deserialize($objLayout->orderExt);
+				$tmp = StringUtil::deserialize($objLayout->orderExt);
 
 				if (!empty($tmp) && \is_array($tmp))
 				{
@@ -647,8 +647,8 @@ class PageRegular extends Frontend
 			}
 
 			// Get the file entries from the database
-			$objFiles = \FilesModel::findMultipleByUuids($arrExternal);
-			$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+			$objFiles = FilesModel::findMultipleByUuids($arrExternal);
+			$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 			if ($objFiles !== null)
 			{
@@ -686,13 +686,13 @@ class PageRegular extends Frontend
 		// Add the analytics scripts
 		if ($objLayout->analytics != '')
 		{
-			$arrAnalytics = \StringUtil::deserialize($objLayout->analytics, true);
+			$arrAnalytics = StringUtil::deserialize($objLayout->analytics, true);
 
 			foreach ($arrAnalytics as $strTemplate)
 			{
 				if ($strTemplate != '')
 				{
-					$objTemplate = new \FrontendTemplate($strTemplate);
+					$objTemplate = new FrontendTemplate($strTemplate);
 					$strHeadTags .= $objTemplate->parse();
 				}
 			}
@@ -720,13 +720,13 @@ class PageRegular extends Frontend
 		// jQuery
 		if ($objLayout->addJQuery)
 		{
-			$arrJquery = \StringUtil::deserialize($objLayout->jquery, true);
+			$arrJquery = StringUtil::deserialize($objLayout->jquery, true);
 
 			foreach ($arrJquery as $strTemplate)
 			{
 				if ($strTemplate != '')
 				{
-					$objTemplate = new \FrontendTemplate($strTemplate);
+					$objTemplate = new FrontendTemplate($strTemplate);
 					$strScripts .= $objTemplate->parse();
 				}
 			}
@@ -738,13 +738,13 @@ class PageRegular extends Frontend
 		// MooTools
 		if ($objLayout->addMooTools)
 		{
-			$arrMootools = \StringUtil::deserialize($objLayout->mootools, true);
+			$arrMootools = StringUtil::deserialize($objLayout->mootools, true);
 
 			foreach ($arrMootools as $strTemplate)
 			{
 				if ($strTemplate != '')
 				{
-					$objTemplate = new \FrontendTemplate($strTemplate);
+					$objTemplate = new FrontendTemplate($strTemplate);
 					$strScripts .= $objTemplate->parse();
 				}
 			}
@@ -756,13 +756,13 @@ class PageRegular extends Frontend
 		// Add the framework agnostic JavaScripts
 		if ($objLayout->scripts != '')
 		{
-			$arrScripts = \StringUtil::deserialize($objLayout->scripts, true);
+			$arrScripts = StringUtil::deserialize($objLayout->scripts, true);
 
 			foreach ($arrScripts as $strTemplate)
 			{
 				if ($strTemplate != '')
 				{
-					$objTemplate = new \FrontendTemplate($strTemplate);
+					$objTemplate = new FrontendTemplate($strTemplate);
 					$strScripts .= $objTemplate->parse();
 				}
 			}
@@ -772,7 +772,7 @@ class PageRegular extends Frontend
 		$strScripts .= '[[TL_BODY]]';
 
 		// Add the external JavaScripts
-		$arrExternalJs = \StringUtil::deserialize($objLayout->externalJs);
+		$arrExternalJs = StringUtil::deserialize($objLayout->externalJs);
 
 		// External JavaScripts
 		if (!empty($arrExternalJs) && \is_array($arrExternalJs))
@@ -780,7 +780,7 @@ class PageRegular extends Frontend
 			// Consider the sorting order (see #5038)
 			if ($objLayout->orderExtJs != '')
 			{
-				$tmp = \StringUtil::deserialize($objLayout->orderExtJs);
+				$tmp = StringUtil::deserialize($objLayout->orderExtJs);
 
 				if (!empty($tmp) && \is_array($tmp))
 				{
@@ -811,8 +811,8 @@ class PageRegular extends Frontend
 		}
 
 		// Get the file entries from the database
-		$objFiles = \FilesModel::findMultipleByUuids($arrExternalJs);
-		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$objFiles = FilesModel::findMultipleByUuids($arrExternalJs);
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		if ($objFiles !== null)
 		{
@@ -820,7 +820,7 @@ class PageRegular extends Frontend
 			{
 				if (file_exists($rootDir . '/' . $objFiles->path))
 				{
-					$strScripts .= \Template::generateScriptTag($objFiles->path, false, null);
+					$strScripts .= Template::generateScriptTag($objFiles->path, false, null);
 				}
 			}
 		}

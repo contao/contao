@@ -163,7 +163,7 @@ class tl_undo extends Backend
 	 */
 	public function showDeletedRecords($data, $row)
 	{
-		$arrData = \StringUtil::deserialize($row['data']);
+		$arrData = StringUtil::deserialize($row['data']);
 
 		foreach ($arrData as $strTable=>$arrTableData)
 		{

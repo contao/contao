@@ -44,14 +44,14 @@ class ContentDownload extends ContentElement
 			return '';
 		}
 
-		$objFile = \FilesModel::findByUuid($this->singleSRC);
+		$objFile = FilesModel::findByUuid($this->singleSRC);
 
 		if ($objFile === null)
 		{
 			return '';
 		}
 
-		$allowedDownload = \StringUtil::trimsplit(',', strtolower(\Config::get('allowedDownload')));
+		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
 
 		// Return if the file type is not allowed
 		if (!\in_array($objFile->extension, $allowedDownload))
@@ -59,14 +59,14 @@ class ContentDownload extends ContentElement
 			return '';
 		}
 
-		$file = \Input::get('file', true);
+		$file = Input::get('file', true);
 
 		// Send the file to the browser (see #4632 and #8375)
-		if ($file && (!isset($_GET['cid']) || \Input::get('cid') == $this->id))
+		if ($file && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
 		{
 			if ($file == $objFile->path)
 			{
-				\Controller::sendFileToBrowser($file, (bool) $this->inline);
+				Controller::sendFileToBrowser($file, (bool) $this->inline);
 			}
 
 			if (isset($_GET['cid']))
@@ -86,28 +86,28 @@ class ContentDownload extends ContentElement
 	 */
 	protected function compile()
 	{
-		$objFile = new \File($this->singleSRC);
+		$objFile = new File($this->singleSRC);
 
 		if (TL_MODE == 'FE')
 		{
 			global $objPage;
 
-			$arrMeta = \Frontend::getMetaData($this->objFile->meta, $objPage->language);
+			$arrMeta = Frontend::getMetaData($this->objFile->meta, $objPage->language);
 
 			if (empty($arrMeta) && $objPage->rootFallbackLanguage !== null)
 			{
-				$arrMeta = \Frontend::getMetaData($this->objFile->meta, $objPage->rootFallbackLanguage);
+				$arrMeta = Frontend::getMetaData($this->objFile->meta, $objPage->rootFallbackLanguage);
 			}
 		}
 		else
 		{
-			$arrMeta = \Frontend::getMetaData($this->objFile->meta, $GLOBALS['TL_LANGUAGE']);
+			$arrMeta = Frontend::getMetaData($this->objFile->meta, $GLOBALS['TL_LANGUAGE']);
 		}
 
 		// Use the meta title (see #1459)
 		if (!$this->overwriteLink && isset($arrMeta['title']))
 		{
-			$this->linkTitle = \StringUtil::specialchars($arrMeta['title']);
+			$this->linkTitle = StringUtil::specialchars($arrMeta['title']);
 		}
 
 		if (!$this->titleText || !$this->overwriteLink)
@@ -115,7 +115,7 @@ class ContentDownload extends ContentElement
 			$this->titleText = sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename);
 		}
 
-		$strHref = \Environment::get('request');
+		$strHref = Environment::get('request');
 
 		// Remove an existing file parameter (see #5683)
 		if (isset($_GET['file']))
@@ -128,13 +128,13 @@ class ContentDownload extends ContentElement
 			$strHref = preg_replace('/(&(amp;)?|\?)cid=\d+/', '', $strHref);
 		}
 
-		$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . \System::urlEncode($objFile->value) . '&amp;cid=' . $this->id;
+		$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . System::urlEncode($objFile->value) . '&amp;cid=' . $this->id;
 
 		$this->Template->link = $this->linkTitle ?: $objFile->basename;
-		$this->Template->title = \StringUtil::specialchars($this->titleText);
+		$this->Template->title = StringUtil::specialchars($this->titleText);
 		$this->Template->href = $strHref;
 		$this->Template->filesize = $this->getReadableSize($objFile->filesize, 1);
-		$this->Template->icon = \Image::getPath($objFile->icon);
+		$this->Template->icon = Image::getPath($objFile->icon);
 		$this->Template->mime = $objFile->mime;
 		$this->Template->extension = $objFile->extension;
 		$this->Template->path = $objFile->dirname;

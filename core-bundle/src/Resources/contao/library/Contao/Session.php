@@ -72,7 +72,7 @@ class Session
 		}
 		else
 		{
-			$this->session = \System::getContainer()->get('session');
+			$this->session = System::getContainer()->get('session');
 		}
 
 		$this->sessionBag = $this->session->getBag($this->getSessionBagKey());

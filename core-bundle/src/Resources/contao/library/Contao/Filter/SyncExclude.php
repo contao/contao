@@ -10,6 +10,9 @@
 
 namespace Contao\Filter;
 
+use Contao\Folder;
+use Contao\StringUtil;
+
 /**
  * Filters a directory listing
  *
@@ -41,7 +44,7 @@ class SyncExclude extends \RecursiveFilterIterator
 			$strPath = \dirname($strPath);
 		}
 
-		$objFolder = new \Folder(\StringUtil::stripRootDir($strPath));
+		$objFolder = new Folder(StringUtil::stripRootDir($strPath));
 
 		return !$objFolder->isUnsynchronized();
 	}

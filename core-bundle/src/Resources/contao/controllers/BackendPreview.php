@@ -39,12 +39,12 @@ class BackendPreview extends Backend
 		$this->import('BackendUser', 'User');
 		parent::__construct();
 
-		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
 		{
 			throw new AccessDeniedException('Access denied');
 		}
 
-		\System::loadLanguageFile('default');
+		System::loadLanguageFile('default');
 	}
 
 	/**
@@ -54,12 +54,12 @@ class BackendPreview extends Backend
 	 */
 	public function run()
 	{
-		$objRouter = \System::getContainer()->get('router');
+		$objRouter = System::getContainer()->get('router');
 
 		// Switch to a particular member (see #6546)
-		if ($strUser = \Input::get('user'))
+		if ($strUser = Input::get('user'))
 		{
-			$objAuthenticator = \System::getContainer()->get('contao.security.frontend_preview_authenticator');
+			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 
 			if (!$objAuthenticator->authenticateFrontendUser($strUser, false))
 			{
@@ -68,48 +68,48 @@ class BackendPreview extends Backend
 
 			$arrParameters = array();
 
-			if (\Input::get('url'))
+			if (Input::get('url'))
 			{
-				$arrParameters['url'] = \Input::get('url');
+				$arrParameters['url'] = Input::get('url');
 			}
 
-			if (\Input::get('page'))
+			if (Input::get('page'))
 			{
-				$arrParameters['page'] = \Input::get('page');
+				$arrParameters['page'] = Input::get('page');
 			}
 
 			return new RedirectResponse($objRouter->generate('contao_backend_preview', $arrParameters));
 		}
 
-		$objTemplate = new \BackendTemplate('be_preview');
-		$objTemplate->base = \Environment::get('base');
+		$objTemplate = new BackendTemplate('be_preview');
+		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreview']);
-		$objTemplate->charset = \Config::get('characterSet');
-		$objTemplate->site = \Input::get('site', true);
+		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreview']);
+		$objTemplate->charset = Config::get('characterSet');
+		$objTemplate->site = Input::get('site', true);
 		$objTemplate->switchHref = $objRouter->generate('contao_backend_switch');
-		$objTemplate->user = \System::getContainer()->get('contao.security.token_checker')->getFrontendUsername();
+		$objTemplate->user = System::getContainer()->get('contao.security.token_checker')->getFrontendUsername();
 
 		$strUrl = null;
 
-		if (\Input::get('url'))
+		if (Input::get('url'))
 		{
-			$strUrl = \Environment::get('base') . \Input::get('url');
+			$strUrl = Environment::get('base') . Input::get('url');
 		}
-		elseif (\Input::get('page'))
+		elseif (Input::get('page'))
 		{
-			$strUrl = $this->redirectToFrontendPage(\Input::get('page'), \Input::get('article'), true);
+			$strUrl = $this->redirectToFrontendPage(Input::get('page'), Input::get('article'), true);
 		}
 		else
 		{
 			$event = new PreviewUrlConvertEvent();
-			\System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CONVERT, $event);
+			System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CONVERT, $event);
 			$strUrl = $event->getUrl();
 		}
 
 		if ($strUrl === null)
 		{
-			$strUrl = \System::getContainer()->get('router')->generate('contao_root', array(), UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = System::getContainer()->get('router')->generate('contao_root', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 
 		$objTemplate->url = $strUrl;

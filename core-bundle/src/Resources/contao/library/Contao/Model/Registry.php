@@ -94,8 +94,8 @@ class Registry implements \Countable
 	public function fetch($strTable, $varKey, $strAlias=null)
 	{
 		/** @var Model $strClass */
-		$strClass = \Model::getClassFromTable($strTable);
-		$strPk    = $strClass::getPk();
+		$strClass = Model::getClassFromTable($strTable);
+		$strPk = $strClass::getPk();
 
 		// Search by PK (most common case)
 		if ($strAlias === null || $strAlias == $strPk)

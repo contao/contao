@@ -46,7 +46,7 @@ class DcaLoader extends Controller
 			throw new \Exception('The table name must not be empty');
 		}
 
-		if (\Validator::isInsecurePath($strTable))
+		if (Validator::isInsecurePath($strTable))
 		{
 			throw new \InvalidArgumentException('The table name contains invalid characters');
 		}
@@ -71,7 +71,7 @@ class DcaLoader extends Controller
 
 		$GLOBALS['loadDataContainer'][$this->strTable] = true; // see #6145
 
-		$strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
+		$strCacheDir = System::getContainer()->getParameter('kernel.cache_dir');
 
 		// Try to load from cache
 		if (file_exists($strCacheDir . '/contao/dca/' . $this->strTable . '.php'))
@@ -82,7 +82,7 @@ class DcaLoader extends Controller
 		{
 			try
 			{
-				$files = \System::getContainer()->get('contao.resource_locator')->locate('dca/' . $this->strTable . '.php', null, false);
+				$files = System::getContainer()->get('contao.resource_locator')->locate('dca/' . $this->strTable . '.php', null, false);
 			}
 			catch (\InvalidArgumentException $e)
 			{
@@ -105,7 +105,7 @@ class DcaLoader extends Controller
 			}
 		}
 
-		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Local configuration file
 		if (file_exists($rootDir . '/system/config/dcaconfig.php'))

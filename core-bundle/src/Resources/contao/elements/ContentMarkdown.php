@@ -35,7 +35,7 @@ class ContentMarkdown extends ContentElement
 	{
 		if (TL_MODE == 'BE')
 		{
-			$return = '<pre>'. \StringUtil::specialchars($this->code) .'</pre>';
+			$return = '<pre>'. StringUtil::specialchars($this->code) .'</pre>';
 
 			if ($this->headline != '')
 			{
@@ -54,7 +54,7 @@ class ContentMarkdown extends ContentElement
 	protected function compile()
 	{
 		$this->code = MarkdownExtra::defaultTransform($this->code);
-		$this->Template->content = strip_tags($this->code, \Config::get('allowedTags'));
+		$this->Template->content = strip_tags($this->code, Config::get('allowedTags'));
 	}
 }
 

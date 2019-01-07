@@ -195,7 +195,7 @@ class tl_member_group extends Backend
 	public function addIcon($row, $label)
 	{
 		$image = 'mgroup';
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 
 		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
 

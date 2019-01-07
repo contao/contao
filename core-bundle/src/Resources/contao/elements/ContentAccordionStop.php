@@ -32,7 +32,7 @@ class ContentAccordionStop extends ContentElement
 		if (TL_MODE == 'BE')
 		{
 			$this->strTemplate = 'be_wildcard';
-			$this->Template = new \BackendTemplate($this->strTemplate);
+			$this->Template = new BackendTemplate($this->strTemplate);
 		}
 	}
 }

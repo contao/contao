@@ -104,7 +104,7 @@ class Message
 			throw new \Exception("Invalid message type $strType");
 		}
 
-		\System::getContainer()->get('session')->getFlashBag()->add(static::getFlashBagKey($strType, $strScope), $strMessage);
+		System::getContainer()->get('session')->getFlashBag()->add(static::getFlashBagKey($strType, $strScope), $strMessage);
 	}
 
 	/**
@@ -136,7 +136,7 @@ class Message
 	 */
 	public static function generateUnwrapped($strScope=TL_MODE, $blnRaw=false)
 	{
-		$session = \System::getContainer()->get('session');
+		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
 		{
@@ -172,7 +172,7 @@ class Message
 	 */
 	public static function reset()
 	{
-		$session = \System::getContainer()->get('session');
+		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
 		{
@@ -201,7 +201,7 @@ class Message
 	 */
 	public static function hasError($strScope=TL_MODE)
 	{
-		$session = \System::getContainer()->get('session');
+		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
 		{
@@ -220,7 +220,7 @@ class Message
 	 */
 	public static function hasConfirmation($strScope=TL_MODE)
 	{
-		$session = \System::getContainer()->get('session');
+		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
 		{
@@ -239,7 +239,7 @@ class Message
 	 */
 	public static function hasNew($strScope=TL_MODE)
 	{
-		$session = \System::getContainer()->get('session');
+		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
 		{
@@ -258,7 +258,7 @@ class Message
 	 */
 	public static function hasInfo($strScope=TL_MODE)
 	{
-		$session = \System::getContainer()->get('session');
+		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
 		{
@@ -277,7 +277,7 @@ class Message
 	 */
 	public static function hasRaw($strScope=TL_MODE)
 	{
-		$session = \System::getContainer()->get('session');
+		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
 		{

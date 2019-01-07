@@ -75,16 +75,16 @@ class FileSelector extends Widget
 
 		if ($this->extensions != '')
 		{
-			$this->arrValidFileTypes = \StringUtil::trimsplit(',', strtolower($this->extensions));
+			$this->arrValidFileTypes = StringUtil::trimsplit(',', strtolower($this->extensions));
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Store the keyword
-		if (\Input::post('FORM_SUBMIT') == 'item_selector')
+		if (Input::post('FORM_SUBMIT') == 'item_selector')
 		{
-			$strKeyword = ltrim(\Input::postRaw('keyword'), '*');
+			$strKeyword = ltrim(Input::postRaw('keyword'), '*');
 
 			// Make sure the regular expression is valid
 			if ($strKeyword != '')
@@ -117,7 +117,7 @@ class FileSelector extends Widget
 			{
 				$strPattern = "CAST(name AS CHAR) REGEXP ?";
 
-				if (substr(\Config::get('dbCollation'), -3) == '_ci')
+				if (substr(Config::get('dbCollation'), -3) == '_ci')
 				{
 					$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 				}
@@ -217,12 +217,12 @@ class FileSelector extends Widget
 		}
 
 		// Add the breadcrumb menu
-		if (\Input::get('do') != 'files')
+		if (Input::get('do') != 'files')
 		{
-			\Backend::addFilesBreadcrumb('tl_files_picker');
+			Backend::addFilesBreadcrumb('tl_files_picker');
 		}
 
-		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Root nodes (breadcrumb menu)
 		if (!empty($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root']))
@@ -261,7 +261,7 @@ class FileSelector extends Widget
 		// Start from root
 		elseif ($this->User->isAdmin)
 		{
-			$tree .= $this->renderFiletree($rootDir . '/' . \Config::get('uploadPath'), 0, false, true, $arrFound);
+			$tree .= $this->renderFiletree($rootDir . '/' . Config::get('uploadPath'), 0, false, true, $arrFound);
 		}
 
 		// Show mounted files to regular users
@@ -288,7 +288,7 @@ class FileSelector extends Widget
 
 		// Return the tree
 		return '<ul class="tl_listing tree_view picker_selector'.(($this->strClass != '') ? ' ' . $this->strClass : '').'" id="'.$this->strId.'" data-callback="reloadFiletree">
-    <li class="tl_folder_top"><div class="tl_left">'.\Image::getHtml($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['icon'] ?: 'filemounts.svg').' '.$GLOBALS['TL_LANG']['MOD']['files'][0].'</div> <div class="tl_right">&nbsp;</div><div style="clear:both"></div></li><li class="parent" id="'.$this->strId.'_parent"><ul>'.$tree.$strReset.'
+    <li class="tl_folder_top"><div class="tl_left">'.Image::getHtml($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['icon'] ?: 'filemounts.svg').' '.$GLOBALS['TL_LANG']['MOD']['files'][0].'</div> <div class="tl_right">&nbsp;</div><div style="clear:both"></div></li><li class="parent" id="'.$this->strId.'_parent"><ul>'.$tree.$strReset.'
   </ul></li></ul>';
 	}
 
@@ -304,7 +304,7 @@ class FileSelector extends Widget
 	 */
 	public function generateAjax($strFolder, $strField, $level, $mount=false)
 	{
-		if (!\Environment::get('isAjaxRequest'))
+		if (!Environment::get('isAjaxRequest'))
 		{
 			return '';
 		}
@@ -316,9 +316,9 @@ class FileSelector extends Widget
 		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'])
 		{
 			case 'File':
-				if (\Config::get($this->strField) != '')
+				if (Config::get($this->strField) != '')
 				{
-					$this->varValue = \Config::get($this->strField);
+					$this->varValue = Config::get($this->strField);
 				}
 				break;
 
@@ -330,13 +330,13 @@ class FileSelector extends Widget
 					break;
 				}
 
-				$objField = $this->Database->prepare("SELECT " . \Database::quoteIdentifier($this->strField) . " FROM " . $this->strTable . " WHERE id=?")
+				$objField = $this->Database->prepare("SELECT " . Database::quoteIdentifier($this->strField) . " FROM " . $this->strTable . " WHERE id=?")
 										   ->limit(1)
 										   ->execute($this->strId);
 
 				if ($objField->numRows)
 				{
-					$this->varValue = \StringUtil::deserialize($objField->{$this->strField});
+					$this->varValue = StringUtil::deserialize($objField->{$this->strField});
 				}
 				break;
 		}
@@ -345,10 +345,10 @@ class FileSelector extends Widget
 
 		if ($this->extensions != '')
 		{
-			$this->arrValidFileTypes = \StringUtil::trimsplit(',', $this->extensions);
+			$this->arrValidFileTypes = StringUtil::trimsplit(',', $this->extensions);
 		}
 
-		return $this->renderFiletree(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $strFolder, ($level * 20), $mount, $this->isProtectedPath($strFolder));
+		return $this->renderFiletree(System::getContainer()->getParameter('kernel.project_dir') . '/' . $strFolder, ($level * 20), $mount, $this->isProtectedPath($strFolder));
 	}
 
 	/**
@@ -377,7 +377,7 @@ class FileSelector extends Widget
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 
@@ -386,11 +386,11 @@ class FileSelector extends Widget
 		$xtnode = 'tree_' . $this->strTable . '_' . $this->strName;
 
 		// Get session data and toggle nodes
-		if (\Input::get($flag.'tg'))
+		if (Input::get($flag.'tg'))
 		{
-			$session[$node][\Input::get($flag.'tg')] = (isset($session[$node][\Input::get($flag.'tg')]) && $session[$node][\Input::get($flag.'tg')] == 1) ? 0 : 1;
+			$session[$node][Input::get($flag.'tg')] = (isset($session[$node][Input::get($flag.'tg')]) && $session[$node][Input::get($flag.'tg')] == 1) ? 0 : 1;
 			$objSessionBag->replace($session);
-			$this->redirect(preg_replace('/(&(amp;)?|\?)'.$flag.'tg=[^& ]*/i', '', \Environment::get('request')));
+			$this->redirect(preg_replace('/(&(amp;)?|\?)'.$flag.'tg=[^& ]*/i', '', Environment::get('request')));
 		}
 
 		$return = '';
@@ -445,7 +445,7 @@ class FileSelector extends Widget
 		for ($f=0, $c=\count($folders); $f<$c; $f++)
 		{
 			$content = scan($folders[$f]);
-			$currentFolder = \StringUtil::stripRootDir($folders[$f]);
+			$currentFolder = StringUtil::stripRootDir($folders[$f]);
 			$countFiles = \count($content);
 
 			// Check whether there are subfolders or files
@@ -473,7 +473,7 @@ class FileSelector extends Widget
 			$tid = md5($folders[$f]);
 			$folderAttribute = 'style="margin-left:20px"';
 			$session[$node][$tid] = is_numeric($session[$node][$tid]) ? $session[$node][$tid] : 0;
-			$currentFolder = \StringUtil::stripRootDir($folders[$f]);
+			$currentFolder = StringUtil::stripRootDir($folders[$f]);
 			$blnIsOpen = (!empty($arrFound) || $session[$node][$tid] == 1 || \count(preg_grep('/^' . preg_quote($currentFolder, '/') . '\//', $this->varValue)) > 0);
 			$return .= "\n    " . '<li class="'.$folderClass.' toggle_select hover-div"><div class="tl_left" style="padding-left:'.$intMargin.'px">';
 
@@ -483,7 +483,7 @@ class FileSelector extends Widget
 				$folderAttribute = '';
 				$img = $blnIsOpen ? 'folMinus.svg' : 'folPlus.svg';
 				$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-				$return .= '<a href="'.\Backend::addToUrl($flag.'tg='.$tid).'" title="'.\StringUtil::specialchars($alt).'" onclick="return AjaxRequest.toggleFiletree(this,\''.$xtnode.'_'.$tid.'\',\''.$currentFolder.'\',\''.$this->strField.'\',\''.$this->strName.'\','.$level.')">'.\Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
+				$return .= '<a href="'.Backend::addToUrl($flag.'tg='.$tid).'" title="'.StringUtil::specialchars($alt).'" onclick="return AjaxRequest.toggleFiletree(this,\''.$xtnode.'_'.$tid.'\',\''.$currentFolder.'\',\''.$this->strField.'\',\''.$this->strName.'\','.$level.')">'.Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
 			}
 
 			$protected = $blnProtected;
@@ -495,10 +495,10 @@ class FileSelector extends Widget
 			}
 
 			$folderImg = $protected ? 'folderCP.svg' : 'folderC.svg';
-			$folderLabel = ($this->files || $this->filesOnly) ? '<strong>'.\StringUtil::specialchars(basename($currentFolder)).'</strong>' : \StringUtil::specialchars(basename($currentFolder));
+			$folderLabel = ($this->files || $this->filesOnly) ? '<strong>'.StringUtil::specialchars(basename($currentFolder)).'</strong>' : StringUtil::specialchars(basename($currentFolder));
 
 			// Add the current folder
-			$return .= \Image::getHtml($folderImg, '', $folderAttribute).' <a href="' . \Backend::addToUrl('fn='.$this->urlEncode($currentFolder)) . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">'.$folderLabel.'</a></div> <div class="tl_right">';
+			$return .= Image::getHtml($folderImg, '', $folderAttribute).' <a href="' . Backend::addToUrl('fn='.$this->urlEncode($currentFolder)) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">'.$folderLabel.'</a></div> <div class="tl_right">';
 
 			// Add a checkbox or radio button
 			if (!$this->filesOnly)
@@ -506,12 +506,12 @@ class FileSelector extends Widget
 				switch ($this->fieldType)
 				{
 					case 'checkbox':
-						$return .= '<input type="checkbox" name="'.$this->strName.'[]" id="'.$this->strName.'_'.md5($currentFolder).'" class="tl_tree_checkbox" value="'.\StringUtil::specialchars($currentFolder).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFolder, $this->varValue).'>';
+						$return .= '<input type="checkbox" name="'.$this->strName.'[]" id="'.$this->strName.'_'.md5($currentFolder).'" class="tl_tree_checkbox" value="'.StringUtil::specialchars($currentFolder).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFolder, $this->varValue).'>';
 						break;
 
 					default:
 					case 'radio':
-						$return .= '<input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.md5($currentFolder).'" class="tl_tree_radio" value="'.\StringUtil::specialchars($currentFolder).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFolder, $this->varValue).'>';
+						$return .= '<input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.md5($currentFolder).'" class="tl_tree_radio" value="'.StringUtil::specialchars($currentFolder).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFolder, $this->varValue).'>';
 						break;
 				}
 			}
@@ -533,10 +533,10 @@ class FileSelector extends Widget
 			for ($h=0, $c=\count($files); $h<$c; $h++)
 			{
 				$thumbnail = '';
-				$currentFile = \StringUtil::stripRootDir($files[$h]);
+				$currentFile = StringUtil::stripRootDir($files[$h]);
 				$currentEncoded = $this->urlEncode($currentFile);
 
-				$objFile = new \File($currentFile);
+				$objFile = new File($currentFile);
 
 				if (!empty($this->arrValidFileTypes) && !\in_array($objFile->extension, $this->arrValidFileTypes))
 				{
@@ -560,30 +560,30 @@ class FileSelector extends Widget
 				$thumbnail .= ')</span>';
 
 				// Generate thumbnail
-				if ($objFile->isImage && $objFile->viewHeight > 0 && \Config::get('thumbnails') && ($objFile->isSvgImage || ($objFile->height <= \Config::get('gdMaxImgHeight') && $objFile->width <= \Config::get('gdMaxImgWidth'))))
+				if ($objFile->isImage && $objFile->viewHeight > 0 && Config::get('thumbnails') && ($objFile->isSvgImage || ($objFile->height <= Config::get('gdMaxImgHeight') && $objFile->width <= Config::get('gdMaxImgWidth'))))
 				{
-					$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
-					$thumbnail .= '<br>' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($rootDir), '', 'style="margin:0 0 2px -18px"');
-					$importantPart = \System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
+					$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+					$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($rootDir), '', 'style="margin:0 0 2px -18px"');
+					$importantPart = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
 					if ($importantPart->getPosition()->getX() > 0 || $importantPart->getPosition()->getY() > 0 || $importantPart->getSize()->getWidth() < $objFile->width || $importantPart->getSize()->getHeight() < $objFile->height)
 					{
-						$thumbnail .= ' ' . \Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($rootDir), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
+						$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($rootDir), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
 					}
 				}
 
-				$return .= \Image::getHtml($objFile->icon, $objFile->mime).' '.\StringUtil::convertEncoding(\StringUtil::specialchars(basename($currentFile)), \Config::get('characterSet')).$thumbnail.'</div> <div class="tl_right">';
+				$return .= Image::getHtml($objFile->icon, $objFile->mime).' '.StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), Config::get('characterSet')).$thumbnail.'</div> <div class="tl_right">';
 
 				// Add checkbox or radio button
 				switch ($this->fieldType)
 				{
 					case 'checkbox':
-						$return .= '<input type="checkbox" name="'.$this->strName.'[]" id="'.$this->strName.'_'.md5($currentFile).'" class="tl_tree_checkbox" value="'.\StringUtil::specialchars($currentFile).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFile, $this->varValue).'>';
+						$return .= '<input type="checkbox" name="'.$this->strName.'[]" id="'.$this->strName.'_'.md5($currentFile).'" class="tl_tree_checkbox" value="'.StringUtil::specialchars($currentFile).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFile, $this->varValue).'>';
 						break;
 
 					default:
 					case 'radio':
-						$return .= '<input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.md5($currentFile).'" class="tl_tree_radio" value="'.\StringUtil::specialchars($currentFile).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFile, $this->varValue).'>';
+						$return .= '<input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.md5($currentFile).'" class="tl_tree_radio" value="'.StringUtil::specialchars($currentFile).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFile, $this->varValue).'>';
 						break;
 				}
 
@@ -619,24 +619,24 @@ class FileSelector extends Widget
 		}
 
 		// TinyMCE will pass the path instead of the ID
-		if (strpos($this->varValue[0], \Config::get('uploadPath') . '/') === 0)
+		if (strpos($this->varValue[0], Config::get('uploadPath') . '/') === 0)
 		{
 			return;
 		}
 
 		// Ignore the numeric IDs when in switch mode (TinyMCE)
-		if (\Input::get('switch'))
+		if (Input::get('switch'))
 		{
 			return;
 		}
 
 		// Return if the custom path is not within the upload path (see #8562)
-		if ($this->path != '' && strpos($this->path, \Config::get('uploadPath') . '/') !== 0)
+		if ($this->path != '' && strpos($this->path, Config::get('uploadPath') . '/') !== 0)
 		{
 			return;
 		}
 
-		$objFiles = \FilesModel::findMultipleByIds($this->varValue);
+		$objFiles = FilesModel::findMultipleByIds($this->varValue);
 
 		if ($objFiles !== null)
 		{
@@ -653,7 +653,7 @@ class FileSelector extends Widget
 	 */
 	protected function isProtectedPath($path)
 	{
-		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		do
 		{

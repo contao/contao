@@ -46,7 +46,7 @@ abstract class Backend extends Controller
 	 */
 	public static function getTheme()
 	{
-		$theme = \Config::get('backendTheme');
+		$theme = Config::get('backendTheme');
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		if ($theme != '' && $theme != 'flexible' && is_dir($rootDir . '/system/themes/' . $theme))
@@ -204,7 +204,7 @@ abstract class Backend extends Controller
 	 */
 	public static function getTinyTemplates()
 	{
-		$strDir = \Config::get('uploadPath') . '/tiny_templates';
+		$strDir = Config::get('uploadPath') . '/tiny_templates';
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		if (!is_dir($rootDir . '/' . $strDir))
@@ -252,7 +252,7 @@ abstract class Backend extends Controller
 	{
 		try
 		{
-			$files = \System::getContainer()->get('contao.resource_locator')->locate('config/runonce.php', null, false);
+			$files = System::getContainer()->get('contao.resource_locator')->locate('config/runonce.php', null, false);
 		}
 		catch (\InvalidArgumentException $e)
 		{
@@ -267,14 +267,14 @@ abstract class Backend extends Controller
 			}
 			catch (\Exception $e) {}
 
-			$strRelpath = \StringUtil::stripRootDir($file);
+			$strRelpath = StringUtil::stripRootDir($file);
 
 			if (!unlink($file))
 			{
 				throw new \Exception("The file $strRelpath cannot be deleted. Please remove the file manually and correct the file permission settings on your server.");
 			}
 
-			\System::log("File $strRelpath ran once and has then been removed successfully", __METHOD__, TL_GENERAL);
+			System::log("File $strRelpath ran once and has then been removed successfully", __METHOD__, TL_GENERAL);
 		}
 	}
 
@@ -317,11 +317,11 @@ abstract class Backend extends Controller
 		}
 
 		/** @var SessionInterface $objSession */
-		$objSession = \System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		$arrTables = (array) $arrModule['tables'];
-		$strTable = \Input::get('table') ?: $arrTables[0];
-		$id = (!\Input::get('act') && \Input::get('id')) ? \Input::get('id') : $objSession->get('CURRENT_ID');
+		$strTable = Input::get('table') ?: $arrTables[0];
+		$id = (!Input::get('act') && Input::get('id')) ? Input::get('id') : $objSession->get('CURRENT_ID');
 
 		// Store the current ID in the current session
 		if ($id != $objSession->get('CURRENT_ID'))
@@ -329,7 +329,7 @@ abstract class Backend extends Controller
 			$objSession->set('CURRENT_ID', $id);
 		}
 
-		\define('CURRENT_ID', (\Input::get('table') ? $id : \Input::get('id')));
+		\define('CURRENT_ID', (Input::get('table') ? $id : Input::get('id')));
 		$this->Template->headline = $GLOBALS['TL_LANG']['MOD'][$module][0];
 
 		// Add the module style sheet
@@ -361,7 +361,7 @@ abstract class Backend extends Controller
 			}
 
 			// Load the language and DCA file
-			\System::loadLanguageFile($strTable);
+			System::loadLanguageFile($strTable);
 			$this->loadDataContainer($strTable);
 
 			// Include all excluded fields which are allowed for the current user
@@ -406,7 +406,7 @@ abstract class Backend extends Controller
 		$this->Template->headline = '<span>' . $this->Template->headline . '</span>';
 
 		// AJAX request
-		if ($_POST && \Environment::get('isAjaxRequest'))
+		if ($_POST && Environment::get('isAjaxRequest'))
 		{
 			$this->objAjax->executePostActions($dc);
 		}
@@ -421,10 +421,10 @@ abstract class Backend extends Controller
 		}
 
 		// Custom action (if key is not defined in config.php the default action will be called)
-		elseif (\Input::get('key') && isset($arrModule[\Input::get('key')]))
+		elseif (Input::get('key') && isset($arrModule[Input::get('key')]))
 		{
-			$objCallback = \System::importStatic($arrModule[\Input::get('key')][0]);
-			$response = $objCallback->{$arrModule[\Input::get('key')][1]}($dc);
+			$objCallback = System::importStatic($arrModule[Input::get('key')][0]);
+			$response = $objCallback->{$arrModule[Input::get('key')][1]}($dc);
 
 			if ($response instanceof RedirectResponse)
 			{
@@ -438,11 +438,11 @@ abstract class Backend extends Controller
 			$this->Template->main .= $response;
 
 			// Add the name of the parent element
-			if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(\Input::get('table'), $arrTables) && \Input::get('table') != $arrTables[0])
+			if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != $arrTables[0])
 			{
 				$objRow = $this->Database->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=(SELECT pid FROM $strTable WHERE id=?)")
 										 ->limit(1)
-										 ->execute(\Input::get('id'));
+										 ->execute(Input::get('id'));
 
 				if ($objRow->title != '')
 				{
@@ -455,13 +455,13 @@ abstract class Backend extends Controller
 			}
 
 			// Add the name of the submodule
-			$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][\Input::get('key')][1], \Input::get('id')) . '</span>';
+			$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1], Input::get('id')) . '</span>';
 		}
 
 		// Default action
 		elseif (\is_object($dc))
 		{
-			$act = \Input::get('act');
+			$act = Input::get('act');
 
 			if ($act == '' || $act == 'paste' || $act == 'select')
 			{
@@ -503,7 +503,7 @@ abstract class Backend extends Controller
 
 				$pid = $dc->id;
 				$table = $strTable;
-				$ptable = (\Input::get('act') != 'edit') ? $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] : $strTable;
+				$ptable = (Input::get('act') != 'edit') ? $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] : $strTable;
 
 				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'], array(5, 6)))
 				{
@@ -558,14 +558,14 @@ abstract class Backend extends Controller
 			}
 
 			// Add the current action
-			if (\Input::get('act') == 'editAll')
+			if (Input::get('act') == 'editAll')
 			{
 				if (isset($GLOBALS['TL_LANG']['MSC']['all'][0]))
 				{
 					$this->Template->headline .= ' › <span>' . $GLOBALS['TL_LANG']['MSC']['all'][0] . '</span>';
 				}
 			}
-			elseif (\Input::get('act') == 'overrideAll')
+			elseif (Input::get('act') == 'overrideAll')
 			{
 				if (isset($GLOBALS['TL_LANG']['MSC']['all_override'][0]))
 				{
@@ -574,41 +574,41 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				if (\Input::get('id'))
+				if (Input::get('id'))
 				{
-					if (\Input::get('do') == 'files' || \Input::get('do') == 'tpl_editor')
+					if (Input::get('do') == 'files' || Input::get('do') == 'tpl_editor')
 					{
 						// Handle new folders (see #7980)
-						if (strpos(\Input::get('id'), '__new__') !== false)
+						if (strpos(Input::get('id'), '__new__') !== false)
 						{
-							$this->Template->headline .= ' › <span>' . \dirname(\Input::get('id')) . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
+							$this->Template->headline .= ' › <span>' . \dirname(Input::get('id')) . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
 						}
 						else
 						{
-							$this->Template->headline .= ' › <span>' . \Input::get('id') . '</span>';
+							$this->Template->headline .= ' › <span>' . Input::get('id') . '</span>';
 						}
 					}
 					elseif (isset($GLOBALS['TL_LANG'][$strTable][$act][1]))
 					{
-						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], \Input::get('id')) . '</span>';
+						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
 					}
 				}
-				elseif (\Input::get('pid'))
+				elseif (Input::get('pid'))
 				{
-					if (\Input::get('do') == 'files' || \Input::get('do') == 'tpl_editor')
+					if (Input::get('do') == 'files' || Input::get('do') == 'tpl_editor')
 					{
-						if (\Input::get('act') == 'move')
+						if (Input::get('act') == 'move')
 						{
-							$this->Template->headline .= ' › <span>' . \Input::get('pid') . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['move'][1] . '</span>';
+							$this->Template->headline .= ' › <span>' . Input::get('pid') . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['move'][1] . '</span>';
 						}
 						else
 						{
-							$this->Template->headline .= ' › <span>' . \Input::get('pid') . '</span>';
+							$this->Template->headline .= ' › <span>' . Input::get('pid') . '</span>';
 						}
 					}
 					elseif (isset($GLOBALS['TL_LANG'][$strTable][$act][1]))
 					{
-						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], \Input::get('pid')) . '</span>';
+						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
 					}
 				}
 			}
@@ -630,7 +630,7 @@ abstract class Backend extends Controller
 	 */
 	public static function findSearchablePages($pid=0, $domain='', $blnIsSitemap=false)
 	{
-		$objPages = \PageModel::findPublishedByPid($pid, array('ignoreFePreview'=>true));
+		$objPages = PageModel::findPublishedByPid($pid, array('ignoreFePreview'=>true));
 
 		if ($objPages === null)
 		{
@@ -645,12 +645,12 @@ abstract class Backend extends Controller
 			if ($objPage->type == 'regular')
 			{
 				// Searchable and not protected
-				if ((!$objPage->noSearch || $blnIsSitemap) && (!$objPage->protected || (\Config::get('indexProtected') && (!$blnIsSitemap || $objPage->sitemap == 'map_always'))) && (!$blnIsSitemap || $objPage->sitemap != 'map_never') && !$objPage->requireItem)
+				if ((!$objPage->noSearch || $blnIsSitemap) && (!$objPage->protected || (Config::get('indexProtected') && (!$blnIsSitemap || $objPage->sitemap == 'map_always'))) && (!$blnIsSitemap || $objPage->sitemap != 'map_never') && !$objPage->requireItem)
 				{
 					$arrPages[] = $objPage->getAbsoluteUrl();
 
 					// Get articles with teaser
-					if (($objArticles = \ArticleModel::findPublishedWithTeaserByPid($objPage->id, array('ignoreFePreview'=>true))) !== null)
+					if (($objArticles = ArticleModel::findPublishedWithTeaserByPid($objPage->id, array('ignoreFePreview'=>true))) !== null)
 					{
 						foreach ($objArticles as $objArticle)
 						{
@@ -661,7 +661,7 @@ abstract class Backend extends Controller
 			}
 
 			// Get subpages
-			if ((!$objPage->protected || \Config::get('indexProtected')) && ($arrSubpages = static::findSearchablePages($objPage->id, $domain, $blnIsSitemap)))
+			if ((!$objPage->protected || Config::get('indexProtected')) && ($arrSubpages = static::findSearchablePages($objPage->id, $domain, $blnIsSitemap)))
 			{
 				$arrPages = array_merge($arrPages, $arrSubpages);
 			}
@@ -683,14 +683,14 @@ abstract class Backend extends Controller
 	{
 		@trigger_error('Using Backend::addFileMetaInformationToRequest() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-		$objFile = \FilesModel::findByUuid($strUuid);
+		$objFile = FilesModel::findByUuid($strUuid);
 
 		if ($objFile === null)
 		{
 			return;
 		}
 
-		$arrMeta = \StringUtil::deserialize($objFile->meta);
+		$arrMeta = StringUtil::deserialize($objFile->meta);
 
 		if (empty($arrMeta))
 		{
@@ -701,7 +701,7 @@ abstract class Backend extends Controller
 
 		if ($strPtable == 'tl_article')
 		{
-			$objPage = \PageModel::findOneBy(array('tl_page.id=(SELECT pid FROM tl_article WHERE id=?)'), $intPid);
+			$objPage = PageModel::findOneBy(array('tl_page.id=(SELECT pid FROM tl_article WHERE id=?)'), $intPid);
 		}
 		else
 		{
@@ -710,7 +710,7 @@ abstract class Backend extends Controller
 			{
 				foreach ($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'] as $callback)
 				{
-					if (($val = \System::importStatic($callback[0])->{$callback[1]}($strPtable, $intPid)) !== false)
+					if (($val = System::importStatic($callback[0])->{$callback[1]}($strPtable, $intPid)) !== false)
 					{
 						$objPage = $val;
 					}
@@ -723,7 +723,7 @@ abstract class Backend extends Controller
 
 				if (\is_object($objPage) && !($objPage instanceof PageModel))
 				{
-					$objPage = \PageModel::findByPk($objPage->id);
+					$objPage = PageModel::findByPk($objPage->id);
 				}
 			}
 		}
@@ -740,19 +740,19 @@ abstract class Backend extends Controller
 
 		if (isset($arrMeta[$strLanguage]))
 		{
-			if (!empty($arrMeta[$strLanguage]['title']) && \Input::post('title') == '')
+			if (!empty($arrMeta[$strLanguage]['title']) && Input::post('title') == '')
 			{
-				\Input::setPost('title', $arrMeta[$strLanguage]['title']);
+				Input::setPost('title', $arrMeta[$strLanguage]['title']);
 			}
 
-			if (!empty($arrMeta[$strLanguage]['alt']) && \Input::post('alt') == '')
+			if (!empty($arrMeta[$strLanguage]['alt']) && Input::post('alt') == '')
 			{
-				\Input::setPost('alt', $arrMeta[$strLanguage]['alt']);
+				Input::setPost('alt', $arrMeta[$strLanguage]['alt']);
 			}
 
-			if (!empty($arrMeta[$strLanguage]['caption']) && \Input::post('caption') == '')
+			if (!empty($arrMeta[$strLanguage]['caption']) && Input::post('caption') == '')
 			{
-				\Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
+				Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
 			}
 		}
 	}
@@ -768,19 +768,19 @@ abstract class Backend extends Controller
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
 	{
 		/** @var AttributeBagInterface $objSession */
-		$objSession = \System::getContainer()->get('session')->getBag('contao_backend');
+		$objSession = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
 		if (isset($_GET['pn']))
 		{
 			// Check the path (thanks to Arnaud Buchoux)
-			if (\Validator::isInsecurePath(\Input::get('pn', true)))
+			if (Validator::isInsecurePath(Input::get('pn', true)))
 			{
-				throw new \RuntimeException('Insecure path ' . \Input::get('pn', true));
+				throw new \RuntimeException('Insecure path ' . Input::get('pn', true));
 			}
 
-			$objSession->set($strKey, \Input::get('pn', true));
-			\Controller::redirect(preg_replace('/&pn=[^&]*/', '', \Environment::get('request')));
+			$objSession->set($strKey, Input::get('pn', true));
+			Controller::redirect(preg_replace('/&pn=[^&]*/', '', Environment::get('request')));
 		}
 
 		$intNode = $objSession->get($strKey);
@@ -791,20 +791,20 @@ abstract class Backend extends Controller
 		}
 
 		// Check the path (thanks to Arnaud Buchoux)
-		if (\Validator::isInsecurePath($intNode))
+		if (Validator::isInsecurePath($intNode))
 		{
 			throw new \RuntimeException('Insecure path ' . $intNode);
 		}
 
 		$arrIds   = array();
 		$arrLinks = array();
-		$objUser  = \BackendUser::getInstance();
+		$objUser  = BackendUser::getInstance();
 
 		// Generate breadcrumb trail
 		if ($intNode)
 		{
 			$intId = $intNode;
-			$objDatabase = \Database::getInstance();
+			$objDatabase = Database::getInstance();
 
 			do
 			{
@@ -830,11 +830,11 @@ abstract class Backend extends Controller
 				// No link for the active page
 				if ($objPage->id == $intNode)
 				{
-					$arrLinks[] = \Backend::addPageIcon($objPage->row(), '', null, '', true) . ' ' . $objPage->title;
+					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' ' . $objPage->title;
 				}
 				else
 				{
-					$arrLinks[] = \Backend::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . \Backend::addToUrl('pn='.$objPage->id) . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $objPage->title . '</a>';
+					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn='.$objPage->id) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $objPage->title . '</a>';
 				}
 
 				// Do not show the mounted pages
@@ -859,7 +859,7 @@ abstract class Backend extends Controller
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
 
 		// Add root link
-		$arrLinks[] = \Image::getHtml('pagemounts.svg') . ' <a href="' . \Backend::addToUrl('pn=0') . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
@@ -891,26 +891,26 @@ abstract class Backend extends Controller
 			$row['protected'] = true;
 		}
 
-		$image = \Controller::getPageStatusIcon((object) $row);
-		$imageAttribute = trim($imageAttribute . ' data-icon="' . \Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'1'))) . '" data-icon-disabled="' . \Controller::getPageStatusIcon((object) array_merge($row, array('published'=>''))) . '"');
+		$image = Controller::getPageStatusIcon((object) $row);
+		$imageAttribute = trim($imageAttribute . ' data-icon="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'1'))) . '" data-icon-disabled="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>''))) . '"');
 
 		// Return the image only
 		if ($blnReturnImage)
 		{
-			return \Image::getHtml($image, '', $imageAttribute);
+			return Image::getHtml($image, '', $imageAttribute);
 		}
 
 		// Mark root pages
-		if ($row['type'] == 'root' || \Input::get('do') == 'article')
+		if ($row['type'] == 'root' || Input::get('do') == 'article')
 		{
 			$label = '<strong>' . $label . '</strong>';
 		}
 
 		// Add the breadcrumb link
-		$label = '<a href="' . \Backend::addToUrl('pn='.$row['id']) . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $label . '</a>';
+		$label = '<a href="' . self::addToUrl('pn='.$row['id']) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $label . '</a>';
 
 		// Return the image
-		return '<a href="contao/main.php?do=feRedirect&amp;page='.$row['id'].'" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']).'" target="_blank">'.\Image::getHtml($image, '', $imageAttribute).'</a> '.$label;
+		return '<a href="contao/main.php?do=feRedirect&amp;page='.$row['id'].'" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']).'" target="_blank">'.Image::getHtml($image, '', $imageAttribute).'</a> '.$label;
 	}
 
 	/**
@@ -929,7 +929,7 @@ abstract class Backend extends Controller
 
 			foreach ($GLOBALS['TL_HOOKS']['getSystemMessages'] as $callback)
 			{
-				$strBuffer = \System::importStatic($callback[0])->{$callback[1]}();
+				$strBuffer = System::importStatic($callback[0])->{$callback[1]}();
 
 				if ($strBuffer != '')
 				{
@@ -957,19 +957,19 @@ abstract class Backend extends Controller
 	public static function addFilesBreadcrumb($strKey='tl_files_node')
 	{
 		/** @var AttributeBagInterface $objSession */
-		$objSession = \System::getContainer()->get('session')->getBag('contao_backend');
+		$objSession = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
 		if (isset($_GET['fn']))
 		{
 			// Check the path (thanks to Arnaud Buchoux)
-			if (\Validator::isInsecurePath(\Input::get('fn', true)))
+			if (Validator::isInsecurePath(Input::get('fn', true)))
 			{
-				throw new \RuntimeException('Insecure path ' . \Input::get('fn', true));
+				throw new \RuntimeException('Insecure path ' . Input::get('fn', true));
 			}
 
-			$objSession->set($strKey, \Input::get('fn', true));
-			\Controller::redirect(preg_replace('/(&|\?)fn=[^&]*/', '', \Environment::get('request')));
+			$objSession->set($strKey, Input::get('fn', true));
+			Controller::redirect(preg_replace('/(&|\?)fn=[^&]*/', '', Environment::get('request')));
 		}
 
 		$strNode = $objSession->get($strKey);
@@ -980,7 +980,7 @@ abstract class Backend extends Controller
 		}
 
 		// Check the path (thanks to Arnaud Buchoux)
-		if (\Validator::isInsecurePath($strNode))
+		if (Validator::isInsecurePath($strNode))
 		{
 			throw new \RuntimeException('Insecure path ' . $strNode);
 		}
@@ -995,13 +995,13 @@ abstract class Backend extends Controller
 			return;
 		}
 
-		$objUser  = \BackendUser::getInstance();
-		$strPath  = \Config::get('uploadPath');
-		$arrNodes = explode('/', preg_replace('/^' . preg_quote(\Config::get('uploadPath'), '/') . '\//', '', $strNode));
+		$objUser  = BackendUser::getInstance();
+		$strPath  = Config::get('uploadPath');
+		$arrNodes = explode('/', preg_replace('/^' . preg_quote(Config::get('uploadPath'), '/') . '\//', '', $strNode));
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = \Image::getHtml('filemounts.svg') . ' <a href="' . \Backend::addToUrl('fn=') . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . self::addToUrl('fn=') . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -1017,11 +1017,11 @@ abstract class Backend extends Controller
 			// No link for the active folder
 			if ($strPath == $strNode)
 			{
-				$arrLinks[] = \Image::getHtml('folderC.svg') . ' ' . $strFolder;
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' ' . $strFolder;
 			}
 			else
 			{
-				$arrLinks[] = \Image::getHtml('folderC.svg') . ' <a href="' . \Backend::addToUrl('fn='.$strPath) . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . self::addToUrl('fn='.$strPath) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
 			}
 		}
 
@@ -1088,14 +1088,14 @@ abstract class Backend extends Controller
 			unset($extras['context']);
 		}
 
-		$factory = \System::getContainer()->get('contao.picker.builder');
+		$factory = System::getContainer()->get('contao.picker.builder');
 
 		if (!$factory->supportsContext($context, $providers))
 		{
 			return '';
 		}
 
-		return ' <a href="' . ampersand($factory->getUrl($context, $extras)) . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . \Image::getHtml((\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
+		return ' <a href="' . ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . Image::getHtml((\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
   <script>
     $("pp_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
@@ -1120,7 +1120,7 @@ abstract class Backend extends Controller
 
 		while ($objLayout->next())
 		{
-			$arrCustom = \StringUtil::deserialize($objLayout->sections);
+			$arrCustom = StringUtil::deserialize($objLayout->sections);
 
 			// Add the custom layout sections
 			if (!empty($arrCustom) && \is_array($arrCustom))
@@ -1155,7 +1155,7 @@ abstract class Backend extends Controller
 
 		foreach ($this->eliminateNestedPages($this->User->pagemounts) as $page)
 		{
-			$objPage = \PageModel::findWithDetails($page);
+			$objPage = PageModel::findWithDetails($page);
 
 			// Root page mounted
 			if ($objPage->type == 'root')
@@ -1178,7 +1178,7 @@ abstract class Backend extends Controller
 			}
 
 			// Skip websites that run under a different domain (see #2387)
-			if ($objPage->domain && $objPage->domain != \Environment::get('host'))
+			if ($objPage->domain && $objPage->domain != Environment::get('host'))
 			{
 				continue;
 			}
@@ -1216,7 +1216,7 @@ abstract class Backend extends Controller
 			if ($objPages->type == 'root')
 			{
 				// Skip websites that run under a different domain
-				if ($objPages->dns && $objPages->dns != \Environment::get('host'))
+				if ($objPages->dns && $objPages->dns != Environment::get('host'))
 				{
 					continue;
 				}
@@ -1227,7 +1227,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$strOptions .= sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, (('{{link_url::' . $objPages->id . '}}' == \Input::get('value')) ? ' selected="selected"' : ''), str_repeat(' &nbsp; &nbsp; ', $level), \StringUtil::specialchars($objPages->title));
+				$strOptions .= sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, (('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : ''), str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
 				$strOptions .= $this->doCreatePageList($objPages->id, $level);
 			}
 		}
@@ -1257,7 +1257,7 @@ abstract class Backend extends Controller
 
 		if ($this->User->isAdmin)
 		{
-			return $this->doCreateFileList(\Config::get('uploadPath'), -1, $strFilter);
+			return $this->doCreateFileList(Config::get('uploadPath'), -1, $strFilter);
 		}
 
 		$return = '';
@@ -1345,13 +1345,13 @@ abstract class Backend extends Controller
 					continue;
 				}
 
-				$strFiles .= sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, (($strFolder . '/' . $strFile == \Input::get('value')) ? ' selected="selected"' : ''), \StringUtil::specialchars($strFile));
+				$strFiles .= sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, (($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : ''), StringUtil::specialchars($strFile));
 			}
 		}
 
 		if (\strlen($strFiles))
 		{
-			return '<optgroup label="' . \StringUtil::specialchars($strFolder) . '">' . $strFiles . $strFolders . '</optgroup>';
+			return '<optgroup label="' . StringUtil::specialchars($strFolder) . '">' . $strFiles . $strFolders . '</optgroup>';
 		}
 
 		return $strFiles . $strFolders;

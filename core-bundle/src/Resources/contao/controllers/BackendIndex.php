@@ -40,8 +40,8 @@ class BackendIndex extends Backend
 		$this->import('BackendUser', 'User');
 		parent::__construct();
 
-		\System::loadLanguageFile('default');
-		\System::loadLanguageFile('tl_user');
+		System::loadLanguageFile('default');
+		System::loadLanguageFile('tl_user');
 	}
 
 	/**
@@ -51,26 +51,26 @@ class BackendIndex extends Backend
 	 */
 	public function run()
 	{
-		$container = \System::getContainer();
+		$container = System::getContainer();
 		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
 
 		if ($exception instanceof LockedException)
 		{
-			\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedMinutes()));
+			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedMinutes()));
 		}
 		elseif ($exception instanceof InvalidTwoFactorCodeException)
 		{
-			\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidTwoFactor']);
+			Message::addError($GLOBALS['TL_LANG']['ERR']['invalidTwoFactor']);
 		}
 		elseif ($exception instanceof AuthenticationException)
 		{
-			\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
+			Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
 		}
 
 		$queryString = '';
 		$arrParams = array();
 
-		if ($referer = \Input::get('referer', true))
+		if ($referer = Input::get('referer', true))
 		{
 			$queryString = '?' . base64_decode($referer);
 			$arrParams['referer'] = $referer;
@@ -78,8 +78,8 @@ class BackendIndex extends Backend
 
 		$router = $container->get('router');
 
-		$objTemplate = new \BackendTemplate('be_login');
-		$objTemplate->action = ampersand(\Environment::get('request'));
+		$objTemplate = new BackendTemplate('be_login');
+		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['loginBT'];
 
 		/** @var TokenInterface $token */
@@ -87,30 +87,30 @@ class BackendIndex extends Backend
 
 		if ($token instanceof TwoFactorToken)
 		{
-			$objTemplate = new \BackendTemplate('be_login_two_factor');
+			$objTemplate = new BackendTemplate('be_login_two_factor');
 			$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 			$objTemplate->action = $router->generate('contao_backend_two_factor');
 			$objTemplate->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
 			$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
 		}
 
-		$objTemplate->theme = \Backend::getTheme();
-		$objTemplate->messages = \Message::generate();
-		$objTemplate->base = \Environment::get('base');
+		$objTemplate->theme = Backend::getTheme();
+		$objTemplate->messages = Message::generate();
+		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->languages = \System::getLanguages(true); // backwards compatibility
-		$objTemplate->charset = \Config::get('characterSet');
+		$objTemplate->languages = System::getLanguages(true); // backwards compatibility
+		$objTemplate->charset = Config::get('characterSet');
 		$objTemplate->userLanguage = $GLOBALS['TL_LANG']['tl_user']['language'][0];
-		$objTemplate->curLanguage = \Input::post('language') ?: str_replace('-', '_', $GLOBALS['TL_LANGUAGE']);
-		$objTemplate->curUsername = \Input::post('username') ?: '';
-		$objTemplate->loginButton = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
+		$objTemplate->curLanguage = Input::post('language') ?: str_replace('-', '_', $GLOBALS['TL_LANGUAGE']);
+		$objTemplate->curUsername = Input::post('username') ?: '';
+		$objTemplate->loginButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
 		$objTemplate->username = $GLOBALS['TL_LANG']['tl_user']['username'][0];
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
-		$objTemplate->targetPath = \StringUtil::specialchars($router->generate('contao_backend', array(), Router::ABSOLUTE_URL) . $queryString);
-		$objTemplate->failurePath = \StringUtil::specialchars($router->generate('contao_backend_login', $arrParams, Router::ABSOLUTE_URL));
+		$objTemplate->targetPath = StringUtil::specialchars($router->generate('contao_backend', array(), Router::ABSOLUTE_URL) . $queryString);
+		$objTemplate->failurePath = StringUtil::specialchars($router->generate('contao_backend_login', $arrParams, Router::ABSOLUTE_URL));
 
 		return $objTemplate->getResponse();
 	}

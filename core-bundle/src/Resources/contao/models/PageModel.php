@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -149,57 +150,57 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByStart($val, array $opt=array())
  * @method static PageModel|null findOneByStop($val, array $opt=array())
  *
- * @method static Model\Collection|PageModel[]|PageModel|null findByPid($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findBySorting($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByTitle($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByAlias($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByType($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByPageTitle($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByLanguage($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByRobots($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByDescription($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByRedirect($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByJumpTo($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByRedirectBack($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByUrl($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByTarget($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByDns($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByStaticFiles($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByStaticPlugins($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByFallback($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByAdminEmail($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByDateFormat($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByTimeFormat($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByDatimFormat($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByCreateSitemap($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findBySitemapName($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByUseSSL($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByAutoforward($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByProtected($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByGroups($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByIncludeLayout($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByLayout($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByMobileLayout($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByIncludeCache($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByCache($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByIncludeChmod($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByCuser($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByCgroup($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByChmod($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByNoSearch($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByCssClass($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findBySitemap($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByHide($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByGuests($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByTabindex($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByAccesskey($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByPublished($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByStart($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findByStop($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|PageModel[]|PageModel|null findAll(array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByPid($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findBySorting($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByTitle($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByAlias($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByType($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByPageTitle($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByLanguage($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByRobots($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByDescription($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByRedirect($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByJumpTo($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByRedirectBack($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByUrl($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByTarget($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByDns($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByStaticFiles($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByStaticPlugins($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByFallback($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByAdminEmail($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByDateFormat($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByTimeFormat($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByDatimFormat($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByCreateSitemap($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findBySitemapName($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByUseSSL($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByAutoforward($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByProtected($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByGroups($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByIncludeLayout($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByLayout($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByMobileLayout($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByIncludeCache($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByCache($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByIncludeChmod($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByCuser($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByCgroup($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByChmod($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByNoSearch($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByCssClass($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findBySitemap($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByHide($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByGuests($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByTabindex($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByAccesskey($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByPublished($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByStart($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByStop($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
@@ -283,7 +284,7 @@ class PageModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -296,7 +297,7 @@ class PageModel extends Model
 	 * @param integer $intPid     The parent ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedByPid($intPid, array $arrOptions=array())
 	{
@@ -305,7 +306,7 @@ class PageModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -328,7 +329,7 @@ class PageModel extends Model
 		@trigger_error('Using PageModel::findFirstPublishedRootByHostAndLanguage() has been deprecated and will no longer work Contao 5.0.', E_USER_DEPRECATED);
 
 		$t = static::$strTable;
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		if (\is_array($varLanguage))
 		{
@@ -350,7 +351,7 @@ class PageModel extends Model
 
 			if (!static::isPreviewMode($arrOptions))
 			{
-				$time = \Date::floorToMinute();
+				$time = Date::floorToMinute();
 				$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 			}
 
@@ -368,7 +369,7 @@ class PageModel extends Model
 
 			if (!static::isPreviewMode($arrOptions))
 			{
-				$time = \Date::floorToMinute();
+				$time = Date::floorToMinute();
 				$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 			}
 
@@ -391,7 +392,7 @@ class PageModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -418,7 +419,7 @@ class PageModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -445,7 +446,7 @@ class PageModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -472,7 +473,7 @@ class PageModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -499,7 +500,7 @@ class PageModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -517,7 +518,7 @@ class PageModel extends Model
 	 * @param array $arrAliases An array of possible alias names
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
 	 */
 	public static function findByAliases($arrAliases, array $arrOptions=array())
 	{
@@ -541,13 +542,13 @@ class PageModel extends Model
 		// Check the publication status (see #4652)
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
 		if (!isset($arrOptions['order']))
 		{
-			$arrOptions['order'] = \Database::getInstance()->findInSet("$t.alias", $arrAliases);
+			$arrOptions['order'] = Database::getInstance()->findInSet("$t.alias", $arrAliases);
 		}
 
 		return static::findBy($arrColumns, null, $arrOptions);
@@ -559,7 +560,7 @@ class PageModel extends Model
 	 * @param mixed $varId      The numeric ID or the alias name
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedByIdOrAlias($varId, array $arrOptions=array())
 	{
@@ -568,7 +569,7 @@ class PageModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -582,13 +583,13 @@ class PageModel extends Model
 	 * @param boolean $blnShowHidden If true, hidden pages will be included
 	 * @param boolean $blnIsSitemap  If true, the sitemap settings apply
 	 *
-	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false)
 	{
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 
-		$objSubpages = \Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . (FE_USER_LOGGED_IN ? " AND p2.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'" . ($time + 60) . "') AND p2.published='1'" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . (FE_USER_LOGGED_IN ? " AND p1.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'" . ($time + 60) . "') AND p1.published='1'" : "") . " ORDER BY p1.sorting")
+		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . (FE_USER_LOGGED_IN ? " AND p2.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'" . ($time + 60) . "') AND p2.published='1'" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . (FE_USER_LOGGED_IN ? " AND p1.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'" . ($time + 60) . "') AND p1.published='1'" : "") . " ORDER BY p1.sorting")
 											   ->execute($intPid);
 
 		if ($objSubpages->numRows < 1)
@@ -605,7 +606,7 @@ class PageModel extends Model
 	 * @param array $arrIds     An array of page IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedRegularWithoutGuestsByIds($arrIds, array $arrOptions=array())
 	{
@@ -629,13 +630,13 @@ class PageModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
 		if (!isset($arrOptions['order']))
 		{
-			$arrOptions['order'] = \Database::getInstance()->findInSet("$t.id", $arrIds);
+			$arrOptions['order'] = Database::getInstance()->findInSet("$t.id", $arrIds);
 		}
 
 		return static::findBy($arrColumns, null, $arrOptions);
@@ -647,7 +648,7 @@ class PageModel extends Model
 	 * @param integer $intPid     The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedRegularWithoutGuestsByPid($intPid, array $arrOptions=array())
 	{
@@ -661,7 +662,7 @@ class PageModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -699,7 +700,7 @@ class PageModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -711,7 +712,7 @@ class PageModel extends Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no parent pages
+	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no parent pages
 	 */
 	public static function findPublishedRootPages(array $arrOptions=array())
 	{
@@ -720,7 +721,7 @@ class PageModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -732,7 +733,7 @@ class PageModel extends Model
 	 *
 	 * @param integer $intId The page's ID
 	 *
-	 * @return Model\Collection|PageModel[]|PageModel|null A collection of models or null if there are no parent pages
+	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no parent pages
 	 */
 	public static function findParentsById($intId)
 	{
@@ -766,8 +767,8 @@ class PageModel extends Model
 			return null;
 		}
 
-		$time = \Date::floorToMinute();
-		$objDatabase = \Database::getInstance();
+		$time = Date::floorToMinute();
+		$objDatabase = Database::getInstance();
 		$arrIds = array_map('\intval', $arrIds);
 
 		$objResult = $objDatabase->prepare("SELECT p.* FROM tl_member_group g LEFT JOIN tl_page p ON g.jumpTo=p.id WHERE g.id IN(" . implode(',', $arrIds) . ") AND g.jumpTo>0 AND g.redirect='1' AND g.disable!='1' AND (g.start='' OR g.start<='$time') AND (g.stop='' OR g.stop>'" . ($time + 60) . "') AND p.published='1' AND (p.start='' OR p.start<='$time') AND (p.stop='' OR p.stop>'" . ($time + 60) . "') ORDER BY " . $objDatabase->findInSet('g.id', $arrIds))
@@ -812,9 +813,9 @@ class PageModel extends Model
 	/**
 	 * Register the contao.dns-fallback alias when the model is attached to the registry
 	 *
-	 * @param Model\Registry $registry The model registry
+	 * @param Registry $registry The model registry
 	 */
-	public function onRegister(Model\Registry $registry)
+	public function onRegister(Registry $registry)
 	{
 		parent::onRegister($registry);
 
@@ -828,9 +829,9 @@ class PageModel extends Model
 	/**
 	 * Unregister the contao.dns-fallback alias when the model is detached from the registry
 	 *
-	 * @param Model\Registry $registry The model registry
+	 * @param Registry $registry The model registry
 	 */
-	public function onUnregister(Model\Registry $registry)
+	public function onUnregister(Registry $registry)
 	{
 		parent::onUnregister($registry);
 
@@ -858,7 +859,7 @@ class PageModel extends Model
 
 		// Set some default values
 		$this->protected = (bool) $this->protected;
-		$this->groups = $this->protected ? \StringUtil::deserialize($this->groups) : false;
+		$this->groups = $this->protected ? StringUtil::deserialize($this->groups) : false;
 		$this->layout = $this->includeLayout ? $this->layout : false;
 		$this->mobileLayout = $this->includeLayout ? $this->mobileLayout : false;
 		$this->cache = $this->includeCache ? $this->cache : false;
@@ -883,7 +884,7 @@ class PageModel extends Model
 		else
 		{
 			// Load all parent pages
-			$objParentPage = \PageModel::findParentsById($pid);
+			$objParentPage = PageModel::findParentsById($pid);
 
 			if ($objParentPage !== null)
 			{
@@ -934,7 +935,7 @@ class PageModel extends Model
 					if ($objParentPage->protected && $this->protected === false)
 					{
 						$this->protected = true;
-						$this->groups = \StringUtil::deserialize($objParentPage->groups);
+						$this->groups = StringUtil::deserialize($objParentPage->groups);
 					}
 				}
 			}
@@ -968,7 +969,7 @@ class PageModel extends Model
 			$this->adminEmail = $objParentPage->adminEmail;
 
 			// Store whether the root page has been published
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$this->rootIsPublic = ($objParentPage->published && ($objParentPage->start == '' || $objParentPage->start <= $time) && ($objParentPage->stop == '' || $objParentPage->stop > ($time + 60)));
 			$this->rootIsFallback = true;
 			$this->rootUseSSL = $objParentPage->useSSL;
@@ -992,7 +993,7 @@ class PageModel extends Model
 		// No root page found
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
-			\System::log('Page ID "'. $this->id .'" does not belong to a root page', __METHOD__, TL_ERROR);
+			System::log('Page ID "'. $this->id .'" does not belong to a root page', __METHOD__, TL_ERROR);
 			throw new NoRootPageFoundException('No root page found');
 		}
 
@@ -1001,15 +1002,15 @@ class PageModel extends Model
 		// Use the global date format if none is set (see #6104)
 		if ($this->dateFormat == '')
 		{
-			$this->dateFormat = \Config::get('dateFormat');
+			$this->dateFormat = Config::get('dateFormat');
 		}
 		if ($this->timeFormat == '')
 		{
-			$this->timeFormat = \Config::get('timeFormat');
+			$this->timeFormat = Config::get('timeFormat');
 		}
 		if ($this->datimFormat == '')
 		{
-			$this->datimFormat = \Config::get('datimFormat');
+			$this->datimFormat = Config::get('datimFormat');
 		}
 
 		// Prevent saving (see #6506 and #7199)
@@ -1036,7 +1037,7 @@ class PageModel extends Model
 
 		$this->loadDetails();
 
-		$objUrlGenerator = \System::getContainer()->get('contao.routing.url_generator');
+		$objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
 
 		$strUrl = $objUrlGenerator->generate
 		(
@@ -1052,7 +1053,7 @@ class PageModel extends Model
 		// Make the URL relative to the base path
 		if (0 === strncmp($strUrl, '/', 1))
 		{
-			$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
+			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 		}
 
 		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
@@ -1071,7 +1072,7 @@ class PageModel extends Model
 	{
 		$this->loadDetails();
 
-		$objUrlGenerator = \System::getContainer()->get('contao.routing.url_generator');
+		$objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
 
 		$strUrl = $objUrlGenerator->generate
 		(
@@ -1138,7 +1139,7 @@ class PageModel extends Model
 
 			foreach ($GLOBALS['TL_HOOKS']['generateFrontendUrl'] as $callback)
 			{
-				$strUrl = \System::importStatic($callback[0])->{$callback[1]}($this->row(), $strParams, $strUrl);
+				$strUrl = System::importStatic($callback[0])->{$callback[1]}($this->row(), $strParams, $strUrl);
 			}
 
 			return $strUrl;

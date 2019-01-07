@@ -118,13 +118,13 @@ class TextField extends Widget
 			{
 				try
 				{
-					$varInput = \Idna::encodeUrl($varInput);
+					$varInput = Idna::encodeUrl($varInput);
 				}
 				catch (\InvalidArgumentException $e) {}
 			}
 			elseif ($this->rgxp == 'email' || $this->rgxp == 'friendly')
 			{
-				$varInput = \Idna::encodeEmail($varInput);
+				$varInput = Idna::encodeEmail($varInput);
 			}
 		}
 
@@ -147,13 +147,13 @@ class TextField extends Widget
 			{
 				try
 				{
-					$this->varValue = \Idna::decodeUrl($this->varValue);
+					$this->varValue = Idna::decodeUrl($this->varValue);
 				}
 				catch (\InvalidArgumentException $e) {}
 			}
 			elseif ($this->rgxp == 'email' || $this->rgxp == 'friendly')
 			{
-				$this->varValue = \Idna::decodeEmail($this->varValue);
+				$this->varValue = Idna::decodeEmail($this->varValue);
 			}
 
 			return sprintf('<input type="%s" name="%s" id="ctrl_%s" class="tl_text%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s',
@@ -161,7 +161,7 @@ class TextField extends Widget
 							$this->strName,
 							$this->strId,
 							(($this->strClass != '') ? ' ' . $this->strClass : ''),
-							\StringUtil::specialchars($this->varValue),
+							StringUtil::specialchars($this->varValue),
 							$this->getAttributes(),
 							$this->wizard);
 		}
@@ -186,7 +186,7 @@ class TextField extends Widget
 									$this->strName,
 									$this->strId.'_'.$i,
 									$this->size,
-									\StringUtil::specialchars(@$this->varValue[$i]), // see #4979
+									StringUtil::specialchars(@$this->varValue[$i]), // see #4979
 									$this->getAttributes());
 		}
 

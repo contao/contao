@@ -99,9 +99,9 @@ class FormSubmit extends Widget
 	{
 		if ($this->imageSubmit && $this->singleSRC != '')
 		{
-			$objModel = \FilesModel::findByUuid($this->singleSRC);
+			$objModel = FilesModel::findByUuid($this->singleSRC);
 
-			if ($objModel !== null && is_file(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
+			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
 			{
 				$this->src = $objModel->path;
 			}
@@ -123,8 +123,8 @@ class FormSubmit extends Widget
 							$this->src,
 							$this->strId,
 							(($this->strClass != '') ? ' ' . $this->strClass : ''),
-							\StringUtil::specialchars($this->slabel),
-							\StringUtil::specialchars($this->slabel),
+							StringUtil::specialchars($this->slabel),
+							StringUtil::specialchars($this->slabel),
 							$this->getAttributes(),
 							$this->strTagEnding);
 		}

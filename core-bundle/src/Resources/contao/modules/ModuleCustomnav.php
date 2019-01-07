@@ -35,7 +35,7 @@ class ModuleCustomnav extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['customnav'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -46,7 +46,7 @@ class ModuleCustomnav extends Module
 		}
 
 		// Always return an array (see #4616)
-		$this->pages = \StringUtil::deserialize($this->pages, true);
+		$this->pages = StringUtil::deserialize($this->pages, true);
 
 		if (empty($this->pages) || $this->pages[0] == '')
 		{
@@ -77,7 +77,7 @@ class ModuleCustomnav extends Module
 		}
 
 		// Get all active pages and also include root pages if the language is added to the URL (see #72)
-		$objPages = \PageModel::findPublishedRegularWithoutGuestsByIds($this->pages, array('includeRoot'=>\Config::get('addLanguageToUrl')));
+		$objPages = PageModel::findPublishedRegularWithoutGuestsByIds($this->pages, array('includeRoot'=>Config::get('addLanguageToUrl')));
 
 		// Return if there are no pages
 		if ($objPages === null)
@@ -90,7 +90,7 @@ class ModuleCustomnav extends Module
 		// Sort the array keys according to the given order
 		if ($this->orderPages != '')
 		{
-			$tmp = \StringUtil::deserialize($this->orderPages);
+			$tmp = StringUtil::deserialize($this->orderPages);
 
 			if (!empty($tmp) && \is_array($tmp))
 			{
@@ -112,7 +112,7 @@ class ModuleCustomnav extends Module
 			$this->navigationTpl = 'nav_default';
 		}
 
-		$objTemplate = new \FrontendTemplate($this->navigationTpl);
+		$objTemplate = new FrontendTemplate($this->navigationTpl);
 		$objTemplate->type = \get_class($this);
 		$objTemplate->cssID = $this->cssID; // see #4897 and 6129
 		$objTemplate->level = 'level_1';
@@ -120,7 +120,7 @@ class ModuleCustomnav extends Module
 		/** @var PageModel[] $arrPages */
 		foreach ($arrPages as $objModel)
 		{
-			$_groups = \StringUtil::deserialize($objModel->groups);
+			$_groups = StringUtil::deserialize($objModel->groups);
 
 			// Do not show protected pages unless a front end user is logged in
 			if (!$objModel->protected || (\is_array($_groups) && \count(array_intersect($_groups, $groups))) || $this->showProtected)
@@ -133,7 +133,7 @@ class ModuleCustomnav extends Module
 						break;
 
 					case 'forward':
-						if (($objNext = $objModel->getRelated('jumpTo')) instanceof PageModel || ($objNext = \PageModel::findFirstPublishedRegularByPid($objModel->id)) instanceof PageModel)
+						if (($objNext = $objModel->getRelated('jumpTo')) instanceof PageModel || ($objNext = PageModel::findFirstPublishedRegularByPid($objModel->id)) instanceof PageModel)
 						{
 							/** @var PageModel $objNext */
 							$href = $objNext->getFrontendUrl();
@@ -157,7 +157,7 @@ class ModuleCustomnav extends Module
 				$trail = \in_array($objModel->id, $objPage->trail);
 
 				// Active page
-				if ($objPage->id == $objModel->id && $href == \Environment::get('request'))
+				if ($objPage->id == $objModel->id && $href == Environment::get('request'))
 				{
 					$strClass = trim($objModel->cssClass);
 					$row = $objModel->row();
@@ -165,8 +165,8 @@ class ModuleCustomnav extends Module
 					$row['isActive'] = true;
 					$row['isTrail'] = false;
 					$row['class'] = trim('active ' . $strClass);
-					$row['title'] = \StringUtil::specialchars($objModel->title, true);
-					$row['pageTitle'] = \StringUtil::specialchars($objModel->pageTitle, true);
+					$row['title'] = StringUtil::specialchars($objModel->title, true);
+					$row['pageTitle'] = StringUtil::specialchars($objModel->pageTitle, true);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
@@ -191,8 +191,8 @@ class ModuleCustomnav extends Module
 					$row['isActive'] = false;
 					$row['isTrail'] = $trail;
 					$row['class'] = $strClass;
-					$row['title'] = \StringUtil::specialchars($objModel->title, true);
-					$row['pageTitle'] = \StringUtil::specialchars($objModel->pageTitle, true);
+					$row['title'] = StringUtil::specialchars($objModel->title, true);
+					$row['pageTitle'] = StringUtil::specialchars($objModel->pageTitle, true);
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
@@ -217,9 +217,9 @@ class ModuleCustomnav extends Module
 
 		$objTemplate->items = $items;
 
-		$this->Template->request = \Environment::get('indexFreeRequest');
+		$this->Template->request = Environment::get('indexFreeRequest');
 		$this->Template->skipId = 'skipNavigation' . $this->id;
-		$this->Template->skipNavigation = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
+		$this->Template->skipNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
 		$this->Template->items = !empty($items) ? $objTemplate->parse() : '';
 	}
 }

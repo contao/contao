@@ -49,7 +49,7 @@ class Upload extends Widget implements \uploadable
 	{
 		parent::__construct($arrAttributes);
 
-		$this->objUploader = new \FileUpload();
+		$this->objUploader = new FileUpload();
 		$this->objUploader->setName($this->strName);
 	}
 

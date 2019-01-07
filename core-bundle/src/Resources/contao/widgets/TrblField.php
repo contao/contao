@@ -57,7 +57,7 @@ class TrblField extends Widget
 				break;
 
 			case 'options':
-				$this->arrUnits = \StringUtil::deserialize($varValue);
+				$this->arrUnits = StringUtil::deserialize($varValue);
 				break;
 
 			default:
@@ -120,7 +120,7 @@ class TrblField extends Widget
 		foreach ($this->arrUnits as $arrUnit)
 		{
 			$arrUnits[] = sprintf('<option value="%s"%s>%s</option>',
-								   \StringUtil::specialchars($arrUnit['value']),
+								   StringUtil::specialchars($arrUnit['value']),
 								   $this->isSelected($arrUnit),
 								   $arrUnit['label']);
 		}
@@ -141,7 +141,7 @@ class TrblField extends Widget
 									$this->strId.'_'.$strKey,
 									$strKey,
 									(($this->strClass != '') ? ' ' . $this->strClass : ''),
-									\StringUtil::specialchars(@$this->varValue[$strKey]), // see #4979
+									StringUtil::specialchars(@$this->varValue[$strKey]), // see #4979
 									$this->getAttributes());
 		}
 

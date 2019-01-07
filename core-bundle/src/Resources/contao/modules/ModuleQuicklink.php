@@ -35,7 +35,7 @@ class ModuleQuicklink extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['quicklink'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -46,13 +46,13 @@ class ModuleQuicklink extends Module
 		}
 
 		// Redirect to selected page
-		if (\Input::post('FORM_SUBMIT') == 'tl_quicklink_' . $this->id)
+		if (Input::post('FORM_SUBMIT') == 'tl_quicklink_' . $this->id)
 		{
-			$this->redirect(\Input::post('target', true));
+			$this->redirect(Input::post('target', true));
 		}
 
 		// Always return an array (see #4616)
-		$this->pages = \StringUtil::deserialize($this->pages, true);
+		$this->pages = StringUtil::deserialize($this->pages, true);
 
 		if (empty($this->pages) || $this->pages[0] == '')
 		{
@@ -71,7 +71,7 @@ class ModuleQuicklink extends Module
 		global $objPage;
 
 		// Get all active pages
-		$objPages = \PageModel::findPublishedRegularWithoutGuestsByIds($this->pages);
+		$objPages = PageModel::findPublishedRegularWithoutGuestsByIds($this->pages);
 
 		// Return if there are no pages
 		if ($objPages === null)
@@ -84,7 +84,7 @@ class ModuleQuicklink extends Module
 		// Sort the array keys according to the given order
 		if ($this->orderPages != '')
 		{
-			$tmp = \StringUtil::deserialize($this->orderPages);
+			$tmp = StringUtil::deserialize($this->orderPages);
 
 			if (!empty($tmp) && \is_array($tmp))
 			{
@@ -104,8 +104,8 @@ class ModuleQuicklink extends Module
 		/** @var PageModel[] $arrPages */
 		foreach ($arrPages as $objSubpage)
 		{
-			$objSubpage->title = \StringUtil::stripInsertTags($objSubpage->title);
-			$objSubpage->pageTitle = \StringUtil::stripInsertTags($objSubpage->pageTitle);
+			$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
+			$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);
 
 			// Get href
 			switch ($objSubpage->type)
@@ -115,7 +115,7 @@ class ModuleQuicklink extends Module
 					break;
 
 				case 'forward':
-					if (($objNext = $objSubpage->getRelated('jumpTo')) instanceof PageModel || ($objNext = \PageModel::findFirstPublishedRegularByPid($objSubpage->id)) instanceof PageModel)
+					if (($objNext = $objSubpage->getRelated('jumpTo')) instanceof PageModel || ($objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id)) instanceof PageModel)
 					{
 						/** @var PageModel $objNext */
 						$href = $objNext->getFrontendUrl();
@@ -131,7 +131,7 @@ class ModuleQuicklink extends Module
 			$items[] = array
 			(
 				'href' => $href,
-				'title' => \StringUtil::specialchars($objSubpage->pageTitle ?: $objSubpage->title),
+				'title' => StringUtil::specialchars($objSubpage->pageTitle ?: $objSubpage->title),
 				'link' => $objSubpage->title,
 				'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))
 			);
@@ -139,9 +139,9 @@ class ModuleQuicklink extends Module
 
 		$this->Template->items = $items;
 		$this->Template->formId = 'tl_quicklink_' . $this->id;
-		$this->Template->request = ampersand(\Environment::get('request'), true);
+		$this->Template->request = ampersand(Environment::get('request'), true);
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicklink'];
-		$this->Template->button = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
+		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 	}
 }
 

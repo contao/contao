@@ -485,7 +485,7 @@ class Date
 			}
 		}
 
-		return \Config::get('dateFormat');
+		return Config::get('dateFormat');
 	}
 
 	/**
@@ -506,7 +506,7 @@ class Date
 			}
 		}
 
-		return \Config::get('timeFormat');
+		return Config::get('timeFormat');
 	}
 
 	/**
@@ -527,7 +527,7 @@ class Date
 			}
 		}
 
-		return \Config::get('datimFormat');
+		return Config::get('datimFormat');
 	}
 
 	/**
@@ -594,7 +594,7 @@ class Date
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseDate'] as $callback)
 			{
-				$strReturn = \System::importStatic($callback[0])->{$callback[1]}($strReturn, $strFormat, $intTstamp);
+				$strReturn = System::importStatic($callback[0])->{$callback[1]}($strReturn, $strFormat, $intTstamp);
 			}
 		}
 
@@ -632,7 +632,7 @@ class Date
 			return $strDate;
 		}
 
-		\System::loadLanguageFile('default');
+		System::loadLanguageFile('default');
 
 		if (!$GLOBALS['TL_LANG']['MSC']['dayShortLength'])
 		{

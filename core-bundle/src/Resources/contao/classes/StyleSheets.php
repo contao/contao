@@ -30,7 +30,7 @@ class StyleSheets extends Backend
 	{
 		parent::__construct();
 		$this->import('Files');
-		$this->strRootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$this->strRootDir = System::getContainer()->getParameter('kernel.project_dir');
 	}
 
 	/**
@@ -50,7 +50,7 @@ class StyleSheets extends Backend
 		}
 
 		// Delete the CSS file
-		if (\Input::get('act') == 'delete')
+		if (Input::get('act') == 'delete')
 		{
 			$this->import('Files');
 			$this->Files->delete('assets/css/' . $objStyleSheet->name . '.css');
@@ -89,7 +89,7 @@ class StyleSheets extends Backend
 			}
 
 			// Preserve root files (is this still required now that scripts are in assets/css/scripts?)
-			if (\is_array(\Config::get('rootFiles')) && \in_array($file, \Config::get('rootFiles')))
+			if (\is_array(Config::get('rootFiles')) && \in_array($file, Config::get('rootFiles')))
 			{
 				continue;
 			}
@@ -100,7 +100,7 @@ class StyleSheets extends Backend
 				continue;
 			}
 
-			$objFile = new \File('assets/css/' . $file);
+			$objFile = new File('assets/css/' . $file);
 
 			// Delete the old style sheet
 			if ($objFile->extension == 'css' && !\in_array($objFile->filename, $arrStyleSheets))
@@ -136,7 +136,7 @@ class StyleSheets extends Backend
 		// Check whether the target file is writeable
 		if (file_exists($this->strRootDir . '/assets/css/' . $row['name'] . '.css') && !$this->Files->is_writeable('assets/css/' . $row['name'] . '.css'))
 		{
-			\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['notWriteable'], 'assets/css/' . $row['name'] . '.css'));
+			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['notWriteable'], 'assets/css/' . $row['name'] . '.css'));
 
 			return;
 		}
@@ -150,7 +150,7 @@ class StyleSheets extends Backend
 
 		if ($objTheme->vars != '')
 		{
-			if (\is_array(($tmp = \StringUtil::deserialize($objTheme->vars))))
+			if (\is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
 			{
 				foreach ($tmp as $v)
 				{
@@ -162,7 +162,7 @@ class StyleSheets extends Backend
 		// Merge the global style sheet variables
 		if ($row['vars'] != '')
 		{
-			if (\is_array($tmp = \StringUtil::deserialize($row['vars'])))
+			if (\is_array($tmp = StringUtil::deserialize($row['vars'])))
 			{
 				foreach ($tmp as $v)
 				{
@@ -175,7 +175,7 @@ class StyleSheets extends Backend
 		uksort($vars, 'length_sort_desc');
 
 		// Create the file
-		$objFile = new \File('assets/css/' . $row['name'] . '.css');
+		$objFile = new File('assets/css/' . $row['name'] . '.css');
 		$objFile->write('/* ' . $row['name'] . ".css */\n");
 
 		$objDefinitions = $this->Database->prepare("SELECT * FROM tl_style WHERE pid=? AND invisible!='1' ORDER BY sorting")
@@ -240,14 +240,14 @@ class StyleSheets extends Backend
 		}
 
 		// Selector
-		$arrSelector = \StringUtil::trimsplit(',', \StringUtil::decodeEntities($row['selector']));
+		$arrSelector = StringUtil::trimsplit(',', StringUtil::decodeEntities($row['selector']));
 		$return .= implode(($blnWriteToFile ? ',' : ",\n"), $arrSelector) . ($blnWriteToFile ? '' : ' ') . '{';
 
 		// Size
 		if ($row['size'])
 		{
 			// Width
-			$row['width'] = \StringUtil::deserialize($row['width']);
+			$row['width'] = StringUtil::deserialize($row['width']);
 
 			if (isset($row['width']['value']) && $row['width']['value'] != '')
 			{
@@ -255,7 +255,7 @@ class StyleSheets extends Backend
 			}
 
 			// Height
-			$row['height'] = \StringUtil::deserialize($row['height']);
+			$row['height'] = StringUtil::deserialize($row['height']);
 
 			if (isset($row['height']['value']) && $row['height']['value'] != '')
 			{
@@ -263,7 +263,7 @@ class StyleSheets extends Backend
 			}
 
 			// Min-width
-			$row['minwidth'] = \StringUtil::deserialize($row['minwidth']);
+			$row['minwidth'] = StringUtil::deserialize($row['minwidth']);
 
 			if (isset($row['minwidth']['value']) && $row['minwidth']['value'] != '')
 			{
@@ -271,7 +271,7 @@ class StyleSheets extends Backend
 			}
 
 			// Min-height
-			$row['minheight'] = \StringUtil::deserialize($row['minheight']);
+			$row['minheight'] = StringUtil::deserialize($row['minheight']);
 
 			if (isset($row['minheight']['value']) && $row['minheight']['value'] != '')
 			{
@@ -279,7 +279,7 @@ class StyleSheets extends Backend
 			}
 
 			// Max-width
-			$row['maxwidth'] = \StringUtil::deserialize($row['maxwidth']);
+			$row['maxwidth'] = StringUtil::deserialize($row['maxwidth']);
 
 			if (isset($row['maxwidth']['value']) && $row['maxwidth']['value'] != '')
 			{
@@ -287,7 +287,7 @@ class StyleSheets extends Backend
 			}
 
 			// Max-height
-			$row['maxheight'] = \StringUtil::deserialize($row['maxheight']);
+			$row['maxheight'] = StringUtil::deserialize($row['maxheight']);
 
 			if (isset($row['maxheight']['value']) && $row['maxheight']['value'] != '')
 			{
@@ -299,7 +299,7 @@ class StyleSheets extends Backend
 		if ($row['positioning'])
 		{
 			// Top/right/bottom/left
-			$row['trbl'] = \StringUtil::deserialize($row['trbl']);
+			$row['trbl'] = StringUtil::deserialize($row['trbl']);
 
 			if (\is_array($row['trbl']))
 			{
@@ -349,7 +349,7 @@ class StyleSheets extends Backend
 			// Margin
 			if ($row['margin'] != '' || $row['align'] != '')
 			{
-				$row['margin'] = \StringUtil::deserialize($row['margin']);
+				$row['margin'] = StringUtil::deserialize($row['margin']);
 
 				if (\is_array($row['margin']))
 				{
@@ -410,7 +410,7 @@ class StyleSheets extends Backend
 			// Padding
 			if ($row['padding'] != '')
 			{
-				$row['padding'] = \StringUtil::deserialize($row['padding']);
+				$row['padding'] = StringUtil::deserialize($row['padding']);
 
 				if (\is_array($row['padding']))
 				{
@@ -476,7 +476,7 @@ class StyleSheets extends Backend
 		// Background
 		if ($row['background'])
 		{
-			$bgColor = \StringUtil::deserialize($row['bgcolor'], true);
+			$bgColor = StringUtil::deserialize($row['bgcolor'], true);
 
 			// Try to shorten the definition
 			if ($bgColor[0] != '' && $row['bgimage'] != '' && $row['bgposition'] != '' && $row['bgrepeat'] != '')
@@ -533,7 +533,7 @@ class StyleSheets extends Backend
 			// Background gradient
 			if ($row['gradientAngle'] != '' && $row['gradientColors'] != '')
 			{
-				$row['gradientColors'] = \StringUtil::deserialize($row['gradientColors']);
+				$row['gradientColors'] = StringUtil::deserialize($row['gradientColors']);
 
 				if (\is_array($row['gradientColors']) && \count(array_filter($row['gradientColors'])) > 0)
 				{
@@ -599,8 +599,8 @@ class StyleSheets extends Backend
 			// Box shadow
 			if ($row['shadowsize'] != '')
 			{
-				$shColor = \StringUtil::deserialize($row['shadowcolor'], true);
-				$row['shadowsize'] = \StringUtil::deserialize($row['shadowsize']);
+				$shColor = StringUtil::deserialize($row['shadowcolor'], true);
+				$row['shadowsize'] = StringUtil::deserialize($row['shadowsize']);
 
 				if (\is_array($row['shadowsize']) && $row['shadowsize']['top'] != '' && $row['shadowsize']['right'] != '')
 				{
@@ -635,8 +635,8 @@ class StyleSheets extends Backend
 		// Border
 		if ($row['border'])
 		{
-			$bdColor = \StringUtil::deserialize($row['bordercolor'], true);
-			$row['borderwidth'] = \StringUtil::deserialize($row['borderwidth']);
+			$bdColor = StringUtil::deserialize($row['bordercolor'], true);
+			$row['borderwidth'] = StringUtil::deserialize($row['borderwidth']);
 
 			// Border width
 			if (\is_array($row['borderwidth']))
@@ -706,7 +706,7 @@ class StyleSheets extends Backend
 			// Border radius
 			if ($row['borderradius'] != '')
 			{
-				$row['borderradius'] = \StringUtil::deserialize($row['borderradius']);
+				$row['borderradius'] = StringUtil::deserialize($row['borderradius']);
 
 				if (\is_array($row['borderradius']) && ($row['borderradius']['top'] != '' || $row['borderradius']['right'] != '' || $row['borderradius']['bottom'] != '' || $row['borderradius']['left'] != ''))
 				{
@@ -760,7 +760,7 @@ class StyleSheets extends Backend
 			}
 
 			// Border spacing
-			$row['borderspacing'] = \StringUtil::deserialize($row['borderspacing']);
+			$row['borderspacing'] = StringUtil::deserialize($row['borderspacing']);
 
 			if (isset($row['borderspacing']['value']) && $row['borderspacing']['value'] != '')
 			{
@@ -771,8 +771,8 @@ class StyleSheets extends Backend
 		// Font
 		if ($row['font'])
 		{
-			$row['fontsize'] = \StringUtil::deserialize($row['fontsize']);
-			$row['lineheight'] = \StringUtil::deserialize($row['lineheight']);
+			$row['fontsize'] = StringUtil::deserialize($row['fontsize']);
+			$row['lineheight'] = StringUtil::deserialize($row['lineheight']);
 			$row['fontfamily'] = str_replace(', ', ',', $row['fontfamily']);
 
 			// Try to shorten the definition
@@ -802,7 +802,7 @@ class StyleSheets extends Backend
 			}
 
 			// Font style
-			$row['fontstyle'] = \StringUtil::deserialize($row['fontstyle']);
+			$row['fontstyle'] = StringUtil::deserialize($row['fontstyle']);
 
 			if (\is_array($row['fontstyle']))
 			{
@@ -847,7 +847,7 @@ class StyleSheets extends Backend
 				}
 			}
 
-			$fnColor = \StringUtil::deserialize($row['fontcolor'], true);
+			$fnColor = StringUtil::deserialize($row['fontcolor'], true);
 
 			// Font color
 			if ($fnColor[0] != '')
@@ -862,7 +862,7 @@ class StyleSheets extends Backend
 			}
 
 			// Text indent
-			$row['textindent'] = \StringUtil::deserialize($row['textindent']);
+			$row['textindent'] = StringUtil::deserialize($row['textindent']);
 
 			if (isset($row['textindent']['value']) && $row['textindent']['value'] != '')
 			{
@@ -870,7 +870,7 @@ class StyleSheets extends Backend
 			}
 
 			// Letter spacing
-			$row['letterspacing'] = \StringUtil::deserialize($row['letterspacing']);
+			$row['letterspacing'] = StringUtil::deserialize($row['letterspacing']);
 
 			if (isset($row['letterspacing']['value']) && $row['letterspacing']['value'] != '')
 			{
@@ -878,7 +878,7 @@ class StyleSheets extends Backend
 			}
 
 			// Word spacing
-			$row['wordspacing'] = \StringUtil::deserialize($row['wordspacing']);
+			$row['wordspacing'] = StringUtil::deserialize($row['wordspacing']);
 
 			if (isset($row['wordspacing']['value']) && $row['wordspacing']['value'] != '')
 			{
@@ -920,11 +920,11 @@ class StyleSheets extends Backend
 		// Custom code
 		if ($row['own'] != '')
 		{
-			$own = trim(\StringUtil::decodeEntities($row['own']));
+			$own = trim(StringUtil::decodeEntities($row['own']));
 			$own = preg_replace('/url\("(?!data:|\/)/', 'url("' . $strGlue, $own);
 			$own = preg_split('/[\n\r]+/', $own);
 			$own = implode(($blnWriteToFile ? '' : $lb), $own);
-			$return .= $lb . ((!$blnWriteToFile && !$export) ? \StringUtil::specialchars($own) : $own);
+			$return .= $lb . ((!$blnWriteToFile && !$export) ? StringUtil::specialchars($own) : $own);
 		}
 
 		// Allow custom definitions
@@ -1071,22 +1071,22 @@ class StyleSheets extends Backend
 	 */
 	public function importStyleSheet()
 	{
-		if (\Input::get('key') != 'import')
+		if (Input::get('key') != 'import')
 		{
 			return '';
 		}
 
 		/** @var FileUpload $objUploader */
-		$objUploader = new \FileUpload();
+		$objUploader = new FileUpload();
 
 		// Import CSS
-		if (\Input::post('FORM_SUBMIT') == 'tl_style_sheet_import')
+		if (Input::post('FORM_SUBMIT') == 'tl_style_sheet_import')
 		{
 			$arrUploaded = $objUploader->uploadTo('system/tmp');
 
 			if (empty($arrUploaded))
 			{
-				\Message::addError($GLOBALS['TL_LANG']['ERR']['all_fields']);
+				Message::addError($GLOBALS['TL_LANG']['ERR']['all_fields']);
 				$this->reload();
 			}
 
@@ -1095,16 +1095,16 @@ class StyleSheets extends Backend
 				// Folders cannot be imported
 				if (is_dir($this->strRootDir . '/' . $strCssFile))
 				{
-					\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['importFolder'], basename($strCssFile)));
+					Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['importFolder'], basename($strCssFile)));
 					continue;
 				}
 
-				$objFile = new \File($strCssFile);
+				$objFile = new File($strCssFile);
 
 				// Check the file extension
 				if ($objFile->extension != 'css')
 				{
-					\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
+					Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 					continue;
 				}
 
@@ -1114,7 +1114,7 @@ class StyleSheets extends Backend
 
 				// Create the new style sheet
 				$objStyleSheet = $this->Database->prepare("INSERT INTO tl_style_sheet (pid, tstamp, name, media) VALUES (?, ?, ?, ?)")
-												->execute(\Input::get('id'), time(), $strName, array('all'));
+												->execute(Input::get('id'), time(), $strName, array('all'));
 
 				$insertId = $objStyleSheet->insertId;
 
@@ -1296,29 +1296,29 @@ class StyleSheets extends Backend
 				// Notify the user
 				if ($strName . '.css' != basename($strCssFile))
 				{
-					\Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_style_sheet']['css_renamed'], basename($strCssFile), $strName . '.css'));
+					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_style_sheet']['css_renamed'], basename($strCssFile), $strName . '.css'));
 				}
 				else
 				{
-					\Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_style_sheet']['css_imported'], $strName . '.css'));
+					Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_style_sheet']['css_imported'], $strName . '.css'));
 				}
 			}
 
 			// Redirect
-			\System::setCookie('BE_PAGE_OFFSET', 0, 0);
-			$this->redirect(str_replace('&key=import', '', \Environment::get('request')));
+			System::setCookie('BE_PAGE_OFFSET', 0, 0);
+			$this->redirect(str_replace('&key=import', '', Environment::get('request')));
 		}
 
 		// Return form
-		return \Message::generate() . '
+		return Message::generate() . '
 <div id="tl_buttons">
-<a href="' .ampersand(str_replace('&key=import', '', \Environment::get('request'))). '" class="header_back" title="' .\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']). '" accesskey="b">' .$GLOBALS['TL_LANG']['MSC']['backBT']. '</a>
+<a href="' .ampersand(str_replace('&key=import', '', Environment::get('request'))). '" class="header_back" title="' .StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']). '" accesskey="b">' .$GLOBALS['TL_LANG']['MSC']['backBT']. '</a>
 </div>
-<form action="' .ampersand(\Environment::get('request'), true). '" id="tl_style_sheet_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
+<form action="' .ampersand(Environment::get('request'), true). '" id="tl_style_sheet_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_style_sheet_import">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-<input type="hidden" name="MAX_FILE_SIZE" value="'.\Config::get('maxFileSize').'">
+<input type="hidden" name="MAX_FILE_SIZE" value="'.Config::get('maxFileSize').'">
 
 <div class="tl_tbox">
   <div class="widget">
@@ -1366,7 +1366,7 @@ class StyleSheets extends Backend
 
 		if ($objTheme->vars != '')
 		{
-			if (\is_array(($tmp = \StringUtil::deserialize($objTheme->vars))))
+			if (\is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
 			{
 				foreach ($tmp as $v)
 				{
@@ -1378,7 +1378,7 @@ class StyleSheets extends Backend
 		// Merge the global style sheet variables
 		if ($objStyleSheet->vars != '')
 		{
-			if (\is_array(($tmp = \StringUtil::deserialize($objStyleSheet->vars))))
+			if (\is_array(($tmp = StringUtil::deserialize($objStyleSheet->vars))))
 			{
 				foreach ($tmp as $v)
 				{
@@ -1391,7 +1391,7 @@ class StyleSheets extends Backend
 		uksort($vars, 'length_sort_desc');
 
 		// Create the file
-		$objFile = new \File('system/tmp/' . md5(uniqid(mt_rand(), true)));
+		$objFile = new File('system/tmp/' . md5(uniqid(mt_rand(), true)));
 		$objFile->write('');
 
 		// Add the media query (see #7560)
@@ -1462,7 +1462,7 @@ class StyleSheets extends Backend
 			'selector' => $arrDefinition['selector']
 		);
 
-		$arrAttributes = \StringUtil::trimsplit(';', $arrDefinition['attributes']);
+		$arrAttributes = StringUtil::trimsplit(';', $arrDefinition['attributes']);
 
 		foreach ($arrAttributes as $strDefinition)
 		{
@@ -1842,7 +1842,7 @@ class StyleSheets extends Backend
 						// Handle linear gradients (see #4640)
 						if (strncmp($url, 'linear-gradient', 15) === 0)
 						{
-							$colors = \StringUtil::trimsplit(',', preg_replace('/linear-gradient ?\(([^\)]+)\)/', '$1', $url));
+							$colors = StringUtil::trimsplit(',', preg_replace('/linear-gradient ?\(([^\)]+)\)/', '$1', $url));
 							$arrSet['gradientAngle'] = array_shift($colors);
 							$arrSet['gradientColors'] = serialize($colors);
 						}
@@ -2245,7 +2245,7 @@ class StyleSheets extends Backend
 	{
 		if ($arrParent['embedImages'] > 0 && file_exists($this->strRootDir . '/' . $strImage))
 		{
-			$objImage = new \File($strImage);
+			$objImage = new File($strImage);
 			$strMime = $objImage->extension;
 
 			// Adjust the mime types

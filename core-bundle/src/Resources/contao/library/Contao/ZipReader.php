@@ -134,7 +134,7 @@ class ZipReader
 		}
 
 		$this->strFile = $strFile;
-		$this->strRootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$this->strRootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check if file exists
 		if (!file_exists($this->strRootDir . '/' . $strFile))

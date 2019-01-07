@@ -44,7 +44,7 @@ class ModuleLogin extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['login'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -54,7 +54,7 @@ class ModuleLogin extends Module
 			return $objTemplate->parse();
 		}
 
-		if (!$_POST && $this->redirectBack && ($strReferer = $this->getReferer()) != \Environment::get('request'))
+		if (!$_POST && $this->redirectBack && ($strReferer = $this->getReferer()) != Environment::get('request'))
 		{
 			$_SESSION['LAST_PAGE_VISITED'] = $strReferer;
 		}
@@ -67,7 +67,7 @@ class ModuleLogin extends Module
 	 */
 	protected function compile()
 	{
-		$container = \System::getContainer();
+		$container = System::getContainer();
 
 		/** @var RouterInterface $router */
 		$router = $container->get('router');
@@ -79,30 +79,30 @@ class ModuleLogin extends Module
 
 			$this->import('FrontendUser', 'User');
 
-			$strRedirect = \Environment::get('base').\Environment::get('request');
+			$strRedirect = Environment::get('base').Environment::get('request');
 
 			// Redirect to last page visited
 			if ($this->redirectBack && $_SESSION['LAST_PAGE_VISITED'] != '')
 			{
-				$strRedirect = \Environment::get('base').$_SESSION['LAST_PAGE_VISITED'];
+				$strRedirect = Environment::get('base').$_SESSION['LAST_PAGE_VISITED'];
 			}
 
 			// Redirect home if the page is protected
 			elseif ($objPage->protected)
 			{
-				$strRedirect = \Environment::get('base');
+				$strRedirect = Environment::get('base');
 			}
 
 			$this->Template->logout = true;
 			$this->Template->formId = 'tl_logout_' . $this->id;
-			$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
+			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
 			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $this->User->username);
 			$this->Template->action = $container->get('security.logout_url_generator')->getLogoutPath();
-			$this->Template->targetPath = \StringUtil::specialchars($strRedirect);
+			$this->Template->targetPath = StringUtil::specialchars($strRedirect);
 
 			if ($this->User->lastLogin > 0)
 			{
-				$this->Template->lastLogin = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], \Date::parse($objPage->datimFormat, $this->User->lastLogin));
+				$this->Template->lastLogin = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], Date::parse($objPage->datimFormat, $this->User->lastLogin));
 			}
 
 			return;
@@ -122,7 +122,7 @@ class ModuleLogin extends Module
 		}
 
 		$blnRedirectBack = false;
-		$strRedirect = \Environment::get('base').\Environment::get('request');
+		$strRedirect = Environment::get('base').Environment::get('request');
 
 		// Redirect to the last page visited
 		if ($this->redirectBack && $_SESSION['LAST_PAGE_VISITED'] != '')
@@ -141,14 +141,14 @@ class ModuleLogin extends Module
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->action = $router->generate('contao_frontend_login');
-		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
-		$this->Template->value = \StringUtil::specialchars($container->get('security.authentication_utils')->getLastUsername());
+		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
+		$this->Template->value = StringUtil::specialchars($container->get('security.authentication_utils')->getLastUsername());
 		$this->Template->formId = 'tl_login_' . $this->id;
 		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 		$this->Template->forceTargetPath = (int) $blnRedirectBack;
-		$this->Template->targetPath = \StringUtil::specialchars($strRedirect);
-		$this->Template->failurePath = \StringUtil::specialchars(\Environment::get('base').\Environment::get('request'));
+		$this->Template->targetPath = StringUtil::specialchars($strRedirect);
+		$this->Template->failurePath = StringUtil::specialchars(Environment::get('base').Environment::get('request'));
 	}
 }
 

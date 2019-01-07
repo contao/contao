@@ -10,7 +10,14 @@
 
 namespace Contao\Database;
 
+use Contao\Config;
 use Contao\Controller;
+use Contao\Database;
+use Contao\Dbafs;
+use Contao\File;
+use Contao\FilesModel;
+use Contao\StringUtil;
+use Contao\System;
 use Symfony\Component\Finder\SplFileInfo;
 
 @trigger_error('Using the Contao\Database\Updater class has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
@@ -82,7 +89,7 @@ class Updater extends Controller
 						   ->execute(serialize($mootools), $objLayout->id);
 		}
 
-		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Update event reader
 		if (!file_exists($rootDir . '/templates/event_default.tpl'))
@@ -150,7 +157,7 @@ class Updater extends Controller
 
 		while ($objUser->next())
 		{
-			$modules = \StringUtil::deserialize($objUser->modules);
+			$modules = StringUtil::deserialize($objUser->modules);
 
 			if (empty($modules) || !\is_array($modules))
 			{
@@ -353,7 +360,7 @@ class Updater extends Controller
 		// Rename "responsive.css" to "grid.css"
 		while ($objLayout->next())
 		{
-			$arrCss = \StringUtil::deserialize($objLayout->framework);
+			$arrCss = StringUtil::deserialize($objLayout->framework);
 
 			if (($key = array_search('responsive.css', $arrCss)) !== false)
 			{
@@ -383,7 +390,7 @@ class Updater extends Controller
 			// jQuery already activated
 			if ($objLayout->addjQuery)
 			{
-				$arrJQuery = \StringUtil::deserialize($objLayout->jquery);
+				$arrJQuery = StringUtil::deserialize($objLayout->jquery);
 
 				// Add j_mediaelement
 				if (!\is_array($arrJQuery))
@@ -403,7 +410,7 @@ class Updater extends Controller
 				$arrSet['jquery'] = serialize(array('j_mediaelement'));
 			}
 
-			$arrMooTools = \StringUtil::deserialize($objLayout->mootools);
+			$arrMooTools = StringUtil::deserialize($objLayout->mootools);
 
 			// Unset the moo_mediaelement template
 			if (($key = array_search('moo_mediaelement', $arrMooTools)) !== false)
@@ -432,7 +439,7 @@ class Updater extends Controller
 		// Add the "enable" flag to all modules
 		while ($objLayout->next())
 		{
-			$arrModules = \StringUtil::deserialize($objLayout->modules);
+			$arrModules = StringUtil::deserialize($objLayout->modules);
 
 			foreach (array_keys($arrModules) as $key)
 			{
@@ -475,7 +482,7 @@ class Updater extends Controller
 		while ($objLayout->next())
 		{
 			$strSections = '';
-			$tmp = \StringUtil::deserialize($objLayout->sections);
+			$tmp = StringUtil::deserialize($objLayout->sections);
 
 			if (!empty($tmp) && \is_array($tmp))
 			{
@@ -544,7 +551,7 @@ class Updater extends Controller
 		while ($objLayout->next())
 		{
 			$strFramework = '';
-			$tmp = \StringUtil::deserialize($objLayout->framework);
+			$tmp = StringUtil::deserialize($objLayout->framework);
 
 			if (!empty($tmp) && \is_array($tmp))
 			{
@@ -590,7 +597,7 @@ class Updater extends Controller
 			// Check whether j_slider is enabled
 			if ($objLayout->addJQuery)
 			{
-				$jquery = \StringUtil::deserialize($objLayout->jquery);
+				$jquery = StringUtil::deserialize($objLayout->jquery);
 
 				if (!empty($jquery) && \is_array($jquery))
 				{
@@ -608,7 +615,7 @@ class Updater extends Controller
 			// Check whether moo_slider is enabled
 			if ($objLayout->addMooTools)
 			{
-				$mootools = \StringUtil::deserialize($objLayout->mootools);
+				$mootools = StringUtil::deserialize($objLayout->mootools);
 
 				if (!empty($mootools) && \is_array($mootools))
 				{
@@ -642,14 +649,14 @@ class Updater extends Controller
 	{
 		if ($strPath === null)
 		{
-			$strPath = \Config::get('uploadPath');
+			$strPath = Config::get('uploadPath');
 		}
 
 		$arrMeta = array();
 		$arrMapper = array();
 		$arrFolders = array();
 		$arrFiles = array();
-		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 		$arrScan = scan($rootDir . '/' . $strPath);
 
 		foreach ($arrScan as $strFile)
@@ -677,7 +684,7 @@ class Updater extends Controller
 			$this->scanUploadFolder($strFolder, $strUuid);
 
 			$this->Database->prepare("INSERT INTO tl_files (pid, tstamp, uuid, name, type, path, hash) VALUES (?, ?, ?, ?, 'folder', ?, ?)")
-						   ->execute($pid, time(), $strUuid, basename($strFolder), $strFolder, \Dbafs::getFolderHash($strFolder));
+						   ->execute($pid, time(), $strUuid, basename($strFolder), $strFolder, Dbafs::getFolderHash($strFolder));
 		}
 
 		// Files
@@ -699,7 +706,7 @@ class Updater extends Controller
 				}
 			}
 
-			$objFile = new \File($strFile);
+			$objFile = new File($strFile);
 			$strUuid = $this->Database->getUuid();
 
 			$this->Database->prepare("INSERT INTO tl_files (pid, tstamp, uuid, name, type, path, extension, hash) VALUES (?, ?, ?, ?, 'file', ?, ?, ?)")
@@ -731,7 +738,7 @@ class Updater extends Controller
 		$arrFields = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = \System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
+		$files = System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
 
 		foreach ($files as $file)
 		{
@@ -834,7 +841,7 @@ class Updater extends Controller
 	 */
 	public static function convertSingleField($table, $field)
 	{
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		// Get the non-empty rows
 		$objRow = $objDatabase->query("SELECT id, $field FROM $table WHERE $field!=''");
@@ -862,7 +869,7 @@ class Updater extends Controller
 			// Numeric ID to UUID
 			if ($objHelper->isNumeric)
 			{
-				$objFile = \FilesModel::findByPk($objHelper->value);
+				$objFile = FilesModel::findByPk($objHelper->value);
 
 				$objDatabase->prepare("UPDATE $table SET $field=? WHERE id=?")
 							->execute($objFile->uuid, $objRow->id);
@@ -871,7 +878,7 @@ class Updater extends Controller
 			// Path to UUID
 			else
 			{
-				$objFile = \FilesModel::findByPath($objHelper->value);
+				$objFile = FilesModel::findByPath($objHelper->value);
 
 				$objDatabase->prepare("UPDATE $table SET $field=? WHERE id=?")
 							->execute($objFile->uuid, $objRow->id);
@@ -887,7 +894,7 @@ class Updater extends Controller
 	 */
 	public static function convertMultiField($table, $field)
 	{
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		// Get the non-empty rows
 		$objRow = $objDatabase->query("SELECT id, $field FROM $table WHERE $field!=''");
@@ -904,7 +911,7 @@ class Updater extends Controller
 
 		while ($objRow->next())
 		{
-			$arrValues = \StringUtil::deserialize($objRow->$field, true);
+			$arrValues = StringUtil::deserialize($objRow->$field, true);
 
 			if (empty($arrValues))
 			{
@@ -924,14 +931,14 @@ class Updater extends Controller
 				// Numeric ID to UUID
 				if ($objHelper->isNumeric)
 				{
-					$objFile = \FilesModel::findByPk($objHelper->value[$k]);
+					$objFile = FilesModel::findByPk($objHelper->value[$k]);
 					$arrValues[$k] = $objFile->uuid;
 				}
 
 				// Path to UUID
 				else
 				{
-					$objFile = \FilesModel::findByPath($objHelper->value[$k]);
+					$objFile = FilesModel::findByPath($objHelper->value[$k]);
 					$arrValues[$k] = $objFile->uuid;
 				}
 			}
@@ -949,7 +956,7 @@ class Updater extends Controller
 	 */
 	public static function convertOrderField($table, $field)
 	{
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		// Get the non-empty rows
 		$objRow = $objDatabase->query("SELECT id, $field FROM $table WHERE $field LIKE '%,%'");
@@ -978,13 +985,13 @@ class Updater extends Controller
 		if (!\is_array($value))
 		{
 			$return->value = rtrim($value, "\x00");
-			$return->isUuid = (\strlen($value) == 16 && !is_numeric($return->value) && strncmp($return->value, \Config::get('uploadPath') . '/', \strlen(\Config::get('uploadPath')) + 1) !== 0);
+			$return->isUuid = (\strlen($value) == 16 && !is_numeric($return->value) && strncmp($return->value, Config::get('uploadPath') . '/', \strlen(Config::get('uploadPath')) + 1) !== 0);
 			$return->isNumeric = (is_numeric($return->value) && $return->value > 0);
 		}
 		else
 		{
 			$return->value = array_map(function ($var) { return rtrim($var, "\x00"); }, $value);
-			$return->isUuid = (\strlen($value[0]) == 16 && !is_numeric($return->value[0]) && strncmp($return->value[0], \Config::get('uploadPath') . '/', \strlen(\Config::get('uploadPath')) + 1) !== 0);
+			$return->isUuid = (\strlen($value[0]) == 16 && !is_numeric($return->value[0]) && strncmp($return->value[0], Config::get('uploadPath') . '/', \strlen(Config::get('uploadPath')) + 1) !== 0);
 			$return->isNumeric = (is_numeric($return->value[0]) && $return->value[0] > 0);
 		}
 

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes user groups
  *
@@ -50,24 +52,24 @@ namespace Contao;
  * @method static UserGroupModel|null findOneByStart($val, array $opt=array())
  * @method static UserGroupModel|null findOneByStop($val, array $opt=array())
  *
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByName($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByModules($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByThemes($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByPagemounts($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByAlpty($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByFilemounts($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByFop($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByForms($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByFormp($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByAmg($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByAlexf($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByDisable($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByStart($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findByStop($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|UserGroupModel[]|UserGroupModel|null findAll(array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByName($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByModules($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByThemes($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByPagemounts($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByAlpty($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByFilemounts($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByFop($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByForms($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByFormp($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByAmg($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByAlexf($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByDisable($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByStart($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findByStop($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|UserGroupModel[]|UserGroupModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())

@@ -49,7 +49,7 @@ class ContentVimeo extends ContentElement
 	 */
 	protected function compile()
 	{
-		$size = \StringUtil::deserialize($this->playerSize);
+		$size = StringUtil::deserialize($this->playerSize);
 
 		if (!\is_array($size) || empty($size[0]) || empty($size[1]))
 		{
@@ -61,7 +61,7 @@ class ContentVimeo extends ContentElement
 		}
 
 		$params = array();
-		$options = \StringUtil::deserialize($this->vimeoOptions);
+		$options = StringUtil::deserialize($this->vimeoOptions);
 		$url = 'https://player.vimeo.com/video/' . $this->vimeo;
 
 		if (\is_array($options))

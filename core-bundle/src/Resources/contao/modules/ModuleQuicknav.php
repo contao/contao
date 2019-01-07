@@ -35,7 +35,7 @@ class ModuleQuicknav extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['quicknav'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -45,9 +45,9 @@ class ModuleQuicknav extends Module
 			return $objTemplate->parse();
 		}
 
-		if (\Input::post('FORM_SUBMIT') == 'tl_quicknav_' . $this->id)
+		if (Input::post('FORM_SUBMIT') == 'tl_quicknav_' . $this->id)
 		{
-			$this->redirect(\Input::post('target', true));
+			$this->redirect(Input::post('target', true));
 		}
 
 		return parent::generate();
@@ -73,7 +73,7 @@ class ModuleQuicknav extends Module
 		// Overwrite the domain and language if the reference page belongs to a differnt root page (see #3765)
 		else
 		{
-			$objRootPage = \PageModel::findWithDetails($this->rootPage);
+			$objRootPage = PageModel::findWithDetails($this->rootPage);
 
 			// Set the domain
 			if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain != '' && $objRootPage->domain != $objPage->domain)
@@ -84,9 +84,9 @@ class ModuleQuicknav extends Module
 
 		$this->Template->formId = 'tl_quicknav_' . $this->id;
 		$this->Template->targetPage = $GLOBALS['TL_LANG']['MSC']['targetPage'];
-		$this->Template->button = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
+		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicknav'];
-		$this->Template->request = ampersand(\Environment::get('request'), true);
+		$this->Template->request = ampersand(Environment::get('request'), true);
 		$this->Template->items = $this->getQuicknavPages($this->rootPage, 1, $host);
 	}
 
@@ -115,7 +115,7 @@ class ModuleQuicknav extends Module
 		}
 
 		// Get all active subpages
-		$objSubpages = \PageModel::findPublishedRegularWithoutGuestsByPid($pid);
+		$objSubpages = PageModel::findPublishedRegularWithoutGuestsByPid($pid);
 
 		if ($objSubpages === null)
 		{
@@ -126,7 +126,7 @@ class ModuleQuicknav extends Module
 
 		foreach ($objSubpages as $objSubpage)
 		{
-			$_groups = \StringUtil::deserialize($objSubpage->groups);
+			$_groups = StringUtil::deserialize($objSubpage->groups);
 
 			// Override the domain (see #3765)
 			if ($host !== null)
@@ -145,9 +145,9 @@ class ModuleQuicknav extends Module
 					$arrPages[] = array
 					(
 						'level' => ($level - 2),
-						'title' => \StringUtil::specialchars(\StringUtil::stripInsertTags($objSubpage->pageTitle ?: $objSubpage->title)),
+						'title' => StringUtil::specialchars(StringUtil::stripInsertTags($objSubpage->pageTitle ?: $objSubpage->title)),
 						'href' => $objSubpage->getFrontendUrl(),
-						'link' => \StringUtil::stripInsertTags($objSubpage->title),
+						'link' => StringUtil::stripInsertTags($objSubpage->title),
 						'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))
 					);
 

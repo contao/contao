@@ -37,7 +37,7 @@ class ModulePersonalData extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['personalData'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -47,7 +47,7 @@ class ModulePersonalData extends Module
 			return $objTemplate->parse();
 		}
 
-		$this->editable = \StringUtil::deserialize($this->editable);
+		$this->editable = StringUtil::deserialize($this->editable);
 
 		// Return if there are not editable fields or if there is no logged in user
 		if (empty($this->editable) || !\is_array($this->editable) || !FE_USER_LOGGED_IN)
@@ -75,7 +75,7 @@ class ModulePersonalData extends Module
 
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
-		\System::loadLanguageFile('tl_member');
+		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
 		// Call onload_callback (e.g. to check permissions)
@@ -113,14 +113,14 @@ class ModulePersonalData extends Module
 		);
 
 		$blnModified = false;
-		$objMember = \MemberModel::findByPk($this->User->id);
+		$objMember = MemberModel::findByPk($this->User->id);
 		$strTable = $objMember->getTable();
 		$strFormId = 'tl_member_' . $this->id;
-		$session = \System::getContainer()->get('session');
+		$session = System::getContainer()->get('session');
 		$flashBag = $session->getFlashBag();
 
 		// Initialize the versioning (see #7415)
-		$objVersions = new \Versions($strTable, $objMember->id);
+		$objVersions = new Versions($strTable, $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
 		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
@@ -214,7 +214,7 @@ class ModulePersonalData extends Module
 			}
 
 			// Validate the form data
-			if (\Input::post('FORM_SUBMIT') == $strFormId)
+			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
 				$objWidget->validate();
 				$varValue = $objWidget->value;
@@ -226,7 +226,7 @@ class ModulePersonalData extends Module
 				{
 					try
 					{
-						$objDate = new \Date($varValue, \Date::getFormatFromRgxp($rgxp));
+						$objDate = new Date($varValue, Date::getFormatFromRgxp($rgxp));
 						$varValue = $objDate->tstamp;
 					}
 					catch (\OutOfBoundsException $e)
@@ -285,7 +285,7 @@ class ModulePersonalData extends Module
 					// Encrypt the value (see #7815)
 					if ($arrData['eval']['encrypt'])
 					{
-						$varValue = \Encryption::encrypt($varValue);
+						$varValue = Encryption::encrypt($varValue);
 					}
 
 					// Set the new value
@@ -328,7 +328,7 @@ class ModulePersonalData extends Module
 		$this->Template->hasError = $doNotSubmit;
 
 		// Redirect or reload if there was no error
-		if (\Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
+		if (Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
 		{
 			// HOOK: updated personal data
 			if (isset($GLOBALS['TL_HOOKS']['updatePersonalData']) && \is_array($GLOBALS['TL_HOOKS']['updatePersonalData']))
@@ -391,8 +391,8 @@ class ModulePersonalData extends Module
 
 		$this->Template->categories = $arrGroups;
 		$this->Template->formId = $strFormId;
-		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['saveData']);
-		$this->Template->action = \Environment::get('indexFreeRequest');
+		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['saveData']);
+		$this->Template->action = Environment::get('indexFreeRequest');
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->rowLast = 'row_' . $row . ((($row % 2) == 0) ? ' even' : ' odd');
 	}

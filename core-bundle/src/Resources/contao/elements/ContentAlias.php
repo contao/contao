@@ -25,7 +25,7 @@ class ContentAlias extends ContentElement
 	 */
 	public function generate()
 	{
-		$objElement = \ContentModel::findByPk($this->cteAlias);
+		$objElement = ContentModel::findByPk($this->cteAlias);
 
 		if ($objElement === null)
 		{
@@ -46,7 +46,7 @@ class ContentAlias extends ContentElement
 		/** @var ContentElement $objElement */
 		$objElement = new $strClass($objElement);
 
-		$cssID = \StringUtil::deserialize($objElement->cssID, true);
+		$cssID = StringUtil::deserialize($objElement->cssID, true);
 
 		// Override the CSS ID (see #305)
 		if (!empty($this->cssID[0]))

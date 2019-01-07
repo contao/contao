@@ -48,7 +48,7 @@ class Messages extends Backend
 
 		try
 		{
-			if (\System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver()->isExists())
+			if (System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver()->isExists())
 			{
 				return '<p class="tl_error">' . $GLOBALS['TL_LANG']['MSC']['maintenanceEnabled'] . '</p>';
 			}
@@ -69,7 +69,7 @@ class Messages extends Backend
 	public function languageFallback()
 	{
 		$arrRoots = array();
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 		$objRoots = $this->Database->execute("SELECT fallback, dns FROM tl_page WHERE type='root' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1' ORDER BY dns");
 
 		while ($objRoots->next())

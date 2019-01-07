@@ -43,7 +43,7 @@ class ContentTeaser extends ContentElement
 	 */
 	public function generate()
 	{
-		$objArticle = \ArticleModel::findPublishedById($this->article);
+		$objArticle = ArticleModel::findPublishedById($this->article);
 
 		if ($objArticle === null)
 		{
@@ -51,7 +51,7 @@ class ContentTeaser extends ContentElement
 		}
 
 		// Use findPublished() instead of getRelated()
-		$objParent = \PageModel::findPublishedById($objArticle->pid);
+		$objParent = PageModel::findPublishedById($objArticle->pid);
 
 		if ($objParent === null)
 		{
@@ -81,10 +81,10 @@ class ContentTeaser extends ContentElement
 		$this->Template->href = $this->objParent->getFrontendUrl($link);
 
 		// Clean the RTE output
-		$this->Template->text = \StringUtil::toHtml5($objArticle->teaser);
+		$this->Template->text = StringUtil::toHtml5($objArticle->teaser);
 
 		$this->Template->headline = $objArticle->title;
-		$this->Template->readMore = \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->title));
+		$this->Template->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->title));
 		$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];
 	}
 }

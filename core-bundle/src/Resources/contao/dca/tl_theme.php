@@ -288,7 +288,7 @@ class tl_theme extends Backend
 			if ($objFile !== null)
 			{
 				$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-				$label = Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl($rootDir), '', 'class="theme_preview"') . ' ' . $label;
+				$label = Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl($rootDir), '', 'class="theme_preview"') . ' ' . $label;
 			}
 		}
 

@@ -86,7 +86,7 @@ class FrontendCron extends Frontend
 		}
 
 		// Load the default language file (see #8719)
-		\System::loadLanguageFile('default');
+		System::loadLanguageFile('default');
 
 		// Run the jobs
 		foreach ($arrIntervals as $strInterval)
@@ -103,7 +103,7 @@ class FrontendCron extends Frontend
 			$this->Database->query("UPDATE tl_cron SET value=$intCurrent WHERE name='$strInterval'");
 
 			// Add a log entry if in debug mode (see #4729)
-			if (\Config::get('debugMode'))
+			if (Config::get('debugMode'))
 			{
 				$this->log('Running the ' . $strInterval . ' cron jobs', __METHOD__, TL_CRON);
 			}
@@ -115,7 +115,7 @@ class FrontendCron extends Frontend
 			}
 
 			// Add a log entry if in debug mode (see #4729)
-			if (\Config::get('debugMode'))
+			if (Config::get('debugMode'))
 			{
 				$this->log(ucfirst($strInterval) . ' cron jobs complete', __METHOD__, TL_CRON);
 			}

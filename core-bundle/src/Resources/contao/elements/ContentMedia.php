@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Content element "mediaelement".
  *
@@ -26,7 +28,7 @@ class ContentMedia extends ContentElement
 
 	/**
 	 * Files object
-	 * @var Model\Collection|FilesModel
+	 * @var Collection|FilesModel
 	 */
 	protected $objFiles;
 
@@ -42,14 +44,14 @@ class ContentMedia extends ContentElement
 			return '';
 		}
 
-		$source = \StringUtil::deserialize($this->playerSRC);
+		$source = StringUtil::deserialize($this->playerSRC);
 
 		if (empty($source) || !\is_array($source))
 		{
 			return '';
 		}
 
-		$objFiles = \FilesModel::findMultipleByUuidsAndExtensions($source, array('mp4', 'm4v', 'mov', 'wmv', 'webm', 'ogv', 'm4a', 'mp3', 'wma', 'mpeg', 'wav', 'ogg'));
+		$objFiles = FilesModel::findMultipleByUuidsAndExtensions($source, array('mp4', 'm4v', 'mov', 'wmv', 'webm', 'ogv', 'm4a', 'mp3', 'wma', 'mpeg', 'wav', 'ogg'));
 
 		if ($objFiles === null)
 		{
@@ -63,8 +65,8 @@ class ContentMedia extends ContentElement
 
 			while ($objFiles->next())
 			{
-				$objFile = new \File($objFiles->path);
-				$return .= '<li>' . \Image::getHtml($objFile->icon, '', 'class="mime_icon"') . ' <span>' . $objFile->name . '</span> <span class="size">(' . $this->getReadableSize($objFile->size) . ')</span></li>';
+				$objFile = new File($objFiles->path);
+				$return .= '<li>' . Image::getHtml($objFile->icon, '', 'class="mime_icon"') . ' <span>' . $objFile->name . '</span> <span class="size">(' . $this->getReadableSize($objFile->size) . ')</span></li>';
 			}
 
 			return $return . '</ul>';
@@ -88,7 +90,7 @@ class ContentMedia extends ContentElement
 		// Optional poster
 		if ($this->posterSRC != '')
 		{
-			if (($objFile = \FilesModel::findByUuid($this->posterSRC)) !== null)
+			if (($objFile = FilesModel::findByUuid($this->posterSRC)) !== null)
 			{
 				$this->Template->poster = $objFile->path;
 			}
@@ -119,7 +121,7 @@ class ContentMedia extends ContentElement
 		// Pass File objects to the template
 		while ($objFiles->next())
 		{
-			$arrMeta = \StringUtil::deserialize($objFiles->meta);
+			$arrMeta = StringUtil::deserialize($objFiles->meta);
 
 			if (\is_array($arrMeta) && isset($arrMeta[$strLanguage]))
 			{
@@ -130,13 +132,13 @@ class ContentMedia extends ContentElement
 				$strTitle = $objFiles->name;
 			}
 
-			$objFile = new \File($objFiles->path);
-			$objFile->title = \StringUtil::specialchars($strTitle);
+			$objFile = new File($objFiles->path);
+			$objFile->title = StringUtil::specialchars($strTitle);
 
 			$arrFiles[$objFile->extension] = $objFile;
 		}
 
-		$size = \StringUtil::deserialize($this->playerSize);
+		$size = StringUtil::deserialize($this->playerSize);
 
 		if (!\is_array($size) || empty($size[0]) || empty($size[1]))
 		{
@@ -157,7 +159,7 @@ class ContentMedia extends ContentElement
 		$this->Template->files = array_values(array_filter($arrFiles));
 
 		$attributes = array('controls' => 'controls');
-		$options = \StringUtil::deserialize($this->playerOptions);
+		$options = StringUtil::deserialize($this->playerOptions);
 
 		if (\is_array($options))
 		{

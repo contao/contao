@@ -130,7 +130,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	public static function createFromDbResult(Result $objResult, $strTable)
 	{
 		$arrModels = array();
-		$strClass = \Model::getClassFromTable($strTable);
+		$strClass = Model::getClassFromTable($strTable);
 
 		while ($objResult->next())
 		{

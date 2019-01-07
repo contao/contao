@@ -104,7 +104,7 @@ class FrontendTemplate extends Template
 	protected function compile()
 	{
 		$this->keywords = '';
-		$arrKeywords = \StringUtil::trimsplit(',', $GLOBALS['TL_KEYWORDS']);
+		$arrKeywords = StringUtil::trimsplit(',', $GLOBALS['TL_KEYWORDS']);
 
 		// Add the meta keywords
 		if (\strlen($arrKeywords[0]))
@@ -140,7 +140,7 @@ class FrontendTemplate extends Template
 		}
 
 		// Check whether all $_GET parameters have been used (see #4277)
-		if ($this->blnCheckRequest && \Input::hasUnusedGet())
+		if ($this->blnCheckRequest && Input::hasUnusedGet())
 		{
 			throw new \UnusedArgumentsException();
 		}
@@ -246,7 +246,7 @@ class FrontendTemplate extends Template
 	 */
 	public static function addToUrl($strRequest, $blnIgnoreParams=false, $arrUnset=array())
 	{
-		return \Frontend::addToUrl($strRequest, $blnIgnoreParams, $arrUnset);
+		return Frontend::addToUrl($strRequest, $blnIgnoreParams, $arrUnset);
 	}
 
 	/**
@@ -256,7 +256,7 @@ class FrontendTemplate extends Template
 	 */
 	public function hasAuthenticatedBackendUser()
 	{
-		return \System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+		return System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
 	}
 
 	/**
@@ -332,7 +332,7 @@ class FrontendTemplate extends Template
 		{
 			if (isset($this->sections[$sect['id']]))
 			{
-				$sections .= "\n" . '<' . $tag . ' id="' . \StringUtil::standardize($sect['id'], true) . '">' . "\n" . '<div class="inside">' . "\n" . $this->sections[$sect['id']] . "\n" . '</div>' . "\n" . '</' . $tag . '>' . "\n";
+				$sections .= "\n" . '<' . $tag . ' id="' . StringUtil::standardize($sect['id'], true) . '">' . "\n" . '<div class="inside">' . "\n" . $this->sections[$sect['id']] . "\n" . '</div>' . "\n" . '</' . $tag . '>' . "\n";
 			}
 		}
 
@@ -353,7 +353,7 @@ class FrontendTemplate extends Template
 	 */
 	private function setCacheHeaders(Response $response)
 	{
-		/** @var $objPage \PageModel */
+		/** @var $objPage PageModel */
 		global $objPage;
 
 		if (($objPage->cache === false || $objPage->cache < 1) && ($objPage->clientCache === false || $objPage->clientCache < 1))

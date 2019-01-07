@@ -77,7 +77,7 @@ class Folder extends System
 			$strFolder = '';
 		}
 
-		$this->strRootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$this->strRootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check whether it is a directory
 		if (is_file($this->strRootDir . '/' . $strFolder))
@@ -102,9 +102,9 @@ class Folder extends System
 			}
 
 			// Update the database
-			if (\Dbafs::shouldBeSynchronized($this->strFolder))
+			if (Dbafs::shouldBeSynchronized($this->strFolder))
 			{
-				$this->objModel = \Dbafs::addResource($this->strFolder);
+				$this->objModel = Dbafs::addResource($this->strFolder);
 			}
 		}
 	}
@@ -189,9 +189,9 @@ class Folder extends System
 		$this->Files->rrdir($this->strFolder, true);
 
 		// Update the database
-		if (\Dbafs::shouldBeSynchronized($this->strFolder))
+		if (Dbafs::shouldBeSynchronized($this->strFolder))
 		{
-			$objFiles = \FilesModel::findMultipleByBasepath($this->strFolder . '/');
+			$objFiles = FilesModel::findMultipleByBasepath($this->strFolder . '/');
 
 			if ($objFiles !== null)
 			{
@@ -201,7 +201,7 @@ class Folder extends System
 				}
 			}
 
-			\Dbafs::updateFolderHashes($this->strFolder);
+			Dbafs::updateFolderHashes($this->strFolder);
 		}
 	}
 
@@ -226,9 +226,9 @@ class Folder extends System
 		$this->Files->rrdir($this->strFolder);
 
 		// Update the database
-		if (\Dbafs::shouldBeSynchronized($this->strFolder))
+		if (Dbafs::shouldBeSynchronized($this->strFolder))
 		{
-			\Dbafs::deleteResource($this->strFolder);
+			Dbafs::deleteResource($this->strFolder);
 		}
 	}
 
@@ -258,27 +258,27 @@ class Folder extends System
 		// Create the parent folder if it does not exist
 		if (!is_dir($this->strRootDir . '/' . $strParent))
 		{
-			new \Folder($strParent);
+			new Folder($strParent);
 		}
 
 		$return = $this->Files->rename($this->strFolder, $strNewName);
 
 		// Update the database AFTER the folder has been renamed
-		$syncSource = \Dbafs::shouldBeSynchronized($this->strFolder);
-		$syncTarget = \Dbafs::shouldBeSynchronized($strNewName);
+		$syncSource = Dbafs::shouldBeSynchronized($this->strFolder);
+		$syncTarget = Dbafs::shouldBeSynchronized($strNewName);
 
 		// Synchronize the database
 		if ($syncSource && $syncTarget)
 		{
-			$this->objModel = \Dbafs::moveResource($this->strFolder, $strNewName);
+			$this->objModel = Dbafs::moveResource($this->strFolder, $strNewName);
 		}
 		elseif ($syncSource)
 		{
-			$this->objModel = \Dbafs::deleteResource($this->strFolder);
+			$this->objModel = Dbafs::deleteResource($this->strFolder);
 		}
 		elseif ($syncTarget)
 		{
-			$this->objModel = \Dbafs::addResource($strNewName);
+			$this->objModel = Dbafs::addResource($strNewName);
 		}
 
 		// Reset the object AFTER the database has been updated
@@ -304,22 +304,22 @@ class Folder extends System
 		// Create the parent folder if it does not exist
 		if (!is_dir($this->strRootDir . '/' . $strParent))
 		{
-			new \Folder($strParent);
+			new Folder($strParent);
 		}
 
 		$this->Files->rcopy($this->strFolder, $strNewName);
 
 		// Update the database AFTER the folder has been renamed
-		$syncSource = \Dbafs::shouldBeSynchronized($this->strFolder);
-		$syncTarget = \Dbafs::shouldBeSynchronized($strNewName);
+		$syncSource = Dbafs::shouldBeSynchronized($this->strFolder);
+		$syncTarget = Dbafs::shouldBeSynchronized($strNewName);
 
 		if ($syncSource && $syncTarget)
 		{
-			\Dbafs::copyResource($this->strFolder, $strNewName);
+			Dbafs::copyResource($this->strFolder, $strNewName);
 		}
 		elseif ($syncTarget)
 		{
-			\Dbafs::addResource($strNewName);
+			Dbafs::addResource($strNewName);
 		}
 
 		return true;
@@ -343,7 +343,7 @@ class Folder extends System
 			throw new \RuntimeException(sprintf('Cannot protect folder "%s" because one of its parent folders is public', $this->strFolder));
 		}
 
-		(new \File($this->strFolder . '/.public'))->delete();
+		(new File($this->strFolder . '/.public'))->delete();
 	}
 
 	/**
@@ -353,7 +353,7 @@ class Folder extends System
 	{
 		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
-			\System::getContainer()->get('filesystem')->touch($this->strRootDir . '/' . $this->strFolder . '/.public');
+			System::getContainer()->get('filesystem')->touch($this->strRootDir . '/' . $this->strFolder . '/.public');
 		}
 	}
 
@@ -398,7 +398,7 @@ class Folder extends System
 			throw new \RuntimeException(sprintf('Cannot synchronize the folder "%s" because one of its parent folders is unsynchronized', $this->strFolder));
 		}
 
-		(new \File($this->strFolder . '/.nosync'))->delete();
+		(new File($this->strFolder . '/.nosync'))->delete();
 	}
 
 	/**
@@ -408,7 +408,7 @@ class Folder extends System
 	{
 		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.nosync'))
 		{
-			\System::getContainer()->get('filesystem')->touch($this->strRootDir . '/' . $this->strFolder . '/.nosync');
+			System::getContainer()->get('filesystem')->touch($this->strRootDir . '/' . $this->strFolder . '/.nosync');
 		}
 	}
 
@@ -442,9 +442,9 @@ class Folder extends System
 	 */
 	public function getModel()
 	{
-		if ($this->objModel === null && \Dbafs::shouldBeSynchronized($this->strFolder))
+		if ($this->objModel === null && Dbafs::shouldBeSynchronized($this->strFolder))
 		{
-			$this->objModel = \FilesModel::findByPath($this->strFolder);
+			$this->objModel = FilesModel::findByPath($this->strFolder);
 		}
 
 		return $this->objModel;
@@ -500,12 +500,12 @@ class Folder extends System
 
 			if (is_dir($this->strRootDir . '/' . $this->strFolder . '/' . $strFile))
 			{
-				$objFolder = new \Folder($this->strFolder . '/' . $strFile);
+				$objFolder = new Folder($this->strFolder . '/' . $strFile);
 				$intSize += $objFolder->size;
 			}
 			else
 			{
-				$objFile = new \File($this->strFolder . '/' . $strFile);
+				$objFile = new File($this->strFolder . '/' . $strFile);
 				$intSize += $objFile->size;
 			}
 		}
@@ -522,7 +522,7 @@ class Folder extends System
 	 */
 	public function shouldBeSynchronized()
 	{
-		return \Dbafs::shouldBeSynchronized($this->strFolder);
+		return Dbafs::shouldBeSynchronized($this->strFolder);
 	}
 
 	/**

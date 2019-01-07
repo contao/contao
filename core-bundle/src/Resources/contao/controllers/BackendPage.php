@@ -43,12 +43,12 @@ class BackendPage extends Backend
 		$this->import('BackendUser', 'User');
 		parent::__construct();
 
-		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
 		{
 			throw new AccessDeniedException('Access denied');
 		}
 
-		\System::loadLanguageFile('default');
+		System::loadLanguageFile('default');
 	}
 
 	/**
@@ -59,23 +59,23 @@ class BackendPage extends Backend
 	public function run()
 	{
 		/** @var SessionInterface $objSession */
-		$objSession = \System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
-		$objTemplate = new \BackendTemplate('be_picker');
+		$objTemplate = new BackendTemplate('be_picker');
 		$objTemplate->main = '';
 
 		// Ajax request
-		if ($_POST && \Environment::get('isAjaxRequest'))
+		if ($_POST && Environment::get('isAjaxRequest'))
 		{
-			$this->objAjax = new \Ajax(\Input::post('action'));
+			$this->objAjax = new Ajax(Input::post('action'));
 			$this->objAjax->executePreActions();
 		}
 
-		$strTable = \Input::get('table');
-		$strField = \Input::get('field');
+		$strTable = Input::get('table');
+		$strField = Input::get('field');
 
 		// Define the current ID
-		\define('CURRENT_ID', (\Input::get('table') ? $objSession->get('CURRENT_ID') : \Input::get('id')));
+		\define('CURRENT_ID', (Input::get('table') ? $objSession->get('CURRENT_ID') : Input::get('id')));
 
 		$this->loadDataContainer($strTable);
 		$strDriver = 'DC_' . $GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'];
@@ -86,11 +86,11 @@ class BackendPage extends Backend
 		if ($this->Database->tableExists($strTable))
 		{
 			/** @var Model $strModel */
-			$strModel = \Model::getClassFromTable($strTable);
+			$strModel = Model::getClassFromTable($strTable);
 
 			if (class_exists($strModel))
 			{
-				$objModel = $strModel::findByPk(\Input::get('id'));
+				$objModel = $strModel::findByPk(Input::get('id'));
 
 				if ($objModel !== null)
 				{
@@ -100,13 +100,13 @@ class BackendPage extends Backend
 		}
 
 		// AJAX request
-		if ($_POST && \Environment::get('isAjaxRequest'))
+		if ($_POST && Environment::get('isAjaxRequest'))
 		{
 			$this->objAjax->executePostActions($objDca);
 		}
 
-		$objSession->set('filePickerRef', \Environment::get('request'));
-		$arrValues = array_filter(explode(',', \Input::get('value')));
+		$objSession->set('filePickerRef', Environment::get('request'));
+		$arrValues = array_filter(explode(',', Input::get('value')));
 
 		// Call the load_callback
 		if (\is_array($GLOBALS['TL_DCA'][$strTable]['fields'][$strField]['load_callback']))
@@ -135,14 +135,14 @@ class BackendPage extends Backend
 		$objSessionBag = $objSession->getBag('contao_backend');
 
 		$objTemplate->main = $objPageTree->generate();
-		$objTemplate->theme = \Backend::getTheme();
-		$objTemplate->base = \Environment::get('base');
+		$objTemplate->theme = Backend::getTheme();
+		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']);
-		$objTemplate->charset = \Config::get('characterSet');
+		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']);
+		$objTemplate->charset = Config::get('characterSet');
 		$objTemplate->addSearch = true;
 		$objTemplate->search = $GLOBALS['TL_LANG']['MSC']['search'];
-		$objTemplate->action = ampersand(\Environment::get('request'));
+		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->value = $objSessionBag->get('page_selector_search');
 		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'];
 
@@ -152,10 +152,10 @@ class BackendPage extends Backend
 			$objTemplate->managerHref = 'contao/main.php?do=page&amp;popup=1';
 		}
 
-		if (\Input::get('switch') && $this->User->hasAccess('files', 'modules'))
+		if (Input::get('switch') && $this->User->hasAccess('files', 'modules'))
 		{
 			$objTemplate->switch = $GLOBALS['TL_LANG']['MSC']['filePicker'];
-			$objTemplate->switchHref = str_replace('contao/page?', 'contao/file?', ampersand(\Environment::get('request')));
+			$objTemplate->switchHref = str_replace('contao/page?', 'contao/file?', ampersand(Environment::get('request')));
 		}
 
 		return $objTemplate->getResponse();

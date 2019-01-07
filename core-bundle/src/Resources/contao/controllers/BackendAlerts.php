@@ -35,12 +35,12 @@ class BackendAlerts extends Backend
 		$this->import('BackendUser', 'User');
 		parent::__construct();
 
-		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
 		{
 			throw new AccessDeniedException('Access denied');
 		}
 
-		\System::loadLanguageFile('default');
+		System::loadLanguageFile('default');
 	}
 
 	/**
@@ -50,13 +50,13 @@ class BackendAlerts extends Backend
 	 */
 	public function run()
 	{
-		$objTemplate = new \BackendTemplate('be_alerts');
-		$objTemplate->theme = \Backend::getTheme();
-		$objTemplate->base = \Environment::get('base');
+		$objTemplate = new BackendTemplate('be_alerts');
+		$objTemplate->theme = Backend::getTheme();
+		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['systemMessages']);
-		$objTemplate->charset = \Config::get('characterSet');
-		$objTemplate->messages = \Message::generateUnwrapped() . \Backend::getSystemMessages();
+		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['systemMessages']);
+		$objTemplate->charset = Config::get('characterSet');
+		$objTemplate->messages = Message::generateUnwrapped() . Backend::getSystemMessages();
 		$objTemplate->noMessages = $GLOBALS['TL_LANG']['MSC']['noSystemMessages'];
 
 		return $objTemplate->getResponse();

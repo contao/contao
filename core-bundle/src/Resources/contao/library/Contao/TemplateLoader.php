@@ -93,7 +93,7 @@ class TemplateLoader
 	public static function getPath($template, $format, $custom='templates')
 	{
 		$file = $template . '.' . $format;
-		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Check the theme folder first
 		if (file_exists($rootDir . '/' . $custom . '/' . $file))
@@ -126,7 +126,7 @@ class TemplateLoader
 	public static function getDefaultPath($template, $format)
 	{
 		$file = $template . '.' . $format;
-		$container = \System::getContainer();
+		$container = System::getContainer();
 		$rootDir = $container->getParameter('kernel.project_dir');
 
 		if (isset(self::$files[$template]))
@@ -161,7 +161,7 @@ class TemplateLoader
 	public static function initialize()
 	{
 		$objFilesystem = new Filesystem();
-		$container = \System::getContainer();
+		$container = System::getContainer();
 		$strCacheDir = $container->getParameter('kernel.cache_dir');
 
 		// Try to load from cache
@@ -173,7 +173,7 @@ class TemplateLoader
 		{
 			try
 			{
-				foreach (\System::getContainer()->get('contao.resource_finder')->findIn('templates')->name('*.html5') as $file)
+				foreach (System::getContainer()->get('contao.resource_finder')->findIn('templates')->name('*.html5') as $file)
 				{
 					/** @var SplFileInfo $file */
 					self::addFile($file->getBasename('.html5'), rtrim($objFilesystem->makePathRelative($file->getPath(), $container->getParameter('kernel.project_dir')), '/'));

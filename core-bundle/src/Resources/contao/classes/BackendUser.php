@@ -115,8 +115,8 @@ class BackendUser extends User
 	{
 		parent::__construct();
 
-		$this->strIp = \Environment::get('ip');
-		$this->strHash = \Input::cookie($this->strCookie);
+		$this->strIp = Environment::get('ip');
+		$this->strHash = Input::cookie($this->strCookie);
 	}
 
 	/**
@@ -131,7 +131,7 @@ class BackendUser extends User
 			return static::$objInstance;
 		}
 
-		$objToken = \System::getContainer()->get('security.token_storage')->getToken();
+		$objToken = System::getContainer()->get('security.token_storage')->getToken();
 
 		// Load the user from the security storage
 		if ($objToken !== null && is_a($objToken->getUser(), static::class))
@@ -140,7 +140,7 @@ class BackendUser extends User
 		}
 
 		// Check for an authenticated user in the session
-		$strUser = \System::getContainer()->get('contao.security.token_checker')->getBackendUsername();
+		$strUser = System::getContainer()->get('contao.security.token_checker')->getBackendUsername();
 
 		if ($strUser !== null)
 		{
@@ -205,7 +205,7 @@ class BackendUser extends User
 	{
 		@trigger_error('Using BackendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return \System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+		return System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
 	}
 
 	/**
@@ -220,7 +220,7 @@ class BackendUser extends User
 	{
 		@trigger_error('Using BackendUser::login() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return \System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+		return System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
 	}
 
 	/**
@@ -286,7 +286,7 @@ class BackendUser extends User
 			$row['cuser'] = false;
 			$row['cgroup'] = false;
 
-			$objParentPage = \PageModel::findById($pid);
+			$objParentPage = PageModel::findById($pid);
 
 			while ($objParentPage !== null && $row['chmod'] === false && $pid > 0)
 			{
@@ -296,26 +296,26 @@ class BackendUser extends User
 				$row['cuser'] = $objParentPage->includeChmod ? $objParentPage->cuser : false;
 				$row['cgroup'] = $objParentPage->includeChmod ? $objParentPage->cgroup : false;
 
-				$objParentPage = \PageModel::findById($pid);
+				$objParentPage = PageModel::findById($pid);
 			}
 
 			// Set default values
 			if ($row['chmod'] === false)
 			{
-				$row['chmod'] = \Config::get('defaultChmod');
+				$row['chmod'] = Config::get('defaultChmod');
 			}
 			if ($row['cuser'] === false)
 			{
-				$row['cuser'] = (int) \Config::get('defaultUser');
+				$row['cuser'] = (int) Config::get('defaultUser');
 			}
 			if ($row['cgroup'] === false)
 			{
-				$row['cgroup'] = (int) \Config::get('defaultGroup');
+				$row['cgroup'] = (int) Config::get('defaultGroup');
 			}
 		}
 
 		// Set permissions
-		$chmod = \StringUtil::deserialize($row['chmod']);
+		$chmod = StringUtil::deserialize($row['chmod']);
 		$chmod = \is_array($chmod) ? $chmod : array($chmod);
 		$permission = array('w'.$int);
 
@@ -377,18 +377,18 @@ class BackendUser extends User
 		{
 			if (!is_numeric($v))
 			{
-				$this->$k = \StringUtil::deserialize($v);
+				$this->$k = StringUtil::deserialize($v);
 			}
 		}
 
 		$GLOBALS['TL_USERNAME'] = $this->username;
 
-		\Config::set('showHelp', $this->showHelp);
-		\Config::set('useRTE', $this->useRTE);
-		\Config::set('useCE', $this->useCE);
-		\Config::set('thumbnails', $this->thumbnails);
-		\Config::set('backendTheme', $this->backendTheme);
-		\Config::set('fullscreen', $this->fullscreen);
+		Config::set('showHelp', $this->showHelp);
+		Config::set('useRTE', $this->useRTE);
+		Config::set('useCE', $this->useCE);
+		Config::set('thumbnails', $this->thumbnails);
+		Config::set('backendTheme', $this->backendTheme);
+		Config::set('fullscreen', $this->fullscreen);
 
 		// Inherit permissions
 		$always = array('alexf');
@@ -411,7 +411,7 @@ class BackendUser extends User
 
 		// Merge permissions
 		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array_merge($always, $depends) : $always;
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 
 		foreach ((array) $this->groups as $id)
 		{
@@ -423,7 +423,7 @@ class BackendUser extends User
 			{
 				foreach ($inherit as $field)
 				{
-					$value = \StringUtil::deserialize($objGroup->$field, true);
+					$value = StringUtil::deserialize($objGroup->$field, true);
 
 					// The new page/file picker can return integers instead of arrays, so use empty() instead of is_array() and StringUtil::deserialize(true) here
 					if (!empty($value))
@@ -460,7 +460,7 @@ class BackendUser extends User
 		// Convert the file mounts into paths
 		if (!$this->isAdmin && !empty($this->filemounts))
 		{
-			$objFiles = \FilesModel::findMultipleByUuids($this->filemounts);
+			$objFiles = FilesModel::findMultipleByUuids($this->filemounts);
 
 			if ($objFiles !== null)
 			{
@@ -485,32 +485,32 @@ class BackendUser extends User
 	public function navigation($blnShowAll=false)
 	{
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		/** @var RouterInterface $router */
-		$router = \System::getContainer()->get('router');
+		$router = System::getContainer()->get('router');
 
 		$arrModules = array();
 		$session = $objSessionBag->all();
 
 		// Toggle nodes
-		if (\Input::get('mtg'))
+		if (Input::get('mtg'))
 		{
-			$session['backend_modules'][\Input::get('mtg')] = (isset($session['backend_modules'][\Input::get('mtg')]) && $session['backend_modules'][\Input::get('mtg')] == 0) ? 1 : 0;
+			$session['backend_modules'][Input::get('mtg')] = (isset($session['backend_modules'][Input::get('mtg')]) && $session['backend_modules'][Input::get('mtg')] == 0) ? 1 : 0;
 			$objSessionBag->replace($session);
-			\Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', \Environment::get('request')));
+			Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', Environment::get('request')));
 		}
 
-		$strRefererId = \System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
+		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
 		foreach ($GLOBALS['BE_MOD'] as $strGroupName=>$arrGroupModules)
 		{
 			if (!empty($arrGroupModules) && ($strGroupName == 'system' || $this->hasAccess(array_keys($arrGroupModules), 'modules')))
 			{
 				$arrModules[$strGroupName]['class'] = ' node-expanded';
-				$arrModules[$strGroupName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
+				$arrModules[$strGroupName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
 				$arrModules[$strGroupName]['label'] = (($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName]) ? $GLOBALS['TL_LANG']['MOD'][$strGroupName][0] : $GLOBALS['TL_LANG']['MOD'][$strGroupName]) != false) ? $label : $strGroupName;
-				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>\Input::get('do'), 'mtg'=>$strGroupName, 'ref'=>$strRefererId));
+				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>Input::get('do'), 'mtg'=>$strGroupName, 'ref'=>$strRefererId));
 				$arrModules[$strGroupName]['ajaxUrl'] = $router->generate('contao_backend');
 				$arrModules[$strGroupName]['icon'] = 'modPlus.gif'; // backwards compatibility with e.g. EasyThemes
 
@@ -523,7 +523,7 @@ class BackendUser extends User
 					if ($blnAccess && !$blnHide)
 					{
 						$arrModules[$strGroupName]['modules'][$strModuleName] = $arrModuleConfig;
-						$arrModules[$strGroupName]['modules'][$strModuleName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$strModuleName][1]);
+						$arrModules[$strGroupName]['modules'][$strModuleName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$strModuleName][1]);
 						$arrModules[$strGroupName]['modules'][$strModuleName]['label'] = (($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strModuleName]) ? $GLOBALS['TL_LANG']['MOD'][$strModuleName][0] : $GLOBALS['TL_LANG']['MOD'][$strModuleName]) != false) ? $label : $strModuleName;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['class'] = 'navigation ' . $strModuleName;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['href'] = $router->generate('contao_backend', array('do'=>$strModuleName, 'ref'=>$strRefererId));
@@ -551,7 +551,7 @@ class BackendUser extends User
 			if (!$blnShowAll && isset($session['backend_modules'][$strGroupName]) && $session['backend_modules'][$strGroupName] < 1)
 			{
 				$arrModules[$strGroupName]['class'] = str_replace('node-expanded', '', $arrModules[$strGroupName]['class']) . ' node-collapsed';
-				$arrModules[$strGroupName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['expandNode']);
+				$arrModules[$strGroupName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['expandNode']);
 				$arrModules[$strGroupName]['isClosed'] = true;
 			}
 
@@ -560,7 +560,7 @@ class BackendUser extends User
 				foreach ($arrGroupModules['modules'] as $strModuleName => $arrModuleConfig)
 				{
 					// Mark the active module and its group
-					if (\Input::get('do') == $strModuleName)
+					if (Input::get('do') == $strModuleName)
 					{
 						$arrModules[$strGroupName]['class'] .= ' trail';
 						$arrModules[$strGroupName]['modules'][$strModuleName]['isActive'] = true;

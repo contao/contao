@@ -96,16 +96,16 @@ class ModuleArticle extends Module
 
 		// Add the modification date
 		$this->Template->timestamp = $this->tstamp;
-		$this->Template->date = \Date::parse($objPage->datimFormat, $this->tstamp);
+		$this->Template->date = Date::parse($objPage->datimFormat, $this->tstamp);
 
 		// Clean the RTE output
-		$this->teaser = \StringUtil::toHtml5($this->teaser);
+		$this->teaser = StringUtil::toHtml5($this->teaser);
 
 		// Show the teaser only
 		if ($this->multiMode && $this->showTeaser)
 		{
 			$this->cssID = array($id, '');
-			$arrCss = \StringUtil::deserialize($this->teaserCssID);
+			$arrCss = StringUtil::deserialize($this->teaserCssID);
 
 			// Override the CSS ID and class
 			if (\is_array($arrCss) && \count($arrCss) == 2)
@@ -125,14 +125,14 @@ class ModuleArticle extends Module
 			$this->Template->headline = $this->headline;
 			$this->Template->href = $objPage->getFrontendUrl($href);
 			$this->Template->teaser = $this->teaser;
-			$this->Template->readMore = \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $this->headline), true);
+			$this->Template->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $this->headline), true);
 			$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];
 
 			return;
 		}
 
 		// Get section and article alias
-		list($strSection, $strArticle) = explode(':', \Input::get('articles'));
+		list($strSection, $strArticle) = explode(':', Input::get('articles'));
 
 		if ($strArticle === null)
 		{
@@ -142,7 +142,7 @@ class ModuleArticle extends Module
 		// Overwrite the page title (see #2853 and #4955)
 		if (!$this->blnNoMarkup && $strArticle != '' && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title != '')
 		{
-			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($this->title));
+			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($this->title));
 
 			if ($this->teaser != '')
 			{
@@ -157,11 +157,11 @@ class ModuleArticle extends Module
 		if (!$this->multiMode && $strArticle != '' && ($strArticle == $this->id || $strArticle == $this->alias))
 		{
 			$this->Template->backlink = 'javascript:history.go(-1)'; // see #6955
-			$this->Template->back = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goBack']);
+			$this->Template->back = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goBack']);
 		}
 
 		$arrElements = array();
-		$objCte = \ContentModel::findPublishedByPidAndTable($this->id, 'tl_article');
+		$objCte = ContentModel::findPublishedByPidAndTable($this->id, 'tl_article');
 
 		if ($objCte !== null)
 		{
@@ -215,7 +215,7 @@ class ModuleArticle extends Module
 		// New structure
 		elseif ($this->printable != '')
 		{
-			$options = \StringUtil::deserialize($this->printable);
+			$options = StringUtil::deserialize($this->printable);
 
 			if (!empty($options) && \is_array($options))
 			{
@@ -231,19 +231,19 @@ class ModuleArticle extends Module
 		// Add syndication variables
 		if ($this->Template->printable)
 		{
-			$request = \Environment::get('indexFreeRequest');
+			$request = Environment::get('indexFreeRequest');
 
 			// URL encoding will be handled by the Symfony router, so do not apply rawurlencode() here anymore
 			$this->Template->print = '#';
-			$this->Template->encUrl = \Environment::get('base') . \Environment::get('request');
+			$this->Template->encUrl = Environment::get('base') . Environment::get('request');
 			$this->Template->encTitle = $objPage->pageTitle;
 			$this->Template->href = $request . ((strpos($request, '?') !== false) ? '&amp;' : '?') . 'pdf=' . $this->id;
 
-			$this->Template->printTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['printPage']);
-			$this->Template->pdfTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['printAsPdf']);
-			$this->Template->facebookTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['facebookShare']);
-			$this->Template->twitterTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['twitterShare']);
-			$this->Template->gplusTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['gplusShare']);
+			$this->Template->printTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['printPage']);
+			$this->Template->pdfTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['printAsPdf']);
+			$this->Template->facebookTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['facebookShare']);
+			$this->Template->twitterTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['twitterShare']);
+			$this->Template->gplusTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['gplusShare']);
 		}
 
 		// HOOK: add custom logic
@@ -267,7 +267,7 @@ class ModuleArticle extends Module
 
 		// Generate article
 		$strArticle = $this->replaceInsertTags($this->generate(), false);
-		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, \Config::get('characterSet'));
+		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, Config::get('characterSet'));
 		$strArticle = $this->convertRelativeUrls($strArticle, '', true);
 
 		// Remove form elements and JavaScript links

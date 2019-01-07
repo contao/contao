@@ -62,12 +62,12 @@ class PageSelector extends Widget
 		$this->import('BackendUser', 'User');
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Store the keyword
-		if (\Input::post('FORM_SUBMIT') == 'item_selector')
+		if (Input::post('FORM_SUBMIT') == 'item_selector')
 		{
-			$strKeyword = ltrim(\Input::postRaw('keyword'), '*');
+			$strKeyword = ltrim(Input::postRaw('keyword'), '*');
 
 			// Make sure the regular expression is valid
 			if ($strKeyword != '')
@@ -101,7 +101,7 @@ class PageSelector extends Widget
 			{
 				$strPattern = "CAST(title AS CHAR) REGEXP ?";
 
-				if (substr(\Config::get('dbCollation'), -3) == '_ci')
+				if (substr(Config::get('dbCollation'), -3) == '_ci')
 				{
 					$strPattern = "LOWER(CAST(title AS CHAR)) REGEXP LOWER(?)";
 				}
@@ -170,9 +170,9 @@ class PageSelector extends Widget
 		}
 
 		// Add the breadcrumb menu
-		if (\Input::get('do') != 'page')
+		if (Input::get('do') != 'page')
 		{
-			\Backend::addPagesBreadcrumb('tl_page_picker');
+			Backend::addPagesBreadcrumb('tl_page_picker');
 		}
 
 		// Root nodes (breadcrumb menu)
@@ -249,7 +249,7 @@ class PageSelector extends Widget
 
 		// Return the tree
 		return '<ul class="tl_listing tree_view picker_selector'.(($this->strClass != '') ? ' ' . $this->strClass : '').'" id="'.$this->strId.'" data-callback="reloadPagetree" data-inserttag="link_url">
-    <li class="tl_folder_top"><div class="tl_left">'.\Image::getHtml($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['icon'] ?: 'pagemounts.svg').' '.$GLOBALS['TL_LANG']['MOD']['page'][0].'</div> <div class="tl_right">&nbsp;</div><div style="clear:both"></div></li><li class="parent" id="'.$this->strId.'_parent"><ul>'.$tree.$strReset.'
+    <li class="tl_folder_top"><div class="tl_left">'.Image::getHtml($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['icon'] ?: 'pagemounts.svg').' '.$GLOBALS['TL_LANG']['MOD']['page'][0].'</div> <div class="tl_right">&nbsp;</div><div style="clear:both"></div></li><li class="parent" id="'.$this->strId.'_parent"><ul>'.$tree.$strReset.'
   </ul></li></ul>';
 	}
 
@@ -264,7 +264,7 @@ class PageSelector extends Widget
 	 */
 	public function generateAjax($id, $strField, $level)
 	{
-		if (!\Environment::get('isAjaxRequest'))
+		if (!Environment::get('isAjaxRequest'))
 		{
 			return '';
 		}
@@ -276,9 +276,9 @@ class PageSelector extends Widget
 		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'])
 		{
 			case 'File':
-				if (\Config::get($this->strField) != '')
+				if (Config::get($this->strField) != '')
 				{
-					$this->varValue = \Config::get($this->strField);
+					$this->varValue = Config::get($this->strField);
 				}
 				break;
 
@@ -288,13 +288,13 @@ class PageSelector extends Widget
 					break;
 				}
 
-				$objField = $this->Database->prepare("SELECT " . \Database::quoteIdentifier($this->strField) . " FROM " . $this->strTable . " WHERE id=?")
+				$objField = $this->Database->prepare("SELECT " . Database::quoteIdentifier($this->strField) . " FROM " . $this->strTable . " WHERE id=?")
 										   ->limit(1)
 										   ->execute($this->strId);
 
 				if ($objField->numRows)
 				{
-					$this->varValue = \StringUtil::deserialize($objField->{$this->strField});
+					$this->varValue = StringUtil::deserialize($objField->{$this->strField});
 				}
 				break;
 		}
@@ -330,7 +330,7 @@ class PageSelector extends Widget
 	protected function renderPagetree($id, $intMargin, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
 
@@ -339,11 +339,11 @@ class PageSelector extends Widget
 		$xtnode = 'tree_' . $this->strTable . '_' . $this->strName;
 
 		// Get the session data and toggle the nodes
-		if (\Input::get($flag.'tg'))
+		if (Input::get($flag.'tg'))
 		{
-			$session[$node][\Input::get($flag.'tg')] = (isset($session[$node][\Input::get($flag.'tg')]) && $session[$node][\Input::get($flag.'tg')] == 1) ? 0 : 1;
+			$session[$node][Input::get($flag.'tg')] = (isset($session[$node][Input::get($flag.'tg')]) && $session[$node][Input::get($flag.'tg')] == 1) ? 0 : 1;
 			$objSessionBag->replace($session);
-			$this->redirect(preg_replace('/(&(amp;)?|\?)'.$flag.'tg=[^& ]*/i', '', \Environment::get('request')));
+			$this->redirect(preg_replace('/(&(amp;)?|\?)'.$flag.'tg=[^& ]*/i', '', Environment::get('request')));
 		}
 
 		$objPage = $this->Database->prepare("SELECT id, alias, type, protected, published, start, stop, hide, title FROM tl_page WHERE id=?")
@@ -384,7 +384,7 @@ class PageSelector extends Widget
 			$folderAttribute = '';
 			$img = $blnIsOpen ? 'folMinus.svg' : 'folPlus.svg';
 			$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-			$return .= '<a href="'.\Backend::addToUrl($flag.'tg='.$id).'" title="'.\StringUtil::specialchars($alt).'" onclick="return AjaxRequest.togglePagetree(this,\''.$xtnode.'_'.$id.'\',\''.$this->strField.'\',\''.$this->strName.'\','.$level.')">'.\Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
+			$return .= '<a href="'.Backend::addToUrl($flag.'tg='.$id).'" title="'.StringUtil::specialchars($alt).'" onclick="return AjaxRequest.togglePagetree(this,\''.$xtnode.'_'.$id.'\',\''.$this->strField.'\',\''.$this->strName.'\','.$level.')">'.Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
 		}
 
 		// Set the protection status
@@ -393,23 +393,23 @@ class PageSelector extends Widget
 		// Add the current page
 		if (!empty($childs))
 		{
-			$return .= \Image::getHtml($this->getPageStatusIcon($objPage), '', $folderAttribute).' <a href="' . \Backend::addToUrl('pn='.$objPage->id) . '" title="'.\StringUtil::specialchars($objPage->title . ' (' . $objPage->alias . \Config::get('urlSuffix') . ')').'">'.(($objPage->type == 'root') ? '<strong>' : '').$objPage->title.(($objPage->type == 'root') ? '</strong>' : '').'</a></div> <div class="tl_right">';
+			$return .= Image::getHtml($this->getPageStatusIcon($objPage), '', $folderAttribute).' <a href="' . Backend::addToUrl('pn='.$objPage->id) . '" title="'.StringUtil::specialchars($objPage->title . ' (' . $objPage->alias . Config::get('urlSuffix') . ')').'">'.(($objPage->type == 'root') ? '<strong>' : '').$objPage->title.(($objPage->type == 'root') ? '</strong>' : '').'</a></div> <div class="tl_right">';
 		}
 		else
 		{
-			$return .= \Image::getHtml($this->getPageStatusIcon($objPage), '', $folderAttribute).' '.(($objPage->type == 'root') ? '<strong>' : '').$objPage->title.(($objPage->type == 'root') ? '</strong>' : '').'</div> <div class="tl_right">';
+			$return .= Image::getHtml($this->getPageStatusIcon($objPage), '', $folderAttribute).' '.(($objPage->type == 'root') ? '<strong>' : '').$objPage->title.(($objPage->type == 'root') ? '</strong>' : '').'</div> <div class="tl_right">';
 		}
 
 		// Add checkbox or radio button
 		switch ($this->fieldType)
 		{
 			case 'checkbox':
-				$return .= '<input type="checkbox" name="'.$this->strName.'[]" id="'.$this->strName.'_'.$id.'" class="tl_tree_checkbox" value="'.\StringUtil::specialchars($id).'" onfocus="Backend.getScrollOffset()"'.static::optionChecked($id, $this->varValue).'>';
+				$return .= '<input type="checkbox" name="'.$this->strName.'[]" id="'.$this->strName.'_'.$id.'" class="tl_tree_checkbox" value="'.StringUtil::specialchars($id).'" onfocus="Backend.getScrollOffset()"'.static::optionChecked($id, $this->varValue).'>';
 				break;
 
 			default:
 			case 'radio':
-				$return .= '<input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.$id.'" class="tl_tree_radio" value="'.\StringUtil::specialchars($id).'" onfocus="Backend.getScrollOffset()"'.static::optionChecked($id, $this->varValue).'>';
+				$return .= '<input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.$id.'" class="tl_tree_radio" value="'.StringUtil::specialchars($id).'" onfocus="Backend.getScrollOffset()"'.static::optionChecked($id, $this->varValue).'>';
 				break;
 		}
 

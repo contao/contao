@@ -36,13 +36,13 @@ class BackendConfirm extends Backend
 		$this->import('BackendUser', 'User');
 		parent::__construct();
 
-		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
 		{
 			throw new AccessDeniedException('Access denied');
 		}
 
-		\System::loadLanguageFile('default');
-		\System::loadLanguageFile('modules');
+		System::loadLanguageFile('default');
+		System::loadLanguageFile('modules');
 	}
 
 	/**
@@ -53,16 +53,16 @@ class BackendConfirm extends Backend
 	public function run()
 	{
 		/** @var SessionInterface $objSession */
-		$objSession = \System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		// Redirect to the back end home page
-		if (\Input::post('FORM_SUBMIT') == 'invalid_token_url')
+		if (Input::post('FORM_SUBMIT') == 'invalid_token_url')
 		{
 			list($strUrl) = explode('?', $objSession->get('INVALID_TOKEN_URL'));
 			$this->redirect($strUrl);
 		}
 
-		$objTemplate = new \BackendTemplate('be_confirm');
+		$objTemplate = new BackendTemplate('be_confirm');
 
 		// Prepare the URL
 		$url = preg_replace('/(\?|&)rt=[^&]*/', '', $objSession->get('INVALID_TOKEN_URL'));
@@ -112,7 +112,7 @@ class BackendConfirm extends Backend
 			}
 		}
 
-		\System::loadLanguageFile($arrInfo['table']);
+		System::loadLanguageFile($arrInfo['table']);
 
 		// Override the action label
 		if (isset($arrInfo['clipboard']))
@@ -142,18 +142,18 @@ class BackendConfirm extends Backend
 
 		// Template variables
 		$objTemplate->confirm = true;
-		$objTemplate->link = \StringUtil::specialchars($url);
+		$objTemplate->link = StringUtil::specialchars($url);
 		$objTemplate->info = $arrInfo;
 		$objTemplate->labels = $GLOBALS['TL_LANG']['CONFIRM'];
 		$objTemplate->explain = $GLOBALS['TL_LANG']['ERR']['invalidTokenUrl'];
 		$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
 		$objTemplate->continue = $GLOBALS['TL_LANG']['MSC']['continue'];
-		$objTemplate->theme = \Backend::getTheme();
-		$objTemplate->base = \Environment::get('base');
+		$objTemplate->theme = Backend::getTheme();
+		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
-		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['invalidTokenUrl']);
-		$objTemplate->charset = \Config::get('characterSet');
+		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['invalidTokenUrl']);
+		$objTemplate->charset = Config::get('characterSet');
 
 		return $objTemplate->getResponse();
 	}

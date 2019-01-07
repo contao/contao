@@ -91,10 +91,10 @@ class Combiner extends System
 	 */
 	public function __construct()
 	{
-		$container = \System::getContainer();
+		$container = System::getContainer();
 
 		$this->strRootDir = $container->getParameter('kernel.project_dir');
-		$this->strWebDir = \StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
+		$this->strWebDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 		parent::__construct();
 	}
@@ -212,9 +212,9 @@ class Combiner extends System
 			{
 				$strPath = 'assets/' . $strTarget . '/' . str_replace('/', '_', $arrFile['name']) . $this->strMode;
 
-				if (\Config::get('debugMode') || !file_exists($this->strRootDir . '/' . $strPath))
+				if (Config::get('debugMode') || !file_exists($this->strRootDir . '/' . $strPath))
 				{
-					$objFile = new \File($strPath);
+					$objFile = new File($strPath);
 					$objFile->write($this->handleScssLess(file_get_contents($this->strRootDir . '/' . $arrFile['name']), $arrFile));
 					$objFile->close();
 				}
@@ -253,7 +253,7 @@ class Combiner extends System
 	 */
 	public function getCombinedFile($strUrl=null)
 	{
-		if (\Config::get('debugMode'))
+		if (Config::get('debugMode'))
 		{
 			return $this->getDebugMarkup();
 		}
@@ -272,7 +272,7 @@ class Combiner extends System
 
 		foreach ($return as $k=>$v)
 		{
-			$options = \StringUtil::resolveFlaggedUrl($v);
+			$options = StringUtil::resolveFlaggedUrl($v);
 			$return[$k] = $v;
 
 			if ($options->mtime)
@@ -305,7 +305,7 @@ class Combiner extends System
 	{
 		if ($strUrl === null)
 		{
-			$strUrl = \System::getContainer()->get('contao.assets.assets_context')->getStaticUrl();
+			$strUrl = System::getContainer()->get('contao.assets.assets_context')->getStaticUrl();
 		}
 
 		$arrPrefix = array();
@@ -316,7 +316,7 @@ class Combiner extends System
 			$arrPrefix[] = basename($arrFile['name']);
 		}
 
-		$strKey = \StringUtil::substr(implode(',', $arrPrefix), 64, '...') . '-' . substr(md5($this->strKey), 0, 8);
+		$strKey = StringUtil::substr(implode(',', $arrPrefix), 64, '...') . '-' . substr(md5($this->strKey), 0, 8);
 
 		// Load the existing file
 		if (file_exists($this->strRootDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode))
@@ -325,7 +325,7 @@ class Combiner extends System
 		}
 
 		// Create the file
-		$objFile = new \File('assets/' . $strTarget . '/' . $strKey . $this->strMode);
+		$objFile = new File('assets/' . $strTarget . '/' . $strKey . $this->strMode);
 		$objFile->truncate();
 
 		foreach ($this->arrFiles as $arrFile)
@@ -407,7 +407,7 @@ class Combiner extends System
 				$this->strRootDir . '/vendor/contao-components/compass/css'
 			));
 
-			$objCompiler->setFormatter((\Config::get('debugMode') ? Expanded::class : Compressed::class));
+			$objCompiler->setFormatter((Config::get('debugMode') ? Expanded::class : Compressed::class));
 
 			return $this->fixPaths($objCompiler->compile($content), $arrFile);
 		}
@@ -418,7 +418,7 @@ class Combiner extends System
 			$arrOptions = array
 			(
 				'strictMath' => true,
-				'compress' => !\Config::get('debugMode'),
+				'compress' => !Config::get('debugMode'),
 				'import_dirs' => array($this->strRootDir . '/' . $strPath => $strPath)
 			);
 

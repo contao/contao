@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Parent class for objects that can be modules or content elements.
  *
@@ -84,12 +86,12 @@ abstract class Hybrid extends Frontend
 		parent::__construct();
 
 		// Store the parent element (see #4556)
-		if ($objElement instanceof Model || $objElement instanceof Model\Collection)
+		if ($objElement instanceof Model || $objElement instanceof Collection)
 		{
 			/** @var ContentModel|ModuleModel|FormModel $objModel */
 			$objModel = $objElement;
 
-			if ($objModel instanceof Model\Collection)
+			if ($objModel instanceof Collection)
 			{
 				$objModel = $objModel->current();
 			}
@@ -103,7 +105,7 @@ abstract class Hybrid extends Frontend
 		}
 
 		/** @var Model $strModelClass */
-		$strModelClass = \Model::getClassFromTable($this->strTable);
+		$strModelClass = Model::getClassFromTable($this->strTable);
 
 		// Load the model
 		if (class_exists($strModelClass))
@@ -135,7 +137,7 @@ abstract class Hybrid extends Frontend
 		$this->arrData = $objHybrid->row();
 
 		// Get the CSS ID from the parent element (!)
-		$this->cssID = \StringUtil::deserialize($objElement->cssID, true);
+		$this->cssID = StringUtil::deserialize($objElement->cssID, true);
 
 		// Override the CSS ID (see #305)
 		if (!empty($this->cssID[0]))
@@ -152,7 +154,7 @@ abstract class Hybrid extends Frontend
 		$this->cssID = $cssID;
 		$this->typePrefix = $objElement->typePrefix;
 
-		$arrHeadline = \StringUtil::deserialize($objElement->headline);
+		$arrHeadline = StringUtil::deserialize($objElement->headline);
 		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		$this->strColumn = $strColumn;
@@ -230,7 +232,7 @@ abstract class Hybrid extends Frontend
 			return '';
 		}
 
-		$this->Template = new \FrontendTemplate($this->strTemplate);
+		$this->Template = new FrontendTemplate($this->strTemplate);
 		$this->Template->setData($this->arrData);
 
 		$this->compile();

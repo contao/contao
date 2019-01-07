@@ -42,7 +42,7 @@ class ModuleLogout extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['logout'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -58,8 +58,8 @@ class ModuleLogout extends Module
 			$_SESSION['LAST_PAGE_VISITED'] = $this->getReferer();
 		}
 
-		$strLogoutUrl = \System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
-		$strRedirect = \Environment::get('base');
+		$strLogoutUrl = System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
+		$strRedirect = Environment::get('base');
 
 		// Redirect to last page visited
 		if ($this->redirectBack && !empty($_SESSION['LAST_PAGE_VISITED']))

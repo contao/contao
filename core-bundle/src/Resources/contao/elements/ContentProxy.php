@@ -31,7 +31,7 @@ class ContentProxy extends ContentElement
 			$reference->setBackendScope();
 		}
 
-		return \System::getContainer()->get('fragment.handler')->render($reference);
+		return System::getContainer()->get('fragment.handler')->render($reference);
 	}
 
 	/**

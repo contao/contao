@@ -62,7 +62,7 @@ class PageForward extends Frontend
 		}
 		else
 		{
-			$objNextPage = \PageModel::findFirstPublishedRegularByPid($objPage->id);
+			$objNextPage = PageModel::findFirstPublishedRegularByPid($objPage->id);
 		}
 
 		// Forward page does not exist
@@ -73,7 +73,7 @@ class PageForward extends Frontend
 		}
 
 		$strGet = '';
-		$strQuery = \Environment::get('queryString');
+		$strQuery = Environment::get('queryString');
 		$arrQuery = array();
 
 		// Extract the query string keys (see #5867)
@@ -93,7 +93,7 @@ class PageForward extends Frontend
 		{
 			foreach (array_keys($_GET) as $key)
 			{
-				if (\Config::get('addLanguageToUrl') && $key == 'language')
+				if (Config::get('addLanguageToUrl') && $key == 'language')
 				{
 					continue;
 				}
@@ -107,11 +107,11 @@ class PageForward extends Frontend
 				// Ignore the auto_item parameter (see #5886)
 				if ($key == 'auto_item')
 				{
-					$strGet .= '/' . \Input::get($key);
+					$strGet .= '/' . Input::get($key);
 				}
 				else
 				{
-					$strGet .= '/' . $key . '/' . \Input::get($key);
+					$strGet .= '/' . $key . '/' . Input::get($key);
 				}
 			}
 		}

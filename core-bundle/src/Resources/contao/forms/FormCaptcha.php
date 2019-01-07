@@ -125,7 +125,7 @@ class FormCaptcha extends Widget
 	 */
 	public function validate()
 	{
-		if (!isset($_POST[$this->strCaptchaKey]) || !\in_array(\Input::post($this->strCaptchaKey.'_hash'), $this->generateHashes((int) \Input::post($this->strCaptchaKey)), true) || (isset($_POST[$this->strCaptchaKey.'_name']) && \Input::post($this->strCaptchaKey.'_name')))
+		if (!isset($_POST[$this->strCaptchaKey]) || !\in_array(Input::post($this->strCaptchaKey.'_hash'), $this->generateHashes((int) Input::post($this->strCaptchaKey)), true) || (isset($_POST[$this->strCaptchaKey.'_name']) && Input::post($this->strCaptchaKey.'_name')))
 		{
 			$this->class = 'error';
 			$this->addError($GLOBALS['TL_LANG']['ERR']['captcha']);
@@ -170,7 +170,7 @@ class FormCaptcha extends Widget
 		return array_map(
 			function ($hashTime) use ($sum)
 			{
-				return hash_hmac('sha256', $sum . "\0" . $hashTime, \System::getContainer()->getParameter('kernel.secret'));
+				return hash_hmac('sha256', $sum . "\0" . $hashTime, System::getContainer()->getParameter('kernel.secret'));
 			},
 			array($time, $time - 1)
 		);
