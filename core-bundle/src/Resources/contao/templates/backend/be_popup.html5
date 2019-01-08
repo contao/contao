@@ -10,7 +10,7 @@
   <meta name="referrer" content="origin">
 
   <link rel="stylesheet" href="<?php
-    $objCombiner = new Combiner();
+    $objCombiner = new Contao\Combiner();
     $objCombiner->add('system/themes/'. $this->theme .'/fonts.css');
     $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
     $objCombiner->add('system/themes/'. $this->theme .'/popup.css');
@@ -20,7 +20,7 @@
 
   <script><?= $this->getLocaleString() ?></script>
   <script src="<?php
-    $objCombiner = new Combiner();
+    $objCombiner = new Contao\Combiner();
     $objCombiner->add('assets/mootools/js/mootools.min.js');
     $objCombiner->add('bundles/contaocore/mootao.min.js');
     $objCombiner->add('bundles/contaocore/core.min.js');
@@ -91,7 +91,7 @@
       </table>
       <?php if ($this->href): ?>
         <div id="download">
-          <a href="<?= $this->href ?>" class="tl_submit" download="<?= basename($this->path) ?>"><?= Image::getHtml($this->icon, '', 'class="mime_icon"') ?> <?= $this->download ?></a>
+          <a href="<?= $this->href ?>" class="tl_submit" download="<?= basename($this->path) ?>"><?= Contao\Image::getHtml($this->icon, '', 'class="mime_icon"') ?> <?= $this->download ?></a>
         </div>
       <?php endif; ?>
       <?php if ($this->isImage): ?>

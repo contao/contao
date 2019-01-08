@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes news feeds
  *
@@ -41,19 +43,19 @@ namespace Contao;
  * @method static NewsFeedModel|null findOneByFeedBase($val, array $opt=array())
  * @method static NewsFeedModel|null findOneByDescription($val, array $opt=array())
  *
- * @method static Model\Collection|NewsFeedModel[]|NewsFeedModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|NewsFeedModel[]|NewsFeedModel|null findByTitle($val, array $opt=array())
- * @method static Model\Collection|NewsFeedModel[]|NewsFeedModel|null findByAlias($val, array $opt=array())
- * @method static Model\Collection|NewsFeedModel[]|NewsFeedModel|null findByLanguage($val, array $opt=array())
- * @method static Model\Collection|NewsFeedModel[]|NewsFeedModel|null findByArchives($val, array $opt=array())
- * @method static Model\Collection|NewsFeedModel[]|NewsFeedModel|null findByFormat($val, array $opt=array())
- * @method static Model\Collection|NewsFeedModel[]|NewsFeedModel|null findBySource($val, array $opt=array())
- * @method static Model\Collection|NewsFeedModel[]|NewsFeedModel|null findByMaxItems($val, array $opt=array())
- * @method static Model\Collection|NewsFeedModel[]|NewsFeedModel|null findByFeedBase($val, array $opt=array())
- * @method static Model\Collection|NewsFeedModel[]|NewsFeedModel|null findByDescription($val, array $opt=array())
- * @method static Model\Collection|NewsFeedModel[]|NewsFeedModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|NewsFeedModel[]|NewsFeedModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|NewsFeedModel[]|NewsFeedModel|null findAll(array $opt=array())
+ * @method static Collection|NewsFeedModel[]|NewsFeedModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|NewsFeedModel[]|NewsFeedModel|null findByTitle($val, array $opt=array())
+ * @method static Collection|NewsFeedModel[]|NewsFeedModel|null findByAlias($val, array $opt=array())
+ * @method static Collection|NewsFeedModel[]|NewsFeedModel|null findByLanguage($val, array $opt=array())
+ * @method static Collection|NewsFeedModel[]|NewsFeedModel|null findByArchives($val, array $opt=array())
+ * @method static Collection|NewsFeedModel[]|NewsFeedModel|null findByFormat($val, array $opt=array())
+ * @method static Collection|NewsFeedModel[]|NewsFeedModel|null findBySource($val, array $opt=array())
+ * @method static Collection|NewsFeedModel[]|NewsFeedModel|null findByMaxItems($val, array $opt=array())
+ * @method static Collection|NewsFeedModel[]|NewsFeedModel|null findByFeedBase($val, array $opt=array())
+ * @method static Collection|NewsFeedModel[]|NewsFeedModel|null findByDescription($val, array $opt=array())
+ * @method static Collection|NewsFeedModel[]|NewsFeedModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|NewsFeedModel[]|NewsFeedModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|NewsFeedModel[]|NewsFeedModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -84,7 +86,7 @@ class NewsFeedModel extends Model
 	 * @param integer $intId      The news archive ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|NewsFeedModel[]|NewsFeedModel|null A collection of models or null if the news archive is not part of a feed
+	 * @return Collection|NewsFeedModel[]|NewsFeedModel|null A collection of models or null if the news archive is not part of a feed
 	 */
 	public static function findByArchive($intId, array $arrOptions=array())
 	{
@@ -99,7 +101,7 @@ class NewsFeedModel extends Model
 	 * @param array $arrIds     An array of news feed IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|NewsFeedModel[]|NewsFeedModel|null A collection of models or null if there are no feeds
+	 * @return Collection|NewsFeedModel[]|NewsFeedModel|null A collection of models or null if there are no feeds
 	 */
 	public static function findByIds($arrIds, array $arrOptions=array())
 	{

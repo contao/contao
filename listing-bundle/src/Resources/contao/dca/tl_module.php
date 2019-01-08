@@ -103,7 +103,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_layout'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module_listing extends Backend
+class tl_module_listing extends Contao\Backend
 {
 
 	/**

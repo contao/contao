@@ -9,7 +9,7 @@
  */
 
 // Dynamically add the permission check and parent table
-if (Input::get('do') == 'news')
+if (Contao\Input::get('do') == 'news')
 {
 	$GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_news';
 	$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('tl_content_news', 'checkPermission');
@@ -24,7 +24,7 @@ if (Input::get('do') == 'news')
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_content_news extends Backend
+class tl_content_news extends Contao\Backend
 {
 
 	/**
@@ -33,7 +33,7 @@ class tl_content_news extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -57,7 +57,7 @@ class tl_content_news extends Backend
 		}
 
 		// Check the current action
-		switch (Input::get('act'))
+		switch (Contao\Input::get('act'))
 		{
 			case '': // empty
 			case 'paste':
@@ -73,16 +73,16 @@ class tl_content_news extends Backend
 			case 'cutAll':
 			case 'copyAll':
 				// Check access to the parent element if a content element is moved
-				if (Input::get('act') == 'cutAll' || Input::get('act') == 'copyAll')
+				if (Contao\Input::get('act') == 'cutAll' || Contao\Input::get('act') == 'copyAll')
 				{
-					$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
+					$this->checkAccessToElement(Contao\Input::get('pid'), $root, (Contao\Input::get('mode') == 2));
 				}
 
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_news' AND pid=?")
 										 ->execute(CURRENT_ID);
 
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = System::getContainer()->get('session');
+				$objSession = Contao\System::getContainer()->get('session');
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCes->fetchEach('id'));
@@ -92,12 +92,12 @@ class tl_content_news extends Backend
 			case 'cut':
 			case 'copy':
 				// Check access to the parent element if a content element is moved
-				$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
+				$this->checkAccessToElement(Contao\Input::get('pid'), $root, (Contao\Input::get('mode') == 2));
 				// no break;
 
 			default:
 				// Check access to the content element
-				$this->checkAccessToElement(Input::get('id'), $root);
+				$this->checkAccessToElement(Contao\Input::get('id'), $root);
 				break;
 		}
 	}
@@ -145,7 +145,7 @@ class tl_content_news extends Backend
 	public function generateFeed()
 	{
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		$session = $objSession->get('news_feed_updater');
 
@@ -154,14 +154,14 @@ class tl_content_news extends Backend
 			return;
 		}
 
-		$this->import('News');
+		$this->import('Contao\News', 'News');
 
 		foreach ($session as $id)
 		{
 			$this->News->generateFeedsByArchive($id);
 		}
 
-		$this->import('Automator');
+		$this->import('Contao\Automator', 'Automator');
 		$this->Automator->generateSitemap();
 
 		$objSession->set('news_feed_updater', null);
@@ -181,9 +181,9 @@ class tl_content_news extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Input::get('cid')))
+		if (\strlen(Contao\Input::get('cid')))
 		{
-			$this->toggleVisibility(Input::get('cid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Contao\Input::get('cid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -193,28 +193,28 @@ class tl_content_news extends Backend
 			return '';
 		}
 
-		$href .= '&amp;id='.Input::get('id').'&amp;cid='.$row['id'].'&amp;state='.$row['invisible'];
+		$href .= '&amp;id='.Contao\Input::get('id').'&amp;cid='.$row['id'].'&amp;state='.$row['invisible'];
 
 		if ($row['invisible'])
 		{
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'" data-tid="cid"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'" data-tid="cid"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
 	}
 
 	/**
 	 * Toggle the visibility of an element
 	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
+	 * @param integer              $intId
+	 * @param boolean              $blnVisible
+	 * @param Contao\DataContainer $dc
 	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
+		Contao\Input::setGet('id', $intId);
+		Contao\Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -257,7 +257,7 @@ class tl_content_news extends Backend
 			}
 		}
 
-		$objVersions = new Versions('tl_content', $intId);
+		$objVersions = new Contao\Versions('tl_content', $intId);
 		$objVersions->initialize();
 
 		// Reverse the logic (elements have invisible=1)

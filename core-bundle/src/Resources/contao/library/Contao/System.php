@@ -124,6 +124,7 @@ abstract class System
 	{
 		if (!isset($this->arrObjects[$strKey]))
 		{
+			/** @var Input|Environment|Session $strKey */
 			if ($strKey == 'Input' || $strKey == 'Environment' || $strKey == 'Session')
 			{
 				$this->arrObjects[$strKey] = $strKey::getInstance();

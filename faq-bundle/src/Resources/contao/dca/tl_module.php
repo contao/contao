@@ -35,7 +35,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['faq_readerModule'] = array
 	'sql'                     => "int(10) unsigned NOT NULL default '0'"
 );
 
-$bundles = System::getContainer()->getParameter('kernel.bundles');
+$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
 
 // Add the comments template drop-down menu
 if (isset($bundles['ContaoCommentsBundle']))
@@ -48,7 +48,7 @@ if (isset($bundles['ContaoCommentsBundle']))
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module_faq extends Backend
+class tl_module_faq extends Contao\Backend
 {
 
 	/**

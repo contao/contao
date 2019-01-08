@@ -14,7 +14,7 @@
     <?php $this->endblock(); ?>
 
     <link rel="stylesheet" href="<?php
-      $objCombiner = new Combiner();
+      $objCombiner = new Contao\Combiner();
       $objCombiner->add('system/themes/'. $this->theme .'/fonts.css');
       $objCombiner->add('assets/colorpicker/css/mooRainbow.min.css');
       $objCombiner->add('assets/chosen/css/chosen.min.css');
@@ -28,7 +28,7 @@
 
     <script><?= $this->getLocaleString() ?></script>
     <script src="<?php
-      $objCombiner = new Combiner();
+      $objCombiner = new Contao\Combiner();
       $objCombiner->add('assets/mootools/js/mootools.min.js');
       $objCombiner->add('assets/colorpicker/js/mooRainbow.min.js');
       $objCombiner->add('assets/chosen/js/chosen.min.js');
@@ -53,7 +53,7 @@
           <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">Contao</a></h1>
           <nav aria-label="<?= $this->headerNavigation ?>">
             <ul id="tmenu">
-              <li><a href="<?= $this->route('contao_backend_alerts') ?>" class="icon-alert" title="<?= StringUtil::specialchars($this->systemMessages) ?>" onclick="Backend.openModalIframe({'title':'<?= str_replace("'", "\\'", StringUtil::specialchars($this->systemMessages)) ?>','url':this.href});return false"><?= $this->systemMessages ?><?php if ($this->systemErrorMessagesCount > 0) echo ' <sup>' . $this->systemErrorMessagesCount . '</sup>'; ?></a></li>
+              <li><a href="<?= $this->route('contao_backend_alerts') ?>" class="icon-alert" title="<?= Contao\StringUtil::specialchars($this->systemMessages) ?>" onclick="Backend.openModalIframe({'title':'<?= str_replace("'", "\\'", Contao\StringUtil::specialchars($this->systemMessages)) ?>','url':this.href});return false"><?= $this->systemMessages ?><?php if ($this->systemErrorMessagesCount > 0) echo ' <sup>' . $this->systemErrorMessagesCount . '</sup>'; ?></a></li>
               <li><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" class="icon-preview" title="<?= $this->previewTitle ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
               <li class="submenu">
                 <h2><?= $this->username ?></h2>
@@ -64,7 +64,7 @@
                   <li><a href="<?= $this->logoutLink ?>" class="icon-logout" accesskey="q"><?= $this->logout ?></a></li>
                 </ul>
               </li>
-              <li class="burger"><button type="button" id="burger"><?= Image::getHtml('burger.svg') ?></button></li>
+              <li class="burger"><button type="button" id="burger"><?= Contao\Image::getHtml('burger.svg') ?></button></li>
             </ul>
           </nav>
         </div>
@@ -122,7 +122,7 @@
 
   <?php if ($this->pageOffset): ?>
     <script>Backend.vScrollTo($('paste_hint') ? <?= $this->pageOffset + 40 ?> : <?= $this->pageOffset ?>)</script>
-    <?php System::setCookie('BE_PAGE_OFFSET', 0, 0); ?>
+    <?php Contao\System::setCookie('BE_PAGE_OFFSET', 0, 0); ?>
   <?php endif; ?>
 
 </body>

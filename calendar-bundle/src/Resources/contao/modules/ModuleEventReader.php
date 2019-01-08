@@ -45,7 +45,7 @@ class ModuleEventReader extends Events
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventreader'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -56,18 +56,18 @@ class ModuleEventReader extends Events
 		}
 
 		// Set the item from the auto_item parameter
-		if (!isset($_GET['events']) && \Config::get('useAutoItem') && isset($_GET['auto_item']))
+		if (!isset($_GET['events']) && Config::get('useAutoItem') && isset($_GET['auto_item']))
 		{
-			\Input::setGet('events', \Input::get('auto_item'));
+			Input::setGet('events', Input::get('auto_item'));
 		}
 
 		// Return an empty string if "events" is not set (to combine list and reader on same page)
-		if (!\Input::get('events'))
+		if (!Input::get('events'))
 		{
 			return '';
 		}
 
-		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar));
+		$this->cal_calendar = $this->sortOutProtected(StringUtil::deserialize($this->cal_calendar));
 
 		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
 		{
@@ -90,12 +90,12 @@ class ModuleEventReader extends Events
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
 		// Get the current event
-		$objEvent = \CalendarEventsModel::findPublishedByParentAndIdOrAlias(\Input::get('events'), $this->cal_calendar);
+		$objEvent = CalendarEventsModel::findPublishedByParentAndIdOrAlias(Input::get('events'), $this->cal_calendar);
 
 		// The event does not exist or has an external target (see #33)
 		if (null === $objEvent || $objEvent->source != 'default')
 		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Overwrite the page title (see #2853, #4955 and #87)
@@ -105,7 +105,7 @@ class ModuleEventReader extends Events
 		}
 		elseif ($objEvent->title)
 		{
-			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objEvent->title));
+			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objEvent->title));
 		}
 
 		// Overwrite the page description
@@ -120,12 +120,12 @@ class ModuleEventReader extends Events
 
 		$intStartTime = $objEvent->startTime;
 		$intEndTime = $objEvent->endTime;
-		$span = \Calendar::calculateSpan($intStartTime, $intEndTime);
+		$span = Calendar::calculateSpan($intStartTime, $intEndTime);
 
 		// Do not show dates in the past if the event is recurring (see #923)
 		if ($objEvent->recurring)
 		{
-			$arrRange = \StringUtil::deserialize($objEvent->repeatEach);
+			$arrRange = StringUtil::deserialize($objEvent->repeatEach);
 
 			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 			{
@@ -160,7 +160,7 @@ class ModuleEventReader extends Events
 		// Recurring event
 		if ($objEvent->recurring)
 		{
-			$arrRange = \StringUtil::deserialize($objEvent->repeatEach);
+			$arrRange = StringUtil::deserialize($objEvent->repeatEach);
 
 			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 			{
@@ -175,7 +175,7 @@ class ModuleEventReader extends Events
 
 				if ($objEvent->recurrences > 0)
 				{
-					$until = ' ' . sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], \Date::parse($objPage->dateFormat, $objEvent->repeatEnd));
+					$until = ' ' . sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], Date::parse($objPage->dateFormat, $objEvent->repeatEnd));
 				}
 
 				if ($objEvent->recurrences > 0 && $intEndTime <= time())
@@ -193,7 +193,7 @@ class ModuleEventReader extends Events
 			}
 		}
 
-		$objTemplate = new \FrontendTemplate($this->cal_template);
+		$objTemplate = new FrontendTemplate($this->cal_template);
 		$objTemplate->setData($objEvent->row());
 		$objTemplate->date = $strDate;
 		$objTemplate->time = $strTime;
@@ -222,8 +222,8 @@ class ModuleEventReader extends Events
 		if ($objEvent->teaser != '')
 		{
 			$objTemplate->hasTeaser = true;
-			$objTemplate->teaser = \StringUtil::toHtml5($objEvent->teaser);
-			$objTemplate->teaser = \StringUtil::encodeEmail($objTemplate->teaser);
+			$objTemplate->teaser = StringUtil::toHtml5($objEvent->teaser);
+			$objTemplate->teaser = StringUtil::encodeEmail($objTemplate->teaser);
 		}
 
 		// Display the "read more" button for external/article links
@@ -241,7 +241,7 @@ class ModuleEventReader extends Events
 			$objTemplate->details = function () use ($id)
 			{
 				$strDetails = '';
-				$objElement = \ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
+				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
 
 				if ($objElement !== null)
 				{
@@ -256,7 +256,7 @@ class ModuleEventReader extends Events
 
 			$objTemplate->hasDetails = function () use ($id)
 			{
-				return \ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
+				return ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
 			};
 		}
 
@@ -265,9 +265,9 @@ class ModuleEventReader extends Events
 		// Add an image
 		if ($objEvent->addImage && $objEvent->singleSRC != '')
 		{
-			$objModel = \FilesModel::findByUuid($objEvent->singleSRC);
+			$objModel = FilesModel::findByUuid($objEvent->singleSRC);
 
-			if ($objModel !== null && is_file(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
+			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
 			{
 				// Do not override the field now that we have a model registry (see #6303)
 				$arrEvent = $objEvent->row();
@@ -275,7 +275,7 @@ class ModuleEventReader extends Events
 				// Override the default image size
 				if ($this->imgSize != '')
 				{
-					$size = \StringUtil::deserialize($this->imgSize);
+					$size = StringUtil::deserialize($this->imgSize);
 
 					if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]))
 					{
@@ -374,7 +374,7 @@ class ModuleEventReader extends Events
 
 		$this->Template->event = $objTemplate->parse();
 
-		$bundles = \System::getContainer()->getParameter('kernel.bundles');
+		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
 		if ($objEvent->noComments || !isset($bundles['ContaoCommentsBundle']))
@@ -398,7 +398,7 @@ class ModuleEventReader extends Events
 		$intHl = min((int) str_replace('h', '', $this->hl), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
-		$this->import('Comments');
+		$this->import(Comments::class, 'Comments');
 		$arrNotifies = array();
 
 		// Notify the system administrator
@@ -443,11 +443,11 @@ class ModuleEventReader extends Events
 	 */
 	private function getDateAndTime(CalendarEventsModel $objEvent, PageModel $objPage, $intStartTime, $intEndTime, $span)
 	{
-		$strDate = \Date::parse($objPage->dateFormat, $intStartTime);
+		$strDate = Date::parse($objPage->dateFormat, $intStartTime);
 
 		if ($span > 0)
 		{
-			$strDate = \Date::parse($objPage->dateFormat, $intStartTime) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . \Date::parse($objPage->dateFormat, $intEndTime);
+			$strDate = Date::parse($objPage->dateFormat, $intStartTime) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse($objPage->dateFormat, $intEndTime);
 		}
 
 		$strTime = '';
@@ -456,15 +456,15 @@ class ModuleEventReader extends Events
 		{
 			if ($span > 0)
 			{
-				$strDate = \Date::parse($objPage->datimFormat, $intStartTime) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . \Date::parse($objPage->datimFormat, $intEndTime);
+				$strDate = Date::parse($objPage->datimFormat, $intStartTime) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse($objPage->datimFormat, $intEndTime);
 			}
 			elseif ($intStartTime == $intEndTime)
 			{
-				$strTime = \Date::parse($objPage->timeFormat, $intStartTime);
+				$strTime = Date::parse($objPage->timeFormat, $intStartTime);
 			}
 			else
 			{
-				$strTime = \Date::parse($objPage->timeFormat, $intStartTime) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . \Date::parse($objPage->timeFormat, $intEndTime);
+				$strTime = Date::parse($objPage->timeFormat, $intStartTime) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse($objPage->timeFormat, $intEndTime);
 			}
 		}
 

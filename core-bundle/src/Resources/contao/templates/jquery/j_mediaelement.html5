@@ -14,7 +14,7 @@ $GLOBALS['TL_CSS'][] = 'assets/mediaelement/css/mediaelementplayer.min.css|stati
         return $(this).parents('picture').length === 0;
     }).mediaelementplayer({
       // Put custom options here
-      pluginPath: '<?= Environment::get('path') ?>/assets/mediaelement/plugins/'
+      pluginPath: '<?= Contao\Environment::get('path') ?>/assets/mediaelement/plugins/'
     });
   });
 </script>

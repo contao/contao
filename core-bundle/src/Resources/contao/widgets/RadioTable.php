@@ -115,8 +115,11 @@ class RadioTable extends Widget
 				}
 
 				// Else return an empty cell
-				else $return .= '
+				else
+				{
+					$return .= '
       <td></td>';
+				}
 			}
 
 			// Close row

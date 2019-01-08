@@ -14,6 +14,7 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\Database;
 use Contao\DcaExtractor;
+use Contao\SqlFileParser;
 use Contao\System;
 use Symfony\Component\Finder\SplFileInfo;
 

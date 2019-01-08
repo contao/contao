@@ -96,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module_newsletter extends Backend
+class tl_module_newsletter extends Contao\Backend
 {
 
 	/**
@@ -105,7 +105,7 @@ class tl_module_newsletter extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**

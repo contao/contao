@@ -8,6 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\System;
 use Patchwork\Utf8;
 
 /**

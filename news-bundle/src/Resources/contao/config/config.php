@@ -14,8 +14,8 @@ array_insert($GLOBALS['BE_MOD']['content'], 1, array
 	'news' => array
 	(
 		'tables'      => array('tl_news_archive', 'tl_news', 'tl_news_feed', 'tl_content'),
-		'table'       => array('TableWizard', 'importTable'),
-		'list'        => array('ListWizard', 'importList')
+		'table'       => array('Contao\TableWizard', 'importTable'),
+		'list'        => array('Contao\ListWizard', 'importList')
 	)
 ));
 
@@ -24,15 +24,15 @@ array_insert($GLOBALS['FE_MOD'], 2, array
 (
 	'news' => array
 	(
-		'newslist'    => 'ModuleNewsList',
-		'newsreader'  => 'ModuleNewsReader',
-		'newsarchive' => 'ModuleNewsArchive',
-		'newsmenu'    => 'ModuleNewsMenu'
+		'newslist'    => 'Contao\ModuleNewsList',
+		'newsreader'  => 'Contao\ModuleNewsReader',
+		'newsarchive' => 'Contao\ModuleNewsArchive',
+		'newsmenu'    => 'Contao\ModuleNewsMenu'
 	)
 ));
 
 // Cron jobs
-$GLOBALS['TL_CRON']['daily']['generateNewsFeeds'] = array('News', 'generateFeeds');
+$GLOBALS['TL_CRON']['daily']['generateNewsFeeds'] = array('Contao\News', 'generateFeeds');
 
 // Style sheet
 if (\defined('TL_MODE') && TL_MODE == 'BE')
@@ -41,10 +41,10 @@ if (\defined('TL_MODE') && TL_MODE == 'BE')
 }
 
 // Register hooks
-$GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array('News', 'purgeOldFeeds');
-$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('News', 'getSearchablePages');
+$GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array('Contao\News', 'purgeOldFeeds');
+$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('Contao\News', 'getSearchablePages');
 $GLOBALS['TL_HOOKS']['generatePage'][] = array('contao_news.listener.generate_page', 'onGeneratePage');
-$GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array('News', 'generateFeeds');
+$GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array('Contao\News', 'generateFeeds');
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('contao_news.listener.insert_tags', 'onReplaceInsertTags');
 
 // Add permissions

@@ -143,7 +143,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_showQuantity'] = array
 	'sql'                     => "char(1) NOT NULL default ''"
 );
 
-$bundles = System::getContainer()->getParameter('kernel.bundles');
+$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
 
 // Add the comments template drop-down menu
 if (isset($bundles['ContaoCommentsBundle']))
@@ -156,7 +156,7 @@ if (isset($bundles['ContaoCommentsBundle']))
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module_calendar extends Backend
+class tl_module_calendar extends Contao\Backend
 {
 
 	/**
@@ -165,7 +165,7 @@ class tl_module_calendar extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -215,11 +215,11 @@ class tl_module_calendar extends Backend
 	/**
 	 * Return the calendar formats depending on the module type
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getFormats(DataContainer $dc)
+	public function getFormats(Contao\DataContainer $dc)
 	{
 		if ($dc->activeRecord->type == 'eventmenu')
 		{
@@ -249,10 +249,10 @@ class tl_module_calendar extends Backend
       if ($("ctrl_cal_format").value == "cal_day") {
         e1.setStyle("display", "block");
         e2.setStyle("display", "none");
-	  } else {
+      } else {
         e1.setStyle("display", "none");
         e2.setStyle("display", "block");
-	  }
+      }
     };
     window.addEvent("domready", function() {
       if ($("ctrl_cal_startDay")) {

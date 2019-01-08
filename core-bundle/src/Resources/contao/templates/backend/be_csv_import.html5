@@ -1,8 +1,8 @@
 
-<?= Message::generate() ?>
+<?= Contao\Message::generate() ?>
 
 <div id="tl_buttons">
-  <a href="<?= ampersand($this->backUrl) ?>" class="header_back" title="<?= StringUtil::specialchars($this->backBTTitle) ?>" accesskey="b"><?= $this->backBT ?></a>
+  <a href="<?= ampersand($this->backUrl) ?>" class="header_back" title="<?= Contao\StringUtil::specialchars($this->backBTTitle) ?>" accesskey="b"><?= $this->backBT ?></a>
 </div>
 
 <form action="<?= ampersand($this->action) ?>" id="<?= $this->formId ?>" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">

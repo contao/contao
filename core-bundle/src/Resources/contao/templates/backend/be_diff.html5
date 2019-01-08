@@ -10,7 +10,7 @@
   <meta name="referrer" content="origin">
 
   <link rel="stylesheet" href="<?php
-    $objCombiner = new Combiner();
+    $objCombiner = new Contao\Combiner();
     $objCombiner->add('system/themes/'. $this->theme .'/fonts.css');
     $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
     $objCombiner->add('system/themes/'. $this->theme .'/diff.css');

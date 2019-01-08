@@ -9,10 +9,10 @@
  */
 
 // Add content element
-$GLOBALS['TL_CTE']['includes']['comments'] = 'ContentComments';
+$GLOBALS['TL_CTE']['includes']['comments'] = 'Contao\ContentComments';
 
 // Front end modules
-$GLOBALS['FE_MOD']['application']['comments'] = 'ModuleComments';
+$GLOBALS['FE_MOD']['application']['comments'] = 'Contao\ModuleComments';
 
 // Back end modules
 array_insert($GLOBALS['BE_MOD']['content'], 5, array
@@ -25,4 +25,4 @@ array_insert($GLOBALS['BE_MOD']['content'], 5, array
 ));
 
 // Cron jobs
-$GLOBALS['TL_CRON']['daily']['purgeCommentSubscriptions'] = array('Comments', 'purgeSubscriptions');
+$GLOBALS['TL_CRON']['daily']['purgeCommentSubscriptions'] = array('Contao\Comments', 'purgeSubscriptions');

@@ -195,7 +195,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		'feedBase' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_news_feed']['feedBase'],
-			'default'                 => Environment::get('base'),
+			'default'                 => Contao\Environment::get('base'),
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -221,7 +221,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_news_feed extends Backend
+class tl_news_feed extends Contao\Backend
 {
 
 	/**
@@ -230,7 +230,7 @@ class tl_news_feed extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -272,10 +272,10 @@ class tl_news_feed extends Backend
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		// Check current action
-		switch (Input::get('act'))
+		switch (Contao\Input::get('act'))
 		{
 			case 'select':
 				// Allow
@@ -292,9 +292,9 @@ class tl_news_feed extends Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!\in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newsfeedp')))
+				if (!\in_array(Contao\Input::get('id'), $root) || (Contao\Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newsfeedp')))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news feed ID ' . Input::get('id') . '.');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' news feed ID ' . Contao\Input::get('id') . '.');
 				}
 				break;
 
@@ -303,7 +303,7 @@ class tl_news_feed extends Backend
 			case 'overrideAll':
 			case 'copyAll':
 				$session = $objSession->all();
-				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newsfeedp'))
+				if (Contao\Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newsfeedp'))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
@@ -315,9 +315,9 @@ class tl_news_feed extends Backend
 				break;
 
 			default:
-				if (\strlen(Input::get('act')))
+				if (\strlen(Contao\Input::get('act')))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news feeds.');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' news feeds.');
 				}
 				break;
 		}
@@ -358,7 +358,7 @@ class tl_news_feed extends Backend
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = Contao\System::getContainer()->get('session')->getBag('contao_backend');
 
 		$arrNew = $objSessionBag->get('new_records');
 
@@ -371,11 +371,11 @@ class tl_news_feed extends Backend
 
 				while ($objGroup->next())
 				{
-					$arrNewsfeedp = StringUtil::deserialize($objGroup->newsfeedp);
+					$arrNewsfeedp = Contao\StringUtil::deserialize($objGroup->newsfeedp);
 
 					if (\is_array($arrNewsfeedp) && \in_array('create', $arrNewsfeedp))
 					{
-						$arrNewsfeeds = StringUtil::deserialize($objGroup->newsfeeds, true);
+						$arrNewsfeeds = Contao\StringUtil::deserialize($objGroup->newsfeeds, true);
 						$arrNewsfeeds[] = $insertId;
 
 						$this->Database->prepare("UPDATE tl_user_group SET newsfeeds=? WHERE id=?")
@@ -391,11 +391,11 @@ class tl_news_feed extends Backend
 										   ->limit(1)
 										   ->execute($this->User->id);
 
-				$arrNewsfeedp = StringUtil::deserialize($objUser->newsfeedp);
+				$arrNewsfeedp = Contao\StringUtil::deserialize($objUser->newsfeedp);
 
 				if (\is_array($arrNewsfeedp) && \in_array('create', $arrNewsfeedp))
 				{
-					$arrNewsfeeds = StringUtil::deserialize($objUser->newsfeeds, true);
+					$arrNewsfeeds = Contao\StringUtil::deserialize($objUser->newsfeeds, true);
 					$arrNewsfeeds[] = $insertId;
 
 					$this->Database->prepare("UPDATE tl_user SET newsfeeds=? WHERE id=?")
@@ -423,7 +423,7 @@ class tl_news_feed extends Backend
 	 */
 	public function copyFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'newsfeedp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('create', 'newsfeedp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
 	}
 
 	/**
@@ -440,7 +440,7 @@ class tl_news_feed extends Backend
 	 */
 	public function deleteFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'newsfeedp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('delete', 'newsfeedp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
 	}
 
 	/**
@@ -449,7 +449,7 @@ class tl_news_feed extends Backend
 	public function generateFeed()
 	{
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		$session = $objSession->get('news_feed_updater');
 
@@ -458,14 +458,14 @@ class tl_news_feed extends Backend
 			return;
 		}
 
-		$this->import('News');
+		$this->import('Contao\News', 'News');
 
 		foreach ($session as $id)
 		{
 			$this->News->generateFeed($id);
 		}
 
-		$this->import('Automator');
+		$this->import('Contao\Automator', 'Automator');
 		$this->Automator->generateSitemap();
 
 		$objSession->set('news_feed_updater', null);
@@ -477,9 +477,9 @@ class tl_news_feed extends Backend
 	 * This method is triggered when a single news archive or multiple news
 	 * archives are modified (edit/editAll).
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 */
-	public function scheduleUpdate(DataContainer $dc)
+	public function scheduleUpdate(Contao\DataContainer $dc)
 	{
 		// Return if there is no ID
 		if (!$dc->id)
@@ -488,7 +488,7 @@ class tl_news_feed extends Backend
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		// Store the ID in the session
 		$session = $objSession->get('news_feed_updater');
@@ -505,11 +505,11 @@ class tl_news_feed extends Backend
 	{
 		if ($this->User->isAdmin)
 		{
-			$objArchive = NewsArchiveModel::findAll();
+			$objArchive = Contao\NewsArchiveModel::findAll();
 		}
 		else
 		{
-			$objArchive = NewsArchiveModel::findMultipleByIds($this->User->news);
+			$objArchive = Contao\NewsArchiveModel::findMultipleByIds($this->User->news);
 		}
 
 		$return = array();
@@ -528,14 +528,14 @@ class tl_news_feed extends Backend
 	/**
 	 * Check the RSS-feed alias
 	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return mixed
 	 *
 	 * @throws Exception
 	 */
-	public function checkFeedAlias($varValue, DataContainer $dc)
+	public function checkFeedAlias($varValue, Contao\DataContainer $dc)
 	{
 		// No change or empty value
 		if ($varValue == $dc->value || $varValue == '')
@@ -543,9 +543,9 @@ class tl_news_feed extends Backend
 			return $varValue;
 		}
 
-		$varValue = StringUtil::standardize($varValue); // see #5096
+		$varValue = Contao\StringUtil::standardize($varValue); // see #5096
 
-		$this->import('Automator');
+		$this->import('Contao\Automator', 'Automator');
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);
 
 		// Alias exists

@@ -52,7 +52,7 @@ class ModuleEventlist extends Events
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventlist'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -62,7 +62,7 @@ class ModuleEventlist extends Events
 			return $objTemplate->parse();
 		}
 
-		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar, true));
+		$this->cal_calendar = $this->sortOutProtected(StringUtil::deserialize($this->cal_calendar, true));
 
 		// Return if there are no calendars
 		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
@@ -71,7 +71,7 @@ class ModuleEventlist extends Events
 		}
 
 		// Show the event reader if an item has been selected
-		if ($this->cal_readerModule > 0  && (isset($_GET['events']) || (\Config::get('useAutoItem') && isset($_GET['auto_item']))))
+		if ($this->cal_readerModule > 0  && (isset($_GET['events']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
 		{
 			return $this->getFrontendModule($this->cal_readerModule, $this->strColumn);
 		}
@@ -89,9 +89,9 @@ class ModuleEventlist extends Events
 
 		$blnClearInput = false;
 
-		$intYear = \Input::get('year');
-		$intMonth = \Input::get('month');
-		$intDay = \Input::get('day');
+		$intYear = Input::get('year');
+		$intMonth = Input::get('month');
+		$intDay = Input::get('day');
 
 		// Jump to the current period
 		if (!isset($_GET['year']) && !isset($_GET['month']) && !isset($_GET['day']))
@@ -121,30 +121,30 @@ class ModuleEventlist extends Events
 		{
 			if ($blnDynamicFormat && $intYear)
 			{
-				$this->Date = new \Date($intYear, 'Y');
+				$this->Date = new Date($intYear, 'Y');
 				$this->cal_format = 'cal_year';
 				$this->headline .= ' ' . date('Y', $this->Date->tstamp);
 			}
 			elseif ($blnDynamicFormat && $intMonth)
 			{
-				$this->Date = new \Date($intMonth, 'Ym');
+				$this->Date = new Date($intMonth, 'Ym');
 				$this->cal_format = 'cal_month';
-				$this->headline .= ' ' . \Date::parse('F Y', $this->Date->tstamp);
+				$this->headline .= ' ' . Date::parse('F Y', $this->Date->tstamp);
 			}
 			elseif ($blnDynamicFormat && $intDay)
 			{
-				$this->Date = new \Date($intDay, 'Ymd');
+				$this->Date = new Date($intDay, 'Ymd');
 				$this->cal_format = 'cal_day';
-				$this->headline .= ' ' . \Date::parse($objPage->dateFormat, $this->Date->tstamp);
+				$this->headline .= ' ' . Date::parse($objPage->dateFormat, $this->Date->tstamp);
 			}
 			else
 			{
-				$this->Date = new \Date();
+				$this->Date = new Date();
 			}
 		}
 		catch (\OutOfBoundsException $e)
 		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		list($intStart, $intEnd, $strEmpty) = $this->getDatesFromFormat($this->Date, $this->cal_format);
@@ -197,7 +197,7 @@ class ModuleEventlist extends Events
 					}
 
 					$event['firstDay'] = $GLOBALS['TL_LANG']['DAYS'][date('w', $day)];
-					$event['firstDate'] = \Date::parse($objPage->dateFormat, $day);
+					$event['firstDate'] = Date::parse($objPage->dateFormat, $day);
 
 					$arrEvents[] = $event;
 				}
@@ -220,18 +220,18 @@ class ModuleEventlist extends Events
 		if ($this->perPage > 0)
 		{
 			$id = 'page_e' . $this->id;
-			$page = \Input::get($id) ?? 1;
+			$page = Input::get($id) ?? 1;
 
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))
 			{
-				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 			}
 
 			$offset = ($page - 1) * $this->perPage;
 			$limit = min($this->perPage + $offset, $total);
 
-			$objPagination = new \Pagination($total, $this->perPage, \Config::get('maxPaginationLinks'), $id);
+			$objPagination = new Pagination($total, $this->perPage, Config::get('maxPaginationLinks'), $id);
 			$this->Template->pagination = $objPagination->generate("\n  ");
 		}
 
@@ -246,7 +246,7 @@ class ModuleEventlist extends Events
 		// Override the default image size
 		if ($this->imgSize != '')
 		{
-			$size = \StringUtil::deserialize($this->imgSize);
+			$size = StringUtil::deserialize($this->imgSize);
 
 			if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]))
 			{
@@ -254,7 +254,7 @@ class ModuleEventlist extends Events
 			}
 		}
 
-		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Parse events
 		for ($i=$offset; $i<$limit; $i++)
@@ -268,7 +268,7 @@ class ModuleEventlist extends Events
 				$blnIsLastEvent = true;
 			}
 
-			$objTemplate = new \FrontendTemplate($this->cal_template);
+			$objTemplate = new FrontendTemplate($this->cal_template);
 			$objTemplate->setData($event);
 
 			// Month header
@@ -298,7 +298,7 @@ class ModuleEventlist extends Events
 			// Add the template variables
 			$objTemplate->classList = $event['class'] . ((($headerCount % 2) == 0) ? ' even' : ' odd') . (($headerCount == 0) ? ' first' : '') . ($blnIsLastEvent ? ' last' : '') . ' cal_' . $event['parent'];
 			$objTemplate->classUpcoming = $event['class'] . ((($eventCount % 2) == 0) ? ' even' : ' odd') . (($eventCount == 0) ? ' first' : '') . ((($offset + $eventCount + 1) >= $limit) ? ' last' : '') . ' cal_' . $event['parent'];
-			$objTemplate->readMore = \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
+			$objTemplate->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
 			$objTemplate->more = $GLOBALS['TL_LANG']['MSC']['more'];
 			$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 
@@ -319,7 +319,7 @@ class ModuleEventlist extends Events
 			// Add an image
 			if ($event['addImage'] && $event['singleSRC'] != '')
 			{
-				$objModel = \FilesModel::findByUuid($event['singleSRC']);
+				$objModel = FilesModel::findByUuid($event['singleSRC']);
 
 				if ($objModel !== null && is_file($rootDir . '/' . $objModel->path))
 				{
@@ -373,9 +373,9 @@ class ModuleEventlist extends Events
 		// Clear the $_GET array (see #2445)
 		if ($blnClearInput)
 		{
-			\Input::setGet('year', null);
-			\Input::setGet('month', null);
-			\Input::setGet('day', null);
+			Input::setGet('year', null);
+			Input::setGet('month', null);
+			Input::setGet('day', null);
 		}
 	}
 }

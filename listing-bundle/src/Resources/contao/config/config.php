@@ -9,4 +9,4 @@
  */
 
 // Front end module
-$GLOBALS['FE_MOD']['application']['listing'] = 'ModuleListing';
+$GLOBALS['FE_MOD']['application']['listing'] = 'Contao\ModuleListing';

@@ -38,7 +38,7 @@ class ModuleNewsletterReader extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsletterreader'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -49,13 +49,13 @@ class ModuleNewsletterReader extends Module
 		}
 
 		// Set the item from the auto_item parameter
-		if (!isset($_GET['items']) && \Config::get('useAutoItem') && isset($_GET['auto_item']))
+		if (!isset($_GET['items']) && Config::get('useAutoItem') && isset($_GET['auto_item']))
 		{
-			\Input::setGet('items', \Input::get('auto_item'));
+			Input::setGet('items', Input::get('auto_item'));
 		}
 
 		// Do not index or cache the page if no news item has been specified
-		if (!\Input::get('items'))
+		if (!Input::get('items'))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;
@@ -66,7 +66,7 @@ class ModuleNewsletterReader extends Module
 			return '';
 		}
 
-		$this->nl_channels = \StringUtil::deserialize($this->nl_channels);
+		$this->nl_channels = StringUtil::deserialize($this->nl_channels);
 
 		// Do not index or cache the page if there are no channels
 		if (empty($this->nl_channels) || !\is_array($this->nl_channels))
@@ -95,17 +95,17 @@ class ModuleNewsletterReader extends Module
 		$this->Template->referer = 'javascript:history.go(-1)';
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
-		$objNewsletter = \NewsletterModel::findSentByParentAndIdOrAlias(\Input::get('items'), $this->nl_channels);
+		$objNewsletter = NewsletterModel::findSentByParentAndIdOrAlias(Input::get('items'), $this->nl_channels);
 
 		if (null === $objNewsletter)
 		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Overwrite the page title (see #2853 and #4955)
 		if ($objNewsletter->subject != '')
 		{
-			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objNewsletter->subject));
+			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objNewsletter->subject));
 		}
 
 		// Add enclosure
@@ -126,10 +126,10 @@ class ModuleNewsletterReader extends Module
 
 		// Parse simple tokens and insert tags
 		$strContent = $this->replaceInsertTags($strContent);
-		$strContent = \StringUtil::parseSimpleTokens($strContent, array());
+		$strContent = StringUtil::parseSimpleTokens($strContent, array());
 
 		// Encode e-mail addresses
-		$strContent = \StringUtil::encodeEmail($strContent);
+		$strContent = StringUtil::encodeEmail($strContent);
 
 		$this->Template->content = $strContent;
 		$this->Template->subject = $objNewsletter->subject;

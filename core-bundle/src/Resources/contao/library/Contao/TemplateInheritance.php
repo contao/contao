@@ -304,7 +304,7 @@ trait TemplateInheritance
 			return TemplateLoader::getDefaultPath($strTemplate, $strFormat);
 		}
 
-		return Controller::getTemplate($strTemplate, $strFormat);
+		return Controller::getTemplate($strTemplate);
 	}
 }
 

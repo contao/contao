@@ -39,7 +39,7 @@ class ModuleEventMenu extends ModuleCalendar
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventmenu'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -112,9 +112,9 @@ class ModuleEventMenu extends ModuleCalendar
 			$arrItems[$intYear]['date'] = $intDate;
 			$arrItems[$intYear]['link'] = $intYear;
 			$arrItems[$intYear]['href'] = $this->strLink . '?year=' . $intDate;
-			$arrItems[$intYear]['title'] = \StringUtil::specialchars($intYear . ' (' . $quantity . ')');
+			$arrItems[$intYear]['title'] = StringUtil::specialchars($intYear . ' (' . $quantity . ')');
 			$arrItems[$intYear]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
-			$arrItems[$intYear]['isActive'] = (\Input::get('year') == $intDate);
+			$arrItems[$intYear]['isActive'] = (Input::get('year') == $intDate);
 			$arrItems[$intYear]['quantity'] = $quantity;
 		}
 
@@ -165,9 +165,9 @@ class ModuleEventMenu extends ModuleCalendar
 				$arrItems[$intYear][$intMonth]['date'] = $intDate;
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
 				$arrItems[$intYear][$intMonth]['href'] = $this->strLink . '?month=' . $intDate;
-				$arrItems[$intYear][$intMonth]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.$intYear . ' (' . $quantity . ')');
+				$arrItems[$intYear][$intMonth]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.$intYear . ' (' . $quantity . ')');
 				$arrItems[$intYear][$intMonth]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
-				$arrItems[$intYear][$intMonth]['isActive'] = (\Input::get('month') == $intDate);
+				$arrItems[$intYear][$intMonth]['isActive'] = (Input::get('month') == $intDate);
 				$arrItems[$intYear][$intMonth]['quantity'] = $quantity;
 			}
 		}
@@ -175,7 +175,7 @@ class ModuleEventMenu extends ModuleCalendar
 		$this->Template->items = $arrItems;
 		$this->Template->showQuantity = ($this->cal_showQuantity != '') ? true : false;
 		$this->Template->url = $this->strLink . '?';
-		$this->Template->activeYear = \Input::get('year');
+		$this->Template->activeYear = Input::get('year');
 	}
 }
 

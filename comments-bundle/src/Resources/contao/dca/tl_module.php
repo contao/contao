@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-System::loadLanguageFile('tl_content');
+Contao\System::loadLanguageFile('tl_content');
 
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['comments'] = '{title_legend},name,headline,type;{comment_legend},com_order,perPage,com_moderate,com_bbcode,com_protected,com_requireLogin,com_disableCaptcha;{template_legend:hide},com_template,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
@@ -78,7 +78,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_template'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module_comments extends Backend
+class tl_module_comments extends Contao\Backend
 {
 
 	/**

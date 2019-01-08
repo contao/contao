@@ -27,19 +27,19 @@
         <!-- indexer::stop -->
         <div class="syndication">
           <?php if ($this->printButton): ?>
-            <a href="<?= $this->print ?>" class="print" rel="nofollow" title="<?= $this->printTitle ?>" onclick="window.print();return false"><?= Image::getHtml('assets/contao/images/print.svg') ?></a>
+            <a href="<?= $this->print ?>" class="print" rel="nofollow" title="<?= $this->printTitle ?>" onclick="window.print();return false"><?= Contao\Image::getHtml('assets/contao/images/print.svg') ?></a>
           <?php endif; ?>
           <?php if ($this->pdfButton): ?>
-            <a href="<?= $this->href ?>" class="pdf" rel="nofollow" title="<?= $this->pdfTitle ?>"><?= Image::getHtml('assets/contao/images/pdf.svg') ?></a>
+            <a href="<?= $this->href ?>" class="pdf" rel="nofollow" title="<?= $this->pdfTitle ?>"><?= Contao\Image::getHtml('assets/contao/images/pdf.svg') ?></a>
           <?php endif; ?>
           <?php if ($this->facebookButton): ?>
-            <a href="<?= $this->route('contao_frontend_share', array('p'=>'facebook', 'u'=>$this->encUrl)) ?>" class="facebook" rel="nofollow" title="<?= $this->facebookTitle ?>" onclick="var w=window.open(this.href,'','width=640,height=380,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');w.opener=null;return false"><?= Image::getHtml('assets/contao/images/facebook.svg') ?></a>
+            <a href="<?= $this->route('contao_frontend_share', array('p'=>'facebook', 'u'=>$this->encUrl)) ?>" class="facebook" rel="nofollow" title="<?= $this->facebookTitle ?>" onclick="var w=window.open(this.href,'','width=640,height=380,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');w.opener=null;return false"><?= Contao\Image::getHtml('assets/contao/images/facebook.svg') ?></a>
           <?php endif; ?>
           <?php if ($this->twitterButton): ?>
-            <a href="<?= $this->route('contao_frontend_share', array('p'=>'twitter', 'u'=> $this->encUrl, 't'=>$this->encTitle)) ?>" class="twitter" rel="nofollow" title="<?= $this->twitterTitle ?>" onclick="var w=window.open(this.href,'','width=640,height=380,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');w.opener=null;return false"><?= Image::getHtml('assets/contao/images/twitter.svg') ?></a>
+            <a href="<?= $this->route('contao_frontend_share', array('p'=>'twitter', 'u'=> $this->encUrl, 't'=>$this->encTitle)) ?>" class="twitter" rel="nofollow" title="<?= $this->twitterTitle ?>" onclick="var w=window.open(this.href,'','width=640,height=380,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');w.opener=null;return false"><?= Contao\Image::getHtml('assets/contao/images/twitter.svg') ?></a>
           <?php endif; ?>
           <?php if ($this->gplusButton): ?>
-            <a href="<?= $this->route('contao_frontend_share', array('p'=>'gplus', 'u'=> $this->encUrl)) ?>" class="gplus" rel="nofollow" title="<?= $this->gplusTitle ?>" onclick="var w=window.open(this.href,'','width=600,height=200,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');w.opener=null;return false"><?= Image::getHtml('assets/contao/images/gplus.svg') ?></a>
+            <a href="<?= $this->route('contao_frontend_share', array('p'=>'gplus', 'u'=> $this->encUrl)) ?>" class="gplus" rel="nofollow" title="<?= $this->gplusTitle ?>" onclick="var w=window.open(this.href,'','width=600,height=200,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');w.opener=null;return false"><?= Contao\Image::getHtml('assets/contao/images/gplus.svg') ?></a>
           <?php endif; ?>
         </div>
         <!-- indexer::continue -->

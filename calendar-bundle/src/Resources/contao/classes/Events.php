@@ -66,8 +66,8 @@ abstract class Events extends Module
 			return $arrCalendars;
 		}
 
-		$this->import('FrontendUser', 'User');
-		$objCalendar = \CalendarModel::findMultipleByIds($arrCalendars);
+		$this->import(FrontendUser::class, 'User');
+		$objCalendar = CalendarModel::findMultipleByIds($arrCalendars);
 		$arrCalendars = array();
 
 		if ($objCalendar !== null)
@@ -81,7 +81,7 @@ abstract class Events extends Module
 						continue;
 					}
 
-					$groups = \StringUtil::deserialize($objCalendar->groups);
+					$groups = StringUtil::deserialize($objCalendar->groups);
 
 					if (empty($groups) || !\is_array($groups) || \count(array_intersect($groups, $this->User->groups)) < 1)
 					{
@@ -117,7 +117,7 @@ abstract class Events extends Module
 		foreach ($arrCalendars as $id)
 		{
 			// Get the events of the current period
-			$objEvents = \CalendarEventsModel::findCurrentByPid($id, $intStart, $intEnd);
+			$objEvents = CalendarEventsModel::findCurrentByPid($id, $intStart, $intEnd);
 
 			if ($objEvents === null)
 			{
@@ -131,7 +131,7 @@ abstract class Events extends Module
 				// Recurring events
 				if ($objEvents->recurring)
 				{
-					$arrRepeat = \StringUtil::deserialize($objEvents->repeatEach);
+					$arrRepeat = StringUtil::deserialize($objEvents->repeatEach);
 
 					if (!\is_array($arrRepeat) || !isset($arrRepeat['unit']) || !isset($arrRepeat['value']) || $arrRepeat['value'] < 1)
 					{
@@ -216,14 +216,14 @@ abstract class Events extends Module
 
 		$intDate = $intStart;
 		$intKey = date('Ymd', $intStart);
-		$strDate = \Date::parse($objPage->dateFormat, $intStart);
+		$strDate = Date::parse($objPage->dateFormat, $intStart);
 		$strDay = $GLOBALS['TL_LANG']['DAYS'][date('w', $intStart)];
 		$strMonth = $GLOBALS['TL_LANG']['MONTHS'][(date('n', $intStart)-1)];
-		$span = \Calendar::calculateSpan($intStart, $intEnd);
+		$span = Calendar::calculateSpan($intStart, $intEnd);
 
 		if ($span > 0)
 		{
-			$strDate = \Date::parse($objPage->dateFormat, $intStart) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . \Date::parse($objPage->dateFormat, $intEnd);
+			$strDate = Date::parse($objPage->dateFormat, $intStart) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse($objPage->dateFormat, $intEnd);
 			$strDay = '';
 		}
 
@@ -233,15 +233,15 @@ abstract class Events extends Module
 		{
 			if ($span > 0)
 			{
-				$strDate = \Date::parse($objPage->datimFormat, $intStart) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . \Date::parse($objPage->datimFormat, $intEnd);
+				$strDate = Date::parse($objPage->datimFormat, $intStart) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse($objPage->datimFormat, $intEnd);
 			}
 			elseif ($intStart == $intEnd)
 			{
-				$strTime = \Date::parse($objPage->timeFormat, $intStart);
+				$strTime = Date::parse($objPage->timeFormat, $intStart);
 			}
 			else
 			{
-				$strTime = \Date::parse($objPage->timeFormat, $intStart) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . \Date::parse($objPage->timeFormat, $intEnd);
+				$strTime = Date::parse($objPage->timeFormat, $intStart) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse($objPage->timeFormat, $intEnd);
 			}
 		}
 
@@ -251,7 +251,7 @@ abstract class Events extends Module
 		// Recurring event
 		if ($objEvents->recurring)
 		{
-			$arrRange = \StringUtil::deserialize($objEvents->repeatEach);
+			$arrRange = StringUtil::deserialize($objEvents->repeatEach);
 
 			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
 			{
@@ -266,7 +266,7 @@ abstract class Events extends Module
 
 				if ($objEvents->recurrences > 0)
 				{
-					$until = ' ' . sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], \Date::parse($objPage->dateFormat, $objEvents->repeatEnd));
+					$until = ' ' . sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], Date::parse($objPage->dateFormat, $objEvents->repeatEnd));
 				}
 
 				if ($objEvents->recurrences > 0 && $intEnd < time())
@@ -306,7 +306,7 @@ abstract class Events extends Module
 		$arrEvent['calendar'] = $objEvents->getRelated('pid');
 		$arrEvent['link'] = $objEvents->title;
 		$arrEvent['target'] = '';
-		$arrEvent['title'] = \StringUtil::specialchars($objEvents->title, true);
+		$arrEvent['title'] = StringUtil::specialchars($objEvents->title, true);
 		$arrEvent['href'] = $this->generateEventUrl($objEvents);
 		$arrEvent['class'] = ($objEvents->cssClass != '') ? ' ' . $objEvents->cssClass : '';
 		$arrEvent['recurring'] = $recurring;
@@ -327,8 +327,8 @@ abstract class Events extends Module
 		if ($arrEvent['teaser'] != '')
 		{
 			$arrEvent['hasTeaser'] = true;
-			$arrEvent['teaser'] = \StringUtil::toHtml5($arrEvent['teaser']);
-			$arrEvent['teaser'] = \StringUtil::encodeEmail($arrEvent['teaser']);
+			$arrEvent['teaser'] = StringUtil::toHtml5($arrEvent['teaser']);
+			$arrEvent['teaser'] = StringUtil::encodeEmail($arrEvent['teaser']);
 		}
 
 		// Display the "read more" button for external/article links
@@ -346,7 +346,7 @@ abstract class Events extends Module
 			$arrEvent['details'] = function () use ($id)
 			{
 				$strDetails = '';
-				$objElement = \ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
+				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
 
 				if ($objElement !== null)
 				{
@@ -361,7 +361,7 @@ abstract class Events extends Module
 
 			$arrEvent['hasDetails'] = function () use ($id)
 			{
-				return \ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
+				return ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
 			};
 		}
 
@@ -438,7 +438,7 @@ abstract class Events extends Module
 			case 'external':
 				if (substr($objEvent->url, 0, 7) == 'mailto:')
 				{
-					self::$arrUrlCache[$strCacheKey] = \StringUtil::encodeEmail($objEvent->url);
+					self::$arrUrlCache[$strCacheKey] = StringUtil::encodeEmail($objEvent->url);
 				}
 				else
 				{
@@ -457,7 +457,7 @@ abstract class Events extends Module
 
 			// Link to an article
 			case 'article':
-				if (($objArticle = \ArticleModel::findByPk($objEvent->articleId)) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
+				if (($objArticle = ArticleModel::findByPk($objEvent->articleId)) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
 
@@ -470,15 +470,15 @@ abstract class Events extends Module
 		// Link to the default page
 		if (self::$arrUrlCache[$strCacheKey] === null)
 		{
-			$objPage = \PageModel::findByPk($objEvent->getRelated('pid')->jumpTo);
+			$objPage = PageModel::findByPk($objEvent->getRelated('pid')->jumpTo);
 
 			if (!$objPage instanceof PageModel)
 			{
-				self::$arrUrlCache[$strCacheKey] = ampersand(\Environment::get('request'));
+				self::$arrUrlCache[$strCacheKey] = ampersand(Environment::get('request'));
 			}
 			else
 			{
-				$params = (\Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id);
+				$params = (Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id);
 
 				self::$arrUrlCache[$strCacheKey] = ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
 			}

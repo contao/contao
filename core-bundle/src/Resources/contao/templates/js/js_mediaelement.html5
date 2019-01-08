@@ -12,7 +12,7 @@ $GLOBALS['TL_CSS'][] = 'assets/mediaelement/css/mediaelementplayer.min.css|stati
     for (var i=0; i<e.length; i++) {
       new MediaElementPlayer(e[i], {
         // Put custom options here
-        pluginPath: '<?= Environment::get('path') ?>/assets/mediaelement/plugins/'
+        pluginPath: '<?= Contao\Environment::get('path') ?>/assets/mediaelement/plugins/'
       });
     }
   })();

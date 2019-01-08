@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\Database\Result;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -69,15 +70,15 @@ class Newsletter extends Backend
 		// Add attachments
 		if ($objNewsletter->addFile)
 		{
-			$files = \StringUtil::deserialize($objNewsletter->files);
+			$files = StringUtil::deserialize($objNewsletter->files);
 
 			if (!empty($files) && \is_array($files))
 			{
-				$objFiles = \FilesModel::findMultipleByUuids($files);
+				$objFiles = FilesModel::findMultipleByUuids($files);
 
 				if ($objFiles !== null)
 				{
-					$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+					$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 					while ($objFiles->next())
 					{
@@ -101,31 +102,31 @@ class Newsletter extends Backend
 		}
 
 		/** @var SessionInterface $objSession */
-		$objSession = \System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('session');
 
 		// Send newsletter
-		if (\Input::get('token') != '' && \Input::get('token') == $objSession->get('tl_newsletter_send'))
+		if (Input::get('token') != '' && Input::get('token') == $objSession->get('tl_newsletter_send'))
 		{
-			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', \Environment::get('request'));
+			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', Environment::get('request'));
 
 			// Preview
 			if (isset($_GET['preview']))
 			{
 				// Check the e-mail address
-				if (!\Validator::isEmail(\Input::get('recipient', true)))
+				if (!Validator::isEmail(Input::get('recipient', true)))
 				{
 					$_SESSION['TL_PREVIEW_MAIL_ERROR'] = true;
 					$this->redirect($referer);
 				}
 
-				$arrRecipient['email'] = urldecode(\Input::get('recipient', true));
+				$arrRecipient['email'] = urldecode(Input::get('recipient', true));
 
 				// Send
 				$objEmail = $this->generateEmailObject($objNewsletter, $arrAttachments);
 				$this->sendNewsletter($objEmail, $objNewsletter, $arrRecipient, $text, $html);
 
 				// Redirect
-				\Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], 1));
+				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], 1));
 				$this->redirect($referer);
 			}
 
@@ -137,16 +138,16 @@ class Newsletter extends Backend
 			if ($objTotal->count < 1)
 			{
 				$objSession->set('tl_newsletter_send', null);
-				\Message::addError($GLOBALS['TL_LANG']['tl_newsletter']['error']);
+				Message::addError($GLOBALS['TL_LANG']['tl_newsletter']['error']);
 				$this->redirect($referer);
 			}
 
 			$intTotal = $objTotal->count;
 
 			// Get page and timeout
-			$intTimeout = (\Input::get('timeout') > 0) ? \Input::get('timeout') : 1;
-			$intStart = \Input::get('start') ?: 0;
-			$intPages = \Input::get('mpc') ?: 10;
+			$intTimeout = (Input::get('timeout') > 0) ? Input::get('timeout') : 1;
+			$intStart = Input::get('start') ?: 0;
+			$intPages = Input::get('mpc') ?: 10;
 
 			// Get recipients
 			$objRecipients = $this->Database->prepare("SELECT *, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON(r.email=m.email) WHERE r.pid=? AND r.active=1 ORDER BY r.email")
@@ -173,14 +174,14 @@ class Newsletter extends Backend
 					if ($objRecipients->id !== null && ($objRecipients->disable || ($objRecipients->start != '' && $objRecipients->start > time()) || ($objRecipients->stop != '' && $objRecipients->stop < time())))
 					{
 						--$intTotal;
-						echo 'Skipping <strong>' . \Idna::decodeEmail($objRecipients->email) . '</strong> as the member is not active<br>';
+						echo 'Skipping <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong> as the member is not active<br>';
 						continue;
 					}
 
 					$objEmail = $this->generateEmailObject($objNewsletter, $arrAttachments);
 					$this->sendNewsletter($objEmail, $objNewsletter, $objRecipients->row(), $text, $html);
 
-					echo 'Sending newsletter to <strong>' . \Idna::decodeEmail($objRecipients->email) . '</strong><br>';
+					echo 'Sending newsletter to <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
 				}
 			}
 
@@ -195,7 +196,7 @@ class Newsletter extends Backend
 				if (!empty($_SESSION['REJECTED_RECIPIENTS']))
 				{
 					$intRejected = \count($_SESSION['REJECTED_RECIPIENTS']);
-					\Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['rejected'], $intRejected));
+					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['rejected'], $intRejected));
 					$intTotal -= $intRejected;
 
 					foreach ($_SESSION['REJECTED_RECIPIENTS'] as $strRecipient)
@@ -203,23 +204,23 @@ class Newsletter extends Backend
 						$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='' WHERE email=?")
 									   ->execute($strRecipient);
 
-						$this->log('Recipient address "' . \Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated', __METHOD__, TL_ERROR);
+						$this->log('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated', __METHOD__, TL_ERROR);
 					}
 				}
 
-				\Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
+				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
 
-				echo '<script>setTimeout(\'window.location="' . \Environment::get('base') . $referer . '"\',1000)</script>';
-				echo '<a href="' . \Environment::get('base') . $referer . '">Please click here to proceed if you are not using JavaScript</a>';
+				echo '<script>setTimeout(\'window.location="' . Environment::get('base') . $referer . '"\',1000)</script>';
+				echo '<a href="' . Environment::get('base') . $referer . '">Please click here to proceed if you are not using JavaScript</a>';
 			}
 
 			// Redirect to the next cycle
 			else
 			{
-				$url = preg_replace('/&(amp;)?(start|mpc|recipient)=[^&]*/', '', \Environment::get('request')) . '&start=' . ($intStart + $intPages) . '&mpc=' . $intPages;
+				$url = preg_replace('/&(amp;)?(start|mpc|recipient)=[^&]*/', '', Environment::get('request')) . '&start=' . ($intStart + $intPages) . '&mpc=' . $intPages;
 
-				echo '<script>setTimeout(\'window.location="' . \Environment::get('base') . $url . '"\',' . ($intTimeout * 1000) . ')</script>';
-				echo '<a href="' . \Environment::get('base') . $url . '">Please click here to proceed if you are not using JavaScript</a>';
+				echo '<script>setTimeout(\'window.location="' . Environment::get('base') . $url . '"\',' . ($intTimeout * 1000) . ')</script>';
+				echo '<a href="' . Environment::get('base') . $url . '">Please click here to proceed if you are not using JavaScript</a>';
 			}
 
 			echo '</div></div>';
@@ -229,24 +230,24 @@ class Newsletter extends Backend
 		$strToken = md5(uniqid(mt_rand(), true));
 		$objSession->set('tl_newsletter_send', $strToken);
 		$sprintf = ($objNewsletter->senderName != '') ? $objNewsletter->senderName . ' &lt;%s&gt;' : '%s';
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		// Preview newsletter
-		$return = \Message::generate() . '
+		$return = Message::generate() . '
 <div id="tl_buttons">
-<a href="'.$this->getReferer(true).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.$this->getReferer(true).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
 <form action="'.TL_SCRIPT.'" id="tl_newsletter_send" class="tl_form tl_edit_form" method="get">
 <div class="tl_formbody_edit tl_newsletter_send">
-<input type="hidden" name="do" value="' . \Input::get('do') . '">
-<input type="hidden" name="table" value="' . \Input::get('table') . '">
-<input type="hidden" name="key" value="' . \Input::get('key') . '">
-<input type="hidden" name="id" value="' . \Input::get('id') . '">
+<input type="hidden" name="do" value="' . Input::get('do') . '">
+<input type="hidden" name="table" value="' . Input::get('table') . '">
+<input type="hidden" name="key" value="' . Input::get('key') . '">
+<input type="hidden" name="id" value="' . Input::get('id') . '">
 <input type="hidden" name="token" value="' . $strToken . '">
 <table class="prev_header">
   <tr class="row_0">
     <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['from'] . '</td>
-    <td class="col_1">' . sprintf($sprintf, \Idna::decodeEmail($objNewsletter->sender)) . '</td>
+    <td class="col_1">' . sprintf($sprintf, Idna::decodeEmail($objNewsletter->sender)) . '</td>
   </tr>
   <tr class="row_1">
     <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['subject'][0] . '</td>
@@ -271,23 +272,23 @@ class Newsletter extends Backend
 <fieldset class="tl_tbox nolegend">
 <div class="w50 widget">
   <h3><label for="ctrl_mpc">' . $GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][0] . '</label></h3>
-  <input type="text" name="mpc" id="ctrl_mpc" value="10" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][1] && \Config::get('showHelp')) ? '
+  <input type="text" name="mpc" id="ctrl_mpc" value="10" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['mailsPerCycle'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_timeout">' . $GLOBALS['TL_LANG']['tl_newsletter']['timeout'][0] . '</label></h3>
-  <input type="text" name="timeout" id="ctrl_timeout" value="1" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['timeout'][1] && \Config::get('showHelp')) ? '
+  <input type="text" name="timeout" id="ctrl_timeout" value="1" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['timeout'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['timeout'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_start">' . $GLOBALS['TL_LANG']['tl_newsletter']['start'][0] . '</label></h3>
-  <input type="text" name="start" id="ctrl_start" value="0" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['start'][1] && \Config::get('showHelp')) ? '
+  <input type="text" name="start" id="ctrl_start" value="0" class="tl_text" onfocus="Backend.getScrollOffset()">' . (($GLOBALS['TL_LANG']['tl_newsletter']['start'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_newsletter']['start'][1], $objNewsletter->id) . '</p>' : '') . '
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_recipient">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][0] . '</label></h3>
-  <input type="text" name="recipient" id="ctrl_recipient" value="'.\Idna::decodeEmail($this->User->email).'" class="tl_text" onfocus="Backend.getScrollOffset()">' . (isset($_SESSION['TL_PREVIEW_MAIL_ERROR']) ? '
-  <div class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['email'] . '</div>' : (($GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] && \Config::get('showHelp')) ? '
+  <input type="text" name="recipient" id="ctrl_recipient" value="'.Idna::decodeEmail($this->User->email).'" class="tl_text" onfocus="Backend.getScrollOffset()">' . (isset($_SESSION['TL_PREVIEW_MAIL_ERROR']) ? '
+  <div class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['email'] . '</div>' : (($GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] . '</p>' : '')) . '
 </div>
 </fieldset>
@@ -312,14 +313,14 @@ class Newsletter extends Backend
 	/**
 	 * Generate the e-mail object and return it
 	 *
-	 * @param Database\Result $objNewsletter
-	 * @param array           $arrAttachments
+	 * @param Result $objNewsletter
+	 * @param array  $arrAttachments
 	 *
 	 * @return Email
 	 */
-	protected function generateEmailObject(Database\Result $objNewsletter, $arrAttachments)
+	protected function generateEmailObject(Result $objNewsletter, $arrAttachments)
 	{
-		$objEmail = new \Email();
+		$objEmail = new Email();
 		$objEmail->from = $objNewsletter->sender;
 		$objEmail->subject = $objNewsletter->subject;
 
@@ -335,7 +336,7 @@ class Newsletter extends Backend
 		// Attachments
 		if (!empty($arrAttachments) && \is_array($arrAttachments))
 		{
-			$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+			$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 			foreach ($arrAttachments as $strAttachment)
 			{
@@ -349,17 +350,17 @@ class Newsletter extends Backend
 	/**
 	 * Compile the newsletter and send it
 	 *
-	 * @param Email           $objEmail
-	 * @param Database\Result $objNewsletter
-	 * @param array           $arrRecipient
-	 * @param string          $text
-	 * @param string          $html
-	 * @param string          $css
+	 * @param Email  $objEmail
+	 * @param Result $objNewsletter
+	 * @param array  $arrRecipient
+	 * @param string $text
+	 * @param string $html
+	 * @param string $css
 	 */
-	protected function sendNewsletter(Email $objEmail, Database\Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
+	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
 		// Prepare the text content
-		$objEmail->text = \StringUtil::parseSimpleTokens($text, $arrRecipient);
+		$objEmail->text = StringUtil::parseSimpleTokens($text, $arrRecipient);
 
 		if (!$objNewsletter->sendText)
 		{
@@ -369,11 +370,11 @@ class Newsletter extends Backend
 				$objNewsletter->template = 'mail_default';
 			}
 
-			$objTemplate = new \BackendTemplate($objNewsletter->template);
+			$objTemplate = new BackendTemplate($objNewsletter->template);
 			$objTemplate->setData($objNewsletter->row());
 			$objTemplate->title = $objNewsletter->subject;
-			$objTemplate->body = \StringUtil::parseSimpleTokens($html, $arrRecipient);
-			$objTemplate->charset = \Config::get('characterSet');
+			$objTemplate->body = StringUtil::parseSimpleTokens($html, $arrRecipient);
+			$objTemplate->charset = Config::get('characterSet');
 			$objTemplate->recipient = $arrRecipient['email'];
 
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
@@ -381,7 +382,7 @@ class Newsletter extends Backend
 
 			// Parse template
 			$objEmail->html = $objTemplate->parse();
-			$objEmail->imageDir = \System::getContainer()->getParameter('kernel.project_dir') . '/';
+			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 		}
 
 		// Deactivate invalid addresses
@@ -418,22 +419,22 @@ class Newsletter extends Backend
 	 */
 	public function importRecipients()
 	{
-		if (\Input::get('key') != 'import')
+		if (Input::get('key') != 'import')
 		{
 			return '';
 		}
 
 		/** @var FileUpload $objUploader */
-		$objUploader = new \FileUpload();
+		$objUploader = new FileUpload();
 
 		// Import recipients
-		if (\Input::post('FORM_SUBMIT') == 'tl_recipients_import')
+		if (Input::post('FORM_SUBMIT') == 'tl_recipients_import')
 		{
 			$arrUploaded = $objUploader->uploadTo('system/tmp');
 
 			if (empty($arrUploaded))
 			{
-				\Message::addError($GLOBALS['TL_LANG']['ERR']['all_fields']);
+				Message::addError($GLOBALS['TL_LANG']['ERR']['all_fields']);
 				$this->reload();
 			}
 
@@ -443,16 +444,16 @@ class Newsletter extends Backend
 
 			foreach ($arrUploaded as $strCsvFile)
 			{
-				$objFile = new \File($strCsvFile);
+				$objFile = new File($strCsvFile);
 
 				if ($objFile->extension != 'csv')
 				{
-					\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
+					Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 					continue;
 				}
 
 				// Get separator
-				switch (\Input::post('separator'))
+				switch (Input::post('separator'))
 				{
 					case 'semicolon':
 						$strSeparator = ';';
@@ -489,7 +490,7 @@ class Newsletter extends Backend
 				foreach ($arrRecipients as $strRecipient)
 				{
 					// Skip invalid entries
-					if (!\Validator::isEmail($strRecipient))
+					if (!Validator::isEmail($strRecipient))
 					{
 						$this->log('The recipient address "' . $strRecipient . '" seems to be invalid and was not imported', __METHOD__, TL_ERROR);
 						++$intInvalid;
@@ -498,7 +499,7 @@ class Newsletter extends Backend
 
 					// Check whether the e-mail address exists
 					$objRecipient = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE pid=? AND email=?")
-												   ->execute(\Input::get('id'), $strRecipient);
+												   ->execute(Input::get('id'), $strRecipient);
 
 					if ($objRecipient->count > 0)
 					{
@@ -507,43 +508,43 @@ class Newsletter extends Backend
 
 					// Check whether the e-mail address has been blacklisted
 					$objBlacklist = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_blacklist WHERE pid=? AND hash=?")
-												   ->execute(\Input::get('id'), md5($strRecipient));
+												   ->execute(Input::get('id'), md5($strRecipient));
 
 					if ($objBlacklist->count > 0)
 					{
-						$this->log('Recipient "' . $strRecipient . '" has unsubscribed from channel ID "' . \Input::get('id') . '" and was not imported', __METHOD__, TL_ERROR);
+						$this->log('Recipient "' . $strRecipient . '" has unsubscribed from channel ID "' . Input::get('id') . '" and was not imported', __METHOD__, TL_ERROR);
 						continue;
 					}
 
 					$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=1")
-								   ->execute(\Input::get('id'), $strRecipient);
+								   ->execute(Input::get('id'), $strRecipient);
 
 					++$intTotal;
 				}
 			}
 
-			\Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['confirm'], $intTotal));
+			Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['confirm'], $intTotal));
 
 			if ($intInvalid > 0)
 			{
-				\Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['invalid'], $intInvalid));
+				Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['invalid'], $intInvalid));
 			}
 
-			\System::setCookie('BE_PAGE_OFFSET', 0, 0);
+			System::setCookie('BE_PAGE_OFFSET', 0, 0);
 			$this->reload();
 		}
 
 		// Return form
 		return '
 <div id="tl_buttons">
-<a href="'.ampersand(str_replace('&key=import', '', \Environment::get('request'))).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="'.ampersand(str_replace('&key=import', '', Environment::get('request'))).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
-'.\Message::generate().'
-<form action="'.ampersand(\Environment::get('request'), true).'" id="tl_recipients_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
+'.Message::generate().'
+<form action="'.ampersand(Environment::get('request'), true).'" id="tl_recipients_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_recipients_import">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-<input type="hidden" name="MAX_FILE_SIZE" value="'.\Config::get('maxFileSize').'">
+<input type="hidden" name="MAX_FILE_SIZE" value="'.Config::get('maxFileSize').'">
 
 <fieldset class="tl_tbox nolegend">
   <div class="widget w50">
@@ -608,7 +609,7 @@ class Newsletter extends Backend
 	 */
 	public function createNewUser($intUser, $arrData)
 	{
-		$arrNewsletters = \StringUtil::deserialize($arrData['newsletter'], true);
+		$arrNewsletters = StringUtil::deserialize($arrData['newsletter'], true);
 
 		// Return if there are no newsletters
 		if (!\is_array($arrNewsletters))
@@ -634,7 +635,7 @@ class Newsletter extends Backend
 			if ($objRecipient->count < 1)
 			{
 				$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, addedOn=$time, ip=?")
-							   ->execute($intNewsletter, $arrData['email'], \Environment::get('ip'));
+							   ->execute($intNewsletter, $arrData['email'], Environment::get('ip'));
 			}
 		}
 	}
@@ -646,7 +647,7 @@ class Newsletter extends Backend
 	 */
 	public function activateAccount($objUser)
 	{
-		$arrNewsletters = \StringUtil::deserialize($objUser->newsletter, true);
+		$arrNewsletters = StringUtil::deserialize($objUser->newsletter, true);
 
 		// Return if there are no newsletters
 		if (!\is_array($arrNewsletters))
@@ -738,12 +739,12 @@ class Newsletter extends Backend
 		}
 
 		$time = time();
-		$varValue = \StringUtil::deserialize($varValue, true);
+		$varValue = StringUtil::deserialize($varValue, true);
 
 		// Get all channel IDs (thanks to Andreas Schempp)
 		if ($blnIsFrontend && $objModule instanceof Module)
 		{
-			$arrChannel = \StringUtil::deserialize($objModule->newsletters, true);
+			$arrChannel = StringUtil::deserialize($objModule->newsletters, true);
 		}
 		else
 		{
@@ -775,7 +776,7 @@ class Newsletter extends Backend
 			if ($objRecipient->count < 1)
 			{
 				$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=?, addedOn=?, ip=?")
-							   ->execute($intId, $objUser->email, ($objUser->disable ? '' : 1), ($blnIsFrontend ? $time : ''), ($blnIsFrontend ? \Environment::get('ip') : ''));
+							   ->execute($intId, $objUser->email, ($objUser->disable ? '' : 1), ($blnIsFrontend ? $time : ''), ($blnIsFrontend ? Environment::get('ip') : ''));
 			}
 		}
 
@@ -787,12 +788,12 @@ class Newsletter extends Backend
 	 */
 	public function updateAccount()
 	{
-		$intUser = \Input::get('id');
+		$intUser = Input::get('id');
 
 		// Front end call
 		if (TL_MODE == 'FE')
 		{
-			$this->import('FrontendUser', 'User');
+			$this->import(FrontendUser::class, 'User');
 			$intUser = $this->User->id;
 		}
 
@@ -803,7 +804,7 @@ class Newsletter extends Backend
 		}
 
 		// Edit account
-		if (TL_MODE == 'FE' || \Input::get('act') == 'edit')
+		if (TL_MODE == 'FE' || Input::get('act') == 'edit')
 		{
 			$objUser = $this->Database->prepare("SELECT email, disable FROM tl_member WHERE id=?")
 									  ->limit(1)
@@ -811,7 +812,7 @@ class Newsletter extends Backend
 
 			if ($objUser->numRows)
 			{
-				$strEmail = \Input::post('email', true);
+				$strEmail = Input::post('email', true);
 
 				// E-mail address has changed
 				if (!empty($_POST) && $strEmail != '' && $strEmail != $objUser->email)
@@ -856,18 +857,18 @@ class Newsletter extends Backend
 				}
 
 				// Check activation status
-				elseif (!empty($_POST) && \Input::post('disable') != $objUser->disable)
+				elseif (!empty($_POST) && Input::post('disable') != $objUser->disable)
 				{
 					$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=? WHERE email=?")
-								   ->execute((\Input::post('disable') ? '' : 1), $objUser->email);
+								   ->execute((Input::post('disable') ? '' : 1), $objUser->email);
 
-					$objUser->disable = \Input::post('disable');
+					$objUser->disable = Input::post('disable');
 				}
 			}
 		}
 
 		// Delete account
-		elseif (\Input::get('act') == 'delete')
+		elseif (Input::get('act') == 'delete')
 		{
 			$objUser = $this->Database->prepare("SELECT email FROM tl_member WHERE id=?")
 									  ->limit(1)
@@ -886,7 +887,7 @@ class Newsletter extends Backend
 	 */
 	public function purgeSubscriptions()
 	{
-		$objRecipient = \NewsletterRecipientsModel::findExpiredSubscriptions();
+		$objRecipient = NewsletterRecipientsModel::findExpiredSubscriptions();
 
 		if ($objRecipient === null)
 		{
@@ -911,7 +912,7 @@ class Newsletter extends Backend
 	 */
 	public function getNewsletters($objModule)
 	{
-		$objNewsletter = \NewsletterChannelModel::findAll();
+		$objNewsletter = NewsletterChannelModel::findAll();
 
 		if ($objNewsletter === null)
 		{
@@ -930,7 +931,7 @@ class Newsletter extends Backend
 		}
 		else
 		{
-			$newsletters = \StringUtil::deserialize($objModule->newsletters, true);
+			$newsletters = StringUtil::deserialize($objModule->newsletters, true);
 
 			if (empty($newsletters) || !\is_array($newsletters))
 			{
@@ -970,10 +971,10 @@ class Newsletter extends Backend
 		}
 
 		$arrProcessed = array();
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 
 		// Get all channels
-		$objNewsletter = \NewsletterChannelModel::findAll();
+		$objNewsletter = NewsletterChannelModel::findAll();
 
 		// Walk through each channel
 		if ($objNewsletter !== null)
@@ -994,7 +995,7 @@ class Newsletter extends Backend
 				// Get the URL of the jumpTo page
 				if (!isset($arrProcessed[$objNewsletter->jumpTo]))
 				{
-					$objParent = \PageModel::findWithDetails($objNewsletter->jumpTo);
+					$objParent = PageModel::findWithDetails($objNewsletter->jumpTo);
 
 					// The target page does not exist
 					if ($objParent === null)
@@ -1024,13 +1025,13 @@ class Newsletter extends Backend
 					}
 
 					// Generate the URL
-					$arrProcessed[$objNewsletter->jumpTo] = $objParent->getAbsoluteUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
+					$arrProcessed[$objNewsletter->jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
 				}
 
 				$strUrl = $arrProcessed[$objNewsletter->jumpTo];
 
 				// Get the items
-				$objItem = \NewsletterModel::findSentByPid($objNewsletter->id);
+				$objItem = NewsletterModel::findSentByPid($objNewsletter->id);
 
 				if ($objItem !== null)
 				{

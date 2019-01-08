@@ -42,7 +42,7 @@ class ModuleSubscribe extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['subscribe'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -52,7 +52,7 @@ class ModuleSubscribe extends Module
 			return $objTemplate->parse();
 		}
 
-		$this->nl_channels = \StringUtil::deserialize($this->nl_channels);
+		$this->nl_channels = StringUtil::deserialize($this->nl_channels);
 
 		// Return if there are no channels
 		if (empty($this->nl_channels) || !\is_array($this->nl_channels))
@@ -71,7 +71,7 @@ class ModuleSubscribe extends Module
 		// Overwrite default template
 		if ($this->nl_template)
 		{
-			$this->Template = new \FrontendTemplate($this->nl_template);
+			$this->Template = new FrontendTemplate($this->nl_template);
 			$this->Template->setData($this->arrData);
 		}
 
@@ -79,7 +79,7 @@ class ModuleSubscribe extends Module
 		$this->Template->captcha = '';
 
 		// Activate e-mail address
-		if (strncmp(\Input::get('token'), 'nl-', 3) === 0)
+		if (strncmp(Input::get('token'), 'nl-', 3) === 0)
 		{
 			$this->activateRecipient();
 
@@ -100,13 +100,13 @@ class ModuleSubscribe extends Module
 			);
 
 			/** @var Widget $objWidget */
-			$objWidget = new \FormCaptcha(\FormCaptcha::getAttributesFromDca($arrField, $arrField['name']));
+			$objWidget = new FormCaptcha(FormCaptcha::getAttributesFromDca($arrField, $arrField['name']));
 		}
 
 		$strFormId = 'tl_subscribe_' . $this->id;
 
 		// Validate the form
-		if (\Input::post('FORM_SUBMIT') == $strFormId)
+		if (Input::post('FORM_SUBMIT') == $strFormId)
 		{
 			$varSubmitted = $this->validateForm($objWidget);
 
@@ -122,7 +122,7 @@ class ModuleSubscribe extends Module
 			$this->Template->captcha = $objWidget->parse();
 		}
 
-		$session = \System::getContainer()->get('session');
+		$session = System::getContainer()->get('session');
 		$flashBag = $session->getFlashBag();
 
 		// Confirmation message
@@ -135,7 +135,7 @@ class ModuleSubscribe extends Module
 		}
 
 		$arrChannels = array();
-		$objChannel = \NewsletterChannelModel::findByIds($this->nl_channels);
+		$objChannel = NewsletterChannelModel::findByIds($this->nl_channels);
 
 		// Get the titles
 		if ($objChannel !== null)
@@ -149,10 +149,10 @@ class ModuleSubscribe extends Module
 		// Default template variables
 		$this->Template->channels = $arrChannels;
 		$this->Template->showChannels = !$this->nl_hideChannels;
-		$this->Template->submit = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['subscribe']);
+		$this->Template->submit = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['subscribe']);
 		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
-		$this->Template->action = \Environment::get('indexFreeRequest');
+		$this->Template->action = Environment::get('indexFreeRequest');
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
 		$this->Template->text = $this->nl_text;
@@ -163,13 +163,13 @@ class ModuleSubscribe extends Module
 	 */
 	protected function activateRecipient()
 	{
-		$this->Template = new \FrontendTemplate('mod_newsletter');
+		$this->Template = new FrontendTemplate('mod_newsletter');
 
 		/** @var OptIn $optIn */
-		$optIn = \System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt-in');
 
 		// Find an unconfirmed token
-		if ((!$optInToken = $optIn->find(\Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) < 1 || key($arrRelated) != 'tl_newsletter_recipients' || \count($arrIds = current($arrRelated)) < 1)
+		if ((!$optInToken = $optIn->find(Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) < 1 || key($arrRelated) != 'tl_newsletter_recipients' || \count($arrIds = current($arrRelated)) < 1)
 		{
 			$this->Template->type = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountError'];
@@ -184,7 +184,7 @@ class ModuleSubscribe extends Module
 		// Update the subscriptions
 		foreach ($arrIds as $intId)
 		{
-			if (!$objRecipient = \NewsletterRecipientsModel::findByPk($intId))
+			if (!$objRecipient = NewsletterRecipientsModel::findByPk($intId))
 			{
 				continue;
 			}
@@ -224,9 +224,9 @@ class ModuleSubscribe extends Module
 	protected function validateForm(Widget $objWidget=null)
 	{
 		// Validate the e-mail address
-		$varInput = \Idna::encodeEmail(\Input::post('email', true));
+		$varInput = Idna::encodeEmail(Input::post('email', true));
 
-		if (!\Validator::isEmail($varInput))
+		if (!Validator::isEmail($varInput))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['email'];
@@ -237,7 +237,7 @@ class ModuleSubscribe extends Module
 		$this->Template->email = $varInput;
 
 		// Validate the channel selection
-		$arrChannels = \Input::post('channels');
+		$arrChannels = Input::post('channels');
 
 		if (!\is_array($arrChannels))
 		{
@@ -262,7 +262,7 @@ class ModuleSubscribe extends Module
 		// Check if there are any new subscriptions
 		$arrSubscriptions = array();
 
-		if (($objSubscription = \NewsletterRecipientsModel::findBy(array("email=? AND active='1'"), $varInput)) !== null)
+		if (($objSubscription = NewsletterRecipientsModel::findBy(array("email=? AND active='1'"), $varInput)) !== null)
 		{
 			$arrSubscriptions = $objSubscription->fetchEach('pid');
 		}
@@ -300,7 +300,7 @@ class ModuleSubscribe extends Module
 	protected function addRecipient($strEmail, $arrNew)
 	{
 		// Remove old subscriptions that have not been activated yet
-		if (($objOld = \NewsletterRecipientsModel::findOldSubscriptionsByEmailAndPids($strEmail, $arrNew)) !== null)
+		if (($objOld = NewsletterRecipientsModel::findOldSubscriptionsByEmailAndPids($strEmail, $arrNew)) !== null)
 		{
 			while ($objOld->next())
 			{
@@ -314,7 +314,7 @@ class ModuleSubscribe extends Module
 		// Add the new subscriptions
 		foreach ($arrNew as $id)
 		{
-			$objRecipient = new \NewsletterRecipientsModel();
+			$objRecipient = new NewsletterRecipientsModel();
 			$objRecipient->pid = $id;
 			$objRecipient->tstamp = $time;
 			$objRecipient->email = $strEmail;
@@ -323,7 +323,7 @@ class ModuleSubscribe extends Module
 			$objRecipient->save();
 
 			// Remove the blacklist entry (see #4999)
-			if (($objBlacklist = \NewsletterBlacklistModel::findByHashAndPid(md5($strEmail), $id)) !== null)
+			if (($objBlacklist = NewsletterBlacklistModel::findByHashAndPid(md5($strEmail), $id)) !== null)
 			{
 				$objBlacklist->delete();
 			}
@@ -332,21 +332,21 @@ class ModuleSubscribe extends Module
 		}
 
 		/** @var OptIn $optIn */
-		$optIn = \System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt-in');
 		$optInToken = $optIn->create('nl-', $strEmail, $arrRelated);
 
 		// Get the channels
-		$objChannel = \NewsletterChannelModel::findByIds($arrNew);
+		$objChannel = NewsletterChannelModel::findByIds($arrNew);
 
 		// Prepare the simple token data
 		$arrData = array();
 		$arrData['token'] = $optInToken->getIdentifier();
-		$arrData['domain'] = \Idna::decode(\Environment::get('host'));
-		$arrData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
+		$arrData['domain'] = Idna::decode(Environment::get('host'));
+		$arrData['link'] = Idna::decode(Environment::get('base')) . Environment::get('request') . ((strpos(Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 		$arrData['channel'] = $arrData['channels'] = implode("\n", $objChannel->fetchEach('title'));
 
 		// Send the token
-		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], \Idna::decode(\Environment::get('host'))), \StringUtil::parseSimpleTokens($this->nl_subscribe, $arrData));
+		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))), StringUtil::parseSimpleTokens($this->nl_subscribe, $arrData));
 
 		// Redirect to the jumpTo page
 		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
@@ -355,7 +355,7 @@ class ModuleSubscribe extends Module
 			$this->redirect($objTarget->getFrontendUrl());
 		}
 
-		\System::getContainer()->get('session')->getFlashBag()->set('nl_confirm', $GLOBALS['TL_LANG']['MSC']['nl_confirm']);
+		System::getContainer()->get('session')->getFlashBag()->set('nl_confirm', $GLOBALS['TL_LANG']['MSC']['nl_confirm']);
 
 		$this->reload();
 	}

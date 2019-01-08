@@ -130,7 +130,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array
 	'sql'                     => "char(1) NOT NULL default ''"
 );
 
-$bundles = System::getContainer()->getParameter('kernel.bundles');
+$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
 
 // Add the comments template drop-down menu
 if (isset($bundles['ContaoCommentsBundle']))
@@ -143,7 +143,7 @@ if (isset($bundles['ContaoCommentsBundle']))
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module_news extends Backend
+class tl_module_news extends Contao\Backend
 {
 
 	/**
@@ -152,7 +152,7 @@ class tl_module_news extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -241,11 +241,11 @@ class tl_module_news extends Backend
 	/**
 	 * Return the sorting options
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getSortingOptions(DataContainer $dc)
+	public function getSortingOptions(Contao\DataContainer $dc)
 	{
 		if ($dc->activeRecord && $dc->activeRecord->type == 'newsmenu')
 		{

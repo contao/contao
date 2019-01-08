@@ -44,7 +44,7 @@ class ModuleFaqList extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqlist'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -54,7 +54,7 @@ class ModuleFaqList extends Module
 			return $objTemplate->parse();
 		}
 
-		$this->faq_categories = \StringUtil::deserialize($this->faq_categories);
+		$this->faq_categories = StringUtil::deserialize($this->faq_categories);
 
 		// Return if there are no categories
 		if (empty($this->faq_categories) || !\is_array($this->faq_categories))
@@ -63,7 +63,7 @@ class ModuleFaqList extends Module
 		}
 
 		// Show the FAQ reader if an item has been selected
-		if ($this->faq_readerModule > 0 && (isset($_GET['items']) || (\Config::get('useAutoItem') && isset($_GET['auto_item']))))
+		if ($this->faq_readerModule > 0 && (isset($_GET['items']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
 		{
 			return $this->getFrontendModule($this->faq_readerModule, $this->strColumn);
 		}
@@ -76,7 +76,7 @@ class ModuleFaqList extends Module
 	 */
 	protected function compile()
 	{
-		$objFaq = \FaqModel::findPublishedByPids($this->faq_categories);
+		$objFaq = FaqModel::findPublishedByPids($this->faq_categories);
 
 		if ($objFaq === null)
 		{
@@ -91,7 +91,7 @@ class ModuleFaqList extends Module
 		while ($objFaq->next())
 		{
 			$arrTemp = $objFaq->row();
-			$arrTemp['title'] = \StringUtil::specialchars($objFaq->question, true);
+			$arrTemp['title'] = StringUtil::specialchars($objFaq->question, true);
 			$arrTemp['href'] = $this->generateFaqLink($objFaq);
 
 			/** @var FaqCategoryModel $objPid */
@@ -148,12 +148,12 @@ class ModuleFaqList extends Module
 		// Get the URL from the jumpTo page of the category
 		if (!isset($this->arrTargets[$jumpTo]))
 		{
-			$this->arrTargets[$jumpTo] = ampersand(\Environment::get('request'), true);
+			$this->arrTargets[$jumpTo] = ampersand(Environment::get('request'), true);
 
-			if ($jumpTo > 0 && ($objTarget = \PageModel::findByPk($jumpTo)) !== null)
+			if ($jumpTo > 0 && ($objTarget = PageModel::findByPk($jumpTo)) !== null)
 			{
 				/** @var PageModel $objTarget */
-				$this->arrTargets[$jumpTo] = ampersand($objTarget->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s'));
+				$this->arrTargets[$jumpTo] = ampersand($objTarget->getFrontendUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s'));
 			}
 		}
 

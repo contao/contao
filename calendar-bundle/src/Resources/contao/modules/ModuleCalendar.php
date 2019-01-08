@@ -52,7 +52,7 @@ class ModuleCalendar extends Events
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['calendar'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -62,7 +62,7 @@ class ModuleCalendar extends Events
 			return $objTemplate->parse();
 		}
 
-		$this->cal_calendar = $this->sortOutProtected(\StringUtil::deserialize($this->cal_calendar, true));
+		$this->cal_calendar = $this->sortOutProtected(StringUtil::deserialize($this->cal_calendar, true));
 
 		// Return if there are no calendars
 		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
@@ -70,7 +70,7 @@ class ModuleCalendar extends Events
 			return '';
 		}
 
-		$this->strUrl = preg_replace('/\?.*$/', '', \Environment::get('request'));
+		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('request'));
 		$this->strLink = $this->strUrl;
 
 		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
@@ -90,30 +90,30 @@ class ModuleCalendar extends Events
 		// Create the date object
 		try
 		{
-			if (\Input::get('month'))
+			if (Input::get('month'))
 			{
-				$this->Date = new \Date(\Input::get('month'), 'Ym');
+				$this->Date = new Date(Input::get('month'), 'Ym');
 			}
-			elseif (\Input::get('day'))
+			elseif (Input::get('day'))
 			{
-				$this->Date = new \Date(\Input::get('day'), 'Ymd');
+				$this->Date = new Date(Input::get('day'), 'Ymd');
 			}
 			else
 			{
-				$this->Date = new \Date();
+				$this->Date = new Date();
 			}
 		}
 		catch (\OutOfBoundsException $e)
 		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 
 		// Find the boundaries
 		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(". implode(',', array_map('\intval', $this->cal_calendar)) .")" . (!BE_USER_LOGGED_IN ? " AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'" : ""));
 
-		$objTemplate = new \FrontendTemplate($this->cal_ctemplate);
+		$objTemplate = new FrontendTemplate($this->cal_ctemplate);
 
 		// Store year and month
 		$intYear = date('Y', $this->Date->tstamp);
@@ -131,7 +131,7 @@ class ModuleCalendar extends Events
 		if (($objMinMax->dateFrom !== null && $intPrevYm >= date('Ym', $objMinMax->dateFrom)) || $intPrevYm >= date('Ym'))
 		{
 			$objTemplate->prevHref = $this->strUrl . '?month=' . $intPrevYm;
-			$objTemplate->prevTitle = \StringUtil::specialchars($lblPrevious);
+			$objTemplate->prevTitle = StringUtil::specialchars($lblPrevious);
 			$objTemplate->prevLink = $GLOBALS['TL_LANG']['MSC']['cal_previous'] . ' ' . $lblPrevious;
 			$objTemplate->prevLabel = $GLOBALS['TL_LANG']['MSC']['cal_previous'];
 		}
@@ -149,7 +149,7 @@ class ModuleCalendar extends Events
 		if (($objMinMax->dateTo !== null && $intNextYm <= date('Ym', max($objMinMax->dateTo, $objMinMax->repeatUntil))) || $intNextYm <= date('Ym'))
 		{
 			$objTemplate->nextHref = $this->strUrl . '?month=' . $intNextYm;
-			$objTemplate->nextTitle = \StringUtil::specialchars($lblNext);
+			$objTemplate->nextTitle = StringUtil::specialchars($lblNext);
 			$objTemplate->nextLink = $lblNext . ' ' . $GLOBALS['TL_LANG']['MSC']['cal_next'];
 			$objTemplate->nextLabel = $GLOBALS['TL_LANG']['MSC']['cal_next'];
 		}
@@ -257,7 +257,7 @@ class ModuleCalendar extends Events
 			$strClass .= ($intKey == date('Ymd')) ? ' today' : '';
 
 			// Mark the selected day (see #1784)
-			if ($intKey == \Input::get('day'))
+			if ($intKey == Input::get('day'))
 			{
 				$strClass .= ' selected';
 			}
@@ -286,7 +286,7 @@ class ModuleCalendar extends Events
 			$arrDays[$strWeekClass][$i]['label'] = $intDay;
 			$arrDays[$strWeekClass][$i]['class'] = 'days active' . $strClass;
 			$arrDays[$strWeekClass][$i]['href'] = $this->strLink . '?day=' . $intKey;
-			$arrDays[$strWeekClass][$i]['title'] = sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
+			$arrDays[$strWeekClass][$i]['title'] = sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
 			$arrDays[$strWeekClass][$i]['events'] = $arrEvents;
 		}
 

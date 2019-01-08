@@ -40,7 +40,7 @@ class ModuleUnsubscribe extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['unsubscribe'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -50,7 +50,7 @@ class ModuleUnsubscribe extends Module
 			return $objTemplate->parse();
 		}
 
-		$this->nl_channels = \StringUtil::deserialize($this->nl_channels);
+		$this->nl_channels = StringUtil::deserialize($this->nl_channels);
 
 		// Return if there are no channels
 		if (empty($this->nl_channels) || !\is_array($this->nl_channels))
@@ -69,7 +69,7 @@ class ModuleUnsubscribe extends Module
 		// Overwrite default template
 		if ($this->nl_template)
 		{
-			$this->Template = new \FrontendTemplate($this->nl_template);
+			$this->Template = new FrontendTemplate($this->nl_template);
 			$this->Template->setData($this->arrData);
 		}
 
@@ -90,13 +90,13 @@ class ModuleUnsubscribe extends Module
 			);
 
 			/** @var Widget $objWidget */
-			$objWidget = new \FormCaptcha(\FormCaptcha::getAttributesFromDca($arrField, $arrField['name']));
+			$objWidget = new FormCaptcha(FormCaptcha::getAttributesFromDca($arrField, $arrField['name']));
 		}
 
 		$strFormId = 'tl_unsubscribe_' . $this->id;
 
 		// Unsubscribe
-		if (\Input::post('FORM_SUBMIT') == $strFormId)
+		if (Input::post('FORM_SUBMIT') == $strFormId)
 		{
 			$varSubmitted = $this->validateForm($objWidget);
 
@@ -112,7 +112,7 @@ class ModuleUnsubscribe extends Module
 			$this->Template->captcha = $objWidget->parse();
 		}
 
-		$session = \System::getContainer()->get('session');
+		$session = System::getContainer()->get('session');
 		$flashBag = $session->getFlashBag();
 
 		// Confirmation message
@@ -125,7 +125,7 @@ class ModuleUnsubscribe extends Module
 		}
 
 		$arrChannels = array();
-		$objChannel = \NewsletterChannelModel::findByIds($this->nl_channels);
+		$objChannel = NewsletterChannelModel::findByIds($this->nl_channels);
 
 		// Get the titles
 		if ($objChannel !== null)
@@ -139,11 +139,11 @@ class ModuleUnsubscribe extends Module
 		// Default template variables
 		$this->Template->channels = $arrChannels;
 		$this->Template->showChannels = !$this->nl_hideChannels;
-		$this->Template->email = \Input::get('email');
-		$this->Template->submit = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['unsubscribe']);
+		$this->Template->email = Input::get('email');
+		$this->Template->submit = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['unsubscribe']);
 		$this->Template->channelsLabel = $GLOBALS['TL_LANG']['MSC']['nl_channels'];
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
-		$this->Template->action = \Environment::get('indexFreeRequest');
+		$this->Template->action = Environment::get('indexFreeRequest');
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
 	}
@@ -158,9 +158,9 @@ class ModuleUnsubscribe extends Module
 	protected function validateForm(Widget $objWidget=null)
 	{
 		// Validate the e-mail address
-		$varInput = \Idna::encodeEmail(\Input::post('email', true));
+		$varInput = Idna::encodeEmail(Input::post('email', true));
 
-		if (!\Validator::isEmail($varInput))
+		if (!Validator::isEmail($varInput))
 		{
 			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['email'];
@@ -171,7 +171,7 @@ class ModuleUnsubscribe extends Module
 		$this->Template->email = $varInput;
 
 		// Validate the channel selection
-		$arrChannels = \Input::post('channels');
+		$arrChannels = Input::post('channels');
 
 		if (!\is_array($arrChannels))
 		{
@@ -196,7 +196,7 @@ class ModuleUnsubscribe extends Module
 		// Check if there are any new subscriptions
 		$arrSubscriptions = array();
 
-		if (($objSubscription = \NewsletterRecipientsModel::findBy(array("email=? AND active='1'"), $varInput)) !== null)
+		if (($objSubscription = NewsletterRecipientsModel::findBy(array("email=? AND active='1'"), $varInput)) !== null)
 		{
 			$arrSubscriptions = $objSubscription->fetchEach('pid');
 		}
@@ -234,16 +234,16 @@ class ModuleUnsubscribe extends Module
 	protected function removeRecipient($strEmail, $arrRemove)
 	{
 		// Remove the subscriptions
-		if (($objRemove = \NewsletterRecipientsModel::findByEmailAndPids($strEmail, $arrRemove)) !== null)
+		if (($objRemove = NewsletterRecipientsModel::findByEmailAndPids($strEmail, $arrRemove)) !== null)
 		{
 			while ($objRemove->next())
 			{
 				$strHash = md5($objRemove->email);
 
 				// Add a blacklist entry (see #4999)
-				if (($objBlacklist = \NewsletterBlacklistModel::findByHashAndPid($strHash, $objRemove->pid)) === null)
+				if (($objBlacklist = NewsletterBlacklistModel::findByHashAndPid($strHash, $objRemove->pid)) === null)
 				{
-					$objBlacklist = new \NewsletterBlacklistModel();
+					$objBlacklist = new NewsletterBlacklistModel();
 					$objBlacklist->pid = $objRemove->pid;
 					$objBlacklist->hash = $strHash;
 					$objBlacklist->save();
@@ -254,7 +254,7 @@ class ModuleUnsubscribe extends Module
 		}
 
 		// Get the channels
-		$objChannels = \NewsletterChannelModel::findByIds($arrRemove);
+		$objChannels = NewsletterChannelModel::findByIds($arrRemove);
 		$arrChannels = $objChannels->fetchEach('title');
 
 		// HOOK: post unsubscribe callback
@@ -269,15 +269,15 @@ class ModuleUnsubscribe extends Module
 
 		// Prepare the simple token data
 		$arrData = array();
-		$arrData['domain'] = \Idna::decode(\Environment::get('host'));
+		$arrData['domain'] = Idna::decode(Environment::get('host'));
 		$arrData['channel'] = $arrData['channels'] = implode("\n", $arrChannels);
 
 		// Confirmation e-mail
-		$objEmail = new \Email();
+		$objEmail = new Email();
 		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
 		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], \Idna::decode(\Environment::get('host')));
-		$objEmail->text = \StringUtil::parseSimpleTokens($this->nl_unsubscribe, $arrData);
+		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host')));
+		$objEmail->text = StringUtil::parseSimpleTokens($this->nl_unsubscribe, $arrData);
 		$objEmail->sendTo($strEmail);
 
 		// Redirect to the jumpTo page
@@ -287,7 +287,7 @@ class ModuleUnsubscribe extends Module
 			$this->redirect($objTarget->getFrontendUrl());
 		}
 
-		\System::getContainer()->get('session')->getFlashBag()->set('nl_removed', $GLOBALS['TL_LANG']['MSC']['nl_removed']);
+		System::getContainer()->get('session')->getFlashBag()->set('nl_removed', $GLOBALS['TL_LANG']['MSC']['nl_removed']);
 
 		$this->reload();
 	}

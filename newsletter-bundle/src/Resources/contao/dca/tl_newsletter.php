@@ -201,7 +201,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'options_callback'        => function ()
 			{
-				return Controller::getTemplateGroup('mail_');
+				return Contao\Controller::getTemplateGroup('mail_');
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -277,7 +277,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_newsletter extends Backend
+class tl_newsletter extends Contao\Backend
 {
 
 	/**
@@ -286,7 +286,7 @@ class tl_newsletter extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -311,10 +311,10 @@ class tl_newsletter extends Backend
 			$root = $this->User->newsletters;
 		}
 
-		$id = \strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+		$id = \strlen(Contao\Input::get('id')) ? Contao\Input::get('id') : CURRENT_ID;
 
 		// Check current action
-		switch (Input::get('act'))
+		switch (Contao\Input::get('act'))
 		{
 			case 'paste':
 			case 'select':
@@ -325,17 +325,17 @@ class tl_newsletter extends Backend
 				break;
 
 			case 'create':
-				if (!\strlen(Input::get('pid')) || !\in_array(Input::get('pid'), $root))
+				if (!\strlen(Contao\Input::get('pid')) || !\in_array(Contao\Input::get('pid'), $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create newsletters in channel ID ' . Input::get('pid') . '.');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create newsletters in channel ID ' . Contao\Input::get('pid') . '.');
 				}
 				break;
 
 			case 'cut':
 			case 'copy':
-				if (!\in_array(Input::get('pid'), $root))
+				if (!\in_array(Contao\Input::get('pid'), $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter ID ' . $id . ' to channel ID ' . Input::get('pid') . '.');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' newsletter ID ' . $id . ' to channel ID ' . Contao\Input::get('pid') . '.');
 				}
 				// no break;
 
@@ -353,7 +353,7 @@ class tl_newsletter extends Backend
 
 				if (!\in_array($objChannel->pid, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter ID ' . $id . ' of newsletter channel ID ' . $objChannel->pid . '.');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' newsletter ID ' . $id . ' of newsletter channel ID ' . $objChannel->pid . '.');
 				}
 				break;
 
@@ -376,7 +376,7 @@ class tl_newsletter extends Backend
 				}
 
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = System::getContainer()->get('session');
+				$objSession = Contao\System::getContainer()->get('session');
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objChannel->fetchEach('id'));
@@ -384,12 +384,12 @@ class tl_newsletter extends Backend
 				break;
 
 			default:
-				if (\strlen(Input::get('act')))
+				if (\strlen(Contao\Input::get('act')))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '".');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
 				}
 
-				if (Input::get('key') == 'send')
+				if (Contao\Input::get('key') == 'send')
 				{
 					$objChannel = $this->Database->prepare("SELECT pid FROM tl_newsletter WHERE id=?")
 												 ->limit(1)
@@ -423,9 +423,9 @@ class tl_newsletter extends Backend
 	public function listNewsletters($arrRow)
 	{
 		return '
-<div class="cte_type ' . (($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished') . '"><strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']) . '</div>
-<div class="limit_height' . (!Config::get('doNotCollapse') ? ' h85' : '') . '">' . (!$arrRow['sendText'] ? '
-' . StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '
+<div class="cte_type ' . (($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished') . '"><strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Contao\Date::parse(Contao\Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']) . '</div>
+<div class="limit_height' . (!Contao\Config::get('doNotCollapse') ? ' h85' : '') . '">' . (!$arrRow['sendText'] ? '
+' . Contao\StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '
 <pre style="white-space:pre-wrap">' . $arrRow['text'] . '</pre>
 </div>' . "\n";
 	}
@@ -439,7 +439,7 @@ class tl_newsletter extends Backend
 	 */
 	public function convertAbsoluteLinks($strContent)
 	{
-		return str_replace('src="' .Environment::get('base'), 'src="', $strContent);
+		return str_replace('src="' .Contao\Environment::get('base'), 'src="', $strContent);
 	}
 
 	/**
@@ -457,14 +457,14 @@ class tl_newsletter extends Backend
 	/**
 	 * Auto-generate the newsletter alias if it has not been set yet
 	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return mixed
 	 *
 	 * @throws Exception
 	 */
-	public function generateAlias($varValue, DataContainer $dc)
+	public function generateAlias($varValue, Contao\DataContainer $dc)
 	{
 		$aliasExists = function (string $alias) use ($dc): bool
 		{
@@ -474,7 +474,7 @@ class tl_newsletter extends Backend
 		// Generate alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->subject, NewsletterChannelModel::findByPk($dc->activeRecord->pid)->jumpTo ?? array(), $aliasExists);
+			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->subject, Contao\NewsletterChannelModel::findByPk($dc->activeRecord->pid)->jumpTo ?? array(), $aliasExists);
 		}
 		elseif ($aliasExists($varValue))
 		{
@@ -487,12 +487,12 @@ class tl_newsletter extends Backend
 	/**
 	 * Add the sender address as placeholder
 	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return mixed
 	 */
-	public function addSenderPlaceholder($varValue, DataContainer $dc)
+	public function addSenderPlaceholder($varValue, Contao\DataContainer $dc)
 	{
 		if ($dc->activeRecord && $dc->activeRecord->pid)
 		{
@@ -508,12 +508,12 @@ class tl_newsletter extends Backend
 	/**
 	 * Add the sender name as placeholder
 	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return mixed
 	 */
-	public function addSenderNamePlaceholder($varValue, DataContainer $dc)
+	public function addSenderNamePlaceholder($varValue, Contao\DataContainer $dc)
 	{
 		if ($dc->activeRecord && $dc->activeRecord->pid)
 		{

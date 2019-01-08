@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
 use FOS\HttpCache\ResponseTagger;
 
 /**
@@ -37,8 +38,8 @@ abstract class ModuleNews extends Module
 			return $arrArchives;
 		}
 
-		$this->import('FrontendUser', 'User');
-		$objArchive = \NewsArchiveModel::findMultipleByIds($arrArchives);
+		$this->import(FrontendUser::class, 'User');
+		$objArchive = NewsArchiveModel::findMultipleByIds($arrArchives);
 		$arrArchives = array();
 
 		if ($objArchive !== null)
@@ -52,7 +53,7 @@ abstract class ModuleNews extends Module
 						continue;
 					}
 
-					$groups = \StringUtil::deserialize($objArchive->groups);
+					$groups = StringUtil::deserialize($objArchive->groups);
 
 					if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, $this->User->groups)))
 					{
@@ -79,7 +80,7 @@ abstract class ModuleNews extends Module
 	 */
 	protected function parseArticle($objArticle, $blnAddArchive=false, $strClass='', $intCount=0)
 	{
-		$objTemplate = new \FrontendTemplate($this->news_template);
+		$objTemplate = new FrontendTemplate($this->news_template);
 		$objTemplate->setData($objArticle->row());
 
 		if ($objArticle->cssClass != '')
@@ -98,7 +99,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
 		$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
 		$objTemplate->more = $this->generateLink($GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
-		$objTemplate->link = \News::generateNewsUrl($objArticle, $blnAddArchive);
+		$objTemplate->link = News::generateNewsUrl($objArticle, $blnAddArchive);
 		$objTemplate->archive = $objArticle->getRelated('pid');
 		$objTemplate->count = $intCount; // see #5708
 		$objTemplate->text = '';
@@ -109,8 +110,8 @@ abstract class ModuleNews extends Module
 		if ($objArticle->teaser != '')
 		{
 			$objTemplate->hasTeaser = true;
-			$objTemplate->teaser = \StringUtil::toHtml5($objArticle->teaser);
-			$objTemplate->teaser = \StringUtil::encodeEmail($objTemplate->teaser);
+			$objTemplate->teaser = StringUtil::toHtml5($objArticle->teaser);
+			$objTemplate->teaser = StringUtil::encodeEmail($objTemplate->teaser);
 		}
 
 		// Display the "read more" button for external/article links
@@ -128,7 +129,7 @@ abstract class ModuleNews extends Module
 			$objTemplate->text = function () use ($id)
 			{
 				$strText = '';
-				$objElement = \ContentModel::findPublishedByPidAndTable($id, 'tl_news');
+				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_news');
 
 				if ($objElement !== null)
 				{
@@ -143,7 +144,7 @@ abstract class ModuleNews extends Module
 
 			$objTemplate->hasText = function () use ($objArticle)
 			{
-				return \ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
+				return ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
 			};
 		}
 
@@ -163,9 +164,9 @@ abstract class ModuleNews extends Module
 		// Add an image
 		if ($objArticle->addImage && $objArticle->singleSRC != '')
 		{
-			$objModel = \FilesModel::findByUuid($objArticle->singleSRC);
+			$objModel = FilesModel::findByUuid($objArticle->singleSRC);
 
-			if ($objModel !== null && is_file(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
+			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
 			{
 				// Do not override the field now that we have a model registry (see #6303)
 				$arrArticle = $objArticle->row();
@@ -173,7 +174,7 @@ abstract class ModuleNews extends Module
 				// Override the default image size
 				if ($this->imgSize != '')
 				{
-					$size = \StringUtil::deserialize($this->imgSize);
+					$size = StringUtil::deserialize($this->imgSize);
 
 					if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]))
 					{
@@ -194,7 +195,7 @@ abstract class ModuleNews extends Module
 
 					// Link to the news article
 					$objTemplate->href = $objTemplate->link;
-					$objTemplate->linkTitle = \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
+					$objTemplate->linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
 				}
 			}
 		}
@@ -232,8 +233,8 @@ abstract class ModuleNews extends Module
 	/**
 	 * Parse one or more items and return them as array
 	 *
-	 * @param Model\Collection $objArticles
-	 * @param boolean          $blnAddArchive
+	 * @param Collection $objArticles
+	 * @param boolean    $blnAddArchive
 	 *
 	 * @return array
 	 */
@@ -269,7 +270,7 @@ abstract class ModuleNews extends Module
 	 */
 	protected function getMetaFields($objArticle)
 	{
-		$meta = \StringUtil::deserialize($this->news_metaFields);
+		$meta = StringUtil::deserialize($this->news_metaFields);
 
 		if (!\is_array($meta))
 		{
@@ -286,7 +287,7 @@ abstract class ModuleNews extends Module
 			switch ($field)
 			{
 				case 'date':
-					$return['date'] = \Date::parse($objPage->datimFormat, $objArticle->date);
+					$return['date'] = Date::parse($objPage->datimFormat, $objArticle->date);
 					break;
 
 				case 'author':
@@ -298,11 +299,11 @@ abstract class ModuleNews extends Module
 					break;
 
 				case 'comments':
-					if ($objArticle->noComments || !\in_array('comments', \ModuleLoader::getActive()) || $objArticle->source != 'default')
+					if ($objArticle->noComments || !\in_array('comments', ModuleLoader::getActive()) || $objArticle->source != 'default')
 					{
 						break;
 					}
-					$intTotal = \CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
+					$intTotal = CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
 					$return['ccount'] = $intTotal;
 					$return['comments'] = sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
 					break;
@@ -327,7 +328,7 @@ abstract class ModuleNews extends Module
 	{
 		@trigger_error('Using ModuleNews::generateNewsUrl() has been deprecated and will no longer work in Contao 5.0. Use News::generateNewsUrl() instead.', E_USER_DEPRECATED);
 
-		return \News::generateNewsUrl($objItem, $blnAddArchive);
+		return News::generateNewsUrl($objItem, $blnAddArchive);
 	}
 
 	/**
@@ -346,8 +347,8 @@ abstract class ModuleNews extends Module
 		if ($objArticle->source != 'external')
 		{
 			return sprintf('<a href="%s" title="%s" itemprop="url"><span itemprop="headline">%s</span>%s</a>',
-							\News::generateNewsUrl($objArticle, $blnAddArchive),
-							\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
+							News::generateNewsUrl($objArticle, $blnAddArchive),
+							StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
 							$strLink,
 							($blnIsReadMore ? '<span class="invisible"> '.$objArticle->headline.'</span>' : ''));
 		}
@@ -355,7 +356,7 @@ abstract class ModuleNews extends Module
 		// Encode e-mail addresses
 		if (substr($objArticle->url, 0, 7) == 'mailto:')
 		{
-			$strArticleUrl = \StringUtil::encodeEmail($objArticle->url);
+			$strArticleUrl = StringUtil::encodeEmail($objArticle->url);
 		}
 
 		// Ampersand URIs
@@ -367,7 +368,7 @@ abstract class ModuleNews extends Module
 		// External link
 		return sprintf('<a href="%s" title="%s"%s itemprop="url"><span itemprop="headline">%s</span></a>',
 						$strArticleUrl,
-						\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
+						StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
 						($objArticle->target ? ' target="_blank"' : ''),
 						$strLink);
 	}

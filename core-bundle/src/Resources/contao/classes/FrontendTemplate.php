@@ -186,7 +186,7 @@ class FrontendTemplate extends Template
 			}
 		}
 
-		include $this->getTemplate($template, $this->strFormat);
+		include $this->getTemplate($template);
 	}
 
 	/**
@@ -232,7 +232,7 @@ class FrontendTemplate extends Template
 			$template = 'block_sections';
 		}
 
-		include $this->getTemplate($template, $this->strFormat);
+		include $this->getTemplate($template);
 	}
 
 	/**
