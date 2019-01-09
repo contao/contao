@@ -17,7 +17,7 @@ use Contao\Database\Result;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Provide methods to manage back end controllers.
@@ -316,7 +316,7 @@ abstract class Backend extends Controller
 			throw new \InvalidArgumentException('Back end module "' . $module . '" is not defined in the BE_MOD array');
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		$arrTables = (array) $arrModule['tables'];

@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\OptIn\OptIn;
 use Patchwork\Utf8;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Front end module "lost password".
@@ -215,7 +215,7 @@ class ModulePassword extends Module
 		$objWidget->rowClassConfirm = 'row_1 odd';
 		$this->Template->rowLast = 'row_2 row_last even';
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Validate the field

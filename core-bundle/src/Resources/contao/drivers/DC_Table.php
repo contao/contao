@@ -16,7 +16,7 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Provide methods to modify the database.
@@ -108,7 +108,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	{
 		parent::__construct();
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Check the request token (see #4007)
@@ -298,7 +298,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$return = '';
 		$this->limit = '';
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		$undoPeriod = (int) Config::get('undoPeriod');
@@ -673,7 +673,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$this->set['ptable'] = $this->ptable;
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Empty the clipboard
@@ -761,7 +761,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$cr[] = $this->intId;
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Empty clipboard
@@ -837,7 +837,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -877,7 +877,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$this->redirect($this->getReferer());
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		/** @var AttributeBagInterface $objSessionBag */
@@ -1177,7 +1177,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -1221,7 +1221,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$newSorting = null;
 				$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4) ? $this->strTable.'_'.CURRENT_ID : $this->strTable;
 
-				/** @var SessionInterface $objSession */
+				/** @var Session $objSession */
 				$objSession = System::getContainer()->get('session');
 				$session = $objSession->all();
 
@@ -1589,7 +1589,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		$session = $objSession->all();
@@ -1874,7 +1874,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 			}
 
-			/** @var SessionInterface $objSessionBag */
+			/** @var Session $objSessionBag */
 			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 			$class = 'tl_tbox';
@@ -2309,7 +2309,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$return = '';
 		$this->import(BackendUser::class, 'User');
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Get current IDs from session
@@ -2709,7 +2709,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$return = '';
 		$this->import(BackendUser::class, 'User');
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Get current IDs from session
@@ -3434,7 +3434,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$this->loadDataContainer($table);
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		/** @var AttributeBagInterface $objSessionBag */
@@ -3754,7 +3754,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$arrIds[] = $objRows->id;
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		$blnClipboard = false;
@@ -4063,7 +4063,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	protected function parentView()
 	{
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		$blnClipboard = false;

@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Util\PackageUtil;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -394,6 +395,7 @@ class PageRegular extends Frontend
 			{
 				try
 				{
+					/** @var AdapterInterface $cache */
 					$cache = $container->get('cache.system');
 					$hash = $cache->getItem('contao.jquery_hash');
 

@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\Database\Result;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Provide methods to handle newsletters.
@@ -101,7 +101,7 @@ class Newsletter extends Backend
 			$html = $this->convertRelativeUrls($html);
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Send newsletter

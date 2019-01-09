@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Maintenance module "rebuild index".
@@ -83,7 +83,7 @@ class RebuildIndex extends Backend implements \executable
 			// Check the request token (see #4007)
 			if (!isset($_GET['rt']) || !RequestToken::validate(Input::get('rt')))
 			{
-				/** @var SessionInterface $objSession */
+				/** @var Session $objSession */
 				$objSession = System::getContainer()->get('session');
 
 				$objSession->set('INVALID_TOKEN_URL', Environment::get('request'));

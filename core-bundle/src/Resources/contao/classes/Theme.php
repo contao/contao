@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\Database\Result;
 use Patchwork\Utf8;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Provide methods to handle themes.
@@ -48,7 +48,7 @@ class Theme extends Backend
 
 		if (Input::post('FORM_SUBMIT') == 'tl_theme_import')
 		{
-			/** @var SessionInterface $objSession */
+			/** @var Session $objSession */
 			$objSession = System::getContainer()->get('session');
 
 			if (!Input::post('confirm'))
@@ -696,7 +696,7 @@ class Theme extends Backend
 
 		System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 		$objSession->remove('uploaded_themes');
 

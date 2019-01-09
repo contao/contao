@@ -21,7 +21,7 @@ use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Abstract library base class
@@ -296,7 +296,7 @@ abstract class System
 	 */
 	public static function getReferer($blnEncodeAmpersands=false, $strTable=null)
 	{
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = static::getContainer()->get('session');
 
 		$ref = Input::get('ref');

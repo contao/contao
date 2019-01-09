@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Confirm an invalid token URL.
@@ -52,7 +52,7 @@ class BackendConfirm extends Backend
 	 */
 	public function run()
 	{
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Redirect to the back end home page
