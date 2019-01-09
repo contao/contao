@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\DependencyInjection;
 
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\DependencyInjection\Compiler\ContaoManagerPass;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ContaoManagerPassTest extends TestCase
+class ContaoManagerPassTest extends ContaoTestCase
 {
     public function testAddsTheManagerPathIfTheFileExists(): void
     {

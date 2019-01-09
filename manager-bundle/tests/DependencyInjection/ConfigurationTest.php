@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\DependencyInjection;
 
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\DependencyInjection\Configuration;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Processor;
 
 class ConfigurationTest extends TestCase
