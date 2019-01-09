@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests;
 
 use Contao\ManagerBundle\ContaoManagerBundle;
+use Contao\ManagerBundle\DependencyInjection\Compiler\ContaoManagerPass;
 use Contao\ManagerBundle\DependencyInjection\Compiler\SwiftMailerPass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,6 +29,7 @@ class ContaoManagerBundleTest extends TestCase
 
         $passes = $container->getCompilerPassConfig()->getBeforeOptimizationPasses();
 
-        $this->assertInstanceOf(SwiftMailerPass::class, $passes[3]);
+        $this->assertInstanceOf(ContaoManagerPass::class, $passes[3]);
+        $this->assertInstanceOf(SwiftMailerPass::class, $passes[4]);
     }
 }
