@@ -82,6 +82,7 @@ namespace Contao;
  */
 class CalendarModel extends Model
 {
+
 	/**
 	 * Table name
 	 * @var string
