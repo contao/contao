@@ -16,8 +16,24 @@
         <?php endif; ?>
       <?php endif; ?>
       <?= $this->hidden ?>
+      <?php if ($this->method != 'get'): ?>
+        <p id="warn_<?= $this->id ?>" class="error" style="display:none"><?= $this->cookieWarning ?></p>
+      <?php endif; ?>
       <?= $this->fields ?>
     </div>
+    <?php if ($this->method != 'get'): ?>
+      <script>
+        (function() {
+          if (navigator.cookieEnabled) return;
+          var e = document.getElementById('warn_<?= $this->id ?>'),
+              t = e.parentNode.getElementsByTagName('button');
+          e.style.display = 'block';
+          for (var i=0; i<t.length; i++) {
+            if (t[i].type.toLowerCase() == 'submit') t[i].disabled = true
+          }
+        })();
+      </script>
+    <?php endif; ?>
   </form>
 
 </div>

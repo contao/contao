@@ -194,6 +194,9 @@
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
       </trans-unit>
+      <trans-unit id="ERR.formCookieWarning">
+        <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+      </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
       </trans-unit>

@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Warn in the form generator if cookies are disabled (see #134).
  * Use the Symfony CMF router (see #95).
  * Increase the back end preview image dimensions (see #246).
  * Add the "contao.slug" service (see #222).
