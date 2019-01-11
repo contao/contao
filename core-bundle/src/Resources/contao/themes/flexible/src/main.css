@@ -1535,16 +1535,16 @@ ul.sortable button {
 	top:0;
 	right:0;
 	border:0;
-	background:rgba(255,255,255,.7);
+	background:#eee;
 	margin:0;
-	padding:0 0 2px;
+	padding:0 0 3px;
 	font-size:22px;
-	line-height:10px;
+	line-height:9px;
 	cursor:pointer;
 	transition:all .1s linear;
 }
 ul.sortable button:hover {
-	background:rgba(255,255,255,.9);
+	background:#f9f9f9;
 }
 ul.sortable button[disabled] {
 	color:#999;

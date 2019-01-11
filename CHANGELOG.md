@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Warn if there are user groups granting access to the template editor (see #224).
  * Warn in the form generator if cookies are disabled (see #134).
  * Use the Symfony CMF router (see #95).
  * Increase the back end preview image dimensions (see #246).

@@ -98,11 +98,6 @@ $GLOBALS['BE_MOD'] = array
 		(
 			'callback'                => 'Contao\ModuleMaintenance'
 		),
-		'undo' => array
-		(
-			'tables'                  => array('tl_undo'),
-			'disablePermissionChecks' => true
-		),
 		'log' => array
 		(
 			'tables'                  => array('tl_log')
@@ -111,6 +106,11 @@ $GLOBALS['BE_MOD'] = array
 		(
 			'tables'                  => array('tl_opt_in'),
 			'resend'                  => array('tl_opt_in', 'resendToken'),
+		),
+		'undo' => array
+		(
+			'tables'                  => array('tl_undo'),
+			'disablePermissionChecks' => true
 		)
 	)
 );
