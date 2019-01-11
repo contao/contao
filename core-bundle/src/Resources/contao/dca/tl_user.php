@@ -19,7 +19,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'onload_callback' => array
 		(
 			array('tl_user', 'handleUserProfile'),
-			array('tl_user', 'checkPermission')
+			array('tl_user', 'checkPermission'),
+			array('tl_user', 'addTemplateWarning')
 		),
 		'onsubmit_callback' => array
 		(
@@ -556,7 +557,7 @@ class tl_user extends Contao\Backend
 	 *
 	 * @param Contao\DataContainer $dc
 	 */
-	public function handleUserProfile($dc)
+	public function handleUserProfile(Contao\DataContainer $dc)
 	{
 		if (Contao\Input::get('do') != 'login')
 		{
@@ -583,6 +584,24 @@ class tl_user extends Contao\Backend
 		foreach ($arrFields as $strField)
 		{
 			$GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['exclude'] = false;
+		}
+	}
+
+	/**
+	 * Add a warning if there are users with access to the template editor.
+	 */
+	public function addTemplateWarning()
+	{
+		if (Contao\Input::get('act') && Contao\Input::get('act') != 'select')
+		{
+			return;
+		}
+
+		$objResult = $this->Database->query("SELECT COUNT(*) AS cnt FROM tl_user WHERE admin='' AND modules LIKE '%\"tpl_editor\"%'");
+
+		if ($objResult->cnt > 0)
+		{
+			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['userTemplateEditor']);
 		}
 	}
 

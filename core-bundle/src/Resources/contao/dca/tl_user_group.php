@@ -18,6 +18,10 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 	(
 		'dataContainer'               => 'Table',
 		'enableVersioning'            => true,
+		'onload_callback' => array
+		(
+			array('tl_user_group', 'addTemplateWarning')
+		),
 		'sql' => array
 		(
 			'keys' => array
@@ -267,6 +271,24 @@ class tl_user_group extends Contao\Backend
 	{
 		parent::__construct();
 		$this->import('Contao\BackendUser', 'User');
+	}
+
+	/**
+	 * Add a warning if there are users with access to the template editor.
+	 */
+	public function addTemplateWarning()
+	{
+		if (Contao\Input::get('act') && Contao\Input::get('act') != 'select')
+		{
+			return;
+		}
+
+		$objResult = $this->Database->query("SELECT COUNT(*) AS cnt FROM tl_user_group WHERE modules LIKE '%\"tpl_editor\"%'");
+
+		if ($objResult->cnt > 0)
+		{
+			Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['groupTemplateEditor']);
+		}
 	}
 
 	/**
