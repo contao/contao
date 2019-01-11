@@ -12,6 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-class PalettePositionException extends \InvalidArgumentException
+@trigger_error('Using the PalettePositionException class has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\DataContainer\PalettePositionException class instead.', E_USER_DEPRECATED);
+
+/**
+ * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0; use the
+ *             Contao\CoreBundle\DataContainer\PalettePositionException instead
+ */
+class PalettePositionException extends \Contao\CoreBundle\DataContainer\PalettePositionException
 {
 }

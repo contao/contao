@@ -12,6 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-class PaletteNotFoundException extends \InvalidArgumentException
+@trigger_error('Using the PaletteNotFoundException class has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\DataContainer\PaletteNotFoundException class instead.', E_USER_DEPRECATED);
+
+/**
+ * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0; use the
+ *             Contao\CoreBundle\DataContainer\PaletteNotFoundException instead
+ */
+class PaletteNotFoundException extends \Contao\CoreBundle\DataContainer\PaletteNotFoundException
 {
 }

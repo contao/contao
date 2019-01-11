@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
-use Contao\CoreBundle\Exception\PaletteNotFoundException;
-use Contao\CoreBundle\Exception\PalettePositionException;
 use Contao\StringUtil;
 
 class PaletteManipulator
