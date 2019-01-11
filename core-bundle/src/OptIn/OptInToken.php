@@ -64,11 +64,11 @@ class OptInToken implements OptInTokenInterface
     public function confirm(): void
     {
         if ($this->isConfirmed()) {
-            throw new \LogicException('The token has already been confirmed');
+            throw new OptInTokenAlreadyConfirmedException();
         }
 
         if (!$this->isValid()) {
-            throw new \LogicException('The token is no longer valid');
+            throw new OptInTokenNoLongerValidException();
         }
 
         $this->model->tstamp = time();
@@ -87,15 +87,17 @@ class OptInToken implements OptInTokenInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \LogicException
      */
     public function send(string $subject = null, string $text = null): void
     {
         if ($this->isConfirmed()) {
-            throw new \LogicException('The token has already been confirmed');
+            throw new OptInTokenAlreadyConfirmedException();
         }
 
         if (!$this->isValid()) {
-            throw new \LogicException('The token is no longer valid');
+            throw new OptInTokenNoLongerValidException();
         }
 
         if (!$this->hasBeenSent()) {

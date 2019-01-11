@@ -31,6 +31,9 @@ interface OptInTokenInterface
 
     /**
      * Confirms the token.
+     *
+     * @throws OptInTokenAlreadyConfirmedException
+     * @throws OptInTokenNoLongerValidException
      */
     public function confirm(): void;
 
@@ -41,6 +44,9 @@ interface OptInTokenInterface
 
     /**
      * Sends the token via e-mail.
+     *
+     * @throws OptInTokenAlreadyConfirmedException
+     * @throws OptInTokenNoLongerValidException
      */
     public function send(string $subject = null, string $text = null): void;
 

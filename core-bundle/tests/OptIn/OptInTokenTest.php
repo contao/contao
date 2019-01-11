@@ -14,7 +14,9 @@ namespace Contao\CoreBundle\Tests\OptIn;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\OptIn\OptInToken;
+use Contao\CoreBundle\OptIn\OptInTokenAlreadyConfirmedException;
 use Contao\CoreBundle\OptIn\OptInTokenInterface;
+use Contao\CoreBundle\OptIn\OptInTokenNoLongerValidException;
 use Contao\Email;
 use Contao\OptInModel;
 use Contao\TestCase\ContaoTestCase;
@@ -66,7 +68,7 @@ class OptInTokenTest extends ContaoTestCase
         $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
         $token = $this->getToken($model);
 
-        $this->expectException('LogicException');
+        $this->expectException(OptInTokenAlreadyConfirmedException::class);
         $this->expectExceptionMessage('The token has already been confirmed');
 
         $token->confirm();
@@ -83,7 +85,7 @@ class OptInTokenTest extends ContaoTestCase
         $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
         $token = $this->getToken($model);
 
-        $this->expectException('LogicException');
+        $this->expectException(OptInTokenNoLongerValidException::class);
         $this->expectExceptionMessage('The token is no longer valid');
 
         $token->confirm();
@@ -135,7 +137,7 @@ class OptInTokenTest extends ContaoTestCase
         $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
         $token = $this->getToken($model);
 
-        $this->expectException('LogicException');
+        $this->expectException(OptInTokenAlreadyConfirmedException::class);
         $this->expectExceptionMessage('The token has already been confirmed');
 
         $token->send('Subject', 'Text');
@@ -152,7 +154,7 @@ class OptInTokenTest extends ContaoTestCase
         $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
         $token = $this->getToken($model);
 
-        $this->expectException('LogicException');
+        $this->expectException(OptInTokenNoLongerValidException::class);
         $this->expectExceptionMessage('The token is no longer valid');
 
         $token->send('Subject', 'Text');

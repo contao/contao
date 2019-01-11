@@ -1,0 +1,21 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\OptIn;
+
+class OptInTokenNoLongerValidException extends \RuntimeException
+{
+    public function __construct(\Exception $previous = null)
+    {
+        parent::__construct('The token is no longer valid', 0, $previous);
+    }
+}
