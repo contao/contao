@@ -10,13 +10,6 @@
 
 Contao\System::loadLanguageFile('tl_files');
 
-// Overwrite some settings in the template editor
-if (Contao\Input::get('do') == 'tpl_editor')
-{
-	Contao\Config::set('uploadPath', 'templates');
-	Contao\Config::set('editableFiles', 'html5');
-}
-
 $GLOBALS['TL_DCA']['tl_templates'] = array
 (
 
@@ -28,6 +21,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 		'closed'                      => true,
 		'onload_callback' => array
 		(
+			array('tl_templates', 'adjustSettings'),
 			array('tl_templates', 'addBreadcrumb'),
 		)
 	),
@@ -146,6 +140,15 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
  */
 class tl_templates extends Contao\Backend
 {
+
+	/**
+	 * Adjust some global settings in the template editor
+	 */
+	public function adjustSettings()
+	{
+		Contao\Config::set('uploadPath', 'templates');
+		Contao\Config::set('editableFiles', 'html5');
+	}
 
 	/**
 	 * Add the breadcrumb menu
