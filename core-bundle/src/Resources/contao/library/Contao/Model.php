@@ -870,7 +870,14 @@ abstract class Model
 			}
 		}
 
-		return static::createCollection(array_filter(array_values($arrRegistered)), static::$strTable);
+		$arrRegistered = array_filter(array_values($arrRegistered));
+
+		if (empty($arrRegistered))
+		{
+			return null;
+		}
+
+		return static::createCollection($arrRegistered, static::$strTable);
 	}
 
 	/**

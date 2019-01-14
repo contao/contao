@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Return `null` in `Model::findMultipleByIds()` if there are no models (see #266).
  * Restore compatibility with Doctrine DBAL 2.9 (see #256).
 
 ## 4.4.32 (2018-12-19)
