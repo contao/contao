@@ -3494,7 +3494,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		{
 			$fld = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? 'pid' : 'id';
 
-			$objRoot = $this->Database->prepare("SELECT DISTINCT " . \Database::quoteIdentifier($fld) . " FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure))
+			$objRoot = $this->Database->prepare("SELECT DISTINCT " . \Database::quoteIdentifier($fld) . " FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting" : ""))
 									  ->execute($this->values);
 
 			if ($objRoot->numRows < 1)
