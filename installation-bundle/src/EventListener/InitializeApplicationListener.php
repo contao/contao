@@ -10,8 +10,6 @@
 
 namespace Contao\InstallationBundle\EventListener;
 
-use Contao\CoreBundle\Command\InstallCommand;
-use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

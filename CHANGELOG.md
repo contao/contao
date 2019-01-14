@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Restore compatibility with Doctrine DBAL 2.9 (see #256).
+
 ## 4.4.32 (2018-12-19)
 
  * Correctly check the permission to move child records as non-admin user (see #247).
