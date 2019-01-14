@@ -296,8 +296,8 @@ class DcaSchemaProvider
         }
 
         $columns = [];
-        $lengths = [];
         $flags = [];
+        $lengths = [];
 
         foreach (explode(',', $matches[3]) as $column) {
             preg_match('/`([^`]+)`(\((\d+)\))?/', $column, $cm);
@@ -320,9 +320,16 @@ class DcaSchemaProvider
 
                 // Backwards compatibility for doctrine/dbal < 2.9
                 if (!method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
-                    $columns = array_combine($columns, array_map(function($column, $length) {
-                        return $column . ($length ? '(' . $length . ')' : '');
-                    }, $columns, $lengths));
+                    $columns = array_combine(
+                        $columns,
+                        array_map(
+                            function ($column, $length) {
+                                return $column.($length ? '('.$length.')' : '');
+                            },
+                            $columns,
+                            $lengths
+                        )
+                    );
                 }
             }
 

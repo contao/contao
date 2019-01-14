@@ -35,7 +35,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     public function testAppendsToAnExistingSchema()
     {
         if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
-            $this->markTestSkipped('This test is only relevant for doctrine/dbal < 2.9.');
+            $this->markTestSkipped('This test is only relevant for doctrine/dbal < 2.9');
         }
 
         $framework = $this->mockContaoFrameworkWithInstaller(
@@ -71,7 +71,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     public function testChangesTheIndexIfThereIsASubpart()
     {
         if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
-            $this->markTestSkipped('This test is only relevant for doctrine/dbal < 2.9.');
+            $this->markTestSkipped('This test is only relevant for doctrine/dbal < 2.9');
         }
 
         $connection = $this->createMock(Connection::class);

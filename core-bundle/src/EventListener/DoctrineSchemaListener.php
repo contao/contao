@@ -49,7 +49,7 @@ class DoctrineSchemaListener
 
     /**
      * Handles the Doctrine schema and overrides the indexes with a fixed length
-     * for backwards compatibility with doctrine/dbal < 2.9
+     * for backwards compatibility with doctrine/dbal < 2.9.
      *
      * @param SchemaIndexDefinitionEventArgs $event
      */

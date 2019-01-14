@@ -325,6 +325,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertTrue($table->hasIndex('path'));
         $this->assertFalse($table->getIndex('path')->isUnique());
         $this->assertSame([333], $table->getIndex('path')->getOption('lengths'));
+
         if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
             $this->assertSame(['path'], $table->getIndex('path')->getColumns());
         } else {
@@ -368,6 +369,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertTrue($table->hasIndex('col123'));
         $this->assertFalse($table->getIndex('col123')->isUnique());
         $this->assertSame([100, null, 99], $table->getIndex('col123')->getOption('lengths'));
+
         if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
             $this->assertSame(['col1', 'col2', 'col3'], $table->getIndex('col123')->getColumns());
         } else {
