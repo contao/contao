@@ -15,6 +15,7 @@ use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\Tests\DoctrineTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Event\SchemaIndexDefinitionEventArgs;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
@@ -33,6 +34,10 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
      */
     public function testAppendsToAnExistingSchema()
     {
+        if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+            $this->markTestSkipped('This test is only relevant for doctrine/dbal < 2.9');
+        }
+
         $framework = $this->mockContaoFrameworkWithInstaller(
             [
                 'tl_files' => [
@@ -65,6 +70,10 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
      */
     public function testChangesTheIndexIfThereIsASubpart()
     {
+        if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+            $this->markTestSkipped('This test is only relevant for doctrine/dbal < 2.9');
+        }
+
         $connection = $this->createMock(Connection::class);
 
         $connection

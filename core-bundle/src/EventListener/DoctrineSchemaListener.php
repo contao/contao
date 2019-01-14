@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Doctrine\DBAL\Event\SchemaIndexDefinitionEventArgs;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
@@ -47,12 +48,18 @@ class DoctrineSchemaListener
     }
 
     /**
-     * Handles the Doctrine schema and overrides the indexes with a fixed length.
+     * Handles the Doctrine schema and overrides the indexes with a fixed length
+     * for backwards compatibility with doctrine/dbal < 2.9.
      *
      * @param SchemaIndexDefinitionEventArgs $event
      */
     public function onSchemaIndexDefinition(SchemaIndexDefinitionEventArgs $event)
     {
+        // Skip for doctrine/dbal >= 2.9
+        if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+            return;
+        }
+
         $connection = $event->getConnection();
         $data = $event->getTableIndex();
 
