@@ -568,6 +568,15 @@ The confirmation link is valid for 24 hours.
 
 If you did not request an account, please ignore this e-mail.
 </source>
+        <target>Děkujeme za registrování se na ##domain##.
+
+Klikněte na tento odkaz pro dokončení registrace a aktivování účtu:
+
+##link##
+
+Potvrzovací kód je platná 24 hodin.
+
+Pokud jste žádnou registraci neprovedli, ignorujte prosím tento mail.</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -582,6 +591,14 @@ Click here to set the new password:
 
 If you did not request this e-mail, please contact the website administrator.
 </source>
+        <target>Požádali jste o vytvoření nového hesla pro ##domain##.
+
+Klikněte na odkaz pro zadání nového hesla:
+
+##link##
+
+Pokud jste o nic takového nepožádali, kontaktujte prosím správce webu.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>

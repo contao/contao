@@ -257,6 +257,10 @@
         <source>The form could not be sent</source>
         <target>Das Formular konnte nicht gesendet werden</target>
       </trans-unit>
+      <trans-unit id="ERR.formCookieWarning">
+        <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+        <target>Sie werden dieses Formular nicht absenden können, da Sie Cookies in Ihrem Browser deaktiviert haben.</target>
+      </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
         <target>Bitte beantworten Sie die Sicherheitsfrage!</target>
@@ -1369,22 +1373,6 @@
         <source>Move the item one position down</source>
         <target>Den Eintrag eine Position nach unten verschieben</target>
       </trans-unit>
-      <trans-unit id="MSC.staticFiles.0">
-        <source>Files URL</source>
-        <target>Datei-URL</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.1">
-        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-        <target>Die Datei-URL gilt für das &lt;em&gt;files&lt;/em&gt;-Verzeichnis (Page-Speed-Optimierung).</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.0">
-        <source>Assets URL</source>
-        <target>Assets-URL</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.1">
-        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-        <target>Die Assets-URL gilt für das &lt;em&gt;assets&lt;/em&gt;-Verzeichnis (Page-Speed-Optimierung).</target>
-      </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
         <target>Backend-Tastaturkürzel</target>
@@ -1468,10 +1456,6 @@
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Benutzer</target>
-      </trans-unit>
-      <trans-unit id="MSC.loginTo">
-        <source>Log into %s</source>
-        <target>Anmelden bei %s</target>
       </trans-unit>
       <trans-unit id="MSC.loginBT">
         <source>Login</source>
@@ -1709,10 +1693,6 @@
         <source>justified</source>
         <target>Blocksatz</target>
       </trans-unit>
-      <trans-unit id="MSC.filetree">
-        <source>File system</source>
-        <target>Dateisystem</target>
-      </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
         <target>Männlich</target>
@@ -1773,9 +1753,9 @@
         <source>Back end modules</source>
         <target>Backend-Module</target>
       </trans-unit>
-      <trans-unit id="MSC.welcomeTo">
-        <source>%s back end</source>
-        <target>%s Backend</target>
+      <trans-unit id="MSC.dashboard">
+        <source>Dashboard</source>
+        <target>Dashboard</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -2325,6 +2305,10 @@
         <source>Invalid token</source>
         <target>Ungültiges Token</target>
       </trans-unit>
+      <trans-unit id="MSC.resendToken">
+        <source>The token has been re-sent to %s.</source>
+        <target>Das Token wurde nochmals an %s gesendet.</target>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Versionskonflikt</target>
@@ -2424,6 +2408,10 @@
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
         <target>Bitte aktivieren Sie die Zwei-Faktor-Authentifizierung bevor Sie fortfahren.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTextCode">
+        <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>Wenn Sie den QR-Code nicht scannen können, geben Sie stattdessen diesen Schlüssel ein:</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>

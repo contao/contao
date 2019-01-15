@@ -257,6 +257,10 @@
         <source>The form could not be sent</source>
         <target>Het formulier kon niet worden verstuurd</target>
       </trans-unit>
+      <trans-unit id="ERR.formCookieWarning">
+        <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+        <target>U kunt dit formulier niet verzenden, omdat de cookies in uw browser zijn uitgeschakeld.</target>
+      </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
         <target>Beantwoord de verificatievraag a.u.b.!</target>
@@ -1369,22 +1373,6 @@
         <source>Move the item one position down</source>
         <target>Verplaats item één plaats naar beneden</target>
       </trans-unit>
-      <trans-unit id="MSC.staticFiles.0">
-        <source>Files URL</source>
-        <target>Bestanden URL</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.1">
-        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-        <target>De bestanden URL is van toepassing op de &lt;em&gt;tl_files&lt;/em&gt; directory en alle afbeelding thumbnails (paginasnelheid optimalisatie).</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.0">
-        <source>Assets URL</source>
-        <target>Plugins URL</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.1">
-        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-        <target>De plugin URL is van toepassing op alle bronnen in de &lt;em&gt;plugins&lt;/em&gt; directory (paginasnelheid optimalisatie).</target>
-      </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
         <target>Back-end sneltoetsen</target>
@@ -1468,10 +1456,6 @@
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Gebruiker</target>
-      </trans-unit>
-      <trans-unit id="MSC.loginTo">
-        <source>Log into %s</source>
-        <target>Meld aan bij %s</target>
       </trans-unit>
       <trans-unit id="MSC.loginBT">
         <source>Login</source>
@@ -1709,10 +1693,6 @@
         <source>justified</source>
         <target>uitgelijnd</target>
       </trans-unit>
-      <trans-unit id="MSC.filetree">
-        <source>File system</source>
-        <target>Bestandssysteem</target>
-      </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
         <target>Mannelijk</target>
@@ -1773,9 +1753,9 @@
         <source>Back end modules</source>
         <target>Back-end modules</target>
       </trans-unit>
-      <trans-unit id="MSC.welcomeTo">
-        <source>%s back end</source>
-        <target>%s back-end</target>
+      <trans-unit id="MSC.dashboard">
+        <source>Dashboard</source>
+        <target>Dashboard</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -2325,6 +2305,10 @@
         <source>Invalid token</source>
         <target>Ongeldig token</target>
       </trans-unit>
+      <trans-unit id="MSC.resendToken">
+        <source>The token has been re-sent to %s.</source>
+        <target>Het token is opnieuw verstuurd naar %s.</target>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Versie conflict</target>
@@ -2424,6 +2408,10 @@
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
         <target>Schakel twee-traps authenticatie in voordat u doorgaat.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTextCode">
+        <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>Als u de QR-code niet kunt scannen, voer dan deze sleutel in:</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>

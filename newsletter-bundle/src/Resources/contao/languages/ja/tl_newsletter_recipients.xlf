@@ -41,14 +41,6 @@
         <source>The activation token of the subscription.</source>
         <target>購読を有効にするトークンです。</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.confirmed.0">
-        <source>Confirmation date</source>
-        <target>確認した日</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.confirmed.1">
-        <source>The date of confirmation (double opt-in).</source>
-        <target>(二重のオプトインの)確認を行った日です。</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter_recipients.email_legend">
         <source>E-mail address</source>
         <target>電子メールアドレス</target>

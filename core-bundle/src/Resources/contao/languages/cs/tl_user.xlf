@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_user.name.0">
         <source>Name</source>
-        <target>Název</target>
+        <target>Jméno</target>
       </trans-unit>
       <trans-unit id="tl_user.name.1">
         <source>Please enter the first and last name.</source>
@@ -335,6 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_user.useTwoFactor">
         <source>Use two-factor authentication</source>
+        <target>Použít dvoufázové ověření</target>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>

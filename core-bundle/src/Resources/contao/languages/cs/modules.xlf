@@ -85,6 +85,14 @@
         <source>Manage user groups (back end user groups)</source>
         <target>Tento modul umožňuje spravovat uživatelské skupiny (uživatelské skupiny backendu)</target>
       </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+        <target>Dvoufázové přihlášení</target>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage the double opt-in tokens</source>
+        <target>Spravujte dvoufázové ověřovací kódy</target>
+      </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
         <target>Systém</target>
@@ -123,9 +131,12 @@
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
+        <target>Zabezpečení
+</target>
       </trans-unit>
       <trans-unit id="MOD.security.1">
         <source>Secure your account</source>
+        <target>Zabezpečte svůj účet</target>
       </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>

@@ -49,6 +49,14 @@
         <source>Here you can enter a website address.</source>
         <target>Овде можете унети адресу сајта.</target>
       </trans-unit>
+      <trans-unit id="tl_comments.member.0">
+        <source>Member</source>
+        <target>Члан</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.member.1">
+        <source>Here you can associate the comment with a member.</source>
+        <target>Овде можете повезати коментар са чланом.</target>
+      </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>
         <target>Коментар</target>

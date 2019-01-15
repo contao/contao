@@ -231,12 +231,15 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
+        <target>Нити једна од root страница активног сајта без експлицитног ДНС подешавања није постављена као резервна опција за језик.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
+        <target>Нити једна root страница активног сајта &lt;strong&gt;%s&lt;/strong&gt; мије постављена као резервна опција за језик.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
+        <target>Можете одредити само једну root страницу сајта као резервну опцију за језик.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
@@ -253,6 +256,10 @@
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
         <target>Садржај формулара није могуће послати</target>
+      </trans-unit>
+      <trans-unit id="ERR.formCookieWarning">
+        <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+        <target>Нећете моћи да пошаљете овај формулар, зато што сте онемогућили кориштење колачића у Вашем интернет прегледачу.</target>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -280,9 +287,11 @@
       </trans-unit>
       <trans-unit id="ERR.largeImage">
         <source>Image exceeds the maximum dimensions of %sx%s.</source>
+        <target>Слика прелази максимално дозвољене димензије %sx%s.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
+        <target>Неисправан кôд за верификацију!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -574,9 +583,11 @@
       </trans-unit>
       <trans-unit id="PTY.error_401.0">
         <source>401 Not authenticated</source>
+        <target>401 Аутентификација није прошла</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
         <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>Ако корисник жели да приступи заштићеној страници без претходне аутентификације, биће преусмерен на страницу грешке 401.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -1362,22 +1373,6 @@
         <source>Move the item one position down</source>
         <target>Помери ставку за једну позицију доле</target>
       </trans-unit>
-      <trans-unit id="MSC.staticFiles.0">
-        <source>Files URL</source>
-        <target>URL фајлова</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.1">
-        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-        <target>URL фајлова се односи на &lt;em&gt;files&lt;/em&gt; фолдер (оптимизација брзине учитавања страница).</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.0">
-        <source>Assets URL</source>
-        <target>URL ресурса</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.1">
-        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-        <target>URL ресурса се односи на &lt;em&gt;assets&lt;/em&gt; фолдер (оптимизација брзине учитавања страница).</target>
-      </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
         <target>Пречице на тастатури у БекЕнду</target>
@@ -1462,10 +1457,6 @@
         <source>User</source>
         <target>Корисник</target>
       </trans-unit>
-      <trans-unit id="MSC.loginTo">
-        <source>Log into %s</source>
-        <target>Пријави се у %s</target>
-      </trans-unit>
       <trans-unit id="MSC.loginBT">
         <source>Login</source>
         <target>Пријава</target>
@@ -1476,6 +1467,7 @@
       </trans-unit>
       <trans-unit id="MSC.switchBT">
         <source>Back to %s</source>
+        <target>Назад на %s</target>
       </trans-unit>
       <trans-unit id="MSC.logoutBTTitle">
         <source>Close the current session</source>
@@ -1701,10 +1693,6 @@
         <source>justified</source>
         <target>поравнато са обе стране</target>
       </trans-unit>
-      <trans-unit id="MSC.filetree">
-        <source>File system</source>
-        <target>Фајл систем</target>
-      </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
         <target>Мушко</target>
@@ -1751,6 +1739,7 @@
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
+        <target>Управљање верзијама</target>
       </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
@@ -1764,9 +1753,9 @@
         <source>Back end modules</source>
         <target>Модули БекЕнда</target>
       </trans-unit>
-      <trans-unit id="MSC.welcomeTo">
-        <source>%s back end</source>
-        <target>%s БекЕнд</target>
+      <trans-unit id="MSC.dashboard">
+        <source>Dashboard</source>
+        <target>Командна табла</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -1902,6 +1891,7 @@
       </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
+        <target>Функције претраге и филтрирања</target>
       </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
@@ -2165,6 +2155,7 @@
       </trans-unit>
       <trans-unit id="MSC.first">
         <source>First</source>
+        <target>Први</target>
       </trans-unit>
       <trans-unit id="MSC.previous">
         <source>Previous</source>
@@ -2176,6 +2167,7 @@
       </trans-unit>
       <trans-unit id="MSC.last">
         <source>Last</source>
+        <target>Последњи</target>
       </trans-unit>
       <trans-unit id="MSC.goToPage">
         <source>Go to page %s</source>
@@ -2313,6 +2305,10 @@
         <source>Invalid token</source>
         <target>Неважећи токен</target>
       </trans-unit>
+      <trans-unit id="MSC.resendToken">
+        <source>The token has been re-sent to %s.</source>
+        <target>Токен је поново послат на%s.</target>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Конфликт верзија</target>
@@ -2355,6 +2351,7 @@
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
         <source>Header navigation</source>
+        <target>Навигација у заглављу</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination menu</source>
@@ -2382,27 +2379,39 @@
       </trans-unit>
       <trans-unit id="MSC.security">
         <source>Security</source>
+        <target>Безбедност</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorAuthentication">
         <source>Two-factor authentication</source>
+        <target>Двостепена аутентификација</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerification">
         <source>Verification code</source>
+        <target>Кôд за верификацију</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerificationHelp">
         <source>Please enter the verification code generated by your 2FA/TOTP app.</source>
+        <target>Унесите кôд за верификацију генерисан Вашом 2FA/TOTP апликацијом.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorExplain">
         <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
+        <target>Овде можете да омогућите двостепену аутентификацију која ће Вашем налогу да дода још један додатни слој безбедности. Поред корисничког имена и лозинке, мораћете унети кôд за верификацију који ће генерисати нека од апликација за двостепену аутентификацију попут 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator или било које друге TOTP апликације.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
+        <target>Скенирајте QR кôд са Вашом 2FA/TOTP апликацијом. </target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
+        <target>Двостепена аутентификација је омогућена.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
+        <target>Омогућите двостепену аутентификацију пре него што наставите.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTextCode">
+        <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>Ако нисте у могућности да скенирате QR кôд, унесите кључ ручно:</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>

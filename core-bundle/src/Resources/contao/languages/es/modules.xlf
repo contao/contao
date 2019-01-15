@@ -85,6 +85,12 @@
         <source>Manage user groups (back end user groups)</source>
         <target>Los usuarios del back end pueden ser asignados a cualquier número de grupos para poder compartir configuraciones concretas. Este módulo te permite la configuración de estos grupos.</target>
       </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage the double opt-in tokens</source>
+      </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
         <target>Sistema</target>

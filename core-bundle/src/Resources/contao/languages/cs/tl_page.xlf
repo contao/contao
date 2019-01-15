@@ -97,6 +97,22 @@
         <source>Here you can restrict the access to the website to a certain domain name.</source>
         <target>Zde můžete omezit přístup na webovou stránku na určité domény.</target>
       </trans-unit>
+      <trans-unit id="tl_page.staticFiles.0">
+        <source>Files URL</source>
+        <target>URL-adresa k souborům</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.1">
+        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
+        <target>Dotkne se všech souborů v adresáři &lt;em&gt;tl_files&lt;/em&gt; (zvýší rychlost načítání stránky)</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.0">
+        <source>Assets URL</source>
+        <target>URL-adresa rozšíření</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.1">
+        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
+        <target>URL-adresa rozšíření se dotkne všech souborů v adresáři &lt;em&gt;rozšíření&lt;/em&gt; (zvýší rychlost načítání stránky).</target>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>E-mailová adresa administrátora webu</target>
@@ -591,12 +607,15 @@
       </trans-unit>
       <trans-unit id="CACHE.7776000">
         <source>3 months</source>
+        <target>3 měsíce</target>
       </trans-unit>
       <trans-unit id="CACHE.15552000">
         <source>6 months</source>
+        <target>6 měsíců</target>
       </trans-unit>
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
+        <target>1 rok</target>
       </trans-unit>
     </body>
   </file>

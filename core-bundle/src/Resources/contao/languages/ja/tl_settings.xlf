@@ -1,14 +1,6 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_settings.php" source-language="en" target-language="ja">
     <body>
-      <trans-unit id="tl_settings.websiteTitle.0">
-        <source>Website title</source>
-        <target>ウェブサイトの題名</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websiteTitle.1">
-        <source>Please enter the title of the website.</source>
-        <target>ウェブサイトの題名を入力してください。</target>
-      </trans-unit>
       <trans-unit id="tl_settings.adminEmail.0">
         <source>E-mail address of the system administrator</source>
         <target>システム管理者の電子メールアドレス</target>
@@ -49,14 +41,6 @@
         <source>Please select the server time zone.</source>
         <target>サーバーのタイムゾーンを選択してください。</target>
       </trans-unit>
-      <trans-unit id="tl_settings.characterSet.0">
-        <source>Character set</source>
-        <target>文字セット</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.characterSet.1">
-        <source>It is recommended to use UTF-8, so special characters are displayed correctly.</source>
-        <target>特殊文字を正しく表示するように、UTF-8の使用をお勧めします。</target>
-      </trans-unit>
       <trans-unit id="tl_settings.disableCron.0">
         <source>Disable the command scheduler</source>
         <target>コマンドスケジューラーを不使用</target>
@@ -64,22 +48,6 @@
       <trans-unit id="tl_settings.disableCron.1">
         <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
         <target>定期的なコマンドのスケジューラーを使用しないで、(手動で設定がしなければならない)本当のcronのジョブを経由して&lt;em&gt;_contao/cron&lt;/em&gt;を起動します。</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.minifyMarkup.0">
-        <source>Minify the markup</source>
-        <target>マークアップを削減</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.minifyMarkup.1">
-        <source>Minify the HTML markup before it is sent to the browser.</source>
-        <target>ブラウザーに送る前にHTMLのマークアップを少なくします。</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gzipScripts.0">
-        <source>Compress scripts</source>
-        <target>スクリプトを圧縮</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gzipScripts.1">
-        <source>Create a compressed version of the combined CSS and JavaScript files. Requires adjustments of the .htaccess file.</source>
-        <target>一体化したCSSとJavaScriptの圧縮したバージョンを作成します。.htaccessファイルに調整が必要です。</target>
       </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>
@@ -97,14 +65,6 @@
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
         <target>「すべての項目を表示」のオプションを選択した場合の、項目の最大数となります。</target>
       </trans-unit>
-      <trans-unit id="tl_settings.fileSyncExclude.0">
-        <source>Exclude folders from synchronization</source>
-        <target>同期の対象にしないフォルダー</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.fileSyncExclude.1">
-        <source>Here you can enter a comma separated list of folders which will be exempt from the files synchronization (e.g. &lt;em&gt;attachments,music_academy&lt;/em&gt;). Note that excluded resources cannot be used in e.g. image or download elements!</source>
-        <target>ファイルの同期を適用しないフォルダー(例えば、&lt;em&gt;attachments、music_academy&lt;/em&gt;)をコンマで区切ったリストで指定します。指定したフォルダーに含まれるリソースはコンテント要素の画像やダウンロード等で使用できないことに注意してください。</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotCollapse.0">
         <source>Do not collapse elements</source>
         <target>要素を折り畳まない</target>
@@ -113,14 +73,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>バックエンドのプレビューで要素を折り畳みません。</target>
       </trans-unit>
-      <trans-unit id="tl_settings.sslProxyDomain.0">
-        <source>SSL proxy domain</source>
-        <target>SSLプロキシのドメイン</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sslProxyDomain.1">
-        <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
-        <target>ウェブサイトをSSLプロキシサーバー経由で提供している場合は、そのドメイン名を入力してください。(例: &lt;em&gt;sslsites.de&lt;/em&gt;)</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
         <target>空のURLにリダイレクトしない</target>
@@ -128,14 +80,6 @@
       <trans-unit id="tl_settings.doNotRedirectEmpty.1">
         <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
         <target>言語をURLに追加を有効にしているときに、空のURLで言語のルートのページにリダイレクトしません。(推奨しません。)</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.useAutoItem.0">
-        <source>Enable auto_item</source>
-        <target>auto_itemパラメーターを有効</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.useAutoItem.1">
-        <source>Skip the &lt;em&gt;items/&lt;/em&gt; or &lt;em&gt;events/&lt;/em&gt; fragment in the URL and automatically discover the item based on the &lt;em&gt;auto_item&lt;/em&gt; parameter.</source>
-        <target>URLの &lt;em&gt;items/&lt;/em&gt; や &lt;em&gt;events/&lt;/em&gt; といった断片を飛ばして、 &lt;em&gt;auto_item&lt;/em&gt; パラメーターを基に自動的に項目を見いだします。</target>
       </trans-unit>
       <trans-unit id="tl_settings.folderUrl.0">
         <source>Enable folder URLs</source>
@@ -168,22 +112,6 @@
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>ダウンロードできるファイル形式をコンマで区切ったリストで入力します。</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.editableFiles.0">
-        <source>Editable file types</source>
-        <target>編集できるファイル形式</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.editableFiles.1">
-        <source>Here you can enter a comma separated list of file types that can be edited in the source editor.</source>
-        <target>ソースファイルエディターで編集できるファイル形式をコンマで区切ったリストで入力します。</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.templateFiles.0">
-        <source>Template file types</source>
-        <target>テンプレートのファイル形式</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.templateFiles.1">
-        <source>Here you can enter a comma separated list of supported template file types.</source>
-        <target>サポートするテンプレートのファイル形式をコンマで区切ったリストで入力します。</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -249,38 +177,6 @@
         <source>Use this option carefully and always exclude personalized pages from being indexed!</source>
         <target>このオプションは注意して使用し、常に個人用のページをインデックス作成から除外してください。</target>
       </trans-unit>
-      <trans-unit id="tl_settings.undoPeriod.0">
-        <source>Storage time for undo steps</source>
-        <target>復元の項目の保管期間</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.undoPeriod.1">
-        <source>Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).</source>
-        <target>復元の項目の保管期間を秒数で入力します。(初期設定: 24時間 = 86400秒)</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.versionPeriod.0">
-        <source>Storage time for versions</source>
-        <target>バージョンの保管期間</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.versionPeriod.1">
-        <source>Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).</source>
-        <target>レコードの異なるバージョンの保管期間を秒数で入力します。(初期設定: 90日 = 7776000秒)</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.logPeriod.0">
-        <source>Storage time for log entries</source>
-        <target>ログの項目の保管期間</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.logPeriod.1">
-        <source>Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).</source>
-        <target>ログの項目の保管期間を秒数で入力します。(初期設定: 14日 = 1209600秒)</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sessionTimeout.0">
-        <source>Session timeout</source>
-        <target>セッションの時間切れ</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sessionTimeout.1">
-        <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
-        <target>セッションの最大の存続期間を秒数で入力します。(初期設定: 60分 = 3600秒)</target>
-      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>ページの所有者の初期設定</target>
@@ -305,10 +201,6 @@
         <source>Please assign the default access rights for pages and articles.</source>
         <target>ページとアーティクルに初期設定とするアクセス権を割り当ててください。</target>
       </trans-unit>
-      <trans-unit id="tl_settings.title_legend">
-        <source>Website title</source>
-        <target>ウェブサイトの題名</target>
-      </trans-unit>
       <trans-unit id="tl_settings.date_legend">
         <source>Date and time</source>
         <target>日付と時刻</target>
@@ -325,10 +217,6 @@
         <source>Front end configuration</source>
         <target>フロントエンドの構成</target>
       </trans-unit>
-      <trans-unit id="tl_settings.proxy_legend">
-        <source>Proxy configuration</source>
-        <target>プロキシの構成</target>
-      </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>
         <target>セキュリティの設定</target>
@@ -341,13 +229,12 @@
         <source>Upload settings</source>
         <target>アップロードの設定</target>
       </trans-unit>
+      <trans-unit id="tl_settings.cron_legend">
+        <source>Cron job settings</source>
+      </trans-unit>
       <trans-unit id="tl_settings.search_legend">
         <source>Search engine settings</source>
         <target>検索エンジンの設定</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.timeout_legend">
-        <source>Timeout values</source>
-        <target>タイムアウトの値</target>
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>

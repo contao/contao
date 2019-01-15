@@ -47,6 +47,8 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
         <source>Leave blank to create an open-ended event.</source>
+        <target>
+Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>
@@ -63,6 +65,22 @@
       <trans-unit id="tl_calendar_events.endDate.1">
         <source>Leave blank to create a single day event.</source>
         <target>Favor inserir a data de encerramento do evento ou deixe vazio caso seja um evento de um único dia.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.0">
+        <source>Meta title</source>
+        <target>Campos do Cabeçalho</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Aqui pode adicionar um titulo de cabeçalho para substituir o titulo de página padrão.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.0">
+        <source>Meta description</source>
+        <target>Informação meta</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Aqui pode adicionar uma descrição meta para substituir a descrição  de página padrão.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
@@ -259,6 +277,10 @@
       <trans-unit id="tl_calendar_events.date_legend">
         <source>Date and time</source>
         <target>Data e hora</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>Dados meta</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>

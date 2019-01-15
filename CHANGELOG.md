@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.7.0-RC1 (2019-01-15)
 
  * Warn if there are user groups granting access to the template editor (see #224).
  * Warn in the form generator if cookies are disabled (see #134).

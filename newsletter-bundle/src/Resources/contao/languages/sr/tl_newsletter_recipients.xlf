@@ -41,14 +41,6 @@
         <source>The activation token of the subscription.</source>
         <target>Токен за активацију претплате.</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.confirmed.0">
-        <source>Confirmation date</source>
-        <target>Датум потврде</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.confirmed.1">
-        <source>The date of confirmation (double opt-in).</source>
-        <target>Датум потврде (метод двоструке потврде).</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter_recipients.email_legend">
         <source>E-mail address</source>
         <target>Имејл адреса</target>

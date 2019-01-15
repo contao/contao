@@ -85,6 +85,14 @@
         <source>Manage user groups (back end user groups)</source>
         <target>Управление группами пользователей (групп пользователей панели управления).</target>
       </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+        <target>Двойное подтверждение</target>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage the double opt-in tokens</source>
+        <target>Управление токенами двойного подтверждения</target>
+      </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
         <target>Система</target>

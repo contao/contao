@@ -231,12 +231,15 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
+        <target>Žádná z kořenových stránek, která nepoužívá zvláštní nastavení DNS, není nastavená jako výchozí jazyková verze.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
+        <target>Žádná z aktivních kořenových stránek&lt;strong&gt;%s&lt;/strong&gt; není nastavená jako výchozí jazyková verze.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
+        <target>Můžete určit jen jednu z kořenových stránek jako výchozí jazykovou verzi.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
@@ -253,6 +256,9 @@
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
         <target>Formulář není možné odeslat.</target>
+      </trans-unit>
+      <trans-unit id="ERR.formCookieWarning">
+        <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -280,9 +286,11 @@
       </trans-unit>
       <trans-unit id="ERR.largeImage">
         <source>Image exceeds the maximum dimensions of %sx%s.</source>
+        <target>Obrázek překračuje nastavenou maximální velikost %sx%s.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
+        <target>Neplatný ověřovací kód!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -574,9 +582,11 @@
       </trans-unit>
       <trans-unit id="PTY.error_401.0">
         <source>401 Not authenticated</source>
+        <target>401 Neautorizovaný</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
         <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>Tato stránka se zobrazí, pokud se uživatel pokusí vstoupit na chráněnou stránku bez potřebné autorizace.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -667,6 +677,7 @@
       </trans-unit>
       <trans-unit id="DATE.A">
         <source>AM</source>
+        <target>odpoledne</target>
       </trans-unit>
       <trans-unit id="DATE.d">
         <source>DD</source>
@@ -1360,22 +1371,6 @@
         <source>Move the item one position down</source>
         <target>Posunout položku o jedno dolů</target>
       </trans-unit>
-      <trans-unit id="MSC.staticFiles.0">
-        <source>Files URL</source>
-        <target>URL-adresa k souborům</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.1">
-        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-        <target>Dotkne se všech souborů v adresáři &lt;em&gt;tl_files&lt;/em&gt; (zvýší rychlost načítání stránky)</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.0">
-        <source>Assets URL</source>
-        <target>URL-adresa rozšíření</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.1">
-        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-        <target>URL-adresa rozšíření se dotkne všech souborů v adresáři &lt;em&gt;rozšíření&lt;/em&gt; (zvýší rychlost načítání stránky).</target>
-      </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
         <target>Klávesové zkratky backendu</target>
@@ -1459,10 +1454,6 @@
       <trans-unit id="MSC.user">
         <source>User</source>
         <target>Uživatel</target>
-      </trans-unit>
-      <trans-unit id="MSC.loginTo">
-        <source>Log into %s</source>
-        <target>Přihlásit se do %s</target>
       </trans-unit>
       <trans-unit id="MSC.loginBT">
         <source>Login</source>
@@ -1700,10 +1691,6 @@
         <source>justified</source>
         <target>do bloku</target>
       </trans-unit>
-      <trans-unit id="MSC.filetree">
-        <source>File system</source>
-        <target>Systém souborů</target>
-      </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
         <target>Muž</target>
@@ -1764,9 +1751,9 @@
         <source>Back end modules</source>
         <target>Backend moduly</target>
       </trans-unit>
-      <trans-unit id="MSC.welcomeTo">
-        <source>%s back end</source>
-        <target>%s backend</target>
+      <trans-unit id="MSC.dashboard">
+        <source>Dashboard</source>
+        <target>Nástěnka</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -2166,6 +2153,7 @@
       </trans-unit>
       <trans-unit id="MSC.first">
         <source>First</source>
+        <target>První</target>
       </trans-unit>
       <trans-unit id="MSC.previous">
         <source>Previous</source>
@@ -2177,6 +2165,7 @@
       </trans-unit>
       <trans-unit id="MSC.last">
         <source>Last</source>
+        <target>Poslední</target>
       </trans-unit>
       <trans-unit id="MSC.goToPage">
         <source>Go to page %s</source>
@@ -2314,6 +2303,10 @@
         <source>Invalid token</source>
         <target>Invalidní klíč</target>
       </trans-unit>
+      <trans-unit id="MSC.resendToken">
+        <source>The token has been re-sent to %s.</source>
+        <target>Kód byl znovu odeslán %s.</target>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Konflikt verzí</target>
@@ -2384,27 +2377,40 @@
       </trans-unit>
       <trans-unit id="MSC.security">
         <source>Security</source>
+        <target>Zabezpečení
+</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorAuthentication">
         <source>Two-factor authentication</source>
+        <target>Dvoufázové ověření</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerification">
         <source>Verification code</source>
+        <target>Ověřovací kód</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerificationHelp">
         <source>Please enter the verification code generated by your 2FA/TOTP app.</source>
+        <target>Zadejte prosím ověřovací kód vytvořený Vámi zvolenou aplikací 2FA/TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorExplain">
         <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
+        <target>Zde můžete zapnout dvoufázové ověření, čímž se přidá další stupeň při přihlašování do Contaa. Při přihlašování budete navíc potřebovat ověřovací kód dvoufázového přihlášení, který vytvoří Vám zvolená aplikace jako 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator nebo jiná aplikace pro dvoufázové ověření.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
+        <target>Naskenujte prosím tento kód pomocí Vaší aplikace pro dvoufázové přihlášení.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
+        <target>Dvoufázové ověření je zapnuté.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
+        <target>Zapněte prosím dvoufázové ověření, ještě než budete pokračovat.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTextCode">
+        <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>Pokud nemůžete naskenovat querový kód, zadejte místo toho následující klíč:</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>

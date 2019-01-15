@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_news.alias.0">
         <source>News alias</source>
-        <target>Pseudônimo da Notícia</target>
+        <target>Nome curto da Notícia</target>
       </trans-unit>
       <trans-unit id="tl_news.alias.1">
         <source>The news alias is a unique reference to the news item which can be called instead of its numeric ID.</source>
@@ -40,6 +40,22 @@
       <trans-unit id="tl_news.time.1">
         <source>Please enter the time according to the global time format.</source>
         <target>Favor inserir a hora do artigo</target>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.0">
+        <source>Meta title</source>
+        <target>Titulo meta</target>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Aqui pode adicionar um titulo meta para substituir o titulo de página padrão.</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.0">
+        <source>Meta description</source>
+        <target>Informação meta</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Aqui pode adicionar uma descrição meta para substituir a descrição  de página padrão.</target>
       </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
@@ -208,6 +224,10 @@
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
         <target>Data e hora</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Dados meta</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>

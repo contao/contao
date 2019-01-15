@@ -85,6 +85,12 @@
         <source>Manage user groups (back end user groups)</source>
         <target>管理用户帐号组（后台用户组）。</target>
       </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage the double opt-in tokens</source>
+      </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
         <target>系统</target>

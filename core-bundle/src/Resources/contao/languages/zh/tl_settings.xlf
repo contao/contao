@@ -1,14 +1,6 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_settings.php" source-language="en" target-language="zh">
     <body>
-      <trans-unit id="tl_settings.websiteTitle.0">
-        <source>Website title</source>
-        <target>网站名称</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websiteTitle.1">
-        <source>Please enter the title of the website.</source>
-        <target>请输入网站名称</target>
-      </trans-unit>
       <trans-unit id="tl_settings.adminEmail.0">
         <source>E-mail address of the system administrator</source>
         <target>系统管理员E-mail地址</target>
@@ -49,14 +41,6 @@
         <source>Please select the server time zone.</source>
         <target>请选择服务器时区</target>
       </trans-unit>
-      <trans-unit id="tl_settings.characterSet.0">
-        <source>Character set</source>
-        <target>字符集</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.characterSet.1">
-        <source>It is recommended to use UTF-8, so special characters are displayed correctly.</source>
-        <target>推荐使用UTF-8，正确显示所有特殊字符</target>
-      </trans-unit>
       <trans-unit id="tl_settings.disableCron.0">
         <source>Disable the command scheduler</source>
         <target>禁用命令调度</target>
@@ -64,22 +48,6 @@
       <trans-unit id="tl_settings.disableCron.1">
         <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
         <target>禁用周期的计划命令，通过一个真实的cron job来触发&lt;em&gt;_contao/cron&lt;/em&gt; 路由 (需要手动设置).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.minifyMarkup.0">
-        <source>Minify the markup</source>
-        <target>精简标记</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.minifyMarkup.1">
-        <source>Minify the HTML markup before it is sent to the browser.</source>
-        <target>在HTML标记发送至浏览器前将其精简。</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gzipScripts.0">
-        <source>Compress scripts</source>
-        <target>压缩脚本</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gzipScripts.1">
-        <source>Create a compressed version of the combined CSS and JavaScript files. Requires adjustments of the .htaccess file.</source>
-        <target>创建组合CSS和JavaScript文件的压缩版本。需要调整.htacess文件。</target>
       </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>
@@ -97,14 +65,6 @@
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
         <target>如果用户选择“显示全部记录”选项，将会影响到全部限制设定。</target>
       </trans-unit>
-      <trans-unit id="tl_settings.fileSyncExclude.0">
-        <source>Exclude folders from synchronization</source>
-        <target>同步中排除的文件夹</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.fileSyncExclude.1">
-        <source>Here you can enter a comma separated list of folders which will be exempt from the files synchronization (e.g. &lt;em&gt;attachments,music_academy&lt;/em&gt;). Note that excluded resources cannot be used in e.g. image or download elements!</source>
-        <target>您可以在这里录入以逗号分割的文件夹列表，该列表中的文件夹不会被同步 (如：&lt;em&gt;attachments,music_academy&lt;/em&gt;)。请注意被排除的资源不能用在如：图片或下载元素！</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotCollapse.0">
         <source>Do not collapse elements</source>
         <target>不折叠元素</target>
@@ -113,14 +73,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>后台预览时不折叠元素</target>
       </trans-unit>
-      <trans-unit id="tl_settings.sslProxyDomain.0">
-        <source>SSL proxy domain</source>
-        <target>SSL 代理服务器域名</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sslProxyDomain.1">
-        <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
-        <target>如果您的网站是通过SSL代理服务器，请在这里输入网站域名 (如：&lt;em&gt;sslsites.de&lt;/em&gt;)。</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
         <target>不重定向空URLs</target>
@@ -128,14 +80,6 @@
       <trans-unit id="tl_settings.doNotRedirectEmpty.1">
         <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
         <target>对于空URL，显示网站而不是重定向到语言根页面 (不推荐)。</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.useAutoItem.0">
-        <source>Enable auto_item</source>
-        <target>允许auto_item</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.useAutoItem.1">
-        <source>Skip the &lt;em&gt;items/&lt;/em&gt; or &lt;em&gt;events/&lt;/em&gt; fragment in the URL and automatically discover the item based on the &lt;em&gt;auto_item&lt;/em&gt; parameter.</source>
-        <target>跳过URL中&lt;em&gt;items/&lt;/em&gt;或&lt;em&gt;events/&lt;/em&gt;片段接着自动找到基于 &lt;em&gt;auto_item&lt;/em&gt;参数的记录。</target>
       </trans-unit>
       <trans-unit id="tl_settings.folderUrl.0">
         <source>Enable folder URLs</source>
@@ -168,22 +112,6 @@
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>用英文逗号隔开</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.editableFiles.0">
-        <source>Editable file types</source>
-        <target>可编辑文件类型</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.editableFiles.1">
-        <source>Here you can enter a comma separated list of file types that can be edited in the source editor.</source>
-        <target>用英文逗号隔开</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.templateFiles.0">
-        <source>Template file types</source>
-        <target>模板文件类型</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.templateFiles.1">
-        <source>Here you can enter a comma separated list of supported template file types.</source>
-        <target>您可以在这里录入所支持的模板文件类型列表，该列表用逗号分割。</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -249,38 +177,6 @@
         <source>Use this option carefully and always exclude personalized pages from being indexed!</source>
         <target>慎用此项，注意不让私人页面被索引</target>
       </trans-unit>
-      <trans-unit id="tl_settings.undoPeriod.0">
-        <source>Storage time for undo steps</source>
-        <target>以备恢复的数据储存时间</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.undoPeriod.1">
-        <source>Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).</source>
-        <target>填入秒数 (默认值24小时=86400秒)</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.versionPeriod.0">
-        <source>Storage time for versions</source>
-        <target>修订版本储存时间</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.versionPeriod.1">
-        <source>Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).</source>
-        <target>(默认值90天=7776000秒)</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.logPeriod.0">
-        <source>Storage time for log entries</source>
-        <target>修订版本储存时间</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.logPeriod.1">
-        <source>Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).</source>
-        <target>(14 天 = 1209600 秒)</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sessionTimeout.0">
-        <source>Session timeout</source>
-        <target>缓存失效期</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sessionTimeout.1">
-        <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
-        <target>(60 分钟= 3600 秒)</target>
-      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>页面默认用户</target>
@@ -305,10 +201,6 @@
         <source>Please assign the default access rights for pages and articles.</source>
         <target>设置页面默认权限</target>
       </trans-unit>
-      <trans-unit id="tl_settings.title_legend">
-        <source>Website title</source>
-        <target>网站名称</target>
-      </trans-unit>
       <trans-unit id="tl_settings.date_legend">
         <source>Date and time</source>
         <target>日期与时间</target>
@@ -325,10 +217,6 @@
         <source>Front end configuration</source>
         <target>前台设置</target>
       </trans-unit>
-      <trans-unit id="tl_settings.proxy_legend">
-        <source>Proxy configuration</source>
-        <target>代理服务器配置</target>
-      </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>
         <target>安全设置</target>
@@ -341,13 +229,12 @@
         <source>Upload settings</source>
         <target>上传设置</target>
       </trans-unit>
+      <trans-unit id="tl_settings.cron_legend">
+        <source>Cron job settings</source>
+      </trans-unit>
       <trans-unit id="tl_settings.search_legend">
         <source>Search engine settings</source>
         <target>搜索引擎设置</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.timeout_legend">
-        <source>Timeout values</source>
-        <target>有效期</target>
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>

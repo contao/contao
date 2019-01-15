@@ -41,6 +41,22 @@
         <source>Please enter the time according to the global time format.</source>
         <target>Lütfen zamanı küresel zaman biçimine uygun şekilde giriniz.</target>
       </trans-unit>
+      <trans-unit id="tl_news.pageTitle.0">
+        <source>Meta title</source>
+        <target>Meta başlığı</target>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Buraya, varsayılan sayfa başlığını etkisiz kılıp özel bir meta başlık girebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.0">
+        <source>Meta description</source>
+        <target>Meta Açıklaması</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Buraya, varsayılan sayfa açıklamasını etkisiz kılıp özel bir meta açıklama girebilirsiniz.</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>Alt başlık</target>
@@ -123,9 +139,11 @@
       </trans-unit>
       <trans-unit id="tl_news.external.0">
         <source>Custom URL</source>
+        <target>Özel URL</target>
       </trans-unit>
       <trans-unit id="tl_news.external.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to a custom URL.</source>
+        <target>Ziyaretçiler &quot;Devamını oku ...&quot; butonuna tıklayarak, başka bir sayfaya yönlendirileceklerdir.</target>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>
@@ -206,6 +224,10 @@
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
         <target>Tarih ve saat</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta bilgileri</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>

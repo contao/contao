@@ -33,6 +33,14 @@
         <source>Make the folder and its sub-folders accessible via HTTP.</source>
         <target>Zpřístupnit adresář a jeho podadresáře přes HTTP.</target>
       </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+        <target>Nesynchronizovat</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>Nesynchronizovat složky a podsložky s databází.</target>
+      </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
         <target>Důležitá část x-koordinátů</target>
@@ -123,9 +131,11 @@
       </trans-unit>
       <trans-unit id="tl_files.dropzoneFileTooBig">
         <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>Soubor je příliš velký ({{filesize}} MB). Maximální povolená velikost souboru činí {{maxFilesize}} MB.</target>
       </trans-unit>
       <trans-unit id="tl_files.dropzoneInvalidType">
         <source>Files of this type cannot be uploaded.</source>
+        <target>Souboru tohoto druhu nelze nahrát.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>

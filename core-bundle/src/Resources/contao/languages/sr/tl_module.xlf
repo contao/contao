@@ -568,6 +568,16 @@ The confirmation link is valid for 24 hours.
 
 If you did not request an account, please ignore this e-mail.
 </source>
+        <target>Хвала Вам што сте се регистровали на ##domain##.
+
+Кликните на следећи линк како бисте завршили Вашу регистрацију:
+
+##link##
+
+Линк је активан 24 часа.
+
+Ако нисте затражили отварање налога, молимо Вас да игноришете овај имејл.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -582,6 +592,14 @@ Click here to set the new password:
 
 If you did not request this e-mail, please contact the website administrator.
 </source>
+        <target>Затражили сте нову лозинку за Ваш налог на ##domain##.
+
+Да бисте поставили нову лозинку, кликните на следећи линк:
+
+##link##
+
+Ако нисте Ви затражили промену лозинке, одмах контактирајте администратора.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>

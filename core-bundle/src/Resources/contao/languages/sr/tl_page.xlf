@@ -97,6 +97,22 @@
         <source>Here you can restrict the access to the website to a certain domain name.</source>
         <target>Овде можете ограничити приступ сајту за одређено доменско име.</target>
       </trans-unit>
+      <trans-unit id="tl_page.staticFiles.0">
+        <source>Files URL</source>
+        <target>URL фајлова</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.1">
+        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
+        <target>URL фајлова се односи на &lt;em&gt;files&lt;/em&gt; фолдер (оптимизација брзине учитавања страница).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.0">
+        <source>Assets URL</source>
+        <target>URL ресурса</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.1">
+        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
+        <target>URL ресурса се односи на &lt;em&gt;assets&lt;/em&gt; фолдер (оптимизација брзине учитавања страница).</target>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>Имејл адреса администратора сајта</target>
@@ -591,12 +607,15 @@
       </trans-unit>
       <trans-unit id="CACHE.7776000">
         <source>3 months</source>
+        <target>3 месеца</target>
       </trans-unit>
       <trans-unit id="CACHE.15552000">
         <source>6 months</source>
+        <target>6 месеци</target>
       </trans-unit>
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
+        <target>1 годину</target>
       </trans-unit>
     </body>
   </file>

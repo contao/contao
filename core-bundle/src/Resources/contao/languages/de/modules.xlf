@@ -85,6 +85,14 @@
         <source>Manage user groups (back end user groups)</source>
         <target>Benutzergruppen verwalten (Backend-Benutzergruppen)</target>
       </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+        <target>Double Opt-In</target>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage the double opt-in tokens</source>
+        <target>Double Opt-In-Token verwalten</target>
+      </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
         <target>System</target>

@@ -158,16 +158,16 @@
         <target>Кокосова острва</target>
       </trans-unit>
       <trans-unit id="CNT.cd">
-        <source>Congo - Kinshasa</source>
-        <target>Конго - Киншаса</target>
+        <source>Democratic Republic of the Congo</source>
+        <target>Демократска република Конго</target>
       </trans-unit>
       <trans-unit id="CNT.cf">
         <source>Central African Republic</source>
         <target>Централноафричка Република</target>
       </trans-unit>
       <trans-unit id="CNT.cg">
-        <source>Congo - Brazzaville</source>
-        <target>Конго - Бразавил</target>
+        <source>Republic of the Congo</source>
+        <target>Република Конго</target>
       </trans-unit>
       <trans-unit id="CNT.ch">
         <source>Switzerland</source>
@@ -196,10 +196,6 @@
       <trans-unit id="CNT.co">
         <source>Colombia</source>
         <target>Колумбија</target>
-      </trans-unit>
-      <trans-unit id="CNT.cp">
-        <source>Clipperton Island</source>
-        <target>Клипертоново острво</target>
       </trans-unit>
       <trans-unit id="CNT.cr">
         <source>Costa Rica</source>
@@ -232,10 +228,6 @@
       <trans-unit id="CNT.de">
         <source>Germany</source>
         <target>Немачка</target>
-      </trans-unit>
-      <trans-unit id="CNT.dg">
-        <source>Diego Garcia</source>
-        <target>Диего Гарсија</target>
       </trans-unit>
       <trans-unit id="CNT.dj">
         <source>Djibouti</source>
