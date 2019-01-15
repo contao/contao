@@ -140,17 +140,17 @@ class Database
 	{
 		$arrConfig = array();
 
-		$arrDefaultConfig = array
-		(
-			'dbHost'     => Config::get('dbHost'),
-			'dbPort'     => Config::get('dbPort'),
-			'dbUser'     => Config::get('dbUser'),
-			'dbPass'     => Config::get('dbPass'),
-			'dbDatabase' => Config::get('dbDatabase')
-		);
-
 		if (\is_array($arrCustomConfig))
 		{
+			$arrDefaultConfig = array
+			(
+				'dbHost'     => Config::get('dbHost'),
+				'dbPort'     => Config::get('dbPort'),
+				'dbUser'     => Config::get('dbUser'),
+				'dbPass'     => Config::get('dbPass'),
+				'dbDatabase' => Config::get('dbDatabase')
+			);
+
 			$arrConfig = array_merge($arrDefaultConfig, $arrCustomConfig);
 		}
 
