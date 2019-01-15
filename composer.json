@@ -145,7 +145,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.7.x-dev"
+            "dev-4.7": "4.7.x-dev"
         },
         "contao-manager-plugin": {
             "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
