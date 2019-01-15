@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Support comma separated values in `Model::getRelated()` (see #257).
  * Do not check the user's file permissions in the template editor (see #224).
  * Do not show pretty errors if "text/html" is not accepted (see #249).
  * Return `null` in `Model::findMultipleByIds()` if there are no models (see #266).
