@@ -43,7 +43,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * @var bool|null
      */
-    private static $isFrontend;
+    private static $isFrontend = false;
 
     /**
      * @var RequestStack
@@ -107,7 +107,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @throws \LogicException
      */
-    public function initialize(bool $isFrontend = null): void
+    public function initialize(bool $isFrontend = false): void
     {
         if ($this->isInitialized()) {
             return;
