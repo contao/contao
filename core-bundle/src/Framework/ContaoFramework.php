@@ -40,7 +40,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private static $initialized = false;
 
     /**
-     * @var bool|null
+     * @var bool
      */
     private static $isFrontend = false;
 
@@ -215,10 +215,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return null;
         }
 
-        return substr(
-            $this->request->getBaseUrl().$this->request->getPathInfo(),
-            \strlen($this->request->getBasePath())
-        );
+        return substr($this->request->getBaseUrl().$this->request->getPathInfo(), \strlen($this->request->getBasePath().'/'));
     }
 
     private function getPath(): ?string

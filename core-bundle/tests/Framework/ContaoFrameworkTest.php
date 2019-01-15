@@ -26,13 +26,9 @@ use Contao\CoreBundle\Session\MockNativeSessionStorage;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\RouterInterface;
 
 class ContaoFrameworkTest extends TestCase
 {
@@ -149,23 +145,19 @@ class ContaoFrameworkTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testInitializesTheFrameworkWithoutARoute(): void
+    public function testInitializesTheFrameworkWithoutARequestInFrontendMode(): void
     {
-        $request = new Request();
-        $request->setLocale('de');
+        $framework = $this->mockFramework();
+        $framework->setContainer($this->mockContainer());
 
-        $routingLoader = $this->createMock(LoaderInterface::class);
-        $routingLoader
-            ->method('load')
-            ->willReturn(new RouteCollection())
+        /** @var Config|MockObject $config */
+        $config = $framework->getAdapter(Config::class);
+        $config
+            ->expects($this->once())
+            ->method('preload')
         ;
 
-        $container = $this->mockContainer();
-        $container->set('routing.loader', $routingLoader);
-
-        $framework = $this->mockFramework($request);
-        $framework->setContainer($container);
-        $framework->initialize();
+        $framework->initialize(true);
 
         $this->assertTrue(\defined('TL_MODE'));
         $this->assertTrue(\defined('TL_START'));
@@ -175,12 +167,48 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
         $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
         $this->assertTrue(\defined('TL_PATH'));
-        $this->assertNull(TL_MODE);
+        $this->assertSame('FE', TL_MODE);
+        $this->assertSame($this->getTempDir(), TL_ROOT);
+        $this->assertNull(TL_REFERER_ID);
+        $this->assertNull(TL_SCRIPT);
+        $this->assertNull(TL_PATH);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testInitializesTheFrameworkWithAnInsecurePath(): void
+    {
+        $request = Request::create('/contao4/web/app_dev.php/index.html');
+        $request->server->set('SCRIPT_FILENAME', '/var/www/contao4/web/app_dev.php');
+        $request->server->set('SCRIPT_NAME', '/contao4/web/app_dev.php');
+
+        $framework = $this->mockFramework($request);
+        $framework->setContainer($this->mockContainer());
+
+        /** @var Config|MockObject $config */
+        $config = $framework->getAdapter(Config::class);
+        $config
+            ->expects($this->once())
+            ->method('preload')
+        ;
+
+        $framework->initialize(true);
+
+        $this->assertTrue(\defined('TL_MODE'));
+        $this->assertTrue(\defined('TL_START'));
+        $this->assertTrue(\defined('TL_ROOT'));
+        $this->assertTrue(\defined('TL_REFERER_ID'));
+        $this->assertTrue(\defined('TL_SCRIPT'));
+        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('TL_PATH'));
+        $this->assertSame('FE', TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
         $this->assertSame('', TL_REFERER_ID);
-        $this->assertNull(TL_SCRIPT);
-        $this->assertSame('', TL_PATH);
-        $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
+        $this->assertSame('app_dev.php/index.html', TL_SCRIPT);
+        $this->assertSame('/contao4/web', TL_PATH);
     }
 
     /**
@@ -231,7 +259,7 @@ class ContaoFrameworkTest extends TestCase
             ->willReturn(false)
         ;
 
-        $framework = $this->mockFramework(null, $scopeMatcher);
+        $framework = $this->mockFramework(Request::create('/index.html'), $scopeMatcher);
         $framework->setContainer($this->mockContainer());
         $framework->initialize();
 
@@ -268,10 +296,6 @@ class ContaoFrameworkTest extends TestCase
         error_reporting($errorReporting);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testValidatesTheRequestToken(): void
     {
         $request = Request::create('/contao/login');
@@ -326,10 +350,6 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDoesNotValidateTheRequestTokenUponAjaxRequests(): void
     {
         $request = Request::create('/contao/login');
@@ -365,10 +385,6 @@ class ContaoFrameworkTest extends TestCase
         $this->addToAssertionCount(1);  // does not throw an exception
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDoesNotValidateTheRequestTokenIfTheRequestAttributeIsFalse(): void
     {
         $request = Request::create('/contao/login');
@@ -450,9 +466,6 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     *
      * @dataProvider getInstallRoutes
      */
     public function testAllowsTheInstallationToBeIncompleteInTheInstallTool(string $route): void
@@ -582,10 +595,6 @@ class ContaoFrameworkTest extends TestCase
         $this->assertSame(LegacyClass::class, $prop->getValue($adapter));
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testRegistersTheHookServices(): void
     {
         $request = Request::create('/index.html');
@@ -695,20 +704,6 @@ class ContaoFrameworkTest extends TestCase
             ],
             $GLOBALS['TL_HOOKS']['isVisibleElement']
         );
-    }
-
-    /**
-     * @return RouterInterface|MockObject
-     */
-    private function mockRouter(string $url): RouterInterface
-    {
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->method('generate')
-            ->willReturn($url)
-        ;
-
-        return $router;
     }
 
     private function mockFramework(Request $request = null, ScopeMatcher $scopeMatcher = null): ContaoFramework
