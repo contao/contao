@@ -222,30 +222,10 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return null;
         }
 
-        $attributes = $this->request->attributes;
-
-        if (!$attributes->has('_route')) {
-            return null;
-        }
-
-        try {
-            $route = $this->router->generate($attributes->get('_route'), $attributes->get('_route_params'));
-
-            // The Symfony router can return null even though the interface only allows strings
-            if (!\is_string($route)) {
-                return null;
-            }
-        } catch (\Exception $e) {
-            return null;
-        }
-
-        $basePath = $this->request->getBasePath().'/';
-
-        if (0 !== strncmp($route, $basePath, \strlen($basePath))) {
-            return null;
-        }
-
-        return substr($route, \strlen($basePath));
+        return substr(
+            $this->request->getBaseUrl().$this->request->getPathInfo(),
+            \strlen($this->request->getBasePath())
+        );
     }
 
     private function getPath(): ?string
