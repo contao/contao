@@ -56,7 +56,7 @@ class LegacyMatcher implements RequestMatcherInterface
      */
     public function matchRequest(Request $request): array
     {
-        $this->framework->initialize();
+        $this->framework->initialize(true);
 
         if (empty($GLOBALS['TL_HOOKS']['getPageIdFromUrl']) || !\is_array($GLOBALS['TL_HOOKS']['getPageIdFromUrl'])) {
             return $this->requestMatcher->matchRequest($request);
