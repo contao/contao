@@ -39,12 +39,11 @@ class LocaleListener
      */
     public function onKernelRequest(GetResponseEvent $event): void
     {
-        $request = $event->getRequest();
-
-        if (!$this->scopeMatcher->isContaoRequest($request) || $request->attributes->has('_locale')) {
+        if (!$this->scopeMatcher->isContaoRequest($event->getRequest())) {
             return;
         }
 
+        $request = $event->getRequest();
         $request->attributes->set('_locale', $this->getLocale($request));
     }
 
