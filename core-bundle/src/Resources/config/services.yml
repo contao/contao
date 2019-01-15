@@ -131,7 +131,6 @@ services:
         class: Contao\CoreBundle\Framework\ContaoFramework
         arguments:
             - "@request_stack"
-            - "@router"
             - "@contao.routing.scope_matcher"
             - "%kernel.project_dir%"
             - "%contao.error_level%"

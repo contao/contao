@@ -26,7 +26,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @internal Do not instantiate this class in your code; use the "contao.framework" service instead
@@ -49,11 +48,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      * @var RequestStack
      */
     private $requestStack;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
 
     /**
      * @var ScopeMatcher
@@ -85,10 +79,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
-        $this->router = $router;
         $this->scopeMatcher = $scopeMatcher;
         $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
