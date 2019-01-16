@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 class ClearSessionDataListener
 {
     /**
-     * Clear the Contao form data if not a POST request.
+     * Clear the Contao session data if not a POST request.
      */
     public function onKernelResponse(FilterResponseEvent $event): void
     {
@@ -41,28 +41,25 @@ class ClearSessionDataListener
         $this->clearLegacyFormData();
     }
 
-    private function clearLegacyFormData()
+    private function clearLegacyAttributeBags(string $key): void
     {
-        if (!isset($_SESSION['FORM_DATA']['SUBMITTED_AT'])) {
-            unset($_SESSION['FORM_DATA']);
+        if (!isset($_SESSION[$key])) {
             return;
         }
 
-        // Leave the data available for 10 secods (for redirect confirmation pages)
-        if (((int) $_SESSION['FORM_DATA']['SUBMITTED_AT'] + 10) > time()) {
-            return;
+        /** @var AttributeBag $bag */
+        if (($bag = $_SESSION[$key]) instanceof AttributeBag && !$bag->count()) {
+            unset($_SESSION[$key]);
         }
-
-        unset($_SESSION['FORM_DATA']);
-        unset($_SESSION['FILES']);
     }
 
-    private function clearLegacyAttributeBags(string $key)
+    private function clearLegacyFormData(): void
     {
-        if (isset($_SESSION[$key]) && $_SESSION[$key] instanceof AttributeBag) {
-            if (!$_SESSION[$key]->count()) {
-                unset($_SESSION[$key]);
-            }
+        // Leave the data available for 10 secods (for redirect confirmation pages)
+        if (isset($_SESSION['FORM_DATA']['SUBMITTED_AT']) && ($_SESSION['FORM_DATA']['SUBMITTED_AT'] + 10) > time()) {
+            return;
         }
+
+        unset($_SESSION['FORM_DATA'], $_SESSION['FILES']);
     }
 }

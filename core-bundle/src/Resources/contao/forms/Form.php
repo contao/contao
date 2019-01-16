@@ -527,7 +527,7 @@ class Form extends Hybrid
 			$_SESSION['FORM_DATA'][$key] = $this->allowTags ? \Input::postHtml($key, true) : \Input::post($key, true);
 		}
 
-		// Store the submitted time to invalidate the session later on
+		// Store the submit time to invalidate the session later on
 		$_SESSION['FORM_DATA']['SUBMITTED_AT'] = time();
 
 		$arrFiles = $_SESSION['FILES'];

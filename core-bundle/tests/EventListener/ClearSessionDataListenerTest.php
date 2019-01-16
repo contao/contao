@@ -43,7 +43,7 @@ class ClearSessionDataListenerTest extends TestCase
             new Response()
         );
 
-        $_SESSION['FORM_DATA'] = ['foo' => 'bar', 'SUBMITTED_AT' => (time() - 50)];
+        $_SESSION['FORM_DATA'] = ['foo' => 'bar', 'SUBMITTED_AT' => time() - 50];
 
         $listener = new ClearSessionDataListener();
         $listener->onKernelResponse($event);
@@ -51,7 +51,7 @@ class ClearSessionDataListenerTest extends TestCase
         $this->assertArrayNotHasKey('FORM_DATA', $_SESSION);
     }
 
-    public function testDoesNotClearTheFormDataIfJustSubmitted(): void
+    public function testDoesNotClearTheFormDataIfTheFormHasJustBeenSubmitted(): void
     {
         $session = $this->createMock(Session::class);
         $session
@@ -70,7 +70,7 @@ class ClearSessionDataListenerTest extends TestCase
             new Response()
         );
 
-        $_SESSION['FORM_DATA'] = ['foo' => 'bar', 'SUBMITTED_AT' => (time() - 5)];
+        $_SESSION['FORM_DATA'] = ['foo' => 'bar', 'SUBMITTED_AT' => time() - 5];
 
         $listener = new ClearSessionDataListener();
         $listener->onKernelResponse($event);
@@ -147,7 +147,7 @@ class ClearSessionDataListenerTest extends TestCase
         $this->assertSame(['foo' => 'bar'], $_SESSION['FORM_DATA']);
     }
 
-    public function testClearsLegacyAttributeBagsIfEmpty()
+    public function testClearsTheLegacyAttributeBags(): void
     {
         $session = $this->createMock(Session::class);
         $session
@@ -166,42 +166,15 @@ class ClearSessionDataListenerTest extends TestCase
             new Response()
         );
 
+        $_SESSION['BE_DATA'] = new AttributeBag();
         $_SESSION['FE_DATA'] = new AttributeBag();
-        $_SESSION['BE_DATA'] = new AttributeBag();
+        $_SESSION['FE_DATA']->set('foo', 'bar');
 
         $listener = new ClearSessionDataListener();
         $listener->onKernelResponse($event);
 
-        $this->assertArrayNotHasKey('FE_DATA', $_SESSION);
         $this->assertArrayNotHasKey('BE_DATA', $_SESSION);
-    }
-
-    public function testDoesNotClearLegacyAttributeBagsThatAreNotEmpty()
-    {
-        $session = $this->createMock(Session::class);
-        $session
-            ->expects($this->once())
-            ->method('isStarted')
-            ->willReturn(true)
-        ;
-
-        $request = new Request();
-        $request->setSession($session);
-
-        $event = new FilterResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
-
-        $_SESSION['FE_DATA'] = (new AttributeBag())->set('foo', 'bar');
-        $_SESSION['BE_DATA'] = new AttributeBag();
-
-        $listener = new ClearSessionDataListener();
-        $listener->onKernelResponse($event);
-
         $this->assertArrayHasKey('FE_DATA', $_SESSION);
-        $this->assertArrayNotHasKey('BE_DATA', $_SESSION);
+        $this->assertSame('bar', $_SESSION['FE_DATA']->get('foo'));
     }
 }
