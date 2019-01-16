@@ -130,7 +130,7 @@ services:
     contao.framework:
         class: Contao\CoreBundle\Framework\ContaoFramework
         arguments:
-            - "@router"
+            - "@request_stack"
             - "@contao.routing.scope_matcher"
             - "%kernel.project_dir%"
             - "%contao.error_level%"
