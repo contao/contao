@@ -123,9 +123,11 @@
       </trans-unit>
       <trans-unit id="tl_files.dropzoneFileTooBig">
         <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>Soubor je příliš velký ({{filesize}} MB). Maximální povolená velikost souboru činí {{maxFilesize}} MB.</target>
       </trans-unit>
       <trans-unit id="tl_files.dropzoneInvalidType">
         <source>Files of this type cannot be uploaded.</source>
+        <target>Soubory tohoto druhu nelze nahrát.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>

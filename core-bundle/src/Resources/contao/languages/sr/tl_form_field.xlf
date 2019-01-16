@@ -423,6 +423,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.invisible.1">
         <source>Hide the form field on the website.</source>
+        <target>Сакриј поље на страници.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.type_legend">
         <source>Field type and name</source>

@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.alexf.0">
         <source>Allowed fields</source>
-        <target>Vyjmutá pole</target>
+        <target>Povolená pole</target>
       </trans-unit>
       <trans-unit id="tl_user_group.alexf.1">
         <source>Here you can choose which fields will be editable.</source>

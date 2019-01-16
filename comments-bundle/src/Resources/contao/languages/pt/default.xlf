@@ -23,6 +23,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_notify">
         <source>Notify me of new comments by e-mail (you can cancel your subscription at any time)</source>
+        <target>Notificar-me sobre novos comentários via e-mail (pode cancelar a sua subscrição a qualquer momento)</target>
       </trans-unit>
       <trans-unit id="MSC.com_submit">
         <source>Submit comment</source>
@@ -69,6 +70,22 @@ Click here to edit or answer the comment:
 
 %s
 </source>
+        <target>%s adicionou um novo comentário ao seu website:
+
+---
+
+%s
+
+---
+
+Clique aqui para ver o comentário:
+
+%s
+
+Clique aqui para responder ao comentário:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
@@ -107,6 +124,22 @@ You can cancel your subscription at any time by clicking here:
 
 %s
 </source>
+        <target>Olá Novamente %s,
+
+Por favor confirme que pretende ser notificado sobre novos comentarios via e-mail realizados nesta página:
+
+%s
+
+Clicar aqui para confirmar a subscrição:
+
+%s
+
+O link de confirmação é válido por 24 horas.
+
+Poderá cancelar a subscrição a qualquer momento clicando aqui:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
         <source>New comment on %s</source>
@@ -127,6 +160,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Olá Novamente %s,
+
+um novo comentário foi adicionado à pagina que subscreveu:
+
+---
+
+%s
+
+---
+
+Clicar aqui para cancelar a subscrição:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
@@ -147,6 +194,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Olá Novamente %s,
+
+uma nova resposta a um comentário foi adicionada na página que subscreveu:
+
+---
+
+%s
+
+---
+
+Clicar aqui para cancelar a subscrição:
+
+%s
+</target>
       </trans-unit>
     </body>
   </file>

@@ -23,6 +23,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_notify">
         <source>Notify me of new comments by e-mail (you can cancel your subscription at any time)</source>
+        <target>Обавести ме о сваком новом коментару имејлом (можете отказати претплату у било ком тренутку)</target>
       </trans-unit>
       <trans-unit id="MSC.com_submit">
         <source>Submit comment</source>
@@ -69,6 +70,22 @@ Click here to edit or answer the comment:
 
 %s
 </source>
+        <target>%s је написао нови коментар на вашем сајту:
+
+---
+
+%s
+
+---
+
+Да бисте видели коментар, кликните на линк испод:
+
+%s
+
+Да бисте уредили или одговорили на коментар, кликните на линк испод:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
@@ -107,6 +124,22 @@ You can cancel your subscription at any time by clicking here:
 
 %s
 </source>
+        <target>Здраво %s,
+
+молимо Вас да потврдите да желите да будете обавештени мејлом о новим коментарима на страници:
+
+%s
+
+Да бисте потврдили претплату кликните на линк испод:
+
+%s
+
+Линк важи 24 часа.
+
+Можете отказати претплату у било ком тренутку кликом на:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
         <source>New comment on %s</source>
@@ -127,6 +160,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Здраво %s,
+
+додат је нови коментар на страницу на коју сте претплаћени:
+
+---
+
+%s
+
+---
+
+Да откажете претплату, кликните на линк испод:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
@@ -147,6 +194,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Здраво %s,
+
+написан је нови коментар на страници на коју сте претплаћени:
+
+---
+
+%s
+
+---
+
+Да откажете претплату, кликните на линк испод:
+
+%s
+</target>
       </trans-unit>
     </body>
   </file>

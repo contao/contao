@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_module.newsletters.1">
         <source>Show these channels in the front end form.</source>
-        <target>Favor selecionar os canais que os usuários poderão assinar durante o processo de registro.</target>
+        <target>Mostrar estes canais na pagina principal.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_channels.0">
         <source>Channels</source>
@@ -19,9 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_text.0">
         <source>Custom text</source>
+        <target>Texto personalizado</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
         <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+        <target>Aqui pode por exemplo inserir uma nota de privacidade para a newsletter ser conforme GDPR.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
@@ -33,19 +35,19 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_subscribe.0">
         <source>Subscription message</source>
-        <target>E-mail de assinatura</target>
+        <target>Mensagem de subscrição</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_subscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names), &lt;em&gt;##domain##&lt;/em&gt; (domain name) and &lt;em&gt;##link##&lt;/em&gt; (activation link).</source>
-        <target>Favor entrar o texto do e-mail de confirmação de assinatura. Você pode usar os curingas &lt;em&gt;##channel##&lt;/em&gt; (nome de canal), &lt;em&gt;##domain##&lt;/em&gt; (domínio atual) e &lt;em&gt;##link##&lt;/em&gt; (link de ativação).</target>
+        <target>Você pode usar &lt;em&gt;##channel##&lt;/em&gt; (nome de canal), &lt;em&gt;##domain##&lt;/em&gt; (domínio atual) e &lt;em&gt;##link##&lt;/em&gt; (link de ativação).</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.0">
         <source>Unsubscription message</source>
-        <target>E-mail de cancelamento de assinatura</target>
+        <target>Mensagem de cancelamento de subscrição</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
-        <target>Favor entrar o texto do e-mail de confirmação de cancelamento de assinatura. Você pode usar os curingas &lt;em&gt;##channel##&lt;/em&gt; (nome de canal), &lt;em&gt;##domain##&lt;/em&gt; (domínio atual) e &lt;em&gt;##link##&lt;/em&gt; (link de ativação).</target>
+        <target>Você pode usar &lt;em&gt;##channels##&lt;/em&gt; (nomes de canal), &lt;em&gt;##domain##&lt;/em&gt; (domínio atual).</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
@@ -53,14 +55,15 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
         <source>Here you can select the newsletter template.</source>
-        <target>Favor selecionar um layout de módulos. Você pode adicionar layouts personalizados de notícias na pasta &lt;em&gt;templates&lt;/em&gt;. Arquivos de modelos de newsletters começam com &lt;em&gt;nl_&lt;/em&gt; e requerem a extensão de arquivo &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <target>Aqui pode seleccionar templates de módulos a usar.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>
+        <target>Texto personalizado</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
-        <target>Sua assinatura no %s</target>
+        <target>A sua subscrição  no %s</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.1">
         <source>You have subscribed to the following channels on ##domain##:
@@ -75,17 +78,32 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 If you did not subscribe yourself, please ignore this e-mail.
 </source>
+        <target>Subscreveu os seguintes canais em ##domain##:
+
+##channels##
+
+Por favor clique aqui para activar a sua subscrição:
+
+##link##
+
+O link de confirmação é válido por 24 horas. Poderá cancelar a subscrição em qualquer momento.
+
+Caso não tenha requerido esta subscrição,  por favor ignore este e-mail.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>
-        <target>Sua assinatura no %s</target>
+        <target>A sua subscrição em %s</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.1">
         <source>You have unsubscribed from the following channels on ##domain##:
 
 ##channels##
 </source>
-        <target>Você cancelou sua assinatura do ##channel## com sucesso.</target>
+        <target>Você cancelou sua assinatura nos seguintes canais no domínio ##domain##:
+
+##channels##
+</target>
       </trans-unit>
     </body>
   </file>

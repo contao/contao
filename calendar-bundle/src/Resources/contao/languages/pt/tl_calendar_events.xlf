@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
         <source>Leave blank to create an open-ended event.</source>
+        <target>Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>

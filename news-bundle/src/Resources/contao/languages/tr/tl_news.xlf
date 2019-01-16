@@ -123,9 +123,11 @@
       </trans-unit>
       <trans-unit id="tl_news.external.0">
         <source>Custom URL</source>
+        <target>Özel URL</target>
       </trans-unit>
       <trans-unit id="tl_news.external.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to a custom URL.</source>
+        <target>Ziyaretçiler &quot;Devamını oku ...&quot; butonuna tıklayarak, başka bir sayfaya yönlendirileceklerdir.</target>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>
