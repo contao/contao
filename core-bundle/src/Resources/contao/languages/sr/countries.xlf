@@ -159,6 +159,7 @@
       </trans-unit>
       <trans-unit id="CNT.cd">
         <source>Democratic Republic of the Congo</source>
+        <target>Демократска република Конго</target>
       </trans-unit>
       <trans-unit id="CNT.cf">
         <source>Central African Republic</source>
@@ -166,6 +167,7 @@
       </trans-unit>
       <trans-unit id="CNT.cg">
         <source>Republic of the Congo</source>
+        <target>Република Конго</target>
       </trans-unit>
       <trans-unit id="CNT.ch">
         <source>Switzerland</source>
