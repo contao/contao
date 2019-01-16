@@ -40,11 +40,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private static $initialized = false;
 
     /**
-     * @var bool
-     */
-    private static $isFrontend = false;
-
-    /**
      * @var RequestStack
      */
     private $requestStack;
@@ -68,6 +63,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      * @var Request
      */
     private $request;
+
+    /**
+     * @var bool
+     */
+    private $isFrontend = false;
 
     /**
      * @var array
@@ -108,13 +108,12 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
         // Set before calling any methods to prevent recursion
         self::$initialized = true;
-        self::$isFrontend = $isFrontend;
 
         if (null === $this->container) {
             throw new \LogicException('The service container has not been set.');
         }
 
-        // Set the current request
+        $this->isFrontend = $isFrontend;
         $this->request = $this->requestStack->getMasterRequest();
 
         $this->setConstants();
@@ -181,7 +180,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
     private function getMode(): ?string
     {
-        if (true === self::$isFrontend) {
+        if (true === $this->isFrontend) {
             return 'FE';
         }
 
