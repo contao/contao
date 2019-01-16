@@ -363,6 +363,11 @@ abstract class Frontend extends Controller
 			}
 		}
 
+		if ($objRootPage->type != 'root')
+		{
+			return PageModel::findByPk($objRootPage->rootId);
+		}
+
 		return $objRootPage;
 	}
 

@@ -870,8 +870,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPublic());
         $this->assertSame('request_stack', (string) $definition->getArgument(0));
         $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
-        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(2));
-        $this->assertSame('%contao.error_level%', (string) $definition->getArgument(3));
+        $this->assertSame('contao.security.token_checker', (string) $definition->getArgument(2));
+        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));
+        $this->assertSame('%contao.error_level%', (string) $definition->getArgument(4));
 
         $conditionals = $definition->getInstanceofConditionals();
 

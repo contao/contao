@@ -78,11 +78,6 @@ class FrontendController extends AbstractController
             throw new UnauthorizedHttpException('Not authorized');
         }
 
-        $tokenChecker = $this->get('contao.security.token_checker');
-
-        \define('FE_USER_LOGGED_IN', $tokenChecker->hasFrontendUser());
-        \define('BE_USER_LOGGED_IN', $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode());
-
         /** @var PageError401 $pageHandler */
         $pageHandler = new $GLOBALS['TL_PTY']['error_401']();
 
