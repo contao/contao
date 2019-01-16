@@ -25,7 +25,7 @@ use Contao\TemplateLoader;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @internal Do not instantiate this class in your code; use the "contao.framework" service instead
@@ -40,9 +40,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private static $initialized = false;
 
     /**
-     * @var RouterInterface
+     * @var RequestStack
      */
-    private $router;
+    private $requestStack;
 
     /**
      * @var ScopeMatcher
@@ -65,6 +65,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private $request;
 
     /**
+     * @var bool
+     */
+    private $isFrontend = false;
+
+    /**
      * @var array
      */
     private $adapterCache = [];
@@ -74,9 +79,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
-    public function __construct(RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
     {
-        $this->router = $router;
+        $this->requestStack = $requestStack;
         $this->scopeMatcher = $scopeMatcher;
         $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
@@ -95,7 +100,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @throws \LogicException
      */
-    public function initialize(): void
+    public function initialize(bool $isFrontend = false): void
     {
         if ($this->isInitialized()) {
             return;
@@ -108,7 +113,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             throw new \LogicException('The service container has not been set.');
         }
 
-        \define('TL_ROOT', $this->rootDir);
+        $this->isFrontend = $isFrontend;
+        $this->request = $this->requestStack->getMasterRequest();
 
         $this->setConstants();
         $this->initializeFramework();
@@ -117,28 +123,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     public function setHookListeners(array $hookListeners): void
     {
         $this->hookListeners = $hookListeners;
-    }
-
-    public function setRequest(Request $request): void
-    {
-        // Do not overwrite the request in a sub-request. Unfortunately, the master
-        // request might be cached, so the only request we have is a sub-request.
-        // Therefore we just hopefully assume the first request is a master request.
-        if (null !== $this->request) {
-            return;
-        }
-
-        $this->request = $request;
-
-        if (!$this->isInitialized()) {
-            return;
-        }
-
-        $this->setConstants();
-        $this->initializeLegacySessionAccess();
-        $this->setDefaultLanguage();
-        $this->validateInstallation();
-        $this->handleRequestToken();
     }
 
     /**
@@ -172,63 +156,74 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function setConstants(): void
     {
-        if (null === $this->request) {
-            return;
+        if (!\defined('TL_MODE')) {
+            \define('TL_MODE', $this->getMode());
         }
 
-        \define('TL_MODE', $this->getMode($this->request));
-        \define('TL_REFERER_ID', $this->request->attributes->get('_contao_referer_id', ''));
-        \define('TL_SCRIPT', $this->getRoute($this->request));
+        \define('TL_START', microtime(true));
+        \define('TL_ROOT', $this->rootDir);
+        \define('TL_REFERER_ID', $this->getRefererId());
+
+        if (!\defined('TL_SCRIPT')) {
+            \define('TL_SCRIPT', $this->getRoute());
+        }
 
         // Define the login status constants in the back end (see #4099, #5279)
-        if (!$this->scopeMatcher->isFrontendRequest($this->request)) {
+        if (null === $this->request || !$this->scopeMatcher->isFrontendRequest($this->request)) {
             \define('BE_USER_LOGGED_IN', false);
             \define('FE_USER_LOGGED_IN', false);
         }
 
         // Define the relative path to the installation (see #5339)
-        \define('TL_PATH', $this->request->getBasePath());
+        \define('TL_PATH', $this->getPath());
     }
 
-    private function getMode(Request $request): ?string
+    private function getMode(): ?string
     {
-        if ($this->scopeMatcher->isBackendRequest($request)) {
+        if (true === $this->isFrontend) {
+            return 'FE';
+        }
+
+        if (null === $this->request) {
+            return null;
+        }
+
+        if ($this->scopeMatcher->isBackendRequest($this->request)) {
             return 'BE';
         }
 
-        if ($this->scopeMatcher->isFrontendRequest($request)) {
+        if ($this->scopeMatcher->isFrontendRequest($this->request)) {
             return 'FE';
         }
 
         return null;
     }
 
-    private function getRoute(Request $request): ?string
+    private function getRefererId(): ?string
     {
-        $attributes = $request->attributes;
-
-        if (!$attributes->has('_route')) {
+        if (null === $this->request) {
             return null;
         }
 
-        try {
-            $route = $this->router->generate($attributes->get('_route'), $attributes->get('_route_params'));
+        return $this->request->attributes->get('_contao_referer_id', '');
+    }
 
-            // The Symfony router can return null even though the interface only allows strings
-            if (!\is_string($route)) {
-                return null;
-            }
-        } catch (\Exception $e) {
+    private function getRoute(): ?string
+    {
+        if (null === $this->request) {
             return null;
         }
 
-        $basePath = $request->getBasePath().'/';
+        return substr($this->request->getBaseUrl().$this->request->getPathInfo(), \strlen($this->request->getBasePath().'/'));
+    }
 
-        if (0 !== strncmp($route, $basePath, \strlen($basePath))) {
+    private function getPath(): ?string
+    {
+        if (null === $this->request) {
             return null;
         }
 
-        return substr($route, \strlen($basePath));
+        return $this->request->getBasePath();
     }
 
     private function initializeFramework(): void

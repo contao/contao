@@ -41,8 +41,8 @@ services:
             # and lower than the header replay header (defaults to 7)
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 6 }
 
-    contao.listener.clear_form_data:
-        class: Contao\CoreBundle\EventListener\ClearFormDataListener
+    contao.listener.clear_session_data:
+        class: Contao\CoreBundle\EventListener\ClearSessionDataListener
         tags:
             # The priority must be higher than the one of the Symfony save session listener (defaults to -1000)
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -768 }
@@ -66,6 +66,7 @@ services:
         arguments:
             - "@contao.doctrine.schema_provider"
         tags:
+            - { name: doctrine.event_listener, event: onSchemaIndexDefinition }
             - { name: doctrine.event_listener, event: postGenerateSchema }
 
     contao.listener.exception_converter:
@@ -75,15 +76,6 @@ services:
         tags:
             # The priority must be higher than the one of the response exception listener (defaults to 64)
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 96 }
-
-    contao.listener.framework_request:
-        class: Contao\CoreBundle\EventListener\FrameworkRequestListener
-        arguments:
-            - "@contao.framework"
-            - "@request_stack"
-        tags:
-            # The priority must be lower than the one of the Symfony route listener (defaults to 32)
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
 
     contao.listener.header_replay.user_session:
         class: Contao\CoreBundle\EventListener\HeaderReplay\UserSessionListener

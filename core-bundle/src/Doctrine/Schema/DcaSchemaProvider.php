@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Doctrine\Schema;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaConfig;
@@ -285,10 +286,10 @@ class DcaSchemaProvider
         $lengths = [];
 
         foreach (explode(',', $matches[3]) as $column) {
-            $name = trim($column, '` ');
+            preg_match('/`([^`]+)`(\((\d+)\))?/', $column, $cm);
 
-            $columns[] = $name;
-            $lengths[] = $this->getIndexLength($table, $name);
+            $columns[] = $cm[1];
+            $lengths[] = isset($cm[3]) ? (int) $cm[3] : $this->getIndexLength($table, $cm[1]);
         }
 
         if (false !== strpos($matches[1], 'unique')) {
@@ -296,6 +297,20 @@ class DcaSchemaProvider
         } else {
             if (false !== strpos($matches[1], 'fulltext')) {
                 $flags[] = 'fulltext';
+            }
+
+            // Backwards compatibility for doctrine/dbal < 2.9
+            if (array_filter($lengths) && !method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+                $columns = array_combine(
+                    $columns,
+                    array_map(
+                        function ($column, $length) {
+                            return $column.($length ? '('.$length.')' : '');
+                        },
+                        $columns,
+                        $lengths
+                    )
+                );
             }
 
             $table->addIndex($columns, $matches[2], $flags, ['lengths' => $lengths]);

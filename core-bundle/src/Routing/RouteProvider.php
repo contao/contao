@@ -61,7 +61,7 @@ class RouteProvider implements RouteProviderInterface
      */
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
-        $this->framework->initialize();
+        $this->framework->initialize(true);
 
         $pathInfo = rawurldecode($request->getPathInfo());
 
@@ -97,7 +97,7 @@ class RouteProvider implements RouteProviderInterface
      */
     public function getRouteByName($name): Route
     {
-        $this->framework->initialize();
+        $this->framework->initialize(true);
 
         $ids = $this->getPageIdsFromNames([$name]);
 
@@ -125,7 +125,7 @@ class RouteProvider implements RouteProviderInterface
      */
     public function getRoutesByNames($names): array
     {
-        $this->framework->initialize();
+        $this->framework->initialize(true);
 
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);

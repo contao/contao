@@ -35,7 +35,7 @@ use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\EventListener\BackendMenuListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
-use Contao\CoreBundle\EventListener\ClearFormDataListener;
+use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
@@ -278,13 +278,13 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(6, $tags['kernel.event_listener'][0]['priority']);
     }
 
-    public function testRegistersTheClearFormDataListener(): void
+    public function testRegistersTheClearSessionDataListener(): void
     {
-        $this->assertTrue($this->container->has('contao.listener.clear_form_data'));
+        $this->assertTrue($this->container->has('contao.listener.clear_session_data'));
 
-        $definition = $this->container->getDefinition('contao.listener.clear_form_data');
+        $definition = $this->container->getDefinition('contao.listener.clear_session_data');
 
-        $this->assertSame(ClearFormDataListener::class, $definition->getClass());
+        $this->assertSame(ClearSessionDataListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
         $tags = $definition->getTags();
@@ -343,7 +343,8 @@ class ContaoCoreExtensionTest extends TestCase
         $tags = $definition->getTags();
 
         $this->assertArrayHasKey('doctrine.event_listener', $tags);
-        $this->assertSame('postGenerateSchema', $tags['doctrine.event_listener'][0]['event']);
+        $this->assertSame('onSchemaIndexDefinition', $tags['doctrine.event_listener'][0]['event']);
+        $this->assertSame('postGenerateSchema', $tags['doctrine.event_listener'][1]['event']);
     }
 
     public function testRegistersTheExceptionConverterListener(): void
@@ -867,7 +868,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoFramework::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('router', (string) $definition->getArgument(0));
+        $this->assertSame('request_stack', (string) $definition->getArgument(0));
         $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
         $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(2));
         $this->assertSame('%contao.error_level%', (string) $definition->getArgument(3));
