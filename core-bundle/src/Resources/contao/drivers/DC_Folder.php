@@ -1928,14 +1928,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('File "' . $this->intId . '" does not exist.');
 		}
 
-		$this->import(BackendUser::class, 'User');
-
-		// Check user permission
-		if (!$this->User->hasAccess('f5', 'fop'))
-		{
-			throw new AccessDeniedException('Not enough permissions to edit the file source of file "' . $this->intId . '".');
-		}
-
 		$objFile = new File($this->intId);
 
 		// Check whether file type is editable
@@ -2407,14 +2399,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			return '';
 		}
 
-		$this->import(BackendUser::class, 'User');
 		$this->loadLanguageFile('tl_files');
-
-		// Check the permission to synchronize
-		if (!$this->User->hasAccess('f6', 'fop'))
-		{
-			throw new AccessDeniedException('Not enough permissions to synchronize the file system.');
-		}
 
 		// Synchronize
 		$strLog = Dbafs::syncFiles();

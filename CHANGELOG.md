@@ -1,5 +1,13 @@
 # Change log
 
+## DEV
+
+ * Support comma separated values in `Model::getRelated()` (see #257).
+ * Do not check the user's file permissions in the template editor (see #224).
+ * Do not show pretty errors if "text/html" is not accepted (see #249).
+ * Return `null` in `Model::findMultipleByIds()` if there are no models (see #266).
+ * Restore compatibility with Doctrine DBAL 2.9 (see #256).
+
 ## 4.7.0-RC1 (2019-01-15)
 
  * Warn if there are user groups granting access to the template editor (see #224).
