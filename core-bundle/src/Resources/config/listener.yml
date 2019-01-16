@@ -61,6 +61,7 @@ services:
         arguments:
             - "@contao.doctrine.schema_provider"
         tags:
+            - { name: doctrine.event_listener, event: onSchemaIndexDefinition }
             - { name: doctrine.event_listener, event: postGenerateSchema }
 
     contao.listener.exception_converter:

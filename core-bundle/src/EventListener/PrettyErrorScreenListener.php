@@ -27,6 +27,8 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageError404;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\AcceptHeader;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -97,17 +99,24 @@ class PrettyErrorScreenListener
      */
     public function onKernelException(GetResponseForExceptionEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
-            return;
-        }
-
-        $request = $event->getRequest();
-
-        if ('html' !== $request->getRequestFormat() || !$this->scopeMatcher->isContaoRequest($request)) {
+        if (!$event->isMasterRequest() || !$this->isSupportedRequest($event->getRequest())) {
             return;
         }
 
         $this->handleException($event);
+    }
+
+    private function isSupportedRequest(Request $request): bool
+    {
+        if ('html' !== $request->getRequestFormat()) {
+            return false;
+        }
+
+        if (!AcceptHeader::fromString($request->headers->get('Accept'))->has('text/html')) {
+            return false;
+        }
+
+        return $this->scopeMatcher->isContaoRequest($request);
     }
 
     private function handleException(GetResponseForExceptionEvent $event): void

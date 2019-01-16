@@ -45,6 +45,7 @@ return PhpCsFixer\Config::create()
         'comment_to_phpdoc' => true,
         'compact_nullable_typehint' => true,
         'escape_implicit_backslashes' => true,
+        'fopen_flags' => false,
         'fully_qualified_strict_types' => true,
         'general_phpdoc_annotation_remove' => [
             'author',

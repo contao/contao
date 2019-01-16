@@ -52,7 +52,7 @@ the monorepo instead of the individual bundles:
 Again, use `dev-master` if you want to add a new feature or `dev-<lts-version>`
 if you want to fix a bug.
 
-Next install the dependencies:
+Next, install the dependencies:
 
 ```
 composer update

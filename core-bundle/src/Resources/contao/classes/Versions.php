@@ -478,26 +478,48 @@ class Versions extends Controller
 							$from[$k] = \Encryption::decrypt($from[$k]);
 						}
 
-						// Convert serialized arrays into strings
-						if (\is_array(($tmp = \StringUtil::deserialize($to[$k]))) && !\is_array($to[$k]))
+						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'])
 						{
-							$to[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
-						}
-						if (\is_array(($tmp = \StringUtil::deserialize($from[$k]))) && !\is_array($from[$k]))
-						{
-							$from[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
+							if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['csv']))
+							{
+								$delimiter = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['csv'];
+
+								if (isset($to[$k]))
+								{
+									$to[$k] = preg_replace('/' . preg_quote($delimiter, ' ?/') . '/', $delimiter . ' ', $to[$k]);
+								}
+								if (isset($from[$k]))
+								{
+									$from[$k] = preg_replace('/' . preg_quote($delimiter, ' ?/') . '/', $delimiter . ' ', $from[$k]);
+								}
+							}
+							else
+							{
+								// Convert serialized arrays into strings
+								if (\is_array(($tmp = \StringUtil::deserialize($to[$k]))) && !\is_array($to[$k]))
+								{
+									$to[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
+								}
+								if (\is_array(($tmp = \StringUtil::deserialize($from[$k]))) && !\is_array($from[$k]))
+								{
+									$from[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
+								}
+							}
 						}
 
 						unset($tmp);
 
 						// Convert binary UUIDs to their hex equivalents (see #6365)
-						if ($blnIsBinary && \Validator::isBinaryUuid($to[$k]))
+						if ($blnIsBinary)
 						{
-							$to[$k] = \StringUtil::binToUuid($to[$k]);
-						}
-						if ($blnIsBinary && \Validator::isBinaryUuid($from[$k]))
-						{
-							$to[$k] = \StringUtil::binToUuid($from[$k]);
+							if (\Validator::isBinaryUuid($to[$k]))
+							{
+								$to[$k] = \StringUtil::binToUuid($to[$k]);
+							}
+							if (\Validator::isBinaryUuid($from[$k]))
+							{
+								$to[$k] = \StringUtil::binToUuid($from[$k]);
+							}
 						}
 
 						// Convert date fields

@@ -315,7 +315,8 @@ class ContaoCoreExtensionTest extends TestCase
         $tags = $definition->getTags();
 
         $this->assertArrayHasKey('doctrine.event_listener', $tags);
-        $this->assertSame('postGenerateSchema', $tags['doctrine.event_listener'][0]['event']);
+        $this->assertSame('onSchemaIndexDefinition', $tags['doctrine.event_listener'][0]['event']);
+        $this->assertSame('postGenerateSchema', $tags['doctrine.event_listener'][1]['event']);
     }
 
     public function testRegistersTheExceptionConverterListener(): void

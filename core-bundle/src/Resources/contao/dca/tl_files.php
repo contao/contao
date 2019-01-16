@@ -410,6 +410,20 @@ class tl_files extends Backend
 					}
 					break;
 
+				case 'source':
+					if (!$this->User->hasAccess('f5', 'fop'))
+					{
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to edit the source of file "' . Input::get('id', true) . '".');
+					}
+					break;
+
+				case 'sync':
+					if (!$this->User->hasAccess('f6', 'fop'))
+					{
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to synchronize the file system with the database.');
+					}
+					break;
+
 				default:
 					if (empty($this->User->fop))
 					{

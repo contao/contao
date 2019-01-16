@@ -608,28 +608,41 @@ abstract class Model
 		}
 		elseif ($arrRelation['type'] == 'hasMany' || $arrRelation['type'] == 'belongsToMany')
 		{
-			$arrValues = \StringUtil::deserialize($this->$strKey, true);
-			$strField = $arrRelation['table'] . '.' . \Database::quoteIdentifier($arrRelation['field']);
-
-			// Handle UUIDs (see #6525 and #8850)
-			if ($arrRelation['table'] == 'tl_files' && $arrRelation['field'] == 'uuid')
+			if (isset($arrRelation['delimiter']))
 			{
-				/** @var FilesModel $strClass */
-				$objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);
+				$arrValues = \StringUtil::trimsplit($arrRelation['delimiter'], $this->$strKey);
 			}
 			else
 			{
-				$arrOptions = array_merge
-				(
-					array
+				$arrValues = \StringUtil::deserialize($this->$strKey, true);
+			}
+
+			$objModel = null;
+
+			if (\is_array($arrValues))
+			{
+				// Handle UUIDs (see #6525 and #8850)
+				if ($arrRelation['table'] == 'tl_files' && $arrRelation['field'] == 'uuid')
+				{
+					/** @var FilesModel $strClass */
+					$objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);
+				}
+				else
+				{
+					$strField = $arrRelation['table'] . '.' . \Database::quoteIdentifier($arrRelation['field']);
+
+					$arrOptions = array_merge
 					(
-						'order' => \Database::getInstance()->findInSet($strField, $arrValues)
-					),
+						array
+						(
+							'order' => \Database::getInstance()->findInSet($strField, $arrValues)
+						),
 
-					$arrOptions
-				);
+						$arrOptions
+					);
 
-				$objModel = $strClass::findBy(array($strField . " IN('" . implode("','", $arrValues) . "')"), null, $arrOptions);
+					$objModel = $strClass::findBy(array($strField . " IN('" . implode("','", $arrValues) . "')"), null, $arrOptions);
+				}
 			}
 
 			$this->arrRelated[$strKey] = $objModel;
@@ -877,7 +890,14 @@ abstract class Model
 			}
 		}
 
-		return static::createCollection(array_filter(array_values($arrRegistered)), static::$strTable);
+		$arrRegistered = array_filter(array_values($arrRegistered));
+
+		if (empty($arrRegistered))
+		{
+			return null;
+		}
+
+		return static::createCollection($arrRegistered, static::$strTable);
 	}
 
 	/**

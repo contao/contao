@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Statement;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -362,8 +363,19 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $this->assertTrue($table->hasIndex('name'));
         $this->assertFalse($table->getIndex('name')->isUnique());
-        $this->assertSame(['name'], $table->getIndex('name')->getColumns());
         $this->assertSame([$expected], $table->getIndex('name')->getOption('lengths'));
+
+        if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+            $this->assertSame(['name'], $table->getIndex('name')->getColumns());
+        } else {
+            $column = 'name';
+
+            if ($expected) {
+                $column .= '('.$expected.')';
+            }
+
+            $this->assertSame([$column], $table->getIndex('name')->getColumns());
+        }
     }
 
     /**
@@ -400,6 +412,48 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'On', 'barracuda'],
             [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '1', 'barracuda'],
         ];
+    }
+
+    public function testHandlesIndexesOverMultipleColumns(): void
+    {
+        $provider = $this->getProvider(
+            [
+                'tl_foo' => [
+                    'TABLE_FIELDS' => [
+                        'col1' => "`col1` varchar(255) NOT NULL default ''",
+                        'col2' => "`col2` varchar(255) NOT NULL default ''",
+                        'col3' => "`col3` varchar(255) NOT NULL default ''",
+                    ],
+                    'TABLE_CREATE_DEFINITIONS' => [
+                        'col123' => 'KEY `col123` (`col1`(100), `col2`, `col3`(99))',
+                    ],
+                    'TABLE_OPTIONS' => 'ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                ],
+            ]
+        );
+
+        $schema = $provider->createSchema();
+
+        $this->assertCount(1, $schema->getTableNames());
+        $this->assertTrue($schema->hasTable('tl_foo'));
+
+        $table = $schema->getTable('tl_foo');
+
+        for ($i = 1; $i <= 3; ++$i) {
+            $this->assertTrue($table->hasColumn('col'.$i));
+            $this->assertSame('string', $table->getColumn('col'.$i)->getType()->getName());
+            $this->assertSame(255, $table->getColumn('col'.$i)->getLength());
+        }
+
+        $this->assertTrue($table->hasIndex('col123'));
+        $this->assertFalse($table->getIndex('col123')->isUnique());
+        $this->assertSame([100, null, 99], $table->getIndex('col123')->getOption('lengths'));
+
+        if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+            $this->assertSame(['col1', 'col2', 'col3'], $table->getIndex('col123')->getColumns());
+        } else {
+            $this->assertSame(['col1(100)', 'col2', 'col3(99)'], $table->getIndex('col123')->getColumns());
+        }
     }
 
     public function testHandlesFulltextIndexes(): void
