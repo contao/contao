@@ -270,7 +270,7 @@ class RouteProvider implements RouteProviderInterface
             $defaults,
             $requirements,
             ['utf8' => true],
-            $page->domain,
+            strtok($page->domain, ':'),
             null
         );
 
@@ -299,7 +299,7 @@ class RouteProvider implements RouteProviderInterface
             $defaults,
             $requirements,
             [],
-            $page->domain,
+            strtok($page->domain, ':'),
             null
         );
 
