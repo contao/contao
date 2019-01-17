@@ -96,6 +96,43 @@ class RouteProviderTest extends TestCase
         $this->assertCount(2, $routes);
     }
 
+    public function testRoutesWithPortInDomain(): void
+    {
+        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17, 'domain' => 'example.org:4430']);
+
+        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findByPk')
+            ->with(17)
+            ->willReturn($page)
+        ;
+
+        $framework = $this->mockFramework($pageAdapter);
+        $route = $this->mockRouteProvider($framework)->getRouteByName('tl_page.17');
+
+        $this->assertSame('example.org', $route->getHost());
+    }
+
+
+    public function testRoutesWithDomain(): void
+    {
+        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17, 'domain' => 'example.org']);
+
+        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findByPk')
+            ->with(17)
+            ->willReturn($page)
+        ;
+
+        $framework = $this->mockFramework($pageAdapter);
+        $route = $this->mockRouteProvider($framework)->getRouteByName('tl_page.17');
+
+        $this->assertSame('example.org', $route->getHost());
+    }
+
     public function testFindsAllPagesForGetRoutesByNamesWithNullArgument(): void
     {
         $pageAdapter = $this->mockAdapter(['findAll']);
