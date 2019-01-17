@@ -313,27 +313,21 @@ class DcaSchemaProvider
                 $flags[] = 'fulltext';
             }
 
-            $options = [];
-
-            if (array_filter($lengths)) {
-                $options['lengths'] = $lengths;
-
-                // Backwards compatibility for doctrine/dbal < 2.9
-                if (!method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
-                    $columns = array_combine(
+            // Backwards compatibility for doctrine/dbal <2.9
+            if (array_filter($lengths) && !method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+                $columns = array_combine(
+                    $columns,
+                    array_map(
+                        function ($column, $length) {
+                            return $column.($length ? '('.$length.')' : '');
+                        },
                         $columns,
-                        array_map(
-                            function ($column, $length) {
-                                return $column.($length ? '('.$length.')' : '');
-                            },
-                            $columns,
-                            $lengths
-                        )
-                    );
-                }
+                        $lengths
+                    )
+                );
             }
 
-            $table->addIndex($columns, $matches[2], $flags, $options);
+            $table->addIndex($columns, $matches[2], $flags, ['lengths' => $lengths]);
         }
     }
 
