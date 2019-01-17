@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.7.0-RC2 (2019-01-17)
 
  * Support comma separated values in `Model::getRelated()` (see #257).
  * Do not check the user's file permissions in the template editor (see #224).
