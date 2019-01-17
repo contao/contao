@@ -1,4 +1,12 @@
 services:
+    contao_calendar.listener.breadcrumb:
+        class: Contao\CalendarBundle\EventListener\BreadcrumbListener
+        arguments:
+            - "@contao.framework"
+        tags:
+            - { name: contao.hook, hook: generateBreadcrumb }
+        public: true
+
     contao_calendar.listener.generate_page:
         class: Contao\CalendarBundle\EventListener\GeneratePageListener
         arguments:
@@ -26,11 +34,3 @@ services:
             - "@contao.framework"
         tags:
             - { name: kernel.event_listener, event: contao.preview_url_convert, method: onPreviewUrlConvert }
-
-    contao_calendar.listener.breadcrumb:
-        class: Contao\CalendarBundle\EventListener\BreadcrumbListener
-        arguments:
-        - "@contao.framework"
-        tags:
-        - { name: contao.hook, hook: generateBreadcrumb }
-        public: true

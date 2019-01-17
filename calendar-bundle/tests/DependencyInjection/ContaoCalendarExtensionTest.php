@@ -44,6 +44,17 @@ class ContaoCalendarExtensionTest extends TestCase
         $extension->load([], $this->container);
     }
 
+    public function testRegistersTheBreadcrumbListener(): void
+    {
+        $this->assertTrue($this->container->has('contao_calendar.listener.breadcrumb'));
+
+        $definition = $this->container->getDefinition('contao_calendar.listener.breadcrumb');
+
+        $this->assertSame(BreadcrumbListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+    }
+
     public function testRegistersTheGeneratePageListener(): void
     {
         $this->assertTrue($this->container->has('contao_calendar.listener.generate_page'));
@@ -125,16 +136,5 @@ class ContaoCalendarExtensionTest extends TestCase
 
         $this->assertArrayHasKey('contao.picker_provider', $tags);
         $this->assertSame(96, $tags['contao.picker_provider'][0]['priority']);
-    }
-
-    public function testRegistersTheBreadcrumbListener(): void
-    {
-        $this->assertTrue($this->container->has('contao_calendar.listener.breadcrumb'));
-
-        $definition = $this->container->getDefinition('contao_calendar.listener.breadcrumb');
-
-        $this->assertSame(BreadcrumbListener::class, $definition->getClass());
-        $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 }
