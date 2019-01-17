@@ -77,7 +77,7 @@ class BreadcrumbListenerTest extends ContaoTestCase
         $inputAdapter = $this->mockAdapter(['get']);
         $inputAdapter
             ->method('get')
-            ->with('items')
+            ->with('events')
             ->willReturn(null);
 
         $framework = $this->mockContaoFramework(
