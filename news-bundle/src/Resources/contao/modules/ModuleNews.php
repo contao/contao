@@ -299,10 +299,18 @@ abstract class ModuleNews extends Module
 					break;
 
 				case 'comments':
-					if ($objArticle->noComments || !\in_array('comments', ModuleLoader::getActive()) || $objArticle->source != 'default')
+					if ($objArticle->noComments || $objArticle->source != 'default')
 					{
 						break;
 					}
+
+					$bundles = System::getContainer()->getParameter('kernel.bundles');
+
+					if (!isset($bundles['ContaoCommentsBundle']))
+					{
+						break;
+					}
+
 					$intTotal = CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
 					$return['ccount'] = $intTotal;
 					$return['comments'] = sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
