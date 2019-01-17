@@ -41,12 +41,7 @@ class BreadcrumbListener
             return $items;
         }
 
-        $newsArchive = $this->getNewsArchive();
-        if (!$newsArchive) {
-            return $items;
-        }
-
-        $news = $this->getNews($newsAlias, $newsArchive);
+        $news = $this->getNews($newsAlias);
         if (!$news) {
             return $items;
         }
@@ -76,16 +71,16 @@ class BreadcrumbListener
         return $inputAdapter->get('items');
     }
 
-    private function getNewsArchive(): ?NewsArchiveModel
+    private function getNews(string $newsAlias): ?NewsModel
     {
-        /** @var Adapter|NewsArchiveModel $repository */
-        $repository = $this->framework->getAdapter(NewsArchiveModel::class);
+        $newsArchive = $this->framework
+            ->getAdapter(NewsArchiveModel::class)
+            ->findOneByJumpTo($GLOBALS['objPage']->id);
 
-        return $repository->findOneByJumpTo($GLOBALS['objPage']->id);
-    }
+        if (!$newsArchive) {
+            return null;
+        }
 
-    private function getNews(string $newsAlias, NewsArchiveModel $newsArchive): ?NewsModel
-    {
         /** @var Adapter|NewsModel $repository */
         $repository = $this->framework->getAdapter(NewsModel::class);
 

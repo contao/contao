@@ -41,12 +41,7 @@ class BreadcrumbListener
             return $items;
         }
 
-        $calendar = $this->getCalenderModel();
-        if (!$calendar) {
-            return $items;
-        }
-
-        $eventModel = $this->getEventModel($eventAlias, $calendar);
+        $eventModel = $this->getEventModel($eventAlias);
         if (!$eventModel) {
             return $items;
         }
@@ -73,23 +68,20 @@ class BreadcrumbListener
             return $inputAdapter->get('auto_item');
         }
 
-        return $inputAdapter->get('items');
+        return $inputAdapter->get('events');
     }
 
-    private function getCalenderModel(): ?CalendarModel
+    private function getEventModel(string $eventAlias): ?CalendarEventsModel
     {
         /** @var Adapter|CalendarModel $repository */
-        $repository = $this->framework->getAdapter(CalendarModel::class);
-
-        return $repository->findOneByJumpTo($GLOBALS['objPage']->id);
-    }
-
-    private function getEventModel(string $eventAlias, CalendarModel $calendarModel): ?CalendarEventsModel
-    {
+        $calendarModel = $this->framework->getAdapter(CalendarModel::class)->findOneByJumpTo($GLOBALS['objPage']->id);
+        if (!$calendarModel) {
+            return null;
+        }
         /** @var Adapter|CalendarEventsModel $repository */
-        $repository = $this->framework->getAdapter(CalendarEventsModel::class);
-
-        return $repository->findPublishedByParentAndIdOrAlias($eventAlias, [$calendarModel->id]);
+        return $this->framework
+            ->getAdapter(CalendarEventsModel::class)
+            ->findPublishedByParentAndIdOrAlias($eventAlias, [$calendarModel->id]);
     }
 
     private function addBreadcrumbItem(array $items, CalendarEventsModel $eventModel): array

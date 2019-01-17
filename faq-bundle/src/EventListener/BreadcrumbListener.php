@@ -44,12 +44,7 @@ class BreadcrumbListener
             return $items;
         }
 
-        $faqCategory = $this->getFaqCategory();
-        if (!$faqCategory) {
-            return $items;
-        }
-
-        $faq = $this->getFaq($faqAlias, $faqCategory);
+        $faq = $this->getFaq($faqAlias);
         if (!$faq) {
             return $items;
         }
@@ -77,20 +72,20 @@ class BreadcrumbListener
         return $inputAdapter->get('items');
     }
 
-    private function getFaqCategory(): ?FaqCategoryModel
+    private function getFaq(string $faqAlias): ?FaqModel
     {
-        /** @var Adapter|FaqCategoryModel $repository */
-        $repository = $this->framework->getAdapter(FaqCategoryModel::class);
+        $faqCategory = $this->framework
+            ->getAdapter(FaqCategoryModel::class)
+            ->findOneByJumpTo($GLOBALS['objPage']->id);
 
-        return $repository->findOneByJumpTo($GLOBALS['objPage']->id);
-    }
+        if (!$faqCategory) {
+            return null;
+        }
 
-    private function getFaq(string $faqAlias, FaqCategoryModel $faqCategory): ?FaqModel
-    {
         /** @var Adapter|FaqModel $repository */
-        $repository = $this->framework->getAdapter(FaqModel::class);
-
-        return $repository->findPublishedByParentAndIdOrAlias($faqAlias, [$faqCategory->id]);
+        return $this->framework
+            ->getAdapter(FaqModel::class)
+            ->findPublishedByParentAndIdOrAlias($faqAlias, [$faqCategory->id]);
     }
 
     private function addBreadcrumbItem(array $items, FaqModel $faq, bool $useAutoItem): array
