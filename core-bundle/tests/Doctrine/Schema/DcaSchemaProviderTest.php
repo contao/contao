@@ -321,16 +321,19 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
     /**
      * @dataProvider getIndexes
+     *
+     * @param bool|string $largePrefixes
      */
-    public function testAddsTheIndexLength(?int $expected, string $tableOptions, string $largePrefixes = '', string $filePerTable = '', string $fileSystem = 'antelope'): void
+    public function testAddsTheIndexLength(?int $expected, string $tableOptions, $largePrefixes = null, string $version = null, string $filePerTable = null, string $fileFormat = null): void
     {
         $statement = $this->createMock(Statement::class);
         $statement
             ->method('fetch')
             ->willReturnOnConsecutiveCalls(
                 (object) ['Value' => $largePrefixes],
+                (object) ['Value' => $version],
                 (object) ['Value' => $filePerTable],
-                (object) ['Value' => $fileSystem]
+                (object) ['Value' => $fileFormat]
             )
         ;
 
@@ -383,35 +386,140 @@ class DcaSchemaProviderTest extends DoctrineTestCase
      */
     public function getIndexes(): array
     {
-        return [
-            // Default
-            [null, 'ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci'],
-            [250, 'ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci'],
-
-            // Large prefixes DISABLED
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'Off'],
-            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', '0'],
-
-            // Large prefixes ENABLED
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On'],
-            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', '1'],
-
-            // Large prefixes ENABLED, file per table DISABLED
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'Off'],
-            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '0'],
-
-            // Large prefixes ENABLED, file per table DISABLED, file system PROVIDED
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'Off', 'barracuda'],
-            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '0', 'barracuda'],
-
-            // Large prefixes ENABLED, file per table ENABLED
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'On'],
-            [191, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '1'],
-
-            // Large prefixes ENABLED, file per table ENABLED, file system PROVIDED
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci', 'On', 'On', 'barracuda'],
-            [null, 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci', 'On', '1', 'barracuda'],
+        $return = [
+            'MyISAM, utf8' => [
+                null,
+                'ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+            ],
+            'MyISAM, utf8mb4' => [
+                250,
+                'ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+            ],
         ];
+
+        $matrix = [
+            'MySQL' => ['5.5.62', '5.7.7', '8.0.13'],
+            'MariaDB' => ['10.1.37', '10.2.2', '10.3.12'],
+        ];
+
+        foreach ($matrix as $vendor => $versions) {
+            $return += [
+                $vendor.' '.$versions[0].', utf8, large_prefixes=Off' => [
+                    null,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                    'Off',
+                    $versions[0],
+                ],
+                $vendor.' '.$versions[0].', utf8mb4, large_prefixes=Off' => [
+                    191,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                    '0',
+                    $versions[0],
+                ],
+                $vendor.' '.$versions[0].', utf8, large_prefixes=On' => [
+                    null,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                    'On',
+                    $versions[0],
+                ],
+                $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On' => [
+                    191,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                    '1',
+                    $versions[0],
+                ],
+                $vendor.' '.$versions[0].', utf8, large_prefixes=On, file_per_table=Off' => [
+                    null,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                    'On',
+                    $versions[0],
+                    'Off',
+                ],
+                $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On, file_per_table=Off' => [
+                    191,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                    'On',
+                    $versions[0],
+                    '0',
+                ],
+                $vendor.' '.$versions[0].', utf8, large_prefixes=On, file_per_table=Off, file_format=Barracuda' => [
+                    null,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                    'On',
+                    $versions[0],
+                    'Off',
+                    'Barracuda',
+                ],
+                $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On, file_per_table=Off, file_format=Barracuda' => [
+                    191,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                    'On',
+                    $versions[0],
+                    '0',
+                    'Barracuda',
+                ],
+                $vendor.' '.$versions[0].', utf8, large_prefixes=On, file_per_table=On' => [
+                    null,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                    'On',
+                    $versions[0],
+                    'On',
+                ],
+                $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On, file_per_table=On' => [
+                    191,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                    'On',
+                    $versions[0],
+                    '1',
+                ],
+                $vendor.' '.$versions[0].', utf8, large_prefixes=On, file_per_table=On, file_format=Barracuda' => [
+                    null,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                    'On',
+                    $versions[0],
+                    'On',
+                    'Barracuda',
+                ],
+                $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On, file_per_table=On, file_format=Barracuda' => [
+                    null,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                    'On',
+                    $versions[0],
+                    '1',
+                    'Barracuda',
+                ],
+
+                // innodb_large_prefixes enabled by default
+                $vendor.' '.$versions[1].' with utf8' => [
+                    null,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                    null,
+                    $versions[1],
+                ],
+                $vendor.' '.$versions[1].' with utf8mb4' => [
+                    null,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                    null,
+                    $versions[1],
+                ],
+
+                // innodb_large_prefixes removed
+                $vendor.' '.$versions[2].' with utf8' => [
+                    null,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                    null,
+                    $versions[2],
+                ],
+                $vendor.' '.$versions[2].' with utf8mb4' => [
+                    null,
+                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                    null,
+                    $versions[2],
+                ],
+            ];
+        }
+
+        return $return;
     }
 
     public function testHandlesIndexesOverMultipleColumns(): void

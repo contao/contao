@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Check the database configuration the install tool (see #285).
+
 ## 4.6.13 (2019-01-16)
 
  * Support comma separated values in `Model::getRelated()` (see #257).

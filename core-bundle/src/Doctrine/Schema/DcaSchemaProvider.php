@@ -408,9 +408,32 @@ class DcaSchemaProvider
             ->fetch(\PDO::FETCH_OBJ)
         ;
 
-        // The variable no longer exists (as of MySQL 8 and MariaDB 10.3)
+        // The variable no longer exists as of MySQL 8 and MariaDB 10.3
         if (false === $largePrefix) {
             return 3072;
+        }
+
+        $version = $this->doctrine
+            ->getConnection()
+            ->query('SELECT @@version as Value')
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        [$ver] = explode('-', $version->Value);
+
+        // As there is no reliable way to get the vendor (see #84), we are
+        // guessing based on the version number. The check will not be run
+        // as of MySQL 8 and MariaDB 10.3, so this should be safe.
+        $vok = version_compare($ver, '10', '>=') ? '10.2.2' : '5.7.7';
+
+        // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
+        if (version_compare($ver, $vok, '>=')) {
+            return 3072;
+        }
+
+        // The innodb_large_prefix option is disabled
+        if (!\in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true)) {
+            return 767;
         }
 
         $filePerTable = $this->doctrine
@@ -430,14 +453,12 @@ class DcaSchemaProvider
             ->fetch(\PDO::FETCH_OBJ)
         ;
 
-        if (
-            'barracuda' === strtolower((string) $fileFormat->Value)
-            && \in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true)
-        ) {
-            return 3072;
+        // The InnoDB file format is not Barracuda
+        if ('barracuda' !== strtolower((string) $fileFormat->Value)) {
+            return 767;
         }
 
-        return 767;
+        return 3072;
     }
 
     private function isCaseSensitive(array $config): bool
