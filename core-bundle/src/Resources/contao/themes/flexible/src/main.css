@@ -55,16 +55,19 @@ body.popup {
 	vertical-align:top;
 }
 #tmenu sup {
-	position:absolute;
-	top:8px;
-	left:19px;
-	z-index:1;
-	font-size:.5rem;
-	background:#f00;
-	padding:0 2px;
-	border-radius:2px;
-	line-height:11px;
-	text-indent:0;
+	position: absolute;
+	top: 5px;
+	left: 20px;
+	z-index: 1;
+	font-size: .6rem;
+	background: #fff;
+	border-radius: 100%;
+	line-height: 17px;
+	text-indent: 0;
+	width: 15px;
+	height: 15px;
+	color: #e36b00;
+	text-align: center;
 }
 #tmenu .burger {
 	display:none;
