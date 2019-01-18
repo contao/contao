@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Correctly sort the tree view records if there is an active filter (see #269).
+
 ## 4.4.33 (2019-01-16)
 
  * Support comma separated values in `Model::getRelated()` (see #257).
