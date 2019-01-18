@@ -293,7 +293,7 @@ class SymlinksCommand extends AbstractLockedCommand
             if (!empty($parents)) {
                 $parent = \dirname($path);
 
-                while (false !== strpos($parent, '/')) {
+                while ($parent !== '.') {
                     if (\in_array($parent, $parents, true)) {
                         $this->rows[] = [
                             sprintf(
