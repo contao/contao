@@ -217,8 +217,13 @@ abstract class Frontend extends \Controller
 		}
 
 		// Add the second fragment as auto_item if the number of fragments is even
-		if (\Config::get('useAutoItem') && \count($arrFragments) % 2 == 0)
+		if (\count($arrFragments) % 2 == 0)
 		{
+			if (!\Config::get('useAutoItem'))
+			{
+				return false; // see #264
+			}
+
 			array_insert($arrFragments, 1, array('auto_item'));
 		}
 
