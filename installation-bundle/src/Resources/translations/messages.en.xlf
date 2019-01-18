@@ -16,7 +16,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>For security reasons, the install tool has been locked after a wrong password had been entered more than three times in a row. To unlock it, run &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; on the command line.</target>
+        <target>For security reasons, the install tool has been locked after a wrong password had been entered more than three times in a row. You can unlock it in the Contao Manager or by running &lt;code&gt;contao:install:unlock&lt;/code&gt; on the command line.</target>
       </trans-unit>
       <trans-unit id="5">
         <source>file_permissions_headline</source>
