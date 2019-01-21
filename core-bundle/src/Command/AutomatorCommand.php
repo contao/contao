@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,8 +13,7 @@
 namespace Contao\CoreBundle\Command;
 
 use Contao\Automator;
-use Contao\CoreBundle\Framework\FrameworkAwareInterface;
-use Contao\CoreBundle\Framework\FrameworkAwareTrait;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,42 +21,40 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
- * Runs Automator tasks on the command line.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/toflar>
+ * Runs Contao automator tasks on the command line.
  */
-class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareInterface
+class AutomatorCommand extends AbstractLockedCommand
 {
-    use FrameworkAwareTrait;
-
     /**
      * @var array
      */
     private $commands = [];
 
     /**
-     * Returns the help text.
-     *
-     * By using the __toString() method, we ensure that the help text is lazy loaded at
-     * a time where the autoloader is available (required by $this->getCommands()).
-     *
-     * @return string
+     * @var ContaoFrameworkInterface
      */
-    public function __toString()
+    private $framework;
+
+    public function __construct(ContaoFrameworkInterface $framework)
     {
-        return sprintf("The name of the task:\n  - %s", implode("\n  - ", $this->getCommands()));
+        $this->framework = $framework;
+
+        parent::__construct();
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('contao:automator')
             ->setDefinition([
-                new InputArgument('task', InputArgument::OPTIONAL, $this),
+                new InputArgument(
+                    'task',
+                    InputArgument::OPTIONAL,
+                    sprintf("The name of the task:\n  - %s", implode("\n  - ", $this->getCommands()))
+                ),
             ])
             ->setDescription('Runs automator tasks on the command line.')
         ;
@@ -64,7 +63,7 @@ class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareIn
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output)
+    protected function executeLocked(InputInterface $input, OutputInterface $output): int
     {
         $this->framework->initialize();
 
@@ -79,13 +78,7 @@ class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareIn
         return 0;
     }
 
-    /**
-     * Runs the Automator.
-     *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     */
-    private function runAutomator(InputInterface $input, OutputInterface $output)
+    private function runAutomator(InputInterface $input, OutputInterface $output): void
     {
         $task = $this->getTaskFromInput($input, $output);
 
@@ -94,11 +87,9 @@ class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareIn
     }
 
     /**
-     * Returns a list of available commands.
-     *
-     * @return array
+     * @return string[]
      */
-    private function getCommands()
+    private function getCommands(): array
     {
         if (empty($this->commands)) {
             $this->commands = $this->generateCommandMap();
@@ -108,11 +99,9 @@ class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareIn
     }
 
     /**
-     * Generates the command map from the Automator class.
-     *
-     * @return array
+     * @return string[]
      */
-    private function generateCommandMap()
+    private function generateCommandMap(): array
     {
         $this->framework->initialize();
 
@@ -133,13 +122,8 @@ class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareIn
 
     /**
      * Returns the task name from the argument list or via an interactive dialog.
-     *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return string|null
      */
-    private function getTaskFromInput(InputInterface $input, OutputInterface $output)
+    private function getTaskFromInput(InputInterface $input, OutputInterface $output): string
     {
         $commands = $this->getCommands();
         $task = $input->getArgument('task');
@@ -152,7 +136,7 @@ class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareIn
             return $task;
         }
 
-        $question = new ChoiceQuestion('Please select a task:', $commands, 0);
+        $question = new ChoiceQuestion('Please select a task:', $commands);
         $question->setMaxAttempts(1);
 
         /** @var QuestionHelper $helper */

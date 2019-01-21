@@ -18,7 +18,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class RadioButton extends \Widget
+class RadioButton extends Widget
 {
 
 	/**
@@ -56,7 +56,7 @@ class RadioButton extends \Widget
 				break;
 
 			case 'options':
-				$this->arrOptions = \StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue);
 				break;
 
 			default:
@@ -94,7 +94,7 @@ class RadioButton extends \Widget
 			$arrOptions[] = sprintf('<input type="radio" name="%s" id="opt_%s" class="tl_radio" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s</label>',
 									 $this->strName,
 									 $this->strId.'_'.$i,
-									 \StringUtil::specialchars($arrOption['value']),
+									 StringUtil::specialchars($arrOption['value']),
 									 $this->isChecked($arrOption),
 									 $this->getAttributes(),
 									 $this->strId.'_'.$i,
@@ -118,3 +118,5 @@ class RadioButton extends \Widget
 						$this->wizard);
 	}
 }
+
+class_alias(RadioButton::class, 'RadioButton');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,68 +15,67 @@ namespace Contao\FaqBundle\Tests\Picker;
 use Contao\BackendUser;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\FaqBundle\Picker\FaqPickerProvider;
+use Contao\FaqCategoryModel;
+use Contao\FaqModel;
+use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
-use PHPUnit\Framework\TestCase;
+use Knp\Menu\ItemInterface;
+use Knp\Menu\MenuItem;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Tests the FaqPickerProvider class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
-class FaqPickerProviderTest extends TestCase
+class FaqPickerProviderTest extends ContaoTestCase
 {
     /**
      * @var FaqPickerProvider
      */
-    protected $provider;
+    private $provider;
 
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $menuFactory = $this->createMock(FactoryInterface::class);
-
         $menuFactory
             ->method('createItem')
-            ->willReturnArgument(1)
+            ->willReturnCallback(
+                function (string $name, array $data) use ($menuFactory): ItemInterface {
+                    $item = new MenuItem($name, $menuFactory);
+                    $item->setLabel($data['label']);
+                    $item->setLinkAttributes($data['linkAttributes']);
+                    $item->setCurrent($data['current']);
+                    $item->setUri($data['uri']);
+
+                    return $item;
+                }
+            )
         ;
 
         $router = $this->createMock(RouterInterface::class);
-
         $router
             ->method('generate')
             ->willReturnCallback(
-                function ($name, array $params) {
+                function (string $name, array $params): string {
                     return $name.'?'.http_build_query($params);
                 }
             )
         ;
 
-        $this->provider = new FaqPickerProvider($menuFactory, $router);
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturn('Faq picker')
+        ;
 
-        $GLOBALS['TL_LANG']['MSC']['faqPicker'] = 'Faq picker';
+        $this->provider = new FaqPickerProvider($menuFactory, $router, $translator);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown()
-    {
-        parent::tearDown();
-
-        unset($GLOBALS['TL_LANG']);
-    }
-
-    /**
-     * Tests the createMenuItem() method.
-     */
-    public function testCreatesTheMenuItem()
+    public function testCreatesTheMenuItem(): void
     {
         $picker = json_encode([
             'context' => 'link',
@@ -87,74 +88,35 @@ class FaqPickerProviderTest extends TestCase
             $picker = $encoded;
         }
 
-        $this->assertSame(
-            [
-                'label' => 'Faq picker',
-                'linkAttributes' => ['class' => 'faqPicker'],
-                'current' => true,
-                'uri' => 'contao_backend?do=faq&popup=1&picker='.urlencode(strtr(base64_encode($picker), '+/=', '-_,')),
-            ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'faqPicker'))
-        );
+        $item = $this->provider->createMenuItem(new PickerConfig('link', [], '', 'faqPicker'));
+        $uri = 'contao_backend?do=faq&popup=1&picker='.urlencode(strtr(base64_encode($picker), '+/=', '-_,'));
+
+        $this->assertSame('Faq picker', $item->getLabel());
+        $this->assertSame(['class' => 'faqPicker'], $item->getLinkAttributes());
+        $this->assertTrue($item->isCurrent());
+        $this->assertSame($uri, $item->getUri());
     }
 
-    /**
-     * Tests the isCurrent() method.
-     */
-    public function testChecksIfAMenuItemIsCurrent()
+    public function testChecksIfAMenuItemIsCurrent(): void
     {
         $this->assertTrue($this->provider->isCurrent(new PickerConfig('link', [], '', 'faqPicker')));
         $this->assertFalse($this->provider->isCurrent(new PickerConfig('link', [], '', 'filePicker')));
     }
 
-    /**
-     * Tests the getName() method.
-     */
-    public function testReturnsTheCorrectName()
+    public function testReturnsTheCorrectName(): void
     {
         $this->assertSame('faqPicker', $this->provider->getName());
     }
 
-    /**
-     * Tests the supportsContext() method.
-     */
-    public function testChecksIfAContextIsSupported()
+    public function testChecksIfAContextIsSupported(): void
     {
-        $user = $this
-            ->getMockBuilder(BackendUser::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['hasAccess'])
-            ->getMock()
-        ;
-
-        $user
-            ->method('hasAccess')
-            ->willReturn(true)
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-
-        $token
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $this->provider->setTokenStorage($tokenStorage);
+        $this->provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->assertTrue($this->provider->supportsContext('link'));
         $this->assertFalse($this->provider->supportsContext('file'));
     }
 
-    /**
-     * Tests the supportsContext() method without token storage.
-     */
-    public function testFailsToCheckTheContextIfThereIsNoTokenStorage()
+    public function testFailsToCheckTheContextIfThereIsNoTokenStorage(): void
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('No token storage provided');
@@ -162,13 +124,9 @@ class FaqPickerProviderTest extends TestCase
         $this->provider->supportsContext('link');
     }
 
-    /**
-     * Tests the supportsContext() method without token.
-     */
-    public function testFailsToCheckTheContextIfThereIsNoToken()
+    public function testFailsToCheckTheContextIfThereIsNoToken(): void
     {
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn(null)
@@ -182,20 +140,15 @@ class FaqPickerProviderTest extends TestCase
         $this->provider->supportsContext('link');
     }
 
-    /**
-     * Tests the supportsContext() method without a user object.
-     */
-    public function testFailsToCheckTheContextIfThereIsNoUser()
+    public function testFailsToCheckTheContextIfThereIsNoUser(): void
     {
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->method('getUser')
             ->willReturn(null)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn($token)
@@ -209,27 +162,18 @@ class FaqPickerProviderTest extends TestCase
         $this->provider->supportsContext('link');
     }
 
-    /**
-     * Tests the supportsValue() method.
-     */
-    public function testChecksIfAValueIsSupported()
+    public function testChecksIfAValueIsSupported(): void
     {
         $this->assertTrue($this->provider->supportsValue(new PickerConfig('link', [], '{{faq_url::5}}')));
         $this->assertFalse($this->provider->supportsValue(new PickerConfig('link', [], '{{link_url::5}}')));
     }
 
-    /**
-     * Tests the getDcaTable() method.
-     */
-    public function testReturnsTheDcaTable()
+    public function testReturnsTheDcaTable(): void
     {
         $this->assertSame('tl_faq', $this->provider->getDcaTable());
     }
 
-    /**
-     * Tests the getDcaAttributes() method.
-     */
-    public function testReturnsTheDcaAttributes()
+    public function testReturnsTheDcaAttributes(): void
     {
         $extra = ['source' => 'tl_faq.2'];
 
@@ -251,11 +195,81 @@ class FaqPickerProviderTest extends TestCase
         );
     }
 
-    /**
-     * Tests the convertDcaValue() method.
-     */
-    public function testConvertsTheDcaValue()
+    public function testConvertsTheDcaValue(): void
     {
         $this->assertSame('{{faq_url::5}}', $this->provider->convertDcaValue(new PickerConfig('link'), 5));
+    }
+
+    public function testAddsTableAndIdIfThereIsAValue(): void
+    {
+        $faq = $this->createMock(FaqModel::class);
+        $faq
+            ->expects($this->once())
+            ->method('getRelated')
+            ->with('pid')
+            ->willReturn($this->mockClassWithProperties(FaqCategoryModel::class, ['id' => 1]))
+        ;
+
+        $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
+
+        $adapters = [
+            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
+        ];
+
+        $this->provider->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(FaqPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($this->provider, [$config]);
+
+        $this->assertSame('faq', $params['do']);
+        $this->assertSame('tl_faq', $params['table']);
+        $this->assertSame(1, $params['id']);
+    }
+
+    public function testDoesNotAddTableAndIdIfThereIsNoEventsModel(): void
+    {
+        $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
+
+        $adapters = [
+            FaqModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+        ];
+
+        $this->provider->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(FaqPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($this->provider, [$config]);
+
+        $this->assertSame('faq', $params['do']);
+        $this->assertArrayNotHasKey('tl_faq', $params);
+        $this->assertArrayNotHasKey('id', $params);
+    }
+
+    public function testDoesNotAddTableAndIdIfThereIsNoCalendarModel(): void
+    {
+        $faq = $this->createMock(FaqModel::class);
+        $faq
+            ->expects($this->once())
+            ->method('getRelated')
+            ->with('pid')
+            ->willReturn(null)
+        ;
+
+        $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
+
+        $adapters = [
+            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
+        ];
+
+        $this->provider->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(FaqPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($this->provider, [$config]);
+
+        $this->assertSame('faq', $params['do']);
+        $this->assertArrayNotHasKey('tl_faq', $params);
+        $this->assertArrayNotHasKey('id', $params);
     }
 }

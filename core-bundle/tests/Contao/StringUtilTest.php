@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,44 +15,26 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\StringUtil;
 use Contao\System;
+use Psr\Log\NullLogger;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * Tests the StringUtil class.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- * @author Martin Auswöger <martin@auswoeger.com>
- * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @group contao3
- */
 class StringUtilTest extends TestCase
 {
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    protected function setUp(): void
     {
-        if (!\defined('TL_ERROR')) {
-            \define('TL_ERROR', 'ERROR');
-        }
+        parent::setUp();
+
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.project_dir', $this->getFixturesDir());
+        $container->set('monolog.logger.contao', new NullLogger());
+
+        System::setContainer($container);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
-    {
-        if (!\defined('TL_ROOT')) {
-            \define('TL_ROOT', $this->getRootDir());
-        }
-
-        System::setContainer($this->mockContainerWithContaoScopes());
-    }
-
-    /**
-     * Tests generating aliases.
-     */
-    public function testGeneratesAliases()
+    public function testGeneratesAliases(): void
     {
         $GLOBALS['TL_CONFIG']['characterSet'] = 'UTF-8';
 
@@ -66,25 +50,17 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests parsing simple tokens.
-     *
-     * @param string $string
-     * @param array  $tokens
-     * @param string $expected
-     *
      * @dataProvider parseSimpleTokensProvider
      */
-    public function testParsesSimpleTokens($string, array $tokens, $expected)
+    public function testParsesSimpleTokens(string $string, array $tokens, string $expected): void
     {
         $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens));
     }
 
     /**
-     * Provides the data for the testParseSimpleTokens() method.
-     *
-     * @return array
+     * @return array<string,array<int,array<string,float|int|string>|string>>
      */
-    public function parseSimpleTokensProvider()
+    public function parseSimpleTokensProvider(): array
     {
         return [
             'Test regular token replacement' => [
@@ -291,25 +267,17 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests that the parseSimpleTokens() method works correctly with newlines.
-     *
-     * @param string $string
-     * @param array  $tokens
-     * @param string $expected
-     *
      * @dataProvider parseSimpleTokensCorrectNewlines
      */
-    public function testHandlesLineBreaksWhenParsingSimpleTokens($string, array $tokens, $expected)
+    public function testHandlesLineBreaksWhenParsingSimpleTokens(string $string, array $tokens, string $expected): void
     {
         $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens));
     }
 
     /**
-     * Provides the data for the testParseSimpleTokensCorrectNewlines() method.
-     *
-     * @return array
+     * @return array<string,array<int,array<string,string>|string>>
      */
-    public function parseSimpleTokensCorrectNewlines()
+    public function parseSimpleTokensCorrectNewlines(): array
     {
         return [
             'Test newlines are kept end of token' => [
@@ -346,24 +314,17 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests that the parseSimpleTokens() method does not execute PHP code.
-     *
-     * @param string $string
-     * @param bool
-     *
      * @dataProvider parseSimpleTokensDoesntExecutePhp
      */
-    public function testDoesNotExecutePhpCode($string)
+    public function testDoesNotExecutePhpCode(string $string): void
     {
         $this->assertSame($string, StringUtil::parseSimpleTokens($string, []));
     }
 
     /**
-     * Provides the data for the testParseSimpleTokens() method.
-     *
-     * @return array
+     * @return array<string,(bool|string)[]>
      */
-    public function parseSimpleTokensDoesntExecutePhp()
+    public function parseSimpleTokensDoesntExecutePhp(): array
     {
         return [
             '(<?php)' => [
@@ -394,24 +355,17 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Tests that the parseSimpleTokens() method does not execute PHP code inside tokens.
-     *
-     * @param array $tokens
-     * @param bool
-     *
      * @dataProvider parseSimpleTokensDoesntExecutePhpInToken
      */
-    public function testDoesNotExecutePhpCodeInTokens(array $tokens)
+    public function testDoesNotExecutePhpCodeInTokens(array $tokens): void
     {
         $this->assertSame($tokens['foo'], StringUtil::parseSimpleTokens('##foo##', $tokens));
     }
 
     /**
-     * Provides the data for the testParseSimpleTokens() method.
-     *
-     * @return array
+     * @return array<string,(bool|array<string,string>)[]>
      */
-    public function parseSimpleTokensDoesntExecutePhpInToken()
+    public function parseSimpleTokensDoesntExecutePhpInToken(): array
     {
         return [
             '(<?php)' => [
@@ -441,27 +395,24 @@ class StringUtilTest extends TestCase
         ];
     }
 
-    /**
-     * Tests that the parseSimpleTokens() method does not execute PHP code when tokens
-     * contain PHP code that is generated only after replacing the tokens.
-     */
-    public function testDoesNotExecutePhpCodeInCombinedTokens()
+    public function testDoesNotExecutePhpCodeInCombinedTokens(): void
     {
-        $this->assertSame('This is <?php echo "I am evil";?> evil', StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', [
+        $data = [
             'open' => '<',
             'open2' => '?php echo "I am evil";',
             'close' => '?>',
-        ]));
+        ];
+
+        $this->assertSame(
+            'This is <?php echo "I am evil";?> evil',
+            StringUtil::parseSimpleTokens('This is ##open####open2####close## evil', $data)
+        );
     }
 
     /**
-     * Tests that the parseSimpleTokens() method fails for invalid comparisons.
-     *
-     * @param $string
-     *
      * @dataProvider parseSimpleTokensInvalidComparison
      */
-    public function testFailsIfTheComparisonOperatorIsInvalid($string)
+    public function testFailsIfTheComparisonOperatorIsInvalid(string $string): void
     {
         $this->expectException('InvalidArgumentException');
 
@@ -469,11 +420,9 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * Provides the data for the testParseSimpleTokens() method.
-     *
-     * @return array
+     * @return array<string,string[]>
      */
-    public function parseSimpleTokensInvalidComparison()
+    public function parseSimpleTokensInvalidComparison(): array
     {
         return [
             'PHP constants are not allowed' => ['{if foo==__FILE__}{endif}'],
@@ -489,79 +438,58 @@ class StringUtilTest extends TestCase
         ];
     }
 
-    /**
-     * Tests the stripRootDir() method.
-     */
-    public function testStripsTheRootDirectory()
+    public function testStripsTheRootDirectory(): void
     {
-        $this->assertSame('', StringUtil::stripRootDir($this->getRootDir().'/'));
-        $this->assertSame('', StringUtil::stripRootDir($this->getRootDir().'\\'));
-        $this->assertSame('foo', StringUtil::stripRootDir($this->getRootDir().'/foo'));
-        $this->assertSame('foo', StringUtil::stripRootDir($this->getRootDir().'\foo'));
-        $this->assertSame('foo/', StringUtil::stripRootDir($this->getRootDir().'/foo/'));
-        $this->assertSame('foo\\', StringUtil::stripRootDir($this->getRootDir().'\foo\\'));
-        $this->assertSame('foo/bar', StringUtil::stripRootDir($this->getRootDir().'/foo/bar'));
-        $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getRootDir().'\foo\bar'));
+        $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'/'));
+        $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'\\'));
+        $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'/foo'));
+        $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'\foo'));
+        $this->assertSame('foo/', StringUtil::stripRootDir($this->getFixturesDir().'/foo/'));
+        $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
+        $this->assertSame('foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/foo/bar'));
+        $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
     }
 
-    /**
-     * Tests that a path outside the root directory triggers an exception.
-     */
-    public function testFailsIfThePathIsOutsideTheRootDirectory()
+    public function testFailsIfThePathIsOutsideTheRootDirectory(): void
     {
         $this->expectException('InvalidArgumentException');
 
         StringUtil::stripRootDir('/foo');
     }
 
-    /**
-     * Tests that a parent path triggers an exception.
-     */
-    public function testFailsIfThePathIsTheParentFolder()
+    public function testFailsIfThePathIsTheParentFolder(): void
     {
         $this->expectException('InvalidArgumentException');
 
-        StringUtil::stripRootDir(\dirname($this->getRootDir()).'/');
+        StringUtil::stripRootDir(\dirname($this->getFixturesDir()).'/');
     }
 
-    /**
-     * Tests that a longer path triggers an exception.
-     */
-    public function testFailsIfThePathDoesNotMatch()
+    public function testFailsIfThePathDoesNotMatch(): void
     {
         $this->expectException('InvalidArgumentException');
 
-        StringUtil::stripRootDir($this->getRootDir().'foo/');
+        StringUtil::stripRootDir($this->getFixturesDir().'foo/');
     }
 
-    /**
-     * Tests that omitting the trailing slash triggers an exception.
-     */
-    public function testFailsIfThePathHasNoTrailingSlash()
+    public function testFailsIfThePathHasNoTrailingSlash(): void
     {
         $this->expectException('InvalidArgumentException');
 
-        StringUtil::stripRootDir($this->getRootDir());
+        StringUtil::stripRootDir($this->getFixturesDir());
     }
 
     /**
-     * Tests splitting and trimming a string.
-     *
-     * @param string $pattern
-     * @param string $string
-     * @param array  $expected
-     *
      * @dataProvider trimsplitProvider
      */
-    public function testTrimsplit($pattern, $string, array $expected)
+    public function testSplitsAndTrimsStrings(string $pattern, string $string, array $expected): void
     {
         $this->assertSame($expected, StringUtil::trimsplit($pattern, $string));
     }
 
     /**
-     * @return array
+     * @return array<string,(string|string[])[]>
      */
-    public function trimsplitProvider()
+    public function trimsplitProvider(): array
     {
         return [
             'Test regular split' => [

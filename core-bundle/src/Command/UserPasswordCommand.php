@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -26,8 +28,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Changes the password of a Contao back end user.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class UserPasswordCommand extends ContainerAwareCommand
 {
@@ -36,11 +36,6 @@ class UserPasswordCommand extends ContainerAwareCommand
      */
     private $framework;
 
-    /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
@@ -51,7 +46,7 @@ class UserPasswordCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('contao:user:password')
@@ -69,7 +64,7 @@ class UserPasswordCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         if (null === $input->getArgument('username')) {
             throw new InvalidArgumentException('Please provide the username as argument.');
@@ -92,7 +87,7 @@ class UserPasswordCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (null === $input->getArgument('username') || null === $input->getOption('password')) {
             return 1;
@@ -122,14 +117,8 @@ class UserPasswordCommand extends ContainerAwareCommand
 
     /**
      * Asks a question with the given label and hides the input.
-     *
-     * @param string          $label
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return string
      */
-    private function askForPassword($label, InputInterface $input, OutputInterface $output)
+    private function askForPassword(string $label, InputInterface $input, OutputInterface $output): string
     {
         $question = new Question($label);
         $question->setHidden(true);
@@ -142,15 +131,9 @@ class UserPasswordCommand extends ContainerAwareCommand
     }
 
     /**
-     * Validates the password length and creates the password hash.
-     *
-     * @param string $password
-     *
      * @throws InvalidArgumentException
-     *
-     * @return string
      */
-    private function validateAndHashPassword($password)
+    private function validateAndHashPassword(string $password): string
     {
         $this->framework->initialize();
 

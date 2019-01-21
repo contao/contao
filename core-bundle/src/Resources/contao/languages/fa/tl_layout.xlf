@@ -208,14 +208,6 @@
         <source>Here you can add external CSS, SCSS or LESS files from the file system.</source>
         <target>اینجا می‌توانید پرونده‌های CSS، SCSS یا LESS خارجی را از سامانه پرونده انتخاب نمایید.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.orderExt.0">
-        <source>Sort order</source>
-        <target>ترتیب مرتب‌سازی</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.orderExt.1">
-        <source>The sort order of the style sheets.</source>
-        <target>ترتیب مرتب‌سازی شیوه‌نامه‌ها</target>
-      </trans-unit>
       <trans-unit id="tl_layout.loadingOrder.0">
         <source>Loading order</source>
         <target>ترتیب بارگذاری</target>
@@ -229,7 +221,7 @@
         <target>ترکیب اسکریپت‌ها</target>
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
-        <source>Combine the .css and .js files (do not enable for HTTP/2).</source>
+        <source>Combine the .css and .js files (recommended).</source>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
@@ -284,14 +276,14 @@
         <target>برچسب ویوپورت</target>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.1">
-        <source>Here you can set the viewport tag.</source>
+        <source>Here you can set a custom viewport tag.</source>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.0">
         <source>Title tag</source>
         <target>برچسب عنوان</target>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
-        <source>Here you can set a custom title tag.</source>
+        <source>Here you can overwrite the title tag.</source>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>
@@ -380,6 +372,13 @@
       <trans-unit id="tl_layout.analytics.1">
         <source>Here you can select one or more analytics templates.</source>
         <target>اینجا می‌توانید یک یا چند قالب جاوااسکریپت انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.externalJs.0">
+        <source>External JavaScripts</source>
+        <target>جاوااسکریپت‌های خارجی</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.externalJs.1">
+        <source>Here you can add external JS files from the file system.</source>
       </trans-unit>
       <trans-unit id="tl_layout.script.0">
         <source>Custom JavaScript code</source>

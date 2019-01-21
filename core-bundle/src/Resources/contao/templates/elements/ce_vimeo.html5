@@ -2,6 +2,17 @@
 
 <?php $this->block('content'); ?>
 
-  <iframe<?= $this->size ?> src="<?= $this->src ?>" allowfullscreen></iframe>
+  <figure class="video_container">
+    <?php if ($this->aspect): ?>
+      <div class="responsive ratio-<?= $this->aspect ?>">
+    <?php endif; ?>
+    <iframe<?= $this->size ?> src="<?= $this->src ?>" allowfullscreen></iframe>
+    <?php if ($this->aspect): ?>
+      </div>
+    <?php endif; ?>
+    <?php if ($this->caption): ?>
+      <figcaption class="caption"><?= $this->caption ?></figcaption>
+    <?php endif; ?>
+  </figure>
 
 <?php $this->endblock(); ?>

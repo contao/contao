@@ -10,9 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -29,7 +27,7 @@ use Symfony\Component\Routing\RouterInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendUser extends \User
+class BackendUser extends User
 {
 
 	/**
@@ -69,8 +67,14 @@ class BackendUser extends \User
 	const CAN_DELETE_ARTICLES = 6;
 
 	/**
+	 * Symfony Security session key
+	 * @var string
+	 */
+	const SECURITY_SESSION_KEY = '_security_contao_backend';
+
+	/**
 	 * Current object instance (do not remove)
-	 * @var object
+	 * @var BackendUser
 	 */
 	protected static $objInstance;
 
@@ -99,14 +103,51 @@ class BackendUser extends \User
 	protected $arrFilemountIds;
 
 	/**
+	 * Symfony security roles
+	 * @var array
+	 */
+	protected $roles = array('ROLE_USER');
+
+	/**
 	 * Initialize the object
 	 */
 	protected function __construct()
 	{
 		parent::__construct();
 
-		$this->strIp = \Environment::get('ip');
-		$this->strHash = \Input::cookie($this->strCookie);
+		$this->strIp = Environment::get('ip');
+		$this->strHash = Input::cookie($this->strCookie);
+	}
+
+	/**
+	 * Instantiate a new user object
+	 *
+	 * @return static|User The object instance
+	 */
+	public static function getInstance()
+	{
+		if (static::$objInstance !== null)
+		{
+			return static::$objInstance;
+		}
+
+		$objToken = System::getContainer()->get('security.token_storage')->getToken();
+
+		// Load the user from the security storage
+		if ($objToken !== null && is_a($objToken->getUser(), static::class))
+		{
+			return static::loadUserByUsername($objToken->getUser()->getUsername());
+		}
+
+		// Check for an authenticated user in the session
+		$strUser = System::getContainer()->get('contao.security.token_checker')->getBackendUsername();
+
+		if ($strUser !== null)
+		{
+			return static::loadUserByUsername($strUser);
+		}
+
+		return parent::getInstance();
 	}
 
 	/**
@@ -125,7 +166,7 @@ class BackendUser extends \User
 				break;
 
 			case 'groups':
-				return \is_array($this->arrData['groups']) ? $this->arrData['groups'] : array($this->arrData['groups']);
+				return \is_array($this->arrData['groups']) ? $this->arrData['groups'] : (($this->arrData['groups'] != '') ? array($this->arrData['groups']) : array());
 				break;
 
 			case 'pagemounts':
@@ -156,32 +197,30 @@ class BackendUser extends \User
 	 * Redirect to the login screen if authentication fails
 	 *
 	 * @return boolean True if the user could be authenticated
+	 *
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony security instead.
 	 */
 	public function authenticate()
 	{
-		// Do not redirect if authentication is successful
-		if (parent::authenticate())
-		{
-			return true;
-		}
+		@trigger_error('Using BackendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
-		$route = $request->attributes->get('_route');
+		return System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+	}
 
-		if ($route == 'contao_backend_login')
-		{
-			return false;
-		}
+	/**
+	 * Try to login the current user
+	 *
+	 * @return boolean True if the user could be logged in
+	 *
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony security instead.
+	 */
+	public function login()
+	{
+		@trigger_error('Using BackendUser::login() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		$parameters = array();
-
-		// Redirect to the last page visited upon login
-		if ($request->query->count() > 0 && \in_array($route, array('contao_backend', 'contao_backend_preview')))
-		{
-			$parameters['referer'] = base64_encode($request->getRequestUri());
-		}
-
-		throw new RedirectResponseException(\System::getContainer()->get('router')->generate('contao_backend_login', $parameters, UrlGeneratorInterface::ABSOLUTE_URL));
+		return System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
 	}
 
 	/**
@@ -247,11 +286,9 @@ class BackendUser extends \User
 			$row['cuser'] = false;
 			$row['cgroup'] = false;
 
-			$objParentPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-											->limit(1)
-											->execute($pid);
+			$objParentPage = PageModel::findById($pid);
 
-			while ($row['chmod'] === false && $pid > 0 && $objParentPage->numRows)
+			while ($objParentPage !== null && $row['chmod'] === false && $pid > 0)
 			{
 				$pid = $objParentPage->pid;
 
@@ -259,28 +296,26 @@ class BackendUser extends \User
 				$row['cuser'] = $objParentPage->includeChmod ? $objParentPage->cuser : false;
 				$row['cgroup'] = $objParentPage->includeChmod ? $objParentPage->cgroup : false;
 
-				$objParentPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-												->limit(1)
-												->execute($pid);
+				$objParentPage = PageModel::findById($pid);
 			}
 
 			// Set default values
 			if ($row['chmod'] === false)
 			{
-				$row['chmod'] = \Config::get('defaultChmod');
+				$row['chmod'] = Config::get('defaultChmod');
 			}
 			if ($row['cuser'] === false)
 			{
-				$row['cuser'] = (int) \Config::get('defaultUser');
+				$row['cuser'] = (int) Config::get('defaultUser');
 			}
 			if ($row['cgroup'] === false)
 			{
-				$row['cgroup'] = (int) \Config::get('defaultGroup');
+				$row['cgroup'] = (int) Config::get('defaultGroup');
 			}
 		}
 
 		// Set permissions
-		$chmod = \StringUtil::deserialize($row['chmod']);
+		$chmod = StringUtil::deserialize($row['chmod']);
 		$chmod = \is_array($chmod) ? $chmod : array($chmod);
 		$permission = array('w'.$int);
 
@@ -342,24 +377,18 @@ class BackendUser extends \User
 		{
 			if (!is_numeric($v))
 			{
-				$this->$k = \StringUtil::deserialize($v);
+				$this->$k = StringUtil::deserialize($v);
 			}
 		}
 
 		$GLOBALS['TL_USERNAME'] = $this->username;
 
-		\System::getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
-		\System::getContainer()->get('translator')->setLocale($this->language);
-
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language);
-
-		\Config::set('showHelp', $this->showHelp);
-		\Config::set('useRTE', $this->useRTE);
-		\Config::set('useCE', $this->useCE);
-		\Config::set('thumbnails', $this->thumbnails);
-		\Config::set('backendTheme', $this->backendTheme);
-		\Config::set('limitWidth', $this->limitWidth);
+		Config::set('showHelp', $this->showHelp);
+		Config::set('useRTE', $this->useRTE);
+		Config::set('useCE', $this->useCE);
+		Config::set('thumbnails', $this->thumbnails);
+		Config::set('backendTheme', $this->backendTheme);
+		Config::set('fullscreen', $this->fullscreen);
 
 		// Inherit permissions
 		$always = array('alexf');
@@ -382,7 +411,7 @@ class BackendUser extends \User
 
 		// Merge permissions
 		$inherit = \in_array($this->inherit, array('group', 'extend')) ? array_merge($always, $depends) : $always;
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 
 		foreach ((array) $this->groups as $id)
 		{
@@ -394,7 +423,7 @@ class BackendUser extends \User
 			{
 				foreach ($inherit as $field)
 				{
-					$value = \StringUtil::deserialize($objGroup->$field, true);
+					$value = StringUtil::deserialize($objGroup->$field, true);
 
 					// The new page/file picker can return integers instead of arrays, so use empty() instead of is_array() and StringUtil::deserialize(true) here
 					if (!empty($value))
@@ -431,12 +460,18 @@ class BackendUser extends \User
 		// Convert the file mounts into paths
 		if (!$this->isAdmin && !empty($this->filemounts))
 		{
-			$objFiles = \FilesModel::findMultipleByUuids($this->filemounts);
+			$objFiles = FilesModel::findMultipleByUuids($this->filemounts);
 
 			if ($objFiles !== null)
 			{
 				$this->filemounts = $objFiles->fetchEach('path');
 			}
+		}
+
+		// Hide the "admin" field if the user is not an admin (see #184)
+		if (!$this->isAdmin && ($index = array_search('tl_user::admin', $this->alexf)) !== false)
+		{
+			unset($this->alexf[$index]);
 		}
 	}
 
@@ -450,42 +485,45 @@ class BackendUser extends \User
 	public function navigation($blnShowAll=false)
 	{
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		/** @var RouterInterface $router */
-		$router = \System::getContainer()->get('router');
+		$router = System::getContainer()->get('router');
 
 		$arrModules = array();
 		$session = $objSessionBag->all();
 
 		// Toggle nodes
-		if (\Input::get('mtg'))
+		if (Input::get('mtg'))
 		{
-			$session['backend_modules'][\Input::get('mtg')] = (isset($session['backend_modules'][\Input::get('mtg')]) && $session['backend_modules'][\Input::get('mtg')] == 0) ? 1 : 0;
+			$session['backend_modules'][Input::get('mtg')] = (isset($session['backend_modules'][Input::get('mtg')]) && $session['backend_modules'][Input::get('mtg')] == 0) ? 1 : 0;
 			$objSessionBag->replace($session);
-			\Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', \Environment::get('request')));
+			Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', Environment::get('request')));
 		}
 
-		$strRefererId = \System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
+		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
 		foreach ($GLOBALS['BE_MOD'] as $strGroupName=>$arrGroupModules)
 		{
 			if (!empty($arrGroupModules) && ($strGroupName == 'system' || $this->hasAccess(array_keys($arrGroupModules), 'modules')))
 			{
 				$arrModules[$strGroupName]['class'] = ' node-expanded';
-				$arrModules[$strGroupName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
+				$arrModules[$strGroupName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
 				$arrModules[$strGroupName]['label'] = (($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName]) ? $GLOBALS['TL_LANG']['MOD'][$strGroupName][0] : $GLOBALS['TL_LANG']['MOD'][$strGroupName]) != false) ? $label : $strGroupName;
-				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>\Input::get('do'), 'mtg'=>$strGroupName, 'ref'=>$strRefererId));
+				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>Input::get('do'), 'mtg'=>$strGroupName, 'ref'=>$strRefererId));
 				$arrModules[$strGroupName]['ajaxUrl'] = $router->generate('contao_backend');
 				$arrModules[$strGroupName]['icon'] = 'modPlus.gif'; // backwards compatibility with e.g. EasyThemes
 
 				foreach ($arrGroupModules as $strModuleName=>$arrModuleConfig)
 				{
 					// Check access
-					if ($strModuleName == 'undo' || $this->hasAccess($strModuleName, 'modules'))
+					$blnAccess = (isset($arrModuleConfig['disablePermissionChecks']) && $arrModuleConfig['disablePermissionChecks'] === true) || $this->hasAccess($strModuleName, 'modules');
+					$blnHide = isset($arrModuleConfig['hideInNavigation']) && $arrModuleConfig['hideInNavigation'] === true;
+
+					if ($blnAccess && !$blnHide)
 					{
 						$arrModules[$strGroupName]['modules'][$strModuleName] = $arrModuleConfig;
-						$arrModules[$strGroupName]['modules'][$strModuleName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$strModuleName][1]);
+						$arrModules[$strGroupName]['modules'][$strModuleName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$strModuleName][1]);
 						$arrModules[$strGroupName]['modules'][$strModuleName]['label'] = (($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strModuleName]) ? $GLOBALS['TL_LANG']['MOD'][$strModuleName][0] : $GLOBALS['TL_LANG']['MOD'][$strModuleName]) != false) ? $label : $strModuleName;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['class'] = 'navigation ' . $strModuleName;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['href'] = $router->generate('contao_backend', array('do'=>$strModuleName, 'ref'=>$strRefererId));
@@ -513,7 +551,7 @@ class BackendUser extends \User
 			if (!$blnShowAll && isset($session['backend_modules'][$strGroupName]) && $session['backend_modules'][$strGroupName] < 1)
 			{
 				$arrModules[$strGroupName]['class'] = str_replace('node-expanded', '', $arrModules[$strGroupName]['class']) . ' node-collapsed';
-				$arrModules[$strGroupName]['title'] = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['expandNode']);
+				$arrModules[$strGroupName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['expandNode']);
 				$arrModules[$strGroupName]['isClosed'] = true;
 			}
 
@@ -522,7 +560,7 @@ class BackendUser extends \User
 				foreach ($arrGroupModules['modules'] as $strModuleName => $arrModuleConfig)
 				{
 					// Mark the active module and its group
-					if (\Input::get('do') == $strModuleName)
+					if (Input::get('do') == $strModuleName)
 					{
 						$arrModules[$strGroupName]['class'] .= ' trail';
 						$arrModules[$strGroupName]['modules'][$strModuleName]['isActive'] = true;
@@ -533,4 +571,19 @@ class BackendUser extends \User
 
 		return $arrModules;
 	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getRoles()
+	{
+		if ($this->isAdmin)
+		{
+			return array('ROLE_USER', 'ROLE_ADMIN', 'ROLE_ALLOWED_TO_SWITCH');
+		}
+
+		return $this->roles;
+	}
 }
+
+class_alias(BackendUser::class, 'BackendUser');

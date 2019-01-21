@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,21 +15,11 @@ namespace Contao\CoreBundle\Tests\Session\Attribute;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the ArrayAttributeBag class.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ArrayAttributeBagTest extends TestCase
 {
-    /**
-     * Tests the offsetSet() method.
-     */
-    public function testCanWriteTheOffset()
+    public function testCanWriteTheOffset(): void
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
-
         $bag['foo'] = 'bar';
         $bag['bar']['baz'] = 'foo';
         $bag['baz'] = [];
@@ -38,13 +30,9 @@ class ArrayAttributeBagTest extends TestCase
         $this->assertSame(['foo' => 'bar'], $bag->get('baz'));
     }
 
-    /**
-     * Tests the offsetExists() method.
-     */
-    public function testChecksIfTheOffsetExists()
+    public function testChecksIfTheOffsetExists(): void
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
-
         $bag['foo'] = 'bar';
         $bag['bar']['baz'] = 'foo';
 
@@ -53,13 +41,9 @@ class ArrayAttributeBagTest extends TestCase
         $this->assertFalse(isset($bag['baz']));
     }
 
-    /**
-     * Tests the offsetGet() method.
-     */
-    public function testCanReadTheOffset()
+    public function testCanReadTheOffset(): void
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
-
         $bag['foo'] = 'bar';
         $bag['bar']['baz'] = 'foo';
 
@@ -68,13 +52,9 @@ class ArrayAttributeBagTest extends TestCase
         $this->assertSame('foo', $bag['bar']['baz']);
     }
 
-    /**
-     * Tests the offsetGet() method.
-     */
-    public function testCanModifyTheOffset()
+    public function testCanModifyTheOffset(): void
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
-
         $bag['foo'] = 1;
         $bag['bar']['baz'] = 'foo';
 
@@ -85,10 +65,7 @@ class ArrayAttributeBagTest extends TestCase
         $this->assertSame(['baz' => 'foobar'], $bag['bar']);
     }
 
-    /**
-     * Tests the offsetUnset() method.
-     */
-    public function testCanUnsetTheOffset()
+    public function testCanUnsetTheOffset(): void
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
         $bag->set('foo', 'bar');
@@ -100,10 +77,7 @@ class ArrayAttributeBagTest extends TestCase
         $this->assertSame([], $bag->get('bar'));
     }
 
-    /**
-     * Tests that values are not referenced.
-     */
-    public function testDoesNotReferenceValues()
+    public function testDoesNotReferenceValues(): void
     {
         $bag = new ArrayAttributeBag('foobar_storageKey');
         $bag->set('foo', 'bar');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -18,11 +20,6 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 
-/**
- * Provides the faq picker.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
@@ -30,7 +27,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'faqPicker';
     }
@@ -38,7 +35,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     /**
      * {@inheritdoc}
      */
-    public function supportsContext($context)
+    public function supportsContext($context): bool
     {
         return 'link' === $context && $this->getUser()->hasAccess('faq', 'modules');
     }
@@ -46,7 +43,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     /**
      * {@inheritdoc}
      */
-    public function supportsValue(PickerConfig $config)
+    public function supportsValue(PickerConfig $config): bool
     {
         return false !== strpos($config->getValue(), '{{faq_url::');
     }
@@ -54,7 +51,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     /**
      * {@inheritdoc}
      */
-    public function getDcaTable()
+    public function getDcaTable(): string
     {
         return 'tl_faq';
     }
@@ -62,7 +59,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     /**
      * {@inheritdoc}
      */
-    public function getDcaAttributes(PickerConfig $config)
+    public function getDcaAttributes(PickerConfig $config): array
     {
         $attributes = ['fieldType' => 'radio'];
 
@@ -80,7 +77,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     /**
      * {@inheritdoc}
      */
-    public function convertDcaValue(PickerConfig $config, $value)
+    public function convertDcaValue(PickerConfig $config, $value): string
     {
         return '{{faq_url::'.$value.'}}';
     }
@@ -88,7 +85,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     /**
      * {@inheritdoc}
      */
-    protected function getRouteParameters(PickerConfig $config = null)
+    protected function getRouteParameters(PickerConfig $config = null): array
     {
         $params = ['do' => 'faq'];
 
@@ -107,13 +104,9 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     }
 
     /**
-     * Returns the FAQ category ID.
-     *
-     * @param int $id
-     *
-     * @return int|null
+     * @param int|string $id
      */
-    private function getFaqCategoryId($id)
+    private function getFaqCategoryId($id): ?int
     {
         /** @var FaqModel $faqAdapter */
         $faqAdapter = $this->framework->getAdapter(FaqModel::class);
@@ -126,6 +119,6 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
             return null;
         }
 
-        return $faqCategory->id;
+        return (int) $faqCategory->id;
     }
 }

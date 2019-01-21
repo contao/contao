@@ -121,22 +121,6 @@
         <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
         <target>Jeśli twoja strona jest dostępna przez serwer proxy SSL, wprowadź jego domenę (np. &lt;em&gt;sslsites.de&lt;/em&gt;).</target>
       </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.0">
-        <source>Anonymize IP addresses</source>
-        <target>Anonimizuj adresy IP</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize any IP address that is stored in the database, except in the &lt;em&gt;tl_session&lt;/em&gt; table (the IP address is bound to the session for security reasons).</source>
-        <target>Anonimizuj każdy adres IP, który jest przechowywane w bazie danych, z wyjątkiem tych w tabeli &lt;em&gt;tl_session&lt;/em&gt; (adres IP jest przypisany do sesji ze względów bezpieczeństwa).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.0">
-        <source>Anonymize Google Analytics</source>
-        <target>Anonimizuj Google Analytics</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.1">
-        <source>Anonymize the IP addresses that are sent to Google Analytics.</source>
-        <target>Anonimizuj adresy IP wysyłane do Google Anayltics.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
         <target>Nie przekierowuj pustych URLi</target>
@@ -177,14 +161,6 @@
         <source>Do not check the request token when a form is submitted (insecure!).</source>
         <target>Nie sprawdzaj tokenu przy wysyłaniu formularza (niebezpieczne!).</target>
       </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.0">
-        <source>Account locking time</source>
-        <target>Czas oczekiwania na odblokowanie konta</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.1">
-        <source>An account will be locked if a wrong password is entered three times in a row.</source>
-        <target>Wprowadź czas (w sekundach), po którym użytkownik ponownie będzie miał możliwość zalogowania się na swoje konto (domyślnie: 5 minut = 300 sekund). Ta funkcja utrudnia ataki metodą &quot;brutal force&quot;.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
         <target>Poprawne typy pobieranych plików</target>
@@ -208,14 +184,6 @@
       <trans-unit id="tl_settings.templateFiles.1">
         <source>Here you can enter a comma separated list of supported template file types.</source>
         <target>Wprowadź oddzielone przecinkami wspierane rozszerzenia plików szablonów.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.0">
-        <source>Maximum front end width</source>
-        <target>Maksymalna szerokość obrazka</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.1">
-        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically. Set to 0 to disable the limit.</source>
-        <target>Jeśli szerokość obrazka lub filmu przekroczy tą wartość, element zostanie automatycznie dostosowany. Wprowadź 0, aby wyłączyć limit.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -313,14 +281,6 @@
         <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
         <target>Wprowadź maksymalny czas trwania sesji, podaj wartość w sekundach (domyślnie: 60 minut = 3600 sekund). Jeśli w tym przedziale czasu użytkownik będzie nieaktywny, aktualna sesja zostanie przerwana a użytkownik wylogowany.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.autologin.0">
-        <source>Auto login period</source>
-        <target>Okres automatycznego logowania</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.1">
-        <source>Here you can set the front end auto login period (90 days = 7776000 seconds).</source>
-        <target>Tu możesz ustalić okres automatycznego logowania (90 dni = 7776000 sekund).</target>
-      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>Domyślna strona użytkownika</target>
@@ -368,10 +328,6 @@
       <trans-unit id="tl_settings.proxy_legend">
         <source>Proxy configuration</source>
         <target>Konfiguracja proxy</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacy_legend">
-        <source>Privacy settings</source>
-        <target>Ustawienia prywatności</target>
       </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>

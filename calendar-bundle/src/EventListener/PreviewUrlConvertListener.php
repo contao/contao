@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,11 +19,6 @@ use Contao\Events;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Converts the front end preview URL.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PreviewUrlConvertListener
 {
     /**
@@ -34,12 +31,6 @@ class PreviewUrlConvertListener
      */
     private $framework;
 
-    /**
-     * Constructor.
-     *
-     * @param RequestStack             $requestStack
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(RequestStack $requestStack, ContaoFrameworkInterface $framework)
     {
         $this->requestStack = $requestStack;
@@ -47,11 +38,9 @@ class PreviewUrlConvertListener
     }
 
     /**
-     * Modifies the front end preview URL.
-     *
-     * @param PreviewUrlConvertEvent $event
+     * Adds the front end preview URL to the event.
      */
-    public function onPreviewUrlConvert(PreviewUrlConvertEvent $event)
+    public function onPreviewUrlConvert(PreviewUrlConvertEvent $event): void
     {
         if (!$this->framework->isInitialized()) {
             return;
@@ -69,14 +58,7 @@ class PreviewUrlConvertListener
         $event->setUrl($request->getSchemeAndHttpHost().'/'.$eventsAdapter->generateEventUrl($eventModel));
     }
 
-    /**
-     * Returns the event model.
-     *
-     * @param Request $request
-     *
-     * @return CalendarEventsModel|null
-     */
-    private function getEventModel(Request $request)
+    private function getEventModel(Request $request): ?CalendarEventsModel
     {
         if (!$request->query->has('calendar')) {
             return null;

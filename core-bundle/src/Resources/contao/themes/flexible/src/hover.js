@@ -161,7 +161,7 @@ var Theme = {
 					.replace(/</g, '&lt;')
 					.replace(/>/g, '&gt;')
 					.replace(/\n|\r\n/g, '<br>X'));
-				var height = Math.max(line, dummy.getSize().y + 2);
+				var height = Math.max(line, dummy.getSize().y);
 				if (this.clientHeight != height) this.tween('height', height);
 			}).set('tween', { 'duration':100 }).setStyle('height', line + 'px');
 

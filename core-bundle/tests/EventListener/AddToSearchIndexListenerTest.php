@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,65 +13,37 @@
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use PHPUnit\Framework\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
+use Contao\Frontend;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-/**
- * Tests the AddToSearchIndexListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class AddToSearchIndexListenerTest extends TestCase
 {
     /**
-     * @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ContaoFrameworkInterface|MockObject
      */
     private $framework;
 
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->framework = $this->createMock(ContaoFrameworkInterface::class);
+        $adapter = $this->mockAdapter(['indexPageIfApplicable']);
 
-        $frontendAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['indexPageIfApplicable'])
-            ->getMock()
-        ;
-
-        $frontendAdapter
-            ->method('indexPageIfApplicable')
-            ->willReturn(null)
-        ;
-
-        $this->framework
-            ->method('getAdapter')
-            ->willReturn($frontendAdapter)
-        ;
+        $this->framework = $this->mockContaoFramework([Frontend::class => $adapter]);
     }
 
-    /**
-     * Tests that the listener does use the response if the Contao framework is booted.
-     */
-    public function testIndexesTheResponse()
+    public function testIndexesTheResponse(): void
     {
-        $this->framework
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
-
         $event = $this->mockPostResponseEvent();
-
         $event
             ->expects($this->once())
             ->method('getResponse')
@@ -80,39 +54,27 @@ class AddToSearchIndexListenerTest extends TestCase
         $listener->onKernelTerminate($event);
     }
 
-    /**
-     * Tests that the listener does nothing if the Contao framework is not booted.
-     */
-    public function testDoesNotIndexTheResponseIfTheContaoFrameworkIsNotInitialized()
+    public function testDoesNotIndexTheResponseIfTheContaoFrameworkIsNotInitialized(): void
     {
-        $this->framework
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework
             ->method('isInitialized')
             ->willReturn(false)
         ;
 
         $event = $this->mockPostResponseEvent();
-
         $event
             ->expects($this->never())
             ->method('getResponse')
         ;
 
-        $listener = new AddToSearchIndexListener($this->framework);
+        $listener = new AddToSearchIndexListener($framework);
         $listener->onKernelTerminate($event);
     }
 
-    /**
-     * Tests that the listener does nothing if the request method is not GET.
-     */
-    public function testDoesNotIndexTheResponseIfTheRequestMethodIsNotGet()
+    public function testDoesNotIndexTheResponseIfTheRequestMethodIsNotGet(): void
     {
-        $this->framework
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
-
         $event = $this->mockPostResponseEvent(null, Request::METHOD_POST);
-
         $event
             ->expects($this->never())
             ->method('getResponse')
@@ -122,18 +84,9 @@ class AddToSearchIndexListenerTest extends TestCase
         $listener->onKernelTerminate($event);
     }
 
-    /**
-     * Tests that the listener does nothing if the request is a fragment.
-     */
-    public function testDoesNotIndexTheResponseUponFragmentRequests()
+    public function testDoesNotIndexTheResponseUponFragmentRequests(): void
     {
-        $this->framework
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
-
         $event = $this->mockPostResponseEvent('_fragment/foo/bar');
-
         $event
             ->expects($this->never())
             ->method('getResponse')
@@ -144,29 +97,17 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
-     * Returns a PostResponseEvent mock object.
-     *
-     * @param string|null $requestUri
-     * @param string      $requestMethod
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject|PostResponseEvent
+     * @return PostResponseEvent|MockObject
      */
-    private function mockPostResponseEvent($requestUri = null, $requestMethod = Request::METHOD_GET)
+    private function mockPostResponseEvent(string $requestUri = null, string $requestMethod = Request::METHOD_GET): PostResponseEvent
     {
         $request = new Request();
         $request->setMethod($requestMethod);
-
-        if (null !== $requestUri) {
-            $request->server->set('REQUEST_URI', $requestUri);
-        }
+        $request->server->set('REQUEST_URI', $requestUri);
 
         return $this
             ->getMockBuilder(PostResponseEvent::class)
-            ->setConstructorArgs([
-                $this->createMock(KernelInterface::class),
-                $request,
-                new Response(),
-            ])
+            ->setConstructorArgs([$this->createMock(KernelInterface::class), $request, new Response()])
             ->setMethods(['getResponse'])
             ->getMock()
         ;

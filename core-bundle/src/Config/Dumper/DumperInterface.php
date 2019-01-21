@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,11 +12,6 @@
 
 namespace Contao\CoreBundle\Config\Dumper;
 
-/**
- * Interface for cache dumpers.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 interface DumperInterface
 {
     /**
@@ -22,7 +19,6 @@ interface DumperInterface
      *
      * @param array|string $files
      * @param string       $cacheFile
-     * @param array        $options
      */
     public function dump($files, $cacheFile, array $options = []);
 }

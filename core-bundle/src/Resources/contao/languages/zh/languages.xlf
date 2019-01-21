@@ -1074,10 +1074,6 @@
         <source>Turkmen</source>
         <target>土库曼语</target>
       </trans-unit>
-      <trans-unit id="LNG.tl">
-        <source>Tagalog</source>
-        <target>塔加路族语</target>
-      </trans-unit>
       <trans-unit id="LNG.tn">
         <source>Tswana</source>
         <target>茨瓦纳语</target>

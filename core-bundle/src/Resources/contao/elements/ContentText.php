@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentText extends \ContentElement
+class ContentText extends ContentElement
 {
 
 	/**
@@ -29,24 +29,24 @@ class ContentText extends \ContentElement
 	 */
 	protected function compile()
 	{
-		$this->text = \StringUtil::toHtml5($this->text);
+		$this->text = StringUtil::toHtml5($this->text);
 
 		// Add the static files URL to images
-		if (TL_FILES_URL != '')
+		if ($staticUrl = System::getContainer()->get('contao.assets.files_context')->getStaticUrl())
 		{
-			$path = \Config::get('uploadPath') . '/';
-			$this->text = str_replace(' src="' . $path, ' src="' . TL_FILES_URL . $path, $this->text);
+			$path = Config::get('uploadPath') . '/';
+			$this->text = str_replace(' src="' . $path, ' src="' . $staticUrl . $path, $this->text);
 		}
 
-		$this->Template->text = \StringUtil::encodeEmail($this->text);
+		$this->Template->text = StringUtil::encodeEmail($this->text);
 		$this->Template->addImage = false;
 
 		// Add an image
 		if ($this->addImage && $this->singleSRC != '')
 		{
-			$objModel = \FilesModel::findByUuid($this->singleSRC);
+			$objModel = FilesModel::findByUuid($this->singleSRC);
 
-			if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
+			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
 			{
 				$this->singleSRC = $objModel->path;
 				$this->addImageToTemplate($this->Template, $this->arrData, null, null, $objModel);
@@ -54,3 +54,5 @@ class ContentText extends \ContentElement
 		}
 	}
 }
+
+class_alias(ContentText::class, 'ContentText');

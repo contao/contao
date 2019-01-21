@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,26 +16,18 @@ use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Tests the WebsiteRootsConfigProvider class.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- */
 class WebsiteRootsConfigProviderTest extends TestCase
 {
-    /**
-     * Tests that a configuration is provided if the host matches.
-     */
-    public function testProvidesTheConfigurationIfTheHostMatches()
+    public function testProvidesTheConfigurationIfTheHostMatches(): void
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'http://origin.com');
 
         $statement = $this->createMock(Statement::class);
-
         $statement
             ->method('bindValue')
             ->with('dns', 'origin.com')
@@ -45,7 +39,8 @@ class WebsiteRootsConfigProviderTest extends TestCase
             ->willReturn('1')
         ;
 
-        $connection = $this->getConnection($statement);
+        $connection = $this->mockConnection($statement);
+
         $configProvider = new WebsiteRootsConfigProvider($connection);
         $result = $configProvider->getOptions($request);
 
@@ -59,16 +54,12 @@ class WebsiteRootsConfigProviderTest extends TestCase
         );
     }
 
-    /**
-     * Tests that no configuration is provided if the host does not match.
-     */
-    public function testDoesNotProvideTheConfigurationIfTheHostDoesNotMatch()
+    public function testDoesNotProvideTheConfigurationIfTheHostDoesNotMatch(): void
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://origin.com');
 
         $statement = $this->createMock(Statement::class);
-
         $statement
             ->method('bindValue')
             ->with('dns', 'origin.com')
@@ -80,23 +71,20 @@ class WebsiteRootsConfigProviderTest extends TestCase
             ->willReturn('0')
         ;
 
-        $connection = $this->getConnection($statement);
+        $connection = $this->mockConnection($statement);
+
         $configProvider = new WebsiteRootsConfigProvider($connection);
         $result = $configProvider->getOptions($request);
 
         $this->assertCount(0, $result);
     }
 
-    /**
-     * Tests that no configuration is provided if there is no origin header.
-     */
-    public function testDoesNotProvideTheConfigurationIfThereIsNoOriginHeader()
+    public function testDoesNotProvideTheConfigurationIfThereIsNoOriginHeader(): void
     {
         $request = Request::create('http://foobar.com');
         $request->headers->remove('Origin');
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->never())
             ->method('prepare')
@@ -108,16 +96,12 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    /**
-     * Tests that no configuration is provided if the origin equals the host.
-     */
-    public function testDoesNotProvideTheConfigurationIfTheOriginEqualsTheHost()
+    public function testDoesNotProvideTheConfigurationIfTheOriginEqualsTheHost(): void
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://foobar.com');
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->never())
             ->method('prepare')
@@ -129,16 +113,12 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    /**
-     * Tests that no configuration is provided if the table does not exist.
-     */
-    public function testDoesNotProvideTheConfigurationIfTheTableDoesNotExist()
+    public function testDoesNotProvideTheConfigurationIfTheTableDoesNotExist(): void
     {
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://origin.com');
 
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
-
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')
@@ -146,7 +126,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('getSchemaManager')
             ->willReturn($schemaManager)
@@ -164,16 +143,11 @@ class WebsiteRootsConfigProviderTest extends TestCase
     }
 
     /**
-     * Mocks a database connection object.
-     *
-     * @param string $statement
-     *
-     * @return Connection|\PHPUnit_Framework_MockObject_MockObject
+     * @return Connection|MockObject
      */
-    private function getConnection($statement)
+    private function mockConnection(Statement $statement): Connection
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
-
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')
@@ -181,7 +155,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->once())
             ->method('prepare')

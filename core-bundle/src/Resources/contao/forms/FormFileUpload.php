@@ -22,7 +22,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormFileUpload extends \Widget implements \uploadable
+class FormFileUpload extends Widget implements \uploadable
 {
 
 	/**
@@ -109,7 +109,7 @@ class FormFileUpload extends \Widget implements \uploadable
 		// Sanitize the filename
 		try
 		{
-			$file['name'] = \StringUtil::sanitizeFileName($file['name']);
+			$file['name'] = StringUtil::sanitizeFileName($file['name']);
 		}
 		catch (\InvalidArgumentException $e)
 		{
@@ -119,7 +119,7 @@ class FormFileUpload extends \Widget implements \uploadable
 		}
 
 		// Invalid file name
-		if (!\Validator::isValidFileName($file['name']))
+		if (!Validator::isValidFileName($file['name']))
 		{
 			$this->addError($GLOBALS['TL_LANG']['ERR']['filename']);
 
@@ -156,8 +156,8 @@ class FormFileUpload extends \Widget implements \uploadable
 			return;
 		}
 
-		$objFile = new \File($file['name']);
-		$uploadTypes = \StringUtil::trimsplit(',', strtolower($this->extensions));
+		$objFile = new File($file['name']);
+		$uploadTypes = StringUtil::trimsplit(',', strtolower($this->extensions));
 
 		// File type is not allowed
 		if (!\in_array($objFile->extension, $uploadTypes))
@@ -170,23 +170,23 @@ class FormFileUpload extends \Widget implements \uploadable
 
 		if ($arrImageSize = @getimagesize($file['tmp_name']))
 		{
-			$intImageWidth = \Config::get('imageWidth');
+			$intImageWidth = Config::get('imageWidth');
 
 			// Image exceeds maximum image width
 			if ($intImageWidth > 0 && $arrImageSize[0] > $intImageWidth)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], $file['name'], \Config::get('imageWidth')));
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], $file['name'], Config::get('imageWidth')));
 				unset($_FILES[$this->strName]);
 
 				return;
 			}
 
-			$intImageHeight = \Config::get('imageHeight');
+			$intImageHeight = Config::get('imageHeight');
 
 			// Image exceeds maximum image height
 			if ($intImageHeight > 0 && $arrImageSize[1] > $intImageHeight)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $file['name'], \Config::get('imageHeight')));
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $file['name'], Config::get('imageHeight')));
 				unset($_FILES[$this->strName]);
 
 				return;
@@ -205,7 +205,7 @@ class FormFileUpload extends \Widget implements \uploadable
 				// Overwrite the upload folder with user's home directory
 				if ($this->useHomeDir && FE_USER_LOGGED_IN)
 				{
-					$this->import('FrontendUser', 'User');
+					$this->import(FrontendUser::class, 'User');
 
 					if ($this->User->assignDir && $this->User->homeDir)
 					{
@@ -213,7 +213,7 @@ class FormFileUpload extends \Widget implements \uploadable
 					}
 				}
 
-				$objUploadFolder = \FilesModel::findByUuid($intUploadFolder);
+				$objUploadFolder = FilesModel::findByUuid($intUploadFolder);
 
 				// The upload folder could not be found
 				if ($objUploadFolder === null)
@@ -222,18 +222,19 @@ class FormFileUpload extends \Widget implements \uploadable
 				}
 
 				$strUploadFolder = $objUploadFolder->path;
+				$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 				// Store the file if the upload folder exists
-				if ($strUploadFolder != '' && is_dir(TL_ROOT . '/' . $strUploadFolder))
+				if ($strUploadFolder != '' && is_dir($rootDir . '/' . $strUploadFolder))
 				{
-					$this->import('Files');
+					$this->import(Files::class, 'Files');
 
 					// Do not overwrite existing files
-					if ($this->doNotOverwrite && file_exists(TL_ROOT . '/' . $strUploadFolder . '/' . $file['name']))
+					if ($this->doNotOverwrite && file_exists($rootDir . '/' . $strUploadFolder . '/' . $file['name']))
 					{
 						$offset = 1;
 
-						$arrAll = scan(TL_ROOT . '/' . $strUploadFolder);
+						$arrAll = scan($rootDir . '/' . $strUploadFolder);
 						$arrFiles = preg_grep('/^' . preg_quote($objFile->filename, '/') . '.*\.' . preg_quote($objFile->extension, '/') . '/', $arrAll);
 
 						foreach ($arrFiles as $strFile)
@@ -252,25 +253,25 @@ class FormFileUpload extends \Widget implements \uploadable
 
 					// Move the file to its destination
 					$this->Files->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
-					$this->Files->chmod($strUploadFolder . '/' . $file['name'], \Config::get('defaultFileChmod'));
+					$this->Files->chmod($strUploadFolder . '/' . $file['name'], 0666 & ~umask());
 
 					$strUuid = null;
 					$strFile = $strUploadFolder . '/' . $file['name'];
 
 					// Generate the DB entries
-					if (\Dbafs::shouldBeSynchronized($strFile))
+					if (Dbafs::shouldBeSynchronized($strFile))
 					{
-						$objModel = \FilesModel::findByPath($strFile);
+						$objModel = FilesModel::findByPath($strFile);
 
 						if ($objModel === null)
 						{
-							$objModel = \Dbafs::addResource($strFile);
+							$objModel = Dbafs::addResource($strFile);
 						}
 
-						$strUuid = \StringUtil::binToUuid($objModel->uuid);
+						$strUuid = StringUtil::binToUuid($objModel->uuid);
 
 						// Update the hash of the target folder
-						\Dbafs::updateFolderHashes($strUploadFolder);
+						Dbafs::updateFolderHashes($strUploadFolder);
 					}
 
 					// Add the session entry (see #6986)
@@ -278,7 +279,7 @@ class FormFileUpload extends \Widget implements \uploadable
 					(
 						'name'     => $file['name'],
 						'type'     => $file['type'],
-						'tmp_name' => TL_ROOT . '/' . $strFile,
+						'tmp_name' => $rootDir . '/' . $strFile,
 						'error'    => $file['error'],
 						'size'     => $file['size'],
 						'uploaded' => true,
@@ -321,23 +322,8 @@ class FormFileUpload extends \Widget implements \uploadable
 			return $this->maxlength;
 		}
 
-		// Get the upload_max_filesize from the php.ini
-		$upload_max_filesize = ini_get('upload_max_filesize');
-
-		// Convert the value to bytes
-		if (stripos($upload_max_filesize, 'K') !== false)
-		{
-			$upload_max_filesize = round($upload_max_filesize * 1024);
-		}
-		elseif (stripos($upload_max_filesize, 'M') !== false)
-		{
-			$upload_max_filesize = round($upload_max_filesize * 1024 * 1024);
-		}
-		elseif (stripos($upload_max_filesize, 'G') !== false)
-		{
-			$upload_max_filesize = round($upload_max_filesize * 1024 * 1024 * 1024);
-		}
-
-		return min($upload_max_filesize, \Config::get('maxFileSize'));
+		return FileUpload::getMaxUploadSize();
 	}
 }
+
+class_alias(FormFileUpload::class, 'FormFileUpload');

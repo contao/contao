@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,11 +12,6 @@
 
 namespace Contao\CoreBundle\Exception;
 
-/**
- * Invalid request token exception.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class InvalidRequestTokenException extends \RuntimeException
 {
 }

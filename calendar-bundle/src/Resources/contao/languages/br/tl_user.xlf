@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_user.calendars.1">
         <source>Here you can grant access to one or more calendars.</source>
-        <target>Gellout a rit tizhout un deiziataer pe muioc'h.</target>
+        <target>Gellout a rit amañ reiñ ar moned d'un deiziataer pe meur a hini.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarp.0">
         <source>Calendar permissions</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>
-        <target>Gellout a reer termenañ an aotreoù froud deiziataer.</target>
+        <target>Gellout a rit termenañ an aotreoù froud deiziataer.</target>
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
         <source>Events permissions</source>

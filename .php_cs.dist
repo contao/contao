@@ -1,6 +1,6 @@
 <?php
 
-$header = <<<EOF
+$header = <<<'EOF'
 This file is part of Contao.
 
 (c) Leo Feyer
@@ -34,6 +34,8 @@ return PhpCsFixer\Config::create()
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
+        '@PHP71Migration' => true,
+        '@PHP71Migration:risky' => true,
         '@PHPUnit60Migration:risky' => true,
         'align_multiline_comment' => true,
         'array_indentation' => true,
@@ -46,12 +48,14 @@ return PhpCsFixer\Config::create()
         'fopen_flags' => false,
         'fully_qualified_strict_types' => true,
         'general_phpdoc_annotation_remove' => [
+            'author',
             'expectedException',
             'expectedExceptionMessage',
         ],
         'header_comment' => ['header' => $header],
         'heredoc_to_nowdoc' => true,
         'linebreak_after_opening_tag' => true,
+        'list_syntax' => ['syntax' => 'short'],
         'multiline_comment_opening_closing' => true,
         'multiline_whitespace_before_semicolons' => [
             'strategy' => 'new_line_for_chained_calls',
@@ -63,6 +67,7 @@ return PhpCsFixer\Config::create()
         'no_binary_string' => true,
         'no_null_property_initialization' => true,
         'no_superfluous_elseif' => true,
+        'no_superfluous_phpdoc_tags' => true,
         'no_unreachable_default_argument_value' => true,
         'no_useless_else' => true,
         'no_useless_return' => true,
@@ -80,6 +85,7 @@ return PhpCsFixer\Config::create()
         'strict_comparison' => true,
         'strict_param' => true,
         'string_line_ending' => true,
+        'void_return' => true,
     ])
     ->setFinder($finder)
     ->setRiskyAllowed(true)

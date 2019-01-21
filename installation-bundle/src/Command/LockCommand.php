@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,8 +19,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Locks the install tool.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class LockCommand extends ContainerAwareCommand
 {
@@ -27,12 +27,7 @@ class LockCommand extends ContainerAwareCommand
      */
     private $lockFile;
 
-    /**
-     * Construct.
-     *
-     * @param string $lockFile
-     */
-    public function __construct($lockFile)
+    public function __construct(string $lockFile)
     {
         $this->lockFile = $lockFile;
 
@@ -42,7 +37,7 @@ class LockCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('contao:install:lock')
@@ -53,7 +48,7 @@ class LockCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (file_exists($this->lockFile)) {
             $output->writeln('<comment>The install tool has been locked already.</comment>');

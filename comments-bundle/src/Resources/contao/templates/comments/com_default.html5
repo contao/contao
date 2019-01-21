@@ -1,7 +1,7 @@
 
 <div class="comment_default<?= $this->class ?>" id="<?= $this->id ?>">
 
-  <p class="info"><?= $this->by ?> <?php if ($this->website): ?><a href="<?= $this->website ?>" rel="nofollow" target="_blank"><?php endif; ?><?= $this->name ?><?php if ($this->website): ?></a><?php endif; ?> | <time datetime="<?= $this->datetime ?>" class="date"><?= $this->date ?></time></p>
+  <p class="info"><?= $this->by ?> <?php if ($this->website): ?><a href="<?= $this->website ?>" target="_blank" rel="nofollow noreferrer noopener"><?php endif; ?><?= $this->name ?><?php if ($this->website): ?></a><?php endif; ?> | <time datetime="<?= $this->datetime ?>" class="date"><?= $this->date ?></time></p>
 
   <div class="comment">
     <?= $this->comment ?>

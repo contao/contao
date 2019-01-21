@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,12 +19,8 @@ use Contao\StringUtil;
 use Contao\Validator;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Provides the file picker.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
@@ -32,16 +30,9 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
      */
     private $uploadPath;
 
-    /**
-     * Constructor.
-     *
-     * @param FactoryInterface $menuFactory
-     * @param RouterInterface  $router
-     * @param string           $uploadPath
-     */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, $uploadPath)
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator, string $uploadPath)
     {
-        parent::__construct($menuFactory, $router);
+        parent::__construct($menuFactory, $router, $translator);
 
         $this->uploadPath = $uploadPath;
     }
@@ -49,7 +40,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'filePicker';
     }
@@ -57,7 +48,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function supportsContext($context)
+    public function supportsContext($context): bool
     {
         return \in_array($context, ['file', 'link'], true) && $this->getUser()->hasAccess('files', 'modules');
     }
@@ -65,21 +56,21 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function supportsValue(PickerConfig $config)
+    public function supportsValue(PickerConfig $config): bool
     {
+        $value = $config->getValue();
+
         if ('file' === $config->getContext()) {
-            return Validator::isUuid($config->getValue());
+            return Validator::isUuid($value);
         }
 
-        return false !== strpos($config->getValue(), '{{file::')
-            || 0 === strpos($config->getValue(), $this->uploadPath)
-        ;
+        return false !== strpos($value, '{{file::') || 0 === strpos($value, $this->uploadPath);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getDcaTable()
+    public function getDcaTable(): string
     {
         return 'tl_files';
     }
@@ -87,55 +78,19 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    public function getDcaAttributes(PickerConfig $config)
+    public function getDcaAttributes(PickerConfig $config): array
     {
-        $value = $config->getValue();
-
         if ('file' === $config->getContext()) {
-            $attributes = array_intersect_key(
-                $config->getExtras(),
-                array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions'])
-            );
-
-            if (!isset($attributes['fieldType'])) {
-                $attributes['fieldType'] = 'radio';
-            }
-
-            if ($value) {
-                $attributes['value'] = [];
-
-                foreach (explode(',', $value) as $v) {
-                    $attributes['value'][] = $this->urlEncode($this->convertValueToPath($v));
-                }
-            }
-
-            return $attributes;
+            return $this->getFileDcaAttributes($config);
         }
 
-        $attributes = [
-            'fieldType' => 'radio',
-            'filesOnly' => true,
-        ];
-
-        if ($value) {
-            if (false !== strpos($value, '{{file::')) {
-                $value = str_replace(['{{file::', '}}'], '', $value);
-            }
-
-            if (0 === strpos($value, $this->uploadPath.'/')) {
-                $attributes['value'] = $this->urlEncode($value);
-            } else {
-                $attributes['value'] = $this->urlEncode($this->convertValueToPath($value));
-            }
-        }
-
-        return $attributes;
+        return $this->getLinkDcaAttributes($config);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function convertDcaValue(PickerConfig $config, $value)
+    public function convertDcaValue(PickerConfig $config, $value): string
     {
         if ('file' === $config->getContext()) {
             return $value;
@@ -155,19 +110,15 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * {@inheritdoc}
      */
-    protected function getRouteParameters(PickerConfig $config = null)
+    protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'files'];
     }
 
     /**
      * Converts the UUID value to a file path if possible.
-     *
-     * @param mixed $value
-     *
-     * @return string
      */
-    private function convertValueToPath($value)
+    private function convertValueToPath(string $value): string
     {
         /** @var FilesModel $filesAdapter */
         $filesAdapter = $this->framework->getAdapter(FilesModel::class);
@@ -182,14 +133,64 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     /**
      * Urlencodes a file path preserving slashes.
      *
-     * @param string $strPath
-     *
-     * @return string
-     *
      * @see \Contao\System::urlEncode()
      */
-    private function urlEncode($strPath)
+    private function urlEncode(string $strPath): string
     {
         return str_replace('%2F', '/', rawurlencode($strPath));
+    }
+
+    /**
+     * @return array<string,string|bool>
+     */
+    private function getFileDcaAttributes(PickerConfig $config): array
+    {
+        $attributes = array_intersect_key(
+            $config->getExtras(),
+            array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions'])
+        );
+
+        if (!isset($attributes['fieldType'])) {
+            $attributes['fieldType'] = 'radio';
+        }
+
+        $value = $config->getValue();
+
+        if ($value) {
+            $attributes['value'] = [];
+
+            foreach (explode(',', $value) as $v) {
+                $attributes['value'][] = $this->urlEncode($this->convertValueToPath($v));
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @return array<string,string|bool>
+     */
+    private function getLinkDcaAttributes(PickerConfig $config): array
+    {
+        $attributes = [
+            'fieldType' => 'radio',
+            'filesOnly' => true,
+        ];
+
+        $value = $config->getValue();
+
+        if ($value) {
+            if (false !== strpos($value, '{{file::')) {
+                $value = str_replace(['{{file::', '}}'], '', $value);
+            }
+
+            if (0 === strpos($value, $this->uploadPath.'/')) {
+                $attributes['value'] = $this->urlEncode($value);
+            } else {
+                $attributes['value'] = $this->urlEncode($this->convertValueToPath($value));
+            }
+        }
+
+        return $attributes;
     }
 }

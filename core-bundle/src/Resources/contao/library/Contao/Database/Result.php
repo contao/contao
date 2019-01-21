@@ -382,3 +382,5 @@ class Result
 		return $this;
 	}
 }
+
+class_alias(Result::class, 'Database\Result');

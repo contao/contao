@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,8 +14,6 @@ namespace Contao\CoreBundle\HttpKernel\Header;
 
 /**
  * Handles HTTP headers in memory (for unit tests).
- *
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class MemoryHeaderStorage implements HeaderStorageInterface
 {
@@ -22,11 +22,6 @@ class MemoryHeaderStorage implements HeaderStorageInterface
      */
     private $headers;
 
-    /**
-     * Constructor.
-     *
-     * @param array $headers
-     */
     public function __construct(array $headers = [])
     {
         $this->headers = $headers;
@@ -35,7 +30,7 @@ class MemoryHeaderStorage implements HeaderStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function all()
+    public function all(): array
     {
         return $this->headers;
     }
@@ -43,7 +38,7 @@ class MemoryHeaderStorage implements HeaderStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function add($header)
+    public function add(string $header): void
     {
         $this->headers[] = $header;
     }
@@ -51,7 +46,7 @@ class MemoryHeaderStorage implements HeaderStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function clear()
+    public function clear(): void
     {
         $this->headers = [];
     }

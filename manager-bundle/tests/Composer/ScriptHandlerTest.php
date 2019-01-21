@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,28 +16,29 @@ use Contao\ManagerBundle\Composer\ScriptHandler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Tests the ScriptHandler class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ScriptHandlerTest extends TestCase
 {
-    /**
-     * Tests that the initializeApplication() method exists.
-     */
-    public function testInitializeApplicationMethodExists()
+    public function testInitializeApplicationMethodExists(): void
     {
         $this->assertTrue(method_exists(ScriptHandler::class, 'initializeApplication'));
     }
 
-    /**
-     * Tests adding the app directory.
-     */
-    public function testAddAppDirectory()
+    public function testAddAppDirectory(): void
     {
+        $filesystem = new Filesystem();
+        $tempdir = sys_get_temp_dir().'/ScriptHandlerTest';
+
+        if ($filesystem->exists($tempdir)) {
+            $filesystem->remove($tempdir);
+        }
+
+        $filesystem->mkdir($tempdir);
+        chdir($tempdir);
+
         ScriptHandler::addAppDirectory();
 
-        (new Filesystem())->remove(getcwd().'/app');
+        $this->assertDirectoryExists($tempdir.'/app');
+
+        $filesystem->remove($tempdir.'/app');
     }
 }

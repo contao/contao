@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,90 +13,81 @@
 namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
 use Contao\NewsModel;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Tests the PreviewUrlCreateListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
-class PreviewUrlCreateListenerTest extends TestCase
+class PreviewUrlCreateListenerTest extends ContaoTestCase
 {
-    /**
-     * Tests the onPreviewUrlCreate() method.
-     */
-    public function testCreatesThePreviewUrl()
+    public function testCreatesThePreviewUrl(): void
     {
-        $request = Request::createFromGlobals();
-
         $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack->push(new Request());
 
         $event = new PreviewUrlCreateEvent('news', 1);
+        $newsModel = $this->mockClassWithProperties(NewsModel::class, ['id' => 1]);
 
-        $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => $newsModel]),
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+        $listener = new PreviewUrlCreateListener($requestStack, $framework);
         $listener->onPreviewUrlCreate($event);
 
         $this->assertSame('news=1', $event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed if the framework is not initialized.
-     */
-    public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized()
+    public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework
+            ->method('isInitialized')
+            ->willReturn(false)
+        ;
+
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $listener = new PreviewUrlCreateListener(new RequestStack(), $this->mockContaoFramework(false));
+        $listener = new PreviewUrlCreateListener(new RequestStack(), $framework);
         $listener->onPreviewUrlCreate($event);
 
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed if the key is not "news".
-     */
-    public function testDoesNotCreateThePreviewUrlIfTheNewsParameterIsNotSet()
+    public function testDoesNotCreateThePreviewUrlIfTheNewsParameterIsNotSet(): void
     {
+        $framework = $this->mockContaoFramework();
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
-        $listener = new PreviewUrlCreateListener(new RequestStack(), $this->mockContaoFramework());
+        $listener = new PreviewUrlCreateListener(new RequestStack(), $framework);
         $listener->onPreviewUrlCreate($event);
 
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed on the news archive list page.
-     */
-    public function testDoesNotCreateThePreviewUrlOnTheArchiveListPage()
+    public function testDoesNotCreateThePreviewUrlOnTheArchiveListPage(): void
     {
-        $request = Request::createFromGlobals();
+        $request = new Request();
         $request->query->set('table', 'tl_news');
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
+        $framework = $this->mockContaoFramework();
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
+        $listener = new PreviewUrlCreateListener($requestStack, $framework);
         $listener->onPreviewUrlCreate($event);
 
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * Tests that the ID is overwritten if the news settings are edited.
-     */
-    public function testOverwritesTheIdIfTheArchiveSettingsAreEdited()
+    public function testOverwritesTheIdIfTheArchiveSettingsAreEdited(): void
     {
-        $request = Request::createFromGlobals();
+        $request = new Request();
         $request->query->set('act', 'edit');
         $request->query->set('table', 'tl_news');
         $request->query->set('id', 2);
@@ -102,77 +95,36 @@ class PreviewUrlCreateListenerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
+        $newsModel = $this->mockClassWithProperties(NewsModel::class, ['id' => 2]);
+
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => $newsModel]),
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
+        $listener = new PreviewUrlCreateListener($requestStack, $framework);
         $listener->onPreviewUrlCreate($event);
 
         $this->assertSame('news=2', $event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed if there is no news item.
-     */
-    public function testDoesNotCreateThePreviewUrlIfThereIsNoNewsItem()
+    public function testDoesNotCreateThePreviewUrlIfThereIsNoNewsItem(): void
     {
-        $request = Request::createFromGlobals();
-
         $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack->push(new Request());
 
-        $event = new PreviewUrlCreateEvent('news', null);
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
+        ];
 
-        $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
+        $framework = $this->mockContaoFramework($adapters);
+        $event = new PreviewUrlCreateEvent('news', 0);
+
+        $listener = new PreviewUrlCreateListener($requestStack, $framework);
         $listener->onPreviewUrlCreate($event);
 
         $this->assertNull($event->getQuery());
-    }
-
-    /**
-     * Returns a ContaoFramework instance.
-     *
-     * @param bool $isInitialized
-     *
-     * @return ContaoFrameworkInterface
-     */
-    private function mockContaoFramework($isInitialized = true)
-    {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-
-        $framework
-            ->method('isInitialized')
-            ->willReturn($isInitialized)
-        ;
-
-        $newsModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByPk'])
-            ->getMock()
-        ;
-
-        $newsModelAdapter
-            ->method('findByPk')
-            ->willReturnCallback(function ($id) {
-                if (null === $id) {
-                    return null;
-                }
-
-                return (object) ['id' => $id];
-            })
-        ;
-
-        $framework
-            ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($newsModelAdapter) {
-                if (NewsModel::class === $key) {
-                    return $newsModelAdapter;
-                }
-
-                return null;
-            })
-        ;
-
-        return $framework;
     }
 }

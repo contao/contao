@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_news">
         <source>Articles</source>
-        <target>نوشته‌ها</target>
+        <target>مقاله‌ها</target>
       </trans-unit>
       <trans-unit id="FMD.news">
         <source>News</source>
@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="FMD.newslist.1">
         <source>Adds a list of news items to the page</source>
-        <target>افزودن فهرست آیتم‌ها خبری به برگه</target>
+        <target>افزودن فهرست آیتم‌های خبری به برگه</target>
       </trans-unit>
       <trans-unit id="FMD.newsreader.0">
         <source>Newsreader</source>

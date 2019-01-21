@@ -80,7 +80,7 @@ class Pagination
 
 	/**
 	 * Template object
-	 * @var Template|object
+	 * @var Template
 	 */
 	protected $objTemplate;
 
@@ -144,17 +144,16 @@ class Pagination
 		$this->lblLast = $GLOBALS['TL_LANG']['MSC']['last'];
 		$this->lblTotal = $GLOBALS['TL_LANG']['MSC']['totalPages'];
 
-		if (\Input::get($strParameter) > 0)
+		if (Input::get($strParameter) > 0)
 		{
-			$this->intPage = \Input::get($strParameter);
+			$this->intPage = Input::get($strParameter);
 		}
 
 		$this->strParameter = $strParameter;
 
 		if ($objTemplate === null)
 		{
-			/** @var FrontendTemplate|object $objTemplate */
-			$objTemplate = new \FrontendTemplate('pagination');
+			$objTemplate = new FrontendTemplate('pagination');
 		}
 
 		$this->objTemplate = $objTemplate;
@@ -216,10 +215,10 @@ class Pagination
 		}
 
 		$blnQuery = false;
-		list($this->strUrl) = explode('?', \Environment::get('request'), 2);
+		list($this->strUrl) = explode('?', Environment::get('request'), 2);
 
 		// Prepare the URL
-		foreach (preg_split('/&(amp;)?/', \Environment::get('queryString'), -1, PREG_SPLIT_NO_EMPTY) as $fragment)
+		foreach (preg_split('/&(amp;)?/', Environment::get('queryString'), -1, PREG_SPLIT_NO_EMPTY) as $fragment)
 		{
 			if (strpos($fragment, $this->strParameter . '=') === false)
 			{
@@ -250,7 +249,12 @@ class Pagination
 		$objTemplate->hasLast = $this->hasLast();
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$objTemplate->items = $this->getItemsAsString($strSeparator);
+		$objTemplate->items = function () use ($strSeparator)
+		{
+			@trigger_error('Using $pagination->items has been deprecated and will no longer work in Contao 5.0. Use $pagination->pages instead.', E_USER_DEPRECATED);
+
+			return $this->getItemsAsString($strSeparator);
+		};
 
 		$objTemplate->pages = $this->getItemsAsArray();
 		$objTemplate->total = sprintf($this->lblTotal, $this->intPage, $this->intTotalPages);
@@ -259,31 +263,32 @@ class Pagination
 		(
 			'link' => $this->lblFirst,
 			'href' => $this->linkToPage(1),
-			'title' => sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), 1)
+			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), 1)
 		);
 
 		$objTemplate->previous = array
 		(
 			'link' => $this->lblPrevious,
 			'href' => $this->linkToPage($this->intPage - 1),
-			'title' => sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage - 1))
+			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage - 1))
 		);
 
 		$objTemplate->next = array
 		(
 			'link' => $this->lblNext,
 			'href' => $this->linkToPage($this->intPage + 1),
-			'title' => sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage + 1))
+			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage + 1))
 		);
 
 		$objTemplate->last = array
 		(
 			'link' => $this->lblLast,
 			'href' => $this->linkToPage($this->intTotalPages),
-			'title' => sprintf(\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intTotalPages)
+			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intTotalPages)
 		);
 
 		$objTemplate->class = 'pagination-' . $this->strParameter;
+		$objTemplate->pagination = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagination']);
 
 		// Adding rel="prev" and rel="next" links is not possible
 		// anymore with unique variable names (see #3515 and #4141)
@@ -306,7 +311,7 @@ class Pagination
 		{
 			if ($arrItem['href'] === null)
 			{
-				$arrLinks[] = sprintf('<li><span class="active">%s</span></li>', $arrItem['page']);
+				$arrLinks[] = sprintf('<li><strong class="active">%s</strong></li>', $arrItem['page']);
 			}
 			else
 			{
@@ -372,7 +377,7 @@ class Pagination
 				(
 					'page'  => $i,
 					'href'  => $this->linkToPage($i),
-					'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $i))
+					'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $i))
 				);
 			}
 		}
@@ -399,3 +404,5 @@ class Pagination
 		}
 	}
 }
+
+class_alias(Pagination::class, 'Pagination');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -18,8 +20,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Synchronizes the file system with the database.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FilesyncCommand extends AbstractLockedCommand implements FrameworkAwareInterface
 {
@@ -28,7 +28,7 @@ class FilesyncCommand extends AbstractLockedCommand implements FrameworkAwareInt
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('contao:filesync')
@@ -39,7 +39,7 @@ class FilesyncCommand extends AbstractLockedCommand implements FrameworkAwareInt
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output)
+    protected function executeLocked(InputInterface $input, OutputInterface $output): int
     {
         $this->framework->initialize();
 

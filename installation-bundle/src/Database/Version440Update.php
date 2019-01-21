@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,17 +14,12 @@ namespace Contao\InstallationBundle\Database;
 
 use Contao\StringUtil;
 
-/**
- * Runs the version 4.4.0 update.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class Version440Update extends AbstractVersionUpdate
 {
     /**
      * {@inheritdoc}
      */
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -38,7 +35,7 @@ class Version440Update extends AbstractVersionUpdate
     /**
      * {@inheritdoc}
      */
-    public function run()
+    public function run(): void
     {
         // Add the js_autofocus.html5 template
         $statement = $this->connection->query('
@@ -49,7 +46,6 @@ class Version440Update extends AbstractVersionUpdate
         ');
 
         while (false !== ($layout = $statement->fetch(\PDO::FETCH_OBJ))) {
-            /** @var array $scripts */
             $scripts = StringUtil::deserialize($layout->scripts);
 
             if (!empty($scripts) && \is_array($scripts)) {
@@ -106,12 +102,7 @@ class Version440Update extends AbstractVersionUpdate
         ");
     }
 
-    /**
-     * Enables the "overwrite meta" field.
-     *
-     * @param string $table
-     */
-    private function enableOverwriteMeta($table)
+    private function enableOverwriteMeta(string $table): void
     {
         $this->connection->query("
             ALTER TABLE

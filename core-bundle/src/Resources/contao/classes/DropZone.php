@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class DropZone extends \FileUpload
+class DropZone extends FileUpload
 {
 
 	/**
@@ -26,10 +26,10 @@ class DropZone extends \FileUpload
 	public function generateMarkup()
 	{
 		// Maximum file size in MB
-		$intMaxSize = round($this->getMaximumUploadSize() / 1024 / 1024);
+		$intMaxSize = round(static::getMaxUploadSize() / 1024 / 1024);
 
 		// String of accepted file extensions
-		$strAccepted = implode(',', array_map(function ($a) { return '.' . $a; }, \StringUtil::trimsplit(',', strtolower(\Config::get('uploadTypes')))));
+		$strAccepted = implode(',', array_map(function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))));
 
 		// Add the scripts
 		$GLOBALS['TL_CSS'][] = 'assets/dropzone/css/dropzone.min.css';
@@ -54,8 +54,11 @@ class DropZone extends \FileUpload
         paramName: "' . $this->strName . '",
         maxFilesize: ' . $intMaxSize . ',
         acceptedFiles: "' . $strAccepted . '",
+        timeout: 0,
         previewsContainer: ".dropzone-previews",
-        clickable: ".dropzone"
+        clickable: ".dropzone",
+        dictFileTooBig: ' . json_encode($GLOBALS['TL_LANG']['tl_files']['dropzoneFileTooBig']) . ',
+        dictInvalidFileType: ' . json_encode($GLOBALS['TL_LANG']['tl_files']['dropzoneInvalidType']) . '
       }).on("addedfile", function() {
         $$(".dz-message").setStyle("display", "none");
       }).on("success", function(file, message) {
@@ -76,9 +79,11 @@ class DropZone extends \FileUpload
 		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
 		{
 			$return .= '
-  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], \System::getReadableSize($this->getMaximumUploadSize()), \Config::get('gdMaxImgWidth') . 'x' . \Config::get('gdMaxImgHeight')) . '</p>';
+  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(static::getMaxUploadSize()), Config::get('gdMaxImgWidth') . 'x' . Config::get('gdMaxImgHeight')) . '</p>';
 		}
 
 		return $return;
 	}
 }
+
+class_alias(DropZone::class, 'DropZone');

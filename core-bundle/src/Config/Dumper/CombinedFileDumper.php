@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,9 +17,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Combines multiple files into one PHP file.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class CombinedFileDumper implements DumperInterface
 {
@@ -41,14 +40,7 @@ class CombinedFileDumper implements DumperInterface
      */
     private $header = "<?php\n"; // add a line-break to prevent the "unexpected $end" error
 
-    /**
-     * Constructor.
-     *
-     * @param Filesystem      $filesystem
-     * @param LoaderInterface $loader
-     * @param string          $cacheDir
-     */
-    public function __construct(Filesystem $filesystem, LoaderInterface $loader, $cacheDir)
+    public function __construct(Filesystem $filesystem, LoaderInterface $loader, string $cacheDir)
     {
         $this->filesystem = $filesystem;
         $this->loader = $loader;
@@ -56,15 +48,11 @@ class CombinedFileDumper implements DumperInterface
     }
 
     /**
-     * Sets the header for a PHP file (e.g. a file doc block).
-     *
-     * @param string $header
-     *
      * @throws \InvalidArgumentException
      */
-    public function setHeader($header)
+    public function setHeader(string $header): void
     {
-        if (0 !== strpos($header, '<?php')) {
+        if (0 !== strncmp($header, '<?php', 5)) {
             throw new \InvalidArgumentException('The file header must start with an opening PHP tag.');
         }
 
@@ -74,10 +62,10 @@ class CombinedFileDumper implements DumperInterface
     /**
      * {@inheritdoc}
      */
-    public function dump($files, $cacheFile, array $options = [])
+    public function dump($files, $cacheFile, array $options = []): void
     {
         $buffer = $this->header;
-        $type = isset($options['type']) ? $options['type'] : null;
+        $type = $options['type'] ?? null;
 
         foreach ((array) $files as $file) {
             $buffer .= $this->loader->load($file, $type);

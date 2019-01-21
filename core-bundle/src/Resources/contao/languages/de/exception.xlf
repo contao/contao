@@ -78,7 +78,7 @@
         <target>Gemäß Konfiguration müsste die Applikation die Anfrage zu einer anderen Seite umleiten, jedoch existiert diese Zielseite nicht oder wurde noch nicht veröffentlicht.</target>
       </trans-unit>
       <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let him know that there is something wrong.</source>
+        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
         <target>Dieses Problem muss vom Administrator der Webseite behoben werden. Wenn Sie ein Besucher sind, können Sie nichts weiter tun als den &lt;a href=&quot;%s&quot;&gt;Webmaster&lt;/a&gt; zu kontaktieren und ihn über das Problem zu informieren.</target>
       </trans-unit>
       <trans-unit id="XPT.noRoot">
@@ -90,7 +90,7 @@
         <target>Es gibt keinen Startpunkt einer Webseite, der zu der angefragten Sprache und/oder Domain passt.</target>
       </trans-unit>
       <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
+        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
         <target>Wenn Sie explizit eine Sprache gesetzt haben, gehen Sie zur &lt;a href=&quot;%s&quot;&gt;Startseite&lt;/a&gt; und sehen Sie, ob Sie automatisch weitergeleitet werden. Andernfalls kontaktieren Sie den &lt;a href=&quot;%s&quot;&gt;Webmaster&lt;/a&gt; und informieren Sie ihn über das Problem.</target>
       </trans-unit>
       <trans-unit id="XPT.noLayout">
@@ -118,7 +118,7 @@
         <target>Ihre Anfrage bezieht sich auf eine Webseite, die noch keine veröffentlichten Seiten enthält.</target>
       </trans-unit>
       <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
+        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
         <target>Die Webseite befindet sich höchstwahrscheinlich noch im Aufbau und wird in ein paar Tagen online sein. Wenn Sie trotzdem denken, dass es ein Problem gibt, kontaktieren Sie den &lt;a href=&quot;%s&quot;&gt;Webmaster&lt;/a&gt; und informieren Sie ihn darüber.</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">

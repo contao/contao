@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_article.title.0">
         <source>Title</source>
-        <target>Titulek</target>
+        <target>Název</target>
       </trans-unit>
       <trans-unit id="tl_article.title.1">
         <source>Please enter the article title.</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_article.inColumn.1">
         <source>Please choose the layout section you want the article to be displayed in.</source>
-        <target>Prosím přiřaďte článek do sloupce nebo hlavičky nebo zápatí</target>
+        <target>Prosím přiřaďte článek do sloupce, záhlaví, zápatí nebo vlastní sekce, aby se zobrazil ve Vámi požadované sekci.</target>
       </trans-unit>
       <trans-unit id="tl_article.keywords.0">
         <source>Meta keywords</source>

@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_news_feed">
         <source>News feeds</source>
-        <target>Haber beslemeleri</target>
+        <target>Haber akışları</target>
       </trans-unit>
       <trans-unit id="MOD.tl_news">
         <source>Articles</source>

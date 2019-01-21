@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.0">
         <source>Allowed RSS feeds</source>
-        <target>İzin  verilen RSS akışları</target>
+        <target>İzin verilen RSS beslemeleri</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>
@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
         <source>RSS feed permissions</source>
-        <target>RSS akış izinleri</target>
+        <target>RSS besleme izinleri</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>
@@ -35,7 +35,6 @@
       </trans-unit>
       <trans-unit id="tl_user.calendars_legend">
         <source>Events permissions</source>
-        <target>Etkinlik izinleri</target>
       </trans-unit>
     </body>
   </file>

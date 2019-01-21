@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,19 +16,9 @@ use Contao\Idna;
 use PHPUnit\Framework\TestCase;
 use TrueBV\Exception\DomainOutOfBoundsException;
 
-/**
- * Tests the Idna class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @group contao3
- */
 class IdnaTest extends TestCase
 {
-    /**
-     * Tests encoding unicode domains.
-     */
-    public function testEncodesUnicodeDomain()
+    public function testEncodesUnicodeDomain(): void
     {
         $this->assertSame('xn--fbar-5qaa.de', Idna::encode('fööbar.de'));
         $this->assertSame('', Idna::encode(''));
@@ -37,10 +29,7 @@ class IdnaTest extends TestCase
         Idna::encode(str_repeat('subdomain.', 24).'fööbar.de');
     }
 
-    /**
-     * Tests decoding punycode domains.
-     */
-    public function testDecodesPunycodeDomain()
+    public function testDecodesPunycodeDomain(): void
     {
         $this->assertSame('fööbar.de', Idna::decode('xn--fbar-5qaa.de'));
         $this->assertSame('', Idna::decode(''));
@@ -51,10 +40,7 @@ class IdnaTest extends TestCase
         Idna::decode(str_repeat('subdomain.', 25).'xn--fbar-5qaa.de');
     }
 
-    /**
-     * Tests encoding e-mail addresses.
-     */
-    public function testEncodesEmailAddresses()
+    public function testEncodesEmailAddresses(): void
     {
         $this->assertSame('info@xn--fbar-5qaa.de', Idna::encodeEmail('info@fööbar.de'));
         $this->assertSame('', Idna::encodeEmail(''));
@@ -67,10 +53,7 @@ class IdnaTest extends TestCase
         Idna::encodeEmail('info@'.str_repeat('subdomain.', 24).'fööbar.de');
     }
 
-    /**
-     * Tests decoding e-mail addresses.
-     */
-    public function testDecodesEmailAddresses()
+    public function testDecodesEmailAddresses(): void
     {
         $this->assertSame('info@fööbar.de', Idna::decodeEmail('info@xn--fbar-5qaa.de'));
         $this->assertSame('', Idna::decodeEmail(''));
@@ -83,10 +66,7 @@ class IdnaTest extends TestCase
         Idna::decodeEmail('info@'.str_repeat('subdomain.', 25).'xn--f%sbr-tve.de');
     }
 
-    /**
-     * Tests encoding URLs.
-     */
-    public function testEncodesUrls()
+    public function testEncodesUrls(): void
     {
         $this->assertSame('http://www.xn--fbar-5qaa.de', Idna::encodeUrl('http://www.fööbar.de'));
         $this->assertSame('', Idna::encodeUrl(''));
@@ -99,10 +79,7 @@ class IdnaTest extends TestCase
         Idna::encodeUrl('index.php?foo=bar');
     }
 
-    /**
-     * Tests decoding URLs.
-     */
-    public function testDecodesUrls()
+    public function testDecodesUrls(): void
     {
         $this->assertSame('http://www.fööbar.de', Idna::decodeUrl('http://www.xn--fbar-5qaa.de'));
         $this->assertSame('', Idna::decodeUrl(''));

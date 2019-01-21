@@ -38,8 +38,8 @@
         <target>Metadaten überschreiben</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the image meta data from the file manager.</source>
-        <target>Die Bild-Metadaten aus der Dateiverwaltung überschreiben.</target>
+        <source>Overwrite the meta data from the file manager.</source>
+        <target>Die Metadaten aus der Dateiverwaltung überschreiben.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -310,8 +310,8 @@
         <target>Lightbox</target>
       </trans-unit>
       <trans-unit id="tl_content.rel.1">
-        <source>To trigger the lightbox, enter a &lt;em&gt;rel&lt;/em&gt; attribute here.</source>
-        <target>Hier können Sie ein &lt;em&gt;rel&lt;/em&gt;-Attribut eingeben, um die Lightbox anzusteuern.</target>
+        <source>To trigger the lightbox, enter a &lt;em&gt;data-lightbox&lt;/em&gt; attribute here.</source>
+        <target>Hier können Sie ein &lt;em&gt;data-lightbox&lt;/em&gt;-Attribut eingeben, um die Lightbox anzusteuern.</target>
       </trans-unit>
       <trans-unit id="tl_content.useImage.0">
         <source>Create an image link</source>
@@ -328,14 +328,6 @@
       <trans-unit id="tl_content.multiSRC.1">
         <source>Please select one or more files or folders from the files directory. If you select a folder, its files will be included automatically.</source>
         <target>Bitte wählen Sie eine oder mehr Dateien oder Ordner aus der Dateiübersicht. Wenn Sie einen Ordner auswählen, werden die darin enthaltenen Dateien automatisch eingefügt.</target>
-      </trans-unit>
-      <trans-unit id="tl_content.orderSRC.0">
-        <source>Sort order</source>
-        <target>Sortierreihenfolge</target>
-      </trans-unit>
-      <trans-unit id="tl_content.orderSRC.1">
-        <source>The sort order of the items.</source>
-        <target>Die Sortierreihenfolge der Elemente.</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.0">
         <source>Use home directory</source>
@@ -441,13 +433,61 @@
         <source>Width and height of the media player in pixels (e.g. 640x480).</source>
         <target>Breite und Höhe des Mediaplayers in Pixeln (z.B. 640x480).</target>
       </trans-unit>
-      <trans-unit id="tl_content.autoplay.0">
-        <source>Autoplay</source>
-        <target>Autoplay</target>
+      <trans-unit id="tl_content.playerOptions.0">
+        <source>Player options</source>
+        <target>Player-Optionen</target>
       </trans-unit>
-      <trans-unit id="tl_content.autoplay.1">
-        <source>Automatically play the video when the page loads.</source>
-        <target>Das Video automatisch beim Laden der Seite abspielen.</target>
+      <trans-unit id="tl_content.playerOptions.1">
+        <source>Here you can select the player options.</source>
+        <target>Hier können Sie die Player-Optionen auswählen.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerPreload.0">
+        <source>Preloading</source>
+        <target>Preloading</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerPreload.1">
+        <source>Here you can suggest how the browser shall preload the video.</source>
+        <target>Hier können Sie empfehlen, wie der Browser das Video vorab laden soll.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerStart.0">
+        <source>Start at</source>
+        <target>Start bei</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerStart.1">
+        <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>Beginnt die Wiedergabe bei der festgelegten Anzahl an Sekunden. Geben Sie 0 ein, um das Feature zu deaktivieren.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerStop.0">
+        <source>Stop at</source>
+        <target>Stopp bei</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerStop.1">
+        <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>Beendet die Wiedergabe bei der festgelegten Anzahl an Sekunden. Geben Sie 0 ein, um das Feature zu deaktivieren.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerCaption.0">
+        <source>Caption</source>
+        <target>Bildunterschrift</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerCaption.1">
+        <source>Here you can enter a caption.</source>
+        <target>Hier können Sie eine Bildunterschrift eingeben.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerAspect.0">
+        <source>Aspect ratio</source>
+        <target>Seitenverhältnis</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerAspect.1">
+        <source>Here you can select the aspect ratio of the video to make it responsive.</source>
+        <target>Hier können Sie das Seitenverhältnis des Videos auswählen, um es responsive zu machen.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerColor.0">
+        <source>Controls color</source>
+        <target>Farben der Steuererlemente</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerColor.1">
+        <source>Here you can enter a hexadecimal color (e.g. ff0000) for the video controls.</source>
+        <target>Hier können Sie einen hexadezimalen Farbcode (z.B. ff0000) für die Steuerelemente eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -622,12 +662,8 @@
         <target>Bildlink-Einstellungen</target>
       </trans-unit>
       <trans-unit id="tl_content.source_legend">
-        <source>Files and folders</source>
-        <target>Dateien und Ordner</target>
-      </trans-unit>
-      <trans-unit id="tl_content.dwnconfig_legend">
-        <source>Download settings</source>
-        <target>Download-Einstellungen</target>
+        <source>Source</source>
+        <target>Quelle</target>
       </trans-unit>
       <trans-unit id="tl_content.include_legend">
         <source>Include settings</source>
@@ -686,8 +722,8 @@
         <target>Individuelle Reihenfolge</target>
       </trans-unit>
       <trans-unit id="tl_content.random">
-        <source>Random order without pagination</source>
-        <target>Zufällige Reihenfolge ohne Seitenumbruch</target>
+        <source>Random order</source>
+        <target>Zufällige Reihenfolge</target>
       </trans-unit>
       <trans-unit id="tl_content.includeTemplate">
         <source>The &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
@@ -696,6 +732,98 @@
       <trans-unit id="tl_content.includeTemplates">
         <source>The &lt;em&gt;%s&lt;/em&gt; or &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
         <target>Das &lt;em&gt;%s&lt;/em&gt;- oder &lt;em&gt;%s&lt;/em&gt;-Template muss im Seitenlayout eingebunden sein.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_autoplay">
+        <source>Autoplay</source>
+        <target>Autoplay</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_nocontrols">
+        <source>Hide the controls</source>
+        <target>Steuerelemente verbergen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_loop">
+        <source>Play in a loop</source>
+        <target>In einer Schleife abspielen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_muted">
+        <source>Mute the audio output</source>
+        <target>Die Audioausgabe stummschalten</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_playsinline">
+        <source>Play inline (no fullscreen mode)</source>
+        <target>Inline abspielen (kein Vollbildmodus)</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.auto">
+        <source>Auto (preload the entiry video)</source>
+        <target>Auto (das ganze Video vorab laden)</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.metadata">
+        <source>Metadata (preload the metadata only)</source>
+        <target>Metadata (nur die Metadaten vorab laden)</target>
+      </trans-unit>
+      <trans-unit id="tl_content.player_preload.none">
+        <source>None (do not preload anything)</source>
+        <target>None (nichts vorab laden)</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_autoplay">
+        <source>Autoplay</source>
+        <target>Autoplay</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_controls">
+        <source>Hide the controls</source>
+        <target>Steuerelemente verbergen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_cc_load_policy">
+        <source>Show captions by default</source>
+        <target>Untertitel standardmäßig anzeigen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_fs">
+        <source>Hide the fullscreen button</source>
+        <target>Den Fullscreen-Button ausblenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_hl">
+        <source>Use the Contao page language</source>
+        <target>Die Contao-Seitensprache verwenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_iv_load_policy">
+        <source>Hide annotations</source>
+        <target>Anmerkungen verstecken</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_modestbranding">
+        <source>Hide the YouTube logo</source>
+        <target>Das YouTube-Logo ausblenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_rel">
+        <source>Do not show related videos at the end</source>
+        <target>Keine ähnlichen Videos am Ende zeigen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_showinfo">
+        <source>Hide the top bar in the preview</source>
+        <target>Die Linkleiste in der Vorschau ausblenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_nocookie">
+        <source>Use the youtube-nocookie.com domain</source>
+        <target>Die youtube-nocookie.com-Domain verwenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_autoplay">
+        <source>Autoplay</source>
+        <target>Autoplay</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_loop">
+        <source>Play in a loop</source>
+        <target>In einer Schleife abspielen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_portrait">
+        <source>Hide the profile image</source>
+        <target>Das Profilbild ausblenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_title">
+        <source>Hide the title</source>
+        <target>Den Titel ausblenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_byline">
+        <source>Hide the author</source>
+        <target>Den Autor ausblenden</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New element</source>

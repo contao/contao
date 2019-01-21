@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -28,10 +30,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Handles the installation process.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
  */
 class InstallationController implements ContainerAwareInterface
@@ -48,13 +46,9 @@ class InstallationController implements ContainerAwareInterface
     ];
 
     /**
-     * Handles the installation process.
-     *
-     * @return Response
-     *
      * @Route("/install", name="contao_install")
      */
-    public function installAction()
+    public function installAction(): Response
     {
         if (null !== ($response = $this->initializeApplication())) {
             return $response;
@@ -96,6 +90,10 @@ class InstallationController implements ContainerAwareInterface
             return $this->render('old_database.html.twig');
         }
 
+        if ($installTool->hasConfigurationError($this->context)) {
+            return $this->render('configuration_error.html.twig');
+        }
+
         $this->runDatabaseUpdates();
 
         if (null !== ($response = $this->adjustDatabaseTables())) {
@@ -113,12 +111,7 @@ class InstallationController implements ContainerAwareInterface
         return $this->render('main.html.twig', $this->context);
     }
 
-    /**
-     * Initializes the application.
-     *
-     * @return Response|null
-     */
-    private function initializeApplication()
+    private function initializeApplication(): ?Response
     {
         $event = new InitializeApplicationEvent();
 
@@ -136,11 +129,17 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to accept the license.
      *
+     * @throws \RuntimeException
+     *
      * @return Response|RedirectResponse
      */
-    private function acceptLicense()
+    private function acceptLicense(): Response
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         if ('tl_license' !== $request->request->get('FORM_SUBMIT')) {
             return $this->render('license.html.twig');
@@ -154,11 +153,17 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to set the install tool password.
      *
+     * @throws \RuntimeException
+     *
      * @return Response|RedirectResponse
      */
-    private function setPassword()
+    private function setPassword(): Response
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         if ('tl_password' !== $request->request->get('FORM_SUBMIT')) {
             return $this->render('password.html.twig');
@@ -193,11 +198,17 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to log in.
      *
+     * @throws \RuntimeException
+     *
      * @return Response|RedirectResponse
      */
-    private function login()
+    private function login(): Response
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         if ('tl_login' !== $request->request->get('FORM_SUBMIT')) {
             return $this->render('login.html.twig');
@@ -225,13 +236,11 @@ class InstallationController implements ContainerAwareInterface
     }
 
     /**
-     * Purges the Symfony cache.
-     *
      * The method preserves the container directory inside the cache folder,
      * because Symfony will throw a "compile error" exception if it is deleted
      * in the middle of a request.
      */
-    private function purgeSymfonyCache()
+    private function purgeSymfonyCache(): void
     {
         $filesystem = new Filesystem();
         $cacheDir = $this->getContainerParameter('kernel.cache_dir');
@@ -259,12 +268,10 @@ class InstallationController implements ContainerAwareInterface
     }
 
     /**
-     * Warms up the Symfony cache.
-     *
      * The method runs the optional cache warmers, because the cache will only
      * have the non-optional stuff at this time.
      */
-    private function warmUpSymfonyCache()
+    private function warmUpSymfonyCache(): void
     {
         $cacheDir = $this->getContainerParameter('kernel.cache_dir');
 
@@ -292,31 +299,45 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to set up the database connection.
      *
+     * @throws \RuntimeException
+     *
      * @return Response|RedirectResponse
      */
-    private function setUpDatabaseConnection()
+    private function setUpDatabaseConnection(): Response
     {
-        $parameters = [];
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
-        $parameters['parameters'] = [
-            'database_host' => $this->getContainerParameter('database_host'),
-            'database_port' => $this->getContainerParameter('database_port'),
-            'database_user' => $this->getContainerParameter('database_user'),
-            'database_password' => $this->getContainerParameter('database_password'),
-            'database_name' => $this->getContainerParameter('database_name'),
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
+
+        // Only warn the user if the connection fails and the env component is used
+        if (false !== getenv('DATABASE_URL')) {
+            return $this->render('misconfigured_database_url.html.twig');
+        }
+
+        $parameters = [
+            'parameters' => [
+                'database_host' => $this->getContainerParameter('database_host'),
+                'database_port' => $this->getContainerParameter('database_port'),
+                'database_user' => $this->getContainerParameter('database_user'),
+                'database_password' => $this->getContainerParameter('database_password'),
+                'database_name' => $this->getContainerParameter('database_name'),
+            ],
         ];
 
         if ('tl_database_login' !== $request->request->get('FORM_SUBMIT')) {
             return $this->render('database.html.twig', $parameters);
         }
 
-        $parameters['parameters'] = [
-            'database_host' => $request->request->get('dbHost'),
-            'database_port' => $request->request->get('dbPort'),
-            'database_user' => $request->request->get('dbUser'),
-            'database_password' => $this->getContainerParameter('database_password'),
-            'database_name' => $request->request->get('dbName'),
+        $parameters = [
+            'parameters' => [
+                'database_host' => $request->request->get('dbHost'),
+                'database_port' => $request->request->get('dbPort'),
+                'database_user' => $request->request->get('dbUser'),
+                'database_password' => $this->getContainerParameter('database_password'),
+                'database_name' => $request->request->get('dbName'),
+            ],
         ];
 
         if ('*****' !== $request->request->get('dbPassword')) {
@@ -340,7 +361,7 @@ class InstallationController implements ContainerAwareInterface
             ));
         }
 
-        $dumper = new ParameterDumper($this->getContainerParameter('kernel.root_dir'));
+        $dumper = new ParameterDumper($this->getContainerParameter('kernel.project_dir'));
         $dumper->setParameters($parameters);
         $dumper->dump();
 
@@ -349,15 +370,13 @@ class InstallationController implements ContainerAwareInterface
         return $this->getRedirectResponse();
     }
 
-    /**
-     * Runs the database updates.
-     */
-    private function runDatabaseUpdates()
+    private function runDatabaseUpdates(): void
     {
         if ($this->container->get('contao.install_tool')->isFreshInstallation()) {
             return;
         }
 
+        /** @var SplFileInfo[] $finder */
         $finder = Finder::create()
             ->files()
             ->name('Version*Update.php')
@@ -367,16 +386,18 @@ class InstallationController implements ContainerAwareInterface
 
         $messages = [];
 
-        /** @var SplFileInfo $file */
         foreach ($finder as $file) {
             $class = 'Contao\InstallationBundle\Database\\'.$file->getBasename('.php');
 
             /** @var AbstractVersionUpdate $update */
             $update = new $class($this->container->get('database_connection'));
 
-            if ($update instanceof AbstractVersionUpdate && $update->shouldBeRun()) {
+            if ($update instanceof AbstractVersionUpdate) {
                 $update->setContainer($this->container);
-                $update->run();
+
+                if ($update->shouldBeRun()) {
+                    $update->run();
+                }
 
                 if ($message = $update->getMessage()) {
                     $messages[] = $message;
@@ -390,9 +411,9 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to adjust the database tables.
      *
-     * @return RedirectResponse|null
+     * @throws \RuntimeException
      */
-    private function adjustDatabaseTables()
+    private function adjustDatabaseTables(): ?RedirectResponse
     {
         $this->container->get('contao.install_tool')->handleRunOnce();
 
@@ -401,6 +422,10 @@ class InstallationController implements ContainerAwareInterface
         $this->context['sql_form'] = $installer->getCommands();
 
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         if ('tl_database_update' !== $request->request->get('FORM_SUBMIT')) {
             return null;
@@ -420,9 +445,9 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to import the example website.
      *
-     * @return RedirectResponse|null
+     * @throws \RuntimeException
      */
-    private function importExampleWebsite()
+    private function importExampleWebsite(): ?RedirectResponse
     {
         $installTool = $this->container->get('contao.install_tool');
         $templates = $installTool->getTemplates();
@@ -434,6 +459,10 @@ class InstallationController implements ContainerAwareInterface
         }
 
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         if ('tl_template_import' !== $request->request->get('FORM_SUBMIT')) {
             return null;
@@ -464,11 +493,9 @@ class InstallationController implements ContainerAwareInterface
     }
 
     /**
-     * Creates an admin user.
-     *
-     * @return RedirectResponse|null
+     * @throws \RuntimeException
      */
-    private function createAdminUser()
+    private function createAdminUser(): ?RedirectResponse
     {
         $installTool = $this->container->get('contao.install_tool');
 
@@ -485,6 +512,10 @@ class InstallationController implements ContainerAwareInterface
         }
 
         $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         if ('tl_admin' !== $request->request->get('FORM_SUBMIT')) {
             return null;
@@ -564,15 +595,7 @@ class InstallationController implements ContainerAwareInterface
         return $this->getRedirectResponse();
     }
 
-    /**
-     * Renders a template.
-     *
-     * @param string $name
-     * @param array  $context
-     *
-     * @return Response
-     */
-    private function render($name, array $context = [])
+    private function render(string $name, array $context = []): Response
     {
         return new Response(
             $this->container->get('twig')->render(
@@ -582,14 +605,7 @@ class InstallationController implements ContainerAwareInterface
         );
     }
 
-    /**
-     * Translate a key.
-     *
-     * @param string $key
-     *
-     * @return string
-     */
-    private function trans($key)
+    private function trans(string $key): string
     {
         return $this->container->get('translator')->trans($key);
     }
@@ -597,21 +613,27 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Returns a redirect response to reload the page.
      *
-     * @return RedirectResponse
+     * @throws \RuntimeException
      */
-    private function getRedirectResponse()
+    private function getRedirectResponse(): RedirectResponse
     {
-        return new RedirectResponse($this->container->get('request_stack')->getCurrentRequest()->getRequestUri());
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
+
+        return new RedirectResponse($request->getRequestUri());
     }
 
     /**
      * Adds the default values to the context.
      *
-     * @param array $context
+     * @throws \RuntimeException
      *
-     * @return array
+     * @return array<string,string>
      */
-    private function addDefaultsToContext(array $context)
+    private function addDefaultsToContext(array $context): array
     {
         $context = array_merge($this->context, $context);
 
@@ -628,18 +650,19 @@ class InstallationController implements ContainerAwareInterface
         }
 
         if (!isset($context['path'])) {
-            $context['path'] = $this->container->get('request_stack')->getCurrentRequest()->getBasePath();
+            $request = $this->container->get('request_stack')->getCurrentRequest();
+
+            if (null === $request) {
+                throw new \RuntimeException('The request stack did not contain a request');
+            }
+
+            $context['path'] = $request->getBasePath();
         }
 
         return $context;
     }
 
-    /**
-     * Returns the request token.
-     *
-     * @return string
-     */
-    private function getRequestToken()
+    private function getRequestToken(): string
     {
         $tokenName = $this->getContainerParameter('contao.csrf_token_name');
 
@@ -647,17 +670,13 @@ class InstallationController implements ContainerAwareInterface
             return '';
         }
 
-        return $this->container->get('security.csrf.token_manager')->getToken($tokenName)->getValue();
+        return $this->container->get('contao.csrf.token_manager')->getToken($tokenName)->getValue();
     }
 
     /**
-     * Returns a parameter from the container.
-     *
-     * @param string $name
-     *
-     * @return mixed
+     * @return string|bool|null
      */
-    private function getContainerParameter($name)
+    private function getContainerParameter(string $name)
     {
         if ($this->container->hasParameter($name)) {
             return $this->container->getParameter($name);
@@ -666,12 +685,7 @@ class InstallationController implements ContainerAwareInterface
         return null;
     }
 
-    /**
-     * Returns the user agent string.
-     *
-     * @return string
-     */
-    private function getUserAgentString()
+    private function getUserAgentString(): string
     {
         if (!$this->container->has('contao.framework') || !$this->container->get('contao.framework')->isInitialized()) {
             return '';

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,34 +13,22 @@
 namespace Contao\ManagerBundle\Test\Cache;
 
 use Contao\ManagerBundle\Cache\BundleCacheClearer;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Tests the BundleCacheClearer class.
- *
- * @author Kamil Kuzminski <https://github.com/qzminski>
- */
-class BundleCacheClearerTest extends TestCase
+class BundleCacheClearerTest extends ContaoTestCase
 {
-    /**
-     * Tests the clear() method.
-     */
-    public function testClear()
+    public function testClear(): void
     {
-        $tmpdir = sys_get_temp_dir().'/'.uniqid('BundleCacheClearerTest_', true);
-
         $fs = new Filesystem();
-        $fs->mkdir($tmpdir);
-        $fs->touch($tmpdir.'/bundles.map');
+        $fs->mkdir($this->getTempDir());
+        $fs->touch($this->getTempDir().'/bundles.map');
 
-        $this->assertFileExists($tmpdir.'/bundles.map');
+        $this->assertFileExists($this->getTempDir().'/bundles.map');
 
         $clearer = new BundleCacheClearer($fs);
-        $clearer->clear($tmpdir);
+        $clearer->clear($this->getTempDir());
 
-        $this->assertFileNotExists($tmpdir.'/bundles.map');
-
-        $fs->remove($tmpdir);
+        $this->assertFileNotExists($this->getTempDir().'/bundles.map');
     }
 }

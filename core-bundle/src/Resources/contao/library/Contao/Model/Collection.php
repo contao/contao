@@ -130,12 +130,12 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	public static function createFromDbResult(Result $objResult, $strTable)
 	{
 		$arrModels = array();
-		$strClass = \Model::getClassFromTable($strTable);
+		$strClass = Model::getClassFromTable($strTable);
 
 		while ($objResult->next())
 		{
 			/** @var Model $strClass */
-			$objModel = \Model\Registry::getInstance()->fetch($strTable, $objResult->{$strClass::getPk()});
+			$objModel = Registry::getInstance()->fetch($strTable, $objResult->{$strClass::getPk()});
 
 			if ($objModel !== null)
 			{
@@ -445,3 +445,5 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return new \ArrayIterator($this->arrModels);
 	}
 }
+
+class_alias(Collection::class, 'Model\Collection');

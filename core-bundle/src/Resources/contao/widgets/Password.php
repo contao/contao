@@ -22,7 +22,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Password extends \Widget
+class Password extends Widget
 {
 
 	/**
@@ -110,9 +110,12 @@ class Password extends \Widget
 			return '*****';
 		}
 
-		if (Utf8::strlen($varInput) < \Config::get('minPasswordLength'))
+		// Check password length either from DCA or use Config as fallback (#1086)
+		$intLength = $this->minlength ?: Config::get('minPasswordLength');
+
+		if (Utf8::strlen($varInput) < $intLength)
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], \Config::get('minPasswordLength')));
+			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], $intLength));
 		}
 
 		if ($varInput != $this->getPost($this->strName . '_confirm'))
@@ -130,7 +133,7 @@ class Password extends \Widget
 		if (!$this->hasErrors())
 		{
 			$this->blnSubmitInput = true;
-			\Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
+			Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
 
 			return password_hash($varInput, PASSWORD_DEFAULT);
 		}
@@ -152,7 +155,7 @@ class Password extends \Widget
 						(($this->varValue != '') ? '*****' : ''),
 						$this->getAttributes(),
 						$this->wizard,
-						((\strlen($this->description) && \Config::get('showHelp') && !$this->hasErrors()) ? "\n  " . '<p class="tl_help tl_tip">'.$this->description.'</p>' : ''));
+						((\strlen($this->description) && Config::get('showHelp') && !$this->hasErrors()) ? "\n  " . '<p class="tl_help tl_tip">'.$this->description.'</p>' : ''));
 	}
 
 	/**
@@ -183,6 +186,8 @@ class Password extends \Widget
 						(\strlen($this->strClass) ? ' ' . $this->strClass : ''),
 						(($this->varValue != '') ? '*****' : ''),
 						$this->getAttributes(),
-						((\strlen($GLOBALS['TL_LANG']['MSC']['confirm'][1]) && \Config::get('showHelp')) ? "\n  " . '<p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['confirm'][1].'</p>' : ''));
+						((\strlen($GLOBALS['TL_LANG']['MSC']['confirm'][1]) && Config::get('showHelp')) ? "\n  " . '<p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['confirm'][1].'</p>' : ''));
 	}
 }
+
+class_alias(Password::class, 'Password');

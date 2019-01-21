@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,66 +12,51 @@
 
 namespace Contao\CoreBundle\Tests\Controller;
 
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Tests\LanguageHelper;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\FileUpload;
+use Contao\Message;
+use Contao\System;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Tests the BackendControllerTest class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class BackendCsvImportControllerTest extends TestCase
 {
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
-        $GLOBALS['TL_LANG']['MSC'] = new LanguageHelper();
+        $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
+
+        $container = $this->mockContainer();
+        $container->set('session', new Session(new MockArraySessionStorage()));
+        $container->set('contao.resource_finder', $finder);
+
+        System::setContainer($container);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function tearDownAfterClass()
+    public function testRendersTheListWizardMarkup(): void
     {
-        parent::tearDownAfterClass();
+        $request = new Request();
+        $request->query->set('key', 'lw');
 
-        unset($GLOBALS['TL_LANG']['MSC']);
-    }
-
-    /**
-     * Tests the list wizard import.
-     */
-    public function testRendersTheListWizardMarkup()
-    {
-        $dc = $this->createMock(DataContainer::class);
-
-        $dc
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'id':
-                        return 1;
-
-                    case 'table':
-                        return 'tl_content';
-
-                    default:
-                        return null;
-                }
-            })
+        $html = $this
+            ->mockController($request)
+            ->importListWizardAction($this->mockDataContainer())
+            ->getContent()
         ;
 
         $expect = <<<'EOF'
@@ -79,37 +66,12 @@ class BackendCsvImportControllerTest extends TestCase
 
 EOF;
 
-        $request = new Request();
-        $request->query->set('key', 'lw');
-
-        $this->assertSame($expect, $this->getController($request)->importListWizard($dc)->getContent());
+        $this->assertSame($expect, $html);
     }
 
-    /**
-     * Tests the list wizard import with POST data.
-     */
-    public function testImportsTheListWizardData()
+    public function testImportsTheListWizardData(): void
     {
-        $dc = $this->createMock(DataContainer::class);
-
-        $dc
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'id':
-                        return 1;
-
-                    case 'table':
-                        return 'tl_content';
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->atLeastOnce())
             ->method('update')
@@ -129,36 +91,25 @@ EOF;
             $this->mockContaoFrameworkWithUploader(),
             $connection,
             $requestStack,
-            $this->getRootDir()
+            $this->createMock(TranslatorInterface::class),
+            $this->getFixturesDir()
         );
 
-        $response = $controller->importListWizard($dc);
+        $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(302, $response->getStatusCode());
     }
 
-    /**
-     * Tests the table wizard import.
-     */
-    public function testRendersTheTableWizardMarkup()
+    public function testRendersTheTableWizardMarkup(): void
     {
-        $dc = $this->createMock(DataContainer::class);
+        $request = new Request();
+        $request->query->set('key', 'tw');
 
-        $dc
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'id':
-                        return 1;
-
-                    case 'table':
-                        return 'tl_content';
-
-                    default:
-                        return null;
-                }
-            })
+        $html = $this
+            ->mockController($request)
+            ->importTableWizardAction($this->mockDataContainer())
+            ->getContent()
         ;
 
         $expect = <<<'EOF'
@@ -168,37 +119,12 @@ EOF;
 
 EOF;
 
-        $request = new Request();
-        $request->query->set('key', 'tw');
-
-        $this->assertSame($expect, $this->getController($request)->importTableWizard($dc)->getContent());
+        $this->assertSame($expect, $html);
     }
 
-    /**
-     * Tests the table wizard import with POST data.
-     */
-    public function testImportsTheTableWizardData()
+    public function testImportsTheTableWizardData(): void
     {
-        $dc = $this->createMock(DataContainer::class);
-
-        $dc
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'id':
-                        return 1;
-
-                    case 'table':
-                        return 'tl_content';
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->atLeastOnce())
             ->method('update')
@@ -218,36 +144,25 @@ EOF;
             $this->mockContaoFrameworkWithUploader(),
             $connection,
             $requestStack,
-            $this->getRootDir()
+            $this->createMock(TranslatorInterface::class),
+            $this->getFixturesDir()
         );
 
-        $response = $controller->importTableWizard($dc);
+        $response = $controller->importTableWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(302, $response->getStatusCode());
     }
 
-    /**
-     * Tests the option wizard import.
-     */
-    public function testRendersTheOptionWizardMarkup()
+    public function testRendersTheOptionWizardMarkup(): void
     {
-        $dc = $this->createMock(DataContainer::class);
+        $request = new Request();
+        $request->query->set('key', 'ow');
 
-        $dc
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'id':
-                        return 1;
-
-                    case 'table':
-                        return 'tl_content';
-
-                    default:
-                        return null;
-                }
-            })
+        $html = $this
+            ->mockController($request)
+            ->importOptionWizardAction($this->mockDataContainer())
+            ->getContent()
         ;
 
         $expect = <<<'EOF'
@@ -257,37 +172,12 @@ EOF;
 
 EOF;
 
-        $request = new Request();
-        $request->query->set('key', 'ow');
-
-        $this->assertSame($expect, $this->getController($request)->importOptionWizard($dc)->getContent());
+        $this->assertSame($expect, $html);
     }
 
-    /**
-     * Tests the option wizard import with POST data.
-     */
-    public function testImportsTheOptionWizardData()
+    public function testImportsTheOptionWizardData(): void
     {
-        $dc = $this->createMock(DataContainer::class);
-
-        $dc
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'id':
-                        return 1;
-
-                    case 'table':
-                        return 'tl_content';
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->atLeastOnce())
             ->method('update')
@@ -311,123 +201,201 @@ EOF;
             $this->mockContaoFrameworkWithUploader(),
             $connection,
             $requestStack,
-            $this->getRootDir()
+            $this->createMock(TranslatorInterface::class),
+            $this->getFixturesDir()
         );
 
-        $response = $controller->importOptionWizard($dc);
+        $response = $controller->importOptionWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(302, $response->getStatusCode());
     }
 
-    /**
-     * Tests the list wizard import with incomplete POST data.
-     */
-    public function testRedirectsIfThePostDataIsIncomplete()
+    public function testRedirectsIfThePostDataIsIncomplete(): void
     {
-        $dc = $this->createMock(DataContainer::class);
-
-        $dc
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'id':
-                        return 1;
-
-                    case 'table':
-                        return 'tl_content';
-
-                    default:
-                        return null;
-                }
-            })
-        ;
+        $connection = $this->createMock(Connection::class);
 
         $request = new Request();
         $request->query->set('key', 'lw');
         $request->request->set('FORM_SUBMIT', 'tl_csv_import_lw');
 
-        $response = $this->getController($request)->importListWizard($dc);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
+        $controller = new BackendCsvImportController(
+            $this->mockFramework(['files/data.csv'], true),
+            $connection,
+            $requestStack,
+            $translator,
+            $this->getFixturesDir()
+        );
+
+        $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(303, $response->getStatusCode());
     }
 
-    /**
-     * Tests the wizard import without a request object.
-     */
-    public function testFailsIfThereIsNoRequestObject()
+    public function testFailsIfThereIsNoRequestObject(): void
     {
-        $dc = $this->createMock(DataContainer::class);
-
-        $dc
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'id':
-                        return 1;
-
-                    case 'table':
-                        return 'tl_content';
-
-                    default:
-                        return null;
-                }
-            })
-        ;
+        $connection = $this->createMock(Connection::class);
 
         $controller = new BackendCsvImportController(
             $this->mockContaoFrameworkWithUploader(),
-            $this->createMock(Connection::class),
+            $connection,
             new RequestStack(),
-            $this->getRootDir()
+            $this->createMock(TranslatorInterface::class),
+            $this->getFixturesDir()
         );
 
         $this->expectException(InternalServerErrorException::class);
 
-        $controller->importListWizard($dc);
+        $controller->importListWizardAction($this->mockDataContainer());
     }
 
-    /**
-     * Returns the controller.
-     *
-     * @param Request|null $request
-     *
-     * @return BackendCsvImportController
-     */
-    private function getController(Request $request = null)
+    public function testFailsIfThereAreNoFiles(): void
     {
-        parent::setUp();
+        $connection = $this->createMock(Connection::class);
 
-        if (null === $request) {
-            $request = new Request();
-        }
+        $request = new Request();
+        $request->query->set('key', 'lw');
+        $request->request->set('FORM_SUBMIT', 'tl_csv_import_lw');
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
+        $controller = new BackendCsvImportController(
+            $this->mockFramework([], true),
+            $connection,
+            $requestStack,
+            $translator,
+            $this->getFixturesDir()
+        );
+
+        $response = $controller->importListWizardAction($this->mockDataContainer());
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame(303, $response->getStatusCode());
+    }
+
+    public function testFailsIfTheFileExtensionIsNotCsv(): void
+    {
+        $connection = $this->createMock(Connection::class);
+
+        $request = new Request();
+        $request->query->set('key', 'lw');
+        $request->request->set('FORM_SUBMIT', 'tl_csv_import_lw');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
+        $controller = new BackendCsvImportController(
+            $this->mockFramework(['files/data.jpg'], true),
+            $connection,
+            $requestStack,
+            $translator,
+            $this->getFixturesDir()
+        );
+
+        $response = $controller->importListWizardAction($this->mockDataContainer());
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame(303, $response->getStatusCode());
+    }
+
+    private function mockFramework(array $files = [], bool $expectError = false): ContaoFrameworkInterface
+    {
+        $uploader = $this->createMock(FileUpload::class);
+        $uploader
+            ->method('uploadTo')
+            ->willReturn($files)
+        ;
+
+        $adapter = $this->mockAdapter(['addError']);
+        $adapter
+            ->expects($expectError ? $this->once() : $this->never())
+            ->method('addError')
+        ;
+
+        $framework = $this->mockContaoFramework([Message::class => $adapter]);
+        $framework
+            ->method('createInstance')
+            ->willReturn($uploader)
+        ;
+
+        return $framework;
+    }
+
+    private function mockController(Request $request = null): BackendCsvImportController
+    {
+        $requestStack = new RequestStack();
+        $requestStack->push($request ?: new Request());
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
 
         return new BackendCsvImportController(
             $this->mockContaoFrameworkWithUploader(),
             $this->createMock(Connection::class),
             $requestStack,
-            $this->getRootDir()
+            $translator,
+            $this->getFixturesDir()
         );
+    }
+
+    /**
+     * @return DataContainer|MockObject
+     */
+    private function mockDataContainer(): DataContainer
+    {
+        $properties = [
+            'id' => 1,
+            'table' => 'tl_content',
+        ];
+
+        return $this->mockClassWithProperties(DataContainer::class, $properties);
     }
 
     /**
      * Mocks a Contao framework with a file uploader.
      *
-     * @return ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
+     * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockContaoFrameworkWithUploader()
+    private function mockContaoFrameworkWithUploader(): ContaoFrameworkInterface
     {
         $uploader = $this->createMock(FileUpload::class);
-
         $uploader
             ->method('uploadTo')
             ->willReturn(['files/data.csv'])
         ;
 
-        return $this->mockContaoFramework(null, null, [], [FileUpload::class => $uploader]);
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->method('createInstance')
+            ->willReturn($uploader)
+        ;
+
+        return $framework;
     }
 }

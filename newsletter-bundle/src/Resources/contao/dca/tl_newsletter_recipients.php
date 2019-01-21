@@ -31,7 +31,8 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			(
 				'id' => 'primary',
 				'pid,email' => 'unique',
-				'email' => 'index'
+				'email' => 'index',
+				'active' => 'index'
 			)
 		)
 	),
@@ -138,7 +139,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'sorting'                 => true,
 			'flag'                    => 1,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>128, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_newsletter_recipients', 'checkUniqueRecipient'),
@@ -163,30 +164,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'flag'                    => 8,
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "varchar(10) NOT NULL default ''"
-		),
-		'confirmed' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['confirmed'],
-			'filter'                  => true,
-			'sorting'                 => true,
-			'flag'                    => 8,
-			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => "varchar(10) NOT NULL default ''"
-		),
-		'ip' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['ip'],
-			'search'                  => true,
-			'sorting'                 => true,
-			'flag'                    => 11,
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'token' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['token'],
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "varchar(32) NOT NULL default ''"
 		)
 	)
 );
@@ -196,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_newsletter_recipients extends Backend
+class tl_newsletter_recipients extends Contao\Backend
 {
 
 	/**
@@ -205,7 +182,7 @@ class tl_newsletter_recipients extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -230,10 +207,10 @@ class tl_newsletter_recipients extends Backend
 			$root = $this->User->newsletters;
 		}
 
-		$id = \strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+		$id = \strlen(Contao\Input::get('id')) ? Contao\Input::get('id') : CURRENT_ID;
 
 		// Check current action
-		switch (Input::get('act'))
+		switch (Contao\Input::get('act'))
 		{
 			case 'paste':
 			case 'select':
@@ -244,19 +221,19 @@ class tl_newsletter_recipients extends Backend
 				break;
 
 			case 'create':
-				if (!\strlen(Input::get('pid')) || !\in_array(Input::get('pid'), $root))
+				if (!\strlen(Contao\Input::get('pid')) || !\in_array(Contao\Input::get('pid'), $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create newsletters recipients in channel ID ' . Input::get('pid') . '.');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create newsletters recipients in channel ID ' . Contao\Input::get('pid') . '.');
 				}
 				break;
 
 			case 'cut':
 			case 'copy':
-				if (!\in_array(Input::get('pid'), $root))
+				if (!\in_array(Contao\Input::get('pid'), $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter recipient ID ' . $id . ' to channel ID ' . Input::get('pid') . '.');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' newsletter recipient ID ' . $id . ' to channel ID ' . Contao\Input::get('pid') . '.');
 				}
-				// NO BREAK STATEMENT HERE
+				// no break;
 
 			case 'edit':
 			case 'show':
@@ -273,7 +250,7 @@ class tl_newsletter_recipients extends Backend
 
 				if (!\in_array($objRecipient->pid, $root))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' recipient ID ' . $id . ' of newsletter channel ID ' . $objRecipient->pid . '.');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' recipient ID ' . $id . ' of newsletter channel ID ' . $objRecipient->pid . '.');
 				}
 				break;
 
@@ -294,7 +271,7 @@ class tl_newsletter_recipients extends Backend
 				}
 
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = System::getContainer()->get('session');
+				$objSession = Contao\System::getContainer()->get('session');
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objRecipient->fetchEach('id'));
@@ -302,9 +279,9 @@ class tl_newsletter_recipients extends Backend
 				break;
 
 			default:
-				if (\strlen(Input::get('act')))
+				if (\strlen(Contao\Input::get('act')))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '".');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
 				}
 				elseif (!\in_array($id, $root))
 				{
@@ -315,27 +292,27 @@ class tl_newsletter_recipients extends Backend
 	}
 
 	/**
-	 * Reset the double opt-in data if a recipient is moved manually
+	 * Set the recipient status to "added manually" if they are moved to another channel
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 */
-	public function clearOptInData(DataContainer $dc)
+	public function clearOptInData(Contao\DataContainer $dc)
 	{
-		$this->Database->prepare("UPDATE tl_newsletter_recipients SET addedOn='', confirmed='', ip='', token='' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_newsletter_recipients SET addedOn='' WHERE id=?")
 					   ->execute($dc->id);
 	}
 
 	/**
 	 * Check if recipients are unique per channel
 	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return mixed
 	 *
 	 * @throws Exception
 	 */
-	public function checkUniqueRecipient($varValue, DataContainer $dc)
+	public function checkUniqueRecipient($varValue, Contao\DataContainer $dc)
 	{
 		$objRecipient = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
 									   ->execute($varValue, $dc->id, $dc->id);
@@ -351,14 +328,14 @@ class tl_newsletter_recipients extends Backend
 	/**
 	 * Check if a recipient is blacklisted for a channel
 	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return mixed
 	 *
 	 * @throws Exception
 	 */
-	public function checkBlacklistedRecipient($varValue, DataContainer $dc)
+	public function checkBlacklistedRecipient($varValue, Contao\DataContainer $dc)
 	{
 		$objBlacklist = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_blacklist WHERE hash=? AND pid=(SELECT pid FROM tl_newsletter_recipients WHERE id=?) AND id!=?")
 									   ->execute(md5($varValue), $dc->id, $dc->id);
@@ -380,18 +357,18 @@ class tl_newsletter_recipients extends Backend
 	 */
 	public function listRecipient($row)
 	{
-		$label = Idna::decodeEmail($row['email']);
+		$label = Contao\Idna::decodeEmail($row['email']);
 
 		if ($row['addedOn'])
 		{
-			$label .= ' <span style="color:#999;padding-left:3px">(' . sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['subscribed'], Date::parse(Config::get('datimFormat'), $row['addedOn'])) . ')</span>';
+			$label .= ' <span style="color:#999;padding-left:3px">(' . sprintf($GLOBALS['TL_LANG']['tl_newsletter_recipients']['subscribed'], Contao\Date::parse(Contao\Config::get('datimFormat'), $row['addedOn'])) . ')</span>';
 		}
 		else
 		{
 			$label .= ' <span style="color:#999;padding-left:3px">(' . $GLOBALS['TL_LANG']['tl_newsletter_recipients']['manually'] . ')</span>';
 		}
 
-		return sprintf('<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="member.svg" data-icon-disabled="member_.svg">%s</div></div>', TL_ASSETS_URL, Backend::getTheme(), ($row['active'] ? 'member' : 'member_'), $label) . "\n";
+		return sprintf('<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="member.svg" data-icon-disabled="member_.svg">%s</div></div>', Contao\System::getContainer()->get('contao.assets.assets_context')->getStaticUrl(), Contao\Backend::getTheme(), ($row['active'] ? 'member' : 'member_'), $label) . "\n";
 	}
 
 	/**
@@ -408,9 +385,9 @@ class tl_newsletter_recipients extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Input::get('tid')))
+		if (\strlen(Contao\Input::get('tid')))
 		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -427,23 +404,23 @@ class tl_newsletter_recipients extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['active'] ? 1 : 0) . '"').'</a> ';
+		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['active'] ? 1 : 0) . '"').'</a> ';
 	}
 
 	/**
 	 * Disable/enable a user group
 	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
+	 * @param integer              $intId
+	 * @param boolean              $blnVisible
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
+		Contao\Input::setGet('id', $intId);
+		Contao\Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -486,7 +463,7 @@ class tl_newsletter_recipients extends Backend
 			}
 		}
 
-		$objVersions = new Versions('tl_newsletter_recipients', $intId);
+		$objVersions = new Contao\Versions('tl_newsletter_recipients', $intId);
 		$objVersions->initialize();
 
 		// Trigger the save_callback

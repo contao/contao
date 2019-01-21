@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.addReply.1">
         <source>Here you can reply to the comment.</source>
-        <target>Burada yorumu cevaplayabilirsiniz.</target>
+        <target>Burada yoruma cevap yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_comments.author.0">
         <source>Author</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.author.1">
         <source>Here you can change the author of the reply.</source>
-        <target>Burada cevabın yazarını değiştirebilirsiniz.</target>
+        <target>Burada cevaplayan yazarı değiştirebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_comments.reply.0">
         <source>Reply</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.reply.1">
         <source>Here you can enter the reply.</source>
-        <target>Buraya cevabı girebilirsiniz.</target>
+        <target>Buraya cevabı yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
         <source>Publish comment</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.notified.1">
         <source>The notification of this comment has been sent.</source>
-        <target>Bu yoruma bildirim gönderildi.</target>
+        <target>Bu yorumun bildirisi gönderildi.</target>
       </trans-unit>
       <trans-unit id="tl_comments.notifiedReply.0">
         <source>Notified (reply)</source>
@@ -151,7 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.tl_faq">
         <source>FAQ</source>
-        <target>SSS</target>
+        <target>FAQ</target>
       </trans-unit>
       <trans-unit id="tl_comments.tl_calendar_events">
         <source>Event</source>
@@ -163,7 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.show.1">
         <source>Show the details of comment ID %s</source>
-        <target>Yorum kimliği %s ayrıntılarını göster </target>
+        <target>Yorum ID %s ayrıntılarını göster </target>
       </trans-unit>
       <trans-unit id="tl_comments.edit.0">
         <source>Edit comment</source>
@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.edit.1">
         <source>Edit comment ID %s</source>
-        <target>Yorum kimliği %s düzenle</target>
+        <target>Yorum ID %s düzenle</target>
       </trans-unit>
       <trans-unit id="tl_comments.delete.0">
         <source>Delete comment</source>
@@ -179,7 +179,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.delete.1">
         <source>Delete comment ID %s</source>
-        <target>Yorum kimliği %s sil</target>
+        <target>Yorum ID %s sil.</target>
       </trans-unit>
       <trans-unit id="tl_comments.toggle.0">
         <source>Publish/unpublish comment</source>
@@ -187,7 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.toggle.1">
         <source>Publish/unpublish comment ID %s</source>
-        <target>Yorum kimliği %s yayınla/yayınlama </target>
+        <target>Yorum ID %s yayınla/yayınlama </target>
       </trans-unit>
     </body>
   </file>

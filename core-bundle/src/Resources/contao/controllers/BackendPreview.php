@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -21,7 +22,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendPreview extends \Backend
+class BackendPreview extends Backend
 {
 
 	/**
@@ -35,15 +36,15 @@ class BackendPreview extends \Backend
 	 */
 	public function __construct()
 	{
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 		parent::__construct();
 
-		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
 		{
 			throw new AccessDeniedException('Access denied');
 		}
 
-		\System::loadLanguageFile('default');
+		System::loadLanguageFile('default');
 	}
 
 	/**
@@ -53,64 +54,68 @@ class BackendPreview extends \Backend
 	 */
 	public function run()
 	{
-		/** @var BackendTemplate|object $objTemplate */
-		$objTemplate = new \BackendTemplate('be_preview');
+		$objRouter = System::getContainer()->get('router');
 
-		$objTemplate->base = \Environment::get('base');
+		// Switch to a particular member (see #6546)
+		if ($strUser = Input::get('user'))
+		{
+			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
+
+			if (!$objAuthenticator->authenticateFrontendUser($strUser, false))
+			{
+				$objAuthenticator->removeFrontendAuthentication();
+			}
+
+			$arrParameters = array();
+
+			if (Input::get('url'))
+			{
+				$arrParameters['url'] = Input::get('url');
+			}
+
+			if (Input::get('page'))
+			{
+				$arrParameters['page'] = Input::get('page');
+			}
+
+			return new RedirectResponse($objRouter->generate('contao_backend_preview', $arrParameters));
+		}
+
+		$objTemplate = new BackendTemplate('be_preview');
+		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreview']);
-		$objTemplate->charset = \Config::get('characterSet');
-		$objTemplate->site = \Input::get('site', true);
-		$objTemplate->switchHref = \System::getContainer()->get('router')->generate('contao_backend_switch');
+		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreview']);
+		$objTemplate->charset = Config::get('characterSet');
+		$objTemplate->site = Input::get('site', true);
+		$objTemplate->switchHref = $objRouter->generate('contao_backend_switch');
+		$objTemplate->user = System::getContainer()->get('contao.security.token_checker')->getFrontendUsername();
 
 		$strUrl = null;
 
-		if (\Input::get('url'))
+		if (Input::get('url'))
 		{
-			$strUrl = \Environment::get('base') . \Input::get('url');
+			$strUrl = Environment::get('base') . Input::get('url');
 		}
-		elseif (\Input::get('page'))
+		elseif (Input::get('page'))
 		{
-			$strUrl = $this->redirectToFrontendPage(\Input::get('page'), \Input::get('article'), true);
+			$strUrl = $this->redirectToFrontendPage(Input::get('page'), Input::get('article'), true);
 		}
 		else
 		{
 			$event = new PreviewUrlConvertEvent();
-			\System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CONVERT, $event);
+			System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CONVERT, $event);
 			$strUrl = $event->getUrl();
 		}
 
 		if ($strUrl === null)
 		{
-			$strUrl = \System::getContainer()->get('router')->generate('contao_root', array(), UrlGeneratorInterface::ABSOLUTE_URL);
+			$strUrl = System::getContainer()->get('router')->generate('contao_root', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
 
 		$objTemplate->url = $strUrl;
 
-		// Switch to a particular member (see #6546)
-		if (\Input::get('user') && ($this->User->isAdmin || (!empty($this->User->amg) && \is_array($this->User->amg))))
-		{
-			$objUser = \MemberModel::findByUsername(\Input::get('user'));
-
-			// Check the allowed member groups
-			if ($objUser !== null && ($this->User->isAdmin || \count(array_intersect(\StringUtil::deserialize($objUser->groups, true), $this->User->amg)) > 0))
-			{
-				$strHash = $this->getSessionHash('FE_USER_AUTH');
-
-				// Remove old sessions
-				$this->Database->prepare("DELETE FROM tl_session WHERE tstamp<? OR hash=?")
-							   ->execute((time() - \Config::get('sessionTimeout')), $strHash);
-
-				// Insert the new session
-				$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-							   ->execute($objUser->id, time(), 'FE_USER_AUTH', \System::getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
-
-				// Set the cookie
-				$this->setCookie('FE_USER_AUTH', $strHash, (time() + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
-				$objTemplate->user = \Input::post('user');
-			}
-		}
-
 		return $objTemplate->getResponse();
 	}
 }
+
+class_alias(BackendPreview::class, 'BackendPreview');

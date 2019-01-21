@@ -17,7 +17,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class BackendModule extends \Backend
+abstract class BackendModule extends Backend
 {
 
 	/**
@@ -89,7 +89,7 @@ abstract class BackendModule extends \Backend
 	 */
 	public function generate()
 	{
-		$this->Template = new \BackendTemplate($this->strTemplate);
+		$this->Template = new BackendTemplate($this->strTemplate);
 		$this->compile();
 
 		return $this->Template->parse();
@@ -100,3 +100,5 @@ abstract class BackendModule extends \Backend
 	 */
 	abstract protected function compile();
 }
+
+class_alias(BackendModule::class, 'BackendModule');

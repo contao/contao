@@ -158,14 +158,16 @@
         <target>جزایر کوکوس (کلینگ)</target>
       </trans-unit>
       <trans-unit id="CNT.cd">
-        <source>Democratic Republic of the Congo</source>
+        <source>Congo - Kinshasa</source>
+        <target>کنگو - کینشاسا</target>
       </trans-unit>
       <trans-unit id="CNT.cf">
         <source>Central African Republic</source>
         <target>جمهوری آفریقای مرکزی</target>
       </trans-unit>
       <trans-unit id="CNT.cg">
-        <source>Republic of the Congo</source>
+        <source>Congo - Brazzaville</source>
+        <target>کنگو - برازاویل</target>
       </trans-unit>
       <trans-unit id="CNT.ch">
         <source>Switzerland</source>
@@ -194,6 +196,10 @@
       <trans-unit id="CNT.co">
         <source>Colombia</source>
         <target>کلمبیا</target>
+      </trans-unit>
+      <trans-unit id="CNT.cp">
+        <source>Clipperton Island</source>
+        <target>جزیره کلیپرتون</target>
       </trans-unit>
       <trans-unit id="CNT.cr">
         <source>Costa Rica</source>
@@ -226,6 +232,10 @@
       <trans-unit id="CNT.de">
         <source>Germany</source>
         <target>آلمان</target>
+      </trans-unit>
+      <trans-unit id="CNT.dg">
+        <source>Diego Garcia</source>
+        <target>دیگو گارسیا</target>
       </trans-unit>
       <trans-unit id="CNT.dj">
         <source>Djibouti</source>

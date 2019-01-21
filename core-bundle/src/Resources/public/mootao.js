@@ -6,7 +6,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
 /*
 ---
 
@@ -84,7 +83,6 @@ Request.Contao = new Class(
 
 // Deprecated since Contao 4.0, to be removed in Contao 5.0
 Request.Mixed = Request.Contao;
-
 
 /*
 ---
@@ -170,7 +168,6 @@ Tips.Contao = new Class(
 	}
 });
 
-
 /*
 ---
 
@@ -244,7 +241,6 @@ Class.refactor(Drag,
 	}
 });
 
-
 /*
 ---
 
@@ -312,7 +308,6 @@ Class.refactor(Sortables,
 		return clone;
 	}
 });
-
 
 /*
 ---

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -25,11 +27,6 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
-/**
- * Generates the Contao cache during cache warmup.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoCacheWarmer implements CacheWarmerInterface
 {
     /**
@@ -62,17 +59,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     private $framework;
 
-    /**
-     * Constructor.
-     *
-     * @param Filesystem               $filesystem
-     * @param ResourceFinderInterface  $finder
-     * @param FileLocator              $locator
-     * @param string                   $rootDir
-     * @param Connection               $connection
-     * @param ContaoFrameworkInterface $framework
-     */
-    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, $rootDir, Connection $connection, ContaoFrameworkInterface $framework)
+    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $rootDir, Connection $connection, ContaoFrameworkInterface $framework)
     {
         $this->filesystem = $filesystem;
         $this->finder = $finder;
@@ -85,7 +72,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * {@inheritdoc}
      */
-    public function warmUp($cacheDir)
+    public function warmUp($cacheDir): void
     {
         if (!$this->isCompleteInstallation()) {
             return;
@@ -103,17 +90,12 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * {@inheritdoc}
      */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return true;
     }
 
-    /**
-     * Generates the config cache.
-     *
-     * @param string $cacheDir
-     */
-    private function generateConfigCache($cacheDir)
+    private function generateConfigCache(string $cacheDir): void
     {
         $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao');
 
@@ -126,12 +108,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
     }
 
-    /**
-     * Generates the DCA cache.
-     *
-     * @param string $cacheDir
-     */
-    private function generateDcaCache($cacheDir)
+    private function generateDcaCache(string $cacheDir): void
     {
         $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), $cacheDir.'/contao');
         $processed = [];
@@ -152,12 +129,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
     }
 
-    /**
-     * Generates the language cache.
-     *
-     * @param string $cacheDir
-     */
-    private function generateLanguageCache($cacheDir)
+    private function generateLanguageCache(string $cacheDir): void
     {
         $dumper = new CombinedFileDumper(
             $this->filesystem,
@@ -195,12 +167,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
     }
 
-    /**
-     * Generates the DCA extracts.
-     *
-     * @param string $cacheDir
-     */
-    private function generateDcaExtracts($cacheDir)
+    private function generateDcaExtracts(string $cacheDir): void
     {
         $processed = [];
         $files = $this->findDcaFiles();
@@ -234,12 +201,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
     }
 
-    /**
-     * Generates the template mapper array.
-     *
-     * @param string $cacheDir The cache directory
-     */
-    private function generateTemplateMapper($cacheDir)
+    private function generateTemplateMapper(string $cacheDir): void
     {
         $files = $this->findTemplateFiles();
 
@@ -263,11 +225,9 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * Returns the languages which are currently in use.
-     *
-     * @return array
+     * @return string[]
      */
-    private function getLanguagesInUse()
+    private function getLanguagesInUse(): array
     {
         // Get all languages in use (see #6013)
         $statement = $this->connection->prepare("
@@ -309,12 +269,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         return array_unique($languages);
     }
 
-    /**
-     * Checks if the installation is complete.
-     *
-     * @return bool
-     */
-    private function isCompleteInstallation()
+    private function isCompleteInstallation(): bool
     {
         try {
             $this->connection->query('SELECT COUNT(*) FROM tl_page');
@@ -326,13 +281,9 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * Returns the config files.
-     *
-     * @param string $name
-     *
-     * @return string|array
+     * @return string[]|string
      */
-    private function findConfigFiles($name)
+    private function findConfigFiles(string $name)
     {
         try {
             return $this->locator->locate('config/'.$name, null, false);
@@ -342,8 +293,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * Returns the DCA files.
-     *
      * @return Finder|SplFileInfo[]|array
      */
     private function findDcaFiles()
@@ -356,13 +305,9 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * Returns the language files.
-     *
-     * @param string $language
-     *
      * @return Finder|SplFileInfo[]|array
      */
-    private function findLanguageFiles($language)
+    private function findLanguageFiles(string $language)
     {
         try {
             return $this->finder->findIn('languages/'.$language)->files()->name('/\.(php|xlf)$/');
@@ -372,8 +317,6 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * Returns the template files.
-     *
      * @return Finder|SplFileInfo[]|array
      */
     private function findTemplateFiles()

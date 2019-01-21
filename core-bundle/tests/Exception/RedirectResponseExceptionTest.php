@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,22 +15,14 @@ namespace Contao\CoreBundle\Tests\Exception;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the RedirectResponseException class.
- *
- * @author Christian Schiffler <https://github.com/discordier>
- */
 class RedirectResponseExceptionTest extends TestCase
 {
-    /**
-     * Tests the getResponse() method.
-     */
-    public function testSetsTheResponseStatusCodeAndLocation()
+    public function testSetsTheResponseStatusCodeAndLocation(): void
     {
         $exception = new RedirectResponseException('http://example.org');
+        $response = $exception->getResponse();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
-        $this->assertSame(303, $exception->getResponse()->getStatusCode());
-        $this->assertSame('http://example.org', $exception->getResponse()->headers->get('Location'));
+        $this->assertSame(303, $response->getStatusCode());
+        $this->assertSame('http://example.org', $response->headers->get('Location'));
     }
 }

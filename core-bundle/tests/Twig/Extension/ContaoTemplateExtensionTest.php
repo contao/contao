@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -8,7 +10,7 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Twig;
+namespace Contao\CoreBundle\Tests\Twig\Extension;
 
 use Contao\BackendCustom;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
@@ -18,27 +20,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Tests the ContaoTemplateExtension class.
- *
- * @author Jim Schmid <https://github.com/sheeep>
- */
 class ContaoTemplateExtensionTest extends TestCase
 {
-    /**
-     * Tests the renderContaoBackendTemplate() method.
-     */
-    public function testRendersTheContaoBackendTemplate()
+    public function testRendersTheContaoBackendTemplate(): void
     {
-        $backendRoute = $this
-            ->getMockBuilder(BackendCustom::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getTemplateObject', 'run'])
-            ->getMock()
-        ;
-
         $template = new \stdClass();
 
+        $backendRoute = $this->createMock(BackendCustom::class);
         $backendRoute
             ->expects($this->once())
             ->method('getTemplateObject')
@@ -51,55 +39,41 @@ class ContaoTemplateExtensionTest extends TestCase
             ->willReturn(new Response())
         ;
 
-        $framework = $this->mockContaoFramework(null, null, [], [
-            BackendCustom::class => $backendRoute,
-        ]);
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->method('createInstance')
+            ->with(BackendCustom::class)
+            ->willReturn($backendRoute)
+        ;
 
-        $extension = $this->getExtension($framework);
-
-        $extension->renderContaoBackendTemplate([
-            'a' => 'a',
-            'b' => 'b',
-            'c' => 'c',
-        ]);
+        $extension = $this->mockExtension($framework);
+        $extension->renderContaoBackendTemplate(['a' => 'a', 'b' => 'b', 'c' => 'c']);
 
         $this->assertSame('a', $template->a);
         $this->assertSame('b', $template->b);
         $this->assertSame('c', $template->c);
     }
 
-    /**
-     * Tests the getFunctions() method.
-     */
-    public function testAddsTheRenderContaoBackEndTemplateFunction()
+    public function testAddsTheRenderContaoBackEndTemplateFunction(): void
     {
-        $extension = $this->getExtension();
-        $functions = $extension->getFunctions();
+        $functions = $this->mockExtension()->getFunctions();
 
-        $renderBaseTemplateFunction = array_filter($functions, function (\Twig_SimpleFunction $function) {
-            return 'render_contao_backend_template' === $function->getName();
-        });
+        $renderBaseTemplateFunction = array_filter(
+            $functions,
+            function (\Twig_SimpleFunction $function): bool {
+                return 'render_contao_backend_template' === $function->getName();
+            }
+        );
 
         $this->assertCount(1, $renderBaseTemplateFunction);
     }
 
-    /**
-     * Tests the scope restriction.
-     */
-    public function testDoesNotRenderTheBackEndTemplateIfNotInBackEndScope()
+    public function testDoesNotRenderTheBackEndTemplateIfNotInBackEndScope(): void
     {
-        $this->assertEmpty($this->getExtension(null, 'frontend')->renderContaoBackendTemplate());
+        $this->assertEmpty($this->mockExtension(null, 'frontend')->renderContaoBackendTemplate());
     }
 
-    /**
-     * Returns a template extension object.
-     *
-     * @param ContaoFrameworkInterface|null $framework
-     * @param string                        $scope
-     *
-     * @return ContaoTemplateExtension
-     */
-    private function getExtension(ContaoFrameworkInterface $framework = null, $scope = 'backend')
+    private function mockExtension(ContaoFrameworkInterface $framework = null, string $scope = 'backend'): ContaoTemplateExtension
     {
         $request = new Request();
         $request->attributes->set('_scope', $scope);

@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_calendar_events.title.0">
         <source>Title</source>
-        <target>Titulek</target>
+        <target>Název</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.title.1">
         <source>Please enter the event title.</source>
@@ -46,8 +46,7 @@
         <target>Konec události</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
-        <source>Use the same value for start and end time to create an open-ended event.</source>
-        <target>Prosím zadejte čas konce události podle celosvětového časového formátu</target>
+        <source>Leave blank to create an open-ended event.</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>
@@ -66,12 +65,20 @@
         <target>Prosím zadejte datum konce události nebo nechte prázdné pro jednodenní událost.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
-        <source>Event location</source>
-        <target>Místo události</target>
+        <source>Location name</source>
+        <target>Název místa</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.1">
-        <source>Here you can enter the event location.</source>
-        <target>Sem můžete zadat místo konání.</target>
+        <source>Here you can enter the name of the event location.</source>
+        <target>Zde můžete zadat název místa konání.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.address.0">
+        <source>Location address</source>
+        <target>Adresa místa</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.address.1">
+        <source>Here you can enter the address of the event location.</source>
+        <target>Zde můžete zadat adresu místa konání.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.0">
         <source>Event teaser</source>
@@ -174,12 +181,12 @@
         <target>Při kliknutí na odkaz &quot;čti dál…&quot; bude návštěvník přesměrován na tento článek.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.0">
-        <source>External URL</source>
-        <target>Externí internetová adresa</target>
+        <source>Custom URL</source>
+        <target>Vlastní URL</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.1">
-        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an external website.</source>
-        <target>Při kliknutí na odkaz &quot;čti dál…&quot; bude návštěvník přesměrován na zadanou internetovou adresu.</target>
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
+        <target>Kliknutím na &quot;čti dál …&quot; bude návštěvník přesměrován na zadanou URL. </target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>

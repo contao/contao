@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,24 +12,22 @@
 
 namespace Contao\ManagerBundle\Tests\Command;
 
+use Contao\ManagerBundle\Api\ManagerConfig;
 use Contao\ManagerBundle\Command\InstallWebDirCommand;
-use PHPUnit\Framework\TestCase;
+use Contao\ManagerBundle\HttpKernel\ContaoKernel;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpKernel\KernelInterface;
 
-/**
- * Tests the InstallWebDirCommand class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/toflar>
- */
-class InstallWebDirCommandTest extends TestCase
+class InstallWebDirCommandTest extends ContaoTestCase
 {
     /**
      * @var InstallWebDirCommand
@@ -40,11 +40,6 @@ class InstallWebDirCommandTest extends TestCase
     private $filesystem;
 
     /**
-     * @var string
-     */
-    private $tmpdir;
-
-    /**
      * @var Finder
      */
     private $webFiles;
@@ -52,61 +47,70 @@ class InstallWebDirCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
-        $this->filesystem = new Filesystem();
-        $this->tmpdir = sys_get_temp_dir().'/'.uniqid('InstallWebDirCommand_', true);
-        $this->webFiles = Finder::create()->files()->in(__DIR__.'/../../src/Resources/web');
-
-        $this->command = new InstallWebDirCommand($this->tmpdir);
+        $this->command = new InstallWebDirCommand($this->getTempDir());
         $this->command->setApplication($this->mockApplication());
+        $this->filesystem = new Filesystem();
+        $this->webFiles = Finder::create()->files()->in(__DIR__.'/../../src/Resources/skeleton/web');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    public function tearDown(): void
     {
-        $this->filesystem->remove($this->tmpdir);
+        parent::tearDown();
+
+        $this->filesystem->remove($this->getTempDir().'/web');
     }
 
-    /**
-     * Tests the command name.
-     */
-    public function testNameAndArguments()
+    public function testNameAndArguments(): void
     {
         $this->assertSame('contao:install-web-dir', $this->command->getName());
         $this->assertTrue($this->command->getDefinition()->hasArgument('target'));
     }
 
-    /**
-     * Tests the command.
-     */
-    public function testCommandRegular()
+    public function testCommandRegular(): void
     {
         foreach ($this->webFiles as $file) {
-            $this->assertFileNotExists($this->tmpdir.'/web/'.$file->getFilename());
+            $this->assertFileNotExists($this->getTempDir().'/web/'.$file->getFilename());
         }
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
         foreach ($this->webFiles as $file) {
-            $this->assertFileExists($this->tmpdir.'/web/'.$file->getRelativePathname());
+            $this->assertFileExists($this->getTempDir().'/web/'.$file->getRelativePathname());
 
             $expectedString = file_get_contents($file->getPathname());
             $expectedString = str_replace(['{root-dir}', '{vendor-dir}'], ['../app', '../vendor'], $expectedString);
 
-            $this->assertStringEqualsFile($this->tmpdir.'/web/'.$file->getRelativePathname(), $expectedString);
+            $this->assertStringEqualsFile($this->getTempDir().'/web/'.$file->getRelativePathname(), $expectedString);
         }
     }
 
-    /**
-     * Tests that the .htaccess file is not changed if it includes a rewrite rule.
-     */
-    public function testHtaccessIsNotChangedIfRewriteRuleExists()
+    public function testCommandDoesNotOverrideOptionals(): void
+    {
+        foreach ($this->webFiles as $file) {
+            $this->filesystem->dumpFile($this->getTempDir().'/web/'.$file->getRelativePathname(), 'foobar-content');
+        }
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute([]);
+
+        foreach ($this->webFiles as $file) {
+            if ('robots.txt' === $file->getRelativePathname()) {
+                $this->assertStringEqualsFile($this->getTempDir().'/web/'.$file->getFilename(), 'foobar-content');
+            } else {
+                $this->assertStringNotEqualsFile($this->getTempDir().'/web/'.$file->getFilename(), 'foobar-content');
+            }
+        }
+    }
+
+    public function testHtaccessIsNotChangedIfRewriteRuleExists(): void
     {
         $existingHtaccess = <<<'EOT'
 <IfModule mod_headers.c>
@@ -114,148 +118,159 @@ class InstallWebDirCommandTest extends TestCase
 </IfModule>
 EOT;
 
-        $this->filesystem->dumpFile($this->tmpdir.'/web/.htaccess', $existingHtaccess);
+        $this->filesystem->dumpFile($this->getTempDir().'/web/.htaccess', $existingHtaccess);
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $this->assertStringEqualsFile($this->tmpdir.'/web/.htaccess', $existingHtaccess);
+        $this->assertStringEqualsFile($this->getTempDir().'/web/.htaccess', $existingHtaccess);
     }
 
-    /**
-     * Tests that the .htaccess file is changed if it does not include a rewrite rule.
-     */
-    public function testHtaccessIsChangedIfRewriteRuleDoesNotExists()
+    public function testHtaccessIsChangedIfRewriteRuleDoesNotExists(): void
     {
         $existingHtaccess = <<<'EOT'
 # Enable PHP 7.2
 AddHandler application/x-httpd-php72 .php
 EOT;
 
-        $this->filesystem->dumpFile($this->tmpdir.'/web/.htaccess', $existingHtaccess);
+        $this->filesystem->dumpFile($this->getTempDir().'/web/.htaccess', $existingHtaccess);
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
         $this->assertStringEqualsFile(
-            $this->tmpdir.'/web/.htaccess',
-            $existingHtaccess."\n\n".file_get_contents(__DIR__.'/../../src/Resources/web/.htaccess')
+            $this->getTempDir().'/web/.htaccess',
+            $existingHtaccess."\n\n".file_get_contents(__DIR__.'/../../src/Resources/skeleton/web/.htaccess')
         );
     }
 
-    /**
-     * Tests that the install.php is removed from web directory.
-     */
-    public function testCommandRemovesInstallPhp()
+    public function testCommandRemovesInstallPhp(): void
     {
-        $this->filesystem->dumpFile($this->tmpdir.'/web/install.php', 'foobar-content');
+        $this->filesystem->dumpFile($this->getTempDir().'/web/install.php', 'foobar-content');
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $this->assertFileNotExists($this->tmpdir.'/web/install.php');
+        $this->assertFileNotExists($this->getTempDir().'/web/install.php');
     }
 
-    /**
-     * Tests that the app_dev.php is installed by default.
-     */
-    public function testInstallsAppDevByDefault()
+    public function testInstallsAppDevByDefault(): void
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $this->assertFileExists($this->tmpdir.'/web/app_dev.php');
+        $this->assertFileExists($this->getTempDir().'/web/app_dev.php');
     }
 
-    /**
-     * Tests that a custom target directory is used.
-     */
-    public function testUsesACustomTargetDirectory()
-    {
-        $commandTester = new CommandTester($this->command);
-        $commandTester->execute(['target' => 'public']);
-
-        $this->assertFileExists($this->tmpdir.'/public/app.php');
-    }
-
-    /**
-     * Tests that the install.php is removed from web directory.
-     */
-    public function testNotInstallsAppDevOnProd()
+    public function testNotInstallsAppDevOnProd(): void
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['--no-dev' => true]);
 
-        $this->assertFileNotExists($this->tmpdir.'/web/app_dev.php');
+        $this->assertFileNotExists($this->getTempDir().'/web/app_dev.php');
     }
 
-    /**
-     * Tests setting the access key as argument.
-     */
-    public function testAccesskeyFromArgument()
+    public function testUsesACustomTargetDirectory(): void
+    {
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(['target' => 'public']);
+
+        $this->assertFileExists($this->getTempDir().'/public/app.php');
+    }
+
+    public function testAccesskeyFromArgument(): void
     {
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['--user' => 'foo', '--password' => 'bar']);
 
-        $this->assertFileExists($this->tmpdir.'/.env');
+        $this->assertFileExists($this->getTempDir().'/.env');
 
-        $env = (new Dotenv())->parse(file_get_contents($this->tmpdir.'/.env'), $this->tmpdir.'/.env');
+        $env = (new Dotenv())->parse(file_get_contents($this->getTempDir().'/.env'), $this->getTempDir().'/.env');
 
         $this->assertArrayHasKey('APP_DEV_ACCESSKEY', $env);
         $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
     }
 
-    /**
-     * Tests setting the access key interactively.
-     */
-    public function testAccesskeyFromInput()
+    public function testAccesskeyFromInput(): void
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
             $this->markTestSkipped('Questions with hidden input cannot be tested on Windows');
         }
 
+        $questionHelper = $this->createMock(QuestionHelper::class);
+        $questionHelper
+            ->expects($this->exactly(2))
+            ->method('ask')
+            ->withConsecutive(
+                [
+                    $this->isInstanceOf(InputInterface::class),
+                    $this->isInstanceOf(OutputInterface::class),
+                    $this->callback(
+                        function (Question $question) {
+                            return 'Please enter a username:' === $question->getQuestion() && !$question->isHidden();
+                        }
+                    ),
+                ],
+                [
+                    $this->isInstanceOf(InputInterface::class),
+                    $this->isInstanceOf(OutputInterface::class),
+                    $this->callback(
+                        function (Question $question) {
+                            return 'Please enter a password:' === $question->getQuestion() && $question->isHidden();
+                        }
+                    ),
+                ]
+            )
+            ->willReturnOnConsecutiveCalls('foo', 'bar')
+        ;
+
+        $this->command->getHelperSet()->set($questionHelper, 'question');
+
         $commandTester = new CommandTester($this->command);
-        $commandTester->setInputs(['foo', 'bar']);
         $commandTester->execute(['--password' => null]);
 
-        $this->assertContains('Please enter a username:', $commandTester->getDisplay());
-        $this->assertContains('Please enter a password:', $commandTester->getDisplay());
+        $this->assertFileExists($this->getTempDir().'/.env');
 
-        $this->assertFileExists($this->tmpdir.'/.env');
-
-        $env = (new Dotenv())->parse(file_get_contents($this->tmpdir.'/.env'), $this->tmpdir.'/.env');
+        $env = (new Dotenv())->parse(file_get_contents($this->getTempDir().'/.env'), $this->getTempDir().'/.env');
 
         $this->assertArrayHasKey('APP_DEV_ACCESSKEY', $env);
         $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
     }
 
-    /**
-     * Tests setting the access key interactively with a given username.
-     */
-    public function testAccesskeyWithUserFromInput()
+    public function testAccesskeyWithUserFromInput(): void
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
             $this->markTestSkipped('Questions with hidden input cannot be tested on Windows');
         }
 
+        $questionHelper = $this->createMock(QuestionHelper::class);
+        $questionHelper
+            ->expects($this->once())
+            ->method('ask')
+            ->with(
+                $this->isInstanceOf(InputInterface::class),
+                $this->isInstanceOf(OutputInterface::class),
+                $this->callback(
+                    function (Question $question) {
+                        return 'Please enter a password:' === $question->getQuestion() && $question->isHidden();
+                    }
+                )
+            )
+            ->willReturn('bar')
+        ;
+
+        $this->command->getHelperSet()->set($questionHelper, 'question');
+
         $commandTester = new CommandTester($this->command);
-        $commandTester->setInputs(['bar']);
         $commandTester->execute(['--user' => 'foo']);
 
-        $this->assertFileExists($this->tmpdir.'/.env');
-        $this->assertNotContains('Please enter a username:', $commandTester->getDisplay());
-        $this->assertContains('Please enter a password:', $commandTester->getDisplay());
-
-        $env = (new Dotenv())->parse(file_get_contents($this->tmpdir.'/.env'), $this->tmpdir.'/.env');
+        $env = (new Dotenv())->parse(file_get_contents($this->getTempDir().'/.env'), $this->getTempDir().'/.env');
 
         $this->assertArrayHasKey('APP_DEV_ACCESSKEY', $env);
         $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
     }
 
-    /**
-     * Tests setting the access key interactively without a username.
-     */
-    public function testAccesskeyWithoutUserFromInput()
+    public function testAccesskeyWithoutUserFromInput(): void
     {
         QuestionHelper::disableStty();
 
@@ -267,19 +282,16 @@ EOT;
         $commandTester->execute(['--password' => 'bar']);
     }
 
-    /**
-     * Tests that the access key is appended to the .env file.
-     */
-    public function testAccesskeyAppendToDotEnv()
+    public function testAccesskeyAppendToDotEnv(): void
     {
-        $this->filesystem->dumpFile($this->tmpdir.'/.env', 'FOO=bar');
+        $this->filesystem->dumpFile($this->getTempDir().'/.env', 'FOO=bar');
 
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['--user' => 'foo', '--password' => 'bar']);
 
-        $this->assertFileExists($this->tmpdir.'/.env');
+        $this->assertFileExists($this->getTempDir().'/.env');
 
-        $env = (new Dotenv())->parse(file_get_contents($this->tmpdir.'/.env'), $this->tmpdir.'/.env');
+        $env = (new Dotenv())->parse(file_get_contents($this->getTempDir().'/.env'), $this->getTempDir().'/.env');
 
         $this->assertArrayHasKey('FOO', $env);
         $this->assertSame('bar', $env['FOO']);
@@ -287,22 +299,27 @@ EOT;
         $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
     }
 
-    /**
-     * Mocks the application.
-     *
-     * @return Application
-     */
-    private function mockApplication()
+    private function mockApplication(ManagerConfig $config = null): Application
     {
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', $this->tmpdir);
+        $container->setParameter('kernel.project_dir', $this->getTempDir());
+        $container->set('filesystem', new Filesystem());
 
-        $kernel = $this->createMock(KernelInterface::class);
-
+        $kernel = $this->createMock(ContaoKernel::class);
         $kernel
             ->method('getContainer')
             ->willReturn($container)
         ;
+
+        if (null !== $config) {
+            $kernel
+                ->expects($this->atLeastOnce())
+                ->method('getManagerConfig')
+                ->willReturn($config)
+            ;
+        }
+
+        $container->set('kernel', $kernel);
 
         $application = new Application($kernel);
         $application->setCatchExceptions(true);

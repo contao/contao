@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,15 +16,10 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * Defines the image sizes service.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Kamil Kuzminski <https://github.com/qzminski>
- */
 class ImageSizes
 {
     /**
@@ -45,13 +42,6 @@ class ImageSizes
      */
     private $options;
 
-    /**
-     * Constructor.
-     *
-     * @param Connection               $connection
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFrameworkInterface $framework)
     {
         $this->connection = $connection;
@@ -62,9 +52,9 @@ class ImageSizes
     /**
      * Returns the image sizes as options suitable for widgets.
      *
-     * @return array
+     * @return array<string,string[]>
      */
-    public function getAllOptions()
+    public function getAllOptions(): array
     {
         $this->loadOptions();
 
@@ -78,11 +68,9 @@ class ImageSizes
     /**
      * Returns the image sizes for the given user suitable for widgets.
      *
-     * @param BackendUser $user
-     *
-     * @return array
+     * @return array<string,string[]>
      */
-    public function getOptionsForUser(BackendUser $user)
+    public function getOptionsForUser(BackendUser $user): array
     {
         $this->loadOptions();
 
@@ -93,7 +81,7 @@ class ImageSizes
                 function ($val) {
                     return is_numeric($val) ? (int) $val : $val;
                 },
-                \StringUtil::deserialize($user->imageSizes, true)
+                StringUtil::deserialize($user->imageSizes, true)
             );
 
             $event = new ImageSizesEvent($this->filterOptions($options), $user);
@@ -107,7 +95,7 @@ class ImageSizes
     /**
      * Loads the options from the database.
      */
-    private function loadOptions()
+    private function loadOptions(): void
     {
         if (null !== $this->options) {
             return;
@@ -135,11 +123,9 @@ class ImageSizes
     /**
      * Filters the options by the given allowed sizes and returns the result.
      *
-     * @param array $allowedSizes
-     *
-     * @return array
+     * @return array<string,string[]>
      */
-    private function filterOptions(array $allowedSizes)
+    private function filterOptions(array $allowedSizes): array
     {
         if (empty($allowedSizes)) {
             return [];
@@ -158,15 +144,7 @@ class ImageSizes
         return $filteredSizes;
     }
 
-    /**
-     * Filters image sizes.
-     *
-     * @param array  $sizes
-     * @param array  $allowedSizes
-     * @param array  $filteredSizes
-     * @param string $group
-     */
-    private function filterImageSizes(array $sizes, array $allowedSizes, array &$filteredSizes, $group)
+    private function filterImageSizes(array $sizes, array $allowedSizes, array &$filteredSizes, string $group): void
     {
         foreach ($sizes as $key => $size) {
             if (\in_array($key, $allowedSizes, true)) {
@@ -175,15 +153,7 @@ class ImageSizes
         }
     }
 
-    /**
-     * Filters resize modes.
-     *
-     * @param array  $sizes
-     * @param array  $allowedSizes
-     * @param array  $filteredSizes
-     * @param string $group
-     */
-    private function filterResizeModes(array $sizes, array $allowedSizes, array &$filteredSizes, $group)
+    private function filterResizeModes(array $sizes, array $allowedSizes, array &$filteredSizes, string $group): void
     {
         foreach ($sizes as $size) {
             if (\in_array($size, $allowedSizes, true)) {

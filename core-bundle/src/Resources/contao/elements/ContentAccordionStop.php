@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentAccordionStop extends \ContentElement
+class ContentAccordionStop extends ContentElement
 {
 
 	/**
@@ -32,7 +32,9 @@ class ContentAccordionStop extends \ContentElement
 		if (TL_MODE == 'BE')
 		{
 			$this->strTemplate = 'be_wildcard';
-			$this->Template = new \BackendTemplate($this->strTemplate);
+			$this->Template = new BackendTemplate($this->strTemplate);
 		}
 	}
 }
+
+class_alias(ContentAccordionStop::class, 'ContentAccordionStop');

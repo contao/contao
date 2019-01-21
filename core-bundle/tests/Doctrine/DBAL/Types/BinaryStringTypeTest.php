@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,46 +13,43 @@
 namespace Contao\CoreBundle\Tests\Doctrine\DBAL\Types;
 
 use Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType;
-use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the BinaryStringType class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class BinaryStringTypeTest extends TestCase
 {
     /**
-     * @var BinaryStringType
+     * @var BinaryStringType|Type
      */
     private $type;
 
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
+        parent::setUpBeforeClass();
+
         Type::addType(BinaryStringType::NAME, BinaryStringType::class);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
+        parent::setUp();
+
         $this->type = Type::getType(BinaryStringType::NAME);
     }
 
-    /**
-     * Tests that getSqlDeclaration() returns a binary definition for fixed length fields.
-     */
-    public function testReturnsABinaryDefinitionForAFixedLengthField()
+    public function testReturnsABinaryDefinitionForAFixedLengthField(): void
     {
         $fieldDefinition = ['fixed' => true];
 
-        /** @var AbstractPlatform|\PHPUnit_Framework_MockObject_MockObject $platform */
+        /** @var AbstractPlatform|MockObject $platform */
         $platform = $this
             ->getMockBuilder(AbstractPlatform::class)
             ->setMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
@@ -60,6 +59,7 @@ class BinaryStringTypeTest extends TestCase
         $platform
             ->expects($this->once())
             ->method('getBinaryTypeDeclarationSQL')
+            ->willReturn('BINARY(255)')
         ;
 
         $platform
@@ -70,14 +70,11 @@ class BinaryStringTypeTest extends TestCase
         $this->type->getSQLDeclaration($fieldDefinition, $platform);
     }
 
-    /**
-     * Tests that getSqlDeclaration() returns a blob definition for variable length fields.
-     */
-    public function testReturnsABlobDefinitionForAVariableLengthField()
+    public function testReturnsABlobDefinitionForAVariableLengthField(): void
     {
         $fieldDefinition = ['fixed' => false];
 
-        /** @var AbstractPlatform|\PHPUnit_Framework_MockObject_MockObject $platform */
+        /** @var AbstractPlatform|MockObject $platform */
         $platform = $this
             ->getMockBuilder(AbstractPlatform::class)
             ->setMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
@@ -92,26 +89,19 @@ class BinaryStringTypeTest extends TestCase
         $platform
             ->expects($this->once())
             ->method('getBlobTypeDeclarationSQL')
+            ->willReturn('BLOB')
         ;
 
         $this->type->getSQLDeclaration($fieldDefinition, $platform);
     }
 
-    /**
-     * Tests the name.
-     */
-    public function testReturnsTheCorrectName()
+    public function testReturnsTheCorrectName(): void
     {
         $this->assertSame(BinaryStringType::NAME, $this->type->getName());
     }
 
-    /**
-     * Tests the custom type requires an SQL hint.
-     */
-    public function testRequiresAnSqlCommentHintForTheCustomType()
+    public function testRequiresAnSqlCommentHintForTheCustomType(): void
     {
-        $platform = $this->getMockForAbstractClass(AbstractPlatform::class);
-
-        $this->assertTrue($this->type->requiresSQLCommentHint($platform));
+        $this->assertTrue($this->type->requiresSQLCommentHint($this->getMockForAbstractClass(AbstractPlatform::class)));
     }
 }

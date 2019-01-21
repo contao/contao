@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,53 +14,32 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Util\PackageUtil;
+use PackageVersions\Versions;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * Tests the AddPackagesPass class.
- *
- * @author Andreas Schempp <http://github.com/aschempp>
- */
 class AddPackagesPassTest extends TestCase
 {
-    /**
-     * Tests adding the packages.
-     */
-    public function testAddsThePackages()
+    public function testAddsThePackages(): void
     {
-        $pass = new AddPackagesPass($this->getRootDir().'/vendor/composer/installed.json');
         $container = new ContainerBuilder();
 
+        $pass = new AddPackagesPass();
         $pass->process($container);
 
         $this->assertTrue($container->hasParameter('kernel.packages'));
 
+        $keys = array_keys(Versions::VERSIONS);
         $packages = $container->getParameter('kernel.packages');
 
         $this->assertInternalType('array', $packages);
-        $this->assertArrayHasKey('contao/test-bundle1', $packages);
-        $this->assertArrayHasKey('contao/test-bundle2', $packages);
-        $this->assertArrayNotHasKey('contao/test-bundle3', $packages);
+        $this->assertArrayHasKey($keys[0], $packages);
+        $this->assertArrayHasKey($keys[1], $packages);
+        $this->assertArrayHasKey($keys[2], $packages);
+        $this->assertArrayNotHasKey('contao/test-bundle4', $packages);
 
-        $this->assertSame('1.0.0', $packages['contao/test-bundle1']);
-        $this->assertSame('dev-develop', $packages['contao/test-bundle2']);
-    }
-
-    /**
-     * Tests adding packages without a JSON file.
-     */
-    public function testAddsAnEmptyArrayIfThereIsNoJsonFile()
-    {
-        $pass = new AddPackagesPass($this->getRootDir().'/vendor/composer/invalid.json');
-        $container = new ContainerBuilder();
-
-        $pass->process($container);
-
-        $this->assertTrue($container->hasParameter('kernel.packages'));
-
-        $packages = $container->getParameter('kernel.packages');
-
-        $this->assertInternalType('array', $packages);
-        $this->assertEmpty($container->getParameter('kernel.packages'));
+        $this->assertSame(PackageUtil::getVersion($keys[0]), $packages[$keys[0]]);
+        $this->assertSame(PackageUtil::getVersion($keys[1]), $packages[$keys[1]]);
+        $this->assertSame(PackageUtil::getVersion($keys[2]), $packages[$keys[2]]);
     }
 }

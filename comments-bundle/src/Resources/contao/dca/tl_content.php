@@ -85,7 +85,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_template'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_content_comments extends Backend
+class tl_content_comments extends Contao\Backend
 {
 
 	/**

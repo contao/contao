@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,31 +13,34 @@
 namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Response\InitializeControllerResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Custom controller to support legacy entry point scripts.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
+ * Custom controller to support legacy entry points.
  *
  * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0
  */
-class InitializeController extends Controller
+class InitializeController extends AbstractController
 {
     /**
      * Initializes the Contao framework.
      *
-     * @return InitializeControllerResponse
+     * @throws \RuntimeException
      *
      * @Route("/_contao/initialize", name="contao_initialize")
      */
-    public function indexAction()
+    public function indexAction(): InitializeControllerResponse
     {
         @trigger_error('Custom entry points are deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
         $masterRequest = $this->get('request_stack')->getMasterRequest();
+
+        if (null === $masterRequest) {
+            throw new \RuntimeException('The request stack did not contain a master request.');
+        }
+
         $realRequest = Request::createFromGlobals();
 
         // Necessary to generate the correct base path

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,41 +16,33 @@ use Contao\CoreBundle\Command\InstallCommand;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Adds a custom initialize.php file upon contao:install.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class InstallCommandListener
 {
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
-    /**
-     * Constructor.
-     *
-     * @param string $rootDir
-     */
-    public function __construct($rootDir)
+    public function __construct(string $projectDir)
     {
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
     }
 
     /**
      * Adds the initialize.php file.
-     *
-     * @param ConsoleTerminateEvent $event
      */
-    public function onConsoleTerminate(ConsoleTerminateEvent $event)
+    public function onConsoleTerminate(ConsoleTerminateEvent $event): void
     {
         if (!$event->getCommand() instanceof InstallCommand) {
             return;
         }
 
         (new Filesystem())
-            ->copy(__DIR__.'/../Resources/system/initialize.php', $this->rootDir.'/system/initialize.php', true)
+            ->copy(
+                __DIR__.'/../Resources/skeleton/system/initialize.php',
+                $this->projectDir.'/system/initialize.php',
+                true
+            )
         ;
     }
 }

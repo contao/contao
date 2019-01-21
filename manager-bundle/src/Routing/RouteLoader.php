@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -34,30 +36,26 @@ class RouteLoader
     private $kernel;
 
     /**
-     * Constructor.
-     *
-     * @param LoaderInterface $loader
-     * @param PluginLoader    $pluginLoader
-     * @param KernelInterface $kernel
+     * @var string
      */
-    public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel)
+    private $rootDir;
+
+    public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel, string $rootDir)
     {
         $this->loader = $loader;
         $this->pluginLoader = $pluginLoader;
         $this->kernel = $kernel;
+        $this->rootDir = $rootDir;
     }
 
     /**
-     * Returns route collection build from all plugins.
-     *
-     * @return RouteCollection
+     * Returns a route collection build from all plugin routes.
      */
-    public function loadFromPlugins()
+    public function loadFromPlugins(): RouteCollection
     {
-        /** @var RouteCollection $collection */
         $collection = array_reduce(
             $this->pluginLoader->getInstancesOf(PluginLoader::ROUTING_PLUGINS, true),
-            function (RouteCollection $collection, RoutingPluginInterface $plugin) {
+            function (RouteCollection $collection, RoutingPluginInterface $plugin): RouteCollection {
                 $routes = $plugin->getRouteCollection($this->loader->getResolver(), $this->kernel);
 
                 if ($routes instanceof RouteCollection) {
@@ -68,6 +66,15 @@ class RouteLoader
             },
             new RouteCollection()
         );
+
+        // Load the app/config/routing.yml file if it exists
+        if (file_exists($configFile = $this->rootDir.'/app/config/routing.yml')) {
+            $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
+
+            if ($routes instanceof RouteCollection) {
+                $collection->addCollection($routes);
+            }
+        }
 
         // Make sure the Contao frontend routes are always loaded last
         foreach (['contao_frontend', 'contao_index', 'contao_root', 'contao_catch_all'] as $name) {

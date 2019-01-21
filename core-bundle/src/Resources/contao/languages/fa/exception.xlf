@@ -76,8 +76,7 @@
         <target>برنامه تنظیم شده است تا درخواست را به برگه دیگری ارجاع دهد، با این حال، برگه مقصد وجود ندارد یا هنوز منتشر نشده است.</target>
       </trans-unit>
       <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let him know that there is something wrong.</source>
-        <target>این چیزی است که لازم است توسط مدیریت وب‌سایت درست شود. اگر شما یک بازدیدکننده هستید، کاری به جزء &lt;a href=&quot;%s&quot;&gt;تماس با مدیر وب&lt;/a&gt; و اجازه دادن به او تا بداند که چیز نادرستی اینجا وجود دارد، نمی‌توانید انجام دهید.</target>
+        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
       </trans-unit>
       <trans-unit id="XPT.noRoot">
         <source>No root page found</source>
@@ -88,8 +87,7 @@
         <target>اینجا برگه ریشه وب‌سایتی که با زبان و/یا نام دامنه درخواستی مطابقت داشته باشد وجود ندارد.</target>
       </trans-unit>
       <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
-        <target>اگر شما به صراحت زبانی را نهاده‌اید، سعی کنید و ببینید که شما تغییر مسیر شده‌اید. در غیر این صورت &lt;a href=&quot;%s&quot;&gt;با مدیر وب تماس بگیرید&lt;/a&gt;  و اجازه دهید که او بداند که اینجا چیز نادرستی وجود دارد.</target>
+        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
       </trans-unit>
       <trans-unit id="XPT.noLayout">
         <source>No layout specified</source>
@@ -116,8 +114,7 @@
         <target>درخواست شما به تارنمایی نگاشته شده است که هنوز دارای هیچ برگه منتشر شده‌ای نیست.</target>
       </trans-unit>
       <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
-        <target>به احتمال زیاد، وب‌سایت همچنان در حال توسعه است و در چند روز آینده آنلاین خواهد بود. اگر هنوز شما فکر می‌کنید که چیز نادرسی وجود دارد، &lt;a href=&quot;%s&quot;&gt;با مدیر وب تماس بگیرید&lt;/a&gt; و به او اجازه دهید تا بداند.</target>
+        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

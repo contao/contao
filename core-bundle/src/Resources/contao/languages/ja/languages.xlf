@@ -1073,10 +1073,6 @@
         <source>Turkmen</source>
         <target>トルクメン語</target>
       </trans-unit>
-      <trans-unit id="LNG.tl">
-        <source>Tagalog</source>
-        <target>タガログ語</target>
-      </trans-unit>
       <trans-unit id="LNG.tn">
         <source>Tswana</source>
         <target>ツワナ語</target>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,11 +15,6 @@ namespace Contao\ManagerBundle\Cache;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
 
-/**
- * Clears the bundle cache.
- *
- * @author Kamil Kuzminski <https://github.com/qzminski>
- */
 class BundleCacheClearer implements CacheClearerInterface
 {
     /**
@@ -25,11 +22,6 @@ class BundleCacheClearer implements CacheClearerInterface
      */
     private $filesystem;
 
-    /**
-     * Constructor.
-     *
-     * @param Filesystem $filesystem
-     */
     public function __construct(Filesystem $filesystem = null)
     {
         $this->filesystem = $filesystem ?: new Filesystem();
@@ -38,7 +30,7 @@ class BundleCacheClearer implements CacheClearerInterface
     /**
      * {@inheritdoc}
      */
-    public function clear($cacheDir)
+    public function clear($cacheDir): void
     {
         $this->filesystem->remove($cacheDir.'/bundles.map');
     }

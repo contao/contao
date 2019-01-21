@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,11 +12,6 @@
 
 namespace Contao\CoreBundle\Analyzer;
 
-/**
- * Analyzes an .htaccess file.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class HtaccessAnalyzer
 {
     /**
@@ -23,10 +20,6 @@ class HtaccessAnalyzer
     private $file;
 
     /**
-     * Stores the file object.
-     *
-     * @param \SplFileInfo $file
-     *
      * @throws \InvalidArgumentException
      */
     public function __construct(\SplFileInfo $file)
@@ -38,26 +31,17 @@ class HtaccessAnalyzer
         $this->file = $file;
     }
 
-    /**
-     * Creates a new object instance.
-     *
-     * @param \SplFileInfo $file
-     *
-     * @return static
-     */
-    public static function create(\SplFileInfo $file)
+    public static function create(\SplFileInfo $file): self
     {
         return new static($file);
     }
 
     /**
      * Checks whether the .htaccess file grants access via HTTP.
-     *
-     * @return bool
      */
-    public function grantsAccess()
+    public function grantsAccess(): bool
     {
-        $content = array_filter(file($this->file));
+        $content = array_filter(file((string) $this->file));
 
         foreach ($content as $line) {
             if ($this->hasRequireGranted($line)) {
@@ -70,12 +54,8 @@ class HtaccessAnalyzer
 
     /**
      * Scans a line for an access definition.
-     *
-     * @param string $line
-     *
-     * @return bool
      */
-    private function hasRequireGranted($line)
+    private function hasRequireGranted(string $line): bool
     {
         if ($this->isComment($line)) {
             return false;
@@ -86,12 +66,8 @@ class HtaccessAnalyzer
 
     /**
      * Checks whether a line is a comment.
-     *
-     * @param string $line
-     *
-     * @return bool
      */
-    private function isComment($line)
+    private function isComment(string $line): bool
     {
         return 0 === strncmp('#', ltrim($line), 1);
     }

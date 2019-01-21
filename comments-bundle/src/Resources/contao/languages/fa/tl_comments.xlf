@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.notified.0">
         <source>Notified (comment)</source>
-        <target>اطلاع‌رسانی شد (دیدگاه)</target>
+        <target>اعلام شده (دیدگاه)</target>
       </trans-unit>
       <trans-unit id="tl_comments.notified.1">
         <source>The notification of this comment has been sent.</source>
@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.notifiedReply.0">
         <source>Notified (reply)</source>
-        <target>اطلاع‌رسانی شد (پاسخ)</target>
+        <target>اعلام شده (پاسخ)</target>
       </trans-unit>
       <trans-unit id="tl_comments.notifiedReply.1">
         <source>The notification of the reply to this comment has been sent.</source>

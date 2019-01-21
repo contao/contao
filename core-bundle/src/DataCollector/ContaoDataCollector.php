@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,45 +14,27 @@ namespace Contao\CoreBundle\DataCollector;
 
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
+use Contao\CoreBundle\Util\PackageUtil;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
+use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
-/**
- * Collects debug information for the web profiler.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ContaoDataCollector extends DataCollector implements FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
 
     /**
-     * @var array
-     */
-    private $packages;
-
-    /**
-     * Constructor.
-     *
-     * @param array $packages
-     */
-    public function __construct(array $packages)
-    {
-        $this->packages = $packages;
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, \Exception $exception = null): void
     {
-        if (isset($this->packages['contao/core-bundle'])) {
-            $version = $this->packages['contao/core-bundle'];
-        } else {
-            $version = $this->packages['contao/contao'];
+        try {
+            $version = PackageUtil::getVersion('contao/core-bundle');
+        } catch (\OutOfBoundsException $e) {
+            $version = PackageUtil::getVersion('contao/contao');
         }
 
         $this->data = ['contao_version' => $version];
@@ -62,36 +46,23 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         }
     }
 
-    /**
-     * Returns the Contao version and build number.
-     *
-     * @return string
-     */
-    public function getContaoVersion()
+    public function getContaoVersion(): string
     {
-        if (!isset($this->data['contao_version'])) {
-            return '';
-        }
-
         return $this->data['contao_version'];
     }
 
     /**
-     * Returns the summary.
-     *
-     * @return array
+     * @return array<string,string|bool>
      */
-    public function getSummary()
+    public function getSummary(): array
     {
         return $this->getData('summary');
     }
 
     /**
-     * Returns the set classes.
-     *
-     * @return array
+     * @return string[]
      */
-    public function getClassesSet()
+    public function getClassesSet(): array
     {
         $data = $this->getData('classes_set');
 
@@ -101,11 +72,9 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * Returns the aliased classes.
-     *
-     * @return array
+     * @return string[]
      */
-    public function getClassesAliased()
+    public function getClassesAliased(): array
     {
         $data = $this->getData('classes_aliased');
 
@@ -115,11 +84,9 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * Returns the composerized classes.
-     *
-     * @return array
+     * @return string[]
      */
-    public function getClassesComposerized()
+    public function getClassesComposerized(): array
     {
         $data = $this->getData('classes_composerized');
 
@@ -129,11 +96,9 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * Returns the additional data added by unknown sources.
-     *
-     * @return array
+     * @return mixed[]
      */
-    public function getAdditionalData()
+    public function getAdditionalData(): array
     {
         $data = $this->data;
 
@@ -156,7 +121,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'contao';
     }
@@ -164,19 +129,15 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     /**
      * {@inheritdoc}
      */
-    public function reset()
+    public function reset(): void
     {
         $this->data = [];
     }
 
     /**
-     * Returns the debug data as array.
-     *
-     * @param string $key
-     *
-     * @return array
+     * @return array<string,string|bool>
      */
-    private function getData($key)
+    private function getData(string $key): array
     {
         if (!isset($this->data[$key]) || !\is_array($this->data[$key])) {
             return [];
@@ -185,10 +146,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return $this->data[$key];
     }
 
-    /**
-     * Adds the summary data.
-     */
-    private function addSummaryData()
+    private function addSummaryData(): void
     {
         $framework = false;
         $modelCount = 0;
@@ -209,12 +167,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         ];
     }
 
-    /**
-     * Returns the page layout name (front end only).
-     *
-     * @return string
-     */
-    private function getLayoutName()
+    private function getLayoutName(): string
     {
         $layout = $this->getLayout();
 
@@ -225,12 +178,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return sprintf('%s (ID %s)', $layout->name, $layout->id);
     }
 
-    /**
-     * Returns the template name (front end only).
-     *
-     * @return string
-     */
-    private function getTemplateName()
+    private function getTemplateName(): string
     {
         $layout = $this->getLayout();
 
@@ -241,18 +189,14 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return $layout->template;
     }
 
-    /**
-     * Returns the layout model (front end only).
-     *
-     * @return LayoutModel|null
-     */
-    private function getLayout()
+    private function getLayout(): ?LayoutModel
     {
-        global $objPage;
-
-        if (null === $objPage) {
+        if (!isset($GLOBALS['objPage'])) {
             return null;
         }
+
+        /** @var PageModel $objPage */
+        $objPage = $GLOBALS['objPage'];
 
         /** @var LayoutModel $layout */
         $layout = $this->framework->getAdapter(LayoutModel::class);

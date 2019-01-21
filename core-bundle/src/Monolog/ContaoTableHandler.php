@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,17 +14,13 @@ namespace Contao\CoreBundle\Monolog;
 
 use Contao\StringUtil;
 use Contao\System;
-use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Statement;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-/**
- * Sends logs to the Contao tl_log table.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ContaoTableHandler extends AbstractProcessingHandler implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
@@ -37,22 +35,12 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
      */
     private $statement;
 
-    /**
-     * Returns the service name for the database connection.
-     *
-     * @return string
-     */
-    public function getDbalServiceName()
+    public function getDbalServiceName(): string
     {
         return $this->dbalServiceName;
     }
 
-    /**
-     * Sets the service name for the database connection.
-     *
-     * @param string $name
-     */
-    public function setDbalServiceName($name)
+    public function setDbalServiceName(string $name): void
     {
         $this->dbalServiceName = $name;
     }
@@ -60,14 +48,13 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if (!$this->isHandling($record)) {
             return false;
         }
 
         $record = $this->processRecord($record);
-
         $record['formatted'] = $this->getFormatter()->format($record);
 
         if (!isset($record['extra']['contao']) || !($record['extra']['contao'] instanceof ContaoContext)) {
@@ -88,7 +75,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $this->createStatement();
 
@@ -104,8 +91,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             'source' => (string) $context->getSource(),
             'action' => (string) $context->getAction(),
             'username' => (string) $context->getUsername(),
-            'func' => (string) $context->getFunc(),
-            'ip' => (string) $context->getIp(),
+            'func' => $context->getFunc(),
             'browser' => StringUtil::specialchars((string) $context->getBrowser()),
         ]);
     }
@@ -113,7 +99,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
     /**
      * {@inheritdoc}
      */
-    protected function getDefaultFormatter()
+    protected function getDefaultFormatter(): LineFormatter
     {
         return new LineFormatter('%message%');
     }
@@ -123,7 +109,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
      *
      * @throws \RuntimeException
      */
-    private function createStatement()
+    private function createStatement(): void
     {
         if (null !== $this->statement) {
             return;
@@ -133,22 +119,22 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             throw new \RuntimeException('The container has not been injected or the database service is missing');
         }
 
-        $this->statement = $this->container->get($this->dbalServiceName)->prepare('
+        /** @var Connection $connection */
+        $connection = $this->container->get($this->dbalServiceName);
+
+        $this->statement = $connection->prepare('
             INSERT INTO
                 tl_log
-                    (tstamp, source, action, username, text, func, ip, browser)
+                    (tstamp, source, action, username, text, func, browser)
                 VALUES
-                    (:tstamp, :source, :action, :username, :text, :func, :ip, :browser)
+                    (:tstamp, :source, :action, :username, :text, :func, :browser)
         ');
     }
 
     /**
      * Executes the legacy hook if the Contao framework is booted.
-     *
-     * @param string        $message
-     * @param ContaoContext $context
      */
-    private function executeHook($message, ContaoContext $context)
+    private function executeHook(string $message, ContaoContext $context): void
     {
         if (null === $this->container || !$this->container->has('contao.framework')) {
             return;
@@ -174,12 +160,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         }
     }
 
-    /**
-     * Checks if the addLogEntry hook is set.
-     *
-     * @return bool
-     */
-    private function hasAddLogEntryHook()
+    private function hasAddLogEntryHook(): bool
     {
         return !empty($GLOBALS['TL_HOOKS']['addLogEntry']) && \is_array($GLOBALS['TL_HOOKS']['addLogEntry']);
     }

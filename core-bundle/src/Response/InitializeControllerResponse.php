@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,9 +15,7 @@ namespace Contao\CoreBundle\Response;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Custom response class to support legacy entry point scripts.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
+ * Custom response class to support legacy entry points.
  *
  * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
  */

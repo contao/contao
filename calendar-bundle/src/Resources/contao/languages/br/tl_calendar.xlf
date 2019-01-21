@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.delete.0">
         <source>Delete calendar</source>
-        <target>Dilemel an deiziataer</target>
+        <target>Dilemel deiziataer</target>
       </trans-unit>
       <trans-unit id="tl_calendar.delete.1">
         <source>Delete calendar ID %s</source>

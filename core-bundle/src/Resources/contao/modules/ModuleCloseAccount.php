@@ -17,7 +17,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleCloseAccount extends \Module
+class ModuleCloseAccount extends Module
 {
 
 	/**
@@ -35,9 +35,7 @@ class ModuleCloseAccount extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('be_wildcard');
-
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['closeAccount'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -61,7 +59,7 @@ class ModuleCloseAccount extends \Module
 	 */
 	protected function compile()
 	{
-		$this->import('FrontendUser', 'User');
+		$this->import(FrontendUser::class, 'User');
 
 		// Initialize the password widget
 		$arrField = array
@@ -72,13 +70,13 @@ class ModuleCloseAccount extends \Module
 			'eval' => array('hideInput'=>true, 'preserveTags'=>true, 'mandatory'=>true, 'required'=>true)
 		);
 
-		$objWidget = new \FormTextField(\FormTextField::getAttributesFromDca($arrField, $arrField['name']));
+		$objWidget = new FormTextField(FormTextField::getAttributesFromDca($arrField, $arrField['name']));
 		$objWidget->rowClass = 'row_0 row_first even';
 
 		$strFormId = 'tl_close_account_' . $this->id;
 
 		// Validate widget
-		if (\Input::post('FORM_SUBMIT') == $strFormId)
+		if (Input::post('FORM_SUBMIT') == $strFormId)
 		{
 			$objWidget->validate();
 
@@ -102,13 +100,13 @@ class ModuleCloseAccount extends \Module
 					}
 				}
 
-				$objMember = \MemberModel::findByPk($this->User->id);
+				$objMember = MemberModel::findByPk($this->User->id);
 
 				// Remove the account
 				if ($this->reg_close == 'close_delete')
 				{
 					$objMember->delete();
-					$this->log('User account ID ' . $this->User->id . ' (' . \Idna::decodeEmail($this->User->email) . ') has been deleted', __METHOD__, TL_ACCESS);
+					$this->log('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deleted', __METHOD__, TL_ACCESS);
 				}
 				// Deactivate the account
 				else
@@ -116,10 +114,14 @@ class ModuleCloseAccount extends \Module
 					$objMember->disable = 1;
 					$objMember->tstamp = time();
 					$objMember->save();
-					$this->log('User account ID ' . $this->User->id . ' (' . \Idna::decodeEmail($this->User->email) . ') has been deactivated', __METHOD__, TL_ACCESS);
+					$this->log('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deactivated', __METHOD__, TL_ACCESS);
 				}
 
-				$this->User->logout();
+				$container = System::getContainer();
+
+				// Log out the user (see #93)
+				$container->get('security.token_storage')->setToken(null);
+				$container->get('session')->invalidate();
 
 				// Check whether there is a jumpTo page
 				if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
@@ -134,8 +136,10 @@ class ModuleCloseAccount extends \Module
 		$this->Template->fields = $objWidget->parse();
 
 		$this->Template->formId = $strFormId;
-		$this->Template->action = \Environment::get('indexFreeRequest');
-		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['closeAccount']);
+		$this->Template->action = Environment::get('indexFreeRequest');
+		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['closeAccount']);
 		$this->Template->rowLast = 'row_1 row_last odd';
 	}
 }
+
+class_alias(ModuleCloseAccount::class, 'ModuleCloseAccount');

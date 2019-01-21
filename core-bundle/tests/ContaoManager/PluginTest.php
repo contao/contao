@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,51 +22,54 @@ use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
+use Nelmio\CorsBundle\NelmioCorsBundle;
+use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use PHPUnit\Framework\TestCase;
+use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Terminal42\HeaderReplay\HeaderReplayBundle;
 
-/**
- * Tests the Plugin class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/toflar>
- */
 class PluginTest extends TestCase
 {
-    /**
-     * Tests returning the bundles.
-     */
-    public function testReturnsTheBundles()
+    public function testReturnsTheBundles(): void
     {
         $plugin = new Plugin();
 
-        /** @var BundleConfig[] $bundles */
+        /** @var BundleConfig[]|array $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
-        $this->assertCount(4, $bundles);
+        $this->assertCount(6, $bundles);
 
         $this->assertSame(KnpMenuBundle::class, $bundles[0]->getName());
-        $this->assertSame([], $bundles[1]->getReplace());
-        $this->assertSame([], $bundles[1]->getLoadAfter());
-
-        $this->assertSame(KnpTimeBundle::class, $bundles[1]->getName());
-        $this->assertSame([], $bundles[2]->getReplace());
-        $this->assertSame([], $bundles[2]->getLoadAfter());
-
-        $this->assertSame(HeaderReplayBundle::class, $bundles[2]->getName());
         $this->assertSame([], $bundles[0]->getReplace());
         $this->assertSame([], $bundles[0]->getLoadAfter());
 
-        $this->assertSame(ContaoCoreBundle::class, $bundles[3]->getName());
-        $this->assertSame(['core'], $bundles[3]->getReplace());
+        $this->assertSame(KnpTimeBundle::class, $bundles[1]->getName());
+        $this->assertSame([], $bundles[1]->getReplace());
+        $this->assertSame([], $bundles[1]->getLoadAfter());
+
+        $this->assertSame(SchebTwoFactorBundle::class, $bundles[2]->getName());
+        $this->assertSame([], $bundles[2]->getReplace());
+        $this->assertSame([], $bundles[2]->getLoadAfter());
+
+        $this->assertSame(HeaderReplayBundle::class, $bundles[3]->getName());
+        $this->assertSame([], $bundles[3]->getReplace());
+        $this->assertSame([], $bundles[3]->getLoadAfter());
+
+        $this->assertSame(CmfRoutingBundle::class, $bundles[4]->getName());
+        $this->assertSame([], $bundles[4]->getReplace());
+        $this->assertSame([], $bundles[4]->getLoadAfter());
+
+        $this->assertSame(ContaoCoreBundle::class, $bundles[5]->getName());
+        $this->assertSame(['core'], $bundles[5]->getReplace());
 
         $this->assertSame(
             [
@@ -78,26 +83,26 @@ class PluginTest extends TestCase
                 KnpMenuBundle::class,
                 KnpTimeBundle::class,
                 LexikMaintenanceBundle::class,
+                NelmioCorsBundle::class,
+                NelmioSecurityBundle::class,
+                SchebTwoFactorBundle::class,
+                HeaderReplayBundle::class,
+                CmfRoutingBundle::class,
                 ContaoManagerBundle::class,
             ],
-            $bundles[3]->getLoadAfter()
+            $bundles[5]->getLoadAfter()
         );
     }
 
-    /**
-     * Tests returning the route collection.
-     */
-    public function testReturnsTheRouteCollection()
+    public function testReturnsTheRouteCollection(): void
     {
         $loader = $this->createMock(LoaderInterface::class);
-
         $loader
             ->expects($this->once())
             ->method('load')
         ;
 
         $resolver = $this->createMock(LoaderResolverInterface::class);
-
         $resolver
             ->method('resolve')
             ->willReturn($loader)

@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentHyperlink extends \ContentElement
+class ContentHyperlink extends ContentElement
 {
 
 	/**
@@ -31,7 +31,7 @@ class ContentHyperlink extends \ContentElement
 	{
 		if (substr($this->url, 0, 7) == 'mailto:')
 		{
-			$this->url = \StringUtil::encodeEmail($this->url);
+			$this->url = StringUtil::encodeEmail($this->url);
 		}
 		else
 		{
@@ -43,9 +43,9 @@ class ContentHyperlink extends \ContentElement
 		// Use an image instead of the title
 		if ($this->useImage && $this->singleSRC != '')
 		{
-			$objModel = \FilesModel::findByUuid($this->singleSRC);
+			$objModel = FilesModel::findByUuid($this->singleSRC);
 
-			if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
+			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
 			{
 				$this->singleSRC = $objModel->path;
 				$this->addImageToTemplate($this->Template, $this->arrData, null, null, $objModel);
@@ -53,17 +53,10 @@ class ContentHyperlink extends \ContentElement
 			}
 		}
 
-		if (strncmp($this->rel, 'lightbox', 8) !== 0)
+		if ($this->rel)
 		{
-			$this->Template->attribute = ' rel="'. $this->rel .'"';
+			$this->Template->attribute = ' data-lightbox="'. $this->rel .'"';
 		}
-		else
-		{
-			$this->Template->attribute = ' data-lightbox="'. substr($this->rel, 9, -1) .'"';
-		}
-
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$this->Template->rel = $this->rel;
 
 		if ($this->linkTitle == '')
 		{
@@ -75,16 +68,18 @@ class ContentHyperlink extends \ContentElement
 		$this->Template->embed_post = $embed[1];
 		$this->Template->link = $this->linkTitle;
 		$this->Template->target = '';
+		$this->Template->rel = '';
 
 		if ($this->titleText)
 		{
-			$this->Template->linkTitle = \StringUtil::specialchars($this->titleText);
+			$this->Template->linkTitle = StringUtil::specialchars($this->titleText);
 		}
 
 		// Override the link target
 		if ($this->target)
 		{
 			$this->Template->target = ' target="_blank"';
+			$this->Template->rel = ' rel="noreferrer noopener"';
 		}
 
 		// Unset the title attributes in the back end (see #6258)
@@ -95,3 +90,5 @@ class ContentHyperlink extends \ContentElement
 		}
 	}
 }
+
+class_alias(ContentHyperlink::class, 'ContentHyperlink');

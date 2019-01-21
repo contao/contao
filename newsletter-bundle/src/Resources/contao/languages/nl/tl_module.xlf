@@ -17,6 +17,14 @@
         <source>Please select one or more channels.</source>
         <target>Selecteer één of meerdere nieuwsbriefkanalen.</target>
       </trans-unit>
+      <trans-unit id="tl_module.nl_text.0">
+        <source>Custom text</source>
+        <target>Aangepaste tekst</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_text.1">
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+        <target>Hier kunt u b.v. een privacynotitie invoeren om het nieuwsbriefabonnement GDPR-compatibel te maken.</target>
+      </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
         <target>Verberg nieuwsbrieven menu</target>
@@ -49,6 +57,10 @@
         <source>Here you can select the newsletter template.</source>
         <target>Kies een nieuwsbrief template.</target>
       </trans-unit>
+      <trans-unit id="tl_module.text_legend">
+        <source>Custom text</source>
+        <target>Aangepaste tekst</target>
+      </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
         <target>Uw inschrijving voor nieuwsbrief %s</target>
@@ -58,9 +70,25 @@
 
 ##channels##
 
-Please click ##link## to activate your subscription. If you did not subscribe yourself, please ignore this e-mail.
+Please click here to activate your subscription:
+
+##link##
+
+The confirmation link is valid for 24 hours. You can cancel your subscription at any time.
+
+If you did not subscribe yourself, please ignore this e-mail.
 </source>
-        <target>U hebt uzelf ingeschreven voor nieuwsbrief ##channel## op ##domain##. Klik op de volgende link om de inschrijving te activeren: ##link##. Als u zich niet hebt opgegeven, kunt u dit bericht negeren.
+        <target>U heeft ingeschreven op de volgende kanalen van ##domain##:
+
+##channels##
+
+Klik hier om uw abonnement te activeren:
+
+##link##
+
+De bevestigings-link is 24 uur geldig. U kunt uw abonnement op elk moment annuleren.
+
+Als u niet zelf heeft ingeschreven, kunt u deze e-mail negeren.
 </target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">

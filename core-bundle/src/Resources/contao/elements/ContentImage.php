@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentImage extends \ContentElement
+class ContentImage extends ContentElement
 {
 
 	/**
@@ -42,9 +42,9 @@ class ContentImage extends \ContentElement
 			return '';
 		}
 
-		$objFile = \FilesModel::findByUuid($this->singleSRC);
+		$objFile = FilesModel::findByUuid($this->singleSRC);
 
-		if ($objFile === null || !is_file(TL_ROOT . '/' . $objFile->path))
+		if ($objFile === null || !is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFile->path))
 		{
 			return '';
 		}
@@ -60,6 +60,10 @@ class ContentImage extends \ContentElement
 	 */
 	protected function compile()
 	{
+		$this->arrData['floating'] = '';
+
 		$this->addImageToTemplate($this->Template, $this->arrData, null, null, $this->objFilesModel);
 	}
 }
+
+class_alias(ContentImage::class, 'ContentImage');

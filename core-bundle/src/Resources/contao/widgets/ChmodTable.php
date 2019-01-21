@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ChmodTable extends \Widget
+class ChmodTable extends Widget
 {
 
 	/**
@@ -61,7 +61,7 @@ class ChmodTable extends \Widget
 			for ($j=1; $j<=6; $j++)
 			{
 				$return .= '
-      <td><input type="checkbox" name="'.$this->strName.'[]" value="'.\StringUtil::specialchars($k.$j).'"'.static::optionChecked($k.$j, $this->varValue).' onfocus="Backend.getScrollOffset()"></td>';
+      <td><input type="checkbox" name="'.$this->strName.'[]" value="'.StringUtil::specialchars($k.$j).'"'.static::optionChecked($k.$j, $this->varValue).' onfocus="Backend.getScrollOffset()"></td>';
 			}
 
 			$return .= '
@@ -72,3 +72,5 @@ class ChmodTable extends \Widget
   </table>';
 	}
 }
+
+class_alias(ChmodTable::class, 'ChmodTable');

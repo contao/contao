@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,17 +12,12 @@
 
 namespace Contao\InstallationBundle\Database;
 
-/**
- * Runs the version 3.5.0 update.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class Version350Update extends AbstractVersionUpdate
 {
     /**
      * {@inheritdoc}
      */
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -28,26 +25,15 @@ class Version350Update extends AbstractVersionUpdate
             return false;
         }
 
-        $sql = $this->connection
-            ->getDatabasePlatform()
-            ->getListTableIndexesSQL('tl_member', $this->connection->getDatabase())
-        ;
+        $columns = $schemaManager->listTableColumns('tl_member');
 
-        $indexes = $this->connection->fetchAll($sql);
-
-        foreach ($indexes as $index) {
-            if ('username' === $index['Key_name']) {
-                return '0' !== $index['Non_Unique'];
-            }
-        }
-
-        return false;
+        return isset($columns['username']) && true === $columns['username']->getNotnull();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function run()
+    public function run(): void
     {
         $this->connection->query('
             ALTER TABLE

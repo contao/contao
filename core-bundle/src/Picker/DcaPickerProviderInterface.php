@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,12 +13,9 @@
 namespace Contao\CoreBundle\Picker;
 
 /**
- * Interface for DCA picker providers.
- *
- * A DcaPickerProvider is able to handle DC_Table or DC_Folder. The interface is optional, because not every picker is
- * based on a regular Contao DataContainer object. If you e.g. implement a Dropbox file picker, a DC is not used.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
+ * A DcaPickerProvider is able to handle DC_Table or DC_Folder. The interface is optional,
+ * because not every picker is based on a regular Contao DataContainer object. If you e.g.
+ * implement a Dropbox file picker, a DC is not used.
  */
 interface DcaPickerProviderInterface extends PickerProviderInterface
 {
@@ -30,19 +29,12 @@ interface DcaPickerProviderInterface extends PickerProviderInterface
     /**
      * Returns the attributes for the DataContainer.
      *
-     * @param PickerConfig $config
-     *
-     * @return array
+     * @return array<string,mixed>
      */
     public function getDcaAttributes(PickerConfig $config);
 
     /**
      * Converts the DCA value for the picker selection.
-     *
-     * @param PickerConfig $config
-     * @param mixed        $value
-     *
-     * @return mixed
      */
     public function convertDcaValue(PickerConfig $config, $value);
 }

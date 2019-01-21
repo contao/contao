@@ -7,15 +7,15 @@
       </trans-unit>
       <trans-unit id="tl_faq.question.1">
         <source>Please enter the question.</source>
-        <target>Lütfen soruyu yazın.</target>
+        <target>Lütfen soruyu girin.</target>
       </trans-unit>
       <trans-unit id="tl_faq.alias.0">
         <source>FAQ alias</source>
-        <target>SSS kısaltması</target>
+        <target>FAQ lakabı</target>
       </trans-unit>
       <trans-unit id="tl_faq.alias.1">
         <source>The FAQ alias is a unique reference to the FAQ which can be called instead of its numeric ID.</source>
-        <target>Sık sorulan soru kısaltması SSS sayısal kodu olarak kullanılacak eşsiz bir belirteçtir.</target>
+        <target>FAQ lakabı sayısal ID'nin yanısıra FAQ'ya yönlendirmek için kullanılan benzeri olmayan bir referanstır.</target>
       </trans-unit>
       <trans-unit id="tl_faq.author.0">
         <source>Author</source>
@@ -23,23 +23,23 @@
       </trans-unit>
       <trans-unit id="tl_faq.author.1">
         <source>Here you can change the author of the FAQ.</source>
-        <target>Sık sorulan sorunun yazarı buradan değiştirilebilir.</target>
+        <target>Burada FAQ'nun yazarını değiştirebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_faq.answer.0">
         <source>Answer</source>
-        <target>Yanıt</target>
+        <target>Cevap</target>
       </trans-unit>
       <trans-unit id="tl_faq.answer.1">
         <source>Please enter the answer.</source>
-        <target>Lütfen yanıtı yazın.</target>
+        <target>Lütfen cevabı girin.</target>
       </trans-unit>
       <trans-unit id="tl_faq.addImage.0">
         <source>Add an image</source>
-        <target>Görsel ekle</target>
+        <target>Resim ekleyin</target>
       </trans-unit>
       <trans-unit id="tl_faq.addImage.1">
         <source>Add an image to the FAQ.</source>
-        <target>Sık sorulan soru için bir görsel ekleyin</target>
+        <target>FAQ için bir resim ekleyin.</target>
       </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.0">
         <source>Add enclosures</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.1">
         <source>Add one or more downloadable files to the FAQ.</source>
-        <target>Sık sorulan sorulara indirilebilecek bir ya da bir kaç dosya ekleyin.</target>
+        <target>FAQ'ya indirilebilecek bir yada birden fazla dosya ekleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_faq.enclosure.0">
         <source>Enclosures</source>
@@ -55,23 +55,23 @@
       </trans-unit>
       <trans-unit id="tl_faq.enclosure.1">
         <source>Please choose the files you want to attach.</source>
-        <target>Eklemek istediğiniz dosyaları seçin</target>
+        <target>Eklemek istediğiniz dosyaları seçiniz.</target>
       </trans-unit>
       <trans-unit id="tl_faq.noComments.0">
         <source>Disable comments</source>
-        <target>Yorum yapılamasın</target>
+        <target>Yorum yapılmasına izin verme</target>
       </trans-unit>
       <trans-unit id="tl_faq.noComments.1">
         <source>Do not allow comments for this particular FAQ.</source>
-        <target>Bu seçenek etkinleştirildiğinde, bu sık sorulan soruya yorum yapılamaz.</target>
+        <target>Bu özel FAQ'ya yorum zapılmasına izin verme.</target>
       </trans-unit>
       <trans-unit id="tl_faq.published.0">
         <source>Publish the FAQ</source>
-        <target>SSS yayınlansın</target>
+        <target>FAQ'yu yayınla</target>
       </trans-unit>
       <trans-unit id="tl_faq.published.1">
         <source>Make the FAQ publicly visible on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, bu sık sorulan soru web sitesinde herkese açık olarak yayınlanır.</target>
+        <target>FAQ'yu web sitesinde genele görünür yap.</target>
       </trans-unit>
       <trans-unit id="tl_faq.title_legend">
         <source>Title and author</source>
@@ -79,11 +79,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.answer_legend">
         <source>Answer</source>
-        <target>Yanıt</target>
+        <target>Cevap</target>
       </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>
-        <target>Görsel ayarları</target>
+        <target>Resim ayarları</target>
       </trans-unit>
       <trans-unit id="tl_faq.enclosure_legend">
         <source>Enclosures</source>
@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.new.0">
         <source>New question</source>
-        <target>Soru ekle</target>
+        <target>Yeni soru</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.show.1">
         <source>Show the details of question ID %s</source>
-        <target>%s kodlu sorunun ayrıntılarını görüntüle</target>
+        <target>ID %s sorusunun ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_faq.edit.0">
         <source>Edit question</source>
@@ -119,15 +119,15 @@
       </trans-unit>
       <trans-unit id="tl_faq.edit.1">
         <source>Edit question ID %s</source>
-        <target>%s kodlu soruyu düzenle</target>
+        <target>ID %s sorusunu düzenle</target>
       </trans-unit>
       <trans-unit id="tl_faq.copy.0">
         <source>Duplicate question</source>
-        <target>Soruyu kopyala</target>
+        <target>Soruyu çoğalt</target>
       </trans-unit>
       <trans-unit id="tl_faq.copy.1">
         <source>Duplicate question ID %s</source>
-        <target>%s kodlu soruyu kopyala</target>
+        <target>ID %s sorusunu çoğalt</target>
       </trans-unit>
       <trans-unit id="tl_faq.cut.0">
         <source>Move question</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.cut.1">
         <source>Move question ID %s</source>
-        <target>%s kodlu soruyu taşı</target>
+        <target>ID %s sorusunu taşı</target>
       </trans-unit>
       <trans-unit id="tl_faq.delete.0">
         <source>Delete question</source>
@@ -143,15 +143,15 @@
       </trans-unit>
       <trans-unit id="tl_faq.delete.1">
         <source>Delete question ID %s</source>
-        <target>%s kodlu soruyu sil</target>
+        <target>ID %s sorusunu sil</target>
       </trans-unit>
       <trans-unit id="tl_faq.toggle.0">
         <source>Publish/unpublish question</source>
-        <target>Soruyu yayınla/yayından kaldır</target>
+        <target>Soruyu yayınla/yayınlama</target>
       </trans-unit>
       <trans-unit id="tl_faq.toggle.1">
         <source>Publish/unpublish question ID %s</source>
-        <target>%s kodlu soruyu yayınla/yayından kaldır</target>
+        <target> ID %s sorusunu yayınla/yayınlama</target>
       </trans-unit>
       <trans-unit id="tl_faq.editheader.0">
         <source>Edit category</source>
@@ -167,15 +167,15 @@
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.1">
         <source>Paste after question ID %s</source>
-        <target>%s kodlu sorudan sonra yapıştır</target>
+        <target>ID %s sorusundan sonra yapıştır</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
         <source>Add new at the top</source>
-        <target>Üste ekle</target>
+        <target>Yeniyi üste ekle</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
         <source>Add new after question ID %s</source>
-        <target>%s kodlu sorudan sonra ekle</target>
+        <target>Yeniyi ID %s sorusundan sonra ekle</target>
       </trans-unit>
     </body>
   </file>

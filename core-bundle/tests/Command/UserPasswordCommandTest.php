@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,53 +12,46 @@
 
 namespace Contao\CoreBundle\Tests\Command;
 
-use Contao\Config;
 use Contao\CoreBundle\Command\UserPasswordCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * Tests the UserPasswordCommandTest class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class UserPasswordCommandTest extends TestCase
 {
     /**
      * @var UserPasswordCommand
      */
-    protected $command;
+    private $command;
 
     /**
      * @var ContainerInterface
      */
-    protected $container;
+    private $container;
 
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
-        $connection = $this->createMock(Connection::class);
+        parent::setUp();
 
-        $this->container = $this->mockContainerWithContaoScopes();
-        $this->container->set('database_connection', $connection);
+        $this->container = new ContainerBuilder();
+        $this->container->set('database_connection', $this->createMock(Connection::class));
 
         $this->command = new UserPasswordCommand($this->mockContaoFramework());
         $this->command->setContainer($this->container);
         $this->command->setApplication(new Application());
     }
 
-    /**
-     * Tests that the command defines username and password.
-     */
-    public function testDefinesUsernameAndPassword()
+    public function testDefinesUsernameAndPassword(): void
     {
         $this->assertNotEmpty($this->command->getDescription());
 
@@ -66,30 +61,21 @@ class UserPasswordCommandTest extends TestCase
         $this->assertTrue($definition->hasOption('password'));
     }
 
-    /**
-     * Tests that a password can be passed as argument.
-     */
-    public function testTakesAPasswordAsArgument()
+    public function testTakesAPasswordAsArgument(): void
     {
-        $code = (new CommandTester($this->command))
-            ->execute(
-                [
-                    'username' => 'foobar',
-                    '--password' => '12345678',
-                ]
-            )
-        ;
+        $input = [
+            'username' => 'foobar',
+            '--password' => '12345678',
+        ];
+
+        $code = (new CommandTester($this->command))->execute($input);
 
         $this->assertSame(0, $code);
     }
 
-    /**
-     * Tests that the password is asked for interactively if not given.
-     */
-    public function testAsksForThePasswordIfNotGiven()
+    public function testAsksForThePasswordIfNotGiven(): void
     {
         $question = $this->createMock(QuestionHelper::class);
-
         $question
             ->method('ask')
             ->willReturn('12345678')
@@ -102,16 +88,12 @@ class UserPasswordCommandTest extends TestCase
         $this->assertSame(0, $code);
     }
 
-    /**
-     * Tests that the command fails if the passwords do not match.
-     */
-    public function testFailsIfThePasswordsDoNotMatch()
+    public function testFailsIfThePasswordsDoNotMatch(): void
     {
         $question = $this->createMock(QuestionHelper::class);
-
         $question
             ->method('ask')
-            ->willReturnOnConsecutiveCalls(['12345678', '87654321'])
+            ->willReturnOnConsecutiveCalls('12345678', '87654321')
         ;
 
         $this->command->getHelperSet()->set($question, 'question');
@@ -122,10 +104,7 @@ class UserPasswordCommandTest extends TestCase
         (new CommandTester($this->command))->execute(['username' => 'foobar']);
     }
 
-    /**
-     * Tests that the command fails if no username is given.
-     */
-    public function testFailsWithoutUsername()
+    public function testFailsWithoutUsername(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Please provide the username as argument.');
@@ -133,112 +112,71 @@ class UserPasswordCommandTest extends TestCase
         (new CommandTester($this->command))->execute([]);
     }
 
-    /**
-     * Tests that the command fails without a password if not interactive.
-     */
-    public function testFailsWithoutPasswordIfNotInteractive()
+    public function testFailsWithoutPasswordIfNotInteractive(): void
     {
-        $code = (new CommandTester($this->command))
-            ->execute(
-                ['username' => 'foobar'],
-                ['interactive' => false]
-            )
-        ;
+        $code = (new CommandTester($this->command))->execute(['username' => 'foobar'], ['interactive' => false]);
 
         $this->assertSame(1, $code);
     }
 
-    /**
-     * Tests that a minimum password length is required.
-     */
-    public function testRequiresAMinimumPasswordLength()
+    public function testRequiresAMinimumPasswordLength(): void
     {
+        unset($GLOBALS['TL_CONFIG']['minPasswordLength']);
+
+        $input = [
+            'username' => 'foobar',
+            '--password' => '123456',
+        ];
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The password must be at least 8 characters long.');
 
-        (new CommandTester($this->command))
-            ->execute(
-                [
-                    'username' => 'foobar',
-                    '--password' => '123456',
-                ],
-                ['interactive' => false]
-            )
-        ;
+        (new CommandTester($this->command))->execute($input, ['interactive' => false]);
     }
 
-    /**
-     * Tests that the minimum password length is read from the Config object.
-     */
-    public function testHandlesACustomMinimumPasswordLength()
+    public function testHandlesACustomMinimumPasswordLength(): void
     {
-        $framework = $this->mockContaoFramework(
-            null,
-            null,
-            [
-                Config::class => $this->mockConfigAdapter(16),
-            ]
-        );
+        $GLOBALS['TL_CONFIG']['minPasswordLength'] = 16;
 
-        $container = $this->mockContainerWithContaoScopes();
-
-        $command = new UserPasswordCommand($framework);
-        $command->setContainer($container);
-        $command->setApplication(new Application());
+        $input = [
+            'username' => 'foobar',
+            '--password' => '123456789',
+        ];
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The password must be at least 16 characters long.');
 
-        (new CommandTester($command))
-            ->execute(
-                [
-                    'username' => 'foobar',
-                    '--password' => '123456789',
-                ],
-                ['interactive' => false]
-            )
-        ;
+        (new CommandTester($this->command))->execute($input, ['interactive' => false]);
     }
 
-    /**
-     * Tests that the command fails if the username is unknown.
-     */
-    public function testFailsIfTheUsernameIsUnknown()
+    public function testFailsIfTheUsernameIsUnknown(): void
     {
+        /** @var Connection|MockObject $connection */
         $connection = $this->container->get('database_connection');
-
         $connection
             ->expects($this->once())
             ->method('update')
             ->willReturn(0)
         ;
 
+        $input = [
+            'username' => 'foobar',
+            '--password' => '12345678',
+        ];
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid username: foobar');
 
-        (new CommandTester($this->command))
-            ->execute(
-                [
-                    'username' => 'foobar',
-                    '--password' => '12345678',
-                ],
-                ['interactive' => false]
-            )
-        ;
+        (new CommandTester($this->command))->execute($input, ['interactive' => false]);
     }
 
     /**
-     * Tests that the database is updated on success.
-     *
-     * @param string $username
-     * @param string $password
-     *
      * @dataProvider usernamePasswordProvider
      */
-    public function testUpdatesTheDatabaseOnSuccess($username, $password)
+    public function testUpdatesTheDatabaseOnSuccess(string $username, string $password): void
     {
+        /** @var Connection|MockObject $connection */
         $connection = $this->container->get('database_connection');
-
         $connection
             ->expects($this->once())
             ->method('update')
@@ -249,7 +187,7 @@ class UserPasswordCommandTest extends TestCase
                         $this->assertArrayHasKey('password', $data);
                         $this->assertSame(PASSWORD_DEFAULT, password_get_info($data['password'])['algo']);
 
-                        return $data;
+                        return true;
                     }
                 ),
                 ['username' => $username]
@@ -257,23 +195,18 @@ class UserPasswordCommandTest extends TestCase
             ->willReturn(1)
         ;
 
-        (new CommandTester($this->command))
-            ->execute(
-                [
-                    'username' => $username,
-                    '--password' => $password,
-                ],
-                ['interactive' => false]
-            )
-        ;
+        $input = [
+            'username' => $username,
+            '--password' => $password,
+        ];
+
+        (new CommandTester($this->command))->execute($input, ['interactive' => false]);
     }
 
     /**
-     * Provides username and password data.
-     *
-     * @return array
+     * @return string[][]
      */
-    public function usernamePasswordProvider()
+    public function usernamePasswordProvider(): array
     {
         return [
             [

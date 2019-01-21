@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -25,45 +27,74 @@ class ConfigurationTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->configuration = new Configuration(false, $this->getRootDir().'/app');
+        $this->configuration = new Configuration($this->getTempDir(), 'en');
     }
 
-    /**
-     * Tests resolving the paths.
-     */
-    public function testResolvesThePaths()
+    public function testAddsTheImagineService(): void
     {
+        $params = [];
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertNull($configuration['image']['imagine_service']);
+
         $params = [
             'contao' => [
-                'web_dir' => $this->getRootDir().'/foo/../web',
                 'image' => [
-                    'target_dir' => $this->getRootDir().'/foo/../assets/images',
+                    'imagine_service' => 'my_super_service',
                 ],
             ],
         ];
 
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
-        $this->assertSame(strtr($this->getRootDir().'/web', '/', \DIRECTORY_SEPARATOR), $configuration['web_dir']);
-
-        $this->assertSame(
-            strtr($this->getRootDir().'/assets/images', '/', \DIRECTORY_SEPARATOR),
-            $configuration['image']['target_dir']
-        );
+        $this->assertSame('my_super_service', $configuration['image']['imagine_service']);
     }
 
     /**
-     * Tests an invalid upload path.
-     *
-     * @param string $uploadPath
-     *
-     * @dataProvider invalidUploadPathProvider
+     * @dataProvider getPaths
      */
-    public function testFailsIfTheUploadPathIsInvalid($uploadPath)
+    public function testResolvesThePaths(string $unix, string $windows): void
+    {
+        $params = [
+            'contao' => [
+                'web_dir' => $unix,
+                'image' => [
+                    'target_dir' => $windows,
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame('/tmp/contao', $configuration['web_dir']);
+        $this->assertSame('C:\Temp\contao', $configuration['image']['target_dir']);
+    }
+
+    /**
+     * @return string[][]
+     */
+    public function getPaths(): array
+    {
+        return [
+            ['/tmp/contao', 'C:\Temp\contao'],
+            ['/tmp/foo/../contao', 'C:\Temp\foo\..\contao'],
+            ['/tmp/foo/bar/../../contao', 'C:\Temp\foo\bar\..\..\contao'],
+            ['/tmp/./contao', 'C:\Temp\.\contao'],
+            ['/tmp//contao', 'C:\Temp\\\\contao'],
+            ['/tmp/contao/', 'C:\Temp\contao\\'],
+            ['/tmp/contao/.', 'C:\Temp\contao\.'],
+            ['/tmp/contao/foo/..', 'C:\Temp\contao\foo\..'],
+        ];
+    }
+
+    /**
+     * @dataProvider getInvalidUploadPaths
+     */
+    public function testFailsIfTheUploadPathIsInvalid(string $uploadPath): void
     {
         $params = [
             'contao' => [
@@ -78,11 +109,9 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * Provides the data for the testInvalidUploadPath() method.
-     *
-     * @return array
+     * @return string[][]
      */
-    public function invalidUploadPathProvider()
+    public function getInvalidUploadPaths(): array
     {
         return [
             [''],

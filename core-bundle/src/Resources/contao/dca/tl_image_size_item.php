@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-System::loadLanguageFile('tl_image_size');
+Contao\System::loadLanguageFile('tl_image_size');
 
 $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 (
@@ -19,6 +19,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		'dataContainer'               => 'Table',
 		'ptable'                      => 'tl_image_size',
 		'enableVersioning'            => true,
+		'markAsCopy'                  => 'media',
 		'onload_callback' => array
 		(
 			array('tl_image_size_item', 'checkPermission'),
@@ -88,7 +89,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_image_size_item']['toggle'],
 				'icon'                => 'visible.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s,\'tl_image_size_item\')"',
+				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_image_size_item', 'toggleIcon')
 			),
 			'show' => array
@@ -203,7 +204,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_image_size_item extends Backend
+class tl_image_size_item extends Contao\Backend
 {
 
 	/**
@@ -212,7 +213,7 @@ class tl_image_size_item extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -265,7 +266,7 @@ class tl_image_size_item extends Backend
 	 */
 	public function showJsLibraryHint()
 	{
-		if ($_POST || Input::get('act') != 'edit')
+		if ($_POST || Contao\Input::get('act') != 'edit')
 		{
 			return;
 		}
@@ -276,8 +277,8 @@ class tl_image_size_item extends Backend
 			return;
 		}
 
-		System::loadLanguageFile('tl_layout');
-		Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_image_size']['picturefill'], $GLOBALS['TL_LANG']['tl_layout']['picturefill'][0]));
+		Contao\System::loadLanguageFile('tl_layout');
+		Contao\Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_image_size']['picturefill'], $GLOBALS['TL_LANG']['tl_layout']['picturefill'][0]));
 	}
 
 	/**
@@ -294,9 +295,9 @@ class tl_image_size_item extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Input::get('tid')))
+		if (\strlen(Contao\Input::get('tid')))
 		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -313,21 +314,21 @@ class tl_image_size_item extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
 	}
 
 	/**
 	 * Toggle the visibility of a format definition
 	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
+	 * @param integer              $intId
+	 * @param boolean              $blnVisible
+	 * @param Contao\DataContainer $dc
 	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
+		Contao\Input::setGet('id', $intId);
+		Contao\Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -370,7 +371,7 @@ class tl_image_size_item extends Backend
 			}
 		}
 
-		$objVersions = new Versions('tl_image_size_item', $intId);
+		$objVersions = new Contao\Versions('tl_image_size_item', $intId);
 		$objVersions->initialize();
 
 		// Reverse the logic (image sizes have invisible=1)

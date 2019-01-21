@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use League\Uri\Components\Query;
+use League\Uri\Http;
 use Patchwork\Utf8;
 
 @trigger_error('Using the logout module has been deprecated and will no longer work in Contao 5.0. Use the logout page instead.', E_USER_DEPRECATED);
@@ -22,7 +24,7 @@ use Patchwork\Utf8;
  * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
  *             Use the logout page instead.
  */
-class ModuleLogout extends \Module
+class ModuleLogout extends Module
 {
 
 	/**
@@ -40,9 +42,7 @@ class ModuleLogout extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('be_wildcard');
-
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['logout'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -58,8 +58,8 @@ class ModuleLogout extends \Module
 			$_SESSION['LAST_PAGE_VISITED'] = $this->getReferer();
 		}
 
-		$this->import('FrontendUser', 'User');
-		$strRedirect = \Environment::get('base');
+		$strLogoutUrl = System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
+		$strRedirect = Environment::get('base');
 
 		// Redirect to last page visited
 		if ($this->redirectBack && !empty($_SESSION['LAST_PAGE_VISITED']))
@@ -71,14 +71,16 @@ class ModuleLogout extends \Module
 		elseif ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			/** @var PageModel $objTarget */
-			$strRedirect = $objTarget->getFrontendUrl();
+			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 
-		// Log out and redirect
-		if ($this->User->logout())
-		{
-			$this->redirect($strRedirect);
-		}
+		$uri = Http::createFromString($strLogoutUrl);
+
+		// Add the redirect= parameter to the logout URL
+		$query = new Query($uri->getQuery());
+		$query = $query->merge('redirect=' . $strRedirect);
+
+		$this->redirect((string) $uri->withQuery((string) $query));
 
 		return '';
 	}
@@ -86,8 +88,7 @@ class ModuleLogout extends \Module
 	/**
 	 * Generate the module
 	 */
-	protected function compile()
-	{
-		return;
-	}
+	protected function compile() {}
 }
+
+class_alias(ModuleLogout::class, 'ModuleLogout');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,68 +13,72 @@
 namespace Contao\CoreBundle\Security\User;
 
 use Contao\BackendUser;
+use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
+use Contao\System;
 use Contao\User;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-/**
- * Provides a Contao front end or back end user object.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
-class ContaoUserProvider implements ContainerAwareInterface, UserProviderInterface
+class ContaoUserProvider implements UserProviderInterface
 {
-    use ContainerAwareTrait;
-
-    /**
-     * @var ScopeMatcher
-     */
-    protected $scopeMatcher;
-
     /**
      * @var ContaoFrameworkInterface
      */
     private $framework;
 
     /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     * @param ScopeMatcher             $scopeMatcher
+     * @var SessionInterface
      */
-    public function __construct(ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher)
+    private $session;
+
+    /**
+     * @var string
+     */
+    private $userClass;
+
+    /**
+     * @var LoggerInterface|null
+     */
+    private $logger;
+
+    /**
+     * @throws \RuntimeException
+     */
+    public function __construct(ContaoFrameworkInterface $framework, SessionInterface $session, string $userClass, LoggerInterface $logger = null)
     {
+        if (BackendUser::class !== $userClass && FrontendUser::class !== $userClass) {
+            throw new \RuntimeException(sprintf('Unsupported class "%s".', $userClass));
+        }
+
         $this->framework = $framework;
-        $this->scopeMatcher = $scopeMatcher;
+        $this->session = $session;
+        $this->userClass = $userClass;
+        $this->logger = $logger;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @return BackendUser|FrontendUser
      */
-    public function loadUserByUsername($username)
+    public function loadUserByUsername($username): User
     {
-        if ($this->isBackendUsername($username)) {
-            $this->framework->initialize();
+        $this->framework->initialize();
 
-            return BackendUser::getInstance();
+        /** @var User $adapter */
+        $adapter = $this->framework->getAdapter($this->userClass);
+        $user = $adapter->loadUserByUsername($username);
+
+        if (is_a($user, $this->userClass)) {
+            return $user;
         }
 
-        if ($this->isFrontendUsername($username)) {
-            $this->framework->initialize();
-
-            return FrontendUser::getInstance();
-        }
-
-        throw new UsernameNotFoundException('Can only load user "frontend" or "backend".');
+        throw new UsernameNotFoundException(sprintf('Could not find user "%s"', $username));
     }
 
     /**
@@ -80,52 +86,70 @@ class ContaoUserProvider implements ContainerAwareInterface, UserProviderInterfa
      */
     public function refreshUser(UserInterface $user)
     {
-        throw new UnsupportedUserException('Cannot refresh a Contao user.');
+        if (!is_a($user, $this->userClass)) {
+            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
+        }
+
+        $user = $this->loadUserByUsername($user->getUsername());
+
+        $this->validateSessionLifetime($user);
+        $this->triggerPostAuthenticateHook($user);
+
+        return $user;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supportsClass($class)
+    public function supportsClass($class): bool
     {
-        return is_subclass_of($class, User::class);
+        return $this->userClass === $class;
     }
 
     /**
-     * Checks if the given username can be mapped to a front end user.
+     * Validates the session lifetime and logs the user out if the session has expired.
      *
-     * @param string $username
-     *
-     * @return bool
+     * @throws UsernameNotFoundException
      */
-    private function isFrontendUsername($username)
+    private function validateSessionLifetime(User $user): void
     {
-        if (
-            null === $this->container
-            || null === ($request = $this->container->get('request_stack')->getCurrentRequest())
-        ) {
-            return false;
+        if (!$this->session->isStarted()) {
+            return;
         }
 
-        return 'frontend' === $username && $this->scopeMatcher->isFrontendRequest($request);
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
+        $timeout = (int) $config->get('sessionTimeout');
+
+        if ($timeout > 0 && (time() - $this->session->getMetadataBag()->getLastUsed()) < $timeout) {
+            return;
+        }
+
+        if (null !== $this->logger) {
+            $this->logger->info(
+                sprintf('User "%s" has been logged out automatically due to inactivity', $user->username),
+                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)]
+            );
+        }
+
+        throw new UsernameNotFoundException(
+            sprintf('User "%s" has been logged out automatically due to inactivity.', $user->username)
+        );
     }
 
-    /**
-     * Checks if the given username can be mapped to a back end user.
-     *
-     * @param string $username
-     *
-     * @return bool
-     */
-    private function isBackendUsername($username)
+    private function triggerPostAuthenticateHook(User $user): void
     {
-        if (
-            null === $this->container
-            || null === ($request = $this->container->get('request_stack')->getCurrentRequest())
-        ) {
-            return false;
+        if (empty($GLOBALS['TL_HOOKS']['postAuthenticate']) || !\is_array($GLOBALS['TL_HOOKS']['postAuthenticate'])) {
+            return;
         }
 
-        return 'backend' === $username && $this->scopeMatcher->isBackendRequest($request);
+        @trigger_error('Using the "postAuthenticate" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
+        /** @var System $system */
+        $system = $this->framework->getAdapter(System::class);
+
+        foreach ($GLOBALS['TL_HOOKS']['postAuthenticate'] as $callback) {
+            $system->importStatic($callback[0])->{$callback[1]}($user);
+        }
     }
 }

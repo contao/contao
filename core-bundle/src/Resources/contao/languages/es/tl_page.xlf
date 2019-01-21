@@ -129,6 +129,14 @@
         <source>The date and time format string will be parsed with the PHP date() function.</source>
         <target>Por favor introduce un formato de fecha y hora válido para la función PHP function date()</target>
       </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.0">
+        <source>Valid alias characters</source>
+        <target>Caracteres de alias válidos</target>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.1">
+        <source>Here you can select a custom character set for auto-generated aliases.</source>
+        <target>Aquí puede seleccionar un juego de caracteres personalizado para alias autogenerados.</target>
+      </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
         <target>Crear un mapa del sitio XML</target>
@@ -265,6 +273,14 @@
         <source>Exclude the page from the search index.</source>
         <target>Si seleccionas esta opción, la página actual será excluida de las operaciones de búsqueda en la web.</target>
       </trans-unit>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+        <target>Requiere un artículo</target>
+      </trans-unit>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Desencadenar un error 404 si la URL de la página no contiene un alias de elemento.</target>
+      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
         <target>Clase CSS</target>
@@ -361,9 +377,9 @@
         <source>Global settings</source>
         <target>Configuración global</target>
       </trans-unit>
-      <trans-unit id="tl_page.mobile_legend">
-        <source>Mobile settings</source>
-        <target>Configuración de dispositivos móviles</target>
+      <trans-unit id="tl_page.alias_legend">
+        <source>Alias settings</source>
+        <target>Configuración de alias</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>
@@ -388,10 +404,6 @@
       <trans-unit id="tl_page.chmod_legend">
         <source>Access rights</source>
         <target>Privilegios de acceso</target>
-      </trans-unit>
-      <trans-unit id="tl_page.search_legend">
-        <source>Search settings</source>
-        <target>Ajustes de búsqueda</target>
       </trans-unit>
       <trans-unit id="tl_page.expert_legend">
         <source>Expert settings</source>
@@ -576,6 +588,15 @@
       <trans-unit id="CACHE.2592000">
         <source>30 days</source>
         <target>30 días (1 mes)</target>
+      </trans-unit>
+      <trans-unit id="CACHE.7776000">
+        <source>3 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.15552000">
+        <source>6 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.31536000">
+        <source>1 year</source>
       </trans-unit>
     </body>
   </file>

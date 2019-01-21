@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,17 +15,9 @@ namespace Contao\CoreBundle\Tests\Monolog;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Tests\TestCase;
 
-/**
- * Tests the ContaoContextTest class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoContextTest extends TestCase
 {
-    /**
-     * Tests the setter and getter methods.
-     */
-    public function testSupportsReadingAndWritingValues()
+    public function testSupportsReadingAndWritingValues(): void
     {
         $context = new ContaoContext('foo');
 
@@ -40,22 +34,17 @@ class ContaoContextTest extends TestCase
         $context->setBrowser('Mozilla');
         $context->setSource('Foo::bar()');
 
-        $this->assertSame(
-            json_encode([
-                'func' => 'foo',
-                'action' => 'action',
-                'username' => 'username',
-                'ip' => '1.2.3.4',
-                'browser' => 'Mozilla',
-            ]),
-            (string) $context
-        );
+        $json = json_encode([
+            'func' => 'foo',
+            'action' => 'action',
+            'username' => 'username',
+            'browser' => 'Mozilla',
+        ]);
+
+        $this->assertSame($json, (string) $context);
     }
 
-    /**
-     * Tests passing an empty function name.
-     */
-    public function testFailsIfTheFunctionNameIsEmpty()
+    public function testFailsIfTheFunctionNameIsEmpty(): void
     {
         $this->expectException('InvalidArgumentException');
 

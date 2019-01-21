@@ -17,7 +17,7 @@ use Symfony\Component\Finder\Finder;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PurgeData extends \Backend implements \executable
+class PurgeData extends Backend implements \executable
 {
 
 	/**
@@ -27,7 +27,7 @@ class PurgeData extends \Backend implements \executable
 	 */
 	public function isActive()
 	{
-		return \Input::post('FORM_SUBMIT') == 'tl_purge';
+		return Input::post('FORM_SUBMIT') == 'tl_purge';
 	}
 
 	/**
@@ -39,15 +39,14 @@ class PurgeData extends \Backend implements \executable
 	{
 		$arrJobs = array();
 
-		/** @var BackendTemplate|object $objTemplate */
-		$objTemplate = new \BackendTemplate('be_purge_data');
+		$objTemplate = new BackendTemplate('be_purge_data');
 		$objTemplate->isActive = $this->isActive();
-		$objTemplate->message = \Message::generateUnwrapped(__CLASS__);
+		$objTemplate->message = Message::generateUnwrapped(__CLASS__);
 
 		// Run the jobs
-		if (\Input::post('FORM_SUBMIT') == 'tl_purge')
+		if (Input::post('FORM_SUBMIT') == 'tl_purge')
 		{
-			$purge = \Input::post('purge');
+			$purge = Input::post('purge');
 
 			if (!empty($purge) && \is_array($purge))
 			{
@@ -62,7 +61,7 @@ class PurgeData extends \Backend implements \executable
 				}
 			}
 
-			\Message::addConfirmation($GLOBALS['TL_LANG']['tl_maintenance']['cacheCleared'], __CLASS__);
+			Message::addConfirmation($GLOBALS['TL_LANG']['tl_maintenance']['cacheCleared'], __CLASS__);
 			$this->reload();
 		}
 
@@ -86,7 +85,9 @@ class PurgeData extends \Backend implements \executable
 			}
 		}
 
-		$strCachePath = \StringUtil::stripRootDir(\System::getContainer()->getParameter('kernel.cache_dir'));
+		$container = System::getContainer();
+		$rootDir = $container->getParameter('kernel.project_dir');
+		$strCachePath = StringUtil::stripRootDir($container->getParameter('kernel.cache_dir'));
 
 		// Folders
 		foreach ($GLOBALS['TL_PURGE']['folders'] as $key=>$config)
@@ -107,9 +108,9 @@ class PurgeData extends \Backend implements \executable
 				$folder = sprintf($folder, $strCachePath);
 
 				// Only check existing folders
-				if (is_dir(TL_ROOT . '/' . $folder))
+				if (is_dir($rootDir . '/' . $folder))
 				{
-					$objFiles = Finder::create()->in(TL_ROOT . '/' . $folder)->files();
+					$objFiles = Finder::create()->in($rootDir . '/' . $folder)->files();
 					$total = iterator_count($objFiles);
 				}
 
@@ -130,13 +131,15 @@ class PurgeData extends \Backend implements \executable
 		}
 
 		$objTemplate->jobs = $arrJobs;
-		$objTemplate->action = ampersand(\Environment::get('request'));
+		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->headline = $GLOBALS['TL_LANG']['tl_maintenance']['clearCache'];
 		$objTemplate->job = $GLOBALS['TL_LANG']['tl_maintenance']['job'];
 		$objTemplate->description = $GLOBALS['TL_LANG']['tl_maintenance']['description'];
-		$objTemplate->submit = \StringUtil::specialchars($GLOBALS['TL_LANG']['tl_maintenance']['clearCache']);
-		$objTemplate->help = (\Config::get('showHelp') && ($GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1] != '')) ? $GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1] : '';
+		$objTemplate->submit = StringUtil::specialchars($GLOBALS['TL_LANG']['tl_maintenance']['clearCache']);
+		$objTemplate->help = (Config::get('showHelp') && ($GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1] != '')) ? $GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1] : '';
 
 		return $objTemplate->parse();
 	}
 }
+
+class_alias(PurgeData::class, 'PurgeData');

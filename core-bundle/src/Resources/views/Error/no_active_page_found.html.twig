@@ -1,10 +1,11 @@
+{% trans_default_domain 'contao_exception' %}
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ error.noActive }}
+    {{ 'XPT.noActive'|trans }}
 {% endblock %}
 {% block matter %}
-    <p>{{ error.noActivePages }}</p>
+    <p>{{ 'XPT.noActivePages'|trans }}</p>
 {% endblock %}
 {% block howToFix %}
-    <p>{{ error.noActiveFix|format(adminEmail)|raw }}</p>
+    <p>{{ 'XPT.noActiveFix'|trans|format(adminEmail)|raw }}</p>
 {% endblock %}

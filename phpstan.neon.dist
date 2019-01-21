@@ -1,0 +1,35 @@
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/contao/phpstan/extension.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+
+parameters:
+    bootstrap: %currentWorkingDirectory%/vendor/autoload.php
+
+    contao:
+        services_yml_path: %currentWorkingDirectory%/core-bundle/src/Resources/config/services.yml
+
+    symfony:
+        container_xml_path: %currentWorkingDirectory%/vendor/contao/phpstan/var/cache/dev/appDevPHPStanProjectContainer.xml
+
+    excludes_analyse:
+        - %currentWorkingDirectory%/core-bundle/src/Resources/*
+        - %currentWorkingDirectory%/core-bundle/tests/Fixtures/*
+        - %currentWorkingDirectory%/core-bundle/tests/Functional/app/*
+        - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
+
+    ignoreErrors:
+        # Ignore the missing TL_SCRIPT constant in the InitializeController class
+        - '#Constant TL_SCRIPT not found\.#'
+
+        # Ignore Symfony configuration errors
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
+
+        # Ignore the Adapter::missingMethod() warning
+        - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter::missingMethod\(\)\.#'
+
+        # Ignore calling ContaoFrameworkInterface::initialize() with a parameter
+        - '#Method Contao\\CoreBundle\\Framework\\ContaoFrameworkInterface::initialize\(\) invoked with 1 parameter, 0 required\.#'
+
+    reportUnmatchedIgnoredErrors: false

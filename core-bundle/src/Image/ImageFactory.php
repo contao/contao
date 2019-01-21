@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,6 +17,7 @@ use Contao\FilesModel;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
+use Contao\Image\ImportantPartInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
@@ -25,11 +28,6 @@ use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Creates Image objects.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
- */
 class ImageFactory implements ImageFactoryInterface
 {
     /**
@@ -72,26 +70,14 @@ class ImageFactory implements ImageFactoryInterface
      */
     private $validExtensions;
 
-    /**
-     * Constructor.
-     *
-     * @param ResizerInterface         $resizer
-     * @param ImagineInterface         $imagine
-     * @param ImagineInterface         $imagineSvg
-     * @param Filesystem               $filesystem
-     * @param ContaoFrameworkInterface $framework
-     * @param bool                     $bypassCache
-     * @param array                    $imagineOptions
-     * @param array                    $validExtensions
-     */
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFrameworkInterface $framework, $bypassCache, array $imagineOptions, array $validExtensions)
+    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFrameworkInterface $framework, bool $bypassCache, array $imagineOptions, array $validExtensions)
     {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
         $this->imagineSvg = $imagineSvg;
         $this->filesystem = $filesystem;
         $this->framework = $framework;
-        $this->bypassCache = (bool) $bypassCache;
+        $this->bypassCache = $bypassCache;
         $this->imagineOptions = $imagineOptions;
         $this->validExtensions = $validExtensions;
     }
@@ -99,7 +85,7 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function create($path, $size = null, $targetPath = null)
+    public function create($path, $size = null, $targetPath = null): ImageInterface
     {
         if ($path instanceof ImageInterface) {
             $image = $path;
@@ -125,7 +111,7 @@ class ImageFactory implements ImageFactoryInterface
             $resizeConfig = $size;
             $importantPart = null;
         } else {
-            list($resizeConfig, $importantPart) = $this->createConfig($size, $image);
+            [$resizeConfig, $importantPart] = $this->createConfig($size, $image);
         }
 
         if (!\is_object($path) || !($path instanceof ImageInterface)) {
@@ -153,7 +139,7 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getImportantPartFromLegacyMode(ImageInterface $image, $mode)
+    public function getImportantPartFromLegacyMode(ImageInterface $image, $mode): ImportantPartInterface
     {
         if (1 !== substr_count($mode, '_')) {
             throw new \InvalidArgumentException(sprintf('"%s" is not a legacy resize mode', $mode));
@@ -166,7 +152,7 @@ class ImageFactory implements ImageFactoryInterface
             $image->getDimensions()->getSize()->getHeight(),
         ];
 
-        list($modeX, $modeY) = explode('_', $mode);
+        [$modeX, $modeY] = explode('_', $mode);
 
         if ('left' === $modeX) {
             $importantPart[2] = 1;
@@ -191,12 +177,11 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * Creates a resize configuration object.
      *
-     * @param int|array|null $size  An image size or an array with width, height and resize mode
-     * @param ImageInterface $image
+     * @param int|array|null $size An image size or an array with width, height and resize mode
      *
-     * @return array
+     * @return (ResizeConfigurationInterface|ImportantPartInterface|null)[]
      */
-    private function createConfig($size, ImageInterface $image)
+    private function createConfig($size, ImageInterface $image): array
     {
         if (!\is_array($size)) {
             $size = [0, 0, $size];
@@ -243,12 +228,8 @@ class ImageFactory implements ImageFactoryInterface
 
     /**
      * Fetches the important part from the database.
-     *
-     * @param ImageInterface $image
-     *
-     * @return ImportantPart|null
      */
-    private function createImportantPart(ImageInterface $image)
+    private function createImportantPart(ImageInterface $image): ?ImportantPart
     {
         /** @var FilesModel $filesModel */
         $filesModel = $this->framework->getAdapter(FilesModel::class);

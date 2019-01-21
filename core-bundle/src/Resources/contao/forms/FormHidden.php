@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormHidden extends \Widget
+class FormHidden extends Widget
 {
 
 	/**
@@ -41,7 +41,9 @@ class FormHidden extends \Widget
 	{
 		return sprintf('<input type="hidden" name="%s" value="%s"%s',
 						$this->strName,
-						\StringUtil::specialchars($this->varValue),
+						StringUtil::specialchars($this->varValue),
 						$this->strTagEnding);
 	}
 }
+
+class_alias(FormHidden::class, 'FormHidden');

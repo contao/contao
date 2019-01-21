@@ -9,15 +9,23 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
   <meta name="referrer" content="origin">
 
-  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
-  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/basic.css">
-  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/popup.css">
+  <link rel="stylesheet" href="<?php
+    $objCombiner = new Contao\Combiner();
+    $objCombiner->add('system/themes/'. $this->theme .'/fonts.css');
+    $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
+    $objCombiner->add('system/themes/'. $this->theme .'/popup.css');
+    echo $objCombiner->getCombinedFile();
+  ?>">
   <?= $this->stylesheets ?>
 
   <script><?= $this->getLocaleString() ?></script>
-  <script src="<?= TL_ASSETS_URL ?>assets/mootools/js/mootools.min.js"></script>
-  <script src="<?= TL_ASSETS_URL ?>bundles/contaocore/mootao.min.js"></script>
-  <script src="<?= TL_ASSETS_URL ?>bundles/contaocore/core.min.js"></script>
+  <script src="<?php
+    $objCombiner = new Contao\Combiner();
+    $objCombiner->add('assets/mootools/js/mootools.min.js');
+    $objCombiner->add('bundles/contaocore/mootao.min.js');
+    $objCombiner->add('bundles/contaocore/core.min.js');
+    echo $objCombiner->getCombinedFile();
+  ?>"></script>
   <script><?= $this->getDateString() ?></script>
   <?= $this->javascripts ?>
 
@@ -25,7 +33,7 @@
 <body class="<?= $this->ua ?> popup">
 
   <div id="container" class="cf">
-    <div id="main">
+    <main id="main">
       <table class="tl_show">
         <tr>
           <td><span class="tl_label"><?= $this->labels->fileCreated ?>:</span></td>
@@ -83,7 +91,7 @@
       </table>
       <?php if ($this->href): ?>
         <div id="download">
-          <a href="<?= $this->href ?>" class="tl_submit" download="<?= basename($this->path) ?>"><?= Image::getHtml($this->icon, '', 'class="mime_icon"') ?> <?= $this->download ?></a>
+          <a href="<?= $this->href ?>" class="tl_submit" download="<?= basename($this->path) ?>"><?= Contao\Image::getHtml($this->icon, '', 'class="mime_icon"') ?> <?= $this->download ?></a>
         </div>
       <?php endif; ?>
       <?php if ($this->isImage): ?>
@@ -93,7 +101,7 @@
           </div>
         </div>
       <?php endif; ?>
-    </div>
+    </main>
   </div>
 
 </body>

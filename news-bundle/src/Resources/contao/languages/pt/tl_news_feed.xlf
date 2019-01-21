@@ -7,11 +7,11 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.title.1">
         <source>Please enter a feed title.</source>
-        <target>Por favor insira o título do arquivo de notícias.</target>
+        <target>Por favor insira o título do arquivo de notícias feed.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.alias.0">
         <source>Feed alias</source>
-        <target>Nome do &quot;feed&quot;</target>
+        <target>Nome curto do &quot;feed&quot;</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.alias.1">
         <source>Here you can enter a unique filename (without extension). The XML feed file will be auto-generated in the &lt;em&gt;share&lt;/em&gt; directory of your Contao installation, e.g. as &lt;em&gt;share/name.xml&lt;/em&gt;.</source>
@@ -19,11 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.language.0">
         <source>Feed language</source>
-        <target>Língua</target>
+        <target>Língua do feed</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.language.1">
         <source>Please enter the feed language according to the ISO-639 standard (e.g. &lt;em&gt;en&lt;/em&gt; or &lt;em&gt;en-us&lt;/em&gt;).</source>
-        <target>Favor inserir a língua de acordo com o formato RFC3066 (ex: &lt;em&gt;pt&lt;/em&gt;, &lt;em&gt;pt-br&lt;/em&gt; ou &lt;em&gt;en-us&lt;/em&gt;.</target>
+        <target>Por favor introduza a língua utilizada no feed segundo a normativa ISO-639 (por ex. &lt;em&gt;pt&lt;/em&gt; , &lt;em&gt;pt-br&lt;/em&gt; ou ainda &lt;em&gt; en-us &lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.archives.0">
         <source>News archives</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.maxItems.1">
         <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
-        <target>Limite o número de itens exportados. Deixe em branco ou informe 0 para incluir todos</target>
+        <target>Aqui pode limitar o numero de selecções no feed. Introduzir 0 (zero) para exportar todos.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.feedBase.0">
         <source>Base URL</source>

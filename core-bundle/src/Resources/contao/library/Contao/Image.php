@@ -97,6 +97,12 @@ class Image
 	protected $zoomLevel = 0;
 
 	/**
+	 * Root dir
+	 * @var string
+	 */
+	protected $strRootDir;
+
+	/**
 	 * Important part settings
 	 *
 	 * @var array
@@ -120,12 +126,12 @@ class Image
 		// Check whether the file exists
 		if (!$file->exists())
 		{
-			$webDir = \System::getContainer()->getParameter('contao.web_dir');
+			$webDir = System::getContainer()->getParameter('contao.web_dir');
 
 			// Handle public bundle resources
 			if (file_exists($webDir . '/' . $file->path))
 			{
-				$file = new \File(\StringUtil::stripRootDir($webDir) . '/' . $file->path);
+				$file = new File(StringUtil::stripRootDir($webDir) . '/' . $file->path);
 			}
 			else
 			{
@@ -134,13 +140,15 @@ class Image
 		}
 
 		$this->fileObj = $file;
-		$arrAllowedTypes = \StringUtil::trimsplit(',', strtolower(\Config::get('validImageTypes')));
+		$arrAllowedTypes = StringUtil::trimsplit(',', strtolower(Config::get('validImageTypes')));
 
 		// Check the file type
 		if (!\in_array($this->fileObj->extension, $arrAllowedTypes))
 		{
 			throw new \InvalidArgumentException('Image type "' . $this->fileObj->extension . '" was not allowed to be processed');
 		}
+
+		$this->strRootDir = System::getContainer()->getParameter('kernel.project_dir');
 	}
 
 	/**
@@ -365,7 +373,7 @@ class Image
 	public function getResizedPath()
 	{
 		$path = $this->resizedPath;
-		$webDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
+		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 
 		// Strip the web/ prefix (see #337)
 		if (strncmp($path, $webDir . '/', \strlen($webDir) + 1) === 0)
@@ -399,7 +407,7 @@ class Image
 			. '-t' . $this->fileObj->mtime
 		), 0, 8);
 
-		return \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.image.target_dir')) . '/' . substr($strCacheKey, -1) . '/' . $this->fileObj->filename . '-' . $strCacheKey . '.' . $this->fileObj->extension;
+		return StringUtil::stripRootDir(System::getContainer()->getParameter('contao.image.target_dir')) . '/' . substr($strCacheKey, -1) . '/' . $this->fileObj->filename . '-' . $strCacheKey . '.' . $this->fileObj->extension;
 	}
 
 	/**
@@ -415,43 +423,43 @@ class Image
 		if (!System::getContainer()->getParameter('contao.image.bypass_cache')
 			&& $this->getTargetPath()
 			&& !$this->getForceOverride()
-			&& file_exists(TL_ROOT . '/' . $this->getTargetPath())
-			&& $this->fileObj->mtime <= filemtime(TL_ROOT . '/' . $this->getTargetPath())
+			&& file_exists($this->strRootDir . '/' . $this->getTargetPath())
+			&& $this->fileObj->mtime <= filemtime($this->strRootDir . '/' . $this->getTargetPath())
 		) {
 			// HOOK: add custom logic
 			if (isset($GLOBALS['TL_HOOKS']['executeResize']) && \is_array($GLOBALS['TL_HOOKS']['executeResize']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['executeResize'] as $callback)
 				{
-					$return = \System::importStatic($callback[0])->{$callback[1]}($this);
+					$return = System::importStatic($callback[0])->{$callback[1]}($this);
 
 					if (\is_string($return))
 					{
-						$this->resizedPath = \System::urlEncode($return);
+						$this->resizedPath = System::urlEncode($return);
 
 						return $this;
 					}
 				}
 			}
 
-			$this->resizedPath = \System::urlEncode($this->getTargetPath());
+			$this->resizedPath = System::urlEncode($this->getTargetPath());
 
 			return $this;
 		}
 
-		$image = \System::getContainer()
+		$image = System::getContainer()
 			->get('contao.image.resizer')
 			->resize(
 				$image,
 				$resizeConfig,
 				(new ResizeOptions())
-					->setImagineOptions(\System::getContainer()->getParameter('contao.image.imagine_options'))
-					->setTargetPath($this->targetPath ? TL_ROOT . '/' . $this->targetPath : null)
-					->setBypassCache(\System::getContainer()->getParameter('contao.image.bypass_cache'))
+					->setImagineOptions(System::getContainer()->getParameter('contao.image.imagine_options'))
+					->setTargetPath($this->targetPath ? $this->strRootDir . '/' . $this->targetPath : null)
+					->setBypassCache(System::getContainer()->getParameter('contao.image.bypass_cache'))
 			)
 		;
 
-		$this->resizedPath = $image->getUrl(TL_ROOT);
+		$this->resizedPath = $image->getUrl($this->strRootDir);
 
 		return $this;
 	}
@@ -459,20 +467,20 @@ class Image
 	/**
 	 * Prepare image object.
 	 *
-	 * @return \Contao\Image\Image
+	 * @return NewImage
 	 */
 	protected function prepareImage()
 	{
 		if ($this->fileObj->isSvgImage)
 		{
-			$imagine = \System::getContainer()->get('contao.image.imagine_svg');
+			$imagine = System::getContainer()->get('contao.image.imagine_svg');
 		}
 		else
 		{
-			$imagine = \System::getContainer()->get('contao.image.imagine');
+			$imagine = System::getContainer()->get('contao.image.imagine');
 		}
 
-		$image = new NewImage(TL_ROOT . '/' . $this->fileObj->path, $imagine, \System::getContainer()->get('filesystem'));
+		$image = new NewImage($this->strRootDir . '/' . $this->fileObj->path, $imagine, System::getContainer()->get('filesystem'));
 		$image->setImportantPart($this->prepareImportantPart());
 
 		return $image;
@@ -570,7 +578,7 @@ class Image
 	 */
 	public function computeResize()
 	{
-		$resizeCoordinates = \System::getContainer()
+		$resizeCoordinates = System::getContainer()
 			->get('contao.image.resize_calculator')
 			->calculate(
 				$this->prepareResizeConfig(),
@@ -614,6 +622,8 @@ class Image
 			return $src;
 		}
 
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+
 		if (strncmp($src, 'icon', 4) === 0)
 		{
 			if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
@@ -624,7 +634,7 @@ class Image
 			$filename = pathinfo($src, PATHINFO_FILENAME);
 
 			// Prefer SVG icons
-			if (file_exists(TL_ROOT . '/assets/contao/images/' . $filename . '.svg'))
+			if (file_exists($rootDir . '/assets/contao/images/' . $filename . '.svg'))
 			{
 				return 'assets/contao/images/' . $filename . '.svg';
 			}
@@ -633,7 +643,7 @@ class Image
 		}
 		else
 		{
-			$theme = \Backend::getTheme();
+			$theme = Backend::getTheme();
 
 			if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
 			{
@@ -643,7 +653,7 @@ class Image
 			$filename = pathinfo($src, PATHINFO_FILENAME);
 
 			// Prefer SVG icons
-			if (file_exists(TL_ROOT . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
+			if (file_exists($rootDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
 			{
 				return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
 			}
@@ -670,12 +680,14 @@ class Image
 			return '';
 		}
 
-		$webDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir'));
+		$container = System::getContainer();
+		$rootDir = $container->getParameter('kernel.project_dir');
+		$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
-		if (!is_file(TL_ROOT . '/' . $src))
+		if (!is_file($rootDir . '/' . $src))
 		{
 			// Handle public bundle resources
-			if (file_exists(TL_ROOT . '/' . $webDir . '/' . $src))
+			if (file_exists($rootDir . '/' . $webDir . '/' . $src))
 			{
 				$src = $webDir . '/' . $src;
 			}
@@ -685,7 +697,7 @@ class Image
 			}
 		}
 
-		$objFile = new \File($src);
+		$objFile = new File($src);
 
 		// Strip the web/ prefix (see #337)
 		if (strncmp($src, $webDir . '/', \strlen($webDir) + 1) === 0)
@@ -693,9 +705,9 @@ class Image
 			$src = substr($src, \strlen($webDir) + 1);
 		}
 
-		$static = (strncmp($src, 'assets/', 7) === 0) ? TL_ASSETS_URL : TL_FILES_URL;
+		$context = (strncmp($src, 'assets/', 7) === 0) ? 'assets_context' : 'files_context';
 
-		return '<img src="' . $static . \System::urlEncode($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . \StringUtil::specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
+		return '<img src="' . Controller::addStaticUrlTo(System::urlEncode($src), $container->get('contao.assets.'.$context)) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
 	}
 
 	/**
@@ -735,7 +747,7 @@ class Image
 
 		if (\is_string($image))
 		{
-			$image = new \File(rawurldecode($image));
+			$image = new File(rawurldecode($image));
 		}
 
 		/** @var Image $imageObj */
@@ -759,7 +771,7 @@ class Image
 		}
 
 		// Load the image size from the database if $size is an ID
-		elseif (($imageSize = \ImageSizeModel::findByPk($size)) !== null)
+		elseif (($imageSize = ImageSizeModel::findByPk($size)) !== null)
 		{
 			$imageObj
 				->setTargetWidth($imageSize->width)
@@ -769,7 +781,7 @@ class Image
 			;
 		}
 
-		$fileRecord = \FilesModel::findByPath($image->path);
+		$fileRecord = FilesModel::findByPath($image->path);
 
 		// Set the important part
 		if ($fileRecord !== null && $fileRecord->importantPartWidth && $fileRecord->importantPartHeight)
@@ -823,7 +835,7 @@ class Image
 		}
 		catch (\Exception $e)
 		{
-			\System::log('Image "' . $image . '" could not be processed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+			System::log('Image "' . $image . '" could not be processed: ' . $e->getMessage(), __METHOD__, 'ERROR');
 		}
 
 		return null;
@@ -890,3 +902,5 @@ class Image
 		return 0;
 	}
 }
+
+class_alias(Image::class, 'Image');

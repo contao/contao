@@ -19,7 +19,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleNewsletterList extends \Module
+class ModuleNewsletterList extends Module
 {
 
 	/**
@@ -37,9 +37,7 @@ class ModuleNewsletterList extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('be_wildcard');
-
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsletterlist'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -49,7 +47,7 @@ class ModuleNewsletterList extends \Module
 			return $objTemplate->parse();
 		}
 
-		$this->nl_channels = \StringUtil::deserialize($this->nl_channels);
+		$this->nl_channels = StringUtil::deserialize($this->nl_channels);
 
 		// Return if there are no channels
 		if (empty($this->nl_channels) || !\is_array($this->nl_channels))
@@ -71,8 +69,8 @@ class ModuleNewsletterList extends \Module
 		$arrJumpTo = array();
 		$arrNewsletter = array();
 
-		$strRequest = ampersand(\Environment::get('request'), true);
-		$objNewsletter = \NewsletterModel::findSentByPids($this->nl_channels);
+		$strRequest = ampersand(Environment::get('request'), true);
+		$objNewsletter = NewsletterModel::findSentByPids($this->nl_channels);
 
 		if ($objNewsletter !== null)
 		{
@@ -99,7 +97,7 @@ class ModuleNewsletterList extends \Module
 					if (($objJumpTo = $objTarget->getRelated('jumpTo')) instanceof PageModel)
 					{
 						/** @var PageModel $objJumpTo */
-						$arrJumpTo[$objTarget->jumpTo] = $objJumpTo->getFrontendUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
+						$arrJumpTo[$objTarget->jumpTo] = $objJumpTo->getFrontendUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
 					}
 					else
 					{
@@ -113,11 +111,11 @@ class ModuleNewsletterList extends \Module
 				$arrNewsletter[] = array
 				(
 					'subject' => $objNewsletter->subject,
-					'title' => \StringUtil::stripInsertTags($objNewsletter->subject),
+					'title' => StringUtil::stripInsertTags($objNewsletter->subject),
 					'href' => sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), $strAlias),
-					'date' => \Date::parse($objPage->dateFormat, $objNewsletter->date),
-					'datim' => \Date::parse($objPage->datimFormat, $objNewsletter->date),
-					'time' => \Date::parse($objPage->timeFormat, $objNewsletter->date),
+					'date' => Date::parse($objPage->dateFormat, $objNewsletter->date),
+					'datim' => Date::parse($objPage->datimFormat, $objNewsletter->date),
+					'time' => Date::parse($objPage->timeFormat, $objNewsletter->date),
 					'channel' => $objNewsletter->pid
 				);
 			}
@@ -126,3 +124,5 @@ class ModuleNewsletterList extends \Module
 		$this->Template->newsletters = $arrNewsletter;
 	}
 }
+
+class_alias(ModuleNewsletterList::class, 'ModuleNewsletterList');

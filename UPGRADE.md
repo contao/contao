@@ -1,5 +1,55 @@
 # API changes
 
+## Version 4.* to 4.6
+
+### Anonymize Google Analytics
+
+The "Anonymize Google Analytics" flag in the back end settings has been
+removed. IP addresses are anonymized by default in the `analytics_google.html5`
+template now.
+
+### Anonymize IP addresses
+
+The "Anonymize IP addresses" flag in the back end settings has been removed. It
+was used to bypass IP anonymization in the `System::anonymizeIp()` method,
+which is no longer supported.
+
+### Maximum front end width
+
+The `$GLOBALS['TL_CONFIG']['maxImageWidth']` parameter has been deprecated. Use
+responsive images instead.
+
+### Flash movie
+
+The "flash movie" front end module has been removed.
+
+## Version 4.* to 4.5
+
+### Template changes
+
+The `pagination.html5` and `be_pagination.html5` templates now use a `<nav>`
+element as container and a `<strong>` element to mark the active item:
+
+```php
+<!-- OLD -->
+<div class="pagination block">
+  ...
+  <li><span class="active">...</span></li>
+  ...
+</div>
+
+<!-- NEW -->
+<nav class="pagination block" aria-label="...">
+  ...
+  <li><strong class="active">...</strong></li>
+  ...
+</nav>
+```
+
+### $_SESSION['TL_LANGUAGE']
+
+The `$_SESSION['TL_LANGUAGE']` flag has been removed.
+
 ## Version 4.* to 4.3
 
 ### Image upscaling

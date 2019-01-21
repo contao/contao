@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\OptIn\OptIn;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
 
@@ -18,7 +19,7 @@ use Symfony\Component\Console\Output\NullOutput;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Automator extends \System
+class Automator extends System
 {
 
 	/**
@@ -34,16 +35,16 @@ class Automator extends \System
 	 */
 	public function purgeSearchTables()
 	{
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		// Truncate the tables
 		$objDatabase->execute("TRUNCATE TABLE tl_search");
 		$objDatabase->execute("TRUNCATE TABLE tl_search_index");
 
-		$strCachePath = \StringUtil::stripRootDir(\System::getContainer()->getParameter('kernel.cache_dir'));
+		$strCachePath = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
 
 		// Purge the cache folder
-		$objFolder = new \Folder($strCachePath . '/contao/search');
+		$objFolder = new Folder($strCachePath . '/contao/search');
 		$objFolder->purge();
 
 		// Add a log entry
@@ -55,7 +56,7 @@ class Automator extends \System
 	 */
 	public function purgeUndoTable()
 	{
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		// Truncate the table
 		$objDatabase->execute("TRUNCATE TABLE tl_undo");
@@ -69,7 +70,7 @@ class Automator extends \System
 	 */
 	public function purgeVersionTable()
 	{
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		// Truncate the table
 		$objDatabase->execute("TRUNCATE TABLE tl_version");
@@ -83,7 +84,7 @@ class Automator extends \System
 	 */
 	public function purgeSystemLog()
 	{
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		// Truncate the table
 		$objDatabase->execute("TRUNCATE TABLE tl_log");
@@ -97,14 +98,16 @@ class Automator extends \System
 	 */
 	public function purgeImageCache()
 	{
-		$strTargetPath = \StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.image.target_dir'));
+		$container = System::getContainer();
+		$strTargetPath = StringUtil::stripRootDir($container->getParameter('contao.image.target_dir'));
+		$strRootDir = $container->getParameter('kernel.project_dir');
 
 		// Walk through the subfolders
-		foreach (scan(TL_ROOT . '/' . $strTargetPath) as $dir)
+		foreach (scan($strRootDir . '/' . $strTargetPath) as $dir)
 		{
 			if (strncmp($dir, '.', 1) !== 0)
 			{
-				$objFolder = new \Folder($strTargetPath . '/' . $dir);
+				$objFolder = new Folder($strTargetPath . '/' . $dir);
 				$objFolder->purge();
 			}
 		}
@@ -125,12 +128,12 @@ class Automator extends \System
 		foreach (array('assets/js', 'assets/css') as $dir)
 		{
 			// Purge the folder
-			$objFolder = new \Folder($dir);
+			$objFolder = new Folder($dir);
 			$objFolder->purge();
 		}
 
 		// Recreate the internal style sheets
-		$this->import('StyleSheets');
+		$this->import(StyleSheets::class, 'StyleSheets');
 		$this->StyleSheets->updateStyleSheets();
 
 		// Also empty the page cache so there are no links to deleted scripts
@@ -147,9 +150,9 @@ class Automator extends \System
 	 */
 	public function purgePageCache()
 	{
-		$strCacheDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('kernel.cache_dir'));
+		$strCacheDir = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
 
-		$objFolder = new \Folder($strCacheDir . '/http_cache');
+		$objFolder = new Folder($strCacheDir . '/http_cache');
 		$objFolder->purge();
 
 		// Add a log entry
@@ -161,9 +164,9 @@ class Automator extends \System
 	 */
 	public function purgeSearchCache()
 	{
-		$strCacheDir = \StringUtil::stripRootDir(\System::getContainer()->getParameter('kernel.cache_dir'));
+		$strCacheDir = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
 
-		$objFolder = new \Folder($strCacheDir . '/contao/search');
+		$objFolder = new Folder($strCacheDir . '/contao/search');
 		$objFolder->purge();
 
 		// Add a log entry
@@ -175,7 +178,7 @@ class Automator extends \System
 	 */
 	public function purgeInternalCache()
 	{
-		$container = \System::getContainer();
+		$container = System::getContainer();
 
 		$clearer = $container->get('contao.cache.clear_internal');
 		$clearer->clear($container->getParameter('kernel.cache_dir'));
@@ -190,11 +193,45 @@ class Automator extends \System
 	public function purgeTempFolder()
 	{
 		// Purge the folder
-		$objFolder = new \Folder('system/tmp');
+		$objFolder = new Folder('system/tmp');
 		$objFolder->purge();
 
 		// Add a log entry
 		$this->log('Purged the temp folder', __METHOD__, TL_CRON);
+	}
+
+	/**
+	 * Purge registrations that have not been activated within 24 hours
+	 */
+	public function purgeRegistrations()
+	{
+		$objMember = MemberModel::findExpiredRegistrations();
+
+		if ($objMember === null)
+		{
+			return;
+		}
+
+		while ($objMember->next())
+		{
+			$objMember->delete();
+		}
+
+		// Add a log entry
+		$this->log('Purged the unactivated member registrations', __METHOD__, TL_CRON);
+	}
+
+	/**
+	 * Purge opt-in tokens
+	 */
+	public function purgeOptInTokens()
+	{
+		/** @var OptIn $optIn */
+		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn->purgeTokens();
+
+		// Add a log entry
+		$this->log('Purged the expired double opt-in tokens', __METHOD__, TL_CRON);
 	}
 
 	/**
@@ -207,7 +244,7 @@ class Automator extends \System
 	public function purgeXmlFiles($blnReturn=false)
 	{
 		$arrFeeds = array();
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		// XML sitemaps
 		$objFeeds = $objDatabase->execute("SELECT sitemapName FROM tl_page WHERE type='root' AND createSitemap=1 AND sitemapName!=''");
@@ -230,7 +267,7 @@ class Automator extends \System
 		// Delete the old files
 		if (!$blnReturn)
 		{
-			$shareDir = \System::getContainer()->getParameter('contao.web_dir') . '/share';
+			$shareDir = System::getContainer()->getParameter('contao.web_dir') . '/share';
 
 			foreach (scan($shareDir) as $file)
 			{
@@ -239,7 +276,7 @@ class Automator extends \System
 					continue; // see #6652
 				}
 
-				$objFile = new \File(\StringUtil::stripRootDir($shareDir) . '/' . $file);
+				$objFile = new File(StringUtil::stripRootDir($shareDir) . '/' . $file);
 
 				if ($objFile->extension == 'xml' && !\in_array($objFile->filename, $arrFeeds))
 				{
@@ -258,8 +295,8 @@ class Automator extends \System
 	 */
 	public function generateSitemap($intId=0)
 	{
-		$time = \Date::floorToMinute();
-		$objDatabase = \Database::getInstance();
+		$time = Date::floorToMinute();
+		$objDatabase = Database::getInstance();
 
 		$this->purgeXmlFiles();
 
@@ -314,14 +351,14 @@ class Automator extends \System
 		// Create the XML file
 		while ($objRoot->next())
 		{
-			$objFile = new \File(\StringUtil::stripRootDir(\System::getContainer()->getParameter('contao.web_dir')) . '/share/' . $objRoot->sitemapName . '.xml');
+			$objFile = new File(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir')) . '/share/' . $objRoot->sitemapName . '.xml');
 
 			$objFile->truncate();
 			$objFile->append('<?xml version="1.0" encoding="UTF-8"?>');
 			$objFile->append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">');
 
 			// Find the searchable pages
-			$arrPages = \Backend::findSearchablePages($objRoot->id, '', true);
+			$arrPages = Backend::findSearchablePages($objRoot->id, '', true);
 
 			// HOOK: take additional pages
 			if (isset($GLOBALS['TL_HOOKS']['getSearchablePages']) && \is_array($GLOBALS['TL_HOOKS']['getSearchablePages']))
@@ -394,7 +431,7 @@ class Automator extends \System
 	 */
 	public function generateSymlinks()
 	{
-		$container = \System::getContainer();
+		$container = System::getContainer();
 
 		$command = $container->get('contao.command.symlinks');
 		$command->setContainer($container);
@@ -417,7 +454,7 @@ class Automator extends \System
 	 */
 	public function generateInternalCache()
 	{
-		$container = \System::getContainer();
+		$container = System::getContainer();
 
 		$warmer = $container->get('contao.cache.warm_internal');
 		$warmer->warmUp($container->getParameter('kernel.cache_dir'));
@@ -436,11 +473,12 @@ class Automator extends \System
 	{
 		@trigger_error('Using Automator::rotateLogs() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.', E_USER_DEPRECATED);
 
-		$arrFiles = preg_grep('/\.log$/', scan(TL_ROOT . '/system/logs'));
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$arrFiles = preg_grep('/\.log$/', scan($rootDir . '/system/logs'));
 
 		foreach ($arrFiles as $strFile)
 		{
-			$objFile = new \File('system/logs/' . $strFile . '.9');
+			$objFile = new File('system/logs/' . $strFile . '.9');
 
 			// Delete the oldest file
 			if ($objFile->exists())
@@ -453,16 +491,18 @@ class Automator extends \System
 			{
 				$strGzName = 'system/logs/' . $strFile . '.' . $i;
 
-				if (file_exists(TL_ROOT . '/' . $strGzName))
+				if (file_exists($rootDir . '/' . $strGzName))
 				{
-					$objFile = new \File($strGzName);
+					$objFile = new File($strGzName);
 					$objFile->renameTo('system/logs/' . $strFile . '.' . ($i+1));
 				}
 			}
 
 			// Add .1 to the latest file
-			$objFile = new \File('system/logs/' . $strFile);
+			$objFile = new File('system/logs/' . $strFile);
 			$objFile->renameTo('system/logs/' . $strFile . '.1');
 		}
 	}
 }
+
+class_alias(Automator::class, 'Automator');

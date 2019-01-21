@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,35 +14,24 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\ResponseExceptionListener;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
-/**
- * Tests the ResponseExceptionListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ResponseExceptionListenerTest extends TestCase
 {
-    /**
-     * Tests passing a response exception.
-     */
-    public function testAddsAResponseToTheEvent()
+    public function testAddsAResponseToTheEvent(): void
     {
-        $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new ResponseException(new Response('Foo'))
-        );
+        $event = $this->mockResponseEvent(new ResponseException(new Response('Foo')));
 
         $listener = new ResponseExceptionListener();
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
+        $this->assertTrue($event->isAllowingCustomResponseCode());
 
         $response = $event->getResponse();
 
@@ -48,21 +39,22 @@ class ResponseExceptionListenerTest extends TestCase
         $this->assertSame('Foo', $response->getContent());
     }
 
-    /**
-     * Tests passing a non-response exception.
-     */
-    public function testDoesNotAddAResponseToTheEventIfTheExceptionIsNotAResponseException()
+    public function testDoesNotAddAResponseToTheEventIfTheExceptionIsNotAResponseException(): void
     {
-        $event = new GetResponseForExceptionEvent(
-            $this->mockKernel(),
-            new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
-            new \RuntimeException()
-        );
+        $event = $this->mockResponseEvent(new \RuntimeException());
 
         $listener = new ResponseExceptionListener();
         $listener->onKernelException($event);
 
         $this->assertFalse($event->hasResponse());
+        $this->assertFalse($event->isAllowingCustomResponseCode());
+    }
+
+    private function mockResponseEvent(\Exception $exception): GetResponseForExceptionEvent
+    {
+        $kernel = $this->createMock(KernelInterface::class);
+        $request = new Request();
+
+        return new GetResponseForExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
     }
 }

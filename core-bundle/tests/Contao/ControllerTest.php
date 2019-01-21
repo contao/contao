@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,32 +16,9 @@ use Contao\Controller;
 use Contao\System;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the Controller class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- *
- * @group contao3
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
 class ControllerTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function setUp()
-    {
-        // Load the System class so it's not using the fixture
-        require __DIR__.'/../../src/Resources/contao/library/Contao/System.php';
-        class_alias(System::class, 'System');
-    }
-
-    /**
-     * Tests the time zones.
-     */
-    public function testReturnsTheTimeZones()
+    public function testReturnsTheTimeZones(): void
     {
         $timeZones = System::getTimeZones();
 
@@ -61,10 +40,7 @@ class ControllerTest extends TestCase
         $this->assertCount(13, $timeZones['United States']);
     }
 
-    /**
-     * Tests generating the margin.
-     */
-    public function testGeneratesTheMargin()
+    public function testGeneratesTheMargin(): void
     {
         $margins = [
             'top' => '40px',

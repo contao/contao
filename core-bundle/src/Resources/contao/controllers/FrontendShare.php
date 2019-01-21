@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FrontendShare extends \Frontend
+class FrontendShare extends Frontend
 {
 
 	/**
@@ -27,28 +27,30 @@ class FrontendShare extends \Frontend
 	 */
 	public function run()
 	{
-		switch (\Input::get('p'))
+		switch (Input::get('p'))
 		{
 			case 'facebook':
 				return new RedirectResponse(
 					'https://www.facebook.com/sharer/sharer.php'
-						. '?u=' . rawurlencode(\Input::get('u', true))
+						. '?u=' . rawurlencode(Input::get('u', true))
 				);
 
 			case 'twitter':
 				return new RedirectResponse(
 					'https://twitter.com/intent/tweet'
-						. '?url=' . rawurlencode(\Input::get('u', true))
-						. '&text=' . rawurlencode(\Input::get('t', true))
+						. '?url=' . rawurlencode(Input::get('u', true))
+						. '&text=' . rawurlencode(Input::get('t', true))
 				);
 
 			case 'gplus':
 				return new RedirectResponse(
 					'https://plus.google.com/share'
-						. '?url=' . rawurlencode(\Input::get('u', true))
+						. '?url=' . rawurlencode(Input::get('u', true))
 				);
 		}
 
 		return new RedirectResponse('../');
 	}
 }
+
+class_alias(FrontendShare::class, 'FrontendShare');

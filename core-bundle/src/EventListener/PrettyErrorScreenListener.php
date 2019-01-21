@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -21,27 +23,20 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageError404;
 use Contao\StringUtil;
-use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\AcceptHeader;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * Renders pretty error screens for exceptions.
- *
- * @author Christian Schiffler <https://github.com/discordier>
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PrettyErrorScreenListener
 {
     /**
@@ -65,11 +60,6 @@ class PrettyErrorScreenListener
     private $tokenStorage;
 
     /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -77,7 +67,7 @@ class PrettyErrorScreenListener
     /**
      * @var array
      */
-    private $mapper = [
+    private static $mapper = [
         ForwardPageNotFoundException::class => 'forward_page_not_found',
         IncompleteInstallationException::class => 'incomplete_installation',
         InsecureInstallationException::class => 'insecure_installation',
@@ -87,72 +77,48 @@ class PrettyErrorScreenListener
         NoRootPageFoundException::class => 'no_root_page_found',
     ];
 
-    /**
-     * Constructor.
-     *
-     * @param bool                     $prettyErrorScreens
-     * @param \Twig_Environment        $twig
-     * @param ContaoFrameworkInterface $framework
-     * @param TokenStorageInterface    $tokenStorage
-     * @param ScopeMatcher             $scopeMatcher
-     * @param LoggerInterface|null     $logger
-     */
-    public function __construct($prettyErrorScreens, \Twig_Environment $twig, ContaoFrameworkInterface $framework, TokenStorageInterface $tokenStorage, ScopeMatcher $scopeMatcher, LoggerInterface $logger = null)
+    public function __construct(bool $prettyErrorScreens, \Twig_Environment $twig, ContaoFrameworkInterface $framework, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;
         $this->tokenStorage = $tokenStorage;
-        $this->scopeMatcher = $scopeMatcher;
         $this->logger = $logger;
     }
 
     /**
      * Map an exception to an error screen.
-     *
-     * @param GetResponseForExceptionEvent $event
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(GetResponseForExceptionEvent $event): void
     {
-        if (!$event->isMasterRequest() || !$this->isSupportedRequest($event->getRequest())) {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
+        $request = $event->getRequest();
+
+        if ('html' !== $request->getRequestFormat()) {
+            return;
+        }
+
+        if (!AcceptHeader::fromString($request->headers->get('Accept'))->has('text/html')) {
             return;
         }
 
         $this->handleException($event);
     }
 
-    /**
-     * Checks if the request is supported.
-     *
-     * @param Request $request
-     *
-     * @return bool
-     */
-    private function isSupportedRequest(Request $request)
-    {
-        if ('html' !== $request->getRequestFormat()) {
-            return false;
-        }
-
-        if (!AcceptHeader::fromString($request->headers->get('Accept'))->has('text/html')) {
-            return false;
-        }
-
-        return $this->scopeMatcher->isContaoRequest($request);
-    }
-
-    /**
-     * Handles the exception.
-     *
-     * @param GetResponseForExceptionEvent $event
-     */
-    private function handleException(GetResponseForExceptionEvent $event)
+    private function handleException(GetResponseForExceptionEvent $event): void
     {
         $exception = $event->getException();
 
         switch (true) {
             case $this->isBackendUser():
                 $this->renderBackendException($event);
+                break;
+
+            case $exception instanceof UnauthorizedHttpException:
+                $this->renderErrorScreenByType(401, $event);
                 break;
 
             case $exception instanceof AccessDeniedHttpException:
@@ -172,12 +138,7 @@ class PrettyErrorScreenListener
         }
     }
 
-    /**
-     * Renders a back end exception.
-     *
-     * @param GetResponseForExceptionEvent $event
-     */
-    private function renderBackendException(GetResponseForExceptionEvent $event)
+    private function renderBackendException(GetResponseForExceptionEvent $event): void
     {
         $exception = $event->getException();
 
@@ -185,13 +146,7 @@ class PrettyErrorScreenListener
         $this->renderTemplate('backend', $this->getStatusCodeForException($exception), $event);
     }
 
-    /**
-     * Renders the error screen.
-     *
-     * @param int                          $type
-     * @param GetResponseForExceptionEvent $event
-     */
-    private function renderErrorScreenByType($type, GetResponseForExceptionEvent $event)
+    private function renderErrorScreenByType(int $type, GetResponseForExceptionEvent $event): void
     {
         static $processing;
 
@@ -208,14 +163,7 @@ class PrettyErrorScreenListener
         $processing = false;
     }
 
-    /**
-     * Returns the response of a Contao page handler.
-     *
-     * @param string $type
-     *
-     * @return Response|null
-     */
-    private function getResponseFromPageHandler($type)
+    private function getResponseFromPageHandler(int $type): ?Response
     {
         $this->framework->initialize();
 
@@ -239,10 +187,8 @@ class PrettyErrorScreenListener
 
     /**
      * Checks the exception chain for a known exception.
-     *
-     * @param GetResponseForExceptionEvent $event
      */
-    private function renderErrorScreenByException(GetResponseForExceptionEvent $event)
+    private function renderErrorScreenByException(GetResponseForExceptionEvent $event): void
     {
         $exception = $event->getException();
         $statusCode = $this->getStatusCodeForException($exception);
@@ -260,16 +206,9 @@ class PrettyErrorScreenListener
         $this->renderTemplate($template ?: 'error', $statusCode, $event);
     }
 
-    /**
-     * Maps an exception to a template.
-     *
-     * @param \Exception $exception
-     *
-     * @return string|null
-     */
-    private function getTemplateForException(\Exception $exception)
+    private function getTemplateForException(\Exception $exception): ?string
     {
-        foreach ($this->mapper as $class => $template) {
+        foreach (self::$mapper as $class => $template) {
             if ($exception instanceof $class) {
                 return $template;
             }
@@ -278,14 +217,7 @@ class PrettyErrorScreenListener
         return null;
     }
 
-    /**
-     * Renders a template and returns the response object.
-     *
-     * @param string                       $template
-     * @param int                          $statusCode
-     * @param GetResponseForExceptionEvent $event
-     */
-    private function renderTemplate($template, $statusCode, GetResponseForExceptionEvent $event)
+    private function renderTemplate(string $template, int $statusCode, GetResponseForExceptionEvent $event): void
     {
         if (!$this->prettyErrorScreens) {
             return;
@@ -294,41 +226,25 @@ class PrettyErrorScreenListener
         $view = '@ContaoCore/Error/'.$template.'.html.twig';
         $parameters = $this->getTemplateParameters($view, $statusCode, $event);
 
-        if (null === $parameters) {
+        try {
+            $event->setResponse(new Response($this->twig->render($view, $parameters), $statusCode));
+        } catch (\Twig_Error $e) {
             $event->setResponse(new Response($this->twig->render('@ContaoCore/Error/error.html.twig'), 500));
-        } else {
-            try {
-                $event->setResponse(new Response($this->twig->render($view, $parameters), $statusCode));
-            } catch (\Twig_Error $e) {
-                $event->setResponse(new Response($this->twig->render('@ContaoCore/Error/error.html.twig'), 500));
-            }
         }
     }
 
     /**
-     * Returns the template parameters.
-     *
-     * @param string                       $view
-     * @param int                          $statusCode
-     * @param GetResponseForExceptionEvent $event
-     *
-     * @return array|null
+     * @return array<string,string|int>
      */
-    private function getTemplateParameters($view, $statusCode, GetResponseForExceptionEvent $event)
+    private function getTemplateParameters(string $view, int $statusCode, GetResponseForExceptionEvent $event): array
     {
-        if (null === ($labels = $this->loadLanguageStrings())) {
-            return null;
-        }
-
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
-
         $encoded = StringUtil::encodeEmail($config->get('adminEmail'));
 
         return [
             'statusCode' => $statusCode,
             'statusName' => Response::$statusTexts[$statusCode],
-            'error' => $labels,
             'template' => $view,
             'base' => $event->getRequest()->getBasePath(),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
@@ -336,68 +252,31 @@ class PrettyErrorScreenListener
         ];
     }
 
-    /**
-     * Loads the language strings.
-     *
-     * @return array|null
-     */
-    private function loadLanguageStrings()
+    private function logException(\Exception $exception): void
     {
-        $this->framework->initialize();
-
-        System::loadLanguageFile('exception');
-
-        if (!isset($GLOBALS['TL_LANG']['XPT'])) {
-            return null;
-        }
-
-        return $GLOBALS['TL_LANG']['XPT'];
-    }
-
-    /**
-     * Logs the exception.
-     *
-     * @param \Exception $exception
-     */
-    private function logException(\Exception $exception)
-    {
-        if (null === $this->logger || !$this->isLoggable($exception)) {
+        if (Kernel::VERSION_ID >= 40100 || null === $this->logger || !$this->isLoggable($exception)) {
             return;
         }
 
         $this->logger->critical('An exception occurred.', ['exception' => $exception]);
     }
 
-    /**
-     * Checks if an extension is loggable.
-     *
-     * @param \Exception $exception
-     *
-     * @return bool
-     */
-    private function isLoggable(\Exception $exception)
+    private function isLoggable(\Exception $exception): bool
     {
         do {
             if ($exception instanceof ForwardPageNotFoundException) {
                 return true;
             }
 
-            foreach (array_keys($this->mapper) as $class) {
-                if ($exception instanceof $class) {
-                    return false;
-                }
+            if (isset(self::$mapper[\get_class($exception)])) {
+                return false;
             }
         } while (null !== ($exception = $exception->getPrevious()));
 
         return true;
     }
 
-    /**
-     * Checks if the user is a back end user.
-     *
-     * @return bool
-     */
-    private function isBackendUser()
+    private function isBackendUser(): bool
     {
         $token = $this->tokenStorage->getToken();
 
@@ -414,15 +293,12 @@ class PrettyErrorScreenListener
         return $user instanceof BackendUser;
     }
 
-    /**
-     * Returns the status code for an exception.
-     *
-     * @param \Exception $exception
-     *
-     * @return int
-     */
-    private function getStatusCodeForException(\Exception $exception)
+    private function getStatusCodeForException(\Exception $exception): int
     {
-        return $exception instanceof HttpException ? $exception->getStatusCode() : 500;
+        if ($exception instanceof HttpException) {
+            return (int) $exception->getStatusCode();
+        }
+
+        return 500;
     }
 }

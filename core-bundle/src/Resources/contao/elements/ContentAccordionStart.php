@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentAccordionStart extends \ContentElement
+class ContentAccordionStart extends ContentElement
 {
 
 	/**
@@ -33,14 +33,11 @@ class ContentAccordionStart extends \ContentElement
 		{
 			$this->strTemplate = 'be_wildcard';
 
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate($this->strTemplate);
-
-			$this->Template = $objTemplate;
+			$this->Template = new BackendTemplate($this->strTemplate);
 			$this->Template->title = $this->mooHeadline;
 		}
 
-		$classes = \StringUtil::deserialize($this->mooClasses);
+		$classes = StringUtil::deserialize($this->mooClasses);
 
 		$this->Template->toggler = $classes[0] ?: 'toggler';
 		$this->Template->accordion = $classes[1] ?: 'accordion';
@@ -48,3 +45,5 @@ class ContentAccordionStart extends \ContentElement
 		$this->Template->headline = $this->mooHeadline;
 	}
 }
+
+class_alias(ContentAccordionStart::class, 'ContentAccordionStart');

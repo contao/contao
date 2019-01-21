@@ -9,6 +9,8 @@ services:
 
     contao.command.automator:
         class: Contao\CoreBundle\Command\AutomatorCommand
+        arguments:
+            - "@contao.framework"
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
@@ -19,6 +21,7 @@ services:
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%contao.image.target_dir%'
+        public: true
 
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand
@@ -27,6 +30,8 @@ services:
             - '%contao.upload_path%'
             - '%kernel.logs_dir%'
             - '@contao.resource_finder'
+            - '@event_dispatcher'
+        public: true
 
     contao.command.user_password_command:
         class: Contao\CoreBundle\Command\UserPasswordCommand
@@ -35,5 +40,3 @@ services:
 
     contao.command.version:
         class: Contao\CoreBundle\Command\VersionCommand
-        arguments:
-            - '%kernel.packages%'

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,88 +12,66 @@
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
+use Contao\CoreBundle\Asset\ContaoContext;
+use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
+use Contao\FilesModel;
+use Contao\Image\PictureGenerator;
+use Contao\Image\ResizeCalculator;
+use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Contao\Picture;
 use Contao\System;
+use Imagine\Gd\Imagine as ImagineGd;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Tests the Picture class.
- *
- * @author Martin Auswöger <https://github.com/ausi>
- * @author Yanick Witschi <https://github.com/Toflar>
- *
- * @group contao3
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
 class PictureTest extends TestCase
 {
-    private static $rootDir;
-
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
-        self::$rootDir = __DIR__.'/../../tmp';
+        parent::setUpBeforeClass();
 
         $fs = new Filesystem();
-        $fs->mkdir(self::$rootDir);
-        $fs->mkdir(self::$rootDir.'/assets');
-        $fs->mkdir(self::$rootDir.'/assets/images');
+        $fs->mkdir(static::getTempDir().'/assets');
+        $fs->mkdir(static::getTempDir().'/assets/images');
 
         foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'] as $subdir) {
-            $fs->mkdir(self::$rootDir.'/assets/images/'.$subdir);
+            $fs->mkdir(static::getTempDir().'/assets/images/'.$subdir);
         }
 
-        $fs->mkdir(self::$rootDir.'/system');
-        $fs->mkdir(self::$rootDir.'/system/tmp');
+        $fs->mkdir(static::getTempDir().'/system');
+        $fs->mkdir(static::getTempDir().'/system/tmp');
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function tearDownAfterClass()
-    {
-        $fs = new Filesystem();
-        $fs->remove(self::$rootDir);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        copy(__DIR__.'/../Fixtures/images/dummy.jpg', self::$rootDir.'/dummy.jpg');
+        copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy.jpg');
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
         $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
 
-        \define('TL_ERROR', 'ERROR');
-        \define('TL_FILES_URL', 'http://example.com/');
-        \define('TL_ROOT', self::$rootDir);
-
-        $container = $this->mockContainerWithContaoScopes();
-        $this->addImageServicesToContainer($container, self::$rootDir);
-
-        System::setContainer($container);
+        System::setContainer($this->mockContainerWithImageServices());
     }
 
     /**
-     * Tests returning the template data.
-     *
      * @group legacy
      *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
-    public function testReturnsTheTemplateData()
+    public function testReturnsTheTemplateData(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
 
@@ -112,13 +92,11 @@ class PictureTest extends TestCase
     }
 
     /**
-     * Tests returning the template data for an image.
-     *
      * @group legacy
      *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
-    public function testHandlesImages()
+    public function testHandlesImages(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
 
@@ -144,13 +122,11 @@ class PictureTest extends TestCase
     }
 
     /**
-     * Tests returning the template data for an image with sources.
-     *
      * @group legacy
      *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
-    public function testHandlesImagesWithSources()
+    public function testHandlesImagesWithSources(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
 
@@ -211,13 +187,11 @@ class PictureTest extends TestCase
     }
 
     /**
-     * Tests returning the template data for an image with densities.
-     *
      * @group legacy
      *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
-    public function testHandlesImagesWithDensities()
+    public function testHandlesImagesWithDensities(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
 
@@ -242,13 +216,11 @@ class PictureTest extends TestCase
     }
 
     /**
-     * Tests returning the template data for an image with densities and sizes.
-     *
      * @group legacy
      *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
-    public function testHandlesImagesWithDensitiesAndSizes()
+    public function testHandlesImagesWithDensitiesAndSizes(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
 
@@ -275,15 +247,13 @@ class PictureTest extends TestCase
     }
 
     /**
-     * Tests that file names are encoded.
-     *
      * @group legacy
      *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
-    public function testEncodesFileNames()
+    public function testEncodesFileNames(): void
     {
-        copy(__DIR__.'/../Fixtures/images/dummy.jpg', self::$rootDir.'/dummy with spaces.jpg');
+        copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy with spaces.jpg');
 
         $picture = new Picture(new File('dummy with spaces.jpg'));
 
@@ -304,13 +274,11 @@ class PictureTest extends TestCase
     }
 
     /**
-     * Tests the old resize mode.
-     *
      * @group legacy
      *
      * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
-    public function testSupportsTheOldResizeMode()
+    public function testSupportsTheOldResizeMode(): void
     {
         $picture = new Picture(new File('dummy.jpg'));
 
@@ -333,5 +301,49 @@ class PictureTest extends TestCase
         );
 
         $this->assertSame([], $pictureData['sources']);
+    }
+
+    private function mockContainerWithImageServices(): ContainerBuilder
+    {
+        $filesystem = new Filesystem();
+
+        $adapters = [
+            Config::class => $this->mockConfiguredAdapter(['get' => 3000]),
+            FilesModel::class => $this->mockConfiguredAdapter(['findByPath' => null]),
+        ];
+
+        $context = $this->createMock(ContaoContext::class);
+        $context
+            ->method('getStaticUrl')
+            ->willReturn('http://example.com/')
+        ;
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $container = $this->mockContainer($this->getTempDir());
+        $container->setParameter('contao.web_dir', $this->getTempDir().'/web');
+        $container->setParameter('contao.image.target_dir', $this->getTempDir().'/assets/images');
+        $container->set('contao.assets.files_context', $context);
+
+        $resizer = new LegacyResizer($container->getParameter('contao.image.target_dir'), new ResizeCalculator());
+        $resizer->setFramework($framework);
+
+        $imageFactory = new ImageFactory(
+            $resizer,
+            new ImagineGd(),
+            new ImagineSvg(),
+            $filesystem,
+            $framework,
+            $container->getParameter('contao.image.bypass_cache'),
+            $container->getParameter('contao.image.imagine_options'),
+            $container->getParameter('contao.image.valid_extensions')
+        );
+
+        $pictureGenerator = new PictureGenerator($resizer);
+
+        $container->set('contao.image.image_factory', $imageFactory);
+        $container->set('contao.image.picture_generator', $pictureGenerator);
+
+        return $container;
     }
 }

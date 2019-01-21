@@ -28,7 +28,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class DcaExtractor extends \Controller
+class DcaExtractor extends Controller
 {
 
 	/**
@@ -109,7 +109,7 @@ class DcaExtractor extends \Controller
 
 		$this->strTable = $strTable;
 
-		$strFile = \System::getContainer()->getParameter('kernel.cache_dir') . '/contao/sql/' . $strTable . '.php';
+		$strFile = System::getContainer()->getParameter('kernel.cache_dir') . '/contao/sql/' . $strTable . '.php';
 
 		// Try to load from cache
 		if (file_exists($strFile))
@@ -309,19 +309,12 @@ class DcaExtractor extends \Controller
 			// Handle multi-column indexes (see #5556)
 			if (strpos($k, ',') !== false)
 			{
-				$f = array_map($quote, \StringUtil::trimsplit(',', $k));
+				$f = array_map($quote, StringUtil::trimsplit(',', $k));
 				$k = str_replace(',', '_', $k);
 			}
 			else
 			{
 				$f = array($quote($k));
-			}
-
-			// Handle key lengths (see #221)
-			if (preg_match('/\([0-9]+\)/', $v))
-			{
-				list($v, $length) = explode('(', rtrim($v, ')'));
-				$f = array($quote($k) . '(' . $length . ')');
 			}
 
 			if ($v == 'primary')
@@ -353,6 +346,10 @@ class DcaExtractor extends \Controller
 			elseif ($k == 'charset')
 			{
 				$return['TABLE_OPTIONS'] .= ' DEFAULT CHARSET=' . $v;
+			}
+			elseif ($k == 'collate')
+			{
+				$return['TABLE_OPTIONS'] .= ' COLLATE ' . $v;
 			}
 		}
 
@@ -429,8 +426,8 @@ class DcaExtractor extends \Controller
 			}
 		}
 
-		$sql = isset($GLOBALS['TL_DCA'][$this->strTable]['config']['sql']) ? $GLOBALS['TL_DCA'][$this->strTable]['config']['sql'] : array();
-		$fields = isset($GLOBALS['TL_DCA'][$this->strTable]['fields']) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'] : array();
+		$sql = $GLOBALS['TL_DCA'][$this->strTable]['config']['sql'] ?? array();
+		$fields = $GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array();
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($blnFromFile)
@@ -443,7 +440,7 @@ class DcaExtractor extends \Controller
 
 				try
 				{
-					$files = \System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
+					$files = System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
 				}
 				catch (\InvalidArgumentException $e)
 				{
@@ -452,7 +449,7 @@ class DcaExtractor extends \Controller
 
 				foreach ($files as $file)
 				{
-					$arrSql = array_merge_recursive($arrSql, \SqlFileParser::parse($file));
+					$arrSql = array_merge_recursive($arrSql, SqlFileParser::parse($file));
 				}
 
 				static::$arrSql = $arrSql;
@@ -506,21 +503,28 @@ class DcaExtractor extends \Controller
 			return;
 		}
 
+		$params = System::getContainer()->get('database_connection')->getParams();
+
 		// Add the default engine and charset if none is given
 		if (empty($sql['engine']))
 		{
-			$sql['engine'] = 'MyISAM';
+			$sql['engine'] = $params['defaultTableOptions']['engine'] ?? 'InnoDB';
 		}
 		if (empty($sql['charset']))
 		{
-			$sql['charset'] = \Config::get('dbCharset');
+			$sql['charset'] = $params['defaultTableOptions']['charset'] ?? 'utf8mb4';
+		}
+		if (empty($sql['collate']))
+		{
+			$sql['collate'] = $params['defaultTableOptions']['collate'] ?? 'utf8mb4_unicode_ci';
 		}
 
 		// Meta
 		$this->arrMeta = array
 		(
-			'engine'  => $sql['engine'],
-			'charset' => $sql['charset']
+			'engine' => $sql['engine'],
+			'charset' => $sql['charset'],
+			'collate' => $sql['collate']
 		);
 
 		// Fields
@@ -585,3 +589,5 @@ class DcaExtractor extends \Controller
 		$this->blnIsDbTable = true;
 	}
 }
+
+class_alias(DcaExtractor::class, 'DcaExtractor');

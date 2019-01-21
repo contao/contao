@@ -49,14 +49,6 @@
         <source>Name of the initiating function</source>
         <target>Имя инициирующий функции</target>
       </trans-unit>
-      <trans-unit id="tl_log.ip.0">
-        <source>IP address</source>
-        <target>IP-адрес</target>
-      </trans-unit>
-      <trans-unit id="tl_log.ip.1">
-        <source>IP address of the user</source>
-        <target>IP-адрес пользователя</target>
-      </trans-unit>
       <trans-unit id="tl_log.browser.0">
         <source>Browser</source>
         <target>Браузер</target>

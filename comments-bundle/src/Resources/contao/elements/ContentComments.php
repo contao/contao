@@ -19,7 +19,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentComments extends \ContentElement
+class ContentComments extends ContentElement
 {
 
 	/**
@@ -37,9 +37,7 @@ class ContentComments extends \ContentElement
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('be_wildcard');
-
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['comments'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 
@@ -54,7 +52,7 @@ class ContentComments extends \ContentElement
 	 */
 	protected function compile()
 	{
-		$this->import('Comments');
+		$this->import(Comments::class, 'Comments');
 		$objConfig = new \stdClass();
 
 		$objConfig->perPage = $this->com_perPage;
@@ -68,3 +66,5 @@ class ContentComments extends \ContentElement
 		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_content', $this->id, $GLOBALS['TL_ADMIN_EMAIL']);
 	}
 }
+
+class_alias(ContentComments::class, 'ContentComments');

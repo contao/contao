@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>Подразумевана поставка је да се коментари сортирају у растућем редоследу, почевши од најстаријег.</target>
+        <target>По основној поставци, коментари се сортирају у растућем редоследу, почев од најстаријег.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.perPage.0">
         <source>Comments per page</source>
@@ -55,19 +55,19 @@
       </trans-unit>
       <trans-unit id="tl_calendar.moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Одобри коментаре пре него што постану видљиви на сајту.</target>
+        <target>Дозволи коментаре пре него што буду објављени на сајту.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.bbcode.0">
         <source>Allow BBCode</source>
-        <target>Дозволи употребу BBCode</target>
+        <target>Дозволи BBCode</target>
       </trans-unit>
       <trans-unit id="tl_calendar.bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Корисници могу да користе BBCode у својим коментарима.</target>
+        <target>Дозволи корисницима да користе BBCode у својим коментарима.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.0">
         <source>Require login to comment</source>
-        <target>Захтевај пријаву ради коментарисања</target>
+        <target>Захтевај пријављивање ради коментарисања</target>
       </trans-unit>
       <trans-unit id="tl_calendar.requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
-        <target>Користи ову опцију само ако су коментари ограничени на пријављене кориснике.</target>
+        <target>Користи ову опцију само ако су коментари ограничени на аутентификоване кориснике.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.protected.0">
         <source>Protect calendar</source>
@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.tstamp.0">
         <source>Revision date</source>
-        <target>Датум ревизије</target>
+        <target>Датум последње верзије</target>
       </trans-unit>
       <trans-unit id="tl_calendar.tstamp.1">
         <source>Date and time of the latest revision</source>
@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.title_legend">
         <source>Title and redirect page</source>
-        <target>Назив и страница преусмеравања</target>
+        <target>Назив и страница преусмерења</target>
       </trans-unit>
       <trans-unit id="tl_calendar.comments_legend">
         <source>Comments</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.source_teaser">
         <source>Event teasers</source>
-        <target>Тизер догађаја</target>
+        <target>Тизери догађаја</target>
       </trans-unit>
       <trans-unit id="tl_calendar.source_text">
         <source>Full articles</source>
@@ -191,7 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.0">
         <source>RSS feeds</source>
-        <target>RSS сажетак</target>
+        <target>RSS сажеци</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage RSS feeds</source>

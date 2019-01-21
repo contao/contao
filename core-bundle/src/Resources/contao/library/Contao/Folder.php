@@ -33,7 +33,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Folder extends \System
+class Folder extends System
 {
 
 	/**
@@ -47,6 +47,12 @@ class Folder extends \System
 	 * @var FilesModel
 	 */
 	protected $objModel;
+
+	/**
+	 * Root dir
+	 * @var string
+	 */
+	protected $strRootDir;
 
 	/**
 	 * Pathinfo
@@ -71,17 +77,19 @@ class Folder extends \System
 			$strFolder = '';
 		}
 
+		$this->strRootDir = System::getContainer()->getParameter('kernel.project_dir');
+
 		// Check whether it is a directory
-		if (is_file(TL_ROOT . '/' . $strFolder))
+		if (is_file($this->strRootDir . '/' . $strFolder))
 		{
 			throw new \Exception(sprintf('File "%s" is not a directory', $strFolder));
 		}
 
-		$this->import('Files');
+		$this->import(Files::class, 'Files');
 		$this->strFolder = $strFolder;
 
 		// Create the folder if it does not exist
-		if (!is_dir(TL_ROOT . '/' . $this->strFolder))
+		if (!is_dir($this->strRootDir . '/' . $this->strFolder))
 		{
 			$strPath = '';
 			$arrChunks = explode('/', $this->strFolder);
@@ -94,9 +102,9 @@ class Folder extends \System
 			}
 
 			// Update the database
-			if (\Dbafs::shouldBeSynchronized($this->strFolder))
+			if (Dbafs::shouldBeSynchronized($this->strFolder))
 			{
-				$this->objModel = \Dbafs::addResource($this->strFolder);
+				$this->objModel = Dbafs::addResource($this->strFolder);
 			}
 		}
 	}
@@ -146,15 +154,15 @@ class Folder extends \System
 				break;
 
 			case 'ctime':
-				return filectime(TL_ROOT . '/' . $this->strFolder);
+				return filectime($this->strRootDir . '/' . $this->strFolder);
 				break;
 
 			case 'mtime':
-				return filemtime(TL_ROOT . '/' . $this->strFolder);
+				return filemtime($this->strRootDir . '/' . $this->strFolder);
 				break;
 
 			case 'atime':
-				return fileatime(TL_ROOT . '/' . $this->strFolder);
+				return fileatime($this->strRootDir . '/' . $this->strFolder);
 				break;
 
 			default:
@@ -170,7 +178,7 @@ class Folder extends \System
 	 */
 	public function isEmpty()
 	{
-		return \count(scan(TL_ROOT . '/' . $this->strFolder, true)) < 1;
+		return \count(scan($this->strRootDir . '/' . $this->strFolder, true)) < 1;
 	}
 
 	/**
@@ -181,9 +189,9 @@ class Folder extends \System
 		$this->Files->rrdir($this->strFolder, true);
 
 		// Update the database
-		if (\Dbafs::shouldBeSynchronized($this->strFolder))
+		if (Dbafs::shouldBeSynchronized($this->strFolder))
 		{
-			$objFiles = \FilesModel::findMultipleByBasepath($this->strFolder . '/');
+			$objFiles = FilesModel::findMultipleByBasepath($this->strFolder . '/');
 
 			if ($objFiles !== null)
 			{
@@ -193,7 +201,7 @@ class Folder extends \System
 				}
 			}
 
-			\Dbafs::updateFolderHashes($this->strFolder);
+			Dbafs::updateFolderHashes($this->strFolder);
 		}
 	}
 
@@ -218,9 +226,9 @@ class Folder extends \System
 		$this->Files->rrdir($this->strFolder);
 
 		// Update the database
-		if (\Dbafs::shouldBeSynchronized($this->strFolder))
+		if (Dbafs::shouldBeSynchronized($this->strFolder))
 		{
-			\Dbafs::deleteResource($this->strFolder);
+			Dbafs::deleteResource($this->strFolder);
 		}
 	}
 
@@ -248,29 +256,29 @@ class Folder extends \System
 		$strParent = \dirname($strNewName);
 
 		// Create the parent folder if it does not exist
-		if (!is_dir(TL_ROOT . '/' . $strParent))
+		if (!is_dir($this->strRootDir . '/' . $strParent))
 		{
-			new \Folder($strParent);
+			new self($strParent);
 		}
 
 		$return = $this->Files->rename($this->strFolder, $strNewName);
 
 		// Update the database AFTER the folder has been renamed
-		$syncSource = \Dbafs::shouldBeSynchronized($this->strFolder);
-		$syncTarget = \Dbafs::shouldBeSynchronized($strNewName);
+		$syncSource = Dbafs::shouldBeSynchronized($this->strFolder);
+		$syncTarget = Dbafs::shouldBeSynchronized($strNewName);
 
 		// Synchronize the database
 		if ($syncSource && $syncTarget)
 		{
-			$this->objModel = \Dbafs::moveResource($this->strFolder, $strNewName);
+			$this->objModel = Dbafs::moveResource($this->strFolder, $strNewName);
 		}
 		elseif ($syncSource)
 		{
-			$this->objModel = \Dbafs::deleteResource($this->strFolder);
+			$this->objModel = Dbafs::deleteResource($this->strFolder);
 		}
 		elseif ($syncTarget)
 		{
-			$this->objModel = \Dbafs::addResource($strNewName);
+			$this->objModel = Dbafs::addResource($strNewName);
 		}
 
 		// Reset the object AFTER the database has been updated
@@ -294,24 +302,24 @@ class Folder extends \System
 		$strParent = \dirname($strNewName);
 
 		// Create the parent folder if it does not exist
-		if (!is_dir(TL_ROOT . '/' . $strParent))
+		if (!is_dir($this->strRootDir . '/' . $strParent))
 		{
-			new \Folder($strParent);
+			new self($strParent);
 		}
 
 		$this->Files->rcopy($this->strFolder, $strNewName);
 
 		// Update the database AFTER the folder has been renamed
-		$syncSource = \Dbafs::shouldBeSynchronized($this->strFolder);
-		$syncTarget = \Dbafs::shouldBeSynchronized($strNewName);
+		$syncSource = Dbafs::shouldBeSynchronized($this->strFolder);
+		$syncTarget = Dbafs::shouldBeSynchronized($strNewName);
 
 		if ($syncSource && $syncTarget)
 		{
-			\Dbafs::copyResource($this->strFolder, $strNewName);
+			Dbafs::copyResource($this->strFolder, $strNewName);
 		}
 		elseif ($syncTarget)
 		{
-			\Dbafs::addResource($strNewName);
+			Dbafs::addResource($strNewName);
 		}
 
 		return true;
@@ -319,14 +327,23 @@ class Folder extends \System
 
 	/**
 	 * Protect the folder by removing the .public file
+	 *
+	 * @throws \RuntimeException If one of the parent folders is public
 	 */
 	public function protect()
 	{
-		if (file_exists(TL_ROOT . '/' . $this->strFolder . '/.public'))
+		if (!$this->isUnprotected())
 		{
-			$objFile = new \File($this->strFolder . '/.public');
-			$objFile->delete();
+			return;
 		}
+
+		// Check if the .public file exists
+		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.public'))
+		{
+			throw new \RuntimeException(sprintf('Cannot protect folder "%s" because one of its parent folders is public', $this->strFolder));
+		}
+
+		(new File($this->strFolder . '/.public'))->delete();
 	}
 
 	/**
@@ -334,10 +351,88 @@ class Folder extends \System
 	 */
 	public function unprotect()
 	{
-		if (!file_exists(TL_ROOT . '/' . $this->strFolder . '/.public'))
+		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
-			\File::putContent($this->strFolder . '/.public', '');
+			System::getContainer()->get('filesystem')->touch($this->strRootDir . '/' . $this->strFolder . '/.public');
 		}
+	}
+
+	/**
+	 * Check if the folder or any parent folder contains a .public file
+	 *
+	 * @return bool
+	 */
+	public function isUnprotected()
+	{
+		$path = $this->strFolder;
+
+		do
+		{
+			if (file_exists($this->strRootDir . '/' . $path . '/.public'))
+			{
+				return true;
+			}
+
+			$path = \dirname($path);
+		}
+		while ($path != '.');
+
+		return false;
+	}
+
+	/**
+	 * Synchronize the folder by removing the .nosync file
+	 *
+	 * @throws \RuntimeException If one of the parent folders is unsynchronized
+	 */
+	public function synchronize()
+	{
+		if (!$this->isUnsynchronized())
+		{
+			return;
+		}
+
+		// Check if the .nosync file exists
+		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.nosync'))
+		{
+			throw new \RuntimeException(sprintf('Cannot synchronize the folder "%s" because one of its parent folders is unsynchronized', $this->strFolder));
+		}
+
+		(new File($this->strFolder . '/.nosync'))->delete();
+	}
+
+	/**
+	 * Unsynchronize the folder by adding a .nosync file
+	 */
+	public function unsynchronize()
+	{
+		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.nosync'))
+		{
+			System::getContainer()->get('filesystem')->touch($this->strRootDir . '/' . $this->strFolder . '/.nosync');
+		}
+	}
+
+	/**
+	 * Check if the folder or any parent folder contains a .nosync file
+	 *
+	 * @return bool
+	 */
+	public function isUnsynchronized()
+	{
+		$path = $this->strFolder;
+
+		do
+		{
+			if (file_exists($this->strRootDir . '/' . $path . '/.nosync'))
+			{
+				return true;
+			}
+
+			$path = \dirname($path);
+		}
+		while ($path != '.');
+
+		return false;
 	}
 
 	/**
@@ -347,9 +442,9 @@ class Folder extends \System
 	 */
 	public function getModel()
 	{
-		if ($this->objModel === null && \Dbafs::shouldBeSynchronized($this->strFolder))
+		if ($this->objModel === null && Dbafs::shouldBeSynchronized($this->strFolder))
 		{
-			$this->objModel = \FilesModel::findByPath($this->strFolder);
+			$this->objModel = FilesModel::findByPath($this->strFolder);
 		}
 
 		return $this->objModel;
@@ -371,7 +466,7 @@ class Folder extends \System
 		/** @var \SplFileInfo[] $it */
 		$it = new \RecursiveIteratorIterator(
 			new \RecursiveDirectoryIterator(
-				TL_ROOT . '/' . $this->strFolder,
+				$this->strRootDir . '/' . $this->strFolder,
 				\FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
 			), \RecursiveIteratorIterator::SELF_FIRST
 		);
@@ -380,7 +475,7 @@ class Folder extends \System
 		{
 			if (strncmp($i->getFilename(), '.', 1) !== 0)
 			{
-				$arrFiles[] = substr($i->getPathname(), \strlen(TL_ROOT . '/' . $this->strFolder . '/'));
+				$arrFiles[] = substr($i->getPathname(), \strlen($this->strRootDir . '/' . $this->strFolder . '/'));
 			}
 		}
 
@@ -396,21 +491,21 @@ class Folder extends \System
 	{
 		$intSize = 0;
 
-		foreach (scan(TL_ROOT . '/' . $this->strFolder, true) as $strFile)
+		foreach (scan($this->strRootDir . '/' . $this->strFolder, true) as $strFile)
 		{
 			if (strncmp($strFile, '.', 1) === 0)
 			{
 				continue;
 			}
 
-			if (is_dir(TL_ROOT . '/' . $this->strFolder . '/' . $strFile))
+			if (is_dir($this->strRootDir . '/' . $this->strFolder . '/' . $strFile))
 			{
-				$objFolder = new \Folder($this->strFolder . '/' . $strFile);
+				$objFolder = new self($this->strFolder . '/' . $strFile);
 				$intSize += $objFolder->size;
 			}
 			else
 			{
-				$objFile = new \File($this->strFolder . '/' . $strFile);
+				$objFile = new File($this->strFolder . '/' . $strFile);
 				$intSize += $objFile->size;
 			}
 		}
@@ -427,7 +522,7 @@ class Folder extends \System
 	 */
 	public function shouldBeSynchronized()
 	{
-		return \Dbafs::shouldBeSynchronized($this->strFolder);
+		return Dbafs::shouldBeSynchronized($this->strFolder);
 	}
 
 	/**
@@ -446,7 +541,7 @@ class Folder extends \System
 
 		if (isset($matches[1]))
 		{
-			$return['dirname'] = TL_ROOT . '/' . $matches[1]; // see #8325
+			$return['dirname'] = $this->strRootDir . '/' . $matches[1]; // see #8325
 		}
 
 		if (isset($matches[2]))
@@ -458,3 +553,5 @@ class Folder extends \System
 		return $return;
 	}
 }
+
+class_alias(Folder::class, 'Folder');

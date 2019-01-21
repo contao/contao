@@ -8,7 +8,7 @@
   <?php endif; ?>
 
   <?php if ($this->hasSubHeadline): ?>
-    <h2><?= $this->subHeadline ?></h2>
+    <h2 itemprop="headline"><?= $this->subHeadline ?></h2>
   <?php endif; ?>
 
   <?php if ($this->hasText): ?>

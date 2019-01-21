@@ -27,18 +27,18 @@ use Symfony\Component\VarDumper\VarDumper;
  *     $template->name = 'Leo Feyer';
  *     $template->output();
  *
- * @property string $style
- * @property array  $cssID
- * @property string $class
- * @property string $inColumn
- * @property string $headline
- * @property array  $hl
+ * @property string       $style
+ * @property array|string $cssID
+ * @property string       $class
+ * @property string       $inColumn
+ * @property string       $headline
+ * @property array        $hl
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Template extends \Controller
+abstract class Template extends Controller
 {
-	use \TemplateInheritance;
+	use TemplateInheritance;
 
 	/**
 	 * Output buffer
@@ -280,7 +280,7 @@ abstract class Template extends \Controller
 
 		$this->compile();
 
-		header('Content-Type: ' . $this->strContentType . '; charset=' . \Config::get('characterSet'));
+		header('Content-Type: ' . $this->strContentType . '; charset=' . Config::get('characterSet'));
 
 		echo $this->strBuffer;
 
@@ -313,10 +313,40 @@ abstract class Template extends \Controller
 	 */
 	public function route($strName, $arrParams=array())
 	{
-		$strUrl = \System::getContainer()->get('router')->generate($strName, $arrParams);
-		$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
+		$strUrl = System::getContainer()->get('router')->generate($strName, $arrParams);
+		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
 		return ampersand($strUrl);
+	}
+
+	/**
+	 * Returns a translated message
+	 *
+	 * @param string $strId
+	 * @param array  $arrParams
+	 * @param string $strDomain
+	 *
+	 * @return string
+	 */
+	public function trans($strId, array $arrParams=array(), $strDomain='contao_default')
+	{
+		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
+	}
+
+	/**
+	 * Returns an asset path
+	 *
+	 * @param string      $path
+	 * @param string|null $packageName
+	 *
+	 * @return string
+	 */
+	public function asset($path, $packageName = null)
+	{
+		$url = System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
+
+		// Contao paths are relative to the <base> tag, so remove leading slashes
+		return ltrim($url, '/');
 	}
 
 	/**
@@ -330,9 +360,6 @@ abstract class Template extends \Controller
 		{
 			$this->strBuffer = $this->parse();
 		}
-
-		// Minify the markup
-		$this->strBuffer = $this->minifyHtml($this->strBuffer);
 	}
 
 	/**
@@ -354,8 +381,7 @@ abstract class Template extends \Controller
 	 */
 	public function minifyHtml($strHtml)
 	{
-		// The feature has been disabled
-		if (!\Config::get('minifyMarkup') || \Config::get('debugMode'))
+		if (Config::get('debugMode'))
 		{
 			return $strHtml;
 		}
@@ -450,11 +476,39 @@ abstract class Template extends \Controller
 	 *
 	 * @param string $href  The script path
 	 * @param string $media The media type string
+	 * @param mixed  $mtime The file mtime
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateStyleTag($href, $media=null)
+	public static function generateStyleTag($href, $media=null, $mtime=false)
 	{
+		// Add the filemtime if not given and not an external file
+		if ($mtime === null && !preg_match('@^https?://@', $href))
+		{
+			$container = System::getContainer();
+			$rootDir = $container->getParameter('kernel.project_dir');
+
+			if (file_exists($rootDir . '/' . $href))
+			{
+				$mtime = filemtime($rootDir . '/' . $href);
+			}
+			else
+			{
+				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
+
+				// Handle public bundle resources in web/
+				if (file_exists($rootDir . '/' . $webDir . '/' . $href))
+				{
+					$mtime = filemtime($rootDir . '/' . $webDir . '/' . $href);
+				}
+			}
+		}
+
+		if ($mtime)
+		{
+			$href .= '?v=' . substr(md5($mtime), 0, 8);
+		}
+
 		return '<link rel="stylesheet" href="' . $href . '"' . (($media && $media != 'all') ? ' media="' . $media . '"' : '') . '>';
 	}
 
@@ -473,14 +527,45 @@ abstract class Template extends \Controller
 	/**
 	 * Generate the markup for a JavaScript tag
 	 *
-	 * @param string  $src   The script path
-	 * @param boolean $async True to add the async attribute
+	 * @param string      $src   The script path
+	 * @param boolean     $async True to add the async attribute
+	 * @param mixed       $mtime The file mtime
+	 * @param string|null $hash  An optional integrity hash
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateScriptTag($src, $async=false)
+	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null)
 	{
-		return '<script src="' . $src . '"' . ($async ? ' async' : '') . '></script>';
+		$external = preg_match('@^https?://@', $src);
+
+		// Add the filemtime if not given and not an external file
+		if ($mtime === null && !$external)
+		{
+			$container = System::getContainer();
+			$rootDir = $container->getParameter('kernel.project_dir');
+
+			if (file_exists($rootDir . '/' . $src))
+			{
+				$mtime = filemtime($rootDir . '/' . $src);
+			}
+			else
+			{
+				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
+
+				// Handle public bundle resources in web/
+				if (file_exists($rootDir . '/' . $webDir . '/' . $src))
+				{
+					$mtime = filemtime($rootDir . '/' . $webDir . '/' . $src);
+				}
+			}
+		}
+
+		if ($mtime)
+		{
+			$src .= '?v=' . substr(md5($mtime), 0, 8);
+		}
+
+		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($external ? ' crossorigin="anonymous"' : '') . '></script>';
 	}
 
 	/**
@@ -506,7 +591,7 @@ abstract class Template extends \Controller
 	 */
 	public static function generateFeedTag($href, $format, $title)
 	{
-		return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . \StringUtil::specialchars($title) . '">';
+		return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . StringUtil::specialchars($title) . '">';
 	}
 
 	/**
@@ -536,3 +621,5 @@ abstract class Template extends \Controller
 		}
 	}
 }
+
+class_alias(Template::class, 'Template');

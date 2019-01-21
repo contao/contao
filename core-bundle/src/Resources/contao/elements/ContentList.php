@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentList extends \ContentElement
+class ContentList extends ContentElement
 {
 
 	/**
@@ -30,7 +30,7 @@ class ContentList extends \ContentElement
 	protected function compile()
 	{
 		$arrItems = array();
-		$items = \StringUtil::deserialize($this->listitems);
+		$items = StringUtil::deserialize($this->listitems);
 		$limit = \count($items) - 1;
 
 		for ($i=0, $c=\count($items); $i<$c; $i++)
@@ -46,3 +46,5 @@ class ContentList extends \ContentElement
 		$this->Template->tag = ($this->listtype == 'ordered') ? 'ol' : 'ul';
 	}
 }
+
+class_alias(ContentList::class, 'ContentList');

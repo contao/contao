@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,9 +19,6 @@ use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 
-/**
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class DoctrineSchemaListener
 {
     /**
@@ -27,11 +26,6 @@ class DoctrineSchemaListener
      */
     private $provider;
 
-    /**
-     * Constructor.
-     *
-     * @param DcaSchemaProvider $provider
-     */
     public function __construct(DcaSchemaProvider $provider)
     {
         $this->provider = $provider;
@@ -39,21 +33,16 @@ class DoctrineSchemaListener
 
     /**
      * Adds the Contao DCA information to the Doctrine schema.
-     *
-     * @param GenerateSchemaEventArgs $event
      */
-    public function postGenerateSchema(GenerateSchemaEventArgs $event)
+    public function postGenerateSchema(GenerateSchemaEventArgs $event): void
     {
         $this->provider->appendToSchema($event->getSchema());
     }
 
     /**
-     * Handles the Doctrine schema and overrides the indexes with a fixed length
-     * for backwards compatibility with doctrine/dbal < 2.9.
-     *
-     * @param SchemaIndexDefinitionEventArgs $event
+     * Adds the index length on MySQL platforms for Doctrine DBAL <2.9.
      */
-    public function onSchemaIndexDefinition(SchemaIndexDefinitionEventArgs $event)
+    public function onSchemaIndexDefinition(SchemaIndexDefinitionEventArgs $event): void
     {
         // Skip for doctrine/dbal >= 2.9
         if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
@@ -61,34 +50,41 @@ class DoctrineSchemaListener
         }
 
         $connection = $event->getConnection();
-        $data = $event->getTableIndex();
 
-        if ('PRIMARY' === $data['name'] || !$connection->getDatabasePlatform() instanceof MySqlPlatform) {
+        if (!$connection->getDatabasePlatform() instanceof MySqlPlatform) {
             return;
         }
 
-        $index = $connection->fetchAssoc(
-            sprintf("SHOW INDEX FROM %s WHERE Key_name='%s'", $event->getTable(), $data['name'])
+        $data = $event->getTableIndex();
+
+        // Ignore primary keys
+        if ('PRIMARY' === $data['name']) {
+            return;
+        }
+
+        $columns = [];
+        $query = sprintf("SHOW INDEX FROM %s WHERE Key_name='%s'", $event->getTable(), $data['name']);
+        $result = $connection->executeQuery($query);
+
+        while ($row = $result->fetch()) {
+            if (null !== $row['Sub_part']) {
+                $columns[] = sprintf('%s(%s)', $row['Column_name'], $row['Sub_part']);
+            } else {
+                $columns[] = $row['Column_name'];
+            }
+        }
+
+        $event->setIndex(
+            new Index(
+                $data['name'],
+                $columns,
+                $data['unique'],
+                $data['primary'],
+                $data['flags'],
+                $data['options']
+            )
         );
 
-        if (null !== $index['Sub_part']) {
-            $columns = [];
-
-            foreach ($data['columns'] as $col) {
-                $columns[$col] = sprintf('%s(%s)', $col, $index['Sub_part']);
-            }
-
-            $event->setIndex(
-                new Index(
-                    $data['name'],
-                    $columns,
-                    $data['unique'],
-                    $data['primary'],
-                    $data['flags'],
-                    $data['options'])
-            );
-
-            $event->preventDefault();
-        }
+        $event->preventDefault();
     }
 }

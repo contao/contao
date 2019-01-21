@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,12 +19,6 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-/**
- * Sets the TL_VIEW cookie based on the "toggle_view" query parameter.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ToggleViewListener
 {
     /**
@@ -35,12 +31,6 @@ class ToggleViewListener
      */
     private $scopeMatcher;
 
-    /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     * @param ScopeMatcher             $scopeMatcher
-     */
     public function __construct(ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher)
     {
         $this->framework = $framework;
@@ -49,10 +39,8 @@ class ToggleViewListener
 
     /**
      * Toggles the TL_VIEW cookie and redirects back to the referring page.
-     *
-     * @param GetResponseEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event): void
     {
         $request = $event->getRequest();
 
@@ -70,13 +58,8 @@ class ToggleViewListener
 
     /**
      * Generates the TL_VIEW cookie based on the toggle_view value.
-     *
-     * @param string $value
-     * @param string $basePath
-     *
-     * @return Cookie The cookie object
      */
-    private function getCookie($value, $basePath)
+    private function getCookie(string $value, string $basePath): Cookie
     {
         if ('mobile' !== $value) {
             $value = 'desktop';

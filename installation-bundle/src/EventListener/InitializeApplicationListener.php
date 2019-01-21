@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,6 +16,7 @@ use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -21,33 +24,21 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-/**
- * Installs the assets, directories and symlinks.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class InitializeApplicationListener implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
     /**
      * Listens to the contao_installation.initialize event.
-     *
-     * @param InitializeApplicationEvent $event
      */
-    public function onInitialize(InitializeApplicationEvent $event)
+    public function onInitialize(InitializeApplicationEvent $event): void
     {
         $this->installAssets($event);
         $this->installContao($event);
         $this->createSymlinks($event);
     }
 
-    /**
-     * Installs the assets.
-     *
-     * @param InitializeApplicationEvent $event
-     */
-    private function installAssets(InitializeApplicationEvent $event)
+    private function installAssets(InitializeApplicationEvent $event): void
     {
         $webDir = $this->container->getParameter('contao.web_dir');
 
@@ -57,7 +48,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
 
         $application = new Application($this->container->get('kernel'));
 
-        $command = new AssetsInstallCommand();
+        $command = new AssetsInstallCommand($this->container->get('filesystem'));
         $command->setApplication($application);
 
         $input = new ArgvInput(['assets:install', '--relative', $webDir]);
@@ -69,12 +60,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
         $event->setOutput($output);
     }
 
-    /**
-     * Installs the Contao folders.
-     *
-     * @param InitializeApplicationEvent $event
-     */
-    private function installContao(InitializeApplicationEvent $event)
+    private function installContao(InitializeApplicationEvent $event): void
     {
         $projectDir = $this->container->getParameter('kernel.project_dir');
 
@@ -93,12 +79,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
         $event->setOutput($output);
     }
 
-    /**
-     * Creates the symlinks.
-     *
-     * @param InitializeApplicationEvent $event
-     */
-    private function createSymlinks(InitializeApplicationEvent $event)
+    private function createSymlinks(InitializeApplicationEvent $event): void
     {
         $webDir = $this->container->getParameter('contao.web_dir');
 
@@ -119,15 +100,12 @@ class InitializeApplicationListener implements ContainerAwareInterface
 
     /**
      * Runs a command and returns the error (if any).
-     *
-     * @param ContainerAwareCommand $command
-     * @param InputInterface        $input
-     *
-     * @return string|null
      */
-    private function runCommand(ContainerAwareCommand $command, InputInterface $input)
+    private function runCommand(Command $command, InputInterface $input): ?string
     {
-        $command->setContainer($this->container);
+        if ($command instanceof ContainerAwareCommand) {
+            $command->setContainer($this->container);
+        }
 
         $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL, true);
         $status = $command->run($input, $output);

@@ -281,6 +281,14 @@
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
         <target>Введите только следующие символы: A-Z0-9[]_-</target>
       </trans-unit>
+      <trans-unit id="ERR.largeImage">
+        <source>Image exceeds the maximum dimensions of %sx%s.</source>
+        <target>Изображение превышает максимальные размеры %sx%s.</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidTwoFactor">
+        <source>Invalid verification code!</source>
+        <target>Неверный код подтверждения!</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Пожалуйста, прибавьте %d к %d.</target>
@@ -569,13 +577,21 @@
         <source>This type of page automatically logs out the user.</source>
         <target>Этот тип страницы автоматически завершает сеанс пользователя.</target>
       </trans-unit>
+      <trans-unit id="PTY.error_401.0">
+        <source>401 Not authenticated</source>
+        <target>401 Не аутентифицирован</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_401.1">
+        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>Страница ошибка 401 выводится, когда пользователь запрашивает защищенную страницу без проверки подлинности.</target>
+      </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>Ошибка 403 (доступ запрещен)</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
         <source>If a user requests a protected page without permission, a 403 error page will be loaded instead.</source>
-        <target>Страница выводится, когда пользователь пытается получить доступ к защищенной странице без разрешения.</target>
+        <target>Страница ошибка 403 выводится, когда пользователь пытается получить доступ к защищенной странице без разрешения.</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
@@ -583,7 +599,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
         <source>If a user requests a non-existent page, a 404 error page will be loaded instead.</source>
-        <target>Страница выводится, когда пользователь пытается получить доступ к несуществующей странице.</target>
+        <target>Страница ошибка 404 выводится, когда пользователь пытается получить доступ к несуществующей странице.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -652,6 +668,62 @@
       <trans-unit id="CHMOD.cworld">
         <source>Everybody</source>
         <target>Любой</target>
+      </trans-unit>
+      <trans-unit id="DATE.a">
+        <source>am</source>
+        <target>am</target>
+      </trans-unit>
+      <trans-unit id="DATE.A">
+        <source>AM</source>
+        <target>AM</target>
+      </trans-unit>
+      <trans-unit id="DATE.d">
+        <source>DD</source>
+        <target>ДД</target>
+      </trans-unit>
+      <trans-unit id="DATE.j">
+        <source>D</source>
+        <target>Д</target>
+      </trans-unit>
+      <trans-unit id="DATE.m">
+        <source>MM</source>
+        <target>ММ</target>
+      </trans-unit>
+      <trans-unit id="DATE.n">
+        <source>M</source>
+        <target>М</target>
+      </trans-unit>
+      <trans-unit id="DATE.y">
+        <source>YY</source>
+        <target>ГГ</target>
+      </trans-unit>
+      <trans-unit id="DATE.Y">
+        <source>YYYY</source>
+        <target>ГГГГ</target>
+      </trans-unit>
+      <trans-unit id="DATE.h">
+        <source>hh</source>
+        <target>чч</target>
+      </trans-unit>
+      <trans-unit id="DATE.H">
+        <source>hh</source>
+        <target>чч</target>
+      </trans-unit>
+      <trans-unit id="DATE.g">
+        <source>h</source>
+        <target>ч</target>
+      </trans-unit>
+      <trans-unit id="DATE.G">
+        <source>h</source>
+        <target>ч</target>
+      </trans-unit>
+      <trans-unit id="DATE.i">
+        <source>mm</source>
+        <target>мм</target>
+      </trans-unit>
+      <trans-unit id="DATE.s">
+        <source>ss</source>
+        <target>сс</target>
       </trans-unit>
       <trans-unit id="DAYS.0">
         <source>Sunday</source>
@@ -1329,32 +1401,6 @@
         <source>Expand or collapse all nodes</source>
         <target>Развернуть или свернуть все узлы</target>
       </trans-unit>
-      <trans-unit id="MSC.lockedAccount.0">
-        <source>A Contao account has been locked</source>
-        <target>Учетная запись Contao заблокирована</target>
-      </trans-unit>
-      <trans-unit id="MSC.lockedAccount.1">
-        <source>The following Contao account has been locked for security reasons.
-
-Username: %s
-Real name: %s
-Website: %s
-
-The account has been locked for %d minutes, because the user has entered an invalid password three times in a row. After this period of time, the account will be unlocked automatically.
-
-This e-mail has been generated by Contao. You can not reply to it directly.
-</source>
-        <target>Следующая учетная запись Contao была заблокирована по соображениям безопасности.
-
-Имя пользователя: %s
-Реальное имя: %s
-Веб-сайт: %s
-
-Учетная запись заблокирована на %d минут, так как пользователь ввел неверный пароль три раза подряд. После истечения этого периода времени, учетная запись будет автоматически разблокирована.
-
-Это письмо создано автоматически Contao. Вы не сможете ответить на него.
-</target>
-      </trans-unit>
       <trans-unit id="MSC.toggleMobile.0">
         <source>Mobile version</source>
         <target>Мобильная версия</target>
@@ -1434,6 +1480,10 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       <trans-unit id="MSC.logoutBT">
         <source>Logout</source>
         <target>Выход</target>
+      </trans-unit>
+      <trans-unit id="MSC.switchBT">
+        <source>Back to %s</source>
+        <target>Назад к %s</target>
       </trans-unit>
       <trans-unit id="MSC.logoutBTTitle">
         <source>Close the current session</source>
@@ -1707,6 +1757,10 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <source>Meta data</source>
         <target>Метаданные</target>
       </trans-unit>
+      <trans-unit id="MSC.versioning">
+        <source>Version management</source>
+        <target>Управление версиями</target>
+      </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
         <target>Версия</target>
@@ -1854,6 +1908,10 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       <trans-unit id="MSC.resetTitle">
         <source>Reset the filters</source>
         <target>Сбросить фильтры</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchAndFilter">
+        <source>Search and filter functions</source>
+        <target>Функции поиска и фильтрации</target>
       </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
@@ -2116,8 +2174,8 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <target>Вверх</target>
       </trans-unit>
       <trans-unit id="MSC.first">
-        <source>&amp;#171; First</source>
-        <target>&amp;#171; Первая</target>
+        <source>First</source>
+        <target>Первый</target>
       </trans-unit>
       <trans-unit id="MSC.previous">
         <source>Previous</source>
@@ -2128,8 +2186,8 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <target>Следующая</target>
       </trans-unit>
       <trans-unit id="MSC.last">
-        <source>Last &amp;#187;</source>
-        <target>Последняя &amp;#187;</target>
+        <source>Last</source>
+        <target>Последний</target>
       </trans-unit>
       <trans-unit id="MSC.goToPage">
         <source>Go to page %s</source>
@@ -2298,6 +2356,82 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a root page in the site structure to enter file meta data.</source>
         <target>Чтобы ввести метаданные файла, вы должны добавить корневую страницу в структуру сайта.</target>
+      </trans-unit>
+      <trans-unit id="MSC.breadcrumbMenu">
+        <source>Breadcrumb menu</source>
+        <target>Меню с историей посещения разделов</target>
+      </trans-unit>
+      <trans-unit id="MSC.mainNavigation">
+        <source>Main navigation</source>
+        <target>Основная навигация</target>
+      </trans-unit>
+      <trans-unit id="MSC.headerNavigation">
+        <source>Header navigation</source>
+        <target>Навигация по верхнему колонтитулу</target>
+      </trans-unit>
+      <trans-unit id="MSC.pagination">
+        <source>Pagination menu</source>
+        <target>Меню разбиения на страницы</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.unicodeLowercase">
+        <source>Unicode numbers and lowercase letters</source>
+        <target>Номера Юникода и строчные буквы</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.unicode">
+        <source>Unicode numbers and letters</source>
+        <target>Номера Юникода и буквы</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.asciiLowercase">
+        <source>ASCII numbers and lowercase letters</source>
+        <target>Номера ASCII и строчные буквы</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.ascii">
+        <source>ASCII numbers and letters</source>
+        <target>Номера ASCII и буквы</target>
+      </trans-unit>
+      <trans-unit id="MSC.sortOrder">
+        <source>Sort order</source>
+        <target>Порядок сортировки</target>
+      </trans-unit>
+      <trans-unit id="MSC.security">
+        <source>Security</source>
+        <target>Безопасность</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorAuthentication">
+        <source>Two-factor authentication</source>
+        <target>Двухфакторная авторизация</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorVerification">
+        <source>Verification code</source>
+        <target>Код подтверждения</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorVerificationHelp">
+        <source>Please enter the verification code generated by your 2FA/TOTP app.</source>
+        <target>Введите код подтверждения, сгенерированный приложением 2FA/TOTP.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorExplain">
+        <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
+        <target>Вы можете включить двухфакторную авторизацию, которая добавит дополнительный уровень безопасности вашей учетной записи. Помимо имени пользователя и пароля, вам нужно будет ввести код подтверждения, созданный приложением двухфакторной авторизации, таким как 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator или любым другим приложением TOTP.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorScan">
+        <source>Please scan the QR code with your 2FA/TOTP app.</source>
+        <target>Отсканируйте QR-код с помощью приложения 2FA/TOTP.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorActive">
+        <source>Two-factor authentication has been enabled.</source>
+        <target>Двухфакторная авторизация включена.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorEnforced">
+        <source>Please enable up two-factor authentication before you continue.</source>
+        <target>Перед продолжением включите двухфакторную авторизацию.</target>
+      </trans-unit>
+      <trans-unit id="MSC.enable">
+        <source>Enable</source>
+        <target>Включить</target>
+      </trans-unit>
+      <trans-unit id="MSC.disable">
+        <source>Disable</source>
+        <target>Отключить</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

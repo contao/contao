@@ -38,7 +38,12 @@ body {
 }
 .tl_label {
 	width:200px;
-	font-weight:bold;
+	font-weight:600;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	.tl_label {
+		font-weight:500;
+	}
 }
 td.headline {
 	font-size:1rem;

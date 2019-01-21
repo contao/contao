@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,31 +12,24 @@
 
 namespace Contao\ManagerBundle\Tests\HttpKernel;
 
+use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerBundle\Routing\RouteLoader;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-/**
- * Tests the RouteLoader class.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- */
-class RouteLoaderTest extends TestCase
+class RouteLoaderTest extends ContaoTestCase
 {
-    /**
-     * Tests the loadFromPlugins() method.
-     */
-    public function testLoadFromPlugins()
+    public function testLoadFromPlugins(): void
     {
         $loaderResolver = $this->createMock(LoaderResolverInterface::class);
-        $loader = $this->createMock(LoaderInterface::class);
 
+        $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->expects($this->exactly(2))
             ->method('getResolver')
@@ -45,7 +40,6 @@ class RouteLoaderTest extends TestCase
         $plugin2 = $this->mockRoutePlugin('foo2', '/foo2/path2');
 
         $pluginLoader = $this->createMock(PluginLoader::class);
-
         $pluginLoader
             ->expects($this->once())
             ->method('getInstancesOf')
@@ -56,7 +50,8 @@ class RouteLoaderTest extends TestCase
         $routeLoader = new RouteLoader(
             $loader,
             $pluginLoader,
-            $this->createMock(KernelInterface::class)
+            $this->createMock(ContaoKernel::class),
+            $this->getTempDir()
         );
 
         $collection = $routeLoader->loadFromPlugins();
@@ -68,14 +63,11 @@ class RouteLoaderTest extends TestCase
         $this->assertInstanceOf(Route::class, $collection->get('foo2'));
     }
 
-    /**
-     * Tests that the catch all route is last.
-     */
-    public function testCatchAllIsLast()
+    public function testCatchAllIsLast(): void
     {
         $loaderResolver = $this->createMock(LoaderResolverInterface::class);
-        $loader = $this->createMock(LoaderInterface::class);
 
+        $loader = $this->createMock(LoaderInterface::class);
         $loader
             ->expects($this->exactly(4))
             ->method('getResolver')
@@ -88,7 +80,6 @@ class RouteLoaderTest extends TestCase
         $plugin4 = $this->mockRoutePlugin('foo4', '/foo4/path4');
 
         $pluginLoader = $this->createMock(PluginLoader::class);
-
         $pluginLoader
             ->expects($this->once())
             ->method('getInstancesOf')
@@ -99,7 +90,8 @@ class RouteLoaderTest extends TestCase
         $routeLoader = new RouteLoader(
             $loader,
             $pluginLoader,
-            $this->createMock(KernelInterface::class)
+            $this->createMock(ContaoKernel::class),
+            $this->getTempDir()
         );
 
         $routes = $routeLoader->loadFromPlugins()->all();
@@ -110,20 +102,14 @@ class RouteLoaderTest extends TestCase
     }
 
     /**
-     * Mocks a route plugin.
-     *
-     * @param string $routeName
-     * @param string $routePath
-     *
-     * @return RoutingPluginInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return RoutingPluginInterface|MockObject
      */
-    private function mockRoutePlugin($routeName, $routePath)
+    private function mockRoutePlugin(string $routeName, string $routePath): RoutingPluginInterface
     {
         $collection = new RouteCollection();
         $collection->add($routeName, new Route($routePath));
 
         $plugin = $this->createMock(RoutingPluginInterface::class);
-
         $plugin
             ->expects($this->atLeastOnce())
             ->method('getRouteCollection')

@@ -6,7 +6,6 @@
  * @license LGPL-3.0-or-later
  */
 
-
 /**
  * Provide methods to handle Ajax requests.
  *
@@ -450,7 +449,7 @@ var AjaxRequest =
 			image = $(el).getFirst('img'),
 			published = (image.get('data-state') == 1),
 			div = el.getParent('div'),
-			index, next, icon, icond, pa;
+			index, next, icon, icond, pa, params;
 
 		// Backwards compatibility
 		if (image.get('data-state') === null) {
@@ -588,11 +587,19 @@ var AjaxRequest =
 		if (!published) {
 			image.src = AjaxRequest.themePath + 'icons/visible.svg';
 			image.set('data-state', 1);
-			new Request.Contao({'url':window.location.href, 'followRedirects':false}).get({'tid':id, 'state':1, 'rt':Contao.request_token});
+
+			params = {'state':1, 'rt':Contao.request_token};
+			params[$(el).get('data-tid') || 'tid'] = id;
+
+			new Request.Contao({'url':window.location.href, 'followRedirects':false}).get(params);
 		} else {
 			image.src = AjaxRequest.themePath + 'icons/invisible.svg';
 			image.set('data-state', 0);
-			new Request.Contao({'url':window.location.href, 'followRedirects':false}).get({'tid':id, 'state':0, 'rt':Contao.request_token});
+
+			params = {'state':0, 'rt':Contao.request_token};
+			params[$(el).get('data-tid') || 'tid'] = id;
+
+			new Request.Contao({'url':window.location.href, 'followRedirects':false}).get(params);
 		}
 
 		return false;
@@ -755,7 +762,6 @@ var AjaxRequest =
 		}
 	}
 };
-
 
 /**
  * Provide methods to handle back end tasks.
@@ -1029,7 +1035,11 @@ var Backend =
 		var hgt = 0;
 
 		$$('div.limit_height').each(function(div) {
-			var toggler, button, size, style;
+			var parent = div.getParent('.tl_content'),
+				toggler, button, size, style;
+
+			// Return if the element is a wrapper
+			if (parent && (parent.hasClass('wrapper_start') || parent.hasClass('wrapper_stop'))) return;
 
 			if (hgt === 0) {
 				hgt = div.className.replace(/[^0-9]*/, '').toInt();
@@ -1269,29 +1279,40 @@ var Backend =
 			},
 			onSort: function(el) {
 				var ul = el.getParent('ul'),
-					wrapLevel = 0;
+					wrapLevel = 0, divs, i;
 
 				if (!ul) return;
 
-				ul.getChildren('li').each(function(el) {
-					var div = el.getFirst('div');
+				divs = ul.getChildren('li > div:first-child');
 
-					if (!div) return;
+				if (!divs) return;
 
-					if (div.hasClass('wrapper_stop') && wrapLevel > 0) {
+				for (i=0; i<divs.length; i++) {
+					if (divs[i].hasClass('wrapper_stop') && wrapLevel > 0) {
 						wrapLevel--;
 					}
 
-					div.className = div.className.replace(/(^|\s)indent[^\s]*/g, '');
+					divs[i].className = divs[i].className.replace(/(^|\s)indent[^\s]*/g, '');
 
 					if (wrapLevel > 0) {
-						div.addClass('indent').addClass('indent_' + wrapLevel);
+						divs[i].addClass('indent').addClass('indent_' + wrapLevel);
 					}
 
-					if (div.hasClass('wrapper_start')) {
+					if (divs[i].hasClass('wrapper_start')) {
 						wrapLevel++;
 					}
-				});
+
+					divs[i].removeClass('indent_first');
+					divs[i].removeClass('indent_last');
+
+					if (divs[i-1] && divs[i-1].hasClass('wrapper_start')) {
+						divs[i].addClass('indent_first');
+					}
+
+					if (divs[i+1] && divs[i+1].hasClass('wrapper_stop')) {
+						divs[i].addClass('indent_last');
+					}
+				}
 			},
 			handle: '.drag-handle'
 		});
@@ -1364,6 +1385,149 @@ var Backend =
 			}
 		});
 		list.fireEvent("complete"); // Initial sorting
+	},
+
+	/**
+	 * Enable drag and drop for the file tree
+	 *
+	 * @param {object} ul      The DOM element
+	 * @param {object} options An optional options object
+	 */
+	enableFileTreeDragAndDrop: function(ul, options) {
+		var ds = new Scroller(document.getElement('body'), {
+			onChange: function(x, y) {
+				this.element.scrollTo(this.element.getScroll().x, y);
+			}
+		});
+
+		ul.addEvent('mousedown', function(event) {
+			var dragHandle = event.target.hasClass('drag-handle') ? event.target : event.target.getParent('.drag-handle');
+			var dragElement = event.target.getParent('.tl_file,.tl_folder');
+
+			if (!dragHandle || !dragElement || event.rightClick) {
+				return;
+			}
+
+			ds.start();
+			ul.addClass('tl_listing_dragging');
+
+			var cloneBase = (dragElement.getElements('.tl_left')[0] || dragElement),
+				clone = cloneBase.clone(true)
+					.inject(ul)
+					.addClass('tl_left_dragging'),
+				currentHover, currentHoverTime;
+
+			clone.setPosition({
+				x: event.page.x - cloneBase.getOffsetParent().getPosition().x - clone.getSize().x,
+				y: cloneBase.getPosition(cloneBase.getOffsetParent()).y
+			}).setStyle('display', 'none');
+
+			var move = new Drag.Move(clone, {
+				droppables: $$([ul]).append(ul.getElements('.tl_folder,li.parent,.tl_folder_top')),
+				unDraggableTags: [],
+				modifiers: {
+					x: 'left',
+					y: 'top'
+				},
+				onStart: function() {
+					clone.setStyle('display', '');
+				},
+				onEnter: function(element, droppable) {
+					droppable = fixDroppable(droppable);
+					droppable.addClass('tl_folder_dropping');
+
+					if (droppable.hasClass('tl_folder') && currentHover !== droppable) {
+						currentHover = droppable;
+						currentHoverTime = new Date().getTime();
+
+						var expandLink = droppable.getElement('img[src$="/icons/folPlus.svg"]');
+						expandLink = expandLink && expandLink.getParent('a');
+
+						if (expandLink) {
+							// Expand the folder after one second hover time
+							setTimeout(function() {
+								if (currentHover === droppable && currentHoverTime + 900 < new Date().getTime()) {
+									var event = document.createEvent('HTMLEvents');
+									event.initEvent('click', true, true);
+									expandLink.dispatchEvent(event);
+
+									currentHover = undefined;
+									currentHoverTime = undefined;
+
+									window.addEvent('ajax_change', function onAjax() {
+										if (move && move.droppables && ul && ul.getElements) {
+											move.droppables = $$([ul]).append(ul.getElements('.tl_folder,li.parent'));
+										}
+										window.removeEvent('ajax_change', onAjax);
+									});
+								}
+							}, 1000);
+						}
+					}
+				},
+				onCancel: function() {
+					currentHover = undefined;
+					currentHoverTime = undefined;
+
+					ds.stop();
+					clone.destroy();
+					window.removeEvent('keyup', onKeyup);
+					ul.getElements('.tl_folder_dropping').removeClass('tl_folder_dropping');
+					ul.removeClass('tl_listing_dragging');
+				},
+				onDrop: function(element, droppable) {
+					currentHover = undefined;
+					currentHoverTime = undefined;
+
+					ds.stop();
+					clone.destroy();
+					window.removeEvent('keyup', onKeyup);
+					ul.getElements('.tl_folder_dropping').removeClass('tl_folder_dropping');
+					ul.removeClass('tl_listing_dragging');
+
+					droppable = fixDroppable(droppable);
+
+					if (!droppable) {
+						return;
+					}
+
+					var id = dragElement.get('data-id'),
+						pid = droppable.get('data-id') || decodeURIComponent(options.url.split(/[?&]pid=/)[1].split('&')[0]);
+
+					// Ignore invalid move operations
+					if (id && pid && ((pid+'/').indexOf(id+'/') === 0 || pid+'/' === id.replace(/[^/]+$/, ''))) {
+						return;
+					}
+
+					Backend.getScrollOffset();
+					document.location.href = options.url + '&id=' + encodeURIComponent(id) + '&pid=' + encodeURIComponent(pid);
+				},
+				onLeave: function(element, droppable) {
+					droppable = fixDroppable(droppable);
+					droppable.removeClass('tl_folder_dropping');
+					currentHover = undefined;
+					currentHoverTime = undefined;
+				}
+			});
+
+			move.start(event);
+			window.addEvent('keyup', onKeyup);
+
+			function onKeyup(event) {
+				if (event.key === 'esc' && move && move.stop) {
+					move.droppables = $$([]);
+					move.stop();
+				}
+			}
+		});
+
+		function fixDroppable(droppable) {
+			if (droppable && droppable.hasClass('parent') && droppable.getPrevious('.tl_folder')) {
+				return droppable.getPrevious('.tl_folder');
+			}
+
+			return droppable;
+		}
 	},
 
 	/**
@@ -2039,7 +2203,7 @@ var Backend =
 			return; // no language given
 		}
 
-		var li = $(ul).getLast('li').clone(),
+		var li = $(ul).getLast('li').clone(true, true),
 			span = li.getElement('span'),
 			img = span.getElement('img');
 
@@ -2063,6 +2227,15 @@ var Backend =
 		// Update the class name
 		li.className = (li.className == 'even') ? 'odd' : 'even';
 		li.inject($(ul), 'bottom');
+
+		// Update the picker
+		li.getElements('a[id^=pp_]').each(function(link) {
+			var i = parseInt(link.get('id').replace(/pp_[^_]+_/, ''));
+			link.id = link.get('id').replace(i, i + 1);
+			var script = link.getNext('script');
+			script.set('html', script.get('html').replace(new RegExp('_' + i, 'g'), '_' + (i + 1)));
+			eval(script.get('html'));
+		});
 
 		// Disable the "add language" button
 		el.getParent('div').getElement('input[type="button"]').setProperty('disabled', true);
@@ -2325,6 +2498,13 @@ var Backend =
 				el.removeEvent('click', boundEvent);
 			}
 
+			// Do not propagate the form field click events
+			el.getElements('label,input[type="checkbox"],input[type="radio"]').each(function(i) {
+				i.addEvent('click', function(e) {
+					e.stopPropagation();
+				});
+			});
+
 			boundEvent = clickEvent.bind(el);
 
 			el.addEvent('click', boundEvent);
@@ -2488,6 +2668,100 @@ var Backend =
 		;
 
 		window.addEvent('domready', init);
+	},
+
+	/**
+	 * Enable drag and drop file upload for the file tree
+	 *
+	 * @param {object} wrap    The DOM element
+	 * @param {object} options An optional options object
+	 */
+	enableFileTreeUpload: function(wrap, options) {
+		wrap = $(wrap);
+
+		var fallbackUrl = options.url,
+			dzElement = new Element('div', {
+				'class': 'dropzone dropzone-filetree',
+				html: '<span class="dropzone-previews"></span>'
+			}).inject(wrap, 'top'),
+			currentHover, currentHoverTime;
+
+		options.previewsContainer = dzElement.getElement('.dropzone-previews');
+		options.clickable = false;
+
+		var dz = new Dropzone(wrap, options);
+
+		dz.on('queuecomplete', function() {
+			window.location.reload();
+		});
+
+		dz.on('dragover', function(event) {
+			if (!event.dataTransfer || !event.dataTransfer.types || event.dataTransfer.types.indexOf('Files') === -1) {
+				return;
+			}
+
+			wrap.getElements('.tl_folder_dropping').removeClass('tl_folder_dropping');
+			var target = event.target && $(event.target);
+
+			if (target) {
+				var folder = target.match('.tl_folder') ? target : target.getParent('.tl_folder');
+
+				if (!folder) {
+					folder = target.getParent('.parent');
+					folder = folder && folder.getPrevious('.tl_folder');
+				}
+
+				if (folder) {
+					var link = folder.getElement('img[src$="/icons/new.svg"]');
+					link = link && link.getParent('a');
+				}
+			}
+
+			if (link && link.href) {
+				dz.options.url = ''+link.href;
+				folder.addClass('tl_folder_dropping');
+
+				if (currentHover !== folder) {
+					currentHover = folder;
+					currentHoverTime = new Date().getTime();
+
+					var expandLink = folder.getElement('img[src$="/icons/folPlus.svg"]');
+					expandLink = expandLink && expandLink.getParent('a');
+
+					if (expandLink) {
+						// Expand the folder after one second hover time
+						setTimeout(function() {
+							if (currentHover === folder && currentHoverTime + 900 < new Date().getTime()) {
+								var event = document.createEvent('HTMLEvents');
+								event.initEvent('click', true, true);
+								expandLink.dispatchEvent(event);
+								currentHover = undefined;
+								currentHoverTime = undefined;
+							}
+						}, 1000);
+					}
+				}
+			} else {
+				dz.options.url = fallbackUrl;
+				currentHover = undefined;
+				currentHoverTime = undefined;
+			}
+		});
+
+		dz.on('drop', function (event) {
+			if (!event.dataTransfer || !event.dataTransfer.types || event.dataTransfer.types.indexOf('Files') === -1) {
+				return;
+			}
+
+			dzElement.addClass('dropzone-filetree-enabled');
+			Backend.getScrollOffset();
+		});
+
+		dz.on('dragleave', function() {
+			wrap.getElements('.tl_folder_dropping').removeClass('tl_folder_dropping');
+			currentHover = undefined;
+			currentHoverTime = undefined;
+		});
 	}
 };
 

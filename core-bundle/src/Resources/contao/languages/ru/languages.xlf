@@ -771,7 +771,7 @@
       </trans-unit>
       <trans-unit id="LNG.na">
         <source>Nauru</source>
-        <target>Науруанский</target>
+        <target>Науру</target>
       </trans-unit>
       <trans-unit id="LNG.nb">
         <source>Norwegian Bokmål</source>
@@ -1072,10 +1072,6 @@
       <trans-unit id="LNG.tk">
         <source>Turkmen</source>
         <target>Туркменский</target>
-      </trans-unit>
-      <trans-unit id="LNG.tl">
-        <source>Tagalog</source>
-        <target>Тагальский</target>
       </trans-unit>
       <trans-unit id="LNG.tn">
         <source>Tswana</source>

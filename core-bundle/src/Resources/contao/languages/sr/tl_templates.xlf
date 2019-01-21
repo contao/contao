@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_templates.target.0">
         <source>Target folder</source>
-        <target>Дестинациони фолдер</target>
+        <target>Одредишни фолдер</target>
       </trans-unit>
       <trans-unit id="tl_templates.target.1">
         <source>A copy of the selected template will be stored in the target folder.</source>

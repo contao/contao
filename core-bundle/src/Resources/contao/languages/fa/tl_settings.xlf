@@ -120,22 +120,6 @@
         <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
         <target>اگر وب‌سایت شما از طریق سرور پروکسی SSL قابل دسترسی است، لطفا دامنه (برای نمونه &lt;em&gt;sslsites.de&lt;/em&gt;) آن را اینجا وارد نمایید.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.0">
-        <source>Anonymize IP addresses</source>
-        <target>نشانی‌های آی‌پی ناشناس</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeIp.1">
-        <source>Anonymize any IP address that is stored in the database, except in the &lt;em&gt;tl_session&lt;/em&gt; table (the IP address is bound to the session for security reasons).</source>
-        <target>ناشناس کردن هر آی‌پی که در پایگاه داده ذخیره می شود، به غیر از جدول &lt;em&gt;tl_session&lt;/em&gt; (نشانی آی‌پی به دلایل امنیتی به نشست مربوط است).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.0">
-        <source>Anonymize Google Analytics</source>
-        <target>گمنام کردن Google Analytics</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacyAnonymizeGA.1">
-        <source>Anonymize the IP addresses that are sent to Google Analytics.</source>
-        <target>گمنام کردن نشانی‌های IP که برای Google Analytics فرستاده می‌شود.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
         <target>عدم تغییر مسیر نشانی‌های وب خالی</target>
@@ -176,14 +160,6 @@
         <source>Do not check the request token when a form is submitted (insecure!).</source>
         <target>توکن درخواستی را وقتی فرمی ارسال می‌شود بررسی نخواهد کرد (ناامن!)</target>
       </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.0">
-        <source>Account locking time</source>
-        <target>زمان قفل ماندن حساب کاربری</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.lockPeriod.1">
-        <source>An account will be locked if a wrong password is entered three times in a row.</source>
-        <target>اگر کاربری بیش از سه بار پشت سر هم گذرواژه اشتباه وارد نمایید قفل خواهد شد.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
         <target>گونه‌های پرونده‌های قابل دانلود</target>
@@ -207,13 +183,6 @@
       <trans-unit id="tl_settings.templateFiles.1">
         <source>Here you can enter a comma separated list of supported template file types.</source>
         <target>اینجا می‌توانید فهرست جداشده با کاما از گونه‌های پرونده قالبی پشتیبانی شده را وارد نمایید.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.0">
-        <source>Maximum front end width</source>
-        <target>عرض بیشینه در بخش کاربری</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.maxImageWidth.1">
-        <source>If the width of an image or movie exceeds this value, it will be adjusted automatically. Set to 0 to disable the limit.</source>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -311,14 +280,6 @@
         <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
         <target>اینجا می‌توانید بیشترین زمان یک نشست  را به ثانیه وارد نمایید (۶۰ دقیقه = ۳۶۰۰ ثانیه).</target>
       </trans-unit>
-      <trans-unit id="tl_settings.autologin.0">
-        <source>Auto login period</source>
-        <target>زمان ورود خودکار</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.autologin.1">
-        <source>Here you can set the front end auto login period (90 days = 7776000 seconds).</source>
-        <target>اینجا می‌توانید دوره ورود خودکار بخش کاربری را تنظیم نمایید (۹۰ روز = ۷۷۷۶۰۰۰ ثانیه).</target>
-      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>صاحب پیش‌فرض برگه</target>
@@ -366,10 +327,6 @@
       <trans-unit id="tl_settings.proxy_legend">
         <source>Proxy configuration</source>
         <target>پیکربندی پروکسی</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.privacy_legend">
-        <source>Privacy settings</source>
-        <target>تنظیمات پنهان‌سازی</target>
       </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>

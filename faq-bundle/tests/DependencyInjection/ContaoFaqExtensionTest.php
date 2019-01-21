@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,15 +17,9 @@ use Contao\FaqBundle\DependencyInjection\ContaoFaqExtension;
 use Contao\FaqBundle\EventListener\InsertTagsListener;
 use Contao\FaqBundle\Picker\FaqPickerProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
-/**
- * Tests the ContaoFaqExtension class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoFaqExtensionTest extends TestCase
 {
     /**
@@ -34,7 +30,7 @@ class ContaoFaqExtensionTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -44,10 +40,7 @@ class ContaoFaqExtensionTest extends TestCase
         $extension->load([], $this->container);
     }
 
-    /**
-     * Tests the contao_faq.listener.insert_tags service.
-     */
-    public function testRegistersTheInsertTagsListener()
+    public function testRegistersTheInsertTagsListener(): void
     {
         $this->assertTrue($this->container->has('contao_faq.listener.insert_tags'));
 
@@ -58,10 +51,7 @@ class ContaoFaqExtensionTest extends TestCase
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 
-    /**
-     * Tests the contao_faq.picker.faq_provider service.
-     */
-    public function testRegistersTheEventPickerProvider()
+    public function testRegistersTheEventPickerProvider(): void
     {
         $this->assertTrue($this->container->has('contao_faq.picker.faq_provider'));
 
@@ -69,12 +59,13 @@ class ContaoFaqExtensionTest extends TestCase
 
         $this->assertSame(FaqPickerProvider::class, $definition->getClass());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
+        $this->assertSame('router', (string) $definition->getArgument(1));
+        $this->assertSame('translator', (string) $definition->getArgument(2));
 
         $conditionals = $definition->getInstanceofConditionals();
 
         $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
 
-        /** @var ChildDefinition $childDefinition */
         $childDefinition = $conditionals[FrameworkAwareInterface::class];
 
         $this->assertSame('setFramework', $childDefinition->getMethodCalls()[0][0]);

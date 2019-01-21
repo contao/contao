@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -19,12 +21,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
 
-/**
- * Adds the calendar feeds to the page header.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class GeneratePageListener
 {
     /**
@@ -32,11 +28,6 @@ class GeneratePageListener
      */
     private $framework;
 
-    /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
@@ -44,11 +35,8 @@ class GeneratePageListener
 
     /**
      * Adds the feeds to the page header.
-     *
-     * @param PageModel          $pageModel
-     * @param LayoutModel|object $layoutModel
      */
-    public function onGeneratePage(PageModel $pageModel, LayoutModel $layoutModel)
+    public function onGeneratePage(PageModel $pageModel, LayoutModel $layoutModel): void
     {
         $calendarfeeds = StringUtil::deserialize($layoutModel->calendarfeeds);
 
@@ -65,16 +53,6 @@ class GeneratePageListener
             return;
         }
 
-        $this->addFeedMarkupToPageHeader($feeds);
-    }
-
-    /**
-     * Adds the feed markup to the page header.
-     *
-     * @param Collection|CalendarFeedModel[] $feeds
-     */
-    private function addFeedMarkupToPageHeader(Collection $feeds)
-    {
         /** @var Template $template */
         $template = $this->framework->getAdapter(Template::class);
 

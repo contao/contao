@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,10 +15,10 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\BackendUser;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\UserSessionListener;
-use Contao\CoreBundle\Security\Authentication\ContaoToken;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -24,88 +26,67 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\User;
 
-/**
- * Tests the UserSessionListener class.
- *
- * @author Yanick Witschi <https:/github.com/toflar>
- */
 class UserSessionListenerTest extends TestCase
 {
     /**
-     * Tests replacing the session upon kernel.request.
-     *
-     * @param string $scope
-     * @param string $userClass
-     * @param string $sessionBagName
-     *
      * @dataProvider scopeBagProvider
      */
-    public function testReplacesTheSessionUponKernelRequest($scope, $userClass, $sessionBagName)
+    public function testReplacesTheSessionUponKernelRequest(string $scope, string $userClass, string $sessionBagName): void
     {
-        $sessionValuesToBeSet = [
+        $sessionValues = [
             'foo' => 'bar',
             'lonesome' => 'looser',
         ];
 
-        $request = new Request();
-        $request->attributes->set('_scope', $scope);
+        $user = $this->mockClassWithProperties($userClass, ['session' => $sessionValues]);
 
-        $responseEvent = new GetResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST
-        );
-
-        $session = $this->mockSession();
-
-        $user = $this
-            ->getMockBuilder($userClass)
-            ->disableOriginalConstructor()
-            ->setMethods(['__get'])
-            ->getMock()
-        ;
-
-        $user
-            ->method('__get')
-            ->with($this->equalTo('session'))
-            ->willReturn($sessionValuesToBeSet)
-        ;
-
-        $token = $this->createMock(ContaoToken::class);
-
+        $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->method('getUser')
             ->willReturn($user)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $listener = $this->getListener($session, null, $tokenStorage);
-        $listener->onKernelRequest($responseEvent);
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('addListener')
+            ->with(KernelEvents::RESPONSE)
+        ;
+
+        $session = $this->mockSession();
+
+        $request = new Request();
+        $request->setSession($session);
+        $request->attributes->set('_scope', $scope);
+
+        $listener = $this->mockListener(null, $tokenStorage, $eventDispatcher);
+        $listener->onKernelRequest($this->mockGetResponseEvent($request));
 
         /** @var AttributeBagInterface $bag */
         $bag = $session->getBag($sessionBagName);
 
-        $this->assertSame($sessionValuesToBeSet, $bag->all());
+        $this->assertSame($sessionValues, $bag->all());
     }
 
     /**
-     * Provides the data for the testSessionReplacedOnKernelRequest() method.
-     *
-     * @return array
+     * @return string[][]
      */
-    public function scopeBagProvider()
+    public function scopeBagProvider(): array
     {
         return [
             [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'contao_backend'],
@@ -114,69 +95,46 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * Tests that the session is stored upon kernel.response.
-     *
-     * @param string $scope
-     * @param string $userClass
-     * @param string $userTable
-     *
      * @dataProvider scopeTableProvider
      */
-    public function testStoresTheSessionUponKernelResponse($scope, $userClass, $userTable)
+    public function testStoresTheSessionUponKernelResponse(string $scope, string $userClass, string $userTable): void
     {
-        $request = new Request();
-        $request->attributes->set('_scope', $scope);
-
-        $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
-
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects($this->once())
             ->method('update')
         ;
 
-        $user = $this
-            ->getMockBuilder($userClass)
-            ->disableOriginalConstructor()
-            ->setMethods(['__get', 'getTable'])
-            ->getMock()
-        ;
-
+        $user = $this->createPartialMock($userClass, ['getTable']);
         $user
             ->method('getTable')
             ->willReturn($userTable)
         ;
 
-        $token = $this->createMock(ContaoToken::class);
-
+        $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->method('getUser')
             ->willReturn($user)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $listener = $this->getListener($this->mockSession(), $connection, $tokenStorage);
-        $listener->onKernelResponse($responseEvent);
+        $request = new Request();
+        $request->setSession($this->mockSession());
+        $request->attributes->set('_scope', $scope);
+
+        $listener = $this->mockListener($connection, $tokenStorage);
+        $listener->onKernelResponse($this->mockFilterResponseEvent($request));
     }
 
     /**
-     * Provides the data for the testSessionStoredOnKernelResponse() method.
-     *
-     * @return array
+     * @return string[][]
      */
-    public function scopeTableProvider()
+    public function scopeTableProvider(): array
     {
         return [
             [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'tl_user'],
@@ -185,103 +143,67 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
-     * Tests that the session bag is not requested when there is no user.
-     *
-     * @param AnonymousToken $noUserReturn
-     *
      * @dataProvider noUserProvider
      */
-    public function testDoesNotReplaceTheSessionIfThereIsNoUser(AnonymousToken $noUserReturn = null)
+    public function testDoesNotReplaceTheSessionIfThereIsNoUser(AnonymousToken $token = null): void
     {
-        $request = new Request();
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
-
-        $responseEvent = new GetResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST
-        );
-
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($this->never())
             ->method('getBag')
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
-            ->willReturn($noUserReturn)
+            ->willReturn($token)
         ;
 
-        $listener = $this->getListener($session, null, $tokenStorage);
-        $listener->onKernelRequest($responseEvent);
+        $request = new Request();
+        $request->setSession($session);
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
+        $listener = $this->mockListener(null, $tokenStorage);
+        $listener->onKernelRequest($this->mockGetResponseEvent($request));
     }
 
     /**
-     * Tests that neither the session bag nor doctrine is requested when there is no user.
-     *
-     * @param AnonymousToken $noUserReturn
-     *
      * @dataProvider noUserProvider
      */
-    public function testDoesNotStoreTheSessionIfThereIsNoUser(AnonymousToken $noUserReturn = null)
+    public function testDoesNotStoreTheSessionIfThereIsNoUser(AnonymousToken $token = null): void
     {
-        $request = new Request();
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
-
-        $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
-
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($this->never())
             ->method('getBag')
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
-            ->willReturn($noUserReturn)
+            ->willReturn($token)
         ;
 
-        $connection = $this
-            ->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['prepare', 'execute'])
-            ->getMock()
-        ;
-
+        $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->never())
-            ->method('prepare')
+            ->method('update')
         ;
 
-        $connection
-            ->expects($this->never())
-            ->method('execute')
-        ;
+        $request = new Request();
+        $request->setSession($session);
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $listener = $this->getListener($session, $connection, $tokenStorage);
-        $listener->onKernelResponse($responseEvent);
+        $listener = $this->mockListener($connection, $tokenStorage);
+        $listener->onKernelResponse($this->mockFilterResponseEvent($request));
     }
 
     /**
-     * Provides the data for the user-less tests.
-     *
-     * @return array
+     * @return (AnonymousToken|null)[][]
      */
-    public function noUserProvider()
+    public function noUserProvider(): array
     {
         return [
             [null],
@@ -289,168 +211,198 @@ class UserSessionListenerTest extends TestCase
         ];
     }
 
-    /**
-     * Tests that the session bag is not requested upon a sub request.
-     */
-    public function testDoesNotReplaceTheSessionUponSubrequests()
+    public function testDoesNotReplaceTheSessionUponSubrequests(): void
     {
-        $request = new Request();
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
-
-        $responseEvent = new GetResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::SUB_REQUEST
-        );
-
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($this->never())
             ->method('getBag')
         ;
 
-        $listener = $this->getListener($session);
-        $listener->onKernelRequest($responseEvent);
-    }
-
-    /**
-     * Tests that neither the session bag nor doctrine is requested upon a subrequest.
-     */
-    public function testDoesNotStoreTheSessionUponSubrequests()
-    {
         $request = new Request();
+        $request->setSession($session);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::SUB_REQUEST,
-            new Response()
-        );
+        $kernel = $this->createMock(KernelInterface::class);
+        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
 
+        $listener = $this->mockListener();
+        $listener->onKernelRequest($event);
+    }
+
+    public function testDoesNotStoreTheSessionUponSubrequests(): void
+    {
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($this->never())
             ->method('getBag')
         ;
 
-        $connection = $this
-            ->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['prepare', 'execute'])
-            ->getMock()
-        ;
-
+        $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->never())
-            ->method('prepare')
+            ->method('update')
         ;
 
-        $connection
-            ->expects($this->never())
-            ->method('execute')
-        ;
-
-        $listener = $this->getListener($session, $connection);
-        $listener->onKernelResponse($responseEvent);
-    }
-
-    /**
-     * Tests that the session bag is not requested if there is no Contao user upon kernel.request.
-     */
-    public function testDoesNotReplaceTheSessionIfTheUserIsNotAContaoUser()
-    {
         $request = new Request();
+        $request->setSession($session);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $responseEvent = new GetResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST
-        );
+        $kernel = $this->createMock(KernelInterface::class);
+        $event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, new Response());
 
-        $token = $this->createMock(ContaoToken::class);
+        $listener = $this->mockListener($connection);
+        $listener->onKernelResponse($event);
+    }
 
+    public function testDoesNotReplaceTheSessionIfNotAContaoRequest(): void
+    {
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->never())
+            ->method('getBag')
+        ;
+
+        $request = new Request();
+        $request->setSession($session);
+
+        $listener = $this->mockListener();
+        $listener->onKernelRequest($this->mockGetResponseEvent($request));
+    }
+
+    public function testDoesNotStoreTheSessionIfNotAContaoRequest(): void
+    {
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->never())
+            ->method('getBag')
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method('update')
+        ;
+
+        $request = new Request();
+        $request->setSession($session);
+
+        $listener = $this->mockListener($connection);
+        $listener->onKernelResponse($this->mockFilterResponseEvent($request));
+    }
+
+    public function testDoesNotReplaceTheSessionIfTheUserIsNotAContaoUser(): void
+    {
+        $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->method('getUser')
             ->willReturn(new User('foo', 'bar'))
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $listener = $this->getListener(
-            $this->mockSession(),
-            $this->createMock(Connection::class),
-            $tokenStorage
-        );
+        $listener = $this->mockListener($this->createMock(Connection::class), $tokenStorage);
 
-        $listener->onKernelRequest($responseEvent);
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
+        $listener->onKernelRequest($this->mockGetResponseEvent($request));
 
         $this->addToAssertionCount(1);  // does not throw an exception
     }
 
-    /**
-     * Tests that neither the session bag nor doctrine is requested if there is no Contao user upon kernel.response.
-     */
-    public function testDoesNotStoreTheSessionIfTheUserIsNotAContaoUser()
+    public function testDoesNotStoreTheSessionIfTheUserIsNotAContaoUser(): void
     {
+        $token = $this->createMock(UsernamePasswordToken::class);
+        $token
+            ->method('getUser')
+            ->willReturn(new User('foo', 'bar'))
+        ;
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $listener = $this->mockListener($connection, $tokenStorage);
+
         $request = new Request();
+        $request->setSession($this->mockSession());
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $responseEvent = new FilterResponseEvent(
-            $this->mockKernel(),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
+        $listener->onKernelResponse($this->mockFilterResponseEvent($request));
 
-        $token = $this->createMock(ContaoToken::class);
+        $this->addToAssertionCount(1);  // does not throw an exception
+    }
 
+    public function testFailsToReplaceTheSessionIfThereIsNoSession(): void
+    {
+        $user = $this->mockClassWithProperties(BackendUser::class, ['session' => []]);
+        $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->method('getUser')
-            ->willReturn(new User('foo', 'bar'))
+            ->willReturn($user)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn($token)
         ;
 
-        $listener = $this->getListener(
-            $this->mockSession(),
-            $this->createMock(Connection::class),
-            $tokenStorage
-        );
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $listener->onKernelResponse($responseEvent);
+        $listener = $this->mockListener(null, $tokenStorage);
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('The request did not contain a session.');
+
+        $listener->onKernelRequest($this->mockGetResponseEvent($request));
+    }
+
+    public function testFailsToStoreTheSessionIfThereIsNoSession(): void
+    {
+        $user = $this->createPartialMock(BackendUser::class, ['getTable']);
+        $user
+            ->method('getTable')
+            ->willReturn('tl_user')
+        ;
+
+        $token = $this->createMock(UsernamePasswordToken::class);
+        $token
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        $request = new Request();
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+
+        $listener = $this->mockListener(null, $tokenStorage);
+
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('The request did not contain a session.');
+
+        $listener->onKernelResponse($this->mockFilterResponseEvent($request));
     }
 
     /**
-     * Returns the session listener object.
-     *
-     * @param SessionInterface      $session
-     * @param Connection            $connection
-     * @param TokenStorageInterface $tokenStorage
-     *
-     * @return UserSessionListener
+     * Mocks a session listener.
      */
-    private function getListener(SessionInterface $session = null, Connection $connection = null, TokenStorageInterface $tokenStorage = null)
+    private function mockListener(Connection $connection = null, TokenStorageInterface $tokenStorage = null, EventDispatcherInterface $eventDispatcher = null): UserSessionListener
     {
-        if (null === $session) {
-            $session = $this->mockSession();
-        }
-
         if (null === $connection) {
             $connection = $this->createMock(Connection::class);
         }
@@ -460,7 +412,34 @@ class UserSessionListenerTest extends TestCase
         }
 
         $trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
+        $scopeMatcher = $this->mockScopeMatcher();
 
-        return new UserSessionListener($session, $connection, $tokenStorage, $trustResolver, $this->mockScopeMatcher());
+        if (null === $eventDispatcher) {
+            $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        }
+
+        return new UserSessionListener($connection, $tokenStorage, $trustResolver, $scopeMatcher, $eventDispatcher);
+    }
+
+    private function mockGetResponseEvent(Request $request = null): GetResponseEvent
+    {
+        $kernel = $this->createMock(KernelInterface::class);
+
+        if (null === $request) {
+            $request = new Request();
+        }
+
+        return new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+    }
+
+    private function mockFilterResponseEvent(Request $request = null): FilterResponseEvent
+    {
+        $kernel = $this->createMock(KernelInterface::class);
+
+        if (null === $request) {
+            $request = new Request();
+        }
+
+        return new FilterResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, new Response());
     }
 }

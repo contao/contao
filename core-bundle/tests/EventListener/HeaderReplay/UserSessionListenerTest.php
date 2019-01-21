@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,144 +13,104 @@
 namespace Contao\CoreBundle\Tests\EventListener\HeaderReplay;
 
 use Contao\CoreBundle\EventListener\HeaderReplay\UserSessionListener;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
-use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
 
-/**
- * Tests the UserSessionListener class.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- */
 class UserSessionListenerTest extends TestCase
 {
     /**
-     * Tests adding the T42-Force-No-Cache header.
-     *
-     * @param string $cookie
-     * @param string $hash
-     *
      * @dataProvider getForceNoCacheHeaderData
      */
-    public function testAddsTheForceNoCacheHeader($cookie, $hash)
+    public function testAddsTheForceNoCacheHeader(string $method): void
     {
-        $session = new Session(new MockArraySessionStorage());
+        $session = $this->mockSession();
         $session->setId('foobar-id');
 
         $request = new Request();
         $request->attributes->set('_scope', 'frontend');
-        $request->cookies->set($cookie, $hash);
         $request->setSession($session);
+
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->expects($this->atLeastOnce())
+            ->method($method)
+            ->willReturn(true)
+        ;
 
         $event = new HeaderReplayEvent($request, new ResponseHeaderBag());
 
-        $listener = new UserSessionListener($this->mockScopeMatcher(), false);
+        $listener = new UserSessionListener($this->mockScopeMatcher(), $tokenChecker);
         $listener->onReplay($event);
 
-        $this->assertArrayHasKey(
-            strtolower(HeaderReplayListener::FORCE_NO_CACHE_HEADER_NAME),
-            $event->getHeaders()->all()
-        );
-
+        $this->assertArrayHasKey('t42-force-no-cache', $event->getHeaders()->all());
         $this->assertNotNull($request->getSession());
-        $this->assertTrue($request->cookies->has($cookie));
     }
 
     /**
-     * Provides the data for the testAddsTheForceNoCacheHeader() method.
-     *
-     * @return array
+     * @return string[][]
      */
-    public function getForceNoCacheHeaderData()
+    public function getForceNoCacheHeaderData(): array
     {
-        return [
-            'Front end user' => ['FE_USER_AUTH', '4549584220117984a1be92c5f9eb980e5d2771d6'],
-            'Back end user' => ['BE_USER_AUTH', 'f6d5c422c903288859fb5ccf03c8af8b0fb4b70a'],
-        ];
+        return [['hasFrontendUser'], ['hasBackendUser']];
     }
 
-    /**
-     * Tests that no header is added outside the Contao scope.
-     */
-    public function testDoesNotAddTheForceNoCacheHeaderIfNotInContaoScope()
+    public function testDoesNotAddTheForceNoCacheHeaderIfNotInContaoScope(): void
     {
         $event = new HeaderReplayEvent(new Request(), new ResponseHeaderBag());
 
-        $listener = new UserSessionListener($this->mockScopeMatcher(), false);
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->expects($this->never())
+            ->method('hasBackendUser')
+        ;
+
+        $listener = new UserSessionListener($this->mockScopeMatcher(), $tokenChecker);
         $listener->onReplay($event);
 
-        $this->assertArrayNotHasKey(
-            strtolower(HeaderReplayListener::FORCE_NO_CACHE_HEADER_NAME),
-            $event->getHeaders()->all()
-        );
+        $this->assertArrayNotHasKey('t42-force-no-cache', $event->getHeaders()->all());
     }
 
-    /**
-     * Tests that no header is added when the request has no session.
-     */
-    public function testDoesNotAddTheForceNoCacheIfThereIsNoSession()
+    public function testDoesNotAddTheForceNoCacheIfThereIsNoSession(): void
     {
         $request = new Request();
         $request->attributes->set('_scope', 'frontend');
 
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->expects($this->never())
+            ->method('hasBackendUser')
+        ;
+
         $event = new HeaderReplayEvent($request, new ResponseHeaderBag());
 
-        $listener = new UserSessionListener($this->mockScopeMatcher(), false);
+        $listener = new UserSessionListener($this->mockScopeMatcher(), $tokenChecker);
         $listener->onReplay($event);
 
-        $this->assertArrayNotHasKey(
-            strtolower(HeaderReplayListener::FORCE_NO_CACHE_HEADER_NAME),
-            $event->getHeaders()->all()
-        );
+        $this->assertArrayNotHasKey('t42-force-no-cache', $event->getHeaders()->all());
     }
 
-    /**
-     * Tests that no header is added when the request has no user authentication cookie.
-     */
-    public function testDoesNotAddTheForceNoCacheIfThereIsNoCookie()
+    public function testDoesNotAddTheForceNoCacheIfThereIsNoAuthenticatedUser(): void
     {
         $request = new Request();
         $request->attributes->set('_scope', 'frontend');
-        $request->setSession(new Session(new MockArraySessionStorage()));
+        $request->setSession($this->mockSession());
+
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->expects($this->once())
+            ->method('hasBackendUser')
+            ->willReturn(false)
+        ;
 
         $event = new HeaderReplayEvent($request, new ResponseHeaderBag());
 
-        $listener = new UserSessionListener($this->mockScopeMatcher(), false);
+        $listener = new UserSessionListener($this->mockScopeMatcher(), $tokenChecker);
         $listener->onReplay($event);
 
-        $this->assertArrayNotHasKey(
-            strtolower(HeaderReplayListener::FORCE_NO_CACHE_HEADER_NAME),
-            $event->getHeaders()->all()
-        );
-
+        $this->assertArrayNotHasKey('t42-force-no-cache', $event->getHeaders()->all());
         $this->assertNotNull($request->getSession());
-    }
-
-    /**
-     * Tests that no header is added if the authentication cookie has an invalid value.
-     */
-    public function testDoesNotAddTheForceNoCacheIfTheCookieIsInvalid()
-    {
-        $request = new Request();
-        $request->attributes->set('_scope', 'frontend');
-        $request->cookies->set('BE_USER_AUTH', 'foobar');
-        $request->setSession(new Session(new MockArraySessionStorage()));
-
-        $event = new HeaderReplayEvent($request, new ResponseHeaderBag());
-
-        $listener = new UserSessionListener($this->mockScopeMatcher(), false);
-        $listener->onReplay($event);
-
-        $this->assertArrayNotHasKey(
-            strtolower(HeaderReplayListener::FORCE_NO_CACHE_HEADER_NAME),
-            $event->getHeaders()->all()
-        );
-
-        $this->assertNotNull($request->getSession());
-        $this->assertTrue($request->cookies->has('BE_USER_AUTH'));
     }
 }

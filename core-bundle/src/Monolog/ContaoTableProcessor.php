@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,11 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-/**
- * Monolog processor for Contao.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ContaoTableProcessor
 {
     /**
@@ -38,35 +35,19 @@ class ContaoTableProcessor
      */
     private $scopeMatcher;
 
-    /**
-     * @var bool
-     */
-    private $anonymizeIp;
-
-    /**
-     * Constructor.
-     *
-     * @param RequestStack          $requestStack
-     * @param TokenStorageInterface $tokenStorage
-     * @param ScopeMatcher          $scopeMatcher
-     * @param bool                  $anonymizeIp
-     */
-    public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage, ScopeMatcher $scopeMatcher, $anonymizeIp = true)
+    public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage, ScopeMatcher $scopeMatcher)
     {
         $this->requestStack = $requestStack;
         $this->tokenStorage = $tokenStorage;
         $this->scopeMatcher = $scopeMatcher;
-        $this->anonymizeIp = $anonymizeIp;
     }
 
     /**
      * Move the Contao context into the "extra" section.
      *
-     * @param array $record
-     *
-     * @return array
+     * @return array<string,array<string,mixed>>
      */
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         if (!isset($record['context']['contao']) || !($record['context']['contao'] instanceof ContaoContext)) {
             return $record;
@@ -74,10 +55,9 @@ class ContaoTableProcessor
 
         $context = $record['context']['contao'];
         $request = $this->requestStack->getCurrentRequest();
-        $level = isset($record['level']) ? $record['level'] : 0;
+        $level = $record['level'] ?? 0;
 
         $this->updateAction($context, $level);
-        $this->updateIp($context, $request);
         $this->updateBrowser($context, $request);
         $this->updateUsername($context);
         $this->updateSource($context, $request);
@@ -88,13 +68,7 @@ class ContaoTableProcessor
         return $record;
     }
 
-    /**
-     * Sets the action.
-     *
-     * @param ContaoContext $context
-     * @param int           $level
-     */
-    private function updateAction(ContaoContext $context, $level)
+    private function updateAction(ContaoContext $context, int $level): void
     {
         if (null !== $context->getAction()) {
             return;
@@ -107,48 +81,16 @@ class ContaoTableProcessor
         }
     }
 
-    /**
-     * Sets the IP adress.
-     *
-     * @param ContaoContext $context
-     * @param Request|null  $request
-     */
-    private function updateIp(ContaoContext $context, Request $request = null)
-    {
-        $ip = $context->getIp();
-
-        if (null === $ip) {
-            $ip = null === $request ? '127.0.0.1' : $request->getClientIp();
-        }
-
-        if ($this->anonymizeIp) {
-            $ip = $this->anonymizeIp($ip);
-        }
-
-        $context->setIp($ip);
-    }
-
-    /**
-     * Sets the browser.
-     *
-     * @param ContaoContext $context
-     * @param Request|null  $request
-     */
-    private function updateBrowser(ContaoContext $context, Request $request = null)
+    private function updateBrowser(ContaoContext $context, Request $request = null): void
     {
         if (null !== $context->getBrowser()) {
             return;
         }
 
-        $context->setBrowser(null === $request ? 'N/A' : $request->server->get('HTTP_USER_AGENT'));
+        $context->setBrowser(null === $request ? 'N/A' : (string) $request->server->get('HTTP_USER_AGENT'));
     }
 
-    /**
-     * Sets the username.
-     *
-     * @param ContaoContext $context
-     */
-    private function updateUsername(ContaoContext $context)
+    private function updateUsername(ContaoContext $context): void
     {
         if (null !== $context->getUsername()) {
             return;
@@ -159,38 +101,12 @@ class ContaoTableProcessor
         $context->setUsername(null === $token ? 'N/A' : $token->getUsername());
     }
 
-    /**
-     * Sets the source.
-     *
-     * @param ContaoContext $context
-     * @param Request|null  $request
-     */
-    private function updateSource(ContaoContext $context, Request $request = null)
+    private function updateSource(ContaoContext $context, Request $request = null): void
     {
         if (null !== $context->getSource()) {
             return;
         }
 
         $context->setSource(null !== $request && $this->scopeMatcher->isBackendRequest($request) ? 'BE' : 'FE');
-    }
-
-    /**
-     * Anonymizes the IP adress.
-     *
-     * @param string $ip
-     *
-     * @return string
-     */
-    private function anonymizeIp($ip)
-    {
-        if ('127.0.0.1' === $ip || '::1' === $ip) {
-            return $ip;
-        }
-
-        if (false !== strpos($ip, ':')) {
-            return substr_replace($ip, ':0000', strrpos($ip, ':'));
-        }
-
-        return substr_replace($ip, '.0', strrpos($ip, '.'));
     }
 }

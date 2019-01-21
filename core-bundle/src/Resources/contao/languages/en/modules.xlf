@@ -65,6 +65,12 @@
       <trans-unit id="MOD.group.1">
         <source>Manage user groups (back end user groups)</source>
       </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage the double opt-in tokens</source>
+      </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
       </trans-unit>
@@ -91,6 +97,12 @@
       </trans-unit>
       <trans-unit id="MOD.maintenance.1">
         <source>Maintain or update Contao</source>
+      </trans-unit>
+      <trans-unit id="MOD.security.0">
+        <source>Security</source>
+      </trans-unit>
+      <trans-unit id="MOD.security.1">
+        <source>Secure your account</source>
       </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
@@ -265,12 +277,6 @@
       </trans-unit>
       <trans-unit id="FMD.miscellaneous">
         <source>Miscellaneous</source>
-      </trans-unit>
-      <trans-unit id="FMD.flash.0">
-        <source>Flash movie</source>
-      </trans-unit>
-      <trans-unit id="FMD.flash.1">
-        <source>Embeds a Flash movie into the page</source>
       </trans-unit>
       <trans-unit id="FMD.randomImage.0">
         <source>Random image</source>

@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_image_size.name.0">
         <source>Name</source>
-        <target>Imię i nazwisko</target>
+        <target>Nazwa wyświetlana</target>
       </trans-unit>
       <trans-unit id="tl_image_size.name.1">
         <source>Please enter the image size name.</source>

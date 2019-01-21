@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,15 +16,13 @@ use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 
 /**
  * Generates an 8 character referer token.
- *
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class TokenGenerator extends UriSafeTokenGenerator
 {
     /**
      * {@inheritdoc}
      */
-    public function generateToken()
+    public function generateToken(): string
     {
         return substr(parent::generateToken(), 0, 8);
     }

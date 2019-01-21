@@ -32,6 +32,18 @@
       <trans-unit id="tl_news.time.1">
         <source>Please enter the time according to the global time format.</source>
       </trans-unit>
+      <trans-unit id="tl_news.pageTitle.0">
+        <source>Meta title</source>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+      </trans-unit>
+      <trans-unit id="tl_news.description.0">
+        <source>Meta description</source>
+      </trans-unit>
+      <trans-unit id="tl_news.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
       </trans-unit>
@@ -93,10 +105,10 @@
         <source>By clicking the "read more …" button, visitors will be redirected to an article.</source>
       </trans-unit>
       <trans-unit id="tl_news.external.0">
-        <source>External URL</source>
+        <source>Custom URL</source>
       </trans-unit>
       <trans-unit id="tl_news.external.1">
-        <source>By clicking the "read more …" button, visitors will be redirected to an external website.</source>
+        <source>By clicking the "read more …" button, visitors will be redirected to a custom URL.</source>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>
@@ -157,6 +169,9 @@
       </trans-unit>
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
       </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>

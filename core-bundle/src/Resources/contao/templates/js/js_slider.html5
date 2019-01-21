@@ -5,7 +5,7 @@ $GLOBALS['TL_CSS'][] = 'assets/swipe/css/swipe.min.css|static';
 
 ?>
 
-<script src="<?= TL_ASSETS_URL ?>assets/swipe/js/swipe.min.js"></script>
+<script src="<?= $this->asset('js/swipe.min.js', 'contao-components/swipe') ?>"></script>
 <script>
   (function() {
     var e = document.querySelectorAll('.content-slider, .slider-control'), c, i;

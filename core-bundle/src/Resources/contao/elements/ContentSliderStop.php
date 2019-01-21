@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentSliderStop extends \ContentElement
+class ContentSliderStop extends ContentElement
 {
 
 	/**
@@ -33,10 +33,7 @@ class ContentSliderStop extends \ContentElement
 		{
 			$this->strTemplate = 'be_wildcard';
 
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate($this->strTemplate);
-
-			$this->Template = $objTemplate;
+			$this->Template = new BackendTemplate($this->strTemplate);
 		}
 
 		// Previous and next labels
@@ -44,3 +41,5 @@ class ContentSliderStop extends \ContentElement
 		$this->Template->next = $GLOBALS['TL_LANG']['MSC']['next'];
 	}
 }
+
+class_alias(ContentSliderStop::class, 'ContentSliderStop');

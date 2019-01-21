@@ -18,12 +18,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'enableVersioning'            => true,
 		'onsubmit_callback' => array
 		(
-			array('tl_member', 'storeDateAdded'),
-			array('tl_member', 'checkRemoveSession')
-		),
-		'ondelete_callback' => array
-		(
-			array('tl_member', 'removeSession')
+			array('tl_member', 'storeDateAdded')
 		),
 		'sql' => array
 		(
@@ -31,9 +26,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			(
 				'id' => 'primary',
 				'username' => 'unique',
-				'email' => 'index',
-				'autologin' => 'unique',
-				'activation' => 'index'
+				'email' => 'index'
 			)
 		)
 	),
@@ -232,7 +225,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'options_callback' => function ()
 			{
-				return System::getCountries();
+				return Contao\System::getCountries();
 			},
 			'sql'                     => "varchar(2) NOT NULL default ''"
 		),
@@ -290,7 +283,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'rgxp'=>'locale', 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'options_callback' => function ()
 			{
-				return System::getLanguages();
+				return Contao\System::getLanguages();
 			},
 			'sql'                     => "varchar(5) NOT NULL default ''"
 		),
@@ -323,21 +316,16 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'flag'                    => 1,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'maxlength'=>64, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50'),
-			'save_callback' => array
-			(
-				array('tl_member', 'resetAutologin')
-			),
-			'sql'                     => "varchar(64) COLLATE utf8_bin NULL"
+			'sql'                     => 'varchar(64) BINARY NULL'
 		),
 		'password' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['password'],
 			'exclude'                 => true,
 			'inputType'               => 'password',
-			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'minlength'=>Config::get('minPasswordLength'), 'feEditable'=>true, 'feGroup'=>'login', 'tl_class'=>'clr'),
+			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'minlength'=>Contao\Config::get('minPasswordLength'), 'feEditable'=>true, 'feGroup'=>'login', 'tl_class'=>'clr'),
 			'save_callback' => array
 			(
-				array('tl_member', 'resetAutologin'),
 				array('tl_member', 'setNewPassword')
 			),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -420,28 +408,12 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
 			'sql'                     => "blob NULL"
-		),
-		'autologin' => array
-		(
-			'default'                 => null,
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "varchar(64) NULL"
-		),
-		'createdOn' => array
-		(
-			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
-		),
-		'activation' => array
-		(
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "varchar(32) NOT NULL default ''"
 		)
 	)
 );
 
 // Filter disabled groups in the front end (see #6757)
-if (TL_MODE == 'FE')
+if (\defined('TL_MODE') && TL_MODE == 'FE')
 {
 	$GLOBALS['TL_DCA']['tl_member']['fields']['groups']['options_callback'] = array('tl_member', 'getActiveGroups');
 }
@@ -451,7 +423,7 @@ if (TL_MODE == 'FE')
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_member extends Backend
+class tl_member extends Contao\Backend
 {
 
 	/**
@@ -460,7 +432,7 @@ class tl_member extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -471,7 +443,7 @@ class tl_member extends Backend
 	public function getActiveGroups()
 	{
 		$arrGroups = array();
-		$objGroup = MemberGroupModel::findAllActive();
+		$objGroup = Contao\MemberGroupModel::findAllActive();
 
 		if ($objGroup !== null)
 		{
@@ -486,17 +458,18 @@ class tl_member extends Backend
 
 	/**
 	 * Add an image to each record
-	 * @param array         $row
-	 * @param string        $label
-	 * @param DataContainer $dc
-	 * @param array         $args
+	 *
+	 * @param array                $row
+	 * @param string               $label
+	 * @param Contao\DataContainer $dc
+	 * @param array                $args
 	 *
 	 * @return array
 	 */
-	public function addIcon($row, $label, DataContainer $dc, $args)
+	public function addIcon($row, $label, Contao\DataContainer $dc, $args)
 	{
 		$image = 'member';
-		$time = \Date::floorToMinute();
+		$time = Contao\Date::floorToMinute();
 
 		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
 
@@ -505,7 +478,7 @@ class tl_member extends Backend
 			$image .= '_';
 		}
 
-		$args[0] = sprintf('<div class="list_icon_new" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="%s.svg" data-icon-disabled="%s.svg">&nbsp;</div>', TL_ASSETS_URL, Backend::getTheme(), $image, $disabled ? $image : rtrim($image, '_'), rtrim($image, '_') . '_');
+		$args[0] = sprintf('<div class="list_icon_new" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="%s.svg" data-icon-disabled="%s.svg">&nbsp;</div>', Contao\System::getContainer()->get('contao.assets.assets_context')->getStaticUrl(), Contao\Backend::getTheme(), $image, $disabled ? $image : rtrim($image, '_'), rtrim($image, '_') . '_');
 
 		return $args;
 	}
@@ -530,55 +503,19 @@ class tl_member extends Backend
 			return '';
 		}
 
-		if (!$row['login'] || $row['username'] == '' || (!$this->User->isAdmin && \count(array_intersect(\StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
+		if (!$row['login'] || $row['username'] == '' || (!$this->User->isAdmin && \count(array_intersect(Contao\StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
 		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon));
+			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 		}
 
-		return '<a href="contao/preview.php?user='.rawurlencode($row['username']).'" target="_blank" title="'.StringUtil::specialchars($title).'">'.Image::getHtml($icon, $label).'</a> ';
-	}
-
-	/**
-	 * Reset the autologin hash
-	 *
-	 * @param string        $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 */
-	public function resetAutologin($varValue, $dc)
-	{
-		// Return if a user edits their own account in the front end
-		if (TL_MODE == 'FE')
-		{
-			return $varValue;
-		}
-
-		// Return if there is no user (e.g. upon registration)
-		if (!$dc)
-		{
-			return $varValue;
-		}
-
-		$objUser = $this->Database->prepare("SELECT * FROM tl_member WHERE id=?")
-								  ->limit(1)
-								  ->execute($dc->id);
-
-		// Reset the autologin hash
-		if ($varValue != $objUser->{$dc->field})
-		{
-			$this->Database->prepare("UPDATE tl_member SET autologin=NULL WHERE id=?")
-						   ->execute($dc->id);
-		}
-
-		return $varValue;
+		return '<a href="contao/preview.php?user='.rawurlencode($row['username']).'" title="'.Contao\StringUtil::specialchars($title).'" target="_blank">'.Contao\Image::getHtml($icon, $label).'</a> ';
 	}
 
 	/**
 	 * Call the "setNewPassword" callback
 	 *
-	 * @param string                    $strPassword
-	 * @param DataContainer|MemberModel $user
+	 * @param string                                  $strPassword
+	 * @param Contao\DataContainer|Contao\MemberModel $user
 	 *
 	 * @return string
 	 */
@@ -613,12 +550,12 @@ class tl_member extends Backend
 	/**
 	 * Store the date when the account has been added
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer|Contao\FrontendUser $dc
 	 */
 	public function storeDateAdded($dc)
 	{
 		// Front end call
-		if (!$dc instanceof DataContainer)
+		if (!$dc instanceof Contao\DataContainer)
 		{
 			return;
 		}
@@ -644,40 +581,6 @@ class tl_member extends Backend
 	}
 
 	/**
-	 * Check whether the user session should be removed
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function checkRemoveSession($dc)
-	{
-		if (!$dc instanceof DataContainer || !$dc->activeRecord)
-		{
-			return;
-		}
-
-		if ($dc->activeRecord->disable || ($dc->activeRecord->start != '' && $dc->activeRecord->start > time()) || ($dc->activeRecord->stop != '' && $dc->activeRecord->stop < time()))
-		{
-			$this->removeSession($dc);
-		}
-	}
-
-	/**
-	 * Remove the session if a user is deleted (see #5353)
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function removeSession($dc)
-	{
-		if (!$dc instanceof DataContainer || !$dc->activeRecord)
-		{
-			return;
-		}
-
-		$this->Database->prepare("DELETE FROM tl_session WHERE name='FE_USER_AUTH' AND pid=?")
-					   ->execute($dc->activeRecord->id);
-	}
-
-	/**
 	 * Return the "toggle visibility" button
 	 *
 	 * @param array  $row
@@ -691,9 +594,9 @@ class tl_member extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Input::get('tid')))
+		if (\strlen(Contao\Input::get('tid')))
 		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -710,23 +613,23 @@ class tl_member extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
 	}
 
 	/**
 	 * Disable/enable a user group
 	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
+	 * @param integer              $intId
+	 * @param boolean              $blnVisible
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
+		Contao\Input::setGet('id', $intId);
+		Contao\Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -769,7 +672,7 @@ class tl_member extends Backend
 			}
 		}
 
-		$objVersions = new Versions('tl_member', $intId);
+		$objVersions = new Contao\Versions('tl_member', $intId);
 		$objVersions->initialize();
 
 		// Reverse the logic (members have disabled=1)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,6 +14,7 @@ namespace Contao\InstallationBundle;
 
 use Contao\Backend;
 use Contao\Config;
+use Contao\File;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Psr\Log\LoggerInterface;
@@ -19,11 +22,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-/**
- * Provides installation related methods.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class InstallTool
 {
     /**
@@ -41,26 +39,14 @@ class InstallTool
      */
     private $logger;
 
-    /**
-     * Constructor.
-     *
-     * @param Connection      $connection
-     * @param string          $rootDir
-     * @param LoggerInterface $logger
-     */
-    public function __construct(Connection $connection, $rootDir, LoggerInterface $logger)
+    public function __construct(Connection $connection, string $rootDir, LoggerInterface $logger)
     {
         $this->connection = $connection;
         $this->rootDir = $rootDir;
         $this->logger = $logger;
     }
 
-    /**
-     * Returns true if the install tool has been locked.
-     *
-     * @return bool
-     */
-    public function isLocked()
+    public function isLocked(): bool
     {
         $file = $this->rootDir.'/var/install_lock';
 
@@ -73,30 +59,17 @@ class InstallTool
         return (int) $count >= 3;
     }
 
-    /**
-     * Returns true if the install tool can write files.
-     *
-     * @return bool
-     */
-    public function canWriteFiles()
+    public function canWriteFiles(): bool
     {
         return is_writable(__FILE__);
     }
 
-    /**
-     * Checks if the license has been accepted.
-     *
-     * @return bool
-     */
-    public function shouldAcceptLicense()
+    public function shouldAcceptLicense(): bool
     {
         return !Config::get('licenseAccepted');
     }
 
-    /**
-     * Increases the login count.
-     */
-    public function increaseLoginCount()
+    public function increaseLoginCount(): void
     {
         $count = 0;
         $file = $this->rootDir.'/var/install_lock';
@@ -109,33 +82,27 @@ class InstallTool
         $fs->dumpFile($file, (int) $count + 1);
     }
 
-    /**
-     * Resets the login count.
-     */
-    public function resetLoginCount()
+    public function resetLoginCount(): void
     {
-        \File::putContent('system/tmp/login-count.txt', 0);
+        File::putContent('system/tmp/login-count.txt', 0);
     }
 
-    /**
-     * Sets a database connection object.
-     *
-     * @param Connection $connection
-     */
-    public function setConnection(Connection $connection)
+    public function setConnection(Connection $connection): void
     {
         $this->connection = $connection;
     }
 
-    /**
-     * Checks if a database connection can be established.
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function canConnectToDatabase($name)
+    public function canConnectToDatabase(?string $name): bool
     {
+        // Return if there is a working database connection already
+        try {
+            $this->connection->connect();
+            $this->connection->query('SHOW TABLES');
+
+            return true;
+        } catch (\Exception $e) {
+        }
+
         if (null === $name || null === $this->connection) {
             return false;
         }
@@ -161,24 +128,12 @@ class InstallTool
         return true;
     }
 
-    /**
-     * Checks if a table exists.
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function hasTable($name)
+    public function hasTable(string $name): bool
     {
         return $this->connection->getSchemaManager()->tablesExist([$name]);
     }
 
-    /**
-     * Checks if the installation is fresh.
-     *
-     * @return bool
-     */
-    public function isFreshInstallation()
+    public function isFreshInstallation(): bool
     {
         if (!$this->hasTable('tl_page')) {
             return true;
@@ -196,10 +151,8 @@ class InstallTool
 
     /**
      * Checks if the database is older than version 3.2.
-     *
-     * @return bool
      */
-    public function hasOldDatabase()
+    public function hasOldDatabase(): bool
     {
         if (!$this->hasTable('tl_layout')) {
             return false;
@@ -222,9 +175,65 @@ class InstallTool
     }
 
     /**
-     * Handles executing the runonce files.
+     * Checks the database configuration.
      */
-    public function handleRunOnce()
+    public function hasConfigurationError(array &$context): bool
+    {
+        $row = $this->connection
+            ->query('SELECT @@version as Version')
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        [$version] = explode('-', $row->Version);
+
+        // The database version is too old
+        if (version_compare($version, '5.1.0', '<')) {
+            $context['errorCode'] = 1;
+            $context['version'] = $version;
+
+            return true;
+        }
+
+        $options = $this->connection->getParams()['defaultTableOptions'];
+
+        // Check the collation if the user has configured it
+        if (isset($options['collate'])) {
+            $statement = $this->connection->query("SHOW COLLATION LIKE '".$options['collate']."'");
+
+            // The configured collation is not installed
+            if (false === ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+                $context['errorCode'] = 2;
+                $context['collation'] = $options['collate'];
+
+                return true;
+            }
+        }
+
+        // Check the engine if the user has configured it
+        if (isset($options['engine'])) {
+            $engineFound = false;
+            $statement = $this->connection->query('SHOW ENGINES');
+
+            while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+                if ($options['engine'] === $row->Engine) {
+                    $engineFound = true;
+                    break;
+                }
+            }
+
+            // The configured engine is not available
+            if (!$engineFound) {
+                $context['errorCode'] = 3;
+                $context['engine'] = $options['engine'];
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function handleRunOnce(): void
     {
         // Wait for the tables to be created (see #5061)
         if (!$this->hasTable('tl_log')) {
@@ -237,10 +246,11 @@ class InstallTool
     /**
      * Returns the available SQL templates.
      *
-     * @return array
+     * @return string[]
      */
-    public function getTemplates()
+    public function getTemplates(): array
     {
+        /** @var SplFileInfo[] $finder */
         $finder = Finder::create()
             ->files()
             ->name('*.sql')
@@ -249,7 +259,6 @@ class InstallTool
 
         $templates = [];
 
-        /** @var SplFileInfo $file */
         foreach ($finder as $file) {
             $templates[] = $file->getRelativePathname();
         }
@@ -257,13 +266,7 @@ class InstallTool
         return $templates;
     }
 
-    /**
-     * Imports a template.
-     *
-     * @param string $template
-     * @param bool   $preserveData
-     */
-    public function importTemplate($template, $preserveData = false)
+    public function importTemplate(string $template, bool $preserveData = false): void
     {
         if (!$preserveData) {
             $tables = $this->connection->getSchemaManager()->listTableNames();
@@ -282,12 +285,7 @@ class InstallTool
         }
     }
 
-    /**
-     * Checks if there is an admin user.
-     *
-     * @return bool
-     */
-    public function hasAdminUser()
+    public function hasAdminUser(): bool
     {
         try {
             $statement = $this->connection->query("
@@ -309,16 +307,7 @@ class InstallTool
         return false;
     }
 
-    /**
-     * Persists the admin user.
-     *
-     * @param string $username
-     * @param string $name
-     * @param string $email
-     * @param string $password
-     * @param string $language
-     */
-    public function persistAdminUser($username, $name, $email, $password, $language)
+    public function persistAdminUser(string $username, string $name, string $email, string $password, string $language): void
     {
         $statement = $this->connection->prepare("
             INSERT INTO
@@ -363,47 +352,26 @@ class InstallTool
     }
 
     /**
-     * Returns a Contao parameter.
-     *
-     * @param string $key
-     *
      * @return mixed|null
      */
-    public function getConfig($key)
+    public function getConfig(string $key)
     {
         return Config::get($key);
     }
 
-    /**
-     * Sets a Contao parameter.
-     *
-     * @param string $key
-     * @param mixed  $value
-     */
-    public function setConfig($key, $value)
+    public function setConfig(string $key, $value): void
     {
         Config::set($key, $value);
     }
 
-    /**
-     * Persists a Contao parameter.
-     *
-     * @param string $key
-     * @param mixed  $value
-     */
-    public function persistConfig($key, $value)
+    public function persistConfig(string $key, $value): void
     {
         $config = Config::getInstance();
         $config->persist($key, $value);
         $config->save();
     }
 
-    /**
-     * Logs an exception in the current log file.
-     *
-     * @param \Exception $e
-     */
-    public function logException(\Exception $e)
+    public function logException(\Exception $e): void
     {
         $this->logger->critical('An exception occurred.', ['exception' => $e]);
     }

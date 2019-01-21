@@ -158,16 +158,16 @@
         <target>Kokosinseln</target>
       </trans-unit>
       <trans-unit id="CNT.cd">
-        <source>Democratic Republic of the Congo</source>
-        <target>Demokratische Republik Kongo</target>
+        <source>Congo - Kinshasa</source>
+        <target>Kongo-Kinshasa</target>
       </trans-unit>
       <trans-unit id="CNT.cf">
         <source>Central African Republic</source>
         <target>Zentralafrikanische Republik</target>
       </trans-unit>
       <trans-unit id="CNT.cg">
-        <source>Republic of the Congo</source>
-        <target>Republik Kongo</target>
+        <source>Congo - Brazzaville</source>
+        <target>Kongo-Brazzaville</target>
       </trans-unit>
       <trans-unit id="CNT.ch">
         <source>Switzerland</source>
@@ -196,6 +196,10 @@
       <trans-unit id="CNT.co">
         <source>Colombia</source>
         <target>Kolumbien</target>
+      </trans-unit>
+      <trans-unit id="CNT.cp">
+        <source>Clipperton Island</source>
+        <target>Clipperton-Insel</target>
       </trans-unit>
       <trans-unit id="CNT.cr">
         <source>Costa Rica</source>
@@ -228,6 +232,10 @@
       <trans-unit id="CNT.de">
         <source>Germany</source>
         <target>Deutschland</target>
+      </trans-unit>
+      <trans-unit id="CNT.dg">
+        <source>Diego Garcia</source>
+        <target>Diego Garcia</target>
       </trans-unit>
       <trans-unit id="CNT.dj">
         <source>Djibouti</source>
@@ -423,7 +431,7 @@
       </trans-unit>
       <trans-unit id="CNT.im">
         <source>Isle of Man</source>
-        <target>Isle of Man</target>
+        <target>Isle of </target>
       </trans-unit>
       <trans-unit id="CNT.in">
         <source>India</source>
@@ -683,7 +691,7 @@
       </trans-unit>
       <trans-unit id="CNT.nr">
         <source>Nauru</source>
-        <target>Nauru</target>
+        <target>Nauruisch</target>
       </trans-unit>
       <trans-unit id="CNT.nu">
         <source>Niue</source>

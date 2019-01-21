@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,12 +16,8 @@ use Contao\BackendUser;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Abstract class for picker providers.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 abstract class AbstractPickerProvider implements PickerProviderInterface
 {
     /**
@@ -33,20 +31,20 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     private $router;
 
     /**
+     * @var TranslatorInterface|null
+     */
+    private $translator;
+
+    /**
      * @var TokenStorageInterface
      */
     private $tokenStorage;
 
-    /**
-     * Constructor.
-     *
-     * @param FactoryInterface $menuFactory
-     * @param RouterInterface  $router
-     */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router)
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator = null)
     {
         $this->menuFactory = $menuFactory;
         $this->router = $router;
+        $this->translator = $translator;
     }
 
     /**
@@ -64,10 +62,17 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     {
         $name = $this->getName();
 
+        if (null === $this->translator) {
+            @trigger_error('Using a picker provider without injecting the translator service has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+            $label = $GLOBALS['TL_LANG']['MSC'][$name];
+        } else {
+            $label = $this->translator->trans('MSC.'.$name, [], 'contao_default');
+        }
+
         return $this->menuFactory->createItem(
             $name,
             [
-                'label' => $GLOBALS['TL_LANG']['MSC'][$name] ?: $name,
+                'label' => $label ?: $name,
                 'linkAttributes' => ['class' => $name],
                 'current' => $this->isCurrent($config),
                 'uri' => $this->generateUrl($config, true),
@@ -75,12 +80,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         );
     }
 
-    /**
-     * Sets the security token storage.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     */
-    public function setTokenStorage(TokenStorageInterface $tokenStorage)
+    public function setTokenStorage(TokenStorageInterface $tokenStorage): void
     {
         $this->tokenStorage = $tokenStorage;
     }
@@ -97,10 +97,8 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      * Returns the back end user object.
      *
      * @throws \RuntimeException
-     *
-     * @return BackendUser
      */
-    protected function getUser()
+    protected function getUser(): BackendUser
     {
         if (null === $this->tokenStorage) {
             throw new \RuntimeException('No token storage provided');
@@ -124,21 +122,14 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     /**
      * Returns the routing parameters for the back end picker.
      *
-     * @param PickerConfig|null $config
-     *
-     * @return array
+     * @return array<string,string|int>
      */
     abstract protected function getRouteParameters(PickerConfig $config = null);
 
     /**
      * Generates the URL for the picker.
-     *
-     * @param PickerConfig $config
-     * @param bool         $ignoreValue
-     *
-     * @return string
      */
-    private function generateUrl(PickerConfig $config, $ignoreValue)
+    private function generateUrl(PickerConfig $config, bool $ignoreValue): ?string
     {
         $params = array_merge(
             $this->getRouteParameters($ignoreValue ? null : $config),

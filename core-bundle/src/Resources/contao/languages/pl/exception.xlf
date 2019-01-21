@@ -78,7 +78,7 @@
         <target>Aplikacja została skonfigurowana, aby przekierowywać żądanie do innej strony, jednak docelowa strona nie istnieje lub nie jest opublikowana.</target>
       </trans-unit>
       <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let him know that there is something wrong.</source>
+        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
         <target>To jest coś, co musi być naprawione przez administratora serwisu. Jeśli jesteś odwiedzającym, nie możesz zrobić nic oprócz &lt;a href=&quot;%s&quot;&gt;skontaktowania się z administratorem&lt;/a&gt; i powiadomienia go o problemie.</target>
       </trans-unit>
       <trans-unit id="XPT.noRoot">
@@ -90,7 +90,7 @@
         <target>Nie znaleziono punktu startowego, który odpowiada żądanemu językowi i/lub nazwie domeny.</target>
       </trans-unit>
       <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
+        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
         <target>Jeśli wyraźnie ustawiłeś język, spróbuj &lt;a href=&quot;%s&quot;&gt;przejść na najwyższy poziom&lt;/a&gt; i zobaczyć, czy zostaniesz przekierowany. W przeciwnym wypadku &lt;a href=&quot;%s&quot;&gt;skontaktuj się z administratorem&lt;/a&gt; i powiadom go o problemie.</target>
       </trans-unit>
       <trans-unit id="XPT.noLayout">
@@ -118,7 +118,7 @@
         <target>Twoje żądanie odnosi się do strony, która nie zawiera żadnych opublikowanych podstron.</target>
       </trans-unit>
       <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
+        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
         <target>Prawdopodobnie strona jest ciągle w fazie produkcji i będzie online za kilka dni. Jeśli myślisz, że jest coś nie tak, &lt;a href=&quot;%s&quot;&gt;skontaktuj się z administratorem&lt;/a&gt; i powiadom go o problemie.</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">

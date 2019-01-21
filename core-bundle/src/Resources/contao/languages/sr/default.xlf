@@ -231,15 +231,12 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
-        <target>Нити једна root страница активног сајта без експлицитног ДНС подешавања није постављена као резервна опција за језик.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
-        <target>Нити једна root страница активног сајта &lt;strong&gt;%s&lt;/strong&gt; мије постављена као резервна опција за језик.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
-        <target>Можете одредити само једну root страницу сајта као резервну опцију за језик.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
@@ -280,6 +277,12 @@
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
         <target>Унесите само карактере из скупа: A-Z0-9[]_-</target>
+      </trans-unit>
+      <trans-unit id="ERR.largeImage">
+        <source>Image exceeds the maximum dimensions of %sx%s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.invalidTwoFactor">
+        <source>Invalid verification code!</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -359,7 +362,7 @@
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
         <source>Single element</source>
-        <target>Јединствени елемент</target>
+        <target>Самостални елемент</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -569,6 +572,12 @@
         <source>This type of page automatically logs out the user.</source>
         <target>Ова врста странице аутоматски одјављује корисника.</target>
       </trans-unit>
+      <trans-unit id="PTY.error_401.0">
+        <source>401 Not authenticated</source>
+      </trans-unit>
+      <trans-unit id="PTY.error_401.1">
+        <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+      </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
         <target>403 Приступ одбијен</target>
@@ -595,7 +604,7 @@
       </trans-unit>
       <trans-unit id="FOP.f1">
         <source>Upload files to the server</source>
-        <target>Копирај фајлове на сервер</target>
+        <target>Постави фајл на сервер</target>
       </trans-unit>
       <trans-unit id="FOP.f2">
         <source>Edit, copy or move files and folders</source>
@@ -652,6 +661,62 @@
       <trans-unit id="CHMOD.cworld">
         <source>Everybody</source>
         <target>Сви</target>
+      </trans-unit>
+      <trans-unit id="DATE.a">
+        <source>am</source>
+        <target>am</target>
+      </trans-unit>
+      <trans-unit id="DATE.A">
+        <source>AM</source>
+        <target>AM</target>
+      </trans-unit>
+      <trans-unit id="DATE.d">
+        <source>DD</source>
+        <target>DD</target>
+      </trans-unit>
+      <trans-unit id="DATE.j">
+        <source>D</source>
+        <target>D</target>
+      </trans-unit>
+      <trans-unit id="DATE.m">
+        <source>MM</source>
+        <target>MM</target>
+      </trans-unit>
+      <trans-unit id="DATE.n">
+        <source>M</source>
+        <target>M</target>
+      </trans-unit>
+      <trans-unit id="DATE.y">
+        <source>YY</source>
+        <target>YY</target>
+      </trans-unit>
+      <trans-unit id="DATE.Y">
+        <source>YYYY</source>
+        <target>YYYY</target>
+      </trans-unit>
+      <trans-unit id="DATE.h">
+        <source>hh</source>
+        <target>hh</target>
+      </trans-unit>
+      <trans-unit id="DATE.H">
+        <source>hh</source>
+        <target>hh</target>
+      </trans-unit>
+      <trans-unit id="DATE.g">
+        <source>h</source>
+        <target>h</target>
+      </trans-unit>
+      <trans-unit id="DATE.G">
+        <source>h</source>
+        <target>h</target>
+      </trans-unit>
+      <trans-unit id="DATE.i">
+        <source>mm</source>
+        <target>mm</target>
+      </trans-unit>
+      <trans-unit id="DATE.s">
+        <source>ss</source>
+        <target>ss</target>
       </trans-unit>
       <trans-unit id="DAYS.0">
         <source>Sunday</source>
@@ -1063,7 +1128,7 @@
       </trans-unit>
       <trans-unit id="MSC.sw_position">
         <source>Position</source>
-        <target>Позиција</target>
+        <target>Позиционирање</target>
       </trans-unit>
       <trans-unit id="MSC.image_sizes">
         <source>Predefined dimensions</source>
@@ -1329,31 +1394,6 @@
         <source>Expand or collapse all nodes</source>
         <target>Отвори или затвори све чворове</target>
       </trans-unit>
-      <trans-unit id="MSC.lockedAccount.0">
-        <source>A Contao account has been locked</source>
-        <target>Contao налог је закључан</target>
-      </trans-unit>
-      <trans-unit id="MSC.lockedAccount.1">
-        <source>The following Contao account has been locked for security reasons.
-
-Username: %s
-Real name: %s
-Website: %s
-
-The account has been locked for %d minutes, because the user has entered an invalid password three times in a row. After this period of time, the account will be unlocked automatically.
-
-This e-mail has been generated by Contao. You can not reply to it directly.
-</source>
-        <target>Следећи Contao налог је закључан из сигурносних разлога.
-
-Корисник: %s
-Име: %s
-Сајт: %s
-
-минута, зато што је корисник погрешио лозинку узастопно три пута. Након истека наведеног периода , налог ће бити откључан аутоматски.
-Мејл је аутоматски генерисао Contao систем. Немојте одговарати директно на њега.
-</target>
-      </trans-unit>
       <trans-unit id="MSC.toggleMobile.0">
         <source>Mobile version</source>
         <target>Мобилна верзија</target>
@@ -1433,6 +1473,9 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       <trans-unit id="MSC.logoutBT">
         <source>Logout</source>
         <target>Одјава</target>
+      </trans-unit>
+      <trans-unit id="MSC.switchBT">
+        <source>Back to %s</source>
       </trans-unit>
       <trans-unit id="MSC.logoutBTTitle">
         <source>Close the current session</source>
@@ -1628,7 +1671,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.tstamp">
         <source>Revision date</source>
-        <target>Датум ревизије</target>
+        <target>Датум последње верзије</target>
       </trans-unit>
       <trans-unit id="MSC.entry">
         <source>%s entry</source>
@@ -1706,6 +1749,9 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <source>Meta data</source>
         <target>Мета подаци</target>
       </trans-unit>
+      <trans-unit id="MSC.versioning">
+        <source>Version management</source>
+      </trans-unit>
       <trans-unit id="MSC.version">
         <source>Version</source>
         <target>Верзија</target>
@@ -1716,7 +1762,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.backendModules">
         <source>Back end modules</source>
-        <target>БекЕнд модули</target>
+        <target>Модули БекЕнда</target>
       </trans-unit>
       <trans-unit id="MSC.welcomeTo">
         <source>%s back end</source>
@@ -1854,6 +1900,9 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <source>Reset the filters</source>
         <target>Ресетуј филтере</target>
       </trans-unit>
+      <trans-unit id="MSC.searchAndFilter">
+        <source>Search and filter functions</source>
+      </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
         <target>Обавезна поља</target>
@@ -1924,7 +1973,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.emailAddress">
         <source>E-mail address</source>
-        <target>E-mail адреса</target>
+        <target>Имејл адреса</target>
       </trans-unit>
       <trans-unit id="MSC.register">
         <source>Register</source>
@@ -2115,8 +2164,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <target>Горе</target>
       </trans-unit>
       <trans-unit id="MSC.first">
-        <source>&amp;#171; First</source>
-        <target>&amp;#171; Први</target>
+        <source>First</source>
       </trans-unit>
       <trans-unit id="MSC.previous">
         <source>Previous</source>
@@ -2127,8 +2175,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
         <target>Следећи</target>
       </trans-unit>
       <trans-unit id="MSC.last">
-        <source>Last &amp;#187;</source>
-        <target>Последњи</target>
+        <source>Last</source>
       </trans-unit>
       <trans-unit id="MSC.goToPage">
         <source>Go to page %s</source>
@@ -2156,7 +2203,7 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       </trans-unit>
       <trans-unit id="MSC.searchLabel">
         <source>Search</source>
-        <target>Претрага</target>
+        <target>Претражи</target>
       </trans-unit>
       <trans-unit id="MSC.keywords">
         <source>Keywords</source>
@@ -2297,6 +2344,73 @@ This e-mail has been generated by Contao. You can not reply to it directly.
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a root page in the site structure to enter file meta data.</source>
         <target>Да бисте чували мета податке о фајлу, у структуру сајта морате додати root страницу.</target>
+      </trans-unit>
+      <trans-unit id="MSC.breadcrumbMenu">
+        <source>Breadcrumb menu</source>
+        <target>Breadcrumb навигација</target>
+      </trans-unit>
+      <trans-unit id="MSC.mainNavigation">
+        <source>Main navigation</source>
+        <target>Главна навигација</target>
+      </trans-unit>
+      <trans-unit id="MSC.headerNavigation">
+        <source>Header navigation</source>
+      </trans-unit>
+      <trans-unit id="MSC.pagination">
+        <source>Pagination menu</source>
+        <target>Мени пагинације</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.unicodeLowercase">
+        <source>Unicode numbers and lowercase letters</source>
+        <target>Unicode бројеви и мала слова</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.unicode">
+        <source>Unicode numbers and letters</source>
+        <target>Unicode бројеви и слова</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.asciiLowercase">
+        <source>ASCII numbers and lowercase letters</source>
+        <target>ASCII бројеви и мала слова</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.ascii">
+        <source>ASCII numbers and letters</source>
+        <target>ASCII бројеви и слова</target>
+      </trans-unit>
+      <trans-unit id="MSC.sortOrder">
+        <source>Sort order</source>
+        <target>Редослед сортирања</target>
+      </trans-unit>
+      <trans-unit id="MSC.security">
+        <source>Security</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorAuthentication">
+        <source>Two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorVerification">
+        <source>Verification code</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorVerificationHelp">
+        <source>Please enter the verification code generated by your 2FA/TOTP app.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorExplain">
+        <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorScan">
+        <source>Please scan the QR code with your 2FA/TOTP app.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorActive">
+        <source>Two-factor authentication has been enabled.</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorEnforced">
+        <source>Please enable up two-factor authentication before you continue.</source>
+      </trans-unit>
+      <trans-unit id="MSC.enable">
+        <source>Enable</source>
+        <target>Омогући</target>
+      </trans-unit>
+      <trans-unit id="MSC.disable">
+        <source>Disable</source>
+        <target>Онемогући</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

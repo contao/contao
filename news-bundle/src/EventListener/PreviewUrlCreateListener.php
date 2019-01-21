@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,11 +18,6 @@ use Contao\NewsModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Adds a query to the front end preview URL.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PreviewUrlCreateListener
 {
     /**
@@ -33,12 +30,6 @@ class PreviewUrlCreateListener
      */
     private $framework;
 
-    /**
-     * Constructor.
-     *
-     * @param RequestStack             $requestStack The request stack
-     * @param ContaoFrameworkInterface $framework    The Contao framework service
-     */
     public function __construct(RequestStack $requestStack, ContaoFrameworkInterface $framework)
     {
         $this->requestStack = $requestStack;
@@ -46,17 +37,21 @@ class PreviewUrlCreateListener
     }
 
     /**
-     * Adds a query to the front end preview URL.
+     * Adds the news ID to the front end preview URL.
      *
-     * @param PreviewUrlCreateEvent $event The event object
+     * @throws \RuntimeException
      */
-    public function onPreviewUrlCreate(PreviewUrlCreateEvent $event)
+    public function onPreviewUrlCreate(PreviewUrlCreateEvent $event): void
     {
         if (!$this->framework->isInitialized() || 'news' !== $event->getKey()) {
             return;
         }
 
         $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
 
         // Return on the news archive list page
         if ('tl_news' === $request->query->get('table') && !$request->query->has('act')) {
@@ -71,12 +66,7 @@ class PreviewUrlCreateListener
     }
 
     /**
-     * Returns the ID.
-     *
-     * @param PreviewUrlCreateEvent $event   The event object
-     * @param Request               $request The request object
-     *
-     * @return int|string The ID
+     * @return int|string
      */
     private function getId(PreviewUrlCreateEvent $event, Request $request)
     {
@@ -89,13 +79,9 @@ class PreviewUrlCreateListener
     }
 
     /**
-     * Returns the news model.
-     *
-     * @param int $id The ID
-     *
-     * @return NewsModel|null The news model or null
+     * @param int|string $id
      */
-    private function getNewsModel($id)
+    private function getNewsModel($id): ?NewsModel
     {
         /** @var NewsModel $adapter */
         $adapter = $this->framework->getAdapter(NewsModel::class);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,88 +15,80 @@ namespace Contao\CalendarBundle\Tests\EventListener;
 use Contao\CalendarBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Tests the PreviewUrlCreateListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
-class PreviewUrlCreateListenerTest extends TestCase
+class PreviewUrlCreateListenerTest extends ContaoTestCase
 {
-    /**
-     * Tests the onPreviewUrlCreate() method.
-     */
-    public function testCreatesThePreviewUrl()
+    public function testCreatesThePreviewUrl(): void
     {
-        $request = Request::createFromGlobals();
-
         $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack->push(new Request());
 
+        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, ['id' => 1]);
+
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => $eventModel]),
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
-        $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
+        $listener = new PreviewUrlCreateListener($requestStack, $framework);
         $listener->onPreviewUrlCreate($event);
 
         $this->assertSame('calendar=1', $event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed if the framework is not initialized.
-     */
-    public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized()
+    public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
+        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework
+            ->method('isInitialized')
+            ->willReturn(false)
+        ;
+
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
-        $listener = new PreviewUrlCreateListener(new RequestStack(), $this->mockContaoFramework(false));
+        $listener = new PreviewUrlCreateListener(new RequestStack(), $framework);
         $listener->onPreviewUrlCreate($event);
 
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed if the key is not "calendar".
-     */
-    public function testDoesNotCreateThePreviewUrlIfTheCalendarParameterIsNotSet()
+    public function testDoesNotCreateThePreviewUrlIfTheCalendarParameterIsNotSet(): void
     {
+        $framework = $this->mockContaoFramework();
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $listener = new PreviewUrlCreateListener(new RequestStack(), $this->mockContaoFramework());
+        $listener = new PreviewUrlCreateListener(new RequestStack(), $framework);
         $listener->onPreviewUrlCreate($event);
 
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed on the calendar list page.
-     */
-    public function testDoesNotCreateThePreviewUrlOnTheCalendarListPage()
+    public function testDoesNotCreateThePreviewUrlOnTheCalendarListPage(): void
     {
-        $request = Request::createFromGlobals();
+        $request = new Request();
         $request->query->set('table', 'tl_calendar_events');
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
+        $framework = $this->mockContaoFramework();
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
-        $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
+        $listener = new PreviewUrlCreateListener($requestStack, $framework);
         $listener->onPreviewUrlCreate($event);
 
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * Tests that the ID is overwritten if the event settings are edited.
-     */
-    public function testOverwritesTheIdIfTheEventSettingsAreEdited()
+    public function testOverwritesTheIdIfTheEventSettingsAreEdited(): void
     {
-        $request = Request::createFromGlobals();
+        $request = new Request();
         $request->query->set('act', 'edit');
         $request->query->set('table', 'tl_calendar_events');
         $request->query->set('id', 2);
@@ -102,77 +96,36 @@ class PreviewUrlCreateListenerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $event = new PreviewUrlCreateEvent('calendar', 1);
+        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, ['id' => 2]);
 
-        $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => $eventModel]),
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+        $event = new PreviewUrlCreateEvent('calendar', 2);
+
+        $listener = new PreviewUrlCreateListener($requestStack, $framework);
         $listener->onPreviewUrlCreate($event);
 
         $this->assertSame('calendar=2', $event->getQuery());
     }
 
-    /**
-     * Tests that the listener is bypassed if there is no event.
-     */
-    public function testDoesNotCreateThePreviewUrlIfThereIsNoEvent()
+    public function testDoesNotCreateThePreviewUrlIfThereIsNoEvent(): void
     {
-        $request = Request::createFromGlobals();
-
         $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack->push(new Request());
 
-        $event = new PreviewUrlCreateEvent('calendar', null);
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
+        ];
 
-        $listener = new PreviewUrlCreateListener($requestStack, $this->mockContaoFramework());
+        $framework = $this->mockContaoFramework($adapters);
+        $event = new PreviewUrlCreateEvent('calendar', 0);
+
+        $listener = new PreviewUrlCreateListener($requestStack, $framework);
         $listener->onPreviewUrlCreate($event);
 
         $this->assertNull($event->getQuery());
-    }
-
-    /**
-     * Returns a ContaoFramework instance.
-     *
-     * @param bool $isInitialized
-     *
-     * @return ContaoFrameworkInterface
-     */
-    private function mockContaoFramework($isInitialized = true)
-    {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-
-        $framework
-            ->method('isInitialized')
-            ->willReturn($isInitialized)
-        ;
-
-        $eventsModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByPk'])
-            ->getMock()
-        ;
-
-        $eventsModelAdapter
-            ->method('findByPk')
-            ->willReturnCallback(function ($id) {
-                if (null === $id) {
-                    return null;
-                }
-
-                return (object) ['id' => $id];
-            })
-        ;
-
-        $framework
-            ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($eventsModelAdapter) {
-                if (CalendarEventsModel::class === $key) {
-                    return $eventsModelAdapter;
-                }
-
-                return null;
-            })
-        ;
-
-        return $framework;
     }
 }

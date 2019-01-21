@@ -182,197 +182,231 @@
         
       </trans-unit>
       <trans-unit id="37">
+        <source>ALTER_TABLE</source>
+        <target>Cambiar tablas</target>
+        
+      </trans-unit>
+      <trans-unit id="38">
         <source>ALTER_ADD</source>
         <target>Añadir columnas</target>
         
       </trans-unit>
-      <trans-unit id="38">
+      <trans-unit id="39">
         <source>ALTER_CHANGE</source>
         <target>Cambiar columnas</target>
         
       </trans-unit>
-      <trans-unit id="39">
+      <trans-unit id="40">
         <source>ALTER_DROP</source>
         <target>Soltar columnas</target>
         
       </trans-unit>
-      <trans-unit id="40">
+      <trans-unit id="41">
         <source>DROP</source>
         <target>Soltar tablas</target>
         
       </trans-unit>
-      <trans-unit id="41">
+      <trans-unit id="42">
         <source>select_all</source>
         <target>Seleccionar todos</target>
         
       </trans-unit>
-      <trans-unit id="42">
+      <trans-unit id="43">
         <source>template_import</source>
         <target>Importar una plantilla</target>
         
       </trans-unit>
-      <trans-unit id="43">
+      <trans-unit id="44">
         <source>template_import_explain</source>
         <target>Aquí puede importar un fichero &lt;code&gt; .sql &lt;/ code&gt; del directorio de la carpeta &lt;code&gt;templates&lt;/ code&gt;. Se borrarán todos los datos existentes! Si sólo desea importar un tema, por favor, utilice el gestor de temas en el backend de Contao.</target>
         
       </trans-unit>
-      <trans-unit id="44">
+      <trans-unit id="45">
         <source>import_exception</source>
         <target>La importación falló! Compruebe si la base de datos está actualizada y si la versión de Contao es compatible con la suya.</target>
         
       </trans-unit>
-      <trans-unit id="45">
+      <trans-unit id="46">
         <source>import_empty_source</source>
         <target>Seleccione un archivo de plantilla</target>
         
       </trans-unit>
-      <trans-unit id="46">
+      <trans-unit id="47">
         <source>import_data_will_be_deleted</source>
         <target>¡Los datos existentes serán eliminados!</target>
         
       </trans-unit>
-      <trans-unit id="47">
+      <trans-unit id="48">
         <source>imported_on</source>
         <target>Template importada en %s.</target>
         
       </trans-unit>
-      <trans-unit id="48">
+      <trans-unit id="49">
         <source>templates</source>
         <target>Plantillas</target>
         
       </trans-unit>
-      <trans-unit id="49">
+      <trans-unit id="50">
         <source>do_not_truncate</source>
         <target>No corte las tablas</target>
         
       </trans-unit>
-      <trans-unit id="50">
+      <trans-unit id="51">
         <source>import_confirm</source>
         <target>¡Los datos existentes serán eliminados! ¿Desea continuar?</target>
         
       </trans-unit>
-      <trans-unit id="51">
+      <trans-unit id="52">
         <source>template_save</source>
         <target>Importar plantilla</target>
         
       </trans-unit>
-      <trans-unit id="52">
+      <trans-unit id="53">
         <source>admin_create</source>
         <target>Crear usuario administrador</target>
         
       </trans-unit>
-      <trans-unit id="53">
+      <trans-unit id="54">
         <source>admin_create_explain</source>
         <target>Aquí puede crear un usuario administrador para acceder al backend de Contao.</target>
         
       </trans-unit>
-      <trans-unit id="54">
+      <trans-unit id="55">
         <source>admin_confirm</source>
         <target>Se ha creado un usuario administrador.</target>
         
       </trans-unit>
-      <trans-unit id="55">
+      <trans-unit id="56">
         <source>admin_username</source>
         <target>Usuario</target>
         
       </trans-unit>
-      <trans-unit id="56">
+      <trans-unit id="57">
         <source>admin_name</source>
         <target>Nombre</target>
         
       </trans-unit>
-      <trans-unit id="57">
+      <trans-unit id="58">
         <source>admin_email</source>
         <target>Formato e-mail</target>
         
       </trans-unit>
-      <trans-unit id="58">
+      <trans-unit id="59">
         <source>admin_save</source>
         <target>Crear un usuario administrador</target>
         
       </trans-unit>
-      <trans-unit id="59">
+      <trans-unit id="60">
         <source>admin_error_extnd</source>
         <target>Por motivos de seguridad no puede utilizar ninguno de los caracteres siguientes: #()/&lt;=&gt;</target>
         
       </trans-unit>
-      <trans-unit id="60">
+      <trans-unit id="61">
         <source>admin_error_no_space</source>
         <target>¡El nombre de usuario no puede contener caracteres de espacios en blanco!</target>
         
       </trans-unit>
-      <trans-unit id="61">
+      <trans-unit id="62">
         <source>admin_error_email</source>
         <target>¡Por favor, introduce un e-mail válido!</target>
         
       </trans-unit>
-      <trans-unit id="62">
+      <trans-unit id="63">
         <source>admin_error_password_match</source>
         <target>¡Las contraseñas no coinciden!</target>
         
       </trans-unit>
-      <trans-unit id="63">
+      <trans-unit id="64">
         <source>admin_error_password_user</source>
         <target>¡El usuario y la contraseña no pueden ser iguales!</target>
         
       </trans-unit>
-      <trans-unit id="64">
+      <trans-unit id="65">
         <source>admin_error</source>
         <target>Indique todos los campos para crear un usuario administrador</target>
         
       </trans-unit>
-      <trans-unit id="65">
+      <trans-unit id="66">
         <source>congratulations</source>
         <target>¡Enhorabuena!</target>
         
       </trans-unit>
-      <trans-unit id="66">
+      <trans-unit id="67">
         <source>congratulations_explain</source>
         <target>Ha instalado Contao con éxito.</target>
         
       </trans-unit>
-      <trans-unit id="67">
+      <trans-unit id="68">
         <source>installation_complete</source>
         <target>Instalación completada</target>
         
       </trans-unit>
-      <trans-unit id="68">
+      <trans-unit id="69">
         <source>installation_complete_explain</source>
         <target>Ahora por favor vaya al backend de Contao y compruebe la configuración del sistema.</target>
         
       </trans-unit>
-      <trans-unit id="69">
+      <trans-unit id="70">
         <source>back_end</source>
         <target>Backend de Contao</target>
         
       </trans-unit>
-      <trans-unit id="70">
+      <trans-unit id="71">
         <source>old_database</source>
         <target>¡La base de datos es demasiado vieja!</target>
         
       </trans-unit>
-      <trans-unit id="71">
+      <trans-unit id="72">
         <source>old_database_explanation</source>
         <target>Necesita al menos Contao 3.2 para actualizar a Contao 4.</target>
         
       </trans-unit>
-      <trans-unit id="72">
+      <trans-unit id="73">
         <source>console_explanation</source>
         <target>¡No se pudo completar una tarea posterior a la instalación!</target>
         
       </trans-unit>
-      <trans-unit id="73">
-        <source>duplicate_subscriptions</source>
-        
-      </trans-unit>
       <trans-unit id="74">
-        <source>duplicate_subscriptions_begin</source>
+        <source>duplicate_subscriptions</source>
         <target>Se encontraron suscripciones a boletines duplicados:</target>
         
       </trans-unit>
       <trans-unit id="75">
-        <source>duplicate_subscriptions_end</source>
+        <source>duplicates_purged</source>
         <target>Las entradas duplicadas se han purgado automáticamente. Se ha almacenado una copia de seguridad de las suscripciones originales en &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="76">
+        <source>unsupported_version</source>
+        <target>¡Su versión de base de datos no es compatible!</target>
+        
+      </trans-unit>
+      <trans-unit id="77">
+        <source>unsupported_version_explain</source>
+        
+      </trans-unit>
+      <trans-unit id="78">
+        <source>unsupported_collation</source>
+        <target>¡La intercalación configurada no es compatible!</target>
+        
+      </trans-unit>
+      <trans-unit id="79">
+        <source>unsupported_collation_explain</source>
+        <target>La intercalación configurada &lt;code&gt;%s&lt;/code&gt;no está disponible en su servidor. La intercalación configurada no está disponible en su servidor. Instálelo (recomendado) o configure un conjunto de caracteres y una intercalación diferentes en el archivo &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="80">
+        <source>unsupported_engine</source>
+        <target>¡El motor de base de datos configurado no es compatible!</target>
+        
+      </trans-unit>
+      <trans-unit id="81">
+        <source>unsupported_engine_explain</source>
+        <target>El motor de base de datos configurado &lt;code&gt;%s&lt;/code&gt;no está disponible en su servidor. Instálelo (recomendado) o configure un motor de base de datos diferente en el archivo &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="82">
+        <source>misconfigured_database_url_explain</source>
         
       </trans-unit>
     </body>

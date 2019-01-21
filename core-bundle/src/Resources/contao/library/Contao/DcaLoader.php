@@ -23,7 +23,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class DcaLoader extends \Controller
+class DcaLoader extends Controller
 {
 
 	/**
@@ -46,7 +46,7 @@ class DcaLoader extends \Controller
 			throw new \Exception('The table name must not be empty');
 		}
 
-		if (\Validator::isInsecurePath($strTable))
+		if (Validator::isInsecurePath($strTable))
 		{
 			throw new \InvalidArgumentException('The table name contains invalid characters');
 		}
@@ -71,7 +71,7 @@ class DcaLoader extends \Controller
 
 		$GLOBALS['loadDataContainer'][$this->strTable] = true; // see #6145
 
-		$strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
+		$strCacheDir = System::getContainer()->getParameter('kernel.cache_dir');
 
 		// Try to load from cache
 		if (file_exists($strCacheDir . '/contao/dca/' . $this->strTable . '.php'))
@@ -82,7 +82,7 @@ class DcaLoader extends \Controller
 		{
 			try
 			{
-				$files = \System::getContainer()->get('contao.resource_locator')->locate('dca/' . $this->strTable . '.php', null, false);
+				$files = System::getContainer()->get('contao.resource_locator')->locate('dca/' . $this->strTable . '.php', null, false);
 			}
 			catch (\InvalidArgumentException $e)
 			{
@@ -105,11 +105,15 @@ class DcaLoader extends \Controller
 			}
 		}
 
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+
 		// Local configuration file
-		if (file_exists(TL_ROOT . '/system/config/dcaconfig.php'))
+		if (file_exists($rootDir . '/system/config/dcaconfig.php'))
 		{
 			@trigger_error('Using the dcaconfig.php file has been deprecated and will no longer work in Contao 5.0. Create one or more DCA files in app/Resources/contao/dca instead.', E_USER_DEPRECATED);
-			include TL_ROOT . '/system/config/dcaconfig.php';
+			include $rootDir . '/system/config/dcaconfig.php';
 		}
 	}
 }
+
+class_alias(DcaLoader::class, 'DcaLoader');

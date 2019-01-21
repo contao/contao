@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,91 +12,37 @@
 
 namespace Contao\CoreBundle\EventListener;
 
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-/**
- * Adds the maintenance attribute to the request.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class BypassMaintenanceListener
 {
     /**
-     * @var SessionInterface
+     * @var TokenChecker
      */
-    private $session;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var bool
-     */
-    private $disableIpCheck;
+    private $tokenChecker;
 
     /**
      * @var string
      */
     private $requestAttribute;
 
-    /**
-     * Constructor.
-     *
-     * @param SessionInterface $session
-     * @param RequestStack     $requestStack
-     * @param bool             $disableIpCheck
-     * @param string           $requestAttribute
-     */
-    public function __construct(SessionInterface $session, RequestStack $requestStack, $disableIpCheck, $requestAttribute = '_bypass_maintenance')
+    public function __construct(TokenChecker $tokenChecker, string $requestAttribute = '_bypass_maintenance')
     {
-        $this->session = $session;
-        $this->requestStack = $requestStack;
-        $this->disableIpCheck = $disableIpCheck;
+        $this->tokenChecker = $tokenChecker;
         $this->requestAttribute = $requestAttribute;
     }
 
     /**
      * Adds the request attribute to the request.
-     *
-     * @param GetResponseEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event): void
     {
-        $request = $event->getRequest();
-
-        if (!$this->hasAuthenticatedBackendUser()) {
+        if (!$this->tokenChecker->hasBackendUser()) {
             return;
         }
 
+        $request = $event->getRequest();
         $request->attributes->set($this->requestAttribute, true);
-    }
-
-    /**
-     * Checks if there is an authenticated back end user.
-     *
-     * @return bool
-     */
-    private function hasAuthenticatedBackendUser()
-    {
-        $request = $this->requestStack->getMasterRequest();
-
-        if (null === $request || !$request->cookies->has('BE_USER_AUTH')) {
-            return false;
-        }
-
-        $sessionHash = sha1(
-            sprintf(
-                '%s%sBE_USER_AUTH',
-                $this->session->getId(),
-                $this->disableIpCheck ? '' : $request->getClientIp()
-            )
-        );
-
-        return $request->cookies->get('BE_USER_AUTH') === $sessionHash;
     }
 }

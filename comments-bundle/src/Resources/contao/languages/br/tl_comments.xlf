@@ -163,7 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.show.1">
         <source>Show the details of comment ID %s</source>
-        <target>Diskouez munudoù an evezhiadenn%s</target>
+        <target>Diskouez munudoù an evezhiadenn %s</target>
       </trans-unit>
       <trans-unit id="tl_comments.edit.0">
         <source>Edit comment</source>

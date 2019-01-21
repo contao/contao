@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -25,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FrontendTemplate extends \Template
+class FrontendTemplate extends Template
 {
 
 	/**
@@ -41,15 +42,6 @@ class FrontendTemplate extends \Template
 	 */
 	public function parse()
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
-		// Adjust the output format
-		if ($objPage->outputFormat != '')
-		{
-			$this->strFormat = $objPage->outputFormat;
-		}
-
 		$strBuffer = parent::parse();
 
 		// HOOK: add custom parse filters
@@ -91,7 +83,7 @@ class FrontendTemplate extends \Template
 	{
 		$this->blnCheckRequest = $blnCheckRequest;
 
-		/** @var $objPage \PageModel */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Vary on the page layout
@@ -112,7 +104,7 @@ class FrontendTemplate extends \Template
 	protected function compile()
 	{
 		$this->keywords = '';
-		$arrKeywords = \StringUtil::trimsplit(',', $GLOBALS['TL_KEYWORDS']);
+		$arrKeywords = StringUtil::trimsplit(',', $GLOBALS['TL_KEYWORDS']);
 
 		// Add the meta keywords
 		if (\strlen($arrKeywords[0]))
@@ -148,9 +140,18 @@ class FrontendTemplate extends \Template
 		}
 
 		// Check whether all $_GET parameters have been used (see #4277)
-		if ($this->blnCheckRequest && \Input::hasUnusedGet())
+		if ($this->blnCheckRequest && Input::hasUnusedGet())
 		{
 			throw new \UnusedArgumentsException();
+		}
+
+		/** @var PageModel $objPage */
+		global $objPage;
+
+		// Minify the markup
+		if ($objPage->minifyMarkup)
+		{
+			$this->strBuffer = $this->minifyHtml($this->strBuffer);
 		}
 
 		parent::compile();
@@ -185,7 +186,7 @@ class FrontendTemplate extends \Template
 			}
 		}
 
-		include $this->getTemplate($template, $this->strFormat);
+		include $this->getTemplate($template);
 	}
 
 	/**
@@ -231,7 +232,7 @@ class FrontendTemplate extends \Template
 			$template = 'block_sections';
 		}
 
-		include $this->getTemplate($template, $this->strFormat);
+		include $this->getTemplate($template);
 	}
 
 	/**
@@ -245,7 +246,7 @@ class FrontendTemplate extends \Template
 	 */
 	public static function addToUrl($strRequest, $blnIgnoreParams=false, $arrUnset=array())
 	{
-		return \Frontend::addToUrl($strRequest, $blnIgnoreParams, $arrUnset);
+		return Frontend::addToUrl($strRequest, $blnIgnoreParams, $arrUnset);
 	}
 
 	/**
@@ -255,12 +256,7 @@ class FrontendTemplate extends \Template
 	 */
 	public function hasAuthenticatedBackendUser()
 	{
-		if (!isset($_COOKIE['BE_USER_AUTH']))
-		{
-			return false;
-		}
-
-		return Input::cookie('BE_USER_AUTH') == $this->getSessionHash('BE_USER_AUTH');
+		return System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
 	}
 
 	/**
@@ -323,16 +319,10 @@ class FrontendTemplate extends \Template
 
 		$tag = 'div';
 
+		// Use the section tag for the main column
 		if ($strKey == 'main')
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			// Use the section tag in HTML5
-			if ($objPage->outputFormat == 'html5')
-			{
-				$tag = 'section';
-			}
+			$tag = 'section';
 		}
 
 		$sections = '';
@@ -342,7 +332,7 @@ class FrontendTemplate extends \Template
 		{
 			if (isset($this->sections[$sect['id']]))
 			{
-				$sections .= "\n" . '<' . $tag . ' id="' . \StringUtil::standardize($sect['id'], true) . '">' . "\n" . '<div class="inside">' . "\n" . $this->sections[$sect['id']] . "\n" . '</div>' . "\n" . '</' . $tag . '>' . "\n";
+				$sections .= "\n" . '<' . $tag . ' id="' . StringUtil::standardize($sect['id'], true) . '">' . "\n" . '<div class="inside">' . "\n" . $this->sections[$sect['id']] . "\n" . '</div>' . "\n" . '</' . $tag . '>' . "\n";
 			}
 		}
 
@@ -363,7 +353,7 @@ class FrontendTemplate extends \Template
 	 */
 	private function setCacheHeaders(Response $response)
 	{
-		/** @var $objPage \PageModel */
+		/** @var $objPage PageModel */
 		global $objPage;
 
 		if (($objPage->cache === false || $objPage->cache < 1) && ($objPage->clientCache === false || $objPage->clientCache < 1))
@@ -394,6 +384,16 @@ class FrontendTemplate extends \Template
 			$response->setSharedMaxAge($objPage->cache);
 		}
 
+		// Tag the response
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			/** @var ResponseTagger $responseTagger */
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_page.' . $objPage->id));
+		}
+
 		return $response;
 	}
 }
+
+class_alias(FrontendTemplate::class, 'FrontendTemplate');

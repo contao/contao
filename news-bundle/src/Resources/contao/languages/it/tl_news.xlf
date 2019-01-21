@@ -122,12 +122,10 @@
         <target>Cliccando il link &quot;continua...&quot; i visitatori verranno indirizzati ad un articolo.</target>
       </trans-unit>
       <trans-unit id="tl_news.external.0">
-        <source>External URL</source>
-        <target>URL esterno</target>
+        <source>Custom URL</source>
       </trans-unit>
       <trans-unit id="tl_news.external.1">
-        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an external website.</source>
-        <target>Cliccando il link &quot;continua...&quot; i visitatori verranno indirizzati ad un sito esterno dove potranno leggere l'articolo completo.</target>
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to a custom URL.</source>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>

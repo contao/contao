@@ -10,14 +10,17 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\Exception\LockedException;
 use Patchwork\Utf8;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * Front end module "login".
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleLogin extends \Module
+class ModuleLogin extends Module
 {
 
 	/**
@@ -30,7 +33,7 @@ class ModuleLogin extends \Module
 	 * Flash type
 	 * @var string
 	 */
-	protected $strFlashType = 'contao.' . TL_MODE . '.error';
+	protected $strFlashType = 'contao.FE.error';
 
 	/**
 	 * Display a login form
@@ -41,9 +44,7 @@ class ModuleLogin extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('be_wildcard');
-
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['login'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -53,102 +54,9 @@ class ModuleLogin extends \Module
 			return $objTemplate->parse();
 		}
 
-		// Set the last page visited (see #8632)
-		if (!$_POST && $this->redirectBack && ($strReferer = $this->getReferer()) != \Environment::get('request'))
+		if (!$_POST && $this->redirectBack && ($strReferer = $this->getReferer()) != Environment::get('request'))
 		{
 			$_SESSION['LAST_PAGE_VISITED'] = $strReferer;
-		}
-
-		// Login
-		if (\Input::post('FORM_SUBMIT') == 'tl_login_' . $this->id)
-		{
-			// Check whether username and password are set
-			if (empty($_POST['username']) || empty($_POST['password']))
-			{
-				\System::getContainer()->get('session')->getFlashBag()->set($this->strFlashType, $GLOBALS['TL_LANG']['MSC']['emptyField']);
-				$this->reload();
-			}
-
-			$this->import('FrontendUser', 'User');
-			$strRedirect = \Environment::get('request');
-
-			// Redirect to the last page visited
-			if ($this->redirectBack && $_SESSION['LAST_PAGE_VISITED'] != '')
-			{
-				$strRedirect = $_SESSION['LAST_PAGE_VISITED'];
-			}
-			else
-			{
-				// Redirect to the jumpTo page
-				if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
-				{
-					/** @var PageModel $objTarget */
-					$strRedirect = $objTarget->getFrontendUrl();
-				}
-
-				// Overwrite the jumpTo page with an individual group setting
-				$objMember = \MemberModel::findByUsername(\Input::post('username'));
-
-				if ($objMember !== null)
-				{
-					$arrGroups = \StringUtil::deserialize($objMember->groups);
-
-					if (!empty($arrGroups) && \is_array($arrGroups))
-					{
-						$objGroupPage = \PageModel::findFirstActiveByMemberGroups($arrGroups);
-
-						if ($objGroupPage !== null)
-						{
-							$strRedirect = $objGroupPage->getFrontendUrl();
-						}
-					}
-				}
-			}
-
-			// Auto login is not allowed
-			if (isset($_POST['autologin']) && !$this->autologin)
-			{
-				unset($_POST['autologin']);
-				\Input::setPost('autologin', null);
-			}
-
-			// Login and redirect
-			if ($this->User->login())
-			{
-				$this->redirect($strRedirect);
-			}
-
-			$this->reload();
-		}
-
-		// Logout and redirect to the website root if the current page is protected
-		if (\Input::post('FORM_SUBMIT') == 'tl_logout_' . $this->id)
-		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$this->import('FrontendUser', 'User');
-			$strRedirect = \Environment::get('request');
-
-			// Redirect to last page visited
-			if ($this->redirectBack && \strlen($_SESSION['LAST_PAGE_VISITED']))
-			{
-				$strRedirect = $_SESSION['LAST_PAGE_VISITED'];
-			}
-
-			// Redirect home if the page is protected
-			elseif ($objPage->protected)
-			{
-				$strRedirect = \Environment::get('base');
-			}
-
-			// Logout and redirect
-			if ($this->User->logout())
-			{
-				$this->redirect($strRedirect);
-			}
-
-			$this->reload();
 		}
 
 		return parent::generate();
@@ -159,46 +67,89 @@ class ModuleLogin extends \Module
 	 */
 	protected function compile()
 	{
-		// Show logout form
-		if (FE_USER_LOGGED_IN)
+		$container = System::getContainer();
+
+		/** @var RouterInterface $router */
+		$router = $container->get('router');
+
+		if ($container->get('contao.security.token_checker')->hasFrontendUser())
 		{
-			$this->import('FrontendUser', 'User');
+			/** @var PageModel $objPage */
+			global $objPage;
+
+			$this->import(FrontendUser::class, 'User');
+
+			$strRedirect = Environment::get('base').Environment::get('request');
+
+			// Redirect to last page visited
+			if ($this->redirectBack && $_SESSION['LAST_PAGE_VISITED'] != '')
+			{
+				$strRedirect = Environment::get('base').$_SESSION['LAST_PAGE_VISITED'];
+			}
+
+			// Redirect home if the page is protected
+			elseif ($objPage->protected)
+			{
+				$strRedirect = Environment::get('base');
+			}
 
 			$this->Template->logout = true;
 			$this->Template->formId = 'tl_logout_' . $this->id;
-			$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
+			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
 			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $this->User->username);
-			$this->Template->action = ampersand(\Environment::get('indexFreeRequest'));
+			$this->Template->action = $container->get('security.logout_url_generator')->getLogoutPath();
+			$this->Template->targetPath = StringUtil::specialchars($strRedirect);
 
 			if ($this->User->lastLogin > 0)
 			{
-				/** @var PageModel $objPage */
-				global $objPage;
-
-				$this->Template->lastLogin = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], \Date::parse($objPage->datimFormat, $this->User->lastLogin));
+				$this->Template->lastLogin = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], Date::parse($objPage->datimFormat, $this->User->lastLogin));
 			}
 
 			return;
 		}
 
-		if (\System::getContainer()->get('session')->isStarted())
-		{
-			$flashBag = \System::getContainer()->get('session')->getFlashBag();
+		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
 
-			if ($flashBag->has($this->strFlashType))
-			{
-				$this->Template->hasError = true;
-				$this->Template->message = $flashBag->get($this->strFlashType)[0];
-			}
+		if ($exception instanceof LockedException)
+		{
+			$this->Template->hasError = true;
+			$this->Template->message = sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedMinutes());
+		}
+		elseif ($exception instanceof AuthenticationException)
+		{
+			$this->Template->hasError = true;
+			$this->Template->message = $GLOBALS['TL_LANG']['ERR']['invalidLogin'];
+		}
+
+		$blnRedirectBack = false;
+		$strRedirect = Environment::get('base').Environment::get('request');
+
+		// Redirect to the last page visited
+		if ($this->redirectBack && $_SESSION['LAST_PAGE_VISITED'] != '')
+		{
+			$blnRedirectBack = true;
+			$strRedirect = $_SESSION['LAST_PAGE_VISITED'];
+		}
+
+		// Redirect to the jumpTo page
+		elseif ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		{
+			/** @var PageModel $objTarget */
+			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
-		$this->Template->action = ampersand(\Environment::get('indexFreeRequest'));
-		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
-		$this->Template->value = \StringUtil::specialchars(\Input::post('username'));
+		$this->Template->action = $router->generate('contao_frontend_login');
+		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
+		$this->Template->value = StringUtil::specialchars($container->get('security.authentication_utils')->getLastUsername());
 		$this->Template->formId = 'tl_login_' . $this->id;
-		$this->Template->autologin = ($this->autologin && \Config::get('autologin') > 0);
+		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
+		$this->Template->forceTargetPath = (int) $blnRedirectBack;
+		$this->Template->targetPath = StringUtil::specialchars($strRedirect);
+		$this->Template->failurePath = StringUtil::specialchars(Environment::get('base').Environment::get('request'));
 	}
 }
+
+class_alias(ModuleLogin::class, 'ModuleLogin');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,11 +14,6 @@ namespace Contao\CoreBundle\Picker;
 
 use Knp\Menu\ItemInterface;
 
-/**
- * Picker interface.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 interface PickerInterface
 {
     /**

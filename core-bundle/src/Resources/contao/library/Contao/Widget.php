@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\Database\Result;
 use Doctrine\DBAL\Types\Type;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,72 +38,72 @@ use Symfony\Component\HttpFoundation\Request;
  *         }
  *     }
  *
- * @property string                  $id                The field ID
- * @property string                  $name              the field name
- * @property string                  $label             The field label
- * @property mixed                   $value             The field value
- * @property string                  $class             One or more CSS classes
- * @property string                  $prefix            The CSS class prefix
- * @property string                  $template          The template name
- * @property string                  $wizard            The field wizard markup
- * @property string                  $alt               The alternative text
- * @property string                  $style             The style attribute
- * @property string                  $accesskey         The key to focus the field
- * @property integer                 $tabindex          The tabindex of the field
- * @property boolean                 $disabled          Adds the disabled attribute
- * @property boolean                 $readonly          Adds the readonly attribute
- * @property boolean                 $autofocus         Adds the autofocus attribute
- * @property boolean                 $required          Adds the required attribute
- * @property string                  $onblur            The blur event
- * @property string                  $onchange          The change event
- * @property string                  $onclick           The click event
- * @property string                  $ondblclick        The double click event
- * @property string                  $onfocus           The focus event
- * @property string                  $onmousedown       The mouse down event
- * @property string                  $onmousemove       The mouse move event
- * @property string                  $onmouseout        The mouse out event
- * @property string                  $onmouseover       The mouse over event
- * @property string                  $onmouseup         The mouse up event
- * @property string                  $onkeydown         The key down event
- * @property string                  $onkeypress        The key press event
- * @property string                  $onkeyup           The key up event
- * @property string                  $onselect          The select event
- * @property boolean                 $mandatory         The field value must not be empty
- * @property boolean                 $nospace           Do not allow whitespace characters
- * @property boolean                 $allowHtml         Allow HTML tags in the field value
- * @property boolean                 $storeFile         Store uploaded files in a given folder
- * @property boolean                 $useHomeDir        Store uploaded files in the user's home directory
- * @property boolean                 $trailingSlash     Add or remove a trailing slash
- * @property boolean                 $spaceToUnderscore Convert spaces to underscores
- * @property boolean                 $doNotTrim         Do not trim the user input
- * @property string                  $forAttribute      The "for" attribute
- * @property \DataContainer          $dataContainer     The data container object
- * @property \Database\Result|object $activeRecord      The active record
- * @property string                  $mandatoryField    The "mandatory field" label
- * @property string                  $customTpl         A custom template name
- * @property string                  $slabel            The submit button label
- * @property boolean                 $preserveTags      Preserve HTML tags
- * @property boolean                 $decodeEntities    Decode HTML entities
- * @property boolean                 useRawRequestData  Use the raw request data from the Symfony request
- * @property integer                 $minlength         The minimum length
- * @property integer                 $maxlength         The maximum length
- * @property integer                 $minval            The minimum value
- * @property integer                 $maxval            The maximum value
- * @property integer                 $rgxp              The regular expression name
- * @property boolean                 $isHexColor        The field value is a hex color
- * @property string                  $strTable          The table name
- * @property string                  $strField          The field name
- * @property string                  $xlabel
- * @property integer                 $currentRecord
- * @property integer                 $rowClass
- * @property integer                 $rowClassConfirm
- * @property integer                 $storeValues
+ * @property string        $id                The field ID
+ * @property string        $name              the field name
+ * @property string        $label             The field label
+ * @property mixed         $value             The field value
+ * @property string        $class             One or more CSS classes
+ * @property string        $prefix            The CSS class prefix
+ * @property string        $template          The template name
+ * @property string        $wizard            The field wizard markup
+ * @property string        $alt               The alternative text
+ * @property string        $style             The style attribute
+ * @property string        $accesskey         The key to focus the field
+ * @property integer       $tabindex          The tabindex of the field
+ * @property boolean       $disabled          Adds the disabled attribute
+ * @property boolean       $readonly          Adds the readonly attribute
+ * @property boolean       $autofocus         Adds the autofocus attribute
+ * @property boolean       $required          Adds the required attribute
+ * @property string        $onblur            The blur event
+ * @property string        $onchange          The change event
+ * @property string        $onclick           The click event
+ * @property string        $ondblclick        The double click event
+ * @property string        $onfocus           The focus event
+ * @property string        $onmousedown       The mouse down event
+ * @property string        $onmousemove       The mouse move event
+ * @property string        $onmouseout        The mouse out event
+ * @property string        $onmouseover       The mouse over event
+ * @property string        $onmouseup         The mouse up event
+ * @property string        $onkeydown         The key down event
+ * @property string        $onkeypress        The key press event
+ * @property string        $onkeyup           The key up event
+ * @property string        $onselect          The select event
+ * @property boolean       $mandatory         The field value must not be empty
+ * @property boolean       $nospace           Do not allow whitespace characters
+ * @property boolean       $allowHtml         Allow HTML tags in the field value
+ * @property boolean       $storeFile         Store uploaded files in a given folder
+ * @property boolean       $useHomeDir        Store uploaded files in the user's home directory
+ * @property boolean       $trailingSlash     Add or remove a trailing slash
+ * @property boolean       $spaceToUnderscore Convert spaces to underscores
+ * @property boolean       $doNotTrim         Do not trim the user input
+ * @property string        $forAttribute      The "for" attribute
+ * @property DataContainer $dataContainer     The data container object
+ * @property Result        $activeRecord      The active record
+ * @property string        $mandatoryField    The "mandatory field" label
+ * @property string        $customTpl         A custom template name
+ * @property string        $slabel            The submit button label
+ * @property boolean       $preserveTags      Preserve HTML tags
+ * @property boolean       $decodeEntities    Decode HTML entities
+ * @property boolean       useRawRequestData  Use the raw request data from the Symfony request
+ * @property integer       $minlength         The minimum length
+ * @property integer       $maxlength         The maximum length
+ * @property integer       $minval            The minimum value
+ * @property integer       $maxval            The maximum value
+ * @property integer       $rgxp              The regular expression name
+ * @property boolean       $isHexColor        The field value is a hex color
+ * @property string        $strTable          The table name
+ * @property string        $strField          The field name
+ * @property string        $xlabel
+ * @property integer       $currentRecord
+ * @property integer       $rowClass
+ * @property integer       $rowClassConfirm
+ * @property integer       $storeValues
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Widget extends \Controller
+abstract class Widget extends Controller
 {
-	use \TemplateInheritance;
+	use TemplateInheritance;
 
 	/**
 	 * Id
@@ -203,18 +204,6 @@ abstract class Widget extends \Controller
 	{
 		parent::__construct();
 
-		// Override the output format in the front end
-		if (TL_MODE == 'FE')
-		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			if ($objPage->outputFormat != '')
-			{
-				$this->strFormat = $objPage->outputFormat;
-			}
-		}
-
 		$this->addAttributes($arrAttributes);
 	}
 
@@ -241,12 +230,12 @@ abstract class Widget extends \Controller
 				break;
 
 			case 'value':
-				$this->varValue = \StringUtil::deserialize($varValue);
+				$this->varValue = StringUtil::deserialize($varValue);
 
 				// Decrypt the value if it is encrypted
 				if ($this->arrConfiguration['encrypt'])
 				{
-					$this->varValue = \Encryption::decrypt($this->varValue);
+					$this->varValue = Encryption::decrypt($this->varValue);
 				}
 				break;
 
@@ -388,7 +377,7 @@ abstract class Widget extends \Controller
 				// Encrypt the value
 				if (isset($this->arrConfiguration['encrypt']) && $this->arrConfiguration['encrypt'])
 				{
-					return \Encryption::encrypt($this->varValue);
+					return Encryption::encrypt($this->varValue);
 				}
 				elseif ($this->varValue === '')
 				{
@@ -729,7 +718,7 @@ abstract class Widget extends \Controller
 		}
 		elseif ($varValue != '')
 		{
-			return ' ' . $strKey . '="' . \StringUtil::specialchars($varValue) . '"';
+			return ' ' . $strKey . '="' . StringUtil::specialchars($varValue) . '"';
 		}
 
 		return '';
@@ -781,7 +770,7 @@ abstract class Widget extends \Controller
 		if ($this->useRawRequestData === true)
 		{
 			/** @var Request $request */
-			$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 			return $request->request->get($strKey);
 		}
@@ -795,7 +784,7 @@ abstract class Widget extends \Controller
 
 		// Support arrays (thanks to Andreas Schempp)
 		$arrParts = explode('[', str_replace(']', '', $strKey));
-		$varValue = \Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
+		$varValue = Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
 		foreach ($arrParts as $part)
 		{
@@ -895,7 +884,7 @@ abstract class Widget extends \Controller
 					{
 						$varInput = str_replace(',', '.', $varInput);
 					}
-					if (!\Validator::isNumeric($varInput))
+					if (!Validator::isNumeric($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['digit'], $this->strLabel));
 					}
@@ -903,7 +892,7 @@ abstract class Widget extends \Controller
 
 				// Natural numbers (positive integers)
 				case 'natural':
-					if (!\Validator::isNatural($varInput))
+					if (!Validator::isNatural($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['natural'], $this->strLabel));
 					}
@@ -911,7 +900,7 @@ abstract class Widget extends \Controller
 
 				// Alphabetic characters (including full stop [.] minus [-] and space [ ])
 				case 'alpha':
-					if (!\Validator::isAlphabetic($varInput))
+					if (!Validator::isAlphabetic($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['alpha'], $this->strLabel));
 					}
@@ -919,7 +908,7 @@ abstract class Widget extends \Controller
 
 				// Alphanumeric characters (including full stop [.] minus [-], underscore [_] and space [ ])
 				case 'alnum':
-					if (!\Validator::isAlphanumeric($varInput))
+					if (!Validator::isAlphanumeric($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['alnum'], $this->strLabel));
 					}
@@ -927,7 +916,7 @@ abstract class Widget extends \Controller
 
 				// Do not allow any characters that are usually encoded by class Input ([#<>()\=])
 				case 'extnd':
-					if (!\Validator::isExtendedAlphanumeric(html_entity_decode($varInput)))
+					if (!Validator::isExtendedAlphanumeric(html_entity_decode($varInput)))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['extnd'], $this->strLabel));
 					}
@@ -935,16 +924,16 @@ abstract class Widget extends \Controller
 
 				// Check whether the current value is a valid date format
 				case 'date':
-					if (!\Validator::isDate($varInput))
+					if (!Validator::isDate($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['date'], \Date::getInputFormat(\Date::getNumericDateFormat())));
+						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['date'], Date::getInputFormat(Date::getNumericDateFormat())));
 					}
 					else
 					{
 						// Validate the date (see #5086)
 						try
 						{
-							new \Date($varInput, \Date::getNumericDateFormat());
+							new Date($varInput, Date::getNumericDateFormat());
 						}
 						catch (\OutOfBoundsException $e)
 						{
@@ -955,24 +944,24 @@ abstract class Widget extends \Controller
 
 				// Check whether the current value is a valid time format
 				case 'time':
-					if (!\Validator::isTime($varInput))
+					if (!Validator::isTime($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['time'], \Date::getInputFormat(\Date::getNumericTimeFormat())));
+						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['time'], Date::getInputFormat(Date::getNumericTimeFormat())));
 					}
 					break;
 
 				// Check whether the current value is a valid date and time format
 				case 'datim':
-					if (!\Validator::isDatim($varInput))
+					if (!Validator::isDatim($varInput))
 					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['dateTime'], \Date::getInputFormat(\Date::getNumericDatimFormat())));
+						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['dateTime'], Date::getInputFormat(Date::getNumericDatimFormat())));
 					}
 					else
 					{
 						// Validate the date (see #5086)
 						try
 						{
-							new \Date($varInput, \Date::getNumericDatimFormat());
+							new Date($varInput, Date::getNumericDatimFormat());
 						}
 						catch (\OutOfBoundsException $e)
 						{
@@ -983,12 +972,12 @@ abstract class Widget extends \Controller
 
 				// Check whether the current value is a valid friendly name e-mail address
 				case 'friendly':
-					list ($strName, $varInput) = \StringUtil::splitFriendlyEmail($varInput);
+					list ($strName, $varInput) = StringUtil::splitFriendlyEmail($varInput);
 					// no break;
 
 				// Check whether the current value is a valid e-mail address
 				case 'email':
-					if (!\Validator::isEmail($varInput))
+					if (!Validator::isEmail($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['email'], $this->strLabel));
 					}
@@ -1000,13 +989,13 @@ abstract class Widget extends \Controller
 
 				// Check whether the current value is list of valid e-mail addresses
 				case 'emails':
-					$arrEmails = \StringUtil::trimsplit(',', $varInput);
+					$arrEmails = StringUtil::trimsplit(',', $varInput);
 
 					foreach ($arrEmails as $strEmail)
 					{
-						$strEmail = \Idna::encodeEmail($strEmail);
+						$strEmail = Idna::encodeEmail($strEmail);
 
-						if (!\Validator::isEmail($strEmail))
+						if (!Validator::isEmail($strEmail))
 						{
 							$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['emails'], $this->strLabel));
 							break;
@@ -1016,7 +1005,7 @@ abstract class Widget extends \Controller
 
 				// Check whether the current value is a valid URL
 				case 'url':
-					if (!\Validator::isUrl($varInput))
+					if (!Validator::isUrl($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['url'], $this->strLabel));
 					}
@@ -1024,7 +1013,7 @@ abstract class Widget extends \Controller
 
 				// Check whether the current value is a valid alias
 				case 'alias':
-					if (!\Validator::isAlias($varInput))
+					if (!Validator::isAlias($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['alias'], $this->strLabel));
 					}
@@ -1032,7 +1021,7 @@ abstract class Widget extends \Controller
 
 				// Check whether the current value is a valid folder URL alias
 				case 'folderalias':
-					if (!\Validator::isFolderAlias($varInput))
+					if (!Validator::isFolderAlias($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['folderalias'], $this->strLabel));
 					}
@@ -1040,7 +1029,7 @@ abstract class Widget extends \Controller
 
 				// Phone numbers (numeric characters, space [ ], plus [+], minus [-], parentheses [()] and slash [/])
 				case 'phone':
-					if (!\Validator::isPhone(html_entity_decode($varInput)))
+					if (!Validator::isPhone(html_entity_decode($varInput)))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['phone'], $this->strLabel));
 					}
@@ -1048,7 +1037,7 @@ abstract class Widget extends \Controller
 
 				// Check whether the current value is a percent value
 				case 'prcnt':
-					if (!\Validator::isPercent($varInput))
+					if (!Validator::isPercent($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['prcnt'], $this->strLabel));
 					}
@@ -1056,7 +1045,7 @@ abstract class Widget extends \Controller
 
 				// Check whether the current value is a locale
 				case 'locale':
-					if (!\Validator::isLocale($varInput))
+					if (!Validator::isLocale($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['locale'], $this->strLabel));
 					}
@@ -1064,7 +1053,7 @@ abstract class Widget extends \Controller
 
 				// Check whether the current value is a language code
 				case 'language':
-					if (!\Validator::isLanguage($varInput))
+					if (!Validator::isLanguage($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['language'], $this->strLabel));
 					}
@@ -1072,7 +1061,7 @@ abstract class Widget extends \Controller
 
 				// Check whether the current value is a Google+ ID or vanity name
 				case 'google+':
-					if (!\Validator::isGooglePlusId($varInput))
+					if (!Validator::isGooglePlusId($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidGoogleId'], $this->strLabel));
 					}
@@ -1080,7 +1069,7 @@ abstract class Widget extends \Controller
 
 				// Check whether the current value is a field name
 				case 'fieldname':
-					if (!\Validator::isFieldName($varInput))
+					if (!Validator::isFieldName($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidFieldName'], $this->strLabel));
 					}
@@ -1335,7 +1324,7 @@ abstract class Widget extends \Controller
 		elseif (isset($arrData['foreignKey']))
 		{
 			$arrKey = explode('.', $arrData['foreignKey'], 2);
-			$objOptions = \Database::getInstance()->query("SELECT id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
+			$objOptions = Database::getInstance()->query("SELECT id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
 			$arrData['options'] = array();
 
 			while ($objOptions->next())
@@ -1365,7 +1354,7 @@ abstract class Widget extends \Controller
 
 			if ($arrData['eval']['includeBlankOption'] && !$arrData['eval']['multiple'])
 			{
-				$strLabel = isset($arrData['eval']['blankOptionLabel']) ? $arrData['eval']['blankOptionLabel'] : '-';
+				$strLabel = $arrData['eval']['blankOptionLabel'] ?? '-';
 				$arrAttributes['options'][] = array('value'=>'', 'label'=>$strLabel);
 			}
 
@@ -1400,12 +1389,12 @@ abstract class Widget extends \Controller
 			}
 		}
 
-		$arrAttributes['value'] = \StringUtil::deserialize($varValue);
+		$arrAttributes['value'] = StringUtil::deserialize($varValue);
 
 		// Convert timestamps
 		if ($varValue != '' && \in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
 		{
-			$objDate = new \Date($varValue, \Date::getFormatFromRgxp($arrData['eval']['rgxp']));
+			$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 			$arrAttributes['value'] = $objDate->{$arrData['eval']['rgxp']};
 		}
 
@@ -1550,3 +1539,5 @@ abstract class Widget extends \Controller
 		return '';
 	}
 }
+
+class_alias(Widget::class, 'Widget');

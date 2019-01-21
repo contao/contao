@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,23 +12,18 @@
 
 namespace Contao\CoreBundle\Monolog;
 
-/**
- * Contao-specific logger context.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ContaoContext
 {
-    const ERROR = 'ERROR';
-    const ACCESS = 'ACCESS';
-    const GENERAL = 'GENERAL';
-    const FILES = 'FILES';
-    const CRON = 'CRON';
-    const FORMS = 'FORMS';
-    const EMAIL = 'EMAIL';
-    const CONFIGURATION = 'CONFIGURATION';
-    const NEWSLETTER = 'NEWSLETTER';
-    const REPOSITORY = 'REPOSITORY';
+    public const ERROR = 'ERROR';
+    public const ACCESS = 'ACCESS';
+    public const GENERAL = 'GENERAL';
+    public const FILES = 'FILES';
+    public const CRON = 'CRON';
+    public const FORMS = 'FORMS';
+    public const EMAIL = 'EMAIL';
+    public const CONFIGURATION = 'CONFIGURATION';
+    public const NEWSLETTER = 'NEWSLETTER';
+    public const REPOSITORY = 'REPOSITORY';
 
     /**
      * @var string
@@ -59,18 +56,11 @@ class ContaoContext
     private $source;
 
     /**
-     * Constructor.
-     *
-     * @param string      $func
-     * @param string|null $action
-     * @param string|null $username
-     * @param string|null $ip
-     * @param string|null $browser
-     * @param string|null $source
+     * @throws \InvalidArgumentException
      */
-    public function __construct($func, $action = null, $username = null, $ip = null, $browser = null, $source = null)
+    public function __construct(string $func, string $action = null, string $username = null, string $ip = null, string $browser = null, string $source = null)
     {
-        if ('' === (string) $func) {
+        if ('' === $func) {
             throw new \InvalidArgumentException('The function name in the Contao context must not be empty');
         }
 
@@ -84,127 +74,69 @@ class ContaoContext
 
     /**
      * Returns a JSON representation of the object.
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string) json_encode([
             'func' => $this->func,
             'action' => $this->action,
             'username' => $this->username,
-            'ip' => $this->ip,
             'browser' => $this->browser,
         ]);
     }
 
-    /**
-     * Returns the function name.
-     *
-     * @return string
-     */
-    public function getFunc()
+    public function getFunc(): string
     {
         return $this->func;
     }
 
-    /**
-     * Returns the action.
-     *
-     * @return string|null
-     */
-    public function getAction()
+    public function getAction(): ?string
     {
         return $this->action;
     }
 
-    /**
-     * Sets the action.
-     *
-     * @param string $action
-     */
-    public function setAction($action)
+    public function setAction(string $action): void
     {
-        $this->action = (string) $action;
+        $this->action = $action;
     }
 
-    /**
-     * Returns the username.
-     *
-     * @return string|null
-     */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->username;
     }
 
-    /**
-     * Sets the username.
-     *
-     * @param string $username
-     */
-    public function setUsername($username)
+    public function setUsername(string $username): void
     {
-        $this->username = (string) $username;
+        $this->username = $username;
     }
 
-    /**
-     * Returns the IP address.
-     *
-     * @return string|null
-     */
-    public function getIp()
+    public function getIp(): ?string
     {
         return $this->ip;
     }
 
-    /**
-     * Sets the IP address.
-     *
-     * @param string|null $ip
-     */
-    public function setIp($ip)
+    public function setIp(?string $ip): void
     {
         $this->ip = (string) $ip;
     }
 
-    /**
-     * Returns the browser.
-     *
-     * @return string|null
-     */
-    public function getBrowser()
+    public function getBrowser(): ?string
     {
         return $this->browser;
     }
 
-    /**
-     * Sets the browser.
-     *
-     * @param string $browser
-     */
-    public function setBrowser($browser)
+    public function setBrowser(string $browser): void
     {
-        $this->browser = (string) $browser;
+        $this->browser = $browser;
     }
 
-    /**
-     * Returns the source.
-     *
-     * @return string|null
-     */
-    public function getSource()
+    public function getSource(): ?string
     {
         return $this->source;
     }
 
-    /**
-     * Sets the source.
-     *
-     * @param string $source
-     */
-    public function setSource($source)
+    public function setSource(string $source): void
     {
-        $this->source = (string) $source;
+        $this->source = $source;
     }
 }

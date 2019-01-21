@@ -9,6 +9,7 @@ services:
         arguments:
             - "@knp_menu.factory"
             - "@router"
+            - "@translator"
         calls:
             - [setTokenStorage, ["@security.token_storage"]]
         tags:

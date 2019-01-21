@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,37 +15,23 @@ namespace Contao\CoreBundle\Tests\Event;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the PreviewUrlCreateEvent class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PreviewUrlCreateEventTest extends TestCase
 {
-    /**
-     * Tests the getId() method.
-     */
-    public function testSupportsReadingTheId()
+    public function testSupportsReadingTheId(): void
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 
         $this->assertSame(12, $event->getId());
     }
 
-    /**
-     * Tests the getKey() method.
-     */
-    public function testSupportsReadingTheKey()
+    public function testSupportsReadingTheKey(): void
     {
-        $event = new PreviewUrlCreateEvent('news', 12);
+        $event = new PreviewUrlCreateEvent('news', 'files/public/image.jpg');
 
         $this->assertSame('news', $event->getKey());
     }
 
-    /**
-     * Tests the query getter and setter.
-     */
-    public function testSupportsReadingAndWritingTheQueryString()
+    public function testSupportsReadingAndWritingTheQueryString(): void
     {
         $event = new PreviewUrlCreateEvent('news', 12);
 

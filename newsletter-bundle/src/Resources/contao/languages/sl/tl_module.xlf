@@ -17,6 +17,12 @@
         <source>Please select one or more channels.</source>
         <target>Prosimo izberite eno ali več vrst e-novic.</target>
       </trans-unit>
+      <trans-unit id="tl_module.nl_text.0">
+        <source>Custom text</source>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_text.1">
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+      </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
         <target>Skrij meni za vrste e-novic</target>
@@ -49,6 +55,9 @@
         <source>Here you can select the newsletter template.</source>
         <target>Tukaj lahko izberete predlogo za e-novico.</target>
       </trans-unit>
+      <trans-unit id="tl_module.text_legend">
+        <source>Custom text</source>
+      </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
         <target>Vaše naročilo na e-novice na %s</target>
@@ -58,14 +67,14 @@
 
 ##channels##
 
-Please click ##link## to activate your subscription. If you did not subscribe yourself, please ignore this e-mail.
+Please click here to activate your subscription:
+
+##link##
+
+The confirmation link is valid for 24 hours. You can cancel your subscription at any time.
+
+If you did not subscribe yourself, please ignore this e-mail.
 </source>
-        <target>Naročili ste se na naslednje novice na ##domain##:
-
-##channels##
-
-Prosimo kliknite ##link## za aktivacijo vaše prijave. Če se niste prijavili vi, prosimo ignorirajte ta e-mail.
-</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>

@@ -49,14 +49,6 @@
         <source>Name of the initiating function</source>
         <target>Name der auslösenden Funktion</target>
       </trans-unit>
-      <trans-unit id="tl_log.ip.0">
-        <source>IP address</source>
-        <target>IP-Adresse</target>
-      </trans-unit>
-      <trans-unit id="tl_log.ip.1">
-        <source>IP address of the user</source>
-        <target>IP-Adresse des Benutzers</target>
-      </trans-unit>
       <trans-unit id="tl_log.browser.0">
         <source>Browser</source>
         <target>Browser</target>

@@ -69,8 +69,8 @@ class Date
 	 */
 	public function __construct($strDate=null, $strFormat=null)
 	{
-		$this->strDate = ($strDate !== null) ? $strDate : time();
-		$this->strFormat = ($strFormat !== null) ? $strFormat : static::getNumericDateFormat();
+		$this->strDate = $strDate ?? time();
+		$this->strFormat = $strFormat ?? static::getNumericDateFormat();
 
 		if (!preg_match('/^-?[0-9]+$/', $this->strDate) || preg_match('/^[a-zA-Z]+$/', $this->strFormat))
 		{
@@ -245,7 +245,7 @@ class Date
 					'y' => '(?P<y>[0-9]{2})',
 				);
 
-				return isset($arrRegexp[$matches[0]]) ? $arrRegexp[$matches[0]] : $matches[0];
+				return $arrRegexp[$matches[0]] ?? $matches[0];
 			}, preg_quote($strFormat));
 	}
 
@@ -270,23 +270,12 @@ class Date
 			throw new \Exception(sprintf('Invalid date format "%s"', $strFormat));
 		}
 
-		$arrCharacterMapper = array
-		(
-			'a' => 'am',
-			'A' => 'AM',
-			'd' => 'DD',
-			'j' => 'D',
-			'm' => 'MM',
-			'n' => 'M',
-			'y' => 'YY',
-			'Y' => 'YYYY',
-			'h' => 'hh',
-			'H' => 'hh',
-			'g' => 'h',
-			'G' => 'h',
-			'i' => 'mm',
-			's' => 'ss',
-		);
+		$arrCharacterMapper = array();
+
+		foreach ($GLOBALS['TL_LANG']['DATE'] as $k=>$v)
+		{
+			$arrCharacterMapper[$k] = $v;
+		}
 
 		$arrInputFormat = array();
 		$arrCharacters = str_split($strFormat);
@@ -350,7 +339,7 @@ class Date
 
 		foreach ($arrCharacters as $strCharacter)
 		{
-			$var = isset($arrCharacterMapper[$strCharacter]) ? $arrCharacterMapper[$strCharacter] : 'dummy';
+			$var = $arrCharacterMapper[$strCharacter] ?? 'dummy';
 
 			switch ($strCharacter)
 			{
@@ -496,7 +485,7 @@ class Date
 			}
 		}
 
-		return \Config::get('dateFormat');
+		return Config::get('dateFormat');
 	}
 
 	/**
@@ -517,7 +506,7 @@ class Date
 			}
 		}
 
-		return \Config::get('timeFormat');
+		return Config::get('timeFormat');
 	}
 
 	/**
@@ -538,7 +527,7 @@ class Date
 			}
 		}
 
-		return \Config::get('datimFormat');
+		return Config::get('datimFormat');
 	}
 
 	/**
@@ -605,7 +594,7 @@ class Date
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseDate'] as $callback)
 			{
-				$strReturn = \System::importStatic($callback[0])->{$callback[1]}($strReturn, $strFormat, $intTstamp);
+				$strReturn = System::importStatic($callback[0])->{$callback[1]}($strReturn, $strFormat, $intTstamp);
 			}
 		}
 
@@ -643,7 +632,7 @@ class Date
 			return $strDate;
 		}
 
-		\System::loadLanguageFile('default');
+		System::loadLanguageFile('default');
 
 		if (!$GLOBALS['TL_LANG']['MSC']['dayShortLength'])
 		{
@@ -689,3 +678,5 @@ class Date
 		return $strReturn;
 	}
 }
+
+class_alias(Date::class, 'Date');

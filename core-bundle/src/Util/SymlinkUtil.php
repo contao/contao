@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,11 +14,6 @@ namespace Contao\CoreBundle\Util;
 
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Adds helper methods for symlinks.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class SymlinkUtil
 {
     /**
@@ -24,12 +21,8 @@ class SymlinkUtil
      *
      * The method will try to generate relative symlinks and fall back to generating
      * absolute symlinks if relative symlinks are not supported (see #208).
-     *
-     * @param string $target
-     * @param string $link
-     * @param string $rootDir
      */
-    public static function symlink($target, $link, $rootDir)
+    public static function symlink(string $target, string $link, string $rootDir): void
     {
         static::validateSymlink($target, $link, $rootDir);
 
@@ -53,14 +46,10 @@ class SymlinkUtil
     /**
      * Validates a symlink.
      *
-     * @param string $target
-     * @param string $link
-     * @param string $rootDir
-     *
      * @throws \InvalidArgumentException
      * @throws \LogicException
      */
-    public static function validateSymlink($target, $link, $rootDir)
+    public static function validateSymlink(string $target, string $link, string $rootDir): void
     {
         if ('' === $target) {
             throw new \InvalidArgumentException('The symlink target must not be empty.');

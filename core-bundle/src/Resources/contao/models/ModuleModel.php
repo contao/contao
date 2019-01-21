@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes front end modules
  *
@@ -48,16 +50,8 @@ namespace Contao;
  * @property string  $inColumn
  * @property integer $skipFirst
  * @property boolean $loadFirst
- * @property string  $size
- * @property boolean $transparent
- * @property string  $flashvars
- * @property string  $altContent
- * @property string  $source
  * @property string  $singleSRC
  * @property string  $url
- * @property boolean $interactive
- * @property string  $flashID
- * @property string  $flashJS
  * @property string  $imgSize
  * @property boolean $useCaption
  * @property boolean $fullsize
@@ -125,16 +119,8 @@ namespace Contao;
  * @method static ModuleModel|null findOneByInColumn($val, array $opt=array())
  * @method static ModuleModel|null findOneBySkipFirst($val, array $opt=array())
  * @method static ModuleModel|null findOneByLoadFirst($val, array $opt=array())
- * @method static ModuleModel|null findOneBySize($val, array $opt=array())
- * @method static ModuleModel|null findOneByTransparent($val, array $opt=array())
- * @method static ModuleModel|null findOneByFlashvars($val, array $opt=array())
- * @method static ModuleModel|null findOneByAltContent($val, array $opt=array())
- * @method static ModuleModel|null findOneBySource($val, array $opt=array())
  * @method static ModuleModel|null findOneBySingleSRC($val, array $opt=array())
  * @method static ModuleModel|null findOneByUrl($val, array $opt=array())
- * @method static ModuleModel|null findOneByInteractive($val, array $opt=array())
- * @method static ModuleModel|null findOneByFlashID($val, array $opt=array())
- * @method static ModuleModel|null findOneByFlashJS($val, array $opt=array())
  * @method static ModuleModel|null findOneByImgSize($val, array $opt=array())
  * @method static ModuleModel|null findOneByUseCaption($val, array $opt=array())
  * @method static ModuleModel|null findOneByFullsize($val, array $opt=array())
@@ -162,80 +148,72 @@ namespace Contao;
  * @method static ModuleModel|null findOneByCssID($val, array $opt=array())
  * @method static ModuleModel|null findOneBySpace($val, array $opt=array())
  *
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByPid($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByName($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByHeadline($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByType($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByLevelOffset($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByShowLevel($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByHardLimit($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByShowProtected($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByDefineRoot($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByRootPage($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNavigationTpl($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCustomTpl($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByPages($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByOrderPages($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByShowHidden($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCustomLabel($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByAutologin($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByJumpTo($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByRedirectBack($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCols($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByEditable($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByMemberTpl($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByTableless($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByForm($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByQueryType($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByFuzzy($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByContextLength($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByTotalLength($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByPerPage($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBySearchType($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBySearchTpl($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByInColumn($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBySkipFirst($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByLoadFirst($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBySize($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByTransparent($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByFlashvars($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByAltContent($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBySource($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBySingleSRC($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByUrl($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByInteractive($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByFlashID($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByFlashJS($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByImgSize($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByUseCaption($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByFullsize($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByMultiSRC($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByOrderSRC($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByHtml($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByRss_cache($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByRss_feed($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByRss_template($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByNumberOfItems($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByDisableCaptcha($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByReg_groups($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByReg_allowLogin($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByReg_skipName($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByReg_close($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByReg_assignDir($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByReg_homeDir($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByReg_activate($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByReg_jumpTo($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByReg_text($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByReg_password($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByProtected($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByGroups($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByGuests($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findByCssID($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBySpace($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|ModuleModel[]|ModuleModel|null findAll(array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByPid($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByName($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByHeadline($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByType($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByLevelOffset($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByShowLevel($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByHardLimit($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByShowProtected($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByDefineRoot($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByRootPage($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByNavigationTpl($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByCustomTpl($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByPages($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByOrderPages($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByShowHidden($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByCustomLabel($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByAutologin($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByJumpTo($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByRedirectBack($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByCols($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByEditable($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByMemberTpl($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByTableless($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByForm($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByQueryType($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByFuzzy($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByContextLength($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByTotalLength($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByPerPage($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findBySearchType($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findBySearchTpl($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByInColumn($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findBySkipFirst($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByLoadFirst($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findBySingleSRC($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByUrl($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByImgSize($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByUseCaption($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByFullsize($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByMultiSRC($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByOrderSRC($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByHtml($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByRss_cache($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByRss_feed($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByRss_template($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByNumberOfItems($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByDisableCaptcha($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_groups($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_allowLogin($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_skipName($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_close($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_assignDir($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_homeDir($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_activate($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_jumpTo($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_text($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_password($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByProtected($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByGroups($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByGuests($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByCssID($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findBySpace($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
@@ -273,16 +251,8 @@ namespace Contao;
  * @method static integer countByInColumn($val, array $opt=array())
  * @method static integer countBySkipFirst($val, array $opt=array())
  * @method static integer countByLoadFirst($val, array $opt=array())
- * @method static integer countBySize($val, array $opt=array())
- * @method static integer countByTransparent($val, array $opt=array())
- * @method static integer countByFlashvars($val, array $opt=array())
- * @method static integer countByAltContent($val, array $opt=array())
- * @method static integer countBySource($val, array $opt=array())
  * @method static integer countBySingleSRC($val, array $opt=array())
  * @method static integer countByUrl($val, array $opt=array())
- * @method static integer countByInteractive($val, array $opt=array())
- * @method static integer countByFlashID($val, array $opt=array())
- * @method static integer countByFlashJS($val, array $opt=array())
  * @method static integer countByImgSize($val, array $opt=array())
  * @method static integer countByUseCaption($val, array $opt=array())
  * @method static integer countByFullsize($val, array $opt=array())
@@ -312,7 +282,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleModel extends \Model
+class ModuleModel extends Model
 {
 
 	/**
@@ -322,3 +292,5 @@ class ModuleModel extends \Model
 	protected static $strTable = 'tl_module';
 
 }
+
+class_alias(ModuleModel::class, 'ModuleModel');

@@ -10,6 +10,7 @@
 
 namespace Contao\Database;
 
+use Contao\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
 
@@ -178,7 +179,7 @@ class Statement
 		{
 			$strQuery = sprintf('(%s) VALUES (%s)',
 								implode(', ', array_map('Database::quoteIdentifier', array_keys($arrParams))),
-								str_replace('%', '%%', implode(', ', array_values($arrParams))));
+								str_replace('%', '%%', implode(', ', $arrParams)));
 		}
 
 		// UPDATE
@@ -188,7 +189,7 @@ class Statement
 
 			foreach ($arrParams as $k=>$v)
 			{
-				$arrSet[] = \Database::quoteIdentifier($k) . '=' . $v;
+				$arrSet[] = Database::quoteIdentifier($k) . '=' . $v;
 			}
 
 			$strQuery = 'SET ' . str_replace('%', '%%', implode(', ', $arrSet));
@@ -234,7 +235,7 @@ class Statement
 	/**
 	 * Execute the query and return the result object
 	 *
-	 * @return Result|object The result object
+	 * @return Result The result object
 	 */
 	public function execute()
 	{
@@ -282,7 +283,7 @@ class Statement
 		}
 
 		// Instantiate a result object
-		return new \Database\Result($this->statement, $this->strQuery);
+		return new Result($this->statement, $this->strQuery);
 	}
 
 	/**
@@ -334,7 +335,7 @@ class Statement
 					break;
 
 				default:
-					$arrValues[$k] = ($v === null) ? 'NULL' : $v;
+					$arrValues[$k] = $v ?? 'NULL';
 					break;
 			}
 		}
@@ -358,11 +359,11 @@ class Statement
 	 * @return Result The result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Database\Statement::execute() instead.
+	 *             Use Statement::execute() instead.
 	 */
 	public function executeUncached()
 	{
-		@trigger_error('Using Database\Statement::executeUncached() has been deprecated and will no longer work in Contao 5.0. Use Database\Statement::execute() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Statement::executeUncached() has been deprecated and will no longer work in Contao 5.0. Use Statement::execute() instead.', E_USER_DEPRECATED);
 
 		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}
@@ -373,12 +374,14 @@ class Statement
 	 * @return Result The result object
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Database\Statement::execute() instead.
+	 *             Use Statement::execute() instead.
 	 */
 	public function executeCached()
 	{
-		@trigger_error('Using Database\Statement::executeCached() has been deprecated and will no longer work in Contao 5.0. Use Database\Statement::execute() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Statement::executeCached() has been deprecated and will no longer work in Contao 5.0. Use Statement::execute() instead.', E_USER_DEPRECATED);
 
 		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}
 }
+
+class_alias(Statement::class, 'Database\Statement');

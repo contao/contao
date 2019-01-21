@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,49 +14,32 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\ToggleViewListener;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\System;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-/**
- * Tests the ToggleViewListener class.
- *
- * @author Andreas Schempp <https:/github.com/aschempp>
- */
 class ToggleViewListenerTest extends TestCase
 {
-    /**
-     * @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $framework;
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function setUpBeforeClass()
-    {
-        $_SERVER['HTTP_HOST'] = 'localhost';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->framework = $this->createMock(ContaoFrameworkInterface::class);
+        $container = $this->mockContainer();
+        $container->set('session', $this->mockSession());
+        $container->set('request_stack', new RequestStack());
+
+        System::setContainer($container);
+
+        $_SERVER['HTTP_HOST'] = 'localhost';
     }
 
-    /**
-     * Tests that there is a repsonse with a correct cookie for the desktop view.
-     */
-    public function testRedirectsToDesktopView()
+    public function testRedirectsToDesktopView(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -64,17 +49,14 @@ class ToggleViewListenerTest extends TestCase
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
+        $listener = new ToggleViewListener($this->mockContaoFramework(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());
         $this->assertCookieValue($event->getResponse(), 'desktop');
     }
 
-    /**
-     * Tests that there is a repsonse with a correct cookie for the mobile view.
-     */
-    public function testRedirectsToMobileView()
+    public function testRedirectsToMobileView(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -84,17 +66,14 @@ class ToggleViewListenerTest extends TestCase
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
+        $listener = new ToggleViewListener($this->mockContaoFramework(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());
         $this->assertCookieValue($event->getResponse(), 'mobile');
     }
 
-    /**
-     * Tests that there is no response if the request scope is not set.
-     */
-    public function testDoesNotSetAResponseIfThereIsNoRequestScope()
+    public function testDoesNotSetAResponseIfThereIsNoRequestScope(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -103,16 +82,13 @@ class ToggleViewListenerTest extends TestCase
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
+        $listener = new ToggleViewListener($this->mockContaoFramework(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertFalse($event->hasResponse());
     }
 
-    /**
-     * Tests that there is no repsonse if the scope is not "frontend".
-     */
-    public function testDoesNotSetAResponseIfNotInFrontEndScope()
+    public function testDoesNotSetAResponseIfNotInFrontEndScope(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -122,16 +98,13 @@ class ToggleViewListenerTest extends TestCase
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
+        $listener = new ToggleViewListener($this->mockContaoFramework(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertFalse($event->hasResponse());
     }
 
-    /**
-     * Tests that there is no repsonse if there are no query parameters.
-     */
-    public function testDoesNotSetAResponseIfThereAreNoQueryParameters()
+    public function testDoesNotSetAResponseIfThereAreNoQueryParameters(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -141,16 +114,13 @@ class ToggleViewListenerTest extends TestCase
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
+        $listener = new ToggleViewListener($this->mockContaoFramework(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertFalse($event->hasResponse());
     }
 
-    /**
-     * Tests that there is a repsonse with a correct cookie for an invalid view.
-     */
-    public function testFallsBackToDesktopIfTheRequestedViewDoesNotExist()
+    public function testFallsBackToDesktopIfTheRequestedViewDoesNotExist(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -160,17 +130,14 @@ class ToggleViewListenerTest extends TestCase
 
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
+        $listener = new ToggleViewListener($this->mockContaoFramework(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());
         $this->assertCookieValue($event->getResponse(), 'desktop');
     }
 
-    /**
-     * Tests the cookie path.
-     */
-    public function testSetsTheCorrectCookiePath()
+    public function testSetsTheCorrectCookiePath(): void
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -186,23 +153,18 @@ class ToggleViewListenerTest extends TestCase
         $basePath->setAccessible(true);
         $basePath->setValue($request, '/foo/bar');
 
-        $listener = new ToggleViewListener($this->framework, $this->mockScopeMatcher());
+        $listener = new ToggleViewListener($this->mockContaoFramework(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertTrue($event->hasResponse());
 
         $cookie = $this->getCookie($event->getResponse());
 
+        $this->assertNotNull($cookie);
         $this->assertSame('/foo/bar', $cookie->getPath());
     }
 
-    /**
-     * Checks if a cookie exists and has the correct value.
-     *
-     * @param Response $response
-     * @param string   $expectedValue
-     */
-    private function assertCookieValue(Response $response, $expectedValue)
+    private function assertCookieValue(Response $response, string $expectedValue): void
     {
         $cookie = $this->getCookie($response);
 
@@ -212,14 +174,9 @@ class ToggleViewListenerTest extends TestCase
 
     /**
      * Finds the TL_VIEW cookie in a response.
-     *
-     * @param Response $response
-     *
-     * @return Cookie|null
      */
-    private function getCookie(Response $response)
+    private function getCookie(Response $response): ?Cookie
     {
-        /** @var Cookie[] $cookies */
         $cookies = $response->headers->getCookies();
 
         foreach ($cookies as $cookie) {

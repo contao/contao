@@ -49,14 +49,6 @@
         <source>Name of the initiating function</source>
         <target>نام کارکرد شروع</target>
       </trans-unit>
-      <trans-unit id="tl_log.ip.0">
-        <source>IP address</source>
-        <target>نشانی آی‌پی</target>
-      </trans-unit>
-      <trans-unit id="tl_log.ip.1">
-        <source>IP address of the user</source>
-        <target>نشانی آی‌پی کاربر</target>
-      </trans-unit>
       <trans-unit id="tl_log.browser.0">
         <source>Browser</source>
         <target>مرورگر</target>

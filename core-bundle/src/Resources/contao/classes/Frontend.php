@@ -11,14 +11,19 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Monolog\ContaoContext;
+use Psr\Log\LogLevel;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ExceptionInterface as RoutingExceptionInterface;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
  * Provide methods to manage front end controllers.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Frontend extends \Controller
+abstract class Frontend extends Controller
 {
 
 	/**
@@ -47,17 +52,22 @@ abstract class Frontend extends \Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 	}
 
 	/**
 	 * Split the current request into fragments, strip the URL suffix, recreate the $_GET array and return the page ID
 	 *
 	 * @return mixed
+	 *
+	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0.
+	 *             Use the Symfony routing instead.
 	 */
 	public static function getPageIdFromUrl()
 	{
-		$strRequest = \Environment::get('relativeRequest');
+		@trigger_error('Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+
+		$strRequest = Environment::get('relativeRequest');
 
 		if ($strRequest == '')
 		{
@@ -77,14 +87,14 @@ abstract class Frontend extends \Controller
 		}
 
 		// Extract the language
-		if (\Config::get('addLanguageToUrl'))
+		if (Config::get('addLanguageToUrl'))
 		{
 			$arrMatches = array();
 
 			// Use the matches instead of substr() (thanks to Mario Müller)
 			if (preg_match('@^([a-z]{2}(-[A-Z]{2})?)/(.*)$@', $strRequest, $arrMatches))
 			{
-				\Input::setGet('language', $arrMatches[1]);
+				Input::setGet('language', $arrMatches[1]);
 
 				// Trigger the root page if only the language was given
 				if ($arrMatches[3] == '')
@@ -101,14 +111,14 @@ abstract class Frontend extends \Controller
 		}
 
 		// Remove the URL suffix if not just a language root (e.g. en/) is requested
-		if ($strRequest != '' && (!\Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(-[A-Z]{2})?/$@', $strRequest)))
+		if ($strRequest != '' && (!Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(-[A-Z]{2})?/$@', $strRequest)))
 		{
-			$intSuffixLength = \strlen(\Config::get('urlSuffix'));
+			$intSuffixLength = \strlen(Config::get('urlSuffix'));
 
 			// Return false if the URL suffix does not match (see #2864)
 			if ($intSuffixLength > 0)
 			{
-				if (substr($strRequest, -$intSuffixLength) != \Config::get('urlSuffix'))
+				if (substr($strRequest, -$intSuffixLength) != Config::get('urlSuffix'))
 				{
 					return false;
 				}
@@ -120,7 +130,7 @@ abstract class Frontend extends \Controller
 		$arrFragments = null;
 
 		// Use folder-style URLs
-		if (\Config::get('folderUrl') && strpos($strRequest, '/') !== false)
+		if (Config::get('folderUrl') && strpos($strRequest, '/') !== false)
 		{
 			$strAlias = $strRequest;
 			$arrOptions = array($strAlias);
@@ -132,8 +142,11 @@ abstract class Frontend extends \Controller
 				$arrOptions[] = $strAlias;
 			}
 
+			/** @var PageModel $objPageModel */
+			$objPageModel = System::getContainer()->get('contao.framework')->getAdapter(PageModel::class);
+
 			// Check if there are pages with a matching alias
-			$objPages = \PageModel::findByAliases($arrOptions);
+			$objPages = $objPageModel->findByAliases($arrOptions);
 
 			if ($objPages !== null)
 			{
@@ -156,7 +169,7 @@ abstract class Frontend extends \Controller
 					}
 				}
 
-				$strHost = \Environment::get('host');
+				$strHost = Environment::get('host');
 
 				// Look for a root page whose domain name matches the host name
 				if (isset($arrPages[$strHost]))
@@ -165,18 +178,18 @@ abstract class Frontend extends \Controller
 				}
 				else
 				{
-					$arrLangs = $arrPages['*'] ?: array(); // empty domain
+					$arrLangs = $arrPages['*'] ?? array(); // empty domain
 				}
 
 				$arrAliases = array();
 
 				// Use the first result (see #4872)
-				if (!\Config::get('addLanguageToUrl'))
+				if (!Config::get('addLanguageToUrl'))
 				{
 					$arrAliases = current($arrLangs);
 				}
 				// Try to find a page matching the language parameter
-				elseif (($lang = \Input::get('language')) && isset($arrLangs[$lang]))
+				elseif (($lang = Input::get('language')) && isset($arrLangs[$lang]))
 				{
 					$arrAliases = $arrLangs[$lang];
 				}
@@ -217,7 +230,7 @@ abstract class Frontend extends \Controller
 		}
 
 		// Add the second fragment as auto_item if the number of fragments is even
-		if (\Config::get('useAutoItem') && \count($arrFragments) % 2 == 0)
+		if (Config::get('useAutoItem') && \count($arrFragments) % 2 == 0)
 		{
 			array_insert($arrFragments, 1, array('auto_item'));
 		}
@@ -253,12 +266,12 @@ abstract class Frontend extends \Controller
 			}
 
 			// Return false if the request contains an auto_item keyword (duplicate content) (see #4012)
-			if (\Config::get('useAutoItem') && \in_array($arrFragments[$i], $GLOBALS['TL_AUTO_ITEM']))
+			if (Config::get('useAutoItem') && \in_array($arrFragments[$i], $GLOBALS['TL_AUTO_ITEM']))
 			{
 				return false;
 			}
 
-			\Input::setGet(urldecode($arrFragments[$i]), urldecode($arrFragments[$i+1]), true);
+			Input::setGet(urldecode($arrFragments[$i]), urldecode($arrFragments[$i+1]), true);
 		}
 
 		return $arrFragments[0] ?: null;
@@ -286,73 +299,67 @@ abstract class Frontend extends \Controller
 	 */
 	public static function getRootPageFromUrl()
 	{
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getRootPageFromUrl']) && \is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getRootPageFromUrl'] as $callback)
-			{
-				/** @var PageModel $objRootPage */
-				if (\is_object($objRootPage = static::importStatic($callback[0])->{$callback[1]}()))
-				{
-					return $objRootPage;
-				}
-			}
-		}
-
-		$host = \Environment::get('host');
+		$host = Environment::get('host');
+		$logger = System::getContainer()->get('monolog.logger.contao');
+		$accept_language = Environment::get('httpAcceptLanguage');
 
 		// The language is set in the URL
-		if (!empty($_GET['language']) && \Config::get('addLanguageToUrl'))
+		if (!empty($_GET['language']) && Config::get('addLanguageToUrl'))
 		{
-			$objRootPage = \PageModel::findFirstPublishedRootByHostAndLanguage($host, \Input::get('language'));
-
-			// No matching root page found
-			if ($objRootPage === null)
-			{
-				\System::log('No root page found (host "' . $host . '", language "'. \Input::get('language') .'")', __METHOD__, TL_ERROR);
-				throw new NoRootPageFoundException('No root page found');
-			}
+			$strUri = Environment::get('url') . '/' . Input::get('language') . '/';
+			$strError = 'No root page found (host "' . $host . '", language "'. Input::get('language') .'")';
 		}
 
 		// No language given
 		else
 		{
-			$accept_language = \Environment::get('httpAcceptLanguage');
-
 			// Always load the language fall back root if "doNotRedirectEmpty" is enabled
-			if (\Config::get('addLanguageToUrl') && \Config::get('doNotRedirectEmpty'))
+			if (Config::get('addLanguageToUrl') && Config::get('doNotRedirectEmpty'))
 			{
 				$accept_language = '-';
 			}
 
-			// Find the matching root pages (thanks to Andreas Schempp)
-			$objRootPage = \PageModel::findFirstPublishedRootByHostAndLanguage($host, $accept_language);
+			$strUri = Environment::get('url') . '/';
+			$strError = 'No root page found (host "' . Environment::get('host') . '", languages "' . implode(', ', Environment::get('httpAcceptLanguage')) . '")';
+		}
 
-			// No matching root page found
-			if ($objRootPage === null)
+		try
+		{
+			$objRequest = Request::create($strUri);
+			$objRequest->headers->set('Accept-Language', $accept_language);
+
+			$arrParameters = System::getContainer()->get('contao.routing.nested_matcher')->matchRequest($objRequest);
+			$objRootPage = $arrParameters['pageModel'] ?? null;
+
+			if (!$objRootPage instanceof PageModel)
 			{
-				\System::log('No root page found (host "' . \Environment::get('host') . '", languages "'.implode(', ', \Environment::get('httpAcceptLanguage')).'")', __METHOD__, TL_ERROR);
-				throw new NoRootPageFoundException('No root page found');
+				throw new MissingMandatoryParametersException('Every Contao route must have a "pageModel" parameter');
+			}
+		}
+		catch (RoutingExceptionInterface $exception)
+		{
+			$logger->log(LogLevel::ERROR, $strError, array('contao' => new ContaoContext(__METHOD__, 'ERROR')));
+
+			throw new NoRootPageFoundException('No root page found', 0, $exception);
+		}
+
+		// Redirect to the website root or language root (e.g. en/)
+		if (Environment::get('relativeRequest') == '')
+		{
+			if (Config::get('addLanguageToUrl') && !Config::get('doNotRedirectEmpty'))
+			{
+				$arrParams = array('_locale' => $objRootPage->language);
+
+				$strUrl = System::getContainer()->get('router')->generate('contao_index', $arrParams);
+				$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
+
+				static::redirect($strUrl, 301);
 			}
 
-			// Redirect to the website root or language root (e.g. en/)
-			if (\Environment::get('relativeRequest') == '')
+			// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
+			elseif ($objRootPage->type !== 'root' && !\in_array($objRootPage->alias, array('index', '/')))
 			{
-				if (\Config::get('addLanguageToUrl') && !\Config::get('doNotRedirectEmpty'))
-				{
-					$arrParams = array('_locale' => $objRootPage->language);
-
-					$strUrl = \System::getContainer()->get('router')->generate('contao_index', $arrParams);
-					$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
-
-					static::redirect($strUrl, 301);
-				}
-
-				// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
-				elseif (($objPage = \PageModel::findFirstPublishedByPid($objRootPage->id)) !== null && !\in_array($objPage->alias, array('index', '/')))
-				{
-					static::redirect($objPage->getFrontendUrl(), 302);
-				}
+				static::redirect($objRootPage->getAbsoluteUrl(), 302);
 			}
 		}
 
@@ -375,7 +382,7 @@ abstract class Frontend extends \Controller
 		// Clean the $_GET values (thanks to thyon)
 		foreach (array_keys($arrGet) as $key)
 		{
-			$arrGet[$key] = \Input::get($key, true, true);
+			$arrGet[$key] = Input::get($key, true, true);
 		}
 
 		$arrFragments = preg_split('/&(amp;)?/i', $strRequest);
@@ -396,7 +403,7 @@ abstract class Frontend extends \Controller
 		}
 
 		// Unset the language parameter
-		if (\Config::get('addLanguageToUrl'))
+		if (Config::get('addLanguageToUrl'))
 		{
 			unset($arrGet['language']);
 		}
@@ -409,7 +416,7 @@ abstract class Frontend extends \Controller
 		foreach ($arrGet as $k=>$v)
 		{
 			// Omit the key if it is an auto_item key (see #5037)
-			if (\Config::get('useAutoItem') && ($k == 'auto_item' || \in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
+			if (Config::get('useAutoItem') && ($k == 'auto_item' || \in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
 			{
 				$strParams = $strConnector . urlencode($v) . $strParams;
 			}
@@ -433,13 +440,13 @@ abstract class Frontend extends \Controller
 		$arrParams = array();
 		$arrParams['alias'] = $pageId . $strParams;
 
-		if (\Config::get('addLanguageToUrl'))
+		if (Config::get('addLanguageToUrl'))
 		{
 			$arrParams['_locale'] = $objPage->rootLanguage;
 		}
 
-		$strUrl = \System::getContainer()->get('router')->generate('contao_frontend', $arrParams);
-		$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
+		$strUrl = System::getContainer()->get('router')->generate('contao_frontend', $arrParams);
+		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
 		return $strUrl;
 	}
@@ -478,7 +485,7 @@ abstract class Frontend extends \Controller
 		{
 			if ($intId != $objPage->id || $blnForceRedirect)
 			{
-				if (($objNextPage = \PageModel::findPublishedById($intId)) !== null)
+				if (($objNextPage = PageModel::findPublishedById($intId)) !== null)
 				{
 					$this->redirect($objNextPage->getFrontendUrl($strParams, $strForceLang));
 				}
@@ -494,52 +501,31 @@ abstract class Frontend extends \Controller
 	 * @param string $strCookie
 	 *
 	 * @return boolean
+	 *
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony security instead.
 	 */
 	protected function getLoginStatus($strCookie)
 	{
-		$cookie = \Input::cookie($strCookie);
+		@trigger_error('Using Frontend::getLoginStatus() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		if ($cookie === null)
+		$objTokenChecker = System::getContainer()->get('contao.security.token_checker');
+
+		if ($strCookie == 'BE_USER_AUTH' && $objTokenChecker->hasBackendUser())
 		{
-			return false;
-		}
-
-		$hash = $this->getSessionHash($strCookie);
-
-		// Validate the cookie hash
-		if ($cookie == $hash)
-		{
-			// Try to find the session
-			$objSession = \SessionModel::findByHashAndName($hash, $strCookie);
-
-			// Validate the session ID and timeout
-			if ($objSession !== null && $objSession->sessionID == \System::getContainer()->get('session')->getId() && (\System::getContainer()->getParameter('contao.security.disable_ip_check') || $objSession->ip == \Environment::get('ip')) && ($objSession->tstamp + \Config::get('sessionTimeout')) > time())
+			// Always return false if we are not in preview mode (show hidden elements)
+			if (TL_MODE == 'FE' && !$objTokenChecker->isPreviewMode())
 			{
-				// Disable the cache if a back end user is logged in
-				if (TL_MODE == 'FE' && $strCookie == 'BE_USER_AUTH')
-				{
-					$_SESSION['DISABLE_CACHE'] = true;
-
-					// Always return false if we are not in preview mode (show hidden elements)
-					if (!\Input::cookie('FE_PREVIEW'))
-					{
-						return false;
-					}
-				}
-
-				// The session could be verified
-				return true;
+				return false;
 			}
+
+			return true;
 		}
 
-		// Reset the cache settings
-		if (TL_MODE == 'FE' && $strCookie == 'BE_USER_AUTH')
+		if ($strCookie == 'FE_USER_AUTH' && $objTokenChecker->hasFrontendUser())
 		{
-			$_SESSION['DISABLE_CACHE'] = false;
+			return true;
 		}
-
-		// Remove the cookie if it is invalid to enable loading cached pages
-		$this->setCookie($strCookie, $hash, (time() - 86400), null, null, \Environment::get('ssl'), true);
 
 		return false;
 	}
@@ -559,7 +545,7 @@ abstract class Frontend extends \Controller
 			return array();
 		}
 
-		$arrData = \StringUtil::deserialize($strData);
+		$arrData = StringUtil::deserialize($strData);
 
 		// Convert the language to a locale (see #5678)
 		$strLanguage = str_replace('-', '_', $strLanguage);
@@ -584,7 +570,7 @@ abstract class Frontend extends \Controller
 		$strText = $this->replaceInsertTags($strText, false);
 		$strText = strip_tags($strText);
 		$strText = str_replace("\n", ' ', $strText);
-		$strText = \StringUtil::substr($strText, 320);
+		$strText = StringUtil::substr($strText, 320);
 
 		return trim($strText);
 	}
@@ -625,10 +611,10 @@ abstract class Frontend extends \Controller
 		}
 
 		// Index page if searching is allowed and there is no back end user
-		if (\Config::get('enableSearch') && $objPage->type == 'regular' && !BE_USER_LOGGED_IN && !$objPage->noSearch)
+		if (Config::get('enableSearch') && $objResponse->getStatusCode() == 200 && !BE_USER_LOGGED_IN && !$objPage->noSearch)
 		{
 			// Index protected pages if enabled
-			if (\Config::get('indexProtected') || (!FE_USER_LOGGED_IN && !$objPage->protected))
+			if (Config::get('indexProtected') || (!FE_USER_LOGGED_IN && !$objPage->protected))
 			{
 				$blnIndex = true;
 
@@ -645,7 +631,7 @@ abstract class Frontend extends \Controller
 				if ($blnIndex)
 				{
 					$arrData = array(
-						'url'       => \Environment::get('base') . \Environment::get('relativeRequest'),
+						'url'       => Environment::get('base') . Environment::get('relativeRequest'),
 						'content'   => $objResponse->getContent(),
 						'title'     => $objPage->pageTitle ?: $objPage->title,
 						'protected' => ($objPage->protected ? '1' : ''),
@@ -654,7 +640,7 @@ abstract class Frontend extends \Controller
 						'language'  => $objPage->language
 					);
 
-					\Search::indexPage($arrData);
+					Search::indexPage($arrData);
 				}
 			}
 		}
@@ -675,3 +661,5 @@ abstract class Frontend extends \Controller
 		return null;
 	}
 }
+
+class_alias(Frontend::class, 'Frontend');

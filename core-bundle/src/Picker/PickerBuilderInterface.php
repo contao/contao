@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,17 +12,10 @@
 
 namespace Contao\CoreBundle\Picker;
 
-/**
- * Picker builder interface.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 interface PickerBuilderInterface
 {
     /**
      * Returns a picker or null if the context is not supported.
-     *
-     * @param PickerConfig $config
      *
      * @return PickerInterface|null
      */
@@ -38,8 +33,7 @@ interface PickerBuilderInterface
     /**
      * Returns whether the given context is supported.
      *
-     * @param string     $context
-     * @param array|null $allowed
+     * @param string $context
      *
      * @return bool
      */
@@ -49,7 +43,6 @@ interface PickerBuilderInterface
      * Returns the picker URL for the given context and configuration.
      *
      * @param string $context
-     * @param array  $extras
      * @param string $value
      *
      * @return string

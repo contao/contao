@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,17 +12,12 @@
 
 namespace Contao\CoreBundle\Picker;
 
-/**
- * Provides the article picker.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'articlePicker';
     }
@@ -28,7 +25,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
     /**
      * {@inheritdoc}
      */
-    public function supportsContext($context)
+    public function supportsContext($context): bool
     {
         return 'link' === $context && $this->getUser()->hasAccess('article', 'modules');
     }
@@ -36,7 +33,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
     /**
      * {@inheritdoc}
      */
-    public function supportsValue(PickerConfig $config)
+    public function supportsValue(PickerConfig $config): bool
     {
         return false !== strpos($config->getValue(), '{{article_url::');
     }
@@ -44,7 +41,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
     /**
      * {@inheritdoc}
      */
-    public function getDcaTable()
+    public function getDcaTable(): string
     {
         return 'tl_article';
     }
@@ -52,7 +49,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
     /**
      * {@inheritdoc}
      */
-    public function getDcaAttributes(PickerConfig $config)
+    public function getDcaAttributes(PickerConfig $config): array
     {
         $attributes = ['fieldType' => 'radio'];
 
@@ -70,7 +67,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
     /**
      * {@inheritdoc}
      */
-    public function convertDcaValue(PickerConfig $config, $value)
+    public function convertDcaValue(PickerConfig $config, $value): string
     {
         return '{{article_url::'.$value.'}}';
     }
@@ -78,7 +75,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
     /**
      * {@inheritdoc}
      */
-    protected function getRouteParameters(PickerConfig $config = null)
+    protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'article'];
     }

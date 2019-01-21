@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alias.0">
         <source>Page alias</source>
-        <target>Alias stránka</target>
+        <target>Alias stránky</target>
       </trans-unit>
       <trans-unit id="tl_page.alias.1">
         <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
@@ -128,6 +128,14 @@
       <trans-unit id="tl_page.datimFormat.1">
         <source>The date and time format string will be parsed with the PHP date() function.</source>
         <target>Zadejte formát data a času jako je použito v PHP funkci date()</target>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.0">
+        <source>Valid alias characters</source>
+        <target>Platné znaky aliasů</target>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.1">
+        <source>Here you can select a custom character set for auto-generated aliases.</source>
+        <target>Zde můžete vybrat vlastní znaky, abyste ovlivnily automatické generování aliasů.</target>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -265,6 +273,14 @@
         <source>Exclude the page from the search index.</source>
         <target>Neindexovat tuto stránku</target>
       </trans-unit>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+        <target>Vyžaduje položku</target>
+      </trans-unit>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Zobrazí chybovou stránku 404, pokud adresa stránky neobsahuje žádný alias.</target>
+      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
         <target>Kaskádovité styly</target>
@@ -361,9 +377,9 @@
         <source>Global settings</source>
         <target>Obecná nastavení</target>
       </trans-unit>
-      <trans-unit id="tl_page.mobile_legend">
-        <source>Mobile settings</source>
-        <target>Nastavení pro mobilní zařízení</target>
+      <trans-unit id="tl_page.alias_legend">
+        <source>Alias settings</source>
+        <target>Nastavení aliasů</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>
@@ -388,10 +404,6 @@
       <trans-unit id="tl_page.chmod_legend">
         <source>Access rights</source>
         <target>Přístupová práva</target>
-      </trans-unit>
-      <trans-unit id="tl_page.search_legend">
-        <source>Search settings</source>
-        <target>Nastavení vyhledávání</target>
       </trans-unit>
       <trans-unit id="tl_page.expert_legend">
         <source>Expert settings</source>
@@ -576,6 +588,15 @@
       <trans-unit id="CACHE.2592000">
         <source>30 days</source>
         <target>30 dní</target>
+      </trans-unit>
+      <trans-unit id="CACHE.7776000">
+        <source>3 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.15552000">
+        <source>6 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.31536000">
+        <source>1 year</source>
       </trans-unit>
     </body>
   </file>

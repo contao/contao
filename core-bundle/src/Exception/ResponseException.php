@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,12 +14,6 @@ namespace Contao\CoreBundle\Exception;
 
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Stores a response object.
- *
- * @author Christian Schiffler <https://github.com/discordier>
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ResponseException extends \RuntimeException
 {
     /**
@@ -25,29 +21,14 @@ class ResponseException extends \RuntimeException
      */
     private $response;
 
-    /**
-     * Constructor.
-     *
-     * @param Response        $response
-     * @param \Exception|null $previous
-     */
     public function __construct(Response $response, \Exception $previous = null)
     {
-        if (!$response->headers->has('X-Status-Code')) {
-            $response->headers->set('X-Status-Code', $response->getStatusCode());
-        }
-
         $this->response = $response;
 
         parent::__construct('This exception has no message. Use $exception->getResponse() instead.', 0, $previous);
     }
 
-    /**
-     * Returns the response object.
-     *
-     * @return Response
-     */
-    public function getResponse()
+    public function getResponse(): Response
     {
         return $this->response;
     }

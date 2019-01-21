@@ -121,6 +121,14 @@
         <source>Maintain or update Contao</source>
         <target>Contaoの保守や更新</target>
       </trans-unit>
+      <trans-unit id="MOD.security.0">
+        <source>Security</source>
+        <target>セキュリティ</target>
+      </trans-unit>
+      <trans-unit id="MOD.security.1">
+        <source>Secure your account</source>
+        <target>アカウントの安全な設定</target>
+      </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
         <target>復元</target>
@@ -352,14 +360,6 @@
       <trans-unit id="FMD.miscellaneous">
         <source>Miscellaneous</source>
         <target>その他</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.0">
-        <source>Flash movie</source>
-        <target>Flash動画</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.1">
-        <source>Embeds a Flash movie into the page</source>
-        <target>ページにFlash動画を埋め込み</target>
       </trans-unit>
       <trans-unit id="FMD.randomImage.0">
         <source>Random image</source>

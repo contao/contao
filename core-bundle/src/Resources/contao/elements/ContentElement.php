@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+use FOS\HttpCache\ResponseTagger;
+
 /**
  * Parent class for content elements.
  *
@@ -22,6 +25,8 @@ namespace Contao;
  * @property string  $headline
  * @property string  $text
  * @property boolean $addImage
+ * @property boolean $inline
+ * @property boolean $overwriteMeta
  * @property string  $singleSRC
  * @property string  $alt
  * @property string  $title
@@ -46,10 +51,10 @@ namespace Contao;
  * @property string  $mooStyle
  * @property string  $mooClasses
  * @property string  $highlight
- * @property string  $shClass
  * @property string  $code
  * @property string  $url
  * @property boolean $target
+ * @property boolean $overwriteLink
  * @property string  $titleText
  * @property string  $linkTitle
  * @property string  $embed
@@ -70,7 +75,15 @@ namespace Contao;
  * @property string  $vimeo
  * @property string  $posterSRC
  * @property string  $playerSize
- * @property boolean $autoplay
+ * @property array   $playerOptions
+ * @property string  $playerPreload
+ * @property integer $playerStart
+ * @property integer $playerStop
+ * @property string  $playerCaption
+ * @property string  $playerAspect
+ * @property string  $playerColor
+ * @property array   $youtubeOptions
+ * @property array   $vimeoOptions
  * @property integer $sliderDelay
  * @property integer $sliderSpeed
  * @property integer $sliderStartSlide
@@ -101,7 +114,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class ContentElement extends \Frontend
+abstract class ContentElement extends Frontend
 {
 
 	/**
@@ -142,12 +155,12 @@ abstract class ContentElement extends \Frontend
 	 */
 	public function __construct($objElement, $strColumn='main')
 	{
-		if ($objElement instanceof Model || $objElement instanceof Model\Collection)
+		if ($objElement instanceof Model || $objElement instanceof Collection)
 		{
 			/** @var ContentModel $objModel */
 			$objModel = $objElement;
 
-			if ($objModel instanceof Model\Collection)
+			if ($objModel instanceof Collection)
 			{
 				$objModel = $objModel->current();
 			}
@@ -158,14 +171,14 @@ abstract class ContentElement extends \Frontend
 		parent::__construct();
 
 		$this->arrData = $objElement->row();
-		$this->cssID = \StringUtil::deserialize($objElement->cssID, true);
+		$this->cssID = StringUtil::deserialize($objElement->cssID, true);
 
 		if ($this->customTpl != '' && TL_MODE == 'FE')
 		{
 			$this->strTemplate = $this->customTpl;
 		}
 
-		$arrHeadline = \StringUtil::deserialize($objElement->headline);
+		$arrHeadline = StringUtil::deserialize($objElement->headline);
 		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		$this->strColumn = $strColumn;
@@ -233,7 +246,7 @@ abstract class ContentElement extends \Frontend
 			return '';
 		}
 
-		$this->Template = new \FrontendTemplate($this->strTemplate);
+		$this->Template = new FrontendTemplate($this->strTemplate);
 		$this->Template->setData($this->arrData);
 
 		$this->compile();
@@ -258,6 +271,14 @@ abstract class ContentElement extends \Frontend
 		if (!empty($this->objModel->classes) && \is_array($this->objModel->classes))
 		{
 			$this->Template->class .= ' ' . implode(' ', $this->objModel->classes);
+		}
+
+		// Tag the response
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			/** @var ResponseTagger $responseTagger */
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_content.' . $this->id));
 		}
 
 		return $this->Template->parse();
@@ -291,3 +312,5 @@ abstract class ContentElement extends \Frontend
 		return '';
 	}
 }
+
+class_alias(ContentElement::class, 'ContentElement');

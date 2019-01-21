@@ -13,11 +13,3 @@
 <?php if ($this->sources): ?>
   </picture>
 <?php endif; ?>
-
-<?php if ($this->sources || $this->img['src'] !== $this->img['srcset']): ?>
-  <script>
-    window.respimage && window.respimage({
-      elements: [document.images[document.images.length - 1]]
-    });
-  </script>
-<?php endif; ?>

@@ -113,6 +113,26 @@
         <source>Skip featured news items</source>
         <target>Hervorgehobene Beiträge überspringen</target>
       </trans-unit>
+      <trans-unit id="tl_module.order_date_asc">
+        <source>Date ascending</source>
+        <target>Datum aufsteigend</target>
+      </trans-unit>
+      <trans-unit id="tl_module.order_date_desc">
+        <source>Date descending</source>
+        <target>Datum absteigend</target>
+      </trans-unit>
+      <trans-unit id="tl_module.order_headline_asc">
+        <source>Headline ascending</source>
+        <target>Überschrift aufsteigend</target>
+      </trans-unit>
+      <trans-unit id="tl_module.order_headline_desc">
+        <source>Headline descending</source>
+        <target>Überschrift absteigend</target>
+      </trans-unit>
+      <trans-unit id="tl_module.order_random">
+        <source>Random order</source>
+        <target>Zufällige Reihenfolge</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

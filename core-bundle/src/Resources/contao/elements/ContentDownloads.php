@@ -10,17 +10,20 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\Model\Collection;
+
 /**
  * Front end content element "downloads".
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentDownloads extends \ContentElement
+class ContentDownloads extends ContentElement
 {
 
 	/**
 	 * Files object
-	 * @var Model\Collection|FilesModel
+	 * @var Collection|FilesModel
 	 */
 	protected $objFiles;
 
@@ -40,7 +43,7 @@ class ContentDownloads extends \ContentElement
 		// Use the home directory of the current user as file source
 		if ($this->useHomeDir && FE_USER_LOGGED_IN)
 		{
-			$this->import('FrontendUser', 'User');
+			$this->import(FrontendUser::class, 'User');
 
 			if ($this->User->assignDir && $this->User->homeDir)
 			{
@@ -49,7 +52,7 @@ class ContentDownloads extends \ContentElement
 		}
 		else
 		{
-			$this->multiSRC = \StringUtil::deserialize($this->multiSRC);
+			$this->multiSRC = StringUtil::deserialize($this->multiSRC);
 		}
 
 		// Return if there are no files
@@ -59,24 +62,29 @@ class ContentDownloads extends \ContentElement
 		}
 
 		// Get the file entries from the database
-		$this->objFiles = \FilesModel::findMultipleByUuids($this->multiSRC);
+		$this->objFiles = FilesModel::findMultipleByUuids($this->multiSRC);
 
 		if ($this->objFiles === null)
 		{
 			return '';
 		}
 
-		$file = \Input::get('file', true);
+		$file = Input::get('file', true);
 
-		// Send the file to the browser and do not send a 404 header (see #4632)
-		if ($file != '' && !preg_match('/^meta(_[a-z]{2})?\.txt$/', basename($file)))
+		// Send the file to the browser (see #4632 and #8375)
+		if ($file != '' && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
 		{
 			while ($this->objFiles->next())
 			{
 				if ($file == $this->objFiles->path || \dirname($file) == $this->objFiles->path)
 				{
-					\Controller::sendFileToBrowser($file);
+					Controller::sendFileToBrowser($file, (bool) $this->inline);
 				}
+			}
+
+			if (isset($_GET['cid']))
+			{
+				throw new PageNotFoundException('Invalid file name');
 			}
 
 			$this->objFiles->reset();
@@ -97,13 +105,13 @@ class ContentDownloads extends \ContentElement
 		$auxDate = array();
 
 		$objFiles = $this->objFiles;
-		$allowedDownload = \StringUtil::trimsplit(',', strtolower(\Config::get('allowedDownload')));
+		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
 
 		// Get all files
 		while ($objFiles->next())
 		{
 			// Continue if the files has been processed or does not exist
-			if (isset($files[$objFiles->path]) || !file_exists(TL_ROOT . '/' . $objFiles->path))
+			if (isset($files[$objFiles->path]) || !file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFiles->path))
 			{
 				continue;
 			}
@@ -111,7 +119,7 @@ class ContentDownloads extends \ContentElement
 			// Single files
 			if ($objFiles->type == 'file')
 			{
-				$objFile = new \File($objFiles->path);
+				$objFile = new File($objFiles->path);
 
 				if (!\in_array($objFile->extension, $allowedDownload) || preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
 				{
@@ -135,18 +143,23 @@ class ContentDownloads extends \ContentElement
 				// Use the file name as title if none is given
 				if ($arrMeta['title'] == '')
 				{
-					$arrMeta['title'] = \StringUtil::specialchars($objFile->basename);
+					$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 				}
 
-				$strHref = \Environment::get('request');
+				$strHref = Environment::get('request');
 
 				// Remove an existing file parameter (see #5683)
-				if (preg_match('/(&(amp;)?|\?)file=/', $strHref))
+				if (isset($_GET['file']))
 				{
 					$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 				}
 
-				$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . \System::urlEncode($objFiles->path);
+				if (isset($_GET['cid']))
+				{
+					$strHref = preg_replace('/(&(amp;)?|\?)cid=\d+/', '', $strHref);
+				}
+
+				$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path) . '&amp;cid=' . $this->id;
 
 				// Add the image
 				$files[$objFiles->path] = array
@@ -154,12 +167,12 @@ class ContentDownloads extends \ContentElement
 					'id'        => $objFiles->id,
 					'uuid'      => $objFiles->uuid,
 					'name'      => $objFile->basename,
-					'title'     => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+					'title'     => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
 					'link'      => $arrMeta['title'],
 					'caption'   => $arrMeta['caption'],
 					'href'      => $strHref,
 					'filesize'  => $this->getReadableSize($objFile->filesize, 1),
-					'icon'      => \Image::getPath($objFile->icon),
+					'icon'      => Image::getPath($objFile->icon),
 					'mime'      => $objFile->mime,
 					'meta'      => $arrMeta,
 					'extension' => $objFile->extension,
@@ -172,7 +185,7 @@ class ContentDownloads extends \ContentElement
 			// Folders
 			else
 			{
-				$objSubfiles = \FilesModel::findByPid($objFiles->uuid, array('order' => 'name'));
+				$objSubfiles = FilesModel::findByPid($objFiles->uuid, array('order' => 'name'));
 
 				if ($objSubfiles === null)
 				{
@@ -187,7 +200,7 @@ class ContentDownloads extends \ContentElement
 						continue;
 					}
 
-					$objFile = new \File($objSubfiles->path);
+					$objFile = new File($objSubfiles->path);
 
 					if (!\in_array($objFile->extension, $allowedDownload) || preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
 					{
@@ -211,10 +224,10 @@ class ContentDownloads extends \ContentElement
 					// Use the file name as title if none is given
 					if ($arrMeta['title'] == '')
 					{
-						$arrMeta['title'] = \StringUtil::specialchars($objFile->basename);
+						$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 					}
 
-					$strHref = \Environment::get('request');
+					$strHref = Environment::get('request');
 
 					// Remove an existing file parameter (see #5683)
 					if (preg_match('/(&(amp;)?|\?)file=/', $strHref))
@@ -222,7 +235,7 @@ class ContentDownloads extends \ContentElement
 						$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 					}
 
-					$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . \System::urlEncode($objSubfiles->path);
+					$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . System::urlEncode($objSubfiles->path);
 
 					// Add the image
 					$files[$objSubfiles->path] = array
@@ -230,12 +243,12 @@ class ContentDownloads extends \ContentElement
 						'id'        => $objSubfiles->id,
 						'uuid'      => $objSubfiles->uuid,
 						'name'      => $objFile->basename,
-						'title'     => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+						'title'     => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
 						'link'      => $arrMeta['title'],
 						'caption'   => $arrMeta['caption'],
 						'href'      => $strHref,
 						'filesize'  => $this->getReadableSize($objFile->filesize, 1),
-						'icon'      => \Image::getPath($objFile->icon),
+						'icon'      => Image::getPath($objFile->icon),
 						'mime'      => $objFile->mime,
 						'meta'      => $arrMeta,
 						'extension' => $objFile->extension,
@@ -275,7 +288,7 @@ class ContentDownloads extends \ContentElement
 			case 'custom':
 				if ($this->orderSRC != '')
 				{
-					$tmp = \StringUtil::deserialize($this->orderSRC);
+					$tmp = StringUtil::deserialize($this->orderSRC);
 
 					if (!empty($tmp) && \is_array($tmp))
 					{
@@ -313,3 +326,5 @@ class ContentDownloads extends \ContentElement
 		$this->Template->files = array_values($files);
 	}
 }
+
+class_alias(ContentDownloads::class, 'ContentDownloads');

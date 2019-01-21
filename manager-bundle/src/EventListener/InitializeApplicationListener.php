@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,40 +14,33 @@ namespace Contao\ManagerBundle\EventListener;
 
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Listens to the contao_installation.initialize_application event.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class InitializeApplicationListener
 {
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
-    /**
-     * Constructor.
-     *
-     * @param string $rootDir
-     */
-    public function __construct($rootDir)
+    public function __construct(string $projectDir)
     {
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
     }
 
     /**
      * Adds the initialize.php file.
      */
-    public function onInitializeApplication()
+    public function onInitializeApplication(): void
     {
-        $source = __DIR__.'/../Resources/system/initialize.php';
-        $target = $this->rootDir.'/system/initialize.php';
-
-        if (md5_file($source) === md5_file($target)) {
+        if (file_exists($this->projectDir.'/system/initialize.php')) {
             return;
         }
 
-        (new Filesystem())->copy($source, $target, true);
+        (new Filesystem())
+            ->copy(
+                __DIR__.'/../Resources/skeleton/system/initialize.php',
+                $this->projectDir.'/system/initialize.php',
+                true
+            )
+        ;
     }
 }

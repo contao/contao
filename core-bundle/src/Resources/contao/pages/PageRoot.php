@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/Toflar>
  */
-class PageRoot extends \Frontend
+class PageRoot extends Frontend
 {
 
 	/**
@@ -35,7 +35,7 @@ class PageRoot extends \Frontend
 	{
 		if (!$blnReturn)
 		{
-			$this->redirect($this->getRedirectUrl($rootPageId));
+			$this->redirect($this->getRedirectUrl($rootPageId), 302);
 		}
 
 		$objNextPage = $this->getNextPage($rootPageId);
@@ -66,7 +66,7 @@ class PageRoot extends \Frontend
 	 */
 	protected function getNextPage($rootPageId)
 	{
-		$objNextPage = \PageModel::findFirstPublishedByPid($rootPageId);
+		$objNextPage = PageModel::findFirstPublishedByPid($rootPageId);
 
 		// No published pages yet
 		if (null === $objNextPage)
@@ -90,3 +90,5 @@ class PageRoot extends \Frontend
 		return $this->getNextPage($rootPageId)->getFrontendUrl();
 	}
 }
+
+class_alias(PageRoot::class, 'PageRoot');

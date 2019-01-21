@@ -29,14 +29,6 @@
         <source>Maintenance mode</source>
         <target>وضعیت نگهداشت</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceEnable">
-        <source>Enable</source>
-        <target>فعال</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceDisable">
-        <source>Disable</source>
-        <target>غیرفعال</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>پاک‌سازی داده‌ها</target>

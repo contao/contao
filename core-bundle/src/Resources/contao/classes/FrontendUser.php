@@ -18,8 +18,14 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FrontendUser extends \User
+class FrontendUser extends User
 {
+
+	/**
+	 * Symfony Security session key
+	 * @var string
+	 */
+	const SECURITY_SESSION_KEY = '_security_contao_frontend';
 
 	/**
 	 * Current object instance (do not remove)
@@ -52,14 +58,51 @@ class FrontendUser extends \User
 	protected $arrGroups;
 
 	/**
+	 * Symfony security roles
+	 * @var array
+	 */
+	protected $roles = array('ROLE_MEMBER');
+
+	/**
 	 * Initialize the object
 	 */
 	protected function __construct()
 	{
 		parent::__construct();
 
-		$this->strIp = \Environment::get('ip');
-		$this->strHash = \Input::cookie($this->strCookie);
+		$this->strIp = Environment::get('ip');
+		$this->strHash = Input::cookie($this->strCookie);
+	}
+
+	/**
+	 * Instantiate a new user object
+	 *
+	 * @return static|User The object instance
+	 */
+	public static function getInstance()
+	{
+		if (static::$objInstance !== null)
+		{
+			return static::$objInstance;
+		}
+
+		$objToken = System::getContainer()->get('security.token_storage')->getToken();
+
+		// Load the user from the security storage
+		if ($objToken !== null && is_a($objToken->getUser(), static::class))
+		{
+			return static::loadUserByUsername($objToken->getUser()->getUsername());
+		}
+
+		// Check for an authenticated user in the session
+		$strUser = System::getContainer()->get('contao.security.token_checker')->getFrontendUsername();
+
+		if ($strUser !== null)
+		{
+			return static::loadUserByUsername($strUser);
+		}
+
+		return parent::getInstance();
 	}
 
 	/**
@@ -109,104 +152,30 @@ class FrontendUser extends \User
 	 * Authenticate a user
 	 *
 	 * @return boolean
+	 *
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony security instead.
 	 */
 	public function authenticate()
 	{
-		// Default authentication
-		if (parent::authenticate())
-		{
-			return true;
-		}
+		@trigger_error('Using FrontendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		// Check whether auto login is enabled
-		if (\Config::get('autologin') > 0 && ($strCookie = \Input::cookie('FE_AUTO_LOGIN')))
-		{
-			// Try to find the user by his auto login cookie
-			if ($this->findBy('autologin', hash_hmac('sha256', $strCookie, \System::getContainer()->getParameter('kernel.secret'))) !== false)
-			{
-				// Check the auto login period
-				if ($this->createdOn >= (time() - \Config::get('autologin')))
-				{
-					// Validate the account status
-					if ($this->checkAccountStatus() !== false)
-					{
-						$this->setUserFromDb();
-
-						// Last login date
-						$this->lastLogin = $this->currentLogin;
-						$this->currentLogin = time();
-						$this->save();
-
-						// Generate the session
-						$this->generateSession();
-						$this->log('User "' . $this->username . '" was logged in automatically', __METHOD__, TL_ACCESS);
-
-						// Reload the page
-						\Controller::reload();
-
-						return true;
-					}
-				}
-			}
-
-			// Remove the cookie if it is invalid to enable loading cached pages
-			$this->setCookie('FE_AUTO_LOGIN', $strCookie, (time() - 86400), null, null, \Environment::get('ssl'), true);
-		}
-
-		return false;
+		return System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
 	}
 
 	/**
-	 * Add the auto login resources
+	 * Try to login the current user
 	 *
-	 * @return boolean
+	 * @return boolean True if the user could be logged in
+	 *
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony security instead.
 	 */
 	public function login()
 	{
-		// Default routine
-		if (parent::login() == false)
-		{
-			return false;
-		}
+		@trigger_error('Using FrontendUser::login() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		// Set the auto login data
-		if (\Config::get('autologin') > 0 && \Input::post('autologin'))
-		{
-			$time = time();
-			$strToken = md5(uniqid(mt_rand(), true));
-
-			$this->createdOn = $time;
-			$this->autologin = hash_hmac('sha256', $strToken, \System::getContainer()->getParameter('kernel.secret'));
-			$this->save();
-
-			$this->setCookie('FE_AUTO_LOGIN', $strToken, ($time + \Config::get('autologin')), null, null, \Environment::get('ssl'), true);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Remove the auto login resources
-	 *
-	 * @return boolean
-	 */
-	public function logout()
-	{
-		// Default routine
-		if (parent::logout() == false)
-		{
-			return false;
-		}
-
-		// Reset the auto login data
-		$this->autologin = null;
-		$this->createdOn = 0;
-		$this->save();
-
-		// Remove the auto login cookie
-		$this->setCookie('FE_AUTO_LOGIN', $this->autologin, (time() - 86400), null, null, \Environment::get('ssl'), true);
-
-		return true;
+		return System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
 	}
 
 	/**
@@ -252,18 +221,8 @@ class FrontendUser extends \User
 		{
 			if (!is_numeric($v))
 			{
-				$this->$k = \StringUtil::deserialize($v);
+				$this->$k = StringUtil::deserialize($v);
 			}
-		}
-
-		// Set language
-		if ($this->language != '')
-		{
-			\System::getContainer()->get('request_stack')->getCurrentRequest()->setLocale($this->language);
-			\System::getContainer()->get('translator')->setLocale($this->language);
-
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			$GLOBALS['TL_LANGUAGE'] = str_replace('_', '-', $this->language);
 		}
 
 		$GLOBALS['TL_USERNAME'] = $this->username;
@@ -275,7 +234,7 @@ class FrontendUser extends \User
 		}
 
 		// Skip inactive groups
-		if (($objGroups = \MemberGroupModel::findAllActive()) !== null)
+		if (($objGroups = MemberGroupModel::findAllActive()) !== null)
 		{
 			$this->groups = array_intersect($this->groups, $objGroups->fetchEach('id'));
 		}
@@ -283,7 +242,7 @@ class FrontendUser extends \User
 		// Get the group login page
 		if ($this->groups[0] > 0)
 		{
-			$objGroup = \MemberGroupModel::findPublishedById($this->groups[0]);
+			$objGroup = MemberGroupModel::findPublishedById($this->groups[0]);
 
 			if ($objGroup !== null && $objGroup->redirect && $objGroup->jumpTo)
 			{
@@ -291,4 +250,14 @@ class FrontendUser extends \User
 			}
 		}
 	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getRoles()
+	{
+		return $this->roles;
+	}
 }
+
+class_alias(FrontendUser::class, 'FrontendUser');

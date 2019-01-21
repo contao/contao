@@ -18,10 +18,19 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		'ctable'                      => array('tl_news'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
+		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
 			array('tl_news_archive', 'checkPermission'),
 			array('tl_news_archive', 'generateFeed')
+		),
+		'oncreate_callback' => array
+		(
+			array('tl_news_archive', 'adjustPermissions')
+		),
+		'oncopy_callback' => array
+		(
+			array('tl_news_archive', 'adjustPermissions')
 		),
 		'onsubmit_callback' => array
 		(
@@ -150,7 +159,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('mandatory'=>true, 'fieldType'=>'radio', 'tl_class'=>'clr'),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'",
-			'relation'                => array('type'=>'hasOne', 'load'=>'eager')
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'protected' => array
 		(
@@ -252,7 +261,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_news_archive extends Backend
+class tl_news_archive extends Contao\Backend
 {
 
 	/**
@@ -261,7 +270,7 @@ class tl_news_archive extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -271,7 +280,7 @@ class tl_news_archive extends Backend
 	 */
 	public function checkPermission()
 	{
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
+		$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
 		if (!isset($bundles['ContaoCommentsBundle']))
@@ -300,90 +309,49 @@ class tl_news_archive extends Backend
 		if (!$this->User->hasAccess('create', 'newp'))
 		{
 			$GLOBALS['TL_DCA']['tl_news_archive']['config']['closed'] = true;
+			$GLOBALS['TL_DCA']['tl_news_archive']['config']['notCreatable'] = true;
+			$GLOBALS['TL_DCA']['tl_news_archive']['config']['notCopyable'] = true;
+		}
+
+		// Check permissions to delete calendars
+		if (!$this->User->hasAccess('delete', 'newp'))
+		{
+			$GLOBALS['TL_DCA']['tl_news_archive']['config']['notDeletable'] = true;
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		// Check current action
-		switch (Input::get('act'))
+		switch (Contao\Input::get('act'))
 		{
-			case 'create':
 			case 'select':
 				// Allow
 				break;
 
-			case 'edit':
-				// Dynamically add the record to the user profile
-				if (!\in_array(Input::get('id'), $root))
+			case 'create':
+				if (!$this->User->hasAccess('create', 'newp'))
 				{
-					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-					$objSessionBag = $objSession->getBag('contao_backend');
-
-					$arrNew = $objSessionBag->get('new_records');
-
-					if (\is_array($arrNew['tl_news_archive']) && \in_array(Input::get('id'), $arrNew['tl_news_archive']))
-					{
-						// Add the permissions on group level
-						if ($this->User->inherit != 'custom')
-						{
-							$objGroup = $this->Database->execute("SELECT id, news, newp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
-
-							while ($objGroup->next())
-							{
-								$arrNewp = StringUtil::deserialize($objGroup->newp);
-
-								if (\is_array($arrNewp) && \in_array('create', $arrNewp))
-								{
-									$arrNews = StringUtil::deserialize($objGroup->news, true);
-									$arrNews[] = Input::get('id');
-
-									$this->Database->prepare("UPDATE tl_user_group SET news=? WHERE id=?")
-												   ->execute(serialize($arrNews), $objGroup->id);
-								}
-							}
-						}
-
-						// Add the permissions on user level
-						if ($this->User->inherit != 'group')
-						{
-							$objUser = $this->Database->prepare("SELECT news, newp FROM tl_user WHERE id=?")
-													   ->limit(1)
-													   ->execute($this->User->id);
-
-							$arrNewp = StringUtil::deserialize($objUser->newp);
-
-							if (\is_array($arrNewp) && \in_array('create', $arrNewp))
-							{
-								$arrNews = StringUtil::deserialize($objUser->news, true);
-								$arrNews[] = Input::get('id');
-
-								$this->Database->prepare("UPDATE tl_user SET news=? WHERE id=?")
-											   ->execute(serialize($arrNews), $this->User->id);
-							}
-						}
-
-						// Add the new element to the user object
-						$root[] = Input::get('id');
-						$this->User->news = $root;
-					}
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create news archives.');
 				}
-				// No break;
+				break;
 
+			case 'edit':
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!\in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newp')))
+				if (!\in_array(Contao\Input::get('id'), $root) || (Contao\Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newp')))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news archive ID ' . Input::get('id') . '.');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' news archive ID ' . Contao\Input::get('id') . '.');
 				}
 				break;
 
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
+			case 'copyAll':
 				$session = $objSession->all();
-				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newp'))
+				if (Contao\Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newp'))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
@@ -395,11 +363,97 @@ class tl_news_archive extends Backend
 				break;
 
 			default:
-				if (\strlen(Input::get('act')))
+				if (\strlen(Contao\Input::get('act')))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news archives.');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' news archives.');
 				}
 				break;
+		}
+	}
+
+	/**
+	 * Add the new archive to the permissions
+	 *
+	 * @param $insertId
+	 */
+	public function adjustPermissions($insertId)
+	{
+		// The oncreate_callback passes $insertId as second argument
+		if (\func_num_args() == 4)
+		{
+			$insertId = func_get_arg(1);
+		}
+
+		if ($this->User->isAdmin)
+		{
+			return;
+		}
+
+		// Set root IDs
+		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		{
+			$root = array(0);
+		}
+		else
+		{
+			$root = $this->User->forms;
+		}
+
+		// The archive is enabled already
+		if (\in_array($insertId, $root))
+		{
+			return;
+		}
+
+		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
+		$objSessionBag = Contao\System::getContainer()->get('session')->getBag('contao_backend');
+
+		$arrNew = $objSessionBag->get('new_records');
+
+		if (\is_array($arrNew['tl_news_archive']) && \in_array($insertId, $arrNew['tl_news_archive']))
+		{
+			// Add the permissions on group level
+			if ($this->User->inherit != 'custom')
+			{
+				$objGroup = $this->Database->execute("SELECT id, news, newp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
+
+				while ($objGroup->next())
+				{
+					$arrNewp = Contao\StringUtil::deserialize($objGroup->newp);
+
+					if (\is_array($arrNewp) && \in_array('create', $arrNewp))
+					{
+						$arrNews = Contao\StringUtil::deserialize($objGroup->news, true);
+						$arrNews[] = $insertId;
+
+						$this->Database->prepare("UPDATE tl_user_group SET news=? WHERE id=?")
+									   ->execute(serialize($arrNews), $objGroup->id);
+					}
+				}
+			}
+
+			// Add the permissions on user level
+			if ($this->User->inherit != 'group')
+			{
+				$objUser = $this->Database->prepare("SELECT news, newp FROM tl_user WHERE id=?")
+										   ->limit(1)
+										   ->execute($this->User->id);
+
+				$arrNewp = Contao\StringUtil::deserialize($objUser->newp);
+
+				if (\is_array($arrNewp) && \in_array('create', $arrNewp))
+				{
+					$arrNews = Contao\StringUtil::deserialize($objUser->news, true);
+					$arrNews[] = $insertId;
+
+					$this->Database->prepare("UPDATE tl_user SET news=? WHERE id=?")
+								   ->execute(serialize($arrNews), $this->User->id);
+				}
+			}
+
+			// Add the new element to the user object
+			$root[] = $insertId;
+			$this->User->news = $root;
 		}
 	}
 
@@ -409,7 +463,7 @@ class tl_news_archive extends Backend
 	public function generateFeed()
 	{
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		$session = $objSession->get('news_feed_updater');
 
@@ -418,14 +472,14 @@ class tl_news_archive extends Backend
 			return;
 		}
 
-		$this->import('News');
+		$this->import('Contao\News', 'News');
 
 		foreach ($session as $id)
 		{
 			$this->News->generateFeedsByArchive($id);
 		}
 
-		$this->import('Automator');
+		$this->import('Contao\Automator', 'Automator');
 		$this->Automator->generateSitemap();
 
 		$objSession->set('news_feed_updater', null);
@@ -437,9 +491,9 @@ class tl_news_archive extends Backend
 	 * This method is triggered when a single news archive or multiple news
 	 * archives are modified (edit/editAll).
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 */
-	public function scheduleUpdate(DataContainer $dc)
+	public function scheduleUpdate(Contao\DataContainer $dc)
 	{
 		// Return if there is no ID
 		if (!$dc->id)
@@ -448,7 +502,7 @@ class tl_news_archive extends Backend
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		// Store the ID in the session
 		$session = $objSession->get('news_feed_updater');
@@ -469,7 +523,7 @@ class tl_news_archive extends Backend
 	 */
 	public function manageFeeds($href, $label, $title, $class, $attributes)
 	{
-		return ($this->User->isAdmin || !empty($this->User->newsfeeds) || $this->User->hasAccess('create', 'newsfeedp')) ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
+		return ($this->User->isAdmin || !empty($this->User->newsfeeds) || !empty($this->User->newsfeedp)) ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
 	}
 
 	/**
@@ -486,7 +540,7 @@ class tl_news_archive extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_news_archive') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_news_archive') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 	/**
@@ -503,7 +557,7 @@ class tl_news_archive extends Backend
 	 */
 	public function copyArchive($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'newp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('create', 'newp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 	/**
@@ -520,6 +574,6 @@ class tl_news_archive extends Backend
 	 */
 	public function deleteArchive($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'newp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('delete', 'newp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 }

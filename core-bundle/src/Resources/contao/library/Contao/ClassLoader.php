@@ -153,15 +153,17 @@ class ClassLoader
 			return;
 		}
 
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+
 		// The class file is set in the mapper
 		if (isset(self::$classes[$class]))
 		{
-			if (\Config::get('debugMode'))
+			if (Config::get('debugMode'))
 			{
 				$GLOBALS['TL_DEBUG']['classes_set'][$class] = $class;
 			}
 
-			include TL_ROOT . '/' . self::$classes[$class];
+			include $rootDir . '/' . self::$classes[$class];
 		}
 
 		// Find the class in the registered namespaces
@@ -169,12 +171,12 @@ class ClassLoader
 		{
 			if (!class_exists($namespaced, false) && !interface_exists($namespaced, false) && !trait_exists($namespaced, false))
 			{
-				if (\Config::get('debugMode'))
+				if (Config::get('debugMode'))
 				{
 					$GLOBALS['TL_DEBUG']['classes_aliased'][$class] = $namespaced;
 				}
 
-				include TL_ROOT . '/' . self::$classes[$namespaced];
+				include $rootDir . '/' . self::$classes[$namespaced];
 			}
 
 			class_alias($namespaced, $class);
@@ -187,12 +189,15 @@ class ClassLoader
 
 			if (class_exists($namespaced) || interface_exists($namespaced) || trait_exists($namespaced))
 			{
-				if (\Config::get('debugMode'))
+				if (Config::get('debugMode'))
 				{
 					$GLOBALS['TL_DEBUG']['classes_composerized'][$class] = $namespaced;
 				}
 
-				class_alias($namespaced, $class);
+				if (!class_exists($class, false) && !interface_exists($class, false) && !trait_exists($class, false))
+				{
+					class_alias($namespaced, $class);
+				}
 			}
 		}
 
@@ -233,7 +238,7 @@ class ClassLoader
 	 */
 	public static function scanAndRegister()
 	{
-		$strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
+		$strCacheDir = System::getContainer()->getParameter('kernel.cache_dir');
 
 		// Try to load from cache
 		if (file_exists($strCacheDir . '/contao/config/autoload.php'))
@@ -244,7 +249,7 @@ class ClassLoader
 		{
 			try
 			{
-				$files = \System::getContainer()->get('contao.resource_locator')->locate('config/autoload.php', null, false);
+				$files = System::getContainer()->get('contao.resource_locator')->locate('config/autoload.php', null, false);
 			}
 			catch (\InvalidArgumentException $e)
 			{
@@ -260,3 +265,5 @@ class ClassLoader
 		self::register();
 	}
 }
+
+class_alias(ClassLoader::class, 'ClassLoader');

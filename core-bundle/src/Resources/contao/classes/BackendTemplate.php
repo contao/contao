@@ -20,7 +20,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendTemplate extends \Template
+class BackendTemplate extends Template
 {
 
 	/**
@@ -53,22 +53,36 @@ class BackendTemplate extends \Template
 	protected function compile()
 	{
 		// User agent class (see #3074 and #6277)
-		$this->ua = \Environment::get('agent')->class;
+		$this->ua = Environment::get('agent')->class;
 
-		if (\Config::get('limitWidth'))
+		if (Config::get('fullscreen'))
 		{
-			$this->ua .= ' lw';
+			$this->ua .= ' fullscreen';
 		}
 
 		// Style sheets
 		if (!empty($GLOBALS['TL_CSS']) && \is_array($GLOBALS['TL_CSS']))
 		{
 			$strStyleSheets = '';
+			$objCombiner = new Combiner();
 
 			foreach (array_unique($GLOBALS['TL_CSS']) as $stylesheet)
 			{
-				$options = \StringUtil::resolveFlaggedUrl($stylesheet);
-				$strStyleSheets .= \Template::generateStyleTag($this->addStaticUrlTo($stylesheet), $options->media);
+				$options = StringUtil::resolveFlaggedUrl($stylesheet);
+
+				if ($options->static)
+				{
+					$objCombiner->add($stylesheet, $options->mtime, $options->media);
+				}
+				else
+				{
+					$strStyleSheets .= Template::generateStyleTag($this->addStaticUrlTo($stylesheet), $options->media, $options->mtime);
+				}
+			}
+
+			if ($objCombiner->hasEntries())
+			{
+				$strStyleSheets = Template::generateStyleTag($objCombiner->getCombinedFile(), 'all') . $strStyleSheets;
 			}
 
 			$this->stylesheets .= $strStyleSheets;
@@ -77,12 +91,32 @@ class BackendTemplate extends \Template
 		// JavaScripts
 		if (!empty($GLOBALS['TL_JAVASCRIPT']) && \is_array($GLOBALS['TL_JAVASCRIPT']))
 		{
+			$objCombiner = new Combiner();
+			$objCombinerAsync = new Combiner();
 			$strJavaScripts = '';
 
 			foreach (array_unique($GLOBALS['TL_JAVASCRIPT']) as $javascript)
 			{
-				$options = \StringUtil::resolveFlaggedUrl($javascript);
-				$strJavaScripts .= \Template::generateScriptTag($this->addStaticUrlTo($javascript), $options->async) . "\n";
+				$options = StringUtil::resolveFlaggedUrl($javascript);
+
+				if ($options->static)
+				{
+					$options->async ? $objCombinerAsync->add($javascript, $options->mtime) : $objCombiner->add($javascript, $options->mtime);
+				}
+				else
+				{
+					$strJavaScripts .= Template::generateScriptTag($this->addStaticUrlTo($javascript), $options->async, $options->mtime);
+				}
+			}
+
+			if ($objCombiner->hasEntries())
+			{
+				$strJavaScripts = Template::generateScriptTag($objCombiner->getCombinedFile()) . $strJavaScripts;
+			}
+
+			if ($objCombinerAsync->hasEntries())
+			{
+				$strJavaScripts = Template::generateScriptTag($objCombinerAsync->getCombinedFile(), true) . $strJavaScripts;
 			}
 
 			$this->javascripts .= $strJavaScripts;
@@ -95,7 +129,7 @@ class BackendTemplate extends \Template
 
 			foreach (array_unique($GLOBALS['TL_MOOTOOLS']) as $script)
 			{
-				$strMootools .= "\n" . trim($script) . "\n";
+				$strMootools .= $script;
 			}
 
 			$this->mootools .= $strMootools;
@@ -126,9 +160,11 @@ class BackendTemplate extends \Template
 	 */
 	protected function getLocaleString()
 	{
+		$container = System::getContainer();
+
 		return
 			'var Contao={'
-				. 'theme:"' . \Backend::getTheme() . '",'
+				. 'theme:"' . Backend::getTheme() . '",'
 				. 'lang:{'
 					. 'close:"' . $GLOBALS['TL_LANG']['MSC']['close'] . '",'
 					. 'collapse:"' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '",'
@@ -136,10 +172,10 @@ class BackendTemplate extends \Template
 					. 'loading:"' . $GLOBALS['TL_LANG']['MSC']['loadingData'] . '",'
 					. 'apply:"' . $GLOBALS['TL_LANG']['MSC']['apply'] . '"'
 				. '},'
-				. 'script_url:"' . TL_ASSETS_URL . '",'
-				. 'path:"' . \Environment::get('path') . '",'
+				. 'script_url:"' . $container->get('contao.assets.assets_context')->getStaticUrl() . '",'
+				. 'path:"' . Environment::get('path') . '",'
 				. 'request_token:"' . REQUEST_TOKEN . '",'
-				. 'referer_id:"' . \System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id') . '"'
+				. 'referer_id:"' . $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id') . '"'
 			. '};';
 	}
 
@@ -170,3 +206,5 @@ class BackendTemplate extends \Template
 			. '});';
 	}
 }
+
+class_alias(BackendTemplate::class, 'BackendTemplate');

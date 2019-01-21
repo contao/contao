@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,11 +17,6 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Contao template extension.
- *
- * @author Jim Schmid <https://github.com/sheeep>
- */
 class ContaoTemplateExtension extends \Twig_Extension
 {
     /**
@@ -37,13 +34,6 @@ class ContaoTemplateExtension extends \Twig_Extension
      */
     private $scopeMatcher;
 
-    /**
-     * Constructor.
-     *
-     * @param RequestStack             $requestStack
-     * @param ContaoFrameworkInterface $framework
-     * @param ScopeMatcher             $scopeMatcher
-     */
     public function __construct(RequestStack $requestStack, ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher)
     {
         $this->requestStack = $requestStack;
@@ -54,7 +44,7 @@ class ContaoTemplateExtension extends \Twig_Extension
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new \Twig_SimpleFunction('render_contao_backend_template', [$this, 'renderContaoBackendTemplate']),
@@ -63,12 +53,8 @@ class ContaoTemplateExtension extends \Twig_Extension
 
     /**
      * Renders a Contao back end template with the given blocks.
-     *
-     * @param array $blocks
-     *
-     * @return string
      */
-    public function renderContaoBackendTemplate(array $blocks = [])
+    public function renderContaoBackendTemplate(array $blocks = []): string
     {
         $request = $this->requestStack->getCurrentRequest();
 

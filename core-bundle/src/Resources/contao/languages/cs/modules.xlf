@@ -121,9 +121,15 @@
         <source>Maintain or update Contao</source>
         <target>Údržba nebo aktualizace Contao.</target>
       </trans-unit>
+      <trans-unit id="MOD.security.0">
+        <source>Security</source>
+      </trans-unit>
+      <trans-unit id="MOD.security.1">
+        <source>Secure your account</source>
+      </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
-        <target>Zpět</target>
+        <target>Obnovit</target>
       </trans-unit>
       <trans-unit id="MOD.undo.1">
         <source>Restore deleted records</source>
@@ -352,14 +358,6 @@
       <trans-unit id="FMD.miscellaneous">
         <source>Miscellaneous</source>
         <target>Různé</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.0">
-        <source>Flash movie</source>
-        <target>Flash video</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.1">
-        <source>Embeds a Flash movie into the page</source>
-        <target>vloží flashové video do stránky.</target>
       </trans-unit>
       <trans-unit id="FMD.randomImage.0">
         <source>Random image</source>

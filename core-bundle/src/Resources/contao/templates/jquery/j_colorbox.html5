@@ -5,7 +5,7 @@ $GLOBALS['TL_CSS'][] = 'assets/colorbox/css/colorbox.min.css|static';
 
 ?>
 
-<script src="<?= TL_ASSETS_URL ?>assets/colorbox/js/colorbox.min.js"></script>
+<script src="<?= $this->asset('js/colorbox.min.js', 'contao-components/colorbox') ?>"></script>
 <script>
   jQuery(function($) {
     $('a[data-lightbox]').map(function() {

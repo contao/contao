@@ -9,13 +9,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
   <meta name="referrer" content="origin">
 
-  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/fonts.css">
-  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/basic.css">
-  <link rel="stylesheet" href="<?= TL_ASSETS_URL ?>system/themes/<?= $this->theme ?>/switch.css">
+  <link rel="stylesheet" href="<?php
+    $objCombiner = new Contao\Combiner();
+    $objCombiner->add('system/themes/'. $this->theme .'/fonts.css');
+    $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
+    $objCombiner->add('system/themes/'. $this->theme .'/switch.css');
+    echo $objCombiner->getCombinedFile();
+  ?>">
   <?= $this->stylesheets ?>
 
   <script><?= $this->getLocaleString() ?></script>
-  <script src="<?= TL_ASSETS_URL ?>assets/mootools/js/mootools.min.js"></script>
+  <script src="<?= $this->asset('js/mootools.min.js', 'contao-components/mootools') ?>"></script>
   <script><?= $this->getDateString() ?></script>
   <?= $this->javascripts ?>
 
@@ -23,7 +27,10 @@
 <body class="<?= $this->ua ?>">
 
   <div id="container" class="cf">
-    <h1><?= $this->fePreview ?></h1>
+    <div class="title">
+      <h1 id="page-title"><?= $this->fePreview ?></h1>
+      <p id="page-uri"><?= $this->base ?></p>
+    </div>
     <form action="<?= $this->action ?>" method="post">
       <div class="formbody">
         <input type="hidden" name="FORM_SUBMIT" value="tl_switch">
@@ -67,6 +74,24 @@
         });
       }
     });
+
+    (function(win) {
+      if (typeof(win.postMessage) !== 'function') {
+        return;
+      }
+      var pageTitle = document.getElementById('page-title'),
+          pageUri = document.getElementById('page-uri');
+      win.addEventListener('message', function(message) {
+        if (message.origin !== win.location.origin) {
+          return;
+        }
+        var data = message.data['contao.preview'];
+        if (data) {
+          pageTitle.textContent = data.title;
+          pageUri.textContent = data.uri;
+        }
+      }, false);
+    })(window);
   </script>
 
 </body>

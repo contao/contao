@@ -141,7 +141,7 @@ class Input
 				$varValue = static::encodeSpecialChars($varValue);
 			}
 
-			if (TL_MODE != 'BE')
+			if (!\defined('TL_MODE') || TL_MODE != 'BE')
 			{
 				$varValue = static::encodeInsertTags($varValue);
 			}
@@ -175,14 +175,14 @@ class Input
 
 			$varValue = static::decodeEntities($varValue);
 			$varValue = static::xssClean($varValue);
-			$varValue = static::stripTags($varValue, \Config::get('allowedTags'));
+			$varValue = static::stripTags($varValue, Config::get('allowedTags'));
 
 			if (!$blnDecodeEntities)
 			{
 				$varValue = static::encodeSpecialChars($varValue);
 			}
 
-			if (TL_MODE != 'BE')
+			if (!\defined('TL_MODE') || TL_MODE != 'BE')
 			{
 				$varValue = static::encodeInsertTags($varValue);
 			}
@@ -216,7 +216,7 @@ class Input
 			$varValue = static::preserveBasicEntities($varValue);
 			$varValue = static::xssClean($varValue);
 
-			if (TL_MODE != 'BE')
+			if (!\defined('TL_MODE') || TL_MODE != 'BE')
 			{
 				$varValue = static::encodeInsertTags($varValue);
 			}
@@ -410,6 +410,14 @@ class Input
 	public static function setUnusedGet($strKey, $varValue)
 	{
 		static::$arrUnusedGet[$strKey] = $varValue;
+	}
+
+	/**
+	 * Reset the unused GET parameters
+	 */
+	public static function resetUnusedGet()
+	{
+		static::$arrUnusedGet = array();
 	}
 
 	/**
@@ -670,7 +678,7 @@ class Input
 
 		// Preserve basic entities
 		$varValue = static::preserveBasicEntities($varValue);
-		$varValue = html_entity_decode($varValue, ENT_QUOTES, \Config::get('characterSet'));
+		$varValue = html_entity_decode($varValue, ENT_QUOTES, Config::get('characterSet'));
 
 		return $varValue;
 	}
@@ -767,6 +775,14 @@ class Input
 			return $_POST[$strKey];
 		}
 
+		$request = System::getContainer()->get('request_stack')->getMasterRequest();
+
+		// Return if the session has not been started before
+		if ($request === null || !$request->hasPreviousSession())
+		{
+			return null;
+		}
+
 		if (isset($_SESSION['FORM_DATA'][$strKey]))
 		{
 			return ($strKey == 'FORM_SUBMIT') ? preg_replace('/^auto_/i', '', $_SESSION['FORM_DATA'][$strKey]) : $_SESSION['FORM_DATA'][$strKey];
@@ -814,3 +830,5 @@ class Input
 		return static::$objInstance;
 	}
 }
+
+class_alias(Input::class, 'Input');

@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ListWizard extends \Widget
+class ListWizard extends Widget
 {
 
 	/**
@@ -74,9 +74,9 @@ class ListWizard extends \Widget
 		}
 
 		// Initialize the tab index
-		if (!\Cache::has('tabindex'))
+		if (!Cache::has('tabindex'))
 		{
-			\Cache::set('tabindex', 1);
+			Cache::set('tabindex', 1);
 		}
 
 		$return = '<ul id="ctrl_'.$this->strId.'" class="tl_listwizard">';
@@ -85,18 +85,18 @@ class ListWizard extends \Widget
 		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
 		{
 			$return .= '
-    <li><input type="text" name="'.$this->strId.'[]" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]).'"' . $this->getAttributes() . '> ';
+    <li><input type="text" name="'.$this->strId.'[]" class="tl_text" value="'.StringUtil::specialchars($this->varValue[$i]).'"' . $this->getAttributes() . '> ';
 
 			// Add buttons
 			foreach ($arrButtons as $button)
 			{
 				if ($button == 'drag')
 				{
-					$return .= ' <button type="button" class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . \Image::getHtml('drag.svg') . '</button>';
+					$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
 				}
 				else
 				{
-					$return .= ' <button type="button" data-command="' . $button . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['lw_'.$button]) . '">' . \Image::getHtml($button.'.svg') . '</button>';
+					$return .= ' <button type="button" data-command="' . $button . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['lw_'.$button]) . '">' . Image::getHtml($button.'.svg') . '</button>';
 				}
 			}
 
@@ -123,7 +123,7 @@ class ListWizard extends \Widget
 	 */
 	public function importList(DataContainer $dc)
 	{
-		$response = System::getContainer()->get('contao.controller.backend_csv_import')->importListWizard($dc);
+		$response = System::getContainer()->get('contao.controller.backend_csv_import')->importListWizardAction($dc);
 
 		if ($response instanceof RedirectResponse)
 		{
@@ -133,3 +133,5 @@ class ListWizard extends \Widget
 		return $response->getContent();
     }
 }
+
+class_alias(ListWizard::class, 'ListWizard');

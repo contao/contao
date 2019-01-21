@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentAccordion extends \ContentElement
+class ContentAccordion extends ContentElement
 {
 
 	/**
@@ -30,24 +30,24 @@ class ContentAccordion extends \ContentElement
 	protected function compile()
 	{
 		// Clean the RTE output
-		$this->text = \StringUtil::toHtml5($this->text);
+		$this->text = StringUtil::toHtml5($this->text);
 
-		$this->Template->text = \StringUtil::encodeEmail($this->text);
+		$this->Template->text = StringUtil::encodeEmail($this->text);
 		$this->Template->addImage = false;
 
 		// Add an image
 		if ($this->addImage && $this->singleSRC != '')
 		{
-			$objModel = \FilesModel::findByUuid($this->singleSRC);
+			$objModel = FilesModel::findByUuid($this->singleSRC);
 
-			if ($objModel !== null && is_file(TL_ROOT . '/' . $objModel->path))
+			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
 			{
 				$this->singleSRC = $objModel->path;
 				$this->addImageToTemplate($this->Template, $this->arrData, null, null, $objModel);
 			}
 		}
 
-		$classes = \StringUtil::deserialize($this->mooClasses);
+		$classes = StringUtil::deserialize($this->mooClasses);
 
 		$this->Template->toggler = $classes[0] ?: 'toggler';
 		$this->Template->accordion = $classes[1] ?: 'accordion';
@@ -55,3 +55,5 @@ class ContentAccordion extends \ContentElement
 		$this->Template->headline = $this->mooHeadline;
 	}
 }
+
+class_alias(ContentAccordion::class, 'ContentAccordion');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,7 +12,6 @@
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Util\SymlinkUtil;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,8 +20,6 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Installs the required Contao directories.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InstallCommand extends AbstractLockedCommand
 {
@@ -59,37 +58,7 @@ class InstallCommand extends AbstractLockedCommand
      */
     private $webDir;
 
-    /**
-     * @var array
-     */
-    private $emptyDirs = [
-        'system',
-        'system/config',
-        'templates',
-        '%s/system',
-    ];
-
-    /**
-     * @var array
-     */
-    private $ignoredDirs = [
-        'assets/css',
-        'assets/js',
-        'system/cache',
-        'system/modules',
-        'system/themes',
-        'system/tmp',
-        '%s/share',
-    ];
-
-    /**
-     * Constructor.
-     *
-     * @param string $rootDir
-     * @param string $uploadPath
-     * @param string $imageDir
-     */
-    public function __construct($rootDir, $uploadPath, $imageDir)
+    public function __construct(string $rootDir, string $uploadPath, string $imageDir)
     {
         $this->rootDir = $rootDir;
         $this->uploadPath = $uploadPath;
@@ -101,7 +70,7 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('contao:install')
@@ -115,7 +84,7 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output)
+    protected function executeLocked(InputInterface $input, OutputInterface $output): int
     {
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
@@ -129,30 +98,26 @@ class InstallCommand extends AbstractLockedCommand
             $this->io->listing($this->rows);
         }
 
-        $this->addInitializePhp();
-        $this->symlinkTcpdfConfig();
-
         return 0;
     }
 
-    /**
-     * Adds the empty directories.
-     */
-    private function addEmptyDirs()
+    private function addEmptyDirs(): void
     {
-        foreach ($this->emptyDirs as $path) {
+        static $emptyDirs = [
+            'system',
+            'system/config',
+            'templates',
+            '%s/system',
+        ];
+
+        foreach ($emptyDirs as $path) {
             $this->addEmptyDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
         $this->addEmptyDir($this->rootDir.'/'.$this->uploadPath);
     }
 
-    /**
-     * Adds an empty directory.
-     *
-     * @param string $path
-     */
-    private function addEmptyDir($path)
+    private function addEmptyDir(string $path): void
     {
         if ($this->fs->exists($path)) {
             return;
@@ -163,24 +128,26 @@ class InstallCommand extends AbstractLockedCommand
         $this->rows[] = str_replace($this->rootDir.'/', '', $path);
     }
 
-    /**
-     * Adds the ignored directories.
-     */
-    private function addIgnoredDirs()
+    private function addIgnoredDirs(): void
     {
-        foreach ($this->ignoredDirs as $path) {
+        static $ignoredDirs = [
+            'assets/css',
+            'assets/js',
+            'system/cache',
+            'system/modules',
+            'system/themes',
+            'system/tmp',
+            '%s/share',
+        ];
+
+        foreach ($ignoredDirs as $path) {
             $this->addIgnoredDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
         $this->addIgnoredDir($this->imageDir);
     }
 
-    /**
-     * Adds a directory with a .gitignore file.
-     *
-     * @param string $path
-     */
-    private function addIgnoredDir($path)
+    private function addIgnoredDir(string $path): void
     {
         $this->addEmptyDir($path);
 
@@ -192,58 +159,5 @@ class InstallCommand extends AbstractLockedCommand
             $path.'/.gitignore',
             "# Create the folder and ignore its content\n*\n!.gitignore\n"
         );
-    }
-
-    /**
-     * Adds the initialize.php file.
-     */
-    private function addInitializePhp()
-    {
-        $this->fs->dumpFile(
-            $this->rootDir.'/system/initialize.php',
-            <<<'EOF'
-<?php
-
-use Contao\CoreBundle\Response\InitializeControllerResponse;
-use Symfony\Component\HttpFoundation\Request;
-
-if (!defined('TL_SCRIPT')) {
-    die('Your script is not compatible with Contao 4.');
-}
-
-/** @var Composer\Autoload\ClassLoader $laoder */
-$loader = require __DIR__ . '/../vendor/autoload.php';
-
-$request = Request::create('/_contao/initialize', 'GET', [], $_COOKIE, [], $_SERVER);
-$request->attributes->set('_scope', ('BE' === TL_MODE ? 'backend' : 'frontend'));
-
-$kernel = new AppKernel('prod', false);
-$response = $kernel->handle($request);
-
-// Send the response if not generated by the InitializeController
-if (!$response instanceof InitializeControllerResponse) {
-    $response->send();
-    $kernel->terminate($request, $response);
-    exit;
-}
-
-EOF
-        );
-
-        $this->io->writeln('Added the <comment>system/initialize.php</comment> file.');
-    }
-
-    /**
-     * Symlinks the tcpdf.php config file to system/config.
-     */
-    private function symlinkTcpdfConfig()
-    {
-        SymlinkUtil::symlink(
-            'vendor/contao/core-bundle/src/Resources/contao/config/tcpdf.php',
-            'system/config/tcpdf.php',
-            $this->rootDir
-        );
-
-        $this->io->writeln('Symlinked the <comment>system/config/tcpdf.php</comment> file.');
     }
 }

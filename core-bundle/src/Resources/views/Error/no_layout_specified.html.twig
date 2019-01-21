@@ -1,13 +1,14 @@
+{% trans_default_domain 'contao_exception' %}
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ error.noLayout }}
+    {{ 'XPT.noLayout'|trans }}
 {% endblock %}
 {% block matter %}
-    <p>{{ error.noLayoutSpecified }}</p>
+    <p>{{ 'XPT.noLayoutSpecified'|trans }}</p>
 {% endblock %}
 {% block howToFix %}
-    <p>{{ error.noLayoutFix|format(adminEmail)|raw }}</p>
+    <p>{{ 'XPT.noLayoutFix'|trans|raw }}</p>
 {% endblock %}
 {% block explain %}
-    <p>{{ error.noLayoutExplain|raw }}</p>
+    <p>{{ 'XPT.noLayoutExplain'|trans|raw }}</p>
 {% endblock %}

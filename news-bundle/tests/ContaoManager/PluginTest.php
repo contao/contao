@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,24 +19,16 @@ use Contao\NewsBundle\ContaoManager\Plugin;
 use Contao\NewsBundle\ContaoNewsBundle;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the Plugin class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PluginTest extends TestCase
 {
-    /**
-     * Tests returning the bundles.
-     */
-    public function testReturnsTheBundles()
+    public function testReturnsTheBundles(): void
     {
         $parser = $this->createMock(ParserInterface::class);
 
         /** @var BundleConfig $config */
         $config = (new Plugin())->getBundles($parser)[0];
 
-        $this->assertInstanceOf('Contao\ManagerPlugin\Bundle\Config\BundleConfig', $config);
+        $this->assertInstanceOf(BundleConfig::class, $config);
         $this->assertSame(ContaoNewsBundle::class, $config->getName());
         $this->assertSame([ContaoCoreBundle::class], $config->getLoadAfter());
         $this->assertSame(['news'], $config->getReplace());

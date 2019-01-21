@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentHtml extends \ContentElement
+class ContentHtml extends ContentElement
 {
 
 	/**
@@ -39,3 +39,5 @@ class ContentHtml extends \ContentElement
 		}
 	}
 }
+
+class_alias(ContentHtml::class, 'ContentHtml');

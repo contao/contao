@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes users
  *
@@ -44,6 +46,8 @@ namespace Contao;
  * @property string  $stop
  * @property string  $session
  * @property integer $dateAdded
+ * @property boolean $useTwoFactor
+ * @property string  $secret
  * @property integer $lastLogin
  * @property integer $currentLogin
  * @property integer $loginCount
@@ -83,47 +87,51 @@ namespace Contao;
  * @method static UserModel|null findOneByStop($val, array $opt=array())
  * @method static UserModel|null findOneBySession($val, array $opt=array())
  * @method static UserModel|null findOneByDateAdded($val, array $opt=array())
+ * @method static UserModel|null findOneByUseTwoFactor($val, array $opt=array())
+ * @method static UserModel|null findOneBySecret($val, array $opt=array())
  * @method static UserModel|null findOneByLastLogin($val, array $opt=array())
  * @method static UserModel|null findOneByCurrentLogin($val, array $opt=array())
  * @method static UserModel|null findOneByLoginCount($val, array $opt=array())
  * @method static UserModel|null findOneByLocked($val, array $opt=array())
  *
- * @method static Model\Collection|UserModel[]|UserModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByName($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByEmail($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByLanguage($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByBackendTheme($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByUploader($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByShowHelp($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByThumbnails($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByUseRTE($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByUseCE($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByPassword($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByPwChange($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByAdmin($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByGroups($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByInherit($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByModules($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByThemes($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByPagemounts($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByAlpty($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByFilemounts($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByFop($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByForms($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByFormp($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByAmg($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByDisable($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByStart($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByStop($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findBySession($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByDateAdded($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByLastLogin($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByCurrentLogin($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByLoginCount($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findByLocked($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|UserModel[]|UserModel|null findAll(array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByName($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByEmail($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByLanguage($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByBackendTheme($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByUploader($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByShowHelp($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByThumbnails($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByUseRTE($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByUseCE($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByPassword($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByPwChange($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByAdmin($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByGroups($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByInherit($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByModules($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByThemes($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByPagemounts($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByAlpty($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByFilemounts($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByFop($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByForms($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByFormp($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByAmg($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByDisable($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByStart($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByStop($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findBySession($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByDateAdded($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByUseTwoFactor($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findBySecret($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByLastLogin($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByCurrentLogin($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByLoginCount($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByLocked($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -156,6 +164,8 @@ namespace Contao;
  * @method static integer countByStop($val, array $opt=array())
  * @method static integer countBySession($val, array $opt=array())
  * @method static integer countByDateAdded($val, array $opt=array())
+ * @method static integer countByUseTwoFactor($val, array $opt=array())
+ * @method static integer countBySecret($val, array $opt=array())
  * @method static integer countByLastLogin($val, array $opt=array())
  * @method static integer countByCurrentLogin($val, array $opt=array())
  * @method static integer countByLoginCount($val, array $opt=array())
@@ -163,7 +173,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class UserModel extends \Model
+class UserModel extends Model
 {
 
 	/**
@@ -173,3 +183,5 @@ class UserModel extends \Model
 	protected static $strTable = 'tl_user';
 
 }
+
+class_alias(UserModel::class, 'UserModel');

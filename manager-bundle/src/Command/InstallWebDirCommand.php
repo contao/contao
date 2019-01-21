@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -20,12 +22,8 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
-/**
- * Installs the web entry points for Contao Managed Edition.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class InstallWebDirCommand extends AbstractLockedCommand
 {
     /**
@@ -43,12 +41,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
      */
     private $rootDir;
 
-    /**
-     * Constructor.
-     *
-     * @param string $rootDir
-     */
-    public function __construct($rootDir)
+    public function __construct(string $rootDir)
     {
         $this->rootDir = $rootDir;
 
@@ -58,7 +51,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('contao:install-web-dir')
@@ -75,7 +68,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         $user = $input->getOption('user');
         $password = $input->getOption('password');
@@ -113,7 +106,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output)
+    protected function executeLocked(InputInterface $input, OutputInterface $output): int
     {
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
@@ -130,12 +123,10 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
     /**
      * Adds the .htaccess file or merges it with an existing one.
-     *
-     * @param string $webDir
      */
-    private function addHtaccess($webDir)
+    private function addHtaccess(string $webDir): void
     {
-        $htaccess = __DIR__.'/../Resources/web/.htaccess';
+        $htaccess = __DIR__.'/../Resources/skeleton/web/.htaccess';
 
         if (!file_exists($webDir.'/.htaccess')) {
             $this->fs->copy($htaccess, $webDir.'/.htaccess', true);
@@ -156,18 +147,15 @@ class InstallWebDirCommand extends AbstractLockedCommand
     }
 
     /**
-     * Adds files from Resources/web to the application's web directory.
-     *
-     * @param string $webDir
-     * @param bool   $dev
+     * Adds files from Resources/skeleton/web to the application's web directory.
      */
-    private function addFiles($webDir, $dev = true)
+    private function addFiles(string $webDir, bool $dev = true): void
     {
-        /** @var Finder $finder */
-        $finder = Finder::create()->files()->in(__DIR__.'/../Resources/web');
+        /** @var SplFileInfo[] $finder */
+        $finder = Finder::create()->files()->in(__DIR__.'/../Resources/skeleton/web');
 
         foreach ($finder as $file) {
-            if ($this->fs->exists($webDir.'/'.$file->getRelativePathname())) {
+            if ($this->isExistingOptionalFile($file, $webDir)) {
                 continue;
             }
 
@@ -182,10 +170,8 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
     /**
      * Removes the install.php entry point leftover from Contao <4.4.
-     *
-     * @param string $webDir
      */
-    private function removeInstallPhp($webDir)
+    private function removeInstallPhp(string $webDir): void
     {
         if (!file_exists($webDir.'/install.php')) {
             return;
@@ -197,11 +183,8 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
     /**
      * Stores username and password in .env file in the project directory.
-     *
-     * @param InputInterface $input
-     * @param string         $projectDir
      */
-    private function storeAppDevAccesskey(InputInterface $input, $projectDir)
+    private function storeAppDevAccesskey(InputInterface $input, string $projectDir): void
     {
         $user = $input->getOption('user');
         $password = $input->getOption('password');
@@ -228,12 +211,8 @@ class InstallWebDirCommand extends AbstractLockedCommand
 
     /**
      * Appends value to the .env file, removing a line with the given key.
-     *
-     * @param string $projectDir
-     * @param string $key
-     * @param string $value
      */
-    private function addToDotEnv($projectDir, $key, $value)
+    private function addToDotEnv(string $projectDir, string $key, string $value): void
     {
         $fs = new Filesystem();
 
@@ -257,5 +236,15 @@ class InstallWebDirCommand extends AbstractLockedCommand
         }
 
         $fs->dumpFile($path, $content.$key."='".str_replace("'", "'\\''", $value)."'\n");
+    }
+
+    /**
+     * Checks if an optional file exists.
+     */
+    private function isExistingOptionalFile(SplFileInfo $file, string $webDir): bool
+    {
+        $path = $file->getRelativePathname();
+
+        return 'robots.txt' === $path && $this->fs->exists($webDir.'/'.$path);
     }
 }

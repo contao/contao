@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentHeadline extends \ContentElement
+class ContentHeadline extends ContentElement
 {
 
 	/**
@@ -27,8 +27,7 @@ class ContentHeadline extends \ContentElement
 	/**
 	 * Generate the content element
 	 */
-	protected function compile()
-	{
-		return;
-	}
+	protected function compile() {}
 }
+
+class_alias(ContentHeadline::class, 'ContentHeadline');

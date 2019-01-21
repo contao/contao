@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,17 +16,9 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the ImageSizesEvent class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ImageSizesEventTest extends TestCase
 {
-    /**
-     * Tests the image sizes setter and getter.
-     */
-    public function testSupportsReadingAndWritingImageSizes()
+    public function testSupportsReadingAndWritingImageSizes(): void
     {
         $event = new ImageSizesEvent([1]);
 
@@ -35,10 +29,7 @@ class ImageSizesEventTest extends TestCase
         $this->assertSame([1, 2], $event->getImageSizes());
     }
 
-    /**
-     * Tests the getUser() method.
-     */
-    public function testSupportsReadingTheUserObject()
+    public function testSupportsReadingTheUserObject(): void
     {
         $user = $this->createMock(BackendUser::class);
         $event = new ImageSizesEvent([1], $user);

@@ -13,14 +13,14 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Back end file picker.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class BackendFile extends \Backend
+class BackendFile extends Backend
 {
 
 	/**
@@ -40,15 +40,15 @@ class BackendFile extends \Backend
 	 */
 	public function __construct()
 	{
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 		parent::__construct();
 
-		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
 		{
 			throw new AccessDeniedException('Access denied');
 		}
 
-		\System::loadLanguageFile('default');
+		System::loadLanguageFile('default');
 	}
 
 	/**
@@ -58,25 +58,24 @@ class BackendFile extends \Backend
 	 */
 	public function run()
 	{
-		/** @var SessionInterface $objSession */
-		$objSession = \System::getContainer()->get('session');
+		/** @var Session $objSession */
+		$objSession = System::getContainer()->get('session');
 
-		/** @var BackendTemplate|object $objTemplate */
-		$objTemplate = new \BackendTemplate('be_picker');
+		$objTemplate = new BackendTemplate('be_picker');
 		$objTemplate->main = '';
 
 		// Ajax request
-		if ($_POST && \Environment::get('isAjaxRequest'))
+		if ($_POST && Environment::get('isAjaxRequest'))
 		{
-			$this->objAjax = new \Ajax(\Input::post('action'));
+			$this->objAjax = new Ajax(Input::post('action'));
 			$this->objAjax->executePreActions();
 		}
 
-		$strTable = \Input::get('table');
-		$strField = \Input::get('field');
+		$strTable = Input::get('table');
+		$strField = Input::get('field');
 
 		// Define the current ID
-		\define('CURRENT_ID', (\Input::get('table') ? $objSession->get('CURRENT_ID') : \Input::get('id')));
+		\define('CURRENT_ID', (Input::get('table') ? $objSession->get('CURRENT_ID') : Input::get('id')));
 
 		$this->loadDataContainer($strTable);
 		$strDriver = 'DC_' . $GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'];
@@ -87,11 +86,11 @@ class BackendFile extends \Backend
 		if ($this->Database->tableExists($strTable))
 		{
 			/** @var Model $strModel */
-			$strModel = \Model::getClassFromTable($strTable);
+			$strModel = Model::getClassFromTable($strTable);
 
 			if (class_exists($strModel))
 			{
-				$objModel = $strModel::findByPk(\Input::get('id'));
+				$objModel = $strModel::findByPk(Input::get('id'));
 
 				if ($objModel !== null)
 				{
@@ -101,21 +100,21 @@ class BackendFile extends \Backend
 		}
 
 		// AJAX request
-		if ($_POST && \Environment::get('isAjaxRequest'))
+		if ($_POST && Environment::get('isAjaxRequest'))
 		{
 			$this->objAjax->executePostActions($objDca);
 		}
 
-		$objSession->set('filePickerRef', \Environment::get('request'));
-		$arrValues = array_filter(explode(',', \Input::get('value')));
+		$objSession->set('filePickerRef', Environment::get('request'));
+		$arrValues = array_filter(explode(',', Input::get('value')));
 
 		// Convert UUIDs to binary
 		foreach ($arrValues as $k=>$v)
 		{
 			// Can be a UUID or a path
-			if (\Validator::isStringUuid($v))
+			if (Validator::isStringUuid($v))
 			{
-				$arrValues[$k] = \StringUtil::uuidToBin($v);
+				$arrValues[$k] = StringUtil::uuidToBin($v);
 			}
 		}
 
@@ -146,15 +145,15 @@ class BackendFile extends \Backend
 		$objSessionBag = $objSession->getBag('contao_backend');
 
 		$objTemplate->main = $objFileTree->generate();
-		$objTemplate->theme = \Backend::getTheme();
-		$objTemplate->base = \Environment::get('base');
+		$objTemplate->theme = Backend::getTheme();
+		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['filepicker']);
-		$objTemplate->charset = \Config::get('characterSet');
+		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['filepicker']);
+		$objTemplate->charset = Config::get('characterSet');
 		$objTemplate->addSearch = true;
 		$objTemplate->search = $GLOBALS['TL_LANG']['MSC']['search'];
 		$objTemplate->searchExclude = $GLOBALS['TL_LANG']['MSC']['searchExclude'];
-		$objTemplate->action = ampersand(\Environment::get('request'));
+		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->value = $objSessionBag->get('file_selector_search');
 		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'];
 
@@ -164,12 +163,14 @@ class BackendFile extends \Backend
 			$objTemplate->managerHref = 'contao/main.php?do=files&amp;popup=1';
 		}
 
-		if (\Input::get('switch') && $this->User->hasAccess('page', 'modules'))
+		if (Input::get('switch') && $this->User->hasAccess('page', 'modules'))
 		{
 			$objTemplate->switch = $GLOBALS['TL_LANG']['MSC']['pagePicker'];
-			$objTemplate->switchHref = str_replace('contao/file?', 'contao/page?', ampersand(\Environment::get('request')));
+			$objTemplate->switchHref = str_replace('contao/file?', 'contao/page?', ampersand(Environment::get('request')));
 		}
 
 		return $objTemplate->getResponse();
 	}
 }
+
+class_alias(BackendFile::class, 'BackendFile');

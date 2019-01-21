@@ -25,7 +25,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormTextField extends \Widget
+class FormTextField extends Widget
 {
 
 	/**
@@ -66,10 +66,36 @@ class FormTextField extends \Widget
 	{
 		switch ($strKey)
 		{
+			// Treat minlength/minval as min for number type field (#1622)
+			case 'minlength':
+			case 'minval':
+				if ($this->type == 'number')
+				{
+					$this->min = $varValue;
+				}
+				else
+				{
+					$this->arrConfiguration[$strKey] = $varValue;
+				}
+				break;
+
+			// Treat maxlength/maxval as max for number type field (#1622)
 			case 'maxlength':
+			case 'maxval':
 				if ($varValue > 0)
 				{
-					$this->arrAttributes['maxlength'] =  $varValue;
+					if ($this->type == 'number')
+					{
+						$this->max = $varValue;
+					}
+					elseif ($strKey == 'maxlength')
+					{
+						$this->arrAttributes[$strKey] = $varValue;
+					}
+					else
+					{
+						$this->arrConfiguration[$strKey] = $varValue;
+					}
 				}
 				break;
 
@@ -87,6 +113,11 @@ class FormTextField extends \Widget
 
 			case 'min':
 			case 'max':
+				$this->arrAttributes[$strKey] = $varValue;
+				$this->arrConfiguration[$strKey . 'val'] = $varValue;
+				unset($this->arrAttributes[$strKey . 'length']);
+				break;
+
 			case 'step':
 			case 'placeholder':
 				$this->arrAttributes[$strKey] = $varValue;
@@ -115,7 +146,7 @@ class FormTextField extends \Widget
 				{
 					try
 					{
-						return \Idna::decodeUrl($this->varValue);
+						return Idna::decodeUrl($this->varValue);
 					}
 					catch (\InvalidArgumentException $e)
 					{
@@ -124,7 +155,7 @@ class FormTextField extends \Widget
 				}
 				elseif ($this->rgxp == 'email' || $this->rgxp == 'friendly')
 				{
-					return \Idna::decodeEmail($this->varValue);
+					return Idna::decodeEmail($this->varValue);
 				}
 				else
 				{
@@ -176,6 +207,27 @@ class FormTextField extends \Widget
 	}
 
 	/**
+	 * Re-add some attributes if the field type is a number
+	 */
+	public function addAttributes($arrAttributes)
+	{
+		parent::addAttributes($arrAttributes);
+
+		if ($this->type != 'number')
+		{
+			return;
+		}
+
+		foreach (array('minlength', 'minval', 'maxlength', 'maxval') as $name)
+		{
+			if (isset($arrAttributes[$name]))
+			{
+				$this->$name = $arrAttributes[$name];
+			}
+		}
+	}
+
+	/**
 	 * Trim the values
 	 *
 	 * @param mixed $varInput The user input
@@ -194,13 +246,13 @@ class FormTextField extends \Widget
 		{
 			try
 			{
-				$varInput = \Idna::encodeUrl($varInput);
+				$varInput = Idna::encodeUrl($varInput);
 			}
 			catch (\InvalidArgumentException $e) {}
 		}
 		elseif ($this->rgxp == 'email' || $this->rgxp == 'friendly')
 		{
-			$varInput = \Idna::encodeEmail($varInput);
+			$varInput = Idna::encodeEmail($varInput);
 		}
 
 		return parent::validator($varInput);
@@ -219,8 +271,10 @@ class FormTextField extends \Widget
 						$this->strId,
 						($this->hideInput ? ' password' : ''),
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
-						\StringUtil::specialchars($this->value),
+						StringUtil::specialchars($this->value),
 						$this->getAttributes(),
 						$this->strTagEnding);
 	}
 }
+
+class_alias(FormTextField::class, 'FormTextField');

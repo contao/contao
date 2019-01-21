@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,26 +15,21 @@ namespace Contao\CoreBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\LockHandler;
+use Symfony\Component\Lock\Factory;
+use Symfony\Component\Lock\Store\FlockStore;
 
-/**
- * Runs a command and locks it while its running.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 abstract class AbstractLockedCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
      */
-    final protected function execute(InputInterface $input, OutputInterface $output)
+    final protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $lock = new LockHandler(
-            $this->getName(),
-            sys_get_temp_dir().'/'.md5($this->getContainer()->getParameter('kernel.project_dir'))
-        );
+        $store = new FlockStore($this->getTempDir());
+        $factory = new Factory($store);
+        $lock = $factory->createLock($this->getName());
 
-        if (!$lock->lock()) {
+        if (!$lock->acquire()) {
             $output->writeln('The command is already running in another process.');
 
             return 1;
@@ -50,12 +47,22 @@ abstract class AbstractLockedCommand extends ContainerAwareCommand
     }
 
     /**
-     * Executes the command.
-     *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return int|null
+     * @return int
      */
     abstract protected function executeLocked(InputInterface $input, OutputInterface $output);
+
+    /**
+     * Creates an installation specific folder in the temporary directory and returns its path.
+     */
+    private function getTempDir(): string
+    {
+        $container = $this->getContainer();
+        $tmpDir = sys_get_temp_dir().'/'.md5($container->getParameter('kernel.project_dir'));
+
+        if (!is_dir($tmpDir)) {
+            $container->get('filesystem')->mkdir($tmpDir);
+        }
+
+        return $tmpDir;
+    }
 }

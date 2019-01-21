@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,66 +13,44 @@
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Input;
+use Contao\System;
 use Contao\Widget;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Tests the Widget class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/toflar>
- *
- * @group contao3
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
 class WidgetTest extends TestCase
 {
     /**
-     * Includes the helper functions if they have not yet been included.
-     */
-    public static function setUpBeforeClass()
-    {
-        if (!\function_exists('utf8_decode_entities')) {
-            include_once __DIR__.'/../../src/Resources/contao/helper/functions.php';
-        }
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
-        \define('TL_MODE', 'FE');
+        $container = new ContainerBuilder();
+        $container->set('request_stack', new RequestStack());
+
+        System::setContainer($container);
     }
 
     /**
-     * Tests reading the POST data.
-     *
-     * @param string $key
-     * @param string $input
-     * @param mixed  $value
-     * @param string $expected
-     *
      * @dataProvider postProvider
      */
-    public function testReadsThePostData($key, $input, $value, $expected)
+    public function testReadsThePostData(string $key, string $input, $value, string $expected = null): void
     {
         // Prevent "undefined index" errors
         $errorReporting = error_reporting();
         error_reporting($errorReporting & ~E_NOTICE);
 
         $widget = $this->createMock(Widget::class);
+
         $class = new \ReflectionClass(Widget::class);
         $method = $class->getMethod('getPost');
-
         $method->setAccessible(true);
 
-        $_POST[$input] = $value;
+        $_POST = [$input => $value];
         Input::resetCache();
         Input::initialize();
 
@@ -81,11 +61,9 @@ class WidgetTest extends TestCase
     }
 
     /**
-     * Provides the data for the testGetPost() method.
-     *
-     * @return array
+     * @return (array<int|string,array<string,array<string,string>>|string>|string|null)[][]
      */
-    public function postProvider()
+    public function postProvider(): array
     {
         return [
             ['foo', 'foo', 'bar', 'bar'],
@@ -105,12 +83,9 @@ class WidgetTest extends TestCase
         ];
     }
 
-    /**
-     * Tests validating the POST data.
-     */
-    public function testValidatesThePostData()
+    public function testValidatesThePostData(): void
     {
-        /** @var Widget|\PHPUnit_Framework_MockObject_MockObject $widget */
+        /** @var Widget|MockObject $widget */
         $widget = $this
             ->getMockBuilder(Widget::class)
             ->disableOriginalConstructor()
@@ -127,7 +102,7 @@ class WidgetTest extends TestCase
 
         $widget
             ->setInputCallback(
-                function () {
+                function (): string {
                     return 'foobar';
                 }
             )

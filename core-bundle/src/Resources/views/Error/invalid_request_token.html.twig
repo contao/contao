@@ -1,14 +1,15 @@
+{% trans_default_domain 'contao_exception' %}
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ error.requestToken }}
+    {{ 'XPT.requestToken'|trans }}
 {% endblock %}
 {% block matter %}
-    <p>{{ error.invalidToken }}</p>
+    <p>{{ 'XPT.invalidToken'|trans }}</p>
 {% endblock %}
 {% block howToFix %}
-    <p>{{ error.tokenRetry|raw }}</p>
+    <p>{{ 'XPT.tokenRetry'|trans|raw }}</p>
 {% endblock %}
 {% block explain %}
-    <p>{{ error.tokenExplainOne|raw }}</p>
-    <p>{{ error.tokenExplainTwo|raw }}</p>
+    <p>{{ 'XPT.tokenExplainOne'|trans|raw }}</p>
+    <p>{{ 'XPT.tokenExplainTwo'|trans|raw }}</p>
 {% endblock %}

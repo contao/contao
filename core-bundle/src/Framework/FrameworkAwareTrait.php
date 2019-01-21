@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,38 +12,24 @@
 
 namespace Contao\CoreBundle\Framework;
 
-/**
- * Provides methods to inject the framework service.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 trait FrameworkAwareTrait
 {
     /**
      * @var ContaoFrameworkInterface
      */
-    private $framework;
+    protected $framework;
 
-    /**
-     * Sets the framework service.
-     *
-     * @param ContaoFrameworkInterface|null $framework
-     */
-    public function setFramework(ContaoFrameworkInterface $framework = null)
+    public function setFramework(ContaoFrameworkInterface $framework = null): void
     {
         $this->framework = $framework;
     }
 
     /**
-     * Returns the framework service.
-     *
      * @throws \LogicException
-     *
-     * @return ContaoFrameworkInterface
      *
      * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0
      */
-    public function getFramework()
+    public function getFramework(): ContaoFrameworkInterface
     {
         @trigger_error(
             'Using FrameworkAwareTrait::getFramework() has been deprecated and will no longer work in Contao 5.0.',

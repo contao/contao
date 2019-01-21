@@ -21,7 +21,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormSelectMenu extends \Widget
+class FormSelectMenu extends Widget
 {
 
 	/**
@@ -89,7 +89,7 @@ class FormSelectMenu extends \Widget
 				break;
 
 			case 'options':
-				$this->arrOptions = \StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue);
 				break;
 
 			case 'rgxp':
@@ -239,7 +239,7 @@ class FormSelectMenu extends \Widget
 				$arrOptions[] = array
 				(
 					'type'  => 'group_start',
-					'label' => \StringUtil::specialchars($arrOption['label'])
+					'label' => StringUtil::specialchars($arrOption['label'])
 				);
 
 				$blnHasGroups = true;
@@ -308,7 +308,7 @@ class FormSelectMenu extends \Widget
 				}
 
 				$strOptions .= sprintf('<optgroup label="%s">',
-										\StringUtil::specialchars($arrOption['label']));
+										StringUtil::specialchars($arrOption['label']));
 
 				$blnHasGroups = true;
 				continue;
@@ -333,3 +333,5 @@ class FormSelectMenu extends \Widget
 						$strOptions);
 	}
 }
+
+class_alias(FormSelectMenu::class, 'FormSelectMenu');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,11 +17,6 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Environment;
 use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
 
-/**
- * Adds the Contao-Page-Layout header based on the terminal42/header-replay-bundle.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- */
 class PageLayoutListener
 {
     /**
@@ -32,12 +29,6 @@ class PageLayoutListener
      */
     private $framework;
 
-    /**
-     * Constructor.
-     *
-     * @param ScopeMatcher             $scopeMatcher
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(ScopeMatcher $scopeMatcher, ContaoFrameworkInterface $framework)
     {
         $this->scopeMatcher = $scopeMatcher;
@@ -49,10 +40,8 @@ class PageLayoutListener
      * or the current browser user agent string, so that the reverse proxy gains the ability to vary on
      * it. This is needed so that the reverse proxy generates two entries for the same URL when you are
      * using mobile and desktop page layouts.
-     *
-     * @param HeaderReplayEvent $event
      */
-    public function onReplay(HeaderReplayEvent $event)
+    public function onReplay(HeaderReplayEvent $event): void
     {
         $request = $event->getRequest();
 
@@ -67,7 +56,6 @@ class PageLayoutListener
 
             /** @var Environment $environment */
             $environment = $this->framework->getAdapter(Environment::class);
-
             $mobile = $environment->get('agent')->mobile;
         }
 

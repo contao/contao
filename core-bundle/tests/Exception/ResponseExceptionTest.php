@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,22 +16,14 @@ use Contao\CoreBundle\Exception\ResponseException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Tests the ResponseException class.
- *
- * @author Christian Schiffler <https://github.com/discordier>
- */
 class ResponseExceptionTest extends TestCase
 {
-    /**
-     * Tests the getResponse() method.
-     */
-    public function testSetsTheResponseStatusCodeAndContent()
+    public function testSetsTheResponseStatusCodeAndContent(): void
     {
         $exception = new ResponseException(new Response('Hello world'));
+        $response = $exception->getResponse();
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $exception->getResponse());
-        $this->assertSame(200, $exception->getResponse()->getStatusCode());
-        $this->assertSame('Hello world', $exception->getResponse()->getContent());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('Hello world', $response->getContent());
     }
 }

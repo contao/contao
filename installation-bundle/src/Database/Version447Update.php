@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,17 +12,12 @@
 
 namespace Contao\InstallationBundle\Database;
 
-/**
- * Runs the version 4.4.7 update.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class Version447Update extends AbstractVersionUpdate
 {
     /**
      * {@inheritdoc}
      */
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -36,7 +33,7 @@ class Version447Update extends AbstractVersionUpdate
     /**
      * {@inheritdoc}
      */
-    public function run()
+    public function run(): void
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -119,14 +116,5 @@ class Version447Update extends AbstractVersionUpdate
 
             $this->addMessage(sprintf('</ul><p>%s</p>', $translator->trans('duplicate_subscriptions_end')));
         }
-
-        $this->connection->query('
-            ALTER TABLE
-                tl_newsletter_recipients
-            DROP INDEX
-                pid,
-            ADD UNIQUE KEY
-                pid_email (pid, email)
-        ');
     }
 }

@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_perPage.1">
         <source>The number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Tek sayfada gösterilecek öge sayısı. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
+        <target>Tek sayfadaki yorum sayısını girin. Sayfalandırmayı devre dışı bırakmak için 0 yazın.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_moderate.0">
         <source>Moderate</source>
@@ -27,11 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.0">
         <source>Allow BBCode</source>
-        <target>BBCode kullanılmasına izin ver</target>
+        <target>BBCode kullanılmasına izin ver.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Ziyaretçilerin yorumlarında BBCode kullanmasına izin ver.</target>
+        <target>Ziyaretçilerin yorumlarında BBCode kullanmalarına izin ver.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.0">
         <source>Require login to comment</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
         <source>Here you can select the comments template.</source>
-        <target>Buradan kullanılmasını istediğiniz yorum kalıbını seçilebilirsiniz.</target>
+        <target>Buradan kullanmak istediğiniz yorum kalıbını seçilebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

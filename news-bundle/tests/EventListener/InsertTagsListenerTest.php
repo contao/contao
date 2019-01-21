@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,196 +12,113 @@
 
 namespace Contao\NewsBundle\Tests\EventListener;
 
-use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\News;
 use Contao\NewsBundle\EventListener\InsertTagsListener;
 use Contao\NewsFeedModel;
 use Contao\NewsModel;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
 
-/**
- * Tests the InsertTagsListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
-class InsertTagsListenerTest extends TestCase
+class InsertTagsListenerTest extends ContaoTestCase
 {
-    /**
-     * Tests that the listener returns a replacement string for a news feed.
-     */
-    public function testReplacesTheNewsFeedTag()
+    public function testReplacesTheNewsFeedTag(): void
     {
-        $listener = new InsertTagsListener($this->mockContaoFramework());
+        $properties = [
+            'feedBase' => 'http://localhost/',
+            'alias' => 'news',
+        ];
 
-        $this->assertSame(
-            'http://localhost/share/news.xml',
-            $listener->onReplaceInsertTags('news_feed::2')
-        );
+        $feedModel = $this->mockClassWithProperties(NewsFeedModel::class, $properties);
+
+        $adapters = [
+            NewsFeedModel::class => $this->mockConfiguredAdapter(['findByPk' => $feedModel]),
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $listener = new InsertTagsListener($framework);
+        $url = $listener->onReplaceInsertTags('news_feed::2', false, null, []);
+
+        $this->assertSame('http://localhost/share/news.xml', $url);
     }
 
-    /**
-     * Tests that the listener returns a replacement string for a news item.
-     */
-    public function testReplacesTheNewsTags()
+    public function testReplacesTheNewsTags(): void
     {
-        $listener = new InsertTagsListener($this->mockContaoFramework());
+        $properties = [
+            'headline' => '"Foo" is not "bar"',
+            'teaser' => '<p>Foo does not equal bar.</p>',
+        ];
+
+        $newsModel = $this->mockClassWithProperties(NewsModel::class, $properties);
+
+        $news = $this->mockAdapter(['generateNewsUrl']);
+        $news
+            ->method('generateNewsUrl')
+            ->willReturnCallback(
+                function (NewsModel $model, bool $addArchive, bool $absolute): string {
+                    if ($absolute) {
+                        return 'http://domain.tld/news/foo-is-not-bar.html';
+                    }
+
+                    return 'news/foo-is-not-bar.html';
+                }
+            )
+        ;
+
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $newsModel]),
+            News::class => $news,
+        ];
+
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
 
         $this->assertSame(
             '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;">"Foo" is not "bar"</a>',
-            $listener->onReplaceInsertTags('news::2')
+            $listener->onReplaceInsertTags('news::2', false, null, [])
         );
 
         $this->assertSame(
             '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;">',
-            $listener->onReplaceInsertTags('news_open::2')
+            $listener->onReplaceInsertTags('news_open::2', false, null, [])
         );
 
         $this->assertSame(
             'news/foo-is-not-bar.html',
-            $listener->onReplaceInsertTags('news_url::2')
+            $listener->onReplaceInsertTags('news_url::2', false, null, [])
+        );
+
+        $this->assertSame(
+            'http://domain.tld/news/foo-is-not-bar.html',
+            $listener->onReplaceInsertTags('news_url::2', false, null, ['absolute'])
         );
 
         $this->assertSame(
             '&quot;Foo&quot; is not &quot;bar&quot;',
-            $listener->onReplaceInsertTags('news_title::2')
+            $listener->onReplaceInsertTags('news_title::2', false, null, [])
         );
 
         $this->assertSame(
             '<p>Foo does not equal bar.</p>',
-            $listener->onReplaceInsertTags('news_teaser::2')
+            $listener->onReplaceInsertTags('news_teaser::2', false, null, [])
         );
     }
 
-    /**
-     * Tests that the listener returns false if the tag is unknown.
-     */
-    public function testReturnsFalseIfTheTagIsUnknown()
+    public function testReturnsFalseIfTheTagIsUnknown(): void
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
-        $this->assertFalse($listener->onReplaceInsertTags('link_url::2'));
+        $this->assertFalse($listener->onReplaceInsertTags('link_url::2', false, null, []));
     }
 
-    /**
-     * Tests that the listener returns an empty string if there is no model.
-     */
-    public function testReturnsAnEmptyStringIfThereIsNoModel()
+    public function testReturnsAnEmptyStringIfThereIsNoModel(): void
     {
-        $listener = new InsertTagsListener($this->mockContaoFramework('source', true));
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => null]),
+            NewsFeedModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
+        ];
 
-        $this->assertSame('', $listener->onReplaceInsertTags('news_feed::3'));
-        $this->assertSame('', $listener->onReplaceInsertTags('news_url::3'));
-    }
+        $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
 
-    /**
-     * Returns a ContaoFramework instance.
-     *
-     * @param string $source
-     * @param bool   $noModels
-     *
-     * @return ContaoFrameworkInterface
-     */
-    private function mockContaoFramework($source = 'default', $noModels = false)
-    {
-        $feedModel = $this->createMock(NewsFeedModel::class);
-
-        $feedModel
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'feedBase':
-                        return 'http://localhost/';
-
-                    case 'alias':
-                        return 'news';
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
-        $newsFeedModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByPk'])
-            ->getMock()
-        ;
-
-        $newsFeedModelAdapter
-            ->method('findByPk')
-            ->willReturn($noModels ? null : $feedModel)
-        ;
-
-        $newsModel = $this->createMock(NewsModel::class);
-
-        $newsModel
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'headline':
-                        return '"Foo" is not "bar"';
-
-                    case 'teaser':
-                        return '<p>Foo does not equal bar.</p>';
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
-        $newsModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByIdOrAlias'])
-            ->getMock()
-        ;
-
-        $newsModelAdapter
-            ->method('findByIdOrAlias')
-            ->willReturn($noModels ? null : $newsModel)
-        ;
-
-        $newsAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['generateNewsUrl'])
-            ->getMock()
-        ;
-
-        $newsAdapter
-            ->method('generateNewsUrl')
-            ->willReturn('news/foo-is-not-bar.html')
-        ;
-
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-
-        $framework
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
-
-        $framework
-            ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($newsFeedModelAdapter, $newsModelAdapter, $newsAdapter) {
-                switch ($key) {
-                    case NewsFeedModel::class:
-                        return $newsFeedModelAdapter;
-
-                    case NewsModel::class:
-                        return $newsModelAdapter;
-
-                    case News::class:
-                        return $newsAdapter;
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
-        return $framework;
+        $this->assertSame('', $listener->onReplaceInsertTags('news_feed::3', false, null, []));
+        $this->assertSame('', $listener->onReplaceInsertTags('news_url::3', false, null, []));
     }
 }

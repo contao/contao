@@ -10,7 +10,11 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
 /**
@@ -37,15 +41,15 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string  $email
  * @property string  $language
  * @property string  $backendTheme
- * @property boolean $limitWidth
+ * @property string  $fullscreen
  * @property string  $uploader
- * @property boolean $showHelp
- * @property boolean $thumbnails
- * @property boolean $useRTE
- * @property boolean $useCE
+ * @property string  $showHelp
+ * @property string  $thumbnails
+ * @property string  $useRTE
+ * @property string  $useCE
  * @property string  $password
- * @property boolean $pwChange
- * @property boolean $admin
+ * @property string  $pwChange
+ * @property string  $admin
  * @property array   $groups
  * @property string  $inherit
  * @property string  $modules
@@ -57,10 +61,10 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string  $forms
  * @property string  $formp
  * @property array   $amg
- * @property boolean $disable
+ * @property string  $disable
  * @property string  $start
  * @property string  $stop
- * @property string  $session
+ * @property array   $session
  * @property integer $dateAdded
  * @property integer $lastLogin
  * @property integer $currentLogin
@@ -80,21 +84,21 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string  $mobile
  * @property string  $fax
  * @property string  $website
- * @property boolean $login
- * @property boolean $assignDir
+ * @property string  $login
+ * @property string  $assignDir
  * @property string  $homeDir
- * @property string  $autologin
  * @property integer $createdOn
- * @property string  $activation
  * @property string  $loginPage
  * @property object  $objImport
  * @property object  $objAuth
  * @property object  $objLogin
  * @property object  $objLogout
+ * @property string  $useTwoFactor
+ * @property string  $secret
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class User extends \System
+abstract class User extends System implements UserInterface, EquatableInterface, \Serializable
 {
 
 	/**
@@ -140,12 +144,24 @@ abstract class User extends \System
 	protected $arrData = array();
 
 	/**
+	 * Symfony authentication roles
+	 * @var array
+	 */
+	protected $roles = array();
+
+	/**
+	 * Salt
+	 * @var string
+	 */
+	protected $salt;
+
+	/**
 	 * Import the database object
 	 */
 	protected function __construct()
 	{
 		parent::__construct();
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 	}
 
 	/**
@@ -247,274 +263,53 @@ abstract class User extends \System
 	 * Authenticate a user
 	 *
 	 * @return boolean True if the user could be authenticated
+	 *
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony security instead.
 	 */
 	public function authenticate()
 	{
-		// No cookie
-		if ($this->strHash === null)
-		{
-			return false;
-		}
+		@trigger_error('Using User::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		// Check the cookie hash
-		if ($this->strHash != $this->getSessionHash($this->strCookie))
-		{
-			return false;
-		}
-
-		$objSession = $this->Database->prepare("SELECT * FROM tl_session WHERE hash=?")
-									 ->execute($this->strHash);
-
-		// Try to find the session in the database
-		if ($objSession->numRows < 1)
-		{
-			return false;
-		}
-
-		$time = time();
-		$container = \System::getContainer();
-		$session = $container->get('session');
-
-		// Validate the session
-		if ($objSession->sessionID != $session->getId() || (!$container->getParameter('contao.security.disable_ip_check') && $objSession->ip != $this->strIp) || $objSession->hash != $this->strHash || ($objSession->tstamp + \Config::get('sessionTimeout')) < $time)
-		{
-			return false;
-		}
-
-		$this->intId = $objSession->pid;
-
-		// Load the user object
-		if ($this->findBy('id', $this->intId) == false)
-		{
-			return false;
-		}
-
-		$this->setUserFromDb();
-
-		// Update session
-		$this->Database->prepare("UPDATE tl_session SET tstamp=$time WHERE hash=?")
-					   ->execute($this->strHash);
-
-		$this->setCookie($this->strCookie, $this->strHash, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
-
-		// HOOK: post authenticate callback
-		if (isset($GLOBALS['TL_HOOKS']['postAuthenticate']) && \is_array($GLOBALS['TL_HOOKS']['postAuthenticate']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['postAuthenticate'] as $callback)
-			{
-				$this->import($callback[0], 'objAuth', true);
-				$this->objAuth->{$callback[1]}($this);
-			}
-		}
-
-		return true;
+		return false;
 	}
 
 	/**
 	 * Try to login the current user
 	 *
 	 * @return boolean True if the user could be logged in
+	 *
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony security instead.
 	 */
 	public function login()
 	{
-		/** @var Request $request */
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		@trigger_error('Using User::login() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		\System::loadLanguageFile('default');
-
-		// Do not continue if username or password are missing
-		if (empty($_POST['username']) || empty($_POST['password']))
-		{
-			return false;
-		}
-
-		// Load the user object
-		if ($this->findBy('username', \Input::post('username', true)) == false)
-		{
-			$blnLoaded = false;
-
-			// HOOK: pass credentials to callback functions
-			if (isset($GLOBALS['TL_HOOKS']['importUser']) && \is_array($GLOBALS['TL_HOOKS']['importUser']))
-			{
-				foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback)
-				{
-					$this->import($callback[0], 'objImport', true);
-					$blnLoaded = $this->objImport->{$callback[1]}(\Input::post('username', true), $request->request->get('password'), $this->strTable);
-
-					// Load successfull
-					if ($blnLoaded === true)
-					{
-						break;
-					}
-				}
-			}
-
-			// Return if the user still cannot be loaded
-			if (!$blnLoaded || $this->findBy('username', \Input::post('username', true)) == false)
-			{
-				\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
-				$this->log('Could not find user "' . \Input::post('username', true) . '"', __METHOD__, TL_ACCESS);
-
-				return false;
-			}
-		}
-
-		$time = time();
-
-		// Set the user language
-		if (\Input::post('language'))
-		{
-			$this->language = \Input::post('language');
-		}
-
-		// Lock the account if there are too many login attempts
-		if ($this->loginCount < 1)
-		{
-			$this->locked = $time;
-			$this->loginCount = \Config::get('loginCount');
-			$this->save();
-
-			// Add a log entry and the error message, because checkAccountStatus() will not be called (see #4444)
-			$this->log('User "' . $this->username . '" has been locked for ' . ceil(\Config::get('lockPeriod') / 60) . ' minutes', __METHOD__, TL_ACCESS);
-			\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], ceil((($this->locked + \Config::get('lockPeriod')) - $time) / 60)));
-
-			// Send admin notification
-			if (\Config::get('adminEmail') != '')
-			{
-				$objEmail = new \Email();
-				$objEmail->subject = $GLOBALS['TL_LANG']['MSC']['lockedAccount'][0];
-				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['lockedAccount'][1], $this->username, ((TL_MODE == 'FE') ? $this->firstname . " " . $this->lastname : $this->name), \Idna::decode(\Environment::get('base')), ceil(\Config::get('lockPeriod') / 60));
-				$objEmail->sendTo(\Config::get('adminEmail'));
-			}
-
-			return false;
-		}
-
-		// Check the account status
-		if ($this->checkAccountStatus() == false)
-		{
-			return false;
-		}
-
-		$blnAuthenticated = password_verify($request->request->get('password'), $this->password);
-		$blnNeedsRehash = password_needs_rehash($this->password, PASSWORD_DEFAULT);
-
-		// Re-hash the password if the algorithm has changed
-		if ($blnAuthenticated && $blnNeedsRehash)
-		{
-			$this->password = password_hash($request->request->get('password'), PASSWORD_DEFAULT);
-		}
-
-		// HOOK: pass credentials to callback functions
-		if (!$blnAuthenticated && isset($GLOBALS['TL_HOOKS']['checkCredentials']) && \is_array($GLOBALS['TL_HOOKS']['checkCredentials']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['checkCredentials'] as $callback)
-			{
-				$this->import($callback[0], 'objAuth', true);
-				$blnAuthenticated = $this->objAuth->{$callback[1]}(\Input::post('username', true), $request->request->get('password'), $this);
-
-				// Authentication successfull
-				if ($blnAuthenticated === true)
-				{
-					break;
-				}
-			}
-		}
-
-		// Redirect if the user could not be authenticated
-		if (!$blnAuthenticated)
-		{
-			--$this->loginCount;
-			$this->save();
-
-			\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
-			$this->log('Invalid password submitted for username "' . $this->username . '"', __METHOD__, TL_ACCESS);
-
-			return false;
-		}
-
-		$this->setUserFromDb();
-
-		// Update the record
-		$this->lastLogin = $this->currentLogin;
-		$this->currentLogin = $time;
-		$this->loginCount = \Config::get('loginCount');
-		$this->save();
-
-		// Generate the session
-		$this->regenerateSessionId();
-		$this->generateSession();
-
-		$this->log('User "' . $this->username . '" has logged in', __METHOD__, TL_ACCESS);
-
-		// HOOK: post login callback
-		if (isset($GLOBALS['TL_HOOKS']['postLogin']) && \is_array($GLOBALS['TL_HOOKS']['postLogin']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback)
-			{
-				$this->import($callback[0], 'objLogin', true);
-				$this->objLogin->{$callback[1]}($this);
-			}
-		}
-
-		return true;
+		return false;
 	}
 
 	/**
 	 * Check the account status and return true if it is active
 	 *
 	 * @return boolean True if the account is active
+	 *
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony security instead.
 	 */
 	protected function checkAccountStatus()
 	{
-		$time = time();
+		@trigger_error('Using User::checkAccountStatus() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		// Check whether the account is locked
-		if (($this->locked + \Config::get('lockPeriod')) > $time)
+		try
 		{
-			\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], ceil((($this->locked + \Config::get('lockPeriod')) - $time) / 60)));
-
-			return false;
+			$userChecker = System::getContainer()->get('contao.security.user_checker');
+			$userChecker->checkPreAuth($this);
+			$userChecker->checkPostAuth($this);
 		}
-
-		// Check whether the account is disabled
-		elseif ($this->disable)
+		catch (AuthenticationException $exception)
 		{
-			\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
-			$this->log('The account has been disabled', __METHOD__, TL_ACCESS);
-
 			return false;
-		}
-
-		// Check wether login is allowed (front end only)
-		elseif ($this instanceof FrontendUser && !$this->login)
-		{
-			\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
-			$this->log('User "' . $this->username . '" is not allowed to log in', __METHOD__, TL_ACCESS);
-
-			return false;
-		}
-
-		// Check whether account is not active yet or anymore
-		elseif ($this->start != '' || $this->stop != '')
-		{
-			$time = \Date::floorToMinute($time);
-
-			if ($this->start != '' && $this->start > $time)
-			{
-				\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
-				$this->log('The account was not active yet (activation date: ' . \Date::parse(\Config::get('dateFormat'), $this->start) . ')', __METHOD__, TL_ACCESS);
-
-				return false;
-			}
-
-			if ($this->stop != '' && $this->stop <= ($time + 60))
-			{
-				\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
-				$this->log('The account was not active anymore (deactivation date: ' . \Date::parse(\Config::get('dateFormat'), $this->stop) . ')', __METHOD__, TL_ACCESS);
-
-				return false;
-			}
 		}
 
 		return true;
@@ -530,7 +325,7 @@ abstract class User extends \System
 	 */
 	public function findBy($strColumn, $varValue)
 	{
-		$objResult = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE " . \Database::quoteIdentifier($strColumn) . "=?")
+		$objResult = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($strColumn) . "=?")
 									->limit(1)
 									->execute($varValue);
 
@@ -560,11 +355,14 @@ abstract class User extends \System
 	/**
 	 * Regenerate the session ID
 	 *
-	 * @throws \RuntimeException
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony authentication instead.
 	 */
 	protected function regenerateSessionId()
 	{
-		$container = \System::getContainer();
+		@trigger_error('Using User::regenerateSessionId() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
+
+		$container = System::getContainer();
 		$strategy = $container->getParameter('security.authentication.session_strategy.strategy');
 
 		// Regenerate the session ID to harden against session fixation attacks
@@ -574,7 +372,7 @@ abstract class User extends \System
 				break;
 
 			case SessionAuthenticationStrategy::MIGRATE:
-				$container->get('session')->migrate(false); // do not destroy the old session
+				$container->get('session')->migrate(); // do not destroy the old session
 				break;
 
 			case SessionAuthenticationStrategy::INVALIDATE:
@@ -588,84 +386,28 @@ abstract class User extends \System
 
 	/**
 	 * Generate a session
+	 *
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony authentication instead.
 	 */
 	protected function generateSession()
 	{
-		$time = time();
-
-		// Generate the cookie hash
-		$this->strHash = $this->getSessionHash($this->strCookie);
-
-		// Clean up old sessions
-		$this->Database->prepare("DELETE FROM tl_session WHERE tstamp<? OR hash=?")
-					   ->execute(($time - \Config::get('sessionTimeout')), $this->strHash);
-
-		// Save the session in the database
-		$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-					   ->execute($this->intId, $time, $this->strCookie, \System::getContainer()->get('session')->getId(), $this->strIp, $this->strHash);
-
-		// Set the authentication cookie
-		$this->setCookie($this->strCookie, $this->strHash, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
+		@trigger_error('Using User::generateSession() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
 	}
 
 	/**
 	 * Remove the authentication cookie and destroy the current session
 	 *
-	 * @return boolean True if the user could be logged out
+	 * @throws RedirectResponseException
+	 *
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony authentication instead.
 	 */
 	public function logout()
 	{
-		// Return if the user has been logged out already
-		if (!\Input::cookie($this->strCookie))
-		{
-			return false;
-		}
+		@trigger_error('Using User::logout() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
 
-		$intUserid = null;
-
-		// Find the session
-		$objSession = $this->Database->prepare("SELECT * FROM tl_session WHERE hash=?")
-									 ->limit(1)
-									 ->execute($this->strHash);
-
-		if ($objSession->numRows)
-		{
-			$this->strIp = $objSession->ip;
-			$this->strHash = $objSession->hash;
-			$intUserid = $objSession->pid;
-		}
-
-		$time = time();
-
-		// Remove the session from the database
-		$this->Database->prepare("DELETE FROM tl_session WHERE hash=?")
-					   ->execute($this->strHash);
-
-		// Remove cookie and hash
-		$this->setCookie($this->strCookie, $this->strHash, ($time - 86400), null, null, \Environment::get('ssl'), true);
-		$this->strHash = '';
-
-		\System::getContainer()->get('session')->invalidate();
-		\System::getContainer()->get('security.token_storage')->setToken(null);
-
-		// Add a log entry
-		if ($this->findBy('id', $intUserid) != false)
-		{
-			$GLOBALS['TL_USERNAME'] = $this->username;
-			$this->log('User "' . $this->username . '" has logged out', __METHOD__, TL_ACCESS);
-		}
-
-		// HOOK: post logout callback
-		if (isset($GLOBALS['TL_HOOKS']['postLogout']) && \is_array($GLOBALS['TL_HOOKS']['postLogout']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['postLogout'] as $callback)
-			{
-				$this->import($callback[0], 'objLogout', true);
-				$this->objLogout->{$callback[1]}($this);
-			}
-		}
-
-		return true;
+		throw new RedirectResponseException(System::getContainer()->get('security.logout_url_generator')->getLogoutUrl());
 	}
 
 	/**
@@ -683,7 +425,7 @@ abstract class User extends \System
 			return false;
 		}
 
-		$groups = \StringUtil::deserialize($this->arrData['groups']);
+		$groups = StringUtil::deserialize($this->arrData['groups']);
 
 		// No groups assigned
 		if (empty($groups) || !\is_array($groups))
@@ -704,4 +446,216 @@ abstract class User extends \System
 	 * Set all user properties from a database record
 	 */
 	abstract protected function setUserFromDb();
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getRoles()
+	{
+		return array();
+	}
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return User
+	 */
+	public static function loadUserByUsername($username)
+	{
+		/** @var Request $request */
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request === null)
+		{
+			return null;
+		}
+
+		$user = new static();
+		$isLogin = $request->request->has('password') && $request->isMethod(Request::METHOD_POST);
+
+		// Load the user object
+		if ($user->findBy('username', $username) === false)
+		{
+			// Return if its not a real login attempt
+			if (!$isLogin)
+			{
+				return null;
+			}
+
+			$password = $request->request->get('password');
+
+			if (self::triggerImportUserHook($username, $password, $user->strTable) === false)
+			{
+				return null;
+			}
+
+			if ($user->findBy('username', Input::post('username')) === false)
+			{
+				return null;
+			}
+		}
+
+		// Check if a passwords needs rehashing (see contao/core#8820)
+		if ($isLogin)
+		{
+			$blnAuthenticated = password_verify($request->request->get('password'), $user->password);
+			$blnNeedsRehash = password_needs_rehash($user->password, PASSWORD_DEFAULT);
+
+			// Re-hash the password if the algorithm has changed
+			if ($blnAuthenticated && $blnNeedsRehash)
+			{
+				$user->password = password_hash($request->request->get('password'), PASSWORD_DEFAULT);
+				$user->save();
+			}
+		}
+
+		$user->setUserFromDb();
+
+		return $user;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getUsername()
+	{
+		return $this->arrData['username'];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function setUsername($username)
+	{
+		$this->arrData['username'] = $username;
+
+		return $this;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getPassword()
+	{
+		return $this->arrData['password'];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function setPassword($password)
+	{
+		$this->arrData['password'] = $password;
+
+		return $this;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getSalt()
+	{
+		return $this->salt;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function setSalt($salt)
+	{
+		$this->salt = $salt;
+
+		return $this;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function serialize()
+	{
+		return serialize(array($this->id, $this->username, $this->disable, $this->admin, $this->groups));
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function unserialize($serialized)
+	{
+		list($this->id, $this->username, $this->disable, $this->admin, $this->groups) = unserialize($serialized, array('allowed_classes'=>false));
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function eraseCredentials() {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function isEqualTo(UserInterface $user)
+	{
+		if (!$user instanceof self)
+		{
+			return false;
+		}
+
+		if ($this->getRoles() !== $user->getRoles())
+		{
+			return false;
+		}
+
+		if ((bool) $this->admin !== (bool) $user->admin)
+		{
+			return false;
+		}
+
+		if ($this->groups !== $user->groups)
+		{
+			return false;
+		}
+
+		if ((bool) $this->disable !== (bool) $user->disable)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Trigger the importUser hook
+	 *
+	 * @param $username
+	 * @param $password
+	 * @param $strTable
+	 *
+	 * @return bool|static
+	 */
+	public static function triggerImportUserHook($username, $password, $strTable)
+	{
+		$self = new static();
+
+		if (empty($GLOBALS['TL_HOOKS']['importUser']) || !\is_array($GLOBALS['TL_HOOKS']['importUser']))
+		{
+			return false;
+		}
+
+		@trigger_error('Using the "importUser" hook has been deprecated and will no longer work in Contao 5.0. Use the contao.import_user event instead.', E_USER_DEPRECATED);
+
+		foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback)
+		{
+			$self->import($callback[0], 'objImport', true);
+			$blnLoaded = $self->objImport->{$callback[1]}($username, $password, $strTable);
+
+			// Load successfull
+			if ($blnLoaded === true)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
+
+class_alias(User::class, 'User');

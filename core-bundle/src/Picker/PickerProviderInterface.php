@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,11 +14,6 @@ namespace Contao\CoreBundle\Picker;
 
 use Knp\Menu\ItemInterface;
 
-/**
- * Picker provider interface.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 interface PickerProviderInterface
 {
     /**
@@ -29,16 +26,12 @@ interface PickerProviderInterface
     /**
      * Returns the URL to the picker based on the current value.
      *
-     * @param PickerConfig $config
-     *
      * @return string
      */
     public function getUrl(PickerConfig $config);
 
     /**
      * Creates the menu item for this picker.
-     *
-     * @param PickerConfig $config
      *
      * @return ItemInterface
      */
@@ -56,16 +49,12 @@ interface PickerProviderInterface
     /**
      * Returns whether the picker supports the given value.
      *
-     * @param PickerConfig $config
-     *
      * @return bool
      */
     public function supportsValue(PickerConfig $config);
 
     /**
      * Returns whether the picker is currently active.
-     *
-     * @param PickerConfig $config
      *
      * @return bool
      */

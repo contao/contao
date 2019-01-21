@@ -129,6 +129,13 @@
         <source>The date and time format string will be parsed with the PHP date() function.</source>
         <target>Inserisci un formato data e ora come utilizzato dalla funzione PHP date().</target>
       </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.0">
+        <source>Valid alias characters</source>
+        <target>Caratteri validi per l'alias</target>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.1">
+        <source>Here you can select a custom character set for auto-generated aliases.</source>
+      </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
         <target>Crea una sitemap</target>
@@ -265,6 +272,13 @@
         <source>Exclude the page from the search index.</source>
         <target>Non includere questa pagina nei risultati di ricerca</target>
       </trans-unit>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+        <target>Richiedi un elemento</target>
+      </trans-unit>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
         <target>Classe CSS</target>
@@ -361,9 +375,9 @@
         <source>Global settings</source>
         <target>Impostazioni globali</target>
       </trans-unit>
-      <trans-unit id="tl_page.mobile_legend">
-        <source>Mobile settings</source>
-        <target>Impostazioni per dispositivi mobile</target>
+      <trans-unit id="tl_page.alias_legend">
+        <source>Alias settings</source>
+        <target>Configurazione alias</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>
@@ -388,10 +402,6 @@
       <trans-unit id="tl_page.chmod_legend">
         <source>Access rights</source>
         <target>Diritti accesso</target>
-      </trans-unit>
-      <trans-unit id="tl_page.search_legend">
-        <source>Search settings</source>
-        <target>Impostazione di ricerca</target>
       </trans-unit>
       <trans-unit id="tl_page.expert_legend">
         <source>Expert settings</source>
@@ -576,6 +586,15 @@
       <trans-unit id="CACHE.2592000">
         <source>30 days</source>
         <target>30 giorni</target>
+      </trans-unit>
+      <trans-unit id="CACHE.7776000">
+        <source>3 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.15552000">
+        <source>6 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.31536000">
+        <source>1 year</source>
       </trans-unit>
     </body>
   </file>

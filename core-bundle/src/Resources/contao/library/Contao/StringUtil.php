@@ -110,7 +110,7 @@ class StringUtil
 		$arrEmptyTags = array('area', 'base', 'br', 'col', 'hr', 'img', 'input', 'frame', 'link', 'meta', 'param');
 
 		$strString = preg_replace('/[\t\n\r]+/', ' ', $strString);
-		$strString = strip_tags($strString, \Config::get('allowedTags'));
+		$strString = strip_tags($strString, Config::get('allowedTags'));
 		$strString = preg_replace('/ +/', ' ', $strString);
 
 		// Seperate tags and text
@@ -233,7 +233,7 @@ class StringUtil
 
 		if ($strCharset === null)
 		{
-			$strCharset = \Config::get('characterSet');
+			$strCharset = Config::get('characterSet');
 		}
 
 		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
@@ -277,6 +277,22 @@ class StringUtil
 	}
 
 	/**
+	 * Prepare a slug
+	 *
+	 * @param string $strSlug The slug
+	 *
+	 * @return string
+	 */
+	public static function prepareSlug($strSlug)
+	{
+		$strSlug = static::stripInsertTags($strSlug);
+		$strSlug = static::restoreBasicEntities($strSlug);
+		$strSlug = static::decodeEntities($strSlug);
+
+		return $strSlug;
+	}
+
+	/**
 	 * Censor a single word or an array of words within a string
 	 *
 	 * @param string $strString  The string to censor
@@ -309,7 +325,7 @@ class StringUtil
 			return $strString;
 		}
 
-		$arrEmails = static::extractEmail($strString, \Config::get('allowedTags'));
+		$arrEmails = static::extractEmail($strString, Config::get('allowedTags'));
 
 		foreach ($arrEmails as $strEmail)
 		{
@@ -351,7 +367,7 @@ class StringUtil
 		{
 			$strEmail = str_replace('mailto:', '', $strEmail);
 
-			if (\Validator::isEmail($strEmail))
+			if (Validator::isEmail($strEmail))
 			{
 				$arrEmails[] = $strEmail;
 			}
@@ -375,7 +391,7 @@ class StringUtil
 		{
 			$strEmail = str_replace('&lt;', '<', $strEmail);
 
-			if (\Validator::isEmail($strEmail))
+			if (Validator::isEmail($strEmail))
 			{
 				$arrEmails[] = $strEmail;
 			}
@@ -489,8 +505,8 @@ class StringUtil
 			' target="_blank"' => ' onclick="return !window.open(this.href)"'
 		);
 
-		$strString = preg_replace(array_keys($arrPregReplace), array_values($arrPregReplace), $strString);
-		$strString = str_ireplace(array_keys($arrStrReplace), array_values($arrStrReplace), $strString);
+		$strString = preg_replace(array_keys($arrPregReplace), $arrPregReplace, $strString);
+		$strString = str_ireplace(array_keys($arrStrReplace), $arrStrReplace, $strString);
 
 		return $strString;
 	}
@@ -521,8 +537,8 @@ class StringUtil
 			' onclick="window.open(this.href); return false;"' => ' target="_blank"'
 		);
 
-		$strString = preg_replace(array_keys($arrPregReplace), array_values($arrPregReplace), $strString);
-		$strString = str_ireplace(array_keys($arrStrReplace), array_values($arrStrReplace), $strString);
+		$strString = preg_replace(array_keys($arrPregReplace), $arrPregReplace, $strString);
+		$strString = str_ireplace(array_keys($arrStrReplace), $arrStrReplace, $strString);
 
 		return $strString;
 	}
@@ -552,7 +568,7 @@ class StringUtil
 				{
 					if (!array_key_exists($matches[1], $arrData))
 					{
-						\System::getContainer()
+						System::getContainer()
 							->get('monolog.logger.contao')
 							->log(LogLevel::INFO, sprintf('Tried to parse unknown simple token "%s".', $matches[1]))
 						;
@@ -579,7 +595,7 @@ class StringUtil
 
 			if (!array_key_exists($strToken, $arrData))
 			{
-				\System::getContainer()
+				System::getContainer()
 					->get('monolog.logger.contao')
 					->log(LogLevel::INFO, sprintf('Tried to evaluate unknown simple token "%s".', $strToken))
 				;
@@ -758,7 +774,7 @@ class StringUtil
 				continue;
 			}
 
-			$file = \FilesModel::findByPath($paths[$i+3]);
+			$file = FilesModel::findByPath($paths[$i+3]);
 
 			if ($file !== null)
 			{
@@ -794,7 +810,7 @@ class StringUtil
 				continue;
 			}
 
-			$file = \FilesModel::findByUuid($paths[$i+4]);
+			$file = FilesModel::findByUuid($paths[$i+4]);
 
 			if ($file !== null)
 			{
@@ -940,7 +956,7 @@ class StringUtil
 		}
 
 		// Use ENT_COMPAT here (see #4889)
-		return htmlspecialchars($strString, ENT_COMPAT, \Config::get('characterSet'), $blnDoubleEncode);
+		return htmlspecialchars($strString, ENT_COMPAT, Config::get('characterSet'), $blnDoubleEncode);
 	}
 
 	/**
@@ -1027,6 +1043,12 @@ class StringUtil
 			return $blnForceArray ? array() : '';
 		}
 
+		// Not a serialized array (see #1486)
+		if (strncmp($varValue, 'a:', 2) !== 0)
+		{
+			return $blnForceArray ? array($varValue) : $varValue;
+		}
+
 		// Potentially including an object (see #6724)
 		if (preg_match('/[OoC]:\+?[0-9]+:"/', $varValue))
 		{
@@ -1035,7 +1057,7 @@ class StringUtil
 			return $blnForceArray ? array($varValue) : $varValue;
 		}
 
-		$varUnserialized = @unserialize($varValue);
+		$varUnserialized = @unserialize($varValue, array('allowed_classes' => false));
 
 		if (\is_array($varUnserialized))
 		{
@@ -1089,18 +1111,16 @@ class StringUtil
 	 */
 	public static function stripRootDir($path)
 	{
-		static $length = null;
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$length = \strlen($rootDir);
 
-		if ($length === null)
+		if (strncmp($path, $rootDir, $length) !== 0 || \strlen($path) <= $length || ($path[$length] !== '/' && $path[$length] !== '\\'))
 		{
-			$length = \strlen(TL_ROOT);
-		}
-
-		if (strncmp($path, TL_ROOT, $length) !== 0 || \strlen($path) <= $length || ($path[$length] !== '/' && $path[$length] !== '\\'))
-		{
-			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir', $path));
+			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $rootDir));
 		}
 
 		return (string) substr($path, $length + 1);
 	}
 }
+
+class_alias(StringUtil::class, 'StringUtil');

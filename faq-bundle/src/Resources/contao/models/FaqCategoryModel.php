@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes FAQ categories
  *
@@ -44,21 +46,21 @@ namespace Contao;
  * @method static FaqCategoryModel|null findOneByRequireLogin($val, array $opt=array())
  * @method static FaqCategoryModel|null findOneByDisableCaptcha($val, array $opt=array())
  *
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findByTitle($val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findByHeadline($val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findByJumpTo($val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findByAllowComments($val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findByNotify($val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findBySortOrder($val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findByPerPage($val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findByModerate($val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findByBbcode($val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findByRequireLogin($val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findByDisableCaptcha($val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|FaqCategoryModel[]|FaqCategoryModel|null findAll(array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findByTitle($val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findByHeadline($val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findByJumpTo($val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findByAllowComments($val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findByNotify($val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findBySortOrder($val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findByPerPage($val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findByModerate($val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findByBbcode($val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findByRequireLogin($val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findByDisableCaptcha($val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|FaqCategoryModel[]|FaqCategoryModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -76,7 +78,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FaqCategoryModel extends \Model
+class FaqCategoryModel extends Model
 {
 
 	/**
@@ -86,3 +88,5 @@ class FaqCategoryModel extends \Model
 	protected static $strTable = 'tl_faq_category';
 
 }
+
+class_alias(FaqCategoryModel::class, 'FaqCategoryModel');

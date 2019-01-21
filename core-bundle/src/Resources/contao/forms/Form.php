@@ -34,7 +34,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Form extends \Hybrid
+class Form extends Hybrid
 {
 
 	/**
@@ -70,9 +70,7 @@ class Form extends \Hybrid
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('be_wildcard');
-
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['form'][0]) . ' ###';
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->title;
@@ -91,8 +89,6 @@ class Form extends \Hybrid
 
 	/**
 	 * Generate the form
-	 *
-	 * @return string
 	 */
 	protected function compile()
 	{
@@ -113,7 +109,7 @@ class Form extends \Hybrid
 
 		// Get all form fields
 		$arrFields = array();
-		$objFields = \FormFieldModel::findPublishedByPid($this->id);
+		$objFields = FormFieldModel::findPublishedByPid($this->id);
 
 		if ($objFields !== null)
 		{
@@ -182,7 +178,7 @@ class Form extends \Hybrid
 				// Unset the default value depending on the field type (see #4722)
 				if (!empty($arrData['value']))
 				{
-					if (!\in_array('value', \StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type])))
+					if (!\in_array('value', StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type])))
 					{
 						$arrData['value'] = '';
 					}
@@ -203,7 +199,7 @@ class Form extends \Hybrid
 				}
 
 				// Validate the input
-				if (\Input::post('FORM_SUBMIT') == $formId)
+				if (Input::post('FORM_SUBMIT') == $formId)
 				{
 					$objWidget->validate();
 
@@ -254,13 +250,13 @@ class Form extends \Hybrid
 		}
 
 		// Process the form data
-		if (\Input::post('FORM_SUBMIT') == $formId && !$doNotSubmit)
+		if (Input::post('FORM_SUBMIT') == $formId && !$doNotSubmit)
 		{
 			$this->processFormData($arrSubmitted, $arrLabels, $arrFields);
 		}
 
 		// Add a warning to the page title
-		if ($doNotSubmit && !\Environment::get('isAjaxRequest'))
+		if ($doNotSubmit && !Environment::get('isAjaxRequest'))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;
@@ -271,7 +267,7 @@ class Form extends \Hybrid
 		}
 
 		$strAttributes = '';
-		$arrAttributes = \StringUtil::deserialize($this->attributes, true);
+		$arrAttributes = StringUtil::deserialize($this->attributes, true);
 
 		if ($arrAttributes[0] != '')
 		{
@@ -286,9 +282,10 @@ class Form extends \Hybrid
 		$this->Template->hasError = $doNotSubmit;
 		$this->Template->attributes = $strAttributes;
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
-		$this->Template->action = \Environment::get('indexFreeRequest');
+		$this->Template->action = Environment::get('indexFreeRequest');
 		$this->Template->maxFileSize = $hasUpload ? $this->objModel->getMaxUploadFileSize() : false;
 		$this->Template->novalidate = $this->novalidate ? ' novalidate' : '';
+		$this->Template->cookieWarning = $GLOBALS['TL_LANG']['ERR']['formCookieWarning'];
 
 		// Get the target URL
 		if ($this->method == 'GET' && $this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
@@ -332,7 +329,7 @@ class Form extends \Hybrid
 					continue;
 				}
 
-				$v = \StringUtil::deserialize($v);
+				$v = StringUtil::deserialize($v);
 
 				// Skip empty fields
 				if ($this->skipEmpty && !\is_array($v) && !\strlen($v))
@@ -341,7 +338,7 @@ class Form extends \Hybrid
 				}
 
 				// Add field to message
-				$message .= (isset($arrLabels[$k]) ? $arrLabels[$k] : ucfirst($k)) . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
+				$message .= ($arrLabels[$k] ?? ucfirst($k)) . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
 
 				// Prepare XML file
 				if ($this->format == 'xml')
@@ -361,7 +358,7 @@ class Form extends \Hybrid
 				}
 			}
 
-			$recipients = \StringUtil::splitCsv($this->recipient);
+			$recipients = StringUtil::splitCsv($this->recipient);
 
 			// Format recipients
 			foreach ($recipients as $k=>$v)
@@ -369,7 +366,7 @@ class Form extends \Hybrid
 				$recipients[$k] = str_replace(array('[', ']', '"'), array('<', '>', ''), $v);
 			}
 
-			$email = new \Email();
+			$email = new Email();
 
 			// Get subject and message
 			if ($this->format == 'email')
@@ -383,40 +380,42 @@ class Form extends \Hybrid
 			$email->fromName = $GLOBALS['TL_ADMIN_NAME'];
 
 			// Get the "reply to" address
-			if (\strlen(\Input::post('email', true)))
+			if (!empty(Input::post('email', true)))
 			{
-				$replyTo = \Input::post('email', true);
+				$replyTo = Input::post('email', true);
 
-				// Add name
-				if (\strlen(\Input::post('name')))
+				// Add the name
+				if (!empty(Input::post('name')))
 				{
-					$replyTo = '"' . \Input::post('name') . '" <' . $replyTo . '>';
+					$replyTo = '"' . Input::post('name') . '" <' . $replyTo . '>';
+				}
+				elseif (!empty(Input::post('firstname')) && !empty(Input::post('lastname')))
+				{
+					$replyTo = '"' . Input::post('firstname') . ' ' . Input::post('lastname') . '" <' . $replyTo . '>';
 				}
 
 				$email->replyTo($replyTo);
 			}
 
 			// Fallback to default subject
-			if (!\strlen($email->subject))
+			if (!$email->subject)
 			{
 				$email->subject = $this->replaceInsertTags($this->subject, false);
 			}
 
 			// Send copy to sender
-			if (\strlen($arrSubmitted['cc']))
+			if (!empty($arrSubmitted['cc']))
 			{
-				$email->sendCc(\Input::post('email', true));
+				$email->sendCc(Input::post('email', true));
 				unset($_SESSION['FORM_DATA']['cc']);
 			}
 
 			// Attach XML file
 			if ($this->format == 'xml')
 			{
-				/** @var FrontendTemplate|object $objTemplate */
-				$objTemplate = new \FrontendTemplate('form_xml');
-
+				$objTemplate = new FrontendTemplate('form_xml');
 				$objTemplate->fields = $fields;
-				$objTemplate->charset = \Config::get('characterSet');
+				$objTemplate->charset = Config::get('characterSet');
 
 				$email->attachFileFromString($objTemplate->parse(), 'form.xml', 'application/xml');
 			}
@@ -424,7 +423,7 @@ class Form extends \Hybrid
 			// Attach CSV file
 			if ($this->format == 'csv')
 			{
-				$email->attachFileFromString(\StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values');
+				$email->attachFileFromString(StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values');
 			}
 
 			$uploaded = '';
@@ -437,7 +436,7 @@ class Form extends \Hybrid
 					// Add a link to the uploaded file
 					if ($file['uploaded'])
 					{
-						$uploaded .= "\n" . \Environment::get('base') . \StringUtil::stripRootDir(\dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
+						$uploaded .= "\n" . Environment::get('base') . StringUtil::stripRootDir(\dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
 						continue;
 					}
 
@@ -446,7 +445,7 @@ class Form extends \Hybrid
 			}
 
 			$uploaded = \strlen(trim($uploaded)) ? "\n\n---\n" . $uploaded : '';
-			$email->text = \StringUtil::decodeEntities(trim($message)) . $uploaded . "\n\n";
+			$email->text = StringUtil::decodeEntities(trim($message)) . $uploaded . "\n\n";
 
 			// Send the e-mail
 			try
@@ -460,7 +459,7 @@ class Form extends \Hybrid
 		}
 
 		// Store the values in the database
-		if ($this->storeValues && $this->targetTable != '')
+		if ($this->storeValues && $this->targetTable)
 		{
 			$arrSet = array();
 
@@ -480,7 +479,7 @@ class Form extends \Hybrid
 					// Convert date formats into timestamps (see #6827)
 					if ($arrSet[$k] != '' && \in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
 					{
-						$objDate = new \Date($arrSet[$k], \Date::getFormatFromRgxp($arrFields[$k]->rgxp));
+						$objDate = new Date($arrSet[$k], Date::getFormatFromRgxp($arrFields[$k]->rgxp));
 						$arrSet[$k] = $objDate->tstamp;
 					}
 				}
@@ -493,7 +492,7 @@ class Form extends \Hybrid
 				{
 					if ($v['uploaded'])
 					{
-						$arrSet[$k] = \StringUtil::stripRootDir($v['tmp_name']);
+						$arrSet[$k] = StringUtil::stripRootDir($v['tmp_name']);
 					}
 				}
 			}
@@ -513,7 +512,7 @@ class Form extends \Hybrid
 			{
 				if ($v === '')
 				{
-					$arrSet[$k] = \Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->targetTable]['fields'][$k]['sql']);
+					$arrSet[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->targetTable]['fields'][$k]['sql']);
 				}
 			}
 
@@ -524,8 +523,11 @@ class Form extends \Hybrid
 		// Store all values in the session
 		foreach (array_keys($_POST) as $key)
 		{
-			$_SESSION['FORM_DATA'][$key] = $this->allowTags ? \Input::postHtml($key, true) : \Input::post($key, true);
+			$_SESSION['FORM_DATA'][$key] = $this->allowTags ? Input::postHtml($key, true) : Input::post($key, true);
 		}
+
+		// Store the submit time to invalidate the session later on
+		$_SESSION['FORM_DATA']['SUBMITTED_AT'] = time();
 
 		$arrFiles = $_SESSION['FILES'];
 
@@ -544,12 +546,12 @@ class Form extends \Hybrid
 		// Add a log entry
 		if (FE_USER_LOGGED_IN)
 		{
-			$this->import('FrontendUser', 'User');
+			$this->import(FrontendUser::class, 'User');
 			$this->log('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".', __METHOD__, TL_FORMS);
 		}
 		else
 		{
-			$this->log('Form "' . $this->title . '" has been submitted by ' . \System::anonymizeIp(\Environment::get('ip')) . '.', __METHOD__, TL_FORMS);
+			$this->log('Form "' . $this->title . '" has been submitted by a guest.', __METHOD__, TL_FORMS);
 		}
 
 		// Check whether there is a jumpTo page
@@ -583,7 +585,7 @@ class Form extends \Hybrid
 	 */
 	protected function initializeSession($formId)
 	{
-		if (\Input::post('FORM_SUBMIT') != $formId)
+		if (Input::post('FORM_SUBMIT') != $formId)
 		{
 			return;
 		}
@@ -599,9 +601,7 @@ class Form extends \Hybrid
 
 				foreach ($_SESSION[$formId][$tl] as $message)
 				{
-					/** @var FrontendTemplate|object $objTemplate */
-					$objTemplate = new \FrontendTemplate('form_message');
-
+					$objTemplate = new FrontendTemplate('form_message');
 					$objTemplate->message = $message;
 					$objTemplate->class = strtolower($tl);
 
@@ -613,3 +613,5 @@ class Form extends \Hybrid
 		}
 	}
 }
+
+class_alias(Form::class, 'Form');

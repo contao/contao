@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,20 +14,20 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\GenerateSymlinksEvent;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Symlinks the public resources into the web directory.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class SymlinksCommand extends AbstractLockedCommand
 {
@@ -33,11 +35,6 @@ class SymlinksCommand extends AbstractLockedCommand
      * @var SymfonyStyle
      */
     private $io;
-
-    /**
-     * @var ResourceFinderInterface
-     */
-    private $resourceFinder;
 
     /**
      * @var array
@@ -52,6 +49,11 @@ class SymlinksCommand extends AbstractLockedCommand
     /**
      * @var string
      */
+    private $webDir;
+
+    /**
+     * @var string
+     */
     private $uploadPath;
 
     /**
@@ -60,29 +62,27 @@ class SymlinksCommand extends AbstractLockedCommand
     private $logsDir;
 
     /**
-     * @var string
+     * @var ResourceFinderInterface
      */
-    private $webDir;
+    private $resourceFinder;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
     /**
      * @var int
      */
     private $statusCode = 0;
 
-    /**
-     * Constructor.
-     *
-     * @param string                  $rootDir
-     * @param string                  $uploadPath
-     * @param string                  $logsDir
-     * @param ResourceFinderInterface $resourceFinder
-     */
-    public function __construct($rootDir, $uploadPath, $logsDir, ResourceFinderInterface $resourceFinder)
+    public function __construct(string $rootDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher)
     {
         $this->rootDir = $rootDir;
         $this->uploadPath = $uploadPath;
         $this->logsDir = $logsDir;
         $this->resourceFinder = $resourceFinder;
+        $this->eventDispatcher = $eventDispatcher;
 
         parent::__construct();
     }
@@ -90,7 +90,7 @@ class SymlinksCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('contao:symlinks')
@@ -104,7 +104,7 @@ class SymlinksCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output)
+    protected function executeLocked(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
         $this->webDir = rtrim($input->getArgument('target'), '/');
@@ -122,7 +122,7 @@ class SymlinksCommand extends AbstractLockedCommand
     /**
      * Generates the symlinks in the web directory.
      */
-    private function generateSymlinks()
+    private function generateSymlinks(): void
     {
         $fs = new Filesystem();
 
@@ -141,14 +141,11 @@ class SymlinksCommand extends AbstractLockedCommand
 
         // Symlinks the logs directory
         $this->symlink($this->getRelativePath($this->logsDir), 'system/logs');
+
+        $this->triggerSymlinkEvent();
     }
 
-    /**
-     * Creates the file symlinks.
-     *
-     * @param string $uploadPath
-     */
-    private function symlinkFiles($uploadPath)
+    private function symlinkFiles(string $uploadPath): void
     {
         $this->createSymlinksFromFinder(
             $this->findIn($this->rootDir.'/'.$uploadPath)->files()->name('.public'),
@@ -156,12 +153,9 @@ class SymlinksCommand extends AbstractLockedCommand
         );
     }
 
-    /**
-     * Creates symlinks for the public module subfolders.
-     */
-    private function symlinkModules()
+    private function symlinkModules(): void
     {
-        $filter = function (SplFileInfo $file) {
+        $filter = function (SplFileInfo $file): bool {
             return HtaccessAnalyzer::create($file)->grantsAccess();
         };
 
@@ -171,10 +165,7 @@ class SymlinksCommand extends AbstractLockedCommand
         );
     }
 
-    /**
-     * Creates the theme symlinks.
-     */
-    private function symlinkThemes()
+    private function symlinkThemes(): void
     {
         /** @var SplFileInfo[] $themes */
         $themes = $this->resourceFinder->findIn('themes')->depth(0)->directories();
@@ -190,13 +181,7 @@ class SymlinksCommand extends AbstractLockedCommand
         }
     }
 
-    /**
-     * Generates symlinks from a Finder object.
-     *
-     * @param Finder $finder
-     * @param string $prepend
-     */
-    private function createSymlinksFromFinder(Finder $finder, $prepend)
+    private function createSymlinksFromFinder(Finder $finder, string $prepend): void
     {
         $files = $this->filterNestedPaths($finder, $prepend);
 
@@ -206,16 +191,22 @@ class SymlinksCommand extends AbstractLockedCommand
         }
     }
 
+    private function triggerSymlinkEvent(): void
+    {
+        $event = new GenerateSymlinksEvent();
+
+        $this->eventDispatcher->dispatch(ContaoCoreEvents::GENERATE_SYMLINKS, $event);
+
+        foreach ($event->getSymlinks() as $target => $link) {
+            $this->symlink($target, $link);
+        }
+    }
+
     /**
-     * Generates a symlink.
-     *
      * The method will try to generate relative symlinks and fall back to generating
      * absolute symlinks if relative symlinks are not supported (see #208).
-     *
-     * @param string $target
-     * @param string $link
      */
-    private function symlink($target, $link)
+    private function symlink(string $target, string $link): void
     {
         $target = strtr($target, '\\', '/');
         $link = strtr($link, '\\', '/');
@@ -247,25 +238,17 @@ class SymlinksCommand extends AbstractLockedCommand
 
     /**
      * Returns a finder instance to find files in the given path.
-     *
-     * @param string $path
-     *
-     * @return Finder
      */
-    private function findIn($path)
+    private function findIn(string $path): Finder
     {
         return Finder::create()
             ->ignoreDotFiles(false)
             ->sort(
-                function (SplFileInfo $a, SplFileInfo $b) {
+                function (SplFileInfo $a, SplFileInfo $b): int {
                     $countA = substr_count(strtr($a->getRelativePath(), '\\', '/'), '/');
                     $countB = substr_count(strtr($b->getRelativePath(), '\\', '/'), '/');
 
-                    if ($countA === $countB) {
-                        return 0;
-                    }
-
-                    return ($countA < $countB) ? -1 : 1;
+                    return $countA <=> $countB;
                 }
             )
             ->followLinks()
@@ -276,17 +259,13 @@ class SymlinksCommand extends AbstractLockedCommand
     /**
      * Filters nested paths so only the top folder is symlinked.
      *
-     * @param Finder $finder
-     * @param string $prepend
-     *
      * @return SplFileInfo[]
      */
-    private function filterNestedPaths(Finder $finder, $prepend)
+    private function filterNestedPaths(Finder $finder, string $prepend): array
     {
         $parents = [];
         $files = iterator_to_array($finder);
 
-        /** @var SplFileInfo $file */
         foreach ($files as $key => $file) {
             $path = rtrim(strtr($prepend.'/'.$file->getRelativePath(), '\\', '/'), '/');
 
@@ -318,14 +297,7 @@ class SymlinksCommand extends AbstractLockedCommand
         return array_values($files);
     }
 
-    /**
-     * Returns the path relative to the root directory.
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    private function getRelativePath($path)
+    private function getRelativePath(string $path): string
     {
         return str_replace(strtr($this->rootDir, '\\', '/').'/', '', strtr($path, '\\', '/'));
     }

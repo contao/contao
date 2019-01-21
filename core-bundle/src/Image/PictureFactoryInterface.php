@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,11 +16,6 @@ use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfigurationInterface;
 use Contao\Image\PictureInterface;
 
-/**
- * Picture factory interface.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
- */
 interface PictureFactoryInterface
 {
     /**

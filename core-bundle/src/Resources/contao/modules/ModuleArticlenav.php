@@ -17,7 +17,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleArticlenav extends \Module
+class ModuleArticlenav extends Module
 {
 
 	/**
@@ -41,9 +41,7 @@ class ModuleArticlenav extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('be_wildcard');
-
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['articlenav'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -56,7 +54,7 @@ class ModuleArticlenav extends \Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$this->objArticles = \ArticleModel::findPublishedWithTeaserByPidAndColumn($objPage->id, $this->strColumn);
+		$this->objArticles = ArticleModel::findPublishedWithTeaserByPidAndColumn($objPage->id, $this->strColumn);
 
 		// Return if there are no articles
 		if ($this->objArticles === null)
@@ -65,7 +63,7 @@ class ModuleArticlenav extends \Module
 		}
 
 		// Redirect to the first article if no article is selected
-		if (!\Input::get('articles'))
+		if (!Input::get('articles'))
 		{
 			if (!$this->loadFirst)
 			{
@@ -99,13 +97,13 @@ class ModuleArticlenav extends \Module
 			$strAlias = $objArticle->alias ?: $objArticle->id;
 
 			// Active article
-			if (\Input::get('articles') == $strAlias)
+			if (Input::get('articles') == $strAlias)
 			{
 				$articles[] = array
 				(
 					'isActive' => true,
 					'href' => $objPage->getFrontendUrl('/articles/' . $strAlias),
-					'title' => \StringUtil::specialchars($objArticle->title, true),
+					'title' => StringUtil::specialchars($objArticle->title, true),
 					'link' => $intCount
 				);
 
@@ -119,7 +117,7 @@ class ModuleArticlenav extends \Module
 				(
 					'isActive' => false,
 					'href' => $objPage->getFrontendUrl('/articles/' . $strAlias),
-					'title' => \StringUtil::specialchars($objArticle->title, true),
+					'title' => StringUtil::specialchars($objArticle->title, true),
 					'link' => $intCount
 				);
 			}
@@ -181,3 +179,5 @@ class ModuleArticlenav extends \Module
 		}
 	}
 }
+
+class_alias(ModuleArticlenav::class, 'ModuleArticlenav');

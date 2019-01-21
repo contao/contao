@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,17 +14,12 @@ namespace Contao\InstallationBundle\Database;
 
 use Contao\StringUtil;
 
-/**
- * Runs the version 3.3.0 update.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class Version330Update extends AbstractVersionUpdate
 {
     /**
      * {@inheritdoc}
      */
-    public function shouldBeRun()
+    public function shouldBeRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -38,7 +35,7 @@ class Version330Update extends AbstractVersionUpdate
     /**
      * {@inheritdoc}
      */
-    public function run()
+    public function run(): void
     {
         $statement = $this->connection->query("
             SELECT

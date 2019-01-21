@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.0">
         <source>Require login to comment</source>
-        <target>Rekizet kevreañ evit leuskel un evezhiadenn</target>
+        <target>Rekizet eo kevreañ evit leuskel un evezhiadenn</target>
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.1">
         <source>Allow only authenticated users to create comments.</source>

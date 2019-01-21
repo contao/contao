@@ -1073,10 +1073,6 @@
         <source>Turkmen</source>
         <target>ترکمنی</target>
       </trans-unit>
-      <trans-unit id="LNG.tl">
-        <source>Tagalog</source>
-        <target>تاگالوگ</target>
-      </trans-unit>
       <trans-unit id="LNG.tn">
         <source>Tswana</source>
         <target>تسوانا</target>

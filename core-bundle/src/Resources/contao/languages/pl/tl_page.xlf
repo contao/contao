@@ -129,6 +129,14 @@
         <source>The date and time format string will be parsed with the PHP date() function.</source>
         <target>Wprowadź format daty i czasu obsługiwany przez funkcję PHP function date().</target>
       </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.0">
+        <source>Valid alias characters</source>
+        <target>Prawidłowe znaki aliasu</target>
+      </trans-unit>
+      <trans-unit id="tl_page.validAliasCharacters.1">
+        <source>Here you can select a custom character set for auto-generated aliases.</source>
+        <target>Tutaj możesz wybrać własny zestaw znaków do auto-generowania aliasów.</target>
+      </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
         <target>Utwórz mapę strony Google XML</target>
@@ -265,6 +273,14 @@
         <source>Exclude the page from the search index.</source>
         <target>Po wybraniu tej opcji ta strona nie będzie brana pod uwagę podczas przeszukiwania witryny.</target>
       </trans-unit>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+        <target>Wymagaj aliasu</target>
+      </trans-unit>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Wyświetl błąd 404, jeśli URL nie zawiera żadnego aliasu.</target>
+      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
         <target>Klasa CSS</target>
@@ -361,9 +377,9 @@
         <source>Global settings</source>
         <target>Ustawienia globalne</target>
       </trans-unit>
-      <trans-unit id="tl_page.mobile_legend">
-        <source>Mobile settings</source>
-        <target>Ustawienia mobilne</target>
+      <trans-unit id="tl_page.alias_legend">
+        <source>Alias settings</source>
+        <target>Ustawienia aliasów</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>
@@ -388,10 +404,6 @@
       <trans-unit id="tl_page.chmod_legend">
         <source>Access rights</source>
         <target>Prawa dostępu</target>
-      </trans-unit>
-      <trans-unit id="tl_page.search_legend">
-        <source>Search settings</source>
-        <target>Ustawienia wyszukiwania</target>
       </trans-unit>
       <trans-unit id="tl_page.expert_legend">
         <source>Expert settings</source>
@@ -576,6 +588,15 @@
       <trans-unit id="CACHE.2592000">
         <source>30 days</source>
         <target>30 dni</target>
+      </trans-unit>
+      <trans-unit id="CACHE.7776000">
+        <source>3 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.15552000">
+        <source>6 months</source>
+      </trans-unit>
+      <trans-unit id="CACHE.31536000">
+        <source>1 year</source>
       </trans-unit>
     </body>
   </file>

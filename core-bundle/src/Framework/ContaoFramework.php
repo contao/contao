@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,10 +14,10 @@ namespace Contao\CoreBundle\Framework;
 
 use Contao\ClassLoader;
 use Contao\Config;
-use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\Input;
 use Contao\RequestToken;
 use Contao\System;
@@ -24,18 +26,8 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Initializes the Contao framework.
- *
- * @author Christian Schiffler <https://github.com/discordier>
- * @author Yanick Witschi <https://github.com/toflar>
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Dominik Tomasi <https://github.com/dtomasi>
- * @author Andreas Schempp <https://github.com/aschempp>
- *
  * @internal Do not instantiate this class in your code; use the "contao.framework" service instead
  */
 class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterface
@@ -51,16 +43,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      * @var RequestStack
      */
     private $requestStack;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
 
     /**
      * @var ScopeMatcher
@@ -83,6 +65,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private $request;
 
     /**
+     * @var bool
+     */
+    private $isFrontend = false;
+
+    /**
      * @var array
      */
     private $adapterCache = [];
@@ -90,37 +77,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * @var array
      */
-    private $basicClasses = [
-        'System',
-        'Config',
-        'ClassLoader',
-        'TemplateLoader',
-        'ModuleLoader',
-    ];
+    private $hookListeners = [];
 
-    /**
-     * @var array
-     */
-    private $installRoutes = [
-        'contao_install',
-        'contao_install_redirect',
-    ];
-
-    /**
-     * Constructor.
-     *
-     * @param RequestStack     $requestStack
-     * @param RouterInterface  $router
-     * @param SessionInterface $session
-     * @param ScopeMatcher     $scopeMatcher
-     * @param string           $rootDir
-     * @param int              $errorLevel
-     */
-    public function __construct(RequestStack $requestStack, RouterInterface $router, SessionInterface $session, ScopeMatcher $scopeMatcher, $rootDir, $errorLevel)
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
-        $this->router = $router;
-        $this->session = $session;
         $this->scopeMatcher = $scopeMatcher;
         $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
@@ -129,7 +90,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * {@inheritdoc}
      */
-    public function isInitialized()
+    public function isInitialized(): bool
     {
         return self::$initialized;
     }
@@ -139,7 +100,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @throws \LogicException
      */
-    public function initialize()
+    public function initialize(bool $isFrontend = false): void
     {
         if ($this->isInitialized()) {
             return;
@@ -152,11 +113,16 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             throw new \LogicException('The service container has not been set.');
         }
 
-        // Set the current request
-        $this->request = $this->requestStack->getCurrentRequest();
+        $this->isFrontend = $isFrontend;
+        $this->request = $this->requestStack->getMasterRequest();
 
         $this->setConstants();
         $this->initializeFramework();
+    }
+
+    public function setHookListeners(array $hookListeners): void
+    {
+        $this->hookListeners = $hookListeners;
     }
 
     /**
@@ -176,7 +142,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * {@inheritdoc}
      */
-    public function getAdapter($class)
+    public function getAdapter($class): Adapter
     {
         if (!isset($this->adapterCache[$class])) {
             $this->adapterCache[$class] = new Adapter($class);
@@ -186,11 +152,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     }
 
     /**
-     * Sets the Contao constants.
-     *
      * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
      */
-    private function setConstants()
+    private function setConstants(): void
     {
         if (!\defined('TL_MODE')) {
             \define('TL_MODE', $this->getMode());
@@ -214,13 +178,12 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         \define('TL_PATH', $this->getPath());
     }
 
-    /**
-     * Returns the TL_MODE value.
-     *
-     * @return string|null
-     */
-    private function getMode()
+    private function getMode(): ?string
     {
+        if (true === $this->isFrontend) {
+            return 'FE';
+        }
+
         if (null === $this->request) {
             return null;
         }
@@ -236,12 +199,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         return null;
     }
 
-    /**
-     * Returns the referer ID.
-     *
-     * @return string|null
-     */
-    private function getRefererId()
+    private function getRefererId(): ?string
     {
         if (null === $this->request) {
             return null;
@@ -250,45 +208,16 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         return $this->request->attributes->get('_contao_referer_id', '');
     }
 
-    /**
-     * Returns the route.
-     *
-     * @return string|null
-     */
-    private function getRoute()
+    private function getRoute(): ?string
     {
         if (null === $this->request) {
             return null;
         }
 
-        $attributes = $this->request->attributes;
-
-        try {
-            $route = $this->router->generate($attributes->get('_route'), $attributes->get('_route_params'));
-
-            // The Symfony router can return null even though the interface only allows strings
-            if (!\is_string($route)) {
-                return null;
-            }
-        } catch (\Exception $e) {
-            return null;
-        }
-
-        $basePath = $this->request->getBasePath().'/';
-
-        if (0 !== strncmp($route, $basePath, \strlen($basePath))) {
-            return null;
-        }
-
-        return substr($route, \strlen($basePath));
+        return substr($this->request->getBaseUrl().$this->request->getPathInfo(), \strlen($this->request->getBasePath().'/'));
     }
 
-    /**
-     * Returns the base path.
-     *
-     * @return string|null
-     */
-    private function getPath()
+    private function getPath(): ?string
     {
         if (null === $this->request) {
             return null;
@@ -297,10 +226,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         return $this->request->getBasePath();
     }
 
-    /**
-     * Initializes the framework.
-     */
-    private function initializeFramework()
+    private function initializeFramework(): void
     {
         // Set the error_reporting level
         error_reporting($this->errorLevel);
@@ -326,6 +252,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         // Fully load the configuration
         $config->getInstance();
 
+        $this->registerHookListeners();
         $this->validateInstallation();
 
         Input::initialize();
@@ -336,10 +263,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $this->handleRequestToken();
     }
 
-    /**
-     * Includes some helper files.
-     */
-    private function includeHelpers()
+    private function includeHelpers(): void
     {
         require __DIR__.'/../Resources/contao/helper/functions.php';
         require __DIR__.'/../Resources/contao/config/constants.php';
@@ -348,12 +272,19 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * Includes the basic classes required for further processing.
      */
-    private function includeBasicClasses()
+    private function includeBasicClasses(): void
     {
-        foreach ($this->basicClasses as $class) {
+        static $basicClasses = [
+            'System',
+            'Config',
+            'ClassLoader',
+            'TemplateLoader',
+            'ModuleLoader',
+        ];
+
+        foreach ($basicClasses as $class) {
             if (!class_exists($class, false)) {
                 require_once __DIR__.'/../Resources/contao/library/Contao/'.$class.'.php';
-                class_alias('Contao\\'.$class, $class);
             }
         }
     }
@@ -361,20 +292,23 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * Initializes session access for $_SESSION['FE_DATA'] and $_SESSION['BE_DATA'].
      */
-    private function initializeLegacySessionAccess()
+    private function initializeLegacySessionAccess(): void
     {
-        if (!$this->session->isStarted()) {
+        if (null === $this->request || !$this->request->hasSession()) {
             return;
         }
 
-        $_SESSION['BE_DATA'] = $this->session->getBag('contao_backend');
-        $_SESSION['FE_DATA'] = $this->session->getBag('contao_frontend');
+        $session = $this->request->getSession();
+
+        if (!$session->isStarted()) {
+            $_SESSION = new LazySessionAccess($session);
+        } else {
+            $_SESSION['BE_DATA'] = $session->getBag('contao_backend');
+            $_SESSION['FE_DATA'] = $session->getBag('contao_frontend');
+        }
     }
 
-    /**
-     * Sets the default language.
-     */
-    private function setDefaultLanguage()
+    private function setDefaultLanguage(): void
     {
         $language = 'en';
 
@@ -384,20 +318,23 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
         $GLOBALS['TL_LANGUAGE'] = $language;
-        $_SESSION['TL_LANGUAGE'] = $language;
     }
 
     /**
-     * Validates the installation.
-     *
-     * @throws IncompleteInstallationException If the installation has not been completed
+     * @throws IncompleteInstallationException
      */
-    private function validateInstallation()
+    private function validateInstallation(): void
     {
-        if (
-            null === $this->request
-            || \in_array($this->request->attributes->get('_route'), $this->installRoutes, true)
-        ) {
+        if (null === $this->request) {
+            return;
+        }
+
+        static $installRoutes = [
+            'contao_install',
+            'contao_install_redirect',
+        ];
+
+        if (\in_array($this->request->attributes->get('_route'), $installRoutes, true)) {
             return;
         }
 
@@ -412,22 +349,16 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
     }
 
-    /**
-     * Sets the time zone.
-     */
-    private function setTimezone()
+    private function setTimezone(): void
     {
         /** @var Config $config */
         $config = $this->getAdapter(Config::class);
 
-        $this->iniSet('date.timezone', $config->get('timeZone'));
-        date_default_timezone_set($config->get('timeZone'));
+        $this->iniSet('date.timezone', (string) $config->get('timeZone'));
+        date_default_timezone_set((string) $config->get('timeZone'));
     }
 
-    /**
-     * Triggers the initializeSystem hook (see #5665).
-     */
-    private function triggerInitializeSystemHook()
+    private function triggerInitializeSystemHook(): void
     {
         if (isset($GLOBALS['TL_HOOKS']['initializeSystem']) && \is_array($GLOBALS['TL_HOOKS']['initializeSystem'])) {
             foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
@@ -442,11 +373,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     }
 
     /**
-     * Handles the request token.
-     *
-     * @throws AjaxRedirectResponseException|InvalidRequestTokenException
+     * @throws InvalidRequestTokenException
      */
-    private function handleRequestToken()
+    private function handleRequestToken(): void
     {
         /** @var RequestToken $requestToken */
         $requestToken = $this->getAdapter(RequestToken::class);
@@ -463,25 +392,14 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         throw new InvalidRequestTokenException('Invalid request token. Please reload the page and try again.');
     }
 
-    /**
-     * Tries to set a php.ini configuration option.
-     *
-     * @param string $key
-     * @param mixed  $value
-     */
-    private function iniSet($key, $value)
+    private function iniSet(string $key, string $value): void
     {
         if (\function_exists('ini_set')) {
             ini_set($key, $value);
         }
     }
 
-    /**
-     * Checks if the token check can be skipped.
-     *
-     * @return bool True
-     */
-    private function canSkipTokenCheck()
+    private function canSkipTokenCheck(): bool
     {
         return null === $this->request
             || 'POST' !== $this->request->getRealMethod()
@@ -489,5 +407,21 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             || !$this->request->attributes->has('_token_check')
             || false === $this->request->attributes->get('_token_check')
         ;
+    }
+
+    private function registerHookListeners(): void
+    {
+        foreach ($this->hookListeners as $hookName => $priorities) {
+            if (isset($GLOBALS['TL_HOOKS'][$hookName]) && \is_array($GLOBALS['TL_HOOKS'][$hookName])) {
+                if (isset($priorities[0])) {
+                    $priorities[0] = array_merge($GLOBALS['TL_HOOKS'][$hookName], $priorities[0]);
+                } else {
+                    $priorities[0] = $GLOBALS['TL_HOOKS'][$hookName];
+                    krsort($priorities);
+                }
+            }
+
+            $GLOBALS['TL_HOOKS'][$hookName] = array_merge(...$priorities);
+        }
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,117 +13,90 @@
 namespace Contao\CoreBundle\Tests\Picker;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\FilesModel;
 use Contao\StringUtil;
+use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
-use PHPUnit\Framework\TestCase;
+use Knp\Menu\ItemInterface;
+use Knp\Menu\MenuItem;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Tests the FilePickerProvider class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
-class FilePickerProviderTest extends TestCase
+class FilePickerProviderTest extends ContaoTestCase
 {
     /**
      * @var FilePickerProvider
      */
-    protected $provider;
+    private $provider;
 
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $menuFactory = $this->createMock(FactoryInterface::class);
-
         $menuFactory
             ->method('createItem')
-            ->willReturnArgument(1)
+            ->willReturnCallback(
+                function (string $name, array $data) use ($menuFactory): ItemInterface {
+                    $item = new MenuItem($name, $menuFactory);
+                    $item->setLabel($data['label']);
+                    $item->setLinkAttributes($data['linkAttributes']);
+                    $item->setCurrent($data['current']);
+                    $item->setUri($data['uri']);
+
+                    return $item;
+                }
+            )
         ;
 
         $router = $this->createMock(RouterInterface::class);
-
         $router
             ->method('generate')
             ->willReturnCallback(
-                function ($name, array $params) {
+                function (string $name, array $params): ?string {
                     return $name.'?'.http_build_query($params);
                 }
             )
         ;
 
-        $filesModel = $this->createMock(FilesModel::class);
+        $properties = [
+            'path' => '/foobar',
+            'uuid' => StringUtil::uuidToBin('82243f46-a4c3-11e3-8e29-000c29e44aea'),
+        ];
 
-        $filesModel
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'path':
-                        return '/foobar';
+        $filesModel = $this->mockClassWithProperties(FilesModel::class, $properties);
 
-                    case 'uuid':
-                        return StringUtil::uuidToBin('82243f46-a4c3-11e3-8e29-000c29e44aea');
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
-        $filesAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByUuid', 'findByPath'])
-            ->getMock()
-        ;
-
-        $filesAdapter
+        $adapter = $this->mockAdapter(['findByUuid', 'findByPath']);
+        $adapter
             ->method('findByUuid')
             ->willReturn($filesModel)
         ;
 
-        $filesAdapter
+        $adapter
             ->method('findByPath')
             ->willReturnOnConsecutiveCalls($filesModel, null)
         ;
 
-        $framwork = $this->createMock(ContaoFramework::class);
+        $framwork = $this->mockContaoFramework([FilesModel::class => $adapter]);
 
-        $framwork
-            ->method('getAdapter')
-            ->willReturn($filesAdapter)
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturn('File picker')
         ;
 
-        $this->provider = new FilePickerProvider($menuFactory, $router, __DIR__);
+        $this->provider = new FilePickerProvider($menuFactory, $router, $translator, __DIR__);
         $this->provider->setFramework($framwork);
-
-        $GLOBALS['TL_LANG']['MSC']['filePicker'] = 'File picker';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown()
-    {
-        parent::tearDown();
-
-        unset($GLOBALS['TL_LANG']);
-    }
-
-    /**
-     * Tests the createMenuItem() method.
-     */
-    public function testCreatesTheMenuItem()
+    public function testCreatesTheMenuItem(): void
     {
         $picker = json_encode([
             'context' => 'link',
@@ -134,78 +109,38 @@ class FilePickerProviderTest extends TestCase
             $picker = $encoded;
         }
 
-        $this->assertSame(
-            [
-                'label' => 'File picker',
-                'linkAttributes' => ['class' => 'filePicker'],
-                'current' => true,
-                'uri' => 'contao_backend?do=files&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
-            ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'filePicker'))
-        );
+        $item = $this->provider->createMenuItem(new PickerConfig('link', [], '', 'filePicker'));
+        $uri = 'contao_backend?do=files&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,');
+
+        $this->assertSame('File picker', $item->getLabel());
+        $this->assertSame(['class' => 'filePicker'], $item->getLinkAttributes());
+        $this->assertTrue($item->isCurrent());
+        $this->assertSame($uri, $item->getUri());
     }
 
-    /**
-     * Tests the isCurrent() method.
-     */
-    public function testChecksIfAMenuItemIsCurrent()
+    public function testChecksIfAMenuItemIsCurrent(): void
     {
         $this->assertTrue($this->provider->isCurrent(new PickerConfig('file', [], '', 'filePicker')));
         $this->assertFalse($this->provider->isCurrent(new PickerConfig('file', [], '', 'pagePicker')));
-
         $this->assertTrue($this->provider->isCurrent(new PickerConfig('link', [], '', 'filePicker')));
         $this->assertFalse($this->provider->isCurrent(new PickerConfig('link', [], '', 'pagePicker')));
     }
 
-    /**
-     * Tests the getName() method.
-     */
-    public function testReturnsTheCorrectName()
+    public function testReturnsTheCorrectName(): void
     {
         $this->assertSame('filePicker', $this->provider->getName());
     }
 
-    /**
-     * Tests the supportsContext() method.
-     */
-    public function testChecksIfAContextIsSupported()
+    public function testChecksIfAContextIsSupported(): void
     {
-        $user = $this
-            ->getMockBuilder(BackendUser::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['hasAccess'])
-            ->getMock()
-        ;
-
-        $user
-            ->method('hasAccess')
-            ->willReturn(true)
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-
-        $token
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $this->provider->setTokenStorage($tokenStorage);
+        $this->provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
 
         $this->assertTrue($this->provider->supportsContext('file'));
         $this->assertTrue($this->provider->supportsContext('link'));
         $this->assertFalse($this->provider->supportsContext('page'));
     }
 
-    /**
-     * Tests the supportsContext() method without token storage.
-     */
-    public function testFailsToCheckTheContextIfThereIsNoTokenStorage()
+    public function testFailsToCheckTheContextIfThereIsNoTokenStorage(): void
     {
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('No token storage provided');
@@ -213,13 +148,9 @@ class FilePickerProviderTest extends TestCase
         $this->provider->supportsContext('link');
     }
 
-    /**
-     * Tests the supportsContext() method without token.
-     */
-    public function testFailsToCheckTheContextIfThereIsNoToken()
+    public function testFailsToCheckTheContextIfThereIsNoToken(): void
     {
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn(null)
@@ -233,20 +164,15 @@ class FilePickerProviderTest extends TestCase
         $this->provider->supportsContext('link');
     }
 
-    /**
-     * Tests the supportsContext() method without a user object.
-     */
-    public function testFailsToCheckTheContextIfThereIsNoUser()
+    public function testFailsToCheckTheContextIfThereIsNoUser(): void
     {
         $token = $this->createMock(TokenInterface::class);
-
         $token
             ->method('getUser')
             ->willReturn(null)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
         $tokenStorage
             ->method('getToken')
             ->willReturn($token)
@@ -260,37 +186,29 @@ class FilePickerProviderTest extends TestCase
         $this->provider->supportsContext('link');
     }
 
-    /**
-     * Tests the supportsValue() method.
-     */
-    public function testChecksIfAValueIsSupported()
+    public function testChecksIfAValueIsSupported(): void
     {
         $uuid = '82243f46-a4c3-11e3-8e29-000c29e44aea';
 
         $this->assertTrue($this->provider->supportsValue(new PickerConfig('file', [], $uuid)));
         $this->assertFalse($this->provider->supportsValue(new PickerConfig('file', [], '/home/foobar.txt')));
-
         $this->assertTrue($this->provider->supportsValue(new PickerConfig('link', [], '{{file::'.$uuid.'}}')));
         $this->assertFalse($this->provider->supportsValue(new PickerConfig('link', [], '/home/foobar.txt')));
     }
 
-    /**
-     * Tests the getDcaTable() method.
-     */
-    public function testReturnsTheDcaTable()
+    public function testReturnsTheDcaTable(): void
     {
         $this->assertSame('tl_files', $this->provider->getDcaTable());
     }
 
-    /**
-     * Tests the getDcaAttributes() method.
-     */
-    public function testReturnsTheDcaAttributes()
+    public function testReturnsTheDcaAttributes(): void
     {
         $extra = [
             'fieldType' => 'checkbox',
             'files' => true,
         ];
+
+        $uuid = '82243f46-a4c3-11e3-8e29-000c29e44aea';
 
         $this->assertSame(
             [
@@ -298,7 +216,16 @@ class FilePickerProviderTest extends TestCase
                 'files' => true,
                 'value' => ['/foobar'],
             ],
-            $this->provider->getDcaAttributes(new PickerConfig('file', $extra, '82243f46-a4c3-11e3-8e29-000c29e44aea'))
+            $this->provider->getDcaAttributes(new PickerConfig('file', $extra, $uuid))
+        );
+
+        $this->assertSame(
+            [
+                'files' => true,
+                'fieldType' => 'radio',
+                'value' => ['/foobar'],
+            ],
+            $this->provider->getDcaAttributes(new PickerConfig('file', ['files' => true], $uuid))
         );
 
         $this->assertSame(
@@ -307,9 +234,7 @@ class FilePickerProviderTest extends TestCase
                 'filesOnly' => true,
                 'value' => '/foobar',
             ],
-            $this->provider->getDcaAttributes(
-                new PickerConfig('link', $extra, '{{file::82243f46-a4c3-11e3-8e29-000c29e44aea}}')
-            )
+            $this->provider->getDcaAttributes(new PickerConfig('link', $extra, '{{file::'.$uuid.'}}'))
         );
 
         $this->assertSame(
@@ -334,16 +259,22 @@ class FilePickerProviderTest extends TestCase
             [
                 'fieldType' => 'radio',
                 'filesOnly' => true,
-                'value' => 'foo/b%C3%A4r%20baz.jpg',
+                'value' => str_replace('%2F', '/', rawurlencode('foo/bär baz.jpg')),
             ],
             $this->provider->getDcaAttributes(new PickerConfig('link', [], 'foo/bär baz.jpg'))
         );
+
+        $this->assertSame(
+            [
+                'fieldType' => 'radio',
+                'filesOnly' => true,
+                'value' => str_replace('%2F', '/', rawurlencode(__DIR__.'/foobar.jpg')),
+            ],
+            $this->provider->getDcaAttributes(new PickerConfig('link', [], __DIR__.'/foobar.jpg'))
+        );
     }
 
-    /**
-     * Tests the convertDcaValue() method.
-     */
-    public function testConvertsTheDcaValue()
+    public function testConvertsTheDcaValue(): void
     {
         $this->assertSame(
             '/foobar',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,12 +15,6 @@ namespace Contao\InstallationBundle\Config;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * Dumps the parameters into the parameters.yml file.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ParameterDumper
 {
     /**
@@ -36,44 +32,29 @@ class ParameterDumper
      */
     private $parameters = ['parameters' => []];
 
-    /**
-     * Constructor.
-     *
-     * @param string          $rootDir
-     * @param Filesystem|null $filesystem
-     */
-    public function __construct($rootDir, Filesystem $filesystem = null)
+    public function __construct(string $rootDir, Filesystem $filesystem = null)
     {
         $this->rootDir = $rootDir;
         $this->filesystem = $filesystem ?: new Filesystem();
+        $parameters = [];
 
-        foreach (['config/parameters.yml.dist', 'config/parameters.yml'] as $file) {
+        foreach (['app/config/parameters.yml.dist', 'app/config/parameters.yml'] as $file) {
             if (file_exists($rootDir.'/'.$file)) {
-                $this->parameters = array_merge(
-                    $this->parameters,
-                    Yaml::parse(file_get_contents($rootDir.'/'.$file))
-                );
+                $parameters[] = Yaml::parse(file_get_contents($rootDir.'/'.$file));
             }
+        }
+
+        if (!empty($parameters)) {
+            $this->parameters = array_merge($this->parameters, ...$parameters);
         }
     }
 
-    /**
-     * Sets a parameter.
-     *
-     * @param string $name
-     * @param mixed  $value
-     */
-    public function setParameter($name, $value)
+    public function setParameter(string $name, $value): void
     {
         $this->parameters['parameters'][$name] = $value;
     }
 
-    /**
-     * Sets multiple parameters.
-     *
-     * @param array $params
-     */
-    public function setParameters(array $params)
+    public function setParameters(array $params): void
     {
         foreach ($params['parameters'] as $name => $value) {
             $this->setParameter($name, $value);
@@ -83,7 +64,7 @@ class ParameterDumper
     /**
      * Dumps the parameters into the parameters.yml file.
      */
-    public function dump()
+    public function dump(): void
     {
         if (
             empty($this->parameters['parameters']['secret']) ||
@@ -97,7 +78,7 @@ class ParameterDumper
         }
 
         $this->filesystem->dumpFile(
-            $this->rootDir.'/config/parameters.yml',
+            $this->rootDir.'/app/config/parameters.yml',
             "# This file has been auto-generated during installation\n".Yaml::dump($this->getEscapedValues())
         );
     }
@@ -105,11 +86,11 @@ class ParameterDumper
     /**
      * Escapes % and @.
      *
-     * @return array<string,array>
+     * @return array<string,string[]>
      *
      * @see http://symfony.com/doc/current/service_container/parameters.html#parameters-in-configuration-files
      */
-    private function getEscapedValues()
+    private function getEscapedValues(): array
     {
         $parameters = [];
 

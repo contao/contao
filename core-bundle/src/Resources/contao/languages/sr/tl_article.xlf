@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_article.groups.0">
         <source>Allowed member groups</source>
-        <target>Дозвољене групе чланова</target>
+        <target>Дозвољене групе корисника</target>
       </trans-unit>
       <trans-unit id="tl_article.groups.1">
         <source>These groups will be able to see the article.</source>

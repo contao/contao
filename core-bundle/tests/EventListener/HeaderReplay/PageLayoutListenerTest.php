@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,49 +13,34 @@
 namespace Contao\CoreBundle\Tests\EventListener\HeaderReplay;
 
 use Contao\CoreBundle\EventListener\HeaderReplay\PageLayoutListener;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
 
-/**
- * Tests the PageLayoutListener class.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- */
 class PageLayoutListenerTest extends TestCase
 {
     /**
-     * Tests all combinations of user agent result, TL_VIEW cookie value and checks if the
-     * header value is set correctly.
-     *
-     * @param bool        $agentIsMobile
-     * @param string|null $tlViewCookie
-     * @param string      $expectedHeaderValue
-     *
      * @dataProvider onReplayProvider
      */
-    public function testAddsThePageLayoutHeader($agentIsMobile, $tlViewCookie, $expectedHeaderValue)
+    public function testAddsThePageLayoutHeader(bool $agentIsMobile, ?string $tlViewCookie, string $expectedHeaderValue): void
     {
-        $envAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['get'])
-            ->getMock()
-        ;
-
-        $envAdapter
+        $adapter = $this->mockAdapter(['get']);
+        $adapter
             ->method('get')
-            ->willReturnCallback(function ($key) use ($agentIsMobile) {
-                if ('agent' === $key) {
-                    return (object) ['mobile' => $agentIsMobile];
-                }
+            ->willReturnCallback(
+                function (string $key) use ($agentIsMobile) {
+                    if ('agent' === $key) {
+                        return (object) ['mobile' => $agentIsMobile];
+                    }
 
-                return null;
-            })
+                    return null;
+                }
+            )
         ;
+
+        $framework = $this->mockContaoFramework([Environment::class => $adapter]);
 
         $request = new Request();
         $request->attributes->set('_scope', 'frontend');
@@ -64,22 +51,16 @@ class PageLayoutListenerTest extends TestCase
 
         $event = new HeaderReplayEvent($request, new ResponseHeaderBag());
 
-        $listener = new PageLayoutListener(
-            $this->mockScopeMatcher(),
-            $this->mockContaoFramework(null, null, [Environment::class => $envAdapter])
-        );
-
+        $listener = new PageLayoutListener($this->mockScopeMatcher(), $framework);
         $listener->onReplay($event);
 
         $this->assertSame($expectedHeaderValue, $event->getHeaders()->get('Contao-Page-Layout'));
     }
 
     /**
-     * Provides the data for the testOnReplayWithNoFrontendScope test.
-     *
-     * @return array
+     * @return array<string,(string|bool|null)[]>
      */
-    public function onReplayProvider()
+    public function onReplayProvider(): array
     {
         return [
             'No cookie -> desktop' => [false, null, 'desktop'],
@@ -91,10 +72,7 @@ class PageLayoutListenerTest extends TestCase
         ];
     }
 
-    /**
-     * Tests that no header is added outside the Contao front end scope.
-     */
-    public function testDoesNotAddThePageLayoutHeaderIfNotInFrontEndScope()
+    public function testDoesNotAddThePageLayoutHeaderIfNotInFrontEndScope(): void
     {
         $event = new HeaderReplayEvent(new Request(), new ResponseHeaderBag());
 

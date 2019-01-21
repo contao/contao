@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,93 +16,102 @@ use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\LockHandler;
+use Symfony\Component\Lock\Factory;
+use Symfony\Component\Lock\Store\FlockStore;
 
-/**
- * Tests the SymlinksCommand class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class SymlinksCommandTest extends TestCase
 {
     /**
+     * @var SymlinksCommand
+     */
+    private $command;
+
+    /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    protected function setUp(): void
     {
-        $fs = new Filesystem();
+        parent::setUp();
 
-        $fs->remove($this->getRootDir().'/system/logs');
-        $fs->remove($this->getRootDir().'/system/themes');
-        $fs->remove($this->getRootDir().'/var');
-        $fs->remove($this->getRootDir().'/web');
+        $this->command = new SymlinksCommand(
+            $this->getFixturesDir(),
+            'files',
+            $this->getFixturesDir().'/var/logs',
+            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
+            $this->createMock(EventDispatcherInterface::class)
+        );
     }
 
     /**
-     * Tests symlinking the Contao folders.
+     * {@inheritdoc}
      */
-    public function testSymlinksTheContaoFolders()
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        $fs = new Filesystem();
+        $fs->remove($this->getFixturesDir().'/system/config');
+        $fs->remove($this->getFixturesDir().'/system/logs');
+        $fs->remove($this->getFixturesDir().'/system/themes');
+        $fs->remove($this->getFixturesDir().'/var');
+        $fs->remove($this->getFixturesDir().'/web');
+    }
+
+    public function testSymlinksTheContaoFolders(): void
     {
         $fs = new Filesystem();
-        $fs->mkdir($this->getRootDir().'/var/logs');
+        $fs->mkdir($this->getFixturesDir().'/system/themes/default');
+        $fs->mkdir($this->getFixturesDir().'/var/logs');
 
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', $this->getRootDir());
+        $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
-        $command = new SymlinksCommand(
-            $this->getRootDir(),
-            'files',
-            $this->getRootDir().'/var/logs',
-            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
-        );
+        $container = $this->mockContainer($this->getFixturesDir());
+        $container->setParameter('kernel.logs_dir', $this->getFixturesDir().'/var/logs');
+        $container->set('contao.resource_finder', $finder);
 
-        $command->setContainer($container);
+        $this->command->setContainer($container);
 
-        $tester = new CommandTester($command);
+        $tester = new CommandTester($this->command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
 
-        $this->assertSame(0, $code);
-        $this->assertContains('web/system/modules/foobar/assets', $display);
-        $this->assertContains('system/modules/foobar/assets', $display);
-        $this->assertContains('web/system/modules/foobar/html', $display);
-        $this->assertContains('system/modules/foobar/html', $display);
-        $this->assertContains('web/system/modules/foobar/html/foo', $display);
-        $this->assertContains('Skipped because system/modules/foobar/html will be symlinked.', $display);
-        $this->assertContains('system/themes/flexible', $display);
-        $this->assertContains('vendor/contao/test-bundle/Resources/contao/themes/flexible', $display);
-        $this->assertContains('web/assets', $display);
-        $this->assertContains('assets', $display);
-        $this->assertContains('web/system/themes', $display);
-        $this->assertContains('system/themes', $display);
-        $this->assertContains('system/logs', $display);
-        $this->assertContains('var/logs', $display);
+        $this->assertSame(1, $code);
+        $this->assertContains(' web/system/modules/foobar/html/foo/bar ', $display);
+        $this->assertContains(' Skipped because system/modules/foobar/html will be symlinked. ', $display);
+        $this->assertContains(' web/system/modules/foobar/assets ', $display);
+        $this->assertContains(' system/modules/foobar/assets ', $display);
+        $this->assertContains(' web/system/modules/foobar/html ', $display);
+        $this->assertContains(' system/modules/foobar/html ', $display);
+        $this->assertContains(' system/themes/default ', $display);
+        $this->assertContains(' The path "system/themes/default" exists and is not a symlink. ', $display);
+        $this->assertContains(' system/themes/flexible ', $display);
+        $this->assertContains(' vendor/contao/test-bundle/Resources/contao/themes/flexible ', $display);
+        $this->assertContains(' web/assets ', $display);
+        $this->assertContains(' assets ', $display);
+        $this->assertContains(' web/system/themes ', $display);
+        $this->assertContains(' system/themes ', $display);
+        $this->assertContains(' system/logs ', $display);
+        $this->assertContains(' var/logs ', $display);
     }
 
-    /**
-     * Tests that the command is locked while running.
-     */
-    public function testIsLockedWhileRunning()
+    public function testIsLockedWhileRunning(): void
     {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', 'foobar');
+        $tmpDir = sys_get_temp_dir().'/'.md5($this->getFixturesDir());
 
-        $lock = new LockHandler('contao:symlinks', sys_get_temp_dir().'/'.md5('foobar'));
-        $lock->lock();
+        if (!is_dir($tmpDir)) {
+            (new Filesystem())->mkdir($tmpDir);
+        }
 
-        $command = new SymlinksCommand(
-            $this->getRootDir(),
-            'files',
-            $this->getRootDir().'/var/logs',
-            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
-        );
+        $factory = new Factory(new FlockStore($tmpDir));
 
-        $command->setContainer($container);
+        $lock = $factory->createLock('contao:symlinks');
+        $lock->acquire();
 
-        $tester = new CommandTester($command);
+        $this->command->setContainer($this->mockContainer($this->getFixturesDir()));
 
+        $tester = new CommandTester($this->command);
         $code = $tester->execute([]);
 
         $this->assertSame(1, $code);
@@ -109,27 +120,17 @@ class SymlinksCommandTest extends TestCase
         $lock->release();
     }
 
-    /**
-     * Tests that absolute paths are converted to relative paths.
-     */
-    public function testConvertsAbsolutePathsToRelativePaths()
+    public function testConvertsAbsolutePathsToRelativePaths(): void
     {
-        $command = new SymlinksCommand(
-            $this->getRootDir(),
-            'files',
-            $this->getRootDir().'/var/logs',
-            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
-        );
-
         // Use \ as directory separator in $rootDir
         $rootDir = new \ReflectionProperty(SymlinksCommand::class, 'rootDir');
         $rootDir->setAccessible(true);
-        $rootDir->setValue($command, strtr($this->getRootDir(), '/', '\\'));
+        $rootDir->setValue($this->command, strtr($this->getFixturesDir(), '/', '\\'));
 
         // Use / as directory separator in $path
         $method = new \ReflectionMethod(SymlinksCommand::class, 'getRelativePath');
         $method->setAccessible(true);
-        $relativePath = $method->invoke($command, $this->getRootDir().'/var/logs');
+        $relativePath = $method->invoke($this->command, $this->getFixturesDir().'/var/logs');
 
         // The path should be normalized and shortened
         $this->assertSame('var/logs', $relativePath);

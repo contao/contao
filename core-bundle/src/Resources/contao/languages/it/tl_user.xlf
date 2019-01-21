@@ -41,13 +41,12 @@
         <source>Here you can override the global back end theme.</source>
         <target>Tramite questa opzione è possibile impostare un tema di backend diverso dall'impostazione generale.</target>
       </trans-unit>
-      <trans-unit id="tl_user.limitWidth.0">
-        <source>Limit width</source>
-        <target>Limite larghezza</target>
+      <trans-unit id="tl_user.fullscreen.0">
+        <source>Fullscreen</source>
+        <target>Schermo intero</target>
       </trans-unit>
-      <trans-unit id="tl_user.limitWidth.1">
-        <source>Limit the maximum width of the back end to 1140px.</source>
-        <target>Limita la larghezza massima del back end a 1140px.</target>
+      <trans-unit id="tl_user.fullscreen.1">
+        <source>Do not limit the width of the back end.</source>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
@@ -332,6 +331,9 @@
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>
         <target>Uploader predefinito</target>
+      </trans-unit>
+      <trans-unit id="tl_user.useTwoFactor">
+        <source>Use two-factor authentication</source>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>

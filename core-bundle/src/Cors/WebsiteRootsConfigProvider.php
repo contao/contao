@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,11 +17,6 @@ use Doctrine\DBAL\Exception\DriverException;
 use Nelmio\CorsBundle\Options\ProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Provides the configuration for the nelmio/cors-bundle.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- */
 class WebsiteRootsConfigProvider implements ProviderInterface
 {
     /**
@@ -27,11 +24,6 @@ class WebsiteRootsConfigProvider implements ProviderInterface
      */
     private $connection;
 
-    /**
-     * Constructor.
-     *
-     * @param Connection $connection
-     */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
@@ -40,7 +32,7 @@ class WebsiteRootsConfigProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getOptions(Request $request)
+    public function getOptions(Request $request): array
     {
         if (!$this->isCorsRequest($request) || !$this->canRunDbQuery()) {
             return [];
@@ -73,12 +65,8 @@ class WebsiteRootsConfigProvider implements ProviderInterface
 
     /**
      * Checks if the request has an Origin header.
-     *
-     * @param Request $request
-     *
-     * @return bool
      */
-    private function isCorsRequest(Request $request)
+    private function isCorsRequest(Request $request): bool
     {
         return $request->headers->has('Origin')
             && $request->headers->get('Origin') !== $request->getSchemeAndHttpHost()
@@ -87,10 +75,8 @@ class WebsiteRootsConfigProvider implements ProviderInterface
 
     /**
      * Checks if the tl_page table exists.
-     *
-     * @return bool
      */
-    private function canRunDbQuery()
+    private function canRunDbQuery(): bool
     {
         try {
             return $this->connection->getSchemaManager()->tablesExist(['tl_page']);

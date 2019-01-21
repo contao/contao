@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+use FOS\HttpCache\ResponseTagger;
+
 /**
  * Parent class for front end modules.
  *
@@ -27,7 +30,7 @@ namespace Contao;
  * @property integer $rootPage
  * @property string  $navigationTpl
  * @property string  $customTpl
- * @property string  $pages
+ * @property array   $pages
  * @property string  $orderPages
  * @property boolean $showHidden
  * @property string  $customLabel
@@ -48,16 +51,8 @@ namespace Contao;
  * @property string  $inColumn
  * @property integer $skipFirst
  * @property boolean $loadFirst
- * @property string  $size
- * @property boolean $transparent
- * @property string  $flashvars
- * @property string  $altContent
- * @property string  $source
  * @property string  $singleSRC
  * @property string  $url
- * @property boolean $interactive
- * @property string  $flashID
- * @property string  $flashJS
  * @property string  $imgSize
  * @property boolean $useCaption
  * @property boolean $fullsize
@@ -87,7 +82,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class Module extends \Frontend
+abstract class Module extends Frontend
 {
 
 	/**
@@ -128,12 +123,12 @@ abstract class Module extends \Frontend
 	 */
 	public function __construct($objModule, $strColumn='main')
 	{
-		if ($objModule instanceof Model || $objModule instanceof Model\Collection)
+		if ($objModule instanceof Model || $objModule instanceof Collection)
 		{
 			/** @var ModuleModel $objModel */
 			$objModel = $objModule;
 
-			if ($objModel instanceof Model\Collection)
+			if ($objModel instanceof Collection)
 			{
 				$objModel = $objModel->current();
 			}
@@ -144,14 +139,14 @@ abstract class Module extends \Frontend
 		parent::__construct();
 
 		$this->arrData = $objModule->row();
-		$this->cssID = \StringUtil::deserialize($objModule->cssID, true);
+		$this->cssID = StringUtil::deserialize($objModule->cssID, true);
 
 		if ($this->customTpl != '' && TL_MODE == 'FE')
 		{
 			$this->strTemplate = $this->customTpl;
 		}
 
-		$arrHeadline = \StringUtil::deserialize($objModule->headline);
+		$arrHeadline = StringUtil::deserialize($objModule->headline);
 		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		$this->strColumn = $strColumn;
@@ -214,7 +209,7 @@ abstract class Module extends \Frontend
 	 */
 	public function generate()
 	{
-		$this->Template = new \FrontendTemplate($this->strTemplate);
+		$this->Template = new FrontendTemplate($this->strTemplate);
 		$this->Template->setData($this->arrData);
 
 		$this->compile();
@@ -241,6 +236,14 @@ abstract class Module extends \Frontend
 			$this->Template->class .= ' ' . implode(' ', $this->objModel->classes);
 		}
 
+		// Tag the response
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			/** @var ResponseTagger $responseTagger */
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_module.' . $this->id));
+		}
+
 		return $this->Template->parse();
 	}
 
@@ -262,7 +265,7 @@ abstract class Module extends \Frontend
 	protected function renderNavigation($pid, $level=1, $host=null, $language=null)
 	{
 		// Get all active subpages
-		$objSubpages = \PageModel::findPublishedSubpagesWithoutGuestsByPid($pid, $this->showHidden, $this instanceof ModuleSitemap);
+		$objSubpages = PageModel::findPublishedSubpagesWithoutGuestsByPid($pid, $this->showHidden, $this instanceof ModuleSitemap);
 
 		if ($objSubpages === null)
 		{
@@ -275,7 +278,7 @@ abstract class Module extends \Frontend
 		// Get all groups of the current front end user
 		if (FE_USER_LOGGED_IN)
 		{
-			$this->import('FrontendUser', 'User');
+			$this->import(FrontendUser::class, 'User');
 			$groups = $this->User->groups;
 		}
 
@@ -285,9 +288,7 @@ abstract class Module extends \Frontend
 			$this->navigationTpl = 'nav_default';
 		}
 
-		/** @var FrontendTemplate|object $objTemplate */
-		$objTemplate = new \FrontendTemplate($this->navigationTpl);
-
+		$objTemplate = new FrontendTemplate($this->navigationTpl);
 		$objTemplate->pid = $pid;
 		$objTemplate->type = \get_class($this);
 		$objTemplate->cssID = $this->cssID; // see #4897
@@ -306,7 +307,7 @@ abstract class Module extends \Frontend
 			}
 
 			$subitems = '';
-			$_groups = \StringUtil::deserialize($objSubpage->groups);
+			$_groups = StringUtil::deserialize($objSubpage->groups);
 
 			// Override the domain (see #3765)
 			if ($host !== null)
@@ -333,7 +334,7 @@ abstract class Module extends \Frontend
 
 						if (strncasecmp($href, 'mailto:', 7) === 0)
 						{
-							$href = \StringUtil::encodeEmail($href);
+							$href = StringUtil::encodeEmail($href);
 						}
 						break;
 
@@ -345,7 +346,7 @@ abstract class Module extends \Frontend
 						}
 						else
 						{
-							$objNext = \PageModel::findFirstPublishedRegularByPid($objSubpage->id);
+							$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
 						}
 
 						$isInvisible = !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time());
@@ -368,7 +369,7 @@ abstract class Module extends \Frontend
 				$trail = \in_array($objSubpage->id, $objPage->trail);
 
 				// Active page
-				if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == \Environment::get('request'))
+				if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == Environment::get('request'))
 				{
 					// Mark active forward pages (see #4822)
 					$strClass = (($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) ? 'forward' . ($trail ? ' trail' : '') : 'active') . (($subitems != '') ? ' submenu' : '') . ($objSubpage->protected ? ' protected' : '') . (($objSubpage->cssClass != '') ? ' ' . $objSubpage->cssClass : '');
@@ -394,11 +395,12 @@ abstract class Module extends \Frontend
 
 				$row['subitems'] = $subitems;
 				$row['class'] = trim($strClass);
-				$row['title'] = \StringUtil::specialchars($objSubpage->title, true);
-				$row['pageTitle'] = \StringUtil::specialchars($objSubpage->pageTitle, true);
+				$row['title'] = StringUtil::specialchars($objSubpage->title, true);
+				$row['pageTitle'] = StringUtil::specialchars($objSubpage->pageTitle, true);
 				$row['link'] = $objSubpage->title;
 				$row['href'] = $href;
-				$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0);
+				$row['rel'] = '';
+				$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0); // backwards compatibility
 				$row['target'] = '';
 				$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
 
@@ -406,6 +408,25 @@ abstract class Module extends \Frontend
 				if ($objSubpage->type == 'redirect' && $objSubpage->target)
 				{
 					$row['target'] = ' target="_blank"';
+				}
+
+				$arrRel = array();
+
+				if (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0)
+				{
+					$arrRel[] = 'nofollow';
+				}
+
+				if ($objSubpage->type == 'redirect' && $objSubpage->target)
+				{
+					$arrRel[] = 'noreferrer';
+					$arrRel[] = 'noopener';
+				}
+
+				// Override the rel attribute
+				if (!empty($arrRel))
+				{
+					$row['rel'] = ' rel="' . implode(' ', $arrRel) . '"';
 				}
 
 				$items[] = $row;
@@ -449,3 +470,5 @@ abstract class Module extends \Frontend
 		return '';
 	}
 }
+
+class_alias(Module::class, 'Module');

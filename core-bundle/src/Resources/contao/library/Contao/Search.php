@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\Database\Result;
 use Patchwork\Utf8;
 
 /**
@@ -49,7 +50,7 @@ class Search
 	 */
 	public static function indexPage($arrData)
 	{
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		$arrSet['tstamp'] = time();
 		$arrSet['url'] = $arrData['url'];
@@ -129,7 +130,7 @@ class Search
 		{
 			foreach ($GLOBALS['TL_HOOKS']['indexPage'] as $callback)
 			{
-				\System::importStatic($callback[0])->{$callback[1]}($strContent, $arrData, $arrSet);
+				System::importStatic($callback[0])->{$callback[1]}($strContent, $arrData, $arrSet);
 			}
 		}
 
@@ -151,13 +152,13 @@ class Search
 		// Get the description
 		if (preg_match('/<meta[^>]+name="description"[^>]+content="([^"]*)"[^>]*>/i', $strHead, $tags))
 		{
-			$arrData['description'] = trim(preg_replace('/ +/', ' ', \StringUtil::decodeEntities($tags[1])));
+			$arrData['description'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($tags[1])));
 		}
 
 		// Get the keywords
 		if (preg_match('/<meta[^>]+name="keywords"[^>]+content="([^"]*)"[^>]*>/i', $strHead, $tags))
 		{
-			$arrData['keywords'] = trim(preg_replace('/ +/', ' ', \StringUtil::decodeEntities($tags[1])));
+			$arrData['keywords'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($tags[1])));
 		}
 
 		// Read the title and alt attributes
@@ -172,7 +173,7 @@ class Search
 
 		// Put everything together
 		$arrSet['text'] = $arrData['title'] . ' ' . $arrData['description'] . ' ' . $strBody . ' ' . $arrData['keywords'];
-		$arrSet['text'] = trim(preg_replace('/ +/', ' ', \StringUtil::decodeEntities($arrSet['text'])));
+		$arrSet['text'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($arrSet['text'])));
 
 		// Calculate the checksum
 		$arrSet['checksum'] = md5($arrSet['text']);
@@ -232,39 +233,13 @@ class Search
 
 		unset($arrSet);
 
-		// Remove special characters
-		$strText = preg_replace(array('/- /', '/ -/', "/' /", "/ '/", '/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\w\'.:+-]/u'), ' ', $strText);
-
 		// Split words
-		$arrWords = preg_split('/ +/', Utf8::strtolower($strText));
+		$arrWords = self::splitIntoWords(Utf8::strtolower($strText), $arrData['language']);
 		$arrIndex = array();
 
 		// Index words
 		foreach ($arrWords as $strWord)
 		{
-			// Strip a leading plus (see #4497)
-			if (strncmp($strWord, '+', 1) === 0)
-			{
-				$strWord = substr($strWord, 1);
-			}
-
-			$strWord = trim($strWord);
-
-			if (!\strlen($strWord) || preg_match('/^[\.:,\'_-]+$/', $strWord))
-			{
-				continue;
-			}
-
-			if (preg_match('/^[\':,]/', $strWord))
-			{
-				$strWord = substr($strWord, 1);
-			}
-
-			if (preg_match('/[\':,.]$/', $strWord))
-			{
-				$strWord = substr($strWord, 0, -1);
-			}
-
 			if (isset($arrIndex[$strWord]))
 			{
 				$arrIndex[$strWord]++;
@@ -298,6 +273,27 @@ class Search
 	}
 
 	/**
+	 * @return string[]
+	 */
+	private static function splitIntoWords(string $strText, string $strLocale)
+	{
+		$iterator = \IntlRuleBasedBreakIterator::createWordInstance($strLocale);
+		$iterator->setText($strText);
+
+		$words = array();
+
+		foreach ($iterator->getPartsIterator() as $part)
+		{
+			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE)
+			{
+				$words[] = $part;
+			}
+		}
+
+		return $words;
+	}
+
+	/**
 	 * Search the index and return the result object
 	 *
 	 * @param string  $strKeywords The keyword string
@@ -307,16 +303,15 @@ class Search
 	 * @param integer $intOffset   An optional result offset
 	 * @param boolean $blnFuzzy    If true, the search will be fuzzy
 	 *
-	 * @return Database\Result The database result object
+	 * @return Result The database result object
 	 *
 	 * @throws \Exception If the cleaned keyword string is empty
 	 */
 	public static function searchFor($strKeywords, $blnOrSearch=false, $arrPid=array(), $intRows=0, $intOffset=0, $blnFuzzy=false)
 	{
 		// Clean the keywords
+		$strKeywords = StringUtil::decodeEntities($strKeywords);
 		$strKeywords = Utf8::strtolower($strKeywords);
-		$strKeywords = \StringUtil::decodeEntities($strKeywords);
-		$strKeywords = preg_replace(array('/\. /', '/\.$/', '/: /', '/:$/', '/, /', '/,$/', '/[^\w\' *+".:,-]/u'), ' ', $strKeywords);
 
 		// Check keyword string
 		if (!\strlen($strKeywords))
@@ -348,7 +343,7 @@ class Search
 				case '"':
 					if ($strKeyword = trim(substr($strKeyword, 1, -1)))
 					{
-						$arrPhrases[] = '[[:<:]]' . str_replace(array(' ', '*'), array('[^[:alnum:]]+', ''), $strKeyword) . '[[:>:]]';
+						$arrPhrases[] = str_replace(' ', '[^[:alnum:]]+', preg_quote($strKeyword));
 					}
 					break;
 
@@ -356,7 +351,10 @@ class Search
 				case '+':
 					if ($strKeyword = trim(substr($strKeyword, 1)))
 					{
-						$arrIncluded[] = $strKeyword;
+						foreach (self::splitIntoWords($strKeyword, $GLOBALS['TL_LANGUAGE']) as $strWord)
+						{
+							$arrIncluded[] = $strWord;
+						}
 					}
 					break;
 
@@ -364,7 +362,10 @@ class Search
 				case '-':
 					if ($strKeyword = trim(substr($strKeyword, 1)))
 					{
-						$arrExcluded[] = $strKeyword;
+						foreach (self::splitIntoWords($strKeyword, $GLOBALS['TL_LANGUAGE']) as $strWord)
+						{
+							$arrExcluded[] = $strWord;
+						}
 					}
 					break;
 
@@ -378,7 +379,10 @@ class Search
 
 				// Normal keywords
 				default:
-					$arrKeywords[] = $strKeyword;
+					foreach (self::splitIntoWords($strKeyword, $GLOBALS['TL_LANGUAGE']) as $strWord)
+					{
+						$arrKeywords[] = $strWord;
+					}
 					break;
 			}
 		}
@@ -443,7 +447,7 @@ class Search
 		{
 			foreach ($arrPhrases as $strPhrase)
 			{
-				$arrWords = explode('[^[:alnum:]]+', Utf8::substr($strPhrase, 7, -7));
+				$arrWords = self::splitIntoWords(str_replace('[^[:alnum:]]+', ' ', $strPhrase), $GLOBALS['TL_LANGUAGE']);
 				$arrAllKeywords[] = implode(' OR ', array_fill(0, \count($arrWords), 'word=?'));
 				$arrValues = array_merge($arrValues, $arrWords);
 				$intKeywords += \count($arrWords);
@@ -505,7 +509,7 @@ class Search
 		}
 
 		// Return result
-		$objResultStmt = \Database::getInstance()->prepare($strQuery);
+		$objResultStmt = Database::getInstance()->prepare($strQuery);
 
 		if ($intRows > 0)
 		{
@@ -522,7 +526,7 @@ class Search
 	 */
 	public static function removeEntry($strUrl)
 	{
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 
 		$objResult = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
 								 ->execute($strUrl);
@@ -565,3 +569,5 @@ class Search
 		return static::$objInstance;
 	}
 }
+
+class_alias(Search::class, 'Search');

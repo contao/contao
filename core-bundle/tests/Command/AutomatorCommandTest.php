@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,47 +13,47 @@
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\AutomatorCommand;
-use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Filesystem\LockHandler;
-use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Lock\Factory;
+use Symfony\Component\Lock\Store\FlockStore;
 
-/**
- * Tests the AutomatorCommand class.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- */
-class AutomatorCommandTest extends TestCase
+class AutomatorCommandTest extends CommandTestCase
 {
     /**
-     * Tests that the object can be converted to a string.
+     * @var AutomatorCommand
      */
-    public function testCanBeConvertedToString()
-    {
-        $command = new AutomatorCommand('contao:automator');
-        $command->setFramework($this->mockContaoFramework());
-
-        $this->assertContains('The name of the task:', $command->__toString());
-    }
+    private $command;
 
     /**
-     * Tests that the command is locked while running.
+     * {@inheritdoc}
      */
-    public function testIsLockedWhileRunning()
+    protected function setUp(): void
     {
-        $lock = new LockHandler('contao:automator', sys_get_temp_dir().'/'.md5('foobar'));
-        $lock->lock();
+        parent::setUp();
 
-        $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->mockApplication());
-        $command->setFramework($this->mockContaoFramework());
+        $this->command = new AutomatorCommand($this->mockContaoFramework());
+    }
 
-        $tester = new CommandTester($command);
+    public function testIsLockedWhileRunning(): void
+    {
+        $tmpDir = sys_get_temp_dir().'/'.md5($this->getFixturesDir());
+
+        if (!is_dir($tmpDir)) {
+            (new Filesystem())->mkdir($tmpDir);
+        }
+
+        $factory = new Factory(new FlockStore($tmpDir));
+
+        $lock = $factory->createLock('contao:automator');
+        $lock->acquire();
+
+        $this->command->setApplication($this->mockApplication());
+
+        $tester = new CommandTester($this->command);
         $tester->setInputs(["\n"]);
 
-        $code = $tester->execute(['command' => $command->getName()]);
+        $code = $tester->execute(['command' => $this->command->getName()]);
 
         $this->assertSame(1, $code);
         $this->assertContains('The command is already running in another process.', $tester->getDisplay());
@@ -59,64 +61,32 @@ class AutomatorCommandTest extends TestCase
         $lock->release();
     }
 
-    /**
-     * Tests selecting an invalid number.
-     */
-    public function testHandlesAnInvalidSelection()
+    public function testHandlesAnInvalidSelection(): void
     {
-        $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->mockApplication());
-        $command->setFramework($this->mockContaoFramework());
+        $this->command->setApplication($this->mockApplication());
 
-        $tester = new CommandTester($command);
+        $tester = new CommandTester($this->command);
         $tester->setInputs(["4800\n"]);
 
-        $code = $tester->execute(['command' => $command->getName()]);
+        $code = $tester->execute(['command' => $this->command->getName()]);
 
         $this->assertSame(1, $code);
         $this->assertContains('Value "4800" is invalid (see help contao:automator)', $tester->getDisplay());
     }
 
-    /**
-     * Tests passing an invalid task name.
-     */
-    public function testHandlesAnInvalidTaskName()
+    public function testHandlesAnInvalidTaskName(): void
     {
-        $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->mockApplication());
-        $command->setFramework($this->mockContaoFramework());
+        $this->command->setApplication($this->mockApplication());
 
-        $tester = new CommandTester($command);
-
-        $code = $tester->execute([
-            'command' => $command->getName(),
+        $input = [
+            'command' => $this->command->getName(),
             'task' => 'fooBar',
-        ]);
+        ];
+
+        $tester = new CommandTester($this->command);
+        $code = $tester->execute($input);
 
         $this->assertSame(1, $code);
         $this->assertContains('Invalid task "fooBar" (see help contao:automator)', $tester->getDisplay());
-    }
-
-    /**
-     * Mocks the application.
-     *
-     * @return Application
-     */
-    private function mockApplication()
-    {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', 'foobar');
-
-        $kernel = $this->createMock(KernelInterface::class);
-
-        $kernel
-            ->method('getContainer')
-            ->willReturn($container)
-        ;
-
-        $application = new Application($kernel);
-        $application->setCatchExceptions(true);
-
-        return $application;
     }
 }

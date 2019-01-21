@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,11 +18,6 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Events;
 use Contao\StringUtil;
 
-/**
- * Handles insert tags for calendars.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class InsertTagsListener
 {
     /**
@@ -28,58 +25,39 @@ class InsertTagsListener
      */
     private $framework;
 
-    /**
-     * @var array
-     */
-    private $supportedTags = [
-        'event',
-        'event_open',
-        'event_url',
-        'event_title',
-        'event_teaser',
-    ];
-
-    /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     */
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
     }
 
     /**
-     * Replaces calendar insert tags.
-     *
-     * @param string $tag
-     *
      * @return string|false
      */
-    public function onReplaceInsertTags($tag)
+    public function onReplaceInsertTags(string $tag, bool $useCache, $cacheValue, array $flags)
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
 
         if ('calendar_feed' === $key) {
-            return $this->replaceFeedInsertTag($elements[1]);
+            return $this->replaceCalendarFeedInsertTag($elements[1]);
         }
 
-        if (\in_array($key, $this->supportedTags, true)) {
-            return $this->replaceEventInsertTag($key, $elements[1]);
+        static $supportedTags = [
+            'event',
+            'event_open',
+            'event_url',
+            'event_title',
+            'event_teaser',
+        ];
+
+        if (\in_array($key, $supportedTags, true)) {
+            return $this->replaceEventInsertTag($key, $elements[1], $flags);
         }
 
         return false;
     }
 
-    /**
-     * Replaces the calendar feed insert tag.
-     *
-     * @param int $feedId
-     *
-     * @return string
-     */
-    private function replaceFeedInsertTag($feedId)
+    private function replaceCalendarFeedInsertTag(string $feedId): string
     {
         $this->framework->initialize();
 
@@ -93,65 +71,44 @@ class InsertTagsListener
         return sprintf('%sshare/%s.xml', $feed->feedBase, $feed->alias);
     }
 
-    /**
-     * Replaces an event-related insert tag.
-     *
-     * @param string $insertTag
-     * @param string $idOrAlias
-     *
-     * @return string
-     */
-    private function replaceEventInsertTag($insertTag, $idOrAlias)
+    private function replaceEventInsertTag(string $insertTag, string $idOrAlias, array $flags): string
     {
         $this->framework->initialize();
 
         /** @var CalendarEventsModel $adapter */
         $adapter = $this->framework->getAdapter(CalendarEventsModel::class);
 
-        if (null === ($event = $adapter->findByIdOrAlias($idOrAlias))) {
+        if (null === ($model = $adapter->findByIdOrAlias($idOrAlias))) {
             return '';
         }
 
-        return $this->generateReplacement($event, $insertTag);
-    }
-
-    /**
-     * Generates the replacement string.
-     *
-     * @param CalendarEventsModel $event
-     * @param string              $insertTag
-     *
-     * @return string
-     */
-    private function generateReplacement(CalendarEventsModel $event, $insertTag)
-    {
-        /** @var Events $adapter */
-        $adapter = $this->framework->getAdapter(Events::class);
+        /** @var Events $events */
+        $events = $this->framework->getAdapter(Events::class);
 
         switch ($insertTag) {
             case 'event':
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
-                    $adapter->generateEventUrl($event),
-                    StringUtil::specialchars($event->title),
-                    $event->title
+                    $events->generateEventUrl($model, \in_array('absolute', $flags, true)),
+                    StringUtil::specialchars($model->title),
+                    $model->title
                 );
 
             case 'event_open':
                 return sprintf(
                     '<a href="%s" title="%s">',
-                    $adapter->generateEventUrl($event),
-                    StringUtil::specialchars($event->title)
+                    $events->generateEventUrl($model, \in_array('absolute', $flags, true)),
+                    StringUtil::specialchars($model->title)
                 );
 
             case 'event_url':
-                return $adapter->generateEventUrl($event);
+                return $events->generateEventUrl($model, \in_array('absolute', $flags, true));
 
             case 'event_title':
-                return StringUtil::specialchars($event->title);
+                return StringUtil::specialchars($model->title);
 
             case 'event_teaser':
-                return StringUtil::toHtml5($event->teaser);
+                return StringUtil::toHtml5($model->teaser);
         }
 
         return '';

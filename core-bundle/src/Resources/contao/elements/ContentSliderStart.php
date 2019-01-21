@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentSliderStart extends \ContentElement
+class ContentSliderStart extends ContentElement
 {
 
 	/**
@@ -33,10 +33,7 @@ class ContentSliderStart extends \ContentElement
 		{
 			$this->strTemplate = 'be_wildcard';
 
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate($this->strTemplate);
-
-			$this->Template = $objTemplate;
+			$this->Template = new BackendTemplate($this->strTemplate);
 			$this->Template->title = $this->headline;
 		}
 
@@ -44,3 +41,5 @@ class ContentSliderStart extends \ContentElement
 		$this->Template->config = $this->sliderDelay . ',' . $this->sliderSpeed . ',' . $this->sliderStartSlide . ',' . $this->sliderContinuous;
 	}
 }
+
+class_alias(ContentSliderStart::class, 'ContentSliderStart');

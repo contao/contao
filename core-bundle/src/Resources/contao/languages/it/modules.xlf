@@ -121,6 +121,12 @@
         <source>Maintain or update Contao</source>
         <target>Gestisci o aggiorna Contao</target>
       </trans-unit>
+      <trans-unit id="MOD.security.0">
+        <source>Security</source>
+      </trans-unit>
+      <trans-unit id="MOD.security.1">
+        <source>Secure your account</source>
+      </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
         <target>Ripristina</target>
@@ -352,14 +358,6 @@
       <trans-unit id="FMD.miscellaneous">
         <source>Miscellaneous</source>
         <target>Varie</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.0">
-        <source>Flash movie</source>
-        <target>Filmato Flash</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.1">
-        <source>Embeds a Flash movie into the page</source>
-        <target>inserisce un filmato Flash nella pagina</target>
       </trans-unit>
       <trans-unit id="FMD.randomImage.0">
         <source>Random image</source>

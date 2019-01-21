@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,22 +12,14 @@
 
 namespace Contao\CoreBundle\DataContainer;
 
-use Contao\CoreBundle\Exception\PaletteNotFoundException;
-use Contao\CoreBundle\Exception\PalettePositionException;
 use Contao\StringUtil;
 
-/**
- * Adds fields and legends to DCA palettes.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PaletteManipulator
 {
-    const POSITION_BEFORE = 'before';
-    const POSITION_AFTER = 'after';
-    const POSITION_PREPEND = 'prepend';
-    const POSITION_APPEND = 'append';
+    public const POSITION_BEFORE = 'before';
+    public const POSITION_AFTER = 'after';
+    public const POSITION_PREPEND = 'prepend';
+    public const POSITION_APPEND = 'append';
 
     /**
      * @var array
@@ -38,28 +32,22 @@ class PaletteManipulator
     private $fields = [];
 
     /**
-     * Creates a new object instance.
-     *
-     * @return static
+     * @var array
      */
-    public static function create()
+    private $removes = [];
+
+    public static function create(): self
     {
         return new static();
     }
 
     /**
-     * Adds a new legend.
-     *
      * If the legend already exists, nothing will be changed.
      *
-     * @param string       $name
      * @param string|array $parent
-     * @param string       $position
      * @param bool         $hide
-     *
-     * @return static
      */
-    public function addLegend($name, $parent, $position = self::POSITION_AFTER, $hide = false)
+    public function addLegend(string $name, $parent, string $position = self::POSITION_AFTER, $hide = false): self
     {
         $this->validatePosition($position);
 
@@ -74,21 +62,16 @@ class PaletteManipulator
     }
 
     /**
-     * Adds a new field.
-     *
      * If $position is PREPEND or APPEND, pass a legend as parent; otherwise pass a field name.
      *
      * @param string|array               $name
      * @param string|array               $parent
-     * @param string                     $position
      * @param string|array|\Closure|null $fallback
      * @param string                     $fallbackPosition
      *
      * @throws PalettePositionException
-     *
-     * @return static
      */
-    public function addField($name, $parent, $position = self::POSITION_AFTER, $fallback = null, $fallbackPosition = self::POSITION_APPEND)
+    public function addField($name, $parent, string $position = self::POSITION_AFTER, $fallback = null, $fallbackPosition = self::POSITION_APPEND): self
     {
         $this->validatePosition($position);
 
@@ -108,14 +91,24 @@ class PaletteManipulator
     }
 
     /**
-     * Applies the changes to a palette.
+     * If no legend is given, the field is removed everywhere.
      *
-     * @param string $name
-     * @param string $table
-     *
-     * @return static
+     * @param string|array $name
      */
-    public function applyToPalette($name, $table)
+    public function removeField($name, string $legend = null): self
+    {
+        $this->removes[] = [
+            'fields' => (array) $name,
+            'parents' => (array) $legend,
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function applyToPalette($name, string $table): self
     {
         $palettes = &$GLOBALS['TL_DCA'][$table]['palettes'];
 
@@ -128,15 +121,7 @@ class PaletteManipulator
         return $this;
     }
 
-    /**
-     * Applies the changes to a subpalette.
-     *
-     * @param string $name
-     * @param string $table
-     *
-     * @return static
-     */
-    public function applyToSubpalette($name, $table)
+    public function applyToSubpalette(string $name, string $table): self
     {
         $subpalettes = &$GLOBALS['TL_DCA'][$table]['subpalettes'];
 
@@ -149,15 +134,7 @@ class PaletteManipulator
         return $this;
     }
 
-    /**
-     * Applies the changes to a palette string.
-     *
-     * @param string $palette
-     * @param bool   $skipLegends
-     *
-     * @return string
-     */
-    public function applyToString($palette, $skipLegends = false)
+    public function applyToString(string $palette, bool $skipLegends = false): string
     {
         $config = $this->explode($palette);
 
@@ -176,17 +153,17 @@ class PaletteManipulator
             $this->applyField($config, $field, $skipLegends);
         }
 
+        foreach ($this->removes as $remove) {
+            $this->applyRemove($config, $remove);
+        }
+
         return $this->implode($config);
     }
 
     /**
-     * Validates the position.
-     *
-     * @param string $position
-     *
      * @throws PalettePositionException
      */
-    private function validatePosition($position)
+    private function validatePosition(string $position): void
     {
         static $positions = [
             self::POSITION_BEFORE,
@@ -203,13 +180,11 @@ class PaletteManipulator
     /**
      * Converts a palette string to a configuration array.
      *
-     * @param string $palette
-     *
-     * @return array
+     * @return array<string,array<string,string[]|bool>>
      */
-    private function explode($palette)
+    private function explode(string $palette): array
     {
-        if ('' === (string) $palette) {
+        if ('' === $palette) {
             return [];
         }
 
@@ -237,12 +212,8 @@ class PaletteManipulator
 
     /**
      * Converts a configuration array to a palette string.
-     *
-     * @param array $config
-     *
-     * @return string
      */
-    private function implode(array $config)
+    private function implode(array $config): string
     {
         $palette = '';
 
@@ -265,13 +236,7 @@ class PaletteManipulator
         return $palette;
     }
 
-    /**
-     * Adds a new legend to the configuration array.
-     *
-     * @param array $config
-     * @param array $action
-     */
-    private function applyLegend(array &$config, array $action)
+    private function applyLegend(array &$config, array $action): void
     {
         // Legend already exists, do nothing
         if (array_key_exists($action['name'], $config)) {
@@ -309,14 +274,7 @@ class PaletteManipulator
         $config += $template;
     }
 
-    /**
-     * Adds a new field to the configuration array.
-     *
-     * @param array $config
-     * @param array $action
-     * @param bool  $skipLegends
-     */
-    private function applyField(array &$config, array $action, $skipLegends = false)
+    private function applyField(array &$config, array $action, bool $skipLegends = false): void
     {
         if (self::POSITION_PREPEND === $action['position'] || self::POSITION_APPEND === $action['position']) {
             $this->applyFieldToLegend($config, $action, $skipLegends);
@@ -325,14 +283,7 @@ class PaletteManipulator
         }
     }
 
-    /**
-     * Adds fields to a legend.
-     *
-     * @param array $config
-     * @param array $action
-     * @param bool  $skipLegends
-     */
-    private function applyFieldToLegend(array &$config, array $action, $skipLegends = false)
+    private function applyFieldToLegend(array &$config, array $action, bool $skipLegends = false): void
     {
         // If $skipLegends is true, we usually only have one legend without name, so we simply append to that
         if ($skipLegends) {
@@ -352,14 +303,7 @@ class PaletteManipulator
         $this->applyFallback($config, $action, $skipLegends);
     }
 
-    /**
-     * Adds a field after a field.
-     *
-     * @param array $config
-     * @param array $action
-     * @param bool  $skipLegends
-     */
-    private function applyFieldToField(array &$config, array $action, $skipLegends = false)
+    private function applyFieldToField(array &$config, array $action, bool $skipLegends = false): void
     {
         $offset = (int) (self::POSITION_AFTER === $action['position']);
 
@@ -379,15 +323,9 @@ class PaletteManipulator
     }
 
     /**
-     * Applies the fallback when adding a field fails.
-     *
      * Adds a new legend if possible or appends to the last one.
-     *
-     * @param array $config
-     * @param array $action
-     * @param bool  $skipLegends
      */
-    private function applyFallback(array &$config, array $action, $skipLegends = false)
+    private function applyFallback(array &$config, array $action, bool $skipLegends = false): void
     {
         if (\is_callable($action['fallback'])) {
             $action['fallback']($config, $action, $skipLegends);
@@ -396,13 +334,7 @@ class PaletteManipulator
         }
     }
 
-    /**
-     * Aplies the fallback to a palette.
-     *
-     * @param array $config
-     * @param array $action
-     */
-    private function applyFallbackPalette(array &$config, array $action)
+    private function applyFallbackPalette(array &$config, array $action): void
     {
         end($config);
         $fallback = key($config);
@@ -430,17 +362,21 @@ class PaletteManipulator
         array_splice($config[$fallback]['fields'], $offset, 0, $action['fields']);
     }
 
+    private function applyRemove(array &$config, array $remove): void
+    {
+        foreach ($config as $legend => $group) {
+            if (empty($remove['parents']) || \in_array($legend, $remove['parents'], true)) {
+                $config[$legend]['fields'] = \array_diff($group['fields'], $remove['fields']);
+            }
+        }
+    }
+
     /**
-     * Searches all legends for a field.
-     *
      * Having the same field in multiple legends is not supported by Contao, so we don't handle that case.
-     *
-     * @param array  $config
-     * @param string $field
      *
      * @return string|false
      */
-    private function findLegendForField(array &$config, $field)
+    private function findLegendForField(array &$config, string $field)
     {
         foreach ($config as $legend => $group) {
             if (\in_array($field, $group['fields'], true)) {
@@ -451,17 +387,7 @@ class PaletteManipulator
         return false;
     }
 
-    /**
-     * Tries to apply to a parent.
-     *
-     * @param array  $config
-     * @param array  $action
-     * @param string $key
-     * @param string $position
-     *
-     * @return bool
-     */
-    private function canApplyToParent(array &$config, array $action, $key, $position)
+    private function canApplyToParent(array &$config, array $action, string $key, string $position): bool
     {
         foreach ($action[$key] as $parent) {
             if (array_key_exists($parent, $config)) {

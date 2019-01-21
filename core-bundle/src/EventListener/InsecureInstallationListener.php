@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,32 +15,19 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-/**
- * Ensures that the document root is secure.
- *
- * @author Dominik Tomasi <https://github.com/dtomasi>
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class InsecureInstallationListener
 {
     /**
-     * @var array
-     */
-    private $localIps = ['127.0.0.1', 'fe80::1', '::1'];
-
-    /**
      * Throws an exception if the document root is insecure.
-     *
-     * @param GetResponseEvent $event
      *
      * @throws InsecureInstallationException
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event): void
     {
         $request = $event->getRequest();
 
         // Skip the check on localhost
-        if (\in_array($request->getClientIp(), $this->localIps, true)) {
+        if (\in_array($request->getClientIp(), ['127.0.0.1', 'fe80::1', '::1'], true)) {
             return;
         }
 

@@ -18,7 +18,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormRadioButton extends \Widget
+class FormRadioButton extends Widget
 {
 
 	/**
@@ -72,7 +72,7 @@ class FormRadioButton extends \Widget
 				break;
 
 			case 'options':
-				$this->arrOptions = \StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue);
 				break;
 
 			case 'rgxp':
@@ -144,7 +144,7 @@ class FormRadioButton extends \Widget
 				$arrOptions[] = array
 				(
 					'type'  => 'group_start',
-					'label' => \StringUtil::specialchars($arrOption['label'])
+					'label' => StringUtil::specialchars($arrOption['label'])
 				);
 
 				$blnHasGroups = true;
@@ -241,3 +241,5 @@ class FormRadioButton extends \Widget
 		}
 	}
 }
+
+class_alias(FormRadioButton::class, 'FormRadioButton');

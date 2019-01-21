@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,45 +14,30 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\InsertTags;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Handles insert tag requests.
+ * @internal Do not use this controller in your code
  *
- * Do not just call this Controller directly! It is supposed to be used within ESI requests that are protected by
- * the fragment uri signer of Symfony. If you call it directly, make sure you check for all permissions needed because
- * insert tags can contain arbitrary data!
- *
- * @author Yanick Witschi <https://github.com/toflar>
+ * It is supposed to be used within ESI requests that are protected by the
+ * Symfony fragment URI signer. If you use it directly, make sure to add a
+ * permission check, because insert tags can contain arbitrary data!
  */
-class InsertTagsController extends Controller
+class InsertTagsController extends AbstractController
 {
     /**
      * @var ContaoFrameworkInterface
      */
     private $framework;
 
-    /**
-     * Constructor.
-     *
-     * @param $framework
-     */
-    public function __construct($framework)
+    public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
     }
 
-    /**
-     * Renders an insert tag.
-     *
-     * @param Request $request
-     * @param string  $insertTag
-     *
-     * @return Response
-     */
-    public function renderAction(Request $request, $insertTag)
+    public function renderAction(Request $request, string $insertTag): Response
     {
         $this->framework->initialize();
 

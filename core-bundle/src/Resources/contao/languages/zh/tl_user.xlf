@@ -41,13 +41,13 @@
         <source>Here you can override the global back end theme.</source>
         <target>可覆盖全局后台主题</target>
       </trans-unit>
-      <trans-unit id="tl_user.limitWidth.0">
-        <source>Limit width</source>
-        <target>限制宽度</target>
+      <trans-unit id="tl_user.fullscreen.0">
+        <source>Fullscreen</source>
+        <target>全屏</target>
       </trans-unit>
-      <trans-unit id="tl_user.limitWidth.1">
-        <source>Limit the maximum width of the back end to 1140px.</source>
-        <target>限制后台最大宽度为1140px。</target>
+      <trans-unit id="tl_user.fullscreen.1">
+        <source>Do not limit the width of the back end.</source>
+        <target>请不要限制后台宽度。</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
@@ -332,6 +332,9 @@
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>
         <target>默认的上载器</target>
+      </trans-unit>
+      <trans-unit id="tl_user.useTwoFactor">
+        <source>Use two-factor authentication</source>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>

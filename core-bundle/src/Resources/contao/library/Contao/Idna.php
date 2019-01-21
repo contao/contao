@@ -326,3 +326,5 @@ class Idna
 		return $strReturn;
 	}
 }
+
+class_alias(Idna::class, 'Idna');

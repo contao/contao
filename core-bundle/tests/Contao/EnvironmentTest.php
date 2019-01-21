@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,34 +15,47 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Contao\System;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Tests the Environment class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @group contao3
- */
 class EnvironmentTest extends TestCase
 {
     /**
+     * @var string
+     */
+    public $rootDir;
+
+    /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
+        $this->rootDir = strtr($this->getFixturesDir(), '\\', '/');
+
         Environment::reset();
         Environment::set('path', '/core');
+
+        $request = new Request();
+        $request->server->set('REMOTE_ADDR', '123.456.789.0');
+        $request->server->set('SCRIPT_NAME', '/core/index.php');
+        $request->server->set('HTTPS', 'on');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $container = new ContainerBuilder();
+        $container->set('request_stack', $requestStack);
+
+        System::setContainer($container);
 
         require __DIR__.'/../../src/Resources/contao/config/default.php';
         require __DIR__.'/../../src/Resources/contao/config/agents.php';
     }
 
-    /**
-     * Tests the mod_php environment.
-     */
-    public function testHandlesModPhp()
+    public function testHandlesModPhp(): void
     {
         $this->setSapi('apache');
 
@@ -55,8 +70,8 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
-        $_SERVER['DOCUMENT_ROOT'] = $this->getRootDir();
-        $_SERVER['SCRIPT_FILENAME'] = $this->getRootDir().'/core/index.php';
+        $_SERVER['DOCUMENT_ROOT'] = $this->rootDir;
+        $_SERVER['SCRIPT_FILENAME'] = $this->rootDir.'/core/index.php';
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
         $_SERVER['QUERY_STRING'] = 'do=test';
         $_SERVER['REQUEST_URI'] = '/core/en/academy.html?do=test';
@@ -66,10 +81,7 @@ class EnvironmentTest extends TestCase
         $this->runTests();
     }
 
-    /**
-     * Tests the cgi_fcgi environment.
-     */
-    public function testHandlesCgiFcgi()
+    public function testHandlesCgiFcgi(): void
     {
         $this->setSapi('cgi_fcgi');
 
@@ -84,8 +96,8 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
-        $_SERVER['DOCUMENT_ROOT'] = $this->getRootDir();
-        $_SERVER['SCRIPT_FILENAME'] = $this->getRootDir().'/core/index.php';
+        $_SERVER['DOCUMENT_ROOT'] = $this->rootDir;
+        $_SERVER['SCRIPT_FILENAME'] = $this->rootDir.'/core/index.php';
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
         $_SERVER['QUERY_STRING'] = 'do=test';
         $_SERVER['REQUEST_URI'] = '/core/en/academy.html?do=test';
@@ -99,10 +111,7 @@ class EnvironmentTest extends TestCase
         $this->runTests();
     }
 
-    /**
-     * Tests the fpm_fcgi environment.
-     */
-    public function testHandlesFpmFcgi()
+    public function testHandlesFpmFcgi(): void
     {
         $this->setSapi('fpm_fcgi');
 
@@ -117,8 +126,8 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
-        $_SERVER['DOCUMENT_ROOT'] = $this->getRootDir();
-        $_SERVER['SCRIPT_FILENAME'] = $this->getRootDir().'/core/index.php';
+        $_SERVER['DOCUMENT_ROOT'] = $this->rootDir;
+        $_SERVER['SCRIPT_FILENAME'] = $this->rootDir.'/core/index.php';
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
         $_SERVER['QUERY_STRING'] = 'do=test';
         $_SERVER['REQUEST_URI'] = 'http://localhost/core/en/academy.html?do=test'; // see #8661
@@ -130,30 +139,8 @@ class EnvironmentTest extends TestCase
         $this->runTests();
     }
 
-    /**
-     * Returns the normalized root directory.
-     *
-     * @return string
-     */
-    public function getRootDir()
+    private function runTests(): void
     {
-        return strtr(parent::getRootDir(), '\\', '/');
-    }
-
-    /**
-     * Runs the actual tests.
-     */
-    protected function runTests()
-    {
-        $container = $this->mockContainerWithContaoScopes();
-        $request = $container->get('request_stack')->getCurrentRequest();
-
-        $request->server->set('REMOTE_ADDR', '123.456.789.0');
-        $request->server->set('SCRIPT_NAME', '/core/index.php');
-        $request->server->set('HTTPS', 'on');
-
-        System::setContainer($container);
-
         $agent = Environment::get('agent');
 
         $this->assertSame('mac', $agent->os);
@@ -166,9 +153,9 @@ class EnvironmentTest extends TestCase
         $this->assertFalse($agent->mobile);
 
         $this->assertSame('HTTP/1.1', Environment::get('serverProtocol'));
-        $this->assertSame($this->getRootDir().'/core/index.php', Environment::get('scriptFilename'));
+        $this->assertSame($this->rootDir.'/core/index.php', Environment::get('scriptFilename'));
         $this->assertSame('/core/index.php', Environment::get('scriptName'));
-        $this->assertSame($this->getRootDir(), Environment::get('documentRoot'));
+        $this->assertSame($this->rootDir, Environment::get('documentRoot'));
         $this->assertSame('/core/en/academy.html?do=test', Environment::get('requestUri'));
         $this->assertSame(['de-DE', 'de', 'en-GB', 'en'], Environment::get('httpAcceptLanguage'));
         $this->assertSame(['gzip', 'deflate', 'sdch'], Environment::get('httpAcceptEncoding'));
@@ -188,15 +175,9 @@ class EnvironmentTest extends TestCase
         $this->assertFalse(Environment::get('isAjaxRequest'));
     }
 
-    /**
-     * Overrides the SAPI value.
-     *
-     * @param string $sapi
-     */
-    private function setSapi($sapi)
+    private function setSapi(string $sapi): void
     {
         $reflection = new \ReflectionClass(Environment::class);
-
         $property = $reflection->getProperty('strSapi');
         $property->setAccessible(true);
         $property->setValue($sapi);

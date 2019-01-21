@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Patchwork\Utf8;
 
@@ -22,7 +23,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleNewsReader extends \ModuleNews
+class ModuleNewsReader extends ModuleNews
 {
 
 	/**
@@ -34,15 +35,15 @@ class ModuleNewsReader extends \ModuleNews
 	/**
 	 * Display a wildcard in the back end
 	 *
+	 * @throws InternalServerErrorException
+	 *
 	 * @return string
 	 */
 	public function generate()
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('be_wildcard');
-
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsreader'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -53,35 +54,22 @@ class ModuleNewsReader extends \ModuleNews
 		}
 
 		// Set the item from the auto_item parameter
-		if (!isset($_GET['items']) && \Config::get('useAutoItem') && isset($_GET['auto_item']))
+		if (!isset($_GET['items']) && Config::get('useAutoItem') && isset($_GET['auto_item']))
 		{
-			\Input::setGet('items', \Input::get('auto_item'));
+			Input::setGet('items', Input::get('auto_item'));
 		}
 
-		// Do not index or cache the page if no news item has been specified
-		if (!\Input::get('items'))
+		// Return an empty string if "items" is not set (to combine list and reader on same page)
+		if (!Input::get('items'))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
 			return '';
 		}
 
-		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
+		$this->news_archives = $this->sortOutProtected(StringUtil::deserialize($this->news_archives));
 
-		// Do not index or cache the page if there are no archives
 		if (empty($this->news_archives) || !\is_array($this->news_archives))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
-			return '';
+			throw new InternalServerErrorException('The news reader ID ' . $this->id . ' has no archives specified.', $this->id);
 		}
 
 		return parent::generate();
@@ -100,29 +88,38 @@ class ModuleNewsReader extends \ModuleNews
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
 		// Get the news item
-		$objArticle = \NewsModel::findPublishedByParentAndIdOrAlias(\Input::get('items'), $this->news_archives);
+		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->news_archives);
 
-		if (null === $objArticle)
+		// The news item does not exist or has an external target (see #33)
+		if (null === $objArticle || $objArticle->source != 'default')
 		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		$arrArticle = $this->parseArticle($objArticle);
 		$this->Template->articles = $arrArticle;
 
-		// Overwrite the page title (see #2853 and #4955)
-		if ($objArticle->headline != '')
+		// Overwrite the page title (see #2853, #4955 and #87)
+		if ($objArticle->pageTitle)
 		{
-			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objArticle->headline));
+			$objPage->pageTitle = $objArticle->pageTitle;
+		}
+		elseif ($objArticle->headline)
+		{
+			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objArticle->headline));
 		}
 
 		// Overwrite the page description
-		if ($objArticle->teaser != '')
+		if ($objArticle->description)
+		{
+			$objPage->description = $objArticle->description;
+		}
+		elseif ($objArticle->teaser)
 		{
 			$objPage->description = $this->prepareMetaDescription($objArticle->teaser);
 		}
 
-		$bundles = \System::getContainer()->getParameter('kernel.bundles');
+		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
 		if ($objArticle->noComments || !isset($bundles['ContaoCommentsBundle']))
@@ -146,7 +143,7 @@ class ModuleNewsReader extends \ModuleNews
 		$intHl = min((int) str_replace('h', '', $this->hl), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
-		$this->import('Comments');
+		$this->import(Comments::class, 'Comments');
 		$arrNotifies = array();
 
 		// Notify the system administrator
@@ -178,3 +175,5 @@ class ModuleNewsReader extends \ModuleNews
 		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_news', $objArticle->id, $arrNotifies);
 	}
 }
+
+class_alias(ModuleNewsReader::class, 'ModuleNewsReader');

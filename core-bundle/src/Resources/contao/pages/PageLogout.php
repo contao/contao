@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use League\Uri\Components\Query;
+use League\Uri\Http;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -17,7 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PageLogout extends \Frontend
+class PageLogout extends Frontend
 {
 
 	/**
@@ -35,8 +37,8 @@ class PageLogout extends \Frontend
 			$_SESSION['LAST_PAGE_VISITED'] = $this->getReferer();
 		}
 
-		$this->import('FrontendUser', 'User');
-		$strRedirect = \Environment::get('base');
+		$strLogoutUrl = System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
+		$strRedirect = Environment::get('base');
 
 		// Redirect to last page visited
 		if ($objPage->redirectBack && !empty($_SESSION['LAST_PAGE_VISITED']))
@@ -51,8 +53,14 @@ class PageLogout extends \Frontend
 			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 
-		$this->User->logout();
+		$uri = Http::createFromString($strLogoutUrl);
 
-		return new RedirectResponse($strRedirect);
+		// Add the redirect= parameter to the logout URL
+		$query = new Query($uri->getQuery());
+		$query = $query->merge('redirect=' . $strRedirect);
+
+		return new RedirectResponse((string) $uri->withQuery((string) $query));
 	}
 }
+
+class_alias(PageLogout::class, 'PageLogout');

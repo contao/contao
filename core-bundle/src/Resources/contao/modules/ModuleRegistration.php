@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\OptIn\OptIn;
 use Patchwork\Utf8;
 
 /**
@@ -17,7 +18,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleRegistration extends \Module
+class ModuleRegistration extends Module
 {
 
 	/**
@@ -35,9 +36,7 @@ class ModuleRegistration extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('be_wildcard');
-
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['registration'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -47,7 +46,7 @@ class ModuleRegistration extends \Module
 			return $objTemplate->parse();
 		}
 
-		$this->editable = \StringUtil::deserialize($this->editable);
+		$this->editable = StringUtil::deserialize($this->editable);
 
 		// Return if there are no editable fields
 		if (empty($this->editable) || !\is_array($this->editable))
@@ -68,7 +67,7 @@ class ModuleRegistration extends \Module
 
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
-		\System::loadLanguageFile('tl_member');
+		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
 		// Call onload_callback (e.g. to check permissions)
@@ -89,7 +88,7 @@ class ModuleRegistration extends \Module
 		}
 
 		// Activate account
-		if (strncmp(\Input::get('token'), 'RG', 2) === 0)
+		if (strncmp(Input::get('token'), 'reg-', 4) === 0)
 		{
 			$this->activateAcount();
 
@@ -98,10 +97,7 @@ class ModuleRegistration extends \Module
 
 		if ($this->memberTpl != '')
 		{
-			/** @var FrontendTemplate|object $objTemplate */
-			$objTemplate = new \FrontendTemplate($this->memberTpl);
-
-			$this->Template = $objTemplate;
+			$this->Template = new FrontendTemplate($this->memberTpl);
 			$this->Template->setData($this->arrData);
 		}
 
@@ -145,7 +141,7 @@ class ModuleRegistration extends \Module
 			/** @var FormCaptcha $objCaptcha */
 			$objCaptcha = new $strClass($arrCaptcha);
 
-			if (\Input::post('FORM_SUBMIT') == $strFormId)
+			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
 				$objCaptcha->validate();
 
@@ -159,7 +155,7 @@ class ModuleRegistration extends \Module
 		$objMember = null;
 
 		// Check for a follow-up registration (see #7992)
-		if ($this->reg_activate && \Input::post('email', true) != '' && ($objMember = \MemberModel::findUnactivatedByEmail(\Input::post('email', true))) !== null)
+		if ($this->reg_activate && Input::post('email', true) != '' && ($objMember = MemberModel::findUnactivatedByEmail(Input::post('email', true))) !== null)
 		{
 			$this->resendActivationMail($objMember);
 
@@ -171,7 +167,7 @@ class ModuleRegistration extends \Module
 		$hasUpload = false;
 		$i = 0;
 
-		// Build form
+		// Build the form
 		foreach ($this->editable as $field)
 		{
 			$arrData = $GLOBALS['TL_DCA']['tl_member']['fields'][$field];
@@ -200,13 +196,15 @@ class ModuleRegistration extends \Module
 			$arrData['eval']['required'] = $arrData['eval']['mandatory'];
 
 			// Unset the unique field check upon follow-up registrations
-			if ($objMember !== null && $arrData['eval']['unique'] && \Input::post($field) == $objMember->$field)
+			if ($objMember !== null && $arrData['eval']['unique'] && Input::post($field) == $objMember->$field)
 			{
 				$arrData['eval']['unique'] = false;
 			}
 
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $arrData['default'], '', '', $this));
 
+			// Append the module ID to prevent duplicate IDs (see #1493)
+			$objWidget->id .= '_' . $this->id;
 			$objWidget->storeValues = true;
 			$objWidget->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
 
@@ -217,13 +215,13 @@ class ModuleRegistration extends \Module
 			}
 
 			// Validate input
-			if (\Input::post('FORM_SUBMIT') == $strFormId)
+			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
 				$objWidget->validate();
 				$varValue = $objWidget->value;
 
 				// Check whether the password matches the username
-				if ($objWidget instanceof FormPassword && password_verify(\Input::post('username'), $varValue))
+				if ($objWidget instanceof FormPassword && password_verify(Input::post('username'), $varValue))
 				{
 					$objWidget->addError($GLOBALS['TL_LANG']['ERR']['passwordName']);
 				}
@@ -235,7 +233,7 @@ class ModuleRegistration extends \Module
 				{
 					try
 					{
-						$objDate = new \Date($varValue, \Date::getFormatFromRgxp($rgxp));
+						$objDate = new Date($varValue, Date::getFormatFromRgxp($rgxp));
 						$varValue = $objDate->tstamp;
 					}
 					catch (\OutOfBoundsException $e)
@@ -291,7 +289,7 @@ class ModuleRegistration extends \Module
 					// Encrypt the value (see #7815)
 					if ($arrData['eval']['encrypt'])
 					{
-						$varValue = \Encryption::encrypt($varValue);
+						$varValue = Encryption::encrypt($varValue);
 					}
 
 					// Set the new value
@@ -327,7 +325,7 @@ class ModuleRegistration extends \Module
 		$this->Template->hasError = $doNotSubmit;
 
 		// Create new user if there are no errors
-		if (\Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
+		if (Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
 		{
 			$this->createNewUser($arrUser);
 		}
@@ -350,8 +348,8 @@ class ModuleRegistration extends \Module
 
 		$this->Template->categories = $arrGroups;
 		$this->Template->formId = $strFormId;
-		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['register']);
-		$this->Template->action = \Environment::get('indexFreeRequest');
+		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['register']);
+		$this->Template->action = Environment::get('indexFreeRequest');
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$this->Template->captcha = $arrFields['captcha']['captcha'];
@@ -366,7 +364,6 @@ class ModuleRegistration extends \Module
 	{
 		$arrData['tstamp'] = time();
 		$arrData['login'] = $this->reg_allowLogin;
-		$arrData['activation'] = 'RG' . substr(md5(uniqid(mt_rand(), true)), 2);
 		$arrData['dateAdded'] = $arrData['tstamp'];
 
 		// Set default groups
@@ -378,12 +375,6 @@ class ModuleRegistration extends \Module
 		// Disable account
 		$arrData['disable'] = 1;
 
-		// Send activation e-mail
-		if ($this->reg_activate)
-		{
-			$this->sendActivationMail($arrData);
-		}
-
 		// Make sure newsletter is an array
 		if (isset($arrData['newsletter']) && !\is_array($arrData['newsletter']))
 		{
@@ -391,30 +382,39 @@ class ModuleRegistration extends \Module
 		}
 
 		// Create the user
-		$objNewUser = new \MemberModel();
+		$objNewUser = new MemberModel();
 		$objNewUser->setRow($arrData);
 		$objNewUser->save();
+
+		// Store the new ID (see https://github.com/contao/contao/pull/196#discussion_r243555399)
+		$arrData['id'] = $objNewUser->id;
+
+		// Send activation e-mail
+		if ($this->reg_activate)
+		{
+			$this->sendActivationMail($arrData);
+		}
 
 		// Assign home directory
 		if ($this->reg_assignDir)
 		{
-			$objHomeDir = \FilesModel::findByUuid($this->reg_homeDir);
+			$objHomeDir = FilesModel::findByUuid($this->reg_homeDir);
 
 			if ($objHomeDir !== null)
 			{
-				$this->import('Files');
-				$strUserDir = \StringUtil::standardize($arrData['username']) ?: 'user_' . $objNewUser->id;
+				$this->import(Files::class, 'Files');
+				$strUserDir = StringUtil::standardize($arrData['username']) ?: 'user_' . $objNewUser->id;
 
 				// Add the user ID if the directory exists
-				while (is_dir(TL_ROOT . '/' . $objHomeDir->path . '/' . $strUserDir))
+				while (is_dir(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objHomeDir->path . '/' . $strUserDir))
 				{
 					$strUserDir .= '_' . $objNewUser->id;
 				}
 
 				// Create the user folder
-				new \Folder($objHomeDir->path . '/' . $strUserDir);
+				new Folder($objHomeDir->path . '/' . $strUserDir);
 
-				$objUserDir = \FilesModel::findByPath($objHomeDir->path . '/' . $strUserDir);
+				$objUserDir = FilesModel::findByPath($objHomeDir->path . '/' . $strUserDir);
 
 				// Save the folder ID
 				$objNewUser->assignDir = 1;
@@ -434,7 +434,7 @@ class ModuleRegistration extends \Module
 		}
 
 		// Create the initial version (see #7816)
-		$objVersions = new \Versions('tl_member', $objNewUser->id);
+		$objVersions = new Versions('tl_member', $objNewUser->id);
 		$objVersions->setUsername($objNewUser->username);
 		$objVersions->setUserId(0);
 		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
@@ -458,17 +458,22 @@ class ModuleRegistration extends \Module
 	/**
 	 * Send the activation mail
 	 *
-	 * @param array $arrData
+	 * @param MemberModel $objNewUser
 	 */
 	protected function sendActivationMail($arrData)
 	{
+		/** @var OptIn $optIn */
+		$optIn = System::getContainer()->get('contao.opt-in');
+		$optInToken = $optIn->create('reg-', $arrData['email'], array('tl_member'=>array($arrData['id'])));
+
 		// Prepare the simple token data
 		$arrTokenData = $arrData;
-		$arrTokenData['domain'] = \Idna::decode(\Environment::get('host'));
-		$arrTokenData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $arrData['activation'];
+		$arrTokenData['activation'] = $optInToken->getIdentifier();
+		$arrTokenData['domain'] = Idna::decode(Environment::get('host'));
+		$arrTokenData['link'] = Idna::decode(Environment::get('base')) . Environment::get('request') . ((strpos(Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 		$arrTokenData['channels'] = '';
 
-		$bundles = \System::getContainer()->getParameter('kernel.bundles');
+		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		if (isset($bundles['ContaoNewsletterBundle']))
 		{
@@ -488,7 +493,7 @@ class ModuleRegistration extends \Module
 			// Replace the wildcard
 			if (!empty($arrData['newsletter']))
 			{
-				$objChannels = \NewsletterChannelModel::findByIds($arrData['newsletter']);
+				$objChannels = NewsletterChannelModel::findByIds($arrData['newsletter']);
 
 				if ($objChannels !== null)
 				{
@@ -500,13 +505,8 @@ class ModuleRegistration extends \Module
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$arrTokenData['channel'] = $arrTokenData['channels'];
 
-		$objEmail = new \Email();
-
-		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], \Idna::decode(\Environment::get('host')));
-		$objEmail->text = \StringUtil::parseSimpleTokens($this->reg_text, $arrTokenData);
-		$objEmail->sendTo($arrData['email']);
+		// Send the token
+		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))), StringUtil::parseSimpleTokens($this->reg_text, $arrTokenData));
 	}
 
 	/**
@@ -515,15 +515,13 @@ class ModuleRegistration extends \Module
 	protected function activateAcount()
 	{
 		$this->strTemplate = 'mod_message';
+		$this->Template = new FrontendTemplate($this->strTemplate);
 
-		/** @var FrontendTemplate|object $objTemplate */
-		$objTemplate = new \FrontendTemplate($this->strTemplate);
+		/** @var OptIn $optIn */
+		$optIn = System::getContainer()->get('contao.opt-in');
 
-		$this->Template = $objTemplate;
-
-		$objMember = \MemberModel::findOneByActivation(\Input::get('token'));
-
-		if ($objMember === null)
+		// Find an unconfirmed token with only one related record
+		if ((!$optInToken = $optIn->find(Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
 		{
 			$this->Template->type = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountError'];
@@ -531,10 +529,10 @@ class ModuleRegistration extends \Module
 			return;
 		}
 
-		// Update the account
 		$objMember->disable = '';
-		$objMember->activation = '';
 		$objMember->save();
+
+		$optInToken->confirm();
 
 		// HOOK: post activation callback
 		if (isset($GLOBALS['TL_HOOKS']['activateAccount']) && \is_array($GLOBALS['TL_HOOKS']['activateAccount']))
@@ -547,7 +545,7 @@ class ModuleRegistration extends \Module
 		}
 
 		// Log activity
-		$this->log('User account ID ' . $objMember->id . ' (' . \Idna::decodeEmail($objMember->email) . ') has been activated', __METHOD__, TL_ACCESS);
+		$this->log('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated', __METHOD__, TL_ACCESS);
 
 		// Redirect to the jumpTo page
 		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
@@ -574,13 +572,18 @@ class ModuleRegistration extends \Module
 		}
 
 		$this->strTemplate = 'mod_message';
+		$this->Template = new FrontendTemplate($this->strTemplate);
 
-		/** @var FrontendTemplate|object $objTemplate */
-		$objTemplate = new \FrontendTemplate($this->strTemplate);
+		/** @var OptIn $optIn */
+		$optIn = System::getContainer()->get('contao.opt-in');
 
-		$this->Template = $objTemplate;
+		/** @var OptInModel $model */
+		if ((!$model = OptInModel::findOneByRelatedTableAndId('tl_member', $objMember->id)) || (!$optInToken = $optIn->find($model->token)))
+		{
+			return;
+		}
 
-		$this->sendActivationMail($objMember->row());
+		$optInToken->send();
 
 		// Confirm activation
 		$this->Template->type = 'confirm';
@@ -595,27 +598,26 @@ class ModuleRegistration extends \Module
 	 */
 	protected function sendAdminNotification($intId, $arrData)
 	{
-		$objEmail = new \Email();
-
+		$objEmail = new Email();
 		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
 		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], \Idna::decode(\Environment::get('host')));
+		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], Idna::decode(Environment::get('host')));
 
 		$strData = "\n\n";
 
 		// Add user details
 		foreach ($arrData as $k=>$v)
 		{
-			if ($k == 'password' || $k == 'tstamp' || $k == 'activation' || $k == 'dateAdded')
+			if ($k == 'password' || $k == 'tstamp' || $k == 'dateAdded')
 			{
 				continue;
 			}
 
-			$v = \StringUtil::deserialize($v);
+			$v = StringUtil::deserialize($v);
 
 			if ($k == 'dateOfBirth' && \strlen($v))
 			{
-				$v = \Date::parse(\Config::get('dateFormat'), $v);
+				$v = Date::parse(Config::get('dateFormat'), $v);
 			}
 
 			$strData .= $GLOBALS['TL_LANG']['tl_member'][$k][0] . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
@@ -627,3 +629,5 @@ class ModuleRegistration extends \Module
 		$this->log('A new user (ID ' . $intId . ') has registered on the website', __METHOD__, TL_ACCESS);
 	}
 }
+
+class_alias(ModuleRegistration::class, 'ModuleRegistration');

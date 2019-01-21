@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,24 +16,15 @@ use Symfony\Component\Config\Loader\Loader;
 
 /**
  * Reads PHP files and returns the content without the opening and closing PHP tags.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/Toflar>
  */
 class PhpFileLoader extends Loader
 {
     /**
-     * Reads the contents of a PHP file stripping the opening and closing PHP tags.
-     *
-     * @param string      $file
-     * @param string|null $type
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function load($file, $type = null)
+    public function load($file, $type = null): string
     {
-        list($code, $namespace) = $this->parseFile($file);
+        [$code, $namespace] = $this->parseFile((string) $file);
 
         $code = $this->stripLegacyCheck($code);
 
@@ -45,19 +38,17 @@ class PhpFileLoader extends Loader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, $type = null): bool
     {
-        return 'php' === pathinfo($resource, PATHINFO_EXTENSION);
+        return 'php' === pathinfo((string) $resource, PATHINFO_EXTENSION);
     }
 
     /**
      * Parses a file and returns the code and namespace.
      *
-     * @param string $file
-     *
-     * @return array
+     * @return string[]
      */
-    private function parseFile($file)
+    private function parseFile(string $file): array
     {
         $code = '';
         $namespace = '';
@@ -102,14 +93,7 @@ class PhpFileLoader extends Loader
         return [$code, $namespace];
     }
 
-    /**
-     * Handles the declare() statement.
-     *
-     * @param string $code
-     *
-     * @return string
-     */
-    private function handleDeclare($code)
+    private function handleDeclare(string $code): string
     {
         $code = preg_replace('/(,\s*)?strict_types\s*=\s*1(\s*,)?/', '', $code);
 
@@ -120,14 +104,7 @@ class PhpFileLoader extends Loader
         return str_replace(' ', '', $code);
     }
 
-    /**
-     * Strips the legacy check from the code.
-     *
-     * @param string $code
-     *
-     * @return string
-     */
-    private function stripLegacyCheck($code)
+    private function stripLegacyCheck(string $code): string
     {
         $code = str_replace(
             [

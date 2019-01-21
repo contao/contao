@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentYouTube extends \ContentElement
+class ContentYouTube extends ContentElement
 {
 
 	/**
@@ -38,7 +38,7 @@ class ContentYouTube extends \ContentElement
 
 		if (TL_MODE == 'BE')
 		{
-			return '<p><a href="https://youtu.be/' . $this->youtube . '" target="_blank">youtu.be/' . $this->youtube . '</a></p>';
+			return '<p><a href="https://youtu.be/' . $this->youtube . '" target="_blank" rel="noreferrer noopener">youtu.be/' . $this->youtube . '</a></p>';
 		}
 
 		return parent::generate();
@@ -49,7 +49,7 @@ class ContentYouTube extends \ContentElement
 	 */
 	protected function compile()
 	{
-		$size = \StringUtil::deserialize($this->playerSize);
+		$size = StringUtil::deserialize($this->playerSize);
 
 		if (!\is_array($size) || empty($size[0]) || empty($size[1]))
 		{
@@ -60,13 +60,62 @@ class ContentYouTube extends \ContentElement
 			$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
 		}
 
-		$url = 'https://www.youtube.com/embed/' . $this->youtube;
+		$params = array();
+		$options = StringUtil::deserialize($this->youtubeOptions);
+		$domain = 'https://www.youtube.com';
 
-		if ($this->autoplay)
+		if (\is_array($options))
 		{
-			$url .= '?autoplay=1';
+			foreach ($options as $option)
+			{
+				switch ($option)
+				{
+					case 'youtube_fs':
+					case 'youtube_rel':
+					case 'youtube_showinfo':
+					case 'youtube_controls':
+						$params[] = substr($option, 8) . '=0';
+						break;
+
+					case 'youtube_hl':
+						$params[] = substr($option, 8) . '=' . substr($GLOBALS['TL_LANGUAGE'], 0, 2);
+						break;
+
+					case 'youtube_iv_load_policy':
+						$params[] = substr($option, 8) . '=3';
+						break;
+
+					case 'youtube_nocookie':
+						$domain = 'https://www.youtube-nocookie.com';
+						break;
+
+					default:
+						$params[] = substr($option, 8) . '=1';
+				}
+			}
+		}
+
+		if ($this->playerStart > 0)
+		{
+			$params[] = 'start=' . (int) $this->playerStart;
+		}
+
+		if ($this->playerStop > 0)
+		{
+			$params[] = 'end=' . (int) $this->playerStop;
+		}
+
+		$url = $domain . '/embed/' . $this->youtube;
+
+		if (!empty($params))
+		{
+			$url .= '?' . implode('&amp;', $params);
 		}
 
 		$this->Template->src = $url;
+		$this->Template->aspect = str_replace(':', '', $this->playerAspect);
+		$this->Template->caption = $this->playerCaption;
 	}
 }
+
+class_alias(ContentYouTube::class, 'ContentYouTube');

@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleMaintenance extends \BackendModule
+class ModuleMaintenance extends BackendModule
 {
 
 	/**
@@ -31,11 +31,11 @@ class ModuleMaintenance extends \BackendModule
 	 */
 	protected function compile()
 	{
-		\System::loadLanguageFile('tl_maintenance');
+		System::loadLanguageFile('tl_maintenance');
 
 		$this->Template->content = '';
 		$this->Template->href = $this->getReferer(true);
-		$this->Template->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
+		$this->Template->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
 		$this->Template->button = $GLOBALS['TL_LANG']['MSC']['backBT'];
 
 		foreach ($GLOBALS['TL_MAINTENANCE'] as $callback)
@@ -61,3 +61,5 @@ class ModuleMaintenance extends \BackendModule
 		}
 	}
 }
+
+class_alias(ModuleMaintenance::class, 'ModuleMaintenance');

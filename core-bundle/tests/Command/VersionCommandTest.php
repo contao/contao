@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,25 +13,26 @@
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\VersionCommand;
+use Contao\CoreBundle\Util\PackageUtil;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-/**
- * Tests the VersionCommand class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class VersionCommandTest extends TestCase
 {
-    /**
-     * Tests printing the version number.
-     */
-    public function testOutputsTheVersionNumber()
+    public function testOutputsTheVersionNumber(): void
     {
-        $tester = new CommandTester(new VersionCommand(['contao/core-bundle' => '4.0.2']));
+        $command = new VersionCommand('contao:version');
+
+        $tester = new CommandTester($command);
         $code = $tester->execute([]);
 
+        try {
+            $version = PackageUtil::getVersion('contao/core-bundle');
+        } catch (\OutOfBoundsException $e) {
+            $version = PackageUtil::getVersion('contao/contao');
+        }
+
         $this->assertSame(0, $code);
-        $this->assertContains('4.0.2', $tester->getDisplay());
+        $this->assertContains($version, $tester->getDisplay());
     }
 }

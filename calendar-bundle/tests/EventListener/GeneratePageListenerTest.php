@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,174 +15,73 @@ namespace Contao\CalendarBundle\Tests\EventListener;
 use Contao\CalendarBundle\EventListener\GeneratePageListener;
 use Contao\CalendarFeedModel;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\LayoutModel;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\Template;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
-/**
- * Tests the GeneratePageListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
-class GeneratePageListenerTest extends TestCase
+class GeneratePageListenerTest extends ContaoTestCase
 {
-    /**
-     * Tests that the listener returns a replacement string for a calendar feed.
-     */
-    public function testAddsTheCalendarFeedLink()
+    public function testAddsTheCalendarFeedLink(): void
     {
-        $pageModel = $this->createMock(PageModel::class);
-        $layoutModel = $this->createMock(LayoutModel::class);
-
-        $layoutModel
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                if ('calendarfeeds' === $key) {
-                    return 'a:1:{i:0;i:3;}';
-                }
-
-                return null;
-            })
-        ;
-
         $GLOBALS['TL_HEAD'] = [];
 
-        $listener = new GeneratePageListener($this->mockContaoFramework());
-        $listener->onGeneratePage($pageModel, $layoutModel);
+        $properties = [
+            'feedBase' => 'http://localhost/',
+            'alias' => 'events',
+            'format' => 'rss',
+            'title' => 'Upcoming events',
+        ];
+
+        $calendarFeedModel = $this->mockClassWithProperties(CalendarFeedModel::class, $properties);
+        $collection = new Collection([$calendarFeedModel], 'tl_calendar_feeds');
+
+        $adapters = [
+            CalendarFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => $collection]),
+            Template::class => new Adapter(Template::class),
+        ];
+
+        /** @var LayoutModel|MockObject $layoutModel */
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['calendarfeeds' => 'a:1:{i:0;i:3;}']);
+
+        $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
+        $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertSame(
-            [
-                '<link type="application/rss+xml" rel="alternate" href="http://localhost/share/events.xml" title="Upcoming events">',
-            ],
+            ['<link type="application/rss+xml" rel="alternate" href="http://localhost/share/events.xml" title="Upcoming events">'],
             $GLOBALS['TL_HEAD']
         );
     }
 
-    /**
-     * Tests that the listener returns if there are no feeds.
-     */
-    public function testDoesNotAddTheCalendarFeedLinkIfThereAreNoFeeds()
+    public function testDoesNotAddTheCalendarFeedLinkIfThereAreNoFeeds(): void
     {
-        $pageModel = $this->createMock(PageModel::class);
-        $layoutModel = $this->createMock(LayoutModel::class);
-
-        $layoutModel
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                if ('calendarfeeds' === $key) {
-                    return '';
-                }
-
-                return null;
-            })
-        ;
-
         $GLOBALS['TL_HEAD'] = [];
+
+        /** @var LayoutModel|MockObject $layoutModel */
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['calendarfeeds' => '']);
 
         $listener = new GeneratePageListener($this->mockContaoFramework());
-        $listener->onGeneratePage($pageModel, $layoutModel);
+        $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD']);
     }
 
-    /**
-     * Tests that the listener returns if there are no models.
-     */
-    public function testDoesNotAddTheCalendarFeedLinkIfThereAreNoModels()
+    public function testDoesNotAddTheCalendarFeedLinkIfThereAreNoModels(): void
     {
-        $pageModel = $this->createMock(PageModel::class);
-        $layoutModel = $this->createMock(LayoutModel::class);
-
-        $layoutModel
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                if ('calendarfeeds' === $key) {
-                    return 'a:1:{i:0;i:3;}';
-                }
-
-                return null;
-            })
-        ;
-
         $GLOBALS['TL_HEAD'] = [];
 
-        $listener = new GeneratePageListener($this->mockContaoFramework(true));
-        $listener->onGeneratePage($pageModel, $layoutModel);
+        $adapters = [
+            CalendarFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => null]),
+        ];
+
+        /** @var LayoutModel|MockObject $layoutModel */
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['calendarfeeds' => 'a:1:{i:0;i:3;}']);
+
+        $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
+        $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD']);
-    }
-
-    /**
-     * Returns a ContaoFramework instance.
-     *
-     * @param bool $noModels
-     *
-     * @return ContaoFrameworkInterface
-     */
-    private function mockContaoFramework($noModels = false)
-    {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-
-        $framework
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
-
-        $feedModel = $this->createMock(CalendarFeedModel::class);
-
-        $feedModel
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'feedBase':
-                        return 'http://localhost/';
-
-                    case 'alias':
-                        return 'events';
-
-                    case 'format':
-                        return 'rss';
-
-                    case 'title':
-                        return 'Upcoming events';
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
-        $calendarFeedModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByIds'])
-            ->getMock()
-        ;
-
-        $calendarFeedModelAdapter
-            ->method('findByIds')
-            ->willReturn($noModels ? null : new Collection([$feedModel], 'tl_calendar_feeds'))
-        ;
-
-        $framework
-            ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($calendarFeedModelAdapter) {
-                switch ($key) {
-                    case CalendarFeedModel::class:
-                        return $calendarFeedModelAdapter;
-
-                    case Template::class:
-                        return new Adapter(Template::class);
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
-        return $framework;
     }
 }

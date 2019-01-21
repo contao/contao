@@ -17,13 +17,21 @@
         <source>A custom field to insert HTML code.</source>
         <target>Настраиваемое поле для вставки HTML-кода.</target>
       </trans-unit>
-      <trans-unit id="FFL.fieldset.0">
-        <source>Fieldset</source>
-        <target>Тег Fieldset</target>
+      <trans-unit id="FFL.fieldsetStart.0">
+        <source>Fieldset start</source>
+        <target>Начало Fieldset</target>
       </trans-unit>
-      <trans-unit id="FFL.fieldset.1">
-        <source>A container for form fields with an optional legend.</source>
-        <target>Контейнер для полей формы с необязательной легендой.</target>
+      <trans-unit id="FFL.fieldsetStart.1">
+        <source>The opening part of a fieldset with an optional legend.</source>
+        <target>Открывающая часть fieldset с необязательной легендой.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.0">
+        <source>Fieldset stop</source>
+        <target>Остановка Fieldset</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.1">
+        <source>The closing part of a fieldset.</source>
+        <target>Закрывающая часть fieldset.</target>
       </trans-unit>
       <trans-unit id="FFL.text.0">
         <source>Text field</source>
@@ -337,30 +345,6 @@
       <trans-unit id="tl_form_field.doNotOverwrite.1">
         <source>Add a numeric suffix to the new file if the file name already exists.</source>
         <target>Добавить числовой суффикс к загружаемому файлу, если имя файла уже существует.</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.fsType.0">
-        <source>Operation mode</source>
-        <target>Режим работы</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.fsType.1">
-        <source>Please select the operation mode of the fieldset element.</source>
-        <target>Выберите режим работы Fieldset.</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.fsStart.0">
-        <source>Wrapper start</source>
-        <target>Начало wrapper (обёртки)</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.fsStart.1">
-        <source>Marks the beginning of a fieldset and can contain a legend.</source>
-        <target>Начало Fieldset, может содержать легенду.</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.fsStop.0">
-        <source>Wrapper stop</source>
-        <target>Конец wrapper (обёртки)</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.fsStop.1">
-        <source>Marks the end of a fieldset.</source>
-        <target>Конец Fieldset.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.value.0">
         <source>Default value</source>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,17 +15,12 @@ namespace Contao\InstallationBundle;
 use Symfony\Component\Console\Application;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * Configures the Contao installation bundle.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoInstallationBundle extends Bundle
 {
     /**
      * {@inheritdoc}
      */
-    public function registerCommands(Application $application)
+    public function registerCommands(Application $application): void
     {
         // disable automatic command registration
     }

@@ -182,198 +182,233 @@
         
       </trans-unit>
       <trans-unit id="37">
+        <source>ALTER_TABLE</source>
+        <target>Tabellen wijzigen</target>
+        
+      </trans-unit>
+      <trans-unit id="38">
         <source>ALTER_ADD</source>
         <target>Voeg kolommen toe</target>
         
       </trans-unit>
-      <trans-unit id="38">
+      <trans-unit id="39">
         <source>ALTER_CHANGE</source>
         <target>Wijzig kolommen</target>
         
       </trans-unit>
-      <trans-unit id="39">
+      <trans-unit id="40">
         <source>ALTER_DROP</source>
         <target>Dump kolommen</target>
         
       </trans-unit>
-      <trans-unit id="40">
+      <trans-unit id="41">
         <source>DROP</source>
         <target>Dump tabellen</target>
         
       </trans-unit>
-      <trans-unit id="41">
+      <trans-unit id="42">
         <source>select_all</source>
         <target>Selecteer alles</target>
         
       </trans-unit>
-      <trans-unit id="42">
+      <trans-unit id="43">
         <source>template_import</source>
         <target>Importeer een template</target>
         
       </trans-unit>
-      <trans-unit id="43">
+      <trans-unit id="44">
         <source>template_import_explain</source>
         <target>Hier kunt u een &lt;code&gt;.sql&lt;/code&gt; bestand importeren van de &lt;code&gt;templates&lt;/code&gt; directory. Bestaande gegevens worden verwijderd! Als u alleen een thema wilt importeren, gebruik dan de thema-manager in het Contao backend.</target>
         
       </trans-unit>
-      <trans-unit id="44">
+      <trans-unit id="45">
         <source>import_exception</source>
         <target>Importeren is mislukt! Is de database up-to-date en is het template bestand compatibel met uw Contao versie?</target>
         
       </trans-unit>
-      <trans-unit id="45">
+      <trans-unit id="46">
         <source>import_empty_source</source>
         <target>Kies een template bestand!</target>
         
       </trans-unit>
-      <trans-unit id="46">
+      <trans-unit id="47">
         <source>import_data_will_be_deleted</source>
         <target>Alle bestaande gegevens worden verwijderd!</target>
         
       </trans-unit>
-      <trans-unit id="47">
+      <trans-unit id="48">
         <source>imported_on</source>
         <target>Template geïmporteerd bij %s</target>
         
       </trans-unit>
-      <trans-unit id="48">
+      <trans-unit id="49">
         <source>templates</source>
         <target>Templates</target>
         
       </trans-unit>
-      <trans-unit id="49">
+      <trans-unit id="50">
         <source>do_not_truncate</source>
         <target>Maak tabellen niet leeg</target>
         
       </trans-unit>
-      <trans-unit id="50">
+      <trans-unit id="51">
         <source>import_confirm</source>
         <target>Alle bestaande gegevens worden verwijderd! Wilt u werkelijk verder gaan?</target>
         
       </trans-unit>
-      <trans-unit id="51">
+      <trans-unit id="52">
         <source>template_save</source>
         <target>Importeer template</target>
         
       </trans-unit>
-      <trans-unit id="52">
+      <trans-unit id="53">
         <source>admin_create</source>
         <target>Maak een admin gebruiker aan</target>
         
       </trans-unit>
-      <trans-unit id="53">
+      <trans-unit id="54">
         <source>admin_create_explain</source>
         <target>Maak hier een admin gebruiker aan welke kan inloggen in het Contao backend.</target>
         
       </trans-unit>
-      <trans-unit id="54">
+      <trans-unit id="55">
         <source>admin_confirm</source>
         <target>Een admin gebruiker is aangemaakt.</target>
         
       </trans-unit>
-      <trans-unit id="55">
+      <trans-unit id="56">
         <source>admin_username</source>
         <target>Gebruikersnaam</target>
         
       </trans-unit>
-      <trans-unit id="56">
+      <trans-unit id="57">
         <source>admin_name</source>
         <target>Naam</target>
         
       </trans-unit>
-      <trans-unit id="57">
+      <trans-unit id="58">
         <source>admin_email</source>
         <target>E-mail</target>
         
       </trans-unit>
-      <trans-unit id="58">
+      <trans-unit id="59">
         <source>admin_save</source>
         <target>Maak een admin gebruiker aan</target>
         
       </trans-unit>
-      <trans-unit id="59">
+      <trans-unit id="60">
         <source>admin_error_extnd</source>
         <target>Om veiligheidsredenen mag u de volgende karakters hier niet gebruiken: #()/&lt;=&gt;</target>
         
       </trans-unit>
-      <trans-unit id="60">
+      <trans-unit id="61">
         <source>admin_error_no_space</source>
         <target>De gebruikersnaam mag geen spaties bevatten!</target>
         
       </trans-unit>
-      <trans-unit id="61">
+      <trans-unit id="62">
         <source>admin_error_email</source>
         <target>Geef een geldig e-mail adres op!</target>
         
       </trans-unit>
-      <trans-unit id="62">
+      <trans-unit id="63">
         <source>admin_error_password_match</source>
         <target>De opgegeven wachtwoorden zijn niet gelijk!</target>
         
       </trans-unit>
-      <trans-unit id="63">
+      <trans-unit id="64">
         <source>admin_error_password_user</source>
         <target>Uw gebruikersnaam en wachtwoord mogen niet gelijk zijn!</target>
         
       </trans-unit>
-      <trans-unit id="64">
+      <trans-unit id="65">
         <source>admin_error</source>
         <target>Vul alle velden in om een admin gebruiker aan te maken!</target>
         
       </trans-unit>
-      <trans-unit id="65">
+      <trans-unit id="66">
         <source>congratulations</source>
         <target>Gefeliciteerd!</target>
         
       </trans-unit>
-      <trans-unit id="66">
+      <trans-unit id="67">
         <source>congratulations_explain</source>
         <target>Contao is met succes geïnstalleerd.</target>
         
       </trans-unit>
-      <trans-unit id="67">
+      <trans-unit id="68">
         <source>installation_complete</source>
         <target>Installatie compleet</target>
         
       </trans-unit>
-      <trans-unit id="68">
+      <trans-unit id="69">
         <source>installation_complete_explain</source>
         <target>Ga naar het Contao backend om de systeem instellingen te controleren.</target>
         
       </trans-unit>
-      <trans-unit id="69">
+      <trans-unit id="70">
         <source>back_end</source>
         <target>Contao backend</target>
         
       </trans-unit>
-      <trans-unit id="70">
+      <trans-unit id="71">
         <source>old_database</source>
         <target>De database is te oud!</target>
         
       </trans-unit>
-      <trans-unit id="71">
+      <trans-unit id="72">
         <source>old_database_explanation</source>
         <target>U dient op zijn minst over Contao 3.2 te beschikken om om te kunnen upgraden naar Contao 4.</target>
         
       </trans-unit>
-      <trans-unit id="72">
+      <trans-unit id="73">
         <source>console_explanation</source>
         <target>Een installatie opdracht kan niet worden voltooid!</target>
         
       </trans-unit>
-      <trans-unit id="73">
-        <source>duplicate_subscriptions</source>
-        <target>Dubbele abonnementen</target>
-        
-      </trans-unit>
       <trans-unit id="74">
-        <source>duplicate_subscriptions_begin</source>
+        <source>duplicate_subscriptions</source>
         <target>Er werden dubbele inschrijvingen voor de nieuwsbrief gevonden:</target>
         
       </trans-unit>
       <trans-unit id="75">
-        <source>duplicate_subscriptions_end</source>
+        <source>duplicates_purged</source>
         <target>Dubbele invoeren zijn automatisch opgeschoond. Een back-up van de oorspronkelijke inschrijvingen zijn opgeslagen in &lt;code&gt;tl_newsletter_recipients_backup&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="76">
+        <source>unsupported_version</source>
+        <target>Database versie wordt niet ondersteund!</target>
+        
+      </trans-unit>
+      <trans-unit id="77">
+        <source>unsupported_version_explain</source>
+        <target>Contao vereist tenminste MySQL 5.1.0 u heeft versie %s. Werk uw database versie bij.</target>
+        
+      </trans-unit>
+      <trans-unit id="78">
+        <source>unsupported_collation</source>
+        <target>De geconfigureerde sortering wordt niet ondersteund!</target>
+        
+      </trans-unit>
+      <trans-unit id="79">
+        <source>unsupported_collation_explain</source>
+        <target>De geconfigureerde vergelijking&lt;code&gt;%s&lt;/code&gt;is niet beschikbaar op uw server. Installeer dit (aanbevolen) of configureer een andere tekenset en sortering in het&lt;code&gt;app/config/config.yml&lt;/code&gt;bestand.</target>
+        
+      </trans-unit>
+      <trans-unit id="80">
+        <source>unsupported_engine</source>
+        <target>De geconfigureerde database-engine wordt niet ondersteund!</target>
+        
+      </trans-unit>
+      <trans-unit id="81">
+        <source>unsupported_engine_explain</source>
+        <target>De database-engine&lt;code&gt;%s&lt;/code&gt;is niet beschikbaar op uw server. Installeer deze (aanbevolen) of configureer een andere database-engine in het&lt;code&gt;app/config/config.yml&lt;/code&gt;bestand.</target>
+        
+      </trans-unit>
+      <trans-unit id="82">
+        <source>misconfigured_database_url_explain</source>
+        <target>Kon geen verbinding maken met de database via de URL in de &lt;code&gt;DATABASE_URL&lt;/code&gt;omgevingsvariabele.</target>
         
       </trans-unit>
     </body>

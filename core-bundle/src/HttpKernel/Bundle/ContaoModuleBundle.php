@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -14,20 +16,15 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Allows to register legacy Contao modules as bundle.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 final class ContaoModuleBundle extends Bundle
 {
     /**
      * Sets the module name and application root directory.
      *
-     * @param string $name
-     * @param string $rootDir
-     *
      * @throws \LogicException
      */
-    public function __construct($name, $rootDir)
+    public function __construct(string $name, string $rootDir)
     {
         $this->name = $name;
         $this->path = \dirname($rootDir).'/system/modules/'.$this->name;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,11 +14,6 @@ namespace Contao\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-/**
- * Allows to convert a preview URL.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PreviewUrlConvertEvent extends Event
 {
     /**
@@ -24,22 +21,12 @@ class PreviewUrlConvertEvent extends Event
      */
     private $url;
 
-    /**
-     * Returns the URL.
-     *
-     * @return string
-     */
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->url;
     }
 
-    /**
-     * Sets the URL.
-     *
-     * @param string $url
-     */
-    public function setUrl($url)
+    public function setUrl(string $url): void
     {
         $this->url = $url;
     }

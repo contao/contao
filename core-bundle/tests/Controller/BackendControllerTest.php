@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,37 +17,83 @@ use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * Tests the BackendControllerTest class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class BackendControllerTest extends TestCase
 {
-    /**
-     * Tests the pickerAction() method.
-     */
-    public function testReturnsAResponseInThePickerActionMethod()
+    public function testRedirectsToTheBackendIfTheUserIsFullyAuthenticatedUponLogin(): void
+    {
+        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authorizationChecker
+            ->expects($this->once())
+            ->method('isGranted')
+            ->willReturn(true)
+        ;
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_backend')
+            ->willReturn('/contao')
+        ;
+
+        $container = $this->mockContainer();
+        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set('security.authorization_checker', $authorizationChecker);
+        $container->set('router', $router);
+
+        $controller = new BackendController();
+        $controller->setContainer($container);
+
+        /** @var RedirectResponse $response */
+        $response = $controller->loginAction();
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('/contao', $response->getTargetUrl());
+    }
+
+    public function testRedirectsToTheBackendLoginAfterAUserHasLoggedOut(): void
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_backend_login')
+            ->willReturn('/contao/login')
+        ;
+
+        $container = $this->mockContainer();
+        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set('router', $router);
+
+        $controller = new BackendController();
+        $controller->setContainer($container);
+
+        $response = $controller->logoutAction();
+
+        $this->assertSame('/contao/login', $response->getTargetUrl());
+    }
+
+    public function testReturnsAResponseInThePickerActionMethod(): void
     {
         $picker = $this->createMock(PickerInterface::class);
-
         $picker
             ->method('getCurrentUrl')
             ->willReturn('/foobar')
         ;
 
         $builder = $this->createMock(PickerBuilderInterface::class);
-
         $builder
             ->method('create')
             ->willReturn($picker)
         ;
 
         $container = $this->createMock(ContainerInterface::class);
-
         $container
             ->method('get')
             ->willReturn($builder)
@@ -61,15 +109,11 @@ class BackendControllerTest extends TestCase
 
         $response = $controller->pickerAction($request);
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
         $this->assertSame('/foobar', $response->getTargetUrl());
         $this->assertSame(302, $response->getStatusCode());
     }
 
-    /**
-     * Tests the pickerAction() method with invalid picker extras.
-     */
-    public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerExtrasAreInvalid()
+    public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerExtrasAreInvalid(): void
     {
         $controller = new BackendController();
 
@@ -82,20 +126,15 @@ class BackendControllerTest extends TestCase
         $controller->pickerAction($request);
     }
 
-    /**
-     * Tests the pickerAction() method with an unsupported context.
-     */
-    public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerContextIsUnsupported()
+    public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerContextIsUnsupported(): void
     {
         $builder = $this->createMock(PickerBuilderInterface::class);
-
         $builder
             ->method('create')
             ->willReturn(null)
         ;
 
         $container = $this->createMock(ContainerInterface::class);
-
         $container
             ->method('get')
             ->willReturn($builder)
@@ -111,5 +150,26 @@ class BackendControllerTest extends TestCase
         $this->expectExceptionMessage('Unsupported picker context');
 
         $controller->pickerAction($request);
+    }
+
+    public function testRedirectsToTheBackendIfTheTwoFactorRouteIsCalledManually(): void
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_backend')
+            ->willReturn('/contao')
+        ;
+
+        $container = $this->mockContainer();
+        $container->set('router', $router);
+
+        $controller = new BackendController();
+        $controller->setContainer($container);
+
+        $response = $controller->twoFactorAuthenticationAction();
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 }

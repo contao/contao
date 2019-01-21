@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,14 +18,12 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\SchemaConfig;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
 
-/**
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class DcaSchemaProvider
 {
     /**
@@ -36,24 +36,13 @@ class DcaSchemaProvider
      */
     private $doctrine;
 
-    /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     * @param Registry|null            $doctrine
-     */
-    public function __construct(ContaoFrameworkInterface $framework, Registry $doctrine = null)
+    public function __construct(ContaoFrameworkInterface $framework, Registry $doctrine)
     {
         $this->framework = $framework;
         $this->doctrine = $doctrine;
     }
 
-    /**
-     * Creates a schema.
-     *
-     * @return Schema
-     */
-    public function createSchema()
+    public function createSchema(): Schema
     {
         if (0 !== \count($this->doctrine->getManagerNames())) {
             return $this->createSchemaFromOrm();
@@ -64,20 +53,45 @@ class DcaSchemaProvider
 
     /**
      * Adds the DCA data to the Doctrine schema.
-     *
-     * @param Schema $schema
      */
-    public function appendToSchema(Schema $schema)
+    public function appendToSchema(Schema $schema): void
     {
         $config = $this->getSqlDefinitions();
 
         foreach ($config as $tableName => $definitions) {
             $table = $schema->createTable($tableName);
 
+            // Parse the table options first
+            if (isset($definitions['TABLE_OPTIONS'])) {
+                if (preg_match('/ENGINE=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
+                    $table->addOption('engine', $match[1]);
+                }
+
+                if (preg_match('/DEFAULT CHARSET=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
+                    $table->addOption('charset', $match[1]);
+                    $table->addOption('collate', $match[1].'_general_ci');
+                }
+
+                if (preg_match('/COLLATE ([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
+                    $table->addOption('collate', $match[1]);
+                }
+            }
+
+            // The default InnoDB row format before MySQL 5.7.9 is "Compact" but innodb_large_prefix requires "DYNAMIC"
+            if ($table->hasOption('engine') && 'InnoDB' === $table->getOption('engine')) {
+                $table->addOption('row_format', 'DYNAMIC');
+            }
+
             if (isset($definitions['SCHEMA_FIELDS'])) {
                 foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $config) {
                     $options = $config;
                     unset($options['name'], $options['type']);
+
+                    // Use the binary collation if the "case_sensitive" option is set
+                    if ($this->isCaseSensitive($config)) {
+                        $options['platformOptions']['collation'] = $this->getBinaryCollation($table);
+                    }
+
                     $table->addColumn($config['name'], $config['type'], $options);
                 }
             }
@@ -93,25 +107,10 @@ class DcaSchemaProvider
                     $this->parseIndexSql($table, $keyName, strtolower($sql));
                 }
             }
-
-            if (isset($definitions['TABLE_OPTIONS'])) {
-                if (preg_match('/ENGINE=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
-                    $table->addOption('engine', $match[1]);
-                }
-
-                if (preg_match('/DEFAULT CHARSET=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
-                    $table->addOption('charset', $match[1]);
-                }
-            }
         }
     }
 
-    /**
-     * Creates a Schema instance from Doctrine ORM metadata.
-     *
-     * @return Schema
-     */
-    private function createSchemaFromOrm()
+    private function createSchemaFromOrm(): Schema
     {
         /** @var EntityManagerInterface $manager */
         $manager = $this->doctrine->getManager();
@@ -137,33 +136,28 @@ class DcaSchemaProvider
         return $tool->getSchemaFromMetadata($metadata);
     }
 
-    /**
-     * Creates a Schema instance and adds DCA metadata.
-     *
-     * @return Schema
-     */
-    private function createSchemaFromDca()
+    private function createSchemaFromDca(): Schema
     {
-        $schema = new Schema();
+        $config = new SchemaConfig();
+        $params = $this->doctrine->getConnection()->getParams();
+
+        if (isset($params['defaultTableOptions'])) {
+            $config->setDefaultTableOptions($params['defaultTableOptions']);
+        }
+
+        $schema = new Schema([], [], $config);
 
         $this->appendToSchema($schema);
 
         return $schema;
     }
 
-    /**
-     * Parses the column definition and adds it to the schema table.
-     *
-     * @param Table  $table
-     * @param string $columnName
-     * @param string $sql
-     */
-    private function parseColumnSql(Table $table, $columnName, $sql)
+    private function parseColumnSql(Table $table, string $columnName, string $sql): void
     {
-        list($dbType, $def) = explode(' ', $sql, 2);
+        [$dbType, $def] = explode(' ', $sql, 2);
 
         $type = strtok(strtolower($dbType), '(), ');
-        $length = strtok('(), ');
+        $length = (int) strtok('(), ');
         $fixed = false;
         $scale = null;
         $precision = null;
@@ -172,8 +166,12 @@ class DcaSchemaProvider
 
         $this->setLengthAndPrecisionByType($type, $dbType, $length, $scale, $precision, $fixed);
 
-        $type = $this->doctrine->getConnection()->getDatabasePlatform()->getDoctrineTypeMapping($type);
-        $length = (0 === (int) $length) ? null : (int) $length;
+        $connection = $this->doctrine->getConnection();
+        $type = $connection->getDatabasePlatform()->getDoctrineTypeMapping($type);
+
+        if (0 === $length) {
+            $length = null;
+        }
 
         if (preg_match('/default (\'[^\']*\'|\d+)/i', $def, $match)) {
             $default = trim($match[1], "'");
@@ -181,6 +179,11 @@ class DcaSchemaProvider
 
         if (preg_match('/collate ([^ ]+)/i', $def, $match)) {
             $collation = $match[1];
+        }
+
+        // Use the binary collation if the BINARY flag is set (see #1286)
+        if (0 === strncasecmp($def, 'binary ', 7)) {
+            $collation = $this->getBinaryCollation($table);
         }
 
         $options = [
@@ -207,17 +210,7 @@ class DcaSchemaProvider
         $table->addColumn($columnName, $type, $options);
     }
 
-    /**
-     * Sets the length, scale, precision and fixed values by field type.
-     *
-     * @param string   $type
-     * @param string   $dbType
-     * @param int|null $length
-     * @param int      $scale
-     * @param int      $precision
-     * @param bool     $fixed
-     */
-    private function setLengthAndPrecisionByType($type, $dbType, &$length, &$scale, &$precision, &$fixed)
+    private function setLengthAndPrecisionByType(string $type, string $dbType, ?int &$length, ?int &$scale, ?int &$precision, bool &$fixed): void
     {
         switch ($type) {
             case 'char':
@@ -230,9 +223,9 @@ class DcaSchemaProvider
             case 'real':
             case 'numeric':
             case 'decimal':
-                if (preg_match('([A-Za-z]+\(([0-9]+)\,([0-9]+)\))', $dbType, $match)) {
+                if (preg_match('/[a-z]+\((\d+)\,(\d+)\)/i', $dbType, $match)) {
                     $length = null;
-                    list(, $precision, $scale) = $match;
+                    [, $precision, $scale] = $match;
                 }
                 break;
 
@@ -272,14 +265,7 @@ class DcaSchemaProvider
         }
     }
 
-    /**
-     * Parses the index definition and adds it to the schema table.
-     *
-     * @param Table  $table
-     * @param string $keyName
-     * @param string $sql
-     */
-    private function parseIndexSql(Table $table, $keyName, $sql)
+    private function parseIndexSql(Table $table, string $keyName, string $sql): void
     {
         if ('PRIMARY' === $keyName) {
             if (!preg_match_all('/`([^`]+)`/', $sql, $matches)) {
@@ -303,7 +289,7 @@ class DcaSchemaProvider
             preg_match('/`([^`]+)`(\((\d+)\))?/', $column, $cm);
 
             $columns[] = $cm[1];
-            $lengths[] = isset($cm[3]) ? (int) $cm[3] : null;
+            $lengths[] = isset($cm[3]) ? (int) $cm[3] : $this->getIndexLength($table, $cm[1]);
         }
 
         if (false !== strpos($matches[1], 'unique')) {
@@ -313,7 +299,7 @@ class DcaSchemaProvider
                 $flags[] = 'fulltext';
             }
 
-            // Backwards compatibility for doctrine/dbal <2.9
+            // Backwards compatibility for doctrine/dbal < 2.9
             if (array_filter($lengths) && !method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
                 $columns = array_combine(
                     $columns,
@@ -334,15 +320,14 @@ class DcaSchemaProvider
     /**
      * Returns the SQL definitions from the Contao installer.
      *
-     * @return array
+     * @return array<string,array<string,string[]>>
      */
-    private function getSqlDefinitions()
+    private function getSqlDefinitions(): array
     {
         $this->framework->initialize();
 
         /** @var Installer $installer */
         $installer = $this->framework->createInstance(Installer::class);
-
         $sqlTarget = $installer->getFromDca();
         $sqlLegacy = $installer->getFromFile();
 
@@ -371,5 +356,108 @@ class DcaSchemaProvider
         }
 
         return $sqlTarget;
+    }
+
+    /**
+     * Returns the index length if the index needs to be shortened.
+     */
+    private function getIndexLength(Table $table, string $column): ?int
+    {
+        $col = $table->getColumn($column);
+
+        // Not a text field
+        if (null === ($length = $col->getLength())) {
+            return null;
+        }
+
+        // Return if the field is shorter than the shortest possible index
+        // length (utf8mb4 on InnoDB without large prefixes)
+        if ($length <= 191) {
+            return null;
+        }
+
+        if ($col->hasPlatformOption('collation')) {
+            $collation = $col->getPlatformOption('collation');
+        } else {
+            $collation = $table->getOption('collate');
+        }
+
+        $defaultLength = $this->getDefaultIndexLength($table);
+        $bytes = 0 === strncmp($collation, 'utf8mb4', 7) ? 4 : 3;
+        $indexLength = (int) floor($defaultLength / $bytes);
+
+        // Return if the field is shorter than the index length
+        if ($length <= $indexLength) {
+            return null;
+        }
+
+        return $indexLength;
+    }
+
+    private function getDefaultIndexLength(Table $table): int
+    {
+        $engine = $table->getOption('engine');
+
+        if ('innodb' !== strtolower($engine)) {
+            return 1000;
+        }
+
+        $largePrefix = $this->doctrine
+            ->getConnection()
+            ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        // The variable no longer exists (as of MySQL 8 and MariaDB 10.3)
+        if (false === $largePrefix) {
+            return 3072;
+        }
+
+        $filePerTable = $this->doctrine
+            ->getConnection()
+            ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        // The innodb_file_per_table option is disabled
+        if (!\in_array(strtolower((string) $filePerTable->Value), ['1', 'on'], true)) {
+            return 767;
+        }
+
+        $fileFormat = $this->doctrine
+            ->getConnection()
+            ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        if (
+            'barracuda' === strtolower((string) $fileFormat->Value)
+            && \in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true)
+        ) {
+            return 3072;
+        }
+
+        return 767;
+    }
+
+    private function isCaseSensitive(array $config): bool
+    {
+        if (!isset($config['customSchemaOptions']['case_sensitive'])) {
+            return false;
+        }
+
+        return true === $config['customSchemaOptions']['case_sensitive'];
+    }
+
+    /**
+     * Returns the binary collation depending on the charset.
+     */
+    private function getBinaryCollation(Table $table): ?string
+    {
+        if (!$table->hasOption('charset')) {
+            return null;
+        }
+
+        return $table->getOption('charset').'_bin';
     }
 }

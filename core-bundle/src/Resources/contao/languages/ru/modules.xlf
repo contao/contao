@@ -121,6 +121,14 @@
         <source>Maintain or update Contao</source>
         <target>Обслуживание или обновление Contao.</target>
       </trans-unit>
+      <trans-unit id="MOD.security.0">
+        <source>Security</source>
+        <target>Безопасность</target>
+      </trans-unit>
+      <trans-unit id="MOD.security.1">
+        <source>Secure your account</source>
+        <target>Защитите свой аккаунт</target>
+      </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
         <target>Восстановление</target>
@@ -352,14 +360,6 @@
       <trans-unit id="FMD.miscellaneous">
         <source>Miscellaneous</source>
         <target>Разное</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.0">
-        <source>Flash movie</source>
-        <target>Flash-ролик</target>
-      </trans-unit>
-      <trans-unit id="FMD.flash.1">
-        <source>Embeds a Flash movie into the page</source>
-        <target>Внедряет Flash-ролик на страницу</target>
       </trans-unit>
       <trans-unit id="FMD.randomImage.0">
         <source>Random image</source>

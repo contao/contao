@@ -17,7 +17,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleBooknav extends \Module
+class ModuleBooknav extends Module
 {
 
 	/**
@@ -41,9 +41,7 @@ class ModuleBooknav extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('be_wildcard');
-
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['booknav'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -80,7 +78,7 @@ class ModuleBooknav extends \Module
 		// Get all groups of the current front end user
 		if (FE_USER_LOGGED_IN)
 		{
-			$this->import('FrontendUser', 'User');
+			$this->import(FrontendUser::class, 'User');
 			$groups = $this->User->groups;
 		}
 
@@ -107,8 +105,8 @@ class ModuleBooknav extends \Module
 			{
 				$this->Template->hasUp = true;
 				$this->Template->upHref = $this->arrPages[$intKey]->getFrontendUrl();
-				$this->Template->upTitle = \StringUtil::specialchars($this->arrPages[$intKey]->title, true);
-				$this->Template->upPageTitle = \StringUtil::specialchars($this->arrPages[$intKey]->pageTitle, true);
+				$this->Template->upTitle = StringUtil::specialchars($this->arrPages[$intKey]->title, true);
+				$this->Template->upPageTitle = StringUtil::specialchars($this->arrPages[$intKey]->pageTitle, true);
 				$this->Template->upLink = $GLOBALS['TL_LANG']['MSC']['up'];
 			}
 		}
@@ -145,8 +143,8 @@ class ModuleBooknav extends \Module
 			{
 				$this->Template->hasPrev = true;
 				$this->Template->prevHref = $this->arrPages[$intKey]->getFrontendUrl();
-				$this->Template->prevTitle = \StringUtil::specialchars($this->arrPages[$intKey]->title, true);
-				$this->Template->prevPageTitle = \StringUtil::specialchars($this->arrPages[$intKey]->pageTitle, true);
+				$this->Template->prevTitle = StringUtil::specialchars($this->arrPages[$intKey]->title, true);
+				$this->Template->prevPageTitle = StringUtil::specialchars($this->arrPages[$intKey]->pageTitle, true);
 				$this->Template->prevLink = $this->arrPages[$intKey]->title;
 			}
 		}
@@ -171,8 +169,8 @@ class ModuleBooknav extends \Module
 			{
 				$this->Template->hasNext = true;
 				$this->Template->nextHref = $this->arrPages[$intKey]->getFrontendUrl();
-				$this->Template->nextTitle = \StringUtil::specialchars($this->arrPages[$intKey]->title, true);
-				$this->Template->nextPageTitle = \StringUtil::specialchars($this->arrPages[$intKey]->pageTitle, true);
+				$this->Template->nextTitle = StringUtil::specialchars($this->arrPages[$intKey]->title, true);
+				$this->Template->nextPageTitle = StringUtil::specialchars($this->arrPages[$intKey]->pageTitle, true);
 				$this->Template->nextLink = $this->arrPages[$intKey]->title;
 			}
 		}
@@ -187,7 +185,7 @@ class ModuleBooknav extends \Module
 	 */
 	protected function getBookPages($intParentId, $groups, $time)
 	{
-		$objPages = \PageModel::findPublishedSubpagesWithoutGuestsByPid($intParentId, $this->showHidden);
+		$objPages = PageModel::findPublishedSubpagesWithoutGuestsByPid($intParentId, $this->showHidden);
 
 		if ($objPages === null)
 		{
@@ -196,7 +194,7 @@ class ModuleBooknav extends \Module
 
 		foreach ($objPages as $objPage)
 		{
-			$_groups = \StringUtil::deserialize($objPage->groups);
+			$_groups = StringUtil::deserialize($objPage->groups);
 
 			// Do not show protected pages unless a front end user is logged in
 			if (!$objPage->protected || (\is_array($_groups) && \count(array_intersect($groups, $_groups))) || $this->showProtected)
@@ -211,3 +209,5 @@ class ModuleBooknav extends \Module
 		}
 	}
 }
+
+class_alias(ModuleBooknav::class, 'ModuleBooknav');

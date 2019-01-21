@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,12 +15,6 @@ namespace Contao\CoreBundle\Event;
 use Contao\BackendUser;
 use Symfony\Component\EventDispatcher\Event;
 
-/**
- * Allows to filter image sizes.
- *
- * @author Kamil Kuzminski <https://github.com/qzminski>
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ImageSizesEvent extends Event
 {
     /**
@@ -31,12 +27,6 @@ class ImageSizesEvent extends Event
      */
     private $user;
 
-    /**
-     * Constructor.
-     *
-     * @param array            $imageSizes
-     * @param BackendUser|null $user
-     */
     public function __construct(array $imageSizes, BackendUser $user = null)
     {
         $this->imageSizes = $imageSizes;
@@ -44,31 +34,19 @@ class ImageSizesEvent extends Event
     }
 
     /**
-     * Returns the image sizes.
-     *
-     * @return array
+     * @return array<string,string[]>
      */
-    public function getImageSizes()
+    public function getImageSizes(): array
     {
         return $this->imageSizes;
     }
 
-    /**
-     * Sets the image sizes.
-     *
-     * @param array $imageSizes
-     */
-    public function setImageSizes(array $imageSizes)
+    public function setImageSizes(array $imageSizes): void
     {
         $this->imageSizes = $imageSizes;
     }
 
-    /**
-     * Returns the back end user object.
-     *
-     * @return BackendUser
-     */
-    public function getUser()
+    public function getUser(): BackendUser
     {
         return $this->user;
     }

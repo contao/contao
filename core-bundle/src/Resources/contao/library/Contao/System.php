@@ -13,12 +13,15 @@ namespace Contao;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\Database\Installer;
+use Contao\Database\Updater;
 use League\Uri\Components\Query;
 use Patchwork\Utf8;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Abstract library base class
@@ -29,7 +32,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *
  * Usage:
  *
- *     class MyClass extends \System
+ *     class MyClass extends System
  *     {
  *         public function __construct()
  *         {
@@ -37,19 +40,19 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  *         }
  *     }
  *
- * @property \Automator                                $Automator   The automator object
- * @property \Config                                   $Config      The config object
- * @property \Database                                 $Database    The database object
- * @property \Environment                              $Environment The environment object
- * @property \Files                                    $Files       The files object
- * @property \Input                                    $Input       The input object
- * @property \Database\Installer                       $Installer   The database installer object
- * @property \Database\Updater                         $Updater     The database updater object
- * @property \Messages                                 $Messages    The messages object
- * @property \Session                                  $Session     The session object
- * @property \StyleSheets                              $StyleSheets The style sheets object
- * @property \BackendTemplate|\FrontendTemplate|object $Template    The template object
- * @property \BackendUser|\FrontendUser|object         $User        The user object
+ * @property Automator                        $Automator   The automator object
+ * @property Config                           $Config      The config object
+ * @property Database                         $Database    The database object
+ * @property Environment                      $Environment The environment object
+ * @property Files                            $Files       The files object
+ * @property Input                            $Input       The input object
+ * @property Installer                        $Installer   The database installer object
+ * @property Updater                          $Updater     The database updater object
+ * @property Messages                         $Messages    The messages object
+ * @property Session                          $Session     The session object
+ * @property StyleSheets                      $StyleSheets The style sheets object
+ * @property BackendTemplate|FrontendTemplate $Template    The template object
+ * @property BackendUser|FrontendUser         $User        The user object
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -100,11 +103,11 @@ abstract class System
 	protected static $arrImageSizes = array();
 
 	/**
-	 * Import the Config and Session instances
+	 * Import the Config instance
 	 */
 	protected function __construct()
 	{
-		$this->import('Config');
+		$this->import(Config::class, 'Config');
 	}
 
 	/**
@@ -121,6 +124,7 @@ abstract class System
 	{
 		if (!isset($this->arrObjects[$strKey]))
 		{
+			/** @var Input|Environment|Session $strKey */
 			if ($strKey == 'Input' || $strKey == 'Environment' || $strKey == 'Session')
 			{
 				$this->arrObjects[$strKey] = $strKey::getInstance();
@@ -140,6 +144,8 @@ abstract class System
 	 * @param string  $strClass The class name
 	 * @param string  $strKey   An optional key to store the object under
 	 * @param boolean $blnForce If true, existing objects will be overridden
+	 *
+	 * @throws ServiceNotFoundException
 	 */
 	protected function import($strClass, $strKey=null, $blnForce=false)
 	{
@@ -162,13 +168,24 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
+			elseif (strpos($strClass, '.') !== false)
+			{
+				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The service "%s" was not found or is not public. See https://symfony.com/doc/current/service_container.html#public-versus-private-services', $strClass));
+			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
 				$this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
-				$this->arrObjects[$strKey] = new $strClass();
+				try
+				{
+					$this->arrObjects[$strKey] = new $strClass();
+				}
+				catch (\ArgumentCountError $e)
+				{
+					throw new \ArgumentCountError(sprintf('Cannot create instance of class %s, did you forget to make the service public?', $strClass), $e->getCode(), $e);
+				}
 			}
 		}
 	}
@@ -179,6 +196,8 @@ abstract class System
 	 * @param string  $strClass The class name
 	 * @param string  $strKey   An optional key to store the object under
 	 * @param boolean $blnForce If true, existing objects will be overridden
+	 *
+	 * @throws ServiceNotFoundException
 	 *
 	 * @return object The imported object
 	 */
@@ -203,13 +222,24 @@ abstract class System
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}
+			elseif (strpos($strClass, '.') !== false)
+			{
+				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The service "%s" was not found or is not public. See https://symfony.com/doc/current/service_container.html#public-versus-private-services', $strClass));
+			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
 				static::$arrStaticObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
-				static::$arrStaticObjects[$strKey] = new $strClass();
+				try
+				{
+					static::$arrStaticObjects[$strKey] = new $strClass();
+				}
+				catch (\ArgumentCountError $e)
+				{
+					throw new \ArgumentCountError(sprintf('Cannot create instance of class %s, did you forget to make the service public?', $strClass), $e->getCode(), $e);
+				}
 			}
 		}
 
@@ -248,9 +278,9 @@ abstract class System
 	 */
 	public static function log($strText, $strFunction, $strCategory)
 	{
-		@trigger_error('Using System::log() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead', E_USER_DEPRECATED);
+		@trigger_error('Using System::log() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead.', E_USER_DEPRECATED);
 
-		$level = TL_ERROR === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
+		$level = 'ERROR' === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
 		$logger = static::getContainer()->get('monolog.logger.contao');
 
 		$logger->log($level, $strText, array('contao' => new ContaoContext($strFunction, $strCategory)));
@@ -266,11 +296,11 @@ abstract class System
 	 */
 	public static function getReferer($blnEncodeAmpersands=false, $strTable=null)
 	{
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = static::getContainer()->get('session');
 
-		$ref = \Input::get('ref');
-		$key = \Input::get('popup') ? 'popupReferer' : 'referer';
+		$ref = Input::get('ref');
+		$key = Input::get('popup') ? 'popupReferer' : 'referer';
 		$session = $objSession->get($key);
 
 		// Unique referer ID
@@ -278,13 +308,13 @@ abstract class System
 		{
 			$session = $session[$ref];
 		}
-		elseif (TL_MODE == 'BE' && \is_array($session))
+		elseif (\defined('TL_MODE') && TL_MODE == 'BE' && \is_array($session))
 		{
 			$session = end($session);
 		}
 
 		// Use a specific referer
-		if ($strTable != '' && isset($session[$strTable]) && \Input::get('act') != 'select')
+		if ($strTable != '' && isset($session[$strTable]) && Input::get('act') != 'select')
 		{
 			$session['current'] = $session[$strTable];
 		}
@@ -301,31 +331,31 @@ abstract class System
 
 			/** @var Query $queryObj */
 			$queryObj = new Query($query);
-			$queryObj = $queryObj->without($params);
+			$queryObj = $queryObj->withoutPairs($params);
 
 			return $path . $queryObj->getUriComponent();
 		};
 
 		// Determine current or last
-		$strUrl = ($cleanUrl($session['current']) != $cleanUrl(\Environment::get('request'))) ? $session['current'] : $session['last'];
+		$strUrl = ($cleanUrl($session['current']) != $cleanUrl(Environment::get('request'))) ? $session['current'] : $session['last'];
 
 		// Remove the "toggle" and "toggle all" parameters
 		$return = $cleanUrl($strUrl, array('tg', 'ptg'));
 
 		// Fallback to the generic referer in the front end
-		if ($return == '' && TL_MODE == 'FE')
+		if ($return == '' && \defined('TL_MODE') && TL_MODE == 'FE')
 		{
-			$return = \Environment::get('httpReferer');
+			$return = Environment::get('httpReferer');
 		}
 
 		// Fallback to the current URL if there is no referer
 		if ($return == '')
 		{
-			$return = (TL_MODE == 'BE') ? 'contao/main.php' : \Environment::get('url');
+			$return = (\defined('TL_MODE') && TL_MODE == 'BE') ? 'contao/main.php' : Environment::get('url');
 		}
 
 		// Do not urldecode here!
-		return ampersand($return, $blnEncodeAmpersands);
+		return preg_replace('/&(amp;)?/i', ($blnEncodeAmpersands ? '&amp;' : '&'), $return);
 	}
 
 	/**
@@ -339,7 +369,7 @@ abstract class System
 	{
 		if ($strLanguage === null)
 		{
-			$strLanguage = str_replace('-', '_', isset($GLOBALS['TL_LANGUAGE']) ? $GLOBALS['TL_LANGUAGE'] : 'en');
+			$strLanguage = str_replace('-', '_', $GLOBALS['TL_LANGUAGE'] ?? 'en');
 		}
 
 		// Fall back to English
@@ -357,7 +387,7 @@ abstract class System
 		$strCacheKey = $strLanguage;
 
 		// Make sure the language exists
-        if ($strLanguage != 'en' && !static::isInstalledLanguage($strLanguage))
+		if ($strLanguage != 'en' && !static::isInstalledLanguage($strLanguage))
 		{
 			$strShortLang = substr($strLanguage, 0, 2);
 
@@ -395,32 +425,25 @@ abstract class System
 			}
 			else
 			{
-				try
-				{
-					$files = static::getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.php', null, false);
-				}
-				catch (\InvalidArgumentException $e)
-				{
-					$files = array();
-				}
+				// Find the given filename either as .php or .xlf file
+				$finder = static::getContainer()->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
 
-				foreach ($files as $file)
+				/** @var SplFileInfo $file */
+				foreach ($finder as $file)
 				{
-					include $file;
-				}
+					switch ($file->getExtension())
+					{
+						case 'php':
+							include $file;
+							break;
 
-				try
-				{
-					$files = static::getContainer()->get('contao.resource_locator')->locate('languages/' . $strCreateLang . '/' . $strName . '.xlf', null, false);
-				}
-				catch (\InvalidArgumentException $e)
-				{
-					$files = array();
-				}
+						case 'xlf':
+							$xlfLoader->load($file, $strCreateLang);
+							break;
 
-				foreach ($files as $file)
-				{
-					$xlfLoader->load($file, $strCreateLang);
+						default:
+							throw new \RuntimeException(sprintf('Invalid language file extension: %s', $file->getExtension()));
+					}
 				}
 			}
 		}
@@ -440,11 +463,13 @@ abstract class System
 			$GLOBALS['TL_LANG']['MSC']['deleteConfirm'] = str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['deleteConfirm']);
 		}
 
+		$rootDir = self::getContainer()->getParameter('kernel.project_dir');
+
 		// Local configuration file
-		if (file_exists(TL_ROOT . '/system/config/langconfig.php'))
+		if (file_exists($rootDir . '/system/config/langconfig.php'))
 		{
 			@trigger_error('Using the langconfig.php file has been deprecated and will no longer work in Contao 5.0. Create one or more language files in app/Resources/contao/languages instead.', E_USER_DEPRECATED);
-			include TL_ROOT . '/system/config/langconfig.php';
+			include $rootDir . '/system/config/langconfig.php';
 		}
 	}
 
@@ -459,7 +484,9 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
-			if (is_dir(TL_ROOT . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
+			$rootDir = self::getContainer()->getParameter('kernel.project_dir');
+
+			if (is_dir($rootDir . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
 			{
 				static::$arrLanguages[$strLanguage] = true;
 			}
@@ -501,7 +528,7 @@ abstract class System
 
 		foreach (array_keys($arrAux) as $strKey)
 		{
-			$return[$strKey] = isset($GLOBALS['TL_LANG']['CNT'][$strKey]) ? $GLOBALS['TL_LANG']['CNT'][$strKey] : $countries[$strKey];
+			$return[$strKey] = $GLOBALS['TL_LANG']['CNT'][$strKey] ?? $countries[$strKey];
 		}
 
 		// HOOK: add custom logic
@@ -539,7 +566,8 @@ abstract class System
 		}
 
 		asort($arrAux);
-		$arrBackendLanguages = scan(__DIR__ . '/../../languages');
+
+		$arrBackendLanguages = self::getContainer()->getParameter('contao.locales');
 
 		foreach (array_keys($arrAux) as $strKey)
 		{
@@ -548,7 +576,7 @@ abstract class System
 				continue;
 			}
 
-			$return[$strKey] = isset($GLOBALS['TL_LANG']['LNG'][$strKey]) ? $GLOBALS['TL_LANG']['LNG'][$strKey] : $languages[$strKey];
+			$return[$strKey] = $GLOBALS['TL_LANG']['LNG'][$strKey] ?? $languages[$strKey];
 
 			if (isset($langsNative[$strKey]) && $langsNative[$strKey] != $return[$strKey])
 			{
@@ -633,7 +661,7 @@ abstract class System
 	{
 		if ($strPath == '')
 		{
-			$strPath = \Environment::get('path') ?: '/'; // see #4390
+			$strPath = Environment::get('path') ?: '/'; // see #4390
 		}
 
 		$objCookie = new \stdClass();
@@ -695,20 +723,22 @@ abstract class System
 	 * @param string $strCookie The cookie name
 	 *
 	 * @return string The session hash
+	 *
+	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
+	 *             Use Symfony authentication instead.
 	 */
 	public static function getSessionHash($strCookie)
 	{
-		$container = static::getContainer();
-		$strHash = $container->get('session')->getId();
+		@trigger_error('Using System::getSessionHash() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
 
-		if (!$container->getParameter('contao.security.disable_ip_check'))
+		$session = static::getContainer()->get('session');
+
+		if (!$session->isStarted())
 		{
-			$strHash .= \Environment::get('ip');
+			$session->start();
 		}
 
-		$strHash .= $strCookie;
-
-		return sha1($strHash);
+		return sha1($session->getId().$strCookie);
 	}
 
 	/**
@@ -720,12 +750,6 @@ abstract class System
 	 */
 	public static function anonymizeIp($strIp)
 	{
-		// The feature has been disabled
-		if (!\Config::get('privacyAnonymizeIp'))
-		{
-			return $strIp;
-		}
-
 		// Localhost
 		if ($strIp == '127.0.0.1' || $strIp == '::1')
 		{
@@ -758,10 +782,12 @@ abstract class System
 	{
 		@trigger_error('Using System::readPhpFileWithoutTags() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\PhpFileLoader instead.', E_USER_DEPRECATED);
 
+		$rootDir = self::getContainer()->getParameter('kernel.project_dir');
+
 		// Convert to absolute path
-		if (strpos($strName, TL_ROOT . '/') === false)
+		if (strpos($strName, $rootDir . '/') === false)
 		{
-			$strName = TL_ROOT . '/' . $strName;
+			$strName = $rootDir . '/' . $strName;
 		}
 
 		$loader = new PhpFileLoader();
@@ -785,10 +811,12 @@ abstract class System
 	{
 		@trigger_error('Using System::convertXlfToPhp() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\XliffFileLoader instead.', E_USER_DEPRECATED);
 
+		$rootDir = self::getContainer()->getParameter('kernel.project_dir');
+
 		// Convert to absolute path
-		if (strpos($strName, TL_ROOT . '/') === false)
+		if (strpos($strName, $rootDir . '/') === false)
 		{
-			$strName = TL_ROOT . '/' . $strName;
+			$strName = $rootDir . '/' . $strName;
 		}
 
 		$loader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), $blnLoad);
@@ -811,7 +839,7 @@ abstract class System
 	{
 		@trigger_error('Using System::parseDate() has been deprecated and will no longer work in Contao 5.0. Use Date::parse() instead.', E_USER_DEPRECATED);
 
-		return \Date::parse($strFormat, $intTstamp);
+		return Date::parse($strFormat, $intTstamp);
 	}
 
 	/**
@@ -828,7 +856,7 @@ abstract class System
 	{
 		@trigger_error('Using System::addToUrl() has been deprecated and will no longer work in Contao 5.0. Use Controller::addToUrl() instead.', E_USER_DEPRECATED);
 
-		return \Controller::addToUrl($strRequest);
+		return Controller::addToUrl($strRequest);
 	}
 
 	/**
@@ -841,7 +869,7 @@ abstract class System
 	{
 		@trigger_error('Using System::reload() has been deprecated and will no longer work in Contao 5.0. Use Controller::reload() instead.', E_USER_DEPRECATED);
 
-		\Controller::reload();
+		Controller::reload();
 	}
 
 	/**
@@ -857,7 +885,7 @@ abstract class System
 	{
 		@trigger_error('Using System::redirect() has been deprecated and will no longer work in Contao 5.0. Use Controller::redirect() instead.', E_USER_DEPRECATED);
 
-		\Controller::redirect($strLocation, $intStatus);
+		Controller::redirect($strLocation, $intStatus);
 	}
 
 	/**
@@ -872,7 +900,7 @@ abstract class System
 	{
 		@trigger_error('Using System::addErrorMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addError() instead.', E_USER_DEPRECATED);
 
-		\Message::addError($strMessage);
+		Message::addError($strMessage);
 	}
 
 	/**
@@ -887,7 +915,7 @@ abstract class System
 	{
 		@trigger_error('Using System::addConfirmationMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addConfirmation() instead.', E_USER_DEPRECATED);
 
-		\Message::addConfirmation($strMessage);
+		Message::addConfirmation($strMessage);
 	}
 
 	/**
@@ -902,7 +930,7 @@ abstract class System
 	{
 		@trigger_error('Using System::addNewMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addNew() instead.', E_USER_DEPRECATED);
 
-		\Message::addNew($strMessage);
+		Message::addNew($strMessage);
 	}
 
 	/**
@@ -917,7 +945,7 @@ abstract class System
 	{
 		@trigger_error('Using System::addInfoMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addInfo() instead.', E_USER_DEPRECATED);
 
-		\Message::addInfo($strMessage);
+		Message::addInfo($strMessage);
 	}
 
 	/**
@@ -932,7 +960,7 @@ abstract class System
 	{
 		@trigger_error('Using System::addRawMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addRaw() instead.', E_USER_DEPRECATED);
 
-		\Message::addRaw($strMessage);
+		Message::addRaw($strMessage);
 	}
 
 	/**
@@ -948,7 +976,7 @@ abstract class System
 	{
 		@trigger_error('Using System::addMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::add() instead.', E_USER_DEPRECATED);
 
-		\Message::add($strMessage, $strType);
+		Message::add($strMessage, $strType);
 	}
 
 	/**
@@ -965,7 +993,7 @@ abstract class System
 	{
 		@trigger_error('Using System::getMessages() has been deprecated and will no longer work in Contao 5.0. Use Message::generate() instead.', E_USER_DEPRECATED);
 
-		return \Message::generate($strScope);
+		return Message::generate($strScope);
 	}
 
 	/**
@@ -978,7 +1006,7 @@ abstract class System
 	{
 		@trigger_error('Using System::resetMessages() has been deprecated and will no longer work in Contao 5.0. Use Message::reset() instead.', E_USER_DEPRECATED);
 
-		\Message::reset();
+		Message::reset();
 	}
 
 	/**
@@ -993,7 +1021,7 @@ abstract class System
 	{
 		@trigger_error('Using System::getMessageTypes() has been deprecated and will no longer work in Contao 5.0. Use Message::getTypes() instead.', E_USER_DEPRECATED);
 
-		return \Message::getTypes();
+		return Message::getTypes();
 	}
 
 	/**
@@ -1010,7 +1038,7 @@ abstract class System
 	{
 		@trigger_error('Using System::idnaEncode() has been deprecated and will no longer work in Contao 5.0. Use Idna::encode() instead.', E_USER_DEPRECATED);
 
-		return \Idna::encode($strDomain);
+		return Idna::encode($strDomain);
 	}
 
 	/**
@@ -1027,7 +1055,7 @@ abstract class System
 	{
 		@trigger_error('Using System::idnaDecode() has been deprecated and will no longer work in Contao 5.0. Use Idna::decode() instead.', E_USER_DEPRECATED);
 
-		return \Idna::decode($strDomain);
+		return Idna::decode($strDomain);
 	}
 
 	/**
@@ -1044,7 +1072,7 @@ abstract class System
 	{
 		@trigger_error('Using System::idnaEncodeEmail() has been deprecated and will no longer work in Contao 5.0. Use Idna::encodeEmail() instead.', E_USER_DEPRECATED);
 
-		return \Idna::encodeEmail($strEmail);
+		return Idna::encodeEmail($strEmail);
 	}
 
 	/**
@@ -1061,7 +1089,7 @@ abstract class System
 	{
 		@trigger_error('Using System::idnaEncodeUrl() has been deprecated and will no longer work in Contao 5.0. Use Idna::encodeUrl() instead.', E_USER_DEPRECATED);
 
-		return \Idna::encodeUrl($strUrl);
+		return Idna::encodeUrl($strUrl);
 	}
 
 	/**
@@ -1078,7 +1106,7 @@ abstract class System
 	{
 		@trigger_error('Using System::isValidEmailAddress() has been deprecated and will no longer work in Contao 5.0. Use Validator::isEmail() instead.', E_USER_DEPRECATED);
 
-		return \Validator::isEmail($strEmail);
+		return Validator::isEmail($strEmail);
 	}
 
 	/**
@@ -1095,7 +1123,7 @@ abstract class System
 	{
 		@trigger_error('Using System::splitFriendlyName() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::splitFriendlyEmail() instead.', E_USER_DEPRECATED);
 
-		return \StringUtil::splitFriendlyEmail($strEmail);
+		return StringUtil::splitFriendlyEmail($strEmail);
 	}
 
 	/**
@@ -1112,7 +1140,7 @@ abstract class System
 	{
 		@trigger_error('Using System::getIndexFreeRequest() has been deprecated and will no longer work in Contao 5.0. Use Environment::get("indexFreeRequest") instead.', E_USER_DEPRECATED);
 
-		return ampersand(\Environment::get('indexFreeRequest'), $blnAmpersand);
+		return ampersand(Environment::get('indexFreeRequest'), $blnAmpersand);
 	}
 
 	/**
@@ -1129,7 +1157,7 @@ abstract class System
 	{
 		@trigger_error('Using System::getModelClassFromTable() has been deprecated and will no longer work in Contao 5.0. Use Model::getClassFromTable() instead.', E_USER_DEPRECATED);
 
-		return \Model::getClassFromTable($strTable);
+		return Model::getClassFromTable($strTable);
 	}
 
 	/**
@@ -1154,3 +1182,5 @@ abstract class System
 		@trigger_error('Using System::disableModule() has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.', E_USER_DEPRECATED);
 	}
 }
+
+class_alias(System::class, 'System');

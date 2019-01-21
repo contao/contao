@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes page layouts
  *
@@ -32,7 +34,7 @@ namespace Contao;
  * @property boolean $combineScripts
  * @property string  $modules
  * @property string  $template
- * @property string  $doctype
+ * @property string  $minifyMarkup
  * @property string  $webfonts
  * @property boolean $picturefill
  * @property string  $viewport
@@ -47,6 +49,8 @@ namespace Contao;
  * @property string  $mooSource
  * @property string  $mootools
  * @property string  $analytics
+ * @property string  $externalJs
+ * @property string  $orderExtJs
  * @property string  $script
  * @property string  $scripts
  * @property boolean $static
@@ -75,7 +79,7 @@ namespace Contao;
  * @method static LayoutModel|null findOneByCombineScripts($val, array $opt=array())
  * @method static LayoutModel|null findOneByModules($val, array $opt=array())
  * @method static LayoutModel|null findOneByTemplate($val, array $opt=array())
- * @method static LayoutModel|null findOneByDoctype($val, array $opt=array())
+ * @method static LayoutModel|null findOneByMinifyMarkup($val, array $opt=array())
  * @method static LayoutModel|null findOneByWebfonts($val, array $opt=array())
  * @method static LayoutModel|null findOneByPicturefill($val, array $opt=array())
  * @method static LayoutModel|null findOneByViewport($val, array $opt=array())
@@ -90,53 +94,57 @@ namespace Contao;
  * @method static LayoutModel|null findOneByMooSource($val, array $opt=array())
  * @method static LayoutModel|null findOneByMootools($val, array $opt=array())
  * @method static LayoutModel|null findOneByAnalytics($val, array $opt=array())
+ * @method static LayoutModel|null findOneByExternalJs($val, array $opt=array())
+ * @method static LayoutModel|null findOneByOrderExtJs($val, array $opt=array())
  * @method static LayoutModel|null findOneByScript($val, array $opt=array())
  * @method static LayoutModel|null findOneByScripts($val, array $opt=array())
  * @method static LayoutModel|null findOneByStatic($val, array $opt=array())
  * @method static LayoutModel|null findOneByWidth($val, array $opt=array())
  * @method static LayoutModel|null findOneByAlign($val, array $opt=array())
  *
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByPid($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByName($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByRows($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByHeaderHeight($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByFooterHeight($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByCols($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByWidthLeft($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByWidthRight($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findBySections($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByFramework($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByStylesheet($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByExternal($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByOrderExt($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByLoadingOrder($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByCombineScripts($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByModules($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByTemplate($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByDoctype($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByWebfonts($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByPicturefill($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByViewport($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByTitleTag($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByCssClass($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByOnload($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByHead($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByAddJQuery($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByJSource($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByJquery($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByAddMooTools($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByMooSource($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByMootools($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByAnalytics($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByScript($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByScripts($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByStatic($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByWidth($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findByAlign($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|LayoutModel[]|LayoutModel|null findAll(array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByPid($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByName($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByRows($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByHeaderHeight($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByFooterHeight($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByCols($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByWidthLeft($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByWidthRight($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findBySections($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByFramework($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByStylesheet($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByExternal($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByOrderExt($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByLoadingOrder($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByCombineScripts($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByModules($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByTemplate($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByMinifyMarkup($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByWebfonts($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByPicturefill($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByViewport($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByTitleTag($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByCssClass($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByOnload($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByHead($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByAddJQuery($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByJSource($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByJquery($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByAddMooTools($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByMooSource($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByMootools($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByAnalytics($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByExternalJs($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByOrderExtJs($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByScript($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByScripts($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByStatic($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByWidth($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByAlign($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
@@ -157,7 +165,7 @@ namespace Contao;
  * @method static integer countByCombineScripts($val, array $opt=array())
  * @method static integer countByModules($val, array $opt=array())
  * @method static integer countByTemplate($val, array $opt=array())
- * @method static integer countByDoctype($val, array $opt=array())
+ * @method static integer countByMinifyMarkup($val, array $opt=array())
  * @method static integer countByWebfonts($val, array $opt=array())
  * @method static integer countByPicturefill($val, array $opt=array())
  * @method static integer countByViewport($val, array $opt=array())
@@ -172,6 +180,8 @@ namespace Contao;
  * @method static integer countByMooSource($val, array $opt=array())
  * @method static integer countByMootools($val, array $opt=array())
  * @method static integer countByAnalytics($val, array $opt=array())
+ * @method static integer countByExternalJs($val, array $opt=array())
+ * @method static integer countByOrderExtJs($val, array $opt=array())
  * @method static integer countByScript($val, array $opt=array())
  * @method static integer countByScripts($val, array $opt=array())
  * @method static integer countByStatic($val, array $opt=array())
@@ -180,7 +190,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class LayoutModel extends \Model
+class LayoutModel extends Model
 {
 
 	/**
@@ -190,3 +200,5 @@ class LayoutModel extends \Model
 	protected static $strTable = 'tl_layout';
 
 }
+
+class_alias(LayoutModel::class, 'LayoutModel');

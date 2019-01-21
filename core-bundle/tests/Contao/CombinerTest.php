@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -12,29 +14,14 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Combiner;
 use Contao\Config;
-use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\System;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Tests the Combiner class.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
- * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @group contao3
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
-class CombinerTest extends TestCase
+class CombinerTest extends ContaoTestCase
 {
-    /**
-     * @var string
-     */
-    private static $rootDir;
-
     /**
      * @var ContainerInterface
      */
@@ -43,54 +30,45 @@ class CombinerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
-        self::$rootDir = __DIR__.'/../Fixtures/tmp';
+        parent::setUpBeforeClass();
 
         $fs = new Filesystem();
-        $fs->mkdir(self::$rootDir);
-        $fs->mkdir(self::$rootDir.'/assets');
-        $fs->mkdir(self::$rootDir.'/assets/css');
-        $fs->mkdir(self::$rootDir.'/system');
-        $fs->mkdir(self::$rootDir.'/system/tmp');
-        $fs->mkdir(self::$rootDir.'/web');
+        $fs->mkdir(static::getTempDir().'/assets/css');
+        $fs->mkdir(static::getTempDir().'/system/tmp');
+        $fs->mkdir(static::getTempDir().'/web');
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function tearDownAfterClass()
-    {
-        $fs = new Filesystem();
-        $fs->remove(self::$rootDir);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        \define('TL_ERROR', 'ERROR');
-        \define('TL_ROOT', self::$rootDir);
-        \define('TL_ASSETS_URL', '');
+        $context = $this->createMock(ContaoContext::class);
+        $context
+            ->method('getStaticUrl')
+            ->willReturn('')
+        ;
 
-        $this->container = $this->mockContainerWithContaoScopes();
-        $this->container->setParameter('contao.web_dir', self::$rootDir.'/web');
+        $this->container = $this->mockContainer($this->getTempDir());
+        $this->container->setParameter('contao.web_dir', $this->getTempDir().'/web');
+        $this->container->set('contao.assets.assets_context', $context);
 
+        Config::set('debugMode', false);
         System::setContainer($this->container);
     }
 
-    /**
-     * Tests the CSS combiner.
-     */
-    public function testCombinesCssFiles()
+    public function testCombinesCssFiles(): void
     {
-        file_put_contents(static::$rootDir.'/file1.css', 'file1 { background: url("foo.bar") }');
-        file_put_contents(static::$rootDir.'/web/file2.css', 'web/file2');
-        file_put_contents(static::$rootDir.'/file3.css', 'file3');
-        file_put_contents(static::$rootDir.'/web/file3.css', 'web/file3');
+        file_put_contents($this->getTempDir().'/file1.css', 'file1 { background: url("foo.bar") }');
+        file_put_contents($this->getTempDir().'/web/file2.css', 'web/file2');
+        file_put_contents($this->getTempDir().'/file3.css', 'file3');
+        file_put_contents($this->getTempDir().'/web/file3.css', 'web/file3');
+
+        $mtime = filemtime($this->getTempDir().'/file1.css');
 
         $combiner = new Combiner();
         $combiner->add('file1.css');
@@ -98,36 +76,33 @@ class CombinerTest extends TestCase
 
         $this->assertSame(
             [
-                'file1.css',
-                'file2.css|screen',
-                'file3.css|screen',
+                'file1.css|'.$mtime,
+                'file2.css|screen|'.$mtime,
+                'file3.css|screen|'.$mtime,
             ],
             $combiner->getFileUrls()
         );
 
         $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertRegExp('/^assets\/css\/[a-z0-9]+\.css$/', $combinedFile);
+        $this->assertRegExp('/^assets\/css\/file1\.css\,file2\.css\,file3\.css-[a-z0-9]+\.css$/', $combinedFile);
 
         $this->assertStringEqualsFile(
-            static::$rootDir.'/'.$combinedFile,
+            $this->getTempDir().'/'.$combinedFile,
             "file1 { background: url(\"../../foo.bar\") }\n@media screen{\nweb/file2\n}\n@media screen{\nfile3\n}\n"
         );
 
         Config::set('debugMode', true);
 
-        $markup = $combiner->getCombinedFile();
+        $hash = substr(md5((string) $mtime), 0, 8);
 
         $this->assertSame(
-            'file1.css"><link rel="stylesheet" href="file2.css" media="screen"><link rel="stylesheet" href="file3.css" media="screen',
-            $markup
+            'file1.css?v='.$hash.'"><link rel="stylesheet" href="file2.css?v='.$hash.'" media="screen"><link rel="stylesheet" href="file3.css?v='.$hash.'" media="screen',
+            $combiner->getCombinedFile()
         );
     }
 
-    /**
-     * Tests fixing the paths in the CSS combiner.
-     */
-    public function testFixesTheFilePaths()
+    public function testFixesTheFilePaths(): void
     {
         $class = new \ReflectionClass(Combiner::class);
         $method = $class->getMethod('fixPaths');
@@ -151,10 +126,7 @@ EOF;
         );
     }
 
-    /**
-     * Tests if the CSS combiner handles special characters while fixing paths.
-     */
-    public function testHandlesSpecialCharactersWhileFixingTheFilePaths()
+    public function testHandlesSpecialCharactersWhileFixingTheFilePaths(): void
     {
         $class = new \ReflectionClass(Combiner::class);
         $method = $class->getMethod('fixPaths');
@@ -200,10 +172,7 @@ EOF;
         );
     }
 
-    /**
-     * Checks that the CSS combiner ignores data URLs while fixing paths.
-     */
-    public function testIgnoresDataUrlsWhileFixingTheFilePaths()
+    public function testIgnoresDataUrlsWhileFixingTheFilePaths(): void
     {
         $class = new \ReflectionClass(Combiner::class);
         $method = $class->getMethod('fixPaths');
@@ -220,14 +189,14 @@ EOF;
         );
     }
 
-    /**
-     * Tests the SCSS Combiner.
-     */
-    public function testCombinesScssFiles()
+    public function testCombinesScssFiles(): void
     {
-        file_put_contents(static::$rootDir.'/file1.scss', '$color: red; @import "file1_sub";');
-        file_put_contents(static::$rootDir.'/file1_sub.scss', 'body { color: $color }');
-        file_put_contents(static::$rootDir.'/file2.scss', 'body { color: green }');
+        file_put_contents($this->getTempDir().'/file1.scss', '$color: red; @import "file1_sub";');
+        file_put_contents($this->getTempDir().'/file1_sub.scss', 'body { color: $color }');
+        file_put_contents($this->getTempDir().'/file2.scss', 'body { color: green }');
+
+        $mtime1 = filemtime($this->getTempDir().'/file1.scss');
+        $mtime2 = filemtime($this->getTempDir().'/file2.scss');
 
         $combiner = new Combiner();
         $combiner->add('file1.scss');
@@ -235,34 +204,35 @@ EOF;
 
         $this->assertSame(
             [
-                'assets/css/file1.scss.css',
-                'assets/css/file2.scss.css',
+                'assets/css/file1.scss.css|'.$mtime1,
+                'assets/css/file2.scss.css|'.$mtime2,
             ],
             $combiner->getFileUrls()
         );
 
-        $combinedFile = $combiner->getCombinedFile();
-
-        $this->assertRegExp('/^assets\/css\/[a-z0-9]+\.css$/', $combinedFile);
-        $this->assertStringEqualsFile(static::$rootDir.'/'.$combinedFile, "body{color:red}\nbody{color:green}\n");
+        $this->assertStringEqualsFile(
+            $this->getTempDir().'/'.$combiner->getCombinedFile(),
+            "body{color:red}\nbody{color:green}\n"
+        );
 
         Config::set('debugMode', true);
 
-        $markup = $combiner->getCombinedFile();
+        $hash1 = substr(md5((string) $mtime1), 0, 8);
+        $hash2 = substr(md5((string) $mtime2), 0, 8);
 
         $this->assertSame(
-            'assets/css/file1.scss.css"><link rel="stylesheet" href="assets/css/file2.scss.css',
-            $markup
+            'assets/css/file1.scss.css?v='.$hash1.'"><link rel="stylesheet" href="assets/css/file2.scss.css?v='.$hash2,
+            $combiner->getCombinedFile()
         );
     }
 
-    /**
-     * Tests the JS Combiner.
-     */
-    public function testCombinesJsFiles()
+    public function testCombinesJsFiles(): void
     {
-        file_put_contents(static::$rootDir.'/file1.js', 'file1();');
-        file_put_contents(static::$rootDir.'/web/file2.js', 'file2();');
+        file_put_contents($this->getTempDir().'/file1.js', 'file1();');
+        file_put_contents($this->getTempDir().'/web/file2.js', 'file2();');
+
+        $mtime1 = filemtime($this->getTempDir().'/file1.js');
+        $mtime2 = filemtime($this->getTempDir().'/web/file2.js');
 
         $combiner = new Combiner();
         $combiner->add('file1.js');
@@ -270,24 +240,22 @@ EOF;
 
         $this->assertSame(
             [
-                'file1.js',
-                'file2.js',
+                'file1.js|'.$mtime1,
+                'file2.js|'.$mtime2,
             ],
             $combiner->getFileUrls()
         );
 
         $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertRegExp('/^assets\/js\/[a-z0-9]+\.js$/', $combinedFile);
-        $this->assertStringEqualsFile(static::$rootDir.'/'.$combinedFile, "file1();\nfile2();\n");
+        $this->assertRegExp('/^assets\/js\/file1\.js\,file2\.js-[a-z0-9]+\.js$/', $combinedFile);
+        $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "file1();\nfile2();\n");
 
         Config::set('debugMode', true);
 
-        $markup = $combiner->getCombinedFile();
+        $hash1 = substr(md5((string) $mtime1), 0, 8);
+        $hash2 = substr(md5((string) $mtime2), 0, 8);
 
-        $this->assertSame(
-            'file1.js"></script><script src="file2.js',
-            $markup
-        );
+        $this->assertSame('file1.js?v='.$hash1.'"></script><script src="file2.js?v='.$hash2, $combiner->getCombinedFile());
     }
 }

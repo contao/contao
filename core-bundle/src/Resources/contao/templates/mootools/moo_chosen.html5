@@ -5,7 +5,7 @@ $GLOBALS['TL_CSS'][] = 'assets/chosen/css/chosen.min.css|static';
 
 ?>
 
-<script src="<?= TL_ASSETS_URL ?>assets/chosen/js/chosen.min.js"></script>
+<script src="<?= $this->asset('js/chosen.min.js', 'contao-components/chosen') ?>"></script>
 <script>
   window.addEvent('domready', function() {
     $$('select.tl_chosen').chosen();

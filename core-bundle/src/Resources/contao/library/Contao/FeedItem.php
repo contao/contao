@@ -103,28 +103,32 @@ class FeedItem
 	/**
 	 * Add an enclosure
 	 *
-	 * @param string $strFile The file path
-	 * @param string $strUrl  The base URL
+	 * @param string $strFile  The file path
+	 * @param string $strUrl   The base URL
+	 * @param string $strMedia The media type
 	 */
-	public function addEnclosure($strFile, $strUrl=null)
+	public function addEnclosure($strFile, $strUrl=null, $strMedia='enclosure')
 	{
-		if ($strFile == '' || !file_exists(TL_ROOT . '/' . $strFile))
+		if ($strFile == '' || !file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $strFile))
 		{
 			return;
 		}
 
 		if ($strUrl === null)
 		{
-			$strUrl = \Environment::get('base');
+			$strUrl = Environment::get('base');
 		}
 
-		$objFile = new \File($strFile);
+		$objFile = new File($strFile);
 
 		$this->arrData['enclosure'][] = array
 		(
-			'url' => $strUrl . \System::urlEncode($strFile),
+			'media' => $strMedia,
+			'url' => $strUrl . System::urlEncode($strFile),
 			'length' => $objFile->size,
 			'type' => $objFile->mime
 		);
 	}
 }
+
+class_alias(FeedItem::class, 'FeedItem');

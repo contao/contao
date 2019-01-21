@@ -25,7 +25,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleComments extends \Module
+class ModuleComments extends Module
 {
 
 	/**
@@ -43,9 +43,7 @@ class ModuleComments extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('be_wildcard');
-
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['comments'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -66,7 +64,7 @@ class ModuleComments extends \Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$this->import('Comments');
+		$this->import(Comments::class, 'Comments');
 		$objConfig = new \stdClass();
 
 		$objConfig->perPage = $this->perPage;
@@ -80,3 +78,5 @@ class ModuleComments extends \Module
 		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_page', $objPage->id, $GLOBALS['TL_ADMIN_EMAIL']);
 	}
 }
+
+class_alias(ModuleComments::class, 'ModuleComments');

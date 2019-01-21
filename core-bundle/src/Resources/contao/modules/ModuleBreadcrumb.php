@@ -17,7 +17,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ModuleBreadcrumb extends \Module
+class ModuleBreadcrumb extends Module
 {
 
 	/**
@@ -35,9 +35,7 @@ class ModuleBreadcrumb extends \Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			/** @var BackendTemplate|object $objTemplate */
-			$objTemplate = new \BackendTemplate('be_wildcard');
-
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['breadcrumb'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -64,7 +62,7 @@ class ModuleBreadcrumb extends \Module
 		$items = array();
 
 		// Get all pages up to the root page
-		$objPages = \PageModel::findParentsById($objPage->pid);
+		$objPages = PageModel::findParentsById($objPage->pid);
 
 		if ($objPages !== null)
 		{
@@ -79,14 +77,14 @@ class ModuleBreadcrumb extends \Module
 		// Get the first active regular page and display it instead of the root page
 		if ($type == 'root')
 		{
-			$objFirstPage = \PageModel::findFirstPublishedByPid($objPages->id);
+			$objFirstPage = PageModel::findFirstPublishedByPid($objPages->id);
 
 			$items[] = array
 			(
 				'isRoot'   => true,
 				'isActive' => false,
-				'href'     => (($objFirstPage !== null) ? $objFirstPage->getFrontendUrl() : \Environment::get('base')),
-				'title'    => \StringUtil::specialchars($objPages->pageTitle ?: $objPages->title, true),
+				'href'     => (($objFirstPage !== null) ? $objFirstPage->getFrontendUrl() : Environment::get('base')),
+				'title'    => StringUtil::specialchars($objPages->pageTitle ?: $objPages->title, true),
 				'link'     => $objPages->title,
 				'data'     => (($objFirstPage !== null) ? $objFirstPage->row() : array()),
 				'class'    => ''
@@ -111,12 +109,12 @@ class ModuleBreadcrumb extends \Module
 
 					if (strncasecmp($href, 'mailto:', 7) === 0)
 					{
-						$href = \StringUtil::encodeEmail($href);
+						$href = StringUtil::encodeEmail($href);
 					}
 					break;
 
 				case 'forward':
-					if (($objNext = $pages[$i]->getRelated('jumpTo')) instanceof PageModel || ($objNext = \PageModel::findFirstPublishedRegularByPid($pages[$i]->id)) instanceof PageModel)
+					if (($objNext = $pages[$i]->getRelated('jumpTo')) instanceof PageModel || ($objNext = PageModel::findFirstPublishedRegularByPid($pages[$i]->id)) instanceof PageModel)
 					{
 						/** @var PageModel $objNext */
 						$href = $objNext->getFrontendUrl();
@@ -134,7 +132,7 @@ class ModuleBreadcrumb extends \Module
 				'isRoot'   => false,
 				'isActive' => false,
 				'href'     => $href,
-				'title'    => \StringUtil::specialchars($pages[$i]->pageTitle ?: $pages[$i]->title, true),
+				'title'    => StringUtil::specialchars($pages[$i]->pageTitle ?: $pages[$i]->title, true),
 				'link'     => $pages[$i]->title,
 				'data'     => $pages[$i]->row(),
 				'class'    => ''
@@ -149,20 +147,20 @@ class ModuleBreadcrumb extends \Module
 				'isRoot'   => false,
 				'isActive' => false,
 				'href'     => $pages[0]->getFrontendUrl(),
-				'title'    => \StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title, true),
+				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title, true),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
 				'class'    => ''
 			);
 
-			list($strSection, $strArticle) = explode(':', \Input::get('articles'));
+			list($strSection, $strArticle) = explode(':', Input::get('articles'));
 
 			if ($strArticle === null)
 			{
 				$strArticle = $strSection;
 			}
 
-			$objArticle = \ArticleModel::findByIdOrAlias($strArticle);
+			$objArticle = ArticleModel::findByIdOrAlias($strArticle);
 			$strAlias = $objArticle->alias ?: $objArticle->id;
 
 			if ($objArticle->inColumn != 'main')
@@ -177,7 +175,7 @@ class ModuleBreadcrumb extends \Module
 					'isRoot'   => false,
 					'isActive' => true,
 					'href'     => $pages[0]->getFrontendUrl('/articles/' . $strAlias),
-					'title'    => \StringUtil::specialchars($objArticle->title, true),
+					'title'    => StringUtil::specialchars($objArticle->title, true),
 					'link'     => $objArticle->title,
 					'data'     => $objArticle->row(),
 					'class'    => ''
@@ -193,7 +191,7 @@ class ModuleBreadcrumb extends \Module
 				'isRoot'   => false,
 				'isActive' => true,
 				'href'     => $pages[0]->getFrontendUrl(),
-				'title'    => \StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
+				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
 				'class'    => ''
@@ -216,3 +214,5 @@ class ModuleBreadcrumb extends \Module
 		$this->Template->items = $items;
 	}
 }
+
+class_alias(ModuleBreadcrumb::class, 'ModuleBreadcrumb');

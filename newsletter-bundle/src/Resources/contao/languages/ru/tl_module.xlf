@@ -17,6 +17,14 @@
         <source>Please select one or more channels.</source>
         <target>Выберите один или несколько каналов.</target>
       </trans-unit>
+      <trans-unit id="tl_module.nl_text.0">
+        <source>Custom text</source>
+        <target>Пользовательский текст</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nl_text.1">
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+        <target>Например, вы можете ввести примечание о конфиденциальности, для того, чтобы подписка на рассылку новостей соответствовала требованиям общего регламента по защите данных (GDPR).</target>
+      </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
         <target>Скрыть меню канала</target>
@@ -49,6 +57,10 @@
         <source>Here you can select the newsletter template.</source>
         <target>Вы можете выбрать шаблон новостной рассылки.</target>
       </trans-unit>
+      <trans-unit id="tl_module.text_legend">
+        <source>Custom text</source>
+        <target>Пользовательский текст</target>
+      </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
         <target>Ваша подписка на %s</target>
@@ -58,13 +70,25 @@
 
 ##channels##
 
-Please click ##link## to activate your subscription. If you did not subscribe yourself, please ignore this e-mail.
+Please click here to activate your subscription:
+
+##link##
+
+The confirmation link is valid for 24 hours. You can cancel your subscription at any time.
+
+If you did not subscribe yourself, please ignore this e-mail.
 </source>
-        <target>Вы подписались на следующие каналы на ##domain##:
+        <target>Вы подписались на следующие каналы, на: ##domain##:
 
 ##channels##
 
-Пожалуйста, нажмите на ##link## для завершения процесса подписки. Если вы не подписывались на информационную рассылку, пропустите это сообщение.
+Нажмите здесь, чтобы активировать подписку:
+
+##link##
+
+Ссылка на подтверждение действительна в течение 24 часов. Вы можете отменить подписку в любое время.
+
+Если вы не подписывались на информационную рассылку, проигнорируйте это сообщение.
 </target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">

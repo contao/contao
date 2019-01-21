@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,12 +19,6 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
-/**
- * Adds HTTP headers sent by Contao to the Symfony response.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class MergeHttpHeadersListener
 {
     /**
@@ -51,12 +47,6 @@ class MergeHttpHeadersListener
         'cache-control',
     ];
 
-    /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface    $framework
-     * @param HeaderStorageInterface|null $headerStorage
-     */
     public function __construct(ContaoFrameworkInterface $framework, HeaderStorageInterface $headerStorage = null)
     {
         $this->framework = $framework;
@@ -64,31 +54,19 @@ class MergeHttpHeadersListener
     }
 
     /**
-     * Returns the multi-value headers.
-     *
-     * @return array
+     * @return string[]
      */
-    public function getMultiHeaders()
+    public function getMultiHeaders(): array
     {
         return array_values($this->multiHeaders);
     }
 
-    /**
-     * Sets the multi-value headers.
-     *
-     * @param array $headers
-     */
-    public function setMultiHeader(array $headers)
+    public function setMultiHeader(array $headers): void
     {
         $this->multiHeaders = $headers;
     }
 
-    /**
-     * Adds a multi-value header.
-     *
-     * @param string $name
-     */
-    public function addMultiHeader($name)
+    public function addMultiHeader(string $name): void
     {
         $uniqueKey = $this->getUniqueKey($name);
 
@@ -97,12 +75,7 @@ class MergeHttpHeadersListener
         }
     }
 
-    /**
-     * Removes a multi-value header.
-     *
-     * @param string $name
-     */
-    public function removeMultiHeader($name)
+    public function removeMultiHeader(string $name): void
     {
         if (false !== ($i = array_search($this->getUniqueKey($name), $this->multiHeaders, true))) {
             unset($this->multiHeaders[$i]);
@@ -111,10 +84,8 @@ class MergeHttpHeadersListener
 
     /**
      * Adds the Contao headers to the Symfony response.
-     *
-     * @param FilterResponseEvent $event
      */
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function onKernelResponse(FilterResponseEvent $event): void
     {
         if (!$this->framework->isInitialized()) {
             return;
@@ -128,23 +99,18 @@ class MergeHttpHeadersListener
     /**
      * Fetches and stores HTTP headers from PHP.
      */
-    private function fetchHttpHeaders()
+    private function fetchHttpHeaders(): void
     {
         $this->headers = array_merge($this->headers, $this->headerStorage->all());
         $this->headerStorage->clear();
     }
 
-    /**
-     * Sets the response headers.
-     *
-     * @param Response $response
-     */
-    private function setResponseHeaders(Response $response)
+    private function setResponseHeaders(Response $response): void
     {
         $allowOverrides = [];
 
         foreach ($this->headers as $header) {
-            list($name, $content) = explode(':', $header, 2);
+            [$name, $content] = explode(':', $header, 2);
 
             $uniqueKey = $this->getUniqueKey($name);
 
@@ -171,14 +137,7 @@ class MergeHttpHeadersListener
         }
     }
 
-    /**
-     * Returns the unique header key.
-     *
-     * @param string $name
-     *
-     * @return string
-     */
-    private function getUniqueKey($name)
+    private function getUniqueKey(string $name): string
     {
         return str_replace('_', '-', strtolower($name));
     }

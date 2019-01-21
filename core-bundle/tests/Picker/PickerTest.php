@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,135 +18,98 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Knp\Menu\MenuFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Tests the Picker class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class PickerTest extends TestCase
 {
     /**
      * @var Picker
      */
-    protected $picker;
+    private $picker;
 
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturn('Page picker')
+        ;
+
         $factory = new MenuFactory();
+        $router = $this->createMock(RouterInterface::class);
+        $provider = new PagePickerProvider($factory, $router, $translator);
+        $config = new PickerConfig('page', [], 5, 'pagePicker');
 
-        $this->picker = new Picker(
-            $factory,
-            [new PagePickerProvider($factory, $this->createMock(RouterInterface::class))],
-            new PickerConfig('page', [], 5, 'pagePicker')
-        );
-
-        $GLOBALS['TL_LANG']['MSC']['pagePicker'] = 'Page picker';
+        $this->picker = new Picker($factory, [$provider], $config);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown()
+    public function testReturnsTheConfiguration(): void
     {
-        parent::tearDown();
-
-        unset($GLOBALS['TL_LANG']);
+        $this->assertSame('page', $this->picker->getConfig()->getContext());
     }
 
-    /**
-     * Tests returning the configuration.
-     */
-    public function testReturnsTheConfiguration()
-    {
-        $config = $this->picker->getConfig();
-
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\PickerConfig', $config);
-        $this->assertSame('page', $config->getContext());
-    }
-
-    /**
-     * Tests returning the menu.
-     */
-    public function testReturnsTheMenu()
+    public function testReturnsTheMenu(): void
     {
         $menu = $this->picker->getMenu();
 
-        $this->assertInstanceOf('Knp\Menu\ItemInterface', $menu);
         $this->assertSame('picker', $menu->getName());
         $this->assertSame(1, $menu->count());
 
         $pagePicker = $menu->getChild('pagePicker');
 
-        $this->assertInstanceOf('Knp\Menu\ItemInterface', $pagePicker);
+        $this->assertNotNull($pagePicker);
         $this->assertTrue($pagePicker->isCurrent());
         $this->assertSame('Page picker', $pagePicker->getLabel());
 
         $this->assertSame($menu, $this->picker->getMenu());
     }
 
-    /**
-     * Tests returning the current provider.
-     */
-    public function testReturnsTheCurrentProvider()
+    public function testReturnsTheCurrentProvider(): void
     {
         $provider = $this->picker->getCurrentProvider();
 
-        $this->assertInstanceOf('Contao\CoreBundle\Picker\PagePickerProvider', $provider);
+        $this->assertNotNull($provider);
         $this->assertSame('pagePicker', $provider->getName());
     }
 
-    /**
-     * Tests returning the current provider if there is no current provider.
-     */
-    public function testReturnsNullIfThereIsNoCurrentProvider()
+    public function testReturnsNullIfThereIsNoCurrentProvider(): void
     {
         $factory = new MenuFactory();
-
-        $picker = new Picker(
-            $factory,
-            [new PagePickerProvider($factory, $this->createMock(RouterInterface::class))],
-            new PickerConfig('page')
-        );
+        $router = $this->createMock(RouterInterface::class);
+        $provider = new PagePickerProvider($factory, $router);
+        $config = new PickerConfig('page');
+        $picker = new Picker($factory, [$provider], $config);
 
         $this->assertNull($picker->getCurrentProvider());
     }
 
-    /**
-     * Tests returning the current URL.
-     */
-    public function testReturnsTheCurrentUrl()
+    public function testReturnsTheCurrentUrl(): void
     {
         $this->assertNull($this->picker->getCurrentUrl());
     }
 
-    /**
-     * Tests returning the current URL if there is no current menu item.
-     */
-    public function testReturnsNullAsCurrentUrlIfThereIsNoCurrentMenuItem()
+    public function testReturnsNullAsCurrentUrlIfThereIsNoCurrentMenuItem(): void
     {
         $factory = new MenuFactory();
-
-        $picker = new Picker(
-            $factory,
-            [new PagePickerProvider($factory, $this->createMock(RouterInterface::class))],
-            new PickerConfig('page')
-        );
+        $router = $this->createMock(RouterInterface::class);
+        $translator = $this->createMock(TranslatorInterface::class);
+        $provider = new PagePickerProvider($factory, $router, $translator);
+        $config = new PickerConfig('page');
+        $picker = new Picker($factory, [$provider], $config);
 
         $this->assertNull($picker->getCurrentUrl());
     }
 
-    /**
-     * Tests returning the current URL if there are no menu items.
-     */
-    public function testFailsToReturnTheCurrentUrlIfThereAreNoMenuItems()
+    public function testFailsToReturnTheCurrentUrlIfThereAreNoMenuItems(): void
     {
-        $picker = new Picker(new MenuFactory(), [], new PickerConfig('page', [], 5, 'pagePicker'));
+        $factory = new MenuFactory();
+        $config = new PickerConfig('page', [], 5, 'pagePicker');
+        $picker = new Picker($factory, [], $config);
 
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('No picker menu items found');

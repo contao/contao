@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.enclosure.1">
         <source>Please choose the files you want to attach.</source>
-        <target>Por favor escolha os arquivos para serem anexados.</target>
+        <target>Por favor escolha os ficheiros para serem anexados.</target>
       </trans-unit>
       <trans-unit id="tl_faq.noComments.0">
         <source>Disable comments</source>

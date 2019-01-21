@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,37 +17,28 @@ use Composer\Util\Filesystem;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-/**
- * Sets up the Contao Managed Edition.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ScriptHandler
 {
     /**
      * Runs all Composer tasks to initialize a Contao Managed Edition.
-     *
-     * @param Event $event
      */
-    public static function initializeApplication(Event $event)
+    public static function initializeApplication(Event $event): void
     {
+        $webDir = self::getWebDir($event);
+
         static::purgeCacheFolder();
-
         static::addAppDirectory();
-        static::addWebEntryPoints($event);
-
+        static::executeCommand('contao:install-web-dir', $event);
         static::executeCommand('cache:clear --no-warmup', $event);
         static::executeCommand('cache:warmup', $event);
-        static::executeCommand('assets:install --symlink --relative', $event);
+        static::executeCommand(sprintf('assets:install %s --symlink --relative', $webDir), $event);
+        static::executeCommand(sprintf('contao:install %s', $webDir), $event);
+        static::executeCommand(sprintf('contao:symlinks %s', $webDir), $event);
 
-        static::executeCommand('contao:install', $event);
-        static::executeCommand('contao:symlinks', $event);
+        $event->getIO()->write('<info>Done! Please open the Contao install tool and make sure the database is up-to-date.</info>');
     }
 
-    /**
-     * Purges the cache folder.
-     */
-    public static function purgeCacheFolder()
+    public static function purgeCacheFolder(): void
     {
         $filesystem = new Filesystem();
         $filesystem->removeDirectory(getcwd().'/var/cache/prod');
@@ -54,33 +47,16 @@ class ScriptHandler
     /**
      * Adds the app directory if it does not exist.
      */
-    public static function addAppDirectory()
+    public static function addAppDirectory(): void
     {
         $filesystem = new Filesystem();
         $filesystem->ensureDirectoryExists(getcwd().'/app');
     }
 
     /**
-     * Adds the web entry points.
-     *
-     * @param Event $event The event object
-     *
      * @throws \RuntimeException
      */
-    public static function addWebEntryPoints(Event $event)
-    {
-        static::executeCommand('contao:install-web-dir', $event);
-    }
-
-    /**
-     * Executes a command.
-     *
-     * @param string $cmd
-     * @param Event  $event
-     *
-     * @throws \RuntimeException
-     */
-    private static function executeCommand($cmd, Event $event)
+    private static function executeCommand(string $cmd, Event $event): void
     {
         $phpFinder = new PhpExecutableFinder();
 
@@ -104,7 +80,7 @@ class ScriptHandler
         $process->setTimeout(500);
 
         $process->run(
-            function ($type, $buffer) use ($event) {
+            function (string $type, string $buffer) use ($event): void {
                 $event->getIO()->write($buffer, false);
             }
         );
@@ -116,14 +92,14 @@ class ScriptHandler
         }
     }
 
-    /**
-     * Returns the verbosity flag depending on the console IO verbosity.
-     *
-     * @param Event $event
-     *
-     * @return string
-     */
-    private static function getVerbosityFlag(Event $event)
+    private static function getWebDir(Event $event): string
+    {
+        $extra = $event->getComposer()->getPackage()->getExtra();
+
+        return $extra['symfony-web-dir'] ?? 'web';
+    }
+
+    private static function getVerbosityFlag(Event $event): string
     {
         $io = $event->getIO();
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,17 +13,11 @@
 namespace Contao\CoreBundle\Tests\HttpKernel\Header;
 
 use Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
-/**
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class MemoryHeaderStorageTest extends TestCase
 {
-    /**
-     * Tests that all headers are returned.
-     */
-    public function testReturnsAllHeaders()
+    public function testReturnsAllHeaders(): void
     {
         $storage = new MemoryHeaderStorage(['Foo: Bar']);
 
@@ -32,10 +28,7 @@ class MemoryHeaderStorageTest extends TestCase
         $this->assertSame(['Foo: Bar', 'Bar: Baz'], $storage->all());
     }
 
-    /**
-     * Tests that existing headers are cleared.
-     */
-    public function testClearsExistingHeaders()
+    public function testClearsExistingHeaders(): void
     {
         $storage = new MemoryHeaderStorage(['Foo: Bar']);
 

@@ -10,14 +10,14 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Maintenance module "rebuild index".
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class RebuildIndex extends \Backend implements \executable
+class RebuildIndex extends Backend implements \executable
 {
 
 	/**
@@ -27,7 +27,7 @@ class RebuildIndex extends \Backend implements \executable
 	 */
 	public function isActive()
 	{
-		return \Config::get('enableSearch') && \Input::get('act') == 'index';
+		return Config::get('enableSearch') && Input::get('act') == 'index';
 	}
 
 	/**
@@ -37,36 +37,35 @@ class RebuildIndex extends \Backend implements \executable
 	 */
 	public function run()
 	{
-		if (!\Config::get('enableSearch'))
+		if (!Config::get('enableSearch'))
 		{
 			return '';
 		}
 
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		$time = time();
 		$arrUser = array(''=>'-');
 		$objUser = null;
 
-		/** @var BackendTemplate|object $objTemplate */
-		$objTemplate = new \BackendTemplate('be_rebuild_index');
-		$objTemplate->action = ampersand(\Environment::get('request'));
+		$objTemplate = new BackendTemplate('be_rebuild_index');
+		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->indexHeadline = $GLOBALS['TL_LANG']['tl_maintenance']['searchIndex'];
 		$objTemplate->isActive = $this->isActive();
-		$objTemplate->message = \Message::generateUnwrapped(__CLASS__);
+		$objTemplate->message = Message::generateUnwrapped(__CLASS__);
 
 		// Get the active front end users
 		if ($this->User->isAdmin)
 		{
-			$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
+			$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
 		}
 		else
 		{
-			$amg = \StringUtil::deserialize($this->User->amg);
+			$amg = StringUtil::deserialize($this->User->amg);
 
 			if (!empty($amg) && \is_array($amg))
 			{
-				$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE (groups LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
+				$objUser = $this->Database->execute("SELECT id, username FROM tl_member WHERE (groups LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
 			}
 		}
 
@@ -79,15 +78,15 @@ class RebuildIndex extends \Backend implements \executable
 		}
 
 		// Rebuild the index
-		if (\Input::get('act') == 'index')
+		if (Input::get('act') == 'index')
 		{
 			// Check the request token (see #4007)
-			if (!isset($_GET['rt']) || !\RequestToken::validate(\Input::get('rt')))
+			if (!isset($_GET['rt']) || !RequestToken::validate(Input::get('rt')))
 			{
-				/** @var SessionInterface $objSession */
-				$objSession = \System::getContainer()->get('session');
+				/** @var Session $objSession */
+				$objSession = System::getContainer()->get('session');
 
-				$objSession->set('INVALID_TOKEN_URL', \Environment::get('request'));
+				$objSession->set('INVALID_TOKEN_URL', Environment::get('request'));
 				$this->redirect('contao/confirm.php');
 			}
 
@@ -106,43 +105,33 @@ class RebuildIndex extends \Backend implements \executable
 			// Return if there are no pages
 			if (empty($arrPages))
 			{
-				\Message::addError($GLOBALS['TL_LANG']['tl_maintenance']['noSearchable'], __CLASS__);
+				Message::addError($GLOBALS['TL_LANG']['tl_maintenance']['noSearchable'], __CLASS__);
 				$this->redirect($this->getReferer());
 			}
 
 			// Truncate the search tables
-			$this->import('Automator');
+			$this->import(Automator::class, 'Automator');
 			$this->Automator->purgeSearchTables();
 
-			// Hide unpublished elements
-			$this->setCookie('FE_PREVIEW', 0, ($time - 86400), null, null, \Environment::get('ssl'), true);
-
-			// Calculate the hash
-			$strHash = $this->getSessionHash('FE_USER_AUTH');
-
-			// Remove old sessions
-			$this->Database->prepare("DELETE FROM tl_session WHERE tstamp<? OR hash=?")
-						   ->execute(($time - \Config::get('sessionTimeout')), $strHash);
-
-			$strUser = \Input::get('user');
+			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
+			$strUser = Input::get('user');
 
 			// Log in the front end user
 			if (is_numeric($strUser) && $strUser > 0 && isset($arrUser[$strUser]))
 			{
-				// Insert a new session
-				$this->Database->prepare("INSERT INTO tl_session (pid, tstamp, name, sessionID, ip, hash) VALUES (?, ?, ?, ?, ?, ?)")
-							   ->execute($strUser, $time, 'FE_USER_AUTH', \System::getContainer()->get('session')->getId(), \Environment::get('ip'), $strHash);
+				$objUser = $this->Database->prepare("SELECT username FROM tl_member WHERE id=?")
+										  ->execute($strUser);
 
-				// Set the cookie
-				$this->setCookie('FE_USER_AUTH', $strHash, ($time + \Config::get('sessionTimeout')), null, null, \Environment::get('ssl'), true);
+				if (!$objUser->numRows || !$objAuthenticator->authenticateFrontendUser($objUser->username, false))
+				{
+					$objAuthenticator->removeFrontendAuthentication();
+				}
 			}
 
 			// Log out the front end user
 			else
 			{
-				// Unset the cookies
-				$this->setCookie('FE_USER_AUTH', $strHash, ($time - 86400), null, null, \Environment::get('ssl'), true);
-				$this->setCookie('FE_AUTO_LOGIN', \Input::cookie('FE_AUTO_LOGIN'), ($time - 86400), null, null, \Environment::get('ssl'), true);
+				$objAuthenticator->removeFrontendAuthentication();
 			}
 
 			$strBuffer = '';
@@ -151,7 +140,7 @@ class RebuildIndex extends \Backend implements \executable
 			// Display the pages
 			for ($i=0, $c=\count($arrPages); $i<$c; $i++)
 			{
-				$strBuffer .= '<span class="page_url" data-url="' . $arrPages[$i] . '#' . $rand . $i . '">' . \StringUtil::specialchars(\StringUtil::substr(rawurldecode($arrPages[$i]), 100)) . '</span><br>';
+				$strBuffer .= '<span class="page_url" data-url="' . $arrPages[$i] . '#' . $rand . $i . '">' . StringUtil::specialchars(StringUtil::substr(rawurldecode($arrPages[$i]), 100)) . '</span><br>';
 				unset($arrPages[$i]); // see #5681
 			}
 
@@ -160,7 +149,7 @@ class RebuildIndex extends \Backend implements \executable
 			$objTemplate->loading = $GLOBALS['TL_LANG']['tl_maintenance']['indexLoading'];
 			$objTemplate->complete = $GLOBALS['TL_LANG']['tl_maintenance']['indexComplete'];
 			$objTemplate->indexContinue = $GLOBALS['TL_LANG']['MSC']['continue'];
-			$objTemplate->theme = \Backend::getTheme();
+			$objTemplate->theme = Backend::getTheme();
 			$objTemplate->isRunning = true;
 
 			return $objTemplate->parse();
@@ -169,9 +158,11 @@ class RebuildIndex extends \Backend implements \executable
 		// Default variables
 		$objTemplate->user = $arrUser;
 		$objTemplate->indexLabel = $GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][0];
-		$objTemplate->indexHelp = (\Config::get('showHelp') && \strlen($GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1])) ? $GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1] : '';
+		$objTemplate->indexHelp = (Config::get('showHelp') && \strlen($GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1])) ? $GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1] : '';
 		$objTemplate->indexSubmit = $GLOBALS['TL_LANG']['tl_maintenance']['indexSubmit'];
 
 		return $objTemplate->parse();
 	}
 }
+
+class_alias(RebuildIndex::class, 'RebuildIndex');

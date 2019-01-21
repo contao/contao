@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,32 +17,17 @@ use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-/**
- * Tests the AddSessionBagsPass class.
- *
- * @author Leo Feyer <https:/github.com/leofeyer>
- */
 class AddSessionBagsPassTest extends TestCase
 {
-    /**
-     * Tests adding the session bags.
-     */
-    public function testAddsTheSessionBags()
+    public function testAddsTheSessionBags(): void
     {
         $container = new ContainerBuilder();
         $container->setDefinition('session', new Definition(Session::class));
-
-        $container->setDefinition(
-            'contao.session.contao_backend',
-            new Definition(ArrayAttributeBag::class)
-        );
-
-        $container->setDefinition(
-            'contao.session.contao_frontend',
-            new Definition(ArrayAttributeBag::class)
-        );
+        $container->setDefinition('contao.session.contao_backend', new Definition(ArrayAttributeBag::class));
+        $container->setDefinition('contao.session.contao_frontend', new Definition(ArrayAttributeBag::class));
 
         $pass = new AddSessionBagsPass();
         $pass->process($container);
@@ -50,16 +37,13 @@ class AddSessionBagsPassTest extends TestCase
         $this->assertCount(2, $methodCalls);
         $this->assertSame('registerBag', $methodCalls[0][0]);
         $this->assertSame('registerBag', $methodCalls[1][0]);
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $methodCalls[0][1][0]);
-        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $methodCalls[1][1][0]);
+        $this->assertInstanceOf(Reference::class, $methodCalls[0][1][0]);
+        $this->assertInstanceOf(Reference::class, $methodCalls[1][1][0]);
         $this->assertSame('contao.session.contao_backend', (string) $methodCalls[0][1][0]);
         $this->assertSame('contao.session.contao_frontend', (string) $methodCalls[1][1][0]);
     }
 
-    /**
-     * Tests processing the pass without a session.
-     */
-    public function testDoesNotAddsTheSessionBagsIfThereIsNoSession()
+    public function testDoesNotAddsTheSessionBagsIfThereIsNoSession(): void
     {
         $container = new ContainerBuilder();
 

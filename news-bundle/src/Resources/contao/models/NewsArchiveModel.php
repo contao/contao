@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes news archives
  *
@@ -46,22 +48,22 @@ namespace Contao;
  * @method static NewsArchiveModel|null findOneByRequireLogin($val, array $opt=array())
  * @method static NewsArchiveModel|null findOneByDisableCaptcha($val, array $opt=array())
  *
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findByTitle($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findByJumpTo($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findByProtected($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findByGroups($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findByAllowComments($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findByNotify($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findBySortOrder($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findByPerPage($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findByModerate($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findByBbcode($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findByRequireLogin($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findByDisableCaptcha($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|NewsArchiveModel[]|NewsArchiveModel|null findAll(array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByTitle($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByJumpTo($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByProtected($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByGroups($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByAllowComments($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByNotify($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findBySortOrder($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByPerPage($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByModerate($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByBbcode($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByRequireLogin($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findByDisableCaptcha($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|NewsArchiveModel[]|NewsArchiveModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -80,7 +82,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class NewsArchiveModel extends \Model
+class NewsArchiveModel extends Model
 {
 
 	/**
@@ -90,3 +92,5 @@ class NewsArchiveModel extends \Model
 	protected static $strTable = 'tl_news_archive';
 
 }
+
+class_alias(NewsArchiveModel::class, 'NewsArchiveModel');

@@ -1,13 +1,14 @@
+{% trans_default_domain 'contao_exception' %}
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ error.insecure }}
+    {{ 'XPT.insecure'|trans }}
 {% endblock %}
 {% block matter %}
-    <p>{{ error.insecureRoot }}</p>
+    <p>{{ 'XPT.insecureRoot'|trans }}</p>
 {% endblock %}
 {% block howToFix %}
-    <p>{{ error.insecureFix|raw }}</p>
+    <p>{{ 'XPT.insecureFix'|trans|raw }}</p>
 {% endblock %}
 {% block explain %}
-    <p>{{ error.insecureExplain|raw }}</p>
+    <p>{{ 'XPT.insecureExplain'|trans|raw }}</p>
 {% endblock %}

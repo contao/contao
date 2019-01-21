@@ -22,7 +22,7 @@ use Patchwork\Utf8;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FormPassword extends \Widget
+class FormPassword extends Widget
 {
 
 	/**
@@ -120,9 +120,12 @@ class FormPassword extends \Widget
 			return '';
 		}
 
-		if (Utf8::strlen($varInput) < \Config::get('minPasswordLength'))
+		// Check password length either from DCA or use Config as fallback (#1087)
+		$intLength = $this->minlength ?: Config::get('minPasswordLength');
+
+		if (Utf8::strlen($varInput) < $intLength)
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], \Config::get('minPasswordLength')));
+			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], $intLength));
 		}
 
 		if ($varInput != $this->getPost($this->strName . '_confirm'))
@@ -201,3 +204,5 @@ class FormPassword extends \Widget
 						$this->strTagEnding);
 	}
 }
+
+class_alias(FormPassword::class, 'FormPassword');

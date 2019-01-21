@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -13,11 +15,6 @@ namespace Contao\CoreBundle\Picker;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * Picker builder.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class PickerBuilder implements PickerBuilderInterface
 {
     /**
@@ -35,12 +32,6 @@ class PickerBuilder implements PickerBuilderInterface
      */
     private $providers = [];
 
-    /**
-     * Constructor.
-     *
-     * @param FactoryInterface $menuFactory
-     * @param RouterInterface  $router
-     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router)
     {
         $this->menuFactory = $menuFactory;
@@ -49,10 +40,8 @@ class PickerBuilder implements PickerBuilderInterface
 
     /**
      * Adds a picker provider.
-     *
-     * @param PickerProviderInterface $provider
      */
-    public function addProvider(PickerProviderInterface $provider)
+    public function addProvider(PickerProviderInterface $provider): void
     {
         $this->providers[$provider->getName()] = $provider;
     }
@@ -60,7 +49,7 @@ class PickerBuilder implements PickerBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function create(PickerConfig $config)
+    public function create(PickerConfig $config): ?Picker
     {
         $providers = $this->providers;
 
@@ -70,7 +59,7 @@ class PickerBuilder implements PickerBuilderInterface
 
         $providers = array_filter(
             $providers,
-            function (PickerProviderInterface $provider) use ($config) {
+            function (PickerProviderInterface $provider) use ($config): bool {
                 return $provider->supportsContext($config->getContext());
             }
         );
@@ -85,7 +74,7 @@ class PickerBuilder implements PickerBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function createFromData($data)
+    public function createFromData($data): ?Picker
     {
         try {
             $config = PickerConfig::urlDecode($data);
@@ -99,7 +88,7 @@ class PickerBuilder implements PickerBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsContext($context, array $allowed = null)
+    public function supportsContext($context, array $allowed = null): bool
     {
         $providers = $this->providers;
 
@@ -119,7 +108,7 @@ class PickerBuilder implements PickerBuilderInterface
     /**
      * {@inheritdoc}
      */
-    public function getUrl($context, array $extras = [], $value = '')
+    public function getUrl($context, array $extras = [], $value = ''): string
     {
         $providers = (isset($extras['providers']) && \is_array($extras['providers'])) ? $extras['providers'] : null;
 
@@ -127,9 +116,6 @@ class PickerBuilder implements PickerBuilderInterface
             return '';
         }
 
-        return $this->router->generate(
-            'contao_backend_picker',
-            compact('context', 'extras', 'value')
-        );
+        return $this->router->generate('contao_backend_picker', compact('context', 'extras', 'value'));
     }
 }

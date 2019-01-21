@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,143 +12,252 @@
 
 namespace Contao\CoreBundle\Tests\Security\User;
 
-use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\BackendUser;
+use Contao\Config;
+use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\System;
-use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\MetadataBag;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\User\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * Tests the ContaoUserProvider class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class ContaoUserProviderTest extends TestCase
 {
-    /**
-     * @var ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $framework;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
+    public function testLoadsUsersByUsername(): void
     {
-        parent::setUp();
+        $user = $this->createMock(BackendUser::class);
+        $adapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
+        $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
 
-        $this->framework = $this->createMock(ContaoFrameworkInterface::class);
+        $userProvider = $this->mockUserProvider($framework);
+
+        $this->assertSame($user, $userProvider->loadUserByUsername('foobar'));
     }
 
-    /**
-     * Tests loading the user "backend".
-     */
-    public function testProvidesTheBackEndUser()
+    public function testFailsToLoadAUserIfTheUsernameDoesNotExist(): void
     {
-        $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_BACKEND);
-        $container->set('database_connection', $this->createMock(Connection::class));
+        $user = $this->createMock(UserInterface::class);
+        $adapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
+        $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
 
-        System::setContainer($container);
-
-        $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
-        $provider->setContainer($container);
-
-        $this->assertInstanceOf('Contao\BackendUser', $provider->loadUserByUsername('backend'));
-    }
-
-    /**
-     * Tests loading the user "frontend".
-     */
-    public function testProvidesTheFrontEndUser()
-    {
-        $container = $this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND);
-        $container->set('database_connection', $this->createMock(Connection::class));
-
-        System::setContainer($container);
-
-        $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
-        $provider->setContainer($container);
-
-        $this->assertInstanceOf('Contao\FrontendUser', $provider->loadUserByUsername('frontend'));
-    }
-
-    /**
-     * Tests an invalid container scope.
-     */
-    public function testFailsIfTheScopeIsInvalid()
-    {
-        $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
-        $provider->setContainer($this->mockContainerWithContaoScopes('invalid'));
+        $userProvider = $this->mockUserProvider($framework);
 
         $this->expectException(UsernameNotFoundException::class);
+        $this->expectExceptionMessage('Could not find user "foobar"');
 
-        $provider->loadUserByUsername('frontend');
+        $userProvider->loadUserByUsername('foobar');
     }
 
-    /**
-     * Tests an unsupported username.
-     */
-    public function testFailsIfTheUsernameIsNotSupported()
+    public function testRefreshesTheUser(): void
     {
-        $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
-        $provider->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
+        /** @var UserInterface|MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
+        $adapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
+        $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
+
+        $userProvider = $this->mockUserProvider($framework);
+
+        $this->assertSame($user, $userProvider->refreshUser($user));
+    }
+
+    public function testValidatesTheSessionLifetime(): void
+    {
+        /** @var UserInterface|MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
+        $userAdapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
+
+        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter
+            ->expects($this->once())
+            ->method('get')
+            ->with('sessionTimeout')
+            ->willReturn(3600)
+        ;
+
+        $adapters = [
+            BackendUser::class => $userAdapter,
+            Config::class => $configAdapter,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $metadata = $this->createMock(MetadataBag::class);
+        $metadata
+            ->expects($this->once())
+            ->method('getLastUsed')
+            ->willReturn(time() - 1800)
+        ;
+
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->once())
+            ->method('isStarted')
+            ->willReturn(true)
+        ;
+
+        $session
+            ->expects($this->once())
+            ->method('getMetadataBag')
+            ->willReturn($metadata)
+        ;
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->never())
+            ->method('info')
+        ;
+
+        $userProvider = new ContaoUserProvider($framework, $session, BackendUser::class, $logger);
+
+        $this->assertSame($user, $userProvider->refreshUser($user));
+    }
+
+    public function testLogsOutUsersWhoHaveBeenInactiveForTooLong(): void
+    {
+        /** @var UserInterface|MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
+        $userAdapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
+
+        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter
+            ->expects($this->once())
+            ->method('get')
+            ->with('sessionTimeout')
+            ->willReturn(3600)
+        ;
+
+        $adapters = [
+            BackendUser::class => $userAdapter,
+            Config::class => $configAdapter,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $metadata = $this->createMock(MetadataBag::class);
+        $metadata
+            ->expects($this->once())
+            ->method('getLastUsed')
+            ->willReturn(time() - 7200)
+        ;
+
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->once())
+            ->method('isStarted')
+            ->willReturn(true)
+        ;
+
+        $session
+            ->expects($this->once())
+            ->method('getMetadataBag')
+            ->willReturn($metadata)
+        ;
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('info')
+            ->with('User "foobar" has been logged out automatically due to inactivity')
+        ;
+
+        $userProvider = new ContaoUserProvider($framework, $session, BackendUser::class, $logger);
 
         $this->expectException(UsernameNotFoundException::class);
+        $this->expectExceptionMessage('User "foobar" has been logged out automatically due to inactivity.');
 
-        $provider->loadUserByUsername('foo');
+        $this->assertSame($user, $userProvider->refreshUser($user));
     }
 
-    /**
-     * Tests refreshing a user.
-     */
-    public function testFailsIfTheUserIsRefreshed()
+    public function testFailsToRefreshUnsupportedUsers(): void
     {
-        $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
-        $provider->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
+        $user = $this->createMock(UserInterface::class);
+        $userProvider = $this->mockUserProvider();
 
         $this->expectException(UnsupportedUserException::class);
+        $this->expectExceptionMessage(sprintf('Unsupported class "%s".', \get_class($user)));
 
-        $provider->refreshUser(new User('foo', 'bar'));
+        $userProvider->refreshUser($user);
+    }
+
+    public function testChecksIfAClassIsSupported(): void
+    {
+        $userProvider = $this->mockUserProvider();
+
+        $this->assertTrue($userProvider->supportsClass(BackendUser::class));
+        $this->assertFalse($userProvider->supportsClass(FrontendUser::class));
+    }
+
+    public function testDoesNotHandleUnknownUserClasses(): void
+    {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Unsupported class "LdapUser".');
+
+        $this->mockUserProvider(null, 'LdapUser');
     }
 
     /**
-     * Tests the supportsClass() method.
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "postAuthenticate" hook has been deprecated %s.
      */
-    public function testChecksIfAClassIsSupported()
+    public function testTriggersThePostAuthenticateHook(): void
     {
-        $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
-        $provider->setContainer($this->mockContainerWithContaoScopes(ContaoCoreBundle::SCOPE_FRONTEND));
+        /** @var UserInterface|MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
 
-        $this->assertTrue($provider->supportsClass(FrontendUser::class));
+        $listener = $this->createPartialMock(Controller::class, ['onPostAuthenticate']);
+        $listener
+            ->expects($this->once())
+            ->method('onPostAuthenticate')
+            ->with($user)
+        ;
+
+        $systemAdapter = $this->mockAdapter(['importStatic']);
+        $systemAdapter
+            ->expects($this->once())
+            ->method('importStatic')
+            ->with('HookListener')
+            ->willReturn($listener)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            BackendUser::class => $this->mockConfiguredAdapter(['loadUserByUsername' => $user]),
+            System::class => $systemAdapter,
+        ]);
+
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        $GLOBALS['TL_HOOKS']['postAuthenticate'] = [['HookListener', 'onPostAuthenticate']];
+
+        $userProvider = $this->mockUserProvider($framework);
+
+        $this->assertSame($user, $userProvider->refreshUser($user));
+
+        unset($GLOBALS['TL_HOOKS']);
     }
 
     /**
-     * Tests loading the user "backend" without a container.
+     * Mocks a user provider.
      */
-    public function testFailsToLoadTheBackEndUserIfThereIsNoContainer()
+    private function mockUserProvider(ContaoFrameworkInterface $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
     {
-        $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
+        if (null === $framework) {
+            $framework = $this->mockContaoFramework();
+        }
 
-        $this->expectException(UsernameNotFoundException::class);
+        $session = $this->createMock(SessionInterface::class);
+        $logger = $this->createMock(LoggerInterface::class);
 
-        $provider->loadUserByUsername('backend');
-    }
-
-    /**
-     * Tests loading the user "frontend" without a container.
-     */
-    public function testFailsToLoadTheFrontEndUserIfThereIsNoContainer()
-    {
-        $provider = new ContaoUserProvider($this->framework, $this->mockScopeMatcher());
-
-        $this->expectException(UsernameNotFoundException::class);
-
-        $provider->loadUserByUsername('frontend');
+        return new ContaoUserProvider($framework, $session, $userClass, $logger);
     }
 }

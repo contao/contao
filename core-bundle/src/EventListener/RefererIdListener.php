@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -15,11 +17,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-/**
- * Adds the referer ID to the current request.
- *
- * @author Yanick Witschi <https://github.com/toflar>
- */
 class RefererIdListener
 {
     /**
@@ -37,12 +34,6 @@ class RefererIdListener
      */
     private $token;
 
-    /**
-     * Constructor.
-     *
-     * @param CsrfTokenManagerInterface $tokenManager
-     * @param ScopeMatcher              $scopeMatcher
-     */
     public function __construct(CsrfTokenManagerInterface $tokenManager, ScopeMatcher $scopeMatcher)
     {
         $this->tokenManager = $tokenManager;
@@ -51,10 +42,8 @@ class RefererIdListener
 
     /**
      * Adds the referer ID to the request.
-     *
-     * @param GetResponseEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event): void
     {
         if (!$this->scopeMatcher->isBackendMasterRequest($event)) {
             return;

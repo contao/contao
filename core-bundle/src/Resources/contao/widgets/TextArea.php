@@ -21,7 +21,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class TextArea extends \Widget
+class TextArea extends Widget
 {
 
 	/**
@@ -120,7 +120,9 @@ class TextArea extends \Widget
 						$this->intRows,
 						$this->intCols,
 						$this->getAttributes(),
-						\StringUtil::specialchars($this->varValue),
+						StringUtil::specialchars($this->varValue),
 						$this->wizard);
 	}
 }
+
+class_alias(TextArea::class, 'TextArea');

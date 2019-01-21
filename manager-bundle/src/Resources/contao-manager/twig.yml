@@ -1,5 +1,0 @@
-# Twig configuration
-twig:
-    debug: "%kernel.debug%"
-    strict_variables: "%kernel.debug%"
-    default_path: '%kernel.project_dir%/app/Resources/views'

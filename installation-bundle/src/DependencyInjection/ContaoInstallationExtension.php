@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -16,42 +18,43 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-/**
- * Adds the bundle services to the container.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoInstallationExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__.'/../Resources/config')
         );
 
-        $loader->load('commands.yml');
-        $loader->load('listener.yml');
-        $loader->load('services.yml');
+        static $files = [
+            'commands.yml',
+            'listener.yml',
+            'services.yml',
+        ];
+
+        foreach ($files as $file) {
+            $loader->load($file);
+        }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
-        $rootDir = $container->getParameter('kernel.root_dir');
+        $configDir = $container->getParameter('kernel.project_dir').'/app/config';
 
-        if (file_exists($rootDir.'/config/parameters.yml') || !file_exists($rootDir.'/config/parameters.yml.dist')) {
+        if (file_exists($configDir.'/parameters.yml') || !file_exists($configDir.'/parameters.yml.dist')) {
             return;
         }
 
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator($rootDir.'/config')
+            new FileLocator($configDir)
         );
 
         $loader->load('parameters.yml.dist');

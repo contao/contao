@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -8,36 +10,27 @@
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Doctrine\Schema;
+namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
-use Contao\CoreBundle\Tests\DoctrineTestCase;
+use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\Event\SchemaIndexDefinitionEventArgs;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
+use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
+use PHPUnit\Framework\MockObject\MockObject;
 
-/**
- * Tests the DoctrineSchemaListener class.
- *
- * @author Andreas Schempp <https://github.com/aschempp>
- */
 class DoctrineSchemaListenerTest extends DoctrineTestCase
 {
-    /**
-     * Tests appending to an existing scheme.
-     */
-    public function testAppendsToAnExistingSchema()
+    public function testAppendsToAnExistingSchema(): void
     {
-        if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
-            $this->markTestSkipped('This test is only relevant for doctrine/dbal < 2.9');
-        }
-
         $framework = $this->mockContaoFrameworkWithInstaller(
             [
                 'tl_files' => [
@@ -48,34 +41,63 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
             ]
         );
 
-        $provider = new DcaSchemaProvider(
-            $framework,
-            $this->mockDoctrineRegistry()
-        );
-
         $schema = new Schema();
         $event = new GenerateSchemaEventArgs($this->createMock(EntityManagerInterface::class), $schema);
 
         $this->assertFalse($schema->hasTable('tl_files'));
 
-        $listener = new DoctrineSchemaListener($provider);
+        $listener = new DoctrineSchemaListener(new DcaSchemaProvider($framework, $this->mockDoctrineRegistry()));
         $listener->postGenerateSchema($event);
 
         $this->assertTrue($schema->hasTable('tl_files'));
         $this->assertTrue($schema->getTable('tl_files')->hasColumn('path'));
     }
 
-    /**
-     * Tests that the index is changed if there is a subpart.
-     */
-    public function testChangesTheIndexIfThereIsASubpart()
+    public function testChangesTheIndexIfThereIsASubpart(): void
     {
         if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
             $this->markTestSkipped('This test is only relevant for doctrine/dbal < 2.9');
         }
 
-        $connection = $this->createMock(Connection::class);
+        $result = $this->createMock(ResultStatement::class);
+        $result
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls(
+                [
+                    'Table' => 'tl_recipients',
+                    'Non_unique' => '0',
+                    'Key_name' => 'pid_email',
+                    'Seq_in_index' => '1',
+                    'Column_name' => 'pid',
+                    'Collation' => 'A',
+                    'Cardinality' => '2',
+                    'Sub_part' => null,
+                    'Packed' => null,
+                    'Null' => '',
+                    'Index_type' => 'BTREE',
+                    'Comment' => '',
+                    'Index_comment' => '',
+                ],
+                [
+                    'Table' => 'tl_recipients',
+                    'Non_unique' => '0',
+                    'Key_name' => 'pid_email',
+                    'Seq_in_index' => '2',
+                    'Column_name' => 'email',
+                    'Collation' => 'A',
+                    'Cardinality' => '2',
+                    'Sub_part' => '191',
+                    'Packed' => null,
+                    'Null' => '',
+                    'Index_type' => 'BTREE',
+                    'Comment' => '',
+                    'Index_comment' => '',
+                ],
+                false
+            )
+        ;
 
+        $connection = $this->createMock(Connection::class);
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySqlPlatform())
@@ -83,32 +105,16 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
 
         $connection
             ->expects($this->once())
-            ->method('fetchAssoc')
-            ->with("SHOW INDEX FROM tl_files WHERE Key_name='path'")
-            ->willReturn(
-                [
-                    'Table' => 'tl_files',
-                    'Non_unique' => '1',
-                    'Key_name' => 'path',
-                    'Seq_in_index' => '1',
-                    'Column_name' => 'path',
-                    'Collation' => 'A',
-                    'Cardinality' => '903',
-                    'Sub_part' => '333',
-                    'Packed' => null,
-                    'Null' => null,
-                    'Index_type' => 'BTREE',
-                    'Comment' => '',
-                    'Index_comment' => '',
-                ]
-            )
+            ->method('executeQuery')
+            ->with("SHOW INDEX FROM tl_recipients WHERE Key_name='path'")
+            ->willReturn($result)
         ;
 
-        /** @var SchemaIndexDefinitionEventArgs|\PHPUnit_Framework_MockObject_MockObject $event */
+        /** @var SchemaIndexDefinitionEventArgs|MockObject $event */
         $event = $this
             ->getMockBuilder(SchemaIndexDefinitionEventArgs::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getConnection', 'getTable', 'getTableIndex', 'preventDefault'])
+            ->setMethods(['getConnection', 'getTable', 'getTableIndex', 'preventDefault', 'setIndex'])
             ->getMock()
         ;
 
@@ -119,7 +125,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
 
         $event
             ->method('getTable')
-            ->willReturn('tl_files')
+            ->willReturn('tl_recipients')
         ;
 
         $event
@@ -129,34 +135,35 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
 
         $event
             ->expects($this->once())
+            ->method('setIndex')
+            ->with($this->callback(
+                function (Index $index) {
+                    $this->assertSame(['pid', 'email(191)'], $index->getColumns());
+
+                    return true;
+                }
+            ))
+        ;
+
+        $event
+            ->expects($this->once())
             ->method('preventDefault')
         ;
 
         $listener = new DoctrineSchemaListener($this->createMock(DcaSchemaProvider::class));
         $listener->onSchemaIndexDefinition($event);
-
-        $index = $event->getIndex();
-
-        $this->assertInstanceOf('Doctrine\DBAL\Schema\Index', $index);
-        $this->assertSame('path', $index->getName());
-        $this->assertSame(['path(333)'], $index->getColumns());
     }
 
-    /**
-     * Tests that the index is not changed if there is no subpart.
-     */
-    public function testDoesNotChangeTheIndexIfThereIsNoSubpart()
+    public function testDoesNotChangeTheIndexIfThereIsNoSubpart(): void
     {
-        $connection = $this->createMock(Connection::class);
+        if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+            $this->markTestSkipped('This test is only relevant for doctrine/dbal < 2.9');
+        }
 
-        $connection
-            ->method('getDatabasePlatform')
-            ->willReturn(new MySqlPlatform())
-        ;
-
-        $connection
-            ->method('fetchAssoc')
-            ->willReturn(
+        $result = $this->createMock(ResultStatement::class);
+        $result
+            ->method('fetch')
+            ->willReturnOnConsecutiveCalls(
                 [
                     'Table' => 'tl_member',
                     'Non_unique' => '0',
@@ -171,12 +178,23 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
                     'Index_type' => 'BTREE',
                     'Comment' => '',
                     'Index_comment' => '',
-                ]
+                ],
+                false
             )
         ;
 
-        $event = $this->createMock(SchemaIndexDefinitionEventArgs::class);
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('getDatabasePlatform')
+            ->willReturn(new MySqlPlatform())
+        ;
 
+        $connection
+            ->method('executeQuery')
+            ->willReturn($result)
+        ;
+
+        $event = $this->createMock(SchemaIndexDefinitionEventArgs::class);
         $event
             ->method('getConnection')
             ->willReturn($connection)
@@ -193,21 +211,29 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         ;
 
         $event
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('setIndex')
+            ->with($this->callback(
+                function (Index $index) {
+                    $this->assertSame(['username'], $index->getColumns());
+
+                    return true;
+                }
+            ))
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('preventDefault')
         ;
 
         $listener = new DoctrineSchemaListener($this->createMock(DcaSchemaProvider::class));
         $listener->onSchemaIndexDefinition($event);
     }
 
-    /**
-     * Tests that the index of the primary index column is not changed .
-     */
-    public function testDoesNotChangeTheIndexOfThePrimaryKeyColumn()
+    public function testDoesNotChangeTheIndexOfThePrimaryKeyColumn(): void
     {
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySqlPlatform())
@@ -219,7 +245,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         ;
 
         $event = $this->createMock(SchemaIndexDefinitionEventArgs::class);
-
         $event
             ->method('getConnection')
             ->willReturn($connection)
@@ -239,13 +264,9 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         $listener->onSchemaIndexDefinition($event);
     }
 
-    /**
-     * Tests that the index is not changed on patforms other than MySQL.
-     */
-    public function testDoesNotChangeTheIndexOnDatabasePlatformsOtherThanMysql()
+    public function testDoesNotChangeTheIndexOnDatabasePlatformsOtherThanMysql(): void
     {
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new PostgreSqlPlatform())
@@ -257,7 +278,6 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         ;
 
         $event = $this->createMock(SchemaIndexDefinitionEventArgs::class);
-
         $event
             ->method('getConnection')
             ->willReturn($connection)
@@ -278,13 +298,9 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
     }
 
     /**
-     * Returns the index event argument.
-     *
-     * @param $name
-     *
-     * @return array
+     * @return array<string,string[]|string|bool>
      */
-    private function getIndexEventArg($name)
+    private function getIndexEventArg(string $name): array
     {
         return [
             'name' => $name,

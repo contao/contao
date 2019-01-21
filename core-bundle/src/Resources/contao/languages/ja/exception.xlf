@@ -79,8 +79,8 @@
         <target>アプリケーションは要求を他のページに移動するように構成してありますが、その先のページが存在しないか、公開されていません。</target>
       </trans-unit>
       <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let him know that there is something wrong.</source>
-        <target>これはウェブサイトの管理者が何か修正をしなければなりません。ウェブサイトの訪問者の場合は、&lt;a href=&quot;%s&quot;&gt;ウェブマスターに連絡&lt;/a&gt;して何か問題があると知らせる以外にありません。</target>
+        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
+        <target>これはウェブサイトの管理者が何か修正をしなければなりません。ウェブサイトの訪問者の場合は&lt;a href=&quot;%s&quot;&gt;ウェブマスターに連絡&lt;/a&gt;して、何か問題があると知らせる以外にありません。</target>
       </trans-unit>
       <trans-unit id="XPT.noRoot">
         <source>No root page found</source>
@@ -91,7 +91,7 @@
         <target>要求した言語とドメインの両方、またはどちらかに一致するウェブサイトのルートのページがありません。</target>
       </trans-unit>
       <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know that there is something wrong.</source>
+        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
         <target>明示的に言語を背呈している場合は、&lt;a href=&quot;%s&quot;&gt;最上位に移動&lt;/a&gt;して、リダイレクトされるかどうか確かめてください。もしくは&lt;a href=&quot;%s&quot;&gt;ウェブマスターに連絡&lt;/a&gt;して、何か問題があると知らせてください。</target>
       </trans-unit>
       <trans-unit id="XPT.noLayout">
@@ -119,7 +119,7 @@
         <target>アクセスの要求は、まだ公開したページがないウェブサイトに対応付けられました。</target>
       </trans-unit>
       <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let him know.</source>
+        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
         <target>たぶん、まだウェブサイトは開発途中で、数日の間にオンラインになるでしょう。それでも何か問題があると思う場合は、&lt;a href=&quot;%s&quot;&gt;ウェブマスターに連絡&lt;/a&gt;して問題を知らせてください。</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">

@@ -1,13 +1,14 @@
+{% trans_default_domain 'contao_exception' %}
 {% extends "@ContaoCore/Error/layout.html.twig" %}
 {% block title %}
-    {{ error.incomplete }}
+    {{ 'XPT.incomplete'|trans }}
 {% endblock %}
 {% block matter %}
-    <p>{{ error.incompleteInstallation }}</p>
+    <p>{{ 'XPT.incompleteInstallation'|trans }}</p>
 {% endblock %}
 {% block howToFix %}
-    <p>{{ error.incompleteFix|raw }}</p>
+    <p>{{ 'XPT.incompleteFix'|trans|raw }}</p>
 {% endblock %}
 {% block explain %}
-    <p>{{ error.incompleteExplain|raw }}</p>
+    <p>{{ 'XPT.incompleteExplain'|trans|raw }}</p>
 {% endblock %}

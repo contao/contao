@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -11,71 +13,54 @@
 namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\LayoutModel;
 use Contao\Model\Collection;
 use Contao\NewsBundle\EventListener\GeneratePageListener;
 use Contao\NewsFeedModel;
 use Contao\PageModel;
-use PHPUnit\Framework\TestCase;
+use Contao\Template;
+use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
-/**
- * Tests the GeneratePageListener class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
-class GeneratePageListenerTest extends TestCase
+class GeneratePageListenerTest extends ContaoTestCase
 {
-    /**
-     * Tests that the listener returns a replacement string for a calendar feed.
-     */
-    public function testAddsTheNewsFeedLink()
+    public function testAddsTheNewsFeedLink(): void
     {
-        $layoutModel = $this->createMock(LayoutModel::class);
-
-        $layoutModel
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                if ('newsfeeds' === $key) {
-                    return 'a:1:{i:0;i:3;}';
-                }
-
-                return null;
-            })
-        ;
-
         $GLOBALS['TL_HEAD'] = [];
 
-        $listener = new GeneratePageListener($this->mockContaoFramework());
+        $properties = [
+            'feedBase' => 'http://localhost/',
+            'alias' => 'news',
+            'format' => 'rss',
+            'title' => 'Latest news',
+        ];
+
+        $newsFeedModel = $this->mockClassWithProperties(NewsFeedModel::class, $properties);
+        $collection = new Collection([$newsFeedModel], 'tl_news_feeds');
+
+        $adapters = [
+            NewsFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => $collection]),
+            Template::class => new Adapter(Template::class),
+        ];
+
+        /** @var LayoutModel|MockObject $layoutModel */
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['newsfeeds' => 'a:1:{i:0;i:3;}']);
+
+        $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
         $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertSame(
-            [
-                '<link type="application/rss+xml" rel="alternate" href="http://localhost/share/news.xml" title="Latest news">',
-            ],
+            ['<link type="application/rss+xml" rel="alternate" href="http://localhost/share/news.xml" title="Latest news">'],
             $GLOBALS['TL_HEAD']
         );
     }
 
-    /**
-     * Tests that the listener returns if there are no feeds.
-     */
-    public function testDoesNotAddTheNewsFeedLinkIfThereAreNoFeeds()
+    public function testDoesNotAddTheNewsFeedLinkIfThereAreNoFeeds(): void
     {
-        $layoutModel = $this->createMock(LayoutModel::class);
-
-        $layoutModel
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                if ('newsfeeds' === $key) {
-                    return '';
-                }
-
-                return null;
-            })
-        ;
-
         $GLOBALS['TL_HEAD'] = [];
+
+        /** @var LayoutModel|MockObject $layoutModel */
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['newsfeeds' => '']);
 
         $listener = new GeneratePageListener($this->mockContaoFramework());
         $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
@@ -83,100 +68,20 @@ class GeneratePageListenerTest extends TestCase
         $this->assertEmpty($GLOBALS['TL_HEAD']);
     }
 
-    /**
-     * Tests that the listener returns if there are no models.
-     */
-    public function testDoesNotAddTheNewsFeedLinkIfThereAreNoModels()
+    public function testDoesNotAddTheNewsFeedLinkIfThereAreNoModels(): void
     {
-        $layoutModel = $this->createMock(LayoutModel::class);
-
-        $layoutModel
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                if ('newsfeeds' === $key) {
-                    return 'a:1:{i:0;i:3;}';
-                }
-
-                return null;
-            })
-        ;
-
         $GLOBALS['TL_HEAD'] = [];
 
-        $listener = new GeneratePageListener($this->mockContaoFramework(true));
+        $adapters = [
+            NewsFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => null]),
+        ];
+
+        /** @var LayoutModel|MockObject $layoutModel */
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['newsfeeds' => 'a:1:{i:0;i:3;}']);
+
+        $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
         $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD']);
-    }
-
-    /**
-     * Returns a ContaoFramework instance.
-     *
-     * @param bool $noModels
-     *
-     * @return ContaoFrameworkInterface
-     */
-    private function mockContaoFramework($noModels = false)
-    {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-
-        $framework
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
-
-        $feedModel = $this->createMock(NewsFeedModel::class);
-
-        $feedModel
-            ->method('__get')
-            ->willReturnCallback(function ($key) {
-                switch ($key) {
-                    case 'feedBase':
-                        return 'http://localhost/';
-
-                    case 'alias':
-                        return 'news';
-
-                    case 'format':
-                        return 'rss';
-
-                    case 'title':
-                        return 'Latest news';
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
-        $newsFeedModelAdapter = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findByIds'])
-            ->getMock()
-        ;
-
-        $newsFeedModelAdapter
-            ->method('findByIds')
-            ->willReturn($noModels ? null : new Collection([$feedModel], 'tl_news_feeds'))
-        ;
-
-        $framework
-            ->method('getAdapter')
-            ->willReturnCallback(function ($key) use ($newsFeedModelAdapter) {
-                switch ($key) {
-                    case 'Contao\NewsFeedModel':
-                        return $newsFeedModelAdapter;
-
-                    case 'Contao\Template':
-                        return new Adapter('Contao\Template');
-
-                    default:
-                        return null;
-                }
-            })
-        ;
-
-        return $framework;
     }
 }
