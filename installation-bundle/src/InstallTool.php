@@ -195,6 +195,11 @@ class InstallTool
 
         $options = $this->connection->getParams()['defaultTableOptions'];
 
+        // If Contao is used as bundle and there are no custom settings
+        if (empty($options)) {
+            return false;
+        }
+
         // Check the collation if the user has configured it
         if (isset($options['collate'])) {
             $statement = $this->connection->query("SHOW COLLATION LIKE '".$options['collate']."'");
