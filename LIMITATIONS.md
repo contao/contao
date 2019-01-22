@@ -1,5 +1,13 @@
 # Known limitations
 
+## Importing style sheets with a media query
+
+Although the internal style sheet editor will add an existing media query when
+exporting a style sheet, the media query will not be re-imported.
+
+More information: https://github.com/contao/contao/issues/273 
+
+
 ## Models and database connections
 
 The model registry currently only supports the main database connection. The

@@ -299,7 +299,7 @@ class DcaSchemaProvider
                 $flags[] = 'fulltext';
             }
 
-            // Backwards compatibility for doctrine/dbal < 2.9
+            // Backwards compatibility for doctrine/dbal <2.9
             if (array_filter($lengths) && !method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
                 $columns = array_combine(
                     $columns,

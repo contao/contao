@@ -217,8 +217,13 @@ abstract class Frontend extends Controller
 		}
 
 		// Add the second fragment as auto_item if the number of fragments is even
-		if (\Config::get('useAutoItem') && \count($arrFragments) % 2 == 0)
+		if (\count($arrFragments) % 2 == 0)
 		{
+			if (!\Config::get('useAutoItem'))
+			{
+				return false; // see #264
+			}
+
 			array_insert($arrFragments, 1, array('auto_item'));
 		}
 
@@ -240,10 +245,10 @@ abstract class Frontend extends Controller
 		// Add the fragments to the $_GET array
 		for ($i=1, $c=\count($arrFragments); $i<$c; $i+=2)
 		{
-			// Skip key value pairs if the key is empty (see #4702)
+			// Return false if the key is empty (see #4702 and #263)
 			if ($arrFragments[$i] == '')
 			{
-				continue;
+				return false;
 			}
 
 			// Return false if there is a duplicate parameter (duplicate content) (see #4277)

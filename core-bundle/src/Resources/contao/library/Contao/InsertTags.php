@@ -106,7 +106,7 @@ class InsertTags extends Controller
 			$elements = explode('::', $tag);
 
 			// Load the value from cache
-			if (isset($arrCache[$strTag]) && !\in_array('refresh', $flags))
+			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && !\in_array('refresh', $flags))
 			{
 				$strBuffer .= $arrCache[$strTag];
 				continue;

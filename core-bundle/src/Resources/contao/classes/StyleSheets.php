@@ -1391,7 +1391,7 @@ class StyleSheets extends Backend
 		// Add the media query (see #7560)
 		if ($objStyleSheet->mediaQuery != '')
 		{
-			$objFile->append($objStyleSheet->mediaQuery . ' {');
+			$objFile->append('@media ' . $objStyleSheet->mediaQuery . ' {');
 		}
 
 		$objDefinitions = $this->Database->prepare("SELECT * FROM tl_style WHERE pid=? AND invisible!='1' ORDER BY sorting")

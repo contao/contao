@@ -3,6 +3,7 @@
 ## DEV
 
  * Check the database configuration the install tool (see #285).
+ * Correctly sort the tree view records if there is an active filter (see #269).
 
 ## 4.6.13 (2019-01-16)
 

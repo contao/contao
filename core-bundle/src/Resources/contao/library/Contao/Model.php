@@ -458,6 +458,11 @@ abstract class Model
 				$intPk = $this->arrModified[static::$strPk];
 			}
 
+			if ($intPk === null)
+			{
+				throw new \RuntimeException('The primary key has not been set');
+			}
+
 			// Update the row
 			$objDatabase->prepare("UPDATE " . static::$strTable . " %s WHERE " . \Database::quoteIdentifier(static::$strPk) . "=?")
 						->set($arrSet)
