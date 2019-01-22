@@ -121,10 +121,10 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
-            'Renders the page if there is an item with an empty key' => [
+            'Renders the 404 page if there is an item with an empty key' => [
                 '/home//.html',
-                200,
-                'Home - Root with home page',
+                404,
+                '(404 Not Found)',
                 [],
                 'root-with-home.local',
                 false,
@@ -170,7 +170,7 @@ class RoutingTest extends WebTestCase
                 '/home/foo.html',
                 404,
                 '(404 Not Found)',
-                ['foo' => ''],
+                [],
                 'root-with-home.local',
                 false,
                 false,
@@ -193,10 +193,10 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
-            'Ignores key/value pairs if the key is empty' => [
+            'Renders the 404 page if the path contains an item with an empty key' => [
                 '/home//foo.html',
-                200,
-                'Home - Root with home page',
+                404,
+                '(404 Not Found)',
                 [],
                 'root-with-home.local',
                 false,
@@ -416,10 +416,10 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
-            'Ignores key/value pairs if the key is empty' => [
+            'Renders the 404 page if the path contains item with an empty key' => [
                 '/en/home//foo.html',
-                200,
-                'Home - Root with home page',
+                404,
+                '(404 Not Found)',
                 ['language' => 'en'],
                 'root-with-home.local',
                 false,
@@ -452,11 +452,11 @@ class RoutingTest extends WebTestCase
                 true,
                 false,
             ],
-            'Renders the page if auto items are enabled and there is an item with an empty key' => [
+            'Renders the 404 page if auto items are enabled and there is item with an empty key' => [
                 '/en/home/foobar//foo.html',
-                200,
-                'Foobar - Root with home page',
-                ['language' => 'en', 'auto_item' => 'foobar', 'items' => 'foobar'],
+                404,
+                '(404 Not Found)',
+                ['language' => 'en', 'auto_item' => 'foobar'],
                 'root-with-home.local',
                 true,
                 false,
@@ -639,10 +639,10 @@ class RoutingTest extends WebTestCase
                 false,
                 false,
             ],
-            'Ignores key/value pairs if the key is empty' => [
+            'Renders the 404 page if the path contains an item with item with an empty key' => [
                 '/home//foo',
-                200,
-                'Home - Root with home page',
+                404,
+                '(404 Not Found)',
                 [],
                 'root-with-home.local',
                 false,

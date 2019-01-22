@@ -74,7 +74,6 @@ class InputEnhancer implements RouteEnhancerInterface
         if (0 !== \count($fragments) % 2) {
             if (!$config->get('useAutoItem')) {
                 throw new ResourceNotFoundException('Invalid number of arguments');
-
             }
 
             array_unshift($fragments, 'auto_item');
