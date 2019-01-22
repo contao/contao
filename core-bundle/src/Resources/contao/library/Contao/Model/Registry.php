@@ -168,11 +168,9 @@ class Registry implements \Countable
 		$strPk = $objModel->getPk();
 		$varPk = $objModel->$strPk;
 
-		if ($varPk === null || $varPk === '')
+		if ($varPk === null)
 		{
-			throw new \RuntimeException(
-				"Cannot register a model with a primary key that is null or empty string ($strTable::$strPk)"
-			);
+			throw new \RuntimeException('The primary key has not been set');
 		}
 
 		// Another model object is pointing to the DB record already
