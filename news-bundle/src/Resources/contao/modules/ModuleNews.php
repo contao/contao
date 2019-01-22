@@ -196,6 +196,12 @@ abstract class ModuleNews extends Module
 					// Link to the news article
 					$objTemplate->href = $objTemplate->link;
 					$objTemplate->linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
+
+					// If the external link is opened in a new window, open the image link in a new window, too (see #210)
+					if ($objTemplate->source == 'external' && $objTemplate->target && strpos($objTemplate->attributes, 'target="_blank"') === false)
+					{
+						$objTemplate->attributes .= ' target="_blank"';
+					}
 				}
 			}
 		}

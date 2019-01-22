@@ -3526,8 +3526,21 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			$fld = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6) ? 'pid' : 'id';
 
-			$objRoot = $this->Database->prepare("SELECT DISTINCT " . Database::quoteIdentifier($fld) . " FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting" : ""))
-									  ->execute($this->values);
+			if ($fld == 'id')
+			{
+				$objRoot = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting" : ""))
+										  ->execute($this->values);
+			}
+			elseif ($blnHasSorting)
+			{
+				$objRoot = $this->Database->prepare("SELECT pid, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid" . ($blnHasSorting ? " ORDER BY psort" : ""))
+										  ->execute($this->values);
+			}
+			else
+			{
+				$objRoot = $this->Database->prepare("SELECT pid FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid")
+										  ->execute($this->values);
+			}
 
 			if ($objRoot->numRows < 1)
 			{

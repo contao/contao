@@ -230,6 +230,67 @@ class InstallTool
             }
         }
 
+        // Check if utf8mb4 can be used if the user has configured it
+        if (isset($options['engine'], $options['collate']) && 0 === strncmp($options['collate'], 'utf8mb4', 7)) {
+            if ('innodb' !== strtolower($options['engine'])) {
+                $context['errorCode'] = 4;
+                $context['engine'] = $options['engine'];
+
+                return true;
+            }
+
+            $row = $this->connection
+                ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
+                ->fetch(\PDO::FETCH_OBJ)
+            ;
+
+            // The variable no longer exists as of MySQL 8 and MariaDB 10.3
+            if (false === $row) {
+                return false;
+            }
+
+            // As there is no reliable way to get the vendor (see #84), we are
+            // guessing based on the version number. The check will not be run
+            // as of MySQL 8 and MariaDB 10.3, so this should be safe.
+            $vok = version_compare($version, '10', '>=') ? '10.2.2' : '5.7.7';
+
+            // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
+            if (version_compare($version, $vok, '>=')) {
+                return false;
+            }
+
+            // The innodb_large_prefix option is disabled
+            if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
+                $context['errorCode'] = 5;
+
+                return true;
+            }
+
+            $row = $this->connection
+                ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
+                ->fetch(\PDO::FETCH_OBJ)
+            ;
+
+            // The innodb_file_per_table option is disabled
+            if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
+                $context['errorCode'] = 6;
+
+                return true;
+            }
+
+            $row = $this->connection
+                ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
+                ->fetch(\PDO::FETCH_OBJ)
+            ;
+
+            // The InnoDB file format is not Barracuda
+            if ('barracuda' !== strtolower((string) $row->Value)) {
+                $context['errorCode'] = 6;
+
+                return true;
+            }
+        }
+
         return false;
     }
 

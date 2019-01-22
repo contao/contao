@@ -16,7 +16,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>For security reasons, the install tool has been locked after a wrong password had been entered more than three times in a row. To unlock it, run &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; on the command line.</target>
+        <target>For security reasons, the install tool has been locked after a wrong password had been entered more than three times in a row. You can unlock it in the Contao Manager or by running &lt;code&gt;contao:install:unlock&lt;/code&gt; on the command line.</target>
       </trans-unit>
       <trans-unit id="5">
         <source>file_permissions_headline</source>
@@ -329,6 +329,30 @@
       <trans-unit id="82">
         <source>misconfigured_database_url_explain</source>
         <target>Could not connect to the database using the connection URL found in the &lt;code&gt;DATABASE_URL&lt;/code&gt; environment variable.</target>
+      </trans-unit>
+      <trans-unit id="83">
+        <source>engine_mismatch</source>
+        <target>The configured database engine does not support utf8mb4!</target>
+      </trans-unit>
+      <trans-unit id="84">
+        <source>engine_mismatch_explain</source>
+        <target>The configured database engine &lt;code&gt;%s&lt;/code&gt; does not support utf8mb4. Please use InnoDB instead or configure a different character set and collation in the &lt;code&gt;app/config/config.yml&lt;/code&gt; file.</target>
+      </trans-unit>
+      <trans-unit id="85">
+        <source>innodb_large_prefix</source>
+        <target>The innodb_large_prefix option is not enabled!</target>
+      </trans-unit>
+      <trans-unit id="86">
+        <source>innodb_large_prefix_explain</source>
+        <target>The &lt;code&gt;innodb_large_prefix&lt;/code&gt; option is not enabled on your server. Please enable it (recommended) or configure a different character set and collation in the &lt;code&gt;app/config/config.yml&lt;/code&gt; file.</target>
+      </trans-unit>
+      <trans-unit id="87">
+        <source>innodb_additional</source>
+        <target>InnoDB is not configured properly!</target>
+      </trans-unit>
+      <trans-unit id="88">
+        <source>innodb_additional_explain</source>
+        <target>Using large prefixes in MySQL versions prior to 5.7.7 and MariaDB versions prior to 10.2.2 requires the Barracuda file format and the &lt;code&gt;innodb_file_per_table&lt;/code&gt; option.</target>
       </trans-unit>
     </body>
   </file>

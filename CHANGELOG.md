@@ -1,5 +1,10 @@
 # Change log
 
+## DEV
+
+ * Check the database configuration the install tool (see #285).
+ * Correctly sort the tree view records if there is an active filter (see #269).
+
 ## 4.7.0-RC2 (2019-01-17)
 
  * Support comma separated values in `Model::getRelated()` (see #257).
