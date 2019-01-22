@@ -104,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'login'                       => 'username,password',
+		'login'                       => 'useTwoFactor,username,password',
 		'assignDir'                   => 'homeDir'
 	),
 
@@ -376,7 +376,19 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
 			'sql'                     => "blob NULL"
-		)
+		),
+		'secret' => array
+		(
+			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
+			'sql'                     => "binary(128) NULL default NULL"
+		),
+		'useTwoFactor' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_member']['useTwoFactor'],
+			'inputType'               => 'checkbox',
+			'eval'                    => array('isBoolean'=>true, 'tl_class'=>'m12'),
+			'sql'                     => "char(1) NOT NULL default ''"
+		),
 	)
 );
 
@@ -440,6 +452,11 @@ class tl_member extends Contao\Backend
 		$time = Contao\Date::floorToMinute();
 
 		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
+
+		if ($row['useTwoFactor'])
+		{
+			$image .= '_two_factor';
+		}
 
 		if ($row['disable'] || $disabled)
 		{

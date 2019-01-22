@@ -124,4 +124,15 @@ class FrontendController extends AbstractController
 
         return $response;
     }
+
+    /**
+     * Redirects the user to the Contao front end in case they manually call the
+     * /_contao/two-factor route. Will be intercepted by the two factor bundle otherwise.
+     *
+     * @Route("/_contao/two-factor", name="contao_frontend_two_factor")
+     */
+    public function twoFactorAuthenticationAction(): Response
+    {
+        return $this->redirectTo('contao_index');
+    }
 }

@@ -565,6 +565,19 @@ services:
         tags:
             - { name: 'scheb_two_factor.provider', alias: 'contao_backend_two_factor' }
 
+    contao.security.two_factor.frontend_form_renderer:
+        class: Contao\CoreBundle\Security\TwoFactor\BackendFormRenderer
+        arguments:
+            - "@router"
+
+    contao.security.two_factor.frontend_provider:
+        class: Contao\CoreBundle\Security\TwoFactor\Provider
+        arguments:
+            - "@contao.security.two_factor.authenticator"
+            - "@contao.security.two_factor.frontend_form_renderer"
+        tags:
+            - { name: "scheb_two_factor.provider", alias: "contao_frontend_two_factor" }
+
     contao.security.user_checker:
         class: Contao\CoreBundle\Security\User\UserChecker
         arguments:

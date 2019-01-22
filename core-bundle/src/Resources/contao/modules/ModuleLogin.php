@@ -149,6 +149,7 @@ class ModuleLogin extends Module
 		$this->Template->forceTargetPath = (int) $blnRedirectBack;
 		$this->Template->targetPath = StringUtil::specialchars($strRedirect);
 		$this->Template->failurePath = StringUtil::specialchars(Environment::get('base').Environment::get('request'));
+		$this->Template->authFormPath = StringUtil::specialchars(Environment::get('base').Environment::get('request'));
 	}
 }
 
