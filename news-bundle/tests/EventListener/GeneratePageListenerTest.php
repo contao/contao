@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\Environment;
 use Contao\LayoutModel;
 use Contao\Model\Collection;
 use Contao\NewsBundle\EventListener\GeneratePageListener;
@@ -39,6 +40,7 @@ class GeneratePageListenerTest extends ContaoTestCase
         $collection = new Collection([$newsFeedModel], 'tl_news_feeds');
 
         $adapters = [
+            Environment::class => $this->mockAdapter(['get']),
             NewsFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => $collection]),
             Template::class => new Adapter(Template::class),
         ];

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Doctrine;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -198,9 +198,9 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks the Contao framework with the database installer.
      *
-     * @return ContaoFrameworkInterface|MockObject
+     * @return ContaoFramework|MockObject
      */
-    protected function mockContaoFrameworkWithInstaller(array $dca = [], array $file = []): ContaoFrameworkInterface
+    protected function mockContaoFrameworkWithInstaller(array $dca = [], array $file = []): ContaoFramework
     {
         $installer = $this->createMock(Installer::class);
         $installer

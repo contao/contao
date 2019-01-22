@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Matcher;
 
 use Contao\Config;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\System;
@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 class LegacyMatcher implements RequestMatcherInterface
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -43,7 +43,7 @@ class LegacyMatcher implements RequestMatcherInterface
      */
     private $prependLocale;
 
-    public function __construct(ContaoFrameworkInterface $framework, RequestMatcherInterface $requestMatcher, string $urlSuffix, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, RequestMatcherInterface $requestMatcher, string $urlSuffix, bool $prependLocale)
     {
         $this->framework = $framework;
         $this->requestMatcher = $requestMatcher;

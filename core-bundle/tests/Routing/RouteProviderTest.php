@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
@@ -459,9 +459,9 @@ class RouteProviderTest extends TestCase
     }
 
     /**
-     * @return ContaoFrameworkInterface|MockObject
+     * @return ContaoFramework|MockObject
      */
-    private function mockFramework(Adapter $pageAdapter = null, Adapter $configAdapter = null): ContaoFrameworkInterface
+    private function mockFramework(Adapter $pageAdapter = null, Adapter $configAdapter = null): ContaoFramework
     {
         return $this->mockContaoFramework([PageModel::class => $pageAdapter, Config::class => $configAdapter]);
     }
@@ -502,7 +502,7 @@ class RouteProviderTest extends TestCase
         );
     }
 
-    private function mockRouteProvider(ContaoFrameworkInterface $framework = null, string $urlSuffix = '.html', bool $prependLocale = false): RouteProvider
+    private function mockRouteProvider(ContaoFramework $framework = null, string $urlSuffix = '.html', bool $prependLocale = false): RouteProvider
     {
         if (null === $framework) {
             $framework = $this->mockContaoFramework();

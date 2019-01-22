@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\Header\HeaderStorageInterface;
 use Contao\CoreBundle\HttpKernel\Header\NativeHeaderStorage;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 class MergeHttpHeadersListener
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -47,7 +47,7 @@ class MergeHttpHeadersListener
         'cache-control',
     ];
 
-    public function __construct(ContaoFrameworkInterface $framework, HeaderStorageInterface $headerStorage = null)
+    public function __construct(ContaoFramework $framework, HeaderStorageInterface $headerStorage = null)
     {
         $this->framework = $framework;
         $this->headerStorage = $headerStorage ?: new NativeHeaderStorage();

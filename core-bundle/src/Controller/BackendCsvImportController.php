@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\BackendTemplate;
 use Contao\Config;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\FileUpload;
 use Contao\Message;
@@ -35,7 +35,7 @@ class BackendCsvImportController
     public const SEPARATOR_TABULATOR = 'tabulator';
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -59,7 +59,7 @@ class BackendCsvImportController
      */
     private $projectDir;
 
-    public function __construct(ContaoFrameworkInterface $framework, Connection $connection, RequestStack $requestStack, TranslatorInterface $translator, string $projectDir)
+    public function __construct(ContaoFramework $framework, Connection $connection, RequestStack $requestStack, TranslatorInterface $translator, string $projectDir)
     {
         $this->framework = $framework;
         $this->connection = $connection;

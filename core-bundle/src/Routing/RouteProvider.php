@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
@@ -29,7 +29,7 @@ use Symfony\Component\Routing\RouteCollection;
 class RouteProvider implements RouteProviderInterface
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -48,7 +48,7 @@ class RouteProvider implements RouteProviderInterface
      */
     private $prependLocale;
 
-    public function __construct(ContaoFrameworkInterface $framework, Connection $database, string $urlSuffix, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, Connection $database, string $urlSuffix, bool $prependLocale)
     {
         $this->framework = $framework;
         $this->database = $database;

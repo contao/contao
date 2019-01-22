@@ -22,7 +22,7 @@ use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageError404;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
@@ -50,7 +50,7 @@ class PrettyErrorScreenListener
     private $twig;
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -77,7 +77,7 @@ class PrettyErrorScreenListener
         NoRootPageFoundException::class => 'no_root_page_found',
     ];
 
-    public function __construct(bool $prettyErrorScreens, \Twig_Environment $twig, ContaoFrameworkInterface $framework, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
+    public function __construct(bool $prettyErrorScreens, \Twig_Environment $twig, ContaoFramework $framework, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;

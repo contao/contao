@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Translation;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
@@ -26,11 +26,11 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     private $translator;
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
-    public function __construct(TranslatorInterface $translator, ContaoFrameworkInterface $framework)
+    public function __construct(TranslatorInterface $translator, ContaoFramework $framework)
     {
         $this->translator = $translator;
         $this->framework = $framework;

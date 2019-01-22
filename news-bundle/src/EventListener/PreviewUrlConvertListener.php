@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\EventListener;
 
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\News;
 use Contao\NewsModel;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,11 +27,11 @@ class PreviewUrlConvertListener
     private $requestStack;
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
-    public function __construct(RequestStack $requestStack, ContaoFrameworkInterface $framework)
+    public function __construct(RequestStack $requestStack, ContaoFramework $framework)
     {
         $this->requestStack = $requestStack;
         $this->framework = $framework;

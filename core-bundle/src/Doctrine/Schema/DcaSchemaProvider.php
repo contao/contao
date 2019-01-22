@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Doctrine\Schema;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
@@ -27,7 +27,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 class DcaSchemaProvider
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -36,7 +36,7 @@ class DcaSchemaProvider
      */
     private $doctrine;
 
-    public function __construct(ContaoFrameworkInterface $framework, Registry $doctrine)
+    public function __construct(ContaoFramework $framework, Registry $doctrine)
     {
         $this->framework = $framework;
         $this->doctrine = $doctrine;

@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\EventListener;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\News;
 use Contao\NewsFeedModel;
 use Contao\NewsModel;
@@ -21,11 +21,11 @@ use Contao\StringUtil;
 class InsertTagsListener
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
     }

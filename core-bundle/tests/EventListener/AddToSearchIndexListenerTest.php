@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Frontend;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class AddToSearchIndexListenerTest extends TestCase
 {
     /**
-     * @var ContaoFrameworkInterface|MockObject
+     * @var ContaoFramework|MockObject
      */
     private $framework;
 
@@ -56,7 +56,7 @@ class AddToSearchIndexListenerTest extends TestCase
 
     public function testDoesNotIndexTheResponseIfTheContaoFrameworkIsNotInitialized(): void
     {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(false)

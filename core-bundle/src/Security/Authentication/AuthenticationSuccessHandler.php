@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
 use Contao\PageModel;
@@ -30,7 +30,7 @@ use Symfony\Component\Security\Http\HttpUtils;
 class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     protected $framework;
 
@@ -44,7 +44,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     private $user;
 
-    public function __construct(HttpUtils $httpUtils, ContaoFrameworkInterface $framework, LoggerInterface $logger = null)
+    public function __construct(HttpUtils $httpUtils, ContaoFramework $framework, LoggerInterface $logger = null)
     {
         parent::__construct($httpUtils);
 

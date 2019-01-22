@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\OptIn;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\OptIn\OptInToken;
 use Contao\CoreBundle\OptIn\OptInTokenAlreadyConfirmedException;
 use Contao\CoreBundle\OptIn\OptInTokenInterface;
@@ -220,7 +220,7 @@ class OptInTokenTest extends ContaoTestCase
         $this->assertTrue($token->hasBeenSent());
     }
 
-    private function getToken(OptInModel $model, ContaoFrameworkInterface $framework = null): OptInTokenInterface
+    private function getToken(OptInModel $model, ContaoFramework $framework = null): OptInTokenInterface
     {
         if (null === $framework) {
             $framework = $this->mockContaoFramework();

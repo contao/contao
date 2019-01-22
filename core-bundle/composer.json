@@ -109,7 +109,7 @@
         "ext-fileinfo": "*",
         "composer/composer": "^1.0",
         "contao/manager-plugin": "^2.3.1",
-        "contao/test-case": "^1.6",
+        "contao/test-case": "^2.0",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/event-manager": "^1.0",
         "doctrine/orm": "^2.5",

@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Cache;
 
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -170,7 +170,7 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileNotExists($this->getFixturesDir().'/var/cache/contao');
     }
 
-    private function mockCacheWarmer(Connection $connection = null, ContaoFrameworkInterface $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
+    private function mockCacheWarmer(Connection $connection = null, ContaoFramework $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
     {
         if (null === $connection) {
             $connection = $this->createMock(Connection::class);

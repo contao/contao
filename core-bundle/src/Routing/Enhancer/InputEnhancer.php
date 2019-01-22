@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Enhancer;
 
 use Contao\Config;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Input;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
@@ -24,7 +24,7 @@ use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
 class InputEnhancer implements RouteEnhancerInterface
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -33,7 +33,7 @@ class InputEnhancer implements RouteEnhancerInterface
      */
     private $prependLocale;
 
-    public function __construct(ContaoFrameworkInterface $framework, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, bool $prependLocale)
     {
         $this->framework = $framework;
         $this->prependLocale = $prependLocale;

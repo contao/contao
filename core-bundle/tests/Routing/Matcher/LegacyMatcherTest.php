@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Routing\Matcher;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
@@ -555,9 +555,9 @@ class LegacyMatcherTest extends TestCase
     }
 
     /**
-     * @return ContaoFrameworkInterface|MockObject
+     * @return ContaoFramework|MockObject
      */
-    private function mockFrameworkWithAdapters(Adapter $configAdapter = null, string $language = null, array $hooks = []): ContaoFrameworkInterface
+    private function mockFrameworkWithAdapters(Adapter $configAdapter = null, string $language = null, array $hooks = []): ContaoFramework
     {
         $classes = [];
         $callbacks = [];

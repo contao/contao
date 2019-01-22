@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Authentication\Provider;
 
 use Contao\Controller;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\CoreBundle\Tests\TestCase;
@@ -263,7 +263,7 @@ class AuthenticationProviderTest extends TestCase
         ];
     }
 
-    private function mockProvider(ContaoFrameworkInterface $framework = null): AuthenticationProvider
+    private function mockProvider(ContaoFramework $framework = null): AuthenticationProvider
     {
         $userProvider = $this->createMock(UserProviderInterface::class);
         $userChecker = $this->createMock(UserCheckerInterface::class);
@@ -271,7 +271,7 @@ class AuthenticationProviderTest extends TestCase
         $encoderFactory = $this->createMock(EncoderFactoryInterface::class);
 
         if (null === $framework) {
-            $framework = $this->createMock(ContaoFrameworkInterface::class);
+            $framework = $this->createMock(ContaoFramework::class);
         }
 
         return new AuthenticationProvider($userProvider, $userChecker, $providerKey, $encoderFactory, $framework);

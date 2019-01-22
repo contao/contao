@@ -170,7 +170,13 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionUponDuplicateParameters(): void
     {
-        $framework = $this->mockContaoFramework();
+        $input = $this->mockAdapter(['setGet']);
+        $input
+            ->expects($this->never())
+            ->method('setGet')
+        ;
+
+        $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $defaults = [
             'pageModel' => $this->createMock(PageModel::class),

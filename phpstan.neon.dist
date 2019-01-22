@@ -30,7 +30,4 @@ parameters:
         # Ignore the Adapter::missingMethod() warning
         - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter::missingMethod\(\)\.#'
 
-        # Ignore calling ContaoFrameworkInterface::initialize() with a parameter
-        - '#Method Contao\\CoreBundle\\Framework\\ContaoFrameworkInterface::initialize\(\) invoked with 1 parameter, 0 required\.#'
-
     reportUnmatchedIgnoredErrors: false
