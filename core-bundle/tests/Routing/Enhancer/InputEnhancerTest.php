@@ -163,8 +163,6 @@ class InputEnhancerTest extends TestCase
             ['/foo/bar', false, ['foo', 'bar']],
             ['/foo/bar/bar/baz', false, ['foo', 'bar'], ['bar', 'baz']],
             ['/foo/bar/baz', true, ['auto_item', 'foo'], ['bar', 'baz']],
-            ['/foo/bar//baz', false, ['foo', 'bar']],
-            ['/foo/bar/baz', false, ['foo', 'bar'], ['baz', '']],
             ['/f%20o/bar', false, ['f o', 'bar']],
             ['/foo/ba%20r', false, ['foo', 'ba r']],
         ];
@@ -211,6 +209,63 @@ class InputEnhancerTest extends TestCase
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('"bar" is an auto_item keyword (duplicate content)');
+
+        $enhancer->enhance($defaults, Request::create('/'));
+    }
+
+    public function testThrowsAnExceptionIfTheNumberOfArgumentsIsInvalid(): void
+    {
+        $input = $this->mockAdapter(['setGet']);
+        $input
+            ->expects($this->never())
+            ->method('setGet')
+        ;
+
+        $adapters = [
+            Input::class => $input,
+            Config::class => $this->mockConfiguredAdapter(['get' => false]),
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $defaults = [
+            'pageModel' => $this->createMock(PageModel::class),
+            'parameters' => '/foo/bar/baz',
+        ];
+
+        $enhancer = new InputEnhancer($framework, false);
+
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('Invalid number of arguments');
+
+        $enhancer->enhance($defaults, Request::create('/'));
+    }
+
+    public function testThrowsAnExceptionIfAFragmentKeyIsEmpty(): void
+    {
+        $input = $this->mockAdapter(['setGet']);
+        $input
+            ->expects($this->once())
+            ->method('setGet')
+            ->with('foo', 'bar')
+        ;
+
+        $adapters = [
+            Input::class => $input,
+            Config::class => $this->mockConfiguredAdapter(['get' => false]),
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $defaults = [
+            'pageModel' => $this->createMock(PageModel::class),
+            'parameters' => '/foo/bar//baz',
+        ];
+
+        $enhancer = new InputEnhancer($framework, false);
+
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('Empty fragment key in path');
 
         $enhancer->enhance($defaults, Request::create('/'));
     }

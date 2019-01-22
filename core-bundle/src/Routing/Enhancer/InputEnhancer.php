@@ -71,14 +71,19 @@ class InputEnhancer implements RouteEnhancerInterface
         $fragments = explode('/', substr($defaults['parameters'], 1));
 
         // Add the second fragment as auto_item if the number of fragments is even
-        if ($config->get('useAutoItem') && 0 !== \count($fragments) % 2) {
+        if (0 !== \count($fragments) % 2) {
+            if (!$config->get('useAutoItem')) {
+                throw new ResourceNotFoundException('Invalid number of arguments');
+
+            }
+
             array_unshift($fragments, 'auto_item');
         }
 
         for ($i = 0, $c = \count($fragments); $i < $c; $i += 2) {
             // Skip key value pairs if the key is empty (see #4702)
             if ('' === $fragments[$i]) {
-                continue;
+                throw new ResourceNotFoundException('Empty fragment key in path');
             }
 
             // Abort if there is a duplicate parameter (duplicate content) (see #4277)

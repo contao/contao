@@ -216,6 +216,36 @@ class RoutingTest extends ContaoTestCase
     /**
      * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
      */
+    public function testReturnsFalseIfAFragmentKeyIsEmpty(): void
+    {
+        $_SERVER['REQUEST_URI'] = 'home//foo.html';
+
+        $request = $this->createMock(Request::class);
+        $request
+            ->method('getBasePath')
+            ->willReturn('')
+        ;
+
+        $request
+            ->method('getScriptName')
+            ->willReturn('app.php')
+        ;
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $container = new ContainerBuilder();
+        $container->set('request_stack', $requestStack);
+
+        System::setContainer($container);
+
+        $this->assertFalse(Frontend::getPageIdFromUrl());
+        $this->assertEmpty($_GET);
+    }
+
+    /**
+     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
+     */
     public function testDecodesTheRequestString(): void
     {
         $_SERVER['REQUEST_URI'] = 'h%C3%B6me.html';
@@ -240,36 +270,6 @@ class RoutingTest extends ContaoTestCase
         System::setContainer($container);
 
         $this->assertSame('höme', Frontend::getPageIdFromUrl());
-        $this->assertEmpty($_GET);
-    }
-
-    /**
-     * @expectedDeprecation Using Frontend::getPageIdFromUrl() has been deprecated %s.
-     */
-    public function testUnsetsEmptyFragments(): void
-    {
-        $_SERVER['REQUEST_URI'] = 'home//foo.html';
-
-        $request = $this->createMock(Request::class);
-        $request
-            ->method('getBasePath')
-            ->willReturn('')
-        ;
-
-        $request
-            ->method('getScriptName')
-            ->willReturn('app.php')
-        ;
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
-
-        System::setContainer($container);
-
-        $this->assertSame('home', Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
     }
 
