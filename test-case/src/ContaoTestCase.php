@@ -15,7 +15,7 @@ namespace Contao\TestCase;
 use Contao\Config;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -98,13 +98,13 @@ abstract class ContaoTestCase extends TestCase
      * A Config adapter with the default Contao configuration will be added
      * automatically if no Config adapter is given.
      *
-     * @return ContaoFrameworkInterface|MockObject
+     * @return ContaoFramework|MockObject
      */
-    protected function mockContaoFramework(array $adapters = []): ContaoFrameworkInterface
+    protected function mockContaoFramework(array $adapters = []): ContaoFramework
     {
         $this->addConfigAdapter($adapters);
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(true)
@@ -221,7 +221,7 @@ abstract class ContaoTestCase extends TestCase
     protected function mockTokenStorage(string $class): TokenStorageInterface
     {
         if (!is_a($class, User::class, true)) {
-            throw new \Exception(sprintf('Class "%s" is not a Contao\User class', $class));
+            throw new \InvalidArgumentException(sprintf('Class "%s" is not a Contao\User class', $class));
         }
 
         $user = $this->createPartialMock($class, ['hasAccess']);
