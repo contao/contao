@@ -65,6 +65,11 @@ class ToggleViewListener
             $value = 'desktop';
         }
 
+        if (method_exists(Cookie::class, 'create')) {
+            return Cookie::create('TL_VIEW', $value, 0, $basePath);
+        }
+
+        // Backwards compatibility with symfony/http-foundation <4.2
         return new Cookie('TL_VIEW', $value, 0, $basePath);
     }
 }

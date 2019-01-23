@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 /**
  * @internal Do not instantiate this class in your code; use the "contao.framework" service instead
  */
-class ContaoFramework implements ContainerAwareInterface
+class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
