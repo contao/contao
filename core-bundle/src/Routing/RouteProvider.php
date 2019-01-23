@@ -259,7 +259,7 @@ class RouteProvider implements RouteProviderInterface
 
         $requirements = ['parameters' => '(/.+)?'];
         $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->urlSuffix);
-        $host = ($page->domain) ? strtok($page->domain, ':') : null;
+        $host = $page->domain ? strtok($page->domain, ':') : null;
 
         if ($this->prependLocale) {
             $path = '/{_locale}'.$path;
@@ -289,7 +289,7 @@ class RouteProvider implements RouteProviderInterface
         $path = '/';
         $requirements = [];
         $defaults = $this->getRouteDefaults($page);
-        $host = ($page->domain) ? strtok($page->domain, ':') : null;
+        $host = $page->domain ? strtok($page->domain, ':') : null;
 
         if ($this->prependLocale) {
             $path = '/{_locale}'.$path;
