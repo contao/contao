@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Route;
 
 class RouteProviderTest extends TestCase
 {
-    public function testGetsRouteByName(): void
+    public function testGetsARouteByName(): void
     {
         $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17]);
 
@@ -45,7 +45,7 @@ class RouteProviderTest extends TestCase
         $this->assertSame($page, $route->getDefault('pageModel'));
     }
 
-    public function testThrowsExceptionIfRouteNameHasNoId(): void
+    public function testThrowsAnExceptionIfTheRouteNameDoesNotMatchAPageId(): void
     {
         $provider = $this->mockRouteProvider();
 
@@ -55,7 +55,7 @@ class RouteProviderTest extends TestCase
         $provider->getRouteByName('foobar');
     }
 
-    public function testThrowsExceptionIfPageIsNotFoundFromRouteName(): void
+    public function testThrowsAnExceptionIfThePageIdIsInvalid(): void
     {
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -72,7 +72,7 @@ class RouteProviderTest extends TestCase
         $provider->getRouteByName('tl_page.17');
     }
 
-    public function testGetsRoutesByNames(): void
+    public function testGetsMultipleRoutesByNames(): void
     {
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
@@ -132,7 +132,7 @@ class RouteProviderTest extends TestCase
         $this->assertSame('example.org', $route->getHost());
     }
 
-    public function testFindsAllPagesForGetRoutesByNamesWithNullArgument(): void
+    public function testSelectsAllPagesIfNoPageNamesAreGiven(): void
     {
         $pageAdapter = $this->mockAdapter(['findAll']);
         $pageAdapter
@@ -144,7 +144,7 @@ class RouteProviderTest extends TestCase
         $provider->getRoutesByNames(null);
     }
 
-    public function testReturnsEmptyArrayForGetRoutesByNamesWithoutPageIds(): void
+    public function testReturnsAnEmptyArrayIfThereAreNoMatchingPages(): void
     {
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
@@ -157,21 +157,21 @@ class RouteProviderTest extends TestCase
         $this->assertSame([], $provider->getRoutesByNames(['foo', 'bar']));
     }
 
-    public function testReturnsEmptyCollectionIfPathContainsAutoItem(): void
+    public function testReturnsAnEmptyCollectionIfThePathContainsAutoItem(): void
     {
         $request = $this->mockRequestWithPath('/foo/auto_item/bar.html');
 
         $this->assertEmpty($this->mockRouteProvider()->getRouteCollectionForRequest($request));
     }
 
-    public function testReturnsEmptyCollectionIfUrlSuffixDoesNotMatch(): void
+    public function testReturnsAnEmptyCollectionIfTheUrlSuffixDoesNotMatch(): void
     {
         $request = $this->mockRequestWithPath('/foo.php');
 
         $this->assertEmpty($this->mockRouteProvider()->getRouteCollectionForRequest($request));
     }
 
-    public function testReturnsEmptyCollectionIfLanguageIsNotInUrl(): void
+    public function testReturnsAnEmptyCollectionIfTheLanguageIsNotGiven(): void
     {
         $request = $this->mockRequestWithPath('/foo.html');
         $provider = $this->mockRouteProvider(null, '.html', true);
@@ -307,7 +307,7 @@ class RouteProviderTest extends TestCase
     /**
      * @dataProvider getRoutes
      */
-    public function testSortsRoutes(array $pages, array $languages): void
+    public function testSortsTheRoutes(array $pages, array $languages): void
     {
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
@@ -420,9 +420,9 @@ class RouteProviderTest extends TestCase
     /**
      * @dataProvider getPageRoutes
      */
-    public function testAddsRouteForPage(string $alias, string $language, string $domain, string $urlSuffix, bool $prependLocale): void
+    public function testAddsRoutesForAPage(string $alias, string $language, string $domain, string $urlSuffix, bool $prependLocale, ?string $scheme): void
     {
-        $page = $this->createPage($language, $alias, true, $domain);
+        $page = $this->createPage($language, $alias, true, $domain, $scheme);
 
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
@@ -439,12 +439,19 @@ class RouteProviderTest extends TestCase
         $collection = $provider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $collection);
+
         $route = $collection->get('tl_page.'.$page->id);
 
         $this->assertInstanceOf(Route::class, $route);
         $this->assertSame('(/.+)?', $route->getRequirement('parameters'));
         $this->assertTrue($route->getOption('utf8'));
         $this->assertSame($domain, $route->getHost());
+
+        if ('https' === $scheme) {
+            $this->assertSame(['https'], $route->getSchemes());
+        } else {
+            $this->assertSame([], $route->getSchemes());
+        }
 
         if ($prependLocale) {
             $this->assertSame('/{_locale}/'.$alias.'{parameters}'.$urlSuffix, $route->getPath());
@@ -461,13 +468,16 @@ class RouteProviderTest extends TestCase
                 foreach (['', 'example.com'] as $domain) {
                     foreach (['.html', '.php', ''] as $urlSuffix) {
                         foreach ([true, false] as $addLanguageToUrl) {
-                            yield [
-                                $alias,
-                                $language,
-                                $domain,
-                                $urlSuffix,
-                                $addLanguageToUrl,
-                            ];
+                            foreach ([null, 'https'] as $scheme) {
+                                yield [
+                                    $alias,
+                                    $language,
+                                    $domain,
+                                    $urlSuffix,
+                                    $addLanguageToUrl,
+                                    $scheme,
+                                ];
+                            }
                         }
                     }
                 }
@@ -523,7 +533,7 @@ class RouteProviderTest extends TestCase
     /**
      * @return PageModel|MockObject
      */
-    private function createPage(string $language, string $alias, bool $fallback = true, string $domain = ''): PageModel
+    private function createPage(string $language, string $alias, bool $fallback = true, string $domain = '', string $scheme = null): PageModel
     {
         return $this->mockClassWithProperties(
             PageModel::class,
@@ -534,6 +544,7 @@ class RouteProviderTest extends TestCase
                 'domain' => $domain,
                 'rootLanguage' => $language,
                 'rootIsFallback' => $fallback,
+                'rootUseSSL' => 'https' === $scheme,
             ]
         );
     }

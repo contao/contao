@@ -272,7 +272,7 @@ class RouteProvider implements RouteProviderInterface
             $requirements,
             ['utf8' => true],
             $host,
-            null
+            $page->rootUseSSL ? 'https' : null
         );
 
         $this->addRoutesForRootPage($page, $routes);
@@ -302,7 +302,7 @@ class RouteProvider implements RouteProviderInterface
             $requirements,
             [],
             $host,
-            null
+            $page->rootUseSSL ? 'https' : null
         );
 
         if (!$page->rootIsFallback || !$this->prependLocale) {
@@ -324,7 +324,7 @@ class RouteProvider implements RouteProviderInterface
             [],
             [],
             $host,
-            null
+            $page->rootUseSSL ? 'https' : null
         );
     }
 
