@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Add the `js_nocookie.html5` template (see #134).
  * Check the database configuration the install tool (see #285).
  * Correctly sort the tree view records if there is an active filter (see #269).
 
@@ -16,7 +17,6 @@
 ## 4.7.0-RC1 (2019-01-15)
 
  * Warn if there are user groups granting access to the template editor (see #224).
- * Warn in the form generator if cookies are disabled (see #134).
  * Use the Symfony CMF router (see #95).
  * Increase the back end preview image dimensions (see #246).
  * Add the "contao.slug" service (see #222).
