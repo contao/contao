@@ -21,7 +21,8 @@ use Symfony\Component\Routing\RouteCollection;
 class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
 {
     /**
-     * Override parent constructor because the arguments are replaced in finalMatch().
+     * Initializes the object with an empty route collection and request
+     * context, because both will be set in the finalMatch() method.
      */
     public function __construct()
     {
@@ -34,8 +35,10 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
     public function finalMatch(RouteCollection $collection, Request $request)
     {
         $this->routes = $collection;
+
         $context = new RequestContext();
         $context->fromRequest($request);
+
         $this->setContext($context);
 
         return $this->match($request->getPathInfo());
