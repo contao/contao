@@ -175,6 +175,7 @@ security:
 
     access_control:
         - { path: ^/contao/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/contao/logout, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/contao, roles: ROLE_USER }
 ```
 
