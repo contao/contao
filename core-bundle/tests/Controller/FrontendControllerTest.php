@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Controller;
 use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Fixtures\Controller\PageError401Controller;
 use Contao\CoreBundle\Fixtures\Exception\PageError401Exception;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Exception\LogoutException;
@@ -53,28 +52,8 @@ class FrontendControllerTest extends TestCase
             ->method('initialize')
         ;
 
-        $tokenChecker = $this->createMock(TokenChecker::class);
-        $tokenChecker
-            ->expects($this->once())
-            ->method('hasFrontendUser')
-            ->willReturn(true)
-        ;
-
-        $tokenChecker
-            ->expects($this->once())
-            ->method('hasBackendUser')
-            ->willReturn(true)
-        ;
-
-        $tokenChecker
-            ->expects($this->once())
-            ->method('isPreviewMode')
-            ->willReturn(false)
-        ;
-
         $container = $this->mockContainer();
         $container->set('contao.framework', $framework);
-        $container->set('contao.security.token_checker', $tokenChecker);
 
         $controller = new FrontendController();
         $controller->setContainer($container);
@@ -84,10 +63,6 @@ class FrontendControllerTest extends TestCase
         $response = $controller->loginAction();
 
         $this->assertSame(401, $response->getStatusCode());
-        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(FE_USER_LOGGED_IN);
-        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
-        $this->assertFalse(BE_USER_LOGGED_IN);
 
         unset($GLOBALS['TL_PTY']);
     }
@@ -104,28 +79,8 @@ class FrontendControllerTest extends TestCase
             ->method('initialize')
         ;
 
-        $tokenChecker = $this->createMock(TokenChecker::class);
-        $tokenChecker
-            ->expects($this->once())
-            ->method('hasFrontendUser')
-            ->willReturn(true)
-        ;
-
-        $tokenChecker
-            ->expects($this->once())
-            ->method('hasBackendUser')
-            ->willReturn(true)
-        ;
-
-        $tokenChecker
-            ->expects($this->once())
-            ->method('isPreviewMode')
-            ->willReturn(false)
-        ;
-
         $container = $this->mockContainer();
         $container->set('contao.framework', $framework);
-        $container->set('contao.security.token_checker', $tokenChecker);
 
         $controller = new FrontendController();
         $controller->setContainer($container);

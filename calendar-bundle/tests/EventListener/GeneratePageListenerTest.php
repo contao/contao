@@ -15,6 +15,7 @@ namespace Contao\CalendarBundle\Tests\EventListener;
 use Contao\CalendarBundle\EventListener\GeneratePageListener;
 use Contao\CalendarFeedModel;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\Environment;
 use Contao\LayoutModel;
 use Contao\Model\Collection;
 use Contao\PageModel;
@@ -39,6 +40,7 @@ class GeneratePageListenerTest extends ContaoTestCase
         $collection = new Collection([$calendarFeedModel], 'tl_calendar_feeds');
 
         $adapters = [
+            Environment::class => $this->mockAdapter(['get']),
             CalendarFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => $collection]),
             Template::class => new Adapter(Template::class),
         ];

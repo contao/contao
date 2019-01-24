@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendCustom;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -25,7 +25,7 @@ class ContaoTemplateExtension extends \Twig_Extension
     private $requestStack;
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -34,7 +34,7 @@ class ContaoTemplateExtension extends \Twig_Extension
      */
     private $scopeMatcher;
 
-    public function __construct(RequestStack $requestStack, ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher)
+    public function __construct(RequestStack $requestStack, ContaoFramework $framework, ScopeMatcher $scopeMatcher)
     {
         $this->requestStack = $requestStack;
         $this->framework = $framework;

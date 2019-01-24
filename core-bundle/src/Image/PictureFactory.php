@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Image\ImageInterface;
 use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
@@ -39,7 +39,7 @@ class PictureFactory implements PictureFactoryInterface
     private $imageFactory;
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -58,7 +58,7 @@ class PictureFactory implements PictureFactoryInterface
      */
     private $defaultDensities = '';
 
-    public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFrameworkInterface $framework, bool $bypassCache, array $imagineOptions)
+    public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFramework $framework, bool $bypassCache, array $imagineOptions)
     {
         $this->pictureGenerator = $pictureGenerator;
         $this->imageFactory = $imageFactory;

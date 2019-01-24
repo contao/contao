@@ -15,7 +15,7 @@ namespace Contao\CalendarBundle\Tests\EventListener;
 use Contao\CalendarBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -44,7 +44,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
     public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(false)

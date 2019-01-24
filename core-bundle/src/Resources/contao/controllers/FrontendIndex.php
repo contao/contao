@@ -30,14 +30,8 @@ class FrontendIndex extends Frontend
 	public function __construct()
 	{
 		// Load the user object before calling the parent constructor
-		$this->import(BackendUser::class, 'User');
+		$this->import(FrontendUser::class, 'User');
 		parent::__construct();
-
-		$objTokenChecker = System::getContainer()->get('contao.security.token_checker');
-
-		// Check whether a user is logged in
-		\define('BE_USER_LOGGED_IN', $objTokenChecker->hasBackendUser() && $objTokenChecker->isPreviewMode());
-		\define('FE_USER_LOGGED_IN', $objTokenChecker->hasFrontendUser());
 	}
 
 	/**

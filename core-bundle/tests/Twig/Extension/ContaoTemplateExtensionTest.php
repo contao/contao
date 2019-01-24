@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
 use Contao\BackendCustom;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,7 +73,7 @@ class ContaoTemplateExtensionTest extends TestCase
         $this->assertEmpty($this->mockExtension(null, 'frontend')->renderContaoBackendTemplate());
     }
 
-    private function mockExtension(ContaoFrameworkInterface $framework = null, string $scope = 'backend'): ContaoTemplateExtension
+    private function mockExtension(ContaoFramework $framework = null, string $scope = 'backend'): ContaoTemplateExtension
     {
         $request = new Request();
         $request->attributes->set('_scope', $scope);

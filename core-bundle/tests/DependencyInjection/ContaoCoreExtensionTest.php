@@ -80,6 +80,7 @@ use Contao\CoreBundle\Routing\FrontendLoader;
 use Contao\CoreBundle\Routing\LegacyRouteProvider;
 use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
 use Contao\CoreBundle\Routing\Matcher\PublishingFilter;
+use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
@@ -111,7 +112,6 @@ use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
-use Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher;
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -119,8 +119,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\RequestMatcher;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
 class ContaoCoreExtensionTest extends TestCase
@@ -870,8 +868,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPublic());
         $this->assertSame('request_stack', (string) $definition->getArgument(0));
         $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
-        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(2));
-        $this->assertSame('%contao.error_level%', (string) $definition->getArgument(3));
+        $this->assertSame('contao.security.token_checker', (string) $definition->getArgument(2));
+        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));
+        $this->assertSame('%contao.error_level%', (string) $definition->getArgument(4));
 
         $conditionals = $definition->getInstanceofConditionals();
 
@@ -1247,26 +1246,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(['_scope', 'backend'], $methodCalls[0][1]);
     }
 
-    public function testRegistersTheRoutingDummyCollection(): void
-    {
-        $this->assertTrue($this->container->has('contao.routing.dummy_collection'));
-
-        $definition = $this->container->getDefinition('contao.routing.dummy_collection');
-
-        $this->assertSame(RouteCollection::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-    }
-
-    public function testRegistersTheRoutingDummyContext(): void
-    {
-        $this->assertTrue($this->container->has('contao.routing.dummy_context'));
-
-        $definition = $this->container->getDefinition('contao.routing.dummy_context');
-
-        $this->assertSame(RequestContext::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-    }
-
     public function testRegistersTheRoutingFinalMatcher(): void
     {
         $this->assertTrue($this->container->has('contao.routing.final_matcher'));
@@ -1275,8 +1254,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(UrlMatcher::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.routing.dummy_collection', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.dummy_context', (string) $definition->getArgument(1));
     }
 
     public function testRegistersTheRoutingFrontendLoader(): void

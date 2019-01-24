@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 class ToggleViewListener
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -31,7 +31,7 @@ class ToggleViewListener
      */
     private $scopeMatcher;
 
-    public function __construct(ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher)
+    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher)
     {
         $this->framework = $framework;
         $this->scopeMatcher = $scopeMatcher;
@@ -65,6 +65,11 @@ class ToggleViewListener
             $value = 'desktop';
         }
 
+        if (method_exists(Cookie::class, 'create')) {
+            return Cookie::create('TL_VIEW', $value, 0, $basePath);
+        }
+
+        // Backwards compatibility with symfony/http-foundation <4.2
         return new Cookie('TL_VIEW', $value, 0, $basePath);
     }
 }

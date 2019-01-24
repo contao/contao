@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication\Provider;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\System;
 use Contao\User;
@@ -28,7 +28,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class AuthenticationProvider extends DaoAuthenticationProvider
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -37,7 +37,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
      */
     private $options;
 
-    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFrameworkInterface $framework, array $options = [])
+    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFramework $framework, array $options = [])
     {
         parent::__construct($userProvider, $userChecker, $providerKey, $encoderFactory, false);
 

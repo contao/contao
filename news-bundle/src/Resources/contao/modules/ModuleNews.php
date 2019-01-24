@@ -196,6 +196,12 @@ abstract class ModuleNews extends Module
 					// Link to the news article
 					$objTemplate->href = $objTemplate->link;
 					$objTemplate->linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
+
+					// If the external link is opened in a new window, open the image link in a new window, too (see #210)
+					if ($objTemplate->source == 'external' && $objTemplate->target && strpos($objTemplate->attributes, 'target="_blank"') === false)
+					{
+						$objTemplate->attributes .= ' target="_blank"';
+					}
 				}
 			}
 		}
@@ -299,10 +305,18 @@ abstract class ModuleNews extends Module
 					break;
 
 				case 'comments':
-					if ($objArticle->noComments || !\in_array('comments', ModuleLoader::getActive()) || $objArticle->source != 'default')
+					if ($objArticle->noComments || $objArticle->source != 'default')
 					{
 						break;
 					}
+
+					$bundles = System::getContainer()->getParameter('kernel.bundles');
+
+					if (!isset($bundles['ContaoCommentsBundle']))
+					{
+						break;
+					}
+
 					$intTotal = CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
 					$return['ccount'] = $intTotal;
 					$return['comments'] = sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);

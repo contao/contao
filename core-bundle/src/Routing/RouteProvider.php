@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
@@ -29,7 +29,7 @@ use Symfony\Component\Routing\RouteCollection;
 class RouteProvider implements RouteProviderInterface
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -48,7 +48,7 @@ class RouteProvider implements RouteProviderInterface
      */
     private $prependLocale;
 
-    public function __construct(ContaoFrameworkInterface $framework, Connection $database, string $urlSuffix, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, Connection $database, string $urlSuffix, bool $prependLocale)
     {
         $this->framework = $framework;
         $this->database = $database;
@@ -259,6 +259,7 @@ class RouteProvider implements RouteProviderInterface
 
         $requirements = ['parameters' => '(/.+)?'];
         $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->urlSuffix);
+        $host = $page->domain ? strtok($page->domain, ':') : null;
 
         if ($this->prependLocale) {
             $path = '/{_locale}'.$path;
@@ -270,8 +271,8 @@ class RouteProvider implements RouteProviderInterface
             $defaults,
             $requirements,
             ['utf8' => true],
-            $page->domain,
-            null
+            $host,
+            $page->rootUseSSL ? 'https' : null
         );
 
         $this->addRoutesForRootPage($page, $routes);
@@ -288,6 +289,7 @@ class RouteProvider implements RouteProviderInterface
         $path = '/';
         $requirements = [];
         $defaults = $this->getRouteDefaults($page);
+        $host = $page->domain ? strtok($page->domain, ':') : null;
 
         if ($this->prependLocale) {
             $path = '/{_locale}'.$path;
@@ -299,8 +301,8 @@ class RouteProvider implements RouteProviderInterface
             $defaults,
             $requirements,
             [],
-            $page->domain,
-            null
+            $host,
+            $page->rootUseSSL ? 'https' : null
         );
 
         if (!$page->rootIsFallback || !$this->prependLocale) {
@@ -321,8 +323,8 @@ class RouteProvider implements RouteProviderInterface
             $defaults,
             [],
             [],
-            $page->domain,
-            null
+            $host,
+            $page->rootUseSSL ? 'https' : null
         );
     }
 

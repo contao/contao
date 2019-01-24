@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Security\User;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
@@ -249,7 +249,7 @@ class ContaoUserProviderTest extends TestCase
     /**
      * Mocks a user provider.
      */
-    private function mockUserProvider(ContaoFrameworkInterface $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
+    private function mockUserProvider(ContaoFramework $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
     {
         if (null === $framework) {
             $framework = $this->mockContaoFramework();

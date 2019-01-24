@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Controller;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\FileUpload;
@@ -321,7 +321,7 @@ EOF;
         $this->assertSame(303, $response->getStatusCode());
     }
 
-    private function mockFramework(array $files = [], bool $expectError = false): ContaoFrameworkInterface
+    private function mockFramework(array $files = [], bool $expectError = false): ContaoFramework
     {
         $uploader = $this->createMock(FileUpload::class);
         $uploader
@@ -380,9 +380,9 @@ EOF;
     /**
      * Mocks a Contao framework with a file uploader.
      *
-     * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockContaoFrameworkWithUploader(): ContaoFrameworkInterface
+    private function mockContaoFrameworkWithUploader(): ContaoFramework
     {
         $uploader = $this->createMock(FileUpload::class);
         $uploader

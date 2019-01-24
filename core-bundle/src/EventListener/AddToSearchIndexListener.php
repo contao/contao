@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Frontend;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 class AddToSearchIndexListener
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -29,7 +29,7 @@ class AddToSearchIndexListener
      */
     private $fragmentPath;
 
-    public function __construct(ContaoFrameworkInterface $framework, string $fragmentPath = '_fragment')
+    public function __construct(ContaoFramework $framework, string $fragmentPath = '_fragment')
     {
         $this->framework = $framework;
         $this->fragmentPath = $fragmentPath;

@@ -8,7 +8,7 @@ services:
             calls:
                 - ["setContainer", ["@service_container"]]
 
-    Contao\CoreBundle\Framework\ContaoFrameworkInterface: "@contao.framework"
+    Contao\CoreBundle\Framework\ContaoFramework: "@contao.framework"
 
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
@@ -132,6 +132,7 @@ services:
         arguments:
             - "@request_stack"
             - "@contao.routing.scope_matcher"
+            - "@contao.security.token_checker"
             - "%kernel.project_dir%"
             - "%contao.error_level%"
         public: true
@@ -319,17 +320,8 @@ services:
         calls:
             - ["matchAttribute", ["_scope", "backend"]]
 
-    contao.routing.dummy_collection:
-        class: Symfony\Component\Routing\RouteCollection
-
-    contao.routing.dummy_context:
-        class: Symfony\Component\Routing\RequestContext
-
     contao.routing.final_matcher:
-        class: Symfony\Cmf\Component\Routing\NestedMatcher\UrlMatcher
-        arguments:
-            - "@contao.routing.dummy_collection"
-            - "@contao.routing.dummy_context"
+        class: Contao\CoreBundle\Routing\Matcher\UrlMatcher
 
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader

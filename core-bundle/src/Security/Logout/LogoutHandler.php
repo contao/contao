@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Logout;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\System;
 use Contao\User;
@@ -25,7 +25,7 @@ use Symfony\Component\Security\Http\Logout\LogoutHandlerInterface;
 class LogoutHandler implements LogoutHandlerInterface
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -34,7 +34,7 @@ class LogoutHandler implements LogoutHandlerInterface
      */
     private $logger;
 
-    public function __construct(ContaoFrameworkInterface $framework, LoggerInterface $logger = null)
+    public function __construct(ContaoFramework $framework, LoggerInterface $logger = null)
     {
         $this->framework = $framework;
         $this->logger = $logger;

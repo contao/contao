@@ -13,17 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Enhancer;
 
 use Contao\Config;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Input;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
 
 class InputEnhancer implements RouteEnhancerInterface
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -32,7 +33,7 @@ class InputEnhancer implements RouteEnhancerInterface
      */
     private $prependLocale;
 
-    public function __construct(ContaoFrameworkInterface $framework, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, bool $prependLocale)
     {
         $this->framework = $framework;
         $this->prependLocale = $prependLocale;
@@ -44,6 +45,11 @@ class InputEnhancer implements RouteEnhancerInterface
     public function enhance(array $defaults, Request $request): array
     {
         if (!isset($defaults['pageModel']) || !$defaults['pageModel'] instanceof PageModel) {
+            return $defaults;
+        }
+
+        // TODO: remove this once we are getting rid of header replaying
+        if (\in_array(HeaderReplayListener::CONTENT_TYPE, $request->getAcceptableContentTypes(), true)) {
             return $defaults;
         }
 
@@ -65,14 +71,18 @@ class InputEnhancer implements RouteEnhancerInterface
         $fragments = explode('/', substr($defaults['parameters'], 1));
 
         // Add the second fragment as auto_item if the number of fragments is even
-        if ($config->get('useAutoItem') && 0 !== \count($fragments) % 2) {
+        if (0 !== \count($fragments) % 2) {
+            if (!$config->get('useAutoItem')) {
+                throw new ResourceNotFoundException('Invalid number of arguments');
+            }
+
             array_unshift($fragments, 'auto_item');
         }
 
         for ($i = 0, $c = \count($fragments); $i < $c; $i += 2) {
             // Skip key value pairs if the key is empty (see #4702)
             if ('' === $fragments[$i]) {
-                continue;
+                throw new ResourceNotFoundException('Empty fragment key in path');
             }
 
             // Abort if there is a duplicate parameter (duplicate content) (see #4277)

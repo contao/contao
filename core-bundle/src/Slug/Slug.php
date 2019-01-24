@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Slug;
 
 use Ausi\SlugGenerator\SlugGeneratorInterface;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Contao\StringUtil;
 
@@ -25,11 +25,11 @@ class Slug
     private $slugGenerator;
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
-    public function __construct(SlugGeneratorInterface $slugGenerator, ContaoFrameworkInterface $framework)
+    public function __construct(SlugGeneratorInterface $slugGenerator, ContaoFramework $framework)
     {
         $this->slugGenerator = $slugGenerator;
         $this->framework = $framework;

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\News;
 use Contao\NewsBundle\EventListener\PreviewUrlConvertListener;
 use Contao\NewsModel;
@@ -51,7 +51,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
 
     public function testDoesNotConvertThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(false)

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
 use Contao\NewsModel;
 use Contao\TestCase\ContaoTestCase;
@@ -43,7 +43,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
     public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(false)

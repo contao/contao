@@ -22,9 +22,15 @@ final class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
+        $treeBuilder = new TreeBuilder('contao_manager');
 
-        $rootNode = $treeBuilder->root('contao_manager');
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            // Backwards compatibility with symfony/config <4.2
+            $rootNode = $treeBuilder->root('contao_manager');
+        }
+
         $rootNode
             ->children()
                 ->scalarNode('manager_path')

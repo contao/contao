@@ -566,6 +566,7 @@ input[type=search]::-webkit-search-decoration {
 	padding-top:0;
 	padding-bottom:0;
 	background-color:transparent;
+	background-position-y:center;
 }
 #tl_maintenance_index .tl_tbox {
 	margin-top:-12px;
@@ -617,6 +618,7 @@ input[type=search]::-webkit-search-decoration {
 	padding-top:0;
 	padding-bottom:0;
 	background-color:transparent;
+	background-position-y:center;
 }
 .two-factor code {
 	word-wrap:break-word;

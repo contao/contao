@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\OptIn;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Email;
 use Contao\OptInModel;
 
@@ -24,11 +24,11 @@ class OptInToken implements OptInTokenInterface
     private $model;
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
-    public function __construct(OptInModel $model, ContaoFrameworkInterface $framework)
+    public function __construct(OptInModel $model, ContaoFramework $framework)
     {
         $this->model = $model;
         $this->framework = $framework;

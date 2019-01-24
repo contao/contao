@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Security\User;
 
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
 use Contao\System;
@@ -29,7 +29,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class ContaoUserProvider implements UserProviderInterface
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -51,7 +51,7 @@ class ContaoUserProvider implements UserProviderInterface
     /**
      * @throws \RuntimeException
      */
-    public function __construct(ContaoFrameworkInterface $framework, SessionInterface $session, string $userClass, LoggerInterface $logger = null)
+    public function __construct(ContaoFramework $framework, SessionInterface $session, string $userClass, LoggerInterface $logger = null)
     {
         if (BackendUser::class !== $userClass && FrontendUser::class !== $userClass) {
             throw new \RuntimeException(sprintf('Unsupported class "%s".', $userClass));

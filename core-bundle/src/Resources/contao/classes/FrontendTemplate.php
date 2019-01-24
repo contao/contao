@@ -142,7 +142,7 @@ class FrontendTemplate extends Template
 		// Check whether all $_GET parameters have been used (see #4277)
 		if ($this->blnCheckRequest && Input::hasUnusedGet())
 		{
-			throw new \UnusedArgumentsException();
+			throw new \UnusedArgumentsException('Unused arguments: '.implode(', ', Input::getUnusedGet()));
 		}
 
 		/** @var PageModel $objPage */

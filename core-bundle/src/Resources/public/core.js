@@ -1210,14 +1210,7 @@ var Backend =
 		new Tips.Contao($$('#tmenu a[title]').filter(function(i) {
 			return i.title != '';
 		}), {
-			offset: {x:-12, y:42},
-			windowPadding: {x:200, y:0}
-		});
-
-		new Tips.Contao($$('#tmenu button[title]').filter(function(i) {
-			return i.title != '';
-		}), {
-			offset: {x:-14, y:42}
+			offset: {x:9, y:42}
 		});
 
 		// Navigation groups

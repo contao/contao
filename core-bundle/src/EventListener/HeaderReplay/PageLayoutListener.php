@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\HeaderReplay;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Environment;
 use Terminal42\HeaderReplay\Event\HeaderReplayEvent;
@@ -25,11 +25,11 @@ class PageLayoutListener
     private $scopeMatcher;
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
-    public function __construct(ScopeMatcher $scopeMatcher, ContaoFrameworkInterface $framework)
+    public function __construct(ScopeMatcher $scopeMatcher, ContaoFramework $framework)
     {
         $this->scopeMatcher = $scopeMatcher;
         $this->framework = $framework;

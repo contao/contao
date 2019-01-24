@@ -88,7 +88,7 @@ security:
             security: false
 
         contao_install:
-            pattern: ^/contao/install
+            pattern: ^/contao/install$
             security: false
 
         contao_backend:
@@ -138,7 +138,7 @@ security:
                 use_forward: true
 
             remember_me:
-                secret: '%kernel.secret%'
+                secret: '%secret%'
                 remember_me_parameter: autologin
                 token_provider: contao.security.database_token_provider
 
@@ -151,6 +151,7 @@ security:
 
     access_control:
         - { path: ^/contao/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/contao/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/contao(/|$), roles: ROLE_USER }
 ```
 

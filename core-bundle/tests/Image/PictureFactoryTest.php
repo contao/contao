@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactory;
@@ -362,7 +362,7 @@ class PictureFactoryTest extends TestCase
      * @param PictureGenerator|MockObject|null $pictureGenerator
      * @param ImageFactory|MockObject|null     $imageFactory
      */
-    private function mockPictureFactory($pictureGenerator = null, $imageFactory = null, ContaoFrameworkInterface $framework = null, bool $bypassCache = null, array $imagineOptions = null): PictureFactory
+    private function mockPictureFactory($pictureGenerator = null, $imageFactory = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null): PictureFactory
     {
         if (null === $pictureGenerator) {
             $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
@@ -373,7 +373,7 @@ class PictureFactoryTest extends TestCase
         }
 
         if (null === $framework) {
-            $framework = $this->createMock(ContaoFrameworkInterface::class);
+            $framework = $this->createMock(ContaoFramework::class);
         }
 
         if (null === $bypassCache) {

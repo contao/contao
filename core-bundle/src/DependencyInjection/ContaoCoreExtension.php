@@ -34,6 +34,17 @@ class ContaoCoreExtension extends Extension
     /**
      * {@inheritdoc}
      */
+    public function getConfiguration(array $config, ContainerBuilder $container): Configuration
+    {
+        return new Configuration(
+             $container->getParameter('kernel.project_dir'),
+             $container->getParameter('kernel.default_locale')
+         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration(

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     {
         $responseEvent = $this->mockResponseEvent();
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->expects($this->once())
             ->method('isInitialized')
@@ -48,7 +48,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     {
         $responseEvent = $this->mockResponseEvent();
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->expects($this->once())
             ->method('isInitialized')
@@ -68,7 +68,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $responseEvent = $this->mockResponseEvent($response);
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->expects($this->once())
             ->method('isInitialized')
@@ -148,7 +148,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     {
         $responseEvent = $this->mockResponseEvent();
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->expects($this->atLeastOnce())
             ->method('isInitialized')
@@ -180,7 +180,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     {
         $responseEvent = $this->mockResponseEvent();
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->expects($this->atLeastOnce())
             ->method('isInitialized')
@@ -218,7 +218,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     {
         $responseEvent = $this->mockResponseEvent();
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->expects($this->once())
             ->method('isInitialized')

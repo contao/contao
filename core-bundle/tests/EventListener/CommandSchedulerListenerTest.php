@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\Config;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendCron;
 use Doctrine\DBAL\Connection;
@@ -49,7 +49,7 @@ class CommandSchedulerListenerTest extends TestCase
 
     public function testDoesNotRunTheCommandSchedulerIfTheContaoFrameworkIsNotInitialized(): void
     {
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
+        $framework = $this->createMock(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(false)
