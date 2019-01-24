@@ -1564,7 +1564,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 			else
 			{
-				$this->redirect($this->addToUrl('id='.$this->urlEncode($this->intId)));
+				$this->redirect($this->addToUrl('id='.$this->urlEncode($this->strPath.'/'.$this->varValue).$this->strExtension));
 			}
 		}
 
