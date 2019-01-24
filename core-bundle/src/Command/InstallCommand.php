@@ -12,16 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Lock\LockInterface;
 
 /**
  * Installs the required Contao directories.
  */
-class InstallCommand extends AbstractLockedCommand
+class InstallCommand extends Command
 {
     /**
      * @var Filesystem
@@ -54,15 +56,21 @@ class InstallCommand extends AbstractLockedCommand
     private $imageDir;
 
     /**
+     * @var LockInterface
+     */
+    private $lock;
+
+    /**
      * @var string
      */
     private $webDir;
 
-    public function __construct(string $rootDir, string $uploadPath, string $imageDir)
+    public function __construct(string $rootDir, string $uploadPath, string $imageDir, LockInterface $lock)
     {
         $this->rootDir = $rootDir;
         $this->uploadPath = $uploadPath;
         $this->imageDir = $imageDir;
+        $this->lock = $lock;
 
         parent::__construct();
     }
@@ -84,8 +92,14 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        if (!$this->lock->acquire()) {
+            $output->writeln('The command is already running in another process.');
+
+            return 1;
+        }
+
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
         $this->webDir = rtrim($input->getArgument('target'), '/');
@@ -97,6 +111,8 @@ class InstallCommand extends AbstractLockedCommand
             $this->io->newLine();
             $this->io->listing($this->rows);
         }
+
+        $this->lock->release();
 
         return 0;
     }

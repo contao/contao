@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -20,7 +20,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Unlocks the install tool.
  */
-class UnlockCommand extends ContainerAwareCommand
+class UnlockCommand extends Command
 {
     /**
      * @var string

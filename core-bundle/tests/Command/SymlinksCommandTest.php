@@ -18,32 +18,10 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Lock\Factory;
-use Symfony\Component\Lock\Store\FlockStore;
+use Symfony\Component\Lock\LockInterface;
 
 class SymlinksCommandTest extends TestCase
 {
-    /**
-     * @var SymlinksCommand
-     */
-    private $command;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->command = new SymlinksCommand(
-            $this->getFixturesDir(),
-            'files',
-            $this->getFixturesDir().'/var/logs',
-            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
-            $this->createMock(EventDispatcherInterface::class)
-        );
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -65,15 +43,8 @@ class SymlinksCommandTest extends TestCase
         $fs->mkdir($this->getFixturesDir().'/system/themes/default');
         $fs->mkdir($this->getFixturesDir().'/var/logs');
 
-        $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
-
-        $container = $this->mockContainer($this->getFixturesDir());
-        $container->setParameter('kernel.logs_dir', $this->getFixturesDir().'/var/logs');
-        $container->set('contao.resource_finder', $finder);
-
-        $this->command->setContainer($container);
-
-        $tester = new CommandTester($this->command);
+        $command = $this->mockCommand();
+        $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
 
@@ -98,41 +69,53 @@ class SymlinksCommandTest extends TestCase
 
     public function testIsLockedWhileRunning(): void
     {
-        $tmpDir = sys_get_temp_dir().'/'.md5($this->getFixturesDir());
-
-        if (!is_dir($tmpDir)) {
-            (new Filesystem())->mkdir($tmpDir);
-        }
-
-        $factory = new Factory(new FlockStore($tmpDir));
-
-        $lock = $factory->createLock('contao:symlinks');
-        $lock->acquire();
-
-        $this->command->setContainer($this->mockContainer($this->getFixturesDir()));
-
-        $tester = new CommandTester($this->command);
+        $command = $this->mockCommand(true);
+        $tester = new CommandTester($command);
         $code = $tester->execute([]);
 
         $this->assertSame(1, $code);
         $this->assertContains('The command is already running in another process.', $tester->getDisplay());
-
-        $lock->release();
     }
 
     public function testConvertsAbsolutePathsToRelativePaths(): void
     {
+        $command = (new \ReflectionClass(SymlinksCommand::class))->newInstanceWithoutConstructor();
+
         // Use \ as directory separator in $rootDir
         $rootDir = new \ReflectionProperty(SymlinksCommand::class, 'rootDir');
         $rootDir->setAccessible(true);
-        $rootDir->setValue($this->command, strtr($this->getFixturesDir(), '/', '\\'));
+        $rootDir->setValue($command, strtr($this->getFixturesDir(), '/', '\\'));
 
         // Use / as directory separator in $path
         $method = new \ReflectionMethod(SymlinksCommand::class, 'getRelativePath');
         $method->setAccessible(true);
-        $relativePath = $method->invoke($this->command, $this->getFixturesDir().'/var/logs');
+        $relativePath = $method->invoke($command, $this->getFixturesDir().'/var/logs');
 
         // The path should be normalized and shortened
         $this->assertSame('var/logs', $relativePath);
+    }
+
+    private function mockCommand(bool $isLocked = false): SymlinksCommand
+    {
+        $lock = $this->createMock(LockInterface::class);
+        $lock
+            ->expects($this->once())
+            ->method('acquire')
+            ->willReturn(!$isLocked)
+        ;
+
+        $lock
+            ->expects($isLocked ? $this->never() : $this->once())
+            ->method('release')
+        ;
+
+        return new SymlinksCommand(
+            $this->getFixturesDir(),
+            'files',
+            $this->getFixturesDir().'/var/logs',
+            new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
+            $this->createMock(EventDispatcherInterface::class),
+            $lock
+        );
     }
 }

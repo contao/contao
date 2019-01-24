@@ -21,8 +21,6 @@ use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class UserPasswordCommandTest extends TestCase
 {
@@ -32,22 +30,17 @@ class UserPasswordCommandTest extends TestCase
     private $command;
 
     /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
      * {@inheritdoc}
      */
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->container = new ContainerBuilder();
-        $this->container->set('database_connection', $this->createMock(Connection::class));
+        $this->command = new UserPasswordCommand(
+            $this->mockContaoFramework(),
+            $this->createMock(Connection::class)
+        );
 
-        $this->command = new UserPasswordCommand($this->mockContaoFramework());
-        $this->command->setContainer($this->container);
         $this->command->setApplication(new Application());
     }
 
@@ -152,7 +145,7 @@ class UserPasswordCommandTest extends TestCase
     public function testFailsIfTheUsernameIsUnknown(): void
     {
         /** @var Connection|MockObject $connection */
-        $connection = $this->container->get('database_connection');
+        $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('update')
@@ -164,10 +157,12 @@ class UserPasswordCommandTest extends TestCase
             '--password' => '12345678',
         ];
 
+        $command = new UserPasswordCommand($this->mockContaoFramework(), $connection);
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid username: foobar');
 
-        (new CommandTester($this->command))->execute($input, ['interactive' => false]);
+        (new CommandTester($command))->execute($input, ['interactive' => false]);
     }
 
     /**
@@ -176,7 +171,7 @@ class UserPasswordCommandTest extends TestCase
     public function testUpdatesTheDatabaseOnSuccess(string $username, string $password): void
     {
         /** @var Connection|MockObject $connection */
-        $connection = $this->container->get('database_connection');
+        $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('update')
@@ -200,7 +195,9 @@ class UserPasswordCommandTest extends TestCase
             '--password' => $password,
         ];
 
-        (new CommandTester($this->command))->execute($input, ['interactive' => false]);
+        $command = new UserPasswordCommand($this->mockContaoFramework(), $connection);
+
+        (new CommandTester($command))->execute($input, ['interactive' => false]);
     }
 
     /**

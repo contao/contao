@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Command;
 
-use Contao\CoreBundle\Command\AbstractLockedCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,7 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-class InstallWebDirCommand extends AbstractLockedCommand
+class InstallWebDirCommand extends Command
 {
     /**
      * @var Filesystem
@@ -106,7 +106,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
