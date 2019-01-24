@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Correctly cancel the 2FA process (see #292).
  * Check the database configuration the install tool (see #285).
  * Validate the primary key when registering or saving a model (see #230).
  * Exempt the "page" insert tag from caching (see #284).
