@@ -18,7 +18,6 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Pour des raisons de sécurité, l'outil d'installation a été verrouillé. Ceci arrive si vous entrez un mauvais mot de passe plus de trois fois d'affilée. Pour le déverrouiller, veuillez exécuter &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; dans votre interface en ligne de commande.</target>
         
       </trans-unit>
       <trans-unit id="5">

@@ -1,8 +1,11 @@
 # Change log
 
-## DEV
+## 4.4.34 (2019-01-24)
 
+ * Validate the primary key when registering or saving a model (see #230).
+ * Exempt the "page" insert tag from caching (see #284).
  * Correctly sort the tree view records if there is an active filter (see #269).
+ * Fix two routing issues (see #263, #264). 
 
 ## 4.4.33 (2019-01-16)
 

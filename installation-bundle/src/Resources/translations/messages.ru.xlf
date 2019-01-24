@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>В целях безопасности, мастер установки Contao заблокирован после ввода неправильного пароля, более чем трех раз подряд. Для разблокирования, запустите  &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; в командной строке.</target>
+        <target>В целях безопасности, мастер установки Contao заблокирован после ввода неправильного пароля, более чем трех раз подряд. Вы можете разблокировать его в Contao Manager или запустив &lt;code&gt;contao:install:unlock&lt;/code&gt; в командной строке.</target>
         
       </trans-unit>
       <trans-unit id="5">

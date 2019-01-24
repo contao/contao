@@ -18,7 +18,6 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Het installatie programma is om veiligheidsredenen geblokkeerd omdat een wachtwoord meer dan drie keer achter elkaar verkeerd is ingevoerd. Om te ontgrendelen, start &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; op de opdrachtregel.</target>
         
       </trans-unit>
       <trans-unit id="5">

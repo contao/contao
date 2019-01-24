@@ -18,7 +18,6 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Z bezpečnostních důvodů byl instalační nástroj zablokován, protože bylo zadáno více než třikrát špatné heslo. Pro odblokování spustěte na příkazovém řádku tento příkaz &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt;</target>
         
       </trans-unit>
       <trans-unit id="5">

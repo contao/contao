@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Aus Sicherheitsgründen wurde das Installtool gesperrt, nachdem dreimal hintereinander ein falsches Passwort eingegeben wurde. Um es zu entsperren, führen Sie den Befehl &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; auf der Konsole aus.</target>
+        <target>Aus Sicherheitsgründen wurde das Installtool gesperrt, nachdem dreimal hintereinander ein falsches Passwort eingegeben wurde. Sie können es entweder im Contao Manager entsperren oder den Befehl &lt;code&gt;contao:install:unlock&lt;/code&gt; auf der Konsole ausführen.</target>
         
       </trans-unit>
       <trans-unit id="5">
