@@ -3,7 +3,10 @@
 ## DEV
 
  * Check the database configuration the install tool (see #285).
+ * Validate the primary key when registering or saving a model (see #230).
+ * Exempt the "page" insert tag from caching (see #284).
  * Correctly sort the tree view records if there is an active filter (see #269).
+ * Fix two routing issues (see #263, #264). 
 
 ## 4.6.13 (2019-01-16)
 
