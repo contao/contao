@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.6.14 (2019-01-24)
 
  * Correctly cancel the 2FA process (see #292).
  * Check the database configuration the install tool (see #285).

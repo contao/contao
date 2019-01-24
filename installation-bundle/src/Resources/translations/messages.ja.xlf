@@ -411,6 +411,33 @@
         <target>環境変数&lt;code&gt;DATABASE_URL&lt;/code&gt;による接続のURLを使用してデータベースに接続できませんでした。</target>
         
       </trans-unit>
+      <trans-unit id="83">
+        <source>engine_mismatch</source>
+        
+      </trans-unit>
+      <trans-unit id="84">
+        <source>engine_mismatch_explain</source>
+        
+      </trans-unit>
+      <trans-unit id="85">
+        <source>innodb_large_prefix</source>
+        <target>innodb_large_prefix optionが有効ではありません!</target>
+        
+      </trans-unit>
+      <trans-unit id="86">
+        <source>innodb_large_prefix_explain</source>
+        <target>&lt;code&gt;innodb_large_prefix&lt;/code&gt;オプションをサーバーで有効にしていません。インストールする(ことをお勧めします)か、&lt;code&gt;app/config/config.yml&lt;/code&gt;ファイルに異なる文字セットと照合順序を設定してください。</target>
+        
+      </trans-unit>
+      <trans-unit id="87">
+        <source>innodb_additional</source>
+        <target>InnoDBが適切に構成されていません!</target>
+        
+      </trans-unit>
+      <trans-unit id="88">
+        <source>innodb_additional_explain</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>
