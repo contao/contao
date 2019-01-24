@@ -180,7 +180,14 @@ class UserPasswordCommandTest extends TestCase
                 $this->callback(
                     function ($data) {
                         $this->assertArrayHasKey('password', $data);
-                        $this->assertSame(PASSWORD_DEFAULT, password_get_info($data['password'])['algo']);
+
+                        // In PHP 7.4, the PASSWORD_DEFAULT constant will be null and the bcrypt identifier
+                        // changes to "2y" (see https://wiki.php.net/rfc/password_registry)
+                        if (null === PASSWORD_DEFAULT) {
+                            $this->assertSame('2y', password_get_info($data['password'])['algo']);
+                        } else {
+                            $this->assertSame(PASSWORD_DEFAULT, password_get_info($data['password'])['algo']);
+                        }
 
                         return true;
                     }
