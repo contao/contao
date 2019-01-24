@@ -3,8 +3,12 @@
 ## DEV
 
  * Add the `js_nocookie.html5` template (see #134).
+ * Correctly cancel the 2FA process (see #292).
  * Check the database configuration the install tool (see #285).
+ * Validate the primary key when registering or saving a model (see #230).
+ * Exempt the "page" insert tag from caching (see #284).
  * Correctly sort the tree view records if there is an active filter (see #269).
+ * Fix two routing issues (see #263, #264). 
 
 ## 4.7.0-RC2 (2019-01-17)
 
