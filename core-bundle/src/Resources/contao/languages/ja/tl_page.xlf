@@ -97,6 +97,22 @@
         <source>Here you can restrict the access to the website to a certain domain name.</source>
         <target>ウェブサイトのアクセスを特定のドメイン名に限定します。</target>
       </trans-unit>
+      <trans-unit id="tl_page.staticFiles.0">
+        <source>Files URL</source>
+        <target>filesのURL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.1">
+        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
+        <target>filesのURLは&lt;em&gt;files&lt;/em&gt;のディレクトリとすべての画像のサムネイルに適用します。(Page Speed最適化)</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.0">
+        <source>Assets URL</source>
+        <target>assetsのURL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.1">
+        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
+        <target>asstesのURLは&lt;em&gt;assets&lt;/em&gt;のディレクトリに適用します。(Page Speed最適化)</target>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>ウェブサイトの管理者の電子メールアドレス</target>
@@ -158,8 +174,7 @@
         <target>HTTPSを使用</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>This website is available via HTTPS.</source>
-        <target>このウェブサイトはHTTPS経由で利用できます。</target>
+        <source>Use HTTPS and automatically redirect HTTP requests.</source>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

@@ -97,6 +97,22 @@
         <source>Here you can restrict the access to the website to a certain domain name.</source>
         <target>Aquí puede restringir el acceso a la página web a ciertos nombres de dominio.</target>
       </trans-unit>
+      <trans-unit id="tl_page.staticFiles.0">
+        <source>Files URL</source>
+        <target>URL de archivos</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.1">
+        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
+        <target>La URL de archivos aplica al directorio &lt;em&gt;tl_files&lt;/em&gt; y a todas las imágenes miniatura (optimización de descarga de páginas).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.0">
+        <source>Assets URL</source>
+        <target>URL de plugins</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.1">
+        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
+        <target>La URL de plugins aplica a todos los recursos en el directorio &lt;em&gt;plugins&lt;/em&gt; (optimización de descarga de páginas).</target>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>Dirección e-mail del administrador de la web</target>
@@ -158,8 +174,7 @@
         <target>Usar HTTPS</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>This website is available via HTTPS.</source>
-        <target>Este sitio web está disponible a través de HTTPS.</target>
+        <source>Use HTTPS and automatically redirect HTTP requests.</source>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

@@ -97,6 +97,22 @@
         <source>Here you can restrict the access to the website to a certain domain name.</source>
         <target>Jeśli przypiszesz nazwę domenę do punktu startowego, odwiedzający będą przekierowani do tej strony dopiero wtedy kiedy wpiszą odpowiedni adres domeny (np. &lt;em&gt;twojadomena.pl&lt;/em&gt; lub &lt;em&gt;subdomena.twojadomena.pl&lt;/em&gt;).</target>
       </trans-unit>
+      <trans-unit id="tl_page.staticFiles.0">
+        <source>Files URL</source>
+        <target>URL plików</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.1">
+        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
+        <target>URL plików dotyczy katalogu &lt;em&gt;tl_files&lt;/em&gt; i wszystkich miniaturek obrazków (optymalizacja czasu ładowania strony).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.0">
+        <source>Assets URL</source>
+        <target>URL pluginów</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.1">
+        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
+        <target>URL plików dotyczy wszystkich źródeł w katalogu &lt;em&gt;plugins&lt;/em&gt; (optymalizacja czasu ładowania strony).</target>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>Adres e-mail administratora strony</target>
@@ -158,8 +174,7 @@
         <target>Używaj HTTPS</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>This website is available via HTTPS.</source>
-        <target>Strona jest dostępna przez HTTPS.</target>
+        <source>Use HTTPS and automatically redirect HTTP requests.</source>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

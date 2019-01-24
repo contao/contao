@@ -18,7 +18,6 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Z bezpečnostních důvodů byl instalační nástroj zablokován, protože bylo zadáno více než třikrát špatné heslo. Pro odblokování spustěte na příkazovém řádku tento příkaz &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt;</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -407,6 +406,33 @@
       </trans-unit>
       <trans-unit id="82">
         <source>misconfigured_database_url_explain</source>
+        
+      </trans-unit>
+      <trans-unit id="83">
+        <source>engine_mismatch</source>
+        
+      </trans-unit>
+      <trans-unit id="84">
+        <source>engine_mismatch_explain</source>
+        
+      </trans-unit>
+      <trans-unit id="85">
+        <source>innodb_large_prefix</source>
+        <target>Funkce innodb_large_prefix není povolená!</target>
+        
+      </trans-unit>
+      <trans-unit id="86">
+        <source>innodb_large_prefix_explain</source>
+        <target>Funkce &lt;code&gt;innodb_large_prefix&lt;/code&gt;Prosím povolte (doporučeno) nebo nastavte jinou znakovou sazbu a koalaci v souboru &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="87">
+        <source>innodb_additional</source>
+        <target>InnoDB není správně nastavená!</target>
+        
+      </trans-unit>
+      <trans-unit id="88">
+        <source>innodb_additional_explain</source>
         
       </trans-unit>
     </body>

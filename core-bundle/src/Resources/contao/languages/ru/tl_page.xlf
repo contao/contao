@@ -97,6 +97,22 @@
         <source>Here you can restrict the access to the website to a certain domain name.</source>
         <target>Вы можете ограничить доступ на веб-сайт определенным доменным именем.</target>
       </trans-unit>
+      <trans-unit id="tl_page.staticFiles.0">
+        <source>Files URL</source>
+        <target>URL файлов</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.1">
+        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
+        <target>URL файлов применяется к каталогу &lt;em&gt;files&lt;/em&gt; и всем эскизам изображений (оптимизация скорости страниц).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.0">
+        <source>Assets URL</source>
+        <target>URL ресурсов</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.1">
+        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
+        <target>URL ресурсов применяется к каталогу &lt;em&gt;assets&lt;/em&gt; и всем ресурсам внутри (оптимизация скорости страниц).</target>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>E-mail администратора веб-сайта</target>
@@ -158,8 +174,7 @@
         <target>Использовать HTTPS</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>This website is available via HTTPS.</source>
-        <target>Этот веб-сайт доступен через HTTPS.</target>
+        <source>Use HTTPS and automatically redirect HTTP requests.</source>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

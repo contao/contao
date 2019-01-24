@@ -18,7 +18,6 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Het installatie programma is om veiligheidsredenen geblokkeerd omdat een wachtwoord meer dan drie keer achter elkaar verkeerd is ingevoerd. Om te ontgrendelen, start &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; op de opdrachtregel.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -409,6 +408,33 @@
       <trans-unit id="82">
         <source>misconfigured_database_url_explain</source>
         <target>Kon geen verbinding maken met de database via de URL in de &lt;code&gt;DATABASE_URL&lt;/code&gt;omgevingsvariabele.</target>
+        
+      </trans-unit>
+      <trans-unit id="83">
+        <source>engine_mismatch</source>
+        
+      </trans-unit>
+      <trans-unit id="84">
+        <source>engine_mismatch_explain</source>
+        
+      </trans-unit>
+      <trans-unit id="85">
+        <source>innodb_large_prefix</source>
+        <target>De innodb_large_prefix option is niet ingeschakeld!</target>
+        
+      </trans-unit>
+      <trans-unit id="86">
+        <source>innodb_large_prefix_explain</source>
+        <target>De &lt;code&gt;innodb_large_prefix&lt;/code&gt; optie is niet ingeschakeld op uw server. Schakel dit in (aanbevolen) of configureer een andere tekenset en sortering in het &lt;code&gt;app/config/config.yml&lt;/code&gt; bestand.</target>
+        
+      </trans-unit>
+      <trans-unit id="87">
+        <source>innodb_additional</source>
+        <target>InnoDB is niet correct geconfigureerd!</target>
+        
+      </trans-unit>
+      <trans-unit id="88">
+        <source>innodb_additional_explain</source>
         
       </trans-unit>
     </body>

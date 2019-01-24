@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.7.0-RC2 (2019-01-24)
 
  * Add the `js_nocookie.html5` template (see #134).
  * Correctly cancel the 2FA process (see #292).

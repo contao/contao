@@ -18,7 +18,6 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>セキュリティ上の理由により、連続して3回以上誤ったパスワードを入力した後のインストールツールはロックされています。ロックを解除するにはコマンド行で&lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt;と実行してください。</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -383,6 +382,7 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
+        <target>Contaoには少なくともMySQL 5.1.0が必要ですが、 バージョン%sをインストルしてあります。データベースのバージョンを更新してください。</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -407,6 +407,34 @@
       </trans-unit>
       <trans-unit id="82">
         <source>misconfigured_database_url_explain</source>
+        <target>環境変数&lt;code&gt;DATABASE_URL&lt;/code&gt;による接続のURLを使用してデータベースに接続できませんでした。</target>
+        
+      </trans-unit>
+      <trans-unit id="83">
+        <source>engine_mismatch</source>
+        
+      </trans-unit>
+      <trans-unit id="84">
+        <source>engine_mismatch_explain</source>
+        
+      </trans-unit>
+      <trans-unit id="85">
+        <source>innodb_large_prefix</source>
+        <target>innodb_large_prefix optionが有効ではありません!</target>
+        
+      </trans-unit>
+      <trans-unit id="86">
+        <source>innodb_large_prefix_explain</source>
+        <target>&lt;code&gt;innodb_large_prefix&lt;/code&gt;オプションをサーバーで有効にしていません。インストールする(ことをお勧めします)か、&lt;code&gt;app/config/config.yml&lt;/code&gt;ファイルに異なる文字セットと照合順序を設定してください。</target>
+        
+      </trans-unit>
+      <trans-unit id="87">
+        <source>innodb_additional</source>
+        <target>InnoDBが適切に構成されていません!</target>
+        
+      </trans-unit>
+      <trans-unit id="88">
+        <source>innodb_additional_explain</source>
         
       </trans-unit>
     </body>

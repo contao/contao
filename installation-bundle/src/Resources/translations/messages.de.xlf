@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Aus Sicherheitsgründen wurde das Installtool gesperrt, nachdem dreimal hintereinander ein falsches Passwort eingegeben wurde. Um es zu entsperren, führen Sie den Befehl &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; auf der Konsole aus.</target>
+        <target>Aus Sicherheitsgründen wurde das Installtool gesperrt, nachdem dreimal hintereinander ein falsches Passwort eingegeben wurde. Sie können es entweder im Contao Manager entsperren oder den Befehl &lt;code&gt;contao:install:unlock&lt;/code&gt; auf der Konsole ausführen.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -409,6 +409,36 @@
       <trans-unit id="82">
         <source>misconfigured_database_url_explain</source>
         <target>Die Datenbankverbindung mit der Verbindungs-URL aus der Environment-Variable &lt;code&gt;DATABASE_URL&lt;/code&gt; ist fehlgeschlagen.</target>
+        
+      </trans-unit>
+      <trans-unit id="83">
+        <source>engine_mismatch</source>
+        <target>Die konfigurierte Datenbank-Engine unterstützt kein utf8mb4!</target>
+        
+      </trans-unit>
+      <trans-unit id="84">
+        <source>engine_mismatch_explain</source>
+        <target>Die konfigurierte Datenbank-Engine &lt;code&gt;%s&lt;/code&gt; unterstützt kein utf8mb4. Bitte verwenden Sie stattdessen InnoDB oder konfigurieren Sie einen anderen Zeichensatz und eine andere Kollation in der Datei &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="85">
+        <source>innodb_large_prefix</source>
+        <target>Die innodb_large_prefix-Option ist nicht aktiv!</target>
+        
+      </trans-unit>
+      <trans-unit id="86">
+        <source>innodb_large_prefix_explain</source>
+        <target>Die &lt;code&gt;innodb_large_prefix&lt;/code&gt;-Option ist auf Ihrem Server nicht aktiv. Bitte aktivieren Sie sie (empfohlen) oder konfigurieren Sie einen anderen Zeichensatz und eine andere Kollation in der Datei &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
+        
+      </trans-unit>
+      <trans-unit id="87">
+        <source>innodb_additional</source>
+        <target>InnoDB ist nicht richtig konfiguriert!</target>
+        
+      </trans-unit>
+      <trans-unit id="88">
+        <source>innodb_additional_explain</source>
+        <target>Die Verwendung von &quot;Large Prefixes&quot; in MySQL-Versionen vor 5.7.7 bzw. MariaDB-Versionen vor 10.2 erfordert das Barracuda-Dateiformat und die Option &lt;code&gt;innodb_file_per_table&lt;/code&gt;.</target>
         
       </trans-unit>
     </body>

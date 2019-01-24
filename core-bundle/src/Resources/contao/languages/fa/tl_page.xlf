@@ -97,6 +97,22 @@
         <source>Here you can restrict the access to the website to a certain domain name.</source>
         <target>اینجا می‌توانید دسترسی به وب‌سایت را به یک نام دامنه مشخص محدود کنید.</target>
       </trans-unit>
+      <trans-unit id="tl_page.staticFiles.0">
+        <source>Files URL</source>
+        <target>نشانی وب پرونده‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.1">
+        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
+        <target>نشانی وب پرونده‌ها به شاخه &lt;em&gt;tl_files&lt;/em&gt; خواهد شد (بهینه‌سازی سرعت برگه).</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.0">
+        <source>Assets URL</source>
+        <target>نشانی وب دارایی‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.1">
+        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
+        <target>نشانی وب دارایی‌ها به شاخه &lt;em&gt;assets&lt;/em&gt; اعمال خواهد شد (بهینه‌سازی سرعت برگه).</target>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>نشانی ایمیل مدیر وب‌سایت</target>
@@ -157,8 +173,7 @@
         <target>استفاده از HTTPS</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>This website is available via HTTPS.</source>
-        <target>این وب‌سایت از طریق HTTPS دردسترس است.</target>
+        <source>Use HTTPS and automatically redirect HTTP requests.</source>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>
