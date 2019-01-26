@@ -7,17 +7,19 @@
       <div class="responsive ratio-<?= $this->aspect ?>">
     <?php endif; ?>
       <?php if ($this->videoSplash): ?>
-        <figure id="videoSplash<?= $this->id ?>" class="image_container" data-video="<?= $this->src ?>">
+        <a id="videoSplash<?= $this->id ?>" class="image_container" href="<?= $this->src ?>">
           <?php $this->insert('picture_default', $this->splashImage->picture); ?>
-        </figure>
+        </a>
         <script>
           document.getElementById('videoSplash<?= $this->id ?>').addEventListener('click', function(e) {
+            e.preventDefault();
             var iframe = document.createElement('iframe');
-            iframe.src = this.dataset['video'];
+            iframe.src = this.href;
             iframe.width = <?= $this->width ?>;
             iframe.height = <?= $this->height ?>;
             iframe.setAttribute('allowfullscreen', '');
             this.parentNode.replaceChild(iframe, this);
+            return false;
           });
         </script>
       <?php else: ?>
