@@ -96,7 +96,7 @@ class LegacyMatcher implements RequestMatcherInterface
         }
 
         $fragments = $this->executeLegacyHook($fragments);
-        $pathInfo = $this->createPathFromFragments($fragments, $locale);
+        $pathInfo = $this->createPathFromFragments($fragments, $request, $locale);
 
         return $this->requestMatcher->matchRequest(Request::create($pathInfo));
     }
@@ -157,7 +157,7 @@ class LegacyMatcher implements RequestMatcherInterface
         return $fragments;
     }
 
-    private function createPathFromFragments(array $fragments, ?string $locale): string
+    private function createPathFromFragments(array $fragments, Request $request, ?string $locale): string
     {
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
@@ -170,6 +170,12 @@ class LegacyMatcher implements RequestMatcherInterface
 
         if ($this->prependLocale) {
             $pathInfo = $locale.'/'.$pathInfo;
+        }
+
+        if ($request->getHost()) {
+            // Add the host to the path
+            // The host will become 'localhost' otherwise and the host regex check in the url matcher will fail
+            return '//'.$request->getHost().'/'.$pathInfo;
         }
 
         return '/'.$pathInfo;
