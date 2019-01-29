@@ -364,6 +364,7 @@ services:
             - "@contao.routing.route_provider"
             - "@contao.routing.final_matcher"
         calls:
+            - ["addRouteFilter", ["@contao.routing.domain_filter"]]
             - ["addRouteFilter", ["@contao.routing.publishing_filter"]]
         public: true
 
@@ -380,6 +381,9 @@ services:
             - ["addRouteEnhancer", ["@contao.routing.input_enhancer"]]
         tags:
             - { name: router, priority: 20 }
+
+    contao.routing.domain_filter:
+        class: Contao\CoreBundle\Routing\Matcher\DomainFilter
 
     contao.routing.publishing_filter:
         class: Contao\CoreBundle\Routing\Matcher\PublishingFilter
