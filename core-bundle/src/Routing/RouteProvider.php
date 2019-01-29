@@ -73,7 +73,7 @@ class RouteProvider implements RouteProviderInterface
         $routes = [];
 
         if ('/' === $pathInfo || ($this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))) {
-            $this->addRoutesForRootPages($this->findRootPages(), $routes);
+            $this->addRoutesForRootPages($this->findRootPages($request->getHttpHost()), $routes);
 
             return $this->createCollectionForRoutes($routes, $request->getLanguages());
         }
@@ -474,7 +474,7 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @return Model[]
      */
-    private function findRootPages(): array
+    private function findRootPages(string $httpHost): array
     {
         if (
             !empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
@@ -495,13 +495,9 @@ class RouteProvider implements RouteProviderInterface
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
 
-        // Include pages with alias "index" or "/" (see #8498, #8560 and #1210)
-        $pages = $pageModel->findBy(["tl_page.type='root' OR tl_page.alias='index' OR tl_page.alias='/'"], []);
-
-        if ($pages instanceof Collection) {
-            return $pages->getModels();
-        }
-
-        return [];
+        return array_merge(
+            $pageModel->findBy(["(tl_page.type='root' AND (tl_page.dns=? OR tl_page.dns=''))"], [$httpHost], ['return' => 'Array']),
+            $pageModel->findBy(["tl_page.alias='index' OR tl_page.alias='/'"], [], ['return' => 'Array'])
+        );
     }
 }
