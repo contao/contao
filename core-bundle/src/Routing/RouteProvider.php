@@ -293,7 +293,7 @@ class RouteProvider implements RouteProviderInterface
         if ($this->prependLocale) {
             $path = '/{_locale}'.$path;
             $requirements['_locale'] = $page->rootLanguage;
-        } else if (!$page->rootIsFallback) {
+        } elseif (!$page->rootIsFallback) {
             $condition = "'{$page->rootLanguage}' in request.getLanguages()";
         }
 

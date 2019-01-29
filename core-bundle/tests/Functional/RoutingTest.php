@@ -759,8 +759,6 @@ class RoutingTest extends WebTestCase
         $title = trim($crawler->filterXPath('//head/title')->text());
         $response = $client->getResponse();
 
-//        dump($response);
-
         $this->assertSame($statusCode, $response->getStatusCode());
         $this->assertContains($pageTitle, $title);
     }
