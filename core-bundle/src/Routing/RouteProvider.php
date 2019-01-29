@@ -259,7 +259,6 @@ class RouteProvider implements RouteProviderInterface
 
         $requirements = ['parameters' => '(/.+)?'];
         $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->urlSuffix);
-        $host = $page->domain ? strtok($page->domain, ':') : null;
 
         if ($this->prependLocale) {
             $path = '/{_locale}'.$path;
@@ -271,7 +270,7 @@ class RouteProvider implements RouteProviderInterface
             $defaults,
             $requirements,
             ['utf8' => true],
-            $host,
+            $page->domain,
             $page->rootUseSSL ? 'https' : null
         );
 
@@ -289,7 +288,6 @@ class RouteProvider implements RouteProviderInterface
         $path = '/';
         $requirements = [];
         $defaults = $this->getRouteDefaults($page);
-        $host = $page->domain ? strtok($page->domain, ':') : null;
 
         if ($this->prependLocale) {
             $path = '/{_locale}'.$path;
@@ -301,7 +299,7 @@ class RouteProvider implements RouteProviderInterface
             $defaults,
             $requirements,
             [],
-            $host,
+            $page->domain,
             $page->rootUseSSL ? 'https' : null
         );
 
@@ -323,7 +321,7 @@ class RouteProvider implements RouteProviderInterface
             $defaults,
             [],
             [],
-            $host,
+            $page->domain,
             $page->rootUseSSL ? 'https' : null
         );
     }

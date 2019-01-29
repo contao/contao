@@ -301,6 +301,24 @@ class RoutingTest extends WebTestCase
                 true,
                 true,
             ],
+            'Matches a root without hostname' => [
+                '/',
+                200,
+                'Home - Domain without hostname',
+                [],
+                'non-existing-domain.local',
+                true,
+                true,
+            ],
+            'Matches a hostname with port' => [
+                '/',
+                200,
+                'Home - Domain with port',
+                [],
+                'domain-with-port.local:8080',
+                true,
+                true,
+            ],
         ];
     }
 

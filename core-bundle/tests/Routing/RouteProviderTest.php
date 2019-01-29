@@ -116,7 +116,7 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomainAndPort(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17, 'domain' => 'example.org:443']);
+        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17, 'domain' => 'example.org:8080']);
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -129,7 +129,7 @@ class RouteProviderTest extends TestCase
         $framework = $this->mockFramework($pageAdapter);
         $route = $this->mockRouteProvider($framework)->getRouteByName('tl_page.17');
 
-        $this->assertSame('example.org', $route->getHost());
+        $this->assertSame('example.org:8080', $route->getHost());
     }
 
     public function testSelectsAllPagesIfNoPageNamesAreGiven(): void
