@@ -78,6 +78,7 @@ use Contao\CoreBundle\Referer\TokenGenerator;
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Routing\FrontendLoader;
 use Contao\CoreBundle\Routing\LegacyRouteProvider;
+use Contao\CoreBundle\Routing\Matcher\DomainFilter;
 use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
 use Contao\CoreBundle\Routing\Matcher\PublishingFilter;
 use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
@@ -1339,7 +1340,10 @@ class ContaoCoreExtensionTest extends TestCase
         $methodCalls = $definition->getMethodCalls();
 
         $this->assertSame('addRouteFilter', $methodCalls[0][0]);
-        $this->assertSame('contao.routing.publishing_filter', (string) $methodCalls[0][1][0]);
+        $this->assertSame('contao.routing.domain_filter', (string) $methodCalls[0][1][0]);
+
+        $this->assertSame('addRouteFilter', $methodCalls[1][0]);
+        $this->assertSame('contao.routing.publishing_filter', (string) $methodCalls[1][1][0]);
     }
 
     public function testRegistersTheRoutingPageRouter(): void
@@ -1366,6 +1370,17 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey('router', $tags);
         $this->assertSame(20, $tags['router'][0]['priority']);
+    }
+
+    public function testRegistersTheRoutingDomainFilter(): void
+    {
+        $this->assertTrue($this->container->has('contao.routing.domain_filter'));
+
+        $definition = $this->container->getDefinition('contao.routing.domain_filter');
+
+        $this->assertSame(DomainFilter::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertEmpty($definition->getArguments());
     }
 
     public function testRegistersTheRoutingPublishingFilter(): void
