@@ -287,11 +287,14 @@ class RouteProvider implements RouteProviderInterface
 
         $path = '/';
         $requirements = [];
+        $condition = null;
         $defaults = $this->getRouteDefaults($page);
 
         if ($this->prependLocale) {
             $path = '/{_locale}'.$path;
             $requirements['_locale'] = $page->rootLanguage;
+        } else if (!$page->rootIsFallback) {
+            $condition = "'{$page->rootLanguage}' in request.getLanguages()";
         }
 
         $routes['tl_page.'.$page->id.'.root'] = new Route(
@@ -300,7 +303,9 @@ class RouteProvider implements RouteProviderInterface
             $requirements,
             [],
             $page->domain,
-            $page->rootUseSSL ? 'https' : null
+            $page->rootUseSSL ? 'https' : null,
+            [],
+            $condition
         );
 
         if (!$page->rootIsFallback || !$this->prependLocale) {

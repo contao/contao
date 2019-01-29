@@ -42,6 +42,6 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
 
         $this->setContext($context);
 
-        return $this->match($request->getPathInfo());
+        return $this->matchRequest($request);
     }
 }
