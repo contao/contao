@@ -301,24 +301,6 @@ class RoutingTest extends WebTestCase
                 true,
                 true,
             ],
-            'Matches a root without hostname' => [
-                '/',
-                200,
-                'Home - Domain without hostname',
-                [],
-                'non-existing-domain.local',
-                true,
-                true,
-            ],
-            'Matches a hostname with port' => [
-                '/',
-                200,
-                'Home - Domain with port',
-                [],
-                'domain-with-port.local:8080',
-                true,
-                true,
-            ],
         ];
     }
 
@@ -777,6 +759,8 @@ class RoutingTest extends WebTestCase
         $title = trim($crawler->filterXPath('//head/title')->text());
         $response = $client->getResponse();
 
+//        dump($response);
+
         $this->assertSame($statusCode, $response->getStatusCode());
         $this->assertContains($pageTitle, $title);
     }
@@ -828,6 +812,20 @@ class RoutingTest extends WebTestCase
                 'Redirecting to http://same-domain-root.local/english-site.html',
                 'fr',
                 'same-domain-root.local',
+            ],
+            'Matches a root without hostname' => [
+                '/',
+                200,
+                'Home - Domain without hostname',
+                'en',
+                'domain-without-hostname.local',
+            ],
+            'Matches a hostname with port' => [
+                '/',
+                200,
+                'Home - Domain with port',
+                'en',
+                'domain-with-port.local:8080',
             ],
         ];
     }
