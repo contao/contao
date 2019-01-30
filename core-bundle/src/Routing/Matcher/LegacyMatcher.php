@@ -210,7 +210,6 @@ class LegacyMatcher implements RequestMatcherInterface
     private function rebuildRequest(string $pathinfo, Request $request): Request
     {
         $uri = $pathinfo;
-
         $server = [];
 
         if ($request->getBaseUrl()) {

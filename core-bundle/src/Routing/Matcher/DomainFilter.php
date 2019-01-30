@@ -17,8 +17,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Removes routes without hostname if there are routes for the current hostname.
- * This prevents the fallback (empty) domain from matching if a root page for the current domain exists.
+ * Removes routes without hostname if there are routes for the current
+ * hostname. This prevents the fallback (empty) domain from matching if a root
+ * page for the current domain exists.
  */
 class DomainFilter implements RouteFilterInterface
 {

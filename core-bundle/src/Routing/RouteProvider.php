@@ -497,12 +497,23 @@ class RouteProvider implements RouteProviderInterface
             }
         }
 
+        $rootPages = [];
+        $indexPages = [];
+
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
+        $pages = $pageModel->findBy(["(tl_page.type='root' AND (tl_page.dns=? OR tl_page.dns=''))"], $httpHost);
 
-        return array_merge(
-            $pageModel->findBy(["(tl_page.type='root' AND (tl_page.dns=? OR tl_page.dns=''))"], [$httpHost], ['return' => 'Array']),
-            $pageModel->findBy(["tl_page.alias='index' OR tl_page.alias='/'"], [], ['return' => 'Array'])
-        );
+        if ($pages instanceof Collection) {
+            $rootPages = $pages->getModels();
+        }
+
+        $pages = $pageModel->findBy(["tl_page.alias='index' OR tl_page.alias='/'"], null);
+
+        if ($pages instanceof Collection) {
+            $indexPages = $pages->getModels();
+        }
+
+        return array_merge($rootPages, $indexPages);
     }
 }
