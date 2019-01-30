@@ -783,6 +783,20 @@ class RoutingTest extends WebTestCase
                 'de,fr',
                 'root-with-index.local',
             ],
+            'Matches a root page without hostname' => [
+                '/',
+                200,
+                'Home - Domain without hostname',
+                'en',
+                'domain-without-hostname.local',
+            ],
+            'Matches a hostname with port' => [
+                '/',
+                200,
+                'Home - Domain with port',
+                'en',
+                'domain-with-port.local:8080',
+            ],
             'Renders the 404 page if no language matches' => [
                 '/',
                 404,

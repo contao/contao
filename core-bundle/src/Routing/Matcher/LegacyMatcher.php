@@ -98,7 +98,7 @@ class LegacyMatcher implements RequestMatcherInterface
         $fragments = $this->executeLegacyHook($fragments);
         $pathInfo = $this->createPathFromFragments($fragments, $locale);
 
-        return $this->requestMatcher->matchRequest(Request::create($pathInfo));
+        return $this->requestMatcher->matchRequest($this->rebuildRequest($pathInfo, $request));
     }
 
     private function createFragmentsFromMatch(array $match): array
@@ -202,5 +202,26 @@ class LegacyMatcher implements RequestMatcherInterface
         }
 
         return $pathInfo;
+    }
+
+    /**
+     * @see ChainRouter::rebuildRequest()
+     */
+    private function rebuildRequest(string $pathinfo, Request $request): Request
+    {
+        $uri = $pathinfo;
+        $server = [];
+
+        if ($request->getBaseUrl()) {
+            $uri = $request->getBaseUrl().$pathinfo;
+            $server['SCRIPT_FILENAME'] = $request->getBaseUrl();
+            $server['PHP_SELF'] = $request->getBaseUrl();
+        }
+
+        $host = $request->getHttpHost() ?: 'localhost';
+        $scheme = $request->getScheme() ?: 'http';
+        $uri = $scheme.'://'.$host.$uri.'?'.$request->getQueryString();
+
+        return Request::create($uri, $request->getMethod(), [], [], [], $server);
     }
 }

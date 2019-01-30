@@ -320,6 +320,9 @@ services:
         calls:
             - ["matchAttribute", ["_scope", "backend"]]
 
+    contao.routing.domain_filter:
+        class: Contao\CoreBundle\Routing\Matcher\DomainFilter
+
     contao.routing.final_matcher:
         class: Contao\CoreBundle\Routing\Matcher\UrlMatcher
 
@@ -364,6 +367,7 @@ services:
             - "@contao.routing.route_provider"
             - "@contao.routing.final_matcher"
         calls:
+            - ["addRouteFilter", ["@contao.routing.domain_filter"]]
             - ["addRouteFilter", ["@contao.routing.publishing_filter"]]
         public: true
 
