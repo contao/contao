@@ -9,6 +9,14 @@ services:
                 - ["setContainer", ["@service_container"]]
 
     Contao\CoreBundle\Framework\ContaoFramework: "@contao.framework"
+    Contao\CoreBundle\Image\ImageFactoryInterface: "@contao.image.image_factory"
+    Contao\CoreBundle\Image\PictureFactoryInterface: "@contao.image.picture_factory"
+    Contao\CoreBundle\Routing\ScopeMatcher: "@contao.routing.scope_matcher"
+    Contao\CoreBundle\Security\Authentication\Token\TokenChecker: "@contao.security.token_checker"
+    Contao\CoreBundle\Slug\Slug: "@contao.slug"
+
+    # Backwards compatibility
+    Contao\CoreBundle\Framework\ContaoFrameworkInterface: "@contao.framework"
 
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
