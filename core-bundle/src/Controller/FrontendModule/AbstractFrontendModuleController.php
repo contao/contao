@@ -14,10 +14,12 @@ namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\BackendTemplate;
 use Contao\CoreBundle\Controller\AbstractFragmentController;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\ModuleModel;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Translation\TranslatorInterface;
 
 abstract class AbstractFrontendModuleController extends AbstractFragmentController
 {
@@ -57,4 +59,18 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
     }
 
     abstract protected function getResponse(Template $template, ModuleModel $model, Request $request): Response;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedServices()
+    {
+        return array_merge(
+            parent::getSubscribedServices(),
+            [
+                'translator' => TranslatorInterface::class,
+                'contao.routing.scope_matcher' => ScopeMatcher::class,
+            ]
+        );
+    }
 }
