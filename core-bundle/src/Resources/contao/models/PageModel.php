@@ -82,6 +82,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $rootAlias
  * @property string  $rootTitle
  * @property string  $rootPageTitle
+ * @property integer $rootSorting
  * @property string  $domain
  * @property string  $rootLanguage
  * @property boolean $rootIsPublic
@@ -957,6 +958,7 @@ class PageModel extends Model
 			$this->rootAlias = $objParentPage->alias;
 			$this->rootTitle = $objParentPage->title;
 			$this->rootPageTitle = $objParentPage->pageTitle ?: $objParentPage->title;
+			$this->rootSorting = $objParentPage->rootSorting;
 			$this->domain = $objParentPage->dns;
 			$this->rootLanguage = $objParentPage->language;
 			$this->language = $objParentPage->language;
