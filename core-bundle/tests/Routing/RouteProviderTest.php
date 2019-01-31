@@ -405,15 +405,26 @@ class RouteProviderTest extends TestCase
             ['en'],
         ];
 
-        yield 'Complex sorting (1)' => [
+        yield 'Sorts fallback root first' => [
             [
-                2 => $this->createPage('de', 'foo'),
-                1 => $this->createPage('de', 'foo/bar'),
+                2 => $this->createPage('de', 'foo', false),
+                4 => $this->createPage('en', 'foo', false),
+                1 => $this->createPage('de', 'foo/bar', false),
                 0 => $this->createPage('en', 'foo', true, 'example.com'),
-                4 => $this->createPage('en', 'foo'),
-                3 => $this->createPage('en', 'foo/bar'),
+                3 => $this->createPage('en', 'foo/bar', false),
             ],
             ['de', 'fr'],
+        ];
+
+        // createPage() generates a rootSorting value from the language, so the test order is by language
+        yield 'Sorts by root page sorting if none of the languages is fallback' => [
+            [
+                1 => $this->createPage('en', 'foo', false),
+                3 => $this->createPage('ru', 'foo', false),
+                2 => $this->createPage('fr', 'foo', false),
+                0 => $this->createPage('en', 'foo/bar', false),
+            ],
+            ['de'],
         ];
     }
 
@@ -545,6 +556,7 @@ class RouteProviderTest extends TestCase
                 'rootLanguage' => $language,
                 'rootIsFallback' => $fallback,
                 'rootUseSSL' => 'https' === $scheme,
+                'rootSorting' => array_reduce((array) $language, function ($c, $i) { return $c + ord($i); }, 0),
             ]
         );
     }
