@@ -421,7 +421,7 @@ class RouteProvider implements RouteProviderInterface
                         return -1;
                     }
 
-                    return $pageB->rootIsFallback ? 1 : strnatcmp((string) $pageA->rootSorting, (string) $pageB->rootSorting);
+                    return $pageB->rootIsFallback ? 1 : $pageA->rootSorting <=> $pageB->rootSorting;
                 }
 
                 if (null === $langA && null !== $langB) {
