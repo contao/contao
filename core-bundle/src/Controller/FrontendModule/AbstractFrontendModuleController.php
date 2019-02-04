@@ -40,6 +40,20 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         return $this->getResponse($template, $model, $request);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedServices(): array
+    {
+        return array_merge(
+            parent::getSubscribedServices(),
+            [
+                'translator' => TranslatorInterface::class,
+                'contao.routing.scope_matcher' => ScopeMatcher::class,
+            ]
+        );
+    }
+
     protected function getBackendWildcard(ModuleModel $module): Response
     {
         $href = $this->get('router')->generate(
@@ -59,18 +73,4 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
     }
 
     abstract protected function getResponse(Template $template, ModuleModel $model, Request $request): Response;
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedServices()
-    {
-        return array_merge(
-            parent::getSubscribedServices(),
-            [
-                'translator' => TranslatorInterface::class,
-                'contao.routing.scope_matcher' => ScopeMatcher::class,
-            ]
-        );
-    }
 }

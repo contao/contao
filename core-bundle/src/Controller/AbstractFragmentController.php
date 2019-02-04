@@ -35,6 +35,20 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedServices(): array
+    {
+        return array_merge(
+            parent::getSubscribedServices(),
+            [
+                'contao.framework' => ContaoFramework::class,
+                'fos_http_cache.http.symfony_response_tagger' => '?'.SymfonyResponseTagger::class,
+            ]
+        );
+    }
+
+    /**
      * Creates a template by name or from the "customTpl" field of the model.
      */
     protected function createTemplate(Model $model, string $templateName): Template
@@ -107,19 +121,5 @@ abstract class AbstractFragmentController extends AbstractController implements 
         }
 
         return Container::underscore($className);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedServices()
-    {
-        return array_merge(
-            parent::getSubscribedServices(),
-            [
-                'contao.framework' => ContaoFramework::class,
-                'fos_http_cache.http.symfony_response_tagger' => '?'.SymfonyResponseTagger::class
-            ]
-        );
     }
 }
