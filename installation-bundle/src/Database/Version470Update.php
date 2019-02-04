@@ -75,7 +75,7 @@ class Version470Update extends AbstractVersionUpdate
                 ADD
                     active CHAR(1) DEFAULT '' NOT NULL
             ");
-    
+
             $this->connection->query("
                 UPDATE
                     tl_comments_notify

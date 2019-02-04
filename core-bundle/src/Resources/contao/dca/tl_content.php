@@ -1733,7 +1733,7 @@ class tl_content extends Contao\Backend
 				case 'hyperlink':
 				case 'image':
 				case 'accordionSingle':
-					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Contao\Config::get('validContao\ImageTypes');
+					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Contao\Config::get('validImageTypes');
 					break;
 
 				case 'download':
@@ -1761,7 +1761,7 @@ class tl_content extends Contao\Backend
 			{
 				case 'gallery':
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['isGallery'] = true;
-					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Contao\Config::get('validContao\ImageTypes');
+					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Contao\Config::get('validImageTypes');
 					break;
 
 				case 'downloads':

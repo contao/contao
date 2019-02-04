@@ -463,7 +463,7 @@ class tl_files extends Contao\Backend
 
 		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
 
-		if (is_dir($rootDir . '/' . $dc->id) || !\in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('validContao\ImageTypes')))))
+		if (is_dir($rootDir . '/' . $dc->id) || !\in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('validImageTypes')))))
 		{
 			$GLOBALS['TL_DCA'][$dc->table]['palettes'] = str_replace(',importantPartX,importantPartY,importantPartWidth,importantPartHeight', '', $GLOBALS['TL_DCA'][$dc->table]['palettes']);
 		}

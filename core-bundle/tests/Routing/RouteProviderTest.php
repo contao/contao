@@ -556,7 +556,7 @@ class RouteProviderTest extends TestCase
                 'rootLanguage' => $language,
                 'rootIsFallback' => $fallback,
                 'rootUseSSL' => 'https' === $scheme,
-                'rootSorting' => array_reduce((array) $language, function ($c, $i) { return $c + ord($i); }, 0),
+                'rootSorting' => array_reduce((array) $language, function ($c, $i) { return $c + \ord($i); }, 0),
             ]
         );
     }
