@@ -30,7 +30,7 @@ class DoctrineMigrationsDiffCommand extends DiffCommand
     /**
      * {@inheritdoc}
      */
-    public function execute(InputInterface $input, OutputInterface $output): void
+    public function execute(InputInterface $input, OutputInterface $output): ?int
     {
         /** @var Application $application */
         $application = $this->getApplication();
@@ -43,6 +43,8 @@ class DoctrineMigrationsDiffCommand extends DiffCommand
         );
 
         parent::execute($input, $output);
+
+        return 0;
     }
 
     /**
