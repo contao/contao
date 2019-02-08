@@ -958,7 +958,7 @@ class PageModel extends Model
 			$this->rootAlias = $objParentPage->alias;
 			$this->rootTitle = $objParentPage->title;
 			$this->rootPageTitle = $objParentPage->pageTitle ?: $objParentPage->title;
-			$this->rootSorting = $objParentPage->rootSorting;
+			$this->rootSorting = $objParentPage->sorting;
 			$this->domain = $objParentPage->dns;
 			$this->rootLanguage = $objParentPage->language;
 			$this->language = $objParentPage->language;
