@@ -1,6 +1,11 @@
 # Change log
 
-## 4.7.0-RC2 (2019-01-24)
+## 4.7.0-RC4 (2019-02-10)
+
+ * Correctly match root pages with hostname and port (see #306).
+ * Fix the "Recreate the symlinks" maintenance task (see #299).
+
+## 4.7.0-RC3 (2019-01-24)
 
  * Add the `js_nocookie.html5` template (see #134).
  * Correctly cancel the 2FA process (see #292).

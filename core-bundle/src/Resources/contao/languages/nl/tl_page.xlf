@@ -175,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
         <source>Use HTTPS and automatically redirect HTTP requests.</source>
+        <target>Gebruik HTTPS en stuur HTTP-verzoeken automatisch door.</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

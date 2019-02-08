@@ -283,6 +283,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
+        <target>کد تایید نامعتبر!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1743,6 +1744,7 @@
       </trans-unit>
       <trans-unit id="MSC.dashboard">
         <source>Dashboard</source>
+        <target>داشبورد</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>

@@ -2415,9 +2415,11 @@
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>Постоји барем један редовни корисник који има приступ едитору шаблона. С обзиром да су шаблони, заправо, PHP фајлови, ови корисници имплицитно имају пуну контролу над системом.</target>
       </trans-unit>
       <trans-unit id="MSC.groupTemplateEditor">
         <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>Постоји барем једна група корисника којој је одобрен приступ едитору шаблона.  С обзиром да су шаблони, заправо, PHP фајлови, корисници ових група имплицитно имају пуну контролу над системом.</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
