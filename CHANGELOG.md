@@ -1,6 +1,6 @@
 # Change log
 
-## 4.7.0-RC4 (2019-02-10)
+## 4.7.0-RC4 (2019-02-08)
 
  * Correctly match root pages with hostname and port (see #306).
  * Fix the "Recreate the symlinks" maintenance task (see #299).
