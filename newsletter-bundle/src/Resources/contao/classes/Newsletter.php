@@ -21,6 +21,11 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class Newsletter extends \Backend
 {
 
+	public function __construct()
+	{
+		parent::__construct();
+	}
+	
 	/**
 	 * Return a form to choose an existing style sheet and import it
 	 *
