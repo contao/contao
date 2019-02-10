@@ -53,6 +53,17 @@ jobs:
         - phpenv config-rm xdebug.ini || true
         - composer update --no-interaction --no-suggest
       script:
+        - run_tests
+        - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
+        - php vendor/bin/monorepo-tools composer-json --validate
+
+    # PHP-CS-Fixer is not yet compatible with PHP 7.3
+    - stage: test
+      php: 7.3
+      install:
+        - phpenv config-rm xdebug.ini || true
+        - composer update --ignore-platform-reqs --no-interaction --no-suggest
+      script:
         - phpdbg -qrr vendor/bin/phpunit -c calendar-bundle --coverage-clover=calendar-bundle.xml
         - phpdbg -qrr vendor/bin/phpunit -c core-bundle --testsuite=coverage --coverage-clover=core-bundle.xml
         - php vendor/bin/phpunit -c core-bundle --testsuite=functional
@@ -63,17 +74,6 @@ jobs:
         - php vendor/bin/monorepo-tools composer-json --validate
       after_script:
         - php vendor/bin/php-coveralls -o coveralls-upload.json -x calendar-bundle.xml -x core-bundle.xml -x faq-bundle.xml -x manager-bundle.xml -x news-bundle.xml
-
-    # PHP-CS-Fixer is not yet compatible with PHP 7.3
-    - stage: test
-      php: 7.3
-      install:
-        - phpenv config-rm xdebug.ini || true
-        - composer update --ignore-platform-reqs --no-interaction --no-suggest
-      script:
-        - run_tests
-        - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
-        - php vendor/bin/monorepo-tools composer-json --validate
 
     # Ignore the platform requirements for the upcoming PHP version
     - stage: test
