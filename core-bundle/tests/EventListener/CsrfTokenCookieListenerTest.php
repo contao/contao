@@ -43,6 +43,7 @@ class CsrfTokenCookieListenerTest extends TestCase
             'csrf_generated' => $generatedToken,
             'not_csrf' => 'baz',
             'csrf_bar' => '"<>!&', // ignore invalid characters
+            0 => 'foobar', // test integer key
         ]);
 
         $requestEvent = $this->createMock(GetResponseEvent::class);
