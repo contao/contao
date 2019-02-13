@@ -33,6 +33,14 @@
         <source>Add an image to the content element.</source>
         <target>コンテント要素に画像を追加します。</target>
       </trans-unit>
+      <trans-unit id="tl_content.inline.0">
+        <source>Show in browser</source>
+        <target>ブラウザーで表示</target>
+      </trans-unit>
+      <trans-unit id="tl_content.inline.1">
+        <source>Show the file in the browser instead of opening the download dialog.</source>
+        <target>ダウンロードのダイアログを開く代わりにブラウザーでファイルを表示します。</target>
+      </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
         <target>メタデータを上書き</target>
@@ -629,6 +637,10 @@
       <trans-unit id="tl_content.image_legend">
         <source>Image settings</source>
         <target>画像の設定</target>
+      </trans-unit>
+      <trans-unit id="tl_content.download_legend">
+        <source>Download settings</source>
+        <target>ダウンロードの設定</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>

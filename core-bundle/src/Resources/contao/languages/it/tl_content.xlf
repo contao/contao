@@ -33,13 +33,18 @@
         <source>Add an image to the content element.</source>
         <target>Scegliendo questa opzione un'immagine sarà aggiunta all'elemento.</target>
       </trans-unit>
+      <trans-unit id="tl_content.inline.0">
+        <source>Show in browser</source>
+      </trans-unit>
+      <trans-unit id="tl_content.inline.1">
+        <source>Show the file in the browser instead of opening the download dialog.</source>
+      </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
         <target>Sovrascrivi i meta dati</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
         <source>Overwrite the meta data from the file manager.</source>
-        <target>Sovrascrivi i meta dati attraverso la gestore file.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -616,6 +621,10 @@
       <trans-unit id="tl_content.image_legend">
         <source>Image settings</source>
         <target>Impostazioni immagine</target>
+      </trans-unit>
+      <trans-unit id="tl_content.download_legend">
+        <source>Download settings</source>
+        <target>Impostazioni download</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>

@@ -49,6 +49,14 @@
         <source>Here you can enter a website address.</source>
         <target>Введите адрес веб-сайта.</target>
       </trans-unit>
+      <trans-unit id="tl_comments.member.0">
+        <source>Member</source>
+        <target>Участник</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.member.1">
+        <source>Here you can associate the comment with a member.</source>
+        <target>Вы можете связать комментарий с участником.</target>
+      </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>
         <target>Комментарий</target>

@@ -257,13 +257,13 @@
         <source>Here you can select the page template.</source>
         <target>Wybierz szablon układu. Domyślnym szablonem jest &lt;em&gt;fe_page&lt;/em&gt;. Jeśli chcesz dodać własny szablon, wgraj go do katalogu &lt;em&gt;templates&lt;/em&gt; (rozszerzenie pliku musi być &lt;em&gt;tpl&lt;/em&gt;).</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.0">
-        <source>Output format</source>
-        <target>Definicja Typu Dokumentu</target>
+      <trans-unit id="tl_layout.minifyMarkup.0">
+        <source>Minify the markup</source>
+        <target>Minimalizuj kod źródłowy</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.1">
-        <source>Here you can set the output format.</source>
-        <target>Wybierz DTD.</target>
+      <trans-unit id="tl_layout.minifyMarkup.1">
+        <source>Minify the HTML markup before it is sent to the browser.</source>
+        <target>Minimalizuj kod źródłowy HTML zanim zostanie wysłany do przeglądarki.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.0">
         <source>Body class</source>

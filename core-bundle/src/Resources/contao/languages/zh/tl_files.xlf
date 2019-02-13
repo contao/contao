@@ -33,6 +33,12 @@
         <source>Make the folder and its sub-folders accessible via HTTP.</source>
         <target>可以通过HTTP来访问该文件夹以及子级文件夹</target>
       </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+      </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
         <target>重要部分 x 坐标</target>

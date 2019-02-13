@@ -65,6 +65,22 @@
         <source>Leave blank to create a single day event.</source>
         <target>空欄にすると1日だけのイベントを作成します。</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.0">
+        <source>Meta title</source>
+        <target>メタタイトル</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>独自のメタタイトルを追加して、ページの題名の初期値を上書きできます。</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.0">
+        <source>Meta description</source>
+        <target>メタデスクリプション</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>独自のメタデスクリプションを追加して、ページの説明の初期値を上書きできます。</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
         <target>会場の名前</target>
@@ -260,6 +276,10 @@
       <trans-unit id="tl_calendar_events.date_legend">
         <source>Date and time</source>
         <target>日付と時刻</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>メタデータ</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>

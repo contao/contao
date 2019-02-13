@@ -33,6 +33,12 @@
         <source>Make the folder and its sub-folders accessible via HTTP.</source>
         <target>Rendre le dossier et ses sous-dossiers accessibles via HTTP.</target>
       </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+      </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
         <target>Coordonnée X de la partie importante </target>

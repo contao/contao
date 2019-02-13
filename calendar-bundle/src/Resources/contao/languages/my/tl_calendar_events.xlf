@@ -64,6 +64,18 @@
         <source>Leave blank to create a single day event.</source>
         <target>သီးခြားနေ့ရက်အဖြစ်အပျက်ထည့်ရန်အလွတ်ထား။</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.0">
+        <source>Meta title</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.0">
+        <source>Meta description</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
       </trans-unit>
@@ -253,6 +265,9 @@
       <trans-unit id="tl_calendar_events.date_legend">
         <source>Date and time</source>
         <target>နေ့စွဲနှင့်အချိန်</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>

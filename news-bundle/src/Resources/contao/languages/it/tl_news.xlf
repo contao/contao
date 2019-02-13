@@ -41,6 +41,18 @@
         <source>Please enter the time according to the global time format.</source>
         <target>Inserisci l'ora della news</target>
       </trans-unit>
+      <trans-unit id="tl_news.pageTitle.0">
+        <source>Meta title</source>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+      </trans-unit>
+      <trans-unit id="tl_news.description.0">
+        <source>Meta description</source>
+      </trans-unit>
+      <trans-unit id="tl_news.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>Sottotitolo</target>
@@ -206,6 +218,10 @@
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
         <target>Data e tempo</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta dati</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>

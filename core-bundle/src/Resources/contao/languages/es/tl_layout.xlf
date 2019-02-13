@@ -257,13 +257,13 @@
         <source>Here you can select the page template.</source>
         <target>Por favor selecciona una plantilla de diseño. La plantilla por defecto se llama &lt;em&gt;fe_page&lt;/em&gt;. Si quieres añadir tus propias plantillas, sube las al directorio &lt;em&gt;templates&lt;/em&gt; (la extensión del archivo debe ser &lt;em&gt;tpl&lt;/em&gt;).</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.0">
-        <source>Output format</source>
-        <target>Definición de Tipo de Documento (DTD)</target>
+      <trans-unit id="tl_layout.minifyMarkup.0">
+        <source>Minify the markup</source>
+        <target>Minificar el código</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.1">
-        <source>Here you can set the output format.</source>
-        <target>Por favor selecciona una DTD.</target>
+      <trans-unit id="tl_layout.minifyMarkup.1">
+        <source>Minify the HTML markup before it is sent to the browser.</source>
+        <target>Minifica el marcado HTML antes de ser enviado al navegador.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.0">
         <source>Body class</source>

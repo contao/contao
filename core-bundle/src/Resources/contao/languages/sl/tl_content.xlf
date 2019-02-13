@@ -33,6 +33,12 @@
         <source>Add an image to the content element.</source>
         <target>Če izberete to možnost bo vsebini dodana slika.</target>
       </trans-unit>
+      <trans-unit id="tl_content.inline.0">
+        <source>Show in browser</source>
+      </trans-unit>
+      <trans-unit id="tl_content.inline.1">
+        <source>Show the file in the browser instead of opening the download dialog.</source>
+      </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
         <target>Prepiši meta podatke</target>
@@ -613,6 +619,10 @@
       <trans-unit id="tl_content.image_legend">
         <source>Image settings</source>
         <target>Nastavitve slike</target>
+      </trans-unit>
+      <trans-unit id="tl_content.download_legend">
+        <source>Download settings</source>
+        <target>Nastavitve prenosa</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>

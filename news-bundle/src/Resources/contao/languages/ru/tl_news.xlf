@@ -41,6 +41,22 @@
         <source>Please enter the time according to the global time format.</source>
         <target>Введите время в соответствии с глобальным форматом времени.</target>
       </trans-unit>
+      <trans-unit id="tl_news.pageTitle.0">
+        <source>Meta title</source>
+        <target>Мета-название</target>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Вы можете добавить собственный мета-заголовок, чтобы перезаписать заголовок страницы по умолчанию.</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.0">
+        <source>Meta description</source>
+        <target>Мета-описание</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Вы можете добавить собственное мета-описание, чтобы перезаписать описание страницы по умолчанию.</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>Подзаголовок</target>
@@ -208,6 +224,10 @@
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
         <target>Дата и время</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Метаданные</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>

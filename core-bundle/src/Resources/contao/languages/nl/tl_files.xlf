@@ -33,6 +33,14 @@
         <source>Make the folder and its sub-folders accessible via HTTP.</source>
         <target>Maak de map en sub-mappen toegankelijk via HTTP.</target>
       </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+        <target>Niet synchroniseren</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>Hoofdmap en zijn submappen niet synchroniseren met de database.</target>
+      </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
         <target> Belangrijkste deel x-coördinaten</target>

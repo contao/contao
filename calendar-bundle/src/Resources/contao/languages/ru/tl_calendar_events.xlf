@@ -65,6 +65,22 @@
         <source>Leave blank to create a single day event.</source>
         <target>Введите дату завершения события согласно глобальному формату времени.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.0">
+        <source>Meta title</source>
+        <target>Мета-заголовок</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Вы можете добавить собственный мета-заголовок, чтобы перезаписать заголовок страницы по умолчанию.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.0">
+        <source>Meta description</source>
+        <target>Мета-описание</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Вы можете добавить собственное мета-описание, чтобы перезаписать описание страницы по умолчанию.</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
         <target>Название расположения</target>
@@ -260,6 +276,10 @@
       <trans-unit id="tl_calendar_events.date_legend">
         <source>Date and time</source>
         <target>Дата и время</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Meta data</source>
+        <target>Метаданные</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details_legend">
         <source>Event details</source>

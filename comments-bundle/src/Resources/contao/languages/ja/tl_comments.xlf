@@ -49,6 +49,14 @@
         <source>Here you can enter a website address.</source>
         <target>ウェブサイトのアドレスを入力できます。</target>
       </trans-unit>
+      <trans-unit id="tl_comments.member.0">
+        <source>Member</source>
+        <target>メンバー</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.member.1">
+        <source>Here you can associate the comment with a member.</source>
+        <target>コメントにメンバーを関連付けられます。</target>
+      </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>
         <target>コメント</target>

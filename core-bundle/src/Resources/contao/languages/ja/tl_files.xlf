@@ -33,6 +33,14 @@
         <source>Make the folder and its sub-folders accessible via HTTP.</source>
         <target>フォルダーとその下位のフォルダーをHTTPでアクセスできるようにします。</target>
       </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+        <target>同期の対象外</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>フォルダーとその下位のフォルダーをデータベースと同期しません。</target>
+      </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
         <target>重要な部分のX座標</target>

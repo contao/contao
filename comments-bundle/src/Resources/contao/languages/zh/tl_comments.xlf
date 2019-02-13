@@ -49,6 +49,13 @@
         <source>Here you can enter a website address.</source>
         <target>您可以在这里输入网站地址。</target>
       </trans-unit>
+      <trans-unit id="tl_comments.member.0">
+        <source>Member</source>
+        <target>会员</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.member.1">
+        <source>Here you can associate the comment with a member.</source>
+      </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>
         <target>评论</target>

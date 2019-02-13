@@ -41,6 +41,22 @@
         <source>Please enter the time according to the global time format.</source>
         <target>Geef het tijdstip van het nieuwsbericht op.</target>
       </trans-unit>
+      <trans-unit id="tl_news.pageTitle.0">
+        <source>Meta title</source>
+        <target>Metatitel</target>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Hier kunt u een aangepaste metatitel toevoegen om de standaardpaginatitel te overschrijven.</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.0">
+        <source>Meta description</source>
+        <target>Meta omschrijving</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Hier kunt u een aangepaste meta omschrijving toevoegen om de standaard pagina omschrijving te wijzigen.</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>Subtitel</target>
@@ -208,6 +224,10 @@
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
         <target>Datum en tijd</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta data</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>

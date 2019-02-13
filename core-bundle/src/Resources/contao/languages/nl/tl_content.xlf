@@ -33,6 +33,14 @@
         <source>Add an image to the content element.</source>
         <target>Voeg een afbeelding toe aan het inhoudselement.</target>
       </trans-unit>
+      <trans-unit id="tl_content.inline.0">
+        <source>Show in browser</source>
+        <target>Toon in de browser</target>
+      </trans-unit>
+      <trans-unit id="tl_content.inline.1">
+        <source>Show the file in the browser instead of opening the download dialog.</source>
+        <target>Toon het bestand in de browser in plaats van het download dialoogvenster te openen.</target>
+      </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
         <target>Overschrijf metadata</target>
@@ -628,6 +636,10 @@
       <trans-unit id="tl_content.image_legend">
         <source>Image settings</source>
         <target>Afbeeldingseigenschappen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.download_legend">
+        <source>Download settings</source>
+        <target>Download instellingen</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>

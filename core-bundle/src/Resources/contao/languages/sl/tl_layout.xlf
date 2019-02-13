@@ -240,13 +240,13 @@
         <source>Here you can select the page template.</source>
         <target>Tu lahko izberete predlogo strani.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.0">
-        <source>Output format</source>
-        <target>Določanje vrste dokumenta (DTD)</target>
+      <trans-unit id="tl_layout.minifyMarkup.0">
+        <source>Minify the markup</source>
+        <target>Skrči HTML označevanje</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.1">
-        <source>Here you can set the output format.</source>
-        <target>Prosimo, izberite vrsto dokumenta (Document Type Definition).</target>
+      <trans-unit id="tl_layout.minifyMarkup.1">
+        <source>Minify the HTML markup before it is sent to the browser.</source>
+        <target>Skrči HTML označevanje preden je poslano brskalniku.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.0">
         <source>Body class</source>

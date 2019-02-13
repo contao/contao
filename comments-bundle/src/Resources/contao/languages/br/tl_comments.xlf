@@ -49,6 +49,12 @@
         <source>Here you can enter a website address.</source>
         <target>Gellout a rit ebarzhiñ chomlec'h ur lec'hienn internet amañ.</target>
       </trans-unit>
+      <trans-unit id="tl_comments.member.0">
+        <source>Member</source>
+      </trans-unit>
+      <trans-unit id="tl_comments.member.1">
+        <source>Here you can associate the comment with a member.</source>
+      </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>
         <target>Evezhiadenn</target>

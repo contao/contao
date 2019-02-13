@@ -33,6 +33,14 @@
         <source>Make the folder and its sub-folders accessible via HTTP.</source>
         <target>Сделать каталог и вложенные подкаталоги доступными по HTTP.</target>
       </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+        <target>Не синхронизировать</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>Не синхронизировать каталог и подкаталоги с базой данных.</target>
+      </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
         <target>Важная часть X-координата</target>

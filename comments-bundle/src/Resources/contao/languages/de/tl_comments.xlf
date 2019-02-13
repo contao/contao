@@ -49,6 +49,14 @@
         <source>Here you can enter a website address.</source>
         <target>Hier können Sie eine Webadresse eingeben.</target>
       </trans-unit>
+      <trans-unit id="tl_comments.member.0">
+        <source>Member</source>
+        <target>Mitglied</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.member.1">
+        <source>Here you can associate the comment with a member.</source>
+        <target>Hier können Sie den Kommentar mit einem Mitglied verknüpfen.</target>
+      </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>
         <target>Kommentar</target>

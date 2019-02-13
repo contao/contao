@@ -7,11 +7,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.question.1">
         <source>Please enter the question.</source>
-        <target>Lütfen soruyu girin.</target>
+        <target>Lütfen soruyu yazın.</target>
       </trans-unit>
       <trans-unit id="tl_faq.alias.0">
         <source>FAQ alias</source>
-        <target>FAQ lakabı</target>
+        <target>SSS kısaltması</target>
       </trans-unit>
       <trans-unit id="tl_faq.alias.1">
         <source>The FAQ alias is a unique reference to the FAQ which can be called instead of its numeric ID.</source>
