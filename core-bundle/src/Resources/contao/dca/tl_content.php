@@ -1188,10 +1188,6 @@ class tl_content extends Contao\Backend
 				Contao\Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplates'], 'moo_accordion', 'j_accordion'));
 				break;
 
-			case 'player':
-				Contao\Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplate'], 'js_mediaelement'));
-				break;
-
 			case 'table':
 				if ($objCte->sortable)
 				{

@@ -368,9 +368,6 @@ class tl_image_size extends Contao\Backend
 		{
 			return;
 		}
-
-		Contao\System::loadLanguageFile('tl_layout');
-		Contao\Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_image_size']['picturefill'], $GLOBALS['TL_LANG']['tl_layout']['picturefill'][0]));
 	}
 
 	/**
