@@ -859,16 +859,23 @@ class RoutingTest extends WebTestCase
             'Redirects to the language root if one of the accept languages matches' => [
                 '/',
                 301,
-                'Redirecting to http://root-with-index.local/en/',
+                'Redirecting to http://same-domain-root.local/de/',
+                'de,en',
+                'same-domain-root.local',
+            ],
+            'Redirects to the language fallback if one of the accept languages matches' => [
+                '/',
+                301,
+                'Redirecting to http://same-domain-root.local/en/',
                 'en,de',
-                'root-with-index.local',
+                'same-domain-root.local',
             ],
             'Redirects to the language fallback if none of the accept languages matches' => [
                 '/',
                 301,
-                'Redirecting to http://root-with-index.local/en/',
-                'de,fr',
-                'root-with-index.local',
+                'Redirecting to http://same-domain-root.local/en/',
+                'fr,es',
+                'same-domain-root.local',
             ],
             'Renders the 404 page if none of the accept languages matches' => [
                 '/',
