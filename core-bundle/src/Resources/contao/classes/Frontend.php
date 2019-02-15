@@ -67,8 +67,12 @@ abstract class Frontend extends \Controller
 		// Get the request without the query string
 		list($strRequest) = explode('?', $strRequest, 2);
 
-		// URL decode here (see #6232)
-		$strRequest = rawurldecode($strRequest);
+		$encodeSlash = function ($strFragment) {
+			return str_replace('/', '%2F', $strFragment);
+		};
+
+		$arrFolders = array_map('urldecode', explode('/', $strRequest));
+		$strRequest = implode('/', array_map($encodeSlash, $arrFolders));
 
 		// The request string must not contain "auto_item" (see #4012)
 		if (strpos($strRequest, '/auto_item/') !== false)
@@ -263,7 +267,10 @@ abstract class Frontend extends \Controller
 				return false;
 			}
 
-			\Input::setGet(urldecode($arrFragments[$i]), urldecode($arrFragments[$i+1]), true);
+			$strKey = str_replace('%2F', '/', (string) $arrFragments[$i]);
+			$strValue = str_replace('%2F', '/', (string) $arrFragments[$i+1]);
+
+			\Input::setGet($strKey, $strValue, true);
 		}
 
 		return $arrFragments[0] ?: null;
