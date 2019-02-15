@@ -158,10 +158,6 @@
         <source>Delete image size ID %s</source>
         <target>Izbriši velikost slike ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.picturefill">
-        <source>The &lt;em&gt;%s&lt;/em&gt; option needs to be enabled in the page layout.</source>
-        <target>&lt;em&gt;%s&lt;/em&gt; možnost mora biti omogočena v postavitvi strani.</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

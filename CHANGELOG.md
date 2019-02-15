@@ -1,5 +1,9 @@
 # Change log
 
+## 4.7.0 (2019-02-15)
+
+ * Fix the input field height on Windows (see #79).
+
 ## 4.7.0-RC4 (2019-02-08)
 
  * Correctly match root pages with hostname and port (see #306).

@@ -160,10 +160,6 @@
         <source>Delete image size ID %s</source>
         <target>حذف اندازه تصویر شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.picturefill">
-        <source>The &lt;em&gt;%s&lt;/em&gt; option needs to be enabled in the page layout.</source>
-        <target>گزینه &lt;em&gt;%s&lt;/em&gt; لازم است که در چیدمان برگه فعال گردد.</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

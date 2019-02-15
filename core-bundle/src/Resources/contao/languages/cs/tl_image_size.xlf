@@ -161,10 +161,6 @@
         <source>Delete image size ID %s</source>
         <target>Smazat obrázkové rozměry ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.picturefill">
-        <source>The &lt;em&gt;%s&lt;/em&gt; option needs to be enabled in the page layout.</source>
-        <target>Volba &lt;em&gt;%s&lt;/em&gt; musí být začleněná do vzhledu stránky.</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>
