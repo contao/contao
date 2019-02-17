@@ -659,7 +659,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     public function testCreatesSchemaFromOrm(): void
     {
         $metadata = new ClassMetadata('tl_member');
-        $metadata->setTableName('tl_member');
+        $metadata->setPrimaryTable(['name' => 'tl_member']);
 
         $provider = new DcaSchemaProvider(
             $this->mockContaoFrameworkWithInstaller(),
@@ -675,10 +675,10 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     public function testAppliesTheSchemaFilterToTheOrmEntities(): void
     {
         $class1 = new ClassMetadata('tl_member');
-        $class1->setTableName('tl_member');
+        $class1->setPrimaryTable(['name' => 'tl_member']);
 
         $class2 = new ClassMetadata('member');
-        $class2->setTableName('member');
+        $class2->setPrimaryTable(['name' => 'member']);
 
         $provider = new DcaSchemaProvider(
             $this->mockContaoFrameworkWithInstaller(),

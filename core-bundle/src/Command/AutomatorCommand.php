@@ -14,16 +14,18 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\Automator;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Lock\LockInterface;
 
 /**
  * Runs Contao automator tasks on the command line.
  */
-class AutomatorCommand extends AbstractLockedCommand
+class AutomatorCommand extends Command
 {
     /**
      * @var array
@@ -35,9 +37,15 @@ class AutomatorCommand extends AbstractLockedCommand
      */
     private $framework;
 
-    public function __construct(ContaoFramework $framework)
+    /**
+     * @var LockInterface
+     */
+    private $lock;
+
+    public function __construct(ContaoFramework $framework, LockInterface $lock)
     {
         $this->framework = $framework;
+        $this->lock = $lock;
 
         parent::__construct();
     }
@@ -63,19 +71,28 @@ class AutomatorCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        if (!$this->lock->acquire()) {
+            $output->writeln('The command is already running in another process.');
+
+            return 1;
+        }
+
+        $return = 0;
+
         $this->framework->initialize();
 
         try {
             $this->runAutomator($input, $output);
         } catch (\InvalidArgumentException $e) {
             $output->writeln(sprintf('%s (see help contao:automator).', $e->getMessage()));
-
-            return 1;
+            $return = 1;
         }
 
-        return 0;
+        $this->lock->release();
+
+        return $return;
     }
 
     private function runAutomator(InputInterface $input, OutputInterface $output): void

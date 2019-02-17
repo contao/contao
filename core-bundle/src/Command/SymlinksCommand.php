@@ -17,6 +17,7 @@ use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\GenerateSymlinksEvent;
 use Contao\CoreBundle\Util\SymlinkUtil;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,11 +26,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Lock\LockInterface;
 
 /**
  * Symlinks the public resources into the web directory.
  */
-class SymlinksCommand extends AbstractLockedCommand
+class SymlinksCommand extends Command
 {
     /**
      * @var SymfonyStyle
@@ -72,17 +74,23 @@ class SymlinksCommand extends AbstractLockedCommand
     private $eventDispatcher;
 
     /**
+     * @var LockInterface
+     */
+    private $lock;
+
+    /**
      * @var int
      */
     private $statusCode = 0;
 
-    public function __construct(string $rootDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher)
+    public function __construct(string $rootDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher, LockInterface $lock)
     {
         $this->rootDir = $rootDir;
         $this->uploadPath = $uploadPath;
         $this->logsDir = $logsDir;
         $this->resourceFinder = $resourceFinder;
         $this->eventDispatcher = $eventDispatcher;
+        $this->lock = $lock;
 
         parent::__construct();
     }
@@ -104,8 +112,14 @@ class SymlinksCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        if (!$this->lock->acquire()) {
+            $output->writeln('The command is already running in another process.');
+
+            return 1;
+        }
+
         $this->io = new SymfonyStyle($input, $output);
         $this->webDir = rtrim($input->getArgument('target'), '/');
 
@@ -115,6 +129,8 @@ class SymlinksCommand extends AbstractLockedCommand
             $this->io->newLine();
             $this->io->table(['', 'Symlink', 'Target / Error'], $this->rows);
         }
+
+        $this->lock->release();
 
         return $this->statusCode;
     }

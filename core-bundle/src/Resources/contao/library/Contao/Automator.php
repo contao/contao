@@ -434,8 +434,6 @@ class Automator extends System
 		$container = System::getContainer();
 
 		$command = $container->get('contao.command.symlinks');
-		$command->setContainer($container);
-
 		$status = $command->run(new ArgvInput(array()), new NullOutput());
 
 		// Add a log entry

@@ -108,6 +108,7 @@ class ImageFactory implements ImageFactoryInterface
         }
 
         if ($size instanceof ResizeConfigurationInterface) {
+            /** @var ResizeConfigurationInterface $resizeConfig */
             $resizeConfig = $size;
             $importantPart = null;
         } else {

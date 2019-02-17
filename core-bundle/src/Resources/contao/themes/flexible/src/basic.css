@@ -69,10 +69,12 @@ h1,h2,h3,h4,h5,h6 {
 input,textarea,select,button {
 	font:inherit;
 	color:inherit;
-	line-height:inherit;
+	line-height:17px; /* see #501 and #79 */
 }
-input {
-	line-height:normal; /* see #501 */
+@supports (display:-ms-grid) {
+	input,textarea,select,button {
+		line-height:1.1;
+	}
 }
 .tl_gray {
 	color:#999;
@@ -278,11 +280,16 @@ fieldset.checkbox_container,fieldset.radio_container {
 		padding:5px 6px;
 	}
 }
+@supports (display:-ms-grid) {
+	.tl_text,.tl_text_2,.tl_text_3,.tl_text_4,.tl_textarea,.tl_text_unit,.tl_text_trbl,.tl_text_interval {
+		padding:4px 6px 5px;
+	}
+}
+
 
 /* Select menus */
 select {
 	text-transform:none;
-	line-height:normal;
 	-moz-appearance:none;
 	-webkit-appearance:none;
 }
@@ -324,6 +331,11 @@ select[multiple] {
 @-moz-document url-prefix() {
 	.tl_select,.tl_mselect,.tl_select_column,.tl_select_unit,.tl_select_interval {
 		padding:4px 18px 4px 2px;
+	}
+}
+@supports (display:-ms-grid) {
+	.tl_select,.tl_mselect,.tl_select_column,.tl_select_unit,.tl_select_interval {
+		padding:5px 18px 5px 2px;
 	}
 }
 
