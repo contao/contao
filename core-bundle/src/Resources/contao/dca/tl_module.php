@@ -163,18 +163,16 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'headline' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['headline'],
-			'default'                 => array('value'=>'', 'unit'=>'h2'),
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
 			'eval'                    => array('maxlength'=>200, 'tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(255) NOT NULL default 'a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}'"
 		),
 		'type' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['type'],
-			'default'                 => 'navigation',
 			'exclude'                 => true,
 			'sorting'                 => true,
 			'flag'                    => 11,
@@ -183,7 +181,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options_callback'        => array('tl_module', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) NOT NULL default 'navigation'"
 		),
 		'levelOffset' => array
 		(
@@ -344,13 +342,12 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'queryType' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['queryType'],
-			'default'                 => 'and',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('and', 'or'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'and'"
 		),
 		'fuzzy' => array
 		(
@@ -363,25 +360,22 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'contextLength' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['contextLength'],
-			'default'                 => 48,
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default '48'"
 		),
 		'totalLength' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['totalLength'],
-			'default'                 => 1000,
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default '1000'"
 		),
 		'perPage' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['perPage'],
-			'default'                 => 0,
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
@@ -390,13 +384,12 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'searchType' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['searchType'],
-			'default'                 => 'simple',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('simple', 'advanced'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'simple'"
 		),
 		'searchTpl' => array
 		(
@@ -410,13 +403,12 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'inColumn' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['inColumn'],
-			'default'                 => 'main',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_module', 'getLayoutSections'),
 			'reference'               => &$GLOBALS['TL_LANG']['COLS'],
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'main'"
 		),
 		'skipFirst' => array
 		(
@@ -508,13 +500,12 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'rss_cache' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['rss_cache'],
-			'default'                 => 3600,
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array(0, 5, 15, 30, 60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400),
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['CACHE'],
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default '3600'"
 		),
 		'rss_feed' => array
 		(
@@ -527,21 +518,19 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'rss_template' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['rss_template'],
-			'default'                 => 'rss_default',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_module', 'getRssTemplates'),
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) NOT NULL default 'rss_default'"
 		),
 		'numberOfItems' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_module']['numberOfItems'],
-			'default'                 => 3,
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default '3'"
 		),
 		'disableCaptcha' => array
 		(

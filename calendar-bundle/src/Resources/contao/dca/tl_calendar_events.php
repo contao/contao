@@ -250,7 +250,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'endDate' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['endDate'],
-			'default'                 => null,
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'date', 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
@@ -394,13 +393,12 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'floating' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['floating'],
-			'default'                 => 'above',
 			'exclude'                 => true,
 			'inputType'               => 'radioTable',
 			'options'                 => array('above', 'left', 'right', 'below'),
 			'eval'                    => array('cols'=>4, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'above'"
 		),
 		'recurring' => array
 		(
@@ -458,14 +456,13 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'source' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['source'],
-			'default'                 => 'default',
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'radio',
 			'options_callback'        => array('tl_calendar_events', 'getSourceOptions'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_calendar_events'],
 			'eval'                    => array('submitOnChange'=>true, 'helpwizard'=>true),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'default'"
 		),
 		'jumpTo' => array
 		(

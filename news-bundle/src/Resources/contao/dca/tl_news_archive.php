@@ -192,24 +192,22 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		'notify' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_news_archive']['notify'],
-			'default'                 => 'notify_admin',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('notify_admin', 'notify_author', 'notify_both'),
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_news_archive'],
-			'sql'                     => "varchar(16) NOT NULL default ''"
+			'sql'                     => "varchar(16) NOT NULL default 'notify_admin'"
 		),
 		'sortOrder' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_news_archive']['sortOrder'],
-			'default'                 => 'ascending',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('ascending', 'descending'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'ascending'"
 		),
 		'perPage' => array
 		(

@@ -15,13 +15,12 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['comments'] = '{type_legend},type,h
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_order'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['com_order'],
-	'default'                 => 'ascending',
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => array('ascending', 'descending'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(32) NOT NULL default ''"
+	'sql'                     => "varchar(32) NOT NULL default 'ascending'"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_perPage'] = array
@@ -72,12 +71,11 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_requireLogin'] = array
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_template'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['com_template'],
-	'default'                 => 'com_default',
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_content_comments', 'getCommentsTemplates'),
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default ''"
+	'sql'                     => "varchar(64) NOT NULL default 'com_default'"
 );
 
 /**

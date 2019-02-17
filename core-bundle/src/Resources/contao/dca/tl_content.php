@@ -171,25 +171,23 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'type' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['type'],
-			'default'                 => 'text',
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_content', 'getContentElements'),
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) NOT NULL default 'text'"
 		),
 		'headline' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['headline'],
-			'default'                 => array('value'=>'', 'unit'=>'h2'),
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
 			'eval'                    => array('maxlength'=>200, 'tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(255) NOT NULL default 'a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}'"
 		),
 		'text' => array
 		(
@@ -305,13 +303,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'floating' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['floating'],
-			'default'                 => 'above',
 			'exclude'                 => true,
 			'inputType'               => 'radioTable',
 			'options'                 => array('above', 'left', 'right', 'below'),
 			'eval'                    => array('cols'=>4, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'above'"
 		),
 		'html' => array
 		(
@@ -409,13 +406,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sortOrder' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['sortOrder'],
-			'default'                 => 'ascending',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('ascending', 'descending'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'ascending'"
 		),
 		'mooHeadline' => array
 		(
@@ -561,12 +557,11 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'perRow' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['perRow'],
-			'default'                 => 4,
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default '4'"
 		),
 		'perPage' => array
 		(
@@ -712,8 +707,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('16:9', '16:10', '21:9', '4:3', '3:2'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_aspect'],
 			'eval'                    => array('includeBlankOption' => true, 'nospace'=>true, 'tl_class'=>'w50'),
-			'default'                 => 'none',
-			'sql'                     => "varchar(8) NOT NULL default ''"
+			'sql'                     => "varchar(8) NOT NULL default 'none'"
 		),
 		'playerPreload' => array
 		(
@@ -775,7 +769,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderStartSlide' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['sliderStartSlide'],
-			'default'                 => 0,
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),

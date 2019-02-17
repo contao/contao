@@ -211,38 +211,34 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'showHelp' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['showHelp'],
-			'default'                 => 1,
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) NOT NULL default '1'"
 		),
 		'thumbnails' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['thumbnails'],
-			'default'                 => 1,
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) NOT NULL default '1'"
 		),
 		'useRTE' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['useRTE'],
-			'default'                 => 1,
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) NOT NULL default '1'"
 		),
 		'useCE' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['useCE'],
-			'default'                 => 1,
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) NOT NULL default '1'"
 		),
 		'password' => array
 		(
@@ -288,12 +284,11 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['inherit'],
 			'exclude'                 => true,
-			'default'                 => 'group',
 			'inputType'               => 'radio',
 			'options'                 => array('group', 'extend', 'custom'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_user'],
 			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true),
-			'sql'                     => "varchar(12) NOT NULL default ''"
+			'sql'                     => "varchar(12) NOT NULL default 'group'"
 		),
 		'modules' => array
 		(
@@ -467,7 +462,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'loginCount' => array
 		(
-			'default'                 => 3,
 			'eval'                    => array('doNotCopy'=>true),
 			'sql'                     => "smallint(5) unsigned NOT NULL default '3'"
 		),

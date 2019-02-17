@@ -280,13 +280,12 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'floating' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['floating'],
-			'default'                 => 'above',
 			'exclude'                 => true,
 			'inputType'               => 'radioTable',
 			'options'                 => array('above', 'left', 'right', 'below'),
 			'eval'                    => array('cols'=>4, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'sql'                     => "varchar(12) NOT NULL default ''"
+			'sql'                     => "varchar(12) NOT NULL default 'above'"
 		),
 		'addEnclosure' => array
 		(

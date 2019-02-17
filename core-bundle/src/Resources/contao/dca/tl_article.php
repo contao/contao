@@ -214,12 +214,11 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_article']['inColumn'],
 			'exclude'                 => true,
 			'filter'                  => true,
-			'default'                 => 'main',
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_article', 'getActiveLayoutSections'),
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['COLS'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'main'"
 		),
 		'keywords' => array
 		(

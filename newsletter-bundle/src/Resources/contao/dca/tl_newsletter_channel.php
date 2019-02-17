@@ -149,7 +149,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		'template' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['template'],
-			'default'                 => 'mail_default',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -157,7 +156,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			{
 				return Contao\Controller::getTemplateGroup('mail_');
 			},
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'mail_default'"
 		),
 		'sender' => array
 		(
