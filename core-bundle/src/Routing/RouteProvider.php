@@ -293,7 +293,9 @@ class RouteProvider implements RouteProviderInterface
         if ($this->prependLocale) {
             $path = '/{_locale}'.$path;
             $requirements['_locale'] = $page->rootLanguage;
-        } elseif (!$page->rootIsFallback) {
+        }
+
+        if (!$page->rootIsFallback) {
             $condition = "'{$page->rootLanguage}' in request.getLanguages()";
         }
 
@@ -305,12 +307,8 @@ class RouteProvider implements RouteProviderInterface
             $page->domain,
             $page->rootUseSSL ? 'https' : null,
             [],
-            $condition
+            $this->prependLocale ? null : $condition
         );
-
-        if (!$page->rootIsFallback || !$this->prependLocale) {
-            return;
-        }
 
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
@@ -327,7 +325,9 @@ class RouteProvider implements RouteProviderInterface
             [],
             [],
             $page->domain,
-            $page->rootUseSSL ? 'https' : null
+            $page->rootUseSSL ? 'https' : null,
+            [],
+            $condition
         );
     }
 
@@ -384,7 +384,18 @@ class RouteProvider implements RouteProviderInterface
             $languages = array_flip(array_values($languages));
         }
 
-        uasort($routes, function (Route $a, Route $b) use ($languages) {
+        uasort($routes, function (Route $a, Route $b) use ($languages, $routes) {
+            $fallbackA = '.fallback' === substr(array_search($a, $routes), -9);
+            $fallbackB = '.fallback' === substr(array_search($b, $routes), -9);
+
+            if ($fallbackA && !$fallbackB) {
+                return 1;
+            }
+
+            if ($fallbackB && !$fallbackA) {
+                return -1;
+            }
+
             if ('' !== $a->getHost() && '' === $b->getHost()) {
                 return -1;
             }
@@ -421,7 +432,11 @@ class RouteProvider implements RouteProviderInterface
                         return -1;
                     }
 
-                    return $pageB->rootIsFallback ? 1 : $pageA->rootSorting <=> $pageB->rootSorting;
+                    if ($pageB->rootIsFallback) {
+                        return 1;
+                    }
+
+                    return $pageA->rootSorting <=> $pageB->rootSorting;
                 }
 
                 if (null === $langA && null !== $langB) {
