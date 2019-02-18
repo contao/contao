@@ -36,8 +36,8 @@ Install Contao and all its dependencies by executing the following command:
 
 ```
 composer require \
-    contao/core-bundle:4.6.* \
-    contao/installation-bundle:^4.6 \
+    contao/core-bundle:4.7.* \
+    contao/installation-bundle:^4.7 \
     php-http/guzzle6-adapter:^1.1
 ```
 
