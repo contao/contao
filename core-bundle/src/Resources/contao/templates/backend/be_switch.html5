@@ -35,6 +35,13 @@
       <div class="formbody">
         <input type="hidden" name="FORM_SUBMIT" value="tl_switch">
         <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+        <?php if ($this->canDebug): ?>
+          <label for="ctrl_debug"><?= $this->debugMode ?>:</label>
+          <select name="debug" id="ctrl_debug" class="tl_select">
+            <option value="0"><?= $this->lblDisabled ?></option>
+            <option value="1"<?php if ($this->debug) echo ' selected="selected"'; ?>><?= $this->lblEnabled ?></option>
+          </select>
+        <?php endif; ?>
         <?php if ($this->canSwitchUser): ?>
           <label for="ctrl_user"><?= $this->feUser ?>:</label>
           <input type="text" name="user" id="ctrl_user" list="userlist" class="tl_text user" placeholder="<?= $this->username ?>" value="<?= $this->user ?>" autocomplete="off">
