@@ -38,12 +38,12 @@ try {
 }
 
 // Handle the request
-$kernel = ContaoKernel::create(\dirname(__DIR__), $jwt['debug'] ?? false);
+$kernel = ContaoKernel::create(\dirname(__DIR__), isset($jwt['debug']) ? (bool) $jwt['debug'] : false);
 $response = $kernel->handle($request);
 
 // Force no-cache on all responses in the preview front controller
 $response->headers->set('Cache-Control', 'no-store');
-$jwtManager->addResponseCookie($response, $jwt);
+$jwtManager->addResponseCookie($response, null === $jwt ? [] : $jwt);
 
 $response->send();
 
