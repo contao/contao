@@ -27,7 +27,6 @@ jobs:
       php: 7.2
       install:
         - phpenv config-rm xdebug.ini || true
-        - composer update --no-interaction --no-suggest
         - composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
       script:
         - run_tests
@@ -47,7 +46,6 @@ jobs:
       php: 7.0
       install:
         - phpenv config-rm xdebug.ini || true
-        - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
         - fix_dependencies
         - composer update --no-interaction --no-suggest
       script:
@@ -82,6 +80,16 @@ jobs:
         - php vendor/bin/monorepo-tools composer-json --validate
 
     # Ignore the platform requirements for the upcoming PHP version
+    - stage: test
+      if: 'type = cron'
+      php: 7.4snapshot
+      install:
+          - phpenv config-rm xdebug.ini || true
+          - composer update --ignore-platform-reqs --no-interaction --no-suggest
+      script:
+          - run_tests
+          - php vendor/bin/monorepo-tools composer-json --validate
+
     - stage: test
       php: nightly
       install:
