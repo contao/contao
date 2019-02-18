@@ -144,7 +144,9 @@ class BackendUser extends User
 
 		if ($strUser !== null)
 		{
-			return static::loadUserByUsername($strUser);
+			static::$objInstance = static::loadUserByUsername($strUser);
+
+			return static::$objInstance;
 		}
 
 		return parent::getInstance();
