@@ -85,14 +85,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: terminal42.header_replay, method: onReplay }
 
-    contao.listener.header_replay.page_layout:
-        class: Contao\CoreBundle\EventListener\HeaderReplay\PageLayoutListener
-        arguments:
-            - "@contao.routing.scope_matcher"
-            - "@contao.framework"
-        tags:
-            - { name: kernel.event_listener, event: terminal42.header_replay, method: onReplay }
-
     contao.listener.insecure_installation:
         class: Contao\CoreBundle\EventListener\InsecureInstallationListener
         tags:
