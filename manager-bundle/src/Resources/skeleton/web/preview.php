@@ -43,7 +43,10 @@ $response = $kernel->handle($request);
 
 // Force no-cache on all responses in the preview front controller
 $response->headers->set('Cache-Control', 'no-store');
-$jwtManager->addResponseCookie($response, null === $jwt ? [] : $jwt);
+
+if (null !== $jwt) {
+    $jwtManager->addResponseCookie($response, $jwt);
+}
 
 $response->send();
 

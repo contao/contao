@@ -60,11 +60,16 @@ class JwtManager
             }
         }
 
-        if ($request->getRequestUri() === '/'.$request->getScriptName().'/contao/login') {
+        if ($request->getPathInfo() === '/contao/login') {
             return null;
         }
 
-        throw new RedirectResponseException('/'.$request->getScriptName().'/contao/login');
+        if (null !== $qs = $request->getQueryString())
+        {
+            $qs = '?'.$qs;
+        }
+
+        throw new RedirectResponseException('/preview.php/contao/login?_target_path='.rawurlencode($request->getPathInfo().$qs));
     }
 
     /**
