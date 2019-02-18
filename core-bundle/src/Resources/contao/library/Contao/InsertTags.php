@@ -163,6 +163,7 @@ class InsertTags extends Controller
 			{
 				// ESI
 				case 'esi':
+					array_shift($elements);
 					$arrCache[$strTag] = $this->replace('{{'. implode('::', $elements) .'}}', false);
 					break;
 
