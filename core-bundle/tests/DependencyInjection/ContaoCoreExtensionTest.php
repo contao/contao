@@ -563,24 +563,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('onSwitchUser', $tags['kernel.event_listener'][0]['method']);
     }
 
-    public function testRegistersTheToggleViewListener(): void
-    {
-        $this->assertTrue($this->container->has('contao.listener.toggle_view'));
-
-        $definition = $this->container->getDefinition('contao.listener.toggle_view');
-
-        $this->assertSame(ToggleViewListener::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-    }
-
     public function testRegistersTheCsrfTokenCookieListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.csrf_token_cookie'));

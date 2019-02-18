@@ -943,7 +943,7 @@ class PageModel extends Model
 							$this->layout = $objParentPage->layout;
 						}
 					}
-					
+
 					// Custom callbacks
 					foreach (static::$inheritanceCallbacks as $callback) {
 						$callback($this, $objParentPage);
