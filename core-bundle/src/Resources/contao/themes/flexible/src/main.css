@@ -173,6 +173,9 @@ body:not(.fullscreen) #header .inner {
 #tmenu .icon-profile {
 	background:url("icons/profile_dark.svg") 20px center no-repeat;
 }
+#tmenu .icon-debug {
+	background:url("icons/debug_dark.svg") 20px center no-repeat;
+}
 #tmenu .icon-security {
 	background:url("icons/shield_dark.svg") 20px center no-repeat;
 }

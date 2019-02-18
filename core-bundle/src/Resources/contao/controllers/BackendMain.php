@@ -13,8 +13,11 @@ namespace Contao;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Util\PackageUtil;
+use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -80,6 +83,39 @@ class BackendMain extends Backend
 		if (Input::get('do') == 'feRedirect')
 		{
 			$this->redirectToFrontendPage(Input::get('page'), Input::get('article'));
+		}
+
+		// Front end redirect
+		if (Input::get('do') == 'debug' && $this->User->isAdmin)
+		{
+			$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			if (null === $objRequest)
+			{
+				throw new \RuntimeException('Request is not available');
+			}
+
+			$objJwtManager = $objRequest->attributes->get(JwtManager::ATTRIBUTE);
+
+			if (!$objJwtManager instanceof JwtManager)
+			{
+				if (null !== $qs = $objRequest->getQueryString())
+				{
+					$qs = '?'.$qs;
+				}
+
+				$this->redirect('/preview.php'.$objRequest->getPathInfo().$qs);
+			}
+
+			$strReferer = Input::get('referer') ? '?'.base64_decode(Input::get('referer', true)) : '';
+			$objResponse = new RedirectResponse('/preview.php'.$objRequest->getPathInfo().$strReferer);
+
+			if ((bool) Input::get('enable') !== $container->get('kernel')->isDebug())
+			{
+				$objJwtManager->addResponseCookie($objResponse, ['debug' => (bool) Input::get('enable')]);
+			}
+
+			throw new ResponseException($objResponse);
 		}
 
 		// Backend user profile redirect
@@ -249,6 +285,10 @@ class BackendMain extends Backend
 		$this->Template->preview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
 		$this->Template->previewTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreviewTitle']);
 		$this->Template->profile = $GLOBALS['TL_LANG']['MSC']['profile'];
+		$this->Template->canDebug = $this->User->isAdmin;
+		$this->Template->isDebug = $container->get('kernel')->isDebug();
+		$this->Template->debug = $container->get('kernel')->isDebug() ? $GLOBALS['TL_LANG']['MSC']['disableDebugMode'] : $GLOBALS['TL_LANG']['MSC']['enableDebugMode'];
+		$this->Template->referer = base64_encode($container->get('request_stack')->getCurrentRequest()->getQueryString());
 		$this->Template->profileTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['profileTitle']);
 		$this->Template->security = $GLOBALS['TL_LANG']['MSC']['security'];
 		$this->Template->pageOffset = (int) Input::cookie('BE_PAGE_OFFSET');

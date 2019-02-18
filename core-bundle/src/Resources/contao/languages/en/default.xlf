@@ -1406,6 +1406,12 @@
       <trans-unit id="MSC.hiddenShow">
         <source>show</source>
       </trans-unit>
+      <trans-unit id="MSC.enableDebugMode">
+        <source>Enable Debug Mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.disableDebugMode">
+        <source>Disable Debug Mode</source>
+      </trans-unit>
       <trans-unit id="MSC.debugMode">
         <source>Debug Mode</source>
       </trans-unit>
