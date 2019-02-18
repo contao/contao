@@ -1048,7 +1048,7 @@ class PageModel extends Model
 			(
 				'_locale' => ($strForceLang ?: $this->rootLanguage),
 				'_domain' => $this->domain,
-				'_ssl' => (bool) $this->rootUseSSL,
+				'_ssl' => Environment::get('ssl') || (bool) $this->rootUseSSL,
 			)
 		);
 
@@ -1083,7 +1083,7 @@ class PageModel extends Model
 			(
 				'_locale' => $this->rootLanguage,
 				'_domain' => $this->domain,
-				'_ssl' => (bool) $this->rootUseSSL,
+				'_ssl' => Environment::get('ssl') || (bool) $this->rootUseSSL,
 			),
 			UrlGeneratorInterface::ABSOLUTE_URL
 		);
