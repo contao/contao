@@ -51,7 +51,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $groups
  * @property boolean $includeLayout
  * @property integer $layout
- * @property integer $mobileLayout
  * @property boolean $includeCache
  * @property integer $cache
  * @property integer $clientCache
@@ -94,7 +93,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property integer $layoutId
  * @property boolean $hasJQuery
  * @property boolean $hasMooTools
- * @property boolean $isMobile
  * @property string  $template
  * @property string  $templateGroup
  *
@@ -133,7 +131,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByGroups($val, array $opt=array())
  * @method static PageModel|null findOneByIncludeLayout($val, array $opt=array())
  * @method static PageModel|null findOneByLayout($val, array $opt=array())
- * @method static PageModel|null findOneByMobileLayout($val, array $opt=array())
  * @method static PageModel|null findOneByIncludeCache($val, array $opt=array())
  * @method static PageModel|null findOneByCache($val, array $opt=array())
  * @method static PageModel|null findOneByIncludeChmod($val, array $opt=array())
@@ -182,7 +179,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByGroups($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByIncludeLayout($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByLayout($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByMobileLayout($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByIncludeCache($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByCache($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByIncludeChmod($val, array $opt=array())
@@ -235,7 +231,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByGroups($val, array $opt=array())
  * @method static integer countByIncludeLayout($val, array $opt=array())
  * @method static integer countByLayout($val, array $opt=array())
- * @method static integer countByMobileLayout($val, array $opt=array())
  * @method static integer countByIncludeCache($val, array $opt=array())
  * @method static integer countByCache($val, array $opt=array())
  * @method static integer countByIncludeChmod($val, array $opt=array())
@@ -257,6 +252,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class PageModel extends Model
 {
+	private static $inheritanceCallbacks = [];
 
 	/**
 	 * Table name
@@ -269,6 +265,20 @@ class PageModel extends Model
 	 * @var boolean
 	 */
 	protected $blnDetailsLoaded = false;
+
+	/**
+	 * Allows you to add an inheritance callback that is called when page
+	 * details are being loaded. The method signature of the callback
+	 * looks as follows:
+	 *
+	 * function(PageModel $currentPage, PageModel $parentPage)
+	 *
+	 * @param callable $callback
+	 */
+	public static function addInheritanceCallback(callable $callback): void
+	{
+		static::$inheritanceCallbacks[] = $callback;
+	}
 
 	/**
 	 * Find a published page by its ID
@@ -862,7 +872,6 @@ class PageModel extends Model
 		$this->protected = (bool) $this->protected;
 		$this->groups = $this->protected ? StringUtil::deserialize($this->groups) : false;
 		$this->layout = $this->includeLayout ? $this->layout : false;
-		$this->mobileLayout = $this->includeLayout ? $this->mobileLayout : false;
 		$this->cache = $this->includeCache ? $this->cache : false;
 		$this->clientCache = $this->includeCache ? $this->clientCache : false;
 
@@ -919,6 +928,13 @@ class PageModel extends Model
 						$this->clientCache = $this->clientCache !== false ? $this->clientCache : $objParentPage->clientCache;
 					}
 
+					// Protection
+					if ($objParentPage->protected && $this->protected === false)
+					{
+						$this->protected = true;
+						$this->groups = StringUtil::deserialize($objParentPage->groups);
+					}
+
 					// Layout
 					if ($objParentPage->includeLayout)
 					{
@@ -926,17 +942,11 @@ class PageModel extends Model
 						{
 							$this->layout = $objParentPage->layout;
 						}
-						if ($this->mobileLayout === false)
-						{
-							$this->mobileLayout = $objParentPage->mobileLayout;
-						}
 					}
-
-					// Protection
-					if ($objParentPage->protected && $this->protected === false)
-					{
-						$this->protected = true;
-						$this->groups = StringUtil::deserialize($objParentPage->groups);
+					
+					// Custom callbacks
+					foreach (static::$inheritanceCallbacks as $callback) {
+						$callback($this, $objParentPage);
 					}
 				}
 			}

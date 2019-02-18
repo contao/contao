@@ -83,15 +83,7 @@ class FrontendTemplate extends Template
 	{
 		$this->blnCheckRequest = $blnCheckRequest;
 
-		/** @var PageModel $objPage */
-		global $objPage;
-
-		// Vary on the page layout
-		$response = parent::getResponse();
-		$response->setVary(array('Contao-Page-Layout'), false);
-		$response->headers->set('Contao-Page-Layout', $objPage->isMobile ? 'mobile' : 'desktop');
-
-		return $this->setCacheHeaders($response);
+		return $this->setCacheHeaders(parent::getResponse());
 	}
 
 	/**

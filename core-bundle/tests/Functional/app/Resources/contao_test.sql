@@ -1347,7 +1347,7 @@ CREATE TABLE `tl_page` (
   `groups` blob DEFAULT NULL,
   `includeLayout` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `layout` int(10) unsigned NOT NULL DEFAULT 0,
-  `mobileLayout` int(10) unsigned NOT NULL DEFAULT 0,
+  `mobileLayout` int(10) unsigned NOT NULL DEFAULT 0, --- TODO: Remove in tests
   `includeCache` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `cache` int(10) unsigned NOT NULL DEFAULT 0,
   `includeChmod` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
