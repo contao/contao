@@ -69,6 +69,13 @@ services:
             - '@contao.framework'
         public: true
 
+    Contao\CoreBundle\Controller\ImagesController:
+        arguments:
+            - "@contao.image.resizer"
+            - "@contao.image.imagine"
+            - "@contao.image.imagine_svg"
+        public: true
+
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver
         decorates: controller_resolver
@@ -162,7 +169,7 @@ services:
         class: Contao\Image\ResizeCalculator
 
     contao.image.resizer:
-        class: Contao\CoreBundle\Image\LegacyResizer
+        class: Contao\Image\DeferredResizer
         arguments:
             - '%contao.image.target_dir%'
             - '@contao.image.resize_calculator'

@@ -264,11 +264,30 @@ class File extends System
 			case 'imageSize':
 				if (empty($this->arrImageSize))
 				{
-					$strCacheKey = $this->strFile . '|' . $this->mtime;
+					$strCacheKey = $this->strFile . '|' . ($this->exists() ? $this->mtime : 0);
 
 					if (isset(static::$arrImageSizeCache[$strCacheKey]))
 					{
 						$this->arrImageSize = static::$arrImageSizeCache[$strCacheKey];
+					}
+					elseif (!$this->exists() && file_exists($this->strRootDir . '/' . $this->strFile . '.config'))
+					{
+						$arrConfig = json_decode(file_get_contents($this->strRootDir . '/' . $this->strFile . '.config'), true);
+						$this->arrImageSize = array
+						(
+							$arrConfig['coordinates']['size']['width'],
+							$arrConfig['coordinates']['size']['height'],
+							[
+								'gif' => IMAGETYPE_GIF,
+								'jpg' => IMAGETYPE_JPEG,
+								'jpeg' => IMAGETYPE_JPEG,
+								'png' => IMAGETYPE_PNG,
+							][$this->extension] ?? 0,
+							'width="' . $arrConfig['coordinates']['size']['width'] . '" height="' . $arrConfig['coordinates']['size']['height'] . '"',
+							'bits' => 8,
+							'channels' => 3,
+							'mime' => $this->getMimeType()
+						);
 					}
 					elseif ($this->isGdImage)
 					{
