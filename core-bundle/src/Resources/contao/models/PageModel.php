@@ -252,8 +252,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class PageModel extends Model
 {
-	private static $inheritanceCallbacks = [];
-
 	/**
 	 * Table name
 	 * @var string
@@ -265,20 +263,6 @@ class PageModel extends Model
 	 * @var boolean
 	 */
 	protected $blnDetailsLoaded = false;
-
-	/**
-	 * Allows you to add an inheritance callback that is called when page
-	 * details are being loaded. The method signature of the callback
-	 * looks as follows:
-	 *
-	 * function(PageModel $currentPage, PageModel $parentPage)
-	 *
-	 * @param callable $callback
-	 */
-	public static function addInheritanceCallback(callable $callback): void
-	{
-		static::$inheritanceCallbacks[] = $callback;
-	}
 
 	/**
 	 * Find a published page by its ID
@@ -943,11 +927,6 @@ class PageModel extends Model
 							$this->layout = $objParentPage->layout;
 						}
 					}
-
-					// Custom callbacks
-					foreach (static::$inheritanceCallbacks as $callback) {
-						$callback($this, $objParentPage);
-					}
 				}
 			}
 
@@ -1023,6 +1002,17 @@ class PageModel extends Model
 		if ($this->datimFormat == '')
 		{
 			$this->datimFormat = Config::get('datimFormat');
+		}
+
+		// HOOK: add custom logic
+		if (isset($GLOBALS['TL_HOOKS']['loadPageDetails']) && \is_array($GLOBALS['TL_HOOKS']['loadPageDetails']))
+		{
+			$parentModels = $objParentPage instanceof Collection ? $objParentPage->getModels() : array();
+			
+			foreach ($GLOBALS['TL_HOOKS']['loadPageDetails'] as $callback)
+			{
+				System::importStatic($callback[0])->{$callback[1]}($this, $parentModels);
+			}
 		}
 
 		// Prevent saving (see #6506 and #7199)
