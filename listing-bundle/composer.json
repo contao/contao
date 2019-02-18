@@ -43,7 +43,7 @@
         ]
     },
     "support": {
-        "issues": "https://github.com/contao/listing-bundle/issues",
+        "issues": "https://github.com/contao/contao/issues",
         "forum": "https://community.contao.org",
         "source": "https://github.com/contao/listing-bundle",
         "docs": "https://docs.contao.org"

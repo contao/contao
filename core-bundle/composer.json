@@ -131,7 +131,7 @@
         }
     },
     "support": {
-        "issues": "https://github.com/contao/core-bundle/issues",
+        "issues": "https://github.com/contao/contao/issues",
         "forum": "https://community.contao.org",
         "source": "https://github.com/contao/core-bundle",
         "docs": "https://docs.contao.org"

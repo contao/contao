@@ -91,6 +91,7 @@ jobs:
           - php vendor/bin/monorepo-tools composer-json --validate
 
     - stage: test
+      if: 'type = cron'
       php: nightly
       install:
         - phpenv config-rm xdebug.ini || true
