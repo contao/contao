@@ -716,6 +716,11 @@ class tl_user extends Contao\Backend
 			return '';
 		}
 
+		if ($authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
+		{
+			return '';
+		}
+
 		if ($this->User->id == $row['id'])
 		{
 			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
