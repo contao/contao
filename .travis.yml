@@ -30,7 +30,6 @@ jobs:
       php: 7.2
       install:
         - phpenv config-rm xdebug.ini || true
-        - composer update --no-interaction --no-suggest
         - composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
       script:
         - run_tests
