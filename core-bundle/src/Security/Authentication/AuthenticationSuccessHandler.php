@@ -112,7 +112,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         $jwtManager = $request->attributes->get(JwtManager::ATTRIBUTE);
 
         if ($this->user instanceof BackendUser && $jwtManager instanceof JwtManager) {
-            $jwtManager->addResponseCookie($response, ['debug' => (bool) $this->user->isAdmin]);
+            $jwtManager->addResponseCookie($response, ['debug' => false]);
         }
 
         return $response;
