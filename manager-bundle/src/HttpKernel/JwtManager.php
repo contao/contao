@@ -17,7 +17,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Firebase\JWT\JWT;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -61,11 +60,11 @@ class JwtManager
             }
         }
 
-        if ($request->getRequestUri() === '/admin.php/contao/login') {
+        if ($request->getRequestUri() === '/'.$request->getScriptName().'/contao/login') {
             return null;
         }
 
-        throw new RedirectResponseException('/admin.php/contao/login');
+        throw new RedirectResponseException('/'.$request->getScriptName().'/contao/login');
     }
 
     /**
