@@ -43,9 +43,9 @@ security:
 
             logout:
                 path: contao_backend_logout
-                target: contao_backend_login
                 handlers:
                     - contao.security.logout_handler
+                success_handler: contao.security.logout_success_handler
 
         contao_frontend:
             request_matcher: contao.routing.frontend_matcher

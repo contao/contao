@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
+use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
@@ -106,7 +108,14 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 
     private function getRedirectResponse(Request $request): RedirectResponse
     {
-        return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
+        $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
+        $jwtManager = $request->attributes->get(JwtManager::ATTRIBUTE);
+
+        if ($this->user instanceof BackendUser && $jwtManager instanceof JwtManager) {
+            $jwtManager->addResponseCookie($response, ['debug' => false]);
+        }
+
+        return $response;
     }
 
     private function triggerPostLoginHook(): void

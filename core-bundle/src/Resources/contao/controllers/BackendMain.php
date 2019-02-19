@@ -13,8 +13,11 @@ namespace Contao;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Util\PackageUtil;
+use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -80,6 +83,39 @@ class BackendMain extends Backend
 		if (Input::get('do') == 'feRedirect')
 		{
 			$this->redirectToFrontendPage(Input::get('page'), Input::get('article'));
+		}
+
+		// Debug redirect
+		if ($this->User->isAdmin && Input::get('do') == 'debug')
+		{
+			$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			if ($objRequest === null)
+			{
+				throw new \RuntimeException('The request stack did not contain a request');
+			}
+
+			$objJwtManager = $objRequest->attributes->get(JwtManager::ATTRIBUTE);
+
+			if (!$objJwtManager instanceof JwtManager)
+			{
+				if (($qs = $objRequest->getQueryString()) !== null)
+				{
+					$qs = '?' . $qs;
+				}
+
+				$this->redirect('/preview.php' . $objRequest->getPathInfo() . $qs);
+			}
+
+			$strReferer = Input::get('referer') ? '?' . base64_decode(Input::get('referer', true)) : '';
+			$objResponse = new RedirectResponse('/preview.php' . $objRequest->getPathInfo() . $strReferer);
+
+			if (Input::get('enable') != $container->get('kernel')->isDebug())
+			{
+				$objJwtManager->addResponseCookie($objResponse, ['debug' => (bool) Input::get('enable')]);
+			}
+
+			throw new ResponseException($objResponse);
 		}
 
 		// Backend user profile redirect
@@ -240,6 +276,13 @@ class BackendMain extends Backend
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
 		}
 
+		$referer = null;
+
+		if ($request = $container->get('request_stack')->getCurrentRequest())
+		{
+			$referer = base64_encode($request->getQueryString());
+		}
+
 		$this->Template->theme = Backend::getTheme();
 		$this->Template->base = Environment::get('base');
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
@@ -249,6 +292,10 @@ class BackendMain extends Backend
 		$this->Template->preview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
 		$this->Template->previewTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreviewTitle']);
 		$this->Template->profile = $GLOBALS['TL_LANG']['MSC']['profile'];
+		$this->Template->canDebug = $this->User->isAdmin;
+		$this->Template->isDebug = $container->get('kernel')->isDebug();
+		$this->Template->debug = $container->get('kernel')->isDebug() ? $GLOBALS['TL_LANG']['MSC']['disableDebugMode'] : $GLOBALS['TL_LANG']['MSC']['enableDebugMode'];
+		$this->Template->referer = $referer;
 		$this->Template->profileTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['profileTitle']);
 		$this->Template->security = $GLOBALS['TL_LANG']['MSC']['security'];
 		$this->Template->pageOffset = (int) Input::cookie('BE_PAGE_OFFSET');

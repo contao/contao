@@ -18,10 +18,12 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -44,6 +46,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('getUriForPath')
             ->willReturn('http://localhost/target')
         ;
+
+        $request->attributes = new ParameterBag();
 
         /** @var BackendUser|MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -77,6 +81,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn('http://localhost/target')
         ;
 
+        $request->attributes = new ParameterBag();
+
         $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->once())
@@ -88,6 +94,53 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
+    }
+
+    public function testAddsTheJwtCookieForTheBackendUser(): void
+    {
+        $jwtManager = $this->createMock(JwtManager::class);
+        $jwtManager
+            ->expects($this->once())
+            ->method('addResponseCookie')
+        ;
+
+        $request = new Request();
+        $request->attributes->set(JwtManager::ATTRIBUTE, $jwtManager);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($this->createMock(BackendUser::class))
+        ;
+
+        $handler = $this->mockSuccessHandler();
+        $handler->onAuthenticationSuccess($request, $token);
+    }
+
+    public function testDoesNotAddTheJwtCookieForTheFrontendUser(): void
+    {
+        $jwtManager = $this->createMock(JwtManager::class);
+        $jwtManager
+            ->expects($this->never())
+            ->method('addResponseCookie')
+        ;
+
+        $request = new Request();
+        $request->attributes->set(JwtManager::ATTRIBUTE, $jwtManager);
+
+        $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($this->createMock(FrontendUser::class))
+        ;
+
+        $handler = $this->mockSuccessHandler($framework);
+        $handler->onAuthenticationSuccess($request, $token);
     }
 
     /**
@@ -109,6 +162,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('getUriForPath')
             ->willReturn('http://localhost/target')
         ;
+
+        $request->attributes = new ParameterBag();
 
         /** @var BackendUser|MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);

@@ -54,11 +54,14 @@
           <nav aria-label="<?= $this->headerNavigation ?>">
             <ul id="tmenu">
               <li><a href="<?= $this->route('contao_backend_alerts') ?>" class="icon-alert" title="<?= Contao\StringUtil::specialchars($this->systemMessages) ?>" onclick="Backend.openModalIframe({'title':'<?= str_replace("'", "\\'", Contao\StringUtil::specialchars($this->systemMessages)) ?>','url':this.href});return false"><?= $this->systemMessages ?><?php if ($this->systemErrorMessagesCount > 0) echo ' <sup>' . $this->systemErrorMessagesCount . '</sup>'; ?></a></li>
-              <li><a href="<?= $this->route('contao_backend_preview') . $this->frontendFile ?>" class="icon-preview" title="<?= $this->previewTitle ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
+              <li><a href="<?= $this->previewRoute('contao_backend_preview') . $this->frontendFile ?>" class="icon-preview" title="<?= $this->previewTitle ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
               <li class="submenu">
                 <h2><?= $this->username ?></h2>
                 <ul class="level_2">
                   <li class="info"><strong><?= $this->user->name ?></strong> <?= $this->user->email ?></li>
+                  <?php if ($this->canDebug): ?>
+                    <li><a href="<?= $this->previewRoute('contao_backend', ['do'=>'debug', 'enable'=>!$this->isDebug, 'referer'=>$this->referer, 'ref'=>$this->ref]) ?>" class="icon-debug"><?= $this->debug ?></a></li>
+                  <?php endif; ?>
                   <li><a href="<?= $this->route('contao_backend', ['do'=>'login', 'ref'=>$this->ref]) ?>" class="icon-profile"><?= $this->profile ?></a></li>
                   <li><a href="<?= $this->route('contao_backend', ['do'=>'security', 'ref'=>$this->ref]) ?>" class="icon-security"><?= $this->security ?></a></li>
                   <li><a href="<?= $this->logoutLink ?>" class="icon-logout" accesskey="q"><?= $this->logout ?></a></li>

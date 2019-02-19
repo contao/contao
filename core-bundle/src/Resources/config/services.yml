@@ -493,6 +493,7 @@ services:
         class: Contao\CoreBundle\Security\Logout\LogoutSuccessHandler
         arguments:
             - '@security.http_utils'
+            - '@contao.routing.scope_matcher'
 
     contao.security.logout_handler:
         class: Contao\CoreBundle\Security\Logout\LogoutHandler
