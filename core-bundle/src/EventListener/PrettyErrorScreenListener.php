@@ -165,7 +165,7 @@ class PrettyErrorScreenListener
 
     private function getResponseFromPageHandler(int $type): ?Response
     {
-        $this->framework->initialize();
+        $this->framework->initialize(true);
 
         $type = 'error_'.$type;
 
