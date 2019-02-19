@@ -16,8 +16,6 @@ use Contao\User;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class Provider implements TwoFactorProviderInterface
 {
@@ -31,22 +29,10 @@ class Provider implements TwoFactorProviderInterface
      */
     private $formRenderer;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var RequestMatcherInterface
-     */
-    private $requestMatcher;
-
-    public function __construct(Authenticator $authenticator, TwoFactorFormRendererInterface $formRenderer, RequestStack $requestStack, RequestMatcherInterface $requestMatcher)
+    public function __construct(Authenticator $authenticator, TwoFactorFormRendererInterface $formRenderer)
     {
         $this->authenticator = $authenticator;
         $this->formRenderer = $formRenderer;
-        $this->requestStack = $requestStack;
-        $this->requestMatcher = $requestMatcher;
     }
 
     /**
