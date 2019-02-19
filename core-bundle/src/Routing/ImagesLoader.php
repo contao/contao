@@ -37,7 +37,7 @@ class ImagesLoader extends Loader
     {
         $routes = new RouteCollection();
 
-        $route = new Route('/'.$this->pathPrefix.'/{path<.+>}', ['_controller' => 'Contao\CoreBundle\Controller\ImagesController::index']);
+        $route = new Route('/'.$this->pathPrefix.'/{path<.+>}', ['_controller' => 'Contao\CoreBundle\Controller\ImagesController']);
 
         $routes->add('contao_images', $route);
 

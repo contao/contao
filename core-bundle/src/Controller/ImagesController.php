@@ -47,7 +47,7 @@ class ImagesController
     /**
      * Route gets registered dynamically in Contao\CoreBundle\Routing\ImagesLoader
      */
-    public function index(string $path): Response
+    public function __invoke(string $path): Response
     {
         try {
             $image = $this->imageFactory->create($this->targetDir.'/'.$path);
