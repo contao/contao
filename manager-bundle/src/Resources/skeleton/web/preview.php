@@ -13,6 +13,7 @@ declare(strict_types=1);
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
+use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\TerminableInterface;
 
@@ -37,15 +38,14 @@ try {
     exit;
 }
 
-// Handle the request
-$kernel = ContaoKernel::create(\dirname(__DIR__), isset($jwt['debug']) ? (bool) $jwt['debug'] : false);
+$kernel = ContaoKernel::create(\dirname(__DIR__), (bool) ($jwt['debug'] ?? false));
 $response = $kernel->handle($request);
 
 // Force no-cache on all responses in the preview front controller
 $response->headers->set('Cache-Control', 'no-store');
 
 // Strip all tag headers from the response
-$response->headers->remove(\FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter::DEFAULT_HEADER_NAME);
+$response->headers->remove(TagHeaderFormatter::DEFAULT_HEADER_NAME);
 
 if (null !== $jwt) {
     $jwtManager->addResponseCookie($response, $jwt);

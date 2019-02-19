@@ -85,32 +85,32 @@ class BackendMain extends Backend
 			$this->redirectToFrontendPage(Input::get('page'), Input::get('article'));
 		}
 
-		// Front end redirect
-		if (Input::get('do') == 'debug' && $this->User->isAdmin)
+		// Debug redirect
+		if ($this->User->isAdmin && Input::get('do') == 'debug')
 		{
 			$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-			if (null === $objRequest)
+			if ($objRequest === null)
 			{
-				throw new \RuntimeException('Request is not available');
+				throw new \RuntimeException('The request stack did not contain a request');
 			}
 
 			$objJwtManager = $objRequest->attributes->get(JwtManager::ATTRIBUTE);
 
 			if (!$objJwtManager instanceof JwtManager)
 			{
-				if (null !== $qs = $objRequest->getQueryString())
+				if (($qs = $objRequest->getQueryString()) !== null)
 				{
-					$qs = '?'.$qs;
+					$qs = '?' . $qs;
 				}
 
-				$this->redirect('/preview.php'.$objRequest->getPathInfo().$qs);
+				$this->redirect('/preview.php' . $objRequest->getPathInfo() . $qs);
 			}
 
-			$strReferer = Input::get('referer') ? '?'.base64_decode(Input::get('referer', true)) : '';
-			$objResponse = new RedirectResponse('/preview.php'.$objRequest->getPathInfo().$strReferer);
+			$strReferer = Input::get('referer') ? '?' . base64_decode(Input::get('referer', true)) : '';
+			$objResponse = new RedirectResponse('/preview.php' . $objRequest->getPathInfo() . $strReferer);
 
-			if ((bool) Input::get('enable') !== $container->get('kernel')->isDebug())
+			if (Input::get('enable') != $container->get('kernel')->isDebug())
 			{
 				$objJwtManager->addResponseCookie($objResponse, ['debug' => (bool) Input::get('enable')]);
 			}

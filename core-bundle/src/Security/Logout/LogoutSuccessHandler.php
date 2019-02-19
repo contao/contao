@@ -26,9 +26,6 @@ class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
      */
     private $scopeMatcher;
 
-    /**
-     * Constructor.
-     */
     public function __construct(HttpUtils $httpUtils, ScopeMatcher $scopeMatcher)
     {
         parent::__construct($httpUtils);

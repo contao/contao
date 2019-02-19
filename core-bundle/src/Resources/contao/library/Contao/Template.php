@@ -319,6 +319,14 @@ abstract class Template extends Controller
 		return ampersand($strUrl);
 	}
 
+	/**
+	 * Return the preview route
+	 *
+	 * @param string $strName   The route name
+	 * @param array  $arrParams The route parameters
+	 *
+	 * @return string The route
+	 */
 	public function previewRoute($strName, $arrParams=array())
 	{
 		$objRouter = System::getContainer()->get('router');

@@ -42,11 +42,12 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $request = $this->createMock(Request::class);
-        $request->attributes = new ParameterBag();
         $request
             ->method('getUriForPath')
             ->willReturn('http://localhost/target')
         ;
+
+        $request->attributes = new ParameterBag();
 
         /** @var BackendUser|MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -66,7 +67,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $handler = $this->createSuccessHandler(null, $logger);
+        $handler = $this->mockSuccessHandler(null, $logger);
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
@@ -75,11 +76,12 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testDoesNotUpdateTheUserIfNotAContaoUser(): void
     {
         $request = $this->createMock(Request::class);
-        $request->attributes = new ParameterBag();
         $request
             ->method('getUriForPath')
             ->willReturn('http://localhost/target')
         ;
+
+        $request->attributes = new ParameterBag();
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -88,7 +90,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($this->createMock(UserInterface::class))
         ;
 
-        $handler = $this->createSuccessHandler();
+        $handler = $this->mockSuccessHandler();
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
@@ -112,7 +114,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($this->createMock(BackendUser::class))
         ;
 
-        $handler = $this->createSuccessHandler();
+        $handler = $this->mockSuccessHandler();
         $handler->onAuthenticationSuccess($request, $token);
     }
 
@@ -137,7 +139,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($this->createMock(FrontendUser::class))
         ;
 
-        $handler = $this->createSuccessHandler($framework);
+        $handler = $this->mockSuccessHandler($framework);
         $handler->onAuthenticationSuccess($request, $token);
     }
 
@@ -156,11 +158,12 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $request = $this->createMock(Request::class);
-        $request->attributes = new ParameterBag();
         $request
             ->method('getUriForPath')
             ->willReturn('http://localhost/target')
         ;
+
+        $request->attributes = new ParameterBag();
 
         /** @var BackendUser|MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -203,7 +206,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['postLogin'] = [['HookListener', 'onPostLogin']];
 
-        $handler = $this->createSuccessHandler($framework, $logger);
+        $handler = $this->mockSuccessHandler($framework, $logger);
         $handler->onAuthenticationSuccess($request, $token);
 
         unset($GLOBALS['TL_HOOKS']);
@@ -245,7 +248,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $handler = $this->createSuccessHandler($framework);
+        $handler = $this->mockSuccessHandler($framework);
         $response = $handler->onAuthenticationSuccess(new Request(), $token);
 
         $this->assertSame('http://localhost/page', $response->getTargetUrl());
@@ -283,7 +286,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $handler = $this->createSuccessHandler($framework);
+        $handler = $this->mockSuccessHandler($framework);
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
@@ -320,13 +323,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $handler = $this->createSuccessHandler($framework);
+        $handler = $this->mockSuccessHandler($framework);
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
     }
 
-    private function createSuccessHandler(ContaoFramework $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
+    private function mockSuccessHandler(ContaoFramework $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $urlGenerator

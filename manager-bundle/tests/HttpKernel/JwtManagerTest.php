@@ -26,32 +26,39 @@ class JwtManagerTest extends TestCase
      */
     private $jwtManager;
 
-    public function setUp()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $this->jwtManager = new JwtManager(sys_get_temp_dir());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
+        parent::tearDown();
+
         unlink(sys_get_temp_dir().'/var/jwt_secret');
     }
 
-    public function testCreatesSecret()
+    public function testCreatesASecret(): void
     {
         $this->assertFileExists(sys_get_temp_dir().'/var/jwt_secret');
     }
 
-    public function testThrowsExceptionIfThereIsNoCookie()
+    public function testThrowsAnExceptionIfThereIsNoCookie(): void
     {
-        $this->expectException(RedirectResponseException::class);
         $request = Request::create('/');
+
+        $this->expectException(RedirectResponseException::class);
+
         $this->jwtManager->parseRequest($request);
     }
 
-    public function testTokenCanBeSetWithoutPayload()
+    public function testTokenCanBeSetWithoutPayload(): void
     {
         $response = new Response();
         $this->jwtManager->addResponseCookie($response);
+
         $request = Request::create('/');
         $request->cookies->set(JwtManager::COOKIE_NAME, $this->getCookieValueFromResponse($response));
 
@@ -61,10 +68,11 @@ class JwtManagerTest extends TestCase
         $this->assertArrayHasKey('exp', $result);
     }
 
-    public function testTokenCanBeSetWithPayload()
+    public function testTokenCanBeSetWithPayload(): void
     {
         $response = new Response();
-        $this->jwtManager->addResponseCookie($response, ['foobar' => 'whatever']);
+        $this->jwtManager->addResponseCookie($response, ['foo' => 'bar']);
+
         $request = Request::create('/');
         $request->cookies->set(JwtManager::COOKIE_NAME, $this->getCookieValueFromResponse($response));
 
@@ -72,17 +80,18 @@ class JwtManagerTest extends TestCase
 
         $this->assertArrayHasKey('iat', $result);
         $this->assertArrayHasKey('exp', $result);
-        $this->assertArrayHasKey('foobar', $result);
-        $this->assertSame('whatever', $result['foobar']);
+        $this->assertArrayHasKey('foo', $result);
+        $this->assertSame('bar', $result['foo']);
     }
 
-    public function testClearResponseCookie()
+    public function testClearTheResponseCookie(): void
     {
         $headerBag = $this->createMock(ResponseHeaderBag::class);
         $headerBag
             ->expects($this->once())
             ->method('clearCookie')
-            ->with(JwtManager::COOKIE_NAME);
+            ->with(JwtManager::COOKIE_NAME)
+        ;
 
         $response = new Response();
         $response->headers = $headerBag;

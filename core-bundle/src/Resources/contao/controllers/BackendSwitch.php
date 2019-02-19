@@ -58,8 +58,12 @@ class BackendSwitch extends Backend
 			$this->getDatalistOptions();
 		}
 
-		$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
-		$objJwtManager = null !== $objRequest ? $objRequest->attributes->get(JwtManager::ATTRIBUTE) : null;
+		$objJwtManager = null;
+
+		if ($objRequest = System::getContainer()->get('request_stack')->getCurrentRequest())
+		{
+			$objJwtManager = $objRequest->attributes->get(JwtManager::ATTRIBUTE);
+		}
 
 		$blnCanSwitchUser = ($this->User->isAdmin || (!empty($this->User->amg) && \is_array($this->User->amg)));
 		$objTokenChecker = System::getContainer()->get('contao.security.token_checker');

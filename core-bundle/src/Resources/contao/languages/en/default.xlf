@@ -1407,13 +1407,13 @@
         <source>show</source>
       </trans-unit>
       <trans-unit id="MSC.enableDebugMode">
-        <source>Enable Debug Mode</source>
+        <source>Enable debug mode</source>
       </trans-unit>
       <trans-unit id="MSC.disableDebugMode">
-        <source>Disable Debug Mode</source>
+        <source>Disable debug mode</source>
       </trans-unit>
       <trans-unit id="MSC.debugMode">
-        <source>Debug Mode</source>
+        <source>Debug mode</source>
       </trans-unit>
       <trans-unit id="MSC.debugEnabled">
         <source>enabled</source>

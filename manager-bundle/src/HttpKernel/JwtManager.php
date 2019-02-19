@@ -13,14 +13,13 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\HttpKernel;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Exception\ResponseException;
 use Firebase\JWT\JWT;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class JwtManager
+class JwtManager
 {
     public const ATTRIBUTE = '_jwtManager';
     public const COOKIE_NAME = '_contao_preview';
@@ -39,15 +38,12 @@ final class JwtManager
             $this->secret = file_get_contents($secretFile);
         }
 
-        if (!\is_string($this->secret) || \strlen($this->secret) !== 64) {
+        if (!\is_string($this->secret) || 64 !== \strlen($this->secret)) {
             $this->secret = bin2hex(random_bytes(32));
             $filesystem->dumpFile($secretFile, $this->secret);
         }
     }
 
-    /**
-     * @throws ResponseException
-     */
     public function parseRequest(Request $request): ?array
     {
         $request->attributes->set(self::ATTRIBUTE, $this);
@@ -56,24 +52,25 @@ final class JwtManager
             try {
                 return $this->decodeJwt((string) $request->cookies->get(self::COOKIE_NAME));
             } catch (\Exception $e) {
-                // Do nothing
+                // do nothing
             }
         }
 
-        if ($request->getPathInfo() === '/contao/login') {
+        if ('/contao/login' === $request->getPathInfo()) {
             return null;
         }
 
-        if (null !== $qs = $request->getQueryString())
-        {
+        if (null !== $qs = $request->getQueryString()) {
             $qs = '?'.$qs;
         }
 
-        throw new RedirectResponseException('/preview.php/contao/login?_target_path='.rawurlencode($request->getPathInfo().$qs));
+        throw new RedirectResponseException(
+            '/preview.php/contao/login?_target_path='.rawurlencode($request->getPathInfo().$qs)
+        );
     }
 
     /**
-     * Adds JWT cookie to the given response.
+     * Adds the JWT cookie to the given response.
      */
     public function addResponseCookie(Response $response, array $payload = []): void
     {
@@ -84,12 +81,7 @@ final class JwtManager
         $payload['iat'] = time();
         $payload['exp'] = strtotime('+30 minutes');
 
-        $cookie = Cookie::create(
-            self::COOKIE_NAME,
-            JWT::encode($payload, $this->secret, 'HS256'),
-            0,
-            '/'
-        );
+        $cookie = Cookie::create(self::COOKIE_NAME, JWT::encode($payload, $this->secret));
 
         $response->headers->setCookie($cookie);
     }
@@ -113,7 +105,7 @@ final class JwtManager
         $cookies = $response->headers->getCookies();
 
         foreach ($cookies as $cookie) {
-            if ($cookie->getName() === self::COOKIE_NAME) {
+            if (self::COOKIE_NAME === $cookie->getName()) {
                 return true;
             }
         }
@@ -123,13 +115,9 @@ final class JwtManager
 
     private function decodeJwt(string $data): array
     {
-        $jwt = JWT::decode(
-            $data,
-            $this->secret,
-            ['HS256']
-        );
+        $jwt = JWT::decode($data, $this->secret, ['HS256']);
 
-        // recursively decode the data as array instead of object
+        // Recursively decode the data as array instead of object
         return json_decode(json_encode($jwt), true);
     }
 }
