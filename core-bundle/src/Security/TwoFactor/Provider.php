@@ -12,13 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\TwoFactor;
 
-use Contao\FrontendUser;
-use Contao\PageModel;
 use Contao\User;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
