@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Image\ImageFactoryInterface;
+use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizerInterface;
-use Imagine\Image\ImagineInterface;
+use Contao\Image\ResizerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -22,25 +24,25 @@ use Symfony\Component\Routing\Annotation\Route;
 class ImagesController
 {
     /**
-     * @var DeferredResizerInterface
+     * @var ImageFactoryInterface
+     */
+    private $imageFactory;
+
+    /**
+     * @var ResizerInterface
      */
     private $resizer;
 
     /**
-     * @var ImagineInterface
+     * @var string
      */
-    private $imagine;
+    private $targetDir;
 
-    /**
-     * @var ImagineInterface
-     */
-    private $imagineSvg;
-
-    public function __construct(DeferredResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg)
+    public function __construct(ImageFactoryInterface $imageFactory, ResizerInterface $resizer, string $targetDir)
     {
+        $this->imageFactory = $imageFactory;
         $this->resizer = $resizer;
-        $this->imagine = $imagine;
-        $this->imagineSvg = $imagineSvg;
+        $this->targetDir = $targetDir;
     }
 
     /**
@@ -48,14 +50,12 @@ class ImagesController
      */
     public function index(string $path): Response
     {
-        if (\in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), ['svg', 'svgz'], true)) {
-            $imagine = $this->imagineSvg;
-        } else {
-            $imagine = $this->imagine;
-        }
-
         try {
-            $image = $this->resizer->resizeDeferredImage($path, $imagine);
+            $image = $this->imageFactory->create($this->targetDir.'/'.$path);
+            $resizer = $this->resizer;
+            if ($image instanceof DeferredImageInterface && $resizer instanceof DeferredResizerInterface) {
+                $resizer->resizeDeferredImage($image);
+            }
         } catch (\Throwable $exception) {
             throw new NotFoundHttpException($exception->getMessage(), $exception);
         }

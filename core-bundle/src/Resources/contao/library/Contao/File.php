@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\Image\DeferredImageInterface;
 use Contao\Image\Image as ContaoImage;
 use Contao\Image\ImageDimensions;
 use Patchwork\Utf8;
@@ -265,32 +266,38 @@ class File extends System
 				if (empty($this->arrImageSize))
 				{
 					$strCacheKey = $this->strFile . '|' . ($this->exists() ? $this->mtime : 0);
-					$strImageTargetDir = System::getContainer()->getParameter('contao.image.target_dir');
 
 					if (isset(static::$arrImageSizeCache[$strCacheKey]))
 					{
 						$this->arrImageSize = static::$arrImageSizeCache[$strCacheKey];
 					}
-					elseif (!$this->exists() && strncmp($strImageTargetDir, $this->strRootDir . '/' . $this->strFile, \strlen($strImageTargetDir)) == 0)
+					elseif (!$this->exists())
 					{
-						$deferredImage = System::getContainer()->get('contao.image.resizer')->getDeferredImage(substr($this->strFile, \strlen($strImageTargetDir) - \strlen($this->strRootDir)));
-						if ($deferredImage)
+						try
 						{
-							$this->arrImageSize = array
-							(
-								$deferredImage->getDimensions()->getSize()->getWidth(),
-								$deferredImage->getDimensions()->getSize()->getHeight(),
-								[
-									'gif' => IMAGETYPE_GIF,
-									'jpg' => IMAGETYPE_JPEG,
-									'jpeg' => IMAGETYPE_JPEG,
-									'png' => IMAGETYPE_PNG,
-								][$this->extension] ?? 0,
-								'width="' . $deferredImage->getDimensions()->getSize()->getWidth() . '" height="' . $deferredImage->getDimensions()->getSize()->getHeight() . '"',
-								'bits' => 8,
-								'channels' => 3,
-								'mime' => $this->getMimeType()
-							);
+							$deferredImage = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile);
+							if ($deferredImage)
+							{
+								$this->arrImageSize = array
+								(
+									$deferredImage->getDimensions()->getSize()->getWidth(),
+									$deferredImage->getDimensions()->getSize()->getHeight(),
+									[
+										'gif' => IMAGETYPE_GIF,
+										'jpg' => IMAGETYPE_JPEG,
+										'jpeg' => IMAGETYPE_JPEG,
+										'png' => IMAGETYPE_PNG,
+									][$this->extension] ?? 0,
+									'width="' . $deferredImage->getDimensions()->getSize()->getWidth() . '" height="' . $deferredImage->getDimensions()->getSize()->getHeight() . '"',
+									'bits' => 8,
+									'channels' => 3,
+									'mime' => $this->getMimeType()
+								);
+							}
+						}
+						catch (\Exception $e)
+						{
+							// Ignore
 						}
 					}
 					elseif ($this->isGdImage)
@@ -629,25 +636,18 @@ class File extends System
 	{
 		if (!$this->exists())
 		{
-			$strImageTargetDir = System::getContainer()->getParameter('contao.image.target_dir');
-			if (strncmp($strImageTargetDir, $this->strRootDir . '/' . $this->strFile, \strlen($strImageTargetDir)) == 0)
-			{
-				$relativeImagePath = substr($this->strFile, \strlen($strImageTargetDir) - \strlen($this->strRootDir));
-				$resizer = System::getContainer()->get('contao.image.resizer');
-				if ($resizer->getDeferredImage($relativeImagePath))
-				{
-					if (\in_array(strtolower(pathinfo($relativeImagePath, PATHINFO_EXTENSION)), ['svg', 'svgz'], true))
-					{
-						$imagine = System::getContainer()->get('contao.image.imagine_svg');
-					}
-					else
-					{
-						$imagine = System::getContainer()->get('contao.image.imagine');
-					}
-					$resizer->resizeDeferredImage($relativeImagePath, $imagine);
+			try {
+				$image = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile);
+				if ($image instanceof DeferredImageInterface) {
+					System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($image);
 				}
 			}
+			catch (\Throwable $e)
+			{
+				// Ignore
+			}
 		}
+
 		$strContent = file_get_contents($this->strRootDir . '/' . ($this->strTmp ?: $this->strFile));
 
 		// Remove BOMs (see #4469)

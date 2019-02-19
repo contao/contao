@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\Image\DeferredImageInterface;
 use Contao\Image\Image as NewImage;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ImportantPart;
@@ -682,13 +683,21 @@ class Image
 
 		$container = System::getContainer();
 		$rootDir = $container->getParameter('kernel.project_dir');
-		$targetDir = $container->getParameter('contao.image.target_dir');
 		$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 		if (!is_file($rootDir . '/' . $src))
 		{
+			$deferredImage = null;
+			try
+			{
+				$deferredImage = $container->get('contao.image.image_factory')->create($rootDir . '/' . $src);
+			}
+			catch (\Exception $e)
+			{
+				// Ignore;
+			}
 			// Handle deferred images
-			if (strncmp($targetDir, $rootDir . '/' . $src, \strlen($targetDir)) == 0 && $container->get('contao.image.resizer')->getDeferredImage(substr($rootDir . '/' . $src, \strlen($targetDir)))) {
+			if ($deferredImage instanceof DeferredImageInterface) {
 				// ignore
 			}
 			// Handle public bundle resources

@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FilesModel;
+use Contao\Image\DeferredImageInterface;
+use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
@@ -90,6 +92,7 @@ class ImageFactory implements ImageFactoryInterface
         if ($path instanceof ImageInterface) {
             $image = $path;
         } else {
+            $path = (string) $path;
             $fileExtension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
             if (\in_array($fileExtension, ['svg', 'svgz'], true)) {
@@ -104,7 +107,15 @@ class ImageFactory implements ImageFactoryInterface
                 );
             }
 
-            $image = new Image((string) $path, $imagine, $this->filesystem);
+            if (
+                $this->resizer instanceof DeferredResizerInterface
+                && !$this->filesystem->exists($path)
+                && $deferredImage = $this->resizer->getDeferredImage($path, $imagine)
+            ) {
+                $image = $deferredImage;
+            } else {
+                $image = new Image($path, $imagine, $this->filesystem);
+            }
         }
 
         if ($size instanceof ResizeConfigurationInterface) {

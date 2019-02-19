@@ -71,9 +71,9 @@ services:
 
     Contao\CoreBundle\Controller\ImagesController:
         arguments:
+            - "@contao.image.image_factory"
             - "@contao.image.resizer"
-            - "@contao.image.imagine"
-            - "@contao.image.imagine_svg"
+            - "%contao.image.target_dir%"
         public: true
 
     contao.controller_resolver:
