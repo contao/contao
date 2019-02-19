@@ -44,6 +44,9 @@ $response = $kernel->handle($request);
 // Force no-cache on all responses in the preview front controller
 $response->headers->set('Cache-Control', 'no-store');
 
+// Strip all tag headers from the response
+$response->headers->remove(\FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter::DEFAULT_HEADER_NAME);
+
 if (null !== $jwt) {
     $jwtManager->addResponseCookie($response, $jwt);
 }
