@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
-use Contao\CoreBundle\Controller\ImagesController;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Route;
@@ -35,7 +34,7 @@ class ImagesLoader extends Loader
      */
     public function load($resource, $type = null): RouteCollection
     {
-        $route = new Route('/'.$this->pathPrefix.'/{path<.+>}', ['_controller' => ImagesController::class]);
+        $route = new Route('/'.$this->pathPrefix.'/{path<.+>}', ['_controller' => 'contao.controller.images']);
 
         $routes = new RouteCollection();
         $routes->add('contao_images', $route);
