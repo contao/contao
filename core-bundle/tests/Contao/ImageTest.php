@@ -1432,6 +1432,10 @@ class ImageTest extends TestCase
         $imageObj->setTargetWidth(50)->setTargetHeight(50);
         $imageObj->executeResize();
 
+        System::getContainer()->get('contao.image.resizer')->resizeDeferredImage(
+            substr($imageObj->getResizedPath(), \strlen('assets/images/')), System::getContainer()->get('contao.image.imagine')
+        );
+
         $GLOBALS['TL_HOOKS'] = [
             'getImage' => [[\get_class($this), 'getImageHookCallback']],
         ];

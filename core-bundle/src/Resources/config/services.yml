@@ -169,7 +169,7 @@ services:
         class: Contao\Image\ResizeCalculator
 
     contao.image.resizer:
-        class: Contao\Image\DeferredResizer
+        class: Contao\CoreBundle\Image\LegacyResizer
         arguments:
             - '%contao.image.target_dir%'
             - '@contao.image.resize_calculator'

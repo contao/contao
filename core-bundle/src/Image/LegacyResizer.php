@@ -21,7 +21,7 @@ use Contao\Image\ImageInterface;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeCoordinatesInterface;
 use Contao\Image\ResizeOptionsInterface;
-use Contao\Image\Resizer as ImageResizer;
+use Contao\Image\DeferredResizer as ImageResizer;
 use Contao\System;
 use Imagine\Gd\Imagine as GdImagine;
 
