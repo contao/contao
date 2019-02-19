@@ -566,7 +566,7 @@ class StringUtil
 				'/##([^=!<>\s]+?)##/',
 				function (array $matches) use ($arrData)
 				{
-					if (!array_key_exists($matches[1], $arrData))
+					if (!\array_key_exists($matches[1], $arrData))
 					{
 						System::getContainer()
 							->get('monolog.logger.contao')
@@ -593,7 +593,7 @@ class StringUtil
 			$strOperator = $arrMatches[2];
 			$strValue = $arrMatches[3];
 
-			if (!array_key_exists($strToken, $arrData))
+			if (!\array_key_exists($strToken, $arrData))
 			{
 				System::getContainer()
 					->get('monolog.logger.contao')

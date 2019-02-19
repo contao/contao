@@ -646,7 +646,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
 			// Use array_key_exists here (see #5252)
-			if (array_key_exists('default', $v))
+			if (\array_key_exists('default', $v))
 			{
 				$this->set[$k] = \is_array($v['default']) ? serialize($v['default']) : $v['default'];
 
@@ -892,7 +892,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			foreach ($objRow->row() as $k=>$v)
 			{
-				if (array_key_exists($k, $GLOBALS['TL_DCA'][$this->strTable]['fields']))
+				if (\array_key_exists($k, $GLOBALS['TL_DCA'][$this->strTable]['fields']))
 				{
 					// Never copy passwords
 					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['inputType'] == 'password')
@@ -912,7 +912,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						$v = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql']);
 
 						// Use array_key_exists to allow NULL (see #5252)
-						if (array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]))
+						if (\array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]))
 						{
 							$v = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['default']) ? serialize($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['default']) : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['default'];
 						}
@@ -1119,7 +1119,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 							$vv = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$v]['fields'][$kk]['sql']);
 
 							// Use array_key_exists to allow NULL (see #5252)
-							if (array_key_exists('default', $GLOBALS['TL_DCA'][$v]['fields'][$kk]))
+							if (\array_key_exists('default', $GLOBALS['TL_DCA'][$v]['fields'][$kk]))
 							{
 								$vv = \is_array($GLOBALS['TL_DCA'][$v]['fields'][$kk]['default']) ? serialize($GLOBALS['TL_DCA'][$v]['fields'][$kk]['default']) : $GLOBALS['TL_DCA'][$v]['fields'][$kk]['default'];
 							}
@@ -2439,7 +2439,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					$formFields[] = $v.'_'.$this->intId;
 
 					// Set the default value and try to load the current value from DB (see #5252)
-					if (array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]))
+					if (\array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]))
 					{
 						$this->varValue = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) ? serialize($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default'];
 					}

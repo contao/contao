@@ -36,7 +36,7 @@ class LazySessionAccess implements \ArrayAccess, \Countable
     {
         $this->startSession();
 
-        return array_key_exists($offset, $_SESSION);
+        return \array_key_exists($offset, $_SESSION);
     }
 
     /**
