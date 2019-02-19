@@ -51,7 +51,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $groups
  * @property boolean $includeLayout
  * @property integer $layout
- * @property integer $mobileLayout
  * @property boolean $includeCache
  * @property integer $cache
  * @property integer $clientCache
@@ -94,7 +93,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property integer $layoutId
  * @property boolean $hasJQuery
  * @property boolean $hasMooTools
- * @property boolean $isMobile
  * @property string  $template
  * @property string  $templateGroup
  *
@@ -133,7 +131,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByGroups($val, array $opt=array())
  * @method static PageModel|null findOneByIncludeLayout($val, array $opt=array())
  * @method static PageModel|null findOneByLayout($val, array $opt=array())
- * @method static PageModel|null findOneByMobileLayout($val, array $opt=array())
  * @method static PageModel|null findOneByIncludeCache($val, array $opt=array())
  * @method static PageModel|null findOneByCache($val, array $opt=array())
  * @method static PageModel|null findOneByIncludeChmod($val, array $opt=array())
@@ -182,7 +179,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByGroups($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByIncludeLayout($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByLayout($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByMobileLayout($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByIncludeCache($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByCache($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByIncludeChmod($val, array $opt=array())
@@ -235,7 +231,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByGroups($val, array $opt=array())
  * @method static integer countByIncludeLayout($val, array $opt=array())
  * @method static integer countByLayout($val, array $opt=array())
- * @method static integer countByMobileLayout($val, array $opt=array())
  * @method static integer countByIncludeCache($val, array $opt=array())
  * @method static integer countByCache($val, array $opt=array())
  * @method static integer countByIncludeChmod($val, array $opt=array())
@@ -862,7 +857,6 @@ class PageModel extends Model
 		$this->protected = (bool) $this->protected;
 		$this->groups = $this->protected ? StringUtil::deserialize($this->groups) : false;
 		$this->layout = $this->includeLayout ? $this->layout : false;
-		$this->mobileLayout = $this->includeLayout ? $this->mobileLayout : false;
 		$this->cache = $this->includeCache ? $this->cache : false;
 		$this->clientCache = $this->includeCache ? $this->clientCache : false;
 
@@ -920,16 +914,9 @@ class PageModel extends Model
 					}
 
 					// Layout
-					if ($objParentPage->includeLayout)
+					if ($objParentPage->includeLayout && $this->layout === false)
 					{
-						if ($this->layout === false)
-						{
-							$this->layout = $objParentPage->layout;
-						}
-						if ($this->mobileLayout === false)
-						{
-							$this->mobileLayout = $objParentPage->mobileLayout;
-						}
+						$this->layout = $objParentPage->layout;
 					}
 
 					// Protection
@@ -1013,6 +1000,22 @@ class PageModel extends Model
 		if ($this->datimFormat == '')
 		{
 			$this->datimFormat = Config::get('datimFormat');
+		}
+
+		// HOOK: add custom logic
+		if (!empty($GLOBALS['TL_HOOKS']['loadPageDetails']) && \is_array($GLOBALS['TL_HOOKS']['loadPageDetails']))
+		{
+			$parentModels = array();
+
+			if ($objParentPage instanceof Collection)
+			{
+				$parentModels = $objParentPage->getModels();
+			}
+
+			foreach ($GLOBALS['TL_HOOKS']['loadPageDetails'] as $callback)
+			{
+				System::importStatic($callback[0])->{$callback[1]}($parentModels, $this);
+			}
 		}
 
 		// Prevent saving (see #6506 and #7199)

@@ -127,7 +127,7 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || $elements[0] == 'toggle_view' || strncmp($elements[0], 'cache_', 6) === 0 || \in_array('uncached', $flags))
+				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || strncmp($elements[0], 'cache_', 6) === 0 || \in_array('uncached', $flags))
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -595,32 +595,6 @@ class InsertTags extends Controller
 				// POST data
 				case 'post':
 					$arrCache[$strTag] = Input::post($elements[1]);
-					break;
-
-				// Mobile/desktop toggle (see #6469)
-				case 'toggle_view':
-					$strRequest = Environment::get('request');
-
-					// ESI request
-					if (preg_match('/^' . preg_quote(ltrim($container->getParameter('fragment.path'), '/'), '/') . '/', $strRequest))
-					{
-						$request = $container->get('request_stack')->getCurrentRequest();
-						$strRequest = $request->query->get('request');
-					}
-
-					$strUrl = ampersand($strRequest);
-					$strGlue = (strpos($strUrl, '?') === false) ? '?' : '&amp;';
-
-					System::loadLanguageFile('default');
-
-					if (Input::cookie('TL_VIEW') == 'mobile' || (Environment::get('agent')->mobile && Input::cookie('TL_VIEW') != 'desktop'))
-					{
-						$arrCache[$strTag] = '<a href="' . $strUrl . $strGlue . 'toggle_view=desktop" class="toggle_desktop" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['toggleDesktop'][1]) . '">' . $GLOBALS['TL_LANG']['MSC']['toggleDesktop'][0] . '</a>';
-					}
-					else
-					{
-						$arrCache[$strTag] = '<a href="' . $strUrl . $strGlue . 'toggle_view=mobile" class="toggle_mobile" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['toggleMobile'][1]) . '">' . $GLOBALS['TL_LANG']['MSC']['toggleMobile'][0] . '</a>';
-					}
 					break;
 
 				// Conditional tags (if)

@@ -77,16 +77,6 @@ class PageRegular extends Frontend
 		// Get the page layout
 		$objLayout = $this->getPageLayout($objPage);
 
-		// HOOK: modify the page or layout object (see #4736)
-		if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && \is_array($GLOBALS['TL_HOOKS']['getPageLayout']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getPageLayout'] as $callback)
-			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objPage, $objLayout, $this);
-			}
-		}
-
 		/** @var ThemeModel $objTheme */
 		$objTheme = $objLayout->getRelated('pid');
 
@@ -239,31 +229,27 @@ class PageRegular extends Frontend
 	 */
 	protected function getPageLayout($objPage)
 	{
-		$blnMobile = ($objPage->mobileLayout && Environment::get('agent')->mobile);
-
-		// Override the autodetected value
-		if (Input::cookie('TL_VIEW') == 'mobile')
-		{
-			$blnMobile = true;
-		}
-		elseif (Input::cookie('TL_VIEW') == 'desktop')
-		{
-			$blnMobile = false;
-		}
-
-		$intId = ($blnMobile && $objPage->mobileLayout) ? $objPage->mobileLayout : $objPage->layout;
-		$objLayout = LayoutModel::findByPk($intId);
+		$objLayout = LayoutModel::findByPk($objPage->layout);
 
 		// Die if there is no layout
 		if (null === $objLayout)
 		{
-			$this->log('Could not find layout ID "' . $intId . '"', __METHOD__, TL_ERROR);
+			$this->log('Could not find layout ID "' . $objPage->layout . '"', __METHOD__, TL_ERROR);
 			throw new NoLayoutSpecifiedException('No layout specified');
 		}
 
 		$objPage->hasJQuery = $objLayout->addJQuery;
 		$objPage->hasMooTools = $objLayout->addMooTools;
-		$objPage->isMobile = $blnMobile;
+
+		// HOOK: modify the page or layout object (see #4736)
+		if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && \is_array($GLOBALS['TL_HOOKS']['getPageLayout']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['getPageLayout'] as $callback)
+			{
+				$this->import($callback[0]);
+				$this->{$callback[0]}->{$callback[1]}($objPage, $objLayout, $this);
+			}
+		}
 
 		return $objLayout;
 	}

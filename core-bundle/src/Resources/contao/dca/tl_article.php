@@ -627,25 +627,20 @@ class tl_article extends Contao\Backend
 			$objPage = Contao\PageModel::findWithDetails($dc->activeRecord->pid);
 
 			// Get the layout sections
-			foreach (array('layout', 'mobileLayout') as $key)
+			if ($objPage->layout)
 			{
-				if (!$objPage->$key)
-				{
-					continue;
-				}
-
-				$objLayout = Contao\LayoutModel::findByPk($objPage->$key);
+				$objLayout = Contao\LayoutModel::findByPk($objPage->layout);
 
 				if ($objLayout === null)
 				{
-					continue;
+					return array();
 				}
 
 				$arrModules = Contao\StringUtil::deserialize($objLayout->modules);
 
 				if (empty($arrModules) || !\is_array($arrModules))
 				{
-					continue;
+					return array();
 				}
 
 				// Find all sections with an article module (see #6094)

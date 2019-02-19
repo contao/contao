@@ -41,7 +41,6 @@ use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
-use Contao\CoreBundle\EventListener\HeaderReplay\PageLayoutListener;
 use Contao\CoreBundle\EventListener\HeaderReplay\UserSessionListener as HeaderReplayUserSessionListener;
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\EventListener\InsertTags\AssetListener;
@@ -52,7 +51,6 @@ use Contao\CoreBundle\EventListener\RefererIdListener;
 use Contao\CoreBundle\EventListener\ResponseExceptionListener;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
-use Contao\CoreBundle\EventListener\ToggleViewListener;
 use Contao\CoreBundle\EventListener\UserSessionListener as EventUserSessionListener;
 use Contao\CoreBundle\Fragment\ForwardFragmentRenderer;
 use Contao\CoreBundle\Fragment\FragmentHandler;
@@ -381,24 +379,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('onReplay', $tags['kernel.event_listener'][0]['method']);
     }
 
-    public function testRegistersTheHeaderReplayPageLayoutListener(): void
-    {
-        $this->assertTrue($this->container->has('contao.listener.header_replay.page_layout'));
-
-        $definition = $this->container->getDefinition('contao.listener.header_replay.page_layout');
-
-        $this->assertSame(PageLayoutListener::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(0));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('terminal42.header_replay', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onReplay', $tags['kernel.event_listener'][0]['method']);
-    }
-
     public function testRegistersTheInsecureInstallationListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.insecure_installation'));
@@ -561,24 +541,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertArrayHasKey('kernel.event_listener', $tags);
         $this->assertSame('security.switch_user', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onSwitchUser', $tags['kernel.event_listener'][0]['method']);
-    }
-
-    public function testRegistersTheToggleViewListener(): void
-    {
-        $this->assertTrue($this->container->has('contao.listener.toggle_view'));
-
-        $definition = $this->container->getDefinition('contao.listener.toggle_view');
-
-        $this->assertSame(ToggleViewListener::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
     }
 
     public function testRegistersTheCsrfTokenCookieListener(): void
