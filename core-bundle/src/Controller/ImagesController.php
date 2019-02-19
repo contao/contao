@@ -19,7 +19,6 @@ use Contao\Image\ResizerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
 
 class ImagesController
 {
@@ -56,7 +55,7 @@ class ImagesController
             if ($image instanceof DeferredImageInterface && $resizer instanceof DeferredResizerInterface) {
                 $resizer->resizeDeferredImage($image);
             }
-        } catch (\Throwable $exception) {
+        } catch (\Exception $exception) {
             throw new NotFoundHttpException($exception->getMessage(), $exception);
         }
 

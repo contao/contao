@@ -243,6 +243,10 @@ class ImageFactory implements ImageFactoryInterface
      */
     private function createImportantPart(ImageInterface $image): ?ImportantPart
     {
+        if (!$this->framework->isInitialized()) {
+            return null;
+        }
+
         /** @var FilesModel $filesModel */
         $filesModel = $this->framework->getAdapter(FilesModel::class);
         $file = $filesModel->findByPath($image->getPath());
