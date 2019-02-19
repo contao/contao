@@ -46,6 +46,7 @@ class ImagesController
 
     /**
      * @Route("/assets/images/{path<.+>}", name="contao_images")
+     * @todo change the route path to the contao.image.target_path parameter
      */
     public function index(string $path): Response
     {

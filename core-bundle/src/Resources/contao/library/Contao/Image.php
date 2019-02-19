@@ -682,12 +682,17 @@ class Image
 
 		$container = System::getContainer();
 		$rootDir = $container->getParameter('kernel.project_dir');
+		$targetDir = $container->getParameter('contao.image.target_dir');
 		$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 		if (!is_file($rootDir . '/' . $src))
 		{
+			// Handle deferred images
+			if (strncmp($targetDir, $rootDir . '/' . $src, \strlen($targetDir)) == 0 && $container->get('contao.image.resizer')->getDeferredImage(substr($rootDir . '/' . $src, \strlen($targetDir)))) {
+				// ignore
+			}
 			// Handle public bundle resources
-			if (file_exists($rootDir . '/' . $webDir . '/' . $src))
+			elseif (file_exists($rootDir . '/' . $webDir . '/' . $src))
 			{
 				$src = $webDir . '/' . $src;
 			}
