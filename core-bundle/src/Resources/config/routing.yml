@@ -10,3 +10,7 @@ contao_backend_redirect:
         _controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
         route: contao_backend
         permanent: true
+
+contao_images:
+    resource: .
+    type: contao_images

@@ -355,6 +355,15 @@ services:
         tags:
             - { name: routing.loader }
 
+    contao.routing.images_loader:
+        class: Contao\CoreBundle\Routing\ImagesLoader
+        arguments:
+            - "%kernel.project_dir%"
+            - "%contao.image.target_dir%"
+            - "@filesystem"
+        tags:
+            - { name: routing.loader }
+
     contao.routing.frontend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher
         calls:
