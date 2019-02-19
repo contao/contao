@@ -80,12 +80,12 @@ jobs:
       if: 'type = cron'
       php: 7.4snapshot
       install:
-          - phpenv config-rm xdebug.ini || true
-          - composer update --ignore-platform-reqs --no-interaction --no-suggest
+        - phpenv config-rm xdebug.ini || true
+        - composer update --ignore-platform-reqs --no-interaction --no-suggest
       script:
-          - run_tests
-          - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
-          - php vendor/bin/monorepo-tools composer-json --validate
+        - run_tests
+        - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
+        - php vendor/bin/monorepo-tools composer-json --validate
 
     - stage: test
       if: 'type = cron'
