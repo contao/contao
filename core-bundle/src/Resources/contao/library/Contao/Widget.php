@@ -1228,7 +1228,7 @@ abstract class Widget extends Controller
 			foreach ($this->arrOptions as $v)
 			{
 				// Single dimensional array
-				if (array_key_exists('value', $v))
+				if (\array_key_exists('value', $v))
 				{
 					if ($strInput == $v['value'])
 					{
@@ -1304,7 +1304,7 @@ abstract class Widget extends Controller
 		}
 
 		// Add Ajax event
-		if ($arrData['inputType'] == 'checkbox' && \is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && array_key_exists($strField, $GLOBALS['TL_DCA'][$strTable]['subpalettes']) && $arrData['eval']['submitOnChange'])
+		if ($arrData['inputType'] == 'checkbox' && \is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && \array_key_exists($strField, $GLOBALS['TL_DCA'][$strTable]['subpalettes']) && $arrData['eval']['submitOnChange'])
 		{
 			$arrAttributes['onclick'] = "AjaxRequest.toggleSubpalette(this, 'sub_".$strName."', '".$strField."')";
 		}

@@ -431,7 +431,7 @@ class Theme extends Backend
 				$table = $tables->item($i)->getAttribute('name');
 
 				// Skip invalid tables
-				if (!array_key_exists($table, $arrLocks))
+				if (!\array_key_exists($table, $arrLocks))
 				{
 					continue;
 				}
@@ -461,7 +461,7 @@ class Theme extends Backend
 				$table = $tables->item($i)->getAttribute('name');
 
 				// Skip invalid tables
-				if (!array_key_exists($table, $arrLocks))
+				if (!\array_key_exists($table, $arrLocks))
 				{
 					continue;
 				}

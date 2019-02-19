@@ -103,7 +103,7 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private function prepareLocale(array &$parameters): void
     {
-        if (!$this->prependLocale && array_key_exists('_locale', $parameters)) {
+        if (!$this->prependLocale && \array_key_exists('_locale', $parameters)) {
             unset($parameters['_locale']);
         }
     }

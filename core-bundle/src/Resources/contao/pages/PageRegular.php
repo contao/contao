@@ -629,7 +629,7 @@ class PageRegular extends Frontend
 					// Move the matching elements to their position in $arrOrder
 					foreach ($arrExternal as $k=>$v)
 					{
-						if (array_key_exists($v, $arrOrder))
+						if (\array_key_exists($v, $arrOrder))
 						{
 							$arrOrder[$v] = $v;
 							unset($arrExternal[$k]);
@@ -792,7 +792,7 @@ class PageRegular extends Frontend
 					// Move the matching elements to their position in $arrOrder
 					foreach ($arrExternalJs as $k=>$v)
 					{
-						if (array_key_exists($v, $arrOrder))
+						if (\array_key_exists($v, $arrOrder))
 						{
 							$arrOrder[$v] = $v;
 							unset($arrExternalJs[$k]);

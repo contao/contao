@@ -163,8 +163,8 @@ class InputEnhancerTest extends TestCase
             ['/foo/bar', false, ['foo', 'bar']],
             ['/foo/bar/bar/baz', false, ['foo', 'bar'], ['bar', 'baz']],
             ['/foo/bar/baz', true, ['auto_item', 'foo'], ['bar', 'baz']],
-            ['/f%20o/bar', false, ['f o', 'bar']],
-            ['/foo/ba%20r', false, ['foo', 'ba r']],
+            ['/f%20o/bar', false, ['f%20o', 'bar']],
+            ['/foo/ba%20r', false, ['foo', 'ba%20r']],
         ];
     }
 

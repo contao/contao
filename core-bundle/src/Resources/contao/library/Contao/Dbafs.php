@@ -157,7 +157,7 @@ class Dbafs
 
 			// The parent ID should be in $arrPids
 			// Do not use isset() here, because the PID can be null
-			if (array_key_exists($strParent, $arrPids))
+			if (\array_key_exists($strParent, $arrPids))
 			{
 				$strPid = $arrPids[$strParent];
 			}

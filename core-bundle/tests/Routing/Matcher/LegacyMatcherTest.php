@@ -83,39 +83,39 @@ class LegacyMatcherTest extends TestCase
     {
         yield [
             '/',
-            false
+            false,
         ];
 
         yield [
             '/',
-            true
+            true,
         ];
 
         yield [
             '/en/',
-            true
+            true,
         ];
 
         yield [
             '/de/',
-            true
+            true,
         ];
 
         yield [
             '/fr-FR/',
-            true
+            true,
         ];
 
         yield [
             '/es/',
             false,
-            true
+            true,
         ];
 
         yield [
             '/fr-FR/',
             false,
-            true
+            true,
         ];
     }
 
