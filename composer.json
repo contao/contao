@@ -9,12 +9,6 @@
             "homepage": "https://github.com/leofeyer"
         }
     ],
-    "repositories": [
-        {
-            "url": "https://github.com/ausi/contao-image.git",
-            "type": "git"
-        }
-    ],
     "require": {
         "php": "^7.1",
         "ext-dom": "*",
@@ -43,7 +37,7 @@
         "contao-components/tablesort": "^4.0",
         "contao-components/tablesorter": "^2.1",
         "contao-components/tinymce4": "^4.7",
-        "contao/image": "dev-feature/deferred-resizing as 0.3.99",
+        "contao/image": "^1.0.0@dev",
         "contao/imagine-svg": "^0.1.2 || ^0.2",
         "contao/manager-plugin": "^2.6.2",
         "doctrine/dbal": "^2.6",
