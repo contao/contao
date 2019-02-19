@@ -17,11 +17,11 @@ use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\File;
 use Contao\Image as LegacyImage;
+use Contao\Image\DeferredResizer as ImageResizer;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeCoordinatesInterface;
 use Contao\Image\ResizeOptionsInterface;
-use Contao\Image\DeferredResizer as ImageResizer;
 use Contao\System;
 use Imagine\Gd\Imagine as GdImagine;
 
