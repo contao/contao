@@ -48,6 +48,15 @@ function phpstan() {
   vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3
 }
 
+function composer() {
+  if [[ ! -e ./vendor/bin/monorepo-tools ]]; then
+    echo "The vendor/bin/monorepo-tools file is missing. Did you install the dependencies?"
+    exit 1
+  fi
+
+  vendor/bin/monorepo-tools composer --validate
+}
+
 function usage() {
   cat <<HEREDOC
 Usage: ./run [task]
@@ -55,6 +64,7 @@ Usage: ./run [task]
   functional    Run the functional tests
   php-cs-fixer  Run the PHP coding style fixer
   phpstan       Run the static PHP analyzer
+  composer      Validate the composer.json files
 HEREDOC
 }
 
@@ -75,11 +85,16 @@ case "$1" in
     phpstan
     exit 0
   ;;
+  composer)
+    composer
+    exit 0
+  ;;
   all)
     phpunit "${@:2}"
     functional
     php-cs-fixer "${@:2}"
     phpstan
+    composer
     exit 0
   ;;
   *)
