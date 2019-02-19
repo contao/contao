@@ -12,19 +12,38 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Logout;
 
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 
 class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
 {
     /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
+
+    /**
+     * Constructor.
+     */
+    public function __construct(HttpUtils $httpUtils, ScopeMatcher $scopeMatcher)
+    {
+        parent::__construct($httpUtils);
+
+        $this->scopeMatcher = $scopeMatcher;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function onLogoutSuccess(Request $request): Response
     {
-        // TODO only handle backend?
+        if ($this->scopeMatcher->isBackendRequest($request)) {
+            return $this->createRedirectResponse($request, 'contao_backend_login');
+        }
 
         if ($targetUrl = $request->query->get('redirect')) {
             return $this->createRedirectResponse($request, $targetUrl);
