@@ -19,6 +19,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
 use Contao\FilesModel;
 use Contao\Image;
+use Contao\Image\DeferredImageInterface;
 use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Contao\System;
@@ -1437,7 +1438,12 @@ class ImageTest extends TestCase
         $imageObj->setTargetWidth(50)->setTargetHeight(50);
         $imageObj->executeResize();
 
-        $deferredImage = System::getContainer()->get('contao.image.image_factory')->create(System::getContainer()->getParameter('kernel.project_dir').'/'.$imageObj->getResizedPath());
+        /** @var DeferredImageInterface $deferredImage */
+        $deferredImage = System::getContainer()
+            ->get('contao.image.image_factory')
+            ->create(System::getContainer()->getParameter('kernel.project_dir').'/'.$imageObj->getResizedPath())
+        ;
+
         System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($deferredImage);
 
         $GLOBALS['TL_HOOKS'] = [
@@ -1532,7 +1538,7 @@ class ImageTest extends TestCase
         $container->setParameter('contao.web_dir', $this->getTempDir().'/web');
 
         $framework = $this->mockContaoFramework([
-            FilesModel::class => $this->createMock(Adapter::class)
+            FilesModel::class => $this->createMock(Adapter::class),
         ]);
 
         $resizer = new LegacyResizer($container->getParameter('contao.image.target_dir'), new ResizeCalculator());

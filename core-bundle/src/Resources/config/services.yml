@@ -63,17 +63,18 @@ services:
             - '%kernel.project_dir%'
         public: true
 
-    contao.controller.insert_tags:
-        class: Contao\CoreBundle\Controller\InsertTagsController
-        arguments:
-            - '@contao.framework'
-        public: true
-
-    Contao\CoreBundle\Controller\ImagesController:
+    contao.controller.images:
+        class:  Contao\CoreBundle\Controller\ImagesController
         arguments:
             - "@contao.image.image_factory"
             - "@contao.image.resizer"
             - "%contao.image.target_dir%"
+        public: true
+
+    contao.controller.insert_tags:
+        class: Contao\CoreBundle\Controller\InsertTagsController
+        arguments:
+            - '@contao.framework'
         public: true
 
     contao.controller_resolver:
@@ -355,6 +356,11 @@ services:
         tags:
             - { name: routing.loader }
 
+    contao.routing.frontend_matcher:
+        class: Symfony\Component\HttpFoundation\RequestMatcher
+        calls:
+            - ['matchAttribute', ['_scope', 'frontend']]
+
     contao.routing.images_loader:
         class: Contao\CoreBundle\Routing\ImagesLoader
         arguments:
@@ -363,11 +369,6 @@ services:
             - "@filesystem"
         tags:
             - { name: routing.loader }
-
-    contao.routing.frontend_matcher:
-        class: Symfony\Component\HttpFoundation\RequestMatcher
-        calls:
-            - ['matchAttribute', ['_scope', 'frontend']]
 
     contao.routing.input_enhancer:
         class: Contao\CoreBundle\Routing\Enhancer\InputEnhancer

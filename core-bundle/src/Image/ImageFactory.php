@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FilesModel;
-use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;

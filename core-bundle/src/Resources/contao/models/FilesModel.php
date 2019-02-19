@@ -262,7 +262,8 @@ class FilesModel extends Model
 			$path = substr($path, \strlen($rootDir) + 1);
 		}
 
-		if (strncmp($path, $uploadPath . '/', \strlen($uploadPath) + 1) !== 0) {
+		if (strncmp($path, $uploadPath . '/', \strlen($uploadPath) + 1) !== 0)
+		{
 			return null;
 		}
 

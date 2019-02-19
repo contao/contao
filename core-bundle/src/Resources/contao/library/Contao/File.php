@@ -276,18 +276,22 @@ class File extends System
 						try
 						{
 							$deferredImage = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile);
+
 							if ($deferredImage)
 							{
+								$mapper = array
+								(
+									'gif' => IMAGETYPE_GIF,
+									'jpg' => IMAGETYPE_JPEG,
+									'jpeg' => IMAGETYPE_JPEG,
+									'png' => IMAGETYPE_PNG,
+								);
+
 								$this->arrImageSize = array
 								(
 									$deferredImage->getDimensions()->getSize()->getWidth(),
 									$deferredImage->getDimensions()->getSize()->getHeight(),
-									[
-										'gif' => IMAGETYPE_GIF,
-										'jpg' => IMAGETYPE_JPEG,
-										'jpeg' => IMAGETYPE_JPEG,
-										'png' => IMAGETYPE_PNG,
-									][$this->extension] ?? 0,
+									$mapper[$this->extension] ?? 0,
 									'width="' . $deferredImage->getDimensions()->getSize()->getWidth() . '" height="' . $deferredImage->getDimensions()->getSize()->getHeight() . '"',
 									'bits' => 8,
 									'channels' => 3,
@@ -297,7 +301,7 @@ class File extends System
 						}
 						catch (\Exception $e)
 						{
-							// Ignore
+							// ignore
 						}
 					}
 					elseif ($this->isGdImage)
@@ -636,15 +640,18 @@ class File extends System
 	{
 		if (!$this->exists())
 		{
-			try {
+			try
+			{
 				$image = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile);
-				if ($image instanceof DeferredImageInterface) {
+
+				if ($image instanceof DeferredImageInterface)
+				{
 					System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($image);
 				}
 			}
 			catch (\Throwable $e)
 			{
-				// Ignore
+				// ignore
 			}
 		}
 

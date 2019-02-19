@@ -687,17 +687,18 @@ class Image
 
 		if (!is_file($rootDir . '/' . $src))
 		{
-			$deferredImage = null;
 			try
 			{
 				$deferredImage = $container->get('contao.image.image_factory')->create($rootDir . '/' . $src);
 			}
 			catch (\Exception $e)
 			{
-				// Ignore;
+				$deferredImage = null;
 			}
+
 			// Handle deferred images
-			if ($deferredImage instanceof DeferredImageInterface) {
+			if ($deferredImage instanceof DeferredImageInterface)
+			{
 				// ignore
 			}
 			// Handle public bundle resources

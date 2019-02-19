@@ -45,13 +45,14 @@ class ImagesController
     }
 
     /**
-     * Route gets registered dynamically in Contao\CoreBundle\Routing\ImagesLoader
+     * The route is registered dynamically in the Contao\CoreBundle\Routing\ImagesLoader class.
      */
     public function __invoke(string $path): Response
     {
         try {
             $image = $this->imageFactory->create($this->targetDir.'/'.$path);
             $resizer = $this->resizer;
+
             if ($image instanceof DeferredImageInterface && $resizer instanceof DeferredResizerInterface) {
                 $resizer->resizeDeferredImage($image);
             }
