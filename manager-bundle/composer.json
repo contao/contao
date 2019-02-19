@@ -77,7 +77,7 @@
         "bin/contao-console"
     ],
     "support": {
-        "issues": "https://github.com/contao/manager-bundle/issues",
+        "issues": "https://github.com/contao/contao/issues",
         "forum": "https://community.contao.org",
         "source": "https://github.com/contao/manager-bundle",
         "docs": "https://docs.contao.org"

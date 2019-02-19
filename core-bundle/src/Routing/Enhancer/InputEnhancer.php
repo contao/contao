@@ -102,7 +102,7 @@ class InputEnhancer implements RouteEnhancerInterface
                 );
             }
 
-            $input->setGet(urldecode($fragments[$i]), urldecode($fragments[$i + 1] ?? ''), true);
+            $input->setGet($fragments[$i], $fragments[$i + 1], true);
         }
 
         return $defaults;

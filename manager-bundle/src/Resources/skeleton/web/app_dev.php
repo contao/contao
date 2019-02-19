@@ -81,6 +81,5 @@ ContaoKernel::setProjectDir(\dirname(__DIR__));
 // Handle the request
 $kernel = new ContaoKernel('dev', true);
 $response = $kernel->handle($request);
-
 $response->send();
 $kernel->terminate($request, $response);

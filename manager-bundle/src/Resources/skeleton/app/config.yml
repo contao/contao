@@ -17,6 +17,7 @@ framework:
         type: service
         strict_requirements: "%kernel.debug%"
     csrf_protection: ~
+    lock: ~
     templating:
         engines: ['twig']
     default_locale:  "%locale%"

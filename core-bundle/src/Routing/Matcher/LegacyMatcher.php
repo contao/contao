@@ -58,7 +58,14 @@ class LegacyMatcher implements RequestMatcherInterface
     {
         $this->framework->initialize(true);
 
-        if (empty($GLOBALS['TL_HOOKS']['getPageIdFromUrl']) || !\is_array($GLOBALS['TL_HOOKS']['getPageIdFromUrl'])) {
+        $pathInfo = rawurldecode($request->getPathInfo());
+
+        if (
+            '/' === $pathInfo
+            || ($this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))
+            || empty($GLOBALS['TL_HOOKS']['getPageIdFromUrl'])
+            || !\is_array($GLOBALS['TL_HOOKS']['getPageIdFromUrl'])
+        ) {
             return $this->requestMatcher->matchRequest($request);
         }
 
@@ -81,7 +88,7 @@ class LegacyMatcher implements RequestMatcherInterface
         }
 
         if (null === $fragments) {
-            $pathInfo = $this->parseSuffixAndLanguage($request->getPathInfo(), $locale);
+            $pathInfo = $this->parseSuffixAndLanguage($pathInfo, $locale);
             $fragments = $this->createFragmentsFromPath($pathInfo);
         }
 
