@@ -432,6 +432,39 @@ function array_insert(&$arrCurrent, $intIndex, $arrNew)
 }
 
 /**
+ * Insert a parameter or array into an existing array before a particular key
+ *
+ * @param array  $arrCurrent An array to insert in to.
+ * @param String $arrKey     The key to insert before.
+ * @param mixed  $arrNew     A value to insert.
+ */
+function array_insert_before(&$arrCurrent, $arrKey, $arrNew) {
+		if (!\is_array($arrCurrent))
+		{
+				$arrCurrent = $arrNew;
+				
+				return;
+		}
+
+		if (!\array_key_exists($arrKey, $arrCurrent)) 
+		{
+				return;
+		}
+
+		$index = 0;
+		foreach ($arrCurrent as $key => $value)
+		{
+				if ($arrKey === $key)
+				{
+						break;
+				}
+				$index++;
+		}
+
+		\array_insert($arrCurrent, $index, $arrNew);
+}
+
+/**
  * Duplicate a particular element of an array
  *
  * @param array   $arrStack
