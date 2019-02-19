@@ -37,7 +37,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'source' => array
 		(
@@ -45,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 		),
 		'parent' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'name' => array
 		(

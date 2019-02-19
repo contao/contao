@@ -32,7 +32,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['faq_readerModule'] = array
 	'options_callback'        => array('tl_module_faq', 'getReaderModules'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "int(10) unsigned NOT NULL default '0'"
+	'sql'                     => "int(10) unsigned NOT NULL default 0"
 );
 
 $bundles = Contao\System::getContainer()->getParameter('kernel.bundles');

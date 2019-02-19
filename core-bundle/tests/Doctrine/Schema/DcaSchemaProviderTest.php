@@ -44,7 +44,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertFalse($table->getColumn('id')->getFixed());
 
         if (null !== ($default = $table->getColumn('id')->getDefault())) {
-            $this->assertSame('0', $default);
+            $this->assertSame(0, $default);
         }
 
         $this->assertTrue($table->hasColumn('pid'));
@@ -68,7 +68,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertTrue($table->getColumn('uppercase')->getNotnull());
         $this->assertFalse($table->getColumn('uppercase')->getFixed());
         $this->assertSame(64, $table->getColumn('uppercase')->getLength());
-        $this->assertSame('Foobar', $table->getColumn('uppercase')->getDefault());
+        $this->assertSame('1.00', $table->getColumn('uppercase')->getDefault());
 
         $this->assertTrue($table->hasColumn('teaser'));
         $this->assertSame('text', $table->getColumn('teaser')->getType()->getName());
@@ -94,7 +94,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertFalse($table->getColumn('price')->getFixed());
         $this->assertSame(6, $table->getColumn('price')->getPrecision());
         $this->assertSame(2, $table->getColumn('price')->getScale());
-        $this->assertSame('0.00', $table->getColumn('price')->getDefault());
+        $this->assertSame(1.99, $table->getColumn('price')->getDefault());
 
         $this->assertTrue($table->hasColumn('thumb'));
         $this->assertSame('blob', $table->getColumn('thumb')->getType()->getName());
@@ -125,7 +125,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     }
 
     /**
-     * @return array<int,array<int,array<string,array<string,array<int|string,array<string,array<string,true>|bool|int|string>|string>>>>>
+     * @return array<int,array<int,array<string,array<string,array<int|string,array<string,array<string,true>|bool|float|int|string>|string>>>>>
      */
     public function createSchemaProvider(): array
     {
@@ -135,14 +135,14 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                 [
                     'tl_member' => [
                         'TABLE_FIELDS' => [
-                            'id' => "`id` int(10) NOT NULL default '0'",
+                            'id' => '`id` int(10) NOT NULL default 0',
                             'pid' => '`pid` int(10) NULL',
                             'title' => "`title` varchar(128) BINARY NOT NULL default ''",
-                            'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT 'Foobar'",
+                            'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT '1.00'",
                             'teaser' => '`teaser` tinytext NULL',
                             'description' => '`description` text NULL',
                             'content' => '`content` mediumtext NULL',
-                            'price' => "`price` decimal(6,2) NOT NULL default '0.00'",
+                            'price' => '`price` decimal(6,2) NOT NULL default 1.99',
                             'thumb' => '`thumb` tinyblob NULL',
                             'image' => '`image` blob NULL',
                             'attachment' => '`attachment` mediumblob NULL',
@@ -160,11 +160,11 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                             ['name' => 'id', 'type' => 'integer'],
                             ['name' => 'pid', 'type' => 'integer', 'notnull' => false],
                             ['name' => 'title', 'type' => 'string', 'length' => 128, 'customSchemaOptions' => ['case_sensitive' => true]],
-                            ['name' => 'uppercase', 'type' => 'string', 'length' => 64, 'default' => 'Foobar'],
+                            ['name' => 'uppercase', 'type' => 'string', 'length' => 64, 'default' => '1.00'],
                             ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TINYTEXT],
                             ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TEXT],
                             ['name' => 'content', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT],
-                            ['name' => 'price', 'type' => 'decimal', 'precision' => 6, 'scale' => 2, 'default' => '0.00'],
+                            ['name' => 'price', 'type' => 'decimal', 'precision' => 6, 'scale' => 2, 'default' => 1.99],
                             ['name' => 'thumb', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TINYBLOB],
                             ['name' => 'image', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_BLOB],
                             ['name' => 'attachment', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_MEDIUMBLOB],
@@ -180,14 +180,14 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                 [
                     'tl_member' => [
                         'TABLE_FIELDS' => [
-                            'id' => "`id` int(10) NOT NULL default '0'",
+                            'id' => '`id` int(10) NOT NULL default 0',
                             'pid' => '`pid` int(10) NULL',
                             'title' => "`title` varchar(128) BINARY NOT NULL default ''",
-                            'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT 'Foobar'",
+                            'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT '1.00'",
                             'teaser' => '`teaser` tinytext NULL',
                             'description' => '`description` text NULL',
                             'content' => '`content` mediumtext NULL',
-                            'price' => "`price` decimal(6,2) NOT NULL default '0.00'",
+                            'price' => '`price` decimal(6,2) NOT NULL default 1.99',
                             'thumb' => '`thumb` tinyblob NULL',
                             'image' => '`image` blob NULL',
                             'attachment' => '`attachment` mediumblob NULL',
@@ -277,7 +277,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             [
                 'tl_member' => [
                     'TABLE_FIELDS' => [
-                        'id' => "`id` int(10) NOT NULL default '0'",
+                        'id' => '`id` int(10) NOT NULL default 0',
                         'pid' => '`pid` int(10) NULL',
                         'username' => "`username` varchar(128) NOT NULL default ''",
                         'firstname' => "`firstname` varchar(128) NOT NULL default ''",
@@ -622,7 +622,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             [
                 'tl_member' => [
                     'TABLE_FIELDS' => [
-                        'id' => "`id` int(10) NOT NULL default '0'",
+                        'id' => '`id` int(10) NOT NULL default 0',
                     ],
                     'TABLE_CREATE_DEFINITIONS' => [
                         'PRIMARY' => 'PRIMARY KEY (id)',

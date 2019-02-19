@@ -109,7 +109,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'name' => array
 		(

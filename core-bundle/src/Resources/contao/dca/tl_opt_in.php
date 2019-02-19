@@ -75,7 +75,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'token' => array
 		(
@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'sorting'                 => true,
 			'flag'                    => 6,
 			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'confirmedOn' => array
 		(
@@ -99,7 +99,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'sorting'                 => true,
 			'flag'                    => 6,
 			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'removeOn' => array
 		(
@@ -108,7 +108,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'sorting'                 => true,
 			'flag'                    => 6,
 			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'email' => array
 		(

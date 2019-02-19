@@ -142,12 +142,12 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_theme.name',
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'name' => array
 		(
@@ -189,7 +189,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>5, 'rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'showLevel' => array
 		(
@@ -197,7 +197,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>5, 'rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'hardLimit' => array
 		(
@@ -230,7 +230,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'navigationTpl' => array
@@ -300,7 +300,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'redirectBack' => array
@@ -336,7 +336,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'foreignKey'              => 'tl_form.title',
 			'options_callback'        => array('tl_module', 'getForms'),
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'queryType' => array
@@ -363,7 +363,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '48'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 48"
 		),
 		'totalLength' => array
 		(
@@ -371,7 +371,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '1000'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 1000"
 		),
 		'perPage' => array
 		(
@@ -379,7 +379,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'searchType' => array
 		(
@@ -416,7 +416,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'loadFirst' => array
 		(
@@ -505,7 +505,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options'                 => array(0, 5, 15, 30, 60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400),
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['CACHE'],
-			'sql'                     => "int(10) unsigned NOT NULL default '3600'"
+			'sql'                     => "int(10) unsigned NOT NULL default 3600"
 		),
 		'rss_feed' => array
 		(
@@ -530,7 +530,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '3'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 3"
 		),
 		'disableCaptcha' => array
 		(
@@ -604,7 +604,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'reg_text' => array

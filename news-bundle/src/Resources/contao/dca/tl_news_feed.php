@@ -117,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'title' => array
 		(
@@ -187,7 +187,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '25'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 25"
 		),
 		'feedBase' => array
 		(

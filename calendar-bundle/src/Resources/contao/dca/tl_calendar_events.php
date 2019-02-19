@@ -152,12 +152,12 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_calendar.title',
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'title' => array
 		(
@@ -195,7 +195,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'chosen'=>true, 'mandatory'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'addTime' => array
@@ -422,7 +422,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'repeatEnd' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['repeatEnd'],
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'recurrences' => array
 		(
@@ -430,7 +430,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'addEnclosure' => array
 		(
@@ -471,7 +471,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('mandatory'=>true, 'fieldType'=>'radio'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'articleId' => array
@@ -481,7 +481,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_calendar_events', 'getArticleAlias'),
 			'eval'                    => array('chosen'=>true, 'mandatory'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('table'=>'tl_article', 'type'=>'hasOne', 'load'=>'lazy'),
 		),
 		'url' => array

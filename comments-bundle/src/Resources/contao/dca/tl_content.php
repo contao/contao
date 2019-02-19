@@ -29,7 +29,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_perPage'] = array
 	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-	'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+	'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_moderate'] = array

@@ -51,7 +51,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_startDay'] = array
 	'options'                 => array(0, 1, 2, 3, 4, 5, 6),
 	'reference'               => &$GLOBALS['TL_LANG']['DAYS'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "smallint(5) unsigned NOT NULL default '1'"
+	'sql'                     => "smallint(5) unsigned NOT NULL default 1"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_format'] = array
@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_readerModule'] = array
 	'options_callback'        => array('tl_module_calendar', 'getReaderModules'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "int(10) unsigned NOT NULL default '0'"
+	'sql'                     => "int(10) unsigned NOT NULL default 0"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_limit'] = array
@@ -106,7 +106,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_limit'] = array
 	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-	'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+	'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_template'] = array

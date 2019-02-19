@@ -158,12 +158,12 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_news_archive.title',
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'headline' => array
 		(
@@ -201,7 +201,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'chosen'=>true, 'mandatory'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'date' => array
@@ -218,7 +218,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			(
 				array('tl_news', 'loadDate')
 			),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'time' => array
 		(
@@ -231,7 +231,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			(
 				array('tl_news', 'loadTime')
 			),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'pageTitle' => array
 		(
@@ -408,7 +408,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('mandatory'=>true, 'fieldType'=>'radio'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'articleId' => array
@@ -418,7 +418,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_news', 'getArticleAlias'),
 			'eval'                    => array('chosen'=>true, 'mandatory'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('table'=>'tl_article', 'type'=>'hasOne', 'load'=>'lazy'),
 		),
 		'url' => array

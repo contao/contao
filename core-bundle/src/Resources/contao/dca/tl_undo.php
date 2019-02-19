@@ -78,14 +78,14 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['pid'],
 			'sorting'                 => true,
 			'foreignKey'              => 'tl_user.name',
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
 			'sorting'                 => true,
 			'flag'                    => 6,
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'fromTable' => array
 		(
@@ -101,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'affectedRows' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['affectedRows'],
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'data' => array
 		(

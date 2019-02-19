@@ -34,11 +34,11 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 		),
 		'pid' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'title' => array
 		(
@@ -54,7 +54,7 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 		),
 		'filesize' => array
 		(
-			'sql'                     => "double NOT NULL default '0'" // see doctrine/dbal#1018
+			'sql'                     => "double NOT NULL default 0" // see doctrine/dbal#1018
 		),
 		'checksum' => array
 		(

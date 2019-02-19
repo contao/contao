@@ -35,7 +35,7 @@ $GLOBALS['TL_DCA']['tl_opt_in_related'] = array
 		'pid' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['pid'],
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'relTable' => array
 		(
@@ -45,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_opt_in_related'] = array
 		'relId' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in_related']['relId'],
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		)
 	)
 );

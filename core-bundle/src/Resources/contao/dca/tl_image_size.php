@@ -124,12 +124,12 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_theme.name',
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'name' => array
 		(

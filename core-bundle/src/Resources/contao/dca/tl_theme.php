@@ -155,7 +155,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'name' => array
 		(
