@@ -12,10 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\TwoFactor;
 
+use Contao\FrontendUser;
+use Contao\PageModel;
 use Contao\User;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class Provider implements TwoFactorProviderInterface
 {
@@ -29,10 +34,22 @@ class Provider implements TwoFactorProviderInterface
      */
     private $formRenderer;
 
-    public function __construct(Authenticator $authenticator, TwoFactorFormRendererInterface $formRenderer)
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var RequestMatcherInterface
+     */
+    private $requestMatcher;
+
+    public function __construct(Authenticator $authenticator, TwoFactorFormRendererInterface $formRenderer, RequestStack $requestStack, RequestMatcherInterface $requestMatcher)
     {
         $this->authenticator = $authenticator;
         $this->formRenderer = $formRenderer;
+        $this->requestStack = $requestStack;
+        $this->requestMatcher = $requestMatcher;
     }
 
     /**
@@ -44,6 +61,27 @@ class Provider implements TwoFactorProviderInterface
 
         if (!$user instanceof User) {
             return false;
+        }
+
+        if ($user instanceof FrontendUser) {
+            $request = $this->requestStack->getCurrentRequest();
+            $targetRequest = Request::create($request->request->get('_target_path'));
+
+            try {
+                $params = $this->requestMatcher->matchRequest($targetRequest);
+                $page = null;
+
+                if (array_key_exists('pageModel', $params)) {
+                    $page = $params['pageModel'];
+                }
+
+                if ($page instanceof PageModel && $page->enforce2FA) {
+                    return true;
+                }
+
+            } catch(\Exception $exception) {
+                // TODO: maybe show some message?
+            }
         }
 
         return (bool) $user->useTwoFactor;
