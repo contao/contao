@@ -55,7 +55,7 @@
         }
     },
     "support": {
-        "issues": "https://github.com/contao/faq-bundle/issues",
+        "issues": "https://github.com/contao/contao/issues",
         "forum": "https://community.contao.org",
         "source": "https://github.com/contao/faq-bundle",
         "docs": "https://docs.contao.org"
