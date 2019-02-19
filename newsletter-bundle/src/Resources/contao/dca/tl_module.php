@@ -83,12 +83,11 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_unsubscribe'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['nl_template'],
-	'default'                 => 'nl_simple',
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_newsletter', 'getNewsletterTemplates'),
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default ''"
+	'sql'                     => "varchar(64) NOT NULL default 'nl_simple'"
 );
 
 /**

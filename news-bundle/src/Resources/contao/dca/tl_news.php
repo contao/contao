@@ -362,13 +362,12 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'floating' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['floating'],
-			'default'                 => 'above',
 			'exclude'                 => true,
 			'inputType'               => 'radioTable',
 			'options'                 => array('above', 'left', 'right', 'below'),
 			'eval'                    => array('cols'=>4, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'sql'                     => "varchar(12) NOT NULL default ''"
+			'sql'                     => "varchar(12) NOT NULL default 'above'"
 		),
 		'addEnclosure' => array
 		(
@@ -394,14 +393,13 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'source' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['source'],
-			'default'                 => 'default',
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'radio',
 			'options_callback'        => array('tl_news', 'getSourceOptions'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_news'],
 			'eval'                    => array('submitOnChange'=>true, 'helpwizard'=>true),
-			'sql'                     => "varchar(12) NOT NULL default ''"
+			'sql'                     => "varchar(12) NOT NULL default 'default'"
 		),
 		'jumpTo' => array
 		(

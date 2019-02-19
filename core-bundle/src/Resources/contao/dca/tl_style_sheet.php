@@ -181,13 +181,12 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 		'media' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_style_sheet']['media'],
-			'default'                 => array('all'),
 			'inputType'               => 'checkbox',
 			'exclude'                 => true,
 			'filter'                  => true,
 			'options'                 => array('all', 'aural', 'braille', 'embossed', 'handheld', 'print', 'projection', 'screen', 'tty', 'tv'),
 			'eval'                    => array('multiple'=>true, 'mandatory'=>true, 'tl_class'=>'clr'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(255) NOT NULL default 'a:1:{i:0;s:3:\"all\";}'"
 		),
 		'mediaQuery' => array
 		(

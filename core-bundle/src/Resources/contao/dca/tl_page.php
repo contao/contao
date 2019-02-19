@@ -231,7 +231,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'type' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['type'],
-			'default'                 => 'regular',
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
@@ -242,7 +241,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			(
 				array('tl_page', 'checkRootType')
 			),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) NOT NULL default 'regular'"
 		),
 		'pageTitle' => array
 		(
@@ -284,13 +283,12 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'redirect' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['redirect'],
-			'default'                 => 'permanent',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('permanent', 'temporary'),
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_page'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'permanent'"
 		),
 		'jumpTo' => array
 		(
@@ -518,7 +516,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'cache' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['cache'],
-			'default'                 => 0,
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'select',
@@ -530,7 +527,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'clientCache' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['clientCache'],
-			'default'                 => 0,
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'select',

@@ -191,13 +191,12 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'format' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['format'],
-			'default'                 => 'raw',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('raw', 'xml', 'csv', 'email'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_form'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(12) NOT NULL default ''"
+			'sql'                     => "varchar(12) NOT NULL default 'raw'"
 		),
 		'skipEmpty' => array
 		(
@@ -239,13 +238,12 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'method' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['method'],
-			'default'                 => 'POST',
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'options'                 => array('POST', 'GET'),
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(12) NOT NULL default ''"
+			'sql'                     => "varchar(12) NOT NULL default 'POST'"
 		),
 		'novalidate' => array
 		(

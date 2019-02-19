@@ -395,7 +395,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'loginCount' => array
 		(
-			'default'                 => 3,
 			'eval'                    => array('doNotCopy'=>true),
 			'sql'                     => "smallint(5) unsigned NOT NULL default '3'"
 		),

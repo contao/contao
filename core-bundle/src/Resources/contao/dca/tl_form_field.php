@@ -151,14 +151,13 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'type' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['type'],
-			'default'                 => 'text',
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_form_field', 'getFields'),
 			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) NOT NULL default 'text'"
 		),
 		'label' => array // "label" needs to come before "name" so it gets the "(copy)" suffix (see #1062)
 		(
@@ -255,11 +254,10 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'size' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['size'],
-			'default'                 => array(4, 40),
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(255) NOT NULL default 'a:2:{i:0;i:4;i:1;i:40;}'"
 		),
 		'multiple' => array
 		(
@@ -281,10 +279,9 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['extensions'],
 			'exclude'                 => true,
-			'default'                 => 'jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,ppt,pptx',
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'extnd', 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(255) NOT NULL default 'jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,ppt,pptx'"
 		),
 		'storeFile' => array
 		(
