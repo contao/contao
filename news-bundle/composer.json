@@ -32,9 +32,6 @@
         "symfony/phpunit-bridge": "^3.4.5"
     },
     "extra": {
-        "branch-alias": {
-            "dev-4.7": "4.7.x-dev"
-        },
         "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
