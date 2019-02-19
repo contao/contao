@@ -10,9 +10,11 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Patchwork\Utf8;
-use Symfony\Component\Routing\RouterInterface;
+use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
@@ -22,7 +24,6 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  */
 class ModuleLogin extends Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -69,14 +70,42 @@ class ModuleLogin extends Module
 	{
 		$container = System::getContainer();
 
-		/** @var RouterInterface $router */
+		/** @var Router $router */
 		$router = $container->get('router');
 
-		if ($container->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			/** @var PageModel $objPage */
-			global $objPage;
+		/** @var TokenChecker $tokenChecker */
+		$tokenChecker = $container->get('contao.security.token_checker');
 
+		/** @var AuthenticationException|null $exception */
+		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
+
+		/** @var PageModel $objPage */
+		global $objPage;
+
+		if ($tokenChecker->hasTwoFactorToken())
+		{
+			$user = FrontendUser::getInstance();
+			$redirectPage = PageModel::findByPk($this->jumpTo);
+
+			$this->Template->action = $router->generate('contao_frontend_two_factor');
+			$this->Template->targetPath = $redirectPage instanceof PageModel ? $redirectPage->getAbsoluteUrl() : $objPage->getAbsoluteUrl();
+			$this->Template->twoFactorEnabled = $user->useTwoFactor;
+			$this->Template->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
+			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
+			$this->Template->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
+			$this->Template->twoFactorAuthentication = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
+
+			if ($exception instanceof InvalidTwoFactorCodeException)
+			{
+				$this->Template->hasError = true;
+				$this->Template->message = $GLOBALS['TL_LANG']['ERR']['invalidTwoFactor'];
+			}
+
+			return;
+		}
+
+		if ($tokenChecker->hasFrontendUser())
+		{
 			$this->import(FrontendUser::class, 'User');
 
 			$strRedirect = Environment::get('base').Environment::get('request');
@@ -107,8 +136,6 @@ class ModuleLogin extends Module
 
 			return;
 		}
-
-		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
 
 		if ($exception instanceof LockedException)
 		{
@@ -149,7 +176,6 @@ class ModuleLogin extends Module
 		$this->Template->forceTargetPath = (int) $blnRedirectBack;
 		$this->Template->targetPath = StringUtil::specialchars($strRedirect);
 		$this->Template->failurePath = StringUtil::specialchars(Environment::get('base').Environment::get('request'));
-		$this->Template->authFormPath = $router->generate('contao_frontend_two_factor');
 	}
 }
 

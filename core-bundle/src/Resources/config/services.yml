@@ -582,6 +582,17 @@ services:
         tags:
             - { name: 'scheb_two_factor.provider', alias: 'contao_frontend_two_factor' }
 
+    contao.security.two_factor.frontend_success_handler:
+        class: Contao\CoreBundle\Security\TwoFactor\FrontendAuthenticationSuccessHandler
+        arguments:
+            - "@security.http_utils"
+            - "contao_frontend"
+
+    contao.security.two_factor.frontend_failure_handler:
+        class: Contao\CoreBundle\Security\TwoFactor\FrontendAuthenticationFailureHandler
+        arguments:
+            - "@security.http_utils"
+
     contao.security.user_checker:
         class: Contao\CoreBundle\Security\User\UserChecker
         arguments:

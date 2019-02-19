@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Security\Authentication\Token;
 
 use Contao\BackendUser;
 use Contao\FrontendUser;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -80,6 +81,24 @@ class TokenChecker
         $token = $this->getToken(self::BACKEND_FIREWALL);
 
         return null !== $token && $token->getUser() instanceof BackendUser;
+    }
+
+    /**
+     * Checks if a user has a two-factor token (in 2FA progess).
+     */
+    public function hasTwoFactorToken(): bool
+    {
+        $token = null;
+
+        if ($this->hasFrontendUser()) {
+            $token = $this->getToken(FrontendUser::SECURITY_SESSION_KEY);
+        }
+
+        if ($this->hasBackendUser()) {
+            $token = $this->getToken(BackendUser::SECURITY_SESSION_KEY);
+        }
+
+        return $token instanceof TwoFactorToken;
     }
 
     /**

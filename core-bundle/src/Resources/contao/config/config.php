@@ -132,6 +132,7 @@ $GLOBALS['FE_MOD'] = array
 	'user' => array
 	(
 		'login'          => 'Contao\ModuleLogin',
+		'twoFactor'      => 'Contao\ModuleFrontendTwoFactor',
 		'logout'         => 'Contao\ModuleLogout',
 		'personalData'   => 'Contao\ModulePersonalData',
 		'registration'   => 'Contao\ModuleRegistration',

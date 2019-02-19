@@ -63,27 +63,6 @@ class Provider implements TwoFactorProviderInterface
             return false;
         }
 
-        if ($user instanceof FrontendUser) {
-            $request = $this->requestStack->getCurrentRequest();
-            $targetRequest = Request::create($request->request->get('_target_path'));
-
-            try {
-                $params = $this->requestMatcher->matchRequest($targetRequest);
-                $page = null;
-
-                if (array_key_exists('pageModel', $params)) {
-                    $page = $params['pageModel'];
-                }
-
-                if ($page instanceof PageModel && $page->enforce2FA) {
-                    return true;
-                }
-
-            } catch(\Exception $exception) {
-                // TODO: maybe show some message?
-            }
-        }
-
         return (bool) $user->useTwoFactor;
     }
 
