@@ -203,6 +203,38 @@ class DataContainerCallbackPassTest extends TestCase
         );
     }
 
+    public function testDoesNotAppendCallbackSuffixForXlabel(): void
+    {
+        $attributes = [
+            'table' => 'tl_content',
+            'target' => 'fields.listitems.xlabel',
+            'priority' => 10,
+            'method' => 'onListitemsXlabel',
+        ];
+
+        $definition = new Definition('Test\CallbackListener');
+        $definition->addTag('contao.callback', $attributes);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.callback_listener', $definition);
+
+        $pass = new DataContainerCallbackPass();
+        $pass->process($container);
+
+        $this->assertSame(
+            [
+                'tl_content' => [
+                    'fields.listitems.xlabel' => [
+                        10 => [
+                            ['test.callback_listener', 'onListitemsXlabel'],
+                        ],
+                    ],
+                ],
+            ],
+            $this->getCallbacksFromDefinition($container)[0]
+        );
+    }
+
     public function testHandlesMultipleCallbacks(): void
     {
         $definition = new Definition('Test\CallbackListener');
