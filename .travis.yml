@@ -12,6 +12,7 @@ cache:
 env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
+    - COMPOSER_MEMORY_LIMIT=-1
 
 jobs:
   include:
