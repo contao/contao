@@ -1544,8 +1544,10 @@ abstract class Controller extends System
 			$picture = array('img'=>array('src'=>'', 'srcset'=>''), 'sources'=>array());
 		}
 
+		$strImageTargetDir = $container->getParameter('contao.image.target_dir');
+
 		// Image dimensions
-		if ($objFile && ($objFile->exists() || file_exists($rootDir . '/' . $objFile->path . '.config')) && ($imgSize = $objFile->imageSize) !== false)
+		if ($objFile && ($objFile->exists() || (strncmp($strImageTargetDir, $rootDir . '/' . $objFile->path, \strlen($strImageTargetDir)) == 0 && System::getContainer()->get('contao.image.resizer')->getDeferredImage(substr($objFile->path, \strlen($strImageTargetDir) - \strlen($rootDir))))) && ($imgSize = $objFile->imageSize) !== false)
 		{
 			$objTemplate->arrSize = $imgSize;
 			$objTemplate->imgSize = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';
