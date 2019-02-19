@@ -5,18 +5,18 @@ services:
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
-                - ["setFramework", ["@contao.framework"]]
+                - ['setFramework', ['@contao.framework']]
 
     contao.command.automator:
         class: Contao\CoreBundle\Command\AutomatorCommand
         arguments:
-            - "@contao.framework"
-            - "@lock"
+            - '@contao.framework'
+            - '@lock'
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
         arguments:
-            - "@lock"
+            - '@lock'
 
     contao.command.install:
         class: Contao\CoreBundle\Command\InstallCommand
@@ -24,7 +24,7 @@ services:
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%contao.image.target_dir%'
-            - "@lock"
+            - '@lock'
         public: true
 
     contao.command.symlinks:
@@ -35,7 +35,7 @@ services:
             - '%kernel.logs_dir%'
             - '@contao.resource_finder'
             - '@event_dispatcher'
-            - "@lock"
+            - '@lock'
         public: true
 
     contao.command.user_password_command:

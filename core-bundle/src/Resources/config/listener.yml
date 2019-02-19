@@ -2,25 +2,25 @@ services:
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
-                - ["setFramework", ["@contao.framework"]]
+                - ['setFramework', ['@contao.framework']]
 
         Symfony\Component\DependencyInjection\ContainerAwareInterface:
             calls:
-                - ["setContainer", ["@service_container"]]
+                - ['setContainer', ['@service_container']]
 
     contao.listener.add_to_search_index:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         arguments:
-            - "@contao.framework"
-            - "%fragment.path%"
+            - '@contao.framework'
+            - '%fragment.path%'
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
-            - "@security.token_storage"
-            - "@translator"
+            - '@security.token_storage'
+            - '@translator'
         tags:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
@@ -28,14 +28,14 @@ services:
     contao.listener.backend_menu_listener:
         class: Contao\CoreBundle\EventListener\BackendMenuListener
         arguments:
-            - "@security.token_storage"
+            - '@security.token_storage'
         tags:
             - { name: kernel.event_listener, event: contao.backend_menu_build, method: onBuild }
 
     contao.listener.bypass_maintenance:
         class: Contao\CoreBundle\EventListener\BypassMaintenanceListener
         arguments:
-            - "@contao.security.token_checker"
+            - '@contao.security.token_checker'
         tags:
             # The priority must be higher than the one of the Lexik maintenance bundle (defaults to 0)
             # and lower than the header replay header (defaults to 7)
@@ -50,9 +50,9 @@ services:
     contao.listener.command_scheduler:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:
-            - "@contao.framework"
-            - "@database_connection"
-            - "%fragment.path%"
+            - '@contao.framework'
+            - '@database_connection'
+            - '%fragment.path%'
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
@@ -64,7 +64,7 @@ services:
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
-            - "@contao.doctrine.schema_provider"
+            - '@contao.doctrine.schema_provider'
         tags:
             - { name: doctrine.event_listener, event: onSchemaIndexDefinition }
             - { name: doctrine.event_listener, event: postGenerateSchema }
@@ -72,7 +72,7 @@ services:
     contao.listener.exception_converter:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
         arguments:
-            - "@database_connection"
+            - '@database_connection'
         tags:
             # The priority must be higher than the one of the response exception listener (defaults to 64)
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 96 }
@@ -80,8 +80,8 @@ services:
     contao.listener.header_replay.user_session:
         class: Contao\CoreBundle\EventListener\HeaderReplay\UserSessionListener
         arguments:
-            - "@contao.routing.scope_matcher"
-            - "@contao.security.token_checker"
+            - '@contao.routing.scope_matcher'
+            - '@contao.security.token_checker'
         tags:
             - { name: kernel.event_listener, event: terminal42.header_replay, method: onReplay }
 
@@ -93,22 +93,22 @@ services:
     contao.listener.insert_tags.asset:
         class: Contao\CoreBundle\EventListener\InsertTags\AssetListener
         arguments:
-            - "@assets.packages"
+            - '@assets.packages'
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
 
     contao.listener.insert_tags.translation:
         class: Contao\CoreBundle\EventListener\InsertTags\TranslationListener
         arguments:
-            - "@translator"
+            - '@translator'
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
 
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleListener
         arguments:
-            - "@contao.routing.scope_matcher"
-            - "%contao.locales%"
+            - '@contao.routing.scope_matcher'
+            - '%contao.locales%'
         tags:
             # The priority must be lower than the one of the Symfony route listener (defaults to 32)
             # and higher than the Symfony locale listener (defaults to 16)
@@ -117,18 +117,18 @@ services:
     contao.listener.merge_http_headers:
         class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
         arguments:
-            - "@contao.framework"
+            - '@contao.framework'
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 256 }
 
     contao.listener.pretty_error_screens:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
         arguments:
-            - "%contao.pretty_error_screens%"
-            - "@twig"
-            - "@contao.framework"
-            - "@security.token_storage"
-            - "@logger"
+            - '%contao.pretty_error_screens%'
+            - '@twig'
+            - '@contao.framework'
+            - '@security.token_storage'
+            - '@logger'
         tags:
             # The priority must be higher than the one of the Twig exception listener (defaults to -128)
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: -96 }
@@ -136,8 +136,8 @@ services:
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener
         arguments:
-            - "@contao.referer_id.manager"
-            - "@contao.routing.scope_matcher"
+            - '@contao.referer_id.manager'
+            - '@contao.routing.scope_matcher'
         tags:
             # The priority must be lower than the one of the Symfony route listener (defaults to 32)
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
@@ -150,24 +150,24 @@ services:
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
         arguments:
-            - "@security.token_storage"
-            - "@security.authentication.trust_resolver"
-            - "@contao.routing.scope_matcher"
+            - '@security.token_storage'
+            - '@security.authentication.trust_resolver'
+            - '@contao.routing.scope_matcher'
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
     contao.listener.switch_user:
         class: Contao\CoreBundle\EventListener\SwitchUserListener
         arguments:
-            - "@security.token_storage"
-            - "@logger"
+            - '@security.token_storage'
+            - '@logger'
         tags:
             - { name: kernel.event_listener, event: security.switch_user, method: onSwitchUser }
 
     contao.listener.csrf_token_cookie:
         class: Contao\CoreBundle\EventListener\CsrfTokenCookieListener
         arguments:
-            - "@contao.csrf.token_storage"
+            - '@contao.csrf.token_storage'
         tags:
             # The priority must be higher than the one of the Symfony route listener (defaults to 32)
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 36 }
@@ -176,10 +176,10 @@ services:
     contao.listener.user_session:
         class: Contao\CoreBundle\EventListener\UserSessionListener
         arguments:
-            - "@database_connection"
-            - "@security.token_storage"
-            - "@security.authentication.trust_resolver"
-            - "@contao.routing.scope_matcher"
-            - "@event_dispatcher"
+            - '@database_connection'
+            - '@security.token_storage'
+            - '@security.authentication.trust_resolver'
+            - '@contao.routing.scope_matcher'
+            - '@event_dispatcher'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

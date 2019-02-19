@@ -2,27 +2,27 @@ services:
     contao_calendar.listener.generate_page:
         class: Contao\CalendarBundle\EventListener\GeneratePageListener
         arguments:
-            - "@contao.framework"
+            - '@contao.framework'
         public: true
 
     contao_calendar.listener.insert_tags:
         class: Contao\CalendarBundle\EventListener\InsertTagsListener
         arguments:
-            - "@contao.framework"
+            - '@contao.framework'
         public: true
 
     contao_calendar.listener.preview_url_create:
         class: Contao\CalendarBundle\EventListener\PreviewUrlCreateListener
         arguments:
-            - "@request_stack"
-            - "@contao.framework"
+            - '@request_stack'
+            - '@contao.framework'
         tags:
             - { name: kernel.event_listener, event: contao.preview_url_create, method: onPreviewUrlCreate }
 
     contao_calendar.listener.preview_url_convert:
         class: Contao\CalendarBundle\EventListener\PreviewUrlConvertListener
         arguments:
-            - "@request_stack"
-            - "@contao.framework"
+            - '@request_stack'
+            - '@contao.framework'
         tags:
             - { name: kernel.event_listener, event: contao.preview_url_convert, method: onPreviewUrlConvert }
