@@ -97,7 +97,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property boolean $hasMooTools
  * @property string  $template
  * @property string  $templateGroup
- * @property boolean  $enforce2FA
  *
  * @method static PageModel|null findById($id, array $opt=array())
  * @method static PageModel|null findByPk($id, array $opt=array())
@@ -962,7 +961,6 @@ class PageModel extends Model
 			$this->datimFormat = $objParentPage->datimFormat;
 			$this->validAliasCharacters = $objParentPage->validAliasCharacters;
 			$this->adminEmail = $objParentPage->adminEmail;
-			$this->enforce2FA = $objParentPage->enforce2FA;
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = ($objParentPage->published && ($objParentPage->start == '' || $objParentPage->start <= $time) && ($objParentPage->stop == '' || $objParentPage->stop > ($time + 60)));

@@ -623,15 +623,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(10) NOT NULL default ''"
-		),
-		'enforce2FA' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['enforceTwoFactor'],
-			'exclude'                 => true,
-			'filter'                  => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('doNotCopy'=>true, 'tl_class'=>'clr'),
-			'sql'                     => "char(1) NOT NULL default ''"
 		)
 	)
 );
