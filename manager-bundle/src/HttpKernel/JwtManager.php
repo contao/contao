@@ -20,10 +20,10 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class JwtManager
+final class JwtManager
 {
     public const ATTRIBUTE = '_jwtManager';
-    private const COOKIE_NAME = '_contao_preview';
+    public const COOKIE_NAME = '_contao_preview';
 
     /**
      * @var string
@@ -84,7 +84,7 @@ class JwtManager
         $payload['iat'] = time();
         $payload['exp'] = strtotime('+30 minutes');
 
-        $cookie = new Cookie(
+        $cookie = Cookie::create(
             self::COOKIE_NAME,
             JWT::encode($payload, $this->secret, 'HS256'),
             0,
