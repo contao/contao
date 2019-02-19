@@ -711,12 +711,7 @@ class tl_user extends Contao\Backend
 	{
 		$authorizationChecker = Contao\System::getContainer()->get('security.authorization_checker');
 
-		if (!$authorizationChecker->isGranted('ROLE_ALLOWED_TO_SWITCH'))
-		{
-			return '';
-		}
-
-		if ($authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
+		if (!$authorizationChecker->isGranted('ROLE_ALLOWED_TO_SWITCH') || $authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
 		{
 			return '';
 		}
