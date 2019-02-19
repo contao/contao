@@ -912,13 +912,6 @@ class PageModel extends Model
 						$this->clientCache = $this->clientCache !== false ? $this->clientCache : $objParentPage->clientCache;
 					}
 
-					// Protection
-					if ($objParentPage->protected && $this->protected === false)
-					{
-						$this->protected = true;
-						$this->groups = StringUtil::deserialize($objParentPage->groups);
-					}
-
 					// Layout
 					if ($objParentPage->includeLayout)
 					{
@@ -926,6 +919,13 @@ class PageModel extends Model
 						{
 							$this->layout = $objParentPage->layout;
 						}
+					}
+
+					// Protection
+					if ($objParentPage->protected && $this->protected === false)
+					{
+						$this->protected = true;
+						$this->groups = StringUtil::deserialize($objParentPage->groups);
 					}
 				}
 			}
