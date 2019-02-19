@@ -65,10 +65,8 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = ['foo', 'bar'];
 
-        $framework = $this->mockFrameworkWithAdapters();
-
         $matcher = new LegacyMatcher(
-            $framework,
+            $this->mockFrameworkWithAdapters(),
             $this->mockRequestMatcher($noRouteFound ? $this->never() : $this->once()),
             '.html',
             $prependLocale
@@ -81,7 +79,7 @@ class LegacyMatcherTest extends TestCase
         $matcher->matchRequest($request);
     }
 
-    public function getRootRequestData()
+    public function getRootRequestData(): \Generator
     {
         yield [
             '/',
