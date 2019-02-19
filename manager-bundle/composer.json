@@ -30,9 +30,6 @@
         "symfony/phpunit-bridge": "^3.3.11"
     },
     "extra": {
-        "branch-alias": {
-            "dev-4.4": "4.4.x-dev"
-        },
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
     },
     "autoload": {

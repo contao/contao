@@ -24,9 +24,6 @@
         "phpunit/phpunit": "^5.7.26"
     },
     "extra": {
-        "branch-alias": {
-            "dev-4.4": "4.4.x-dev"
-        },
         "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
