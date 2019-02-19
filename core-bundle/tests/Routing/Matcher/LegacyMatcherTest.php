@@ -42,7 +42,81 @@ class LegacyMatcherTest extends TestCase
             false
         );
 
-        $matcher->matchRequest($this->createMock(Request::class));
+        $request = $this->createMock(Request::class);
+        $request
+            ->method('getPathInfo')
+            ->willReturn('foo.html')
+        ;
+
+        $matcher->matchRequest($request);
+    }
+
+    /**
+     * @dataProvider getRootRequestData
+     */
+    public function testDoesNotExecuteHooksIfTheRequestPathIsEmpty(string $pathInfo, bool $prependLocale, bool $noRouteFound = false): void
+    {
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getPathInfo')
+            ->willReturn($pathInfo)
+        ;
+
+        $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = ['foo', 'bar'];
+
+        $matcher = new LegacyMatcher(
+            $this->mockFrameworkWithAdapters(),
+            $this->mockRequestMatcher($noRouteFound ? $this->never() : $this->once()),
+            '.html',
+            $prependLocale
+        );
+
+        if ($noRouteFound) {
+            $this->expectException(ResourceNotFoundException::class);
+        }
+
+        $matcher->matchRequest($request);
+    }
+
+    public function getRootRequestData(): \Generator
+    {
+        yield [
+            '/',
+            false
+        ];
+
+        yield [
+            '/',
+            true
+        ];
+
+        yield [
+            '/en/',
+            true
+        ];
+
+        yield [
+            '/de/',
+            true
+        ];
+
+        yield [
+            '/fr-FR/',
+            true
+        ];
+
+        yield [
+            '/es/',
+            false,
+            true
+        ];
+
+        yield [
+            '/fr-FR/',
+            false,
+            true
+        ];
     }
 
     /**
@@ -316,8 +390,8 @@ class LegacyMatcherTest extends TestCase
 
         $request = $this->createMock(Request::class);
         $request
-            ->expects($this->never())
             ->method('getPathInfo')
+            ->willReturn('foo.html')
         ;
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
@@ -373,8 +447,8 @@ class LegacyMatcherTest extends TestCase
 
         $request = $this->createMock(Request::class);
         $request
-            ->expects($this->never())
             ->method('getPathInfo')
+            ->willReturn('foo/bar/baz.html')
         ;
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
@@ -431,8 +505,8 @@ class LegacyMatcherTest extends TestCase
 
         $request = $this->createMock(Request::class);
         $request
-            ->expects($this->never())
             ->method('getPathInfo')
+            ->willReturn('foo/baz.html')
         ;
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
