@@ -56,14 +56,14 @@ class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
         return $this->clearJwtToken($request, parent::onLogoutSuccess($request));
     }
 
-    private function createRedirectResponse(Request $request, string $targetUrl)
+    private function createRedirectResponse(Request $request, string $targetUrl): Response
     {
         $response = $this->httpUtils->createRedirectResponse($request, $targetUrl);
 
         return $this->clearJwtToken($request, $response);
     }
 
-    private function clearJwtToken(Request $request, Response $response)
+    private function clearJwtToken(Request $request, Response $response): Response
     {
         $jwtManager = $request->attributes->get(JwtManager::ATTRIBUTE);
 

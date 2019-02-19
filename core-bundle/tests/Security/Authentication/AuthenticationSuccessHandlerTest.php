@@ -18,10 +18,12 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -40,6 +42,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $request = $this->createMock(Request::class);
+        $request->attributes = new ParameterBag();
         $request
             ->method('getUriForPath')
             ->willReturn('http://localhost/target')
@@ -63,7 +66,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $handler = $this->mockSuccessHandler(null, $logger);
+        $handler = $this->createSuccessHandler(null, $logger);
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
@@ -72,6 +75,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     public function testDoesNotUpdateTheUserIfNotAContaoUser(): void
     {
         $request = $this->createMock(Request::class);
+        $request->attributes = new ParameterBag();
         $request
             ->method('getUriForPath')
             ->willReturn('http://localhost/target')
@@ -84,10 +88,57 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($this->createMock(UserInterface::class))
         ;
 
-        $handler = $this->mockSuccessHandler();
+        $handler = $this->createSuccessHandler();
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
+    }
+
+    public function testAddsTheJwtCookieForTheBackendUser(): void
+    {
+        $jwtManager = $this->createMock(JwtManager::class);
+        $jwtManager
+            ->expects($this->once())
+            ->method('addResponseCookie')
+        ;
+
+        $request = new Request();
+        $request->attributes->set(JwtManager::ATTRIBUTE, $jwtManager);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($this->createMock(BackendUser::class))
+        ;
+
+        $handler = $this->createSuccessHandler();
+        $handler->onAuthenticationSuccess($request, $token);
+    }
+
+    public function testDoesNotAddTheJwtCookieForTheFrontendUser(): void
+    {
+        $jwtManager = $this->createMock(JwtManager::class);
+        $jwtManager
+            ->expects($this->never())
+            ->method('addResponseCookie')
+        ;
+
+        $request = new Request();
+        $request->attributes->set(JwtManager::ATTRIBUTE, $jwtManager);
+
+        $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($this->createMock(FrontendUser::class))
+        ;
+
+        $handler = $this->createSuccessHandler($framework);
+        $handler->onAuthenticationSuccess($request, $token);
     }
 
     /**
@@ -105,6 +156,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $request = $this->createMock(Request::class);
+        $request->attributes = new ParameterBag();
         $request
             ->method('getUriForPath')
             ->willReturn('http://localhost/target')
@@ -151,7 +203,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['postLogin'] = [['HookListener', 'onPostLogin']];
 
-        $handler = $this->mockSuccessHandler($framework, $logger);
+        $handler = $this->createSuccessHandler($framework, $logger);
         $handler->onAuthenticationSuccess($request, $token);
 
         unset($GLOBALS['TL_HOOKS']);
@@ -193,7 +245,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $handler = $this->mockSuccessHandler($framework);
+        $handler = $this->createSuccessHandler($framework);
         $response = $handler->onAuthenticationSuccess(new Request(), $token);
 
         $this->assertSame('http://localhost/page', $response->getTargetUrl());
@@ -231,7 +283,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $handler = $this->mockSuccessHandler($framework);
+        $handler = $this->createSuccessHandler($framework);
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
@@ -268,13 +320,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $handler = $this->mockSuccessHandler($framework);
+        $handler = $this->createSuccessHandler($framework);
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
     }
 
-    private function mockSuccessHandler(ContaoFramework $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
+    private function createSuccessHandler(ContaoFramework $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $urlGenerator

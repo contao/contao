@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 class JwtManager
 {
     public const ATTRIBUTE = '_jwtManager';
-    private const JWT_KEY = '_contao_preview';
+    private const COOKIE_NAME = '_contao_preview';
 
     /**
      * @var string
@@ -52,9 +52,9 @@ class JwtManager
     {
         $request->attributes->set(self::ATTRIBUTE, $this);
 
-        if ($request->cookies->has(self::JWT_KEY)) {
+        if ($request->cookies->has(self::COOKIE_NAME)) {
             try {
-                return $this->decodeJwt((string) $request->cookies->get(self::JWT_KEY));
+                return $this->decodeJwt((string) $request->cookies->get(self::COOKIE_NAME));
             } catch (\Exception $e) {
                 // Do nothing
             }
@@ -85,7 +85,7 @@ class JwtManager
         $payload['exp'] = strtotime('+30 minutes');
 
         $cookie = new Cookie(
-            self::JWT_KEY,
+            self::COOKIE_NAME,
             JWT::encode($payload, $this->secret, 'HS256'),
             0,
             '/'
@@ -99,7 +99,7 @@ class JwtManager
      */
     public function clearResponseCookie(Response $response): Response
     {
-        $response->headers->clearCookie(self::JWT_KEY);
+        $response->headers->clearCookie(self::COOKIE_NAME);
 
         return $response;
     }
@@ -113,7 +113,7 @@ class JwtManager
         $cookies = $response->headers->getCookies();
 
         foreach ($cookies as $cookie) {
-            if ($cookie->getName() === self::JWT_KEY) {
+            if ($cookie->getName() === self::COOKIE_NAME) {
                 return true;
             }
         }
