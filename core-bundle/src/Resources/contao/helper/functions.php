@@ -97,6 +97,9 @@ function scan($strFolder, $blnUncached=false)
  * @param boolean $blnStripInsertTags
  *
  * @return string
+ *
+ * @deprecated Using specialchars() has been deprecated and will no longer work in Contao 5.0.
+ *             Use StringUtil::specialchars() instead.
  */
 function specialchars($strString, $blnStripInsertTags=false)
 {
@@ -118,6 +121,9 @@ function specialchars($strString, $blnStripInsertTags=false)
  * @param boolean $blnPreserveUppercase
  *
  * @return string
+ *
+ * @deprecated Using standardize() has been deprecated and will no longer work in Contao 5.0.
+ *             Use StringUtil::standardize() instead.
  */
 function standardize($strString, $blnPreserveUppercase=false)
 {
@@ -149,6 +155,9 @@ function standardize($strString, $blnPreserveUppercase=false)
  * @param string $strString
  *
  * @return string
+ *
+ * @deprecated Using strip_insert_tags() has been deprecated and will no longer work in Contao 5.0.
+ *             Use StringUtil::stripInsertTags() instead.
  */
 function strip_insert_tags($strString)
 {
@@ -172,6 +181,9 @@ function strip_insert_tags($strString)
  * @param boolean $blnForceArray
  *
  * @return mixed
+ *
+ * @deprecated Using deserialize() has been deprecated and will no longer work in Contao 5.0.
+ *             Use StringUtil::deserialize() instead.
  */
 function deserialize($varValue, $blnForceArray=false)
 {
@@ -230,6 +242,9 @@ function deserialize($varValue, $blnForceArray=false)
  * @param string $strString
  *
  * @return array
+ *
+ * @deprecated Using trimsplit() has been deprecated and will no longer work in Contao 5.0.
+ *             Use StringUtil::trimsplit() instead.
  */
 function trimsplit($strPattern, $strString)
 {
