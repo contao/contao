@@ -231,16 +231,6 @@ class PageRegular extends Frontend
 	{
 		$objLayout = LayoutModel::findByPk($objPage->layout);
 
-		// HOOK: modify the page or layout object (see #4736)
-		if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && \is_array($GLOBALS['TL_HOOKS']['getPageLayout']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getPageLayout'] as $callback)
-			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objPage, $objLayout, $this);
-			}
-		}
-
 		// Die if there is no layout
 		if (null === $objLayout)
 		{
@@ -250,6 +240,16 @@ class PageRegular extends Frontend
 
 		$objPage->hasJQuery = $objLayout->addJQuery;
 		$objPage->hasMooTools = $objLayout->addMooTools;
+
+		// HOOK: modify the page or layout object (see #4736)
+		if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && \is_array($GLOBALS['TL_HOOKS']['getPageLayout']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['getPageLayout'] as $callback)
+			{
+				$this->import($callback[0]);
+				$this->{$callback[0]}->{$callback[1]}($objPage, $objLayout, $this);
+			}
+		}
 
 		return $objLayout;
 	}

@@ -252,6 +252,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class PageModel extends Model
 {
+
 	/**
 	 * Table name
 	 * @var string
@@ -913,12 +914,9 @@ class PageModel extends Model
 					}
 
 					// Layout
-					if ($objParentPage->includeLayout)
+					if ($objParentPage->includeLayout && $this->layout === false)
 					{
-						if ($this->layout === false)
-						{
-							$this->layout = $objParentPage->layout;
-						}
+						$this->layout = $objParentPage->layout;
 					}
 
 					// Protection
@@ -1005,13 +1003,18 @@ class PageModel extends Model
 		}
 
 		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['loadPageDetails']) && \is_array($GLOBALS['TL_HOOKS']['loadPageDetails']))
+		if (!empty($GLOBALS['TL_HOOKS']['loadPageDetails']) && \is_array($GLOBALS['TL_HOOKS']['loadPageDetails']))
 		{
-			$parentModels = $objParentPage instanceof Collection ? $objParentPage->getModels() : array();
-			
+			$parentModels = array();
+
+			if ($objParentPage instanceof Collection)
+			{
+				$parentModels = $objParentPage->getModels();
+			}
+
 			foreach ($GLOBALS['TL_HOOKS']['loadPageDetails'] as $callback)
 			{
-				System::importStatic($callback[0])->{$callback[1]}($this, $parentModels);
+				System::importStatic($callback[0])->{$callback[1]}($parentModels, $this);
 			}
 		}
 
