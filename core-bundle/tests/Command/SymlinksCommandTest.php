@@ -111,6 +111,7 @@ class SymlinksCommandTest extends TestCase
 
         return new SymlinksCommand(
             $this->getFixturesDir(),
+            'assets',
             'files',
             $this->getFixturesDir().'/var/logs',
             new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),

@@ -62,6 +62,7 @@ class ConfigurationTest extends TestCase
         $params = [
             'contao' => [
                 'web_dir' => $unix,
+                'assets_dir' => $unix,
                 'image' => [
                     'target_dir' => $windows,
                 ],
@@ -71,6 +72,7 @@ class ConfigurationTest extends TestCase
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
         $this->assertSame('/tmp/contao', $configuration['web_dir']);
+        $this->assertSame('/tmp/contao', $configuration['assets_dir']);
         $this->assertSame('C:\Temp\contao', $configuration['image']['target_dir']);
     }
 

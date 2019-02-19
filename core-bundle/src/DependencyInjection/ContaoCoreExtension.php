@@ -70,6 +70,7 @@ class ContaoCoreExtension extends Extension
         }
 
         $container->setParameter('contao.web_dir', $config['web_dir']);
+        $container->setParameter('contao.assets_dir', $config['assets_dir']);
         $container->setParameter('contao.prepend_locale', $config['prepend_locale']);
         $container->setParameter('contao.encryption_key', $config['encryption_key']);
         $container->setParameter('contao.url_suffix', $config['url_suffix']);

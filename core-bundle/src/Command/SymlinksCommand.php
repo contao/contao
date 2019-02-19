@@ -51,6 +51,11 @@ class SymlinksCommand extends Command
     /**
      * @var string
      */
+    private $assetsDir;
+
+    /**
+     * @var string
+     */
     private $webDir;
 
     /**
@@ -83,9 +88,10 @@ class SymlinksCommand extends Command
      */
     private $statusCode = 0;
 
-    public function __construct(string $rootDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher, LockInterface $lock)
+    public function __construct(string $rootDir, string $assetsDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher, LockInterface $lock)
     {
         $this->rootDir = $rootDir;
+        $this->assetsDir = $assetsDir;
         $this->uploadPath = $uploadPath;
         $this->logsDir = $logsDir;
         $this->resourceFinder = $resourceFinder;
@@ -152,7 +158,7 @@ class SymlinksCommand extends Command
         $this->symlinkThemes();
 
         // Symlink the assets and themes directory
-        $this->symlink('assets', $this->webDir.'/assets');
+        $this->symlink($this->assetsDir, $this->webDir.'/assets');
         $this->symlink('system/themes', $this->webDir.'/system/themes');
 
         // Symlinks the logs directory

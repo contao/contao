@@ -48,6 +48,11 @@ class InstallCommand extends Command
     /**
      * @var string
      */
+    private $assetsDir;
+
+    /**
+     * @var string
+     */
     private $uploadPath;
 
     /**
@@ -65,9 +70,10 @@ class InstallCommand extends Command
      */
     private $webDir;
 
-    public function __construct(string $rootDir, string $uploadPath, string $imageDir, LockInterface $lock)
+    public function __construct(string $rootDir, string $assetsDir, string $uploadPath, string $imageDir, LockInterface $lock)
     {
         $this->rootDir = $rootDir;
+        $this->assetsDir = $assetsDir;
         $this->uploadPath = $uploadPath;
         $this->imageDir = $imageDir;
         $this->lock = $lock;
@@ -146,18 +152,18 @@ class InstallCommand extends Command
 
     private function addIgnoredDirs(): void
     {
-        static $ignoredDirs = [
-            'assets/css',
-            'assets/js',
+        $ignoredDirs = [
+            sprintf('%s/css', $this->assetsDir),
+            sprintf('%s/js', $this->assetsDir),
             'system/cache',
             'system/modules',
             'system/themes',
             'system/tmp',
-            '%s/share',
+            sprintf('%s/%s/share', $this->rootDir, $this->webDir),
         ];
 
         foreach ($ignoredDirs as $path) {
-            $this->addIgnoredDir($this->rootDir.'/'.sprintf($path, $this->webDir));
+            $this->addIgnoredDir($path);
         }
 
         $this->addIgnoredDir($this->imageDir);

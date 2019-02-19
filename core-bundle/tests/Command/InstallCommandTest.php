@@ -46,7 +46,7 @@ class InstallCommandTest extends TestCase
 
     public function testCreatesTheContaoFolders(): void
     {
-        $command = $this->mockCommand('files', $this->getTempDir().'/assets/images');
+        $command = $this->mockCommand('assets', 'files', $this->getTempDir().'/assets/images');
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $output = $tester->getDisplay();
@@ -64,7 +64,7 @@ class InstallCommandTest extends TestCase
 
     public function testHandlesCustomFilesAndImagesPaths(): void
     {
-        $command = $this->mockCommand('files_test', $this->getTempDir().'/assets/images_test');
+        $command = $this->mockCommand('assets', 'files_test', $this->getTempDir().'/assets/images_test');
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
@@ -76,7 +76,7 @@ class InstallCommandTest extends TestCase
 
     public function testIsLockedWhileRunning(): void
     {
-        $command = $this->mockCommand('files', $this->getTempDir().'/assets/images', true);
+        $command = $this->mockCommand('assets', 'files', $this->getTempDir().'/assets/images', true);
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
 
@@ -84,7 +84,7 @@ class InstallCommandTest extends TestCase
         $this->assertContains('The command is already running in another process.', $tester->getDisplay());
     }
 
-    private function mockCommand(string $uploadPath, string $imageDir, bool $isLocked = false): InstallCommand
+    private function mockCommand(string $assetsDir, string $uploadPath, string $imageDir, bool $isLocked = false): InstallCommand
     {
         $lock = $this->createMock(LockInterface::class);
         $lock
@@ -98,6 +98,6 @@ class InstallCommandTest extends TestCase
             ->method('release')
         ;
 
-        return new InstallCommand($this->getTempDir(), $uploadPath, $imageDir, $lock);
+        return new InstallCommand($this->getTempDir(), $assetsDir, $uploadPath, $imageDir, $lock);
     }
 }

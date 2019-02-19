@@ -60,6 +60,17 @@ class Configuration implements ConfigurationInterface
                         )
                     ->end()
                 ->end()
+                ->scalarNode('assets_dir')
+                    ->cannotBeEmpty()
+                    ->defaultValue($this->canonicalize($this->projectDir.'/assets'))
+                    ->validate()
+                        ->always(
+                            function (string $value): string {
+                                return $this->canonicalize($value);
+                            }
+                        )
+                    ->end()
+                ->end()
                 ->booleanNode('prepend_locale')
                     ->defaultFalse()
                 ->end()
