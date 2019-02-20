@@ -581,13 +581,13 @@ services:
     contao.security.two_factor.frontend_success_handler:
         class: Contao\CoreBundle\Security\TwoFactor\FrontendAuthenticationSuccessHandler
         arguments:
-            - "@security.http_utils"
-            - "contao_frontend"
+            - '@security.http_utils'
+            - 'contao_frontend'
 
     contao.security.two_factor.frontend_failure_handler:
         class: Contao\CoreBundle\Security\TwoFactor\FrontendAuthenticationFailureHandler
         arguments:
-            - "@security.http_utils"
+            - '@security.http_utils'
 
     contao.security.user_checker:
         class: Contao\CoreBundle\Security\User\UserChecker
@@ -653,13 +653,13 @@ services:
     contao.controller.frontend_module.two_factor:
         class: Contao\CoreBundle\Controller\FrontendModule\TwoFactorController
         arguments:
-            - "@translator"
-            - "@router"
-            - "@security.token_storage"
-            - "@contao.security.two_factor.authenticator"
-            - "@security.authentication_utils"
+            - '@translator'
+            - '@router'
+            - '@security.token_storage'
+            - '@contao.security.two_factor.authenticator'
+            - '@security.authentication_utils'
         tags:
             - { name: contao.frontend_module, category: user }
             - { name: container.service_subscriber }
         calls:
-            - ["setContainer", ["@Psr\\Container\\ContainerInterface"]]
+            - ['setContainer', ['@Psr\Container\ContainerInterface']]
