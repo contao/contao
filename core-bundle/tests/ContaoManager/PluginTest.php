@@ -35,7 +35,6 @@ use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Terminal42\HeaderReplay\HeaderReplayBundle;
 
 class PluginTest extends TestCase
 {
@@ -60,15 +59,11 @@ class PluginTest extends TestCase
         $this->assertSame([], $bundles[2]->getReplace());
         $this->assertSame([], $bundles[2]->getLoadAfter());
 
-        $this->assertSame(HeaderReplayBundle::class, $bundles[3]->getName());
-        $this->assertSame([], $bundles[3]->getReplace());
-        $this->assertSame([], $bundles[3]->getLoadAfter());
-
-        $this->assertSame(CmfRoutingBundle::class, $bundles[4]->getName());
+        $this->assertSame(CmfRoutingBundle::class, $bundles[3]->getName());
         $this->assertSame([], $bundles[4]->getReplace());
         $this->assertSame([], $bundles[4]->getLoadAfter());
 
-        $this->assertSame(ContaoCoreBundle::class, $bundles[5]->getName());
+        $this->assertSame(ContaoCoreBundle::class, $bundles[4]->getName());
         $this->assertSame(['core'], $bundles[5]->getReplace());
 
         $this->assertSame(
@@ -86,7 +81,6 @@ class PluginTest extends TestCase
                 NelmioCorsBundle::class,
                 NelmioSecurityBundle::class,
                 SchebTwoFactorBundle::class,
-                HeaderReplayBundle::class,
                 CmfRoutingBundle::class,
                 ContaoManagerBundle::class,
             ],

@@ -19,7 +19,6 @@ use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
 
 class InputEnhancer implements RouteEnhancerInterface
 {
@@ -45,11 +44,6 @@ class InputEnhancer implements RouteEnhancerInterface
     public function enhance(array $defaults, Request $request): array
     {
         if (!isset($defaults['pageModel']) || !$defaults['pageModel'] instanceof PageModel) {
-            return $defaults;
-        }
-
-        // TODO: remove this once we are getting rid of header replaying
-        if (\in_array(HeaderReplayListener::CONTENT_TYPE, $request->getAcceptableContentTypes(), true)) {
             return $defaults;
         }
 

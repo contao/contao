@@ -41,7 +41,6 @@ use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
-use Contao\CoreBundle\EventListener\HeaderReplay\UserSessionListener as HeaderReplayUserSessionListener;
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\EventListener\InsertTags\AssetListener;
 use Contao\CoreBundle\EventListener\LocaleListener;
@@ -359,24 +358,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('kernel.exception', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelException', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(96, $tags['kernel.event_listener'][0]['priority']);
-    }
-
-    public function testRegistersTheHeaderReplayUserSessionListener(): void
-    {
-        $this->assertTrue($this->container->has('contao.listener.header_replay.user_session'));
-
-        $definition = $this->container->getDefinition('contao.listener.header_replay.user_session');
-
-        $this->assertSame(HeaderReplayUserSessionListener::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(0));
-        $this->assertSame('contao.security.token_checker', (string) $definition->getArgument(1));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('terminal42.header_replay', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onReplay', $tags['kernel.event_listener'][0]['method']);
     }
 
     public function testRegistersTheInsecureInstallationListener(): void
