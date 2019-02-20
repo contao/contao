@@ -207,10 +207,10 @@ class ImageFactory implements ImageFactoryInterface
 
             if (null !== $imageSize) {
                 $config
-                    ->setWidth($imageSize->width)
-                    ->setHeight($imageSize->height)
+                    ->setWidth((int) $imageSize->width)
+                    ->setHeight((int) $imageSize->height)
                     ->setMode($imageSize->resizeMode)
-                    ->setZoomLevel($imageSize->zoom)
+                    ->setZoomLevel((int) $imageSize->zoom)
                 ;
             }
 
@@ -218,10 +218,10 @@ class ImageFactory implements ImageFactoryInterface
         }
 
         if (!empty($size[0])) {
-            $config->setWidth($size[0]);
+            $config->setWidth((int) $size[0]);
         }
         if (!empty($size[1])) {
-            $config->setHeight($size[1]);
+            $config->setHeight((int) $size[1]);
         }
 
         if (!isset($size[2]) || 1 !== substr_count($size[2], '_')) {
