@@ -50,48 +50,58 @@ class TwoFactorFrontendListener
 
         $page = $request->attributes->get('pageModel');
 
+        // Check if actual page is available
         if (!$page instanceof PageModel) {
             return;
         }
 
         $user = $token->getUser();
 
+        // Check if FrontendUser
         if (!$user instanceof FrontendUser) {
             return;
         }
 
+        // Check if user has two-factor disabled but is enforced
         if (!$user->useTwoFactor && $page->enforceTwoFactor) {
+            // Search for two-factor page
             $twoFactorPage = PageModel::findPublishedById($page->twofactor_jumpTo);
 
             if (!$twoFactorPage instanceof PageModel) {
                 throw new PageNotFoundException('No two-factor authentication page found.');
             }
 
+            // Two-factor page found, quit
             if ($page->id === $twoFactorPage->id) {
                 return;
             }
 
+            // Redirect to two-factor page
             $event->setResponse(new RedirectResponse($twoFactorPage->getAbsoluteUrl()));
 
             return;
         }
 
+        // Check if user has TwoFactorToken
         if (!$token = $this->tokenStorage->getToken() instanceof TwoFactorToken) {
             return;
         }
 
+        // Search 401 error page
         $unauthorizedPage = PageModel::find401ByPid($page->rootId);
 
         if (!$unauthorizedPage instanceof PageModel) {
             return;
         }
 
-        $redirect = PageModel::findByPk($unauthorizedPage->jumpTo);
+        // Check if 401 error page is available
+        $redirect = PageModel::findPublishedById($unauthorizedPage->jumpTo);
 
         if (!$redirect instanceof PageModel) {
             return;
         }
 
+        // 401 page found, quit
         if ($page->id === $redirect->id) {
             return;
         }
