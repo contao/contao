@@ -535,8 +535,10 @@ class Image
 		}
 
 		return new ImportantPart(
-			new Point($importantPart['x'], $importantPart['y']),
-			new Box($importantPart['width'], $importantPart['height'])
+			$importantPart['x'] / $this->fileObj->viewWidth,
+			$importantPart['y'] / $this->fileObj->viewHeight,
+			$importantPart['width'] / $this->fileObj->viewWidth,
+			$importantPart['height'] / $this->fileObj->viewHeight
 		);
 	}
 

@@ -131,7 +131,7 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame($path, $image->getPath());
 
                         $this->assertSameImportantPart(
-                            new ImportantPart(new Point(50, 50), new Box(25, 25)),
+                            new ImportantPart(0.5, 0.5, 0.25, 0.25),
                             $image->getImportantPart()
                         );
 
@@ -303,8 +303,10 @@ class ImageFactoryTest extends TestCase
 
                         $this->assertSameImportantPart(
                             new ImportantPart(
-                                new Point($expected[0], $expected[1]),
-                                new Box($expected[2], $expected[3])
+                                $expected[0],
+                                $expected[1],
+                                $expected[2],
+                                $expected[3]
                             ),
                             $image->getImportantPart()
                         );
@@ -375,23 +377,28 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->getImageFactory();
 
         $this->assertSameImportantPart(
-            new ImportantPart(new Point($expected[0], $expected[1]), new Box($expected[2], $expected[3])),
+            new ImportantPart(
+                $expected[0],
+                $expected[1],
+                $expected[2],
+                $expected[3]
+            ),
             $imageFactory->getImportantPartFromLegacyMode($imageMock, $mode)
         );
     }
 
     public function getCreateWithLegacyMode(): \Generator
     {
-        yield 'Left Top' => ['left_top', [0, 0, 1, 1]];
-        yield 'Left Center' => ['left_center', [0, 0, 1, 100]];
-        yield 'Left Bottom' => ['left_bottom', [0, 99, 1, 1]];
-        yield 'Center Top' => ['center_top', [0, 0, 100, 1]];
-        yield 'Center Center' => ['center_center', [0, 0, 100, 100]];
-        yield 'Center Bottom' => ['center_bottom', [0, 99, 100, 1]];
-        yield 'Right Top' => ['right_top', [99, 0, 1, 1]];
-        yield 'Right Center' => ['right_center', [99, 0, 1, 100]];
-        yield 'Right Bottom' => ['right_bottom', [99, 99, 1, 1]];
-        yield 'Invalid' => ['top_left', [0, 0, 100, 100]];
+        yield 'Left Top' => ['left_top', [0, 0, 0, 0]];
+        yield 'Left Center' => ['left_center', [0, 0, 0, 1]];
+        yield 'Left Bottom' => ['left_bottom', [0, 1, 0, 0]];
+        yield 'Center Top' => ['center_top', [0, 0, 1, 0]];
+        yield 'Center Center' => ['center_center', [0, 0, 1, 1]];
+        yield 'Center Bottom' => ['center_bottom', [0, 1, 1, 0]];
+        yield 'Right Top' => ['right_top', [1, 0, 0, 0]];
+        yield 'Right Center' => ['right_center', [1, 0, 0, 1]];
+        yield 'Right Bottom' => ['right_bottom', [1, 1, 0, 0]];
+        yield 'Invalid' => ['top_left', [0, 0, 1, 1]];
     }
 
     public function testFailsToReturnTheImportantPartIfTheModeIsInvalid(): void
@@ -433,7 +440,7 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path);
 
         $this->assertSameImportantPart(
-            new ImportantPart(new Point(0, 0), new Box(200, 200)),
+            new ImportantPart(),
             $image->getImportantPart()
         );
     }
@@ -703,9 +710,9 @@ class ImageFactoryTest extends TestCase
 
     private function assertSameImportantPart(ImportantPartInterface $partA, ImportantPartInterface $partB): void
     {
-        $this->assertSame($partA->getPosition()->getX(), $partB->getPosition()->getX());
-        $this->assertSame($partA->getPosition()->getY(), $partB->getPosition()->getY());
-        $this->assertSame($partA->getSize()->getHeight(), $partB->getSize()->getHeight());
-        $this->assertSame($partA->getSize()->getWidth(), $partB->getSize()->getWidth());
+        $this->assertSame($partA->getX(), $partB->getX());
+        $this->assertSame($partA->getY(), $partB->getY());
+        $this->assertSame($partA->getHeight(), $partB->getHeight());
+        $this->assertSame($partA->getWidth(), $partB->getWidth());
     }
 }

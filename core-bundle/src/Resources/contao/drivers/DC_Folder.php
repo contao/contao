@@ -2764,7 +2764,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 						$importantPart = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
-						if ($importantPart->getPosition()->getX() > 0 || $importantPart->getPosition()->getY() > 0 || $importantPart->getSize()->getWidth() < $objFile->width || $importantPart->getSize()->getHeight() < $objFile->height)
+						if ($importantPart->getX() > 0 || $importantPart->getY() > 0 || $importantPart->getWidth() < 1 || $importantPart->getHeight() < 1)
 						{
 							$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($this->strRootDir), '', 'class="preview-important"');
 						}

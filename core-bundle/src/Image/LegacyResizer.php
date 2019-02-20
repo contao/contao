@@ -66,12 +66,13 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
                 }
 
                 $importantPart = $image->getImportantPart();
+                $imageSize = $image->getDimensions()->getSize();
 
                 $this->legacyImage->setImportantPart([
-                    'x' => $importantPart->getPosition()->getX(),
-                    'y' => $importantPart->getPosition()->getY(),
-                    'width' => $importantPart->getSize()->getWidth(),
-                    'height' => $importantPart->getSize()->getHeight(),
+                    'x' => $importantPart->getX() * $imageSize->getWidth(),
+                    'y' => $importantPart->getY() * $imageSize->getHeight(),
+                    'width' => $importantPart->getWidth() * $imageSize->getWidth(),
+                    'height' => $importantPart->getHeight() * $imageSize->getHeight(),
                 ]);
             }
         }

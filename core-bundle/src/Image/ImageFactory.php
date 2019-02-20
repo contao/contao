@@ -159,29 +159,31 @@ class ImageFactory implements ImageFactoryInterface
         $importantPart = [
             0,
             0,
-            $image->getDimensions()->getSize()->getWidth(),
-            $image->getDimensions()->getSize()->getHeight(),
+            1,
+            1,
         ];
 
         [$modeX, $modeY] = explode('_', $mode);
 
         if ('left' === $modeX) {
-            $importantPart[2] = 1;
+            $importantPart[2] = 0;
         } elseif ('right' === $modeX) {
-            $importantPart[0] = $importantPart[2] - 1;
-            $importantPart[2] = 1;
+            $importantPart[0] = 1;
+            $importantPart[2] = 0;
         }
 
         if ('top' === $modeY) {
-            $importantPart[3] = 1;
+            $importantPart[3] = 0;
         } elseif ('bottom' === $modeY) {
-            $importantPart[1] = $importantPart[3] - 1;
-            $importantPart[3] = 1;
+            $importantPart[1] = 1;
+            $importantPart[3] = 0;
         }
 
         return new ImportantPart(
-            new Point($importantPart[0], $importantPart[1]),
-            new Box($importantPart[2], $importantPart[3])
+            $importantPart[0],
+            $importantPart[1],
+            $importantPart[2],
+            $importantPart[3]
         );
     }
 
@@ -264,8 +266,10 @@ class ImageFactory implements ImageFactoryInterface
         }
 
         return new ImportantPart(
-            new Point((int) $file->importantPartX, (int) $file->importantPartY),
-            new Box((int) $file->importantPartWidth, (int) $file->importantPartHeight)
+            $file->importantPartX / $imageSize->getWidth(),
+            $file->importantPartY / $imageSize->getHeight(),
+            $file->importantPartWidth / $imageSize->getWidth(),
+            $file->importantPartHeight / $imageSize->getHeight()
         );
     }
 }

@@ -221,11 +221,14 @@ class Picture
 		$config->setSizeItems($sizeItems);
 
 		$importantPart = $this->image->getImportantPart();
+		$imageSize = $image->getDimensions()->getSize();
 
 		$image->setImportantPart(
 			new ImportantPart(
-				new Point($importantPart['x'], $importantPart['y']),
-				new Box($importantPart['width'], $importantPart['height'])
+				$importantPart['x'] / $imageSize->getWidth(),
+				$importantPart['y'] / $imageSize->getHeight(),
+				$importantPart['width'] / $imageSize->getWidth(),
+				$importantPart['height'] / $imageSize->getHeight()
 			)
 		);
 
