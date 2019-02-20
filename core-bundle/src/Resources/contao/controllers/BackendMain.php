@@ -112,7 +112,7 @@ class BackendMain extends Backend
 
 			if (Input::get('enable') != $container->get('kernel')->isDebug())
 			{
-				$objJwtManager->addResponseCookie($objResponse, ['debug' => (bool) Input::get('enable')]);
+				$objJwtManager->addResponseCookie($objResponse, array('debug' => (bool) Input::get('enable')));
 			}
 
 			throw new ResponseException($objResponse);

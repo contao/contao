@@ -124,7 +124,7 @@ class BackendSwitch extends Backend
 
 		if ($blnUpdate && $objJwtManager instanceof JwtManager)
 		{
-			$objJwtManager->addResponseCookie($objResponse, ['debug' => $blnDebug]);
+			$objJwtManager->addResponseCookie($objResponse, array('debug' => $blnDebug));
 		}
 
 		return $objResponse;
