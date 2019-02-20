@@ -61,7 +61,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -107,7 +107,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -137,7 +137,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -167,7 +167,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -197,7 +197,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -228,7 +228,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -258,7 +258,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -295,7 +295,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -326,7 +326,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -357,7 +357,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -388,7 +388,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -420,7 +420,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -457,7 +457,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -518,7 +518,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -589,7 +589,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();

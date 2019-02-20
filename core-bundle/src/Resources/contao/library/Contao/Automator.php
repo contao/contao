@@ -377,12 +377,6 @@ class Automator extends System
 
 				if (isset($strUrl[3]))
 				{
-					// Remove the app_dev.php/ fragment (see #1520)
-					if (strncmp($strUrl[3], 'app_dev.php/', 12) === 0)
-					{
-						$strUrl[3] = substr($strUrl[3], 12);
-					}
-
 					$strUrl[3] = rawurlencode($strUrl[3]);
 					$strUrl[3] = str_replace(array('%2F', '%3F', '%3D', '%26', '%5B', '%5D', '%25'), array('/', '?', '=', '&', '[', ']', '%'), $strUrl[3]);
 				}

@@ -283,9 +283,9 @@ The `$_SESSION['TL_USER_LOGGED_IN']` flag has been removed.
 
 ### PHP entry points
 
-Contao 4 only uses a single PHP entry point, namely the `app.php` or
-`app_dev.php` file. The previous PHP entry points have been removed and a route
-has been set up for each one instead.
+Contao 4 only uses a single PHP entry point, namely the `index.php` file. The
+previous PHP entry points have been removed and a route has been set up for
+each one instead.
 
  - `contao/confirm.php`  -> `contao_backend_confirm`
  - `contao/file.php`     -> `contao_backend_file`

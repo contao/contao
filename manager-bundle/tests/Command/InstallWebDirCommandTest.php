@@ -114,7 +114,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
     {
         $existingHtaccess = <<<'EOT'
 <IfModule mod_headers.c>
-  RewriteRule ^ %{ENV:BASE}/app.php [L]
+  RewriteRule ^ %{ENV:BASE}/index.php [L]
 </IfModule>
 EOT;
 
@@ -175,7 +175,7 @@ EOT;
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['target' => 'public']);
 
-        $this->assertFileExists($this->getTempDir().'/public/app.php');
+        $this->assertFileExists($this->getTempDir().'/public/index.php');
     }
 
     public function testAccesskeyFromArgument(): void
