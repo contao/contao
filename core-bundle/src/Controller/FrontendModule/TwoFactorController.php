@@ -81,17 +81,19 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $template->error = false;
         $template->action = '';
+        $template->enforceTwoFactor = $this->page->enforceTwoFactor;
         $template->targetPath = $return;
 
-        if (!$user->useTwoFactor && !$request->request->get('2fa')) {
+        // Inform the user if 2FA is enforced
+        if ($this->page->enforceTwoFactor) {
+            $template->message = $this->translator->trans('MSC.twoFactorEnforced', [], 'contao_default');
+        }
+
+        if ((!$user->useTwoFactor && $this->page->enforceTwoFactor) || 'enable' === $request->get('2fa')) {
             $this->enableTwoFactor($template, $request, $user, $return);
         }
 
-        if ('enable' === $request->get('2fa')) {
-            $this->enableTwoFactor($template, $request, $user, $return);
-        }
-
-        if ('tl_two_factor_disable' === $request->request->get('FORM_SUBMIT')) {
+        if (!$this->page->enforceTwoFactor && 'tl_two_factor_disable' === $request->request->get('FORM_SUBMIT')) {
             $this->disableTwoFactor($user);
         }
 
