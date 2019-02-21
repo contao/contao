@@ -164,7 +164,7 @@ class SymlinksCommand extends Command
     private function symlinkFiles(string $uploadPath): void
     {
         $this->createSymlinksFromFinder(
-            $this->findIn($this->rootDir.'/'.$uploadPath)->files()->name('.public'),
+            $this->findIn($this->rootDir.'/'.$uploadPath)->files()->depth('> 0')->name('.public'),
             $uploadPath
         );
     }
