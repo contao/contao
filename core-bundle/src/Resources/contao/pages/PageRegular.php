@@ -422,13 +422,23 @@ class PageRegular extends \Frontend
 			{
 				if (isset($arrPackages['contao-components/mootools']))
 				{
-					if (version_compare($arrPackages['contao-components/mootools'], '1.5.1', '>'))
+					$chunks = explode('.', $arrPackages['contao-components/mootools']);
+
+					// Only use "major.minor.patch" to load MooTools via CDN (see #318)
+					if (\count($chunks) > 3)
 					{
-						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $arrPackages['contao-components/mootools'] . '/mootools.min.js') . "\n";
+						$chunks = \array_slice($chunks, 0, 3);
+					}
+
+					$version = implode('.', $chunks);
+
+					if (version_compare($version, '1.5.1', '>'))
+					{
+						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools.min.js') . "\n";
 					}
 					else
 					{
-						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $arrPackages['contao-components/mootools'] . '/mootools-yui-compressed.js') . "\n";
+						$this->Template->mooScripts .= \Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools-yui-compressed.js') . "\n";
 					}
 
 					// Local fallback (thanks to DyaGa)

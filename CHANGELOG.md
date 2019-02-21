@@ -1,5 +1,11 @@
 # Change log
 
+## DEV
+
+ * Correctly load MooTools via CDN (see #318).
+ * Do not double decode URL fragments (see #321).
+ * Correctly replace insert tags if the page contains invalid characters (see #349).
+
 ## 4.4.34 (2019-01-24)
 
  * Validate the primary key when registering or saving a model (see #230).
