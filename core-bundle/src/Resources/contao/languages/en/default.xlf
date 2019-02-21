@@ -1398,7 +1398,7 @@
         <source>Clear clipboard</source>
       </trans-unit>
       <trans-unit id="MSC.hiddenElements">
-        <source>Unpublished elements</source>
+        <source>Unpublished</source>
       </trans-unit>
       <trans-unit id="MSC.hiddenHide">
         <source>hide</source>

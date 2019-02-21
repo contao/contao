@@ -78,7 +78,7 @@ class BackendSwitch extends Backend
 			$blnUpdate = true;
 			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 			$blnShowUnpublished = Input::post('unpublished') != 'hide';
-			$blnDebug = Input::post('debug');
+			$blnDebug = (bool) Input::post('debug');
 
 			// Switch user accounts
 			if ($blnCanSwitchUser && isset($_POST['user']))
