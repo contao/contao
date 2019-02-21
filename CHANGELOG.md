@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.35 (2019-02-21)
 
  * Fix the format selection in the image size widget (see #315).
  * Ignore a `.public` file in the root files directory (see #286).  

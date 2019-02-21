@@ -18,6 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
+        <target>セキュリティ上の理由により、連続して3回以上誤ったパスワードを入力した後のインストールツールはロックされています。Contao Manager、またはコマンド行で&lt;code&gt;contao:install:unlock&lt;/code&gt;を実行してロックを解除できます。</target>
         
       </trans-unit>
       <trans-unit id="5">

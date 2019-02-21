@@ -18,6 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
+        <target>Om veiligheidsredenen is het installatietool vergrendeld nadat een verkeerd wachtwoord meer dan drie keer achter elkaar is ingevoerd. Je kunt het ontgrendelen in de Contao Manager of door &lt;code&gt;contao:install:unlock&lt;/code&gt; uit te voeren op de opdrachtregel.</target>
         
       </trans-unit>
       <trans-unit id="5">
