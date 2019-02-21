@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\ManagerBundle\HttpKernel\JwtManager;
+use Contao\CoreBundle\HttpKernel\JwtManager;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

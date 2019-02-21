@@ -11,8 +11,8 @@ declare(strict_types=1);
  */
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\HttpKernel\JwtManager;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
-use Contao\ManagerBundle\HttpKernel\JwtManager;
 use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\TerminableInterface;

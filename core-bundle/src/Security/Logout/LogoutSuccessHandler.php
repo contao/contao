@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Logout;
 
+use Contao\CoreBundle\HttpKernel\JwtManager;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\HttpUtils;

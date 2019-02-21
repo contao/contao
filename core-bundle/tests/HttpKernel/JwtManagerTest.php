@@ -10,39 +10,35 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\Tests\HttpKernel;
+namespace Contao\CoreBundle\Tests\HttpKernel;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\ManagerBundle\HttpKernel\JwtManager;
-use PHPUnit\Framework\TestCase;
+use Contao\CoreBundle\HttpKernel\JwtManager;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-class JwtManagerTest extends TestCase
+class JwtManagerTest extends ContaoTestCase
 {
     /**
      * @var JwtManager
      */
     private $jwtManager;
 
+    /**
+     * {@inheritdoc}
+     */
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->jwtManager = new JwtManager(sys_get_temp_dir());
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-
-        unlink(sys_get_temp_dir().'/var/jwt_secret');
+        $this->jwtManager = new JwtManager($this->getTempDir());
     }
 
     public function testCreatesASecret(): void
     {
-        $this->assertFileExists(sys_get_temp_dir().'/var/jwt_secret');
+        $this->assertFileExists($this->getTempDir().'/var/jwt_secret');
     }
 
     public function testThrowsAnExceptionIfThereIsNoCookie(): void

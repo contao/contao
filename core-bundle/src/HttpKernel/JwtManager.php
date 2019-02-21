@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\HttpKernel;
+namespace Contao\CoreBundle\HttpKernel;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Firebase\JWT\JWT;
