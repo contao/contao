@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Fix the format selection in the image size widget (see #315).
  * Ignore a `.public` file in the root files directory (see #286).  
  * Correctly load MooTools via CDN (see #318).
  * Do not double decode URL fragments (see #321).

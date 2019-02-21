@@ -172,7 +172,7 @@ class ImageSize extends \Widget
 			{
 				$arrOptions[] = sprintf('<option value="%s"%s>%s</option>',
 									   \StringUtil::specialchars($arrOption['value']),
-									   $this->isSelected($arrOption),
+									   $this->optionSelected($arrOption['value'], $this->varValue[2]),
 									   $arrOption['label']);
 			}
 			else
@@ -183,7 +183,7 @@ class ImageSize extends \Widget
 				{
 					$arrOptgroups[] = sprintf('<option value="%s"%s>%s</option>',
 											   \StringUtil::specialchars($arrOptgroup['value']),
-											   $this->isSelected($arrOptgroup),
+											   $this->optionSelected($arrOptgroup['value'], $this->varValue[2]),
 											   $arrOptgroup['label']);
 				}
 
