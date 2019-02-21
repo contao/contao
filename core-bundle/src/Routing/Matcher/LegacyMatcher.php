@@ -62,9 +62,9 @@ class LegacyMatcher implements RequestMatcherInterface
 
         if (
             '/' === $pathInfo
-            || ($this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))
             || empty($GLOBALS['TL_HOOKS']['getPageIdFromUrl'])
             || !\is_array($GLOBALS['TL_HOOKS']['getPageIdFromUrl'])
+            || ($this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))
         ) {
             return $this->requestMatcher->matchRequest($request);
         }

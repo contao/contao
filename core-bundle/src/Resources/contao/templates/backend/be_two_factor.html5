@@ -14,7 +14,7 @@
         <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor">
         <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
         <div class="qr-code">
-          <img src="data:image/svg+xml;base64,<?= $this->qrCode; ?>">
+          <img src="data:image/svg+xml;base64,<?= $this->qrCode; ?>" alt>
         </div>
         <div class="widget w50">
           <p><?= $this->textCode; ?></p>

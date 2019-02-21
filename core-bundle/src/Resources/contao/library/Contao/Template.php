@@ -553,11 +553,11 @@ abstract class Template extends Controller
 	/**
 	 * Generate the markup for a JavaScript tag
 	 *
-	 * @param string      $src          The script path
-	 * @param boolean     $async        True to add the async attribute
-	 * @param mixed       $mtime        The file mtime
-	 * @param string|null $hash         An optional integrity hash
-	 * @param string|null $crossorigin  An optional crossorigin attribute
+	 * @param string      $src         The script path
+	 * @param boolean     $async       True to add the async attribute
+	 * @param mixed       $mtime       The file mtime
+	 * @param string|null $hash        An optional integrity hash
+	 * @param string|null $crossorigin An optional crossorigin attribute
 	 *
 	 * @return string The markup string
 	 */
