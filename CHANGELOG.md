@@ -1,13 +1,17 @@
 # Change log
 
-## 4.7.0 (2019-02-15)
+## DEV
 
+ * Do not add `crossorigin="anonymous"` to all external scripts (see #356).
  * Correctly set the root IDs in the "checkPermission" callbacks (see #320).
  * Fix the format selection in the image size widget (see #315).
  * Ignore a `.public` file in the root files directory (see #286).  
  * Correctly load MooTools via CDN (see #318).
  * Do not double decode URL fragments (see #321).
  * Correctly replace insert tags if the page contains invalid characters (see #349).
+
+## 4.7.0 (2019-02-15)
+
  * Fix the input field height on Windows (see #79).
 
 ## 4.7.0-RC4 (2019-02-08)
