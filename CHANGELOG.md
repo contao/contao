@@ -1,14 +1,18 @@
 # Change log
 
-## DEV
+## 4.7.1 (2019-02-21)
 
  * Do not add `crossorigin="anonymous"` to all external scripts (see #356).
+ * Use the host as title on the login page (see #339).
  * Correctly set the root IDs in the "checkPermission" callbacks (see #320).
  * Fix the format selection in the image size widget (see #315).
  * Ignore a `.public` file in the root files directory (see #286).  
  * Correctly load MooTools via CDN (see #318).
+ * Hide the impersonation link if already in impersonation mode (see #345).
+ * Store the user object after it has been loaded (see #347).
  * Do not double decode URL fragments (see #321).
  * Correctly replace insert tags if the page contains invalid characters (see #349).
+ * Correctly redirect to the preferred language for empty URL (see #336).
 
 ## 4.7.0 (2019-02-15)
 

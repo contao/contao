@@ -124,6 +124,23 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 %s
 </source>
+        <target>こんにちは、%sさん。
+
+このページの新しいコメントを電子メールで通知を受けるかどうか確認してください:
+
+%s
+
+---
+
+クリックすると登録を承認:
+
+%s
+
+承認のリンクは24時間有効です。
+次をクリックするといつでも登録を止められます。
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
         <source>New comment on %s</source>

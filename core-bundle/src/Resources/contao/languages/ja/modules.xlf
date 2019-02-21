@@ -87,9 +87,11 @@
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
+        <target>ダブルオプトイン</target>
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
         <source>Manage the double opt-in tokens</source>
+        <target>ダブルオプトインのトークンの管理</target>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>

@@ -18,6 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
+        <target>セキュリティ上の理由により、連続して3回以上誤ったパスワードを入力した後のインストールツールはロックされています。Contao Manager、またはコマンド行で&lt;code&gt;contao:install:unlock&lt;/code&gt;を実行してロックを解除できます。</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -412,10 +413,12 @@
       </trans-unit>
       <trans-unit id="83">
         <source>engine_mismatch</source>
+        <target>構成したデータベースのエンジンはutf8mb4をサポートしていません!</target>
         
       </trans-unit>
       <trans-unit id="84">
         <source>engine_mismatch_explain</source>
+        <target>構成したデータベースエンジンの&lt;code&gt;%s&lt;/code&gt;はutf8mb4をサポートしていません。InnoDBを使用するか、&lt;code&gt;app/config/config.yml&lt;/code&gt;ファイルで違う文字セットと照合順序を設定してください。</target>
         
       </trans-unit>
       <trans-unit id="85">
@@ -435,6 +438,7 @@
       </trans-unit>
       <trans-unit id="88">
         <source>innodb_additional_explain</source>
+        <target>MySQLの5.77より前のバージョンとMariaDBの102.2より前のバージョンでlarge prefixを使用するにはBarracudaファイル形式と&lt;code&gt;innodb_file_per_table&lt;/code&gt;オプションが必要です。</target>
         
       </trans-unit>
     </body>
