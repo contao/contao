@@ -1,4 +1,4 @@
 <?php
 
-// This is just a BC layer
+// Backwards compatibility
 require __DIR__.'/index.php';
