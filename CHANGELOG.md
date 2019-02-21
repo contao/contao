@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Ignore a `.public` file in the root files directory (see #286).  
  * Correctly load MooTools via CDN (see #318).
  * Do not double decode URL fragments (see #321).
  * Correctly replace insert tags if the page contains invalid characters (see #349).

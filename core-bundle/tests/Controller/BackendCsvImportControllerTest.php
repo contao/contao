@@ -425,7 +425,7 @@ EOF;
 
         $uploader
             ->method('uploadTo')
-            ->willReturn(['files/data.csv'])
+            ->willReturn(['files/data/data.csv'])
         ;
 
         return $this->mockContaoFramework(null, null, [], [FileUpload::class => $uploader]);

@@ -63,20 +63,15 @@ class SymlinksCommandTest extends TestCase
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertContains('web/system/modules/foobar/assets', $display);
-        $this->assertContains('system/modules/foobar/assets', $display);
-        $this->assertContains('web/system/modules/foobar/html', $display);
-        $this->assertContains('system/modules/foobar/html', $display);
-        $this->assertContains('web/system/modules/foobar/html/foo', $display);
-        $this->assertContains('Skipped because system/modules/foobar/html will be symlinked.', $display);
-        $this->assertContains('system/themes/flexible', $display);
-        $this->assertContains('vendor/contao/test-bundle/Resources/contao/themes/flexible', $display);
-        $this->assertContains('web/assets', $display);
-        $this->assertContains('assets', $display);
-        $this->assertContains('web/system/themes', $display);
-        $this->assertContains('system/themes', $display);
-        $this->assertContains('system/logs', $display);
-        $this->assertContains('var/logs', $display);
+        $this->assertNotRegExp('# web/files +files #', $display);
+        $this->assertRegExp('# web/files/public +files/public #', $display);
+        $this->assertRegExp('# web/system/modules/foobar/html/foo/bar +Skipped because system/modules/foobar/html will be symlinked\. #', $display);
+        $this->assertRegExp('# web/system/modules/foobar/assets +system/modules/foobar/assets #', $display);
+        $this->assertRegExp('# web/system/modules/foobar/html +system/modules/foobar/html #', $display);
+        $this->assertRegExp('# system/themes/flexible +vendor/contao/test-bundle/Resources/contao/themes/flexible #', $display);
+        $this->assertRegExp('# web/assets +assets #', $display);
+        $this->assertRegExp('# web/system/themes +system/themes #', $display);
+        $this->assertRegExp('# system/logs +var/logs #', $display);
     }
 
     /**

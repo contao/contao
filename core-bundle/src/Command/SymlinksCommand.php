@@ -151,7 +151,7 @@ class SymlinksCommand extends AbstractLockedCommand
     private function symlinkFiles($uploadPath)
     {
         $this->createSymlinksFromFinder(
-            $this->findIn($this->rootDir.'/'.$uploadPath)->files()->name('.public'),
+            $this->findIn($this->rootDir.'/'.$uploadPath)->files()->depth('> 0')->name('.public'),
             $uploadPath
         );
     }
