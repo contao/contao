@@ -342,13 +342,13 @@ class tl_news_feed extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		if (empty($this->User->newsfeeds) || !\is_array($this->User->newsfeeds))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $this->User->newsfeeds;
 		}
 
 		// The feed is enabled already

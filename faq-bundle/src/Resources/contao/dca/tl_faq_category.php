@@ -364,13 +364,13 @@ class tl_faq_category extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		if (empty($this->User->faqs) || !\is_array($this->User->faqs))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $this->User->faqs;
 		}
 
 		// The FAQ category is enabled already

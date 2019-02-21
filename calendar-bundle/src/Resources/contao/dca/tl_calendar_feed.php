@@ -342,13 +342,13 @@ class tl_calendar_feed extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		if (empty($this->User->calendarfeeds) || !\is_array($this->User->calendarfeeds))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $this->User->calendarfeeds;
 		}
 
 		// The calendar feed is enabled already

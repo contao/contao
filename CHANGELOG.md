@@ -2,6 +2,7 @@
 
 ## 4.7.0 (2019-02-15)
 
+ * Correctly set the root IDs in the "checkPermission" callbacks (see #320).
  * Fix the format selection in the image size widget (see #315).
  * Ignore a `.public` file in the root files directory (see #286).  
  * Correctly load MooTools via CDN (see #318).

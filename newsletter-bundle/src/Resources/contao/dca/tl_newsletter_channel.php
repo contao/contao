@@ -309,13 +309,13 @@ class tl_newsletter_channel extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		if (empty($this->User->newsletters) || !\is_array($this->User->newsletters))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $this->User->newsletters;
 		}
 
 		// The channel is enabled already
