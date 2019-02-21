@@ -48,7 +48,7 @@ class ContaoCacheTest extends ContaoTestCase
     /**
      * @dataProvider requestProvider
      */
-    public function testPrivateRequestsNeverHitTheCache(Request $request, bool $shouldCircumventCache): void
+    public function testPrivateRequestsNeverHitTheCache(Request $request, bool $shouldBypassCache): void
     {
         $kernel = $this->createMock(ContaoKernel::class);
         $kernel
@@ -62,7 +62,7 @@ class ContaoCacheTest extends ContaoTestCase
 
         $cache = new ContaoCache($kernel, $this->getTempDir());
         $cache->handle($request);
-        $this->assertSame($shouldCircumventCache, $cache->wasCacheCircumvented());
+        $this->assertSame($shouldBypassCache, $cache->wasBypassed());
     }
 
     public function requestProvider(): \Generator

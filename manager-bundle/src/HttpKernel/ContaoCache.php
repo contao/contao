@@ -31,7 +31,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     /**
      * @var bool
      */
-    private $cacheWasCircumvented;
+    private $wasBypassed;
 
     public function __construct(ContaoKernel $kernel, string $cacheDir = null)
     {
@@ -42,9 +42,9 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         $this->addSubscriber(new CleanupCacheTagsListener());
     }
 
-    public function wasCacheCircumvented(): bool
+    public function wasBypassed(): bool
     {
-        return $this->cacheWasCircumvented;
+        return $this->wasBypassed;
     }
 
     /**
@@ -55,12 +55,12 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         if ($this->isRequestPrivate($request)) {
-            $this->cacheWasCircumvented = true;
+            $this->wasBypassed = true;
 
             return $this->kernel->handle($request, $type, $catch);
         }
 
-        $this->cacheWasCircumvented = false;
+        $this->wasBypassed = false;
 
         return parent::handle($request, $type, $catch);
     }
@@ -86,7 +86,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
 
     /**
      * Checks if the Request includes authorization or other sensitive information
-     * that should cause the cache to be circumvented.
+     * that should cause the cache to be bypassed.
      */
     private function isRequestPrivate(Request $request): bool
     {
