@@ -387,7 +387,7 @@ EOF;
         $uploader = $this->createMock(FileUpload::class);
         $uploader
             ->method('uploadTo')
-            ->willReturn(['files/data.csv'])
+            ->willReturn(['files/data/data.csv'])
         ;
 
         $framework = $this->mockContaoFramework();

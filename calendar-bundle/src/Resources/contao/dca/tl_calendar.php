@@ -388,13 +388,13 @@ class tl_calendar extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		if (empty($this->User->calendars) || !\is_array($this->User->calendars))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $this->User->calendars;
 		}
 
 		// The calendar is enabled already

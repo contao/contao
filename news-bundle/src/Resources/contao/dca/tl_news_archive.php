@@ -388,13 +388,13 @@ class tl_news_archive extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		if (empty($this->User->news) || !\is_array($this->User->news))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $this->User->news;
 		}
 
 		// The archive is enabled already
