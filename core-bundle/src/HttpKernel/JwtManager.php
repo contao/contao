@@ -81,7 +81,12 @@ class JwtManager
         $payload['iat'] = time();
         $payload['exp'] = strtotime('+30 minutes');
 
-        $cookie = Cookie::create(self::COOKIE_NAME, JWT::encode($payload, $this->secret));
+        if (method_exists(Cookie::class, 'create')) {
+            $cookie = Cookie::create(self::COOKIE_NAME, JWT::encode($payload, $this->secret));
+        } else {
+            // Backwards compatibility with symfony/http-foundation <4.2
+            $cookie = new Cookie(self::COOKIE_NAME, JWT::encode($payload, $this->secret));
+        }
 
         $response->headers->setCookie($cookie);
     }
