@@ -19,7 +19,6 @@ use Contao\Input;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
 
 class InputEnhancerTest extends TestCase
 {
@@ -43,25 +42,6 @@ class InputEnhancerTest extends TestCase
 
         $enhancer = new InputEnhancer($framework, false);
         $enhancer->enhance([], Request::create('/'));
-    }
-
-    public function testReturnsTheDefaultsUponHeaderReplay(): void
-    {
-        $framework = $this->mockContaoFramework();
-        $framework
-            ->expects($this->never())
-            ->method('initialize')
-        ;
-
-        $defaults = [
-            'pageModel' => $this->createMock(PageModel::class),
-        ];
-
-        $request = Request::create('/');
-        $request->headers->set('Accept', HeaderReplayListener::CONTENT_TYPE);
-
-        $enhancer = new InputEnhancer($framework, false);
-        $enhancer->enhance($defaults, $request);
     }
 
     /**

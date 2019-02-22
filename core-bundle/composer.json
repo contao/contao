@@ -89,7 +89,6 @@
         "symfony/twig-bundle": "3.4.* || 4.1.* || 4.2.*",
         "symfony/yaml": "3.4.* || 4.1.* || 4.2.*",
         "tecnickcom/tcpdf": "^6.2.22",
-        "terminal42/header-replay-bundle": "^1.4",
         "true/punycode": "^2.1"
     },
     "conflict": {
