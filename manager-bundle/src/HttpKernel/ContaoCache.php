@@ -48,12 +48,11 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     }
 
     /**
-     * We override the handle() method to never cache private requests.
-     *
      * {@inheritdoc}
      */
-    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true): Response
     {
+        // Never cache private requests
         if ($this->isRequestPrivate($request)) {
             $this->wasBypassed = true;
 

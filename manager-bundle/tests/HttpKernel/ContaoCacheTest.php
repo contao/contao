@@ -29,12 +29,13 @@ class ContaoCacheTest extends ContaoTestCase
     {
         $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
         $dispatcher = $cache->getEventDispatcher();
-
         $preInvalidateListeners = $dispatcher->getListeners(Events::PRE_INVALIDATE);
+
         $this->assertInstanceOf(PurgeListener::class, $preInvalidateListeners[0][0]);
         $this->assertInstanceOf(PurgeTagsListener::class, $preInvalidateListeners[1][0]);
 
         $postHandleListeners = $dispatcher->getListeners(Events::POST_HANDLE);
+
         $this->assertInstanceOf(CleanupCacheTagsListener::class, $postHandleListeners[0][0]);
     }
 
@@ -55,6 +56,7 @@ class ContaoCacheTest extends ContaoTestCase
             ->method('getContainer')
             ->willReturn($this->mockContainer())
         ;
+
         $kernel
             ->method('handle')
             ->willReturn(new Response())
@@ -62,6 +64,7 @@ class ContaoCacheTest extends ContaoTestCase
 
         $cache = new ContaoCache($kernel, $this->getTempDir());
         $cache->handle($request);
+
         $this->assertSame($shouldBypassCache, $cache->wasBypassed());
     }
 
