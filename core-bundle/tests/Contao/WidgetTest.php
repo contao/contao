@@ -60,26 +60,69 @@ class WidgetTest extends TestCase
         error_reporting($errorReporting);
     }
 
-    /**
-     * @return (array<int|string,array<string,array<string,string>>|string>|string|null)[][]
-     */
-    public function postProvider(): array
+    public function postProvider(): \Generator
     {
-        return [
-            ['foo', 'foo', 'bar', 'bar'],
-            ['foo[0]', 'foo', ['bar'], 'bar'],
-            [
-                'foo[k1][k2][k3]',
-                'foo',
-                ['k1' => ['k2' => ['k3' => 'bar']]],
-                'bar',
-            ],
-            ['foo[0]', 'foo', ['k1' => 'bar'], null],
-            ['foo[k1][0]', 'foo', ['k1' => 'bar'], 'bar'],
-            ['foo', 'nofoo', 'bar', null],
-            ['', 'foo', 'bar', null],
-            ['', '', 'bar', 'bar'],
-            ['[0]', '', ['bar'], 'bar'],
+        yield [
+            'foo',
+            'foo',
+            'bar',
+            'bar',
+        ];
+
+        yield [
+            'foo[0]',
+            'foo',
+            ['bar'],
+            'bar',
+        ];
+
+        yield [
+            'foo[k1][k2][k3]',
+            'foo',
+            ['k1' => ['k2' => ['k3' => 'bar']]],
+            'bar',
+        ];
+
+        yield [
+            'foo[0]',
+            'foo',
+            ['k1' => 'bar'],
+            null,
+        ];
+
+        yield [
+            'foo[k1][0]',
+            'foo',
+            ['k1' => 'bar'],
+            'bar',
+        ];
+
+        yield [
+            'foo',
+            'nofoo',
+            'bar',
+            null,
+        ];
+
+        yield [
+            '',
+            'foo',
+            'bar',
+            null,
+        ];
+
+        yield [
+            '',
+            '',
+            'bar',
+            'bar',
+        ];
+
+        yield [
+            '[0]',
+            '',
+            ['bar'],
+            'bar',
         ];
     }
 

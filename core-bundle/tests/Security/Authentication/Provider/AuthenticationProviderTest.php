@@ -252,15 +252,10 @@ class AuthenticationProviderTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
-    /**
-     * @return bool[][]
-     */
-    public function getCheckCredentialsHookData(): array
+    public function getCheckCredentialsHookData(): \Generator
     {
-        return [
-            [true],
-            [false],
-        ];
+        yield [true];
+        yield [false];
     }
 
     private function mockProvider(ContaoFramework $framework = null): AuthenticationProvider

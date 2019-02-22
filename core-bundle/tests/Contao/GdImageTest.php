@@ -100,16 +100,11 @@ class GdImageTest extends TestCase
         $this->assertSame('image/'.$type, $finfo->file($file));
     }
 
-    /**
-     * @return string[][]
-     */
-    public function getImageTypes(): array
+    public function getImageTypes(): \Generator
     {
-        return [
-            ['gif'],
-            ['jpeg'],
-            ['png'],
-        ];
+        yield ['gif'];
+        yield ['jpeg'];
+        yield ['png'];
     }
 
     public function testFailsIfTheFileTypeIsInvalid(): void

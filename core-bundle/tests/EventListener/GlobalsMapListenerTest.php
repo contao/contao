@@ -33,42 +33,42 @@ class GlobalsMapListenerTest extends TestCase
         $this->assertSame($expected, $GLOBALS);
     }
 
-    /**
-     * @return (array<string,array<string,string>|string>)[][]
-     */
-    public function getValuesData(): array
+    public function getValuesData(): \Generator
     {
-        return [
-            [
-                [],
-                ['foo' => 'bar'],
-                ['foo' => 'bar'],
-            ],
-            [
-                ['bar' => 'baz'],
-                ['foo' => 'bar'],
-                ['bar' => 'baz', 'foo' => 'bar'],
-            ],
-            [
-                [],
-                ['TL_CTE' => ['foo' => 'bar']],
-                ['TL_CTE' => ['foo' => 'bar']],
-            ],
-            [
-                ['TL_CTE' => ['bar' => 'baz']],
-                ['TL_CTE' => ['foo' => 'bar']],
-                ['TL_CTE' => ['bar' => 'baz', 'foo' => 'bar']],
-            ],
-            [
-                ['TL_CTE' => ['foo' => 'bar']],
-                ['TL_CTE' => ['foo' => 'baz']],
-                ['TL_CTE' => ['foo' => 'baz']],
-            ],
-            [
-                ['TL_CTE' => ['foo' => 'bar']],
-                ['TL_CTE' => ['foo' => 'baz', 'bar' => 'baz']],
-                ['TL_CTE' => ['foo' => 'baz', 'bar' => 'baz']],
-            ],
+        yield [
+            [],
+            ['foo' => 'bar'],
+            ['foo' => 'bar'],
+        ];
+
+        yield [
+            ['bar' => 'baz'],
+            ['foo' => 'bar'],
+            ['bar' => 'baz', 'foo' => 'bar'],
+        ];
+
+        yield [
+            [],
+            ['TL_CTE' => ['foo' => 'bar']],
+            ['TL_CTE' => ['foo' => 'bar']],
+        ];
+
+        yield [
+            ['TL_CTE' => ['bar' => 'baz']],
+            ['TL_CTE' => ['foo' => 'bar']],
+            ['TL_CTE' => ['bar' => 'baz', 'foo' => 'bar']],
+        ];
+
+        yield [
+            ['TL_CTE' => ['foo' => 'bar']],
+            ['TL_CTE' => ['foo' => 'baz']],
+            ['TL_CTE' => ['foo' => 'baz']],
+        ];
+
+        yield [
+            ['TL_CTE' => ['foo' => 'bar']],
+            ['TL_CTE' => ['foo' => 'baz', 'bar' => 'baz']],
+            ['TL_CTE' => ['foo' => 'baz', 'bar' => 'baz']],
         ];
     }
 }

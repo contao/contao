@@ -124,75 +124,70 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         }
     }
 
-    /**
-     * @return array<int,array<int,array<string,array<string,array<int|string,array<string,array<string,true>|bool|float|int|string>|string>>>>>
-     */
-    public function createSchemaProvider(): array
+    public function createSchemaProvider(): \Generator
     {
-        return [
-            // Test table fields SQL string from DCA file
+        // Test table fields SQL string from DCA file
+        yield [
             [
-                [
-                    'tl_member' => [
-                        'TABLE_FIELDS' => [
-                            'id' => '`id` int(10) NOT NULL default 0',
-                            'pid' => '`pid` int(10) NULL',
-                            'title' => "`title` varchar(128) BINARY NOT NULL default ''",
-                            'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT '1.00'",
-                            'teaser' => '`teaser` tinytext NULL',
-                            'description' => '`description` text NULL',
-                            'content' => '`content` mediumtext NULL',
-                            'price' => '`price` decimal(6,2) NOT NULL default 1.99',
-                            'thumb' => '`thumb` tinyblob NULL',
-                            'image' => '`image` blob NULL',
-                            'attachment' => '`attachment` mediumblob NULL',
-                            'published' => "`published` char(1) NOT NULL default ''",
-                        ],
+                'tl_member' => [
+                    'TABLE_FIELDS' => [
+                        'id' => '`id` int(10) NOT NULL default 0',
+                        'pid' => '`pid` int(10) NULL',
+                        'title' => "`title` varchar(128) BINARY NOT NULL default ''",
+                        'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT '1.00'",
+                        'teaser' => '`teaser` tinytext NULL',
+                        'description' => '`description` text NULL',
+                        'content' => '`content` mediumtext NULL',
+                        'price' => '`price` decimal(6,2) NOT NULL default 1.99',
+                        'thumb' => '`thumb` tinyblob NULL',
+                        'image' => '`image` blob NULL',
+                        'attachment' => '`attachment` mediumblob NULL',
+                        'published' => "`published` char(1) NOT NULL default ''",
                     ],
                 ],
             ],
+        ];
 
-            // Test schema definition from DCA file
+        // Test schema definition from DCA file
+        yield [
             [
-                [
-                    'tl_member' => [
-                        'SCHEMA_FIELDS' => [
-                            ['name' => 'id', 'type' => 'integer'],
-                            ['name' => 'pid', 'type' => 'integer', 'notnull' => false],
-                            ['name' => 'title', 'type' => 'string', 'length' => 128, 'customSchemaOptions' => ['case_sensitive' => true]],
-                            ['name' => 'uppercase', 'type' => 'string', 'length' => 64, 'default' => '1.00'],
-                            ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TINYTEXT],
-                            ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TEXT],
-                            ['name' => 'content', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT],
-                            ['name' => 'price', 'type' => 'decimal', 'precision' => 6, 'scale' => 2, 'default' => 1.99],
-                            ['name' => 'thumb', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TINYBLOB],
-                            ['name' => 'image', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_BLOB],
-                            ['name' => 'attachment', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_MEDIUMBLOB],
-                            ['name' => 'published', 'type' => 'string', 'fixed' => true, 'length' => 1],
-                        ],
+                'tl_member' => [
+                    'SCHEMA_FIELDS' => [
+                        ['name' => 'id', 'type' => 'integer'],
+                        ['name' => 'pid', 'type' => 'integer', 'notnull' => false],
+                        ['name' => 'title', 'type' => 'string', 'length' => 128, 'customSchemaOptions' => ['case_sensitive' => true]],
+                        ['name' => 'uppercase', 'type' => 'string', 'length' => 64, 'default' => '1.00'],
+                        ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TINYTEXT],
+                        ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TEXT],
+                        ['name' => 'content', 'type' => 'text', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT],
+                        ['name' => 'price', 'type' => 'decimal', 'precision' => 6, 'scale' => 2, 'default' => 1.99],
+                        ['name' => 'thumb', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_TINYBLOB],
+                        ['name' => 'image', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_BLOB],
+                        ['name' => 'attachment', 'type' => 'blob', 'notnull' => false, 'length' => MySqlPlatform::LENGTH_LIMIT_MEDIUMBLOB],
+                        ['name' => 'published', 'type' => 'string', 'fixed' => true, 'length' => 1],
                     ],
                 ],
             ],
+        ];
 
-            // Test table fields from database.sql file
+        // Test table fields from database.sql file
+        yield [
+            [],
             [
-                [],
-                [
-                    'tl_member' => [
-                        'TABLE_FIELDS' => [
-                            'id' => '`id` int(10) NOT NULL default 0',
-                            'pid' => '`pid` int(10) NULL',
-                            'title' => "`title` varchar(128) BINARY NOT NULL default ''",
-                            'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT '1.00'",
-                            'teaser' => '`teaser` tinytext NULL',
-                            'description' => '`description` text NULL',
-                            'content' => '`content` mediumtext NULL',
-                            'price' => '`price` decimal(6,2) NOT NULL default 1.99',
-                            'thumb' => '`thumb` tinyblob NULL',
-                            'image' => '`image` blob NULL',
-                            'attachment' => '`attachment` mediumblob NULL',
-                            'published' => "`published` char(1) NOT NULL default ''",
-                        ],
+                'tl_member' => [
+                    'TABLE_FIELDS' => [
+                        'id' => '`id` int(10) NOT NULL default 0',
+                        'pid' => '`pid` int(10) NULL',
+                        'title' => "`title` varchar(128) BINARY NOT NULL default ''",
+                        'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT '1.00'",
+                        'teaser' => '`teaser` tinytext NULL',
+                        'description' => '`description` text NULL',
+                        'content' => '`content` mediumtext NULL',
+                        'price' => '`price` decimal(6,2) NOT NULL default 1.99',
+                        'thumb' => '`thumb` tinyblob NULL',
+                        'image' => '`image` blob NULL',
+                        'attachment' => '`attachment` mediumblob NULL',
+                        'published' => "`published` char(1) NOT NULL default ''",
                     ],
                 ],
             ],
@@ -381,20 +376,16 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         }
     }
 
-    /**
-     * @return (string|int|null)[][]
-     */
-    public function getIndexes(): array
+    public function getIndexes(): \Generator
     {
-        $return = [
-            'MyISAM, utf8' => [
-                null,
-                'ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
-            ],
-            'MyISAM, utf8mb4' => [
-                250,
-                'ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
-            ],
+        yield 'MyISAM, utf8' => [
+            null,
+            'ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+        ];
+
+        yield 'MyISAM, utf8mb4' => [
+            250,
+            'ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
         ];
 
         $matrix = [
@@ -403,123 +394,132 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ];
 
         foreach ($matrix as $vendor => $versions) {
-            $return += [
-                $vendor.' '.$versions[0].', utf8, large_prefixes=Off' => [
-                    null,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
-                    'Off',
-                    $versions[0],
-                ],
-                $vendor.' '.$versions[0].', utf8mb4, large_prefixes=Off' => [
-                    191,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
-                    '0',
-                    $versions[0],
-                ],
-                $vendor.' '.$versions[0].', utf8, large_prefixes=On' => [
-                    null,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
-                    'On',
-                    $versions[0],
-                ],
-                $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On' => [
-                    191,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
-                    '1',
-                    $versions[0],
-                ],
-                $vendor.' '.$versions[0].', utf8, large_prefixes=On, file_per_table=Off' => [
-                    null,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
-                    'On',
-                    $versions[0],
-                    'Off',
-                ],
-                $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On, file_per_table=Off' => [
-                    191,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
-                    'On',
-                    $versions[0],
-                    '0',
-                ],
-                $vendor.' '.$versions[0].', utf8, large_prefixes=On, file_per_table=Off, file_format=Barracuda' => [
-                    null,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
-                    'On',
-                    $versions[0],
-                    'Off',
-                    'Barracuda',
-                ],
-                $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On, file_per_table=Off, file_format=Barracuda' => [
-                    191,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
-                    'On',
-                    $versions[0],
-                    '0',
-                    'Barracuda',
-                ],
-                $vendor.' '.$versions[0].', utf8, large_prefixes=On, file_per_table=On' => [
-                    null,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
-                    'On',
-                    $versions[0],
-                    'On',
-                ],
-                $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On, file_per_table=On' => [
-                    191,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
-                    'On',
-                    $versions[0],
-                    '1',
-                ],
-                $vendor.' '.$versions[0].', utf8, large_prefixes=On, file_per_table=On, file_format=Barracuda' => [
-                    null,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
-                    'On',
-                    $versions[0],
-                    'On',
-                    'Barracuda',
-                ],
-                $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On, file_per_table=On, file_format=Barracuda' => [
-                    null,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
-                    'On',
-                    $versions[0],
-                    '1',
-                    'Barracuda',
-                ],
+            yield $vendor.' '.$versions[0].', utf8, large_prefixes=Off' => [
+                null,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                'Off',
+                $versions[0],
+            ];
 
-                // innodb_large_prefixes enabled by default
-                $vendor.' '.$versions[1].' with utf8' => [
-                    null,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
-                    null,
-                    $versions[1],
-                ],
-                $vendor.' '.$versions[1].' with utf8mb4' => [
-                    null,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
-                    null,
-                    $versions[1],
-                ],
+            yield $vendor.' '.$versions[0].', utf8mb4, large_prefixes=Off' => [
+                191,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                '0',
+                $versions[0],
+            ];
 
-                // innodb_large_prefixes removed
-                $vendor.' '.$versions[2].' with utf8' => [
-                    null,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
-                    null,
-                    $versions[2],
-                ],
-                $vendor.' '.$versions[2].' with utf8mb4' => [
-                    null,
-                    'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
-                    null,
-                    $versions[2],
-                ],
+            yield $vendor.' '.$versions[0].', utf8, large_prefixes=On' => [
+                null,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                'On',
+                $versions[0],
+            ];
+
+            yield $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On' => [
+                191,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                '1',
+                $versions[0],
+            ];
+
+            yield $vendor.' '.$versions[0].', utf8, large_prefixes=On, file_per_table=Off' => [
+                null,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                'On',
+                $versions[0],
+                'Off',
+            ];
+
+            yield $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On, file_per_table=Off' => [
+                191,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                'On',
+                $versions[0],
+                '0',
+            ];
+
+            yield $vendor.' '.$versions[0].', utf8, large_prefixes=On, file_per_table=Off, file_format=Barracuda' => [
+                null,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                'On',
+                $versions[0],
+                'Off',
+                'Barracuda',
+            ];
+
+            yield $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On, file_per_table=Off, file_format=Barracuda' => [
+                191,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                'On',
+                $versions[0],
+                '0',
+                'Barracuda',
+            ];
+
+            yield $vendor.' '.$versions[0].', utf8, large_prefixes=On, file_per_table=On' => [
+                null,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                'On',
+                $versions[0],
+                'On',
+            ];
+
+            yield $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On, file_per_table=On' => [
+                191,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                'On',
+                $versions[0],
+                '1',
+            ];
+
+            yield $vendor.' '.$versions[0].', utf8, large_prefixes=On, file_per_table=On, file_format=Barracuda' => [
+                null,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                'On',
+                $versions[0],
+                'On',
+                'Barracuda',
+            ];
+
+            yield $vendor.' '.$versions[0].', utf8mb4, large_prefixes=On, file_per_table=On, file_format=Barracuda' => [
+                null,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                'On',
+                $versions[0],
+                '1',
+                'Barracuda',
+            ];
+
+            // innodb_large_prefixes enabled by default
+            yield $vendor.' '.$versions[1].' with utf8' => [
+                null,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                null,
+                $versions[1],
+            ];
+
+            yield $vendor.' '.$versions[1].' with utf8mb4' => [
+                null,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                null,
+                $versions[1],
+            ];
+
+            // innodb_large_prefixes removed
+            yield $vendor.' '.$versions[2].' with utf8' => [
+                null,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
+                null,
+                $versions[2],
+            ];
+
+            yield $vendor.' '.$versions[2].' with utf8mb4' => [
+                null,
+                'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
+                null,
+                $versions[2],
             ];
         }
-
-        return $return;
     }
 
     public function testHandlesIndexesOverMultipleColumns(): void

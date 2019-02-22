@@ -52,10 +52,7 @@ class StoreRefererListenerTest extends TestCase
         $this->assertSame($expectedReferer, $session->get('referer'));
     }
 
-    /**
-     * @return array<string,(array<string,array<string,string>|string>|Request|null)[]>
-     */
-    public function refererStoredOnKernelResponseProvider(): array
+    public function refererStoredOnKernelResponseProvider(): \Generator
     {
         $request = new Request();
         $request->attributes->set('_route', 'contao_backend');
@@ -78,69 +75,71 @@ class StoreRefererListenerTest extends TestCase
         $requestWithRefInUrlFrontend->attributes->set('_route', 'contao_frontend');
         $requestWithRefInUrlFrontend->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        return [
-            'Test current referer null returns correct new referer for back end scope' => [
-                $request,
-                null,
-                [
-                    'dummyTestRefererId' => [
-                        'last' => '',
-                        'current' => 'path/of/contao?having&query&string=1',
-                    ],
+        yield 'Test current referer null returns correct new referer for back end scope' => [
+            $request,
+            null,
+            [
+                'dummyTestRefererId' => [
+                    'last' => '',
+                    'current' => 'path/of/contao?having&query&string=1',
                 ],
             ],
-            'Test referer returns correct new referer for back end scope' => [
-                $requestWithRefInUrl,
-                [
-                    'dummyTestRefererId' => [
-                        'last' => '',
-                        'current' => 'hi/I/am/your_current_referer.html',
-                    ],
-                ],
-                [
-                    'dummyTestRefererId' => [
-                        'last' => 'hi/I/am/your_current_referer.html',
-                        'current' => 'path/of/contao?having&query&string=1',
-                    ],
-                ],
-            ],
-            'Test current referer null returns null for front end scope' => [
-                $requestFrontend,
-                null,
-                null,
-            ],
-            'Test referer returns correct new referer for front end scope' => [
-                $requestWithRefInUrlFrontend,
-                [
+        ];
+
+        yield 'Test referer returns correct new referer for back end scope' => [
+            $requestWithRefInUrl,
+            [
+                'dummyTestRefererId' => [
                     'last' => '',
                     'current' => 'hi/I/am/your_current_referer.html',
                 ],
-                [
+            ],
+            [
+                'dummyTestRefererId' => [
                     'last' => 'hi/I/am/your_current_referer.html',
                     'current' => 'path/of/contao?having&query&string=1',
                 ],
             ],
-            'Test referers are correctly added to the referers array (see #143)' => [
-                $requestWithRefInUrl,
-                [
-                    'dummyTestRefererId' => [
-                        'last' => '',
-                        'current' => 'hi/I/am/your_current_referer.html',
-                    ],
-                    'dummyTestRefererId1' => [
-                        'last' => '',
-                        'current' => 'hi/I/am/your_current_referer.html',
-                    ],
+        ];
+
+        yield 'Test current referer null returns null for front end scope' => [
+            $requestFrontend,
+            null,
+            null,
+        ];
+
+        yield 'Test referer returns correct new referer for front end scope' => [
+            $requestWithRefInUrlFrontend,
+            [
+                'last' => '',
+                'current' => 'hi/I/am/your_current_referer.html',
+            ],
+            [
+                'last' => 'hi/I/am/your_current_referer.html',
+                'current' => 'path/of/contao?having&query&string=1',
+            ],
+        ];
+
+        yield 'Test referers are correctly added to the referers array (see #143)' => [
+            $requestWithRefInUrl,
+            [
+                'dummyTestRefererId' => [
+                    'last' => '',
+                    'current' => 'hi/I/am/your_current_referer.html',
                 ],
-                [
-                    'dummyTestRefererId' => [
-                        'last' => 'hi/I/am/your_current_referer.html',
-                        'current' => 'path/of/contao?having&query&string=1',
-                    ],
-                    'dummyTestRefererId1' => [
-                        'last' => '',
-                        'current' => 'hi/I/am/your_current_referer.html',
-                    ],
+                'dummyTestRefererId1' => [
+                    'last' => '',
+                    'current' => 'hi/I/am/your_current_referer.html',
+                ],
+            ],
+            [
+                'dummyTestRefererId' => [
+                    'last' => 'hi/I/am/your_current_referer.html',
+                    'current' => 'path/of/contao?having&query&string=1',
+                ],
+                'dummyTestRefererId1' => [
+                    'last' => '',
+                    'current' => 'hi/I/am/your_current_referer.html',
                 ],
             ],
         ];
@@ -217,17 +216,10 @@ class StoreRefererListenerTest extends TestCase
         $listener->onKernelResponse($this->mockResponseEvent($request));
     }
 
-    /**
-     * @return (AnonymousToken|null)[][]
-     */
-    public function noUserProvider(): array
+    public function noUserProvider(): \Generator
     {
-        $anonymousToken = new AnonymousToken('key', 'anon.');
-
-        return [
-            [null],
-            [$anonymousToken],
-        ];
+        yield [null];
+        yield [new AnonymousToken('key', 'anon.')];
     }
 
     public function testDoesNotStoreTheRefererIfNotAContaoRequest(): void
@@ -310,15 +302,10 @@ class StoreRefererListenerTest extends TestCase
         $listener->onKernelResponse($this->mockResponseEvent($request));
     }
 
-    /**
-     * @return string[][]
-     */
-    public function noSessionProvider(): array
+    public function noSessionProvider(): \Generator
     {
-        return [
-            [ContaoCoreBundle::SCOPE_BACKEND],
-            [ContaoCoreBundle::SCOPE_FRONTEND],
-        ];
+        yield [ContaoCoreBundle::SCOPE_BACKEND];
+        yield [ContaoCoreBundle::SCOPE_FRONTEND];
     }
 
     private function mockListener(TokenStorageInterface $tokenStorage = null): StoreRefererListener

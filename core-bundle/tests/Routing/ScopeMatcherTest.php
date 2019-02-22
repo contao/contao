@@ -54,54 +54,54 @@ class ScopeMatcherTest extends TestCase
         $this->assertSame($isFrontend, $this->matcher->isFrontendRequest($request));
     }
 
-    /**
-     * @return (bool|int|string|null)[][]
-     */
-    public function masterRequestProvider(): array
+    public function masterRequestProvider(): \Generator
     {
-        return [
-            [
-                ContaoCoreBundle::SCOPE_BACKEND,
-                HttpKernelInterface::MASTER_REQUEST,
-                true,
-                false,
-                true,
-            ],
-            [
-                ContaoCoreBundle::SCOPE_FRONTEND,
-                HttpKernelInterface::MASTER_REQUEST,
-                true,
-                true,
-                false,
-            ],
-            [
-                null,
-                HttpKernelInterface::MASTER_REQUEST,
-                false,
-                false,
-                false,
-            ],
-            [
-                ContaoCoreBundle::SCOPE_BACKEND,
-                HttpKernelInterface::SUB_REQUEST,
-                false,
-                false,
-                true,
-            ],
-            [
-                ContaoCoreBundle::SCOPE_FRONTEND,
-                HttpKernelInterface::SUB_REQUEST,
-                false,
-                true,
-                false,
-            ],
-            [
-                null,
-                HttpKernelInterface::SUB_REQUEST,
-                false,
-                false,
-                false,
-            ],
+        yield [
+            ContaoCoreBundle::SCOPE_BACKEND,
+            HttpKernelInterface::MASTER_REQUEST,
+            true,
+            false,
+            true,
+        ];
+
+        yield [
+            ContaoCoreBundle::SCOPE_FRONTEND,
+            HttpKernelInterface::MASTER_REQUEST,
+            true,
+            true,
+            false,
+        ];
+
+        yield [
+            null,
+            HttpKernelInterface::MASTER_REQUEST,
+            false,
+            false,
+            false,
+        ];
+
+        yield [
+            ContaoCoreBundle::SCOPE_BACKEND,
+            HttpKernelInterface::SUB_REQUEST,
+            false,
+            false,
+            true,
+        ];
+
+        yield [
+            ContaoCoreBundle::SCOPE_FRONTEND,
+            HttpKernelInterface::SUB_REQUEST,
+            false,
+            true,
+            false,
+        ];
+
+        yield [
+            null,
+            HttpKernelInterface::SUB_REQUEST,
+            false,
+            false,
+            false,
         ];
     }
 }

@@ -81,42 +81,13 @@ class LegacyMatcherTest extends TestCase
 
     public function getRootRequestData(): \Generator
     {
-        yield [
-            '/',
-            false,
-        ];
-
-        yield [
-            '/',
-            true,
-        ];
-
-        yield [
-            '/en/',
-            true,
-        ];
-
-        yield [
-            '/de/',
-            true,
-        ];
-
-        yield [
-            '/fr-FR/',
-            true,
-        ];
-
-        yield [
-            '/es/',
-            false,
-            true,
-        ];
-
-        yield [
-            '/fr-FR/',
-            false,
-            true,
-        ];
+        yield ['/', false];
+        yield ['/', true];
+        yield ['/en/', true];
+        yield ['/de/', true];
+        yield ['/fr-FR/', true];
+        yield ['/es/', false, true];
+        yield ['/fr-FR/', false, true];
     }
 
     /**

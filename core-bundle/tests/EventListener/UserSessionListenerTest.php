@@ -83,15 +83,10 @@ class UserSessionListenerTest extends TestCase
         $this->assertSame($sessionValues, $bag->all());
     }
 
-    /**
-     * @return string[][]
-     */
-    public function scopeBagProvider(): array
+    public function scopeBagProvider(): \Generator
     {
-        return [
-            [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'contao_backend'],
-            [ContaoCoreBundle::SCOPE_FRONTEND, FrontendUser::class, 'contao_frontend'],
-        ];
+        yield [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'contao_backend'];
+        yield [ContaoCoreBundle::SCOPE_FRONTEND, FrontendUser::class, 'contao_frontend'];
     }
 
     /**
@@ -131,15 +126,10 @@ class UserSessionListenerTest extends TestCase
         $listener->onKernelResponse($this->mockFilterResponseEvent($request));
     }
 
-    /**
-     * @return string[][]
-     */
-    public function scopeTableProvider(): array
+    public function scopeTableProvider(): \Generator
     {
-        return [
-            [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'tl_user'],
-            [ContaoCoreBundle::SCOPE_FRONTEND, FrontendUser::class, 'tl_member'],
-        ];
+        yield [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'tl_user'];
+        yield [ContaoCoreBundle::SCOPE_FRONTEND, FrontendUser::class, 'tl_member'];
     }
 
     /**
@@ -200,15 +190,10 @@ class UserSessionListenerTest extends TestCase
         $listener->onKernelResponse($this->mockFilterResponseEvent($request));
     }
 
-    /**
-     * @return (AnonymousToken|null)[][]
-     */
-    public function noUserProvider(): array
+    public function noUserProvider(): \Generator
     {
-        return [
-            [null],
-            [new AnonymousToken('key', 'anon.')],
-        ];
+        yield [null];
+        yield [new AnonymousToken('key', 'anon.')];
     }
 
     public function testDoesNotReplaceTheSessionUponSubrequests(): void

@@ -207,20 +207,9 @@ class UserPasswordCommandTest extends TestCase
         (new CommandTester($command))->execute($input, ['interactive' => false]);
     }
 
-    /**
-     * @return string[][]
-     */
-    public function usernamePasswordProvider(): array
+    public function usernamePasswordProvider(): \Generator
     {
-        return [
-            [
-                'foobar',
-                '12345678',
-            ],
-            [
-                'k.jones',
-                'kevinjones',
-            ],
-        ];
+        yield ['foobar', '12345678'];
+        yield ['k.jones', 'kevinjones'];
     }
 }

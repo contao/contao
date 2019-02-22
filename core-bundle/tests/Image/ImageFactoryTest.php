@@ -385,23 +385,18 @@ class ImageFactoryTest extends TestCase
         );
     }
 
-    /**
-     * @return array<string,(string|int[])[]>
-     */
-    public function getCreateWithLegacyMode(): array
+    public function getCreateWithLegacyMode(): \Generator
     {
-        return [
-            'Left Top' => ['left_top', [0, 0, 1, 1]],
-            'Left Center' => ['left_center', [0, 0, 1, 100]],
-            'Left Bottom' => ['left_bottom', [0, 99, 1, 1]],
-            'Center Top' => ['center_top', [0, 0, 100, 1]],
-            'Center Center' => ['center_center', [0, 0, 100, 100]],
-            'Center Bottom' => ['center_bottom', [0, 99, 100, 1]],
-            'Right Top' => ['right_top', [99, 0, 1, 1]],
-            'Right Center' => ['right_center', [99, 0, 1, 100]],
-            'Right Bottom' => ['right_bottom', [99, 99, 1, 1]],
-            'Invalid' => ['top_left', [0, 0, 100, 100]],
-        ];
+        yield 'Left Top' => ['left_top', [0, 0, 1, 1]];
+        yield 'Left Center' => ['left_center', [0, 0, 1, 100]];
+        yield 'Left Bottom' => ['left_bottom', [0, 99, 1, 1]];
+        yield 'Center Top' => ['center_top', [0, 0, 100, 1]];
+        yield 'Center Center' => ['center_center', [0, 0, 100, 100]];
+        yield 'Center Bottom' => ['center_bottom', [0, 99, 100, 1]];
+        yield 'Right Top' => ['right_top', [99, 0, 1, 1]];
+        yield 'Right Center' => ['right_center', [99, 0, 1, 100]];
+        yield 'Right Bottom' => ['right_bottom', [99, 99, 1, 1]];
+        yield 'Invalid' => ['top_left', [0, 0, 100, 100]];
     }
 
     public function testFailsToReturnTheImportantPartIfTheModeIsInvalid(): void

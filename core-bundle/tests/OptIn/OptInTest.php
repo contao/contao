@@ -130,14 +130,9 @@ class OptInTest extends ContaoTestCase
         (new OptIn($framework))->purgeTokens();
     }
 
-    /**
-     * @return array<(string|MemberModel|null)[]>
-     */
-    public function getExpiredTokens(): array
+    public function getExpiredTokens(): \Generator
     {
-        return [
-            ['delete', null],
-            ['save', $this->createMock(MemberModel::class)],
-        ];
+        yield ['delete', null];
+        yield ['save', $this->createMock(MemberModel::class)];
     }
 }

@@ -537,15 +537,10 @@ class ContaoFrameworkTest extends TestCase
         $this->addToAssertionCount(1);  // does not throw an exception
     }
 
-    /**
-     * @return array<string,string[]>
-     */
-    public function getInstallRoutes(): array
+    public function getInstallRoutes(): \Generator
     {
-        return [
-            'contao_install' => ['contao_install'],
-            'contao_install_redirect' => ['contao_install_redirect'],
-        ];
+        yield 'contao_install' => ['contao_install'];
+        yield 'contao_install_redirect' => ['contao_install_redirect'];
     }
 
     /**

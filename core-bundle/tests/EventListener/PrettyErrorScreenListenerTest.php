@@ -131,16 +131,11 @@ class PrettyErrorScreenListenerTest extends TestCase
         unset($GLOBALS['TL_PTY']);
     }
 
-    /**
-     * @return (UnauthorizedHttpException|AccessDeniedHttpException|NotFoundHttpException|int)[][]
-     */
-    public function getErrorTypes(): array
+    public function getErrorTypes(): \Generator
     {
-        return [
-            [401, new UnauthorizedHttpException('', '', new InsufficientAuthenticationException())],
-            [403, new AccessDeniedHttpException('', new AccessDeniedException())],
-            [404, new NotFoundHttpException('', new PageNotFoundException())],
-        ];
+        yield [401, new UnauthorizedHttpException('', '', new InsufficientAuthenticationException())];
+        yield [403, new AccessDeniedHttpException('', new AccessDeniedException())];
+        yield [404, new NotFoundHttpException('', new PageNotFoundException())];
     }
 
     public function testHandlesResponseExceptionsWhenRenderingAPageHandler(): void

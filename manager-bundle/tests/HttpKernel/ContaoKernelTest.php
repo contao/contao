@@ -143,37 +143,36 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertSame($expectedResult, $files);
     }
 
-    /**
-     * @return (string[]|string)[][]
-     */
-    public function containerConfigurationProvider(): array
+    public function containerConfigurationProvider(): \Generator
     {
-        return [
-            [
-                __DIR__.'/../Fixtures/HttpKernel/WithParametersYml',
-                'prod',
-                ['parameters.yml', 'parameters.yml'],
-            ],
-            [
-                __DIR__.'/../Fixtures/HttpKernel/WithConfigDevYml',
-                'dev',
-                ['config_dev.yml'],
-            ],
-            [
-                __DIR__.'/../Fixtures/HttpKernel/WithConfigYml',
-                'prod',
-                ['config.yml'],
-            ],
-            [
-                __DIR__.'/../Fixtures/HttpKernel/WithConfigsYml',
-                'prod',
-                ['config_prod.yml'],
-            ],
-            [
-                $this->getTempDir(),
-                'prod',
-                [],
-            ],
+        yield [
+            __DIR__.'/../Fixtures/HttpKernel/WithParametersYml',
+            'prod',
+            ['parameters.yml', 'parameters.yml'],
+        ];
+
+        yield [
+            __DIR__.'/../Fixtures/HttpKernel/WithConfigDevYml',
+            'dev',
+            ['config_dev.yml'],
+        ];
+
+        yield [
+            __DIR__.'/../Fixtures/HttpKernel/WithConfigYml',
+            'prod',
+            ['config.yml'],
+        ];
+
+        yield [
+            __DIR__.'/../Fixtures/HttpKernel/WithConfigsYml',
+            'prod',
+            ['config_prod.yml'],
+        ];
+
+        yield [
+            $this->getTempDir(),
+            'prod',
+            [],
         ];
     }
 

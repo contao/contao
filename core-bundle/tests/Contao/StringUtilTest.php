@@ -57,212 +57,246 @@ class StringUtilTest extends TestCase
         $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens));
     }
 
-    /**
-     * @return array<string,array<int,array<string,float|int|string>|string>>
-     */
-    public function parseSimpleTokensProvider(): array
+    public function parseSimpleTokensProvider(): \Generator
     {
-        return [
-            'Test regular token replacement' => [
-                'This is my ##email##',
-                ['email' => 'test@foobar.com'],
-                'This is my test@foobar.com',
-            ],
-            'Test regular token replacement is non greedy' => [
-                'This is my ##email##,##email2##',
-                ['email' => 'test@foobar.com', 'email2' => 'foo@test.com'],
-                'This is my test@foobar.com,foo@test.com',
-            ],
-            'Test token replacement with special characters (-)' => [
-                'This is my ##e-mail##',
-                ['e-mail' => 'test@foobar.com'],
-                'This is my test@foobar.com',
-            ],
-            'Test token replacement with special characters (&)' => [
-                'This is my ##e&mail##',
-                ['e&mail' => 'test@foobar.com'],
-                'This is my test@foobar.com',
-            ],
-            'Test token replacement with special characters (#)' => [
-                'This is my ##e#mail##',
-                ['e#mail' => 'test@foobar.com'],
-                'This is my test@foobar.com',
-            ],
-            'Test token replacement with token delimiter (##)' => [
-                'This is my ##e##mail##',
-                ['e##mail' => 'test@foobar.com'],
-                'This is my ##e##mail##',
-            ],
-            'Test comparisons (==) with regular characters (match)' => [
-                'This is my {if email==""}match{endif}',
-                ['email' => ''],
-                'This is my match',
-            ],
-            'Test comparisons (==) with regular characters (no match)' => [
-                'This is my {if email==""}match{endif}',
-                ['email' => 'test@foobar.com'],
-                'This is my ',
-            ],
-            'Test comparisons (!=) with regular characters (match)' => [
-                'This is my {if email!=""}match{endif}',
-                ['email' => 'test@foobar.com'],
-                'This is my match',
-            ],
-            'Test comparisons (!=) with regular characters (no match)' => [
-                'This is my {if email!=""}match{endif}',
-                ['email' => ''],
-                'This is my ',
-            ],
-            'Test comparisons (>) with regular characters (match)' => [
-                'This is my {if value>0}match{endif}',
-                ['value' => 5],
-                'This is my match',
-            ],
-            'Test comparisons (>) with regular characters (no match)' => [
-                'This is my {if value>0}hello{endif}',
-                ['value' => -8],
-                'This is my ',
-            ],
-            'Test comparisons (>=) with regular characters (match)' => [
-                'This is my {if value>=0}match{endif}',
-                ['value' => 5],
-                'This is my match',
-            ],
-            'Test comparisons (>=) with regular characters (no match)' => [
-                'This is my {if value>=0}hello{endif}',
-                ['value' => -8],
-                'This is my ',
-            ],
-            'Test comparisons (<) with regular characters (match)' => [
-                'This is my {if value<0}match{endif}',
-                ['value' => -5],
-                'This is my match',
-            ],
-            'Test comparisons (<) with regular characters (no match)' => [
-                'This is my {if value<0}hello{endif}',
-                ['value' => 9],
-                'This is my ',
-            ],
-            'Test comparisons (<=) with regular characters (match)' => [
-                'This is my {if value<=0}match{endif}',
-                ['value' => -5],
-                'This is my match',
-            ],
-            'Test comparisons (<=) with regular characters (no match)' => [
-                'This is my {if value<=0}hello{endif}',
-                ['value' => 9],
-                'This is my ',
-            ],
-            'Test comparisons (<) with special characters (match)' => [
-                'This is my {if val&#ue<0}match{endif}',
-                ['val&#ue' => -5],
-                'This is my match',
-            ],
-            'Test comparisons (<) with special characters (no match)' => [
-                'This is my {if val&#ue<0}match{endif}',
-                ['val&#ue' => 9],
-                'This is my ',
-            ],
-            'Test comparisons (===) with regular characters (match)' => [
-                'This is my {if value===5}match{endif}',
-                ['value' => 5],
-                'This is my match',
-            ],
-            'Test comparisons (===) with regular characters (no match)' => [
-                'This is my {if value===5}match{endif}',
-                ['value' => 5.0],
-                'This is my ',
-            ],
-            'Test comparisons (!==) with regular characters (match)' => [
-                'This is my {if value!==5.0}match{endif}',
-                ['value' => '5'],
-                'This is my match',
-            ],
-            'Test comparisons (!==) with regular characters (no match)' => [
-                'This is my {if value!==5.0}match{endif}',
-                ['value' => 5.0],
-                'This is my ',
-            ],
-            'Test whitespace in tokens not allowed and ignored' => [
-                'This is my ##dumb token## you know',
-                ['dumb token' => 'foobar'],
-                'This is my ##dumb token## you know',
-            ],
-            'Test if-tags insertion not evaluated' => [
-                '##token##',
-                ['token' => '{if token=="foo"}'],
-                '{if token=="foo"}',
-            ],
-            'Test if-tags insertion not evaluated with multiple tokens' => [
-                '##token1####token2####token3##',
-                ['token1' => '{', 'token2' => 'if', 'token3' => ' token=="foo"}'],
-                '{if token=="foo"}',
-            ],
-            'Test nested if-tag with " in value (match)' => [
-                '{if value=="f"oo"}1{endif}{if value=="f\"oo"}2{endif}',
-                ['value' => 'f"oo'],
-                '12',
-            ],
-            'Test else (match)' => [
-                'This is my {if value=="foo"}match{else}else-match{endif}',
-                ['value' => 'foo'],
-                'This is my match',
-            ],
-            'Test else (no match)' => [
-                'This is my {if value!="foo"}match{else}else-match{endif}',
-                ['value' => 'foo'],
-                'This is my else-match',
-            ],
-            'Test nested if (match)' => [
-                '0{if value=="foo"}1{if value!="foo"}2{else}3{if value=="foo"}4{else}5{endif}6{endif}7{else}8{endif}9',
-                ['value' => 'foo'],
-                '0134679',
-            ],
-            'Test nested if (no match)' => [
-                '0{if value!="foo"}1{if value=="foo"}2{else}3{if value!="foo"}4{else}5{endif}6{endif}7{else}8{endif}9',
-                ['value' => 'foo'],
-                '089',
-            ],
-            'Test nested elseif (match)' => [
-                '0{if value=="bar"}1{elseif value=="foo"}2{else}3{if value=="bar"}4{elseif value=="foo"}5{else}6{endif}7{endif}8',
-                ['value' => 'foo'],
-                '028',
-            ],
-            'Test nested elseif (no match)' => [
-                '0{if value=="bar"}1{elseif value!="foo"}2{else}3{if value=="bar"}4{elseif value!="foo"}5{else}6{endif}7{endif}8',
-                ['value' => 'foo'],
-                '03678',
-            ],
-            'Test special value chars \'=!<>;$()[] (match)' => [
-                '{if value=="\'=!<>;$()[]"}match{else}no-match{endif}',
-                ['value' => '\'=!<>;$()[]'],
-                'match',
-            ],
-            'Test special value chars \'=!<>;$()[] (no match)' => [
-                '{if value=="\'=!<>;$()[]"}match{else}no-match{endif}',
-                ['value' => '=!<>;$()[]'],
-                'no-match',
-            ],
-            'Test every elseif expression is skipped if first if statement evaluates to true' => [
-                '{if value=="foobar"}Output 1{elseif value=="foobar"}Output 2{elseif value=="foobar"}Output 3{elseif value=="foobar"}Output 4{else}Output 5{endif}',
-                ['value' => 'foobar'],
-                'Output 1',
-            ],
-            'Test every elseif expression is skipped if first elseif statement evaluates to true' => [
-                '{if value!="foobar"}Output 1{elseif value=="foobar"}Output 2{elseif value=="foobar"}Output 3{elseif value=="foobar"}Output 4{elseif value=="foobar"}Output 5{else}Output 6{endif}',
-                ['value' => 'foobar'],
-                'Output 2',
-            ],
-            'Test every elseif expression is skipped if second elseif statement evaluates to true' => [
-                '{if value!="foobar"}Output 1{elseif value!="foobar"}Output 2{elseif value=="foobar"}Output 3{elseif value=="foobar"}Output 4{elseif value=="foobar"}Output 5{elseif value=="foobar"}Output 6{else}Output 7{endif}',
-                ['value' => 'foobar'],
-                'Output 3',
-            ],
-            'Test {{iflng}} insert tag or similar constructs are ignored' => [
-                '{if value=="foobar"}{{iflng::en}}hi{{iflng}}{{elseifinserttag::whodoesthisanyway}}{elseif value=="foo"}{{iflng::en}}hi2{{iflng}}{else}ok{endif}',
-                ['value' => 'foobar'],
-                '{{iflng::en}}hi{{iflng}}{{elseifinserttag::whodoesthisanyway}}',
-            ],
+        yield 'Test regular token replacement' => [
+            'This is my ##email##',
+            ['email' => 'test@foobar.com'],
+            'This is my test@foobar.com',
+        ];
+
+        yield 'Test regular token replacement is non greedy' => [
+            'This is my ##email##,##email2##',
+            ['email' => 'test@foobar.com', 'email2' => 'foo@test.com'],
+            'This is my test@foobar.com,foo@test.com',
+        ];
+
+        yield 'Test token replacement with special characters (-)' => [
+            'This is my ##e-mail##',
+            ['e-mail' => 'test@foobar.com'],
+            'This is my test@foobar.com',
+        ];
+
+        yield 'Test token replacement with special characters (&)' => [
+            'This is my ##e&mail##',
+            ['e&mail' => 'test@foobar.com'],
+            'This is my test@foobar.com',
+        ];
+
+        yield 'Test token replacement with special characters (#)' => [
+            'This is my ##e#mail##',
+            ['e#mail' => 'test@foobar.com'],
+            'This is my test@foobar.com',
+        ];
+
+        yield 'Test token replacement with token delimiter (##)' => [
+            'This is my ##e##mail##',
+            ['e##mail' => 'test@foobar.com'],
+            'This is my ##e##mail##',
+        ];
+
+        yield 'Test comparisons (==) with regular characters (match)' => [
+            'This is my {if email==""}match{endif}',
+            ['email' => ''],
+            'This is my match',
+        ];
+
+        yield 'Test comparisons (==) with regular characters (no match)' => [
+            'This is my {if email==""}match{endif}',
+            ['email' => 'test@foobar.com'],
+            'This is my ',
+        ];
+
+        yield 'Test comparisons (!=) with regular characters (match)' => [
+            'This is my {if email!=""}match{endif}',
+            ['email' => 'test@foobar.com'],
+            'This is my match',
+        ];
+
+        yield 'Test comparisons (!=) with regular characters (no match)' => [
+            'This is my {if email!=""}match{endif}',
+            ['email' => ''],
+            'This is my ',
+        ];
+
+        yield 'Test comparisons (>) with regular characters (match)' => [
+            'This is my {if value>0}match{endif}',
+            ['value' => 5],
+            'This is my match',
+        ];
+
+        yield 'Test comparisons (>) with regular characters (no match)' => [
+            'This is my {if value>0}hello{endif}',
+            ['value' => -8],
+            'This is my ',
+        ];
+
+        yield 'Test comparisons (>=) with regular characters (match)' => [
+            'This is my {if value>=0}match{endif}',
+            ['value' => 5],
+            'This is my match',
+        ];
+
+        yield 'Test comparisons (>=) with regular characters (no match)' => [
+            'This is my {if value>=0}hello{endif}',
+            ['value' => -8],
+            'This is my ',
+        ];
+
+        yield 'Test comparisons (<) with regular characters (match)' => [
+            'This is my {if value<0}match{endif}',
+            ['value' => -5],
+            'This is my match',
+        ];
+
+        yield 'Test comparisons (<) with regular characters (no match)' => [
+            'This is my {if value<0}hello{endif}',
+            ['value' => 9],
+            'This is my ',
+        ];
+
+        yield 'Test comparisons (<=) with regular characters (match)' => [
+            'This is my {if value<=0}match{endif}',
+            ['value' => -5],
+            'This is my match',
+        ];
+
+        yield 'Test comparisons (<=) with regular characters (no match)' => [
+            'This is my {if value<=0}hello{endif}',
+            ['value' => 9],
+            'This is my ',
+        ];
+
+        yield 'Test comparisons (<) with special characters (match)' => [
+            'This is my {if val&#ue<0}match{endif}',
+            ['val&#ue' => -5],
+            'This is my match',
+        ];
+
+        yield 'Test comparisons (<) with special characters (no match)' => [
+            'This is my {if val&#ue<0}match{endif}',
+            ['val&#ue' => 9],
+            'This is my ',
+        ];
+
+        yield 'Test comparisons (===) with regular characters (match)' => [
+            'This is my {if value===5}match{endif}',
+            ['value' => 5],
+            'This is my match',
+        ];
+
+        yield 'Test comparisons (===) with regular characters (no match)' => [
+            'This is my {if value===5}match{endif}',
+            ['value' => 5.0],
+            'This is my ',
+        ];
+
+        yield 'Test comparisons (!==) with regular characters (match)' => [
+            'This is my {if value!==5.0}match{endif}',
+            ['value' => '5'],
+            'This is my match',
+        ];
+
+        yield 'Test comparisons (!==) with regular characters (no match)' => [
+            'This is my {if value!==5.0}match{endif}',
+            ['value' => 5.0],
+            'This is my ',
+        ];
+
+        yield 'Test whitespace in tokens not allowed and ignored' => [
+            'This is my ##dumb token## you know',
+            ['dumb token' => 'foobar'],
+            'This is my ##dumb token## you know',
+        ];
+
+        yield 'Test if-tags insertion not evaluated' => [
+            '##token##',
+            ['token' => '{if token=="foo"}'],
+            '{if token=="foo"}',
+        ];
+
+        yield 'Test if-tags insertion not evaluated with multiple tokens' => [
+            '##token1####token2####token3##',
+            ['token1' => '{', 'token2' => 'if', 'token3' => ' token=="foo"}'],
+            '{if token=="foo"}',
+        ];
+
+        yield 'Test nested if-tag with " in value (match)' => [
+            '{if value=="f"oo"}1{endif}{if value=="f\"oo"}2{endif}',
+            ['value' => 'f"oo'],
+            '12',
+        ];
+
+        yield 'Test else (match)' => [
+            'This is my {if value=="foo"}match{else}else-match{endif}',
+            ['value' => 'foo'],
+            'This is my match',
+        ];
+
+        yield 'Test else (no match)' => [
+            'This is my {if value!="foo"}match{else}else-match{endif}',
+            ['value' => 'foo'],
+            'This is my else-match',
+        ];
+
+        yield 'Test nested if (match)' => [
+            '0{if value=="foo"}1{if value!="foo"}2{else}3{if value=="foo"}4{else}5{endif}6{endif}7{else}8{endif}9',
+            ['value' => 'foo'],
+            '0134679',
+        ];
+
+        yield 'Test nested if (no match)' => [
+            '0{if value!="foo"}1{if value=="foo"}2{else}3{if value!="foo"}4{else}5{endif}6{endif}7{else}8{endif}9',
+            ['value' => 'foo'],
+            '089',
+        ];
+
+        yield 'Test nested elseif (match)' => [
+            '0{if value=="bar"}1{elseif value=="foo"}2{else}3{if value=="bar"}4{elseif value=="foo"}5{else}6{endif}7{endif}8',
+            ['value' => 'foo'],
+            '028',
+        ];
+
+        yield 'Test nested elseif (no match)' => [
+            '0{if value=="bar"}1{elseif value!="foo"}2{else}3{if value=="bar"}4{elseif value!="foo"}5{else}6{endif}7{endif}8',
+            ['value' => 'foo'],
+            '03678',
+        ];
+
+        yield 'Test special value chars \'=!<>;$()[] (match)' => [
+            '{if value=="\'=!<>;$()[]"}match{else}no-match{endif}',
+            ['value' => '\'=!<>;$()[]'],
+            'match',
+        ];
+
+        yield 'Test special value chars \'=!<>;$()[] (no match)' => [
+            '{if value=="\'=!<>;$()[]"}match{else}no-match{endif}',
+            ['value' => '=!<>;$()[]'],
+            'no-match',
+        ];
+
+        yield 'Test every elseif expression is skipped if first if statement evaluates to true' => [
+            '{if value=="foobar"}Output 1{elseif value=="foobar"}Output 2{elseif value=="foobar"}Output 3{elseif value=="foobar"}Output 4{else}Output 5{endif}',
+            ['value' => 'foobar'],
+            'Output 1',
+        ];
+
+        yield 'Test every elseif expression is skipped if first elseif statement evaluates to true' => [
+            '{if value!="foobar"}Output 1{elseif value=="foobar"}Output 2{elseif value=="foobar"}Output 3{elseif value=="foobar"}Output 4{elseif value=="foobar"}Output 5{else}Output 6{endif}',
+            ['value' => 'foobar'],
+            'Output 2',
+        ];
+
+        yield 'Test every elseif expression is skipped if second elseif statement evaluates to true' => [
+            '{if value!="foobar"}Output 1{elseif value!="foobar"}Output 2{elseif value=="foobar"}Output 3{elseif value=="foobar"}Output 4{elseif value=="foobar"}Output 5{elseif value=="foobar"}Output 6{else}Output 7{endif}',
+            ['value' => 'foobar'],
+            'Output 3',
+        ];
+
+        yield 'Test {{iflng}} insert tag or similar constructs are ignored' => [
+            '{if value=="foobar"}{{iflng::en}}hi{{iflng}}{{elseifinserttag::whodoesthisanyway}}{elseif value=="foo"}{{iflng::en}}hi2{{iflng}}{else}ok{endif}',
+            ['value' => 'foobar'],
+            '{{iflng::en}}hi{{iflng}}{{elseifinserttag::whodoesthisanyway}}',
         ];
     }
 
@@ -274,42 +308,42 @@ class StringUtilTest extends TestCase
         $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens));
     }
 
-    /**
-     * @return array<string,array<int,array<string,string>|string>>
-     */
-    public function parseSimpleTokensCorrectNewlines(): array
+    public function parseSimpleTokensCorrectNewlines(): \Generator
     {
-        return [
-            'Test newlines are kept end of token' => [
-                "This is my ##token##\n",
-                ['token' => 'foo'],
-                "This is my foo\n",
-            ],
-            'Test newlines are kept end in token' => [
-                'This is my ##token##',
-                ['token' => "foo\n"],
-                "This is my foo\n",
-            ],
-            'Test newlines are kept end in and after token' => [
-                "This is my ##token##\n",
-                ['token' => "foo\n"],
-                "This is my foo\n\n",
-            ],
-            'Test newlines are kept' => [
-                "This is my \n ##newline## here",
-                ['newline' => "foo\nbar\n"],
-                "This is my \n foo\nbar\n here",
-            ],
-            'Test newlines are removed after if tag' => [
-                "\n{if token=='foo'}\nline2\n{endif}\n",
-                ['token' => 'foo'],
-                "\nline2\n",
-            ],
-            'Test newlines are removed after else tag' => [
-                "\n{if token!='foo'}{else}\nline2\n{endif}\n",
-                ['token' => 'foo'],
-                "\nline2\n",
-            ],
+        yield 'Test newlines are kept end of token' => [
+            "This is my ##token##\n",
+            ['token' => 'foo'],
+            "This is my foo\n",
+        ];
+
+        yield 'Test newlines are kept end in token' => [
+            'This is my ##token##',
+            ['token' => "foo\n"],
+            "This is my foo\n",
+        ];
+
+        yield 'Test newlines are kept end in and after token' => [
+            "This is my ##token##\n",
+            ['token' => "foo\n"],
+            "This is my foo\n\n",
+        ];
+
+        yield 'Test newlines are kept' => [
+            "This is my \n ##newline## here",
+            ['newline' => "foo\nbar\n"],
+            "This is my \n foo\nbar\n here",
+        ];
+
+        yield 'Test newlines are removed after if tag' => [
+            "\n{if token=='foo'}\nline2\n{endif}\n",
+            ['token' => 'foo'],
+            "\nline2\n",
+        ];
+
+        yield 'Test newlines are removed after else tag' => [
+            "\n{if token!='foo'}{else}\nline2\n{endif}\n",
+            ['token' => 'foo'],
+            "\nline2\n",
         ];
     }
 
@@ -321,36 +355,36 @@ class StringUtilTest extends TestCase
         $this->assertSame($string, StringUtil::parseSimpleTokens($string, []));
     }
 
-    /**
-     * @return array<string,(bool|string)[]>
-     */
-    public function parseSimpleTokensDoesntExecutePhp(): array
+    public function parseSimpleTokensDoesntExecutePhp(): \Generator
     {
-        return [
-            '(<?php)' => [
-                'This <?php var_dump() ?> is a test.',
-                false,
-            ],
-            '(<?=)' => [
-                'This <?= $var ?> is a test.',
-                false,
-            ],
-            '(<?)' => [
-                'This <? var_dump() ?> is a test.',
-                \PHP_VERSION_ID >= 70000,
-            ],
-            '(<%)' => [
-                'This <% var_dump() ?> is a test.',
-                \PHP_VERSION_ID >= 70000 || !\in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
-            ],
-            '(<script language="php">)' => [
-                'This <script language="php"> var_dump() </script> is a test.',
-                \PHP_VERSION_ID >= 70000,
-            ],
-            '(<script language=\'php\'>)' => [
-                'This <script language=\'php\'> var_dump() </script> is a test.',
-                \PHP_VERSION_ID >= 70000,
-            ],
+        yield '(<?php)' => [
+            'This <?php var_dump() ?> is a test.',
+            false,
+        ];
+
+        yield '(<?=)' => [
+            'This <?= $var ?> is a test.',
+            false,
+        ];
+
+        yield '(<?)' => [
+            'This <? var_dump() ?> is a test.',
+            \PHP_VERSION_ID >= 70000,
+        ];
+
+        yield '(<%)' => [
+            'This <% var_dump() ?> is a test.',
+            \PHP_VERSION_ID >= 70000 || !\in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
+        ];
+
+        yield '(<script language="php">)' => [
+            'This <script language="php"> var_dump() </script> is a test.',
+            \PHP_VERSION_ID >= 70000,
+        ];
+
+        yield '(<script language=\'php\'>)' => [
+            'This <script language=\'php\'> var_dump() </script> is a test.',
+            \PHP_VERSION_ID >= 70000,
         ];
     }
 
@@ -362,36 +396,36 @@ class StringUtilTest extends TestCase
         $this->assertSame($tokens['foo'], StringUtil::parseSimpleTokens('##foo##', $tokens));
     }
 
-    /**
-     * @return array<string,(bool|array<string,string>)[]>
-     */
-    public function parseSimpleTokensDoesntExecutePhpInToken(): array
+    public function parseSimpleTokensDoesntExecutePhpInToken(): \Generator
     {
-        return [
-            '(<?php)' => [
-                ['foo' => 'This <?php var_dump() ?> is a test.'],
-                false,
-            ],
-            '(<?=)' => [
-                ['foo' => 'This <?= $var ?> is a test.'],
-                false,
-            ],
-            '(<?)' => [
-                ['foo' => 'This <? var_dump() ?> is a test.'],
-                \PHP_VERSION_ID >= 70000,
-            ],
-            '(<%)' => [
-                ['foo' => 'This <% var_dump() ?> is a test.'],
-                \PHP_VERSION_ID >= 70000 || !\in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
-            ],
-            '(<script language="php">)' => [
-                ['foo' => 'This <script language="php"> var_dump() </script> is a test.'],
-                \PHP_VERSION_ID >= 70000,
-            ],
-            '(<script language=\'php\'>)' => [
-                ['foo' => 'This <script language=\'php\'> var_dump() </script> is a test.'],
-                \PHP_VERSION_ID >= 70000,
-            ],
+        yield '(<?php)' => [
+            ['foo' => 'This <?php var_dump() ?> is a test.'],
+            false,
+        ];
+
+        yield '(<?=)' => [
+            ['foo' => 'This <?= $var ?> is a test.'],
+            false,
+        ];
+
+        yield '(<?)' => [
+            ['foo' => 'This <? var_dump() ?> is a test.'],
+            \PHP_VERSION_ID >= 70000,
+        ];
+
+        yield '(<%)' => [
+            ['foo' => 'This <% var_dump() ?> is a test.'],
+            \PHP_VERSION_ID >= 70000 || !\in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
+        ];
+
+        yield '(<script language="php">)' => [
+            ['foo' => 'This <script language="php"> var_dump() </script> is a test.'],
+            \PHP_VERSION_ID >= 70000,
+        ];
+
+        yield '(<script language=\'php\'>)' => [
+            ['foo' => 'This <script language=\'php\'> var_dump() </script> is a test.'],
+            \PHP_VERSION_ID >= 70000,
         ];
     }
 
@@ -419,23 +453,18 @@ class StringUtilTest extends TestCase
         StringUtil::parseSimpleTokens($string, ['foo' => 'bar']);
     }
 
-    /**
-     * @return array<string,string[]>
-     */
-    public function parseSimpleTokensInvalidComparison(): array
+    public function parseSimpleTokensInvalidComparison(): \Generator
     {
-        return [
-            'PHP constants are not allowed' => ['{if foo==__FILE__}{endif}'],
-            'Not closed string (")' => ['{if foo=="bar}{endif}'],
-            'Not closed string (\')' => ['{if foo==\'bar}{endif}'],
-            'Additional chars after string ("/)' => ['{if foo=="bar"/}{endif}'],
-            'Additional chars after string (\'/)' => ['{if foo==\'bar\'/}{endif}'],
-            'Additional chars after string ("*)' => ['{if foo=="bar"*}{endif}'],
-            'Additional chars after string (\'*)' => ['{if foo==\'bar\'*}{endif}'],
-            'Unknown operator (=)' => ['{if foo="bar"}{endif}'],
-            'Unknown operator (====)' => ['{if foo===="bar"}{endif}'],
-            'Unknown operator (<==)' => ['{if foo<=="bar"}{endif}'],
-        ];
+        yield 'PHP constants are not allowed' => ['{if foo==__FILE__}{endif}'];
+        yield 'Not closed string (")' => ['{if foo=="bar}{endif}'];
+        yield 'Not closed string (\')' => ['{if foo==\'bar}{endif}'];
+        yield 'Additional chars after string ("/)' => ['{if foo=="bar"/}{endif}'];
+        yield 'Additional chars after string (\'/)' => ['{if foo==\'bar\'/}{endif}'];
+        yield 'Additional chars after string ("*)' => ['{if foo=="bar"*}{endif}'];
+        yield 'Additional chars after string (\'*)' => ['{if foo==\'bar\'*}{endif}'];
+        yield 'Unknown operator (=)' => ['{if foo="bar"}{endif}'];
+        yield 'Unknown operator (====)' => ['{if foo===="bar"}{endif}'];
+        yield 'Unknown operator (<==)' => ['{if foo<=="bar"}{endif}'];
     }
 
     public function testStripsTheRootDirectory(): void
@@ -486,42 +515,42 @@ class StringUtilTest extends TestCase
         $this->assertSame($expected, StringUtil::trimsplit($pattern, $string));
     }
 
-    /**
-     * @return array<string,(string|string[])[]>
-     */
-    public function trimsplitProvider(): array
+    public function trimsplitProvider(): \Generator
     {
-        return [
-            'Test regular split' => [
-                ',',
-                'foo,bar',
-                ['foo', 'bar'],
-            ],
-            'Test split with trim' => [
-                ',',
-                " \n \r \t foo \n \r \t , \n \r \t bar \n \r \t ",
-                ['foo', 'bar'],
-            ],
-            'Test regex split' => [
-                '[,;]',
-                'foo,bar;baz',
-                ['foo', 'bar', 'baz'],
-            ],
-            'Test regex split with trim' => [
-                '[,;]',
-                " \n \r \t foo \n \r \t , \n \r \t bar \n \r \t ; \n \r \t baz \n \r \t ",
-                ['foo', 'bar', 'baz'],
-            ],
-            'Test split cache bug 1' => [
-                ',',
-                ',foo,,bar',
-                ['', 'foo', '', 'bar'],
-            ],
-            'Test split cache bug 2' => [
-                ',,',
-                'foo,,bar',
-                ['foo', 'bar'],
-            ],
+        yield 'Test regular split' => [
+            ',',
+            'foo,bar',
+            ['foo', 'bar'],
+        ];
+
+        yield 'Test split with trim' => [
+            ',',
+            " \n \r \t foo \n \r \t , \n \r \t bar \n \r \t ",
+            ['foo', 'bar'],
+        ];
+
+        yield 'Test regex split' => [
+            '[,;]',
+            'foo,bar;baz',
+            ['foo', 'bar', 'baz'],
+        ];
+
+        yield 'Test regex split with trim' => [
+            '[,;]',
+            " \n \r \t foo \n \r \t , \n \r \t bar \n \r \t ; \n \r \t baz \n \r \t ",
+            ['foo', 'bar', 'baz'],
+        ];
+
+        yield 'Test split cache bug 1' => [
+            ',',
+            ',foo,,bar',
+            ['', 'foo', '', 'bar'],
+        ];
+
+        yield 'Test split cache bug 2' => [
+            ',,',
+            'foo,,bar',
+            ['foo', 'bar'],
         ];
     }
 }

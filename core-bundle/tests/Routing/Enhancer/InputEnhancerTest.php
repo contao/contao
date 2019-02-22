@@ -67,17 +67,12 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance($defaults, Request::create('/'));
     }
 
-    /**
-     * @return (bool|string)[][]
-     */
-    public function getLocales(): array
+    public function getLocales(): \Generator
     {
-        return [
-            [false, 'en'],
-            [false, 'de'],
-            [true, 'de'],
-            [true, 'en'],
-        ];
+        yield [false, 'en'];
+        yield [false, 'de'];
+        yield [true, 'de'];
+        yield [true, 'en'];
     }
 
     public function testDoesNotAddTheLocaleIfItIsNotPresent(): void
@@ -134,18 +129,13 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance($defaults, Request::create('/'));
     }
 
-    /**
-     * @return (bool|string|string[])[][]
-     */
-    public function getParameters(): array
+    public function getParameters(): \Generator
     {
-        return [
-            ['/foo/bar', false, ['foo', 'bar']],
-            ['/foo/bar/bar/baz', false, ['foo', 'bar'], ['bar', 'baz']],
-            ['/foo/bar/baz', true, ['auto_item', 'foo'], ['bar', 'baz']],
-            ['/f%20o/bar', false, ['f%20o', 'bar']],
-            ['/foo/ba%20r', false, ['foo', 'ba%20r']],
-        ];
+        yield ['/foo/bar', false, ['foo', 'bar']];
+        yield ['/foo/bar/bar/baz', false, ['foo', 'bar'], ['bar', 'baz']];
+        yield ['/foo/bar/baz', true, ['auto_item', 'foo'], ['bar', 'baz']];
+        yield ['/f%20o/bar', false, ['f%20o', 'bar']];
+        yield ['/foo/ba%20r', false, ['foo', 'ba%20r']];
     }
 
     public function testThrowsAnExceptionUponDuplicateParameters(): void

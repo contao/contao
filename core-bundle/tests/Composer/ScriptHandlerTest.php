@@ -111,31 +111,26 @@ class ScriptHandlerTest extends TestCase
         $this->assertSame($expected, $method->invokeArgs($this->handler, [$this->mockComposerEvent($extra)]));
     }
 
-    /**
-     * @return (array<string,string>|string)[][]
-     */
-    public function binDirProvider(): array
+    public function binDirProvider(): \Generator
     {
-        return [
-            [
-                [],
-                'app',
-            ],
-            [
-                ['symfony-app-dir' => 'foo/bar'],
-                'foo/bar',
-            ],
-            [
-                ['symfony-var-dir' => __DIR__],
-                'bin',
-            ],
-            [
-                [
-                    'symfony-var-dir' => __DIR__,
-                    'symfony-bin-dir' => 'app',
-                ],
-                'app',
-            ],
+        yield [
+            [],
+            'app',
+        ];
+
+        yield [
+            ['symfony-app-dir' => 'foo/bar'],
+            'foo/bar',
+        ];
+
+        yield [
+            ['symfony-var-dir' => __DIR__],
+            'bin',
+        ];
+
+        yield [
+            ['symfony-var-dir' => __DIR__, 'symfony-bin-dir' => 'app'],
+            'app',
         ];
     }
 
@@ -150,20 +145,16 @@ class ScriptHandlerTest extends TestCase
         $this->assertSame($expected, $method->invokeArgs($this->handler, [$this->mockComposerEvent($extra)]));
     }
 
-    /**
-     * @return (array<string,string>|string)[][]
-     */
-    public function webDirProvider(): array
+    public function webDirProvider(): \Generator
     {
-        return [
-            [
-                [],
-                'web',
-            ],
-            [
-                ['symfony-web-dir' => 'foo/bar'],
-                'foo/bar',
-            ],
+        yield [
+            [],
+            'web',
+        ];
+
+        yield [
+            ['symfony-web-dir' => 'foo/bar'],
+            'foo/bar',
         ];
     }
 

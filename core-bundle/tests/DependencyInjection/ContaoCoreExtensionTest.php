@@ -187,19 +187,14 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('setFramework', $methodCalls[0][0]);
     }
 
-    /**
-     * @return array<int,array<int,string|true>>
-     */
-    public function getCommandTestData(): array
+    public function getCommandTestData(): \Generator
     {
-        return [
-            ['contao.command.automator', AutomatorCommand::class],
-            ['contao.command.filesync', FilesyncCommand::class],
-            ['contao.command.install', InstallCommand::class, true],
-            ['contao.command.symlinks', SymlinksCommand::class, true],
-            ['contao.command.user_password_command', UserPasswordCommand::class],
-            ['contao.command.version', VersionCommand::class],
-        ];
+        yield ['contao.command.automator', AutomatorCommand::class];
+        yield ['contao.command.filesync', FilesyncCommand::class];
+        yield ['contao.command.install', InstallCommand::class, true];
+        yield ['contao.command.symlinks', SymlinksCommand::class, true];
+        yield ['contao.command.user_password_command', UserPasswordCommand::class];
+        yield ['contao.command.version', VersionCommand::class];
     }
 
     public function testRegistersTheAddToSearchIndexListener(): void

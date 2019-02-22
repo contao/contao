@@ -72,21 +72,16 @@ class ContaoTableProcessorTest extends TestCase
         $this->assertSame(ContaoContext::CRON, $context->getAction());
     }
 
-    /**
-     * @return (int|string)[][]
-     */
-    public function actionLevelProvider(): array
+    public function actionLevelProvider(): \Generator
     {
-        return [
-            [Logger::DEBUG, ContaoContext::GENERAL],
-            [Logger::INFO, ContaoContext::GENERAL],
-            [Logger::NOTICE, ContaoContext::GENERAL],
-            [Logger::WARNING, ContaoContext::GENERAL],
-            [Logger::ERROR, ContaoContext::ERROR],
-            [Logger::CRITICAL, ContaoContext::ERROR],
-            [Logger::ALERT, ContaoContext::ERROR],
-            [Logger::EMERGENCY, ContaoContext::ERROR],
-        ];
+        yield [Logger::DEBUG, ContaoContext::GENERAL];
+        yield [Logger::INFO, ContaoContext::GENERAL];
+        yield [Logger::NOTICE, ContaoContext::GENERAL];
+        yield [Logger::WARNING, ContaoContext::GENERAL];
+        yield [Logger::ERROR, ContaoContext::ERROR];
+        yield [Logger::CRITICAL, ContaoContext::ERROR];
+        yield [Logger::ALERT, ContaoContext::ERROR];
+        yield [Logger::EMERGENCY, ContaoContext::ERROR];
     }
 
     public function testAddsTheUserAgent(): void
@@ -224,24 +219,17 @@ class ContaoTableProcessorTest extends TestCase
         $this->assertSame($expectedSource, $context->getSource());
     }
 
-    /**
-     * @return (string|null)[][]
-     */
-    public function sourceProvider(): array
+    public function sourceProvider(): \Generator
     {
-        return [
-            [null, 'FE', 'FE'],
-            [null, 'BE', 'BE'],
-            [null, null, 'FE'],
-
-            [ContaoCoreBundle::SCOPE_FRONTEND, 'FE', 'FE'],
-            [ContaoCoreBundle::SCOPE_FRONTEND, 'BE', 'BE'],
-            [ContaoCoreBundle::SCOPE_FRONTEND, null, 'FE'],
-
-            [ContaoCoreBundle::SCOPE_BACKEND, 'FE', 'FE'],
-            [ContaoCoreBundle::SCOPE_BACKEND, 'BE', 'BE'],
-            [ContaoCoreBundle::SCOPE_BACKEND, null, 'BE'],
-        ];
+        yield [null, 'FE', 'FE'];
+        yield [null, 'BE', 'BE'];
+        yield [null, null, 'FE'];
+        yield [ContaoCoreBundle::SCOPE_FRONTEND, 'FE', 'FE'];
+        yield [ContaoCoreBundle::SCOPE_FRONTEND, 'BE', 'BE'];
+        yield [ContaoCoreBundle::SCOPE_FRONTEND, null, 'FE'];
+        yield [ContaoCoreBundle::SCOPE_BACKEND, 'FE', 'FE'];
+        yield [ContaoCoreBundle::SCOPE_BACKEND, 'BE', 'BE'];
+        yield [ContaoCoreBundle::SCOPE_BACKEND, null, 'BE'];
     }
 
     private function mockContaoTableProcessor(RequestStack $requestStack = null, TokenStorageInterface $tokenStorage = null): ContaoTableProcessor

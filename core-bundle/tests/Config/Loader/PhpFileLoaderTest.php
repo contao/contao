@@ -209,15 +209,10 @@ EOF;
         );
     }
 
-    /**
-     * @return string[][]
-     */
-    public function loadWithDeclareStatementsStrictType(): array
+    public function loadWithDeclareStatementsStrictType(): \Generator
     {
-        return [
-            ['tl_test_with_declare1'],
-            ['tl_test_with_declare2'],
-        ];
+        yield ['tl_test_with_declare1'];
+        yield ['tl_test_with_declare2'];
     }
 
     /**
@@ -255,15 +250,10 @@ EOF;
         );
     }
 
-    /**
-     * @return string[][]
-     */
-    public function loadWithDeclareStatementsMultipleDefined(): array
+    public function loadWithDeclareStatementsMultipleDefined(): \Generator
     {
-        return [
-            ['tl_test_with_declare4'],
-            ['tl_test_with_declare5'],
-            ['tl_test_with_declare6'],
-        ];
+        yield ['tl_test_with_declare4'];
+        yield ['tl_test_with_declare5'];
+        yield ['tl_test_with_declare6'];
     }
 }

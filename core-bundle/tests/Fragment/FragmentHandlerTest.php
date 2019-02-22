@@ -72,12 +72,10 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render($uri);
     }
 
-    /**
-     * @return string[][]
-     */
-    public function getRenderingStrategies(): array
+    public function getRenderingStrategies(): \Generator
     {
-        return [['inline'], ['esi']];
+        yield ['inline'];
+        yield ['esi'];
     }
 
     /**
@@ -101,15 +99,10 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render($uri);
     }
 
-    /**
-     * @return array<int,array<int,array<string,string>>>
-     */
-    public function getOptions(): array
+    public function getOptions(): \Generator
     {
-        return [
-            [['foo' => 'bar']],
-            [['bar' => 'baz']],
-        ];
+        yield [['foo' => 'bar']];
+        yield [['bar' => 'baz']];
     }
 
     public function testAddsThePageIdFromTheGlobalPageObject(): void
