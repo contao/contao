@@ -200,6 +200,10 @@ class ModuleNewsArchive extends ModuleNews
 				$arrOptions['order'] = "RAND()";
 				break;
 
+			case 'order_featured_desc':
+				$arrOptions['order'] = "$t.featured DESC, $t.date DESC";
+				break;
+
 			case 'order_date_asc':
 				$arrOptions['order'] = "$t.date";
 				break;
