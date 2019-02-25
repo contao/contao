@@ -112,6 +112,7 @@ jobs:
         - php vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
 
   allow_failures:
+    - php: 7.4snapshot
     - php: nightly
 
 before_install:
