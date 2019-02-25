@@ -127,6 +127,7 @@ jobs:
         - php vendor/bin/php-coveralls -o coveralls-upload.json -x calendar-bundle.xml -x core-bundle.xml -x faq-bundle.xml -x manager-bundle.xml -x news-bundle.xml
 
   allow_failures:
+    - php: 7.4snapshot
     - php: nightly
 
 before_install:
