@@ -646,11 +646,20 @@ abstract class Controller extends System
 				}
 				else
 				{
-					$groups = StringUtil::deserialize($objElement->groups);
+					$objUser = FrontendUser::getInstance();
 
-					if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, FrontendUser::getInstance()->groups)))
+					if (!\is_array($objUser->groups))
 					{
 						$blnReturn = false;
+					}
+					else
+					{
+						$groups = StringUtil::deserialize($objElement->groups);
+
+						if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, $objUser->groups)))
+						{
+							$blnReturn = false;
+						}
 					}
 				}
 			}
