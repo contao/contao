@@ -152,11 +152,11 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener->setCallbacks(
             [
                 'tl_page' => [
-                    'list.sorting.panel_callback.foobar' =>  [
+                    'list.sorting.panel_callback.foobar' => [
                         0 => [
                             ['Test\CallbackListener', 'onFoobarCallback'],
                         ],
-                    ]
+                    ],
                 ],
             ]
         );
