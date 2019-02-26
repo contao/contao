@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Correctly check for related records when purgin opt-in tokens.
+
 ## 4.7.1 (2019-02-21)
 
  * Do not add `crossorigin="anonymous"` to all external scripts (see #356).
