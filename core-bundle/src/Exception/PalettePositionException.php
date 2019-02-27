@@ -18,6 +18,6 @@ namespace Contao\CoreBundle\Exception;
  * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0; use the
  *             Contao\CoreBundle\DataContainer\PalettePositionException instead
  */
-class PalettePositionException extends \Contao\CoreBundle\DataContainer\PalettePositionException
+class PalettePositionException extends \InvalidArgumentException
 {
 }
