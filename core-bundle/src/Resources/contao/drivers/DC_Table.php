@@ -5570,7 +5570,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 					foreach ($options as $k=>$v)
 					{
-						if ($v == '')
+						if ($v == '0')
 						{
 							$options[$v] = '-';
 						}
@@ -5590,7 +5590,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 					foreach ($options as $k=>$v)
 					{
-						if ($v == '')
+						if ($v == '0')
 						{
 							$options[$v] = '-';
 						}
@@ -5616,7 +5616,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 					foreach ($options as $k=>$v)
 					{
-						if ($v == '')
+						if ($v == '0')
 						{
 							$options[$v] = '-';
 						}
