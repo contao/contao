@@ -176,6 +176,12 @@
       <trans-unit id="tl_page.cache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
       </trans-unit>
+      <trans-unit id="tl_page.forceCache.0">
+        <source>Force server cache for logged-in members</source>
+      </trans-unit>
+      <trans-unit id="tl_page.forceCache.1">
+        <source>By default, the server cache is disabled for logged-in members. You can force caching with this checkbox (ATTENTION: This can lead to information leak between logged in members, only do this if you know what you're doing!).</source>
+      </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
         <source>Client cache timeout</source>
       </trans-unit>

@@ -348,6 +348,7 @@ class FrontendTemplate extends Template
 		/** @var PageModel $objPage */
 		global $objPage;
 
+		// Do not cache response if caching was not configured at all and make sure the response is private.
 		if (($objPage->cache === false || $objPage->cache < 1) && ($objPage->clientCache === false || $objPage->clientCache < 1))
 		{
 			$response->headers->addCacheControlDirective('no-cache');
@@ -356,9 +357,8 @@ class FrontendTemplate extends Template
 			return $response->setPrivate();
 		}
 
-		// Do not cache the response if a user is logged in or the page is protected
-		// TODO: Add support for proxies so they can vary on member context
-		if (FE_USER_LOGGED_IN === true || BE_USER_LOGGED_IN === true || $objPage->protected || $this->hasAuthenticatedBackendUser())
+		// Do not cache response if any cookies were received or sent and make sure the response is private.
+		if (0 !== \count($response->headers->getCookies()) || 0 !== \count(System::getContainer()->get('request_stack')->getCurrentRequest()->headers->getCookies()))
 		{
 			$response->headers->addCacheControlDirective('no-cache');
 			$response->headers->addCacheControlDirective('no-store');
@@ -366,14 +366,27 @@ class FrontendTemplate extends Template
 			return $response->setPrivate();
 		}
 
+		// From here on, we have cacheable requests.
+
+		// Private cache
 		if ($objPage->clientCache > 0)
 		{
 			$response->setMaxAge($objPage->clientCache);
+			$response->setPrivate(); // Make sure the response is private
 		}
 
+		// Shared cache
 		if ($objPage->cache > 0)
 		{
-			$response->setSharedMaxAge($objPage->cache);
+			$response->setSharedMaxAge($objPage->cache); // Automatically sets the response to public
+
+			// We do vary on Cookie for the responses that are cacheable for the shared cache which will
+			// cause reverse proxies to never load a response from the cache if the **request** contains a cookie.
+			// However, we want the reverse proxy to still load the response from the cache even if there is a cookie in case
+			// it was configured so by the user.
+			if (!$objPage->forceCache) {
+				$response->setVary(['Cookie']);
+			}
 		}
 
 		// Tag the response
