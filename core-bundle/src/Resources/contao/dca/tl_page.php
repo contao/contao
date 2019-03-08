@@ -181,7 +181,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'protected'                   => 'groups',
 		'createSitemap'               => 'sitemapName',
 		'includeLayout'               => 'layout',
-		'includeCache'                => 'cache,forceCache,clientCache',
+		'includeCache'                => 'cache,alwaysLoadFromCache,clientCache',
 		'includeChmod'                => 'cuser,cgroup,chmod'
 	),
 
@@ -524,9 +524,9 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
-		'forceCache' => array
+		'alwaysLoadFromCache' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['forceCache'],
+			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['alwaysLoadFromCache'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => "char(1) NOT NULL default ''"

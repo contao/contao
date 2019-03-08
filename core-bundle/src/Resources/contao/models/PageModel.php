@@ -53,7 +53,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property integer $layout
  * @property boolean $includeCache
  * @property integer $cache
- * @property boolean $forceCache
+ * @property boolean $alwaysLoadFromCache
  * @property integer $clientCache
  * @property boolean $includeChmod
  * @property integer $cuser
@@ -860,7 +860,7 @@ class PageModel extends Model
 		$this->groups = $this->protected ? StringUtil::deserialize($this->groups) : false;
 		$this->layout = $this->includeLayout ? $this->layout : false;
 		$this->cache = $this->includeCache ? $this->cache : false;
-		$this->forceCache = (bool) $this->forceCache;
+		$this->alwaysLoadFromCache = (bool) $this->alwaysLoadFromCache;
 		$this->clientCache = $this->includeCache ? $this->clientCache : false;
 
 		$pid = $this->pid;
@@ -914,7 +914,7 @@ class PageModel extends Model
 					if ($objParentPage->includeCache)
 					{
 						$this->cache = $this->cache !== false ? $this->cache : $objParentPage->cache;
-						$this->forceCache = $this->forceCache !== false ? $this->forceCache : $objParentPage->forceCache;
+						$this->alwaysLoadFromCache = $this->alwaysLoadFromCache !== false ? $this->alwaysLoadFromCache : $objParentPage->alwaysLoadFromCache;
 						$this->clientCache = $this->clientCache !== false ? $this->clientCache : $objParentPage->clientCache;
 					}
 

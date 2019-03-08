@@ -394,7 +394,7 @@ class FrontendTemplate extends Template
 			// different content depending on whether you're logged in or not in both trees. E.g. a navigation module or
 			// a login module. Exception to this rule is if those modules support ESI requests in which case they can
 			// handle their own caching headers and only set "Cache-Control: public" if no member is logged in.
-			if (!$objPage->forceCache) {
+			if (!$objPage->alwaysLoadFromCache) {
 				$response->setVary(array('Cookie'));
 			}
 		}
@@ -410,7 +410,7 @@ class FrontendTemplate extends Template
 		return $response;
 	}
 
-	private function isCurrentRequestPrivate()
+	private function isCurrentRequestPrivate(): bool
 	{
 		/** @var \Symfony\Component\HttpFoundation\Request $request */
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
