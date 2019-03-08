@@ -381,9 +381,21 @@ class FrontendTemplate extends Template
 			$response->setSharedMaxAge($objPage->cache); // Automatically sets the response to public
 
 			// We do vary on Cookie for the responses that are cacheable for the shared cache which will
-			// cause reverse proxies to never load a response from the cache if the **request** contains a cookie.
-			// However, we want the reverse proxy to still load the response from the cache even if there is a cookie in case
-			// it was configured so by the user.
+			// cause reverse proxies to never load a response from the cache if the **request** contains a cookie on the
+			// next request.
+			//
+			// NOTE: we do not generate a cache entry for every response containing a Cookie! Responses containing a cookie
+			// will always be private (see earlier in this method).
+			//
+			// However, we want to be able to force the reverse proxy to still load the response from the cache even if there
+			// is a cookie on the request in case it was configured so by the user. A typical example for this use case
+			// would be if you have a member section on a completely different page tree than your "public" website section.
+			// You can configure the public section to force the cache which will ensure that logged in members still
+			// get the cached entries served when they visit the "public" section.
+			// However, you have to be very careful in that case. E.g. you cannot share any front end module that shows
+			// different content depending on whether you're logged in or not in both trees. E.g. a navigation module or
+			// a login module. Exception to this rule is if those modules support ESI requests in which case they can
+			// handle their own caching headers and only set "Cache-Control: public" if no member is logged in.
 			if (!$objPage->forceCache) {
 				$response->setVary(['Cookie']);
 			}
