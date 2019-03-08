@@ -358,7 +358,7 @@ class FrontendTemplate extends Template
 		}
 
 		// Do not cache response if any cookies were received or sent and make sure the response is private.
-		if (0 !== \count($response->headers->getCookies()) || 0 !== \count(System::getContainer()->get('request_stack')->getCurrentRequest()->headers->getCookies()))
+		if (0 !== \count($response->headers->getCookies()) || 0 !== System::getContainer()->get('request_stack')->getCurrentRequest()->cookies->count())
 		{
 			$response->headers->addCacheControlDirective('no-cache');
 			$response->headers->addCacheControlDirective('no-store');
