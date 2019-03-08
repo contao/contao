@@ -180,7 +180,7 @@
         <source>Force server cache for logged-in members</source>
       </trans-unit>
       <trans-unit id="tl_page.forceCache.1">
-        <source>By default, the server cache is disabled for logged-in members. You can force caching with this checkbox (ATTENTION: This can lead to information leak between logged in members, only do this if you know what you're doing!).</source>
+        <source>By default, the server cache is disabled for logged-in members. You can force the shared cache to provide the cached entry even for logged-in members with this setting. (ATTENTION: If used incorrectly this might cause a logged in member to receive the public response from the cache instead the personalized one.).</source>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
         <source>Client cache timeout</source>
