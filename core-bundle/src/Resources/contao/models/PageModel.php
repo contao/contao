@@ -860,7 +860,7 @@ class PageModel extends Model
 		$this->groups = $this->protected ? StringUtil::deserialize($this->groups) : false;
 		$this->layout = $this->includeLayout ? $this->layout : false;
 		$this->cache = $this->includeCache ? $this->cache : false;
-		$this->forceCache = (bool) $this->forceCache ? $this->forceCache : false;
+		$this->forceCache = (bool) $this->forceCache;
 		$this->clientCache = $this->includeCache ? $this->clientCache : false;
 
 		$pid = $this->pid;
