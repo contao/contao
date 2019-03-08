@@ -356,8 +356,8 @@ class FrontendTemplate extends Template
 			return $response->setPrivate();
 		}
 
-		// Do not cache response if any cookies were received or sent and make sure the response is private.
-		if (0 !== \count($response->headers->getCookies()) || 0 !== System::getContainer()->get('request_stack')->getCurrentRequest()->cookies->count())
+		// Do not cache response if the response contains cookies or the current request is considered private
+		if (0 !== \count($response->headers->getCookies()) || $this->isCurrentRequestPrivate())
 		{
 			$response->headers->set('Cache-Control', 'no-cache, no-store');
 
@@ -395,7 +395,7 @@ class FrontendTemplate extends Template
 			// a login module. Exception to this rule is if those modules support ESI requests in which case they can
 			// handle their own caching headers and only set "Cache-Control: public" if no member is logged in.
 			if (!$objPage->forceCache) {
-				$response->setVary(['Cookie']);
+				$response->setVary(array('Cookie'));
 			}
 		}
 
@@ -408,6 +408,29 @@ class FrontendTemplate extends Template
 		}
 
 		return $response;
+	}
+
+	private function isCurrentRequestPrivate()
+	{
+		/** @var \Symfony\Component\HttpFoundation\Request $request */
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if (null === $request)
+		{
+			return false;
+		}
+
+		if ($request->cookies->count())
+		{
+			return true;
+		}
+
+		if ($request->headers->has('Authorization'))
+		{
+			return true;
+		}
+
+		return false;
 	}
 }
 
