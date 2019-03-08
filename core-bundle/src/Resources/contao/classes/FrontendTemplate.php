@@ -351,8 +351,7 @@ class FrontendTemplate extends Template
 		// Do not cache response if caching was not configured at all and make sure the response is private.
 		if (($objPage->cache === false || $objPage->cache < 1) && ($objPage->clientCache === false || $objPage->clientCache < 1))
 		{
-			$response->headers->addCacheControlDirective('no-cache');
-			$response->headers->addCacheControlDirective('no-store');
+			$response->headers->set('Cache-Control', 'no-cache, no-store');
 
 			return $response->setPrivate();
 		}
@@ -360,8 +359,7 @@ class FrontendTemplate extends Template
 		// Do not cache response if any cookies were received or sent and make sure the response is private.
 		if (0 !== \count($response->headers->getCookies()) || 0 !== System::getContainer()->get('request_stack')->getCurrentRequest()->cookies->count())
 		{
-			$response->headers->addCacheControlDirective('no-cache');
-			$response->headers->addCacheControlDirective('no-store');
+			$response->headers->set('Cache-Control', 'no-cache, no-store');
 
 			return $response->setPrivate();
 		}
