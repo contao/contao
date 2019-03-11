@@ -69,10 +69,13 @@ h1,h2,h3,h4,h5,h6 {
 input,textarea,select,button {
 	font:inherit;
 	color:inherit;
+	line-height:inherit;
+}
+input,select {
 	line-height:17px; /* see #501 and #79 */
 }
 @supports (display:-ms-grid) {
-	input,textarea,select,button {
+	input,select {
 		line-height:1.1;
 	}
 }

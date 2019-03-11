@@ -130,11 +130,11 @@ class PictureFactory implements PictureFactoryInterface
             $resizeConfig = new ResizeConfiguration();
 
             if (!empty($size[0])) {
-                $resizeConfig->setWidth($size[0]);
+                $resizeConfig->setWidth((int) $size[0]);
             }
 
             if (!empty($size[1])) {
-                $resizeConfig->setHeight($size[1]);
+                $resizeConfig->setHeight((int) $size[1]);
             }
 
             if (!empty($size[2])) {
