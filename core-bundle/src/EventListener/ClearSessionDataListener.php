@@ -55,7 +55,7 @@ class ClearSessionDataListener
 
     private function clearLegacyFormData(): void
     {
-        // Leave the data available for 10 secods (for redirect confirmation pages)
+        // Leave the data available for 10 seconds (for redirect confirmation pages)
         if (isset($_SESSION['FORM_DATA']['SUBMITTED_AT']) && ($_SESSION['FORM_DATA']['SUBMITTED_AT'] + 10) > time()) {
             return;
         }
