@@ -196,13 +196,18 @@ class DeferredImagesCommand extends Command
         $outputs = [];
 
         for ($i = 0; $i < $count; ++$i) {
-            $process = new Process(array_merge([$phpPath], $_SERVER['argv'], ['--concurrent=1']));
+            $process = new Process(array_merge(
+                [$phpPath],
+                $_SERVER['argv'],
+                ['--concurrent=1', $output->isDecorated() ? '--ansi' : '--no-ansi']
+            ));
             $process->setTimeout(null);
             $process->setEnv([
                 'LINES' => getenv('LINES'),
                 'COLUMNS' => getenv('COLUMNS') - 4,
             ]);
             $process->start();
+
             $processes[] = $process;
             $outputs[] = '';
         }
@@ -226,6 +231,10 @@ class DeferredImagesCommand extends Command
         } while ($isRunning);
 
         $output->write($outputs);
+
+        $output->write(array_map(function (Process $process): string {
+            return $process->getErrorOutput();
+        }, $processes));
 
         return max(...array_map(function (Process $process): int {
             return (int) $process->getExitCode();
