@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\File;
 use Contao\StringUtil;
 
 class Version480Update extends AbstractVersionUpdate
@@ -23,13 +24,21 @@ class Version480Update extends AbstractVersionUpdate
     {
         $schemaManager = $this->connection->getSchemaManager();
 
-        if (!$schemaManager->tablesExist(['tl_layout'])) {
+        if (!$schemaManager->tablesExist(['tl_layout', 'tl_files'])) {
             return false;
         }
 
-        $columns = $schemaManager->listTableColumns('tl_layout');
+        $layoutColumns = $schemaManager->listTableColumns('tl_layout');
+        $filesColumns = $schemaManager->listTableColumns('tl_files');
 
-        return isset($columns['picturefill']);
+        if (!isset($filesColumns['importantpartx'])) {
+            return false;
+        }
+
+        return
+            isset($layoutColumns['picturefill'])
+            && 'integer' === $filesColumns['importantpartx']->getType()->getName()
+        ;
     }
 
     /**
@@ -89,6 +98,58 @@ class Version480Update extends AbstractVersionUpdate
                     $stmt->execute([':scripts' => serialize(array_values($scripts)), ':id' => $row->id]);
                 }
             }
+        }
+
+        $this->connection->query('
+            ALTER TABLE
+                tl_files
+            CHANGE importantPartX importantPartX DOUBLE PRECISION DEFAULT 0 NOT NULL,
+            CHANGE importantPartY importantPartY DOUBLE PRECISION DEFAULT 0 NOT NULL,
+            CHANGE importantPartWidth importantPartWidth DOUBLE PRECISION DEFAULT 0 NOT NULL,
+            CHANGE importantPartHeight importantPartHeight DOUBLE PRECISION DEFAULT 0 NOT NULL
+        ');
+
+        $statement = $this->connection->query('
+            SELECT
+                id, path, importantPartX, importantPartY, importantPartWidth, importantPartHeight
+            FROM
+                tl_files
+            WHERE
+                importantPartWidth > 0 OR importantPartHeight > 0
+        ');
+
+        $rootDir = $this->container->getParameter('kernel.project_dir');
+
+        while (false !== ($file = $statement->fetch(\PDO::FETCH_OBJ))) {
+            if (!file_exists($rootDir.'/'.$file->path) || is_dir($rootDir.'/'.$file->path)) {
+                continue;
+            }
+
+            $imageSize = (new File($file->path))->imageSize;
+
+            if (empty($imageSize[0]) || empty($imageSize[1])) {
+                continue;
+            }
+
+            $stmt = $this->connection->prepare('
+                UPDATE
+                    tl_files
+                SET
+                    importantPartX = :x,
+                    importantPartY = :y,
+                    importantPartWidth = :width,
+                    importantPartHeight = :height
+                WHERE
+                    id = :id
+            ');
+
+            $stmt->execute([
+                ':id' => $file->id,
+                ':x' => $file->importantPartX / $imageSize[0],
+                ':y' => $file->importantPartY / $imageSize[1],
+                ':width' => $file->importantPartWidth / $imageSize[0],
+                ':height' => $file->importantPartHeight / $imageSize[1],
+            ]);
         }
     }
 }

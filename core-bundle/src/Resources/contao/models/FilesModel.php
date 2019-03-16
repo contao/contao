@@ -30,10 +30,10 @@ use Contao\Model\Registry;
  * @property boolean $found
  * @property string  $name
  * @property boolean $protected
- * @property integer $importantPartX
- * @property integer $importantPartY
- * @property integer $importantPartWidth
- * @property integer $importantPartHeight
+ * @property float $importantPartX
+ * @property float $importantPartY
+ * @property float $importantPartWidth
+ * @property float $importantPartHeight
  * @property string  $meta
  *
  * @method static FilesModel|null findByIdOrAlias($val, array $opt=array())

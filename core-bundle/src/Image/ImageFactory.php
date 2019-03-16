@@ -254,20 +254,11 @@ class ImageFactory implements ImageFactoryInterface
             return null;
         }
 
-        $imageSize = $image->getDimensions()->getSize();
-
-        if (
-            $file->importantPartX + $file->importantPartWidth > $imageSize->getWidth()
-            || $file->importantPartY + $file->importantPartHeight > $imageSize->getHeight()
-        ) {
-            return null;
-        }
-
         return new ImportantPart(
-            $file->importantPartX / $imageSize->getWidth(),
-            $file->importantPartY / $imageSize->getHeight(),
-            $file->importantPartWidth / $imageSize->getWidth(),
-            $file->importantPartHeight / $imageSize->getHeight()
+            (float) $file->importantPartX,
+            (float) $file->importantPartY,
+            (float) $file->importantPartWidth,
+            (float) $file->importantPartHeight
         );
     }
 }

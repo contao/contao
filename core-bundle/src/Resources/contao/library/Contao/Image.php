@@ -798,16 +798,17 @@ class Image
 		}
 
 		$fileRecord = FilesModel::findByPath($image->path);
+		$currentSize = $image->imageSize;
 
 		// Set the important part
 		if ($fileRecord !== null && $fileRecord->importantPartWidth && $fileRecord->importantPartHeight)
 		{
 			$imageObj->setImportantPart(array
 			(
-				'x' => (int) $fileRecord->importantPartX,
-				'y' => (int) $fileRecord->importantPartY,
-				'width' => (int) $fileRecord->importantPartWidth,
-				'height' => (int) $fileRecord->importantPartHeight,
+				'x' => (int) ($fileRecord->importantPartX * $currentSize['width']),
+				'y' => (int) ($fileRecord->importantPartY * $currentSize['height']),
+				'width' => (int) ($fileRecord->importantPartWidth * $currentSize['width']),
+				'height' => (int) ($fileRecord->importantPartHeight * $currentSize['height']),
 			));
 		}
 
