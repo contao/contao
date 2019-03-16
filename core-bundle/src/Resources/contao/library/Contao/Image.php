@@ -564,7 +564,7 @@ class Image
 			{
 				$resizeConfig->setMode($this->resizeMode);
 			}
-			catch (\InvalidArgumentException $exception)
+			catch (\Throwable $exception)
 			{
 				$resizeConfig->setMode(ResizeConfiguration::MODE_CROP);
 			}

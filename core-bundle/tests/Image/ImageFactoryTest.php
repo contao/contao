@@ -174,10 +174,10 @@ class ImageFactoryTest extends TestCase
 
         /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
-        $filesModel->importantPartX = 50;
-        $filesModel->importantPartY = 50;
-        $filesModel->importantPartWidth = 25;
-        $filesModel->importantPartHeight = 25;
+        $filesModel->importantPartX = '0.5';
+        $filesModel->importantPartY = '0.5';
+        $filesModel->importantPartWidth = '0.25';
+        $filesModel->importantPartHeight = '0.25';
 
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
 
@@ -327,19 +327,7 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        $imagineImageMock = $this->createMock(ImagineImageInterface::class);
-        $imagineImageMock
-            ->expects($this->once())
-            ->method('getSize')
-            ->willReturn(new Box(100, 100))
-        ;
-
         $imagine = $this->createMock(ImagineInterface::class);
-        $imagine
-            ->expects($this->once())
-            ->method('open')
-            ->willReturn($imagineImageMock)
-        ;
 
         /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
@@ -421,27 +409,6 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path);
 
         $this->assertSame($path, $image->getPath());
-    }
-
-    public function testIgnoresTheImportantPartIfItIsOutOfBounds(): void
-    {
-        $path = $this->getFixturesDir().'/images/dummy.jpg';
-
-        $filesModel = $this->mockClassWithProperties(FilesModel::class);
-        $filesModel->importantPartX = 50;
-        $filesModel->importantPartY = 50;
-        $filesModel->importantPartWidth = 175;
-        $filesModel->importantPartHeight = 175;
-
-        $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
-        $imageFactory = $this->getImageFactory(null, null, null, null, $framework);
-        $image = $imageFactory->create($path);
-
-        $this->assertSameImportantPart(
-            new ImportantPart(),
-            $image->getImportantPart()
-        );
     }
 
     /**
@@ -700,9 +667,8 @@ class ImageFactoryTest extends TestCase
 
     private function assertSameImage(ImageInterface $imageA, ImageInterface $imageB): void
     {
-        $this->assertSame($imageA->getDimensions(), $imageB->getDimensions());
-        $this->assertSame($imageA->getImagine(), $imageB->getImagine());
-        $this->assertSame($imageA->getImportantPart(), $imageB->getImportantPart());
+        $this->assertSameDimensions($imageA->getDimensions(), $imageB->getDimensions());
+        $this->assertSameImportantPart($imageA->getImportantPart(), $imageB->getImportantPart());
         $this->assertSame($imageA->getPath(), $imageB->getPath());
         $this->assertSame($imageA->getUrl($this->getFixturesDir()), $imageB->getUrl($this->getFixturesDir()));
     }
@@ -713,5 +679,13 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($partA->getY(), $partB->getY());
         $this->assertSame($partA->getHeight(), $partB->getHeight());
         $this->assertSame($partA->getWidth(), $partB->getWidth());
+    }
+
+    private function assertSameDimensions(ImageDimensionsInterface $dimensionsA, ImageDimensionsInterface $dimensionsB): void
+    {
+        $this->assertSame($dimensionsA->getSize()->getHeight(), $dimensionsB->getSize()->getHeight());
+        $this->assertSame($dimensionsA->getSize()->getWidth(), $dimensionsB->getSize()->getWidth());
+        $this->assertSame($dimensionsA->isRelative(), $dimensionsB->isRelative());
+        $this->assertSame($dimensionsA->isUndefined(), $dimensionsB->isUndefined());
     }
 }
