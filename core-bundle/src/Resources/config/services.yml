@@ -153,6 +153,12 @@ services:
             - '%contao.error_level%'
         public: true
 
+    contao.image.deferred_storage:
+        class: Contao\Image\DeferredImageStorageFilesystem
+        arguments:
+            - '%contao.image.target_dir%'
+            - '@filesystem'
+
     contao.image.imagine.gd:
         class: Imagine\Gd\Imagine
 
@@ -175,6 +181,7 @@ services:
             - '%contao.image.target_dir%'
             - '@contao.image.resize_calculator'
             - '@filesystem'
+            - '@contao.image.deferred_storage'
         public: true
 
     contao.image.image_factory:

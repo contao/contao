@@ -17,6 +17,15 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.command.deferred_images:
+        class: Contao\CoreBundle\Command\DeferredImagesCommand
+        arguments:
+            - "@filesystem"
+            - "@contao.image.image_factory"
+            - "@contao.image.resizer"
+            - "%contao.image.target_dir%"
+            - '@contao.image.deferred_storage'
+
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
 
