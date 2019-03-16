@@ -24,9 +24,7 @@ use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
 use Contao\Image\ResizerInterface;
 use Contao\ImageSizeModel;
-use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
-use Imagine\Image\Point;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ImageFactory implements ImageFactoryInterface

@@ -17,7 +17,6 @@ use Contao\Image\ImportantPart;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Imagine\Image\Box;
-use Imagine\Image\Point;
 
 /**
  * Resizes images

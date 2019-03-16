@@ -16,8 +16,6 @@ use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\Model\Collection;
-use Imagine\Image\Box;
-use Imagine\Image\Point;
 
 @trigger_error('Using the Contao\Picture class has been deprecated and will no longer work in Contao 5.0. Use the contao.image.picture_factory service instead.', E_USER_DEPRECATED);
 
