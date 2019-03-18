@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Show the video elements headline in the back end preview (see #382).
+
 ## 4.4.35 (2019-02-21)
 
  * Fix the format selection in the image size widget (see #315).
