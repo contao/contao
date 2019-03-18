@@ -31,7 +31,7 @@ use Symfony\Component\Process\Process;
 /**
  * Resize deferred images that have not been processed yet.
  */
-class DeferredImagesCommand extends Command
+class ResizeImagesCommand extends Command
 {
     /**
      * @var Filesystem
@@ -81,7 +81,7 @@ class DeferredImagesCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:deferred-images')
+            ->setName('contao:resize-images')
             ->setDefinition([
                 new InputOption('time-limit', 'l', InputArgument::OPTIONAL, 'Time limit in seconds', '0'),
                 new InputOption('concurrent', 'c', InputArgument::OPTIONAL, 'Run multiple processes concurrently', '1'),

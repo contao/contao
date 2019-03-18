@@ -17,15 +17,6 @@ services:
         arguments:
             - '@contao.framework'
 
-    contao.command.deferred_images:
-        class: Contao\CoreBundle\Command\DeferredImagesCommand
-        arguments:
-            - "@filesystem"
-            - "@contao.image.image_factory"
-            - "@contao.image.resizer"
-            - "%contao.image.target_dir%"
-            - '@contao.image.deferred_storage'
-
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
 
@@ -36,6 +27,15 @@ services:
             - '%contao.upload_path%'
             - '%contao.image.target_dir%'
         public: true
+
+    contao.command.resize_images:
+        class: Contao\CoreBundle\Command\ResizeImagesCommand
+        arguments:
+            - "@filesystem"
+            - "@contao.image.image_factory"
+            - "@contao.image.resizer"
+            - "%contao.image.target_dir%"
+            - '@contao.image.deferred_storage'
 
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand
