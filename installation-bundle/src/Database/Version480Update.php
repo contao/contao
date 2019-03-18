@@ -125,7 +125,7 @@ class Version480Update extends AbstractVersionUpdate
                 continue;
             }
 
-            $imageSize = (new File($file->path))->imageSize;
+            $imageSize = (new File($file->path))->imageViewSize;
 
             if (empty($imageSize[0]) || empty($imageSize[1])) {
                 continue;
