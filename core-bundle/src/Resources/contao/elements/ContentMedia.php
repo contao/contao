@@ -69,7 +69,14 @@ class ContentMedia extends ContentElement
 				$return .= '<li>' . Image::getHtml($objFile->icon, '', 'class="mime_icon"') . ' <span>' . $objFile->name . '</span> <span class="size">(' . $this->getReadableSize($objFile->size) . ')</span></li>';
 			}
 
-			return $return . '</ul>';
+			$return .= '</ul>';
+
+			if ($this->headline != '')
+			{
+				$return = '<'. $this->hl .'>'. $this->headline .'</'. $this->hl .'>'. $return;
+			}
+
+			return $return;
 		}
 
 		$this->objFiles = $objFiles;

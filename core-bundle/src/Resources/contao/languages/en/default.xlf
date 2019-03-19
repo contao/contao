@@ -221,6 +221,9 @@
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
       </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID "%s"!</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>

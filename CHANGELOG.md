@@ -2,6 +2,8 @@
 
 ## DEV
 
+ * Prevent using reserved layout section IDs in custom layout sections (see #301).
+ * Show the video elements headline in the back end preview (see #382).
  * Correctly check for related records when purgin opt-in tokens.
 
 ## 4.7.1 (2019-02-21)
