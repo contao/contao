@@ -46,7 +46,7 @@ class ClearSessionDataListenerTest extends TestCase
             new Response()
         );
 
-        $oldIniValue = ini_set('max_execution_time', $maxExecutionTime);
+        $buffer = ini_set('max_execution_time', $maxExecutionTime);
 
         $_SESSION['FORM_DATA'] = ['foo' => 'bar', 'SUBMITTED_AT' => $submittedAt];
 
@@ -59,11 +59,11 @@ class ClearSessionDataListenerTest extends TestCase
             $this->assertArrayHasKey('FORM_DATA', $_SESSION);
         }
 
-        // Reset ini value
-        ini_set('max_execution_time', $oldIniValue);
+        // Reset the max_execution_time value
+        ini_set('max_execution_time', $buffer);
     }
 
-    public function formDataProvider()
+    public function formDataProvider(): \Generator
     {
         yield '30 times 2 is lower than 100, should clear' => [
             time() - 100,
