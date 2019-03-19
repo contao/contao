@@ -65,14 +65,14 @@ class ClearSessionDataListenerTest extends TestCase
 
     public function formDataProvider(): \Generator
     {
-        yield '30 times 2 is lower than 100, should clear' => [
-            time() - 100,
+        yield '30 times 2 is lower than 90, should clear' => [
+            time() - 90,
             '30',
             true,
         ];
 
-        yield '30 times 2 is higher than 50, should not clear' => [
-            time() - 50,
+        yield '30 times 2 is higher than 30, should not clear' => [
+            time() - 30,
             '30',
             false,
         ];
@@ -83,20 +83,20 @@ class ClearSessionDataListenerTest extends TestCase
             true,
         ];
 
-        yield '60 times 2 is higher than 50, should not clear' => [
-            time() - 50,
+        yield '60 times 2 is higher than 90, should not clear' => [
+            time() - 90,
             '60',
             false,
         ];
 
         yield 'ini-setting is disabled (0) should behave the same as if set to 30 (positive test)' => [
-            time() - 100,
+            time() - 90,
             '0',
             true,
         ];
 
         yield 'ini-setting is disabled (0) should behave the same as if set to 30 (negative test)' => [
-            time() - 50,
+            time() - 30,
             '0',
             false,
         ];
