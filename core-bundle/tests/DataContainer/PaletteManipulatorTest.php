@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DataContainer;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
+use Contao\CoreBundle\DataContainer\PalettePositionException;
 use PHPUnit\Framework\TestCase;
 
 class PaletteManipulatorTest extends TestCase
@@ -315,6 +317,10 @@ class PaletteManipulatorTest extends TestCase
         $this->assertTrue($closureCalled);
     }
 
+    /**
+     * @group legacy
+     * @expectedDeprecation Using the Contao\CoreBundle\Exception\PaletteNotFoundException class has been deprecated %s.
+     */
     public function testFailsIfTheDcaPaletteDoesNotExist(): void
     {
         $pm = PaletteManipulator::create()
@@ -325,7 +331,7 @@ class PaletteManipulatorTest extends TestCase
         // Make sure the palette is not here (for whatever reason another test might have set it)
         unset($GLOBALS['TL_DCA']['tl_test']['palettes']['default']);
 
-        $this->expectException('InvalidArgumentException');
+        $this->expectException(PaletteNotFoundException::class);
 
         $pm->applyToPalette('default', 'tl_test');
     }
@@ -339,14 +345,18 @@ class PaletteManipulatorTest extends TestCase
         // Make sure the palette is not here (for whatever reason another test might have set it)
         unset($GLOBALS['TL_DCA']['tl_test']['subpalettes']['name']);
 
-        $this->expectException('InvalidArgumentException');
+        $this->expectException(PaletteNotFoundException::class);
 
         $pm->applyToSubpalette('name', 'tl_test');
     }
 
+    /**
+     * @group legacy
+     * @expectedDeprecation Using the Contao\CoreBundle\Exception\PalettePositionException class has been deprecated %s.
+     */
     public function testFailsIfThePositionIsInvalid(): void
     {
-        $this->expectException('LogicException');
+        $this->expectException(PalettePositionException::class);
 
         PaletteManipulator::create()
             ->addField('bar', 'foo', 'foo_position')
@@ -356,7 +366,7 @@ class PaletteManipulatorTest extends TestCase
 
     public function testFailsIfTheFallbackPositionIsInvalid(): void
     {
-        $this->expectException('InvalidArgumentException');
+        $this->expectException(PalettePositionException::class);
 
         PaletteManipulator::create()
             ->addField('bar', 'foo', 'after', 'foobar_legend', 'after')
