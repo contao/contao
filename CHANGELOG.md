@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Prevent using reserved layout section IDs in custom layout sections (see #301).
  * Show the video elements headline in the back end preview (see #382).
 
 ## 4.4.35 (2019-02-21)

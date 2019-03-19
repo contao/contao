@@ -39,12 +39,36 @@ class SectionWizard extends \Widget
 	 */
 	protected function validator($varInput)
 	{
-		if (isset($varInput['id']))
+		$arrSections = array();
+		$arrExisting = array();
+
+		foreach ($varInput as $arrSection)
 		{
-			$varInput['id'] = \StringUtil::standardize($varInput['id'], true);
+			// Remove sections without ID
+			if (empty($arrSection['id']))
+			{
+				continue;
+			}
+
+			$arrSection['id'] = \StringUtil::standardize($arrSection['id'], true);
+
+			// Add a suffix to reserved names (see #301)
+			if (\in_array($arrSection['id'], array('top', 'wrapper', 'header', 'container', 'main', 'left', 'right', 'footer')))
+			{
+				$arrSection['id'] .= '-custom';
+			}
+
+			// Check for duplicate section IDs
+			if (\in_array($arrSection['id'], $arrExisting))
+			{
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionId'], $arrSection['id']));
+			}
+
+			$arrSections[] = $arrSection;
+			$arrExisting[] = $arrSection['id'];
 		}
 
-		return parent::validator($varInput);
+		return $arrSections;
 	}
 
 	/**
