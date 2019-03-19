@@ -100,7 +100,7 @@
         "contao/monorepo-tools": "dev-master",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/orm": "^2.5",
-        "friendsofphp/php-cs-fixer": "^2.12",
+        "friendsofphp/php-cs-fixer": "^2.12.7",
         "monolog/monolog": "^1.22",
         "php-coveralls/php-coveralls": "^2.1",
         "phpunit/phpunit": "^5.7.26",
