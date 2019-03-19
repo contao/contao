@@ -85,6 +85,7 @@ class BackendPreview extends Backend
 		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreview']);
+		$objTemplate->host = Environment::get('host');
 		$objTemplate->charset = Config::get('characterSet');
 		$objTemplate->site = Input::get('site', true);
 		$objTemplate->switchHref = $objRouter->generate('contao_backend_switch');

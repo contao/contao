@@ -4,7 +4,7 @@
 
   <?php $this->block('head'); ?>
     <meta charset="<?= $this->charset ?>">
-    <title><?= $this->title ?> - Contao Open Source CMS</title>
+    <title><?= $this->title ?> | <?= $this->host ?></title>
     <base href="<?= $this->base ?>">
 
     <?php $this->block('meta'); ?>

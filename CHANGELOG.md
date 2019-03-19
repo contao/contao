@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Always add the host to the title attribute in the back end (see #339).
  * Prevent using reserved layout section IDs in custom layout sections (see #301).
  * Show the video elements headline in the back end preview (see #382).
  * Correctly check for related records when purgin opt-in tokens.
