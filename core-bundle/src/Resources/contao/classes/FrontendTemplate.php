@@ -353,7 +353,7 @@ class FrontendTemplate extends Template
 	 */
 	private function setCacheHeaders(Response $response)
 	{
-		/** @var $objPage PageModel */
+		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (($objPage->cache === false || $objPage->cache < 1) && ($objPage->clientCache === false || $objPage->clientCache < 1))

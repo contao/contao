@@ -62,6 +62,7 @@ return PhpCsFixer\Config::create()
         ],
         'native_function_invocation' => [
             'include' => ['@compiler_optimized'],
+            'strict' => true,
         ],
         'no_alternative_syntax' => true,
         'no_binary_string' => true,
@@ -73,6 +74,7 @@ return PhpCsFixer\Config::create()
         'no_useless_return' => true,
         'ordered_class_elements' => true,
         'ordered_imports' => true,
+        'php_unit_method_casing' => true,
         'php_unit_strict' => true,
         'phpdoc_add_missing_param_annotation' => true,
         'phpdoc_order' => true,
@@ -81,6 +83,7 @@ return PhpCsFixer\Config::create()
             'null_adjustment' => 'always_last',
             'sort_algorithm' => 'none',
         ],
+        'phpdoc_var_annotation_correct_order' => true,
         'return_assignment' => true,
         'strict_comparison' => true,
         'strict_param' => true,
