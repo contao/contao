@@ -27,7 +27,7 @@ class ClearSessionDataListenerTest extends TestCase
     /**
      * @dataProvider formDataProvider
      */
-    public function testClearsTheFormDataConsidersWaitingTimeCorrectly(int $submittedAt, string $maxExecutionTime, bool $shouldClear): void
+    public function testClearsTheFormDataConsidersWaitingTimeCorrectly(int $seconds, string $maxExecutionTime, bool $shouldClear): void
     {
         $session = $this->createMock(Session::class);
         $session
@@ -46,6 +46,7 @@ class ClearSessionDataListenerTest extends TestCase
             new Response()
         );
 
+        $submittedAt = time() - $seconds;
         $buffer = ini_set('max_execution_time', $maxExecutionTime);
 
         $_SESSION['FORM_DATA'] = ['foo' => 'bar', 'SUBMITTED_AT' => $submittedAt];
@@ -65,38 +66,38 @@ class ClearSessionDataListenerTest extends TestCase
 
     public function formDataProvider(): \Generator
     {
-        yield '30 times 2 is lower than 90, should clear' => [
-            time() - 90,
+        yield '30 times 2 is lower than 100, should clear' => [
+            100,
             '30',
             true,
         ];
 
-        yield '30 times 2 is higher than 30, should not clear' => [
-            time() - 30,
+        yield '30 times 2 is higher than 50, should not clear' => [
+            50,
             '30',
             false,
         ];
 
         yield '60 times 2 is lower than 150, should clear' => [
-            time() - 150,
+            150,
             '60',
             true,
         ];
 
-        yield '60 times 2 is higher than 90, should not clear' => [
-            time() - 90,
+        yield '60 times 2 is higher than 50, should not clear' => [
+            50,
             '60',
             false,
         ];
 
         yield 'ini-setting is disabled (0) should behave the same as if set to 30 (positive test)' => [
-            time() - 90,
+            100,
             '0',
             true,
         ];
 
         yield 'ini-setting is disabled (0) should behave the same as if set to 30 (negative test)' => [
-            time() - 30,
+            50,
             '0',
             false,
         ];
