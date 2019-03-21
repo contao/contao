@@ -44,7 +44,7 @@ class ResizeImagesCommand extends Command
     private $imageFactory;
 
     /**
-     * @var ResizerInterface
+     * @var ?DeferredResizerInterface
      */
     private $resizer;
 
@@ -67,7 +67,7 @@ class ResizeImagesCommand extends Command
     {
         $this->filesystem = $filesystem;
         $this->imageFactory = $imageFactory;
-        $this->resizer = $resizer;
+        $this->resizer = $resizer instanceof DeferredResizerInterface ? $resizer : null;
         $this->targetDir = $targetDir;
         $this->storage = $storage;
         $this->terminalWidth = (new Terminal())->getWidth();
@@ -189,10 +189,10 @@ class ResizeImagesCommand extends Command
             throw new \RuntimeException('The php executable could not be found.');
         }
 
-        /** @var $processes Process[] */
+        /** @var Process[] $processes */
         $processes = [];
 
-        /** @var $outputs string[] */
+        /** @var string[] $outputs */
         $outputs = [];
 
         for ($i = 0; $i < $count; ++$i) {
