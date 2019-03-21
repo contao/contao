@@ -93,7 +93,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     /**
      * {@inheritdoc}
      */
-    protected function executeResize(ImageInterface $image, ResizeCoordinatesInterface $coordinates, $path, ResizeOptionsInterface $options): ImageInterface
+    protected function executeResize(ImageInterface $image, ResizeCoordinatesInterface $coordinates, string $path, ResizeOptionsInterface $options): ImageInterface
     {
         if ($this->legacyImage && $this->hasGetImageHook()) {
             $rootDir = System::getContainer()->getParameter('kernel.project_dir');
