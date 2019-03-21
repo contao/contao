@@ -366,7 +366,7 @@ class PaletteManipulator
     {
         foreach ($config as $legend => $group) {
             if (empty($remove['parents']) || \in_array($legend, $remove['parents'], true)) {
-                $config[$legend]['fields'] = \array_diff($group['fields'], $remove['fields']);
+                $config[$legend]['fields'] = array_diff($group['fields'], $remove['fields']);
             }
         }
     }

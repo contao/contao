@@ -78,7 +78,7 @@ class VersionCommandTest extends TestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $expected = \json_encode([
+        $expected = json_encode([
             'version' => Application::VERSION,
             'commands' => [],
             'features' => [],
@@ -106,7 +106,7 @@ class VersionCommandTest extends TestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $expected = \json_encode([
+        $expected = json_encode([
             'version' => Application::VERSION,
             'commands' => ['foo:bar'],
             'features' => [],
@@ -144,7 +144,7 @@ class VersionCommandTest extends TestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $expected = \json_encode([
+        $expected = json_encode([
             'version' => Application::VERSION,
             'commands' => [],
             'features' => [

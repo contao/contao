@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\OptIn;
 use Contao\CoreBundle\OptIn\OptIn;
 use Contao\MemberModel;
 use Contao\Model;
+use Contao\Model\Collection;
 use Contao\OptInModel;
 use Contao\TestCase\ContaoTestCase;
 
@@ -85,7 +86,7 @@ class OptInTest extends ContaoTestCase
     /**
      * @dataProvider getExpiredTokens
      */
-    public function testPurgesExpiredTokens(string $method, ?MemberModel $model): void
+    public function testPurgesExpiredTokens(string $method, ?Collection $model): void
     {
         $token = $this->createMock(OptInModel::class);
         $token
@@ -113,10 +114,10 @@ class OptInTest extends ContaoTestCase
             ->willReturn(MemberModel::class)
         ;
 
-        $memberAdapter = $this->mockAdapter(['findByPk']);
+        $memberAdapter = $this->mockAdapter(['findMultipleByIds']);
         $memberAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findMultipleByIds')
             ->willReturn($model)
         ;
 
@@ -133,6 +134,6 @@ class OptInTest extends ContaoTestCase
     public function getExpiredTokens(): \Generator
     {
         yield ['delete', null];
-        yield ['save', $this->createMock(MemberModel::class)];
+        yield ['save', new Collection([$this->createMock(MemberModel::class)], 'tl_member')];
     }
 }

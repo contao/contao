@@ -123,7 +123,7 @@ class ModuleCustomnav extends Module
 			$_groups = StringUtil::deserialize($objModel->groups);
 
 			// Do not show protected pages unless a front end user is logged in
-			if (!$objModel->protected || (\is_array($_groups) && \count(array_intersect($_groups, $groups))) || $this->showProtected)
+			if (!$objModel->protected || $this->showProtected || (\is_array($_groups) && \is_array($groups) && \count(array_intersect($_groups, $groups))))
 			{
 				// Get href
 				switch ($objModel->type)

@@ -656,6 +656,7 @@ class InstallationController implements ContainerAwareInterface
                 throw new \RuntimeException('The request stack did not contain a request');
             }
 
+            $context['host'] = $request->getHost();
             $context['path'] = $request->getBasePath();
         }
 

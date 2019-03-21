@@ -24,7 +24,10 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class ClearSessionDataListenerTest extends TestCase
 {
-    public function testClearsTheFormData(): void
+    /**
+     * @dataProvider formDataProvider
+     */
+    public function testClearsTheFormDataConsidersWaitingTimeCorrectly(int $seconds, string $maxExecutionTime, bool $shouldClear): void
     {
         $session = $this->createMock(Session::class);
         $session
@@ -43,39 +46,61 @@ class ClearSessionDataListenerTest extends TestCase
             new Response()
         );
 
-        $_SESSION['FORM_DATA'] = ['foo' => 'bar', 'SUBMITTED_AT' => time() - 50];
+        $submittedAt = time() - $seconds;
+        $buffer = ini_set('max_execution_time', $maxExecutionTime);
+
+        $_SESSION['FORM_DATA'] = ['foo' => 'bar', 'SUBMITTED_AT' => $submittedAt];
 
         $listener = new ClearSessionDataListener();
         $listener->onKernelResponse($event);
 
-        $this->assertArrayNotHasKey('FORM_DATA', $_SESSION);
+        if ($shouldClear) {
+            $this->assertArrayNotHasKey('FORM_DATA', $_SESSION);
+        } else {
+            $this->assertArrayHasKey('FORM_DATA', $_SESSION);
+        }
+
+        // Reset the max_execution_time value
+        ini_set('max_execution_time', $buffer);
     }
 
-    public function testDoesNotClearTheFormDataIfTheFormHasJustBeenSubmitted(): void
+    public function formDataProvider(): \Generator
     {
-        $session = $this->createMock(Session::class);
-        $session
-            ->expects($this->once())
-            ->method('isStarted')
-            ->willReturn(true)
-        ;
+        yield '30 times 2 is lower than 100, should clear' => [
+            100,
+            '30',
+            true,
+        ];
 
-        $request = new Request();
-        $request->setSession($session);
+        yield '30 times 2 is higher than 50, should not clear' => [
+            50,
+            '30',
+            false,
+        ];
 
-        $event = new FilterResponseEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST,
-            new Response()
-        );
+        yield '60 times 2 is lower than 150, should clear' => [
+            150,
+            '60',
+            true,
+        ];
 
-        $_SESSION['FORM_DATA'] = ['foo' => 'bar', 'SUBMITTED_AT' => time() - 5];
+        yield '60 times 2 is higher than 50, should not clear' => [
+            50,
+            '60',
+            false,
+        ];
 
-        $listener = new ClearSessionDataListener();
-        $listener->onKernelResponse($event);
+        yield 'ini-setting is disabled (0) should behave the same as if set to 30 (positive test)' => [
+            100,
+            '0',
+            true,
+        ];
 
-        $this->assertArrayHasKey('FORM_DATA', $_SESSION);
+        yield 'ini-setting is disabled (0) should behave the same as if set to 30 (negative test)' => [
+            50,
+            '0',
+            false,
+        ];
     }
 
     public function testDoesNotClearTheFormDataUponSubrequests(): void

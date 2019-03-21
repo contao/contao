@@ -98,16 +98,17 @@ class OptIn implements OptInInterface
                 /** @var Model $model */
                 $model = $this->framework->getAdapter($adapter->getClassFromTable($table));
 
-                if ($model->findByPk($id)) {
+                // Check if the related records still exist
+                if (null !== $model->findMultipleByIds($id)) {
                     $delete = false;
                     break;
                 }
             }
 
-            // Prolong the token for another 3 years if the related records still exist
             if ($delete) {
                 $token->delete();
             } else {
+                // Prolong the token for another 3 years if the related records still exist
                 $token->removeOn = strtotime('+3 years', (int) $token->removeOn);
                 $token->save();
             }

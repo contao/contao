@@ -316,7 +316,7 @@ abstract class Module extends Frontend
 			}
 
 			// Do not show protected pages unless a front end user is logged in
-			if (!$objSubpage->protected || (\is_array($_groups) && \is_array($groups) && \count(array_intersect($_groups, $groups))) || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always'))
+			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || (\is_array($_groups) && \is_array($groups) && \count(array_intersect($_groups, $groups))))
 			{
 				// Check whether there will be subpages
 				if ($objSubpage->subpages > 0 && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))

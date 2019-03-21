@@ -195,7 +195,7 @@ class ModuleSearch extends Module
 				{
 					if ($v['protected'])
 					{
-						if (!FE_USER_LOGGED_IN)
+						if (!FE_USER_LOGGED_IN || !\is_array($this->User->groups))
 						{
 							unset($arrResult[$k]);
 						}

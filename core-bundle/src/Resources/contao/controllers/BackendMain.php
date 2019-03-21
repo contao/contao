@@ -287,6 +287,7 @@ class BackendMain extends Backend
 		$this->Template->base = Environment::get('base');
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
 		$this->Template->title = StringUtil::specialchars(strip_tags($this->Template->title));
+		$this->Template->host = Environment::get('host');
 		$this->Template->charset = Config::get('characterSet');
 		$this->Template->account = $GLOBALS['TL_LANG']['MOD']['login'][1];
 		$this->Template->preview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
