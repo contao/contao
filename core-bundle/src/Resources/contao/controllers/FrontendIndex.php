@@ -216,17 +216,10 @@ class FrontendIndex extends Frontend
 			}
 		}
 
-		$time = Date::floorToMinute();
-
 		// Trigger the 404 page if the page is not published and the front end preview is not active (see #374)
-		if (!$objPage->published || ($objPage->start !== '' && $objPage->start > $time) || ($objPage->stop !== '' && $objPage->stop < $time))
+		if (!BE_USER_LOGGED_IN && !$objPage->isPublic)
 		{
-			$objTokenChecker = System::getContainer()->get('contao.security.token_checker');
-
-			if (!$objTokenChecker->isPreviewMode())
-			{
-				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-			}
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Load a website root page object (will redirect to the first active regular page)
