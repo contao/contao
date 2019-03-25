@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="MSC.eventPicker">
         <source>Events</source>
-        <target>Kalendar/Ngjarje</target>
+        <target>Ngjarjet</target>
       </trans-unit>
     </body>
   </file>

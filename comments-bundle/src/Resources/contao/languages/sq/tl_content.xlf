@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_order.1">
         <source>Please choose the sort order.</source>
-        <target>Zgjedhoni radhitjen.</target>
+        <target>Zgjedh radhitjen.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_perPage.0">
         <source>Items per page</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
         <source>Disable the security question</source>
-        <target>ç'aktivizo pyetjen e sigurisë</target>
+        <target>Ç'mundëso pyetjen e sigurisë</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
         <source>Here you can disable the security question (not recommended).</source>

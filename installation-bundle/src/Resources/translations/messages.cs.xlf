@@ -18,6 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
+        <target>Z bezpečnostních důvodů byl Instalační nástroj uzamčen, protože bylo třikrát po sobě zadáno špatné heslo. Instalační nástroj můžete odemknout přes Správce Contaa nebo použitím příkazu &lt;code&gt;contao:install:unlock&lt;/code&gt;na Příkazovém řádku. </target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -362,6 +363,7 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
+        <target>Duplikované odběry</target>
         
       </trans-unit>
       <trans-unit id="74">

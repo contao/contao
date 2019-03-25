@@ -15,11 +15,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar.jumpTo.1">
         <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
-        <target>Zgjedhoni faqen e cila do t'i prezantohet vizitorit pas shtypjes në një ngjarje.</target>
+        <target>Zgjedh faqen e cila do t'i prezantohet vizitorit pas shtypjes në një ngjarje.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.allowComments.0">
         <source>Enable comments</source>
-        <target>Aktivizo komente</target>
+        <target>Mundësoj komente</target>
       </trans-unit>
       <trans-unit id="tl_calendar.allowComments.1">
         <source>Allow visitors to comment events.</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>Zakonisht, komentet janë të renditura sipas një radhitje kohore, duke filluar me një të vjetër.</target>
+        <target>Zakonisht, komentet janë të renditura sipas një radhitje kohore, duke filluar me atë më të vjetërsuar.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.perPage.0">
         <source>Comments per page</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.perPage.1">
         <source>Number of comments per page. Set to 0 to disable pagination.</source>
-        <target>Numri i komente në një faqe. Epeni 0 për ta ç'aktivizuar shfletimin e komenteve.</target>
+        <target>Numri i komenteve në një faqe. Epeni 0 për ta ç'mundësuar shfletimin e komenteve.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.moderate.0">
         <source>Moderate comments</source>
@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.0">
         <source>Disable the security question</source>
-        <target>ç'aktivizo pyetjen e sigurisë</target>
+        <target>Ç'mundëso pyetjen e sigurisë</target>
       </trans-unit>
       <trans-unit id="tl_calendar.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.protected.1">
         <source>Show events to certain member groups only.</source>
-        <target>Trego ngjarje vetëm anëtarëve të zgjedhur.</target>
+        <target>Trego ngjarje vetëm anëtarëve të përzgjedhur.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.groups.0">
         <source>Allowed member groups</source>
@@ -99,11 +99,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar.tstamp.0">
         <source>Revision date</source>
-        <target>Data ripunimit/rishikimit</target>
+        <target>Data shqyrtimit</target>
       </trans-unit>
       <trans-unit id="tl_calendar.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Data dhe koha e ripunimit/rishikimit të fundit.</target>
+        <target>Data dhe koha e shqyrtimit të fundit.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.title_legend">
         <source>Title and redirect page</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.protected_legend">
         <source>Access protection</source>
-        <target>Mbrojtja qasjes</target>
+        <target>Mbrojtja e qasjes</target>
       </trans-unit>
       <trans-unit id="tl_calendar.feed_legend">
         <source>RSS/Atom feed</source>
@@ -147,15 +147,15 @@
       </trans-unit>
       <trans-unit id="tl_calendar.new.1">
         <source>Create a new calendar</source>
-        <target>Krijo kalendar të ri</target>
+        <target>Shto kalendar të ri</target>
       </trans-unit>
       <trans-unit id="tl_calendar.show.0">
         <source>Calendar details</source>
-        <target>Detajet e kalenderit</target>
+        <target>Cilësit e kalenderit</target>
       </trans-unit>
       <trans-unit id="tl_calendar.show.1">
         <source>Show the details of calendar ID %s</source>
-        <target>Tregon detajet e kalendarit ID %s</target>
+        <target>Tregon cilësit e kalendarit ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.edit.0">
         <source>Edit calendar</source>
@@ -175,11 +175,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar.copy.0">
         <source>Duplicate calendar</source>
-        <target>Kopjo kalendarin</target>
+        <target>Dyfisho kalendarin</target>
       </trans-unit>
       <trans-unit id="tl_calendar.copy.1">
         <source>Duplicate calendar ID %s</source>
-        <target>Kopjon kalendarin ID %s</target>
+        <target>Dyfisho kalendarin ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar.delete.0">
         <source>Delete calendar</source>

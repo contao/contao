@@ -163,11 +163,11 @@
       </trans-unit>
       <trans-unit id="tl_files.new.0">
         <source>New folder</source>
-        <target>Nova predloga</target>
+        <target>Nova mapa</target>
       </trans-unit>
       <trans-unit id="tl_files.new.1">
         <source>Create a new folder</source>
-        <target>Ustvari novo predlogo</target>
+        <target>Ustvari novo mapo</target>
       </trans-unit>
       <trans-unit id="tl_files.cut.0">
         <source>Move file or folder</source>
