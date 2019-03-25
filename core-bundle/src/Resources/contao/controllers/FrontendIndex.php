@@ -216,6 +216,12 @@ class FrontendIndex extends Frontend
 			}
 		}
 
+		// Trigger the 404 page if the page is not published and the front end preview is not active (see #374)
+		if (!BE_USER_LOGGED_IN && !$objPage->isPublic)
+		{
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+		}
+
 		// Load a website root page object (will redirect to the first active regular page)
 		if ($objPage->type == 'root')
 		{
