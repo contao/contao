@@ -77,6 +77,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $parentTitle
  * @property string  $parentPageTitle
  * @property string  $folderUrl
+ * @property boolean $isPublic
  * @property integer $rootId
  * @property string  $rootAlias
  * @property string  $rootTitle
@@ -870,6 +871,7 @@ class PageModel extends Model
 		$pname = '';
 		$ptitle = '';
 		$trail = array($this->id, $pid);
+		$time = Date::floorToMinute();
 
 		// Inherit the settings
 		if ($this->type == 'root')
@@ -958,7 +960,6 @@ class PageModel extends Model
 			$this->adminEmail = $objParentPage->adminEmail;
 
 			// Store whether the root page has been published
-			$time = Date::floorToMinute();
 			$this->rootIsPublic = ($objParentPage->published && ($objParentPage->start == '' || $objParentPage->start <= $time) && ($objParentPage->stop == '' || $objParentPage->stop > ($time + 60)));
 			$this->rootIsFallback = true;
 			$this->rootUseSSL = $objParentPage->useSSL;
@@ -1001,6 +1002,8 @@ class PageModel extends Model
 		{
 			$this->datimFormat = Config::get('datimFormat');
 		}
+
+		$this->isPublic = ($this->published && ($this->start == '' || $this->start <= $time) && ($this->stop == '' || $this->stop > ($time + 60)));
 
 		// HOOK: add custom logic
 		if (!empty($GLOBALS['TL_HOOKS']['loadPageDetails']) && \is_array($GLOBALS['TL_HOOKS']['loadPageDetails']))

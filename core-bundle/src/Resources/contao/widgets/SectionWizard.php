@@ -39,15 +39,22 @@ class SectionWizard extends Widget
 	 */
 	protected function validator($varInput)
 	{
+		$arrTitles = array();
+		$arrIds = array();
 		$arrSections = array();
-		$arrExisting = array();
 
 		foreach ($varInput as $arrSection)
 		{
-			// Remove sections without ID
-			if (empty($arrSection['id']))
+			// Title and ID are required
+			if ((!empty($arrSection['title']) && empty($arrSection['id'])) || (empty($arrSection['title']) && !empty($arrSection['id'])))
 			{
-				continue;
+				$this->addError($GLOBALS['TL_LANG']['ERR']['emptyTitleOrId']);
+			}
+
+			// Check for duplicate section titles
+			if (\in_array($arrSection['title'], $arrTitles))
+			{
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionTitle'], $arrSection['title']));
 			}
 
 			$arrSection['id'] = StringUtil::standardize($arrSection['id'], true);
@@ -59,13 +66,14 @@ class SectionWizard extends Widget
 			}
 
 			// Check for duplicate section IDs
-			if (\in_array($arrSection['id'], $arrExisting))
+			if (\in_array($arrSection['id'], $arrIds))
 			{
 				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionId'], $arrSection['id']));
 			}
 
+			$arrTitles[] = $arrSection['title'];
+			$arrIds[] = $arrSection['id'];
 			$arrSections[] = $arrSection;
-			$arrExisting[] = $arrSection['id'];
 		}
 
 		return $arrSections;
