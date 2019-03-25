@@ -39,15 +39,22 @@ class SectionWizard extends \Widget
 	 */
 	protected function validator($varInput)
 	{
+		$arrTitles = array();
+		$arrIds = array();
 		$arrSections = array();
-		$arrExisting = array();
 
 		foreach ($varInput as $arrSection)
 		{
-			// Remove sections without ID
-			if (empty($arrSection['id']))
+			// Remove sections without title and ID
+			if (empty($arrSection['title']) || empty($arrSection['id']))
 			{
 				continue;
+			}
+
+			// Check for duplicate section titles
+			if (\in_array($arrSection['title'], $arrTitles))
+			{
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionTitle'], $arrSection['title']));
 			}
 
 			$arrSection['id'] = \StringUtil::standardize($arrSection['id'], true);
@@ -59,13 +66,14 @@ class SectionWizard extends \Widget
 			}
 
 			// Check for duplicate section IDs
-			if (\in_array($arrSection['id'], $arrExisting))
+			if (\in_array($arrSection['id'], $arrIds))
 			{
 				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionId'], $arrSection['id']));
 			}
 
+			$arrTitles[] = $arrSection['title'];
+			$arrIds[] = $arrSection['id'];
 			$arrSections[] = $arrSection;
-			$arrExisting[] = $arrSection['id'];
 		}
 
 		return $arrSections;
@@ -104,8 +112,8 @@ class SectionWizard extends \Widget
 		{
 			$return .= '
     <tr>
-      <td><input type="text" name="'.$this->strId.'['.$i.'][title]" id="'.$this->strId.'_title_'.$i.'" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]['title']).'"></td>
-      <td><input type="text" name="'.$this->strId.'['.$i.'][id]" id="'.$this->strId.'_id_'.$i.'" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]['id']).'"></td>';
+      <td><input type="text" name="'.$this->strId.'['.$i.'][title]" id="'.$this->strId.'_title_'.$i.'" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]['title']).'" required></td>
+      <td><input type="text" name="'.$this->strId.'['.$i.'][id]" id="'.$this->strId.'_id_'.$i.'" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]['id']).'" required></td>';
 
 			$options = '';
 

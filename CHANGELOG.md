@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Make custom layout section titles and IDs mandatory (see #341).
  * Prevent using reserved layout section IDs in custom layout sections (see #301).
  * Show the video elements headline in the back end preview (see #382).
 
