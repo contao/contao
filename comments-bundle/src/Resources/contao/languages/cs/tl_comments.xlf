@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.member.1">
         <source>Here you can associate the comment with a member.</source>
+        <target>Zde můžete spojit komentář s vybraným členem.</target>
       </trans-unit>
       <trans-unit id="tl_comments.comment.0">
         <source>Comment</source>

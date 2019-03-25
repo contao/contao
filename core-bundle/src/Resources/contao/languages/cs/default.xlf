@@ -259,6 +259,7 @@
       </trans-unit>
       <trans-unit id="ERR.formCookieWarning">
         <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+        <target>Tento formulář nebudete moct odeslat, protože nemáte ve Vašem prohlížeči povolené cookies.</target>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -291,6 +292,15 @@
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
         <target>Neplatný ověřovací kód!</target>
+      </trans-unit>
+      <trans-unit id="ERR.emptyTitleOrId">
+        <source>Please enter both title and ID!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionTitle">
+        <source>Duplicate layout section title &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID &quot;%s&quot;!</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2414,9 +2424,11 @@
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>Existuje přinejmenším jeden pravidelný uživatel, který má přistup k editoru předloh. Od té doby kdy jsou předlohy ve formátu PHP, mají tací uživatelé plnou kontrolu nad systémem!</target>
       </trans-unit>
       <trans-unit id="MSC.groupTemplateEditor">
         <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>Existuje přinejmenším jedna skupina, která má přistup k editoru předloh. Od té doby kdy jsou předlohy ve formátu PHP, mají takové skupiny plnou kontrolu nad systémem!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>

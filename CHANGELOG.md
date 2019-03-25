@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.7.2 (2019-03-25)
 
  * Make custom layout section titles and IDs mandatory (see #341).
  * Always add the host to the title attribute in the back end (see #339).

@@ -23,6 +23,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_notify">
         <source>Notify me of new comments by e-mail (you can cancel your subscription at any time)</source>
+        <target>Të njoftohem për komente të reja me e-mail (abonimi mund të ç'aktivizohet në çdo kohë)</target>
       </trans-unit>
       <trans-unit id="MSC.com_submit">
         <source>Submit comment</source>
@@ -69,6 +70,22 @@ Click here to edit or answer the comment:
 
 %s
 </source>
+        <target>%s ka shtuar një koment të ri në faqen tuaj:
+
+---
+
+%s
+
+---
+
+Kliko këtu për të parë komentin:
+
+%s
+
+Kliko këtu për të redaktuar ose përgjigjur komentit:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
@@ -107,6 +124,22 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 %s
 </source>
+        <target>Përshendetje %s,
+
+ju lutem konfirmoni që dëshironi të njoftoheni për komente të reja me e-mail në këtë faqe:
+
+%s
+
+---
+
+Kliko këtu mbi këtë vegëz për të konfirmuar abonimin tuaj:
+
+%s
+
+Vegëza e konfirmimit është e vlefshme për 24 orë. Ju mund ta ç'aktivizoni abonimin tuaj në çdo kohë duke klikuar këtu:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
         <source>New comment on %s</source>
@@ -127,6 +160,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Përshendetje %s,
+
+një koment i ri është shtuar në një faqe, të cilën e keni abonuar:
+
+---
+
+%s
+
+---
+
+Kliko këtu për të ç'aktivizuar abonimin tuaj:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
@@ -147,6 +194,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Përshendetje %s,
+
+një përgjigje e re për një koment është shtuar në një faqe të cilën e keni abonuar:
+
+---
+
+%s
+
+---
+
+Kliko këtu për të ç'aktivizuar abonimin tuaj:
+
+%s
+</target>
       </trans-unit>
     </body>
   </file>

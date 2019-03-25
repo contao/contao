@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_calendar.1">
         <source>Please select one or more calendars.</source>
-        <target>Zgjedhoni një apo më shumë kalendarë.</target>
+        <target>Zgjedh një apo më shumë kalendarë.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_noSpan.0">
         <source>Shortened view</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.1">
         <source>Here you can choose the week start day.</source>
-        <target>Zgjedhoni ditën e fillimit të javës.</target>
+        <target>Zgjedh ditën e fillimit të javës.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_format.0">
         <source>Event list format</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_format.1">
         <source>Here you can choose the event list format.</source>
-        <target>Zgjedhoni formatin e listave për ngjarje.</target>
+        <target>Zgjedh formatin e listave për ngjarje.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.0">
         <source>Ignore URL parameters</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_order.1">
         <source>Here you can choose the sort order.</source>
-        <target>Zgjedhoni renditjen.</target>
+        <target>Zgjedh renditjen.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.0">
         <source>Event reader module</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
         <source>Here you can select the event template.</source>
-        <target>Zgjedhoni një strukturë për ngjarje.</target>
+        <target>Zgjedh një strukturë për ngjarje.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.1">
         <source>Here you can select the calendar template.</source>
-        <target>Zgjedhoni shabllonin e kalendarit.</target>
+        <target>Zgjedh shabllonin e kalendarit.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>

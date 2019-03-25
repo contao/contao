@@ -287,6 +287,15 @@
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
       </trans-unit>
+      <trans-unit id="ERR.emptyTitleOrId">
+        <source>Please enter both title and ID!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionTitle">
+        <source>Duplicate layout section title &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID &quot;%s&quot;!</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Somma %d a %d.</target>

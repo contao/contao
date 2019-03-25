@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_files.syncExclude.0">
         <source>Do not synchronize</source>
+        <target>Ne sinhroniziraj</target>
       </trans-unit>
       <trans-unit id="tl_files.syncExclude.1">
         <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>Te mape in njenih podmap ne sinhroniziraj s podatkovno bazo.</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
@@ -128,9 +130,11 @@
       </trans-unit>
       <trans-unit id="tl_files.dropzoneFileTooBig">
         <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>Datoteka je prevelika ({{filesize}} MiB). Največja dovoljena velikost je {{maxFilesize}} MiB.</target>
       </trans-unit>
       <trans-unit id="tl_files.dropzoneInvalidType">
         <source>Files of this type cannot be uploaded.</source>
+        <target>Ta vrsta datoteke ni dovoljena za prenos.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>
@@ -170,7 +174,7 @@
       </trans-unit>
       <trans-unit id="tl_files.new.0">
         <source>New folder</source>
-        <target>Nova predloga</target>
+        <target>Nova mapa</target>
       </trans-unit>
       <trans-unit id="tl_files.new.1">
         <source>Create a new folder</source>

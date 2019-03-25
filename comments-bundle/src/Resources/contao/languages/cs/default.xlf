@@ -23,6 +23,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_notify">
         <source>Notify me of new comments by e-mail (you can cancel your subscription at any time)</source>
+        <target>Poslat mi mailem upozornění o nových komentářích (kdykoli můžeš zrušit odběr)</target>
       </trans-unit>
       <trans-unit id="MSC.com_submit">
         <source>Submit comment</source>
@@ -69,6 +70,21 @@ Click here to edit or answer the comment:
 
 %s
 </source>
+        <target>%sbyl vytvořený nový komentář na Vašem webu:
+
+--
+%s
+
+--
+
+Klikněte na níže uvedený odkaz pro zobrazení komenáře:
+%s
+
+
+Klikněte na níže uvedený odkaz pro odpověď:
+%s
+
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
@@ -107,6 +123,22 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 %s
 </source>
+        <target>Dobrý den %s,
+
+potvrďte prosím, že chcete odebírat upozornění o nových komentářích na tomto webu:
+
+%s
+
+---
+
+Klikněte na níže uvedený odkaz pro potvrzení odběru:
+
+%s
+
+Potvrzovací odkaz je platný 24 hodin. Kdykoli můžete zrušit odběr upozornění kliknutím na níže uvedený odkaz:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
         <source>New comment on %s</source>
@@ -127,6 +159,19 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Dobrý den %s,
+
+byl vytvořený nový komentář na webu, z něhož odebíráte tato upozornění:
+
+---
+
+%s
+
+---
+
+Klikněte na níže uvedený odkaz pro zrušení odběru upozornění:
+
+%s</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
@@ -147,6 +192,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Dobrý den %s,
+
+právě někdo odpověděl na Váš komentář na webu, z něhož dostáváte toto upozornění:
+
+---
+
+%s
+
+---
+
+Click here to cancel your subscription:
+
+%s
+</target>
       </trans-unit>
     </body>
   </file>

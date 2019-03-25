@@ -18,6 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
+        <target>Z bezpečnostních důvodů byl Instalační nástroj uzamčen, protože bylo třikrát po sobě zadáno špatné heslo. Instalační nástroj můžete odemknout přes Správce Contaa nebo použitím příkazu &lt;code&gt;contao:install:unlock&lt;/code&gt;na Příkazovém řádku. </target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -382,6 +383,7 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
+        <target>Contaa vyžaduje přinejmenším MySQL 5.1.0, Vaše verze je ale %s. Prosím zaktualizujte na vyšší verzi.</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -406,14 +408,17 @@
       </trans-unit>
       <trans-unit id="82">
         <source>misconfigured_database_url_explain</source>
+        <target>Nelze se přihlásit k databance použitím cesty &lt;code&gt;DATABASE_URL&lt;/code&gt; uvedené v nastavovacím souboru.</target>
         
       </trans-unit>
       <trans-unit id="83">
         <source>engine_mismatch</source>
+        <target>Nakonfigurovaná databanka nepodporuje kódování utf8mb4!</target>
         
       </trans-unit>
       <trans-unit id="84">
         <source>engine_mismatch_explain</source>
+        <target>Nastavená databanka &lt;code&gt;%s&lt;/code&gt; nepodporouje utf8mb4. Použijte místo toho InnoDB a nastavte použití jiného kódování znaků a koalic v souboru &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="85">
@@ -433,6 +438,7 @@
       </trans-unit>
       <trans-unit id="88">
         <source>innodb_additional_explain</source>
+        <target>Používání velkých předpon ve verzích MySQL od verze 5.7.7 a MariaDB od verze 10.2.2 vyžaduje souborý formát Barracuda a možnost 1innodb_file_per_table1.</target>
         
       </trans-unit>
     </body>

@@ -43,15 +43,19 @@
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.0">
         <source>Meta title</source>
+        <target>Název pro meta údaj</target>
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Zde můžete přidat vlastní název události a tím přepsat výše uvedený. </target>
       </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
+        <target>Popis pro meta údaj</target>
       </trans-unit>
       <trans-unit id="tl_news.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Zde můžete přidat vlastní popis události a tím přepsat výchozí popis, který se běžně vytváří z úvodníku události. Zobrazí se jen jako informace ve zdrojovém kódu dané stránky.</target>
       </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>

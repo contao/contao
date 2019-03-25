@@ -293,6 +293,16 @@
         <source>Invalid verification code!</source>
         <target>Неверный код подтверждения!</target>
       </trans-unit>
+      <trans-unit id="ERR.emptyTitleOrId">
+        <source>Please enter both title and ID!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionTitle">
+        <source>Duplicate layout section title &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>Дублировать секции макета ID &quot;%s&quot;!</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Пожалуйста, прибавьте %d к %d.</target>

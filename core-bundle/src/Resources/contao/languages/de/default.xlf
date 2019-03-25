@@ -293,6 +293,18 @@
         <source>Invalid verification code!</source>
         <target>Ungültiger Bestätigungscode!</target>
       </trans-unit>
+      <trans-unit id="ERR.emptyTitleOrId">
+        <source>Please enter both title and ID!</source>
+        <target>Bitte geben Sie sowohl einen Titel als auch eine ID ein!</target>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionTitle">
+        <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>Doppelter Layoutbereichstitel &quot;%s&quot;!</target>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>Doppelte Layoutbereichs-ID &quot;%s&quot;!</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Bitte addieren Sie %d und %d.</target>
