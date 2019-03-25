@@ -1,8 +1,10 @@
-# Contao 4 bundles
+[![](https://img.shields.io/travis/com/contao/contao.svg)](https://travis-ci.com/contao/contao/)
+[![](https://img.shields.io/coveralls/github/contao/contao.svg)](https://coveralls.io/github/contao/contao)
+[![](https://img.shields.io/packagist/v/contao/contao.svg)](https://packagist.org/packages/contao/contao)
+[![](https://img.shields.io/twitter/follow/contaocms.svg?style=social)](https://twitter.com/contaocms)
+[![](https://pullreminders.com/badge.svg)](https://pullreminders.com?ref=badge)
 
-[![](https://img.shields.io/travis/contao/contao/master.svg?style=flat-square)](https://travis-ci.com/contao/contao/)
-[![](https://img.shields.io/coveralls/contao/contao/master.svg?style=flat-square)](https://coveralls.io/github/contao/contao)
-[![](https://img.shields.io/packagist/v/contao/contao.svg?style=flat-square)](https://packagist.org/packages/contao/contao)
+# Contao 4 bundles
 
 This is a monorepo holding the official Contao 4 bundles.
 
