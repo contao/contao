@@ -45,10 +45,10 @@ class SectionWizard extends \Widget
 
 		foreach ($varInput as $arrSection)
 		{
-			// Remove sections without title and ID
-			if (empty($arrSection['title']) || empty($arrSection['id']))
+			// Title and ID are required
+			if ((!empty($arrSection['title']) && empty($arrSection['id'])) || (empty($arrSection['title']) && !empty($arrSection['id'])))
 			{
-				continue;
+				$this->addError($GLOBALS['TL_LANG']['ERR']['emptyTitleOrId']);
 			}
 
 			// Check for duplicate section titles
@@ -112,8 +112,8 @@ class SectionWizard extends \Widget
 		{
 			$return .= '
     <tr>
-      <td><input type="text" name="'.$this->strId.'['.$i.'][title]" id="'.$this->strId.'_title_'.$i.'" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]['title']).'" required></td>
-      <td><input type="text" name="'.$this->strId.'['.$i.'][id]" id="'.$this->strId.'_id_'.$i.'" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]['id']).'" required></td>';
+      <td><input type="text" name="'.$this->strId.'['.$i.'][title]" id="'.$this->strId.'_title_'.$i.'" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]['title']).'"></td>
+      <td><input type="text" name="'.$this->strId.'['.$i.'][id]" id="'.$this->strId.'_id_'.$i.'" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]['id']).'"></td>';
 
 			$options = '';
 
