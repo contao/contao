@@ -135,12 +135,6 @@ class FormCheckBox extends \Widget
 		{
 			$this->mandatory = true;
 		}
-
-		// Clear result if nothing has been submitted
-		if (!isset($_POST[$this->strName]))
-		{
-			$this->varValue = '';
-		}
 	}
 
 	/**
