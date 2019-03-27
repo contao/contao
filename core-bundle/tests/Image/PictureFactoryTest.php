@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Image;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Tests\TestCase;
@@ -22,7 +21,6 @@ use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationInterface;
 use Contao\Image\PictureConfigurationItem;
-use Contao\Image\PictureGenerator;
 use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
@@ -216,7 +214,7 @@ class PictureFactoryTest extends TestCase
             ->method('generate')
             ->with(
                 $this->callback(
-                    function (): bool {
+                    static function (): bool {
                         return true;
                     }
                 ),
@@ -234,7 +232,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (): bool {
+                    static function (): bool {
                         return true;
                     }
                 )
@@ -265,7 +263,7 @@ class PictureFactoryTest extends TestCase
             ->method('getImportantPartFromLegacyMode')
             ->with(
                 $this->callback(
-                    function (): bool {
+                    static function (): bool {
                         return true;
                     }
                 ),
@@ -359,10 +357,11 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
-     * @param PictureGenerator|MockObject|null $pictureGenerator
-     * @param ImageFactory|MockObject|null     $imageFactory
+     * @param PictureGeneratorInterface|MockObject|null $pictureGenerator
+     * @param ImageFactoryInterface|MockObject|null     $imageFactory
+     * @param ContaoFramework|MockObject|null           $framework
      */
-    private function mockPictureFactory($pictureGenerator = null, $imageFactory = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null): PictureFactory
+    private function mockPictureFactory(PictureGeneratorInterface $pictureGenerator = null, ImageFactoryInterface $imageFactory = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null): PictureFactory
     {
         if (null === $pictureGenerator) {
             $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);

@@ -113,7 +113,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'inline', ['foo' => 'bar']));
 
         $callback = $this->callback(
-            function () use ($uri) {
+            static function () use ($uri) {
                 return isset($uri->attributes['pageModel']) && 42 === $uri->attributes['pageModel'];
             }
         );
@@ -135,7 +135,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'inline', ['foo' => 'bar']));
 
         $callback = $this->callback(
-            function () use ($uri) {
+            static function () use ($uri) {
                 return isset($uri->attributes['pageModel']) && 99 === $uri->attributes['pageModel'];
             }
         );
@@ -209,6 +209,9 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render($uri);
     }
 
+    /**
+     * @param BaseFragmentHandler|MockObject|null $fragmentHandler
+     */
     private function mockFragmentHandler(FragmentRegistry $registry = null, ServiceLocator $renderers = null, ServiceLocator $preHandlers = null, Request $request = null, BaseFragmentHandler $fragmentHandler = null): FragmentHandler
     {
         if (null === $registry) {

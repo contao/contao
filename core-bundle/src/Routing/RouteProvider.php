@@ -384,7 +384,7 @@ class RouteProvider implements RouteProviderInterface
             $languages = array_flip(array_values($languages));
         }
 
-        uasort($routes, function (Route $a, Route $b) use ($languages, $routes) {
+        uasort($routes, static function (Route $a, Route $b) use ($languages, $routes) {
             $fallbackA = '.fallback' === substr(array_search($a, $routes, true), -9);
             $fallbackB = '.fallback' === substr(array_search($b, $routes, true), -9);
 

@@ -75,7 +75,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('files')
                     ->validate()
                         ->ifTrue(
-                            function (string $v): int {
+                            static function (string $v): int {
                                 return preg_match(
                                     '@^(app|assets|bin|contao|plugins|share|system|templates|var|vendor|web)(/|$)@',
                                     $v

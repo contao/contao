@@ -54,7 +54,7 @@ class InsertTagsListenerTest extends ContaoTestCase
         $events
             ->method('generateEventUrl')
             ->willReturnCallback(
-                function (CalendarEventsModel $model, bool $absolute): string {
+                static function (CalendarEventsModel $model, bool $absolute): string {
                     if ($absolute) {
                         return 'http://domain.tld/events/the-foobar-event.html';
                     }

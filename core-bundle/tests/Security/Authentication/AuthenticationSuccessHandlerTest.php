@@ -329,6 +329,10 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
     }
 
+    /**
+     * @param ContaoFramework|MockObject|null $framework
+     * @param LoggerInterface|MockObject|null $logger
+     */
     private function mockSuccessHandler(ContaoFramework $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);

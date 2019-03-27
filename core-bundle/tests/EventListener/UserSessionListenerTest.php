@@ -18,6 +18,7 @@ use Contao\CoreBundle\EventListener\UserSessionListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -385,6 +386,10 @@ class UserSessionListenerTest extends TestCase
 
     /**
      * Mocks a session listener.
+     *
+     * @param Connection|MockObject|null               $connection
+     * @param TokenStorageInterface|MockObject|null    $tokenStorage
+     * @param EventDispatcherInterface|MockObject|null $eventDispatcher
      */
     private function mockListener(Connection $connection = null, TokenStorageInterface $tokenStorage = null, EventDispatcherInterface $eventDispatcher = null): UserSessionListener
     {

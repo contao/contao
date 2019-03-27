@@ -171,7 +171,7 @@ class SymlinksCommand extends Command
 
     private function symlinkModules(): void
     {
-        $filter = function (SplFileInfo $file): bool {
+        $filter = static function (SplFileInfo $file): bool {
             return HtaccessAnalyzer::create($file)->grantsAccess();
         };
 
@@ -260,7 +260,7 @@ class SymlinksCommand extends Command
         return Finder::create()
             ->ignoreDotFiles(false)
             ->sort(
-                function (SplFileInfo $a, SplFileInfo $b): int {
+                static function (SplFileInfo $a, SplFileInfo $b): int {
                     $countA = substr_count(strtr($a->getRelativePath(), '\\', '/'), '/');
                     $countB = substr_count(strtr($b->getRelativePath(), '\\', '/'), '/');
 

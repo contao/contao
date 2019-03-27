@@ -93,7 +93,7 @@ class DataContainerCallbackListener
             [],
             ...array_filter(
                 $callbacks,
-                function ($priority) {
+                static function ($priority) {
                     return $priority >= 0;
                 },
                 ARRAY_FILTER_USE_KEY
@@ -104,7 +104,7 @@ class DataContainerCallbackListener
             [],
             ...array_filter(
                 $callbacks,
-                function ($priority) {
+                static function ($priority) {
                     return $priority < 0;
                 },
                 ARRAY_FILTER_USE_KEY

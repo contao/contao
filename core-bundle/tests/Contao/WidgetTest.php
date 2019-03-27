@@ -145,7 +145,7 @@ class WidgetTest extends TestCase
 
         $widget
             ->setInputCallback(
-                function (): string {
+                static function (): string {
                     return 'foobar';
                 }
             )
@@ -156,7 +156,7 @@ class WidgetTest extends TestCase
 
         $widget
             ->setInputCallback(
-                function () {
+                static function () {
                     return null;
                 }
             )

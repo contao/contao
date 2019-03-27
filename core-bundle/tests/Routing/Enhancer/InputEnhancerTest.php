@@ -101,7 +101,7 @@ class InputEnhancerTest extends TestCase
         // Input::setGet must always be called with $blnAddUnused=true
         array_walk(
             $setters,
-            function (array &$set): void {
+            static function (array &$set): void {
                 $set[2] = true;
             }
         );

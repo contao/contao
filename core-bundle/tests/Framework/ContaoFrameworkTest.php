@@ -738,6 +738,9 @@ class ContaoFrameworkTest extends TestCase
         );
     }
 
+    /**
+     * @param TokenChecker|MockObject|null $tokenChecker
+     */
     private function mockFramework(Request $request = null, ScopeMatcher $scopeMatcher = null, TokenChecker $tokenChecker = null): ContaoFramework
     {
         $requestStack = new RequestStack();

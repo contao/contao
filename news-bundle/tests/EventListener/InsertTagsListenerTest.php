@@ -54,7 +54,7 @@ class InsertTagsListenerTest extends ContaoTestCase
         $news
             ->method('generateNewsUrl')
             ->willReturnCallback(
-                function (NewsModel $model, bool $addArchive, bool $absolute): string {
+                static function (NewsModel $model, bool $addArchive, bool $absolute): string {
                     if ($absolute) {
                         return 'http://domain.tld/news/foo-is-not-bar.html';
                     }

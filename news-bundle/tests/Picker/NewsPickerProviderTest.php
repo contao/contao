@@ -44,7 +44,7 @@ class NewsPickerProviderTest extends ContaoTestCase
         $menuFactory
             ->method('createItem')
             ->willReturnCallback(
-                function (string $name, array $data) use ($menuFactory): ItemInterface {
+                static function (string $name, array $data) use ($menuFactory): ItemInterface {
                     $item = new MenuItem($name, $menuFactory);
                     $item->setLabel($data['label']);
                     $item->setLinkAttributes($data['linkAttributes']);
@@ -60,7 +60,7 @@ class NewsPickerProviderTest extends ContaoTestCase
         $router
             ->method('generate')
             ->willReturnCallback(
-                function (string $name, array $params): string {
+                static function (string $name, array $params): string {
                     return $name.'?'.http_build_query($params);
                 }
             )

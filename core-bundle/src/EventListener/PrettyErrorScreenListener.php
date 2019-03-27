@@ -167,14 +167,14 @@ class PrettyErrorScreenListener
     {
         $this->framework->initialize(true);
 
-        $type = 'error_'.$type;
+        $key = 'error_'.$type;
 
-        if (!isset($GLOBALS['TL_PTY'][$type]) || !class_exists($GLOBALS['TL_PTY'][$type])) {
+        if (!isset($GLOBALS['TL_PTY'][$key]) || !class_exists($GLOBALS['TL_PTY'][$key])) {
             return null;
         }
 
         /** @var PageError404 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY'][$type]();
+        $pageHandler = new $GLOBALS['TL_PTY'][$key]();
 
         try {
             return $pageHandler->getResponse();

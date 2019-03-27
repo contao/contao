@@ -18,7 +18,7 @@ jobs:
   include:
     - stage: test
       name: 'Test installing the split repos'
-      php: 7.2
+      php: 7.3
       script:
         - cd $TRAVIS_BUILD_DIR/calendar-bundle && run_split_tests
         - cd $TRAVIS_BUILD_DIR/core-bundle && run_split_tests
@@ -28,7 +28,7 @@ jobs:
 
     - stage: test
       name: 'Test installing the lowest dependencies'
-      php: 7.2
+      php: 7.3
       install:
         - phpenv config-rm xdebug.ini || true
         - composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
@@ -100,7 +100,7 @@ jobs:
     - stage: split
       name: 'Split the monorepo'
       if: 'type = push AND (branch =~ /^(master|\d+\.\d+)$/ OR tag IS present)'
-      php: 7.2
+      php: 7.3
       before_install: true
       install:
         - phpenv config-rm xdebug.ini || true

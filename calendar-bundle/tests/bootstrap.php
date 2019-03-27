@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 error_reporting(E_ALL);
 
-$include = function ($file) {
+$include = static function ($file) {
     return file_exists($file) ? include $file : false;
 };
 

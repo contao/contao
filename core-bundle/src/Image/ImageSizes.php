@@ -78,7 +78,7 @@ class ImageSizes
             $event = new ImageSizesEvent($this->options, $user);
         } else {
             $options = array_map(
-                function ($val) {
+                static function ($val) {
                     return is_numeric($val) ? (int) $val : $val;
                 },
                 StringUtil::deserialize($user->imageSizes, true)

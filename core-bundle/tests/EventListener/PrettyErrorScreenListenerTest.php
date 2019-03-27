@@ -25,6 +25,7 @@ use Contao\CoreBundle\Fixtures\Exception\PageErrorResponseException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -230,7 +231,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $twig
             ->method('render')
-            ->willReturnCallback(function () use (&$count): void {
+            ->willReturnCallback(static function () use (&$count): void {
                 if (0 === $count++) {
                     throw new \Twig_Error('foo');
                 }
@@ -300,6 +301,9 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
+    /**
+     * @param \Twig_Environment|MockObject|null $twig
+     */
     private function mockListener(string $userClass, bool $expectLogging = false, \Twig_Environment $twig = null): PrettyErrorScreenListener
     {
         if (null === $twig) {

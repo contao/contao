@@ -37,6 +37,7 @@ use Imagine\Image\Box;
 use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ImageFactoryTest extends TestCase
@@ -645,7 +646,10 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * Mocks an image factory.
+     * @param ResizerInterface|MockObject|null $resizer
+     * @param ImagineInterface|MockObject|null $imagine
+     * @param ImagineInterface|MockObject|null $imagineSvg
+     * @param ContaoFramework|MockObject|null  $framework
      */
     private function mockImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null): ImageFactory
     {

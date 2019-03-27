@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -308,6 +309,9 @@ class StoreRefererListenerTest extends TestCase
         yield [ContaoCoreBundle::SCOPE_FRONTEND];
     }
 
+    /**
+     * @param TokenStorageInterface|MockObject|null $tokenStorage
+     */
     private function mockListener(TokenStorageInterface $tokenStorage = null): StoreRefererListener
     {
         if (null === $tokenStorage) {

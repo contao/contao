@@ -260,7 +260,7 @@ class LegacyMatcherTest extends TestCase
             ->expects($this->exactly(2))
             ->method('matchRequest')
             ->with($this->callback(
-                function (Request $incoming) use ($request, &$folderUrlMatched) {
+                static function (Request $incoming) use ($request, &$folderUrlMatched) {
                     if ($folderUrlMatched > 0) {
                         return true;
                     }
@@ -271,7 +271,7 @@ class LegacyMatcherTest extends TestCase
                 }
             ))
             ->willReturnCallback(
-                function () use (&$folderUrlMatched) {
+                static function () use (&$folderUrlMatched) {
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
                         throw new ResourceNotFoundException('');
@@ -315,7 +315,7 @@ class LegacyMatcherTest extends TestCase
             ->expects($this->exactly(2))
             ->method('matchRequest')
             ->with($this->callback(
-                function (Request $incoming) use ($request, &$folderUrlMatched) {
+                static function (Request $incoming) use ($request, &$folderUrlMatched) {
                     if ($folderUrlMatched > 0) {
                         return true;
                     }
@@ -326,7 +326,7 @@ class LegacyMatcherTest extends TestCase
                 }
             ))
             ->willReturnCallback(
-                function () use (&$folderUrlMatched) {
+                static function () use (&$folderUrlMatched) {
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
@@ -370,7 +370,7 @@ class LegacyMatcherTest extends TestCase
             ->expects($this->exactly(2))
             ->method('matchRequest')
             ->with($this->callback(
-                function (Request $incoming) use ($request, &$folderUrlMatched) {
+                static function (Request $incoming) use ($request, &$folderUrlMatched) {
                     if ($folderUrlMatched > 0) {
                         return true;
                     }
@@ -427,7 +427,7 @@ class LegacyMatcherTest extends TestCase
             ->expects($this->exactly(2))
             ->method('matchRequest')
             ->with($this->callback(
-                function (Request $incoming) use ($request, &$folderUrlMatched) {
+                static function (Request $incoming) use ($request, &$folderUrlMatched) {
                     if ($folderUrlMatched > 0) {
                         return true;
                     }
@@ -485,7 +485,7 @@ class LegacyMatcherTest extends TestCase
             ->expects($this->exactly(2))
             ->method('matchRequest')
             ->with($this->callback(
-                function (Request $incoming) use ($request, &$folderUrlMatched) {
+                static function (Request $incoming) use ($request, &$folderUrlMatched) {
                     if ($folderUrlMatched > 0) {
                         return true;
                     }
@@ -660,7 +660,7 @@ class LegacyMatcherTest extends TestCase
             ->expects($expects)
             ->method('matchRequest')
             ->with($this->callback(
-                function (Request $request) use ($pathInfo) {
+                static function (Request $request) use ($pathInfo) {
                     return null === $pathInfo || $request->getPathInfo() === $pathInfo;
                 }
             ))
@@ -679,7 +679,7 @@ class LegacyMatcherTest extends TestCase
         $configAdapter
             ->method('get')
             ->willReturnCallback(
-                function ($param) use ($config) {
+                static function ($param) use ($config) {
                     return $config[$param] ?? null;
                 }
             )

@@ -258,6 +258,9 @@ class AuthenticationProviderTest extends TestCase
         yield [false];
     }
 
+    /**
+     * @param ContaoFramework|MockObject|null $framework
+     */
     private function mockProvider(ContaoFramework $framework = null): AuthenticationProvider
     {
         $userProvider = $this->createMock(UserProviderInterface::class);

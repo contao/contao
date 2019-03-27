@@ -532,7 +532,7 @@ class RouteProviderTest extends TestCase
         $configAdapter
             ->method('get')
             ->willReturnCallback(
-                function ($param) use ($config) {
+                static function ($param) use ($config) {
                     return $config[$param] ?? null;
                 }
             )
@@ -556,11 +556,14 @@ class RouteProviderTest extends TestCase
                 'rootLanguage' => $language,
                 'rootIsFallback' => $fallback,
                 'rootUseSSL' => 'https' === $scheme,
-                'rootSorting' => array_reduce((array) $language, function ($c, $i) { return $c + \ord($i); }, 0),
+                'rootSorting' => array_reduce((array) $language, static function ($c, $i) { return $c + \ord($i); }, 0),
             ]
         );
     }
 
+    /**
+     * @param ContaoFramework|MockObject|null $framework
+     */
     private function mockRouteProvider(ContaoFramework $framework = null, string $urlSuffix = '.html', bool $prependLocale = false): RouteProvider
     {
         if (null === $framework) {

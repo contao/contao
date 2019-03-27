@@ -174,7 +174,7 @@ class DcaSchemaProvider
         }
 
         if (preg_match('/default (\'[^\']*\'|\d+(?:\.\d+)?)/i', $def, $match)) {
-            if (\is_numeric($match[1])) {
+            if (is_numeric($match[1])) {
                 $default = $match[1] * 1;
             } else {
                 $default = trim($match[1], "'");
@@ -308,7 +308,7 @@ class DcaSchemaProvider
                 $columns = array_combine(
                     $columns,
                     array_map(
-                        function ($column, $length) {
+                        static function ($column, $length) {
                             return $column.($length ? '('.$length.')' : '');
                         },
                         $columns,

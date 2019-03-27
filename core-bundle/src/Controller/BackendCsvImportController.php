@@ -71,7 +71,7 @@ class BackendCsvImportController
     public function importListWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
-            function (array $data, array $row): array {
+            static function (array $data, array $row): array {
                 return array_merge($data, $row);
             },
             $dc->table,
@@ -85,7 +85,7 @@ class BackendCsvImportController
     public function importTableWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
-            function (array $data, array $row): array {
+            static function (array $data, array $row): array {
                 $data[] = $row;
 
                 return $data;
@@ -100,7 +100,7 @@ class BackendCsvImportController
     public function importOptionWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
-            function (array $data, array $row): array {
+            static function (array $data, array $row): array {
                 $data[] = [
                     'value' => $row[0],
                     'label' => $row[1],

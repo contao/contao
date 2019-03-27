@@ -42,7 +42,7 @@ class PluginTest extends ContaoTestCase
             ->expects($this->atLeastOnce())
             ->method('parse')
             ->willReturnCallback(
-                function ($resource): array {
+                static function ($resource): array {
                     return [$resource];
                 }
             )
@@ -66,7 +66,7 @@ class PluginTest extends ContaoTestCase
             ->expects($this->atLeastOnce())
             ->method('load')
             ->willReturnCallback(
-                function ($resource) use (&$files): void {
+                static function ($resource) use (&$files): void {
                     if (\is_string($resource)) {
                         $files[] = basename($resource);
                     } elseif (\is_callable($resource)) {
@@ -94,7 +94,7 @@ class PluginTest extends ContaoTestCase
             ->expects($this->atLeastOnce())
             ->method('load')
             ->willReturnCallback(
-                function ($resource) use (&$files): void {
+                static function ($resource) use (&$files): void {
                     if (\is_string($resource)) {
                         $files[] = basename($resource);
                     } elseif (\is_callable($resource)) {
@@ -135,7 +135,7 @@ class PluginTest extends ContaoTestCase
             ->expects($this->atLeastOnce())
             ->method('load')
             ->willReturnCallback(
-                function (string $file): RouteCollection {
+                static function (string $file): RouteCollection {
                     $collection = new RouteCollection();
                     $collection->add(basename($file).'_foobar', new Route('/foobar'));
 

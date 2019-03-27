@@ -1,10 +1,13 @@
-[![](https://img.shields.io/travis/com/contao/contao.svg)](https://travis-ci.com/contao/contao/)
-[![](https://img.shields.io/coveralls/github/contao/contao.svg)](https://coveralls.io/github/contao/contao)
-[![](https://img.shields.io/packagist/v/contao/contao.svg)](https://packagist.org/packages/contao/contao)
-[![](https://img.shields.io/twitter/follow/contaocms.svg?style=social)](https://twitter.com/contaocms)
-[![](https://pullreminders.com/badge.svg)](https://pullreminders.com?ref=badge)
+<p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg"></p>
 
-# Contao 4 bundles
+<p align="center">
+<a href="https://travis-ci.com/contao/contao/"><img src="https://img.shields.io/travis/com/contao/contao.svg" alt="Travis"></a>
+<a href="https://coveralls.io/github/contao/contao"><img src="https://img.shields.io/coveralls/github/contao/contao.svg" alt="Coveralls"></a>
+<a href="https://packagist.org/packages/contao/contao"><img src="https://img.shields.io/packagist/v/contao/contao.svg" alt="Packagist"></a>
+<a href="https://pullreminders.com?ref=badge"><img src="https://pullreminders.com/badge.svg" alt="Pullreminders"></a>
+</p>
+
+## About
 
 This is a monorepo holding the official Contao 4 bundles.
 

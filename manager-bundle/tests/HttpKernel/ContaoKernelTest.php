@@ -131,7 +131,7 @@ class ContaoKernelTest extends ContaoTestCase
         $loader
             ->method('load')
             ->willReturnCallback(
-                function ($resource) use (&$files): void {
+                static function ($resource) use (&$files): void {
                     $files[] = basename($resource);
                 }
             )

@@ -191,7 +191,7 @@ class TokenCheckerTest extends TestCase
         $user
             ->method('__get')
             ->willReturnCallback(
-                function (string $key) {
+                static function (string $key) {
                     switch ($key) {
                         case 'id':
                             return 1;
