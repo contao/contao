@@ -216,6 +216,9 @@ class FrontendIndex extends Frontend
 			}
 		}
 
+		// Inherit the settings from the parent pages
+		$objPage->loadDetails();
+
 		// Trigger the 404 page if the page is not published and the front end preview is not active (see #374)
 		if (!BE_USER_LOGGED_IN && !$objPage->isPublic)
 		{
@@ -228,12 +231,6 @@ class FrontendIndex extends Frontend
 			/** @var PageRoot $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['root']();
 			$objHandler->generate($objPage->id);
-		}
-
-		// Inherit the settings from the parent pages if it has not been done yet
-		if (!\is_bool($objPage->protected))
-		{
-			$objPage->loadDetails();
 		}
 
 		// Set the admin e-mail address
