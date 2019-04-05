@@ -216,7 +216,7 @@ class FrontendIndex extends Frontend
 			}
 		}
 
-		// Inherit the settings from the parent pages if it has not been done yet
+		// Inherit the settings from the parent pages
 		$objPage->loadDetails();
 
 		// Trigger the 404 page if the page is not published and the front end preview is not active (see #374)
