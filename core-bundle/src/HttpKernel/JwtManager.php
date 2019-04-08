@@ -13,7 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\HttpKernel;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Firebase\JWT\JWT;
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,12 +28,19 @@ class JwtManager
     public const COOKIE_NAME = '_contao_preview';
 
     /**
+     * @var Signer
+     */
+    private $signer;
+
+    /**
      * @var string
      */
     private $secret;
 
-    public function __construct(string $projectDir)
+    public function __construct(string $projectDir, Signer $signer = null)
     {
+        $this->signer = $signer ?: new Sha256();
+
         $filesystem = new Filesystem();
         $secretFile = $projectDir.'/var/jwt_secret';
 
@@ -78,14 +88,24 @@ class JwtManager
             return;
         }
 
-        $payload['iat'] = time();
-        $payload['exp'] = strtotime('+30 minutes');
+        $builder = new Builder();
+
+        foreach ($payload as $k => $v) {
+            $builder->set($k, $v);
+        }
+
+        $token = $builder
+            ->setIssuedAt(time())
+            ->setExpiration(strtotime('+30 minutes'))
+            ->sign($this->signer, $this->secret)
+            ->getToken()
+        ;
 
         if (method_exists(Cookie::class, 'create')) {
-            $cookie = Cookie::create(self::COOKIE_NAME, JWT::encode($payload, $this->secret));
+            $cookie = Cookie::create(self::COOKIE_NAME, (string) $token);
         } else {
             // Backwards compatibility with symfony/http-foundation <4.2
-            $cookie = new Cookie(self::COOKIE_NAME, JWT::encode($payload, $this->secret));
+            $cookie = new Cookie(self::COOKIE_NAME, (string) $token);
         }
 
         $response->headers->setCookie($cookie);
@@ -120,9 +140,12 @@ class JwtManager
 
     private function decodeJwt(string $data): array
     {
-        $jwt = JWT::decode($data, $this->secret, ['HS256']);
+        $token = (new Parser())->parse($data);
 
-        // Recursively decode the data as array instead of object
-        return json_decode(json_encode($jwt), true);
+        if ($token->isExpired() || !$token->verify($this->signer, $this->secret)) {
+            return null;
+        }
+
+        return $token->getClaims();
     }
 }
