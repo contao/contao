@@ -218,7 +218,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				array('tl_calendar_events', 'loadTime')
 			),
-			'sql'                     => "int(10) unsigned NULL"
+			'sql'                     => "int(10) NULL"
 		),
 		'endTime' => array
 		(
@@ -235,7 +235,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				array('tl_calendar_events', 'setEmptyEndTime')
 			),
-			'sql'                     => "int(10) unsigned NULL"
+			'sql'                     => "int(10) NULL"
 		),
 		'startDate' => array
 		(

@@ -1403,7 +1403,7 @@ abstract class Widget extends \Controller
 		$arrAttributes['value'] = \StringUtil::deserialize($varValue);
 
 		// Convert timestamps
-		if ($varValue != '' && \in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
+		if ($varValue !== '' && \in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
 		{
 			$objDate = new \Date($varValue, \Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 			$arrAttributes['value'] = $objDate->{$arrData['eval']['rgxp']};
