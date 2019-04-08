@@ -23,6 +23,7 @@ use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\BackendPreview;
 use Contao\BackendSwitch;
+use Contao\CoreBundle\HttpKernel\JwtManager;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -51,12 +52,25 @@ class BackendController extends AbstractController
     /**
      * @Route("/contao/login", name="contao_backend_login")
      */
-    public function loginAction(): Response
+    public function loginAction(Request $request): Response
     {
         $this->get('contao.framework')->initialize();
 
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return new RedirectResponse($this->get('router')->generate('contao_backend'));
+            $queryString = '';
+
+            if ($request->query->has('referer')) {
+                $queryString = '?'.base64_decode($request->query->get('referer'));
+            }
+
+            $response = new RedirectResponse($this->get('router')->generate('contao_backend').$queryString);
+            $jwtManager = $request->attributes->get(JwtManager::ATTRIBUTE);
+
+            if ($jwtManager instanceof JwtManager) {
+                $jwtManager->addResponseCookie($response, ['debug' => false]);
+            }
+
+            return $response;
         }
 
         $controller = new BackendIndex();

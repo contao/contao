@@ -60,12 +60,13 @@ class JwtManager
             return null;
         }
 
+        $qs = '';
         if (null !== $qs = $request->getQueryString()) {
-            $qs = '?'.$qs;
+            $qs = '?referer='.base64_encode($qs);
         }
 
         throw new RedirectResponseException(
-            '/preview.php/contao/login?_target_path='.rawurlencode($request->getPathInfo().$qs)
+            '/preview.php/contao/login'.$qs
         );
     }
 
