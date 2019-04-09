@@ -185,6 +185,9 @@ class ModuleChangePassword extends Module
 				}
 			}
 
+			// Update the current user so they are not logged out automatically
+			$this->User->findBy('id', $objMember->id);
+
 			// Check whether there is a jumpTo page
 			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 			{

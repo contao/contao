@@ -218,6 +218,19 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    public function testIgnoresEmptyGroups(): void
+    {
+        $pm = PaletteManipulator::create()
+            ->addLegend('foo_legend', '')
+            ->addField('foo', 'foo_legend')
+        ;
+
+        $this->assertSame(
+            '{bar_legend},bar;{foo_legend},foo',
+            $pm->applyToString('{bar_legend},bar;;')
+        );
+    }
+
     public function testIgnoresDuplicateLegends(): void
     {
         $pm = PaletteManipulator::create()

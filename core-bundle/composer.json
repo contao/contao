@@ -49,7 +49,7 @@
         "firebase/php-jwt": "^4.0",
         "friendsofsymfony/http-cache": "^2.5",
         "friendsofsymfony/http-cache-bundle": "^2.6",
-        "imagine/imagine": "^0.7",
+        "imagine/imagine": "^0.7 || ^1.0",
         "knplabs/knp-menu-bundle": "^2.1",
         "knplabs/knp-time-bundle": "^1.5.2",
         "leafo/scssphp": "^0.7.1",

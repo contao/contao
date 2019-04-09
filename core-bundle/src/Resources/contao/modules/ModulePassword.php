@@ -177,13 +177,35 @@ class ModulePassword extends Module
 		$optIn = System::getContainer()->get('contao.opt-in');
 
 		// Find an unconfirmed token with only one related record
-		if ((!$optInToken = $optIn->find(Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
+		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
 		{
 			$this->strTemplate = 'mod_message';
 
 			$this->Template = new FrontendTemplate($this->strTemplate);
 			$this->Template->type = 'error';
-			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountError'];
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
+
+			return;
+		}
+
+		if ($optInToken->isConfirmed())
+		{
+			$this->strTemplate = 'mod_message';
+
+			$this->Template = new FrontendTemplate($this->strTemplate);
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
+
+			return;
+		}
+
+		if ($optInToken->getEmail() != $objMember->email)
+		{
+			$this->strTemplate = 'mod_message';
+
+			$this->Template = new FrontendTemplate($this->strTemplate);
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
 
 			return;
 		}
@@ -287,7 +309,7 @@ class ModulePassword extends Module
 	{
 		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
-		$optInToken = $optIn->create('pw-', $objMember->email, array('tl_member'=>array($objMember->id)));
+		$optInToken = $optIn->create('pw', $objMember->email, array('tl_member'=>array($objMember->id)));
 
 		// Prepare the simple token data
 		$arrData = $objMember->row();

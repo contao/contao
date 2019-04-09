@@ -43,7 +43,7 @@ class OptInTest extends ContaoTestCase
             ->willReturn($model)
         ;
 
-        $token = (new OptIn($framework))->create('reg-', 'foo@bar.com', ['tl_member' => 1]);
+        $token = (new OptIn($framework))->create('reg', 'foo@bar.com', ['tl_member' => 1]);
 
         $this->assertStringMatchesFormat('reg-%x', $token->getIdentifier());
         $this->assertTrue($token->isValid());
@@ -62,7 +62,7 @@ class OptInTest extends ContaoTestCase
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The token prefix must not be longer than 6 characters');
 
-        (new OptIn($framework))->create('registration-', 'foo@bar.com', ['tl_member' => 1]);
+        (new OptIn($framework))->create('registration', 'foo@bar.com', ['tl_member' => 1]);
     }
 
     public function testFindsAToken(): void

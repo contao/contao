@@ -584,7 +584,7 @@ class Comments extends Frontend
 
 		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
-		$optInToken = $optIn->create('com-', $objComment->email, array('tl_comments_notify'=>array($objNotify->id)));
+		$optInToken = $optIn->create('com', $objComment->email, array('tl_comments_notify'=>array($objNotify->id)));
 
 		// Send the token
 		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], Idna::decode(Environment::get('host'))), sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $optInToken->getIdentifier(), $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove));
@@ -603,9 +603,23 @@ class Comments extends Frontend
 			$optIn = System::getContainer()->get('contao.opt-in');
 
 			// Find an unconfirmed token with only one related record
-			if ((!$optInToken = $optIn->find(Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || \count($arrIds = current($arrRelated)) != 1 || (!$objNotify = CommentsNotifyModel::findByPk($arrIds[0])))
+			if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || \count($arrIds = current($arrRelated)) != 1 || (!$objNotify = CommentsNotifyModel::findByPk($arrIds[0])))
 			{
-				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
+				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
+
+				return;
+			}
+
+			if ($optInToken->isConfirmed())
+			{
+				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
+
+				return;
+			}
+
+			if ($optInToken->getEmail() != $objNotify->email)
+			{
+				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
 
 				return;
 			}
@@ -623,7 +637,7 @@ class Comments extends Frontend
 
 			if ($objNotify === null)
 			{
-				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
+				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 
 				return;
 			}

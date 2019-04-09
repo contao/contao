@@ -110,6 +110,12 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
+		'invalidatedThrough' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['invalidatedThrough'],
+			'search'                  => true,
+			'sql'                     => "varchar(24) NOT NULL default ''"
+		),
 		'email' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['emailAddress'],
@@ -201,6 +207,6 @@ class tl_opt_in extends Contao\Backend
 	 */
 	public function resendButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return (!$row['confirmedOn'] && $row['emailSubject'] && $row['emailText'] && $row['createdOn'] > strtotime('-24 hours')) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : '';
+		return (!$row['confirmedOn'] &&!$row['invalidatedThrough'] && $row['emailSubject'] && $row['emailText'] && $row['createdOn'] > strtotime('-24 hours')) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : '';
 	}
 }

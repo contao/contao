@@ -47,6 +47,7 @@ use Contao\CoreBundle\EventListener\LocaleListener;
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
 use Contao\CoreBundle\EventListener\RefererIdListener;
+use Contao\CoreBundle\EventListener\RequestTokenListener;
 use Contao\CoreBundle\EventListener\ResponseExceptionListener;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
@@ -116,7 +117,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\RequestMatcher;
+use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
+use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
+use Symfony\Component\HttpKernel\EventListener\LocaleListener as BaseLocaleListener;
+use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
 {
@@ -156,6 +162,34 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
 
         $this->assertSame('contao', $extension->getAlias());
+    }
+
+    public function testValidatesTheSymfonyListenerPriorities(): void
+    {
+        $events = AbstractSessionListener::getSubscribedEvents();
+
+        $this->assertSame('onKernelResponse', $events['kernel.response'][0]);
+        $this->assertSame(-1000, $events['kernel.response'][1]);
+
+        $events = BaseLocaleListener::getSubscribedEvents();
+
+        $this->assertSame('onKernelRequest', $events['kernel.request'][0][0]);
+        $this->assertSame(16, $events['kernel.request'][0][1]);
+
+        $events = ExceptionListener::getSubscribedEvents();
+
+        $this->assertSame('onKernelException', $events['kernel.exception'][1][0]);
+        $this->assertSame(-128, $events['kernel.exception'][1][1]);
+
+        $events = Firewall::getSubscribedEvents();
+
+        $this->assertSame('onKernelRequest', $events['kernel.request'][0]);
+        $this->assertSame(8, $events['kernel.request'][1]);
+
+        $events = RouterListener::getSubscribedEvents();
+
+        $this->assertSame('onKernelRequest', $events['kernel.request'][0][0]);
+        $this->assertSame(32, $events['kernel.request'][0][1]);
     }
 
     /**
@@ -462,6 +496,27 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(20, $tags['kernel.event_listener'][0]['priority']);
+    }
+
+    public function testRegistersTheRequestTokenListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.request_token'));
+
+        $definition = $this->container->getDefinition('contao.listener.request_token');
+
+        $this->assertSame(RequestTokenListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
+        $this->assertSame('contao.csrf.token_manager', (string) $definition->getArgument(2));
+        $this->assertSame('%contao.csrf_token_name%', (string) $definition->getArgument(3));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
+        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(30, $tags['kernel.event_listener'][0]['priority']);
     }
 
     public function testRegistersTheResponseExceptionListener(): void

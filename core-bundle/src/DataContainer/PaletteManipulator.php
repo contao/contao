@@ -193,6 +193,10 @@ class PaletteManipulator
         $groups = StringUtil::trimsplit(';', $palette);
 
         foreach ($groups as $group) {
+            if ('' === $group) {
+                continue;
+            }
+
             $hide = false;
             $fields = StringUtil::trimsplit(',', $group);
 

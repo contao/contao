@@ -145,14 +145,14 @@ class BackendConfirm extends Backend
 		$objTemplate->link = StringUtil::specialchars($url);
 		$objTemplate->info = $arrInfo;
 		$objTemplate->labels = $GLOBALS['TL_LANG']['CONFIRM'];
-		$objTemplate->explain = $GLOBALS['TL_LANG']['ERR']['invalidTokenUrl'];
+		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
 		$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
 		$objTemplate->continue = $GLOBALS['TL_LANG']['MSC']['continue'];
 		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['invalidTokenUrl'];
-		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['invalidTokenUrl']);
+		$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
+		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['invalidToken']);
 		$objTemplate->host = Environment::get('host');
 		$objTemplate->charset = Config::get('characterSet');
 

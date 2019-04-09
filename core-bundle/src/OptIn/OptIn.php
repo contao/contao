@@ -33,6 +33,10 @@ class OptIn implements OptInInterface
      */
     public function create(string $prefix, string $email, array $related): OptInTokenInterface
     {
+        if ($prefix) {
+            $prefix = rtrim($prefix, '-');
+        }
+
         if (\strlen($prefix) > 6) {
             throw new \InvalidArgumentException('The token prefix must not be longer than 6 characters');
         }
@@ -40,7 +44,7 @@ class OptIn implements OptInInterface
         $token = bin2hex(random_bytes(12));
 
         if ($prefix) {
-            $token = $prefix.substr($token, \strlen($prefix));
+            $token = $prefix.'-'.substr($token, \strlen($prefix) + 1);
         }
 
         /** @var OptInModel $optIn */

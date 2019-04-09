@@ -425,7 +425,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		$groups = StringUtil::deserialize($this->arrData['groups']);
+		$groups = StringUtil::deserialize($this->groups);
 
 		// No groups assigned
 		if (empty($groups) || !\is_array($groups))
@@ -519,7 +519,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function getUsername()
 	{
-		return $this->arrData['username'];
+		return $this->username;
 	}
 
 	/**
@@ -527,7 +527,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function setUsername($username)
 	{
-		$this->arrData['username'] = $username;
+		$this->username = $username;
 
 		return $this;
 	}
@@ -537,7 +537,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function getPassword()
 	{
-		return $this->arrData['password'];
+		return $this->password;
 	}
 
 	/**
@@ -545,7 +545,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function setPassword($password)
 	{
-		$this->arrData['password'] = $password;
+		$this->password = $password;
 
 		return $this;
 	}
@@ -573,7 +573,18 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function serialize()
 	{
-		return serialize(array($this->id, $this->username, $this->disable, $this->admin, $this->groups));
+		$data = array
+		(
+			'id' => $this->id,
+			'username' => $this->username,
+			'password' => $this->password,
+			'admin' => $this->admin,
+			'disable' => $this->disable,
+			'start' => $this->start,
+			'stop' => $this->stop
+		);
+
+		return serialize($data);
 	}
 
 	/**
@@ -581,7 +592,14 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function unserialize($serialized)
 	{
-		list($this->id, $this->username, $this->disable, $this->admin, $this->groups) = unserialize($serialized, array('allowed_classes'=>false));
+		$data = unserialize($serialized, array('allowed_classes'=>false));
+
+		if (array_keys($data) != array('id', 'username', 'password', 'admin', 'disable', 'start', 'stop'))
+		{
+			return;
+		}
+
+		list($this->id, $this->username, $this->password, $this->admin, $this->disable, $this->start, $this->stop) = array_values($data);
 	}
 
 	/**
@@ -604,17 +622,29 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
+		if ($this->password !== $user->password)
+		{
+			return false;
+		}
+
 		if ((bool) $this->admin !== (bool) $user->admin)
 		{
 			return false;
 		}
 
-		if ($this->groups !== $user->groups)
+		if ((bool) $this->disable !== (bool) $user->disable)
 		{
 			return false;
 		}
 
-		if ((bool) $this->disable !== (bool) $user->disable)
+		$time = Date::floorToMinute();
+
+		if ($this->start !== '' && $this->start > $time)
+		{
+			return false;
+		}
+
+		if ($this->stop !== '' && $this->stop <= ($time + 60))
 		{
 			return false;
 		}

@@ -55,7 +55,7 @@ class OptInToken implements OptInTokenInterface
      */
     public function isValid(): bool
     {
-        return $this->model->createdOn > strtotime('-24 hours');
+        return !$this->model->invalidatedThrough && $this->model->createdOn > strtotime('-24 hours');
     }
 
     /**
@@ -75,6 +75,44 @@ class OptInToken implements OptInTokenInterface
         $this->model->confirmedOn = time();
         $this->model->removeOn = strtotime('+3 years');
         $this->model->save();
+
+        $related = $this->model->getRelatedRecords();
+
+        if (empty($related)) {
+            return;
+        }
+
+        /** @var OptInModel $adapter */
+        $adapter = $this->framework->getAdapter(OptInModel::class);
+        $prefix = strtok($this->getIdentifier(), '-');
+
+        // Invalidate other tokens that relate to the same records
+        foreach ($related as $table => $ids) {
+            if (!$models = $adapter->findByRelatedTableAndIds($table, $ids)) {
+                continue;
+            }
+
+            foreach ($models as $model) {
+                if (
+                    $model->confirmedOn > 0
+                    || $model->invalidatedThrough
+                    || $model->token === $this->getIdentifier()
+                    || 0 !== strncmp($model->token, $prefix.'-', \strlen($prefix) + 1)
+                ) {
+                    continue;
+                }
+
+                $token = new OptInToken($model, $this->framework);
+
+                // The related records must match exactly
+                if ($token->getRelatedRecords() !== $related) {
+                    continue;
+                }
+
+                $model->invalidatedThrough = $this->model->token;
+                $model->save();
+            }
+        }
     }
 
     /**

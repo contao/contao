@@ -229,7 +229,7 @@ class ModuleRegistration extends Module
 				$rgxp = $arrData['eval']['rgxp'];
 
 				// Convert date formats into timestamps (check the eval setting first -> #3063)
-				if ($varValue != '' && \in_array($rgxp, array('date', 'time', 'datim')))
+				if ($varValue !== '' && \in_array($rgxp, array('date', 'time', 'datim')))
 				{
 					try
 					{
@@ -464,7 +464,7 @@ class ModuleRegistration extends Module
 	{
 		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
-		$optInToken = $optIn->create('reg-', $arrData['email'], array('tl_member'=>array($arrData['id'])));
+		$optInToken = $optIn->create('reg', $arrData['email'], array('tl_member'=>array($arrData['id'])));
 
 		// Prepare the simple token data
 		$arrTokenData = $arrData;
@@ -521,10 +521,26 @@ class ModuleRegistration extends Module
 		$optIn = System::getContainer()->get('contao.opt-in');
 
 		// Find an unconfirmed token with only one related record
-		if ((!$optInToken = $optIn->find(Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
+		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
 		{
 			$this->Template->type = 'error';
-			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountError'];
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
+
+			return;
+		}
+
+		if ($optInToken->isConfirmed())
+		{
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
+
+			return;
+		}
+
+		if ($optInToken->getEmail() != $objMember->email)
+		{
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
 
 			return;
 		}
@@ -576,9 +592,20 @@ class ModuleRegistration extends Module
 
 		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
+		$optInToken = null;
+		$models = OptInModel::findByRelatedTableAndIds('tl_member', array($objMember->id));
 
-		/** @var OptInModel $model */
-		if ((!$model = OptInModel::findOneByRelatedTableAndId('tl_member', $objMember->id)) || (!$optInToken = $optIn->find($model->token)))
+		foreach ($models as $model)
+		{
+			// Look for a valid, unconfirmed token
+			if (($token = $optIn->find($model->token)) && $token->isValid() && !$token->isConfirmed())
+			{
+				$optInToken = $token;
+				break;
+			}
+		}
+
+		if ($optInToken === null)
 		{
 			return;
 		}
