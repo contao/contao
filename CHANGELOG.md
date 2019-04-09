@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Invalidate old opt-in tokens when a token is confirmed (see CVE-2019-10643).
  * Invalidate the user sessions if a password changes (see CVE-2019-10641).
  * Correctly check if a file or folder is excluded from synchronization (see 410).
 

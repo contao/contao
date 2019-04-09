@@ -42,6 +42,15 @@ class OptInTokenTest extends ContaoTestCase
         $this->assertSame('foo@bar.com', $token->getEmail());
     }
 
+    public function testInvalidatesAToken(): void
+    {
+        /** @var OptInModel|MockObject $model */
+        $model = $this->mockClassWithGetterSetter(OptInModel::class, ['invalidatedThrough' => 'foo']);
+        $token = $this->getToken($model);
+
+        $this->assertFalse($token->isValid());
+    }
+
     public function testConfirmsAToken(): void
     {
         $properties = [
@@ -51,11 +60,120 @@ class OptInTokenTest extends ContaoTestCase
 
         /** @var OptInModel|MockObject $model */
         $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model
+            ->expects($this->once())
+            ->method('getRelatedRecords')
+            ->willReturn([])
+        ;
 
         $token = $this->getToken($model);
         $token->confirm();
 
         $this->assertTrue($token->isConfirmed());
+    }
+
+    public function testInvalidatesRelatedTokens(): void
+    {
+        $properties = [
+            'token' => 'reg-first',
+            'createdOn' => time(),
+            'confirmedOn' => 0,
+        ];
+
+        /** @var OptInModel|MockObject $related */
+        $related = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $related
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        $related
+            ->expects($this->once())
+            ->method('getRelatedRecords')
+            ->willReturn(['tl_user' => [2]])
+        ;
+
+        $adapter = $this->mockAdapter(['findByRelatedTableAndIds']);
+        $adapter
+            ->expects($this->once())
+            ->method('findByRelatedTableAndIds')
+            ->with('tl_user', [2])
+            ->willReturn([$related])
+        ;
+
+        $framework = $this->mockContaoFramework([OptInModel::class => $adapter]);
+
+        $properties = [
+            'token' => 'reg-second',
+            'createdOn' => time(),
+            'confirmedOn' => 0,
+        ];
+
+        /** @var OptInModel|MockObject $model */
+        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model
+            ->expects($this->once())
+            ->method('getRelatedRecords')
+            ->willReturn(['tl_user' => [2]])
+        ;
+
+        $token = $this->getToken($model, $framework);
+        $token->confirm();
+
+        $this->assertTrue($token->isConfirmed());
+        $this->assertSame('reg-second', $related->invalidatedThrough);
+    }
+
+    public function testDoesNotInvalidateRelatedTokensIfTheRelatedRecordsDoNotMatch(): void
+    {
+        $properties = [
+            'token' => 'reg-first',
+            'createdOn' => time(),
+            'confirmedOn' => 0,
+        ];
+
+        /** @var OptInModel|MockObject $related */
+        $related = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $related
+            ->expects($this->never())
+            ->method('save')
+        ;
+
+        $related
+            ->expects($this->once())
+            ->method('getRelatedRecords')
+            ->willReturn(['tl_user' => [2, 3]])
+        ;
+
+        $adapter = $this->mockAdapter(['findByRelatedTableAndIds']);
+        $adapter
+            ->expects($this->once())
+            ->method('findByRelatedTableAndIds')
+            ->with('tl_user', [2])
+            ->willReturn([$related])
+        ;
+
+        $framework = $this->mockContaoFramework([OptInModel::class => $adapter]);
+
+        $properties = [
+            'token' => 'reg-second',
+            'createdOn' => time(),
+            'confirmedOn' => 0,
+        ];
+
+        /** @var OptInModel|MockObject $model */
+        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model
+            ->expects($this->once())
+            ->method('getRelatedRecords')
+            ->willReturn(['tl_user' => [2]])
+        ;
+
+        $token = $this->getToken($model, $framework);
+        $token->confirm();
+
+        $this->assertTrue($token->isConfirmed());
+        $this->assertNull($related->invalidatedThrough);
     }
 
     public function testDoesNotConfirmAConfirmedToken(): void
@@ -220,6 +338,9 @@ class OptInTokenTest extends ContaoTestCase
         $this->assertTrue($token->hasBeenSent());
     }
 
+    /**
+     * @param ContaoFramework|MockObject|null $framework
+     */
     private function getToken(OptInModel $model, ContaoFramework $framework = null): OptInTokenInterface
     {
         if (null === $framework) {
