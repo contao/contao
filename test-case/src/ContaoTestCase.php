@@ -113,7 +113,7 @@ abstract class ContaoTestCase extends TestCase
         $framework
             ->method('getAdapter')
             ->willReturnCallback(
-                function (string $key) use ($adapters): ?Adapter {
+                static function (string $key) use ($adapters): ?Adapter {
                     return $adapters[$key] ?? null;
                 }
             )
@@ -151,23 +151,34 @@ abstract class ContaoTestCase extends TestCase
     /**
      * Mocks a class with magic properties.
      */
-    protected function mockClassWithProperties(string $class, array $properties): MockObject
+    protected function mockClassWithProperties(string $class, array $properties = []): MockObject
     {
         $mock = $this->createMock($class);
         $mock
             ->method('__get')
             ->willReturnCallback(
-                function (string $key) use ($properties) {
+                static function (string $key) use (&$properties) {
                     return $properties[$key] ?? null;
                 }
             )
         ;
 
+        if (\in_array('__set', get_class_methods($class), true)) {
+            $mock
+                ->method('__set')
+                ->willReturnCallback(
+                    static function (string $key, $value) use (&$properties) {
+                        $properties[$key] = $value;
+                    }
+                )
+            ;
+        }
+
         if (\in_array('__isset', get_class_methods($class), true)) {
             $mock
                 ->method('__isset')
                 ->willReturnCallback(
-                    function (string $key) use ($properties) {
+                    static function (string $key) use (&$properties) {
                         return isset($properties[$key]);
                     }
                 )
@@ -182,11 +193,13 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function mockClassWithGetterSetter(string $class, array $properties = []): MockObject
     {
+        @trigger_error('Using ContaoTestCase::mockClassWithGetterSetter() has been deprecated and will no longer work in version 3; use ContaoTestCase::mockClassWithProperties() instead.', E_USER_DEPRECATED);
+
         $mock = $this->createMock($class);
         $mock
             ->method('__get')
             ->willReturnCallback(
-                function (string $key) use (&$properties) {
+                static function (string $key) use (&$properties) {
                     return $properties[$key] ?? null;
                 }
             )
@@ -195,7 +208,7 @@ abstract class ContaoTestCase extends TestCase
         $mock
             ->method('__set')
             ->willReturnCallback(
-                function (string $key, $value) use (&$properties): void {
+                static function (string $key, $value) use (&$properties): void {
                     $properties[$key] = $value;
                 }
             )
@@ -204,7 +217,7 @@ abstract class ContaoTestCase extends TestCase
         $mock
             ->method('__isset')
             ->willReturnCallback(
-                function (string $key) use (&$properties): bool {
+                static function (string $key) use (&$properties): bool {
                     return isset($properties[$key]);
                 }
             )
@@ -215,8 +228,6 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Mocks a token storage with a Contao user.
-     *
-     * @throws \Exception
      */
     protected function mockTokenStorage(string $class): TokenStorageInterface
     {
@@ -265,7 +276,7 @@ abstract class ContaoTestCase extends TestCase
         $adapter
             ->method('get')
             ->willReturnCallback(
-                function (string $key) {
+                static function (string $key) {
                     return $GLOBALS['TL_CONFIG'][$key] ?? null;
                 }
             )
@@ -275,9 +286,7 @@ abstract class ContaoTestCase extends TestCase
     }
 
     /**
-     * Loads the default configuration.
-     *
-     * @throws \Exception
+     * Loads the default configuration from the Contao core bundle.
      */
     private function loadDefaultConfiguration(): void
     {
@@ -308,7 +317,7 @@ abstract class ContaoTestCase extends TestCase
                 break;
 
             default:
-                throw new \Exception('Cannot find the Contao configuration file');
+                throw new \RuntimeException('Cannot find the Contao configuration file');
         }
     }
 }
