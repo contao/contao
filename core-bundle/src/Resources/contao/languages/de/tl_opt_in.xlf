@@ -13,6 +13,10 @@
         <source>Remove on</source>
         <target>Entfernen am</target>
       </trans-unit>
+      <trans-unit id="tl_opt_in.invalidatedThrough">
+        <source>Invalidated through</source>
+        <target>Invalidiert durch</target>
+      </trans-unit>
       <trans-unit id="tl_opt_in.emailSubject">
         <source>E-mail subject</source>
         <target>E-Mail-Betreff</target>

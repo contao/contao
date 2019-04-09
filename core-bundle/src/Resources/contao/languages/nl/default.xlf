@@ -249,10 +249,6 @@
         <source>There are top-level pages in the site structure which are not website root pages.</source>
         <target>Er zijn top-level pagina's in de site structuur welke geen website root pagina's zijn.</target>
       </trans-unit>
-      <trans-unit id="ERR.invalidTokenUrl">
-        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
-        <target>De link die u probeert te openen kon niet worden geverifieerd. Als u zelf op de link geklikt heeft of deze heeft ontvangen uit een betrouwbare bron, kunt u dit hieronder bevestigen.</target>
-      </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
         <target>Het formulier kon niet worden verstuurd</target>
@@ -2310,13 +2306,23 @@
         <source>%s relevance</source>
         <target>%s relevantie</target>
       </trans-unit>
-      <trans-unit id="MSC.invalidTokenUrl">
+      <trans-unit id="MSC.invalidToken">
         <source>Invalid token</source>
         <target>Ongeldig token</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenConfirmed">
+        <source>This token has already been confirmed</source>
+      </trans-unit>
+      <trans-unit id="MSC.tokenEmailMismatch">
+        <source>The e-mail address of the token does not match</source>
       </trans-unit>
       <trans-unit id="MSC.resendToken">
         <source>The token has been re-sent to %s.</source>
         <target>Het token is opnieuw verstuurd naar %s.</target>
+      </trans-unit>
+      <trans-unit id="MSC.invalidTokenUrl">
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
+        <target>De link die u probeert te openen kon niet worden geverifieerd. Als u zelf op de link geklikt heeft of deze heeft ontvangen uit een betrouwbare bron, kunt u dit hieronder bevestigen.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

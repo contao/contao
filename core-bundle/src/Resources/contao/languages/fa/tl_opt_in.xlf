@@ -10,6 +10,9 @@
       <trans-unit id="tl_opt_in.removeOn">
         <source>Remove on</source>
       </trans-unit>
+      <trans-unit id="tl_opt_in.invalidatedThrough">
+        <source>Invalidated through</source>
+      </trans-unit>
       <trans-unit id="tl_opt_in.emailSubject">
         <source>E-mail subject</source>
       </trans-unit>

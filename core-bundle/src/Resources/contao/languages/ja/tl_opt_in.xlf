@@ -13,6 +13,9 @@
         <source>Remove on</source>
         <target>削除先</target>
       </trans-unit>
+      <trans-unit id="tl_opt_in.invalidatedThrough">
+        <source>Invalidated through</source>
+      </trans-unit>
       <trans-unit id="tl_opt_in.emailSubject">
         <source>E-mail subject</source>
         <target>電子メールの件名</target>
