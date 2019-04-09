@@ -120,6 +120,16 @@ $mock = $this->mockClassWithProperties(Contao\PageModel::class, $properties);
 echo $mock->title; // will output "Home"
 ```
 
+If the class also has a magic `__set()` method, you can use it like this:
+
+```php
+$mock = $this->mockClassWithProperties(Contao\PageModel::class);
+$mock->id = 2;
+$mock->title = 'Home';
+
+echo $mock->title; // will output "Home"
+```
+
 
 Mocking a token storage
 -----------------------
