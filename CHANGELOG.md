@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.37 (2019-04-09)
 
  * Invalidate the user sessions if a password changes (see CVE-2019-10641).
 

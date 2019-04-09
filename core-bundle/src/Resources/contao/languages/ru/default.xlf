@@ -283,9 +283,11 @@
       </trans-unit>
       <trans-unit id="ERR.emptyTitleOrId">
         <source>Please enter both title and ID!</source>
+        <target>Введите название и ID!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>Дублировать название секции макета &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
