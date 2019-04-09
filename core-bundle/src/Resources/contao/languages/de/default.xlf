@@ -249,10 +249,6 @@
         <source>There are top-level pages in the site structure which are not website root pages.</source>
         <target>Es sind Seiten in der obersten Ebene der Seitenstruktur, die keine Website-Startpunkte sind.</target>
       </trans-unit>
-      <trans-unit id="ERR.invalidTokenUrl">
-        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
-        <target>Der Link, den Sie aufgerufen haben, konnte nicht verifiziert werden. Wenn Sie den Link selbst aufgerufen oder von einer vertrauenswürdigen Person erhalten haben, können Sie den Vorgang fortsetzen.</target>
-      </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
         <target>Das Formular konnte nicht gesendet werden</target>
@@ -2313,13 +2309,25 @@
         <source>%s relevance</source>
         <target>%s Relevanz</target>
       </trans-unit>
-      <trans-unit id="MSC.invalidTokenUrl">
+      <trans-unit id="MSC.invalidToken">
         <source>Invalid token</source>
         <target>Ungültiges Token</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenConfirmed">
+        <source>This token has already been confirmed</source>
+        <target>Dieses Token wurde bereits bestätigt</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenEmailMismatch">
+        <source>The e-mail address of the token does not match</source>
+        <target>Die E-Mail-Adresse des Tokens stimmt nicht überein</target>
       </trans-unit>
       <trans-unit id="MSC.resendToken">
         <source>The token has been re-sent to %s.</source>
         <target>Das Token wurde nochmals an %s gesendet.</target>
+      </trans-unit>
+      <trans-unit id="MSC.invalidTokenUrl">
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
+        <target>Der Link, den Sie aufgerufen haben, konnte nicht verifiziert werden. Wenn Sie den Link selbst aufgerufen oder von einer vertrauenswürdigen Person erhalten haben, können Sie den Vorgang fortsetzen.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.7.3 (2019-04-09)
 
  * Fix the request token check in the front end (see CVE-2019-10642).
  * Invalidate old opt-in tokens when a token is confirmed (see CVE-2019-10643).

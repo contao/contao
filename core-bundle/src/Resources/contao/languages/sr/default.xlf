@@ -249,10 +249,6 @@
         <source>There are top-level pages in the site structure which are not website root pages.</source>
         <target>Постоје странице у структури сајта које се налазе на највишем хијерархијском нивоу али нису root странице сајта.</target>
       </trans-unit>
-      <trans-unit id="ERR.invalidTokenUrl">
-        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
-        <target>Линк који покушавате да отворите не може бити проверен. Ако сте сами кликнули на линк или сте га примили од особе од поверења, можете потврдити поступак испод.</target>
-      </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
         <target>Садржај формулара није могуће послати</target>
@@ -2310,13 +2306,23 @@
         <source>%s relevance</source>
         <target>%s подударање</target>
       </trans-unit>
-      <trans-unit id="MSC.invalidTokenUrl">
+      <trans-unit id="MSC.invalidToken">
         <source>Invalid token</source>
         <target>Неважећи токен</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenConfirmed">
+        <source>This token has already been confirmed</source>
+      </trans-unit>
+      <trans-unit id="MSC.tokenEmailMismatch">
+        <source>The e-mail address of the token does not match</source>
       </trans-unit>
       <trans-unit id="MSC.resendToken">
         <source>The token has been re-sent to %s.</source>
         <target>Токен је поново послат на%s.</target>
+      </trans-unit>
+      <trans-unit id="MSC.invalidTokenUrl">
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
+        <target>Линк који покушавате да отворите не може бити проверен. Ако сте сами кликнули на линк или сте га примили од особе од поверења, можете потврдити поступак испод.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

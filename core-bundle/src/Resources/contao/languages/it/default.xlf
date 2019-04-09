@@ -246,10 +246,6 @@
         <source>There are top-level pages in the site structure which are not website root pages.</source>
         <target>Ci sono pagine di livello superiore nella struttura del sito che non sono le pagine del sito web di root.</target>
       </trans-unit>
-      <trans-unit id="ERR.invalidTokenUrl">
-        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
-        <target>Il link che stai tentando di visitare non può essere verificato. Se proprio tu hai cliccato su questo link o se lo hai ricevuto da una persona di fiducia, potrai confermare la procedura di seguito.</target>
-      </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
         <target>Il form non è stato inviato correttamente</target>
@@ -2298,12 +2294,22 @@
         <source>%s relevance</source>
         <target>%s rilevanza</target>
       </trans-unit>
-      <trans-unit id="MSC.invalidTokenUrl">
+      <trans-unit id="MSC.invalidToken">
         <source>Invalid token</source>
         <target>Token non valido</target>
       </trans-unit>
+      <trans-unit id="MSC.tokenConfirmed">
+        <source>This token has already been confirmed</source>
+      </trans-unit>
+      <trans-unit id="MSC.tokenEmailMismatch">
+        <source>The e-mail address of the token does not match</source>
+      </trans-unit>
       <trans-unit id="MSC.resendToken">
         <source>The token has been re-sent to %s.</source>
+      </trans-unit>
+      <trans-unit id="MSC.invalidTokenUrl">
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
+        <target>Il link che stai tentando di visitare non può essere verificato. Se proprio tu hai cliccato su questo link o se lo hai ricevuto da una persona di fiducia, potrai confermare la procedura di seguito.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
