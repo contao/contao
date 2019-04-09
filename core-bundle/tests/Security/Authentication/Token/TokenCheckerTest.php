@@ -75,6 +75,7 @@ class TokenCheckerTest extends TestCase
         ];
     }
 
+    /*
     public function testReturnsTheFrontendUsername(): void
     {
         $user = $this->mockUser(FrontendUser::class);
@@ -92,6 +93,7 @@ class TokenCheckerTest extends TestCase
 
         $this->assertSame('foobar', $tokenChecker->getBackendUsername());
     }
+    */
 
     /**
      * @dataProvider getPreviewModeData
@@ -214,12 +216,12 @@ class TokenCheckerTest extends TestCase
                         case 'username':
                             return 'foobar';
 
+                        case 'password':
                         case 'admin':
                         case 'disable':
+                        case 'start':
+                        case 'stop':
                             return '';
-
-                        case 'groups':
-                            return [];
 
                         default:
                             return null;

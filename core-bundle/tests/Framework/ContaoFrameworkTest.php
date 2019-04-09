@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Framework;
 
 use Contao\Config;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
-use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Fixtures\Adapter\LegacyClass;
 use Contao\CoreBundle\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Framework\Adapter;

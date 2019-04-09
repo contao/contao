@@ -102,7 +102,7 @@ class OptInToken implements OptInTokenInterface
                     continue;
                 }
 
-                $token = new OptInToken($model, $this->framework);
+                $token = new self($model, $this->framework);
 
                 // The related records must match exactly
                 if ($token->getRelatedRecords() !== $related) {

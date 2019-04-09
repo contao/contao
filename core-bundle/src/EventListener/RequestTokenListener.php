@@ -94,7 +94,7 @@ class RequestTokenListener
             $hostname = gethostbyaddr($request->getClientIp());
 
             foreach ($config->get('requestTokenWhitelist') as $domain) {
-                if ($domain === $hostname || preg_match('/\.' . preg_quote($domain, '/') . '$/', $hostname)) {
+                if ($domain === $hostname || preg_match('/\.'.preg_quote($domain, '/').'$/', $hostname)) {
                     return;
                 }
             }
