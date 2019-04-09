@@ -29,7 +29,7 @@ class ContentTable extends ContentElement
 	 */
 	protected function compile()
 	{
-		$rows = StringUtil::deserialize($this->tableitems);
+		$rows = StringUtil::deserialize($this->tableitems, true);
 
 		$this->Template->id = 'table_' . $this->id;
 		$this->Template->summary = StringUtil::specialchars($this->summary);
