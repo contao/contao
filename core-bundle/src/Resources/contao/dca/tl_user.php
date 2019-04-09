@@ -24,7 +24,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'onsubmit_callback' => array
 		(
-			array('tl_user', 'storeDateAdded')
+			array('tl_user', 'storeDateAdded'),
+			array('tl_user', 'updateCurrentUser')
 		),
 		'sql' => array
 		(
@@ -869,6 +870,20 @@ class tl_user extends Contao\Backend
 
 		$this->Database->prepare("UPDATE tl_user SET dateAdded=? WHERE id=?")
 					   ->execute($time, $dc->id);
+	}
+
+	/**
+	 * Update the current user if something changes, otherwise they would be
+	 * logged out automatically
+	 *
+	 * @param Contao\DataContainer $dc
+	 */
+	public function updateCurrentUser(Contao\DataContainer $dc)
+	{
+		if ($this->User->id == $dc->id)
+		{
+			$this->User->findBy('id', $this->User->id);
+		}
 	}
 
 	/**

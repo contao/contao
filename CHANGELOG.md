@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Invalidate the user sessions if a password changes (see CVE-2019-10641).
  * Correctly check if a file or folder is excluded from synchronization (see 410).
 
 ## 4.7.2 (2019-03-25)
