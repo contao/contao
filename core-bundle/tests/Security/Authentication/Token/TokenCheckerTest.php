@@ -187,31 +187,9 @@ class TokenCheckerTest extends TestCase
     private function mockUser(string $class): User
     {
         /** @var User|MockObject $user */
-        $user = $this->createPartialMock($class, ['__get']);
-        $user
-            ->method('__get')
-            ->willReturnCallback(
-                static function (string $key) {
-                    switch ($key) {
-                        case 'id':
-                            return 1;
-
-                        case 'username':
-                            return 'foobar';
-
-                        case 'admin':
-                        case 'disable':
-                            return '';
-
-                        case 'groups':
-                            return [];
-
-                        default:
-                            return null;
-                    }
-                }
-            )
-        ;
+        $user = $this->createPartialMock($class, []);
+        $user->id = 1;
+        $user->username = 'foobar';
 
         return $user;
     }
