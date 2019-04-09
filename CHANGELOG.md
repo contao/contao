@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Correctly check if a file or folder is excluded from synchronization (see 410).
+
 ## 4.7.2 (2019-03-25)
 
  * Make custom layout section titles and IDs mandatory (see #341).
