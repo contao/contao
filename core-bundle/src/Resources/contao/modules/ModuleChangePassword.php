@@ -187,6 +187,10 @@ class ModuleChangePassword extends \Module
 				}
 			}
 
+			// Invalidate the user sessions if the password changes
+			$this->Database->prepare("DELETE FROM tl_session WHERE name='FE_USER_AUTH' AND pid=? AND sessionID!=?")
+						   ->execute($objMember->id, session_id());
+
 			// Check whether there is a jumpTo page
 			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 			{

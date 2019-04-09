@@ -254,6 +254,10 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'exclude'                 => true,
 			'inputType'               => 'password',
 			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'minlength'=>Config::get('minPasswordLength')),
+			'save_callback' => array
+			(
+				array('tl_user', 'invalidateSessions')
+			),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'pwChange' => array
@@ -740,6 +744,25 @@ class tl_user extends Backend
 		}
 
 		return $arrModules;
+	}
+
+	/**
+	 * Invalidate the user sessions if the password changes
+	 *
+	 * The password widget only triggers the save_callback if the password has actually
+	 * changed, therefore we do not need to check the active record here.
+	 *
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
+	 *
+	 * @return mixed
+	 */
+	public function invalidateSessions($varValue, DataContainer $dc)
+	{
+		$this->Database->prepare("DELETE FROM tl_session WHERE name='BE_USER_AUTH' AND pid=? AND sessionID!=?")
+					   ->execute($dc->id, session_id());
+
+		return $varValue;
 	}
 
 	/**

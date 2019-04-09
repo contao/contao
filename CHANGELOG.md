@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Invalidate the user sessions if a password changes (see CVE-2019-10641).
+
 ## 4.4.36 (2019-03-25)
 
  * Make custom layout section titles and IDs mandatory (see #341).
