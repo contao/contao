@@ -179,12 +179,16 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('onKernelRequest', $events['kernel.request'][0][0]);
         $this->assertSame(16, $events['kernel.request'][0][1]);
 
-        /*
         $events = ExceptionListener::getSubscribedEvents();
 
-        $this->assertSame('onKernelException', $events['kernel.exception'][1][0]);
-        $this->assertSame(-128, $events['kernel.exception'][1][1]);
-        */
+        if (\is_array($events['kernel.exception'][0])) {
+            $this->assertSame('onKernelException', $events['kernel.exception'][1][0]);
+            $this->assertSame(-128, $events['kernel.exception'][1][1]);
+        } else {
+            // Backwards compatibility with symfony/http-kernel <4.1
+            $this->assertSame('onKernelException', $events['kernel.exception'][0]);
+            $this->assertSame(-128, $events['kernel.exception'][1]);
+        }
 
         $events = Firewall::getSubscribedEvents();
 

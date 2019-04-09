@@ -75,7 +75,6 @@ class TokenCheckerTest extends TestCase
         ];
     }
 
-    /*
     public function testReturnsTheFrontendUsername(): void
     {
         $user = $this->mockUser(FrontendUser::class);
@@ -93,7 +92,6 @@ class TokenCheckerTest extends TestCase
 
         $this->assertSame('foobar', $tokenChecker->getBackendUsername());
     }
-    */
 
     /**
      * @dataProvider getPreviewModeData
@@ -204,31 +202,9 @@ class TokenCheckerTest extends TestCase
     private function mockUser(string $class): User
     {
         /** @var User|MockObject $user */
-        $user = $this->createPartialMock($class, ['__get']);
-        $user
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key) {
-                    switch ($key) {
-                        case 'id':
-                            return 1;
-
-                        case 'username':
-                            return 'foobar';
-
-                        case 'password':
-                        case 'admin':
-                        case 'disable':
-                        case 'start':
-                        case 'stop':
-                            return '';
-
-                        default:
-                            return null;
-                    }
-                }
-            )
-        ;
+        $user = $this->createPartialMock($class, []);
+        $user->id = 1;
+        $user->username = 'foobar';
 
         return $user;
     }
