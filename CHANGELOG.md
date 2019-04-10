@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Fix the save callback in the back end password module (see #429).
  * Correctly handle dates in the calendar bundle (see #428).
 
 ## 4.4.37 (2019-04-09)
