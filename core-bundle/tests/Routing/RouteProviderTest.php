@@ -426,6 +426,15 @@ class RouteProviderTest extends TestCase
             ],
             ['de'],
         ];
+
+        yield 'Appends "de" in case only "de-CH" is accepted' => [
+            [
+                0 => $this->createPage('de-CH', 'foo'),
+                1 => $this->createPage('en', 'bar'),
+                2 => $this->createPage('de', 'bar'),
+            ],
+            ['de-CH', 'en'],
+        ];
     }
 
     /**

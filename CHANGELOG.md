@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Fall back to the language if only language plus region is given (see #430).
+
 ## 4.7.3 (2019-04-09)
 
  * Fix the request token check in the front end (see CVE-2019-10642).
