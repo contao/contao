@@ -110,7 +110,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     public function testChecksTheBackendUsersAccessPermissions(bool $isAdmin, $amg, bool $isValid): void
     {
         /** @var BackendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, compact('isAdmin', 'amg'));
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->isAdmin = $isAdmin;
+        $user->amg = $amg;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -156,7 +158,8 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     public function testDoesNotAuthenticateIfThereIsNotFrontendUser(): void
     {
         /** @var BackendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, ['isAdmin' => true]);
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->isAdmin = true;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -203,10 +206,14 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     public function testChecksTheBackendUsersFrontendGroupAccess(bool $isAdmin, $amg, $groups, bool $isValid): void
     {
         /** @var BackendUser|MockObject $backendUser */
-        $backendUser = $this->mockClassWithProperties(BackendUser::class, compact('isAdmin', 'amg'));
+        $backendUser = $this->mockClassWithProperties(BackendUser::class);
+        $backendUser->isAdmin = $isAdmin;
+        $backendUser->amg = $amg;
 
         /** @var FrontendUser|MockObject $frontendUser */
-        $frontendUser = $this->mockClassWithProperties(FrontendUser::class, compact('groups'));
+        $frontendUser = $this->mockClassWithProperties(FrontendUser::class);
+        $frontendUser->groups = $groups;
+
         $frontendUser
             ->method('getRoles')
             ->willReturn([])
@@ -257,7 +264,8 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     public function testAuthenticatesAFrontendUserWithUnpublishedElementsHidden(): void
     {
         /** @var BackendUser|MockObject $backendUser */
-        $backendUser = $this->mockClassWithProperties(BackendUser::class, ['isAdmin' => true]);
+        $backendUser = $this->mockClassWithProperties(BackendUser::class);
+        $backendUser->isAdmin = true;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -310,7 +318,8 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     public function testAuthenticatesAFrontendUserWithUnpublishedElementsVisible(): void
     {
         /** @var BackendUser|MockObject $backendUser */
-        $backendUser = $this->mockClassWithProperties(BackendUser::class, ['isAdmin' => true]);
+        $backendUser = $this->mockClassWithProperties(BackendUser::class);
+        $backendUser->isAdmin = true;
 
         $token = $this->createMock(TokenInterface::class);
         $token

@@ -38,7 +38,8 @@ class LogoutHandlerTest extends TestCase
         ;
 
         /** @var BackendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->username = 'foobar';
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -80,7 +81,8 @@ class LogoutHandlerTest extends TestCase
     public function testTriggersThePostLogoutHook(): void
     {
         /** @var BackendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, ['username' => 'foobar']);
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->username = 'foobar';
 
         $listener = $this->createPartialMock(Controller::class, ['onPostLogout']);
         $listener

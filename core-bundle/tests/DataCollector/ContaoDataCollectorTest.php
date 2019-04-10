@@ -20,6 +20,7 @@ use Contao\CoreBundle\Util\PackageUtil;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -65,17 +66,20 @@ class ContaoDataCollectorTest extends TestCase
 
     public function testCollectsDataInFrontEnd(): void
     {
-        $properties = [
-            'name' => 'Default',
-            'id' => 2,
-            'template' => 'fe_page',
-        ];
+        /** @var LayoutModel|MockObject $layout */
+        $layout = $this->mockClassWithProperties(LayoutModel::class);
+        $layout->name = 'Default';
+        $layout->id = 2;
+        $layout->template = 'fe_page';
 
-        $layout = $this->mockClassWithProperties(LayoutModel::class, $properties);
         $adapter = $this->mockConfiguredAdapter(['findByPk' => $layout]);
         $framework = $this->mockContaoFramework([LayoutModel::class => $adapter]);
 
-        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 2]);
+        /** @var PageModel|MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 2;
+
+        $GLOBALS['objPage'] = $page;
 
         $collector = new ContaoDataCollector();
         $collector->setFramework($framework);

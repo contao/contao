@@ -45,7 +45,8 @@ class ProviderTest extends TestCase
         $renderer = $this->createMock(BackendFormRenderer::class);
 
         /** @var User|MockObject $user */
-        $user = $this->mockClassWithProperties(User::class, ['useTwoFactor' => '']);
+        $user = $this->mockClassWithProperties(User::class);
+        $user->useTwoFactor = '';
 
         $context = $this->createMock(AuthenticationContextInterface::class);
         $context
@@ -65,7 +66,8 @@ class ProviderTest extends TestCase
         $renderer = $this->createMock(BackendFormRenderer::class);
 
         /** @var User|MockObject $user */
-        $user = $this->mockClassWithProperties(User::class, ['useTwoFactor' => '1']);
+        $user = $this->mockClassWithProperties(User::class);
+        $user->useTwoFactor = '1';
 
         $context = $this->createMock(AuthenticationContextInterface::class);
         $context
@@ -109,7 +111,8 @@ class ProviderTest extends TestCase
     public function testValidatesTheAuthenticationCode(): void
     {
         /** @var User|MockObject $user */
-        $user = $this->mockClassWithProperties(User::class, ['useTwoFactor' => '1']);
+        $user = $this->mockClassWithProperties(User::class);
+        $user->useTwoFactor = '1';
 
         $renderer = $this->createMock(BackendFormRenderer::class);
 

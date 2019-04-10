@@ -29,7 +29,9 @@ class RouteProviderTest extends TestCase
 {
     public function testGetsARouteByName(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17]);
+        /** @var PageModel|MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 17;
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -74,20 +76,20 @@ class RouteProviderTest extends TestCase
 
     public function testGetsMultipleRoutesByNames(): void
     {
+        /** @var PageModel|MockObject $page1 */
+        $page1 = $this->mockClassWithProperties(PageModel::class);
+        $page1->id = 17;
+
+        /** @var PageModel|MockObject $page2 */
+        $page2 = $this->mockClassWithProperties(PageModel::class);
+        $page2->id = 21;
+
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
             ->with('tl_page.id IN (17,21)')
-            ->willReturn(
-                new Collection(
-                    [
-                        $this->mockClassWithProperties(PageModel::class, ['id' => 17]),
-                        $this->mockClassWithProperties(PageModel::class, ['id' => 21]),
-                    ],
-                    'tl_page'
-                )
-            )
+            ->willReturn(new Collection([$page1, $page2], 'tl_page'))
         ;
 
         $provider = $this->mockRouteProvider($this->mockFramework($pageAdapter));
@@ -98,7 +100,10 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomain(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17, 'domain' => 'example.org']);
+        /** @var PageModel|MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 17;
+        $page->domain = 'example.org';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -116,7 +121,10 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomainAndPort(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17, 'domain' => 'example.org:8080']);
+        /** @var PageModel|MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 17;
+        $page->domain = 'example.org:8080';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -546,19 +554,18 @@ class RouteProviderTest extends TestCase
      */
     private function createPage(string $language, string $alias, bool $fallback = true, string $domain = '', string $scheme = null): PageModel
     {
-        return $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => random_int(1, 10000),
-                'type' => 'regular',
-                'alias' => $alias,
-                'domain' => $domain,
-                'rootLanguage' => $language,
-                'rootIsFallback' => $fallback,
-                'rootUseSSL' => 'https' === $scheme,
-                'rootSorting' => array_reduce((array) $language, static function ($c, $i) { return $c + \ord($i); }, 0),
-            ]
-        );
+        /** @var PageModel|MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = random_int(1, 10000);
+        $page->type = 'regular';
+        $page->alias = $alias;
+        $page->domain = $domain;
+        $page->rootLanguage = $language;
+        $page->rootIsFallback = $fallback;
+        $page->rootUseSSL = 'https' === $scheme;
+        $page->rootSorting = array_reduce((array) $language, static function ($c, $i) { return $c + \ord($i); }, 0);
+
+        return $page;
     }
 
     /**

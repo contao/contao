@@ -28,7 +28,8 @@ class AuthenticatorTest extends TestCase
         $totp = TOTP::create(Base32::encodeUpperUnpadded($secret));
 
         /** @var BackendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, ['secret' => $secret]);
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->secret = $secret;
 
         $authenticator = new Authenticator();
 
@@ -41,7 +42,9 @@ class AuthenticatorTest extends TestCase
         $secret = random_bytes(128);
 
         /** @var BackendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, ['secret' => $secret]);
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->secret = $secret;
+
         $user
             ->expects($this->exactly(2))
             ->method('getUsername')
@@ -82,7 +85,9 @@ class AuthenticatorTest extends TestCase
 SVG;
 
         /** @var BackendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, ['secret' => 'foobar']);
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->secret = 'foobar';
+
         $user
             ->expects($this->once())
             ->method('getUsername')

@@ -53,7 +53,7 @@
     },
     "require-dev": {
         "composer/composer": "^1.0",
-        "contao/test-case": "^2.0",
+        "contao/test-case": "^2.1",
         "phpunit/phpunit": "^7.0",
         "symfony/phpunit-bridge": "^3.4.5"
     },

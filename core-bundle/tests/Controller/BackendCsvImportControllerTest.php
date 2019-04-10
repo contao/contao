@@ -369,12 +369,12 @@ EOF;
      */
     private function mockDataContainer(): DataContainer
     {
-        $properties = [
-            'id' => 1,
-            'table' => 'tl_content',
-        ];
+        /** @var DataContainer|MockObject $mock */
+        $mock = $this->mockClassWithProperties(DataContainer::class);
+        $mock->id = 1;
+        $mock->table = 'tl_content';
 
-        return $this->mockClassWithProperties(DataContainer::class, $properties);
+        return $mock;
     }
 
     /**

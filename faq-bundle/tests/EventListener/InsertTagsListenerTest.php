@@ -17,6 +17,7 @@ use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
@@ -39,12 +40,11 @@ class InsertTagsListenerTest extends ContaoTestCase
             ->willReturn($page)
         ;
 
-        $properties = [
-            'alias' => 'what-does-foobar-mean',
-            'question' => 'What does "foobar" mean?',
-        ];
+        /** @var FaqModel|MockObject $faqModel */
+        $faqModel = $this->mockClassWithProperties(FaqModel::class);
+        $faqModel->alias = 'what-does-foobar-mean';
+        $faqModel->question = 'What does "foobar" mean?';
 
-        $faqModel = $this->mockClassWithProperties(FaqModel::class, $properties);
         $faqModel
             ->method('getRelated')
             ->willReturn($categoryModel)

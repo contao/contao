@@ -29,14 +29,13 @@ class GeneratePageListenerTest extends ContaoTestCase
     {
         $GLOBALS['TL_HEAD'] = [];
 
-        $properties = [
-            'feedBase' => 'http://localhost/',
-            'alias' => 'events',
-            'format' => 'rss',
-            'title' => 'Upcoming events',
-        ];
+        /** @var CalendarFeedModel|MockObject $calendarFeedModel */
+        $calendarFeedModel = $this->mockClassWithProperties(CalendarFeedModel::class);
+        $calendarFeedModel->feedBase = 'http://localhost/';
+        $calendarFeedModel->alias = 'events';
+        $calendarFeedModel->format = 'rss';
+        $calendarFeedModel->title = 'Upcoming events';
 
-        $calendarFeedModel = $this->mockClassWithProperties(CalendarFeedModel::class, $properties);
         $collection = new Collection([$calendarFeedModel], 'tl_calendar_feeds');
 
         $adapters = [
@@ -46,7 +45,8 @@ class GeneratePageListenerTest extends ContaoTestCase
         ];
 
         /** @var LayoutModel|MockObject $layoutModel */
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['calendarfeeds' => 'a:1:{i:0;i:3;}']);
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel->calendarfeeds = 'a:1:{i:0;i:3;}';
 
         $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
         $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
@@ -62,7 +62,8 @@ class GeneratePageListenerTest extends ContaoTestCase
         $GLOBALS['TL_HEAD'] = [];
 
         /** @var LayoutModel|MockObject $layoutModel */
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['calendarfeeds' => '']);
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel->calendarfeeds = '';
 
         $listener = new GeneratePageListener($this->mockContaoFramework());
         $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
@@ -79,7 +80,8 @@ class GeneratePageListenerTest extends ContaoTestCase
         ];
 
         /** @var LayoutModel|MockObject $layoutModel */
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['calendarfeeds' => 'a:1:{i:0;i:3;}']);
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel->calendarfeeds = 'a:1:{i:0;i:3;}';
 
         $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
         $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);

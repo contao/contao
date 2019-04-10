@@ -18,6 +18,7 @@ use Contao\ManagerBundle\EventListener\BackendMenuListener;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\MenuItem;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -64,10 +65,14 @@ class BackendMenuListenerTest extends ContaoTestCase
 
     private function mockBackendMenuListener(bool $isAdmin, string $path = null): BackendMenuListener
     {
+        /** @var BackendUser|MockObject $model */
+        $model = $this->mockClassWithProperties(BackendUser::class);
+        $model->isAdmin = $isAdmin;
+
         $token = $this->createMock(TokenInterface::class);
         $token
             ->method('getUser')
-            ->willReturn($this->mockClassWithProperties(BackendUser::class, compact('isAdmin')))
+            ->willReturn($model)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);

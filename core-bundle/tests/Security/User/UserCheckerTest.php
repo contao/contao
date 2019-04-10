@@ -58,13 +58,10 @@ class UserCheckerTest extends TestCase
 
     public function testThrowsAnExceptionIfTheAccountIsLocked(): void
     {
-        $properties = [
-            'username' => 'foo',
-            'locked' => time() + 300,
-        ];
-
         /** @var BackendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, $properties);
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->username = 'foo';
+        $user->locked = time() + 300;
 
         $userChecker = new UserChecker($this->mockContaoFramework());
 
@@ -76,14 +73,11 @@ class UserCheckerTest extends TestCase
 
     public function testThrowsAnExceptionIfTheAccountIsDisabled(): void
     {
-        $properties = [
-            'username' => 'foo',
-            'locked' => 0,
-            'disable' => '1',
-        ];
-
         /** @var BackendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, $properties);
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->username = 'foo';
+        $user->locked = 0;
+        $user->disable = '1';
 
         $userChecker = new UserChecker($this->mockContaoFramework());
 
@@ -95,15 +89,12 @@ class UserCheckerTest extends TestCase
 
     public function testThrowsAnExceptionIfTheUserIsNotAllowedToLogin(): void
     {
-        $properties = [
-            'username' => 'foo',
-            'locked' => 0,
-            'disable' => '',
-            'login' => '',
-        ];
-
         /** @var FrontendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(FrontendUser::class, $properties);
+        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user->username = 'foo';
+        $user->locked = 0;
+        $user->disable = '';
+        $user->login = '';
 
         $userChecker = new UserChecker($this->mockContaoFramework());
 
@@ -117,16 +108,13 @@ class UserCheckerTest extends TestCase
     {
         $time = strtotime('tomorrow');
 
-        $properties = [
-            'username' => 'foo',
-            'locked' => 0,
-            'disable' => '',
-            'login' => '1',
-            'start' => (string) $time,
-        ];
-
         /** @var FrontendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(FrontendUser::class, $properties);
+        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user->username = 'foo';
+        $user->locked = 0;
+        $user->disable = '';
+        $user->login = '1';
+        $user->start = (string) $time;
 
         $userChecker = new UserChecker($this->mockContaoFramework());
         $message = sprintf('The account is not active yet (activation date: %s)', date('Y-m-d', $time));
@@ -141,17 +129,14 @@ class UserCheckerTest extends TestCase
     {
         $time = strtotime('yesterday');
 
-        $properties = [
-            'username' => 'foo',
-            'locked' => 0,
-            'disable' => '',
-            'login' => '1',
-            'start' => '',
-            'stop' => (string) $time,
-        ];
-
         /** @var FrontendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(FrontendUser::class, $properties);
+        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user->username = 'foo';
+        $user->locked = 0;
+        $user->disable = '';
+        $user->login = '1';
+        $user->start = '';
+        $user->stop = (string) $time;
 
         $userChecker = new UserChecker($this->mockContaoFramework());
         $message = sprintf('The account is not active anymore (deactivation date: %s)', date('Y-m-d', $time));

@@ -17,6 +17,7 @@ use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -27,7 +28,9 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
 
-        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, ['id' => 1]);
+        /** @var CalendarEventsModel|MockObject $eventModel */
+        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
+        $eventModel->id = 1;
 
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => $eventModel]),
@@ -96,7 +99,9 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, ['id' => 2]);
+        /** @var CalendarEventsModel|MockObject $eventModel */
+        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
+        $eventModel->id = 2;
 
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => $eventModel]),

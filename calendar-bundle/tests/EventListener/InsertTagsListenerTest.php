@@ -17,17 +17,16 @@ use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
 use Contao\Events;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
     public function testReplacesTheCalendarFeedTag(): void
     {
-        $properties = [
-            'feedBase' => 'http://localhost/',
-            'alias' => 'events',
-        ];
-
-        $feedModel = $this->mockClassWithProperties(CalendarFeedModel::class, $properties);
+        /** @var CalendarFeedModel|MockObject $feedModel */
+        $feedModel = $this->mockClassWithProperties(CalendarFeedModel::class);
+        $feedModel->feedBase = 'http://localhost/';
+        $feedModel->alias = 'events';
 
         $adapters = [
             CalendarFeedModel::class => $this->mockConfiguredAdapter(['findByPk' => $feedModel]),
@@ -43,12 +42,10 @@ class InsertTagsListenerTest extends ContaoTestCase
 
     public function testReplacesTheEventTags(): void
     {
-        $properties = [
-            'title' => 'The "foobar" event',
-            'teaser' => '<p>The annual foobar event.</p>',
-        ];
-
-        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, $properties);
+        /** @var CalendarEventsModel|MockObject $eventModel */
+        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
+        $eventModel->title = 'The "foobar" event';
+        $eventModel->teaser = '<p>The annual foobar event.</p>';
 
         $events = $this->mockAdapter(['generateEventUrl']);
         $events

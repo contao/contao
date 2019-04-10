@@ -17,6 +17,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
 use Contao\NewsModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -28,7 +29,10 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $requestStack->push(new Request());
 
         $event = new PreviewUrlCreateEvent('news', 1);
-        $newsModel = $this->mockClassWithProperties(NewsModel::class, ['id' => 1]);
+
+        /** @var NewsModel|MockObject $newsModel */
+        $newsModel = $this->mockClassWithProperties(NewsModel::class);
+        $newsModel->id = 1;
 
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => $newsModel]),
@@ -95,7 +99,9 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $newsModel = $this->mockClassWithProperties(NewsModel::class, ['id' => 2]);
+        /** @var NewsModel|MockObject $newsModel */
+        $newsModel = $this->mockClassWithProperties(NewsModel::class);
+        $newsModel->id = 2;
 
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => $newsModel]),

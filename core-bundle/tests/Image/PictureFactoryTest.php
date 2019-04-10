@@ -99,31 +99,28 @@ class PictureFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        $properties = [
-            'width' => '100',
-            'height' => '200',
-            'resizeMode' => ResizeConfiguration::MODE_BOX,
-            'zoom' => '50',
-            'sizes' => '100vw',
-            'densities' => '1x, 2x',
-            'cssClass' => 'my-size',
-        ];
+        /** @var ImageSizeModel|MockObject $imageSizeModel */
+        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class);
+        $imageSizeModel->width = 100;
+        $imageSizeModel->height = 200;
+        $imageSizeModel->resizeMode = ResizeConfiguration::MODE_BOX;
+        $imageSizeModel->zoom = 50;
+        $imageSizeModel->sizes = '100vw';
+        $imageSizeModel->densities = '1x, 2x';
+        $imageSizeModel->cssClass = 'my-size';
 
-        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $properties);
         $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
 
-        $properties = [
-            'width' => '50',
-            'height' => '50',
-            'resizeMode' => ResizeConfiguration::MODE_CROP,
-            'zoom' => '100',
-            'sizes' => '50vw',
-            'densities' => '0.5x, 2x',
-            'media' => '(max-width: 900px)',
-        ];
-
         /** @var ImageSizeItemModel|MockObject $imageSizeItemModel */
-        $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class, $properties);
+        $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class);
+        $imageSizeItemModel->width = 50;
+        $imageSizeItemModel->height = 50;
+        $imageSizeItemModel->resizeMode = ResizeConfiguration::MODE_CROP;
+        $imageSizeItemModel->zoom = 100;
+        $imageSizeItemModel->sizes = '50vw';
+        $imageSizeItemModel->densities = '0.5x, 2x';
+        $imageSizeItemModel->media = '(max-width: 900px)';
+
         $imageSizeItemModel
             ->method('__isset')
             ->willReturn(true)

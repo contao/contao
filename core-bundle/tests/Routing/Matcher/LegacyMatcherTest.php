@@ -385,9 +385,11 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        return [
-                            'pageModel' => $this->mockClassWithProperties(PageModel::class, ['alias' => 'bar']),
-                        ];
+                        /** @var PageModel|MockObject $pageModel */
+                        $pageModel = $this->mockClassWithProperties(PageModel::class);
+                        $pageModel->alias = 'bar';
+
+                        return ['pageModel' => $pageModel];
                     }
 
                     return [];
@@ -442,8 +444,12 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
+                        /** @var PageModel|MockObject $pageModel */
+                        $pageModel = $this->mockClassWithProperties(PageModel::class);
+                        $pageModel->alias = 'foo';
+
                         return [
-                            'pageModel' => $this->mockClassWithProperties(PageModel::class, ['alias' => 'foo']),
+                            'pageModel' => $pageModel,
                             'parameters' => '/bar/baz',
                         ];
                     }
@@ -500,8 +506,12 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
+                        /** @var PageModel|MockObject $pageModel */
+                        $pageModel = $this->mockClassWithProperties(PageModel::class);
+                        $pageModel->alias = 'foo';
+
                         return [
-                            'pageModel' => $this->mockClassWithProperties(PageModel::class, ['alias' => 'foo']),
+                            'pageModel' => $pageModel,
                             'parameters' => '/baz',
                         ];
                     }

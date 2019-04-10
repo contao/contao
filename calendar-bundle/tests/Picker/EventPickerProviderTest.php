@@ -21,6 +21,7 @@ use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -202,12 +203,16 @@ class EventPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
+        /** @var CalendarModel|MockObject $calendarModel */
+        $calendarModel = $this->mockClassWithProperties(CalendarModel::class);
+        $calendarModel->id = 1;
+
         $calendarEvents = $this->createMock(CalendarEventsModel::class);
         $calendarEvents
             ->expects($this->once())
             ->method('getRelated')
             ->with('pid')
-            ->willReturn($this->mockClassWithProperties(CalendarModel::class, ['id' => 1]))
+            ->willReturn($calendarModel)
         ;
 
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');

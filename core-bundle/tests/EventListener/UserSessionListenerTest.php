@@ -48,7 +48,9 @@ class UserSessionListenerTest extends TestCase
             'lonesome' => 'looser',
         ];
 
-        $user = $this->mockClassWithProperties($userClass, ['session' => $sessionValues]);
+        /** @var BackendUser|FrontendUser|MockObject $user */
+        $user = $this->mockClassWithProperties($userClass);
+        $user->session = $sessionValues;
 
         $token = $this->createMock(UsernamePasswordToken::class);
         $token
@@ -329,7 +331,10 @@ class UserSessionListenerTest extends TestCase
 
     public function testFailsToReplaceTheSessionIfThereIsNoSession(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['session' => []]);
+        /** @var BackendUser|FrontendUser|MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->session = [];
+
         $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->method('getUser')

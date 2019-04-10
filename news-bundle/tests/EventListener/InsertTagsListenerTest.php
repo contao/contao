@@ -17,17 +17,16 @@ use Contao\NewsBundle\EventListener\InsertTagsListener;
 use Contao\NewsFeedModel;
 use Contao\NewsModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
     public function testReplacesTheNewsFeedTag(): void
     {
-        $properties = [
-            'feedBase' => 'http://localhost/',
-            'alias' => 'news',
-        ];
-
-        $feedModel = $this->mockClassWithProperties(NewsFeedModel::class, $properties);
+        /** @var NewsFeedModel|MockObject $feedModel */
+        $feedModel = $this->mockClassWithProperties(NewsFeedModel::class);
+        $feedModel->feedBase = 'http://localhost/';
+        $feedModel->alias = 'news';
 
         $adapters = [
             NewsFeedModel::class => $this->mockConfiguredAdapter(['findByPk' => $feedModel]),
@@ -43,12 +42,10 @@ class InsertTagsListenerTest extends ContaoTestCase
 
     public function testReplacesTheNewsTags(): void
     {
-        $properties = [
-            'headline' => '"Foo" is not "bar"',
-            'teaser' => '<p>Foo does not equal bar.</p>',
-        ];
-
-        $newsModel = $this->mockClassWithProperties(NewsModel::class, $properties);
+        /** @var NewsModel|MockObject $newsModel */
+        $newsModel = $this->mockClassWithProperties(NewsModel::class);
+        $newsModel->headline = '"Foo" is not "bar"';
+        $newsModel->teaser = '<p>Foo does not equal bar.</p>';
 
         $news = $this->mockAdapter(['generateNewsUrl']);
         $news
