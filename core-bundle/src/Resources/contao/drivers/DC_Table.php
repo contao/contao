@@ -3026,7 +3026,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField];
 
 		// Convert date formats into timestamps
-		if ($varValue !== '' && \in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
+		if ($varValue !== null && $varValue !== '' && \in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
 		{
 			$objDate = new \Date($varValue, \Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 			$varValue = $objDate->tstamp;

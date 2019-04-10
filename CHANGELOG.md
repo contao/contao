@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Correctly handle dates in the calendar bundle (see #428).
+
 ## 4.4.37 (2019-04-09)
 
  * Invalidate the user sessions if a password changes (see CVE-2019-10641).
