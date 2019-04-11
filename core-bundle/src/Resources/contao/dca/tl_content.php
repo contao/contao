@@ -1021,11 +1021,6 @@ class tl_content extends Backend
 	 */
 	public function adjustDcaByType($dc)
 	{
-		if ($_POST || Input::get('act') != 'edit')
-		{
-			return;
-		}
-
 		$objCte = ContentModel::findByPk($dc->id);
 
 		if ($objCte === null)
