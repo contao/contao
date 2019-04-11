@@ -434,6 +434,32 @@ class RouteProviderTest extends TestCase
             ],
             ['de'],
         ];
+
+        yield 'Sorts by "de" if "de_CH" is accepted' => [
+            [
+                1 => $this->createPage('en', 'bar'),
+                0 => $this->createPage('de', 'bar', false),
+            ],
+            ['de_CH'],
+        ];
+
+        yield 'Converts "de_CH" to "de-CH"' => [
+            [
+                1 => $this->createPage('en', 'bar'),
+                0 => $this->createPage('de-CH', 'bar', false),
+            ],
+            ['de_CH'],
+        ];
+
+        yield 'Appends "de" in case "de_CH" is accepted and "de" is not' => [
+            [
+                1 => $this->createPage('de', 'bar', false),
+                3 => $this->createPage('fr', 'bar', false),
+                0 => $this->createPage('en', 'bar', false),
+                2 => $this->createPage('it', 'bar'),
+            ],
+            ['de_CH', 'en'],
+        ];
     }
 
     /**

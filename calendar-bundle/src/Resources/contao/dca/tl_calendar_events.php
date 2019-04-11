@@ -657,11 +657,6 @@ class tl_calendar_events extends Contao\Backend
 				$objCalendar = $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")
 											  ->execute($id);
 
-				if ($objCalendar->numRows < 1)
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid calendar ID ' . $id . '.');
-				}
-
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
 				$objSession = Contao\System::getContainer()->get('session');
 

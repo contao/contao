@@ -381,6 +381,21 @@ class RouteProvider implements RouteProviderInterface
     {
         // Convert languages array so key is language and value is priority
         if (null !== $languages) {
+            foreach ($languages as &$language) {
+                $language = str_replace('_', '-', $language);
+
+                if (5 === \strlen($language)) {
+                    $lng = substr($language, 0, 2);
+
+                    // Append the language if only language plus dialect is given (see #430)
+                    if (!\in_array($lng, $languages, true)) {
+                        $languages[] = $lng;
+                    }
+                }
+            }
+
+            unset($language);
+
             $languages = array_flip(array_values($languages));
         }
 
