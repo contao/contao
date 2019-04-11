@@ -532,11 +532,6 @@ class tl_form_field extends Backend
 				$objForm = $this->Database->prepare("SELECT id FROM tl_form_field WHERE pid=?")
 										  ->execute($id);
 
-				if ($objForm->numRows < 1)
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid form ID ' . $id . '.');
-				}
-
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
 

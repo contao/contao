@@ -280,6 +280,8 @@ class tl_newsletter_recipients extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
+			case 'cutAll':
+			case 'copyAll':
 				if (!\in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
@@ -287,11 +289,6 @@ class tl_newsletter_recipients extends Backend
 
 				$objRecipient = $this->Database->prepare("SELECT id FROM tl_newsletter_recipients WHERE pid=?")
 											 ->execute($id);
-
-				if ($objRecipient->numRows < 1)
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid newsletter recipient ID ' . $id . '.');
-				}
 
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');

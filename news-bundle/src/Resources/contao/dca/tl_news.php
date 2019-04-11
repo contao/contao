@@ -599,11 +599,6 @@ class tl_news extends Backend
 				$objArchive = $this->Database->prepare("SELECT id FROM tl_news WHERE pid=?")
 											 ->execute($id);
 
-				if ($objArchive->numRows < 1)
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid news archive ID ' . $id . '.');
-				}
-
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
 
