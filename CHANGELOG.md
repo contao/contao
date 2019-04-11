@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.38 (2019-04-10)
 
  * Correctly copy multiple events into an empty calendar (see #427).
  * Correctly check the permissions to create form fields (see #414).
