@@ -470,12 +470,6 @@ class tl_form_field extends Backend
 				break;
 
 			case 'create':
-				if (!\strlen(Input::get('id')) || !\in_array(Input::get('id'), $root))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . Input::get('id') . '.');
-				}
-				break;
-
 			case 'cut':
 			case 'copy':
 				$pid = Input::get('pid');
@@ -498,6 +492,11 @@ class tl_form_field extends Backend
 				if (!\in_array($pid, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form field ID ' . $id . ' to form ID ' . $pid . '.');
+				}
+
+				if (Input::get('act') == 'create')
+				{
+					break;
 				}
 				// NO BREAK STATEMENT HERE
 
