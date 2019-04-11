@@ -361,6 +361,7 @@ class PictureFactoryTest extends TestCase
     /**
      * @param PictureGenerator|MockObject|null $pictureGenerator
      * @param ImageFactory|MockObject|null     $imageFactory
+     * @param ContaoFramework|MockObject|null  $framework
      */
     private function mockPictureFactory($pictureGenerator = null, $imageFactory = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null): PictureFactory
     {

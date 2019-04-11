@@ -384,7 +384,7 @@ class RouteProvider implements RouteProviderInterface
             foreach ($languages as &$language) {
                 $language = str_replace('_', '-', $language);
 
-                if (5 === strlen($language)) {
+                if (5 === \strlen($language)) {
                     $lng = substr($language, 0, 2);
 
                     // Append the language if only language plus dialect is given (see #430)
