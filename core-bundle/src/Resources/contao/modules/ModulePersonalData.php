@@ -222,7 +222,7 @@ class ModulePersonalData extends Module
 				$rgxp = $arrData['eval']['rgxp'];
 
 				// Convert date formats into timestamps (check the eval setting first -> #3063)
-				if ($varValue != '' && \in_array($rgxp, array('date', 'time', 'datim')))
+				if ($varValue !== null && $varValue !== '' && \in_array($rgxp, array('date', 'time', 'datim')))
 				{
 					try
 					{
