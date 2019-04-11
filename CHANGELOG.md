@@ -2,6 +2,10 @@
 
 ## DEV
 
+ * Correctly copy multiple events into an empty calendar (see #427).
+ * Correctly check the permissions to create form fields (see #414).
+ * Fix the save callback in the back end password module (see #429).
+ * Correctly handle dates in the calendar bundle (see #428).
  * Fall back to the language if only language plus region is given (see #430).
 
 ## 4.7.3 (2019-04-09)

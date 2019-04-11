@@ -459,12 +459,6 @@ class tl_form_field extends Contao\Backend
 				break;
 
 			case 'create':
-				if (!\strlen(Contao\Input::get('id')) || !\in_array(Contao\Input::get('id'), $root))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . Contao\Input::get('id') . '.');
-				}
-				break;
-
 			case 'cut':
 			case 'copy':
 				$pid = Contao\Input::get('pid');
@@ -487,6 +481,11 @@ class tl_form_field extends Contao\Backend
 				if (!\in_array($pid, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' form field ID ' . $id . ' to form ID ' . $pid . '.');
+				}
+
+				if (Input::get('act') == 'create')
+				{
+					break;
 				}
 				// NO BREAK STATEMENT HERE
 
@@ -521,11 +520,6 @@ class tl_form_field extends Contao\Backend
 
 				$objForm = $this->Database->prepare("SELECT id FROM tl_form_field WHERE pid=?")
 										  ->execute($id);
-
-				if ($objForm->numRows < 1)
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid form ID ' . $id . '.');
-				}
 
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
 				$objSession = Contao\System::getContainer()->get('session');

@@ -1118,11 +1118,6 @@ class tl_content extends Contao\Backend
 	 */
 	public function adjustDcaByType($dc)
 	{
-		if ($_POST || Contao\Input::get('act') != 'edit')
-		{
-			return;
-		}
-
 		$objCte = Contao\ContentModel::findByPk($dc->id);
 
 		if ($objCte === null)
