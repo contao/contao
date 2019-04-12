@@ -47,15 +47,11 @@ class LanguageFilter implements RouteFilterInterface
             /** @var PageModel $pageModel */
             $pageModel = $route->getDefault('pageModel');
 
-            if ($pageModel->rootIsFallback) {
-                continue;
-            }
-
-            $language = $pageModel->rootLanguage;
-
             if (
-                \in_array($language, $languages, true)
-                || preg_grep('/'.preg_quote($language, '/').'_[A-Z]{2}/', $languages)
+                !$pageModel instanceof PageModel
+                || $pageModel->rootIsFallback
+                || \in_array($pageModel->rootLanguage, $languages, true)
+                || preg_grep('/'.preg_quote($pageModel->rootLanguage, '/').'_[A-Z]{2}/', $languages)
             ) {
                 continue;
             }
