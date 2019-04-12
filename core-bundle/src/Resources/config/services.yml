@@ -376,6 +376,7 @@ services:
             - "@contao.routing.final_matcher"
         calls:
             - ["addRouteFilter", ["@contao.routing.domain_filter"]]
+            - ["addRouteFilter", ["@contao.routing.published_filter"]]
         public: true
 
     contao.routing.page_router:
@@ -391,6 +392,11 @@ services:
             - ["addRouteEnhancer", ["@contao.routing.input_enhancer"]]
         tags:
             - { name: router, priority: 20 }
+
+    contao.routing.published_filter:
+        class: Contao\CoreBundle\Routing\Matcher\PublishedFilter
+        arguments:
+            - "@contao.security.token_checker"
 
     contao.routing.route_generator:
         class: Symfony\Cmf\Component\Routing\ProviderBasedGenerator
