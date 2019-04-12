@@ -42,7 +42,9 @@ class DomainFilter implements RouteFilterInterface
 
         if ($hasDomainMatch) {
             foreach ($collection->all() as $name => $route) {
-                if (!$route->getHost()) {
+                $host = $route->getHost();
+
+                if (!$host || $host !== $httpHost) {
                     $collection->remove($name);
                 }
             }
