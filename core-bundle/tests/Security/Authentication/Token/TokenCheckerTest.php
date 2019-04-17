@@ -402,18 +402,19 @@ class TokenCheckerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->atLeast(2))
+            ->expects($this->atLeastOnce())
             ->method('isStarted')
             ->willReturn(true)
         ;
 
         $session
-            ->expects($this->atLeast(2))
+            ->expects($this->atLeastOnce())
             ->method('has')
             ->willReturn(true)
         ;
 
         $session
-            ->expects($this->atLeast(2))
+            ->expects($this->atLeastOnce())
             ->method('get')
             ->willReturn(serialize($token))
         ;
