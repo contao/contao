@@ -311,7 +311,6 @@ class TokenCheckerTest extends TestCase
     {
         $user = $this->mockUser($class);
         $authenticatedToken = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-
         $token = new TwoFactorToken($authenticatedToken, 'password', 'provider', []);
         $tokenChecker = $this->mockTwoFactorTokenChecker($token);
 
