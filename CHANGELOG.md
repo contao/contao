@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Also show future news items if the "show all news items" option is selected (see #419).
+
 ## 4.4.38 (2019-04-10)
 
  * Correctly copy multiple events into an empty calendar (see #427).
