@@ -584,7 +584,7 @@ class StringUtil
 
 		$evaluateExpression = function ($strExpression) use ($arrData)
 		{
-			if (!preg_match('/^([^=!<>\s]+)([=!<>]+)(.+)$/is', $strExpression, $arrMatches))
+			if (!preg_match('/^([^=!<>\s]+)[\s]*([=!<>]+)[\s]*(.+)$/is', $strExpression, $arrMatches))
 			{
 				return false;
 			}
