@@ -20,7 +20,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface;
 
 class ProviderTest extends TestCase
 {
