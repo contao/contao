@@ -80,6 +80,7 @@ use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Routing\FrontendLoader;
 use Contao\CoreBundle\Routing\LegacyRouteProvider;
 use Contao\CoreBundle\Routing\Matcher\DomainFilter;
+use Contao\CoreBundle\Routing\Matcher\LanguageFilter;
 use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
 use Contao\CoreBundle\Routing\Matcher\PublishedFilter;
 use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
@@ -1371,6 +1372,17 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('%contao.prepend_locale%', (string) $definition->getArgument(1));
     }
 
+    public function testRegistersTheRoutingLanguageFilter(): void
+    {
+        $this->assertTrue($this->container->has('contao.routing.language_filter'));
+
+        $definition = $this->container->getDefinition('contao.routing.language_filter');
+
+        $this->assertSame(LanguageFilter::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('%contao.prepend_locale%', (string) $definition->getArgument(0));
+    }
+
     public function testRegistersTheRoutingLegacyMatcher(): void
     {
         $this->assertTrue($this->container->has('contao.routing.legacy_matcher'));
@@ -1415,6 +1427,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.routing.domain_filter', (string) $methodCalls[0][1][0]);
         $this->assertSame('addRouteFilter', $methodCalls[1][0]);
         $this->assertSame('contao.routing.published_filter', (string) $methodCalls[1][1][0]);
+        $this->assertSame('addRouteFilter', $methodCalls[2][0]);
+        $this->assertSame('contao.routing.language_filter', (string) $methodCalls[2][1][0]);
     }
 
     public function testRegistersTheRoutingPageRouter(): void

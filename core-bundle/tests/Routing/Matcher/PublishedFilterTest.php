@@ -65,7 +65,7 @@ class PublishedFilterTest extends TestCase
     {
         $route = $this->createMock(Route::class);
         $route
-            ->expects($this->atLeastOnce())
+            ->expects($this->once())
             ->method('getDefault')
             ->with('pageModel')
             ->willReturn($this->mockClassWithProperties(PageModel::class, ['rootIsPublic' => false]))
@@ -92,7 +92,7 @@ class PublishedFilterTest extends TestCase
     {
         $route = $this->createMock(Route::class);
         $route
-            ->expects($this->atLeastOnce())
+            ->expects($this->once())
             ->method('getDefault')
             ->with('pageModel')
             ->willReturn($this->mockClassWithProperties(PageModel::class, ['rootIsPublic' => true]))
