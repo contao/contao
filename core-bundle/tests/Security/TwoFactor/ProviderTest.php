@@ -128,18 +128,4 @@ class ProviderTest extends TestCase
 
         $this->assertTrue($provider->validateAuthenticationCode($user, '123456'));
     }
-
-    public function testPreparesTheAuthentication(): void
-    {
-        /** @var User|MockObject $user */
-        $user = $this->mockClassWithProperties(User::class);
-
-        $renderer = $this->createMock(BackendFormRenderer::class);
-        $authenticator = $this->createMock(Authenticator::class);
-
-        $provider = new Provider($authenticator, $renderer);
-        $provider->prepareAuthentication($user);
-
-        $this->assertTrue(true);
-    }
 }
