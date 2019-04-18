@@ -14,11 +14,13 @@ namespace Contao\CoreBundle\Tests\Security\TwoFactor;
 
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackendFormRenderer;
+use Contao\CoreBundle\Security\TwoFactor\FrontendFormRenderer;
 use Contao\CoreBundle\Security\TwoFactor\Provider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface;
 
 class ProviderTest extends TestCase
 {
@@ -127,5 +129,18 @@ class ProviderTest extends TestCase
         $provider = new Provider($authenticator, $renderer);
 
         $this->assertTrue($provider->validateAuthenticationCode($user, '123456'));
+    }
+
+    public function testReturnsFormRenderer(): void
+    {
+        $backendRenderer = $this->createMock(BackendFormRenderer::class);
+        $frontendRenderer = $this->createMock(FrontendFormRenderer::class);
+        $authenticator = $this->createMock(Authenticator::class);
+
+        $backendProvider = new Provider($authenticator, $backendRenderer);
+        $frontendProvider = new Provider($authenticator, $frontendRenderer);
+
+        $this->assertInstanceOf(BackendFormRenderer::class, $backendProvider->getFormRenderer());
+        $this->assertInstanceOf(FrontendFormRenderer::class, $frontendProvider->getFormRenderer());
     }
 }
