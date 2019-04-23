@@ -12,19 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\TwoFactor;
 
-use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Security\TwoFactor\FrontendAuthenticationFailureHandler;
 use Contao\CoreBundle\Tests\TestCase;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\HttpKernel;
-use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\HttpUtils;
 
 class FrontendAuthenticationFailureHandlerTest extends TestCase
@@ -36,7 +30,8 @@ class FrontendAuthenticationFailureHandlerTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->once())
-            ->method('set');
+            ->method('set')
+        ;
 
         $request = new Request();
         $request->headers->set(Security::AUTHENTICATION_ERROR, $exception);
@@ -47,7 +42,8 @@ class FrontendAuthenticationFailureHandlerTest extends TestCase
         $utils
             ->expects($this->once())
             ->method('createRedirectResponse')
-            ->willReturn(new RedirectResponse('http://localhost'));
+            ->willReturn(new RedirectResponse('http://localhost'))
+        ;
 
         $handler = new FrontendAuthenticationFailureHandler($utils);
         $handler->onAuthenticationFailure($request, $exception);

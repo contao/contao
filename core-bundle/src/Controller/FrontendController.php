@@ -133,6 +133,6 @@ class FrontendController extends AbstractController
      */
     public function twoFactorAuthenticationAction(): Response
     {
-        return $this->redirectTo('contao_index');
+        return $this->redirectToRoute('contao_index');
     }
 }

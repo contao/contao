@@ -16,7 +16,9 @@ use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Fixtures\Controller\PageError401Controller;
 use Contao\CoreBundle\Fixtures\Exception\PageError401Exception;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\LogoutException;
 
 class FrontendControllerTest extends TestCase
@@ -113,5 +115,26 @@ class FrontendControllerTest extends TestCase
         $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
         $this->assertTrue($response->headers->hasCacheControlDirective('must-revalidate'));
         $this->assertSame('image/png', $response->headers->get('Content-Type'));
+    }
+
+    public function testRedirectsToRootPageIfTheTwoFactorRouteIsCalledManually(): void
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_index')
+            ->willReturn('/')
+        ;
+
+        $container = $this->mockContainer();
+        $container->set('router', $router);
+
+        $controller = new FrontendController();
+        $controller->setContainer($container);
+
+        $response = $controller->twoFactorAuthenticationAction();
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 }
