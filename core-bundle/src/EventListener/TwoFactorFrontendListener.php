@@ -91,7 +91,7 @@ class TwoFactorFrontendListener
         }
 
         // Check if user has TwoFactorToken
-        if (!$token = $this->tokenStorage->getToken() instanceof TwoFactorToken) {
+        if (!$token instanceof TwoFactorToken) {
             return;
         }
 
