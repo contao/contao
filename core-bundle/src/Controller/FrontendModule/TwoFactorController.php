@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
-use Contao\CoreBundle\Translation\Translator;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -24,15 +23,15 @@ use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCode
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TwoFactorController extends AbstractFrontendModuleController
 {
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     protected $translator;
 
@@ -59,7 +58,7 @@ class TwoFactorController extends AbstractFrontendModuleController
     /** @var PageModel */
     protected $page;
 
-    public function __construct(Translator $translator, RouterInterface $router, TokenStorage $tokenStorage, Authenticator $authenticator, AuthenticationUtils $authenticationUtils)
+    public function __construct(TranslatorInterface $translator, Router $router, TokenStorage $tokenStorage, Authenticator $authenticator, AuthenticationUtils $authenticationUtils)
     {
         $this->translator = $translator;
         $this->router = $router;

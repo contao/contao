@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\TwoFactor;
 
+use Contao\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
@@ -32,6 +33,7 @@ class FrontendAuthenticationSuccessHandler implements AuthenticationSuccessHandl
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
+        /** @var User $user */
         $user = $token->getUser();
         $request->getSession()->remove(Security::AUTHENTICATION_ERROR);
 
