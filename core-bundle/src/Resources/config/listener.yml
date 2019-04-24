@@ -197,6 +197,7 @@ services:
     contao.listener.two_factor.frontend:
         class: Contao\CoreBundle\EventListener\TwoFactorFrontendListener
         arguments:
+            - '@contao.framework'
             - '@contao.routing.scope_matcher'
             - '@security.token_storage'
         tags:

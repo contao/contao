@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FrontendUser;
 use Contao\PageModel;
@@ -20,23 +21,27 @@ use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class TwoFactorFrontendListener
 {
+    /** @var ContaoFramework */
+    private $framework;
+
     /**
      * @var ScopeMatcher
      */
     private $scopeMatcher;
 
     /**
-     * @var TokenStorage
+     * @var TokenStorageInterface
      */
     private $tokenStorage;
 
-    public function __construct(ScopeMatcher $scopeMatcher, TokenStorage $tokenStorage)
+    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, TokenStorageInterface $tokenStorage)
     {
+        $this->framework = $framework;
         $this->scopeMatcher = $scopeMatcher;
         $this->tokenStorage = $tokenStorage;
     }
@@ -70,10 +75,13 @@ class TwoFactorFrontendListener
             return;
         }
 
+        /** @var PageModel $adapter */
+        $adapter = $this->framework->getAdapter(PageModel::class);
+
         // Check if user has two-factor disabled but is enforced
         if (!$user->useTwoFactor && $page->enforceTwoFactor) {
             // Search for two-factor page
-            $twoFactorPage = PageModel::findPublishedById($page->twofactor_jumpTo);
+            $twoFactorPage = $adapter->findPublishedById($page->twofactor_jumpTo);
 
             if (!$twoFactorPage instanceof PageModel) {
                 throw new PageNotFoundException('No two-factor authentication page found.');
@@ -96,14 +104,14 @@ class TwoFactorFrontendListener
         }
 
         // Search 401 error page
-        $unauthorizedPage = PageModel::find401ByPid($page->rootId);
+        $unauthorizedPage = $adapter->find401ByPid($page->rootId);
 
         if (!$unauthorizedPage instanceof PageModel) {
             return;
         }
 
         // Check if 401 error page is available
-        $redirect = PageModel::findPublishedById($unauthorizedPage->jumpTo);
+        $redirect = $adapter->findPublishedById($unauthorizedPage->jumpTo);
 
         if (!$redirect instanceof PageModel) {
             return;
@@ -114,6 +122,6 @@ class TwoFactorFrontendListener
             return;
         }
 
-        throw new UnauthorizedHttpException('Missing two-factor authentication.');
+        throw new UnauthorizedHttpException('', 'Missing two-factor authentication.');
     }
 }
