@@ -213,4 +213,10 @@ class PagePickerProviderTest extends ContaoTestCase
         $this->assertSame(5, $this->provider->convertDcaValue(new PickerConfig('page'), 5));
         $this->assertSame('{{link_url::5}}', $this->provider->convertDcaValue(new PickerConfig('link'), 5));
     }
+
+    public function testConvertsTheDcaValueWithCustomInsertTag(): void
+    {
+        $this->assertSame(5, $this->provider->convertDcaValue(new PickerConfig('page', ['insertTag' => '{{link_url::%s|absolute}}']), 5));
+        $this->assertSame('{{link_url::5|absolute}}', $this->provider->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{link_url::%s|absolute}}']), 5));
+    }
 }

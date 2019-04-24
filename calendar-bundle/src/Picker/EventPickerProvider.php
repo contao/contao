@@ -24,6 +24,8 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
 {
     use FrameworkAwareTrait;
 
+    protected const DEFAULT_INSERTTAG = '{{event_url::%s}}';
+
     /**
      * {@inheritdoc}
      */
@@ -45,7 +47,9 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return false !== strpos($config->getValue(), '{{event_url::');
+        $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
+
+        return false !== strpos($config->getValue(), $insertTagChunks[0]);
     }
 
     /**
@@ -68,7 +72,9 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = str_replace(['{{event_url::', '}}'], '', $config->getValue());
+            $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
+
+            $attributes['value'] = str_replace($insertTagChunks, '',  $config->getValue());
         }
 
         return $attributes;
@@ -79,7 +85,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
      */
     public function convertDcaValue(PickerConfig $config, $value): string
     {
-        return '{{event_url::'.$value.'}}';
+        return sprintf($this->getInsertTag($config, self::DEFAULT_INSERTTAG), $value);
     }
 
     /**
@@ -89,11 +95,17 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     {
         $params = ['do' => 'calendar'];
 
-        if (null === $config || !$config->getValue() || false === strpos($config->getValue(), '{{event_url::')) {
+        if (null === $config || !$config->getValue()) {
             return $params;
         }
 
-        $value = str_replace(['{{event_url::', '}}'], '', $config->getValue());
+        $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
+
+        if (false === strpos($config->getValue(), $insertTagChunks[0])) {
+            return $params;
+        }
+
+        $value = str_replace($insertTagChunks, '',  $config->getValue());
 
         if (null !== ($calendarId = $this->getCalendarId($value))) {
             $params['table'] = 'tl_calendar_events';

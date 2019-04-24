@@ -201,6 +201,11 @@ class FaqPickerProviderTest extends ContaoTestCase
         $this->assertSame('{{faq_url::5}}', $this->provider->convertDcaValue(new PickerConfig('link'), 5));
     }
 
+    public function testConvertsTheDcaValueWithCustomInsertTag(): void
+    {
+        $this->assertSame('{{faq_title::5}}', $this->provider->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{faq_title::%s}}']), 5));
+    }
+
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
         /** @var FaqCategoryModel|MockObject $model */

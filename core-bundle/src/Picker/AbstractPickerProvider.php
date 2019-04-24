@@ -120,6 +120,18 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     }
 
     /**
+     * Provides a shortcut to get the "insertTag" extra value for child classes.
+     */
+    protected function getInsertTag(PickerConfig $config, string $default): string
+    {
+        if ($insertTag = $config->getExtra('insertTag')) {
+            return (string) $insertTag;
+        }
+
+        return $default;
+    }
+
+    /**
      * Returns the routing parameters for the back end picker.
      *
      * @return array<string,string|int>

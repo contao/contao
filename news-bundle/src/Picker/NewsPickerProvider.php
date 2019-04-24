@@ -24,6 +24,8 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
 {
     use FrameworkAwareTrait;
 
+    protected const DEFAULT_INSERTTAG = '{{news_url::%s}}';
+
     /**
      * {@inheritdoc}
      */
@@ -45,7 +47,9 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return false !== strpos($config->getValue(), '{{news_url::');
+        $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
+
+        return false !== strpos($config->getValue(), $insertTagChunks[0]);
     }
 
     /**
@@ -68,7 +72,9 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = str_replace(['{{news_url::', '}}'], '', $config->getValue());
+            $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
+
+            $attributes['value'] = str_replace($insertTagChunks, '',  $config->getValue());
         }
 
         return $attributes;
@@ -79,7 +85,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
      */
     public function convertDcaValue(PickerConfig $config, $value): string
     {
-        return '{{news_url::'.$value.'}}';
+        return sprintf($this->getInsertTag($config, self::DEFAULT_INSERTTAG), $value);
     }
 
     /**
@@ -89,11 +95,17 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     {
         $params = ['do' => 'news'];
 
-        if (null === $config || !$config->getValue() || false === strpos($config->getValue(), '{{news_url::')) {
+        if (null === $config || !$config->getValue()) {
             return $params;
         }
 
-        $value = str_replace(['{{news_url::', '}}'], '', $config->getValue());
+        $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
+
+        if (false === strpos($config->getValue(), $insertTagChunks[0])) {
+            return $params;
+        }
+
+        $value = str_replace($insertTagChunks, '', $config->getValue());
 
         if (null !== ($newsArchiveId = $this->getNewsArchiveId($value))) {
             $params['table'] = 'tl_news';

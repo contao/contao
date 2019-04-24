@@ -24,6 +24,8 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
 {
     use FrameworkAwareTrait;
 
+    protected const DEFAULT_INSERTTAG = '{{faq_url::%s}}';
+
     /**
      * {@inheritdoc}
      */
@@ -45,7 +47,9 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return false !== strpos($config->getValue(), '{{faq_url::');
+        $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
+
+        return false !== strpos($config->getValue(), $insertTagChunks[0]);
     }
 
     /**
@@ -68,7 +72,10 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = str_replace(['{{faq_url::', '}}'], '', $config->getValue());
+
+            $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
+
+            $attributes['value'] = str_replace($insertTagChunks, '',  $config->getValue());
         }
 
         return $attributes;
@@ -79,7 +86,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
      */
     public function convertDcaValue(PickerConfig $config, $value): string
     {
-        return '{{faq_url::'.$value.'}}';
+        return sprintf($this->getInsertTag($config, self::DEFAULT_INSERTTAG), $value);
     }
 
     /**
@@ -89,11 +96,17 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     {
         $params = ['do' => 'faq'];
 
-        if (null === $config || !$config->getValue() || false === strpos($config->getValue(), '{{faq_url::')) {
+        if (null === $config ||!$config->getValue()) {
             return $params;
         }
 
-        $value = str_replace(['{{faq_url::', '}}'], '', $config->getValue());
+        $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
+
+        if (false === strpos($config->getValue(), $insertTagChunks[0])) {
+            return $params;
+        }
+
+        $value = str_replace($insertTagChunks, '', $config->getValue());
 
         if (null !== ($faqId = $this->getFaqCategoryId($value))) {
             $params['table'] = 'tl_faq';
