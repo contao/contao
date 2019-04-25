@@ -14,9 +14,7 @@ use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\LockHandler;
 
 /**
  * Tests the SymlinksCommand class.
@@ -46,17 +44,12 @@ class SymlinksCommandTest extends TestCase
         $fs = new Filesystem();
         $fs->mkdir($this->getRootDir().'/var/logs');
 
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', $this->getRootDir());
-
         $command = new SymlinksCommand(
             $this->getRootDir(),
             'files',
             $this->getRootDir().'/var/logs',
             new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
         );
-
-        $command->setContainer($container);
 
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
@@ -72,36 +65,6 @@ class SymlinksCommandTest extends TestCase
         $this->assertRegExp('# web/assets +assets #', $display);
         $this->assertRegExp('# web/system/themes +system/themes #', $display);
         $this->assertRegExp('# system/logs +var/logs #', $display);
-    }
-
-    /**
-     * Tests that the command is locked while running.
-     */
-    public function testIsLockedWhileRunning()
-    {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', 'foobar');
-
-        $lock = new LockHandler('contao:symlinks', sys_get_temp_dir().'/'.md5('foobar'));
-        $lock->lock();
-
-        $command = new SymlinksCommand(
-            $this->getRootDir(),
-            'files',
-            $this->getRootDir().'/var/logs',
-            new ResourceFinder($this->getRootDir().'/vendor/contao/test-bundle/Resources/contao')
-        );
-
-        $command->setContainer($container);
-
-        $tester = new CommandTester($command);
-
-        $code = $tester->execute([]);
-
-        $this->assertSame(1, $code);
-        $this->assertContains('The command is already running in another process.', $tester->getDisplay());
-
-        $lock->release();
     }
 
     /**

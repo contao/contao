@@ -11,6 +11,7 @@
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Util\SymlinkUtil;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,7 +23,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class InstallCommand extends AbstractLockedCommand
+class InstallCommand extends Command
 {
     /**
      * @var Filesystem
@@ -115,7 +116,7 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);

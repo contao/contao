@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Command;
 use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Util\SymlinkUtil;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,7 +28,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class SymlinksCommand extends AbstractLockedCommand
+class SymlinksCommand extends Command
 {
     /**
      * @var SymfonyStyle
@@ -104,7 +105,7 @@ class SymlinksCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
         $this->webDir = rtrim($input->getArgument('target'), '/');

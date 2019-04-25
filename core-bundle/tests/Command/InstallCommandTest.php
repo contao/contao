@@ -13,9 +13,7 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\CoreBundle\Command\InstallCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\LockHandler;
 
 /**
  * Tests the InstallCommand class.
@@ -69,12 +67,7 @@ class InstallCommandTest extends TestCase
      */
     public function testCreatesTheContaoFolders()
     {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', $this->getRootDir());
-
         $command = new InstallCommand($this->getRootDir(), 'files', $this->getRootDir().'/assets/images');
-        $command->setContainer($container);
-
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $output = $tester->getDisplay();
@@ -95,12 +88,7 @@ class InstallCommandTest extends TestCase
      */
     public function testHandlesCustomFilesAndImagesPaths()
     {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', $this->getRootDir());
-
         $command = new InstallCommand($this->getRootDir(), 'files_test', $this->getRootDir().'/assets/images_test');
-        $command->setContainer($container);
-
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
@@ -108,29 +96,5 @@ class InstallCommandTest extends TestCase
         $this->assertSame(0, $code);
         $this->assertContains(' * files_test', $display);
         $this->assertContains(' * assets/images_test', $display);
-    }
-
-    /**
-     * Tests that the command is locked while running.
-     */
-    public function testIsLockedWhileRunning()
-    {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.project_dir', 'foobar');
-
-        $lock = new LockHandler('contao:install', sys_get_temp_dir().'/'.md5('foobar'));
-        $lock->lock();
-
-        $command = new InstallCommand($this->getRootDir(), 'files', $this->getRootDir().'/assets/images');
-        $command->setContainer($container);
-
-        $tester = new CommandTester($command);
-
-        $code = $tester->execute([]);
-
-        $this->assertSame(1, $code);
-        $this->assertContains('The command is already running in another process.', $tester->getDisplay());
-
-        $lock->release();
     }
 }

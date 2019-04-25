@@ -15,7 +15,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Filesystem\LockHandler;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -34,29 +33,6 @@ class AutomatorCommandTest extends TestCase
         $command->setFramework($this->mockContaoFramework());
 
         $this->assertContains('The name of the task:', $command->__toString());
-    }
-
-    /**
-     * Tests that the command is locked while running.
-     */
-    public function testIsLockedWhileRunning()
-    {
-        $lock = new LockHandler('contao:automator', sys_get_temp_dir().'/'.md5('foobar'));
-        $lock->lock();
-
-        $command = new AutomatorCommand('contao:automator');
-        $command->setApplication($this->mockApplication());
-        $command->setFramework($this->mockContaoFramework());
-
-        $tester = new CommandTester($command);
-        $tester->setInputs(["\n"]);
-
-        $code = $tester->execute(['command' => $command->getName()]);
-
-        $this->assertSame(1, $code);
-        $this->assertContains('The command is already running in another process.', $tester->getDisplay());
-
-        $lock->release();
     }
 
     /**

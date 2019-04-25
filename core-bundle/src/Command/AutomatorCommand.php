@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Command;
 use Contao\Automator;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,7 +26,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareInterface
+class AutomatorCommand extends Command implements FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
 
@@ -64,7 +65,7 @@ class AutomatorCommand extends AbstractLockedCommand implements FrameworkAwareIn
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->framework->initialize();
 

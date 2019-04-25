@@ -13,6 +13,7 @@ namespace Contao\CoreBundle\Command;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\Dbafs;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -21,7 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class FilesyncCommand extends AbstractLockedCommand implements FrameworkAwareInterface
+class FilesyncCommand extends Command implements FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
 
@@ -39,7 +40,7 @@ class FilesyncCommand extends AbstractLockedCommand implements FrameworkAwareInt
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->framework->initialize();
 
