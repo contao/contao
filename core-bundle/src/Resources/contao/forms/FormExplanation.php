@@ -37,10 +37,7 @@ class FormExplanation extends \Widget
 	/**
 	 * Do not validate
 	 */
-	public function validate()
-	{
-		return;
-	}
+	public function validate() {}
 
 	/**
 	 * Generate the widget and return it as string

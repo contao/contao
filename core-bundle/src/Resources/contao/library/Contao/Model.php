@@ -576,7 +576,7 @@ abstract class Model
 	public function getRelated($strKey, array $arrOptions=array())
 	{
 		// The related model has been loaded before
-		if (array_key_exists($strKey, $this->arrRelated))
+		if (\array_key_exists($strKey, $this->arrRelated))
 		{
 			return $this->arrRelated[$strKey];
 		}

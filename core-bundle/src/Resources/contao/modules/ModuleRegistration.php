@@ -370,7 +370,7 @@ class ModuleRegistration extends \Module
 		$arrData['dateAdded'] = $arrData['tstamp'];
 
 		// Set default groups
-		if (!array_key_exists('groups', $arrData))
+		if (!\array_key_exists('groups', $arrData))
 		{
 			$arrData['groups'] = $this->reg_groups;
 		}

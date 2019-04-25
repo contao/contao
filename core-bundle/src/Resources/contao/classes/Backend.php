@@ -297,6 +297,8 @@ abstract class Backend extends \Controller
 			}
 		}
 
+		unset($arrGroup);
+
 		$this->import('BackendUser', 'User');
 
 		// Dynamically add the "personal data" module (see #4193)

@@ -110,7 +110,7 @@ class TimePeriod extends \Widget
 	{
 		if (empty($this->varValue) && empty($_POST) && $arrOption['default'])
 		{
-			return parent::optionSelected(1, 1);
+			return $this->optionSelected(1, 1);
 		}
 
 		if (empty($this->varValue) || !\is_array($this->varValue))
@@ -118,7 +118,7 @@ class TimePeriod extends \Widget
 			return '';
 		}
 
-		return parent::optionSelected($arrOption['value'], $this->varValue['unit']);
+		return $this->optionSelected($arrOption['value'], $this->varValue['unit']);
 	}
 
 	/**

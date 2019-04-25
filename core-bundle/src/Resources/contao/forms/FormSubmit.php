@@ -84,10 +84,7 @@ class FormSubmit extends \Widget
 	/**
 	 * Do not validate
 	 */
-	public function validate()
-	{
-		return;
-	}
+	public function validate() {}
 
 	/**
 	 * Parse the template file and return it as string

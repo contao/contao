@@ -68,8 +68,5 @@ class ContentAlias extends \ContentElement
 	/**
 	 * Generate the content element
 	 */
-	protected function compile()
-	{
-		return;
-	}
+	protected function compile() {}
 }

@@ -397,7 +397,7 @@ EOF;
      */
     private function getController(Request $request = null)
     {
-        parent::setUp();
+        $this->setUp();
 
         if (null === $request) {
             $request = new Request();

@@ -345,7 +345,7 @@ class Config
 	 */
 	public static function has($strKey)
 	{
-		return array_key_exists($strKey, $GLOBALS['TL_CONFIG']);
+		return \array_key_exists($strKey, $GLOBALS['TL_CONFIG']);
 	}
 
 	/**

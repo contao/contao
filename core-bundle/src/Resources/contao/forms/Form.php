@@ -91,8 +91,6 @@ class Form extends \Hybrid
 
 	/**
 	 * Generate the form
-	 *
-	 * @return string
 	 */
 	protected function compile()
 	{
