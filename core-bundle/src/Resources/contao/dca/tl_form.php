@@ -515,7 +515,7 @@ class tl_form extends Contao\Backend
 	public function getAllTables()
 	{
 		$arrTables = $this->Database->listTables();
-		$arrViews = System::getContainer()->get('database_connection')->getSchemaManager()->listViews();
+		$arrViews = Contao\System::getContainer()->get('database_connection')->getSchemaManager()->listViews();
 
 		if (!empty($arrViews))
 		{

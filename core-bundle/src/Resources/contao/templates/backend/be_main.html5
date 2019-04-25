@@ -78,7 +78,7 @@
       <?php $this->block('left'); ?>
         <?php if (!$this->isPopup): ?>
           <aside id="left">
-            <?= $this->menu; ?>
+            <?= $this->menu ?>
             <div class="version">
               <?php $this->block('version'); ?>
                 <?= $this->version ?><br><?= $this->learnMore ?>

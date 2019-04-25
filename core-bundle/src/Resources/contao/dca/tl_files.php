@@ -420,7 +420,7 @@ class tl_files extends Contao\Backend
 				case 'source':
 					if (!$this->User->hasAccess('f5', 'fop'))
 					{
-						throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to edit the source of file "' . Input::get('id', true) . '".');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to edit the source of file "' . Contao\Input::get('id', true) . '".');
 					}
 					break;
 
