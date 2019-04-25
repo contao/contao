@@ -208,8 +208,8 @@ class ModuleArticle extends Module
 		{
 			@trigger_error('Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-			$this->Template->printable = true;
-			$this->Template->pdfButton = true;
+			$this->Template->printable = !empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']);
+			$this->Template->pdfButton = $this->Template->printable;
 		}
 
 		// New structure
@@ -219,12 +219,21 @@ class ModuleArticle extends Module
 
 			if (!empty($options) && \is_array($options))
 			{
-				$this->Template->printable = true;
-				$this->Template->printButton = \in_array('print', $options);
-				$this->Template->pdfButton = \in_array('pdf', $options);
-				$this->Template->facebookButton = \in_array('facebook', $options);
-				$this->Template->twitterButton = \in_array('twitter', $options);
-				$this->Template->gplusButton = \in_array('gplus', $options);
+				// Remove the PDF option if there is no PDF handler (see #417)
+				if (empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']) && ($key = array_search('pdf', $options)) !== false)
+				{
+					unset($options[$key]);
+				}
+
+				if (!empty($options))
+				{
+					$this->Template->printable = true;
+					$this->Template->printButton = \in_array('print', $options);
+					$this->Template->pdfButton = \in_array('pdf', $options);
+					$this->Template->facebookButton = \in_array('facebook', $options);
+					$this->Template->twitterButton = \in_array('twitter', $options);
+					$this->Template->gplusButton = \in_array('gplus', $options);
+				}
 			}
 		}
 

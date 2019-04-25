@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Hide the "print article as PDF" link if there is no PDF handler (see #417).
  * Correctly handle dates in the news bundle (see #436).
  * Also show future news items if the "show all news items" option is selected (see #419).
 
