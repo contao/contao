@@ -1,5 +1,10 @@
 # Change log
 
+## DEV
+
+ * Correctly handle dates in the news bundle (see #436).
+ * Also show future news items if the "show all news items" option is selected (see #419).
+
 ## 4.7.4 (2019-04-10)
 
  * Correctly copy multiple events into an empty calendar (see #427).

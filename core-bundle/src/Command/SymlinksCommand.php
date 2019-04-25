@@ -26,7 +26,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Lock\LockInterface;
 
 /**
  * Symlinks the public resources into the web directory.
@@ -74,23 +73,17 @@ class SymlinksCommand extends Command
     private $eventDispatcher;
 
     /**
-     * @var LockInterface
-     */
-    private $lock;
-
-    /**
      * @var int
      */
     private $statusCode = 0;
 
-    public function __construct(string $rootDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher, LockInterface $lock)
+    public function __construct(string $rootDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher)
     {
         $this->rootDir = $rootDir;
         $this->uploadPath = $uploadPath;
         $this->logsDir = $logsDir;
         $this->resourceFinder = $resourceFinder;
         $this->eventDispatcher = $eventDispatcher;
-        $this->lock = $lock;
 
         parent::__construct();
     }
@@ -114,12 +107,6 @@ class SymlinksCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (!$this->lock->acquire()) {
-            $output->writeln('The command is already running in another process.');
-
-            return 1;
-        }
-
         $this->io = new SymfonyStyle($input, $output);
         $this->webDir = rtrim($input->getArgument('target'), '/');
 
@@ -129,8 +116,6 @@ class SymlinksCommand extends Command
             $this->io->newLine();
             $this->io->table(['', 'Symlink', 'Target / Error'], $this->rows);
         }
-
-        $this->lock->release();
 
         return $this->statusCode;
     }

@@ -231,7 +231,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			(
 				array('tl_news', 'loadTime')
 			),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) NOT NULL default '0'"
 		),
 		'pageTitle' => array
 		(

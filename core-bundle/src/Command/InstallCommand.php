@@ -18,7 +18,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Lock\LockInterface;
 
 /**
  * Installs the required Contao directories.
@@ -56,21 +55,15 @@ class InstallCommand extends Command
     private $imageDir;
 
     /**
-     * @var LockInterface
-     */
-    private $lock;
-
-    /**
      * @var string
      */
     private $webDir;
 
-    public function __construct(string $rootDir, string $uploadPath, string $imageDir, LockInterface $lock)
+    public function __construct(string $rootDir, string $uploadPath, string $imageDir)
     {
         $this->rootDir = $rootDir;
         $this->uploadPath = $uploadPath;
         $this->imageDir = $imageDir;
-        $this->lock = $lock;
 
         parent::__construct();
     }
@@ -94,12 +87,6 @@ class InstallCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (!$this->lock->acquire()) {
-            $output->writeln('The command is already running in another process.');
-
-            return 1;
-        }
-
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
         $this->webDir = rtrim($input->getArgument('target'), '/');
@@ -111,8 +98,6 @@ class InstallCommand extends Command
             $this->io->newLine();
             $this->io->listing($this->rows);
         }
-
-        $this->lock->release();
 
         return 0;
     }
