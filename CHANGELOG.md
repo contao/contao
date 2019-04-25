@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Correctly handle dates in the news bundle (see #436).
  * Also show future news items if the "show all news items" option is selected (see #419).
 
 ## 4.4.38 (2019-04-10)
