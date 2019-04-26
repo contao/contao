@@ -517,7 +517,7 @@ class InsertTags extends Controller
 				case 'article_open':
 				case 'article_url':
 				case 'article_title':
-					if (($objArticle = ArticleModel::findByIdOrAlias($elements[1])) === null || !(($objPid = $objArticle->getRelated('pid')) instanceof PageModel))
+					if (!(($objArticle = ArticleModel::findByIdOrAlias($elements[1])) instanceof ArticleModel) || !(($objPid = $objArticle->getRelated('pid')) instanceof PageModel))
 					{
 						break;
 					}

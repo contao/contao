@@ -457,7 +457,7 @@ abstract class Events extends Module
 
 			// Link to an article
 			case 'article':
-				if (($objArticle = ArticleModel::findByPk($objEvent->articleId)) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
+				if (($objArticle = ArticleModel::findByPk($objEvent->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
 
