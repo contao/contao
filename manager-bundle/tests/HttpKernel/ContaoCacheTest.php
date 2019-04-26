@@ -40,10 +40,47 @@ class ContaoCacheTest extends ContaoTestCase
         $this->assertInstanceOf(CleanupCacheTagsListener::class, $postHandleListeners[0][0]);
     }
 
+    /**
+     * @dataProvider cookeWhitelistProvider
+     */
+    public function testCookieWhiteListEnvVariable(string $env, array $expectedList): void
+    {
+        putenv('COOKIE_WHITELIST='.$env);
+
+        $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
+        $dispatcher = $cache->getEventDispatcher();
+
+        $preHandle = $dispatcher->getListeners(Events::PRE_HANDLE);
+        $cookieSubscriber = $preHandle[0][0];
+
+        $this->assertSame($expectedList, $cookieSubscriber->getWhitelist());
+
+        // Cleanup
+        putenv('COOKIE_WHITELIST=null');
+    }
+
     public function testCreatesTheCacheStore(): void
     {
         $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
 
         $this->assertInstanceOf(Psr6Store::class, $cache->getStore());
+    }
+
+    public function cookeWhitelistProvider(): \Generator
+    {
+        yield [
+            '',
+            [],
+        ];
+
+        yield [
+            'PHPSESSID',
+            ['PHPSESSID'],
+        ];
+
+        yield [
+            'PHPSESSID,^my-regex$,another_cookie',
+            ['PHPSESSID', '^my-regex$', 'another_cookie'],
+        ];
     }
 }

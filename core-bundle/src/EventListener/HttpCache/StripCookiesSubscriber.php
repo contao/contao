@@ -48,6 +48,11 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         $this->whitelist = $whitelist;
     }
 
+    public function getWhitelist(): array
+    {
+        return $this->whitelist;
+    }
+
     public function preHandle(CacheEvent $event): void
     {
         $request = $event->getRequest();
