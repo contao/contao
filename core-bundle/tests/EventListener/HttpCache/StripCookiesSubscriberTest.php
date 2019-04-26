@@ -71,7 +71,7 @@ class StripCookiesSubscriberTest extends TestCase
         ];
 
         yield [
-            ['PHPSESSID' => 'foobar', '_ga' => 'value'],
+            ['PHPSESSID' => 'foobar', '_ga' => 'value', '_pk_ref' => 'value', '_pk_hsr' => 'value'],
             ['PHPSESSID' => 'foobar'],
         ];
 
