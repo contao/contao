@@ -51,7 +51,7 @@ class CacheListener
         }
 
         // 3. If the response defines Vary: Cookie and the request did provide at least one cookie.
-        if (\in_array('cookie', $response->getVary(), true) && $request->cookies->count()) {
+        if (\in_array('cookie', array_map('strtolower', $response->getVary()), true) && $request->cookies->count()) {
             $response->setPrivate();
 
             return;
