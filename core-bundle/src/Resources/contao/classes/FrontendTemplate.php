@@ -356,16 +356,6 @@ class FrontendTemplate extends Template
 			return $response->setPrivate();
 		}
 
-		// Do not cache response if the response contains cookies or the current request is considered private
-		if (0 !== \count($response->headers->getCookies()) || $this->isCurrentRequestPrivate())
-		{
-			$response->headers->set('Cache-Control', 'no-cache, no-store');
-
-			return $response->setPrivate();
-		}
-
-		// From here on, we have cacheable requests.
-
 		// Private cache
 		if ($objPage->clientCache > 0)
 		{
@@ -397,40 +387,17 @@ class FrontendTemplate extends Template
 			if (!$objPage->alwaysLoadFromCache) {
 				$response->setVary(array('Cookie'));
 			}
-		}
 
-		// Tag the response
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			/** @var ResponseTagger $responseTagger */
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array('contao.db.tl_page.' . $objPage->id));
+			// Tag the response with cache tags für the shared cache only
+			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+			{
+				/** @var ResponseTagger $responseTagger */
+				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+				$responseTagger->addTags(array('contao.db.tl_page.' . $objPage->id));
+			}
 		}
 
 		return $response;
-	}
-
-	private function isCurrentRequestPrivate(): bool
-	{
-		/** @var \Symfony\Component\HttpFoundation\Request $request */
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if (null === $request)
-		{
-			return false;
-		}
-
-		if ($request->cookies->count())
-		{
-			return true;
-		}
-
-		if ($request->headers->has('Authorization'))
-		{
-			return true;
-		}
-
-		return false;
 	}
 }
 

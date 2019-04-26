@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\HttpKernel;
 
+use Contao\CoreBundle\EventListener\HttpCache\StripCookiesSubscriber;
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
 use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
@@ -36,6 +37,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     {
         parent::__construct($kernel, $cacheDir);
 
+        $this->addSubscriber(new StripCookiesSubscriber(array_filter(explode(',', getenv('COOKIE_WHITELIST') ?: ''))));
         $this->addSubscriber(new PurgeListener());
         $this->addSubscriber(new PurgeTagsListener());
         $this->addSubscriber(new CleanupCacheTagsListener());
