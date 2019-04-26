@@ -75,7 +75,7 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
         foreach ($cookies as $name) {
             foreach ($list as $entry) {
-                $matches = preg_match('/'.$entry.'/', $name);
+                $matches = preg_match('/'.$entry.'/i', $name);
 
                 if ($isWhitelist && !$matches) {
                     $request->cookies->remove($name);
