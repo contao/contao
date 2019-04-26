@@ -35,6 +35,7 @@ use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\EventListener\BackendMenuListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
+use Contao\CoreBundle\EventListener\CacheListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
@@ -308,6 +309,28 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(6, $tags['kernel.event_listener'][0]['priority']);
+    }
+
+    public function testRegistersTheCacheListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.cache'));
+
+        $definition = $this->container->getDefinition('contao.listener.cache');
+
+        $this->assertSame(CacheListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
+        $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
+
+        // Ensure it's registered after the MergeHeaderListener
+        $mergeHeadersListenerDefinition = $this->container->getDefinition('contao.listener.merge_http_headers');
+        $mergeHeadersListenerTags = $mergeHeadersListenerDefinition->getTags();
+
+        $this->assertTrue($tags['kernel.event_listener'][0]['priority'] ?? 0 < $mergeHeadersListenerTags['kernel.event_listener'][0]['priority'] ?? 0);
     }
 
     public function testRegistersTheClearSessionDataListener(): void
