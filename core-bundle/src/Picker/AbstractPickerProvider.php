@@ -124,7 +124,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      */
     protected function getInsertTag(PickerConfig $config, string $default): string
     {
-        if ($insertTag = $config->getExtra('insertTag')) {
+        if ($insertTag = $config->getExtraForProvider('insertTag', $this->getName())) {
             return (string) $insertTag;
         }
 

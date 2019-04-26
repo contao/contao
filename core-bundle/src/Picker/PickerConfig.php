@@ -71,6 +71,15 @@ class PickerConfig implements \JsonSerializable
         return $this->current;
     }
 
+    /**
+     * Checks if there's an extra value for a given provider and if not,
+     * falls back to the general extra.
+     */
+    public function getExtraForProvider(string $name, string $provider)
+    {
+        return $this->extras[$provider][$name] ?? $this->getExtra($name);
+    }
+
     public function getExtra(string $name)
     {
         return $this->extras[$name] ?? null;
