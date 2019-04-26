@@ -426,8 +426,7 @@ class InsertTags extends Controller
 							case 'forward':
 								if ($objNextPage->jumpTo)
 								{
-									/** @var PageModel $objNext */
-									$objNext = $objNextPage->getRelated('jumpTo');
+									$objNext = PageModel::findPublishedById($objNextPage->jumpTo);
 								}
 								else
 								{
