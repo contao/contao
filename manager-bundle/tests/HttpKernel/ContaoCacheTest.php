@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\HttpKernel;
 
+use Contao\CoreBundle\EventListener\HttpCache\StripCookiesSubscriber;
 use Contao\ManagerBundle\HttpKernel\ContaoCache;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\TestCase\ContaoTestCase;
@@ -27,8 +28,10 @@ class ContaoCacheTest extends ContaoTestCase
     {
         $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
         $dispatcher = $cache->getEventDispatcher();
+        $preHandle = $dispatcher->getListeners(Events::PRE_HANDLE);
         $preInvalidateListeners = $dispatcher->getListeners(Events::PRE_INVALIDATE);
 
+        $this->assertInstanceOf(StripCookiesSubscriber::class, $preHandle[0][0]);
         $this->assertInstanceOf(PurgeListener::class, $preInvalidateListeners[0][0]);
         $this->assertInstanceOf(PurgeTagsListener::class, $preInvalidateListeners[1][0]);
 
