@@ -29,7 +29,7 @@ class CacheListenerTest extends TestCase
         // Public response with cookie, should be turned into a private response if it was a master request
         $response = new Response();
         $response->setPublic();
-        $response->headers->setCookie(Cookie::create('foobar', 'foobar'));
+        $response->headers->setCookie(new Cookie('foobar', 'foobar'));
 
         $event = new FilterResponseEvent(
             $this->createMock(KernelInterface::class),
@@ -94,7 +94,7 @@ class CacheListenerTest extends TestCase
     {
         $response = new Response();
         $response->setPublic();
-        $response->headers->setCookie(Cookie::create('foobar', 'foobar'));
+        $response->headers->setCookie(new Cookie('foobar', 'foobar'));
 
         $event = new FilterResponseEvent(
             $this->createMock(KernelInterface::class),
