@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Request;
 class StripCookiesSubscriber implements EventSubscriberInterface
 {
     private const BLACKLIST = [
-
         // Modals are always for JS only
         '^(.*)?modal(.*)?$',
 
@@ -45,6 +44,11 @@ class StripCookiesSubscriber implements EventSubscriberInterface
     public function preHandle(CacheEvent $event): void
     {
         $request = $event->getRequest();
+
+        // Not a cacheable request anyway? Then we don't care
+        if (!$request->isMethodCacheable()) {
+            return;
+        }
 
         if (!$request->cookies->count()) {
             return;
