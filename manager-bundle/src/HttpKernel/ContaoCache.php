@@ -28,9 +28,16 @@ class ContaoCache extends HttpCache implements CacheInvalidation
 {
     use EventDispatchingHttpCache;
 
+    /**
+     * @var bool
+     */
+    private $isDebug;
+
     public function __construct(ContaoKernel $kernel, string $cacheDir = null)
     {
         parent::__construct($kernel, $cacheDir);
+
+        $this->isDebug = $kernel->isDebug();
 
         $this->addSubscriber(new StripCookiesSubscriber(array_filter(explode(',', getenv('COOKIE_WHITELIST') ?: ''))));
         $this->addSubscriber(new PurgeListener());
@@ -44,6 +51,20 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     public function fetch(Request $request, $catch = false): Response
     {
         return parent::fetch($request, $catch);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getOptions()
+    {
+        $options = parent::getOptions();
+
+        // Only works as of Symfony 4.3+
+        $options['trace_level'] = $this->isDebug ? 'full' : 'short';
+        $options['trace_header'] = 'Contao-Cache';
+
+        return $options;
     }
 
     /**
