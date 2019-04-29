@@ -21,21 +21,21 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 {
     private const BLACKLIST = [
         // Modals are always for JS only
-        '^(.*)?modal(.*)?$',
+        '(.*)?modal(.*)?',
 
         // Google Analytics (https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage)
-        '^_ga$',
-        '^_gid$',
-        '^_gat$',
-        '^AMP_TOKEN$',
-        '^_gac_.+$',
+        '_ga',
+        '_gid',
+        '_gat',
+        'AMP_TOKEN',
+        '_gac_.+',
 
         // Matomo (https://matomo.org/faq/general/faq_146/)
-        '^_pk_id$',
-        '^_pk_ref$',
-        '^_pk_ses$',
-        '^_pk_cvar$',
-        '^_pk_hsr$',
+        '_pk_id',
+        '_pk_ref',
+        '_pk_ses',
+        '_pk_cvar',
+        '_pk_hsr',
     ];
 
     /**
@@ -91,7 +91,7 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
         foreach ($cookies as $name) {
             foreach ($list as $entry) {
-                $matches = preg_match('/'.$entry.'/i', $name);
+                $matches = preg_match('/^'.$entry.'$/i', $name);
 
                 if ($isWhitelist && !$matches) {
                     $request->cookies->remove($name);
