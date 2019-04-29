@@ -38,7 +38,7 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         '_pk_hsr',
 
         // Cloudflare
-        '__cfduid'
+        '__cfduid',
     ];
 
     /**
