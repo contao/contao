@@ -133,7 +133,7 @@
         "composer/composer": "^1.0",
         "contao/monorepo-tools": "dev-master",
         "contao/phpstan": "^0.4",
-        "contao/test-case": "^2.0",
+        "contao/test-case": "^2.1",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/event-manager": "^1.0",
         "doctrine/orm": "^2.5",

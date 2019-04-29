@@ -27,7 +27,7 @@ class OptInTokenTest extends ContaoTestCase
     public function testReturnsTheIdentifier(): void
     {
         /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, ['token' => 'foobar']);
+        $model = $this->mockClassWithProperties(OptInModel::class, ['token' => 'foobar']);
         $token = $this->getToken($model);
 
         $this->assertSame('foobar', $token->getIdentifier());
@@ -36,7 +36,7 @@ class OptInTokenTest extends ContaoTestCase
     public function testReturnsTheEmailAddress(): void
     {
         /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, ['email' => 'foo@bar.com']);
+        $model = $this->mockClassWithProperties(OptInModel::class, ['email' => 'foo@bar.com']);
         $token = $this->getToken($model);
 
         $this->assertSame('foo@bar.com', $token->getEmail());
@@ -45,7 +45,7 @@ class OptInTokenTest extends ContaoTestCase
     public function testInvalidatesAToken(): void
     {
         /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, ['invalidatedThrough' => 'foo']);
+        $model = $this->mockClassWithProperties(OptInModel::class, ['invalidatedThrough' => 'foo']);
         $token = $this->getToken($model);
 
         $this->assertFalse($token->isValid());
@@ -59,7 +59,7 @@ class OptInTokenTest extends ContaoTestCase
         ];
 
         /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model = $this->mockClassWithProperties(OptInModel::class, $properties);
         $model
             ->expects($this->once())
             ->method('getRelatedRecords')
@@ -81,7 +81,7 @@ class OptInTokenTest extends ContaoTestCase
         ];
 
         /** @var OptInModel|MockObject $related */
-        $related = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $related = $this->mockClassWithProperties(OptInModel::class, $properties);
         $related
             ->expects($this->once())
             ->method('save')
@@ -110,7 +110,7 @@ class OptInTokenTest extends ContaoTestCase
         ];
 
         /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model = $this->mockClassWithProperties(OptInModel::class, $properties);
         $model
             ->expects($this->once())
             ->method('getRelatedRecords')
@@ -133,7 +133,7 @@ class OptInTokenTest extends ContaoTestCase
         ];
 
         /** @var OptInModel|MockObject $related */
-        $related = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $related = $this->mockClassWithProperties(OptInModel::class, $properties);
         $related
             ->expects($this->never())
             ->method('save')
@@ -162,7 +162,7 @@ class OptInTokenTest extends ContaoTestCase
         ];
 
         /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model = $this->mockClassWithProperties(OptInModel::class, $properties);
         $model
             ->expects($this->once())
             ->method('getRelatedRecords')
@@ -183,7 +183,7 @@ class OptInTokenTest extends ContaoTestCase
         ];
 
         /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model = $this->mockClassWithProperties(OptInModel::class, $properties);
         $token = $this->getToken($model);
 
         $this->expectException(OptInTokenAlreadyConfirmedException::class);
@@ -200,7 +200,7 @@ class OptInTokenTest extends ContaoTestCase
         ];
 
         /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model = $this->mockClassWithProperties(OptInModel::class, $properties);
         $token = $this->getToken($model);
 
         $this->expectException(OptInTokenNoLongerValidException::class);
@@ -219,7 +219,7 @@ class OptInTokenTest extends ContaoTestCase
         ];
 
         /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model = $this->mockClassWithProperties(OptInModel::class, $properties);
         $model
             ->expects($this->once())
             ->method('save')
@@ -252,7 +252,7 @@ class OptInTokenTest extends ContaoTestCase
         ];
 
         /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model = $this->mockClassWithProperties(OptInModel::class, $properties);
         $token = $this->getToken($model);
 
         $this->expectException(OptInTokenAlreadyConfirmedException::class);
@@ -269,7 +269,7 @@ class OptInTokenTest extends ContaoTestCase
         ];
 
         /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model = $this->mockClassWithProperties(OptInModel::class, $properties);
         $token = $this->getToken($model);
 
         $this->expectException(OptInTokenNoLongerValidException::class);
@@ -288,7 +288,7 @@ class OptInTokenTest extends ContaoTestCase
         ];
 
         /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model = $this->mockClassWithProperties(OptInModel::class, $properties);
         $model
             ->expects($this->never())
             ->method('save')
@@ -312,7 +312,7 @@ class OptInTokenTest extends ContaoTestCase
         ];
 
         /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model = $this->mockClassWithProperties(OptInModel::class, $properties);
         $model
             ->expects($this->never())
             ->method('save')

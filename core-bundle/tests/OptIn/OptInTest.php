@@ -23,7 +23,7 @@ class OptInTest extends ContaoTestCase
 {
     public function testCreatesAToken(): void
     {
-        $model = $this->mockClassWithGetterSetter(OptInModel::class);
+        $model = $this->mockClassWithProperties(OptInModel::class);
         $model
             ->expects($this->once())
             ->method('save')
