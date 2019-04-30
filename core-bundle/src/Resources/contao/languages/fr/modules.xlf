@@ -87,6 +87,7 @@
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
+        <target>Double opt-in</target>
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
         <source>Manage the double opt-in tokens</source>
@@ -129,9 +130,11 @@
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
+        <target>Sécurité</target>
       </trans-unit>
       <trans-unit id="MOD.security.1">
         <source>Secure your account</source>
+        <target>Sécuriser votre compte</target>
       </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>

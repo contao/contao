@@ -335,6 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_user.useTwoFactor">
         <source>Use two-factor authentication</source>
+        <target>Utiliser la vérification en deux étapes</target>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>

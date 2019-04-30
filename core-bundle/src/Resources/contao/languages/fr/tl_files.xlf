@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_files.syncExclude.0">
         <source>Do not synchronize</source>
+        <target>Ne pas synchroniser</target>
       </trans-unit>
       <trans-unit id="tl_files.syncExclude.1">
         <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>Ne synchronisez pas le dossier et ses sous-dossiers avec la base de données.</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
@@ -129,9 +131,11 @@
       </trans-unit>
       <trans-unit id="tl_files.dropzoneFileTooBig">
         <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>Le fichier est trop volumineux ({{taille du fichier}} Mio). La taille de fichier maximale est {{maxFilesize}} Mio.</target>
       </trans-unit>
       <trans-unit id="tl_files.dropzoneInvalidType">
         <source>Files of this type cannot be uploaded.</source>
+        <target>Les fichiers de ce type ne peuvent pas être téléversés.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>

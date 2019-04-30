@@ -35,6 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
+        <target>Afficher dans le navigateur</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.1">
         <source>Show the file in the browser instead of opening the download dialog.</source>

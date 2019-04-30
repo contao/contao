@@ -175,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
         <source>Use HTTPS and automatically redirect HTTP requests.</source>
+        <target>Utilisez HTTPS et redirigez automatiquement les requêtes HTTP.</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>
@@ -606,12 +607,15 @@
       </trans-unit>
       <trans-unit id="CACHE.7776000">
         <source>3 months</source>
+        <target>3 mois</target>
       </trans-unit>
       <trans-unit id="CACHE.15552000">
         <source>6 months</source>
+        <target>6 mois</target>
       </trans-unit>
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
+        <target>1 an</target>
       </trans-unit>
     </body>
   </file>

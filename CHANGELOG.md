@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.7.5 (2019-04-30)
 
  * Prevent SQL injections in the file manager search (see CVE-2019-11512).
  * Hide the "print article as PDF" link if there is no PDF handler (see #417).
