@@ -900,98 +900,108 @@ class RoutingTest extends WebTestCase
 
     public function getRootAliasesWithLocale(): \Generator
     {
-        return [
-            'Redirects to the language root if one of the accept languages matches' => [
-                '/',
-                301,
-                'Redirecting to http://same-domain-root.local/de/',
-                'de,en',
-                'same-domain-root.local',
-            ],
-            'Redirects to the language fallback if one of the accept languages matches' => [
-                '/',
-                301,
-                'Redirecting to http://same-domain-root.local/en/',
-                'en,de',
-                'same-domain-root.local',
-            ],
-            'Redirects to the language fallback if none of the accept languages matches' => [
-                '/',
-                301,
-                'Redirecting to http://same-domain-root.local/en/',
-                'fr,es',
-                'same-domain-root.local',
-            ],
-            'Redirects to "de" if "de-CH" is accepted and "de" is not' => [
-                '/',
-                301,
-                'Redirecting to http://same-domain-root.local/de/',
-                'de-CH',
-                'same-domain-root.local',
-            ],
-            'Ignores the case of the language code' => [
-                '/',
-                301,
-                'Redirecting to http://same-domain-root.local/de/',
-                'dE-at',
-                'same-domain-root.local',
-            ],
-            'Redirects to "en" if "de-CH" and "en" are accepted and "de" is not' => [
-                '/',
-                301,
-                'Redirecting to http://same-domain-root.local/en/',
-                'de-CH,en',
-                'same-domain-root.local',
-            ],
-            'Renders the 404 page if none of the accept languages matches' => [
-                '/',
-                404,
-                '(404 Not Found)',
-                'de,fr',
-                'root-without-fallback-language.local',
-            ],
-            'Renders the root page if the locale matches' => [
-                '/en/',
-                200,
-                'Index - Root with index page',
-                'en,de',
-                'root-with-index.local',
-            ],
-            'Renders the first language root if the locale matches' => [
-                '/en/',
-                200,
-                'English site - Same domain root English with index',
-                'en,de',
-                'same-domain-root-with-index.local',
-            ],
-            'Renders the second language root if the locale matches' => [
-                '/de/',
-                200,
-                'German site - Same domain root German with index',
-                'de,en',
-                'same-domain-root-with-index.local',
-            ],
-            'Renders the second language root if the locale matches regardless of accept language' => [
-                '/de/',
-                200,
-                'German site - Same domain root German with index',
-                'fr',
-                'same-domain-root-with-index.local',
-            ],
-            'Renders the 404 page if the locale does not match' => [
-                '/de/',
-                404,
-                '(404 Not Found)',
-                'de,fr',
-                'root-with-index.local',
-            ],
-            'Renders the 404 page if the locale does not exist' => [
-                '/fr/',
-                404,
-                '(404 Not Found)',
-                'de,fr',
-                'root-without-fallback-language.local',
-            ],
+        yield 'Redirects to the language root if one of the accept languages matches' => [
+            '/',
+            301,
+            'Redirecting to http://same-domain-root.local/de/',
+            'de,en',
+            'same-domain-root.local',
+        ];
+
+        yield 'Redirects to the language fallback if one of the accept languages matches' => [
+            '/',
+            301,
+            'Redirecting to http://same-domain-root.local/en/',
+            'en,de',
+            'same-domain-root.local',
+        ];
+
+        yield 'Redirects to the language fallback if none of the accept languages matches' => [
+            '/',
+            301,
+            'Redirecting to http://same-domain-root.local/en/',
+            'fr,es',
+            'same-domain-root.local',
+        ];
+
+        yield 'Redirects to "de" if "de-CH" is accepted and "de" is not' => [
+            '/',
+            301,
+            'Redirecting to http://same-domain-root.local/de/',
+            'de-CH',
+            'same-domain-root.local',
+        ];
+
+        yield 'Ignores the case of the language code' => [
+            '/',
+            301,
+            'Redirecting to http://same-domain-root.local/de/',
+            'dE-at',
+            'same-domain-root.local',
+        ];
+
+        yield 'Redirects to "en" if "de-CH" and "en" are accepted and "de" is not' => [
+            '/',
+            301,
+            'Redirecting to http://same-domain-root.local/en/',
+            'de-CH,en',
+            'same-domain-root.local',
+        ];
+
+        yield 'Renders the 404 page if none of the accept languages matches' => [
+            '/',
+            404,
+            '(404 Not Found)',
+            'de,fr',
+            'root-without-fallback-language.local',
+        ];
+
+        yield 'Renders the root page if the locale matches' => [
+            '/en/',
+            200,
+            'Index - Root with index page',
+            'en,de',
+            'root-with-index.local',
+        ];
+
+        yield 'Renders the first language root if the locale matches' => [
+            '/en/',
+            200,
+            'English site - Same domain root English with index',
+            'en,de',
+            'same-domain-root-with-index.local',
+        ];
+
+        yield 'Renders the second language root if the locale matches' => [
+            '/de/',
+            200,
+            'German site - Same domain root German with index',
+            'de,en',
+            'same-domain-root-with-index.local',
+        ];
+
+        yield 'Renders the second language root if the locale matches regardless of accept language' => [
+            '/de/',
+            200,
+            'German site - Same domain root German with index',
+            'fr',
+            'same-domain-root-with-index.local',
+        ];
+
+        yield 'Renders the 404 page if the locale does not match' => [
+            '/de/',
+            404,
+            '(404 Not Found)',
+            'de,fr',
+            'root-with-index.local',
+        ];
+
+        yield 'Renders the 404 page if the locale does not exist' => [
+            '/fr/',
+            404,
+            '(404 Not Found)',
+            'de,fr',
+            'root-without-fallback-language.local',
         ];
     }
 
