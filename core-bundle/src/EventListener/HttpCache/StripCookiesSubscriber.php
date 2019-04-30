@@ -93,20 +93,14 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
     private function filterCookies(Request $request, array $list, bool $isWhitelist = false): void
     {
-        $cookies = array_keys($request->cookies->all());
+        $removeCookies = preg_grep(
+            '/^(?:'.implode(')$|^(?:', $list).')$/i',
+            array_keys($request->cookies->all()),
+            $isWhitelist ? PREG_GREP_INVERT : 0
+        );
 
-        foreach ($cookies as $name) {
-            foreach ($list as $entry) {
-                $matches = preg_match('/^'.$entry.'$/i', $name);
-
-                if ($isWhitelist && !$matches) {
-                    $request->cookies->remove($name);
-                }
-
-                if (!$isWhitelist && $matches) {
-                    $request->cookies->remove($name);
-                }
-            }
+        foreach ($removeCookies as $name) {
+            $request->cookies->remove($name);
         }
     }
 }
