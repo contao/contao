@@ -341,18 +341,15 @@ abstract class Module extends Frontend
 					case 'forward':
 						if ($objSubpage->jumpTo)
 						{
-							/** @var PageModel $objNext */
-							$objNext = $objSubpage->getRelated('jumpTo');
+							$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
 						}
 						else
 						{
 							$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
 						}
 
-						$isInvisible = !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time());
-
 						// Hide the link if the target page is invisible
-						if (!$objNext instanceof PageModel || ($isInvisible && !BE_USER_LOGGED_IN))
+						if (!$objNext instanceof PageModel || (!$objNext->isPublic && !BE_USER_LOGGED_IN))
 						{
 							continue 2;
 						}

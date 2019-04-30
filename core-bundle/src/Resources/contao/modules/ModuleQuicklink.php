@@ -115,9 +115,17 @@ class ModuleQuicklink extends Module
 					break;
 
 				case 'forward':
-					if (($objNext = $objSubpage->getRelated('jumpTo')) instanceof PageModel || ($objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id)) instanceof PageModel)
+					if ($objSubpage->jumpTo)
 					{
-						/** @var PageModel $objNext */
+						$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
+					}
+					else
+					{
+						$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
+					}
+
+					if ($objNext instanceof PageModel)
+					{
 						$href = $objNext->getFrontendUrl();
 						break;
 					}

@@ -10,7 +10,7 @@
         <?php endforeach; ?>
       </video>
     <?php else: ?>
-      <audio<?= $this->size ?> preload="none"<?= $this->attributes ? ' ' . implode(' ', $this->attributes) : '' ?>>
+      <audio preload="<?= $this->preload ?>"<?= $this->attributes ? ' ' . implode(' ', $this->attributes) : '' ?>>
         <?php foreach ($this->files as $file): ?>
           <source type="<?= $file->mime ?>" src="<?= $file->path ?>" title="<?= $file->title ?>">
         <?php endforeach; ?>

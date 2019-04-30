@@ -16,7 +16,6 @@ use Contao\CoreBundle\Command\InstallCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Lock\LockInterface;
 
 class InstallCommandTest extends TestCase
 {
@@ -46,7 +45,7 @@ class InstallCommandTest extends TestCase
 
     public function testCreatesTheContaoFolders(): void
     {
-        $command = $this->mockCommand('files', $this->getTempDir().'/assets/images');
+        $command = new InstallCommand($this->getTempDir(), 'files', $this->getTempDir().'/assets/images');
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $output = $tester->getDisplay();
@@ -64,7 +63,7 @@ class InstallCommandTest extends TestCase
 
     public function testHandlesCustomFilesAndImagesPaths(): void
     {
-        $command = $this->mockCommand('files_test', $this->getTempDir().'/assets/images_test');
+        $command = new InstallCommand($this->getTempDir(), 'files_test', $this->getTempDir().'/assets/images_test');
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
@@ -72,32 +71,5 @@ class InstallCommandTest extends TestCase
         $this->assertSame(0, $code);
         $this->assertContains(' * files_test', $display);
         $this->assertContains(' * assets/images_test', $display);
-    }
-
-    public function testIsLockedWhileRunning(): void
-    {
-        $command = $this->mockCommand('files', $this->getTempDir().'/assets/images', true);
-        $tester = new CommandTester($command);
-        $code = $tester->execute([]);
-
-        $this->assertSame(1, $code);
-        $this->assertContains('The command is already running in another process.', $tester->getDisplay());
-    }
-
-    private function mockCommand(string $uploadPath, string $imageDir, bool $isLocked = false): InstallCommand
-    {
-        $lock = $this->createMock(LockInterface::class);
-        $lock
-            ->expects($this->once())
-            ->method('acquire')
-            ->willReturn(!$isLocked)
-        ;
-
-        $lock
-            ->expects($isLocked ? $this->never() : $this->once())
-            ->method('release')
-        ;
-
-        return new InstallCommand($this->getTempDir(), $uploadPath, $imageDir, $lock);
     }
 }

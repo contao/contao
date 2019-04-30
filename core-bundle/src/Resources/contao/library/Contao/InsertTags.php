@@ -426,8 +426,7 @@ class InsertTags extends Controller
 							case 'forward':
 								if ($objNextPage->jumpTo)
 								{
-									/** @var PageModel $objNext */
-									$objNext = $objNextPage->getRelated('jumpTo');
+									$objNext = PageModel::findPublishedById($objNextPage->jumpTo);
 								}
 								else
 								{
@@ -518,7 +517,7 @@ class InsertTags extends Controller
 				case 'article_open':
 				case 'article_url':
 				case 'article_title':
-					if (($objArticle = ArticleModel::findByIdOrAlias($elements[1])) === null || !(($objPid = $objArticle->getRelated('pid')) instanceof PageModel))
+					if (!(($objArticle = ArticleModel::findByIdOrAlias($elements[1])) instanceof ArticleModel) || !(($objPid = $objArticle->getRelated('pid')) instanceof PageModel))
 					{
 						break;
 					}

@@ -483,23 +483,12 @@ abstract class Frontend extends Controller
 
 		if (\is_array($intId))
 		{
-			if ($intId['id'] != '')
-			{
-				if ($intId['id'] != $objPage->id  || $blnForceRedirect)
-				{
-					$this->redirect($this->generateFrontendUrl($intId, $strParams, $strForceLang, true));
-				}
-			}
+			$intId = $intId['id'] ?? 0;
 		}
-		elseif ($intId > 0)
+
+		if ($intId > 0 && ($intId != $objPage->id || $blnForceRedirect) && ($objNextPage = PageModel::findPublishedById($intId)) !== null)
 		{
-			if ($intId != $objPage->id || $blnForceRedirect)
-			{
-				if (($objNextPage = PageModel::findPublishedById($intId)) !== null)
-				{
-					$this->redirect($objNextPage->getFrontendUrl($strParams, $strForceLang));
-				}
-			}
+			$this->redirect($objNextPage->getFrontendUrl($strParams, $strForceLang));
 		}
 
 		$this->reload();

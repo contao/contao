@@ -447,7 +447,7 @@ class Calendar extends Frontend
 				break;
 
 			case 'article':
-				if (($objArticle = ArticleModel::findByPk($objEvent->articleId)) !== null && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
+				if (($objArticle = ArticleModel::findByPk($objEvent->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
 				{
 					/** @var PageModel $objPid */
 					$link = ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));

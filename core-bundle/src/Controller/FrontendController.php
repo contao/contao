@@ -75,7 +75,7 @@ class FrontendController extends AbstractController
         $this->get('contao.framework')->initialize();
 
         if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
-            throw new UnauthorizedHttpException('Not authorized');
+            throw new UnauthorizedHttpException('', 'Not authorized');
         }
 
         /** @var PageError401 $pageHandler */
@@ -86,7 +86,7 @@ class FrontendController extends AbstractController
         } catch (ResponseException $e) {
             return $e->getResponse();
         } catch (InsufficientAuthenticationException $e) {
-            throw new UnauthorizedHttpException($e->getMessage());
+            throw new UnauthorizedHttpException('', $e->getMessage());
         }
     }
 

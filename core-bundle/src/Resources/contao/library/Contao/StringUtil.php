@@ -373,6 +373,8 @@ class StringUtil
 			}
 		}
 
+		unset($strEmail);
+
 		// Encode opening arrow brackets (see #3998)
 		$strString = preg_replace_callback('@</?([^\s<>/]*)@', function ($matches) use ($strAllowedTags)
 		{
@@ -584,7 +586,7 @@ class StringUtil
 
 		$evaluateExpression = function ($strExpression) use ($arrData)
 		{
-			if (!preg_match('/^([^=!<>\s]+)([=!<>]+)(.+)$/is', $strExpression, $arrMatches))
+			if (!preg_match('/^([^=!<>\s]+)([=!<>]+)(.+)$/s', $strExpression, $arrMatches))
 			{
 				return false;
 			}

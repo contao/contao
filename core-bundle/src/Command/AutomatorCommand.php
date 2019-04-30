@@ -20,7 +20,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Lock\LockInterface;
 
 /**
  * Runs Contao automator tasks on the command line.
@@ -37,15 +36,9 @@ class AutomatorCommand extends Command
      */
     private $framework;
 
-    /**
-     * @var LockInterface
-     */
-    private $lock;
-
-    public function __construct(ContaoFramework $framework, LockInterface $lock)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
-        $this->lock = $lock;
 
         parent::__construct();
     }
@@ -73,26 +66,17 @@ class AutomatorCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (!$this->lock->acquire()) {
-            $output->writeln('The command is already running in another process.');
-
-            return 1;
-        }
-
-        $return = 0;
-
         $this->framework->initialize();
 
         try {
             $this->runAutomator($input, $output);
         } catch (\InvalidArgumentException $e) {
             $output->writeln(sprintf('%s (see help contao:automator).', $e->getMessage()));
-            $return = 1;
+
+            return 1;
         }
 
-        $this->lock->release();
-
-        return $return;
+        return 0;
     }
 
     private function runAutomator(InputInterface $input, OutputInterface $output): void

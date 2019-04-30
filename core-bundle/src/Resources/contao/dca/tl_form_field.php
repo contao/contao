@@ -480,7 +480,7 @@ class tl_form_field extends Contao\Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' form field ID ' . $id . ' to form ID ' . $pid . '.');
 				}
 
-				if (Input::get('act') == 'create')
+				if (Contao\Input::get('act') == 'create')
 				{
 					break;
 				}
