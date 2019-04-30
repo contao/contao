@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Prevent SQL injections in the file manager search (see CVE-2019-11512).
  * Correctly handle dates in the news bundle (see #436).
  * Also show future news items if the "show all news items" option is selected (see #419).
 
