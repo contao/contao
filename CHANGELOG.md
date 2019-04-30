@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.39 (2019-04-30)
 
  * Prevent SQL injections in the file manager search (see CVE-2019-11512).
  * Correctly handle dates in the news bundle (see #436).
