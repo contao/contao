@@ -651,6 +651,7 @@ var AjaxRequest =
 	toggleFieldset: function(el, id, table) {
 		el.blur();
 		var fs = $('pal_' + id);
+		Backend.getScrollOffset();
 
 		if (fs.hasClass('collapsed')) {
 			fs.removeClass('collapsed');
@@ -992,10 +993,50 @@ var Backend =
 	},
 
 	/**
-	 * Get the current scroll offset and store it in a cookie
+	 * Store the current scroll offset in localstorage
 	 */
 	getScrollOffset: function() {
-		document.cookie = "BE_PAGE_OFFSET=" + window.getScroll().y + "; path=" + (Contao.path || '/');
+		window.localStorage.setItem('contao_backend_offset', parseInt(window.getScroll().y, 10) + window.location);
+	},
+
+	/**
+	 * Scrolls to the current offset if it was defined and gives the header the "down" CSS class.
+	 * It also removes the legacy BE_PAGE_OFFSET cookie.
+	 */
+	initScrollOffset: function() {
+		// Make sure we always kill the legacy cookie here
+		// That way it can be sent by the server but it wont be resent by the
+		// client in the next request
+		Cookie.dispose('BE_PAGE_OFFSET');
+
+		var item = window.localStorage.getItem('contao_backend_offset'), additionalOffset = 0;
+
+		if (!item) {
+			return;
+		}
+
+		// Remove local storage item again
+		window.localStorage.removeItem('contao_backend_offset');
+
+		var chunks = item.split(/^(\d*)/);
+
+		if (window.location != chunks[2]) {
+			return;
+		}
+
+		// Add class to header if possible
+		var header = window.document.getElementById('header');
+
+		if (header) {
+			header.addClass('down')
+		}
+
+		// Collect additional offset
+		$$('[data-additional-scroll-offset]').each(function(el) {
+			additionalOffset += el.get('data-additional-scroll-offset').toInt();
+		});
+
+		this.vScrollTo(chunks[1] + additionalOffset);
 	},
 
 	/**
