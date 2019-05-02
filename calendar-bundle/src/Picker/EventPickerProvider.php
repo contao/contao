@@ -47,9 +47,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
-
-        return false !== strpos($config->getValue(), $insertTagChunks[0]);
+        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG)[0]);
     }
 
     /**
@@ -72,9 +70,11 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
         }
 
         if ($this->supportsValue($config)) {
-            $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
-
-            $attributes['value'] = str_replace($insertTagChunks, '',  $config->getValue());
+            $attributes['value'] = str_replace(
+                $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG),
+                '',
+                $config->getValue()
+            );
         }
 
         return $attributes;
@@ -99,13 +99,13 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
             return $params;
         }
 
-        $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
+        $insertTagChunks = $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG);
 
         if (false === strpos($config->getValue(), $insertTagChunks[0])) {
             return $params;
         }
 
-        $value = str_replace($insertTagChunks, '',  $config->getValue());
+        $value = str_replace($insertTagChunks, '', $config->getValue());
 
         if (null !== ($calendarId = $this->getCalendarId($value))) {
             $params['table'] = 'tl_calendar_events';

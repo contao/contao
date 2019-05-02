@@ -66,9 +66,8 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return Validator::isUuid($value);
         }
 
-        $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
-
-        return false !== strpos($config->getValue(), $insertTagChunks[0]) || 0 === strpos($value, $this->uploadPath);
+        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG)[0])
+            || 0 === strpos($value, $this->uploadPath);
     }
 
     /**
@@ -105,7 +104,6 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
         $filesModel = $filesAdapter->findByPath(rawurldecode($value));
 
         if ($filesModel instanceof FilesModel) {
-
             return sprintf($this->getInsertTag($config, self::DEFAULT_INSERTTAG), StringUtil::binToUuid($filesModel->uuid));
         }
 
@@ -185,8 +183,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
         $value = $config->getValue();
 
         if ($value) {
-
-            $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
+            $insertTagChunks = $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG);
 
             if (false !== strpos($value, $insertTagChunks[0])) {
                 $value = str_replace($insertTagChunks, '', $value);

@@ -37,9 +37,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
-
-        return false !== strpos($config->getValue(), $insertTagChunks[0]);
+        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG)[0]);
     }
 
     /**
@@ -62,9 +60,11 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
         }
 
         if ($this->supportsValue($config)) {
-            $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
-
-            $attributes['value'] = str_replace($insertTagChunks, '',  $config->getValue());
+            $attributes['value'] = str_replace(
+                $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG),
+                '',
+                $config->getValue()
+            );
         }
 
         return $attributes;

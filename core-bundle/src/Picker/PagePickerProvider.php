@@ -41,9 +41,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return is_numeric($config->getValue());
         }
 
-        $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
-
-        return false !== strpos($config->getValue(), $insertTagChunks[0]);
+        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG)[0]);
     }
 
     /**
@@ -86,7 +84,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return $attributes;
         }
 
-        $insertTagChunks = explode('%s', $this->getInsertTag($config, self::DEFAULT_INSERTTAG), 2);
+        $insertTagChunks = $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG);
 
         if ($value && false !== strpos($value, $insertTagChunks[0])) {
             $attributes['value'] = str_replace($insertTagChunks, '', $value);
