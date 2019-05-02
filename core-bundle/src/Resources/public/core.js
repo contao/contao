@@ -993,10 +993,10 @@ var Backend =
 	},
 
 	/**
-	 * Store the current scroll offset in localstorage
+	 * Store the current scroll offset in sessionStorage
 	 */
 	getScrollOffset: function() {
-		window.localStorage.setItem('contao_backend_offset', parseInt(window.getScroll().y, 10) + window.location);
+		window.sessionStorage.setItem('contao_backend_offset', parseInt(window.getScroll().y, 10) + window.location);
 	},
 
 	/**
@@ -1009,14 +1009,14 @@ var Backend =
 		// client in the next request
 		Cookie.dispose('BE_PAGE_OFFSET');
 
-		var item = window.localStorage.getItem('contao_backend_offset'), additionalOffset = 0;
+		var item = window.sessionStorage.getItem('contao_backend_offset'), additionalOffset = 0;
 
 		if (!item) {
 			return;
 		}
 
-		// Remove local storage item again
-		window.localStorage.removeItem('contao_backend_offset');
+		// Remove session storage item again
+		window.sessionStorage.removeItem('contao_backend_offset');
 
 		var chunks = item.split(/^(\d*)/);
 
