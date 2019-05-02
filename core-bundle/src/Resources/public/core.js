@@ -1802,7 +1802,7 @@ var Backend =
 					size = el.getStyle('width') + '|' + el.getStyle('height');
 				}
 			});
-			window.localStorage.getItem('contao_table_wizard_cell_size', size);
+			window.localStorage.setItem('contao_table_wizard_cell_size', size);
 		} else if (size !== null) {
 			var chunks = size.split('|');
 			$$('.tl_tablewizard textarea').each(function(el) {
