@@ -1032,8 +1032,8 @@ var Backend =
 		}
 
 		// Collect additional offset
-		$$('[data-additional-scroll-offset]').each(function(el) {
-			additionalOffset += el.get('data-additional-scroll-offset').toInt();
+		$$('[data-additional-scroll-offset-relevant]').each(function(el) {
+			additionalOffset += el.getScrollSize().y;
 		});
 
 		this.vScrollTo(chunks[1] + additionalOffset);

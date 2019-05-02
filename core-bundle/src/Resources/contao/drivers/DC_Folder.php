@@ -455,7 +455,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').($blnClipboard ? '
-<div id="paste_hint" data-additional-scroll-offset="40">
+<div id="paste_hint" data-additional-scroll-offset-relevant>
   <p>'.$GLOBALS['TL_LANG']['MSC']['selectNewPosition'].'</p>
 </div>' : '').'
 <div class="tl_listing_container tree_view" id="tl_listing">'.($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb'] ?? '').((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
