@@ -1791,7 +1791,7 @@ var Backend =
 	 * @param {float} [factor] The resize factor
 	 */
 	tableWizardResize: function(factor) {
-		var size = Cookie.read('BE_CELL_SIZE');
+		var size = window.localStorage.getItem('contao_table_wizard_cell_size');
 
 		if (factor !== undefined) {
 			size = '';
@@ -1802,7 +1802,7 @@ var Backend =
 					size = el.getStyle('width') + '|' + el.getStyle('height');
 				}
 			});
-			Cookie.write('BE_CELL_SIZE', size, { path: Contao.path });
+			window.localStorage.getItem('contao_table_wizard_cell_size', size);
 		} else if (size !== null) {
 			var chunks = size.split('|');
 			$$('.tl_tablewizard textarea').each(function(el) {
