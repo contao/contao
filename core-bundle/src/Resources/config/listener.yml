@@ -166,15 +166,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: security.switch_user, method: onSwitchUser }
 
-    contao.listener.csrf_token_cookie:
-        class: Contao\CoreBundle\EventListener\CsrfTokenCookieListener
-        arguments:
-            - '@contao.csrf.token_storage'
-        tags:
-            # The priority must be higher than the one of the Symfony route listener (defaults to 32)
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 36 }
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
-
     contao.listener.user_session:
         class: Contao\CoreBundle\EventListener\UserSessionListener
         arguments:

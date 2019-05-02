@@ -588,7 +588,7 @@ class InsertTags extends Controller
 
 				// Request token
 				case 'request_token':
-					$arrCache[$strTag] = REQUEST_TOKEN;
+					$arrCache[$strTag] = RequestToken::get();
 					break;
 
 				// POST data

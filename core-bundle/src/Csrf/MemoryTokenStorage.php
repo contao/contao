@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\Csrf;
 use Symfony\Component\Security\Csrf\Exception\TokenNotFoundException;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
+/**
+ * @deprecated since Contao 4.8, to be removed in Contao 5.0
+ */
 class MemoryTokenStorage implements TokenStorageInterface
 {
     /**
@@ -26,6 +29,11 @@ class MemoryTokenStorage implements TokenStorageInterface
      * @var array
      */
     private $usedTokens = [];
+
+    public function __construct()
+    {
+        @trigger_error('Using the MemoryTokenStorage has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+    }
 
     /**
      * {@inheritdoc}

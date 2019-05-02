@@ -84,14 +84,12 @@ services:
             - { name: nelmio_cors.options_provider }
 
     contao.csrf.token_manager:
-        class: Symfony\Component\Security\Csrf\CsrfTokenManager
+        class: Contao\CoreBundle\Csrf\CsrfTokenManager
         arguments:
-            - '@security.csrf.token_generator'
-            - '@contao.csrf.token_storage'
+            - '@session'
+            - '@request_stack'
+            - '%kernel.secret%'
         public: true
-
-    contao.csrf.token_storage:
-        class: Contao\CoreBundle\Csrf\MemoryTokenStorage
 
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
