@@ -1032,7 +1032,7 @@ var Backend =
 		}
 
 		// Collect additional offset
-		$$('[data-additional-scroll-offset-relevant]').each(function(el) {
+		$$('[data-add-to-scroll-offset]').each(function(el) {
 			additionalOffset += el.getScrollSize().y;
 		});
 
