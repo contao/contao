@@ -602,8 +602,8 @@ abstract class Model
 			throw new \Exception("Field $strKey does not seem to be related");
 		}
 
-		// The relation exists but there is no reference yet (see #6161)
-		if (!isset($this->$strKey))
+		// The relation exists but there is no reference yet (see #6161 and #458)
+		if (empty($this->$strKey))
 		{
 			return null;
 		}
@@ -616,8 +616,7 @@ abstract class Model
 		// Load the related record(s)
 		if ($arrRelation['type'] == 'hasOne' || $arrRelation['type'] == 'belongsTo')
 		{
-			$objModel = $strClass::findOneBy($arrRelation['field'], $this->$strKey, $arrOptions);
-			$this->arrRelated[$strKey] = $objModel;
+			$this->arrRelated[$strKey] = $strClass::findOneBy($arrRelation['field'], $this->$strKey, $arrOptions);;
 		}
 		elseif ($arrRelation['type'] == 'hasMany' || $arrRelation['type'] == 'belongsToMany')
 		{

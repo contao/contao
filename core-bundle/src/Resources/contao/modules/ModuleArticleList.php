@@ -69,15 +69,12 @@ class ModuleArticleList extends Module
 		$this->Template->request = Environment::get('request');
 
 		// Show the articles of a different page
-		if ($this->defineRoot && $this->rootPage > 0)
+		if ($this->defineRoot && ($objTarget = $this->objModel->getRelated('rootPage')) instanceof PageModel)
 		{
-			if (($objTarget = $this->objModel->getRelated('rootPage')) instanceof PageModel)
-			{
-				$id = $objTarget->id;
+			$id = $objTarget->id;
 
-				/** @var PageModel $objTarget */
-				$this->Template->request = $objTarget->getFrontendUrl();
-			}
+			/** @var PageModel $objTarget */
+			$this->Template->request = $objTarget->getFrontendUrl();
 		}
 
 		// Get published articles
