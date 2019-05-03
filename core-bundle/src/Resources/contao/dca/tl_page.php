@@ -1154,6 +1154,11 @@ class tl_page extends Backend
 			}
 		}
 
+		if ($autoAlias === false && $varValue !== $dc->activeRecord->alias)
+		{
+			$this->purgeSearchIndex($dc);
+		}
+
 		return $varValue;
 	}
 
