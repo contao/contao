@@ -59,16 +59,10 @@ class CsrfTokenManager implements CsrfTokenManagerInterface
      */
     public function isTokenValid(CsrfToken $token)
     {
-        return
-            hash_equals(
-                $this->generateHash($token->getId(), $this->getUserId(false)),
-                $token->getValue()
-            )
-            || hash_equals(
-                $this->generateHash($token->getId(), $this->getUserId(true)),
-                $token->getValue()
-            )
-        ;
+        return hash_equals(
+            $this->generateHash($token->getId(), $this->getUserId(true)),
+            $token->getValue()
+        );
     }
 
     /**
@@ -87,6 +81,10 @@ class CsrfTokenManager implements CsrfTokenManagerInterface
         throw new RuntimeException('Cookieless CSRF tokens cannot be removed.');
     }
 
+    /**
+     * @param bool $fromRequest Use the session ID from the current request
+     *                          instead of the currently running session
+     */
     private function getUserId(bool $fromRequest = false): string
     {
         $id = [];
