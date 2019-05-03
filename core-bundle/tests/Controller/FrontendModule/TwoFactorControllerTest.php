@@ -239,7 +239,11 @@ class TwoFactorControllerTest extends TestCase
         return $model;
     }
 
-    private function mockPageModel(bool $enforceTwoFactor = true): PageModel
+    /**
+     * @param bool $enforceTwoFactor
+     * @return \PHPUnit\Framework\MockObject\MockObject|PageModel
+     */
+    private function mockPageModel(bool $enforceTwoFactor = true)
     {
         $model = $this->mockClassWithProperties(PageModel::class, [
             'enforceTwoFactor' => $enforceTwoFactor,
