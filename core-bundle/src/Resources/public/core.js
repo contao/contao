@@ -1033,7 +1033,7 @@ var Backend =
 			additionalOffset += el.getScrollSize().y;
 		});
 
-		this.vScrollTo(chunks[1] + additionalOffset);
+		this.vScrollTo(parseInt(chunks[1], 10) + additionalOffset);
 	},
 
 	/**
