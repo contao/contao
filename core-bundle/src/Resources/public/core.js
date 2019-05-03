@@ -650,8 +650,9 @@ var AjaxRequest =
 	 */
 	toggleFieldset: function(el, id, table) {
 		el.blur();
-		var fs = $('pal_' + id);
 		Backend.getScrollOffset();
+
+		var fs = $('pal_' + id);
 
 		if (fs.hasClass('collapsed')) {
 			fs.removeClass('collapsed');
@@ -1000,38 +1001,34 @@ var Backend =
 	},
 
 	/**
-	 * Scrolls to the current offset if it was defined and gives the header the "down" CSS class.
-	 * It also removes the legacy BE_PAGE_OFFSET cookie.
+	 * Remove the legacy BE_PAGE_OFFSET cookie, scroll to the current offset if
+	 * it was defined and add the "down" CSS class to the header.
 	 */
 	initScrollOffset: function() {
-		// Make sure we always kill the legacy cookie here
-		// That way it can be sent by the server but it wont be resent by the
-		// client in the next request
+		// Kill the legacy cookie here; this way it can be sent by the server
+		// but it wont be resent by the client in the next request
 		Cookie.dispose('BE_PAGE_OFFSET');
 
-		var item = window.sessionStorage.getItem('contao_backend_offset'), additionalOffset = 0;
+		var item = window.sessionStorage.getItem('contao_backend_offset');
+		if (!item) return;
 
-		if (!item) {
-			return;
-		}
-
-		// Remove session storage item again
 		window.sessionStorage.removeItem('contao_backend_offset');
 
 		var chunks = item.split(/^(\d*)/);
 
+		// Return if the scroll offset belongs to a different URL
 		if (window.location != chunks[2]) {
 			return;
 		}
 
-		// Add class to header if possible
 		var header = window.document.getElementById('header');
 
 		if (header) {
-			header.addClass('down')
+			header.addClass('down');
 		}
 
-		// Collect additional offset
+		var additionalOffset = 0;
+
 		$$('[data-add-to-scroll-offset]').each(function(el) {
 			additionalOffset += el.getScrollSize().y;
 		});

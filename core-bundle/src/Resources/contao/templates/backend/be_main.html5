@@ -124,5 +124,6 @@
   <?= $this->mootools ?>
 
   <script>Backend.initScrollOffset()</script>
+
 </body>
 </html>
