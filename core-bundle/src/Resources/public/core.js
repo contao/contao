@@ -997,7 +997,7 @@ var Backend =
 	 * Store the current scroll offset in sessionStorage
 	 */
 	getScrollOffset: function() {
-		window.sessionStorage.setItem('contao_backend_offset', parseInt(window.getScroll().y, 10) + window.location);
+		window.sessionStorage.setItem('contao_backend_offset', parseInt(window.getScroll().y, 10));
 	},
 
 	/**
@@ -1009,17 +1009,26 @@ var Backend =
 		// but it wont be resent by the client in the next request
 		Cookie.dispose('BE_PAGE_OFFSET');
 
-		var item = window.sessionStorage.getItem('contao_backend_offset');
-		if (!item) return;
+		// Add events to the submit buttons so they can reset the offset (except for the "save" which is the only one
+		// that stays on the same page)
+		$$('.tl_submit_container button[name][name!=\'save\']').each(function(button) {
+			var form = button.getParent('form');
+
+			if (!form) return;
+
+			button.addEvent('click', function(e) {
+				e.preventDefault();
+				new Element('input', { type: 'hidden', name: this.get('name'), value: this.get('value') }).inject(form);
+				window.sessionStorage.removeItem('contao_backend_offset');
+				form.submit(e);
+			});
+		});
+
+		var offset = window.sessionStorage.getItem('contao_backend_offset');
+
+		if (!offset) return;
 
 		window.sessionStorage.removeItem('contao_backend_offset');
-
-		var chunks = item.split(/^(\d*)/);
-
-		// Return if the scroll offset belongs to a different URL
-		if (window.location != chunks[2]) {
-			return;
-		}
 
 		var header = window.document.getElementById('header');
 
@@ -1033,7 +1042,7 @@ var Backend =
 			additionalOffset += el.getScrollSize().y;
 		});
 
-		this.vScrollTo(parseInt(chunks[1], 10) + additionalOffset);
+		this.vScrollTo(parseInt(offset, 10) + additionalOffset);
 	},
 
 	/**
