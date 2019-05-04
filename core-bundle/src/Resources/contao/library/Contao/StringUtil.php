@@ -98,16 +98,17 @@ class StringUtil
 	 *
 	 * @param string  $strString        The string to shorten
 	 * @param integer $intNumberOfChars The target number of characters
+	 * @param string  $strEllipsis      An optional ellipsis to append to the shortened HTML string
 	 *
 	 * @return string The shortened HTML string
 	 */
-	public static function substrHtml($strString, $intNumberOfChars)
+	public static function substrHtml($strString, $intNumberOfChars, $strEllipsis=' …')
 	{
 		$strReturn = '';
 		$intCharCount = 0;
 		$arrOpenTags = array();
 		$arrTagBuffer = array();
-		$arrEmptyTags = array('area', 'base', 'br', 'col', 'hr', 'img', 'input', 'frame', 'link', 'meta', 'param');
+		$arrEmptyTags = array('area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr');
 
 		$strString = preg_replace('/[\t\n\r]+/', ' ', $strString);
 		$strString = strip_tags($strString, Config::get('allowedTags'));
@@ -209,7 +210,14 @@ class StringUtil
 
 		foreach ($arrOpenTags as $strTag)
 		{
-			$strReturn .= '</' . $strTag . '>';
+			if ($strTag != end($arrOpenTags))
+			{
+				$strReturn .= '</' . $strTag . '>';
+			}
+			else
+			{
+				$strReturn .= $strEllipsis . '</' . $strTag . '>';
+			}
 		}
 
 		return trim($strReturn);
