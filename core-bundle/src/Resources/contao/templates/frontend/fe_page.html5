@@ -25,7 +25,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body id="top" class="{{ua::class}}<?php if ($this->class) echo ' ' . $this->class; ?>"<?php if ($this->onload): ?> onload="<?= $this->onload ?>"<?php endif; ?> itemscope itemtype="http://schema.org/WebPage">
+<body id="top" class="{{ua::class}}<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>"<?php if ($this->onload): ?> onload="<?= $this->onload ?>"<?php endif; ?> itemscope itemtype="http://schema.org/WebPage">
 
   <?php $this->block('body'); ?>
     <?php $this->sections('top'); ?>

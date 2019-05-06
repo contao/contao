@@ -5,4 +5,5 @@
     <?= $this->headline ?>
   </div>
 
-  <div class="<?= $this->accordion ?>"><div>
+  <div class="<?= $this->accordion ?>">
+    <div>

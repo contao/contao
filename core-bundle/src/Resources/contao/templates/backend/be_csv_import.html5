@@ -9,7 +9,7 @@
   <div class="tl_formbody_edit">
     <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
     <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-    <input type="hidden" name="MAX_FILE_SIZE" value="'<?= $this->fileMaxSize ?>">
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?= $this->fileMaxSize ?>">
 
     <fieldset class="tl_tbox nolegend">
       <div class="widget w50">

@@ -8,12 +8,12 @@
 <div class="event layout_teaser<?= $this->classList ?>" itemscope itemtype="http://schema.org/Event">
 
   <?php if ($this->hasDetails): ?>
-    <h2 itemprop="name"><a href="<?= $this->href ?>" title="<?= $this->title ?> (<?php if ($this->day) echo $this->day . ', '; ?><?= $this->date ?><?php if ($this->time) echo ' ' . $this->time; ?>)"<?= $this->target ?> itemprop="url"><?= $this->link ?></a></h2>
+    <h2 itemprop="name"><a href="<?= $this->href ?>" title="<?= $this->title ?> (<?php if ($this->day): ?><?= $this->day ?>, <?php endif; ?><?= $this->date ?><?php if ($this->time): ?> <?= $this->time ?><?php endif; ?>)"<?= $this->target ?> itemprop="url"><?= $this->link ?></a></h2>
   <?php else: ?>
     <h2 itemprop="name"><?= $this->title ?></h2>
   <?php endif; ?>
 
-  <p class="time"><time datetime="<?= $this->datetime ?>" itemprop="startDate"><?= $this->date ?><?php if ($this->time) echo ' ' . $this->time; ?></time></p>
+  <p class="time"><time datetime="<?= $this->datetime ?>" itemprop="startDate"><?= $this->date ?><?php if ($this->time):?> <?= $this->time ?><?php endif; ?></time></p>
 
   <?php if ($this->location): ?>
     <p class="location" itemprop="location" itemscope itemtype="http://schema.org/Place">

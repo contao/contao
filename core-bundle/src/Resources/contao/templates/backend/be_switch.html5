@@ -46,13 +46,13 @@
           <label for="ctrl_debug"><?= $this->debugMode ?>:</label>
           <select name="debug" id="ctrl_debug" class="tl_select">
             <option value="0"><?= $this->lblDisabled ?></option>
-            <option value="1"<?php if ($this->debug) echo ' selected="selected"'; ?>><?= $this->lblEnabled ?></option>
+            <option value="1"<?php if ($this->debug): ?> selected<?php endif; ?>><?= $this->lblEnabled ?></option>
           </select>
         <?php endif; ?>
         <label for="ctrl_unpublished"><?= $this->hiddenElements ?>:</label>
         <select name="unpublished" id="ctrl_unpublished" class="tl_select">
           <option value="hide"><?= $this->lblHide ?></option>
-          <option value="show"<?php if ($this->show) echo ' selected="selected"'; ?>><?= $this->lblShow ?></option>
+          <option value="show"<?php if ($this->show): ?> selected<?php endif; ?>><?= $this->lblShow ?></option>
         </select>
         <button type="submit" class="tl_submit"><?= $this->apply ?></button>
         <button type="button" class="tl_submit" onclick="parent.frames[1].location.reload()"><?= $this->reload ?></button>

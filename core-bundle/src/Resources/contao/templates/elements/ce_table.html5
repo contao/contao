@@ -3,7 +3,6 @@
 <?php $this->block('content'); ?>
 
   <table id="<?= $this->id ?>"<?php if ($this->sortable): ?> class="sortable" data-sort-default="<?= $this->sortDefault ?>"<?php endif; ?>>
-
     <?php if ($this->summary): ?>
       <caption><?= $this->summary ?></caption>
     <?php endif; ?>
@@ -41,7 +40,6 @@
         </tr>
       <?php endforeach; ?>
     </tbody>
-
   </table>
 
 <?php $this->endblock(); ?>

@@ -6,8 +6,8 @@
     <?= $this->error ?>
   <?php else: ?>
     <h1><?= $this->question ?></h1>
-    <div class="ce_text block">
 
+    <div class="ce_text block">
       <?php if (!$this->addBefore): ?>
         <?= $this->answer ?>
       <?php endif; ?>
@@ -19,7 +19,6 @@
       <?php if ($this->addBefore): ?>
         <?= $this->answer ?>
       <?php endif; ?>
-
     </div>
 
     <?php if ($this->enclosure): ?>
