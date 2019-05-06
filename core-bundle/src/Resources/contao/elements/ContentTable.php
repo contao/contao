@@ -37,7 +37,6 @@ class ContentTable extends ContentElement
 		$this->Template->useFooter = $this->tfoot ? true : false;
 		$this->Template->useLeftTh = $this->tleft ? true : false;
 		$this->Template->sortable = $this->sortable ? true : false;
-		$this->Template->sortDefault = false;
 
 		if ($this->sortable)
 		{
