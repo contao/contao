@@ -616,7 +616,7 @@ abstract class Model
 		// Load the related record(s)
 		if ($arrRelation['type'] == 'hasOne' || $arrRelation['type'] == 'belongsTo')
 		{
-			$this->arrRelated[$strKey] = $strClass::findOneBy($arrRelation['field'], $this->$strKey, $arrOptions);;
+			$this->arrRelated[$strKey] = $strClass::findOneBy($arrRelation['field'], $this->$strKey, $arrOptions);
 		}
 		elseif ($arrRelation['type'] == 'hasMany' || $arrRelation['type'] == 'belongsToMany')
 		{
