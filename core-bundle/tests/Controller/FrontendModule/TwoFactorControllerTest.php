@@ -25,10 +25,10 @@ use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -51,7 +51,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $token = $this->mockToken(TokenInterface::class, true, $this->createMock(BackendUser::class));
         $translator = $this->createMock(Translator::class);
-        $router = $this->createMock(Router::class);
+        $router = $this->createMock(RouterInterface::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
@@ -80,7 +80,7 @@ class TwoFactorControllerTest extends TestCase
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
         $translator = $this->createMock(Translator::class);
-        $router = $this->createMock(Router::class);
+        $router = $this->createMock(RouterInterface::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
@@ -109,7 +109,7 @@ class TwoFactorControllerTest extends TestCase
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
         $translator = $this->createMock(Translator::class);
-        $router = $this->createMock(Router::class);
+        $router = $this->createMock(RouterInterface::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
@@ -140,7 +140,7 @@ class TwoFactorControllerTest extends TestCase
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
         $translator = $this->createMock(Translator::class);
-        $router = $this->createMock(Router::class);
+        $router = $this->createMock(RouterInterface::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
@@ -178,7 +178,7 @@ class TwoFactorControllerTest extends TestCase
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
         $translator = $this->createMock(Translator::class);
-        $router = $this->createMock(Router::class);
+        $router = $this->createMock(RouterInterface::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
@@ -209,7 +209,7 @@ class TwoFactorControllerTest extends TestCase
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
         $translator = $this->createMock(Translator::class);
-        $router = $this->createMock(Router::class);
+        $router = $this->createMock(RouterInterface::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
@@ -240,7 +240,7 @@ class TwoFactorControllerTest extends TestCase
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
         $translator = $this->createMock(Translator::class);
-        $router = $this->createMock(Router::class);
+        $router = $this->createMock(RouterInterface::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
@@ -278,7 +278,7 @@ class TwoFactorControllerTest extends TestCase
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
         $translator = $this->createMock(Translator::class);
-        $router = $this->createMock(Router::class);
+        $router = $this->createMock(RouterInterface::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 

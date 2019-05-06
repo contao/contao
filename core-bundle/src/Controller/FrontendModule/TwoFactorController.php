@@ -21,9 +21,9 @@ use Contao\PageModel;
 use Contao\Template;
 use ParagonIE\ConstantTime\Base32;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -36,7 +36,7 @@ class TwoFactorController extends AbstractFrontendModuleController
     protected $translator;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     protected $router;
 
@@ -58,7 +58,7 @@ class TwoFactorController extends AbstractFrontendModuleController
     /** @var PageModel */
     protected $page;
 
-    public function __construct(Translator $translator, Router $router, TokenStorage $tokenStorage, Authenticator $authenticator, AuthenticationUtils $authenticationUtils)
+    public function __construct(Translator $translator, RouterInterface $router, TokenStorage $tokenStorage, Authenticator $authenticator, AuthenticationUtils $authenticationUtils)
     {
         $this->translator = $translator;
         $this->router = $router;
