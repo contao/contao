@@ -1009,11 +1009,10 @@ var Backend =
 		// but it wont be resent by the client in the next request
 		Cookie.dispose('BE_PAGE_OFFSET');
 
-		// Add events to the submit buttons so they can reset the offset (except for the "save" which is the only one
-		// that stays on the same page)
-		$$('.tl_submit_container button[name][name!=\'save\']').each(function(button) {
+		// Add events to the submit buttons so they can reset the offset
+		// (except for "save", which always stays on the same page)
+		$$('.tl_submit_container button[name][name!="save"]').each(function(button) {
 			var form = button.getParent('form');
-
 			if (!form) return;
 
 			button.addEvent('click', function(e) {
@@ -1025,10 +1024,9 @@ var Backend =
 		});
 
 		var offset = window.sessionStorage.getItem('contao_backend_offset');
+		window.sessionStorage.removeItem('contao_backend_offset');
 
 		if (!offset) return;
-
-		window.sessionStorage.removeItem('contao_backend_offset');
 
 		var header = window.document.getElementById('header');
 
