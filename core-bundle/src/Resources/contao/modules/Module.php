@@ -349,7 +349,7 @@ abstract class Module extends Frontend
 						}
 
 						// Hide the link if the target page is invisible
-						if (!$objNext instanceof PageModel || (!$objNext->isPublic && !BE_USER_LOGGED_IN))
+						if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !BE_USER_LOGGED_IN))
 						{
 							continue 2;
 						}

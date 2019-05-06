@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Correctly show redirect pages in the navigation menu (see #466).
+
 ## 4.7.5 (2019-04-30)
 
  * Prevent SQL injections in the file manager search (see CVE-2019-11512).
