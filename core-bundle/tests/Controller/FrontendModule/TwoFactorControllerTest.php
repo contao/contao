@@ -23,13 +23,15 @@ use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
-use Contao\User;
+use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -48,16 +50,16 @@ class TwoFactorControllerTest extends TestCase
     public function testReturnsIfUserIsNotInstanceOfFrontendUser(): void
     {
         $token = $this->mockToken(TokenInterface::class, true, $this->createMock(BackendUser::class));
-        $translator = $this->mockTranslator();
-        $router = $this->mockRouter();
+        $translator = $this->createMock(Translator::class);
+        $router = $this->createMock(Router::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $authenticator = $this->mockAuthenticator();
         $authenticationUtils = $this->mockAuthenticationUtils();
 
-        $request = $this->mockRequest();
-        $model = $this->mockModuleModel();
+        $request = new Request();
+        $model = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel();
 
         $controller = new TwoFactorController($translator, $router, $tokenStorage, $authenticator, $authenticationUtils);
@@ -77,16 +79,16 @@ class TwoFactorControllerTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
-        $translator = $this->mockTranslator();
-        $router = $this->mockRouter();
+        $translator = $this->createMock(Translator::class);
+        $router = $this->createMock(Router::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $authenticator = $this->mockAuthenticator();
         $authenticationUtils = $this->mockAuthenticationUtils();
 
-        $request = $this->mockRequest();
-        $model = $this->mockModuleModel();
+        $request = new Request();
+        $model = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel();
 
         $controller = new TwoFactorController($translator, $router, $tokenStorage, $authenticator, $authenticationUtils);
@@ -106,18 +108,18 @@ class TwoFactorControllerTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
-        $translator = $this->mockTranslator();
-        $router = $this->mockRouter();
+        $translator = $this->createMock(Translator::class);
+        $router = $this->createMock(Router::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $authenticator = $this->mockAuthenticator();
         $authenticationUtils = $this->mockAuthenticationUtils();
 
-        $request = $this->mockRequest();
+        $request = new Request();
         $request->request->set('FORM_SUBMIT', 'tl_two_factor_disable');
 
-        $model = $this->mockModuleModel();
+        $model = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel(false);
 
         $controller = new TwoFactorController($translator, $router, $tokenStorage, $authenticator, $authenticationUtils);
@@ -137,18 +139,18 @@ class TwoFactorControllerTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
-        $translator = $this->mockTranslator();
-        $router = $this->mockRouter();
+        $translator = $this->createMock(Translator::class);
+        $router = $this->createMock(Router::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $authenticator = $this->mockAuthenticator();
         $authenticationUtils = $this->mockAuthenticationUtils();
 
-        $request = $this->mockRequest();
+        $request = new Request();
         $request->request->set('FORM_SUBMIT', 'tl_two_factor_disable');
 
-        $model = $this->mockModuleModel();
+        $model = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel(false);
         $page
             ->expects($this->exactly(2))
@@ -165,18 +167,144 @@ class TwoFactorControllerTest extends TestCase
         $controller($request, $model, 'main', null, $page);
     }
 
-    private function mockTranslator(): Translator
+    public function testReturnsIfTwoFactorAlreadyEnabled(): void
     {
+        /** @var FrontendUser $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class, [
+            'secret' => '',
+            'useTwoFactor' => true,
+        ]);
+
+        /** @var TokenInterface $token */
+        $token = $this->mockToken(TokenInterface::class, true, $user);
         $translator = $this->createMock(Translator::class);
-
-        return $translator;
-    }
-
-    private function mockRouter(): Router
-    {
         $router = $this->createMock(Router::class);
 
-        return $router;
+        $tokenStorage = $this->mockTokenStorageWithToken($token);
+
+        $authenticator = $this->mockAuthenticator();
+        $authenticationUtils = $this->mockAuthenticationUtils();
+
+        $request = new Request();
+        $request->request->set('2fa', 'enable');
+
+        $model = $this->mockClassWithProperties(ModuleModel::class);
+        $page = $this->mockPageModel(false);
+
+        $controller = new TwoFactorController($translator, $router, $tokenStorage, $authenticator, $authenticationUtils);
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor'));
+
+        $this->assertInstanceOf(TwoFactorController::class, $controller);
+        $controller($request, $model, 'main', null, $page);
+    }
+
+    public function testTwoFactorExceptionHandling(): void
+    {
+        /** @var FrontendUser $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class, [
+            'secret' => '',
+            'useTwoFactor' => false,
+        ]);
+
+        /** @var TokenInterface $token */
+        $token = $this->mockToken(TokenInterface::class, true, $user);
+        $translator = $this->createMock(Translator::class);
+        $router = $this->createMock(Router::class);
+
+        $tokenStorage = $this->mockTokenStorageWithToken($token);
+
+        $authenticator = $this->mockAuthenticator();
+        $authenticationUtils = $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException());
+
+        $request = new Request();
+        $request->request->set('2fa', 'enable');
+
+        $model = $this->mockClassWithProperties(ModuleModel::class);
+        $page = $this->mockPageModel(false);
+
+        $controller = new TwoFactorController($translator, $router, $tokenStorage, $authenticator, $authenticationUtils);
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor'));
+
+        $this->assertInstanceOf(TwoFactorController::class, $controller);
+        $controller($request, $model, 'main', null, $page);
+    }
+
+    public function testDoesNotRedirectWithInvalidCode(): void
+    {
+        /** @var FrontendUser $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class, [
+            'secret' => '',
+            'useTwoFactor' => false,
+        ]);
+
+        /** @var TokenInterface $token */
+        $token = $this->mockToken(TokenInterface::class, true, $user);
+        $translator = $this->createMock(Translator::class);
+        $router = $this->createMock(Router::class);
+
+        $tokenStorage = $this->mockTokenStorageWithToken($token);
+
+        $authenticator = $this->mockAuthenticator($user, false);
+        $authenticationUtils = $this->mockAuthenticationUtils();
+
+        $request = new Request();
+        $request->request->set('2fa', 'enable');
+        $request->request->set('FORM_SUBMIT', 'tl_two_factor');
+        $request->request->set('verify', '123456');
+
+        $model = $this->mockClassWithProperties(ModuleModel::class);
+        $page = $this->mockPageModel(false);
+
+        $controller = new TwoFactorController($translator, $router, $tokenStorage, $authenticator, $authenticationUtils);
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor'));
+
+        $this->assertInstanceOf(TwoFactorController::class, $controller);
+        $controller($request, $model, 'main', null, $page);
+    }
+
+    public function testDoesRedirectWithValidCode(): void
+    {
+        /** @var FrontendUser|MockObject $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class, [
+            'secret' => '',
+            'useTwoFactor' => false,
+        ]);
+
+        $user
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        /** @var TokenInterface $token */
+        $token = $this->mockToken(TokenInterface::class, true, $user);
+        $translator = $this->createMock(Translator::class);
+        $router = $this->createMock(Router::class);
+
+        $tokenStorage = $this->mockTokenStorageWithToken($token);
+
+        $authenticator = $this->mockAuthenticator($user, true);
+        $authenticationUtils = $this->mockAuthenticationUtils();
+
+        $request = new Request();
+        $request->request->set('2fa', 'enable');
+        $request->request->set('FORM_SUBMIT', 'tl_two_factor');
+        $request->request->set('verify', '123456');
+
+        $model = $this->mockClassWithProperties(ModuleModel::class);
+        $page = $this->mockPageModel(false);
+        $page
+            ->expects($this->once())
+            ->method('getAbsoluteUrl')
+            ->willReturn('https://localhost.wip/foobar')
+        ;
+
+        $controller = new TwoFactorController($translator, $router, $tokenStorage, $authenticator, $authenticationUtils);
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor'));
+
+        $this->assertInstanceOf(TwoFactorController::class, $controller);
+        $this->expectException(RedirectResponseException::class);
+
+        $controller($request, $model, 'main', null, $page);
     }
 
     private function mockToken(string $class, bool $withFrontendUser = false, UserInterface $user = null)
@@ -211,45 +339,45 @@ class TwoFactorControllerTest extends TestCase
         return $tokenStorage;
     }
 
-    private function mockAuthenticator(): Authenticator
+    private function mockAuthenticator(FrontendUser $user = null, $result = null): Authenticator
     {
         $authenticator = $this->createMock(Authenticator::class);
+
+        if ($user instanceof FrontendUser) {
+            $authenticator
+                ->expects($this->once())
+                ->method('validateCode')
+                ->with($user, '123456')
+                ->willReturn($result)
+            ;
+        }
 
         return $authenticator;
     }
 
-    private function mockAuthenticationUtils(): AuthenticationUtils
+    private function mockAuthenticationUtils(AuthenticationException $authenticationException = null): AuthenticationUtils
     {
         $authenticationUtils = $this->createMock(AuthenticationUtils::class);
+
+        if ($authenticationException instanceof AuthenticationException) {
+            $authenticationUtils
+                ->expects($this->once())
+                ->method('getLastAuthenticationError')
+                ->willReturn($authenticationException)
+            ;
+        }
 
         return $authenticationUtils;
     }
 
-    private function mockRequest(): Request
-    {
-        $request = new Request();
-
-        return $request;
-    }
-
-    private function mockModuleModel(): ModuleModel
-    {
-        $model = $this->mockClassWithProperties(ModuleModel::class);
-
-        return $model;
-    }
-
     /**
-     * @param bool $enforceTwoFactor
      * @return \PHPUnit\Framework\MockObject\MockObject|PageModel
      */
     private function mockPageModel(bool $enforceTwoFactor = true)
     {
-        $model = $this->mockClassWithProperties(PageModel::class, [
+        return $this->mockClassWithProperties(PageModel::class, [
             'enforceTwoFactor' => $enforceTwoFactor,
         ]);
-
-        return $model;
     }
 
     private function mockContainerWithFrameworkTemplate(string $templateName): ContainerBuilder

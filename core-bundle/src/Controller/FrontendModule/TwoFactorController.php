@@ -144,7 +144,7 @@ class TwoFactorController extends AbstractFrontendModuleController
             }
 
             $template->error = true;
-            $template->message = $GLOBALS['TL_LANG']['ERR']['invalidTwoFactor'];
+            $template->message = $this->translator->trans('ERR.invalidTwoFactor', [], 'contao_default');
         }
 
         // Generate the secret
