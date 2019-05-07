@@ -1037,7 +1037,41 @@ var Backend =
 		var additionalOffset = 0;
 
 		$$('[data-add-to-scroll-offset]').each(function(el) {
-			additionalOffset += el.getScrollSize().y;
+
+			var offset = el.get('data-add-to-scroll-offset'),
+				scrollSize = el.getScrollSize().y,
+				negative = false,
+				percent = false;
+
+			// No specific offset desired, take scrollSize
+			if (!offset) {
+				additionalOffset += scrollSize;
+				return;
+			}
+
+			// Negative
+			if (offset.charAt(0) === '-') {
+				negative = true;
+				offset = offset.substring(1);
+			}
+
+			// Percent
+			if (offset.charAt(offset.length - 1) === '%') {
+				percent = true;
+				offset = offset.substring(0, offset.length - 1);
+			}
+
+			offset = parseInt(offset, 10);
+
+			if (percent) {
+				offset = parseInt(scrollSize * offset / 100, 10);
+			}
+
+			if (negative) {
+				offset = offset * -1;
+			}
+			
+			additionalOffset += offset;
 		});
 
 		this.vScrollTo(parseInt(offset, 10) + additionalOffset);
