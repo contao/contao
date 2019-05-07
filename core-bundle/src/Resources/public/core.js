@@ -1012,14 +1012,8 @@ var Backend =
 		// Add events to the submit buttons so they can reset the offset
 		// (except for "save", which always stays on the same page)
 		$$('.tl_submit_container button[name][name!="save"]').each(function(button) {
-			var form = button.getParent('form');
-			if (!form) return;
-
 			button.addEvent('click', function(e) {
-				e.preventDefault();
-				new Element('input', { type: 'hidden', name: this.get('name'), value: this.get('value') }).inject(form);
 				window.sessionStorage.removeItem('contao_backend_offset');
-				form.submit(e);
 			});
 		});
 
@@ -1070,7 +1064,7 @@ var Backend =
 			if (negative) {
 				offset = offset * -1;
 			}
-			
+
 			additionalOffset += offset;
 		});
 
