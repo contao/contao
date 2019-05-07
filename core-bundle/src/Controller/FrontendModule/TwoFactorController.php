@@ -70,7 +70,10 @@ class TwoFactorController extends AbstractFrontendModuleController
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $page = null): Response
     {
         $this->page = $page;
-        $this->page->loadDetails();
+
+        if ($this->get('contao.routing.scope_matcher')->isFrontendRequest($request)) {
+            $this->page->loadDetails();
+        }
 
         return parent::__invoke($request, $model, $section, $classes);
     }
