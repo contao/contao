@@ -51,14 +51,14 @@ class InstallCommandTest extends TestCase
         $output = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertContains(' * templates', $output);
-        $this->assertContains(' * web/system', $output);
         $this->assertContains(' * assets/css', $output);
         $this->assertContains(' * assets/images', $output);
         $this->assertContains(' * assets/js', $output);
         $this->assertContains(' * system/cache', $output);
         $this->assertContains(' * system/config', $output);
         $this->assertContains(' * system/tmp', $output);
+        $this->assertContains(' * templates', $output);
+        $this->assertContains(' * web/system', $output);
     }
 
     public function testHandlesCustomFilesAndImagesPaths(): void

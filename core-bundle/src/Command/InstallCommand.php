@@ -92,7 +92,6 @@ class InstallCommand extends Command
         $this->webDir = rtrim($input->getArgument('target'), '/');
 
         $this->addEmptyDirs();
-        $this->addIgnoredDirs();
 
         if (!empty($this->rows)) {
             $this->io->newLine();
@@ -105,9 +104,16 @@ class InstallCommand extends Command
     private function addEmptyDirs(): void
     {
         static $emptyDirs = [
+            'assets/css',
+            'assets/js',
             'system',
+            'system/cache',
             'system/config',
+            'system/modules',
+            'system/themes',
+            'system/tmp',
             'templates',
+            '%s/share',
             '%s/system',
         ];
 
@@ -115,6 +121,7 @@ class InstallCommand extends Command
             $this->addEmptyDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
+        $this->addEmptyDir($this->imageDir);
         $this->addEmptyDir($this->rootDir.'/'.$this->uploadPath);
     }
 
@@ -127,38 +134,5 @@ class InstallCommand extends Command
         $this->fs->mkdir($path);
 
         $this->rows[] = str_replace($this->rootDir.'/', '', $path);
-    }
-
-    private function addIgnoredDirs(): void
-    {
-        static $ignoredDirs = [
-            'assets/css',
-            'assets/js',
-            'system/cache',
-            'system/modules',
-            'system/themes',
-            'system/tmp',
-            '%s/share',
-        ];
-
-        foreach ($ignoredDirs as $path) {
-            $this->addIgnoredDir($this->rootDir.'/'.sprintf($path, $this->webDir));
-        }
-
-        $this->addIgnoredDir($this->imageDir);
-    }
-
-    private function addIgnoredDir(string $path): void
-    {
-        $this->addEmptyDir($path);
-
-        if ($this->fs->exists($path.'/.gitignore')) {
-            return;
-        }
-
-        $this->fs->dumpFile(
-            $path.'/.gitignore',
-            "# Create the folder and ignore its content\n*\n!.gitignore\n"
-        );
     }
 }
