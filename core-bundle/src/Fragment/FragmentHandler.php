@@ -103,21 +103,21 @@ class FragmentHandler extends BaseFragmentHandler
     }
 
     /**
-     * Forces the renderer to the "inline" renderer if the request
+     * Forces the renderer to the "inline" renderer if the master request
      * contains cookies. Cookies are not passed on between
      * surrogate requests so subsequent requests might fail.
      * Imagine the main request with two ESI fragments.
-     * If the main request resets a cookie (such as for example it is
-     * done for the rememberme cookie), the subsequent ESI fragment
-     * requests will not receive the updated cookie but instead still
+     * If the response to the main request resets a cookie (such as
+     * for example it is done for the rememberme cookie), the subsequent ESI
+     * fragment requests will not receive the updated cookie but instead still
      * the one of the main request, causing the cookie validation to
      * fail). Contao implicitly deactivates caching anyway if any
-     * cookie is present so it makes no sense to render a fragment
-     * with any other renderer than "inline".
+     * cookie is present so it makes no sense to render ESI fragments
+     * in this case.
      */
     private function getRenderer(string $renderer): string
     {
-        if ('inline' === $renderer || null === ($request = $this->requestStack->getCurrentRequest())) {
+        if ('esi' !== $renderer || null === ($request = $this->requestStack->getMasterRequest())) {
             return $renderer;
         }
 
