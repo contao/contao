@@ -20,7 +20,6 @@ use Contao\DataContainer;
 use Contao\FileUpload;
 use Contao\Message;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
