@@ -997,7 +997,7 @@ var Backend =
 	 * Store the current scroll offset in sessionStorage
 	 */
 	getScrollOffset: function() {
-		window.sessionStorage.setItem('contao_backend_offset', parseInt(window.getScroll().y, 10));
+		window.sessionStorage.setItem('contao_backend_offset', window.getScroll().y);
 	},
 
 	/**
@@ -1012,7 +1012,7 @@ var Backend =
 		// Add events to the submit buttons so they can reset the offset
 		// (except for "save", which always stays on the same page)
 		$$('.tl_submit_container button[name][name!="save"]').each(function(button) {
-			button.addEvent('click', function(e) {
+			button.addEvent('click', function() {
 				window.sessionStorage.removeItem('contao_backend_offset');
 			});
 		});
@@ -1022,16 +1022,14 @@ var Backend =
 
 		if (!offset) return;
 
-		var header = window.document.getElementById('header');
+		var header = window.document.getElementById('header'),
+			additionalOffset = 0;
 
 		if (header) {
 			header.addClass('down');
 		}
 
-		var additionalOffset = 0;
-
 		$$('[data-add-to-scroll-offset]').each(function(el) {
-
 			var offset = el.get('data-add-to-scroll-offset'),
 				scrollSize = el.getScrollSize().y,
 				negative = false,
@@ -1058,7 +1056,7 @@ var Backend =
 			offset = parseInt(offset, 10);
 
 			if (percent) {
-				offset = parseInt(scrollSize * offset / 100, 10);
+				offset = Math.round(scrollSize * offset / 100);
 			}
 
 			if (negative) {
