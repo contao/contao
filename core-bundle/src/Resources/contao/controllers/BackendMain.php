@@ -299,7 +299,6 @@ class BackendMain extends Backend
 		$this->Template->referer = $referer;
 		$this->Template->profileTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['profileTitle']);
 		$this->Template->security = $GLOBALS['TL_LANG']['MSC']['security'];
-		$this->Template->pageOffset = (int) Input::cookie('BE_PAGE_OFFSET');
 		$this->Template->logout = $GLOBALS['TL_LANG']['MSC']['logoutBT'];
 		$this->Template->logoutLink = System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
 		$this->Template->logoutTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logoutBTTitle']);

@@ -48,7 +48,7 @@
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
-      <header id="header"<?php if ($this->pageOffset): ?> class="down"<?php endif; ?>>
+      <header id="header">
         <div class="inner">
           <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">Contao</a></h1>
           <nav aria-label="<?= $this->headerNavigation ?>">
@@ -123,10 +123,7 @@
 
   <?= $this->mootools ?>
 
-  <?php if ($this->pageOffset): ?>
-    <script>Backend.vScrollTo($('paste_hint') ? <?= $this->pageOffset + 40 ?> : <?= $this->pageOffset ?>)</script>
-    <?php Contao\System::setCookie('BE_PAGE_OFFSET', 0, 0); ?>
-  <?php endif; ?>
+  <script>Backend.initScrollOffset()</script>
 
 </body>
 </html>

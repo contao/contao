@@ -650,6 +650,8 @@ var AjaxRequest =
 	 */
 	toggleFieldset: function(el, id, table) {
 		el.blur();
+		Backend.getScrollOffset();
+
 		var fs = $('pal_' + id);
 
 		if (fs.hasClass('collapsed')) {
@@ -992,10 +994,79 @@ var Backend =
 	},
 
 	/**
-	 * Get the current scroll offset and store it in a cookie
+	 * Store the current scroll offset in sessionStorage
 	 */
 	getScrollOffset: function() {
-		document.cookie = "BE_PAGE_OFFSET=" + window.getScroll().y + "; path=" + (Contao.path || '/');
+		window.sessionStorage.setItem('contao_backend_offset', window.getScroll().y);
+	},
+
+	/**
+	 * Remove the legacy BE_PAGE_OFFSET cookie, scroll to the current offset if
+	 * it was defined and add the "down" CSS class to the header.
+	 */
+	initScrollOffset: function() {
+		// Kill the legacy cookie here; this way it can be sent by the server
+		// but it wont be resent by the client in the next request
+		Cookie.dispose('BE_PAGE_OFFSET');
+
+		// Add events to the submit buttons so they can reset the offset
+		// (except for "save", which always stays on the same page)
+		$$('.tl_submit_container button[name][name!="save"]').each(function(button) {
+			button.addEvent('click', function() {
+				window.sessionStorage.removeItem('contao_backend_offset');
+			});
+		});
+
+		var offset = window.sessionStorage.getItem('contao_backend_offset');
+		window.sessionStorage.removeItem('contao_backend_offset');
+
+		if (!offset) return;
+
+		var header = window.document.getElementById('header'),
+			additionalOffset = 0;
+
+		if (header) {
+			header.addClass('down');
+		}
+
+		$$('[data-add-to-scroll-offset]').each(function(el) {
+			var offset = el.get('data-add-to-scroll-offset'),
+				scrollSize = el.getScrollSize().y,
+				negative = false,
+				percent = false;
+
+			// No specific offset desired, take scrollSize
+			if (!offset) {
+				additionalOffset += scrollSize;
+				return;
+			}
+
+			// Negative
+			if (offset.charAt(0) === '-') {
+				negative = true;
+				offset = offset.substring(1);
+			}
+
+			// Percent
+			if (offset.charAt(offset.length - 1) === '%') {
+				percent = true;
+				offset = offset.substring(0, offset.length - 1);
+			}
+
+			offset = parseInt(offset, 10);
+
+			if (percent) {
+				offset = Math.round(scrollSize * offset / 100);
+			}
+
+			if (negative) {
+				offset = offset * -1;
+			}
+
+			additionalOffset += offset;
+		});
+
+		this.vScrollTo(parseInt(offset, 10) + additionalOffset);
 	},
 
 	/**
