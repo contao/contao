@@ -43,6 +43,11 @@ class FragmentHandler extends BaseFragmentHandler
     private $preHandlers;
 
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @var array
      */
     private $initialized = [];
@@ -53,6 +58,7 @@ class FragmentHandler extends BaseFragmentHandler
         $this->fragmentHandler = $fragmentHandler;
         $this->fragmentRegistry = $fragmentRegistry;
         $this->preHandlers = $preHandlers;
+        $this->requestStack = $requestStack;
 
         parent::__construct($requestStack, [], $debug);
     }
@@ -63,7 +69,7 @@ class FragmentHandler extends BaseFragmentHandler
     public function render($uri, $renderer = 'inline', array $options = []): ?string
     {
         if (!$uri instanceof FragmentReference) {
-            return $this->fragmentHandler->render($uri, $renderer, $options);
+            return $this->fragmentHandler->render($uri, $this->getRenderer($renderer), $options);
         }
 
         $config = $this->fragmentRegistry->get($uri->controller);
@@ -81,7 +87,7 @@ class FragmentHandler extends BaseFragmentHandler
             $this->initialized[$renderer] = true;
         }
 
-        return parent::render($uri, $renderer, $config->getOptions());
+        return parent::render($uri, $this->getRenderer($renderer), $config->getOptions());
     }
 
     /**
@@ -94,6 +100,32 @@ class FragmentHandler extends BaseFragmentHandler
         } catch (\RuntimeException $e) {
             throw new ResponseException($response, $e);
         }
+    }
+
+    /**
+     * Forces the renderer to the "inline" renderer if the request
+     * contains cookies. Cookies are not passed on between
+     * surrogate requests so subsequent requests might fail.
+     * Imagine the main request with two ESI fragments.
+     * If the main request resets a cookie (such as for example it is
+     * done for the rememberme cookie), the subsequent ESI fragment
+     * requests will not receive the updated cookie but instead still
+     * the one of the main request, causing the cookie validation to
+     * fail). Contao implicitly deactivates caching anyway if any
+     * cookie is present so it makes no sense to render a fragment
+     * with any other renderer than "inline".
+     */
+    private function getRenderer(string $renderer): string
+    {
+        if ('inline' === $renderer || null === ($request = $this->requestStack->getCurrentRequest())) {
+            return $renderer;
+        }
+
+        if ($request->cookies->count()) {
+            return 'inline';
+        }
+
+        return $renderer;
     }
 
     /**
