@@ -40,7 +40,7 @@ class InsertTagsListenerTest extends ContaoTestCase
             ->willReturn($page)
         ;
 
-        /** @var FaqModel|MockObject $faqModel */
+        /** @var FaqModel&MockObject $faqModel */
         $faqModel = $this->mockClassWithProperties(FaqModel::class);
         $faqModel->alias = 'what-does-foobar-mean';
         $faqModel->question = 'What does "foobar" mean?';

@@ -37,7 +37,7 @@ class LogoutHandlerTest extends TestCase
             ->with('User "foobar" has logged out')
         ;
 
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
@@ -80,7 +80,7 @@ class LogoutHandlerTest extends TestCase
      */
     public function testTriggersThePostLogoutHook(): void
     {
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 

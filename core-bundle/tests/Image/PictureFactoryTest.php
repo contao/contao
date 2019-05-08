@@ -99,7 +99,7 @@ class PictureFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        /** @var ImageSizeModel|MockObject $imageSizeModel */
+        /** @var ImageSizeModel&MockObject $imageSizeModel */
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class);
         $imageSizeModel->width = 100;
         $imageSizeModel->height = 200;
@@ -111,7 +111,7 @@ class PictureFactoryTest extends TestCase
 
         $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
 
-        /** @var ImageSizeItemModel|MockObject $imageSizeItemModel */
+        /** @var ImageSizeItemModel&MockObject $imageSizeItemModel */
         $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class);
         $imageSizeItemModel->width = 50;
         $imageSizeItemModel->height = 50;
@@ -354,9 +354,9 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
-     * @param PictureGeneratorInterface|MockObject|null $pictureGenerator
-     * @param ImageFactoryInterface|MockObject|null     $imageFactory
-     * @param ContaoFramework|MockObject|null           $framework
+     * @param PictureGeneratorInterface&MockObject $pictureGenerator
+     * @param ImageFactoryInterface&MockObject     $imageFactory
+     * @param ContaoFramework&MockObject           $framework
      */
     private function mockPictureFactory(PictureGeneratorInterface $pictureGenerator = null, ImageFactoryInterface $imageFactory = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null): PictureFactory
     {

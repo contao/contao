@@ -67,7 +67,7 @@ class FilePickerProviderTest extends ContaoTestCase
             )
         ;
 
-        /** @var FilesModel|MockObject $filesModel */
+        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->path = '/foobar';
         $filesModel->uuid = StringUtil::uuidToBin('82243f46-a4c3-11e3-8e29-000c29e44aea');

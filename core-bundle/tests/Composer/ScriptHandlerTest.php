@@ -203,7 +203,7 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return Composer|MockObject
+     * @return Composer&MockObject
      */
     private function mockComposer(PackageInterface $package): Composer
     {
@@ -227,7 +227,7 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return IOInterface|MockObject
+     * @return IOInterface&MockObject
      */
     private function mockIO(string $method = null): IOInterface
     {
@@ -241,7 +241,7 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return PackageInterface|MockObject
+     * @return PackageInterface&MockObject
      */
     private function mockPackage(array $extras = []): PackageInterface
     {

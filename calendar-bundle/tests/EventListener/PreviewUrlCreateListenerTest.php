@@ -28,7 +28,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
 
-        /** @var CalendarEventsModel|MockObject $eventModel */
+        /** @var CalendarEventsModel&MockObject $eventModel */
         $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
         $eventModel->id = 1;
 
@@ -99,7 +99,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        /** @var CalendarEventsModel|MockObject $eventModel */
+        /** @var CalendarEventsModel&MockObject $eventModel */
         $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
         $eventModel->id = 2;
 

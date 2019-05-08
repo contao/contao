@@ -234,7 +234,7 @@ class ExceptionConverterListenerTest extends TestCase
     }
 
     /**
-     * @return Connection|MockObject
+     * @return Connection&MockObject
      */
     private function mockConnection(int $rowCount = 1): Connection
     {

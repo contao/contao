@@ -23,7 +23,7 @@ use Symfony\Component\Routing\RouteCollection;
 class LanguageFilterTest extends TestCase
 {
     /**
-     * @param PageModel|MockObject|null $page
+     * @param PageModel&MockObject $page
      *
      * @dataProvider getRoutesAndLanguages
      */

@@ -143,7 +143,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
     }
 
     /**
-     * @return Connection|MockObject
+     * @return Connection&MockObject
      */
     private function mockConnection(Statement $statement): Connection
     {

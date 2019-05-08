@@ -203,7 +203,7 @@ class FaqPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
-        /** @var FaqCategoryModel|MockObject $model */
+        /** @var FaqCategoryModel&MockObject $model */
         $model = $this->mockClassWithProperties(FaqCategoryModel::class);
         $model->id = 1;
 

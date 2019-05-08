@@ -34,7 +34,7 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks a Doctrine registry with database connection.
      *
-     * @return Registry|MockObject
+     * @return Registry&MockObject
      */
     protected function mockDoctrineRegistry(Statement $statement = null, string $filter = null): Registry
     {
@@ -105,7 +105,7 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks a Doctrine registry with database connection and ORM.
      *
-     * @return Registry|MockObject
+     * @return Registry&MockObject
      */
     protected function mockDoctrineRegistryWithOrm(array $metadata = [], string $filter = null): Registry
     {
@@ -198,7 +198,7 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks the Contao framework with the database installer.
      *
-     * @return ContaoFramework|MockObject
+     * @return ContaoFramework&MockObject
      */
     protected function mockContaoFrameworkWithInstaller(array $dca = [], array $file = []): ContaoFramework
     {

@@ -302,7 +302,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     }
 
     /**
-     * @param \Twig_Environment|MockObject|null $twig
+     * @param \Twig_Environment&MockObject $twig
      */
     private function mockListener(string $userClass, bool $expectLogging = false, \Twig_Environment $twig = null): PrettyErrorScreenListener
     {

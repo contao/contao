@@ -86,7 +86,7 @@ class ImageTest extends TestCase
      */
     public function testFailsIfTheFileExtensionIsInvalid(): void
     {
-        /** @var File|MockObject $fileMock */
+        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, ['extension' => 'foobar']);
         $fileMock
             ->method('exists')
@@ -113,7 +113,7 @@ class ImageTest extends TestCase
             'viewHeight' => $arguments[3],
         ];
 
-        /** @var File|MockObject $fileMock */
+        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -573,7 +573,7 @@ class ImageTest extends TestCase
             'viewHeight' => $arguments[3],
         ];
 
-        /** @var File|MockObject $fileMock */
+        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -753,7 +753,7 @@ class ImageTest extends TestCase
             'viewHeight' => 100,
         ];
 
-        /** @var File|MockObject $fileMock */
+        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -873,7 +873,7 @@ class ImageTest extends TestCase
             'viewHeight' => 200,
         ];
 
-        /** @var File|MockObject $fileMock */
+        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -942,7 +942,7 @@ class ImageTest extends TestCase
      */
     public function testFailsIfTheZoomValueIsOutOfBounds(int $value): void
     {
-        /** @var File|MockObject $fileMock */
+        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, ['extension' => 'jpg']);
         $fileMock
             ->method('exists')

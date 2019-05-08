@@ -172,8 +172,8 @@ class ContaoCacheWarmerTest extends TestCase
     }
 
     /**
-     * @param Connection|MockObject|null      $connection
-     * @param ContaoFramework|MockObject|null $framework
+     * @param Connection&MockObject      $connection
+     * @param ContaoFramework&MockObject $framework
      */
     private function mockCacheWarmer(Connection $connection = null, ContaoFramework $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
     {

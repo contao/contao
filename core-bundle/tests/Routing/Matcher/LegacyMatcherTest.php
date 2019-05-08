@@ -385,7 +385,7 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        /** @var PageModel|MockObject $pageModel */
+                        /** @var PageModel&MockObject $pageModel */
                         $pageModel = $this->mockClassWithProperties(PageModel::class);
                         $pageModel->alias = 'bar';
 
@@ -444,7 +444,7 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        /** @var PageModel|MockObject $pageModel */
+                        /** @var PageModel&MockObject $pageModel */
                         $pageModel = $this->mockClassWithProperties(PageModel::class);
                         $pageModel->alias = 'foo';
 
@@ -506,7 +506,7 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        /** @var PageModel|MockObject $pageModel */
+                        /** @var PageModel&MockObject $pageModel */
                         $pageModel = $this->mockClassWithProperties(PageModel::class);
                         $pageModel->alias = 'foo';
 
@@ -610,7 +610,7 @@ class LegacyMatcherTest extends TestCase
     }
 
     /**
-     * @return ContaoFramework|MockObject
+     * @return ContaoFramework&MockObject
      */
     private function mockFrameworkWithAdapters(Adapter $configAdapter = null, string $language = null, array $hooks = []): ContaoFramework
     {
@@ -661,7 +661,7 @@ class LegacyMatcherTest extends TestCase
     }
 
     /**
-     * @return RequestMatcherInterface|MockObject
+     * @return RequestMatcherInterface&MockObject
      */
     private function mockRequestMatcher(Invocation $expects, string $pathInfo = null, array $match = []): RequestMatcherInterface
     {
@@ -681,7 +681,7 @@ class LegacyMatcherTest extends TestCase
     }
 
     /**
-     * @return Adapter|MockObject
+     * @return Adapter&MockObject
      */
     private function mockConfigAdapter(array $config): Adapter
     {

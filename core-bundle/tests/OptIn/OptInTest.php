@@ -68,7 +68,7 @@ class OptInTest extends ContaoTestCase
 
     public function testFindsAToken(): void
     {
-        /** @var OptInModel|MockObject $model */
+        /** @var OptInModel&MockObject $model */
         $model = $this->mockClassWithProperties(OptInModel::class);
         $model->token = 'foobar';
 

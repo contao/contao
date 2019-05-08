@@ -29,7 +29,7 @@ class RouteProviderTest extends TestCase
 {
     public function testGetsARouteByName(): void
     {
-        /** @var PageModel|MockObject $page */
+        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
 
@@ -76,11 +76,11 @@ class RouteProviderTest extends TestCase
 
     public function testGetsMultipleRoutesByNames(): void
     {
-        /** @var PageModel|MockObject $page1 */
+        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class);
         $page1->id = 17;
 
-        /** @var PageModel|MockObject $page2 */
+        /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class);
         $page2->id = 21;
 
@@ -100,7 +100,7 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomain(): void
     {
-        /** @var PageModel|MockObject $page */
+        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
         $page->domain = 'example.org';
@@ -121,7 +121,7 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomainAndPort(): void
     {
-        /** @var PageModel|MockObject $page */
+        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
         $page->domain = 'example.org:8080';
@@ -531,7 +531,7 @@ class RouteProviderTest extends TestCase
     }
 
     /**
-     * @return Request|MockObject
+     * @return Request&MockObject
      */
     private function mockRequestWithPath(string $path, array $languages = ['en']): Request
     {
@@ -550,7 +550,7 @@ class RouteProviderTest extends TestCase
     }
 
     /**
-     * @return ContaoFramework|MockObject
+     * @return ContaoFramework&MockObject
      */
     private function mockFramework(Adapter $pageAdapter = null, Adapter $configAdapter = null): ContaoFramework
     {
@@ -558,7 +558,7 @@ class RouteProviderTest extends TestCase
     }
 
     /**
-     * @return Adapter|MockObject
+     * @return Adapter&MockObject
      */
     private function mockConfigAdapter(array $config): Adapter
     {
@@ -576,11 +576,11 @@ class RouteProviderTest extends TestCase
     }
 
     /**
-     * @return PageModel|MockObject
+     * @return PageModel&MockObject
      */
     private function createPage(string $language, string $alias, bool $fallback = true, string $domain = '', string $scheme = null): PageModel
     {
-        /** @var PageModel|MockObject $page */
+        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = random_int(1, 10000);
         $page->type = 'regular';
@@ -595,7 +595,7 @@ class RouteProviderTest extends TestCase
     }
 
     /**
-     * @param ContaoFramework|MockObject|null $framework
+     * @param ContaoFramework&MockObject $framework
      */
     private function mockRouteProvider(ContaoFramework $framework = null, string $urlSuffix = '.html', bool $prependLocale = false): RouteProvider
     {

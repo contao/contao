@@ -186,7 +186,7 @@ class TokenCheckerTest extends TestCase
 
     private function mockUser(string $class): User
     {
-        /** @var User|MockObject $user */
+        /** @var User&MockObject $user */
         $user = $this->createPartialMock($class, []);
         $user->id = 1;
         $user->username = 'foobar';

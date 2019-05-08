@@ -58,7 +58,7 @@ class UserCheckerTest extends TestCase
 
     public function testThrowsAnExceptionIfTheAccountIsLocked(): void
     {
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foo';
         $user->locked = time() + 300;
@@ -73,7 +73,7 @@ class UserCheckerTest extends TestCase
 
     public function testThrowsAnExceptionIfTheAccountIsDisabled(): void
     {
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foo';
         $user->locked = 0;
@@ -89,7 +89,7 @@ class UserCheckerTest extends TestCase
 
     public function testThrowsAnExceptionIfTheUserIsNotAllowedToLogin(): void
     {
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->username = 'foo';
         $user->locked = 0;
@@ -108,7 +108,7 @@ class UserCheckerTest extends TestCase
     {
         $time = strtotime('tomorrow');
 
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->username = 'foo';
         $user->locked = 0;
@@ -129,7 +129,7 @@ class UserCheckerTest extends TestCase
     {
         $time = strtotime('yesterday');
 
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->username = 'foo';
         $user->locked = 0;

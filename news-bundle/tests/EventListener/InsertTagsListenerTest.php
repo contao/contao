@@ -23,7 +23,7 @@ class InsertTagsListenerTest extends ContaoTestCase
 {
     public function testReplacesTheNewsFeedTag(): void
     {
-        /** @var NewsFeedModel|MockObject $feedModel */
+        /** @var NewsFeedModel&MockObject $feedModel */
         $feedModel = $this->mockClassWithProperties(NewsFeedModel::class);
         $feedModel->feedBase = 'http://localhost/';
         $feedModel->alias = 'news';
@@ -42,7 +42,7 @@ class InsertTagsListenerTest extends ContaoTestCase
 
     public function testReplacesTheNewsTags(): void
     {
-        /** @var NewsModel|MockObject $newsModel */
+        /** @var NewsModel&MockObject $newsModel */
         $newsModel = $this->mockClassWithProperties(NewsModel::class);
         $newsModel->headline = '"Foo" is not "bar"';
         $newsModel->teaser = '<p>Foo does not equal bar.</p>';

@@ -115,7 +115,7 @@ class PublishedFilterTest extends TestCase
     }
 
     /**
-     * @return TokenChecker|MockObject
+     * @return TokenChecker&MockObject
      */
     private function mockTokenChecker(bool $isPreviewMode = false): TokenChecker
     {

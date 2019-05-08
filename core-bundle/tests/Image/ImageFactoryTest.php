@@ -84,7 +84,7 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        /** @var FilesModel|MockObject $filesModel */
+        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
 
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
@@ -164,7 +164,7 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        /** @var ImageSizeModel|MockObject $imageSizeModel */
+        /** @var ImageSizeModel&MockObject $imageSizeModel */
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class);
         $imageSizeModel->width = 100;
         $imageSizeModel->height = 200;
@@ -173,7 +173,7 @@ class ImageFactoryTest extends TestCase
 
         $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
 
-        /** @var FilesModel|MockObject $filesModel */
+        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->importantPartX = 50;
         $filesModel->importantPartY = 50;
@@ -340,7 +340,7 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imagineImageMock)
         ;
 
-        /** @var FilesModel|MockObject $filesModel */
+        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->importantPartX = 50;
         $filesModel->importantPartY = 50;
@@ -638,10 +638,10 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * @param ResizerInterface|MockObject|null $resizer
-     * @param ImagineInterface|MockObject|null $imagine
-     * @param ImagineInterface|MockObject|null $imagineSvg
-     * @param ContaoFramework|MockObject|null  $framework
+     * @param ResizerInterface&MockObject $resizer
+     * @param ImagineInterface&MockObject $imagine
+     * @param ImagineInterface&MockObject $imagineSvg
+     * @param ContaoFramework&MockObject  $framework
      */
     private function mockImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null): ImageFactory
     {

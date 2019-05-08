@@ -29,7 +29,7 @@ class BackendLocaleListenerTest extends TestCase
 {
     public function testSetsTheLocale(): void
     {
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->language = 'de';
 

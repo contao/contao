@@ -66,7 +66,7 @@ class ContaoDataCollectorTest extends TestCase
 
     public function testCollectsDataInFrontEnd(): void
     {
-        /** @var LayoutModel|MockObject $layout */
+        /** @var LayoutModel&MockObject $layout */
         $layout = $this->mockClassWithProperties(LayoutModel::class);
         $layout->name = 'Default';
         $layout->id = 2;
@@ -75,7 +75,7 @@ class ContaoDataCollectorTest extends TestCase
         $adapter = $this->mockConfiguredAdapter(['findByPk' => $layout]);
         $framework = $this->mockContaoFramework([LayoutModel::class => $adapter]);
 
-        /** @var PageModel|MockObject $page */
+        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 2;
 

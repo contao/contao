@@ -75,7 +75,7 @@ class ContaoTemplateExtensionTest extends TestCase
     }
 
     /**
-     * @param ContaoFramework|MockObject|null $framework
+     * @param ContaoFramework&MockObject $framework
      */
     private function mockExtension(ContaoFramework $framework = null, string $scope = 'backend'): ContaoTemplateExtension
     {

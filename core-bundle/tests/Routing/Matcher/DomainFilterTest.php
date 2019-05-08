@@ -76,7 +76,7 @@ class DomainFilterTest extends TestCase
     }
 
     /**
-     * @return Route|MockObject
+     * @return Route&MockObject
      */
     private function mockRouteWithHost(string $host): Route
     {

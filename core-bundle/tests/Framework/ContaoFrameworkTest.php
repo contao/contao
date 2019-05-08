@@ -140,7 +140,7 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->mockFramework();
         $framework->setContainer($this->mockContainer());
 
-        /** @var Config|MockObject $config */
+        /** @var Config&MockObject $config */
         $config = $framework->getAdapter(Config::class);
         $config
             ->expects($this->once())
@@ -175,7 +175,7 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->mockFramework();
         $framework->setContainer($this->mockContainer());
 
-        /** @var Config|MockObject $config */
+        /** @var Config&MockObject $config */
         $config = $framework->getAdapter(Config::class);
         $config
             ->expects($this->once())
@@ -214,7 +214,7 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->mockFramework($request);
         $framework->setContainer($this->mockContainer());
 
-        /** @var Config|MockObject $config */
+        /** @var Config&MockObject $config */
         $config = $framework->getAdapter(Config::class);
         $config
             ->expects($this->once())
@@ -602,7 +602,7 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * @param TokenChecker|MockObject|null $tokenChecker
+     * @param TokenChecker&MockObject $tokenChecker
      */
     private function mockFramework(Request $request = null, ScopeMatcher $scopeMatcher = null, TokenChecker $tokenChecker = null): ContaoFramework
     {
