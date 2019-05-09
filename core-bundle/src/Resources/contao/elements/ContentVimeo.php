@@ -108,6 +108,7 @@ class ContentVimeo extends ContentElement
 			$url .= '#t=' . (int) $this->playerStart . 's';
 		}
 
+		// Add a splash image
 		if ($this->videoSplash)
 		{
 			$objFile = FilesModel::findByUuid($this->singleSRC);
@@ -121,7 +122,7 @@ class ContentVimeo extends ContentElement
 			}
 			else
 			{
-				$this->videoSplash = false;
+				$this->Template->videoSplash = false;
 			}
 		}
 

@@ -123,6 +123,7 @@ class ContentYouTube extends ContentElement
 			$url .= '?' . implode('&amp;', $params);
 		}
 
+		// Add a splash image
 		if ($this->videoSplash)
 		{
 			$objFile = FilesModel::findByUuid($this->singleSRC);
@@ -136,7 +137,7 @@ class ContentYouTube extends ContentElement
 			}
 			else
 			{
-				$this->videoSplash = false;
+				$this->Template->videoSplash = false;
 			}
 		}
 
