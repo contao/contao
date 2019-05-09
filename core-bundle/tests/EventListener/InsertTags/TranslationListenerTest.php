@@ -44,16 +44,11 @@ class TranslationListenerTest extends TestCase
         $this->assertSame($result, $listener->onReplaceInsertTags($insertTag));
     }
 
-    /**
-     * @return (string[]|string)[][]
-     */
-    public function insertTagsProvider(): array
+    public function insertTagsProvider(): \Generator
     {
-        return [
-            ['foo', 'bar'],
-            ['foo', 'baz', 'bar'],
-            ['foo', 'else', 'bar', ['baz', 'what']],
-        ];
+        yield ['foo', 'bar'];
+        yield ['foo', 'baz', 'bar'];
+        yield ['foo', 'else', 'bar', ['baz', 'what']];
     }
 
     public function testIgnoresOtherInsertTags(): void

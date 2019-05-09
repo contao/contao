@@ -26,8 +26,10 @@ class OptInTokenTest extends ContaoTestCase
 {
     public function testReturnsTheIdentifier(): void
     {
-        /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, ['token' => 'foobar']);
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->token = 'foobar';
+
         $token = $this->getToken($model);
 
         $this->assertSame('foobar', $token->getIdentifier());
@@ -35,22 +37,38 @@ class OptInTokenTest extends ContaoTestCase
 
     public function testReturnsTheEmailAddress(): void
     {
-        /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, ['email' => 'foo@bar.com']);
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->email = 'foo@bar.com';
+
         $token = $this->getToken($model);
 
         $this->assertSame('foo@bar.com', $token->getEmail());
     }
 
+    public function testInvalidatesAToken(): void
+    {
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->invalidatedThrough = 'foo';
+
+        $token = $this->getToken($model);
+
+        $this->assertFalse($token->isValid());
+    }
+
     public function testConfirmsAToken(): void
     {
-        $properties = [
-            'createdOn' => time(),
-            'confirmedOn' => 0,
-        ];
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->createdOn = time();
+        $model->confirmedOn = 0;
 
-        /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
+        $model
+            ->expects($this->once())
+            ->method('getRelatedRecords')
+            ->willReturn([])
+        ;
 
         $token = $this->getToken($model);
         $token->confirm();
@@ -58,14 +76,108 @@ class OptInTokenTest extends ContaoTestCase
         $this->assertTrue($token->isConfirmed());
     }
 
+    public function testInvalidatesRelatedTokens(): void
+    {
+        /** @var OptInModel&MockObject $related */
+        $related = $this->mockClassWithProperties(OptInModel::class);
+        $related->token = 'reg-first';
+        $related->createdOn = time();
+        $related->confirmedOn = 0;
+
+        $related
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        $related
+            ->expects($this->once())
+            ->method('getRelatedRecords')
+            ->willReturn(['tl_user' => [2]])
+        ;
+
+        $adapter = $this->mockAdapter(['findByRelatedTableAndIds']);
+        $adapter
+            ->expects($this->once())
+            ->method('findByRelatedTableAndIds')
+            ->with('tl_user', [2])
+            ->willReturn([$related])
+        ;
+
+        $framework = $this->mockContaoFramework([OptInModel::class => $adapter]);
+
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->token = 'reg-second';
+        $model->createdOn = time();
+        $model->confirmedOn = 0;
+
+        $model
+            ->expects($this->once())
+            ->method('getRelatedRecords')
+            ->willReturn(['tl_user' => [2]])
+        ;
+
+        $token = $this->getToken($model, $framework);
+        $token->confirm();
+
+        $this->assertTrue($token->isConfirmed());
+        $this->assertSame('reg-second', $related->invalidatedThrough);
+    }
+
+    public function testDoesNotInvalidateRelatedTokensIfTheRelatedRecordsDoNotMatch(): void
+    {
+        /** @var OptInModel&MockObject $related */
+        $related = $this->mockClassWithProperties(OptInModel::class);
+        $related->token = 'reg-first';
+        $related->createdOn = time();
+        $related->confirmedOn = 0;
+
+        $related
+            ->expects($this->never())
+            ->method('save')
+        ;
+
+        $related
+            ->expects($this->once())
+            ->method('getRelatedRecords')
+            ->willReturn(['tl_user' => [2, 3]])
+        ;
+
+        $adapter = $this->mockAdapter(['findByRelatedTableAndIds']);
+        $adapter
+            ->expects($this->once())
+            ->method('findByRelatedTableAndIds')
+            ->with('tl_user', [2])
+            ->willReturn([$related])
+        ;
+
+        $framework = $this->mockContaoFramework([OptInModel::class => $adapter]);
+
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->token = 'reg-second';
+        $model->createdOn = time();
+        $model->confirmedOn = 0;
+
+        $model
+            ->expects($this->once())
+            ->method('getRelatedRecords')
+            ->willReturn(['tl_user' => [2]])
+        ;
+
+        $token = $this->getToken($model, $framework);
+        $token->confirm();
+
+        $this->assertTrue($token->isConfirmed());
+        $this->assertNull($related->invalidatedThrough);
+    }
+
     public function testDoesNotConfirmAConfirmedToken(): void
     {
-        $properties = [
-            'confirmedOn' => time(),
-        ];
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->confirmedOn = time();
 
-        /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
         $token = $this->getToken($model);
 
         $this->expectException(OptInTokenAlreadyConfirmedException::class);
@@ -76,13 +188,11 @@ class OptInTokenTest extends ContaoTestCase
 
     public function testDoesNotConfirmAnExpiredToken(): void
     {
-        $properties = [
-            'createdOn' => strtotime('-1 day'),
-            'confirmedOn' => 0,
-        ];
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->createdOn = strtotime('-1 day');
+        $model->confirmedOn = 0;
 
-        /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
         $token = $this->getToken($model);
 
         $this->expectException(OptInTokenNoLongerValidException::class);
@@ -93,15 +203,13 @@ class OptInTokenTest extends ContaoTestCase
 
     public function testSendsATokenViaEmail(): void
     {
-        $properties = [
-            'createdOn' => time(),
-            'confirmedOn' => 0,
-            'emailSubject' => '',
-            'emailText' => '',
-        ];
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->createdOn = time();
+        $model->confirmedOn = 0;
+        $model->emailSubject = '';
+        $model->emailText = '';
 
-        /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
         $model
             ->expects($this->once())
             ->method('save')
@@ -129,12 +237,10 @@ class OptInTokenTest extends ContaoTestCase
 
     public function testDoesNotSendAConfirmedTokenViaEmail(): void
     {
-        $properties = [
-            'confirmedOn' => time(),
-        ];
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->confirmedOn = time();
 
-        /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
         $token = $this->getToken($model);
 
         $this->expectException(OptInTokenAlreadyConfirmedException::class);
@@ -145,13 +251,11 @@ class OptInTokenTest extends ContaoTestCase
 
     public function testDoesNotSendAnExpiredTokenViaEmail(): void
     {
-        $properties = [
-            'createdOn' => strtotime('-1 day'),
-            'confirmedOn' => 0,
-        ];
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->createdOn = strtotime('-1 day');
+        $model->confirmedOn = 0;
 
-        /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
         $token = $this->getToken($model);
 
         $this->expectException(OptInTokenNoLongerValidException::class);
@@ -162,15 +266,13 @@ class OptInTokenTest extends ContaoTestCase
 
     public function testRequiresSubjectAndTextToSendToken(): void
     {
-        $properties = [
-            'createdOn' => time(),
-            'confirmedOn' => 0,
-            'emailSubject' => '',
-            'emailText' => '',
-        ];
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->createdOn = time();
+        $model->confirmedOn = 0;
+        $model->emailSubject = '';
+        $model->emailText = '';
 
-        /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
         $model
             ->expects($this->never())
             ->method('save')
@@ -186,15 +288,13 @@ class OptInTokenTest extends ContaoTestCase
 
     public function testDoesNotRequireSubjectAndTextToResendToken(): void
     {
-        $properties = [
-            'createdOn' => time(),
-            'confirmedOn' => 0,
-            'emailSubject' => 'Subject',
-            'emailText' => 'Text',
-        ];
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->createdOn = time();
+        $model->confirmedOn = 0;
+        $model->emailSubject = 'Subject';
+        $model->emailText = 'Text';
 
-        /** @var OptInModel|MockObject $model */
-        $model = $this->mockClassWithGetterSetter(OptInModel::class, $properties);
         $model
             ->expects($this->never())
             ->method('save')
@@ -220,6 +320,9 @@ class OptInTokenTest extends ContaoTestCase
         $this->assertTrue($token->hasBeenSent());
     }
 
+    /**
+     * @param ContaoFramework&MockObject $framework
+     */
     private function getToken(OptInModel $model, ContaoFramework $framework = null): OptInTokenInterface
     {
         if (null === $framework) {

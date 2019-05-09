@@ -33,6 +33,10 @@ class OptIn implements OptInInterface
      */
     public function create(string $prefix, string $email, array $related): OptInTokenInterface
     {
+        if ($prefix) {
+            $prefix = rtrim($prefix, '-');
+        }
+
         if (\strlen($prefix) > 6) {
             throw new \InvalidArgumentException('The token prefix must not be longer than 6 characters');
         }
@@ -40,7 +44,7 @@ class OptIn implements OptInInterface
         $token = bin2hex(random_bytes(12));
 
         if ($prefix) {
-            $token = $prefix.substr($token, \strlen($prefix));
+            $token = $prefix.'-'.substr($token, \strlen($prefix) + 1);
         }
 
         /** @var OptInModel $optIn */
@@ -98,16 +102,17 @@ class OptIn implements OptInInterface
                 /** @var Model $model */
                 $model = $this->framework->getAdapter($adapter->getClassFromTable($table));
 
-                if ($model->findByPk($id)) {
+                // Check if the related records still exist
+                if (null !== $model->findMultipleByIds($id)) {
                     $delete = false;
                     break;
                 }
             }
 
-            // Prolong the token for another 3 years if the related records still exist
             if ($delete) {
                 $token->delete();
             } else {
+                // Prolong the token for another 3 years if the related records still exist
                 $token->removeOn = strtotime('+3 years', (int) $token->removeOn);
                 $token->save();
             }

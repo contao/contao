@@ -1,5 +1,5 @@
 
-<div class="<?= $this->prefix ?><?php if ($this->class) echo ' ' . $this->class; ?>">
+<div class="<?= $this->prefix ?><?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>">
   <?php $this->block('label'); ?>
   <?php $this->endblock(); ?>
 

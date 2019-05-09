@@ -131,7 +131,7 @@ class ContaoKernelTest extends ContaoTestCase
         $loader
             ->method('load')
             ->willReturnCallback(
-                function ($resource) use (&$files): void {
+                static function ($resource) use (&$files): void {
                     $files[] = basename($resource);
                 }
             )
@@ -143,37 +143,36 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertSame($expectedResult, $files);
     }
 
-    /**
-     * @return (string[]|string)[][]
-     */
-    public function containerConfigurationProvider(): array
+    public function containerConfigurationProvider(): \Generator
     {
-        return [
-            [
-                __DIR__.'/../Fixtures/HttpKernel/WithParametersYml',
-                'prod',
-                ['parameters.yml', 'parameters.yml'],
-            ],
-            [
-                __DIR__.'/../Fixtures/HttpKernel/WithConfigDevYml',
-                'dev',
-                ['config_dev.yml'],
-            ],
-            [
-                __DIR__.'/../Fixtures/HttpKernel/WithConfigYml',
-                'prod',
-                ['config.yml'],
-            ],
-            [
-                __DIR__.'/../Fixtures/HttpKernel/WithConfigsYml',
-                'prod',
-                ['config_prod.yml'],
-            ],
-            [
-                $this->getTempDir(),
-                'prod',
-                [],
-            ],
+        yield [
+            __DIR__.'/../Fixtures/HttpKernel/WithParametersYml',
+            'prod',
+            ['parameters.yml', 'parameters.yml'],
+        ];
+
+        yield [
+            __DIR__.'/../Fixtures/HttpKernel/WithConfigDevYml',
+            'dev',
+            ['config_dev.yml'],
+        ];
+
+        yield [
+            __DIR__.'/../Fixtures/HttpKernel/WithConfigYml',
+            'prod',
+            ['config.yml'],
+        ];
+
+        yield [
+            __DIR__.'/../Fixtures/HttpKernel/WithConfigsYml',
+            'prod',
+            ['config_prod.yml'],
+        ];
+
+        yield [
+            $this->getTempDir(),
+            'prod',
+            [],
         ];
     }
 
@@ -203,7 +202,7 @@ class ContaoKernelTest extends ContaoTestCase
     /**
      * Mocks a kernel with the plugin loader.
      *
-     * @return ContaoKernel|MockObject
+     * @return ContaoKernel&MockObject
      */
     private function mockKernel(string $projectDir, string $env = 'prod'): ContaoKernel
     {
@@ -222,7 +221,7 @@ class ContaoKernelTest extends ContaoTestCase
     }
 
     /**
-     * @return ConfigPluginInterface|MockObject
+     * @return ConfigPluginInterface&MockObject
      */
     private function mockConfigPlugin(LoaderInterface $loader): ConfigPluginInterface
     {

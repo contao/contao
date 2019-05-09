@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\Matcher;
 
-use Contao\CoreBundle\Routing\Matcher\PublishingFilter;
+use Contao\CoreBundle\Routing\Matcher\PublishedFilter;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
-class PublishingFilterTest extends TestCase
+class PublishedFilterTest extends TestCase
 {
     public function testDoesNotFilterInPreviewMode(): void
     {
@@ -31,7 +31,7 @@ class PublishingFilterTest extends TestCase
             ->method('all')
         ;
 
-        $filter = new PublishingFilter($this->mockTokenChecker(true));
+        $filter = new PublishedFilter($this->mockTokenChecker(true));
         $filter->filter($collection, $this->createMock(Request::class));
     }
 
@@ -52,18 +52,23 @@ class PublishingFilterTest extends TestCase
             ->willReturn(['foo' => $route])
         ;
 
-        $filter = new PublishingFilter($this->mockTokenChecker());
+        $collection
+            ->expects($this->never())
+            ->method('remove')
+        ;
+
+        $filter = new PublishedFilter($this->mockTokenChecker());
         $filter->filter($collection, $this->createMock(Request::class));
     }
 
-    public function testRemovesRouteWhenPageIsNotPublished(): void
+    public function testRemovesARouteIfThePageHasNotBeenPublished(): void
     {
         $route = $this->createMock(Route::class);
         $route
-            ->expects($this->atLeastOnce())
+            ->expects($this->once())
             ->method('getDefault')
             ->with('pageModel')
-            ->willReturn($this->mockPageModel(false))
+            ->willReturn($this->mockClassWithProperties(PageModel::class, ['rootIsPublic' => false]))
         ;
 
         $collection = $this->createMock(RouteCollection::class);
@@ -79,83 +84,52 @@ class PublishingFilterTest extends TestCase
             ->with('foo')
         ;
 
-        $filter = new PublishingFilter($this->mockTokenChecker());
+        $filter = new PublishedFilter($this->mockTokenChecker());
         $filter->filter($collection, $this->createMock(Request::class));
     }
 
-    public function testRemovesRouteWhenPageStartDateIsInTheFuture(): void
+    public function testDoesNotRemoveARouteIfThePageHasBeenPublished(): void
     {
         $route = $this->createMock(Route::class);
         $route
-            ->expects($this->atLeastOnce())
+            ->expects($this->once())
             ->method('getDefault')
             ->with('pageModel')
-            ->willReturn($this->mockPageModel(true, (string) strtotime('+1 day')))
+            ->willReturn($this->mockClassWithProperties(PageModel::class, ['rootIsPublic' => true]))
         ;
 
         $collection = $this->createMock(RouteCollection::class);
         $collection
             ->expects($this->once())
             ->method('all')
-            ->willReturn(['bar' => $route])
+            ->willReturn(['foo' => $route])
         ;
 
         $collection
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('remove')
-            ->with('bar')
         ;
 
-        $filter = new PublishingFilter($this->mockTokenChecker());
-        $filter->filter($collection, $this->createMock(Request::class));
-    }
-
-    public function testRemovesRouteWhenPageStopDateIsInThePast(): void
-    {
-        $route = $this->createMock(Route::class);
-        $route
-            ->expects($this->atLeastOnce())
-            ->method('getDefault')
-            ->with('pageModel')
-            ->willReturn($this->mockPageModel(true, '', (string) strtotime('-1 day')))
-        ;
-
-        $collection = $this->createMock(RouteCollection::class);
-        $collection
-            ->expects($this->once())
-            ->method('all')
-            ->willReturn(['bar' => $route])
-        ;
-
-        $collection
-            ->expects($this->once())
-            ->method('remove')
-            ->with('bar')
-        ;
-
-        $filter = new PublishingFilter($this->mockTokenChecker());
+        $filter = new PublishedFilter($this->mockTokenChecker());
         $filter->filter($collection, $this->createMock(Request::class));
     }
 
     /**
-     * @return TokenChecker|MockObject
+     * @return TokenChecker&MockObject
      */
     private function mockTokenChecker(bool $isPreviewMode = false): TokenChecker
     {
         $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->method('hasBackendUser')
+            ->willReturn($isPreviewMode)
+        ;
+
         $tokenChecker
             ->method('isPreviewMode')
             ->willReturn($isPreviewMode)
         ;
 
         return $tokenChecker;
-    }
-
-    /**
-     * @return PageModel|MockObject
-     */
-    private function mockPageModel(bool $published, string $start = '', string $stop = ''): PageModel
-    {
-        return $this->mockClassWithProperties(PageModel::class, compact('published', 'start', 'stop'));
     }
 }

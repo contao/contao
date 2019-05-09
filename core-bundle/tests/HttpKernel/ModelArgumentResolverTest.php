@@ -49,16 +49,11 @@ class ModelArgumentResolverTest extends TestCase
         }
     }
 
-    /**
-     * @return string[][]
-     */
-    public function getArguments(): array
+    public function getArguments(): \Generator
     {
-        return [
-            ['pageModel', PageModel::class],
-            ['foobar', PageModel::class],
-            ['foobar', 'PageModel'],
-        ];
+        yield ['pageModel', PageModel::class];
+        yield ['foobar', PageModel::class];
+        yield ['foobar', 'PageModel'];
     }
 
     public function testDoesNothingIfOutsideTheContaoScope(): void

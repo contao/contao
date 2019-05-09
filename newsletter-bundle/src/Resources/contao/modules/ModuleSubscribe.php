@@ -169,26 +169,53 @@ class ModuleSubscribe extends Module
 		$optIn = System::getContainer()->get('contao.opt-in');
 
 		// Find an unconfirmed token
-		if ((!$optInToken = $optIn->find(Input::get('token'))) || $optInToken->isConfirmed() || \count($arrRelated = $optInToken->getRelatedRecords()) < 1 || key($arrRelated) != 'tl_newsletter_recipients' || \count($arrIds = current($arrRelated)) < 1)
+		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) < 1 || key($arrRelated) != 'tl_newsletter_recipients' || \count($arrIds = current($arrRelated)) < 1)
 		{
 			$this->Template->type = 'error';
-			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountError'];
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 
 			return;
+		}
+
+		if ($optInToken->isConfirmed())
+		{
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
+
+			return;
+		}
+
+		$arrRecipients = array();
+
+		// Validate the token
+		foreach ($arrIds as $intId)
+		{
+			if (!$objRecipient = NewsletterRecipientsModel::findByPk($intId))
+			{
+				$this->Template->type = 'error';
+				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
+
+				return;
+			}
+
+			if ($optInToken->getEmail() != $objRecipient->email)
+			{
+				$this->Template->type = 'error';
+				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
+
+				return;
+			}
+
+			$arrRecipients[] = $objRecipient;
 		}
 
 		$time = time();
 		$arrAdd = array();
 		$arrCids = array();
 
-		// Update the subscriptions
-		foreach ($arrIds as $intId)
+		// Activate the subscriptions
+		foreach ($arrRecipients as $objRecipient)
 		{
-			if (!$objRecipient = NewsletterRecipientsModel::findByPk($intId))
-			{
-				continue;
-			}
-
 			$arrAdd[] = $objRecipient->id;
 			$arrCids[] = $objRecipient->pid;
 
@@ -333,7 +360,7 @@ class ModuleSubscribe extends Module
 
 		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
-		$optInToken = $optIn->create('nl-', $strEmail, $arrRelated);
+		$optInToken = $optIn->create('nl', $strEmail, $arrRelated);
 
 		// Get the channels
 		$objChannel = NewsletterChannelModel::findByIds($arrNew);
@@ -349,7 +376,7 @@ class ModuleSubscribe extends Module
 		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))), StringUtil::parseSimpleTokens($this->nl_subscribe, $arrData));
 
 		// Redirect to the jumpTo page
-		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			/** @var PageModel $objTarget */
 			$this->redirect($objTarget->getFrontendUrl());

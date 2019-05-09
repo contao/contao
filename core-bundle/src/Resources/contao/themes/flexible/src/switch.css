@@ -69,8 +69,8 @@ h1 {
 	font-size:1rem;
 	color:#999;
 	font-weight:600;
-	padding:0 3px;
-	vertical-align:middle;
+	padding:0 2px 0 3px;
+	vertical-align:text-bottom;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	.close {
@@ -93,6 +93,9 @@ form {
 	width:24%;
 	max-width:180px;
 }
+.tl_submit {
+	padding:5px 12px 6px;
+}
 label {
 	margin-left:9px;
 }
@@ -103,14 +106,14 @@ p {
 }
 
 /* Tablet */
-@media (max-width:991px) {
+@media (max-width:1099px) {
 	.title {
 		display:none;
 	}
 }
 
 /* Handheld */
-@media (max-width:767px) {
+@media (max-width:991px) {
 	label {
 		display:none;
 	}

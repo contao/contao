@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Framework;
 use Contao\ClassLoader;
 use Contao\Config;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
-use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\LazySessionAccess;
@@ -383,9 +382,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
     }
 
-    /**
-     * @throws InvalidRequestTokenException
-     */
     private function handleRequestToken(): void
     {
         /** @var RequestToken $requestToken */
@@ -395,12 +391,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         if (!\defined('REQUEST_TOKEN')) {
             \define('REQUEST_TOKEN', 'cli' === \PHP_SAPI ? null : $requestToken->get());
         }
-
-        if ($this->canSkipTokenCheck() || $requestToken->validate($this->request->request->get('REQUEST_TOKEN'))) {
-            return;
-        }
-
-        throw new InvalidRequestTokenException('Invalid request token. Please reload the page and try again.');
     }
 
     private function iniSet(string $key, string $value): void
@@ -417,16 +407,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         return $this->request->getSession();
-    }
-
-    private function canSkipTokenCheck(): bool
-    {
-        return null === $this->request
-            || 'POST' !== $this->request->getRealMethod()
-            || $this->request->isXmlHttpRequest()
-            || !$this->request->attributes->has('_token_check')
-            || false === $this->request->attributes->get('_token_check')
-        ;
     }
 
     private function registerHookListeners(): void

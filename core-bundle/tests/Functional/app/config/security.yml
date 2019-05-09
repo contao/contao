@@ -16,7 +16,7 @@ security:
             security: false
 
         contao_install:
-            pattern: ^/contao/install
+            pattern: ^/contao/install$
             security: false
 
         contao_backend:
@@ -43,9 +43,9 @@ security:
 
             logout:
                 path: contao_backend_logout
-                target: contao_backend_login
                 handlers:
                     - contao.security.logout_handler
+                success_handler: contao.security.logout_success_handler
 
         contao_frontend:
             request_matcher: contao.routing.frontend_matcher
@@ -79,4 +79,5 @@ security:
 
     access_control:
         - { path: ^/contao/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/contao/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/contao(/|$), roles: ROLE_USER }

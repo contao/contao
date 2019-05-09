@@ -140,7 +140,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'title' => array
 		(
@@ -158,7 +158,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('mandatory'=>true, 'fieldType'=>'radio', 'tl_class'=>'clr'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'protected' => array
@@ -192,24 +192,22 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		'notify' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['notify'],
-			'default'                 => 'notify_admin',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('notify_admin', 'notify_author', 'notify_both'),
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_calendar'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'notify_admin'"
 		),
 		'sortOrder' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['sortOrder'],
-			'default'                 => 'ascending',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('ascending', 'descending'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'ascending'"
 		),
 		'perPage' => array
 		(
@@ -217,7 +215,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'moderate' => array
 		(
@@ -390,13 +388,13 @@ class tl_calendar extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		if (empty($this->User->calendars) || !\is_array($this->User->calendars))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $this->User->calendars;
 		}
 
 		// The calendar is enabled already

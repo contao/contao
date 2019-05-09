@@ -72,12 +72,10 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render($uri);
     }
 
-    /**
-     * @return string[][]
-     */
-    public function getRenderingStrategies(): array
+    public function getRenderingStrategies(): \Generator
     {
-        return [['inline'], ['esi']];
+        yield ['inline'];
+        yield ['esi'];
     }
 
     /**
@@ -101,15 +99,10 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render($uri);
     }
 
-    /**
-     * @return array<int,array<int,array<string,string>>>
-     */
-    public function getOptions(): array
+    public function getOptions(): \Generator
     {
-        return [
-            [['foo' => 'bar']],
-            [['bar' => 'baz']],
-        ];
+        yield [['foo' => 'bar']];
+        yield [['bar' => 'baz']];
     }
 
     public function testAddsThePageIdFromTheGlobalPageObject(): void
@@ -120,7 +113,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'inline', ['foo' => 'bar']));
 
         $callback = $this->callback(
-            function () use ($uri) {
+            static function () use ($uri) {
                 return isset($uri->attributes['pageModel']) && 42 === $uri->attributes['pageModel'];
             }
         );
@@ -142,7 +135,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'inline', ['foo' => 'bar']));
 
         $callback = $this->callback(
-            function () use ($uri) {
+            static function () use ($uri) {
                 return isset($uri->attributes['pageModel']) && 99 === $uri->attributes['pageModel'];
             }
         );
@@ -216,6 +209,9 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render($uri);
     }
 
+    /**
+     * @param BaseFragmentHandler&MockObject $fragmentHandler
+     */
     private function mockFragmentHandler(FragmentRegistry $registry = null, ServiceLocator $renderers = null, ServiceLocator $preHandlers = null, Request $request = null, BaseFragmentHandler $fragmentHandler = null): FragmentHandler
     {
         if (null === $registry) {
@@ -245,7 +241,7 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * @return ServiceLocator|MockObject
+     * @return ServiceLocator&MockObject
      */
     private function mockServiceLocatorWithRenderer(string $name, array $with = null, Response $response = null): ServiceLocator
     {
@@ -276,7 +272,7 @@ class FragmentHandlerTest extends TestCase
     /**
      * @param object $service
      *
-     * @return ServiceLocator|MockObject
+     * @return ServiceLocator&MockObject
      */
     private function mockServiceLocator(string $name, $service): ServiceLocator
     {

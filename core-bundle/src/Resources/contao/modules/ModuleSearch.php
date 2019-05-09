@@ -88,7 +88,7 @@ class ModuleSearch extends Module
 		$this->Template->advanced = ($this->searchType == 'advanced');
 
 		// Redirect page
-		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			/** @var PageModel $objTarget */
 			$this->Template->action = $objTarget->getFrontendUrl();
@@ -195,7 +195,7 @@ class ModuleSearch extends Module
 				{
 					if ($v['protected'])
 					{
-						if (!FE_USER_LOGGED_IN)
+						if (!FE_USER_LOGGED_IN || !\is_array($this->User->groups))
 						{
 							unset($arrResult[$k]);
 						}

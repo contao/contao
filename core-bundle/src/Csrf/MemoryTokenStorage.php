@@ -67,12 +67,20 @@ class MemoryTokenStorage implements TokenStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function removeToken($tokenId): void
+    public function removeToken($tokenId): ?string
     {
         $this->assertInitialized();
 
+        $token = null;
+
+        if (isset($this->tokens[$tokenId])) {
+            $token = $this->tokens[$tokenId];
+            $this->tokens[$tokenId] = null;
+        }
+
         $this->usedTokens[$tokenId] = true;
-        $this->tokens[$tokenId] = null;
+
+        return $token;
     }
 
     public function initialize(array $tokens): void

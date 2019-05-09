@@ -17,6 +17,7 @@ use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\GenerateSymlinksEvent;
 use Contao\CoreBundle\Util\SymlinkUtil;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,7 +30,7 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * Symlinks the public resources into the web directory.
  */
-class SymlinksCommand extends AbstractLockedCommand
+class SymlinksCommand extends Command
 {
     /**
      * @var SymfonyStyle
@@ -104,7 +105,7 @@ class SymlinksCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
         $this->webDir = rtrim($input->getArgument('target'), '/');
@@ -148,14 +149,14 @@ class SymlinksCommand extends AbstractLockedCommand
     private function symlinkFiles(string $uploadPath): void
     {
         $this->createSymlinksFromFinder(
-            $this->findIn($this->rootDir.'/'.$uploadPath)->files()->name('.public'),
+            $this->findIn($this->rootDir.'/'.$uploadPath)->files()->depth('> 0')->name('.public'),
             $uploadPath
         );
     }
 
     private function symlinkModules(): void
     {
-        $filter = function (SplFileInfo $file): bool {
+        $filter = static function (SplFileInfo $file): bool {
             return HtaccessAnalyzer::create($file)->grantsAccess();
         };
 
@@ -244,7 +245,7 @@ class SymlinksCommand extends AbstractLockedCommand
         return Finder::create()
             ->ignoreDotFiles(false)
             ->sort(
-                function (SplFileInfo $a, SplFileInfo $b): int {
+                static function (SplFileInfo $a, SplFileInfo $b): int {
                     $countA = substr_count(strtr($a->getRelativePath(), '\\', '/'), '/');
                     $countB = substr_count(strtr($b->getRelativePath(), '\\', '/'), '/');
 

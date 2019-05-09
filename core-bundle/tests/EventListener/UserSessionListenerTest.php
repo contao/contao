@@ -18,6 +18,7 @@ use Contao\CoreBundle\EventListener\UserSessionListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,7 +48,9 @@ class UserSessionListenerTest extends TestCase
             'lonesome' => 'looser',
         ];
 
-        $user = $this->mockClassWithProperties($userClass, ['session' => $sessionValues]);
+        /** @var BackendUser&MockObject $user */
+        $user = $this->mockClassWithProperties($userClass);
+        $user->session = $sessionValues;
 
         $token = $this->createMock(UsernamePasswordToken::class);
         $token
@@ -83,15 +86,10 @@ class UserSessionListenerTest extends TestCase
         $this->assertSame($sessionValues, $bag->all());
     }
 
-    /**
-     * @return string[][]
-     */
-    public function scopeBagProvider(): array
+    public function scopeBagProvider(): \Generator
     {
-        return [
-            [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'contao_backend'],
-            [ContaoCoreBundle::SCOPE_FRONTEND, FrontendUser::class, 'contao_frontend'],
-        ];
+        yield [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'contao_backend'];
+        yield [ContaoCoreBundle::SCOPE_FRONTEND, FrontendUser::class, 'contao_frontend'];
     }
 
     /**
@@ -131,15 +129,10 @@ class UserSessionListenerTest extends TestCase
         $listener->onKernelResponse($this->mockFilterResponseEvent($request));
     }
 
-    /**
-     * @return string[][]
-     */
-    public function scopeTableProvider(): array
+    public function scopeTableProvider(): \Generator
     {
-        return [
-            [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'tl_user'],
-            [ContaoCoreBundle::SCOPE_FRONTEND, FrontendUser::class, 'tl_member'],
-        ];
+        yield [ContaoCoreBundle::SCOPE_BACKEND, BackendUser::class, 'tl_user'];
+        yield [ContaoCoreBundle::SCOPE_FRONTEND, FrontendUser::class, 'tl_member'];
     }
 
     /**
@@ -200,15 +193,10 @@ class UserSessionListenerTest extends TestCase
         $listener->onKernelResponse($this->mockFilterResponseEvent($request));
     }
 
-    /**
-     * @return (AnonymousToken|null)[][]
-     */
-    public function noUserProvider(): array
+    public function noUserProvider(): \Generator
     {
-        return [
-            [null],
-            [new AnonymousToken('key', 'anon.')],
-        ];
+        yield [null];
+        yield [new AnonymousToken('key', 'anon.')];
     }
 
     public function testDoesNotReplaceTheSessionUponSubrequests(): void
@@ -343,7 +331,10 @@ class UserSessionListenerTest extends TestCase
 
     public function testFailsToReplaceTheSessionIfThereIsNoSession(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['session' => []]);
+        /** @var BackendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->session = [];
+
         $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->method('getUser')
@@ -400,6 +391,10 @@ class UserSessionListenerTest extends TestCase
 
     /**
      * Mocks a session listener.
+     *
+     * @param Connection&MockObject               $connection
+     * @param TokenStorageInterface&MockObject    $tokenStorage
+     * @param EventDispatcherInterface&MockObject $eventDispatcher
      */
     private function mockListener(Connection $connection = null, TokenStorageInterface $tokenStorage = null, EventDispatcherInterface $eventDispatcher = null): UserSessionListener
     {

@@ -21,6 +21,7 @@ use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -44,7 +45,7 @@ class EventPickerProviderTest extends ContaoTestCase
         $menuFactory
             ->method('createItem')
             ->willReturnCallback(
-                function (string $name, array $data) use ($menuFactory): ItemInterface {
+                static function (string $name, array $data) use ($menuFactory): ItemInterface {
                     $item = new MenuItem($name, $menuFactory);
                     $item->setLabel($data['label']);
                     $item->setLinkAttributes($data['linkAttributes']);
@@ -60,7 +61,7 @@ class EventPickerProviderTest extends ContaoTestCase
         $router
             ->method('generate')
             ->willReturnCallback(
-                function (string $name, array $params): string {
+                static function (string $name, array $params): string {
                     return $name.'?'.http_build_query($params);
                 }
             )
@@ -202,12 +203,16 @@ class EventPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
+        /** @var CalendarModel&MockObject $calendarModel */
+        $calendarModel = $this->mockClassWithProperties(CalendarModel::class);
+        $calendarModel->id = 1;
+
         $calendarEvents = $this->createMock(CalendarEventsModel::class);
         $calendarEvents
             ->expects($this->once())
             ->method('getRelated')
             ->with('pid')
-            ->willReturn($this->mockClassWithProperties(CalendarModel::class, ['id' => 1]))
+            ->willReturn($calendarModel)
         ;
 
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');

@@ -118,12 +118,12 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_newsletter_channel.title',
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'subject' => array
 		(
@@ -370,11 +370,6 @@ class tl_newsletter extends Contao\Backend
 				$objChannel = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE pid=?")
 											 ->execute($id);
 
-				if ($objChannel->numRows < 1)
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid newsletter channel ID  ' . $id . '.');
-				}
-
 				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
 				$objSession = Contao\System::getContainer()->get('session');
 
@@ -474,7 +469,7 @@ class tl_newsletter extends Contao\Backend
 		// Generate alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->subject, Contao\NewsletterChannelModel::findByPk($dc->activeRecord->pid)->jumpTo ?? array(), $aliasExists);
+			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->subject, Contao\NewsletterChannelModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif ($aliasExists($varValue))
 		{

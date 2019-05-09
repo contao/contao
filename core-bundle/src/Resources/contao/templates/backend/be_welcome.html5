@@ -40,7 +40,7 @@
               <?php if ($version['deleted']): ?>
                 <a href="<?= $this->route('contao_backend', array('do'=>'undo')) ?>" title="<?= Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['restore']) ?>"><?= Contao\Image::getHtml('undo.svg', '', 'class="undo"') ?></a>
               <?php else: ?>
-                <?php if ($version['editUrl'] != ''): ?>
+                <?php if ($version['editUrl']): ?>
                   <a href="<?= $version['editUrl'] ?>" title="<?= $this->editElement ?>" class="edit"><?= Contao\Image::getHtml('edit.svg', '', 'style="padding:0 2px"') ?></a>
                 <?php else: ?>
                   <?= Contao\Image::getHtml('edit_.svg', '', 'style="padding:0 2px"') ?>

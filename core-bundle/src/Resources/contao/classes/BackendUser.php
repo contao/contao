@@ -136,7 +136,7 @@ class BackendUser extends User
 		// Load the user from the security storage
 		if ($objToken !== null && is_a($objToken->getUser(), static::class))
 		{
-			return static::loadUserByUsername($objToken->getUser()->getUsername());
+			return $objToken->getUser();
 		}
 
 		// Check for an authenticated user in the session
@@ -144,7 +144,9 @@ class BackendUser extends User
 
 		if ($strUser !== null)
 		{
-			return static::loadUserByUsername($strUser);
+			static::$objInstance = static::loadUserByUsername($strUser);
+
+			return static::$objInstance;
 		}
 
 		return parent::getInstance();

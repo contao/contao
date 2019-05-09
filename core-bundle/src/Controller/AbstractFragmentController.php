@@ -13,10 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FrontendTemplate;
 use Contao\Model;
 use Contao\StringUtil;
 use Contao\Template;
+use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -30,6 +32,20 @@ abstract class AbstractFragmentController extends AbstractController implements 
     public function setFragmentOptions(array $options): void
     {
         $this->options = $options;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedServices(): array
+    {
+        return array_merge(
+            parent::getSubscribedServices(),
+            [
+                'contao.framework' => ContaoFramework::class,
+                'fos_http_cache.http.symfony_response_tagger' => '?'.SymfonyResponseTagger::class,
+            ]
+        );
     }
 
     /**

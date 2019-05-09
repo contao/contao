@@ -57,8 +57,7 @@ class PageForward extends Frontend
 	{
 		if ($objPage->jumpTo)
 		{
-			/** @var PageModel $objNextPage */
-			$objNextPage = $objPage->getRelated('jumpTo');
+			$objNextPage = PageModel::findPublishedById($objPage->jumpTo);
 		}
 		else
 		{

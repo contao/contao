@@ -24,24 +24,26 @@ class MemoryTokenStorageTest extends TestCase
         $memoryTokenStorage->initialize(['foo' => 'bar']);
 
         $this->assertTrue($memoryTokenStorage->hasToken('foo'));
-        $this->assertFalse($memoryTokenStorage->hasToken('baz'));
+        $this->assertFalse($memoryTokenStorage->hasToken('bar'));
 
-        $memoryTokenStorage->setToken('baz', 'bar');
+        $memoryTokenStorage->setToken('bar', 'foo');
 
-        $this->assertTrue($memoryTokenStorage->hasToken('baz'));
-        $this->assertSame(['baz' => 'bar'], $memoryTokenStorage->getUsedTokens());
+        $this->assertTrue($memoryTokenStorage->hasToken('bar'));
+        $this->assertSame(['bar' => 'foo'], $memoryTokenStorage->getUsedTokens());
         $this->assertSame('bar', $memoryTokenStorage->getToken('foo'));
-        $this->assertSame(['foo' => 'bar', 'baz' => 'bar'], $memoryTokenStorage->getUsedTokens());
+        $this->assertSame(['foo' => 'bar', 'bar' => 'foo'], $memoryTokenStorage->getUsedTokens());
 
-        $memoryTokenStorage->removeToken('foo');
+        $token = $memoryTokenStorage->removeToken('foo');
 
+        $this->assertSame('bar', $token);
         $this->assertFalse($memoryTokenStorage->hasToken('foo'));
-        $this->assertSame(['foo' => null, 'baz' => 'bar'], $memoryTokenStorage->getUsedTokens());
+        $this->assertSame(['foo' => null, 'bar' => 'foo'], $memoryTokenStorage->getUsedTokens());
 
-        $memoryTokenStorage->removeToken('baz');
+        $token = $memoryTokenStorage->removeToken('bar');
 
-        $this->assertFalse($memoryTokenStorage->hasToken('baz'));
-        $this->assertSame(['foo' => null, 'baz' => null], $memoryTokenStorage->getUsedTokens());
+        $this->assertSame('foo', $token);
+        $this->assertFalse($memoryTokenStorage->hasToken('bar'));
+        $this->assertSame(['foo' => null, 'bar' => null], $memoryTokenStorage->getUsedTokens());
     }
 
     public function testDoesNotReturnUsedTokensIfNotInitialized(): void

@@ -3,7 +3,6 @@
 <?php $this->block('content'); ?>
 
   <?= $this->events ?>
-
   <?= $this->pagination ?>
 
 <?php $this->endblock(); ?>

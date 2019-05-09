@@ -89,7 +89,7 @@ class InsertTags extends Controller
 		}
 
 		// The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
-		$tags = preg_split('~{{([\pL\pN][^{}]*)}}~u', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$tags = preg_split('~{{([a-zA-Z0-9\x80-\xFF][^{}]*)}}~', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		if (\count($tags) < 2)
 		{
@@ -127,7 +127,7 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || $elements[0] == 'toggle_view' || strncmp($elements[0], 'cache_', 6) === 0 || \in_array('uncached', $flags))
+				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || strncmp($elements[0], 'cache_', 6) === 0 || \in_array('uncached', $flags))
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -426,8 +426,7 @@ class InsertTags extends Controller
 							case 'forward':
 								if ($objNextPage->jumpTo)
 								{
-									/** @var PageModel $objNext */
-									$objNext = $objNextPage->getRelated('jumpTo');
+									$objNext = PageModel::findPublishedById($objNextPage->jumpTo);
 								}
 								else
 								{
@@ -518,7 +517,7 @@ class InsertTags extends Controller
 				case 'article_open':
 				case 'article_url':
 				case 'article_title':
-					if (($objArticle = ArticleModel::findByIdOrAlias($elements[1])) === null || !(($objPid = $objArticle->getRelated('pid')) instanceof PageModel))
+					if (!(($objArticle = ArticleModel::findByIdOrAlias($elements[1])) instanceof ArticleModel) || !(($objPid = $objArticle->getRelated('pid')) instanceof PageModel))
 					{
 						break;
 					}
@@ -595,32 +594,6 @@ class InsertTags extends Controller
 				// POST data
 				case 'post':
 					$arrCache[$strTag] = Input::post($elements[1]);
-					break;
-
-				// Mobile/desktop toggle (see #6469)
-				case 'toggle_view':
-					$strRequest = Environment::get('request');
-
-					// ESI request
-					if (preg_match('/^' . preg_quote(ltrim($container->getParameter('fragment.path'), '/'), '/') . '/', $strRequest))
-					{
-						$request = $container->get('request_stack')->getCurrentRequest();
-						$strRequest = $request->query->get('request');
-					}
-
-					$strUrl = ampersand($strRequest);
-					$strGlue = (strpos($strUrl, '?') === false) ? '?' : '&amp;';
-
-					System::loadLanguageFile('default');
-
-					if (Input::cookie('TL_VIEW') == 'mobile' || (Environment::get('agent')->mobile && Input::cookie('TL_VIEW') != 'desktop'))
-					{
-						$arrCache[$strTag] = '<a href="' . $strUrl . $strGlue . 'toggle_view=desktop" class="toggle_desktop" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['toggleDesktop'][1]) . '">' . $GLOBALS['TL_LANG']['MSC']['toggleDesktop'][0] . '</a>';
-					}
-					else
-					{
-						$arrCache[$strTag] = '<a href="' . $strUrl . $strGlue . 'toggle_view=mobile" class="toggle_mobile" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['toggleMobile'][1]) . '">' . $GLOBALS['TL_LANG']['MSC']['toggleMobile'][0] . '</a>';
-					}
 					break;
 
 				// Conditional tags (if)

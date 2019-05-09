@@ -109,8 +109,10 @@ class FrontendPreviewAuthenticatorTest extends TestCase
      */
     public function testChecksTheBackendUsersAccessPermissions(bool $isAdmin, $amg, bool $isValid): void
     {
-        /** @var BackendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, compact('isAdmin', 'amg'));
+        /** @var BackendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->isAdmin = $isAdmin;
+        $user->amg = $amg;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -144,24 +146,20 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertFalse($authenticator->authenticateFrontendUser('foobar', false));
     }
 
-    /**
-     * @return (string[]|string|bool|null)[][]
-     */
-    public function getAccessPermissions(): array
+    public function getAccessPermissions(): \Generator
     {
-        return [
-            [true, null, true],
-            [false, null, false],
-            [false, 'foobar', false],
-            [false, [], false],
-            [false, ['foobar'], true],
-        ];
+        yield [true, null, true];
+        yield [false, null, false];
+        yield [false, 'foobar', false];
+        yield [false, [], false];
+        yield [false, ['foobar'], true];
     }
 
     public function testDoesNotAuthenticateIfThereIsNotFrontendUser(): void
     {
-        /** @var BackendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, ['isAdmin' => true]);
+        /** @var BackendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->isAdmin = true;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -207,11 +205,15 @@ class FrontendPreviewAuthenticatorTest extends TestCase
      */
     public function testChecksTheBackendUsersFrontendGroupAccess(bool $isAdmin, $amg, $groups, bool $isValid): void
     {
-        /** @var BackendUser|MockObject $backendUser */
-        $backendUser = $this->mockClassWithProperties(BackendUser::class, compact('isAdmin', 'amg'));
+        /** @var BackendUser&MockObject $backendUser */
+        $backendUser = $this->mockClassWithProperties(BackendUser::class);
+        $backendUser->isAdmin = $isAdmin;
+        $backendUser->amg = $amg;
 
-        /** @var FrontendUser|MockObject $frontendUser */
-        $frontendUser = $this->mockClassWithProperties(FrontendUser::class, compact('groups'));
+        /** @var FrontendUser&MockObject $frontendUser */
+        $frontendUser = $this->mockClassWithProperties(FrontendUser::class);
+        $frontendUser->groups = $groups;
+
         $frontendUser
             ->method('getRoles')
             ->willReturn([])
@@ -248,26 +250,22 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertSame($isValid, $authenticator->authenticateFrontendUser('foobar', false));
     }
 
-    /**
-     * @return (string[]|string|bool|null)[][]
-     */
-    public function getFrontendGroupAccessPermissions(): array
+    public function getFrontendGroupAccessPermissions(): \Generator
     {
-        return [
-            [false, null, null, false],
-            [true, null, null, true],
-            [false, [], [], false],
-            [false, ['foo', 'bar'], [], false],
-            [false, [], ['foo', 'bar'], false],
-            [false, ['foo', 'bar'], ['foo', 'bar'], true],
-            [false, ['foo', 'bar'], ['foo'], true],
-        ];
+        yield [false, null, null, false];
+        yield [true, null, null, true];
+        yield [false, [], [], false];
+        yield [false, ['foo', 'bar'], [], false];
+        yield [false, [], ['foo', 'bar'], false];
+        yield [false, ['foo', 'bar'], ['foo', 'bar'], true];
+        yield [false, ['foo', 'bar'], ['foo'], true];
     }
 
     public function testAuthenticatesAFrontendUserWithUnpublishedElementsHidden(): void
     {
-        /** @var BackendUser|MockObject $backendUser */
-        $backendUser = $this->mockClassWithProperties(BackendUser::class, ['isAdmin' => true]);
+        /** @var BackendUser&MockObject $backendUser */
+        $backendUser = $this->mockClassWithProperties(BackendUser::class);
+        $backendUser->isAdmin = true;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -292,7 +290,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session = $this->mockSession();
         $session->start();
 
-        /** @var FrontendUser|MockObject $frontendUser */
+        /** @var FrontendUser&MockObject $frontendUser */
         $frontendUser = $this->createPartialMock(FrontendUser::class, ['getRoles']);
         $frontendUser
             ->method('getRoles')
@@ -319,8 +317,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
     public function testAuthenticatesAFrontendUserWithUnpublishedElementsVisible(): void
     {
-        /** @var BackendUser|MockObject $backendUser */
-        $backendUser = $this->mockClassWithProperties(BackendUser::class, ['isAdmin' => true]);
+        /** @var BackendUser&MockObject $backendUser */
+        $backendUser = $this->mockClassWithProperties(BackendUser::class);
+        $backendUser->isAdmin = true;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -345,7 +344,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session = $this->mockSession();
         $session->start();
 
-        /** @var FrontendUser|MockObject $frontendUser */
+        /** @var FrontendUser&MockObject $frontendUser */
         $frontendUser = $this->createPartialMock(FrontendUser::class, ['getRoles']);
         $frontendUser
             ->method('getRoles')
@@ -523,6 +522,12 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertFalse($authenticator->removeFrontendAuthentication());
     }
 
+    /**
+     * @param SessionInterface&MockObject      $session
+     * @param TokenStorageInterface&MockObject $tokenStorage
+     * @param UserProviderInterface&MockObject $userProvider
+     * @param LoggerInterface&MockObject       $logger
+     */
     private function mockAuthenticator(SessionInterface $session = null, TokenStorageInterface $tokenStorage = null, UserProviderInterface $userProvider = null, LoggerInterface $logger = null): FrontendPreviewAuthenticator
     {
         if (null === $session) {

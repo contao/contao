@@ -298,7 +298,7 @@ class ContentDownloads extends ContentElement
 						// Move the matching elements to their position in $arrOrder
 						foreach ($files as $k=>$v)
 						{
-							if (array_key_exists($v['uuid'], $arrOrder))
+							if (\array_key_exists($v['uuid'], $arrOrder))
 							{
 								$arrOrder[$v['uuid']] = $v;
 								unset($files[$k]);

@@ -127,7 +127,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig): void
     {
         $loader->load(
-            function (ContainerBuilder $container) use ($loader): void {
+            static function (ContainerBuilder $container) use ($loader): void {
                 if ('dev' === $container->getParameter('kernel.environment')) {
                     $loader->load('@ContaoManagerBundle/Resources/skeleton/app/config_dev.yml');
                 } else {
@@ -166,7 +166,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $collection = array_reduce(
             $collections,
-            function (RouteCollection $carry, RouteCollection $item): RouteCollection {
+            static function (RouteCollection $carry, RouteCollection $item): RouteCollection {
                 $carry->addCollection($item);
 
                 return $carry;
@@ -257,7 +257,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             }
         }
 
-        @trigger_error('Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5. Define the "contao.prepend_locale" parameter in the config.yml file instead.', E_USER_DEPRECATED);
+        @trigger_error('Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5.0. Define the "contao.prepend_locale" parameter in the config.yml file instead.', E_USER_DEPRECATED);
 
         $extensionConfigs[] = [
             'prepend_locale' => '%prepend_locale%',

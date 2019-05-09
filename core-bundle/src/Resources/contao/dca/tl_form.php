@@ -128,7 +128,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'title' => array
 		(
@@ -158,7 +158,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'sendViaEmail' => array
@@ -191,13 +191,12 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'format' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['format'],
-			'default'                 => 'raw',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('raw', 'xml', 'csv', 'email'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_form'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(12) NOT NULL default ''"
+			'sql'                     => "varchar(12) NOT NULL default 'raw'"
 		),
 		'skipEmpty' => array
 		(
@@ -239,13 +238,12 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'method' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['method'],
-			'default'                 => 'POST',
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'options'                 => array('POST', 'GET'),
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(12) NOT NULL default ''"
+			'sql'                     => "varchar(12) NOT NULL default 'POST'"
 		),
 		'novalidate' => array
 		(
@@ -514,7 +512,16 @@ class tl_form extends Contao\Backend
 	 */
 	public function getAllTables()
 	{
-		return $this->Database->listTables();
+		$arrTables = $this->Database->listTables();
+		$arrViews = Contao\System::getContainer()->get('database_connection')->getSchemaManager()->listViews();
+
+		if (!empty($arrViews))
+		{
+			$arrTables = array_merge($arrTables, array_keys($arrViews));
+			natsort($arrTables);
+		}
+
+		return array_values($arrTables);
 	}
 
 	/**

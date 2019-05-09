@@ -157,7 +157,7 @@ class Dbafs
 
 			// The parent ID should be in $arrPids
 			// Do not use isset() here, because the PID can be null
-			if (array_key_exists($strParent, $arrPids))
+			if (\array_key_exists($strParent, $arrPids))
 			{
 				$strPid = $arrPids[$strParent];
 			}
@@ -824,15 +824,15 @@ class Dbafs
 
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		// The file has been removed
-		if (!file_exists($rootDir . '/' . $strPath))
-		{
-			return true;
-		}
-
-		if (is_file($rootDir . '/' . $strPath))
+		// Look for an existing parent folder (see #410)
+		while ($strPath != '.' && !is_dir($rootDir . '/' . $strPath))
 		{
 			$strPath = \dirname($strPath);
+		}
+
+		if ($strPath == '.')
+		{
+			return true;
 		}
 
 		$uploadPath = System::getContainer()->getParameter('contao.upload_path');

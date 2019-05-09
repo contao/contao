@@ -73,7 +73,7 @@ class RouteProvider implements RouteProviderInterface
         $routes = [];
 
         if ('/' === $pathInfo || ($this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))) {
-            $this->addRoutesForRootPages($this->findRootPages(), $routes);
+            $this->addRoutesForRootPages($this->findRootPages($request->getHttpHost()), $routes);
 
             return $this->createCollectionForRoutes($routes, $request->getLanguages());
         }
@@ -259,7 +259,6 @@ class RouteProvider implements RouteProviderInterface
 
         $requirements = ['parameters' => '(/.+)?'];
         $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->urlSuffix);
-        $host = $page->domain ? strtok($page->domain, ':') : null;
 
         if ($this->prependLocale) {
             $path = '/{_locale}'.$path;
@@ -271,7 +270,7 @@ class RouteProvider implements RouteProviderInterface
             $defaults,
             $requirements,
             ['utf8' => true],
-            $host,
+            $page->domain,
             $page->rootUseSSL ? 'https' : null
         );
 
@@ -289,7 +288,6 @@ class RouteProvider implements RouteProviderInterface
         $path = '/';
         $requirements = [];
         $defaults = $this->getRouteDefaults($page);
-        $host = $page->domain ? strtok($page->domain, ':') : null;
 
         if ($this->prependLocale) {
             $path = '/{_locale}'.$path;
@@ -301,13 +299,10 @@ class RouteProvider implements RouteProviderInterface
             $defaults,
             $requirements,
             [],
-            $host,
-            $page->rootUseSSL ? 'https' : null
+            $page->domain,
+            $page->rootUseSSL ? 'https' : null,
+            []
         );
-
-        if (!$page->rootIsFallback || !$this->prependLocale) {
-            return;
-        }
 
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
@@ -323,8 +318,9 @@ class RouteProvider implements RouteProviderInterface
             $defaults,
             [],
             [],
-            $host,
-            $page->rootUseSSL ? 'https' : null
+            $page->domain,
+            $page->rootUseSSL ? 'https' : null,
+            []
         );
     }
 
@@ -378,10 +374,36 @@ class RouteProvider implements RouteProviderInterface
     {
         // Convert languages array so key is language and value is priority
         if (null !== $languages) {
+            foreach ($languages as &$language) {
+                $language = str_replace('_', '-', $language);
+
+                if (5 === \strlen($language)) {
+                    $lng = substr($language, 0, 2);
+
+                    // Append the language if only language plus dialect is given (see #430)
+                    if (!\in_array($lng, $languages, true)) {
+                        $languages[] = $lng;
+                    }
+                }
+            }
+
+            unset($language);
+
             $languages = array_flip(array_values($languages));
         }
 
-        uasort($routes, function (Route $a, Route $b) use ($languages) {
+        uasort($routes, static function (Route $a, Route $b) use ($languages, $routes) {
+            $fallbackA = '.fallback' === substr(array_search($a, $routes, true), -9);
+            $fallbackB = '.fallback' === substr(array_search($b, $routes, true), -9);
+
+            if ($fallbackA && !$fallbackB) {
+                return 1;
+            }
+
+            if ($fallbackB && !$fallbackA) {
+                return -1;
+            }
+
             if ('' !== $a->getHost() && '' === $b->getHost()) {
                 return -1;
             }
@@ -418,7 +440,11 @@ class RouteProvider implements RouteProviderInterface
                         return -1;
                     }
 
-                    return $pageB->rootIsFallback ? 1 : 0;
+                    if ($pageB->rootIsFallback) {
+                        return 1;
+                    }
+
+                    return $pageA->rootSorting <=> $pageB->rootSorting;
                 }
 
                 if (null === $langA && null !== $langB) {
@@ -476,7 +502,7 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @return Model[]
      */
-    private function findRootPages(): array
+    private function findRootPages(string $httpHost): array
     {
         if (
             !empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
@@ -494,16 +520,23 @@ class RouteProvider implements RouteProviderInterface
             }
         }
 
+        $rootPages = [];
+        $indexPages = [];
+
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
-
-        // Include pages with alias "index" or "/" (see #8498, #8560 and #1210)
-        $pages = $pageModel->findBy(["tl_page.type='root' OR tl_page.alias='index' OR tl_page.alias='/'"], []);
+        $pages = $pageModel->findBy(["(tl_page.type='root' AND (tl_page.dns=? OR tl_page.dns=''))"], $httpHost);
 
         if ($pages instanceof Collection) {
-            return $pages->getModels();
+            $rootPages = $pages->getModels();
         }
 
-        return [];
+        $pages = $pageModel->findBy(["tl_page.alias='index' OR tl_page.alias='/'"], null);
+
+        if ($pages instanceof Collection) {
+            $indexPages = $pages->getModels();
+        }
+
+        return array_merge($rootPages, $indexPages);
     }
 }

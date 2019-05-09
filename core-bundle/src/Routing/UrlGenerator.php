@@ -103,7 +103,7 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private function prepareLocale(array &$parameters): void
     {
-        if (!$this->prependLocale && array_key_exists('_locale', $parameters)) {
+        if (!$this->prependLocale && \array_key_exists('_locale', $parameters)) {
             unset($parameters['_locale']);
         }
     }
@@ -127,7 +127,7 @@ class UrlGenerator implements UrlGeneratorInterface
 
         $parameters['alias'] = preg_replace_callback(
             '/\{([^\}]+)\}/',
-            function (array $matches) use ($alias, &$parameters, $autoItems, &$hasAutoItem, $config): string {
+            static function (array $matches) use ($alias, &$parameters, $autoItems, &$hasAutoItem, $config): string {
                 $param = $matches[1];
 
                 if (!isset($parameters[$param])) {

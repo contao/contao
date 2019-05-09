@@ -1,5 +1,5 @@
 contao:
-    resource: "@ContaoCoreBundle/Controller"
+    resource: '@ContaoCoreBundle/Controller'
     type: annotation
 
 # Redirect /contao/ to /contao

@@ -37,6 +37,7 @@ use Imagine\Image\Box;
 use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ImageFactoryTest extends TestCase
@@ -83,12 +84,9 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        $properties = [
-            'importantPartWidth' => null,
-            'importantPartHeight' => null,
-        ];
+        /** @var FilesModel&MockObject $filesModel */
+        $filesModel = $this->mockClassWithProperties(FilesModel::class);
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class, $properties);
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->mockImageFactory($resizer, null, null, null, $framework);
@@ -166,24 +164,22 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        $properties = [
-            'width' => '100',
-            'height' => '200',
-            'resizeMode' => ResizeConfiguration::MODE_BOX,
-            'zoom' => '50',
-        ];
+        /** @var ImageSizeModel&MockObject $imageSizeModel */
+        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class);
+        $imageSizeModel->width = 100;
+        $imageSizeModel->height = 200;
+        $imageSizeModel->resizeMode = ResizeConfiguration::MODE_BOX;
+        $imageSizeModel->zoom = 50;
 
-        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $properties);
         $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
 
-        $properties = [
-            'importantPartX' => '50',
-            'importantPartY' => '50',
-            'importantPartWidth' => '25',
-            'importantPartHeight' => '25',
-        ];
+        /** @var FilesModel&MockObject $filesModel */
+        $filesModel = $this->mockClassWithProperties(FilesModel::class);
+        $filesModel->importantPartX = 50;
+        $filesModel->importantPartY = 50;
+        $filesModel->importantPartWidth = 25;
+        $filesModel->importantPartHeight = 25;
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class, $properties);
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
 
         $adapters = [
@@ -344,14 +340,13 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imagineImageMock)
         ;
 
-        $properties = [
-            'importantPartX' => '50',
-            'importantPartY' => '50',
-            'importantPartWidth' => '25',
-            'importantPartHeight' => '25',
-        ];
+        /** @var FilesModel&MockObject $filesModel */
+        $filesModel = $this->mockClassWithProperties(FilesModel::class);
+        $filesModel->importantPartX = 50;
+        $filesModel->importantPartY = 50;
+        $filesModel->importantPartWidth = 25;
+        $filesModel->importantPartHeight = 25;
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class, $properties);
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->mockImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
@@ -385,23 +380,18 @@ class ImageFactoryTest extends TestCase
         );
     }
 
-    /**
-     * @return array<string,(string|int[])[]>
-     */
-    public function getCreateWithLegacyMode(): array
+    public function getCreateWithLegacyMode(): \Generator
     {
-        return [
-            'Left Top' => ['left_top', [0, 0, 1, 1]],
-            'Left Center' => ['left_center', [0, 0, 1, 100]],
-            'Left Bottom' => ['left_bottom', [0, 99, 1, 1]],
-            'Center Top' => ['center_top', [0, 0, 100, 1]],
-            'Center Center' => ['center_center', [0, 0, 100, 100]],
-            'Center Bottom' => ['center_bottom', [0, 99, 100, 1]],
-            'Right Top' => ['right_top', [99, 0, 1, 1]],
-            'Right Center' => ['right_center', [99, 0, 1, 100]],
-            'Right Bottom' => ['right_bottom', [99, 99, 1, 1]],
-            'Invalid' => ['top_left', [0, 0, 100, 100]],
-        ];
+        yield 'Left Top' => ['left_top', [0, 0, 1, 1]];
+        yield 'Left Center' => ['left_center', [0, 0, 1, 100]];
+        yield 'Left Bottom' => ['left_bottom', [0, 99, 1, 1]];
+        yield 'Center Top' => ['center_top', [0, 0, 100, 1]];
+        yield 'Center Center' => ['center_center', [0, 0, 100, 100]];
+        yield 'Center Bottom' => ['center_bottom', [0, 99, 100, 1]];
+        yield 'Right Top' => ['right_top', [99, 0, 1, 1]];
+        yield 'Right Center' => ['right_center', [99, 0, 1, 100]];
+        yield 'Right Bottom' => ['right_bottom', [99, 99, 1, 1]];
+        yield 'Invalid' => ['top_left', [0, 0, 100, 100]];
     }
 
     public function testFailsToReturnTheImportantPartIfTheModeIsInvalid(): void
@@ -431,14 +421,12 @@ class ImageFactoryTest extends TestCase
     {
         $path = $this->getFixturesDir().'/images/dummy.jpg';
 
-        $properties = [
-            'importantPartX' => '50',
-            'importantPartY' => '50',
-            'importantPartWidth' => '175',
-            'importantPartHeight' => '175',
-        ];
+        $filesModel = $this->mockClassWithProperties(FilesModel::class);
+        $filesModel->importantPartX = 50;
+        $filesModel->importantPartY = 50;
+        $filesModel->importantPartWidth = 175;
+        $filesModel->importantPartHeight = 175;
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class, $properties);
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->mockImageFactory(null, null, null, null, $framework);
@@ -650,7 +638,10 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
-     * Mocks an image factory.
+     * @param ResizerInterface&MockObject $resizer
+     * @param ImagineInterface&MockObject $imagine
+     * @param ImagineInterface&MockObject $imagineSvg
+     * @param ContaoFramework&MockObject  $framework
      */
     private function mockImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null): ImageFactory
     {

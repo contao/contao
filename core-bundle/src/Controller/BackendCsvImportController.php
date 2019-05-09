@@ -20,7 +20,6 @@ use Contao\DataContainer;
 use Contao\FileUpload;
 use Contao\Message;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -71,7 +70,7 @@ class BackendCsvImportController
     public function importListWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
-            function (array $data, array $row): array {
+            static function (array $data, array $row): array {
                 return array_merge($data, $row);
             },
             $dc->table,
@@ -85,7 +84,7 @@ class BackendCsvImportController
     public function importTableWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
-            function (array $data, array $row): array {
+            static function (array $data, array $row): array {
                 $data[] = $row;
 
                 return $data;
@@ -100,7 +99,7 @@ class BackendCsvImportController
     public function importOptionWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
-            function (array $data, array $row): array {
+            static function (array $data, array $row): array {
                 $data[] = [
                     'value' => $row[0],
                     'label' => $row[1],
@@ -155,17 +154,7 @@ class BackendCsvImportController
                 ['id' => $id]
             );
 
-            if (method_exists(Cookie::class, 'create')) {
-                $cookie = Cookie::create('BE_PAGE_OFFSET', null, 0, $request->getBasePath(), null, null, false);
-            } else {
-                // Backwards compatibility with symfony/http-foundation <4.2
-                $cookie = new Cookie('BE_PAGE_OFFSET', null, 0, $request->getBasePath(), null, false, false);
-            }
-
-            $response = new RedirectResponse($this->getBackUrl($request));
-            $response->headers->setCookie($cookie);
-
-            return $response;
+            return new RedirectResponse($this->getBackUrl($request));
         }
 
         return new Response($template->parse());
@@ -207,7 +196,7 @@ class BackendCsvImportController
         $delimiter = $this->getDelimiter($separator);
 
         foreach ($files as $file) {
-            $fp = fopen($file, 'rb');
+            $fp = fopen($file, 'r');
 
             while (false !== ($row = fgetcsv($fp, 0, $delimiter))) {
                 $data = $callback($data, $row);

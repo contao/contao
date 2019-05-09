@@ -34,7 +34,9 @@ class ManagerConfig
 
     public function __construct(string $projectDir, Filesystem $filesystem = null)
     {
-        $projectDir = realpath($projectDir) ?: $projectDir;
+        if (false !== ($realpath = realpath($projectDir))) {
+            $projectDir = (string) $realpath;
+        }
 
         $this->configFile = $projectDir.'/app/config/contao-manager.yml';
         $this->filesystem = $filesystem ?: new Filesystem();

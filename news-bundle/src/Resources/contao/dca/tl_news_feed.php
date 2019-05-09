@@ -117,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'title' => array
 		(
@@ -164,33 +164,30 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		'format' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_news_feed']['format'],
-			'default'                 => 'rss',
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'options'                 => array('rss'=>'RSS 2.0', 'atom'=>'Atom'),
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'rss'"
 		),
 		'source' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_news_feed']['source'],
-			'default'                 => 'source_teaser',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('source_teaser', 'source_text'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_news_feed'],
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'source_teaser'"
 		),
 		'maxItems' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_news_feed']['maxItems'],
-			'default'                 => 25,
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 25"
 		),
 		'feedBase' => array
 		(
@@ -342,13 +339,13 @@ class tl_news_feed extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		if (empty($this->User->newsfeeds) || !\is_array($this->User->newsfeeds))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $this->User->newsfeeds;
 		}
 
 		// The feed is enabled already

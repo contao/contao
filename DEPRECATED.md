@@ -292,9 +292,9 @@ $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->
 
 ## PHP entry points
 
-Contao 4 only uses a single PHP entry point, namely the `app.php` or
-`app_dev.php` file. The previous PHP entry points have been removed and a route
-has been set up for each one instead (see UPGRADE.md).
+Contao 4 only uses a single PHP entry point, namely the `index.php` file. The
+previous PHP entry points have been removed and a route has been set up for
+each one instead (see UPGRADE.md).
 
 Using the old paths is deprecated and will no longer work in Contao 5.0.
 

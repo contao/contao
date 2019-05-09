@@ -41,19 +41,14 @@ class LocaleListenerTest extends TestCase
         $this->assertSame($expected, $request->attributes->get('_locale'));
     }
 
-    /**
-     * @return (string|null)[][]
-     */
-    public function getLocaleRequestData(): array
+    public function getLocaleRequestData(): \Generator
     {
-        return [
-            [null, 'en'], // see #264
-            ['en', 'en'],
-            ['de', 'de'],
-            ['de-CH', 'de_CH'],
-            ['de_CH', 'de_CH'],
-            ['zh-tw', 'zh_TW'],
-        ];
+        yield [null, 'en']; // see #264
+        yield ['en', 'en'];
+        yield ['de', 'de'];
+        yield ['de-CH', 'de_CH'];
+        yield ['de_CH', 'de_CH'];
+        yield ['zh-tw', 'zh_TW'];
     }
 
     /**
@@ -73,20 +68,15 @@ class LocaleListenerTest extends TestCase
         $this->assertSame($expected, $request->attributes->get('_locale'));
     }
 
-    /**
-     * @return (string[]|string|null)[][]
-     */
-    public function acceptLanguageTestData(): array
+    public function acceptLanguageTestData(): \Generator
     {
-        return [
-            [null, 'de', ['de', 'en']], // see #264
-            ['de', 'de', ['de', 'en']],
-            ['de, en', 'en', ['en']],
-            ['de', 'en', ['en']],
-            ['de-de, en', 'de', ['de', 'en']],
-            ['de, fr, en', 'fr', ['en', 'fr']],
-            ['fr, de-ch, en', 'de_CH', ['en', 'de_CH']],
-        ];
+        yield [null, 'de', ['de', 'en']]; // see #264
+        yield ['de', 'de', ['de', 'en']];
+        yield ['de, en', 'en', ['en']];
+        yield ['de', 'en', ['en']];
+        yield ['de-de, en', 'de', ['de', 'en']];
+        yield ['de, fr, en', 'fr', ['en', 'fr']];
+        yield ['fr, de-ch, en', 'de_CH', ['en', 'de_CH']];
     }
 
     public function testDoesNothingIfThereIsNoRequestScope(): void

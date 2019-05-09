@@ -24,7 +24,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'onsubmit_callback' => array
 		(
-			array('tl_user', 'storeDateAdded')
+			array('tl_user', 'storeDateAdded'),
+			array('tl_user', 'updateCurrentUser')
 		),
 		'sql' => array
 		(
@@ -131,7 +132,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'username' => array
 		(
@@ -211,38 +212,34 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'showHelp' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['showHelp'],
-			'default'                 => 1,
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) NOT NULL default '1'"
 		),
 		'thumbnails' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['thumbnails'],
-			'default'                 => 1,
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) NOT NULL default '1'"
 		),
 		'useRTE' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['useRTE'],
-			'default'                 => 1,
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) NOT NULL default '1'"
 		),
 		'useCE' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['useCE'],
-			'default'                 => 1,
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) NOT NULL default '1'"
 		),
 		'password' => array
 		(
@@ -288,12 +285,11 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['inherit'],
 			'exclude'                 => true,
-			'default'                 => 'group',
 			'inputType'               => 'radio',
 			'options'                 => array('group', 'extend', 'custom'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_user'],
 			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true),
-			'sql'                     => "varchar(12) NOT NULL default ''"
+			'sql'                     => "varchar(12) NOT NULL default 'group'"
 		),
 		'modules' => array
 		(
@@ -439,7 +435,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'sorting'                 => true,
 			'flag'                    => 6,
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'secret' => array
 		(
@@ -455,7 +451,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'lastLogin' => array
 		(
 			'eval'                    => array('rgxp'=>'datim', 'doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'currentLogin' => array
 		(
@@ -463,18 +459,17 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'sorting'                 => true,
 			'flag'                    => 6,
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'loginCount' => array
 		(
-			'default'                 => 3,
 			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "smallint(5) unsigned NOT NULL default '3'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 3"
 		),
 		'locked' => array
 		(
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		)
 	)
 );
@@ -711,7 +706,7 @@ class tl_user extends Contao\Backend
 	{
 		$authorizationChecker = Contao\System::getContainer()->get('security.authorization_checker');
 
-		if (!$authorizationChecker->isGranted('ROLE_ALLOWED_TO_SWITCH'))
+		if (!$authorizationChecker->isGranted('ROLE_ALLOWED_TO_SWITCH') || $authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
 		{
 			return '';
 		}
@@ -869,6 +864,20 @@ class tl_user extends Contao\Backend
 
 		$this->Database->prepare("UPDATE tl_user SET dateAdded=? WHERE id=?")
 					   ->execute($time, $dc->id);
+	}
+
+	/**
+	 * Update the current user if something changes, otherwise they would be
+	 * logged out automatically
+	 *
+	 * @param Contao\DataContainer $dc
+	 */
+	public function updateCurrentUser(Contao\DataContainer $dc)
+	{
+		if ($this->User->id == $dc->id)
+		{
+			$this->User->findBy('id', $this->User->id);
+		}
 	}
 
 	/**

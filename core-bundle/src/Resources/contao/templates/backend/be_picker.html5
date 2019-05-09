@@ -3,7 +3,7 @@
 <head>
 
   <meta charset="<?= $this->charset ?>">
-  <title><?= $this->title ?> - Contao Open Source CMS</title>
+  <title><?= $this->title ?> | <?= $this->host ?></title>
   <base href="<?= $this->base ?>">
   <meta name="generator" content="Contao Open Source CMS">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
@@ -58,11 +58,11 @@
           <div id="search">
             <input type="hidden" name="FORM_SUBMIT" value="item_selector">
             <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-            <input type="search" name="keyword" id="keyword" value="<?= $this->value ?>" class="tl_text<?php if ($this->value != ''): ?> active<?php endif; ?>">
+            <input type="search" name="keyword" id="keyword" value="<?= $this->value ?>" class="tl_text<?php if ($this->value): ?> active<?php endif; ?>">
             <button type="submit" name="search" class="tl_submit"><?= $this->search ?></button>
           </div>
         </form>
-        <?php if ($this->searchExclude && $this->value != ''): ?>
+        <?php if ($this->searchExclude && $this->value): ?>
           <div class="tl_message">
             <p class="tl_info"><?= $this->searchExclude ?></p>
           </div>

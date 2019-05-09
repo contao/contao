@@ -19,6 +19,7 @@ use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -61,7 +62,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -107,7 +108,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -137,7 +138,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -167,7 +168,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -197,7 +198,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -228,7 +229,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -258,7 +259,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -295,7 +296,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -326,7 +327,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -357,7 +358,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -388,7 +389,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -420,7 +421,7 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
@@ -457,20 +458,19 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $properties = [
-            'domain' => '',
-            'rootLanguage' => 'en',
-            'rootIsFallback' => true,
-            'alias' => 'foo/bar/home',
-        ];
+        /** @var PageModel&MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->domain = '';
+        $page->rootLanguage = 'en';
+        $page->rootIsFallback = true;
+        $page->alias = 'foo/bar/home';
 
-        $page = $this->mockClassWithProperties(PageModel::class, $properties);
         $page
             ->method('loadDetails')
             ->willReturn($page)
@@ -518,20 +518,19 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $properties = [
-            'domain' => 'domain.com',
-            'rootLanguage' => 'en',
-            'rootIsFallback' => true,
-            'alias' => 'foo/bar/home',
-        ];
+        /** @var PageModel&MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->domain = 'domain.com';
+        $page->rootLanguage = 'en';
+        $page->rootIsFallback = true;
+        $page->alias = 'foo/bar/home';
 
-        $page = $this->mockClassWithProperties(PageModel::class, $properties);
         $page
             ->method('loadDetails')
             ->willReturn($page)
@@ -589,20 +588,19 @@ class RoutingTest extends ContaoTestCase
 
         $request
             ->method('getScriptName')
-            ->willReturn('app.php')
+            ->willReturn('index.php')
         ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $properties = [
-            'domain' => 'domain.de',
-            'rootLanguage' => 'de',
-            'rootIsFallback' => false,
-            'alias' => 'startseite',
-        ];
+        /** @var PageModel&MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->domain = 'domain.de';
+        $page->rootLanguage = 'de';
+        $page->rootIsFallback = false;
+        $page->alias = 'startseite';
 
-        $page = $this->mockClassWithProperties(PageModel::class, $properties);
         $page
             ->method('loadDetails')
             ->willReturn($page)

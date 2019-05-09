@@ -39,12 +39,44 @@ class SectionWizard extends Widget
 	 */
 	protected function validator($varInput)
 	{
-		if (isset($varInput['id']))
+		$arrTitles = array();
+		$arrIds = array();
+		$arrSections = array();
+
+		foreach ($varInput as $arrSection)
 		{
-			$varInput['id'] = StringUtil::standardize($varInput['id'], true);
+			// Title and ID are required
+			if ((!empty($arrSection['title']) && empty($arrSection['id'])) || (empty($arrSection['title']) && !empty($arrSection['id'])))
+			{
+				$this->addError($GLOBALS['TL_LANG']['ERR']['emptyTitleOrId']);
+			}
+
+			// Check for duplicate section titles
+			if (\in_array($arrSection['title'], $arrTitles))
+			{
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionTitle'], $arrSection['title']));
+			}
+
+			$arrSection['id'] = StringUtil::standardize($arrSection['id'], true);
+
+			// Add a suffix to reserved names (see #301)
+			if (\in_array($arrSection['id'], array('top', 'wrapper', 'header', 'container', 'main', 'left', 'right', 'footer')))
+			{
+				$arrSection['id'] .= '-custom';
+			}
+
+			// Check for duplicate section IDs
+			if (\in_array($arrSection['id'], $arrIds))
+			{
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionId'], $arrSection['id']));
+			}
+
+			$arrTitles[] = $arrSection['title'];
+			$arrIds[] = $arrSection['id'];
+			$arrSections[] = $arrSection;
 		}
 
-		return parent::validator($varInput);
+		return $arrSections;
 	}
 
 	/**

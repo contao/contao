@@ -22,6 +22,7 @@ use Contao\Model\Registry;
  * @property integer $createdOn
  * @property integer $confirmedOn
  * @property integer $removeOn
+ * @property string  $invalidatedThrough
  * @property string  $email
  * @property string  $emailSubject
  * @property string  $emailText
@@ -35,6 +36,7 @@ use Contao\Model\Registry;
  * @method static OptInModel|null findOneByCreatedOn($val, array $opt=array())
  * @method static OptInModel|null findOneByConfirmedOn($val, array $opt=array())
  * @method static OptInModel|null findOneByRemoveOn($val, array $opt=array())
+ * @method static OptInModel|null findOneByInvalidatedThrough($val, array $opt=array())
  * @method static OptInModel|null findOneByEmail($val, array $opt=array())
  * @method static OptInModel|null findOneByEmailSubject($val, array $opt=array())
  * @method static OptInModel|null findOneByEmailText($val, array $opt=array())
@@ -44,6 +46,7 @@ use Contao\Model\Registry;
  * @method static Collection|OptInModel[]|OptInModel|null findByCreatedOn($val, array $opt=array())
  * @method static Collection|OptInModel[]|OptInModel|null findByConfirmedOn($val, array $opt=array())
  * @method static Collection|OptInModel[]|OptInModel|null findByRemoveOn($val, array $opt=array())
+ * @method static Collection|OptInModel[]|OptInModel|null findByInvalidatedThrough($val, array $opt=array())
  * @method static Collection|OptInModel[]|OptInModel|null findByEmail($val, array $opt=array())
  * @method static Collection|OptInModel[]|OptInModel|null findByEmailSubject($val, array $opt=array())
  * @method static Collection|OptInModel[]|OptInModel|null findByEmailText($val, array $opt=array())
@@ -57,6 +60,7 @@ use Contao\Model\Registry;
  * @method static integer countByCreatedOn($val, array $opt=array())
  * @method static integer countByConfirmedOn($val, array $opt=array())
  * @method static integer countByRemoveOn($val, array $opt=array())
+ * @method static integer countByInvalidatedThrough($val, array $opt=array())
  * @method static integer countByEmail($val, array $opt=array())
  * @method static integer countByEmailSubject($val, array $opt=array())
  * @method static integer countByEmailText($val, array $opt=array())
@@ -75,9 +79,9 @@ class OptInModel extends Model
 	/**
 	 * Find expired double opt-in tokens
 	 *
-	 * @param array $arrOptions An optional options array
+	 * @param array $arrOptions
 	 *
-	 * @return Collection|OptInModel[]|OptInModel|null A collection of models or null if there are no expired tokens
+	 * @return Collection|OptInModel[]|OptInModel|null
 	 */
 	public static function findExpiredTokens(array $arrOptions=array())
 	{
@@ -94,9 +98,14 @@ class OptInModel extends Model
 	 * @param array   $arrOptions
 	 *
 	 * @return static|null
+	 *
+	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0; use the
+	 *             Contao\OptInModel::findByRelatedTableAndIds() method instead
 	 */
 	public static function findOneByRelatedTableAndId($strTable, $intId, array $arrOptions=array())
 	{
+		@trigger_error('Using the Contao\OptInModel::findOneByRelatedTableAndIds() method has been deprecated and will no longer work in Contao 5.0. Use the Contao\OptInModel::findByRelatedTableAndIds() method instead.', E_USER_DEPRECATED);
+
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
@@ -117,6 +126,47 @@ class OptInModel extends Model
 		}
 
 		return new static($objResult);
+	}
+
+	/**
+	 * Find opt-in tokens by their related table and ID
+	 *
+	 * @param string $strTable
+	 * @param array  $arrIds
+	 * @param array  $arrOptions
+	 *
+	 * @return Collection|OptInModel[]|OptInModel|null
+	 */
+	public static function findByRelatedTableAndIds($strTable, array $arrIds, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$objDatabase = Database::getInstance();
+
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=? AND relId IN(" . implode(',', array_map('\intval', $arrIds)) . ")) ORDER BY $t.createdOn DESC")
+								 ->execute($strTable, $arrIds);
+
+		if ($objResult->numRows < 1)
+		{
+			return null;
+		}
+
+		$arrModels = array();
+		$objRegistry = Registry::getInstance();
+
+		while ($objResult->next())
+		{
+			/** @var OptInModel|Model $objOptIn */
+			if ($objOptIn = $objRegistry->fetch($t, $objResult->id))
+			{
+				$arrModels[] = $objOptIn;
+			}
+			else
+			{
+				$arrModels[] = new static($objResult->row());
+			}
+		}
+
+		return static::createCollection($arrModels, $t);
 	}
 
 	/**

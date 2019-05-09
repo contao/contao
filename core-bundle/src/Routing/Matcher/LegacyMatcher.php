@@ -58,7 +58,14 @@ class LegacyMatcher implements RequestMatcherInterface
     {
         $this->framework->initialize(true);
 
-        if (empty($GLOBALS['TL_HOOKS']['getPageIdFromUrl']) || !\is_array($GLOBALS['TL_HOOKS']['getPageIdFromUrl'])) {
+        $pathInfo = rawurldecode($request->getPathInfo());
+
+        if (
+            '/' === $pathInfo
+            || empty($GLOBALS['TL_HOOKS']['getPageIdFromUrl'])
+            || !\is_array($GLOBALS['TL_HOOKS']['getPageIdFromUrl'])
+            || ($this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))
+        ) {
             return $this->requestMatcher->matchRequest($request);
         }
 
@@ -81,7 +88,7 @@ class LegacyMatcher implements RequestMatcherInterface
         }
 
         if (null === $fragments) {
-            $pathInfo = $this->parseSuffixAndLanguage($request->getPathInfo(), $locale);
+            $pathInfo = $this->parseSuffixAndLanguage($pathInfo, $locale);
             $fragments = $this->createFragmentsFromPath($pathInfo);
         }
 
@@ -98,7 +105,7 @@ class LegacyMatcher implements RequestMatcherInterface
         $fragments = $this->executeLegacyHook($fragments);
         $pathInfo = $this->createPathFromFragments($fragments, $locale);
 
-        return $this->requestMatcher->matchRequest(Request::create($pathInfo));
+        return $this->requestMatcher->matchRequest($this->rebuildRequest($pathInfo, $request));
     }
 
     private function createFragmentsFromMatch(array $match): array
@@ -202,5 +209,26 @@ class LegacyMatcher implements RequestMatcherInterface
         }
 
         return $pathInfo;
+    }
+
+    /**
+     * @see ChainRouter::rebuildRequest()
+     */
+    private function rebuildRequest(string $pathinfo, Request $request): Request
+    {
+        $uri = $pathinfo;
+        $server = [];
+
+        if ($request->getBaseUrl()) {
+            $uri = $request->getBaseUrl().$pathinfo;
+            $server['SCRIPT_FILENAME'] = $request->getBaseUrl();
+            $server['PHP_SELF'] = $request->getBaseUrl();
+        }
+
+        $host = $request->getHttpHost() ?: 'localhost';
+        $scheme = $request->getScheme() ?: 'http';
+        $uri = $scheme.'://'.$host.$uri.'?'.$request->getQueryString();
+
+        return Request::create($uri, $request->getMethod(), [], [], [], $server);
     }
 }

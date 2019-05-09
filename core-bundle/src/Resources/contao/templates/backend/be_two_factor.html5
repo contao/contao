@@ -14,15 +14,15 @@
         <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor">
         <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
         <div class="qr-code">
-          <img src="data:image/svg+xml;base64,<?= $this->qrCode; ?>">
+          <img src="data:image/svg+xml;base64,<?= $this->qrCode ?>" alt>
         </div>
         <div class="widget w50">
-          <p><?= $this->textCode; ?></p>
-          <code><?= $this->secret; ?></code>
+          <p><?= $this->textCode ?></p>
+          <code><?= $this->secret ?></code>
         </div>
         <div class="widget w50 clr">
-          <h3><label for="verify"<?php if ($this->error) echo ' class="error"' ?>><?= $this->verify ?></label></h3>
-          <input type="text" name="verify" id="verify" class="tl_text<?php if ($this->error) echo ' class="error"' ?>" value="" autocapitalize="off" autocomplete="off" required>
+          <h3><label for="verify"<?php if ($this->error): ?> class="error"<?php endif; ?>><?= $this->verify ?></label></h3>
+          <input type="text" name="verify" id="verify" class="tl_text<?php if ($this->error): ?> error<?php endif; ?>" value="" autocapitalize="off" autocomplete="off" required>
           <p class="<?= $this->error ? 'tl_error' : 'tl_help' ?> tl_tip"><?= $this->verifyHelp ?></p>
         </div>
         <div class="submit_container cf">

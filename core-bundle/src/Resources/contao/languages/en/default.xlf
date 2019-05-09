@@ -188,9 +188,6 @@
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages in the site structure which are not website root pages.</source>
       </trans-unit>
-      <trans-unit id="ERR.invalidTokenUrl">
-        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
-      </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
       </trans-unit>
@@ -220,6 +217,15 @@
       </trans-unit>
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
+      </trans-unit>
+      <trans-unit id="ERR.emptyTitleOrId">
+        <source>Please enter both title and ID!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionTitle">
+        <source>Duplicate layout section title "%s"!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID "%s"!</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1398,13 +1404,28 @@
         <source>Clear clipboard</source>
       </trans-unit>
       <trans-unit id="MSC.hiddenElements">
-        <source>Unpublished elements</source>
+        <source>Unpublished</source>
       </trans-unit>
       <trans-unit id="MSC.hiddenHide">
         <source>hide</source>
       </trans-unit>
       <trans-unit id="MSC.hiddenShow">
         <source>show</source>
+      </trans-unit>
+      <trans-unit id="MSC.enableDebugMode">
+        <source>Enable debug mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.disableDebugMode">
+        <source>Disable debug mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.debugMode">
+        <source>Debug mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.debugEnabled">
+        <source>enabled</source>
+      </trans-unit>
+      <trans-unit id="MSC.debugDisabled">
+        <source>disabled</source>
       </trans-unit>
       <trans-unit id="MSC.apply">
         <source>Apply</source>
@@ -1727,11 +1748,20 @@
       <trans-unit id="MSC.relevance">
         <source>%s relevance</source>
       </trans-unit>
-      <trans-unit id="MSC.invalidTokenUrl">
+      <trans-unit id="MSC.invalidToken">
         <source>Invalid token</source>
+      </trans-unit>
+      <trans-unit id="MSC.tokenConfirmed">
+        <source>This token has already been confirmed</source>
+      </trans-unit>
+      <trans-unit id="MSC.tokenEmailMismatch">
+        <source>The e-mail address of the token does not match</source>
       </trans-unit>
       <trans-unit id="MSC.resendToken">
         <source>The token has been re-sent to %s.</source>
+      </trans-unit>
+      <trans-unit id="MSC.invalidTokenUrl">
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

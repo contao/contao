@@ -163,16 +163,16 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_page.title',
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'sorting' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'title' => array
 		(
@@ -206,7 +206,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'mandatory'=>true, 'chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'inColumn' => array
@@ -214,12 +214,11 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_article']['inColumn'],
 			'exclude'                 => true,
 			'filter'                  => true,
-			'default'                 => 'main',
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_article', 'getActiveLayoutSections'),
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['COLS'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'main'"
 		),
 		'keywords' => array
 		(
@@ -260,7 +259,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_article']['printable'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'options'                 => array('print', 'pdf', 'facebook', 'twitter', 'gplus'),
+			'options'                 => array('print', 'facebook', 'twitter', 'gplus'),
 			'eval'                    => array('multiple'=>true),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_article'],
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -627,25 +626,20 @@ class tl_article extends Contao\Backend
 			$objPage = Contao\PageModel::findWithDetails($dc->activeRecord->pid);
 
 			// Get the layout sections
-			foreach (array('layout', 'mobileLayout') as $key)
+			if ($objPage->layout)
 			{
-				if (!$objPage->$key)
-				{
-					continue;
-				}
-
-				$objLayout = Contao\LayoutModel::findByPk($objPage->$key);
+				$objLayout = Contao\LayoutModel::findByPk($objPage->layout);
 
 				if ($objLayout === null)
 				{
-					continue;
+					return array();
 				}
 
 				$arrModules = Contao\StringUtil::deserialize($objLayout->modules);
 
 				if (empty($arrModules) || !\is_array($arrModules))
 				{
-					continue;
+					return array();
 				}
 
 				// Find all sections with an article module (see #6094)

@@ -77,16 +77,6 @@ class PageRegular extends Frontend
 		// Get the page layout
 		$objLayout = $this->getPageLayout($objPage);
 
-		// HOOK: modify the page or layout object (see #4736)
-		if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && \is_array($GLOBALS['TL_HOOKS']['getPageLayout']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getPageLayout'] as $callback)
-			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objPage, $objLayout, $this);
-			}
-		}
-
 		/** @var ThemeModel $objTheme */
 		$objTheme = $objLayout->getRelated('pid');
 
@@ -239,31 +229,27 @@ class PageRegular extends Frontend
 	 */
 	protected function getPageLayout($objPage)
 	{
-		$blnMobile = ($objPage->mobileLayout && Environment::get('agent')->mobile);
-
-		// Override the autodetected value
-		if (Input::cookie('TL_VIEW') == 'mobile')
-		{
-			$blnMobile = true;
-		}
-		elseif (Input::cookie('TL_VIEW') == 'desktop')
-		{
-			$blnMobile = false;
-		}
-
-		$intId = ($blnMobile && $objPage->mobileLayout) ? $objPage->mobileLayout : $objPage->layout;
-		$objLayout = LayoutModel::findByPk($intId);
+		$objLayout = LayoutModel::findByPk($objPage->layout);
 
 		// Die if there is no layout
 		if (null === $objLayout)
 		{
-			$this->log('Could not find layout ID "' . $intId . '"', __METHOD__, TL_ERROR);
+			$this->log('Could not find layout ID "' . $objPage->layout . '"', __METHOD__, TL_ERROR);
 			throw new NoLayoutSpecifiedException('No layout specified');
 		}
 
 		$objPage->hasJQuery = $objLayout->addJQuery;
 		$objPage->hasMooTools = $objLayout->addMooTools;
-		$objPage->isMobile = $blnMobile;
+
+		// HOOK: modify the page or layout object (see #4736)
+		if (isset($GLOBALS['TL_HOOKS']['getPageLayout']) && \is_array($GLOBALS['TL_HOOKS']['getPageLayout']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['getPageLayout'] as $callback)
+			{
+				$this->import($callback[0]);
+				$this->{$callback[0]}->{$callback[1]}($objPage, $objLayout, $this);
+			}
+		}
 
 		return $objLayout;
 	}
@@ -405,7 +391,7 @@ class PageRegular extends Frontend
 						$cache->save($hash);
 					}
 
-					$this->Template->mooScripts .= Template::generateScriptTag('https://code.jquery.com/jquery-' . PackageUtil::getNormalizedVersion('contao-components/jquery') . '.min.js', false, false, $hash->get()) . "\n";
+					$this->Template->mooScripts .= Template::generateScriptTag('https://code.jquery.com/jquery-' . PackageUtil::getNormalizedVersion('contao-components/jquery') . '.min.js', false, false, $hash->get(), 'anonymous') . "\n";
 
 					// Local fallback (thanks to DyaGa)
 					if ($objLayout->jSource == 'j_fallback')
@@ -435,11 +421,11 @@ class PageRegular extends Frontend
 
 					if (version_compare($version, '1.5.1', '>'))
 					{
-						$this->Template->mooScripts .= Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools.min.js') . "\n";
+						$this->Template->mooScripts .= Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools.min.js', false, false, null, 'anonymous') . "\n";
 					}
 					else
 					{
-						$this->Template->mooScripts .= Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools-yui-compressed.js') . "\n";
+						$this->Template->mooScripts .= Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools-yui-compressed.js', false, false, null, 'anonymous') . "\n";
 					}
 
 					// Local fallback (thanks to DyaGa)
@@ -629,7 +615,7 @@ class PageRegular extends Frontend
 					// Move the matching elements to their position in $arrOrder
 					foreach ($arrExternal as $k=>$v)
 					{
-						if (array_key_exists($v, $arrOrder))
+						if (\array_key_exists($v, $arrOrder))
 						{
 							$arrOrder[$v] = $v;
 							unset($arrExternal[$k]);
@@ -792,7 +778,7 @@ class PageRegular extends Frontend
 					// Move the matching elements to their position in $arrOrder
 					foreach ($arrExternalJs as $k=>$v)
 					{
-						if (array_key_exists($v, $arrOrder))
+						if (\array_key_exists($v, $arrOrder))
 						{
 							$arrOrder[$v] = $v;
 							unset($arrExternalJs[$k]);

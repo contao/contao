@@ -15,14 +15,16 @@ namespace Contao\CoreBundle\Tests\OptIn;
 use Contao\CoreBundle\OptIn\OptIn;
 use Contao\MemberModel;
 use Contao\Model;
+use Contao\Model\Collection;
 use Contao\OptInModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class OptInTest extends ContaoTestCase
 {
     public function testCreatesAToken(): void
     {
-        $model = $this->mockClassWithGetterSetter(OptInModel::class);
+        $model = $this->mockClassWithProperties(OptInModel::class);
         $model
             ->expects($this->once())
             ->method('save')
@@ -42,7 +44,7 @@ class OptInTest extends ContaoTestCase
             ->willReturn($model)
         ;
 
-        $token = (new OptIn($framework))->create('reg-', 'foo@bar.com', ['tl_member' => 1]);
+        $token = (new OptIn($framework))->create('reg', 'foo@bar.com', ['tl_member' => 1]);
 
         $this->assertStringMatchesFormat('reg-%x', $token->getIdentifier());
         $this->assertTrue($token->isValid());
@@ -61,12 +63,14 @@ class OptInTest extends ContaoTestCase
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The token prefix must not be longer than 6 characters');
 
-        (new OptIn($framework))->create('registration-', 'foo@bar.com', ['tl_member' => 1]);
+        (new OptIn($framework))->create('registration', 'foo@bar.com', ['tl_member' => 1]);
     }
 
     public function testFindsAToken(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class, ['token' => 'foobar']);
+        /** @var OptInModel&MockObject $model */
+        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model->token = 'foobar';
 
         $adapter = $this->mockAdapter(['findByToken']);
         $adapter
@@ -85,7 +89,7 @@ class OptInTest extends ContaoTestCase
     /**
      * @dataProvider getExpiredTokens
      */
-    public function testPurgesExpiredTokens(string $method, ?MemberModel $model): void
+    public function testPurgesExpiredTokens(string $method, ?Collection $model): void
     {
         $token = $this->createMock(OptInModel::class);
         $token
@@ -113,10 +117,10 @@ class OptInTest extends ContaoTestCase
             ->willReturn(MemberModel::class)
         ;
 
-        $memberAdapter = $this->mockAdapter(['findByPk']);
+        $memberAdapter = $this->mockAdapter(['findMultipleByIds']);
         $memberAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findMultipleByIds')
             ->willReturn($model)
         ;
 
@@ -130,14 +134,9 @@ class OptInTest extends ContaoTestCase
         (new OptIn($framework))->purgeTokens();
     }
 
-    /**
-     * @return array<(string|MemberModel|null)[]>
-     */
-    public function getExpiredTokens(): array
+    public function getExpiredTokens(): \Generator
     {
-        return [
-            ['delete', null],
-            ['save', $this->createMock(MemberModel::class)],
-        ];
+        yield ['delete', null];
+        yield ['save', new Collection([$this->createMock(MemberModel::class)], 'tl_member')];
     }
 }

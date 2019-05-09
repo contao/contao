@@ -136,12 +136,12 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_theme.name',
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'name' => array
 		(
@@ -163,7 +163,7 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'cc' => array
 		(
@@ -181,13 +181,12 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 		'media' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_style_sheet']['media'],
-			'default'                 => array('all'),
 			'inputType'               => 'checkbox',
 			'exclude'                 => true,
 			'filter'                  => true,
 			'options'                 => array('all', 'aural', 'braille', 'embossed', 'handheld', 'print', 'projection', 'screen', 'tty', 'tv'),
 			'eval'                    => array('multiple'=>true, 'mandatory'=>true, 'tl_class'=>'clr'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(255) NOT NULL default 'a:1:{i:0;s:3:\"all\";}'"
 		),
 		'mediaQuery' => array
 		(

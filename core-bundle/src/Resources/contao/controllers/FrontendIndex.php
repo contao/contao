@@ -216,18 +216,21 @@ class FrontendIndex extends Frontend
 			}
 		}
 
+		// Inherit the settings from the parent pages
+		$objPage->loadDetails();
+
+		// Trigger the 404 page if the page is not published and the front end preview is not active (see #374)
+		if (!BE_USER_LOGGED_IN && !$objPage->isPublic)
+		{
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+		}
+
 		// Load a website root page object (will redirect to the first active regular page)
 		if ($objPage->type == 'root')
 		{
 			/** @var PageRoot $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['root']();
 			$objHandler->generate($objPage->id);
-		}
-
-		// Inherit the settings from the parent pages if it has not been done yet
-		if (!\is_bool($objPage->protected))
-		{
-			$objPage->loadDetails();
 		}
 
 		// Set the admin e-mail address
@@ -283,7 +286,7 @@ class FrontendIndex extends Frontend
 			$arrGroups = $objPage->groups; // required for empty()
 
 			// Check the user groups
-			if (empty($arrGroups) || !\is_array($arrGroups) || !\count(array_intersect($arrGroups, $this->User->groups)))
+			if (empty($arrGroups) || !\is_array($arrGroups) || !\is_array($this->User->groups) || !\count(array_intersect($arrGroups, $this->User->groups)))
 			{
 				$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
 				throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));

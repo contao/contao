@@ -150,7 +150,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'uuid' => array
 		(
@@ -211,28 +211,28 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['importantPartX'],
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => "int(10) NOT NULL default '0'"
+			'sql'                     => "int(10) NOT NULL default 0"
 		),
 		'importantPartY' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['importantPartY'],
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) NOT NULL default '0'"
+			'sql'                     => "int(10) NOT NULL default 0"
 		),
 		'importantPartWidth' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['importantPartWidth'],
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => "int(10) NOT NULL default '0'"
+			'sql'                     => "int(10) NOT NULL default 0"
 		),
 		'importantPartHeight' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['importantPartHeight'],
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) NOT NULL default '0'"
+			'sql'                     => "int(10) NOT NULL default 0"
 		),
 		'meta' => array
 		(
@@ -420,7 +420,7 @@ class tl_files extends Contao\Backend
 				case 'source':
 					if (!$this->User->hasAccess('f5', 'fop'))
 					{
-						throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to edit the source of file "' . Input::get('id', true) . '".');
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to edit the source of file "' . Contao\Input::get('id', true) . '".');
 					}
 					break;
 
@@ -463,7 +463,7 @@ class tl_files extends Contao\Backend
 
 		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
 
-		if (is_dir($rootDir . '/' . $dc->id) || !\in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('validContao\ImageTypes')))))
+		if (is_dir($rootDir . '/' . $dc->id) || !\in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('validImageTypes')))))
 		{
 			$GLOBALS['TL_DCA'][$dc->table]['palettes'] = str_replace(',importantPartX,importantPartY,importantPartWidth,importantPartHeight', '', $GLOBALS['TL_DCA'][$dc->table]['palettes']);
 		}

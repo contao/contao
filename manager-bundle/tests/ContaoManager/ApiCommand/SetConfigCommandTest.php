@@ -22,7 +22,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 class SetConfigCommandTest extends TestCase
 {
     /**
-     * @var ManagerConfig|MockObject
+     * @var ManagerConfig&MockObject
      */
     private $config;
 

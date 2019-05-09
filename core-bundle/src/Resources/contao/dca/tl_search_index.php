@@ -34,7 +34,7 @@ $GLOBALS['TL_DCA']['tl_search_index'] = array
 		),
 		'pid' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'word' => array
 		(
@@ -42,7 +42,7 @@ $GLOBALS['TL_DCA']['tl_search_index'] = array
 		),
 		'relevance' => array
 		(
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'language' => array
 		(

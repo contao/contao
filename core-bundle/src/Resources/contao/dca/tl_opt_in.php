@@ -75,7 +75,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'token' => array
 		(
@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'sorting'                 => true,
 			'flag'                    => 6,
 			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'confirmedOn' => array
 		(
@@ -99,7 +99,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'sorting'                 => true,
 			'flag'                    => 6,
 			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'removeOn' => array
 		(
@@ -108,7 +108,13 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'sorting'                 => true,
 			'flag'                    => 6,
 			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
+		),
+		'invalidatedThrough' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['invalidatedThrough'],
+			'search'                  => true,
+			'sql'                     => "varchar(24) NOT NULL default ''"
 		),
 		'email' => array
 		(
@@ -201,6 +207,6 @@ class tl_opt_in extends Contao\Backend
 	 */
 	public function resendButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return (!$row['confirmedOn'] && $row['createdOn'] > strtotime('-24 hours')) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : '';
+		return (!$row['confirmedOn'] &&!$row['invalidatedThrough'] && $row['emailSubject'] && $row['emailText'] && $row['createdOn'] > strtotime('-24 hours')) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : '';
 	}
 }

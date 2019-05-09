@@ -150,6 +150,6 @@ class ContaoCoreExtension extends Extension
             $container->getParameter('kernel.project_dir').'/'.$config['image']['target_path']
         );
 
-        @trigger_error('Using the contao.image.target_path parameter has been deprecated and will no longer work in Contao 5. Use the contao.image.target_dir parameter instead.', E_USER_DEPRECATED);
+        @trigger_error('Using the contao.image.target_path parameter has been deprecated and will no longer work in Contao 5.0. Use the contao.image.target_dir parameter instead.', E_USER_DEPRECATED);
     }
 }

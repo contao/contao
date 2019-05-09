@@ -42,19 +42,19 @@ class Version450Update extends AbstractVersionUpdate
                 youtubeOptions text NULL
         ');
 
-        $this->connection->query("
+        $this->connection->query('
             ALTER TABLE
                 tl_content
             ADD
-                youtubeStart int(10) unsigned NOT NULL default '0'
-        ");
+                youtubeStart int(10) unsigned NOT NULL default 0
+        ');
 
-        $this->connection->query("
+        $this->connection->query('
             ALTER TABLE
                 tl_content
             ADD
-                youtubeStop int(10) unsigned NOT NULL default '0'
-        ");
+                youtubeStop int(10) unsigned NOT NULL default 0
+        ');
 
         $this->connection->query("
             UPDATE

@@ -20,6 +20,12 @@ use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 
 class AddResourcesPathsPassTest extends TestCase
 {
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using "app/Resources/contao" has been deprecated %s.
+     * @expectedDeprecation Using "src/Resources/contao" has been deprecated %s.
+     */
     public function testAddsTheResourcesPaths(): void
     {
         $bundles = [
@@ -46,6 +52,7 @@ class AddResourcesPathsPassTest extends TestCase
             [
                 $path.'/Resources/contao',
                 $this->getFixturesDir().'/system/modules/foobar',
+                $this->getFixturesDir().'/contao',
                 $this->getFixturesDir().'/app/Resources/contao',
                 $this->getFixturesDir().'/src/Resources/contao',
             ],

@@ -32,7 +32,7 @@ class AuthenticationEntryPointTest extends TestCase
             ->expects($this->once())
             ->method('createRedirectResponse')
             ->willReturnCallback(
-                function (Request $request, string $url): RedirectResponse {
+                static function (Request $request, string $url): RedirectResponse {
                     return new RedirectResponse($url);
                 }
             )

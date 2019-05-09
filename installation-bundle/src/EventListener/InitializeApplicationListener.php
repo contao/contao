@@ -14,7 +14,6 @@ namespace Contao\InstallationBundle\EventListener;
 
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -51,7 +50,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
         $command = new AssetsInstallCommand($this->container->get('filesystem'));
         $command->setApplication($application);
 
-        $input = new ArgvInput(['assets:install', '--relative', $webDir]);
+        $input = new ArgvInput(['bin/console', 'assets:install', $webDir, '--symlink', '--relative']);
 
         if (null === ($output = $this->runCommand($command, $input))) {
             return;
@@ -103,7 +102,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
      */
     private function runCommand(Command $command, InputInterface $input): ?string
     {
-        if ($command instanceof ContainerAwareCommand) {
+        if ($command instanceof ContainerAwareInterface) {
             $command->setContainer($this->container);
         }
 

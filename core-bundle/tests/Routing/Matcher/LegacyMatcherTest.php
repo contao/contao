@@ -42,7 +42,52 @@ class LegacyMatcherTest extends TestCase
             false
         );
 
-        $matcher->matchRequest($this->createMock(Request::class));
+        $request = $this->createMock(Request::class);
+        $request
+            ->method('getPathInfo')
+            ->willReturn('foo.html')
+        ;
+
+        $matcher->matchRequest($request);
+    }
+
+    /**
+     * @dataProvider getRootRequestData
+     */
+    public function testDoesNotExecuteHooksIfTheRequestPathIsEmpty(string $pathInfo, bool $prependLocale, bool $noRouteFound = false): void
+    {
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getPathInfo')
+            ->willReturn($pathInfo)
+        ;
+
+        $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = ['foo', 'bar'];
+
+        $matcher = new LegacyMatcher(
+            $this->mockFrameworkWithAdapters(),
+            $this->mockRequestMatcher($noRouteFound ? $this->never() : $this->once()),
+            '.html',
+            $prependLocale
+        );
+
+        if ($noRouteFound) {
+            $this->expectException(ResourceNotFoundException::class);
+        }
+
+        $matcher->matchRequest($request);
+    }
+
+    public function getRootRequestData(): \Generator
+    {
+        yield ['/', false];
+        yield ['/', true];
+        yield ['/en/', true];
+        yield ['/de/', true];
+        yield ['/fr-FR/', true];
+        yield ['/es/', false, true];
+        yield ['/fr-FR/', false, true];
     }
 
     /**
@@ -215,7 +260,7 @@ class LegacyMatcherTest extends TestCase
             ->expects($this->exactly(2))
             ->method('matchRequest')
             ->with($this->callback(
-                function (Request $incoming) use ($request, &$folderUrlMatched) {
+                static function (Request $incoming) use ($request, &$folderUrlMatched) {
                     if ($folderUrlMatched > 0) {
                         return true;
                     }
@@ -226,7 +271,7 @@ class LegacyMatcherTest extends TestCase
                 }
             ))
             ->willReturnCallback(
-                function () use (&$folderUrlMatched) {
+                static function () use (&$folderUrlMatched) {
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
                         throw new ResourceNotFoundException('');
@@ -270,7 +315,7 @@ class LegacyMatcherTest extends TestCase
             ->expects($this->exactly(2))
             ->method('matchRequest')
             ->with($this->callback(
-                function (Request $incoming) use ($request, &$folderUrlMatched) {
+                static function (Request $incoming) use ($request, &$folderUrlMatched) {
                     if ($folderUrlMatched > 0) {
                         return true;
                     }
@@ -281,7 +326,7 @@ class LegacyMatcherTest extends TestCase
                 }
             ))
             ->willReturnCallback(
-                function () use (&$folderUrlMatched) {
+                static function () use (&$folderUrlMatched) {
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
@@ -316,8 +361,8 @@ class LegacyMatcherTest extends TestCase
 
         $request = $this->createMock(Request::class);
         $request
-            ->expects($this->never())
             ->method('getPathInfo')
+            ->willReturn('foo.html')
         ;
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
@@ -325,7 +370,7 @@ class LegacyMatcherTest extends TestCase
             ->expects($this->exactly(2))
             ->method('matchRequest')
             ->with($this->callback(
-                function (Request $incoming) use ($request, &$folderUrlMatched) {
+                static function (Request $incoming) use ($request, &$folderUrlMatched) {
                     if ($folderUrlMatched > 0) {
                         return true;
                     }
@@ -340,9 +385,11 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        return [
-                            'pageModel' => $this->mockClassWithProperties(PageModel::class, ['alias' => 'bar']),
-                        ];
+                        /** @var PageModel&MockObject $pageModel */
+                        $pageModel = $this->mockClassWithProperties(PageModel::class);
+                        $pageModel->alias = 'bar';
+
+                        return ['pageModel' => $pageModel];
                     }
 
                     return [];
@@ -373,8 +420,8 @@ class LegacyMatcherTest extends TestCase
 
         $request = $this->createMock(Request::class);
         $request
-            ->expects($this->never())
             ->method('getPathInfo')
+            ->willReturn('foo/bar/baz.html')
         ;
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
@@ -382,7 +429,7 @@ class LegacyMatcherTest extends TestCase
             ->expects($this->exactly(2))
             ->method('matchRequest')
             ->with($this->callback(
-                function (Request $incoming) use ($request, &$folderUrlMatched) {
+                static function (Request $incoming) use ($request, &$folderUrlMatched) {
                     if ($folderUrlMatched > 0) {
                         return true;
                     }
@@ -397,8 +444,12 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
+                        /** @var PageModel&MockObject $pageModel */
+                        $pageModel = $this->mockClassWithProperties(PageModel::class);
+                        $pageModel->alias = 'foo';
+
                         return [
-                            'pageModel' => $this->mockClassWithProperties(PageModel::class, ['alias' => 'foo']),
+                            'pageModel' => $pageModel,
                             'parameters' => '/bar/baz',
                         ];
                     }
@@ -431,8 +482,8 @@ class LegacyMatcherTest extends TestCase
 
         $request = $this->createMock(Request::class);
         $request
-            ->expects($this->never())
             ->method('getPathInfo')
+            ->willReturn('foo/baz.html')
         ;
 
         $matcher = $this->createMock(RequestMatcherInterface::class);
@@ -440,7 +491,7 @@ class LegacyMatcherTest extends TestCase
             ->expects($this->exactly(2))
             ->method('matchRequest')
             ->with($this->callback(
-                function (Request $incoming) use ($request, &$folderUrlMatched) {
+                static function (Request $incoming) use ($request, &$folderUrlMatched) {
                     if ($folderUrlMatched > 0) {
                         return true;
                     }
@@ -455,8 +506,12 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
+                        /** @var PageModel&MockObject $pageModel */
+                        $pageModel = $this->mockClassWithProperties(PageModel::class);
+                        $pageModel->alias = 'foo';
+
                         return [
-                            'pageModel' => $this->mockClassWithProperties(PageModel::class, ['alias' => 'foo']),
+                            'pageModel' => $pageModel,
                             'parameters' => '/baz',
                         ];
                     }
@@ -555,7 +610,7 @@ class LegacyMatcherTest extends TestCase
     }
 
     /**
-     * @return ContaoFramework|MockObject
+     * @return ContaoFramework&MockObject
      */
     private function mockFrameworkWithAdapters(Adapter $configAdapter = null, string $language = null, array $hooks = []): ContaoFramework
     {
@@ -606,7 +661,7 @@ class LegacyMatcherTest extends TestCase
     }
 
     /**
-     * @return RequestMatcherInterface|MockObject
+     * @return RequestMatcherInterface&MockObject
      */
     private function mockRequestMatcher(Invocation $expects, string $pathInfo = null, array $match = []): RequestMatcherInterface
     {
@@ -615,7 +670,7 @@ class LegacyMatcherTest extends TestCase
             ->expects($expects)
             ->method('matchRequest')
             ->with($this->callback(
-                function (Request $request) use ($pathInfo) {
+                static function (Request $request) use ($pathInfo) {
                     return null === $pathInfo || $request->getPathInfo() === $pathInfo;
                 }
             ))
@@ -626,7 +681,7 @@ class LegacyMatcherTest extends TestCase
     }
 
     /**
-     * @return Adapter|MockObject
+     * @return Adapter&MockObject
      */
     private function mockConfigAdapter(array $config): Adapter
     {
@@ -634,7 +689,7 @@ class LegacyMatcherTest extends TestCase
         $configAdapter
             ->method('get')
             ->willReturnCallback(
-                function ($param) use ($config) {
+                static function ($param) use ($config) {
                     return $config[$param] ?? null;
                 }
             )

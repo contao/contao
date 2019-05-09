@@ -32,7 +32,7 @@ class AuthenticationProviderTest extends TestCase
 {
     public function testHandlesContaoUsers(): void
     {
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->loginCount = 3;
@@ -101,7 +101,7 @@ class AuthenticationProviderTest extends TestCase
 
     public function testLocksAUserAfterThreeFailedLoginAttempts(): void
     {
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->locked = 0;
@@ -174,7 +174,7 @@ class AuthenticationProviderTest extends TestCase
      */
     public function testTriggersTheCheckCredentialsHook(bool $success): void
     {
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->loginCount = 3;
@@ -252,17 +252,15 @@ class AuthenticationProviderTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
-    /**
-     * @return bool[][]
-     */
-    public function getCheckCredentialsHookData(): array
+    public function getCheckCredentialsHookData(): \Generator
     {
-        return [
-            [true],
-            [false],
-        ];
+        yield [true];
+        yield [false];
     }
 
+    /**
+     * @param ContaoFramework&MockObject $framework
+     */
     private function mockProvider(ContaoFramework $framework = null): AuthenticationProvider
     {
         $userProvider = $this->createMock(UserProviderInterface::class);

@@ -431,7 +431,7 @@ class Theme extends Backend
 				$table = $tables->item($i)->getAttribute('name');
 
 				// Skip invalid tables
-				if (!array_key_exists($table, $arrLocks))
+				if (!\array_key_exists($table, $arrLocks))
 				{
 					continue;
 				}
@@ -461,7 +461,7 @@ class Theme extends Backend
 				$table = $tables->item($i)->getAttribute('name');
 
 				// Skip invalid tables
-				if (!array_key_exists($table, $arrLocks))
+				if (!\array_key_exists($table, $arrLocks))
 				{
 					continue;
 				}
@@ -693,8 +693,6 @@ class Theme extends Backend
 
 			unset($tl_files, $tl_theme, $tl_style_sheet, $tl_style, $tl_module, $tl_layout, $tl_image_size, $tl_image_size_item);
 		}
-
-		System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');

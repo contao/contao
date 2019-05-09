@@ -41,15 +41,10 @@ class TokenCheckerTest extends TestCase
         $this->assertSame($expect, $tokenChecker->hasFrontendUser());
     }
 
-    /**
-     * @return (string|bool)[][]
-     */
-    public function getFrontendUserData(): array
+    public function getFrontendUserData(): \Generator
     {
-        return [
-            [FrontendUser::class, true],
-            [BackendUser::class, false],
-        ];
+        yield [FrontendUser::class, true];
+        yield [BackendUser::class, false];
     }
 
     /**
@@ -64,15 +59,10 @@ class TokenCheckerTest extends TestCase
         $this->assertSame($expect, $tokenChecker->hasBackendUser());
     }
 
-    /**
-     * @return (string|bool)[][]
-     */
-    public function getBackendUserData(): array
+    public function getBackendUserData(): \Generator
     {
-        return [
-            [BackendUser::class, true],
-            [FrontendUser::class, false],
-        ];
+        yield [BackendUser::class, true];
+        yield [FrontendUser::class, false];
     }
 
     public function testReturnsTheFrontendUsername(): void
@@ -103,16 +93,11 @@ class TokenCheckerTest extends TestCase
         $this->assertSame($expect, $tokenChecker->isPreviewMode());
     }
 
-    /**
-     * @return (FrontendPreviewToken|UsernamePasswordToken|bool)[][]
-     */
-    public function getPreviewModeData(): array
+    public function getPreviewModeData(): \Generator
     {
-        return [
-            [new FrontendPreviewToken(null, true), true],
-            [new FrontendPreviewToken(null, false), false],
-            [new UsernamePasswordToken('user', 'password', 'provider'), false],
-        ];
+        yield [new FrontendPreviewToken(null, true), true];
+        yield [new FrontendPreviewToken(null, false), false];
+        yield [new UsernamePasswordToken('user', 'password', 'provider'), false];
     }
 
     public function testDoesNotReturnATokenIfTheSessionIsNotStarted(): void
@@ -201,32 +186,10 @@ class TokenCheckerTest extends TestCase
 
     private function mockUser(string $class): User
     {
-        /** @var User|MockObject $user */
-        $user = $this->createPartialMock($class, ['__get']);
-        $user
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key) {
-                    switch ($key) {
-                        case 'id':
-                            return 1;
-
-                        case 'username':
-                            return 'foobar';
-
-                        case 'admin':
-                        case 'disable':
-                            return '';
-
-                        case 'groups':
-                            return [];
-
-                        default:
-                            return null;
-                    }
-                }
-            )
-        ;
+        /** @var User&MockObject $user */
+        $user = $this->createPartialMock($class, []);
+        $user->id = 1;
+        $user->username = 'foobar';
 
         return $user;
     }

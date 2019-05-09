@@ -80,7 +80,7 @@ class ScriptHandler
         $process->setTimeout(500);
 
         $process->run(
-            function (string $type, string $buffer) use ($event): void {
+            static function (string $type, string $buffer) use ($event): void {
                 $event->getIO()->write($buffer, false);
             }
         );

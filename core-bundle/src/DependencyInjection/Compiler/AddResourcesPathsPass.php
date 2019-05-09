@@ -42,11 +42,17 @@ class AddResourcesPathsPass implements CompilerPassInterface
             }
         }
 
+        if (is_dir($rootDir.'/contao')) {
+            $paths[] = $rootDir.'/contao';
+        }
+
         if (is_dir($rootDir.'/app/Resources/contao')) {
+            @trigger_error('Using "app/Resources/contao" has been deprecated and will no longer work in Contao 5.0. Use the "contao" folder instead.', E_USER_DEPRECATED);
             $paths[] = $rootDir.'/app/Resources/contao';
         }
 
         if (is_dir($rootDir.'/src/Resources/contao')) {
+            @trigger_error('Using "src/Resources/contao" has been deprecated and will no longer work in Contao 5.0. Use the "contao" folder instead.', E_USER_DEPRECATED);
             $paths[] = $rootDir.'/src/Resources/contao';
         }
 

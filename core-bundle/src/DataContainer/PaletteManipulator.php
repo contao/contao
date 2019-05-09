@@ -193,6 +193,10 @@ class PaletteManipulator
         $groups = StringUtil::trimsplit(';', $palette);
 
         foreach ($groups as $group) {
+            if ('' === $group) {
+                continue;
+            }
+
             $hide = false;
             $fields = StringUtil::trimsplit(',', $group);
 
@@ -239,7 +243,7 @@ class PaletteManipulator
     private function applyLegend(array &$config, array $action): void
     {
         // Legend already exists, do nothing
-        if (array_key_exists($action['name'], $config)) {
+        if (\array_key_exists($action['name'], $config)) {
             return;
         }
 
@@ -258,7 +262,7 @@ class PaletteManipulator
         }
 
         foreach ($action['parents'] as $parent) {
-            if (array_key_exists($parent, $config)) {
+            if (\array_key_exists($parent, $config)) {
                 $offset = array_search($parent, array_keys($config), true);
                 $offset += (int) (self::POSITION_AFTER === $action['position']);
 
@@ -366,7 +370,7 @@ class PaletteManipulator
     {
         foreach ($config as $legend => $group) {
             if (empty($remove['parents']) || \in_array($legend, $remove['parents'], true)) {
-                $config[$legend]['fields'] = \array_diff($group['fields'], $remove['fields']);
+                $config[$legend]['fields'] = array_diff($group['fields'], $remove['fields']);
             }
         }
     }
@@ -390,7 +394,7 @@ class PaletteManipulator
     private function canApplyToParent(array &$config, array $action, string $key, string $position): bool
     {
         foreach ($action[$key] as $parent) {
-            if (array_key_exists($parent, $config)) {
+            if (\array_key_exists($parent, $config)) {
                 $offset = self::POSITION_PREPEND === $action[$position] ? 0 : \count($config[$parent]['fields']);
                 array_splice($config[$parent]['fields'], $offset, 0, $action['fields']);
 

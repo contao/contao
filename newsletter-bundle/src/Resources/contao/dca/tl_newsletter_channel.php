@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'title' => array
 		(
@@ -143,13 +143,12 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'template' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_channel']['template'],
-			'default'                 => 'mail_default',
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -157,7 +156,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			{
 				return Contao\Controller::getTemplateGroup('mail_');
 			},
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) NOT NULL default 'mail_default'"
 		),
 		'sender' => array
 		(
@@ -309,13 +308,13 @@ class tl_newsletter_channel extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		if (empty($this->User->newsletters) || !\is_array($this->User->newsletters))
 		{
 			$root = array(0);
 		}
 		else
 		{
-			$root = $this->User->forms;
+			$root = $this->User->newsletters;
 		}
 
 		// The channel is enabled already

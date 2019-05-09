@@ -646,7 +646,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
 			// Use array_key_exists here (see #5252)
-			if (array_key_exists('default', $v))
+			if (\array_key_exists('default', $v))
 			{
 				$this->set[$k] = \is_array($v['default']) ? serialize($v['default']) : $v['default'];
 
@@ -892,7 +892,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			foreach ($objRow->row() as $k=>$v)
 			{
-				if (array_key_exists($k, $GLOBALS['TL_DCA'][$this->strTable]['fields']))
+				if (\array_key_exists($k, $GLOBALS['TL_DCA'][$this->strTable]['fields']))
 				{
 					// Never copy passwords
 					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['inputType'] == 'password')
@@ -912,7 +912,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						$v = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql']);
 
 						// Use array_key_exists to allow NULL (see #5252)
-						if (array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]))
+						if (\array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]))
 						{
 							$v = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['default']) ? serialize($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['default']) : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['default'];
 						}
@@ -1119,7 +1119,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 							$vv = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$v]['fields'][$kk]['sql']);
 
 							// Use array_key_exists to allow NULL (see #5252)
-							if (array_key_exists('default', $GLOBALS['TL_DCA'][$v]['fields'][$kk]))
+							if (\array_key_exists('default', $GLOBALS['TL_DCA'][$v]['fields'][$kk]))
 							{
 								$vv = \is_array($GLOBALS['TL_DCA'][$v]['fields'][$kk]['default']) ? serialize($GLOBALS['TL_DCA'][$v]['fields'][$kk]['default']) : $GLOBALS['TL_DCA'][$v]['fields'][$kk]['default'];
 							}
@@ -2177,21 +2177,18 @@ class DC_Table extends DataContainer implements \listable, \editable
 			if (isset($_POST['saveNclose']))
 			{
 				Message::reset();
-				System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
 				$this->redirect($this->getReferer());
 			}
 			elseif (isset($_POST['saveNedit']))
 			{
 				Message::reset();
-				System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
 				$this->redirect($this->addToUrl($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']['edit']['href'], false, array('s2e', 'act', 'mode', 'pid')));
 			}
 			elseif (isset($_POST['saveNback']))
 			{
 				Message::reset();
-				System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
 				if ($this->ptable == '')
 				{
@@ -2210,7 +2207,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			elseif (isset($_POST['saveNcreate']))
 			{
 				Message::reset();
-				System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
 				$strUrl = TL_SCRIPT . '?do=' . Input::get('do');
 
@@ -2242,7 +2238,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			elseif (isset($_POST['saveNduplicate']))
 			{
 				Message::reset();
-				System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
 				$strUrl = TL_SCRIPT . '?do=' . Input::get('do');
 
@@ -2439,7 +2434,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					$formFields[] = $v.'_'.$this->intId;
 
 					// Set the default value and try to load the current value from DB (see #5252)
-					if (array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]))
+					if (\array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]))
 					{
 						$this->varValue = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) ? serialize($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default'];
 					}
@@ -2615,7 +2610,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				if (isset($_POST['saveNclose']))
 				{
-					System::setCookie('BE_PAGE_OFFSET', 0, 0);
 					$this->redirect($this->getReferer());
 				}
 
@@ -2934,7 +2928,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				if (isset($_POST['saveNclose']))
 				{
-					System::setCookie('BE_PAGE_OFFSET', 0, 0);
 					$this->redirect($this->getReferer());
 				}
 
@@ -3027,7 +3020,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField];
 
 		// Convert date formats into timestamps
-		if ($varValue != '' && \in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
+		if ($varValue !== null && $varValue !== '' && \in_array($arrData['eval']['rgxp'], array('date', 'time', 'datim')))
 		{
 			$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 			$varValue = $objDate->tstamp;
@@ -3593,7 +3586,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').($blnClipboard ? '
-<div id="paste_hint">
+<div id="paste_hint" data-add-to-scroll-offset="20">
   <p>'.$GLOBALS['TL_LANG']['MSC']['selectNewPosition'].'</p>
 </div>' : '').'
 <div class="tl_listing_container tree_view" id="tl_listing">'.($GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] ?? '').((Input::get('act') == 'select' || ($this->strPickerFieldType == 'checkbox')) ? '
@@ -4125,7 +4118,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').($blnClipboard ? '
-<div id="paste_hint">
+<div id="paste_hint" data-add-to-scroll-offset="20">
   <p>'.$GLOBALS['TL_LANG']['MSC']['selectNewPosition'].'</p>
 </div>' : '').'
 <div class="tl_listing_container parent_view'.($this->strPickerFieldType ? ' picker unselectable' : '').'" id="tl_listing">
@@ -5570,19 +5563,19 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Sort by day
 				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(5, 6)))
 				{
-					$what = "UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-%%m-%%d')) AS $what";
+					$what = "IF($what!='', UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-%%m-%%d')), '') AS $what";
 				}
 
 				// Sort by month
 				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(7, 8)))
 				{
-					$what = "UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-%%m-01')) AS $what";
+					$what = "IF($what!='', UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-%%m-01')), '') AS $what";
 				}
 
 				// Sort by year
 				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(9, 10)))
 				{
-					$what = "UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-01-01')) AS $what";
+					$what = "IF($what!='', UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-01-01')), '') AS $what";
 				}
 			}
 
@@ -5614,7 +5607,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 					foreach ($options as $k=>$v)
 					{
-						if ($v == '')
+						if ($v === '')
 						{
 							$options[$v] = '-';
 						}
@@ -5634,7 +5627,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 					foreach ($options as $k=>$v)
 					{
-						if ($v == '')
+						if ($v === '')
 						{
 							$options[$v] = '-';
 						}
@@ -5660,7 +5653,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 					foreach ($options as $k=>$v)
 					{
-						if ($v == '')
+						if ($v === '')
 						{
 							$options[$v] = '-';
 						}

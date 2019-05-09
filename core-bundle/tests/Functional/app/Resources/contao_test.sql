@@ -1,13 +1,13 @@
--- MySQL dump 10.16  Distrib 10.3.10-MariaDB, for osx10.14 (x86_64)
+-- MySQL dump 10.17  Distrib 10.3.12-MariaDB, for osx10.14 (x86_64)
 --
 -- Host: localhost    Database: contao_test
 -- ------------------------------------------------------
--- Server version	10.3.10-MariaDB
+-- Server version	10.3.12-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -47,7 +47,7 @@ CREATE TABLE `tl_article` (
   PRIMARY KEY (`id`),
   KEY `alias` (`alias`),
   KEY `pid_start_stop_published_sorting` (`pid`,`start`,`stop`,`published`,`sorting`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -145,6 +145,8 @@ CREATE TABLE `tl_calendar_events` (
   `orderEnclosure` blob DEFAULT NULL,
   `imageTitle` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `pageTitle` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `alias` (`alias`),
   KEY `pid_start_stop_published` (`pid`,`start`,`stop`,`published`)
@@ -217,6 +219,7 @@ CREATE TABLE `tl_comments` (
   `ip` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `notified` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `notifiedReply` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `member` int(10) unsigned DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `published` (`published`),
   KEY `source_parent_published` (`source`,`parent`,`published`)
@@ -245,15 +248,14 @@ CREATE TABLE `tl_comments_notify` (
   `source` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `parent` int(10) unsigned NOT NULL DEFAULT 0,
   `name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `addedOn` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `ip` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `tokenConfirm` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `tokenRemove` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `active` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `tokenRemove` (`tokenRemove`),
-  KEY `source_parent_tokenConfirm` (`source`,`parent`,`tokenConfirm`)
+  KEY `source_parent_active` (`source`,`parent`,`active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -364,9 +366,10 @@ CREATE TABLE `tl_content` (
   `playerAspect` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `playerCaption` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `overwriteLink` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `inline` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `pid_ptable_invisible_sorting` (`pid`,`ptable`,`invisible`,`sorting`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -375,7 +378,7 @@ CREATE TABLE `tl_content` (
 
 LOCK TABLES `tl_content` WRITE;
 /*!40000 ALTER TABLE `tl_content` DISABLE KEYS */;
-INSERT INTO `tl_content` VALUES (9,4,'tl_article',128,1539686688,'module','a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}',NULL,'',NULL,'','','','','','','','above',NULL,'',NULL,NULL,'','','','','',0,'ascending','','','','',NULL,'','','','','','','',NULL,NULL,'',4,0,0,'','','','',NULL,'',NULL,'',0,300,0,'',0,0,0,0,1,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}','','','','ascending',0,'','','','','com_default','',NULL,'',NULL,NULL,0,0,'','','none','',''),(10,13,'tl_article',128,1539686730,'module','a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}',NULL,'',NULL,'','','','','','','','above',NULL,'',NULL,NULL,'','','','','',0,'ascending','','','','',NULL,'','','','','','','',NULL,NULL,'',4,0,0,'','','','',NULL,'',NULL,'',0,300,0,'',0,0,0,0,1,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}','','','','ascending',0,'','','','','com_default','',NULL,'',NULL,NULL,0,0,'','','none','','');
+INSERT INTO `tl_content` VALUES (9,4,'tl_article',128,1539686688,'module','a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}',NULL,'',NULL,'','','','','','','','above',NULL,'',NULL,NULL,'','','','','',0,'ascending','','','','',NULL,'','','','','','','',NULL,NULL,'',4,0,0,'','','','',NULL,'',NULL,'',0,300,0,'',0,0,0,0,1,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}','','','','ascending',0,'','','','','com_default','',NULL,'',NULL,NULL,0,0,'','','none','','',''),(10,13,'tl_article',128,1539686730,'module','a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}',NULL,'',NULL,'','','','','','','','above',NULL,'',NULL,NULL,'','','','','',0,'ascending','','','','',NULL,'','','','','','','',NULL,NULL,'',4,0,0,'','','','',NULL,'',NULL,'',0,300,0,'',0,0,0,0,1,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}','','','','ascending',0,'','','','','com_default','',NULL,'',NULL,NULL,0,0,'','','none','','','');
 /*!40000 ALTER TABLE `tl_content` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -512,7 +515,7 @@ CREATE TABLE `tl_files` (
   UNIQUE KEY `uuid` (`uuid`),
   KEY `pid` (`pid`),
   KEY `extension` (`extension`),
-  KEY `path` (`path`(191))
+  KEY `path` (`path`(768))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -715,7 +718,6 @@ CREATE TABLE `tl_layout` (
   `calendarfeeds` blob DEFAULT NULL,
   `modules` blob DEFAULT NULL,
   `template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `doctype` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `webfonts` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `picturefill` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `viewport` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -738,6 +740,7 @@ CREATE TABLE `tl_layout` (
   `combineScripts` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `externalJs` blob DEFAULT NULL,
   `orderExtJs` blob DEFAULT NULL,
+  `minifyMarkup` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -748,7 +751,7 @@ CREATE TABLE `tl_layout` (
 
 LOCK TABLES `tl_layout` WRITE;
 /*!40000 ALTER TABLE `tl_layout` DISABLE KEYS */;
-INSERT INTO `tl_layout` VALUES (1,1,1539617638,'Default','1rw','a:2:{s:4:\"unit\";s:0:\"\";s:5:\"value\";s:0:\"\";}','','1cl','a:2:{s:4:\"unit\";s:0:\"\";s:5:\"value\";s:0:\"\";}','','a:1:{i:0;a:4:{s:5:\"title\";s:0:\"\";s:2:\"id\";s:0:\"\";s:8:\"template\";s:13:\"block_section\";s:8:\"position\";s:3:\"top\";}}','',NULL,NULL,NULL,'external_first',NULL,NULL,'a:1:{i:0;a:3:{s:3:\"mod\";s:1:\"0\";s:3:\"col\";s:4:\"main\";s:6:\"enable\";s:1:\"1\";}}','fe_page','html5','','','','','','',NULL,'','',NULL,'','moo_local',NULL,NULL,NULL,'','','center',NULL,'1',NULL,NULL);
+INSERT INTO `tl_layout` VALUES (1,1,1539617638,'Default','1rw','a:2:{s:4:\"unit\";s:0:\"\";s:5:\"value\";s:0:\"\";}','','1cl','a:2:{s:4:\"unit\";s:0:\"\";s:5:\"value\";s:0:\"\";}','','a:1:{i:0;a:4:{s:5:\"title\";s:0:\"\";s:2:\"id\";s:0:\"\";s:8:\"template\";s:13:\"block_section\";s:8:\"position\";s:3:\"top\";}}','',NULL,NULL,NULL,'external_first',NULL,NULL,'a:1:{i:0;a:3:{s:3:\"mod\";s:1:\"0\";s:3:\"col\";s:4:\"main\";s:6:\"enable\";s:1:\"1\";}}','fe_page','','','','','','',NULL,'','',NULL,'','moo_local',NULL,NULL,NULL,'','','center',NULL,'1',NULL,NULL,'');
 /*!40000 ALTER TABLE `tl_layout` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -822,13 +825,10 @@ CREATE TABLE `tl_member` (
   `loginCount` smallint(5) unsigned NOT NULL DEFAULT 3,
   `locked` int(10) unsigned NOT NULL DEFAULT 0,
   `session` blob DEFAULT NULL,
-  `createdOn` int(10) unsigned NOT NULL DEFAULT 0,
-  `activation` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `newsletter` blob DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
-  KEY `activation` (`activation`),
-  KEY `email` (`email`(191))
+  KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1042,6 +1042,8 @@ CREATE TABLE `tl_news` (
   `overwriteMeta` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `orderEnclosure` blob DEFAULT NULL,
   `imageTitle` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `pageTitle` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `alias` (`alias`),
   KEY `pid_start_stop_published` (`pid`,`start`,`stop`,`published`)
@@ -1054,7 +1056,7 @@ CREATE TABLE `tl_news` (
 
 LOCK TABLES `tl_news` WRITE;
 /*!40000 ALTER TABLE `tl_news` DISABLE KEYS */;
-INSERT INTO `tl_news` VALUES (1,1,1539616623,'Foobar','foobar',1,1539616560,1539616560,'',NULL,'',NULL,'','','','','','','above','',NULL,'default',0,0,'','','','','','1','','','',NULL,'');
+INSERT INTO `tl_news` VALUES (1,1,1539616623,'Foobar','foobar',1,1539616560,1539616560,'',NULL,'',NULL,'','','','','','','above','',NULL,'default',0,0,'','','','','','1','','','',NULL,'',NULL,'');
 /*!40000 ALTER TABLE `tl_news` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1232,12 +1234,10 @@ CREATE TABLE `tl_newsletter_recipients` (
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `active` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `addedOn` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `confirmed` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `ip` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `token` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `pid_email` (`pid`,`email`(191)),
-  KEY `email` (`email`(191))
+  UNIQUE KEY `pid_email` (`pid`,`email`),
+  KEY `active` (`active`),
+  KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1248,6 +1248,64 @@ CREATE TABLE `tl_newsletter_recipients` (
 LOCK TABLES `tl_newsletter_recipients` WRITE;
 /*!40000 ALTER TABLE `tl_newsletter_recipients` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tl_newsletter_recipients` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tl_opt_in`
+--
+
+DROP TABLE IF EXISTS `tl_opt_in`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tl_opt_in` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
+  `token` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `createdOn` int(10) unsigned NOT NULL DEFAULT 0,
+  `confirmedOn` int(10) unsigned NOT NULL DEFAULT 0,
+  `removeOn` int(10) unsigned NOT NULL DEFAULT 0,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `emailSubject` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `emailText` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `token` (`token`),
+  KEY `removeon` (`removeOn`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tl_opt_in`
+--
+
+LOCK TABLES `tl_opt_in` WRITE;
+/*!40000 ALTER TABLE `tl_opt_in` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tl_opt_in` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tl_opt_in_related`
+--
+
+DROP TABLE IF EXISTS `tl_opt_in_related`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tl_opt_in_related` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `pid` int(10) unsigned NOT NULL DEFAULT 0,
+  `relTable` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `relId` int(10) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `reltable_relid` (`relTable`,`relId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tl_opt_in_related`
+--
+
+LOCK TABLES `tl_opt_in_related` WRITE;
+/*!40000 ALTER TABLE `tl_opt_in_related` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tl_opt_in_related` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1289,7 +1347,6 @@ CREATE TABLE `tl_page` (
   `groups` blob DEFAULT NULL,
   `includeLayout` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `layout` int(10) unsigned NOT NULL DEFAULT 0,
-  `mobileLayout` int(10) unsigned NOT NULL DEFAULT 0,
   `includeCache` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `cache` int(10) unsigned NOT NULL DEFAULT 0,
   `includeChmod` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -1312,8 +1369,9 @@ CREATE TABLE `tl_page` (
   `redirectBack` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `alias` (`alias`),
-  KEY `pid_type_start_stop_published` (`pid`,`type`,`start`,`stop`,`published`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
+  KEY `pid_type_start_stop_published` (`pid`,`type`,`start`,`stop`,`published`),
+  KEY `type_dns` (`type`,`dns`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1322,7 +1380,7 @@ CREATE TABLE `tl_page` (
 
 LOCK TABLES `tl_page` WRITE;
 /*!40000 ALTER TABLE `tl_page` DISABLE KEYS */;
-INSERT INTO `tl_page` VALUES (1,0,128,1539679763,'Root with index page','root-with-index-page','root','','en','',NULL,'permanent',0,'','','root-with-index.local','','','1','','','','','','','','','',NULL,'1',1,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(2,1,128,1539698035,'Index','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(3,0,256,1539679767,'Root with home page','root-with-home-page','root','','en','',NULL,'permanent',0,'','','root-with-home.local','','','1','','','','','','','','','',NULL,'1',1,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(4,3,128,1539698035,'Home','home','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(5,0,384,1539680233,'Root with special chars','root-with-special-chars','root','','en','',NULL,'permanent',0,'','','root-with-special-chars.local','','','1','','','','','','','','','',NULL,'1',1,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(6,5,128,1539698035,'Höme','höme','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(7,0,512,1539680468,'Root with folder URLs','root-with-folder-urls','root','','en','',NULL,'permanent',0,'','','root-with-folder-urls.local','','','1','','','','','','','','','',NULL,'1',1,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(8,7,128,1539698035,'Home','folder/url/home','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(9,0,640,1539694676,'Root without fallback language','root-without-fallback-language','root','','en','',NULL,'permanent',0,'','','root-without-fallback-language','','','','','','','','','','','','',NULL,'1',1,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(10,9,128,1539698035,'English','english','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(11,0,768,1539696215,'Same domain root English','same-domain-root-english','root','','en','',NULL,'permanent',0,'','','same-domain-root.local','','','1','','','','','','','','','',NULL,'1',1,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(12,11,128,1539698035,'English site','english-site','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(13,0,896,1539696285,'Same domain root German','same-domain-root-german','root','','de','',NULL,'permanent',0,'','','same-domain-root.local','','','','','','','','','','','','',NULL,'1',1,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(14,13,128,1539698035,'German site','german-site','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(15,0,768,1539696215,'Same domain root English with index','same-domain-root-english-with-index','root','','en','',NULL,'permanent',0,'','','same-domain-root-with-index.local','','','1','','','','','','','','','',NULL,'1',1,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(16,15,128,1539698035,'English site','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(17,0,896,1539696285,'Same domain root German with index','same-domain-root-german-with-index','root','','de','',NULL,'permanent',0,'','','same-domain-root-with-index.local','','','','','','','','','','','','',NULL,'1',1,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(18,17,128,1539698035,'German site','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','');
+INSERT INTO `tl_page` VALUES (1,0,128,1539679763,'Root with index page','root-with-index-page','root','','en','',NULL,'permanent',0,'','','root-with-index.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(2,1,128,1539698035,'Index','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(3,0,256,1539679767,'Root with home page','root-with-home-page','root','','en','',NULL,'permanent',0,'','','root-with-home.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(4,3,128,1539698035,'Home','home','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(5,0,384,1539680233,'Root with special chars','root-with-special-chars','root','','en','',NULL,'permanent',0,'','','root-with-special-chars.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(6,5,128,1539698035,'Höme','höme','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(7,0,512,1539680468,'Root with folder URLs','root-with-folder-urls','root','','en','',NULL,'permanent',0,'','','root-with-folder-urls.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(8,7,128,1539698035,'Home','folder/url/home','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(9,0,640,1539694676,'Root without fallback language','root-without-fallback-language','root','','en','',NULL,'permanent',0,'','','root-without-fallback-language.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(10,9,128,1539698035,'English','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(11,0,768,1550250980,'Same domain root English','same-domain-root-english','root','','en','',NULL,'permanent',0,'','','same-domain-root.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(12,11,128,1539698035,'English site','english-site','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(13,0,896,1550250980,'Same domain root German','same-domain-root-german','root','','de','',NULL,'permanent',0,'','','same-domain-root.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(14,13,128,1539698035,'German site','german-site','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(15,0,960,1550250933,'Same domain root English with index','same-domain-root-english-with-index','root','','en','',NULL,'permanent',0,'','','same-domain-root-with-index.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(16,15,128,1539698035,'English site','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(17,0,896,1539696285,'Same domain root German with index','same-domain-root-german-with-index','root','','de','',NULL,'permanent',0,'','','same-domain-root-with-index.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(18,17,128,1539698035,'German site','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(19,0,1024,1539696285,'Domain without hostname','domain-without-hostname','root','','en','',NULL,'permanent',0,'','','','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(20,19,128,1539698035,'Home','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(21,0,1024,1539696285,'Domain with port','domain-with-port','root','','en','',NULL,'permanent',0,'','','domain-with-port.local:8080','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(22,21,128,1539698035,'Home','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','');
 /*!40000 ALTER TABLE `tl_page` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1373,7 +1431,7 @@ CREATE TABLE `tl_search` (
   `language` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `checksum_pid` (`checksum`,`pid`),
-  UNIQUE KEY `url` (`url`(191))
+  UNIQUE KEY `url` (`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1646,7 +1704,7 @@ CREATE TABLE `tl_user` (
   `secret` binary(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
-  KEY `email` (`email`(191))
+  KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1731,7 +1789,7 @@ CREATE TABLE `tl_version` (
   `data` mediumblob DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `pid` (`pid`),
-  KEY `fromtable` (`fromTable`(191))
+  KEY `fromtable` (`fromTable`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1753,4 +1811,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-10-16 15:54:29
+-- Dump completed on 2019-02-19 10:44:51

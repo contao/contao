@@ -7,8 +7,8 @@
 
 <div class="event layout_list<?= $this->classList ?>" itemscope itemtype="http://schema.org/Event">
 
-  <h2 itemprop="name"><a href="<?= $this->href ?>" title="<?= $this->title ?> (<?php if ($this->day) echo $this->day . ', '; ?><?= $this->date ?><?php if ($this->time) echo ' ' . $this->time; ?>)"<?= $this->target ?> itemprop="url"><?= $this->link ?></a></h2>
-  <p class="time"><time datetime="<?= $this->datetime ?>" itemprop="startDate"><?= $this->date ?><?php if ($this->time) echo ' ' . $this->time; ?></time></p>
+  <h2 itemprop="name"><a href="<?= $this->href ?>" title="<?= $this->title ?> (<?php if ($this->day): ?><?= $this->day ?>, <?php endif; ?><?= $this->date ?><?php if ($this->time): ?> <?= $this->time ?><?php endif; ?>)"<?= $this->target ?> itemprop="url"><?= $this->link ?></a></h2>
+  <p class="time"><time datetime="<?= $this->datetime ?>" itemprop="startDate"><?= $this->date ?><?php if ($this->time): ?> <?= $this->time ?><?php endif; ?></time></p>
 
   <?php if ($this->location): ?>
     <p class="location" itemprop="location" itemscope itemtype="http://schema.org/Place">

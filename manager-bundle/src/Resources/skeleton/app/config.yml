@@ -10,24 +10,25 @@ parameters:
 # Framework configuration
 framework:
     esi: { enabled: true }
-    translator: { fallbacks: ["%locale%"] }
-    secret: "%secret%"
+    translator: { fallbacks: ['%locale%'] }
+    secret: '%secret%'
     router:
-        resource: "contao_manager.routing_loader:loadFromPlugins"
+        resource: 'contao_manager.routing_loader:loadFromPlugins'
         type: service
-        strict_requirements: "%kernel.debug%"
+        strict_requirements: '%kernel.debug%'
     csrf_protection: ~
+    lock: ~
     templating:
         engines: ['twig']
-    default_locale:  "%locale%"
+    default_locale:  '%locale%'
     session:
         handler_id: ~
     fragments: { path: /_fragment }
 
 # Twig configuration
 twig:
-    debug: "%kernel.debug%"
-    strict_variables: "%kernel.debug%"
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
     default_path: '%kernel.project_dir%/app/Resources/views'
 
 # Doctrine configuration
@@ -37,11 +38,11 @@ doctrine:
         connections:
             default:
                 driver: pdo_mysql
-                host: "%database_host%"
-                port: "%database_port%"
-                user: "%database_user%"
-                password: "%database_password%"
-                dbname: "%database_name%"
+                host: '%database_host%'
+                port: '%database_port%'
+                user: '%database_user%'
+                password: '%database_password%'
+                dbname: '%database_name%'
                 charset: utf8mb4
                 default_table_options:
                     charset: utf8mb4
@@ -49,7 +50,7 @@ doctrine:
                     engine: InnoDB
         types:
             binary_string:
-                class: "Contao\\CoreBundle\\Doctrine\\DBAL\\Types\\BinaryStringType"
+                class: 'Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType'
                 commented: true
 
 # SwiftMailer configuration
@@ -57,12 +58,12 @@ swiftmailer:
     default_mailer: default
     mailers:
         default:
-            transport: "%mailer_transport%"
-            host: "%mailer_host%"
-            username: "%mailer_user%"
-            password: "%mailer_password%"
-            port: "%mailer_port%"
-            encryption: "%mailer_encryption%"
+            transport: '%mailer_transport%'
+            host: '%mailer_host%'
+            username: '%mailer_user%'
+            password: '%mailer_password%'
+            port: '%mailer_port%'
+            encryption: '%mailer_encryption%'
 
 # Lexik configuration
 lexik_maintenance:
@@ -71,8 +72,8 @@ lexik_maintenance:
         attributes:
             _bypass_maintenance: true
     driver:
-        class: "Lexik\\Bundle\\MaintenanceBundle\\Drivers\\FileDriver"
-        options: { file_path: "%kernel.project_dir%/var/maintenance_lock" }
+        class: 'Lexik\Bundle\MaintenanceBundle\Drivers\FileDriver'
+        options: { file_path: '%kernel.project_dir%/var/maintenance_lock' }
 
 # Security configuration
 nelmio_security:

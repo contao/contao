@@ -33,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_blacklist'] = array
 		),
 		'pid' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 		),
 		'hash' => array
 		(

@@ -164,12 +164,6 @@
       <trans-unit id="tl_page.layout.1">
         <source>You can manage page layouts with the "themes" module.</source>
       </trans-unit>
-      <trans-unit id="tl_page.mobileLayout.0">
-        <source>Mobile page layout</source>
-      </trans-unit>
-      <trans-unit id="tl_page.mobileLayout.1">
-        <source>This layout will be used if the visitor uses a mobile device.</source>
-      </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
       </trans-unit>

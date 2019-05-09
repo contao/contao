@@ -77,18 +77,13 @@ class ContaoContextTest extends TestCase
         unset($GLOBALS['objPage']);
     }
 
-    /**
-     * @return (string|bool)[][]
-     */
-    public function getBasePaths(): array
+    public function getBasePaths(): \Generator
     {
-        return [
-            ['example.com', true, '', 'https://example.com'],
-            ['example.com', false, '', 'http://example.com'],
-            ['example.com', true, '/foo', 'https://example.com/foo'],
-            ['example.com', false, '/foo', 'http://example.com/foo'],
-            ['example.ch', false, '/bar', 'http://example.ch/bar'],
-        ];
+        yield ['example.com', true, '', 'https://example.com'];
+        yield ['example.com', false, '', 'http://example.com'];
+        yield ['example.com', true, '/foo', 'https://example.com/foo'];
+        yield ['example.com', false, '/foo', 'http://example.com/foo'];
+        yield ['example.ch', false, '/bar', 'http://example.ch/bar'];
     }
 
     public function testReturnsTheStaticUrl(): void

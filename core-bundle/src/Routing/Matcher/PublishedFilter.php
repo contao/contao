@@ -18,7 +18,12 @@ use Symfony\Cmf\Component\Routing\NestedMatcher\RouteFilterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 
-class PublishingFilter implements RouteFilterInterface
+/**
+ * Filters routes if the root page has not been published and the front end
+ * preview is not enabled. This will prevent redirects to unpublished language
+ * root pages.
+ */
+class PublishedFilter implements RouteFilterInterface
 {
     /**
      * @var TokenChecker
@@ -35,26 +40,19 @@ class PublishingFilter implements RouteFilterInterface
      */
     public function filter(RouteCollection $collection, Request $request): RouteCollection
     {
-        if ($this->tokenChecker->isPreviewMode()) {
+        if ($this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode()) {
             return $collection;
         }
 
         foreach ($collection->all() as $name => $route) {
-            if (!$route->getDefault('pageModel') instanceof PageModel) {
+            /** @var PageModel $pageModel */
+            $pageModel = $route->getDefault('pageModel');
+
+            if (!$pageModel instanceof PageModel || $pageModel->rootIsPublic) {
                 continue;
             }
 
-            /** @var PageModel $page */
-            $page = $route->getDefault('pageModel');
-            $time = time();
-
-            if (
-                !$page->published
-                || ('' !== $page->start && $page->start > $time)
-                || ('' !== $page->stop && $page->stop < $time)
-            ) {
-                $collection->remove($name);
-            }
+            $collection->remove($name);
         }
 
         return $collection;

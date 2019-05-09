@@ -187,7 +187,7 @@ class CommandSchedulerListenerTest extends TestCase
     }
 
     /**
-     * @return Connection|MockObject
+     * @return Connection&MockObject
      */
     private function mockConnection()
     {

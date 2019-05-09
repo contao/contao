@@ -49,7 +49,7 @@ class CombinedFileDumperTest extends TestCase
     }
 
     /**
-     * @return Filesystem|MockObject
+     * @return Filesystem&MockObject
      */
     private function mockFilesystem($expects): Filesystem
     {
@@ -64,7 +64,7 @@ class CombinedFileDumperTest extends TestCase
     }
 
     /**
-     * @return PhpFileLoader|MockObject
+     * @return PhpFileLoader&MockObject
      */
     private function mockLoader(): PhpFileLoader
     {

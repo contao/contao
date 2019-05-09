@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,7 +22,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * Installs the required Contao directories.
  */
-class InstallCommand extends AbstractLockedCommand
+class InstallCommand extends Command
 {
     /**
      * @var Filesystem
@@ -84,14 +85,13 @@ class InstallCommand extends AbstractLockedCommand
     /**
      * {@inheritdoc}
      */
-    protected function executeLocked(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
         $this->webDir = rtrim($input->getArgument('target'), '/');
 
         $this->addEmptyDirs();
-        $this->addIgnoredDirs();
 
         if (!empty($this->rows)) {
             $this->io->newLine();
@@ -104,9 +104,16 @@ class InstallCommand extends AbstractLockedCommand
     private function addEmptyDirs(): void
     {
         static $emptyDirs = [
+            'assets/css',
+            'assets/js',
             'system',
+            'system/cache',
             'system/config',
+            'system/modules',
+            'system/themes',
+            'system/tmp',
             'templates',
+            '%s/share',
             '%s/system',
         ];
 
@@ -114,6 +121,7 @@ class InstallCommand extends AbstractLockedCommand
             $this->addEmptyDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
+        $this->addEmptyDir($this->imageDir);
         $this->addEmptyDir($this->rootDir.'/'.$this->uploadPath);
     }
 
@@ -126,38 +134,5 @@ class InstallCommand extends AbstractLockedCommand
         $this->fs->mkdir($path);
 
         $this->rows[] = str_replace($this->rootDir.'/', '', $path);
-    }
-
-    private function addIgnoredDirs(): void
-    {
-        static $ignoredDirs = [
-            'assets/css',
-            'assets/js',
-            'system/cache',
-            'system/modules',
-            'system/themes',
-            'system/tmp',
-            '%s/share',
-        ];
-
-        foreach ($ignoredDirs as $path) {
-            $this->addIgnoredDir($this->rootDir.'/'.sprintf($path, $this->webDir));
-        }
-
-        $this->addIgnoredDir($this->imageDir);
-    }
-
-    private function addIgnoredDir(string $path): void
-    {
-        $this->addEmptyDir($path);
-
-        if ($this->fs->exists($path.'/.gitignore')) {
-            return;
-        }
-
-        $this->fs->dumpFile(
-            $path.'/.gitignore',
-            "# Create the folder and ignore its content\n*\n!.gitignore\n"
-        );
     }
 }

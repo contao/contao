@@ -135,7 +135,7 @@ class ModuleQuicknav extends Module
 			}
 
 			// Do not show protected pages unless a front end user is logged in
-			if (!$objSubpage->protected || (\is_array($_groups) && array_intersect($_groups, $groups)) || $this->showProtected)
+			if (!$objSubpage->protected || $this->showProtected || (\is_array($_groups) && \is_array($groups) && array_intersect($_groups, $groups)))
 			{
 				// Do not skip the current page here! (see #4523)
 

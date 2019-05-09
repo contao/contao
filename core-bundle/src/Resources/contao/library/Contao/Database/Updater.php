@@ -49,16 +49,16 @@ class Updater extends Controller
 	{
 		// Database changes
 		$this->Database->query("ALTER TABLE `tl_layout` ADD `script` text NULL");
-		$this->Database->query("ALTER TABLE `tl_member` ADD `dateAdded` int(10) unsigned NOT NULL default '0'");
-		$this->Database->query("ALTER TABLE `tl_member` ADD `currentLogin` int(10) unsigned NOT NULL default '0'");
-		$this->Database->query("ALTER TABLE `tl_member` ADD `lastLogin` int(10) unsigned NOT NULL default '0'");
-		$this->Database->query("ALTER TABLE `tl_user` ADD `dateAdded` int(10) unsigned NOT NULL default '0'");
-		$this->Database->query("ALTER TABLE `tl_user` ADD `currentLogin` int(10) unsigned NOT NULL default '0'");
-		$this->Database->query("ALTER TABLE `tl_user` ADD `lastLogin` int(10) unsigned NOT NULL default '0'");
+		$this->Database->query("ALTER TABLE `tl_member` ADD `dateAdded` int(10) unsigned NOT NULL default 0");
+		$this->Database->query("ALTER TABLE `tl_member` ADD `currentLogin` int(10) unsigned NOT NULL default 0");
+		$this->Database->query("ALTER TABLE `tl_member` ADD `lastLogin` int(10) unsigned NOT NULL default 0");
+		$this->Database->query("ALTER TABLE `tl_user` ADD `dateAdded` int(10) unsigned NOT NULL default 0");
+		$this->Database->query("ALTER TABLE `tl_user` ADD `currentLogin` int(10) unsigned NOT NULL default 0");
+		$this->Database->query("ALTER TABLE `tl_user` ADD `lastLogin` int(10) unsigned NOT NULL default 0");
 		$this->Database->query("ALTER TABLE `tl_comments` ADD `source` varchar(32) NOT NULL default ''");
 		$this->Database->query("ALTER TABLE `tl_comments` ADD KEY `source` (`source`)");
 		$this->Database->query("ALTER TABLE `tl_layout` CHANGE `mootools` `mootools` text NULL");
-		$this->Database->query("ALTER TABLE `tl_comments` CHANGE `pid` `parent` int(10) unsigned NOT NULL default '0'");
+		$this->Database->query("ALTER TABLE `tl_comments` CHANGE `pid` `parent` int(10) unsigned NOT NULL default 0");
 		$this->Database->query("UPDATE tl_member SET dateAdded=tstamp, currentLogin=tstamp");
 		$this->Database->query("UPDATE tl_user SET dateAdded=tstamp, currentLogin=tstamp");
 		$this->Database->query("UPDATE tl_layout SET mootools='moo_accordion' WHERE mootools='moo_default'");
@@ -127,7 +127,7 @@ class Updater extends Controller
 		$this->Database->query(
 			"CREATE TABLE `tl_theme` (
 			  `id` int(10) unsigned NOT NULL auto_increment,
-			  `tstamp` int(10) unsigned NOT NULL default '0',
+			  `tstamp` int(10) unsigned NOT NULL default 0,
 			  `name` varchar(128) NOT NULL default '',
 			  `author` varchar(128) NOT NULL default '',
 			  `screenshot` varchar(255) NOT NULL default '',
@@ -138,9 +138,9 @@ class Updater extends Controller
 		);
 
 		// Add a PID column to the child tables
-		$this->Database->query("ALTER TABLE `tl_module` ADD `pid` int(10) unsigned NOT NULL default '0'");
-		$this->Database->query("ALTER TABLE `tl_style_sheet` ADD `pid` int(10) unsigned NOT NULL default '0'");
-		$this->Database->query("ALTER TABLE `tl_layout` ADD `pid` int(10) unsigned NOT NULL default '0'");
+		$this->Database->query("ALTER TABLE `tl_module` ADD `pid` int(10) unsigned NOT NULL default 0");
+		$this->Database->query("ALTER TABLE `tl_style_sheet` ADD `pid` int(10) unsigned NOT NULL default 0");
+		$this->Database->query("ALTER TABLE `tl_layout` ADD `pid` int(10) unsigned NOT NULL default 0");
 		$this->Database->query("UPDATE tl_module SET pid=1");
 		$this->Database->query("UPDATE tl_style_sheet SET pid=1");
 		$this->Database->query("UPDATE tl_layout SET pid=1");
@@ -242,7 +242,7 @@ class Updater extends Controller
 			"CREATE TABLE `tl_files` (
 			  `id` int(10) unsigned NOT NULL auto_increment,
 			  `pid` binary(16) NULL,
-			  `tstamp` int(10) unsigned NOT NULL default '0',
+			  `tstamp` int(10) unsigned NOT NULL default 0,
 			  `uuid` binary(16) NULL,
 			  `type` varchar(16) NOT NULL default '',
 			  `path` varchar(1022) NOT NULL default '',
@@ -259,7 +259,7 @@ class Updater extends Controller
 		);
 
 		// Add the "numberOfItems" field
-		$this->Database->query("ALTER TABLE `tl_module` ADD `numberOfItems` smallint(5) unsigned NOT NULL default '0'");
+		$this->Database->query("ALTER TABLE `tl_module` ADD `numberOfItems` smallint(5) unsigned NOT NULL default 0");
 		$this->Database->query("UPDATE `tl_module` SET `numberOfItems`=`rss_numberOfItems` WHERE `rss_numberOfItems`>0");
 		$this->Database->query("UPDATE `tl_module` SET `numberOfItems`=`news_numberOfItems` WHERE `news_numberOfItems`>0");
 
@@ -502,7 +502,7 @@ class Updater extends Controller
 			$this->Database->query("ALTER TABLE `tl_files` ADD UNIQUE KEY `uuid` (`uuid`)");
 
 			// Backup the pid column and change the column type
-			$this->Database->query("ALTER TABLE `tl_files` ADD `pid_backup` int(10) unsigned NOT NULL default '0'");
+			$this->Database->query("ALTER TABLE `tl_files` ADD `pid_backup` int(10) unsigned NOT NULL default 0");
 			$this->Database->query("UPDATE `tl_files` SET `pid_backup`=`pid`");
 			$this->Database->query("ALTER TABLE `tl_files` CHANGE `pid` `pid` binary(16) NULL");
 			$this->Database->query("UPDATE `tl_files` SET `pid`=NULL");

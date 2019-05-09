@@ -197,7 +197,7 @@ class ModuleBooknav extends Module
 			$_groups = StringUtil::deserialize($objPage->groups);
 
 			// Do not show protected pages unless a front end user is logged in
-			if (!$objPage->protected || (\is_array($_groups) && \count(array_intersect($groups, $_groups))) || $this->showProtected)
+			if (!$objPage->protected || $this->showProtected || (\is_array($groups) && \is_array($_groups) && \count(array_intersect($groups, $_groups))))
 			{
 				$this->arrPages[$objPage->id] = $objPage;
 

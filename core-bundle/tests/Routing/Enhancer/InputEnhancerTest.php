@@ -19,7 +19,6 @@ use Contao\Input;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Terminal42\HeaderReplay\EventListener\HeaderReplayListener;
 
 class InputEnhancerTest extends TestCase
 {
@@ -45,25 +44,6 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance([], Request::create('/'));
     }
 
-    public function testReturnsTheDefaultsUponHeaderReplay(): void
-    {
-        $framework = $this->mockContaoFramework();
-        $framework
-            ->expects($this->never())
-            ->method('initialize')
-        ;
-
-        $defaults = [
-            'pageModel' => $this->createMock(PageModel::class),
-        ];
-
-        $request = Request::create('/');
-        $request->headers->set('Accept', HeaderReplayListener::CONTENT_TYPE);
-
-        $enhancer = new InputEnhancer($framework, false);
-        $enhancer->enhance($defaults, $request);
-    }
-
     /**
      * @dataProvider getLocales
      */
@@ -87,17 +67,12 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance($defaults, Request::create('/'));
     }
 
-    /**
-     * @return (bool|string)[][]
-     */
-    public function getLocales(): array
+    public function getLocales(): \Generator
     {
-        return [
-            [false, 'en'],
-            [false, 'de'],
-            [true, 'de'],
-            [true, 'en'],
-        ];
+        yield [false, 'en'];
+        yield [false, 'de'];
+        yield [true, 'de'];
+        yield [true, 'en'];
     }
 
     public function testDoesNotAddTheLocaleIfItIsNotPresent(): void
@@ -126,7 +101,7 @@ class InputEnhancerTest extends TestCase
         // Input::setGet must always be called with $blnAddUnused=true
         array_walk(
             $setters,
-            function (array &$set): void {
+            static function (array &$set): void {
                 $set[2] = true;
             }
         );
@@ -154,18 +129,13 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance($defaults, Request::create('/'));
     }
 
-    /**
-     * @return (bool|string|string[])[][]
-     */
-    public function getParameters(): array
+    public function getParameters(): \Generator
     {
-        return [
-            ['/foo/bar', false, ['foo', 'bar']],
-            ['/foo/bar/bar/baz', false, ['foo', 'bar'], ['bar', 'baz']],
-            ['/foo/bar/baz', true, ['auto_item', 'foo'], ['bar', 'baz']],
-            ['/f%20o/bar', false, ['f o', 'bar']],
-            ['/foo/ba%20r', false, ['foo', 'ba r']],
-        ];
+        yield ['/foo/bar', false, ['foo', 'bar']];
+        yield ['/foo/bar/bar/baz', false, ['foo', 'bar'], ['bar', 'baz']];
+        yield ['/foo/bar/baz', true, ['auto_item', 'foo'], ['bar', 'baz']];
+        yield ['/f%20o/bar', false, ['f%20o', 'bar']];
+        yield ['/foo/ba%20r', false, ['foo', 'ba%20r']];
     }
 
     public function testThrowsAnExceptionUponDuplicateParameters(): void

@@ -18,6 +18,7 @@ use Contao\Database\Updater;
 use League\Uri\Components\Query;
 use Patchwork\Utf8;
 use Psr\Log\LogLevel;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Finder\SplFileInfo;
@@ -168,9 +169,9 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
-			elseif (strpos($strClass, '.') !== false)
+			elseif ($container instanceof Container && isset($container->getRemovedIds()[$strClass]))
 			{
-				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The service "%s" was not found or is not public. See https://symfony.com/doc/current/service_container.html#public-versus-private-services', $strClass));
+				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
@@ -178,14 +179,7 @@ abstract class System
 			}
 			else
 			{
-				try
-				{
-					$this->arrObjects[$strKey] = new $strClass();
-				}
-				catch (\ArgumentCountError $e)
-				{
-					throw new \ArgumentCountError(sprintf('Cannot create instance of class %s, did you forget to make the service public?', $strClass), $e->getCode(), $e);
-				}
+				$this->arrObjects[$strKey] = new $strClass();
 			}
 		}
 	}
@@ -222,9 +216,9 @@ abstract class System
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}
-			elseif (strpos($strClass, '.') !== false)
+			elseif ($container instanceof Container && isset($container->getRemovedIds()[$strClass]))
 			{
-				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The service "%s" was not found or is not public. See https://symfony.com/doc/current/service_container.html#public-versus-private-services', $strClass));
+				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
@@ -232,14 +226,7 @@ abstract class System
 			}
 			else
 			{
-				try
-				{
-					static::$arrStaticObjects[$strKey] = new $strClass();
-				}
-				catch (\ArgumentCountError $e)
-				{
-					throw new \ArgumentCountError(sprintf('Cannot create instance of class %s, did you forget to make the service public?', $strClass), $e->getCode(), $e);
-				}
+				static::$arrStaticObjects[$strKey] = new $strClass();
 			}
 		}
 

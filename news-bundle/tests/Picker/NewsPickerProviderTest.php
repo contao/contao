@@ -21,6 +21,7 @@ use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -44,7 +45,7 @@ class NewsPickerProviderTest extends ContaoTestCase
         $menuFactory
             ->method('createItem')
             ->willReturnCallback(
-                function (string $name, array $data) use ($menuFactory): ItemInterface {
+                static function (string $name, array $data) use ($menuFactory): ItemInterface {
                     $item = new MenuItem($name, $menuFactory);
                     $item->setLabel($data['label']);
                     $item->setLinkAttributes($data['linkAttributes']);
@@ -60,7 +61,7 @@ class NewsPickerProviderTest extends ContaoTestCase
         $router
             ->method('generate')
             ->willReturnCallback(
-                function (string $name, array $params): string {
+                static function (string $name, array $params): string {
                     return $name.'?'.http_build_query($params);
                 }
             )
@@ -202,12 +203,16 @@ class NewsPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
+        /** @var NewsArchiveModel&MockObject $model */
+        $model = $this->mockClassWithProperties(NewsArchiveModel::class);
+        $model->id = 1;
+
         $news = $this->createMock(NewsModel::class);
         $news
             ->expects($this->once())
             ->method('getRelated')
             ->with('pid')
-            ->willReturn($this->mockClassWithProperties(NewsArchiveModel::class, ['id' => 1]))
+            ->willReturn($model)
         ;
 
         $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
