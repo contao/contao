@@ -246,6 +246,6 @@ class tl_module_news extends Contao\Backend
 			return array('order_date_asc', 'order_date_desc');
 		}
 
-		return array('order_date_asc', 'order_date_desc', 'order_headline_asc', 'order_headline_desc', 'order_random', 'order_featured_desc');
+		return array('order_date_asc', 'order_date_desc', 'order_headline_asc', 'order_headline_desc', 'order_random', 'order_featured_asc', 'order_featured_desc');
 	}
 }
