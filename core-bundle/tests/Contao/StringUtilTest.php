@@ -298,6 +298,24 @@ class StringUtilTest extends TestCase
             ['value' => 'foobar'],
             '{{iflng::en}}hi{{iflng}}{{elseifinserttag::whodoesthisanyway}}',
         ];
+
+        yield 'Test white space in expressions (spaces only)' => [
+            'This is my {if email  ==  "test@foobar.com"}match{endif}',
+            ['email' => 'test@foobar.com'],
+            'This is my match',
+        ];
+
+        yield 'Test white space in expressions (with spaces and tabs)' => [
+            "This is my {if email \t== \t\"test@foobar.com\"}match{endif}",
+            ['email' => 'test@foobar.com'],
+            'This is my ',
+        ];
+
+        yield 'Test white space in expressions (with spaces and line breaks)' => [
+            "This is my {if email \n== \n\"test@foobar.com\"}match{endif}",
+            ['email' => 'test@foobar.com'],
+            'This is my ',
+        ];
     }
 
     /**
