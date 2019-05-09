@@ -20,7 +20,6 @@ use Contao\DataContainer;
 use Contao\FileUpload;
 use Contao\Message;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -155,17 +154,7 @@ class BackendCsvImportController
                 ['id' => $id]
             );
 
-            if (method_exists(Cookie::class, 'create')) {
-                $cookie = Cookie::create('BE_PAGE_OFFSET', null, 0, $request->getBasePath(), null, null, false);
-            } else {
-                // Backwards compatibility with symfony/http-foundation <4.2
-                $cookie = new Cookie('BE_PAGE_OFFSET', null, 0, $request->getBasePath(), null, false, false);
-            }
-
-            $response = new RedirectResponse($this->getBackUrl($request));
-            $response->headers->setCookie($cookie);
-
-            return $response;
+            return new RedirectResponse($this->getBackUrl($request));
         }
 
         return new Response($template->parse());

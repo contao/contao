@@ -210,7 +210,7 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * @param BaseFragmentHandler|MockObject|null $fragmentHandler
+     * @param BaseFragmentHandler&MockObject $fragmentHandler
      */
     private function mockFragmentHandler(FragmentRegistry $registry = null, ServiceLocator $renderers = null, ServiceLocator $preHandlers = null, Request $request = null, BaseFragmentHandler $fragmentHandler = null): FragmentHandler
     {
@@ -241,7 +241,7 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * @return ServiceLocator|MockObject
+     * @return ServiceLocator&MockObject
      */
     private function mockServiceLocatorWithRenderer(string $name, array $with = null, Response $response = null): ServiceLocator
     {
@@ -272,7 +272,7 @@ class FragmentHandlerTest extends TestCase
     /**
      * @param object $service
      *
-     * @return ServiceLocator|MockObject
+     * @return ServiceLocator&MockObject
      */
     private function mockServiceLocator(string $name, $service): ServiceLocator
     {

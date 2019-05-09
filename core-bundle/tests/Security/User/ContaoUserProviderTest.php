@@ -57,7 +57,7 @@ class ContaoUserProviderTest extends TestCase
 
     public function testRefreshesTheUser(): void
     {
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
@@ -71,7 +71,7 @@ class ContaoUserProviderTest extends TestCase
 
     public function testValidatesTheSessionLifetime(): void
     {
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
@@ -125,7 +125,7 @@ class ContaoUserProviderTest extends TestCase
 
     public function testLogsOutUsersWhoHaveBeenInactiveForTooLong(): void
     {
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
@@ -215,7 +215,7 @@ class ContaoUserProviderTest extends TestCase
      */
     public function testTriggersThePostAuthenticateHook(): void
     {
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
@@ -254,7 +254,7 @@ class ContaoUserProviderTest extends TestCase
     }
 
     /**
-     * @param ContaoFramework|MockObject|null $framework
+     * @param ContaoFramework&MockObject $framework
      */
     private function mockUserProvider(ContaoFramework $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
     {

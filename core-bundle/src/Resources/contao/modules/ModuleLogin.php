@@ -132,7 +132,7 @@ class ModuleLogin extends Module
 		}
 
 		// Redirect to the jumpTo page
-		elseif ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		elseif (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			/** @var PageModel $objTarget */
 			$strRedirect = $objTarget->getAbsoluteUrl();

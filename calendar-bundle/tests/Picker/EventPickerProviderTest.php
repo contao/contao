@@ -203,7 +203,7 @@ class EventPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
-        /** @var CalendarModel|MockObject $calendarModel */
+        /** @var CalendarModel&MockObject $calendarModel */
         $calendarModel = $this->mockClassWithProperties(CalendarModel::class);
         $calendarModel->id = 1;
 

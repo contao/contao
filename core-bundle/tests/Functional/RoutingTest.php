@@ -924,6 +924,30 @@ class RoutingTest extends WebTestCase
             'same-domain-root.local',
         ];
 
+        yield 'Redirects to "de" if "de-CH" is accepted and "de" is not' => [
+            '/',
+            301,
+            'Redirecting to http://same-domain-root.local/de/',
+            'de-CH',
+            'same-domain-root.local',
+        ];
+
+        yield 'Ignores the case of the language code' => [
+            '/',
+            301,
+            'Redirecting to http://same-domain-root.local/de/',
+            'dE-at',
+            'same-domain-root.local',
+        ];
+
+        yield 'Redirects to "en" if "de-CH" and "en" are accepted and "de" is not' => [
+            '/',
+            301,
+            'Redirecting to http://same-domain-root.local/en/',
+            'de-CH,en',
+            'same-domain-root.local',
+        ];
+
         yield 'Renders the 404 page if none of the accept languages matches' => [
             '/',
             404,

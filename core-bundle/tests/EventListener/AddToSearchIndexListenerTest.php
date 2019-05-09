@@ -25,7 +25,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class AddToSearchIndexListenerTest extends TestCase
 {
     /**
-     * @var ContaoFramework|MockObject
+     * @var ContaoFramework&MockObject
      */
     private $framework;
 
@@ -97,7 +97,7 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
-     * @return PostResponseEvent|MockObject
+     * @return PostResponseEvent&MockObject
      */
     private function mockPostResponseEvent(string $requestUri = null, string $requestMethod = Request::METHOD_GET): PostResponseEvent
     {

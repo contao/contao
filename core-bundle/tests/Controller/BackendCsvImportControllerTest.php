@@ -365,11 +365,11 @@ EOF;
     }
 
     /**
-     * @return DataContainer|MockObject
+     * @return DataContainer&MockObject
      */
     private function mockDataContainer(): DataContainer
     {
-        /** @var DataContainer|MockObject $mock */
+        /** @var DataContainer&MockObject $mock */
         $mock = $this->mockClassWithProperties(DataContainer::class);
         $mock->id = 1;
         $mock->table = 'tl_content';

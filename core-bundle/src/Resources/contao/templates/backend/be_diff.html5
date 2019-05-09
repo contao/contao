@@ -35,7 +35,7 @@
           <?php else: ?>
             <select name="from" id="ctrl_from" class="tl_select">
               <?php foreach ($this->versions as $k=>$v): ?>
-                <option value="<?= $k ?>"<?php if ($v['version'] == $this->from): ?> selected="selected"<?php endif; ?>><?= $v['info'] ?></option>
+                <option value="<?= $k ?>"<?php if ($v['version'] == $this->from): ?> selected<?php endif; ?>><?= $v['info'] ?></option>
               <?php endforeach; ?>
             </select>
           <?php endif; ?>
@@ -45,7 +45,7 @@
           <?php else: ?>
             <select name="to" id="ctrl_to" class="tl_select">
               <?php foreach ($this->versions as $k=>$v): ?>
-                <option value="<?= $k ?>"<?php if ($v['version'] == $this->to): ?> selected="selected"<?php endif; ?>><?= $v['info'] ?></option>
+                <option value="<?= $k ?>"<?php if ($v['version'] == $this->to): ?> selected<?php endif; ?>><?= $v['info'] ?></option>
               <?php endforeach; ?>
             </select>
           <?php endif; ?>

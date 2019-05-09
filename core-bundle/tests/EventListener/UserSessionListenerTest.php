@@ -48,7 +48,7 @@ class UserSessionListenerTest extends TestCase
             'lonesome' => 'looser',
         ];
 
-        /** @var BackendUser|FrontendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties($userClass);
         $user->session = $sessionValues;
 
@@ -331,7 +331,7 @@ class UserSessionListenerTest extends TestCase
 
     public function testFailsToReplaceTheSessionIfThereIsNoSession(): void
     {
-        /** @var BackendUser|FrontendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->session = [];
 
@@ -392,9 +392,9 @@ class UserSessionListenerTest extends TestCase
     /**
      * Mocks a session listener.
      *
-     * @param Connection|MockObject|null               $connection
-     * @param TokenStorageInterface|MockObject|null    $tokenStorage
-     * @param EventDispatcherInterface|MockObject|null $eventDispatcher
+     * @param Connection&MockObject               $connection
+     * @param TokenStorageInterface&MockObject    $tokenStorage
+     * @param EventDispatcherInterface&MockObject $eventDispatcher
      */
     private function mockListener(Connection $connection = null, TokenStorageInterface $tokenStorage = null, EventDispatcherInterface $eventDispatcher = null): UserSessionListener
     {

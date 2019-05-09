@@ -287,7 +287,7 @@ class Form extends Hybrid
 		$this->Template->novalidate = $this->novalidate ? ' novalidate' : '';
 
 		// Get the target URL
-		if ($this->method == 'GET' && $this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($this->method == 'GET' && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			/** @var PageModel $objTarget */
 			$this->Template->action = $objTarget->getFrontendUrl();

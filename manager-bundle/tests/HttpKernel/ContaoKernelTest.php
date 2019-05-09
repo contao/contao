@@ -202,7 +202,7 @@ class ContaoKernelTest extends ContaoTestCase
     /**
      * Mocks a kernel with the plugin loader.
      *
-     * @return ContaoKernel|MockObject
+     * @return ContaoKernel&MockObject
      */
     private function mockKernel(string $projectDir, string $env = 'prod'): ContaoKernel
     {
@@ -221,7 +221,7 @@ class ContaoKernelTest extends ContaoTestCase
     }
 
     /**
-     * @return ConfigPluginInterface|MockObject
+     * @return ConfigPluginInterface&MockObject
      */
     private function mockConfigPlugin(LoaderInterface $loader): ConfigPluginInterface
     {

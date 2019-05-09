@@ -49,7 +49,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $request->attributes = new ParameterBag();
 
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
         $user->username = 'foobar';
         $user->lastLogin = time() - 3600;
@@ -165,7 +165,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $request->attributes = new ParameterBag();
 
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
         $user->username = 'foobar';
         $user->lastLogin = time() - 3600;
@@ -231,7 +231,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
@@ -269,7 +269,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_target_path', 'http://localhost/target');
 
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
@@ -306,7 +306,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $request->request->set('_target_path', 'http://localhost/target');
         $request->request->set('_always_use_target_path', '1');
 
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
@@ -330,8 +330,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
     }
 
     /**
-     * @param ContaoFramework|MockObject|null $framework
-     * @param LoggerInterface|MockObject|null $logger
+     * @param ContaoFramework&MockObject $framework
+     * @param LoggerInterface&MockObject $logger
      */
     private function mockSuccessHandler(ContaoFramework $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
     {

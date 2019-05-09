@@ -258,7 +258,7 @@ class UrlGeneratorTest extends TestCase
     }
 
     /**
-     * @return UrlGeneratorInterface|MockObject
+     * @return UrlGeneratorInterface&MockObject
      */
     private function mockRouterWithContext(array $expectedParameters = [], string $expectedRoute = 'contao_frontend', int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): UrlGeneratorInterface
     {

@@ -203,7 +203,7 @@ class NewsPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
-        /** @var NewsArchiveModel|MockObject $model */
+        /** @var NewsArchiveModel&MockObject $model */
         $model = $this->mockClassWithProperties(NewsArchiveModel::class);
         $model->id = 1;
 

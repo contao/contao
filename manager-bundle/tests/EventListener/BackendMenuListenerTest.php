@@ -65,7 +65,7 @@ class BackendMenuListenerTest extends ContaoTestCase
 
     private function mockBackendMenuListener(bool $isAdmin, string $path = null): BackendMenuListener
     {
-        /** @var BackendUser|MockObject $model */
+        /** @var BackendUser&MockObject $model */
         $model = $this->mockClassWithProperties(BackendUser::class);
         $model->isAdmin = $isAdmin;
 

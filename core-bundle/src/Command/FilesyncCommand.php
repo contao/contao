@@ -18,7 +18,6 @@ use Contao\Dbafs;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Lock\LockInterface;
 
 /**
  * Synchronizes the file system with the database.
@@ -26,18 +25,6 @@ use Symfony\Component\Lock\LockInterface;
 class FilesyncCommand extends Command implements FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
-
-    /**
-     * @var LockInterface
-     */
-    private $lock;
-
-    public function __construct(LockInterface $lock)
-    {
-        $this->lock = $lock;
-
-        parent::__construct();
-    }
 
     /**
      * {@inheritdoc}
@@ -55,18 +42,10 @@ class FilesyncCommand extends Command implements FrameworkAwareInterface
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (!$this->lock->acquire()) {
-            $output->writeln('The command is already running in another process.');
-
-            return 1;
-        }
-
         $this->framework->initialize();
 
         $strLog = Dbafs::syncFiles();
         $output->writeln(sprintf('Synchronization complete (see <info>%s</info>).', $strLog));
-
-        $this->lock->release();
 
         return 0;
     }

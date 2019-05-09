@@ -32,7 +32,7 @@ class AuthenticationProviderTest extends TestCase
 {
     public function testHandlesContaoUsers(): void
     {
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->loginCount = 3;
@@ -101,7 +101,7 @@ class AuthenticationProviderTest extends TestCase
 
     public function testLocksAUserAfterThreeFailedLoginAttempts(): void
     {
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->locked = 0;
@@ -174,7 +174,7 @@ class AuthenticationProviderTest extends TestCase
      */
     public function testTriggersTheCheckCredentialsHook(bool $success): void
     {
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->loginCount = 3;
@@ -259,7 +259,7 @@ class AuthenticationProviderTest extends TestCase
     }
 
     /**
-     * @param ContaoFramework|MockObject|null $framework
+     * @param ContaoFramework&MockObject $framework
      */
     private function mockProvider(ContaoFramework $framework = null): AuthenticationProvider
     {

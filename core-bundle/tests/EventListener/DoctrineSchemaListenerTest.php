@@ -110,7 +110,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
             ->willReturn($result)
         ;
 
-        /** @var SchemaIndexDefinitionEventArgs|MockObject $event */
+        /** @var SchemaIndexDefinitionEventArgs&MockObject $event */
         $event = $this
             ->getMockBuilder(SchemaIndexDefinitionEventArgs::class)
             ->disableOriginalConstructor()

@@ -1,5 +1,5 @@
 imports:
-    - { resource: "security.yml" }
+    - { resource: security.yml }
 
 parameters:
     locale: en
@@ -9,22 +9,22 @@ parameters:
 framework:
     test: ~
     esi: { enabled: true }
-    translator: { fallbacks: ["%locale%"] }
-    secret: "%secret%"
+    translator: { fallbacks: ['%locale%'] }
+    secret: '%secret%'
     router:
-        resource: "%kernel.project_dir%/../../src/Resources/config/routing.yml"
-        strict_requirements: "%kernel.debug%"
+        resource: '%kernel.project_dir%/../../src/Resources/config/routing.yml'
+        strict_requirements: '%kernel.debug%'
     csrf_protection: ~
     templating:
         engines: ['twig']
-    default_locale:  "%locale%"
+    default_locale:  '%locale%'
     session:
         storage_id: session.storage.mock_file
     fragments: { path: /_fragment }
 
 twig:
-    debug: "%kernel.debug%"
-    strict_variables: "%kernel.debug%"
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
 
 doctrine:
     dbal:

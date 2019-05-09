@@ -24,12 +24,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class ImageSizesTest extends TestCase
 {
     /**
-     * @var Connection|MockObject
+     * @var Connection&MockObject
      */
     private $connection;
 
     /**
-     * @var EventDispatcherInterface|MockObject
+     * @var EventDispatcherInterface&MockObject
      */
     private $eventDispatcher;
 
@@ -90,7 +90,7 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->isAdmin = true;
         $user->imageSizes = ['image_sizes' => '42'];
@@ -106,7 +106,7 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->isAdmin = false;
 
@@ -120,7 +120,7 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('image_sizes', $options);
         $this->assertArrayHasKey('42', $options['image_sizes']);
 
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->isAdmin = false;
 
@@ -133,7 +133,7 @@ class ImageSizesTest extends TestCase
         $this->assertArrayNotHasKey('exact', $options);
         $this->assertArrayNotHasKey('image_sizes', $options);
 
-        /** @var BackendUser|MockObject $user */
+        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->isAdmin = false;
 

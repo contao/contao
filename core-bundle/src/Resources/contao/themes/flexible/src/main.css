@@ -60,15 +60,16 @@ body:not(.fullscreen) #header .inner {
 }
 #tmenu sup {
 	position:absolute;
-	top:8px;
-	left:19px;
+	top:5px;
+	left:20px;
 	z-index:1;
-	font-size:.5rem;
-	background:#f00;
-	padding:0 2px;
+	font-size:.6rem;
+	background:#fff;
+	padding:2px;
 	border-radius:2px;
-	line-height:11px;
 	text-indent:0;
+	color:#f47c00;
+	font-weight:400;
 }
 #tmenu .burger {
 	display:none;
@@ -2026,8 +2027,8 @@ fieldset.collapsed > legend {
 		font-weight:600;
 	}
 	#tmenu sup {
-		top:5px;
-		left:29px;
+		top:3px;
+		font-size:.45rem;
 	}
 	#tmenu .icon-alert {
 		width:40px;

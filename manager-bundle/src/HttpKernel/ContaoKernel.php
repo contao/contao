@@ -227,11 +227,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         // TODO: use manager config to load settings
 
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/3.3/public/index.php#L27
-        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? '') {
+        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
             Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST);
         }
 
-        if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? '') {
+        if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? null) {
             Request::setTrustedHosts(explode(',', $trustedHosts));
         }
 

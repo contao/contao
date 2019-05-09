@@ -18,7 +18,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Lock\LockInterface;
 
 class SymlinksCommandTest extends TestCase
 {
@@ -61,16 +60,6 @@ class SymlinksCommandTest extends TestCase
         $this->assertRegExp('# system/logs +var/logs #', $display);
     }
 
-    public function testIsLockedWhileRunning(): void
-    {
-        $command = $this->mockCommand(true);
-        $tester = new CommandTester($command);
-        $code = $tester->execute([]);
-
-        $this->assertSame(1, $code);
-        $this->assertContains('The command is already running in another process.', $tester->getDisplay());
-    }
-
     public function testConvertsAbsolutePathsToRelativePaths(): void
     {
         $command = (new \ReflectionClass(SymlinksCommand::class))->newInstanceWithoutConstructor();
@@ -89,27 +78,14 @@ class SymlinksCommandTest extends TestCase
         $this->assertSame('var/logs', $relativePath);
     }
 
-    private function mockCommand(bool $isLocked = false): SymlinksCommand
+    private function mockCommand(): SymlinksCommand
     {
-        $lock = $this->createMock(LockInterface::class);
-        $lock
-            ->expects($this->once())
-            ->method('acquire')
-            ->willReturn(!$isLocked)
-        ;
-
-        $lock
-            ->expects($isLocked ? $this->never() : $this->once())
-            ->method('release')
-        ;
-
         return new SymlinksCommand(
             $this->getFixturesDir(),
             'files',
             $this->getFixturesDir().'/var/logs',
             new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao'),
-            $this->createMock(EventDispatcherInterface::class),
-            $lock
+            $this->createMock(EventDispatcherInterface::class)
         );
     }
 }

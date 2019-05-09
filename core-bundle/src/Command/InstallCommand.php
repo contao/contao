@@ -18,7 +18,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Lock\LockInterface;
 
 /**
  * Installs the required Contao directories.
@@ -56,21 +55,15 @@ class InstallCommand extends Command
     private $imageDir;
 
     /**
-     * @var LockInterface
-     */
-    private $lock;
-
-    /**
      * @var string
      */
     private $webDir;
 
-    public function __construct(string $rootDir, string $uploadPath, string $imageDir, LockInterface $lock)
+    public function __construct(string $rootDir, string $uploadPath, string $imageDir)
     {
         $this->rootDir = $rootDir;
         $this->uploadPath = $uploadPath;
         $this->imageDir = $imageDir;
-        $this->lock = $lock;
 
         parent::__construct();
     }
@@ -94,25 +87,16 @@ class InstallCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (!$this->lock->acquire()) {
-            $output->writeln('The command is already running in another process.');
-
-            return 1;
-        }
-
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
         $this->webDir = rtrim($input->getArgument('target'), '/');
 
         $this->addEmptyDirs();
-        $this->addIgnoredDirs();
 
         if (!empty($this->rows)) {
             $this->io->newLine();
             $this->io->listing($this->rows);
         }
-
-        $this->lock->release();
 
         return 0;
     }
@@ -120,9 +104,16 @@ class InstallCommand extends Command
     private function addEmptyDirs(): void
     {
         static $emptyDirs = [
+            'assets/css',
+            'assets/js',
             'system',
+            'system/cache',
             'system/config',
+            'system/modules',
+            'system/themes',
+            'system/tmp',
             'templates',
+            '%s/share',
             '%s/system',
         ];
 
@@ -130,6 +121,7 @@ class InstallCommand extends Command
             $this->addEmptyDir($this->rootDir.'/'.sprintf($path, $this->webDir));
         }
 
+        $this->addEmptyDir($this->imageDir);
         $this->addEmptyDir($this->rootDir.'/'.$this->uploadPath);
     }
 
@@ -142,38 +134,5 @@ class InstallCommand extends Command
         $this->fs->mkdir($path);
 
         $this->rows[] = str_replace($this->rootDir.'/', '', $path);
-    }
-
-    private function addIgnoredDirs(): void
-    {
-        static $ignoredDirs = [
-            'assets/css',
-            'assets/js',
-            'system/cache',
-            'system/modules',
-            'system/themes',
-            'system/tmp',
-            '%s/share',
-        ];
-
-        foreach ($ignoredDirs as $path) {
-            $this->addIgnoredDir($this->rootDir.'/'.sprintf($path, $this->webDir));
-        }
-
-        $this->addIgnoredDir($this->imageDir);
-    }
-
-    private function addIgnoredDir(string $path): void
-    {
-        $this->addEmptyDir($path);
-
-        if ($this->fs->exists($path.'/.gitignore')) {
-            return;
-        }
-
-        $this->fs->dumpFile(
-            $path.'/.gitignore',
-            "# Create the folder and ignore its content\n*\n!.gitignore\n"
-        );
     }
 }

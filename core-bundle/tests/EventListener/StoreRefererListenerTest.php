@@ -310,7 +310,7 @@ class StoreRefererListenerTest extends TestCase
     }
 
     /**
-     * @param TokenStorageInterface|MockObject|null $tokenStorage
+     * @param TokenStorageInterface&MockObject $tokenStorage
      */
     private function mockListener(TokenStorageInterface $tokenStorage = null): StoreRefererListener
     {

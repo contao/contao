@@ -376,7 +376,7 @@ class ModuleSubscribe extends Module
 		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))), StringUtil::parseSimpleTokens($this->nl_subscribe, $arrData));
 
 		// Redirect to the jumpTo page
-		if ($this->jumpTo && ($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{
 			/** @var PageModel $objTarget */
 			$this->redirect($objTarget->getFrontendUrl());

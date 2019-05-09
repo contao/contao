@@ -17,9 +17,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Removes routes without hostname if there are routes for the current
- * hostname. This prevents the fallback (empty) domain from matching if a root
- * page for the current domain exists.
+ * Removes routes with a different or no hostname if there are routes for the
+ * current hostname. This prevents the fallback (empty) domain from matching if
+ * a root page for the current domain exists.
  */
 class DomainFilter implements RouteFilterInterface
 {
@@ -42,7 +42,9 @@ class DomainFilter implements RouteFilterInterface
 
         if ($hasDomainMatch) {
             foreach ($collection->all() as $name => $route) {
-                if (!$route->getHost()) {
+                $host = $route->getHost();
+
+                if (!$host || $host !== $httpHost) {
                     $collection->remove($name);
                 }
             }

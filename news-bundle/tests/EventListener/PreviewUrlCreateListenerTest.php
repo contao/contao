@@ -30,7 +30,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        /** @var NewsModel|MockObject $newsModel */
+        /** @var NewsModel&MockObject $newsModel */
         $newsModel = $this->mockClassWithProperties(NewsModel::class);
         $newsModel->id = 1;
 
@@ -99,7 +99,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        /** @var NewsModel|MockObject $newsModel */
+        /** @var NewsModel&MockObject $newsModel */
         $newsModel = $this->mockClassWithProperties(NewsModel::class);
         $newsModel->id = 2;
 

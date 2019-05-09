@@ -21,7 +21,7 @@ use Twig\Environment;
 class BackendMenuRendererTest extends TestCase
 {
     /**
-     * @var Environment|MockObject
+     * @var Environment&MockObject
      */
     private $templating;
 

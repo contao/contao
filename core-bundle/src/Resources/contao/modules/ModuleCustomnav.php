@@ -132,21 +132,27 @@ class ModuleCustomnav extends Module
 						$href = $objModel->url;
 						break;
 
-					case 'forward':
-						if (($objNext = $objModel->getRelated('jumpTo')) instanceof PageModel || ($objNext = PageModel::findFirstPublishedRegularByPid($objModel->id)) instanceof PageModel)
-						{
-							/** @var PageModel $objNext */
-							$href = $objNext->getFrontendUrl();
-						}
-						else
-						{
-							$href = $objModel->getFrontendUrl();
-						}
-						break;
-
 					case 'root':
 						// Overwrite the alias to link to the empty URL or language URL (see #1641)
 						$objModel->alias = 'index';
+						$href = $objModel->getFrontendUrl();
+						break;
+
+					case 'forward':
+						if ($objModel->jumpTo)
+						{
+							$objNext = PageModel::findPublishedById($objModel->jumpTo);
+						}
+						else
+						{
+							$objNext = PageModel::findFirstPublishedRegularByPid($objModel->id);
+						}
+
+						if ($objNext instanceof PageModel)
+						{
+							$href = $objNext->getFrontendUrl();
+							break;
+						}
 						// DO NOT ADD A break; STATEMENT
 
 					default:

@@ -234,8 +234,8 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * @param RequestStack|MockObject|null          $requestStack
-     * @param TokenStorageInterface|MockObject|null $tokenStorage
+     * @param RequestStack&MockObject          $requestStack
+     * @param TokenStorageInterface&MockObject $tokenStorage
      */
     private function mockContaoTableProcessor(RequestStack $requestStack = null, TokenStorageInterface $tokenStorage = null): ContaoTableProcessor
     {

@@ -1,7 +1,7 @@
 <?php $this->extend('form_row'); ?>
 
 <?php $this->block('field'); ?>
-  <fieldset id="ctrl_<?= $this->id ?>" class="radio_container<?php if ($this->class) echo ' ' . $this->class; ?>">
+  <fieldset id="ctrl_<?= $this->id ?>" class="radio_container<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>">
 
     <?php if ($this->label): ?>
       <legend>

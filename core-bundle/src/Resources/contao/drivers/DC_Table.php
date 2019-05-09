@@ -2177,21 +2177,18 @@ class DC_Table extends DataContainer implements \listable, \editable
 			if (isset($_POST['saveNclose']))
 			{
 				Message::reset();
-				System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
 				$this->redirect($this->getReferer());
 			}
 			elseif (isset($_POST['saveNedit']))
 			{
 				Message::reset();
-				System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
 				$this->redirect($this->addToUrl($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']['edit']['href'], false, array('s2e', 'act', 'mode', 'pid')));
 			}
 			elseif (isset($_POST['saveNback']))
 			{
 				Message::reset();
-				System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
 				if ($this->ptable == '')
 				{
@@ -2210,7 +2207,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			elseif (isset($_POST['saveNcreate']))
 			{
 				Message::reset();
-				System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
 				$strUrl = TL_SCRIPT . '?do=' . Input::get('do');
 
@@ -2242,7 +2238,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			elseif (isset($_POST['saveNduplicate']))
 			{
 				Message::reset();
-				System::setCookie('BE_PAGE_OFFSET', 0, 0);
 
 				$strUrl = TL_SCRIPT . '?do=' . Input::get('do');
 
@@ -2615,7 +2610,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				if (isset($_POST['saveNclose']))
 				{
-					System::setCookie('BE_PAGE_OFFSET', 0, 0);
 					$this->redirect($this->getReferer());
 				}
 
@@ -2934,7 +2928,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				if (isset($_POST['saveNclose']))
 				{
-					System::setCookie('BE_PAGE_OFFSET', 0, 0);
 					$this->redirect($this->getReferer());
 				}
 
@@ -3593,7 +3586,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').($blnClipboard ? '
-<div id="paste_hint">
+<div id="paste_hint" data-add-to-scroll-offset="20">
   <p>'.$GLOBALS['TL_LANG']['MSC']['selectNewPosition'].'</p>
 </div>' : '').'
 <div class="tl_listing_container tree_view" id="tl_listing">'.($GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] ?? '').((Input::get('act') == 'select' || ($this->strPickerFieldType == 'checkbox')) ? '
@@ -4125,7 +4118,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').($blnClipboard ? '
-<div id="paste_hint">
+<div id="paste_hint" data-add-to-scroll-offset="20">
   <p>'.$GLOBALS['TL_LANG']['MSC']['selectNewPosition'].'</p>
 </div>' : '').'
 <div class="tl_listing_container parent_view'.($this->strPickerFieldType ? ' picker unselectable' : '').'" id="tl_listing">

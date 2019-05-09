@@ -128,7 +128,7 @@ class WidgetTest extends TestCase
 
     public function testValidatesThePostData(): void
     {
-        /** @var Widget|MockObject $widget */
+        /** @var Widget&MockObject $widget */
         $widget = $this
             ->getMockBuilder(Widget::class)
             ->disableOriginalConstructor()

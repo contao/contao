@@ -89,7 +89,7 @@ class RefererIdListenerTest extends TestCase
     }
 
     /**
-     * @return CsrfTokenManagerInterface|MockObject
+     * @return CsrfTokenManagerInterface&MockObject
      */
     private function mockTokenManager(): CsrfTokenManagerInterface
     {

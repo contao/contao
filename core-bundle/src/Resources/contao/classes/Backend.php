@@ -301,6 +301,8 @@ abstract class Backend extends Controller
 			}
 		}
 
+		unset($arrGroup);
+
 		$this->import(BackendUser::class, 'User');
 		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || $this->User->hasAccess($module, 'modules');
 
