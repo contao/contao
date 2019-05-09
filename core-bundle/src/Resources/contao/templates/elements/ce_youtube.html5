@@ -6,12 +6,12 @@
     <?php if ($this->aspect): ?>
       <div class="responsive ratio-<?= $this->aspect ?>">
     <?php endif; ?>
-      <?php if ($this->videoSplash): ?>
-        <a id="videoSplash<?= $this->id ?>" href="<?= $this->src ?>">
+      <?php if ($this->splashImage): ?>
+        <a id="splashImage_<?= $this->id ?>" href="<?= $this->src ?>">
           <?php $this->insert('picture_default', $this->splashImage->picture); ?>
         </a>
         <script>
-          document.getElementById('videoSplash<?= $this->id ?>').addEventListener('click', function(e) {
+          document.getElementById('splashImage_<?= $this->id ?>').addEventListener('click', function(e) {
             e.preventDefault();
             var iframe = document.createElement('iframe');
             iframe.src = this.href;

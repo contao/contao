@@ -84,6 +84,7 @@ use FOS\HttpCache\ResponseTagger;
  * @property string  $playerColor
  * @property array   $youtubeOptions
  * @property array   $vimeoOptions
+ * @property boolean $splashImage
  * @property integer $sliderDelay
  * @property integer $sliderSpeed
  * @property integer $sliderStartSlide

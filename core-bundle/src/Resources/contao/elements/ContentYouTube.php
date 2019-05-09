@@ -124,20 +124,17 @@ class ContentYouTube extends ContentElement
 		}
 
 		// Add a splash image
-		if ($this->videoSplash)
+		if ($this->splashImage)
 		{
 			$objFile = FilesModel::findByUuid($this->singleSRC);
 
 			if ($objFile !== null && \is_file(TL_ROOT . '/' . $objFile->path))
 			{
 				$this->singleSRC = $objFile->path;
+
 				$objSplash = new \stdClass();
 				$this->addImageToTemplate($objSplash, $this->arrData, null, null, $objFile);
 				$this->Template->splashImage = $objSplash;
-			}
-			else
-			{
-				$this->Template->videoSplash = false;
 			}
 		}
 
