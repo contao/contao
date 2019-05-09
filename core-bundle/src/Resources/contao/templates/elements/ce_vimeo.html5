@@ -6,7 +6,24 @@
     <?php if ($this->aspect): ?>
       <div class="responsive ratio-<?= $this->aspect ?>">
     <?php endif; ?>
-    <iframe<?= $this->size ?> src="<?= $this->src ?>" allowfullscreen></iframe>
+      <?php if ($this->splashImage): ?>
+        <a id="splashImage_<?= $this->id ?>" href="<?= $this->src ?>">
+          <?php $this->insert('picture_default', $this->splashImage->picture); ?>
+        </a>
+        <script>
+          document.getElementById('splashImage_<?= $this->id ?>').addEventListener('click', function(e) {
+            e.preventDefault();
+            var iframe = document.createElement('iframe');
+            iframe.src = this.href;
+            iframe.width = '<?= $this->width ?>';
+            iframe.height = '<?= $this->height ?>';
+            iframe.setAttribute('allowfullscreen', '');
+            this.parentNode.replaceChild(iframe, this);
+          });
+        </script>
+      <?php else: ?>
+        <iframe<?= $this->size ?> src="<?= $this->src ?>" allowfullscreen></iframe>
+      <?php endif; ?>
     <?php if ($this->aspect): ?>
       </div>
     <?php endif; ?>
