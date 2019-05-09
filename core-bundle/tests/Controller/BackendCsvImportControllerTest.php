@@ -41,7 +41,7 @@ class BackendCsvImportControllerTest extends TestCase
 
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('session', new Session(new MockArraySessionStorage()));
         $container->set('contao.resource_finder', $finder);
 
@@ -54,7 +54,7 @@ class BackendCsvImportControllerTest extends TestCase
         $request->query->set('key', 'lw');
 
         $html = $this
-            ->mockController($request)
+            ->getController($request)
             ->importListWizardAction($this->mockDataContainer())
             ->getContent()
         ;
@@ -107,7 +107,7 @@ EOF;
         $request->query->set('key', 'tw');
 
         $html = $this
-            ->mockController($request)
+            ->getController($request)
             ->importTableWizardAction($this->mockDataContainer())
             ->getContent()
         ;
@@ -160,7 +160,7 @@ EOF;
         $request->query->set('key', 'ow');
 
         $html = $this
-            ->mockController($request)
+            ->getController($request)
             ->importOptionWizardAction($this->mockDataContainer())
             ->getContent()
         ;
@@ -344,7 +344,7 @@ EOF;
         return $framework;
     }
 
-    private function mockController(Request $request = null): BackendCsvImportController
+    private function getController(Request $request = null): BackendCsvImportController
     {
         $requestStack = new RequestStack();
         $requestStack->push($request ?: new Request());

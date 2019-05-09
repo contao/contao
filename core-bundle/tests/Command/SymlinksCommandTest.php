@@ -42,7 +42,7 @@ class SymlinksCommandTest extends TestCase
         $fs->mkdir($this->getFixturesDir().'/system/themes/default');
         $fs->mkdir($this->getFixturesDir().'/var/logs');
 
-        $command = $this->mockCommand();
+        $command = $this->getCommand();
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
@@ -78,7 +78,7 @@ class SymlinksCommandTest extends TestCase
         $this->assertSame('var/logs', $relativePath);
     }
 
-    private function mockCommand(): SymlinksCommand
+    private function getCommand(): SymlinksCommand
     {
         return new SymlinksCommand(
             $this->getFixturesDir(),

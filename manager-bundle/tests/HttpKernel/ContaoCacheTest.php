@@ -54,7 +54,7 @@ class ContaoCacheTest extends ContaoTestCase
         $kernel = $this->createMock(ContaoKernel::class);
         $kernel
             ->method('getContainer')
-            ->willReturn($this->mockContainer())
+            ->willReturn($this->getContainerWithContaoConfiguration())
         ;
 
         $kernel

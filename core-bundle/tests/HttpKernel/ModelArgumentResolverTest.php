@@ -27,7 +27,7 @@ class ModelArgumentResolverTest extends TestCase
      */
     public function testResolvesTheModel(string $name, string $class): void
     {
-        System::setContainer($this->mockContainer());
+        System::setContainer($this->getContainerWithContaoConfiguration());
 
         $pageModel = new PageModel();
         $pageModel->setRow(['id' => 42]);

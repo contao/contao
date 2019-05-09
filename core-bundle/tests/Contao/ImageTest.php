@@ -58,7 +58,7 @@ class ImageTest extends TestCase
         $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
 
-        System::setContainer($this->mockContainerWithImageServices());
+        System::setContainer($this->getContainerWithImageServices());
     }
 
     /**
@@ -1517,9 +1517,9 @@ class ImageTest extends TestCase
         yield 'invalid' => ['abc', 0];
     }
 
-    private function mockContainerWithImageServices(): ContainerBuilder
+    private function getContainerWithImageServices(): ContainerBuilder
     {
-        $container = $this->mockContainer($this->getTempDir());
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->setParameter('contao.image.target_dir', $this->getTempDir().'/assets/images');
         $container->setParameter('contao.web_dir', $this->getTempDir().'/web');
 

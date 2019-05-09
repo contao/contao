@@ -28,7 +28,7 @@ class ContaoTableProcessorTest extends TestCase
 {
     public function testCanBeInvoked(): void
     {
-        $processor = $this->mockContaoTableProcessor();
+        $processor = $this->getContaoTableProcessor();
 
         $this->assertEmpty($processor([]));
         $this->assertSame(['foo' => 'bar'], $processor(['foo' => 'bar']));
@@ -45,7 +45,7 @@ class ContaoTableProcessorTest extends TestCase
             'context' => ['contao' => new ContaoContext(__METHOD__)],
         ];
 
-        $processor = $this->mockContaoTableProcessor();
+        $processor = $this->getContaoTableProcessor();
         $record = $processor($data);
 
         /** @var ContaoContext $context */
@@ -64,7 +64,7 @@ class ContaoTableProcessorTest extends TestCase
             'context' => ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)],
         ];
 
-        $processor = $this->mockContaoTableProcessor();
+        $processor = $this->getContaoTableProcessor();
         $record = $processor($data);
 
         /** @var ContaoContext $context */
@@ -92,7 +92,7 @@ class ContaoTableProcessorTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $processor = $this->mockContaoTableProcessor($requestStack);
+        $processor = $this->getContaoTableProcessor($requestStack);
 
         $data = [
             'context' => [
@@ -147,7 +147,7 @@ class ContaoTableProcessorTest extends TestCase
         $tokenStorage = new TokenStorage();
         $tokenStorage->setToken($token);
 
-        $processor = $this->mockContaoTableProcessor(null, $tokenStorage);
+        $processor = $this->getContaoTableProcessor(null, $tokenStorage);
 
         $data = [
             'context' => [
@@ -211,7 +211,7 @@ class ContaoTableProcessorTest extends TestCase
             ],
         ];
 
-        $processor = $this->mockContaoTableProcessor($requestStack);
+        $processor = $this->getContaoTableProcessor($requestStack);
         $result = $processor($data);
 
         /** @var ContaoContext $context */
@@ -237,7 +237,7 @@ class ContaoTableProcessorTest extends TestCase
      * @param RequestStack&MockObject          $requestStack
      * @param TokenStorageInterface&MockObject $tokenStorage
      */
-    private function mockContaoTableProcessor(RequestStack $requestStack = null, TokenStorageInterface $tokenStorage = null): ContaoTableProcessor
+    private function getContaoTableProcessor(RequestStack $requestStack = null, TokenStorageInterface $tokenStorage = null): ContaoTableProcessor
     {
         if (null === $requestStack) {
             $requestStack = $this->createMock(RequestStack::class);

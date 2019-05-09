@@ -26,7 +26,7 @@ class GdImageTest extends TestCase
     {
         parent::setUp();
 
-        System::setContainer($this->mockContainer($this->getTempDir()));
+        System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
     }
 
     /**

@@ -34,7 +34,7 @@ class AddResourcesPathsPassTest extends TestCase
             'foobar' => ContaoModuleBundle::class,
         ];
 
-        $container = $this->mockContainer($this->getFixturesDir());
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
         $container->setParameter('kernel.bundles', $bundles);
 
         $pass = new AddResourcesPathsPass();

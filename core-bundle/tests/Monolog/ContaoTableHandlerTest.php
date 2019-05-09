@@ -62,7 +62,7 @@ class ContaoTableHandlerTest extends TestCase
 
         $system = $this->mockConfiguredAdapter(['importStatic' => $this]);
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework([System::class => $system]));
         $container->set('doctrine.dbal.default_connection', $connection);
 

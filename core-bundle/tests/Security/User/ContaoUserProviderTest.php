@@ -36,9 +36,9 @@ class ContaoUserProviderTest extends TestCase
         $adapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
         $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
 
-        $userProvider = $this->mockUserProvider($framework);
+        $provider = $this->getProvider($framework);
 
-        $this->assertSame($user, $userProvider->loadUserByUsername('foobar'));
+        $this->assertSame($user, $provider->loadUserByUsername('foobar'));
     }
 
     public function testFailsToLoadAUserIfTheUsernameDoesNotExist(): void
@@ -47,12 +47,12 @@ class ContaoUserProviderTest extends TestCase
         $adapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
         $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
 
-        $userProvider = $this->mockUserProvider($framework);
+        $provider = $this->getProvider($framework);
 
         $this->expectException(UsernameNotFoundException::class);
         $this->expectExceptionMessage('Could not find user "foobar"');
 
-        $userProvider->loadUserByUsername('foobar');
+        $provider->loadUserByUsername('foobar');
     }
 
     public function testRefreshesTheUser(): void
@@ -64,9 +64,9 @@ class ContaoUserProviderTest extends TestCase
         $adapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
         $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
 
-        $userProvider = $this->mockUserProvider($framework);
+        $provider = $this->getProvider($framework);
 
-        $this->assertSame($user, $userProvider->refreshUser($user));
+        $this->assertSame($user, $provider->refreshUser($user));
     }
 
     public function testValidatesTheSessionLifetime(): void
@@ -184,20 +184,20 @@ class ContaoUserProviderTest extends TestCase
     public function testFailsToRefreshUnsupportedUsers(): void
     {
         $user = $this->createMock(UserInterface::class);
-        $userProvider = $this->mockUserProvider();
+        $provider = $this->getProvider();
 
         $this->expectException(UnsupportedUserException::class);
         $this->expectExceptionMessage(sprintf('Unsupported class "%s".', \get_class($user)));
 
-        $userProvider->refreshUser($user);
+        $provider->refreshUser($user);
     }
 
     public function testChecksIfAClassIsSupported(): void
     {
-        $userProvider = $this->mockUserProvider();
+        $provider = $this->getProvider();
 
-        $this->assertTrue($userProvider->supportsClass(BackendUser::class));
-        $this->assertFalse($userProvider->supportsClass(FrontendUser::class));
+        $this->assertTrue($provider->supportsClass(BackendUser::class));
+        $this->assertFalse($provider->supportsClass(FrontendUser::class));
     }
 
     public function testDoesNotHandleUnknownUserClasses(): void
@@ -205,7 +205,7 @@ class ContaoUserProviderTest extends TestCase
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Unsupported class "LdapUser".');
 
-        $this->mockUserProvider(null, 'LdapUser');
+        $this->getProvider(null, 'LdapUser');
     }
 
     /**
@@ -246,9 +246,9 @@ class ContaoUserProviderTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['postAuthenticate'] = [['HookListener', 'onPostAuthenticate']];
 
-        $userProvider = $this->mockUserProvider($framework);
+        $provider = $this->getProvider($framework);
 
-        $this->assertSame($user, $userProvider->refreshUser($user));
+        $this->assertSame($user, $provider->refreshUser($user));
 
         unset($GLOBALS['TL_HOOKS']);
     }
@@ -256,7 +256,7 @@ class ContaoUserProviderTest extends TestCase
     /**
      * @param ContaoFramework&MockObject $framework
      */
-    private function mockUserProvider(ContaoFramework $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
+    private function getProvider(ContaoFramework $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
     {
         if (null === $framework) {
             $framework = $this->mockContaoFramework();

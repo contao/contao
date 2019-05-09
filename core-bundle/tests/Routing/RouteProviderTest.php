@@ -42,14 +42,14 @@ class RouteProviderTest extends TestCase
         ;
 
         $framework = $this->mockFramework($pageAdapter);
-        $route = $this->mockRouteProvider($framework)->getRouteByName('tl_page.17');
+        $route = $this->getRouteProvider($framework)->getRouteByName('tl_page.17');
 
         $this->assertSame($page, $route->getDefault('pageModel'));
     }
 
     public function testThrowsAnExceptionIfTheRouteNameDoesNotMatchAPageId(): void
     {
-        $provider = $this->mockRouteProvider();
+        $provider = $this->getRouteProvider();
 
         $this->expectException(RouteNotFoundException::class);
         $this->expectExceptionMessage('Route name does not match a page ID');
@@ -66,7 +66,7 @@ class RouteProviderTest extends TestCase
             ->with(17)
         ;
 
-        $provider = $this->mockRouteProvider($this->mockFramework($pageAdapter));
+        $provider = $this->getRouteProvider($this->mockFramework($pageAdapter));
 
         $this->expectException(RouteNotFoundException::class);
         $this->expectExceptionMessage('Page ID "17" not found');
@@ -92,7 +92,7 @@ class RouteProviderTest extends TestCase
             ->willReturn(new Collection([$page1, $page2], 'tl_page'))
         ;
 
-        $provider = $this->mockRouteProvider($this->mockFramework($pageAdapter));
+        $provider = $this->getRouteProvider($this->mockFramework($pageAdapter));
         $routes = $provider->getRoutesByNames(['tl_page.17', 'tl_page.21']);
 
         $this->assertCount(2, $routes);
@@ -114,7 +114,7 @@ class RouteProviderTest extends TestCase
         ;
 
         $framework = $this->mockFramework($pageAdapter);
-        $route = $this->mockRouteProvider($framework)->getRouteByName('tl_page.17');
+        $route = $this->getRouteProvider($framework)->getRouteByName('tl_page.17');
 
         $this->assertSame('example.org', $route->getHost());
     }
@@ -135,7 +135,7 @@ class RouteProviderTest extends TestCase
         ;
 
         $framework = $this->mockFramework($pageAdapter);
-        $route = $this->mockRouteProvider($framework)->getRouteByName('tl_page.17');
+        $route = $this->getRouteProvider($framework)->getRouteByName('tl_page.17');
 
         $this->assertSame('example.org:8080', $route->getHost());
     }
@@ -148,7 +148,7 @@ class RouteProviderTest extends TestCase
             ->method('findAll')
         ;
 
-        $provider = $this->mockRouteProvider($this->mockFramework($pageAdapter));
+        $provider = $this->getRouteProvider($this->mockFramework($pageAdapter));
         $provider->getRoutesByNames(null);
     }
 
@@ -160,7 +160,7 @@ class RouteProviderTest extends TestCase
             ->method('findBy')
         ;
 
-        $provider = $this->mockRouteProvider($this->mockFramework($pageAdapter));
+        $provider = $this->getRouteProvider($this->mockFramework($pageAdapter));
 
         $this->assertSame([], $provider->getRoutesByNames(['foo', 'bar']));
     }
@@ -169,20 +169,20 @@ class RouteProviderTest extends TestCase
     {
         $request = $this->mockRequestWithPath('/foo/auto_item/bar.html');
 
-        $this->assertEmpty($this->mockRouteProvider()->getRouteCollectionForRequest($request));
+        $this->assertEmpty($this->getRouteProvider()->getRouteCollectionForRequest($request));
     }
 
     public function testReturnsAnEmptyCollectionIfTheUrlSuffixDoesNotMatch(): void
     {
         $request = $this->mockRequestWithPath('/foo.php');
 
-        $this->assertEmpty($this->mockRouteProvider()->getRouteCollectionForRequest($request));
+        $this->assertEmpty($this->getRouteProvider()->getRouteCollectionForRequest($request));
     }
 
     public function testReturnsAnEmptyCollectionIfTheLanguageIsNotGiven(): void
     {
         $request = $this->mockRequestWithPath('/foo.html');
-        $provider = $this->mockRouteProvider(null, '.html', true);
+        $provider = $this->getRouteProvider(null, '.html', true);
 
         $this->assertEmpty($provider->getRouteCollectionForRequest($request));
     }
@@ -214,7 +214,7 @@ class RouteProviderTest extends TestCase
         $framework = $this->mockFramework($pageAdapter, $configAdapter);
         $request = $this->mockRequestWithPath($path);
 
-        $provider = $this->mockRouteProvider($framework, $urlSuffix, $prependLocale);
+        $provider = $this->getRouteProvider($framework, $urlSuffix, $prependLocale);
         $provider->getRouteCollectionForRequest($request);
     }
 
@@ -328,7 +328,7 @@ class RouteProviderTest extends TestCase
         $framework = $this->mockFramework($pageAdapter, $configAdapter);
         $request = $this->mockRequestWithPath('/foo.html', $languages);
 
-        $provider = $this->mockRouteProvider($framework);
+        $provider = $this->getRouteProvider($framework);
         $collection = $provider->getRouteCollectionForRequest($request);
 
         $this->assertCount(\count($pages), $collection);
@@ -480,7 +480,7 @@ class RouteProviderTest extends TestCase
         $framework = $this->mockFramework($pageAdapter, $configAdapter);
         $request = $this->mockRequestWithPath(($prependLocale ? '/'.$language : '').'/foo'.$urlSuffix);
 
-        $provider = $this->mockRouteProvider($framework, $urlSuffix, $prependLocale);
+        $provider = $this->getRouteProvider($framework, $urlSuffix, $prependLocale);
         $collection = $provider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $collection);
@@ -597,7 +597,7 @@ class RouteProviderTest extends TestCase
     /**
      * @param ContaoFramework&MockObject $framework
      */
-    private function mockRouteProvider(ContaoFramework $framework = null, string $urlSuffix = '.html', bool $prependLocale = false): RouteProvider
+    private function getRouteProvider(ContaoFramework $framework = null, string $urlSuffix = '.html', bool $prependLocale = false): RouteProvider
     {
         if (null === $framework) {
             $framework = $this->mockContaoFramework();

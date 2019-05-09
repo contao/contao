@@ -42,7 +42,7 @@ class InstallerTest extends TestCase
             ->addColumn('foo', 'string')
         ;
 
-        $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo']);
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_TABLE', $commands);
@@ -94,7 +94,7 @@ class InstallerTest extends TestCase
             ->addIndex(['foo'], 'foo_idx')
         ;
 
-        $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo']);
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
         $this->assertSame(
@@ -137,7 +137,7 @@ class InstallerTest extends TestCase
             ->addIndex(['foo'], 'foo_idx')
         ;
 
-        $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo']);
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
         $this->assertSame(
@@ -164,7 +164,7 @@ class InstallerTest extends TestCase
             ->addColumn('foo', 'string')
         ;
 
-        $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo']);
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_TABLE', $commands);
@@ -194,7 +194,7 @@ class InstallerTest extends TestCase
             ->addColumn('foo', 'string')
         ;
 
-        $installer = $this->mockInstaller($fromSchema, $toSchema, ['tl_foo'], 'OFF');
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo'], 'OFF');
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_TABLE', $commands);
@@ -225,7 +225,7 @@ class InstallerTest extends TestCase
             ->addColumn('foo', 'string')
         ;
 
-        $installer = $this->mockInstaller($fromSchema, $toSchema);
+        $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_DROP', $commands);
@@ -251,7 +251,7 @@ class InstallerTest extends TestCase
             ->addColumn('bar', 'string')
         ;
 
-        $installer = $this->mockInstaller($fromSchema, $toSchema);
+        $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
@@ -272,7 +272,7 @@ class InstallerTest extends TestCase
             ->addColumn('foo', 'decimal', ['precision' => 9, 'scale' => 2])
         ;
 
-        $installer = $this->mockInstaller($fromSchema, $toSchema);
+        $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
@@ -293,7 +293,7 @@ class InstallerTest extends TestCase
             ->addColumn('foo', 'string', ['default' => ','])
         ;
 
-        $installer = $this->mockInstaller($fromSchema, $toSchema);
+        $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
@@ -329,7 +329,7 @@ class InstallerTest extends TestCase
             ->addColumn('foo4', 'string', ['default' => ','])
         ;
 
-        $installer = $this->mockInstaller($fromSchema, $toSchema);
+        $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
@@ -360,7 +360,7 @@ class InstallerTest extends TestCase
             ->addColumn('foo', 'string')
         ;
 
-        $installer = $this->mockInstaller($fromSchema, $toSchema);
+        $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
         $this->assertEmpty($commands);
@@ -371,7 +371,7 @@ class InstallerTest extends TestCase
      *
      * @return Installer&MockObject
      */
-    private function mockInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = [], string $filePerTable = 'ON'): Installer
+    private function getInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = [], string $filePerTable = 'ON'): Installer
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
         $schemaManager

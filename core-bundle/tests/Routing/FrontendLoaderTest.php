@@ -71,7 +71,7 @@ class FrontendLoaderTest extends TestCase
     {
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
-        $router = $this->mockRouter($collection);
+        $router = $this->getRouter($collection);
 
         $this->expectException(MissingMandatoryParametersException::class);
 
@@ -82,7 +82,7 @@ class FrontendLoaderTest extends TestCase
     {
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
-        $router = $this->mockRouter($collection);
+        $router = $this->getRouter($collection);
 
         $this->assertSame(
             '/foobar.html',
@@ -94,7 +94,7 @@ class FrontendLoaderTest extends TestCase
     {
         $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
-        $router = $this->mockRouter($collection);
+        $router = $this->getRouter($collection);
 
         $this->assertSame(
             '/en/foobar.html',
@@ -106,7 +106,7 @@ class FrontendLoaderTest extends TestCase
     {
         $loader = new FrontendLoader(true, '.xhtml');
         $collection = $loader->load('.', 'bundles');
-        $router = $this->mockRouter($collection);
+        $router = $this->getRouter($collection);
 
         $this->assertSame(
             '/en/foobar.xhtml',
@@ -118,7 +118,7 @@ class FrontendLoaderTest extends TestCase
     {
         $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
-        $router = $this->mockRouter($collection);
+        $router = $this->getRouter($collection);
 
         $this->expectException(MissingMandatoryParametersException::class);
 
@@ -129,7 +129,7 @@ class FrontendLoaderTest extends TestCase
     {
         $loader = new FrontendLoader(false);
         $collection = $loader->load('.', 'bundles');
-        $router = $this->mockRouter($collection);
+        $router = $this->getRouter($collection);
 
         $this->assertSame(
             '/',
@@ -141,7 +141,7 @@ class FrontendLoaderTest extends TestCase
     {
         $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
-        $router = $this->mockRouter($collection);
+        $router = $this->getRouter($collection);
 
         $this->assertSame(
             '/en/',
@@ -153,14 +153,14 @@ class FrontendLoaderTest extends TestCase
     {
         $loader = new FrontendLoader(true);
         $collection = $loader->load('.', 'bundles');
-        $router = $this->mockRouter($collection);
+        $router = $this->getRouter($collection);
 
         $this->expectException(MissingMandatoryParametersException::class);
 
         $router->generate('contao_index');
     }
 
-    private function mockRouter(RouteCollection $collection): Router
+    private function getRouter(RouteCollection $collection): Router
     {
         $loader = $this->createMock(LoaderInterface::class);
         $loader
@@ -168,7 +168,7 @@ class FrontendLoaderTest extends TestCase
             ->willReturn($collection)
         ;
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('routing.loader', $loader);
 
         return new Router($container, '');

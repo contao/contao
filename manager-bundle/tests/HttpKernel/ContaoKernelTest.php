@@ -36,7 +36,7 @@ class ContaoKernelTest extends ContaoTestCase
             ->willReturn([new BundleConfig(ContaoManagerBundle::class)])
         ;
 
-        $kernel = $this->mockKernel($this->getTempDir());
+        $kernel = $this->getKernel($this->getTempDir());
         $kernel->setBundleLoader($bundleLoader);
 
         $bundles = $kernel->registerBundles();
@@ -58,7 +58,7 @@ class ContaoKernelTest extends ContaoTestCase
             ->willReturn([new BundleConfig(ContaoManagerBundle::class)])
         ;
 
-        $kernel = $this->mockKernel($this->getTempDir());
+        $kernel = $this->getKernel($this->getTempDir());
         $kernel->setBundleLoader($bundleLoader);
 
         include __DIR__.'/../Fixtures/HttpKernel/AppBundle.php';
@@ -71,28 +71,28 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testGetProjectDir(): void
     {
-        $kernel = $this->mockKernel($this->getTempDir());
+        $kernel = $this->getKernel($this->getTempDir());
 
         $this->assertSame($kernel->getProjectDir(), $kernel->getProjectDir());
     }
 
     public function testGetRootDir(): void
     {
-        $kernel = $this->mockKernel($this->getTempDir());
+        $kernel = $this->getKernel($this->getTempDir());
 
         $this->assertSame($kernel->getProjectDir().'/app', $kernel->getRootDir());
     }
 
     public function testGetCacheDir(): void
     {
-        $kernel = $this->mockKernel($this->getTempDir());
+        $kernel = $this->getKernel($this->getTempDir());
 
         $this->assertSame($kernel->getProjectDir().'/var/cache/prod', $kernel->getCacheDir());
     }
 
     public function testGetLogDir(): void
     {
-        $kernel = $this->mockKernel($this->getTempDir());
+        $kernel = $this->getKernel($this->getTempDir());
 
         $this->assertSame($kernel->getProjectDir().'/var/logs', $kernel->getLogDir());
     }
@@ -137,7 +137,7 @@ class ContaoKernelTest extends ContaoTestCase
             )
         ;
 
-        $kernel = $this->mockKernel($projectDir, $env);
+        $kernel = $this->getKernel($projectDir, $env);
         $kernel->registerContainerConfiguration($loader);
 
         $this->assertSame($expectedResult, $files);
@@ -187,14 +187,14 @@ class ContaoKernelTest extends ContaoTestCase
             ->willReturn([$this->mockConfigPlugin($loader), $this->mockConfigPlugin($loader)])
         ;
 
-        $kernel = $this->mockKernel($this->getTempDir());
+        $kernel = $this->getKernel($this->getTempDir());
         $kernel->setPluginLoader($pluginLoader);
         $kernel->registerContainerConfiguration($loader);
     }
 
     public function testGetHttpCache(): void
     {
-        $kernel = $this->mockKernel($this->getTempDir());
+        $kernel = $this->getKernel($this->getTempDir());
 
         $this->assertInstanceOf(ContaoCache::class, $kernel->getHttpCache());
     }
@@ -204,7 +204,7 @@ class ContaoKernelTest extends ContaoTestCase
      *
      * @return ContaoKernel&MockObject
      */
-    private function mockKernel(string $projectDir, string $env = 'prod'): ContaoKernel
+    private function getKernel(string $projectDir, string $env = 'prod'): ContaoKernel
     {
         $pluginLoader = $this->createMock(PluginLoader::class);
         $pluginLoader

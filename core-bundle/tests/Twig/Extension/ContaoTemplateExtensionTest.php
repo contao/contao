@@ -47,7 +47,7 @@ class ContaoTemplateExtensionTest extends TestCase
             ->willReturn($backendRoute)
         ;
 
-        $extension = $this->mockExtension($framework);
+        $extension = $this->getExtension($framework);
         $extension->renderContaoBackendTemplate(['a' => 'a', 'b' => 'b', 'c' => 'c']);
 
         $this->assertSame('a', $template->a);
@@ -57,7 +57,7 @@ class ContaoTemplateExtensionTest extends TestCase
 
     public function testAddsTheRenderContaoBackEndTemplateFunction(): void
     {
-        $functions = $this->mockExtension()->getFunctions();
+        $functions = $this->getExtension()->getFunctions();
 
         $renderBaseTemplateFunction = array_filter(
             $functions,
@@ -71,13 +71,13 @@ class ContaoTemplateExtensionTest extends TestCase
 
     public function testDoesNotRenderTheBackEndTemplateIfNotInBackEndScope(): void
     {
-        $this->assertEmpty($this->mockExtension(null, 'frontend')->renderContaoBackendTemplate());
+        $this->assertEmpty($this->getExtension(null, 'frontend')->renderContaoBackendTemplate());
     }
 
     /**
      * @param ContaoFramework&MockObject $framework
      */
-    private function mockExtension(ContaoFramework $framework = null, string $scope = 'backend'): ContaoTemplateExtension
+    private function getExtension(ContaoFramework $framework = null, string $scope = 'backend'): ContaoTemplateExtension
     {
         $request = new Request();
         $request->attributes->set('_scope', $scope);

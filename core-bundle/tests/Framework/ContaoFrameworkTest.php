@@ -74,7 +74,7 @@ class ContaoFrameworkTest extends TestCase
         ;
 
         $framework = $this->mockFramework($request, null, $tokenChecker);
-        $framework->setContainer($this->mockContainer());
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
@@ -110,7 +110,7 @@ class ContaoFrameworkTest extends TestCase
         $request->setLocale('de');
 
         $framework = $this->mockFramework($request);
-        $framework->setContainer($this->mockContainer());
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
@@ -138,7 +138,7 @@ class ContaoFrameworkTest extends TestCase
     public function testInitializesTheFrameworkWithoutARequest(): void
     {
         $framework = $this->mockFramework();
-        $framework->setContainer($this->mockContainer());
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
 
         /** @var Config&MockObject $config */
         $config = $framework->getAdapter(Config::class);
@@ -173,7 +173,7 @@ class ContaoFrameworkTest extends TestCase
     public function testInitializesTheFrameworkWithoutARequestInFrontendMode(): void
     {
         $framework = $this->mockFramework();
-        $framework->setContainer($this->mockContainer());
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
 
         /** @var Config&MockObject $config */
         $config = $framework->getAdapter(Config::class);
@@ -212,7 +212,7 @@ class ContaoFrameworkTest extends TestCase
         $request->server->set('SCRIPT_NAME', '/contao4/web/index.php');
 
         $framework = $this->mockFramework($request);
-        $framework->setContainer($this->mockContainer());
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
 
         /** @var Config&MockObject $config */
         $config = $framework->getAdapter(Config::class);
@@ -251,7 +251,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_contao_referer_id', 'foobar');
 
         $framework = $this->mockFramework($request);
-        $framework->setContainer($this->mockContainer());
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
@@ -291,7 +291,7 @@ class ContaoFrameworkTest extends TestCase
         ;
 
         $framework = $this->mockFramework(Request::create('/index.html'), $scopeMatcher);
-        $framework->setContainer($this->mockContainer());
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
@@ -309,7 +309,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_contao_referer_id', 'foobar');
 
         $framework = $this->mockFramework($request);
-        $framework->setContainer($this->mockContainer());
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
 
         $errorReporting = error_reporting();
         error_reporting(E_ALL ^ E_USER_NOTICE);
@@ -347,7 +347,7 @@ class ContaoFrameworkTest extends TestCase
             error_reporting()
         );
 
-        $framework->setContainer($this->mockContainer());
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
 
         $adapters = [
             Config::class => $this->mockConfigAdapter(false),
@@ -383,7 +383,7 @@ class ContaoFrameworkTest extends TestCase
             error_reporting()
         );
 
-        $framework->setContainer($this->mockContainer());
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
 
         $adapters = [
             Config::class => $this->mockConfigAdapter(false),
@@ -445,7 +445,7 @@ class ContaoFrameworkTest extends TestCase
         $request->setSession($session);
 
         $framework = $this->mockFramework($request);
-        $framework->setContainer($this->mockContainer());
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
         $this->assertInstanceOf(LazySessionAccess::class, $_SESSION);
@@ -498,7 +498,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_contao_referer_id', 'foobar');
         $request->setLocale('de');
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('test.listener', new \stdClass());
         $container->set('test.listener2', new \stdClass());
 

@@ -28,7 +28,7 @@ class RegisterFragmentsPassTest extends TestCase
         $moduleController = new Definition('App\Fragments\LoginController');
         $moduleController->addTag('contao.frontend_module');
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->setDefinition('app.fragments.content_controller', $contentController);
         $container->setDefinition('app.fragments.module_controller', $moduleController);
 
@@ -67,7 +67,7 @@ class RegisterFragmentsPassTest extends TestCase
         $contentController = new Definition('App\Fragments\Text');
         $contentController->addTag('contao.content_element', $attributes);
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
         $pass = new RegisterFragmentsPass();
@@ -91,7 +91,7 @@ class RegisterFragmentsPassTest extends TestCase
         $contentController->setPublic(false);
         $contentController->addTag('contao.content_element');
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
         $this->assertFalse($container->findDefinition('app.fragments.content_controller')->isPublic());
@@ -107,7 +107,7 @@ class RegisterFragmentsPassTest extends TestCase
         $contentController = new Definition(FragmentPreHandlerInterface::class);
         $contentController->addTag('contao.content_element');
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
         $pass = new RegisterFragmentsPass();

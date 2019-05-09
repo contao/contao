@@ -38,17 +38,17 @@ class UrlGeneratorTest extends TestCase
     public function testGeneratesUrls(): void
     {
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foobar']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foobar']))
             ->generate('foobar', ['_locale' => 'de'])
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foobar', '_locale' => 'de']), true)
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foobar', '_locale' => 'de']), true)
             ->generate('foobar', ['_locale' => 'de'])
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foobar/test']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foobar/test']))
             ->generate('foobar/test')
         ;
     }
@@ -56,17 +56,17 @@ class UrlGeneratorTest extends TestCase
     public function testGeneratesUrlsWithoutParameters(): void
     {
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foobar']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foobar']))
             ->generate('foobar')
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foobar/test']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foobar/test']))
             ->generate('foobar/test')
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foobar/article/test']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foobar/article/test']))
             ->generate('foobar/article/test')
         ;
     }
@@ -74,22 +74,22 @@ class UrlGeneratorTest extends TestCase
     public function testOmitsTheIndexFragment(): void
     {
         $this
-            ->mockGenerator($this->mockRouterWithContext([], 'contao_index'))
+            ->getUrlGenerator($this->mockRouterWithContext([], 'contao_index'))
             ->generate('index')
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext([], 'contao_index'), true)
+            ->getUrlGenerator($this->mockRouterWithContext([], 'contao_index'), true)
             ->generate('index')
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'index/foobar']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'index/foobar']))
             ->generate('index/foobar')
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'index/foo/bar']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'index/foo/bar']))
             ->generate('index/{foo}', ['foo' => 'bar'])
         ;
     }
@@ -97,12 +97,12 @@ class UrlGeneratorTest extends TestCase
     public function testRemovesTheLocaleIfPrependLocaleIsNotSet(): void
     {
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foobar']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foobar']))
             ->generate('foobar', ['_locale' => 'en'])
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foobar', '_locale' => 'en']), true)
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foobar', '_locale' => 'en']), true)
             ->generate('foobar', ['_locale' => 'en'])
         ;
     }
@@ -112,12 +112,12 @@ class UrlGeneratorTest extends TestCase
         $params = ['items' => 'bar', 'article' => 'test'];
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/article/test', 'items' => 'bar']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo/article/test', 'items' => 'bar']))
             ->generate('foo/{article}', $params)
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/items/bar/article/test']), false, false)
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo/items/bar/article/test']), false, false)
             ->generate('foo/{items}/{article}', $params)
         ;
     }
@@ -125,24 +125,24 @@ class UrlGeneratorTest extends TestCase
     public function testHandlesAutoItems(): void
     {
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/bar']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo/bar']))
             ->generate('foo/{items}', ['items' => 'bar', 'auto_item' => 'items'])
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/bar/article/test']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo/bar/article/test']))
             ->generate('foo/{items}/{article}', ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items'])
         ;
 
         $GLOBALS['TL_AUTO_ITEM'] = ['article', 'items'];
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/bar']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo/bar']))
             ->generate('foo/{items}', ['items' => 'bar'])
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/bar/article/test']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo/bar/article/test']))
             ->generate('foo/{items}/{article}', ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items'])
         ;
 
@@ -152,24 +152,24 @@ class UrlGeneratorTest extends TestCase
     public function testIgnoresAutoItemsIfTheyAreDisabled(): void
     {
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/items/bar']), false, false)
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo/items/bar']), false, false)
             ->generate('foo/{items}', ['items' => 'bar', 'auto_item' => 'items'])
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/items/bar/article/test']), false, false)
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo/items/bar/article/test']), false, false)
             ->generate('foo/{items}/{article}', ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items'])
         ;
 
         $GLOBALS['TL_AUTO_ITEM'] = ['article', 'items'];
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/items/bar']), false, false)
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo/items/bar']), false, false)
             ->generate('foo/{items}', ['items' => 'bar'])
         ;
 
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo/items/bar/article/test']), false, false)
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo/items/bar/article/test']), false, false)
             ->generate('foo/{items}/{article}', ['items' => 'bar', 'article' => 'test', 'auto_item' => 'items'])
         ;
 
@@ -186,7 +186,7 @@ class UrlGeneratorTest extends TestCase
 
         $this->expectException(MissingMandatoryParametersException::class);
 
-        $this->mockGenerator($router)->generate('foo/{article}');
+        $this->getUrlGenerator($router)->generate('foo/{article}');
     }
 
     public function testReadsTheContextFromTheDomain(): void
@@ -243,12 +243,12 @@ class UrlGeneratorTest extends TestCase
     public function testHandlesNonArrayParameters(): void
     {
         $this
-            ->mockGenerator($this->mockRouterWithContext(['alias' => 'foo']))
+            ->getUrlGenerator($this->mockRouterWithContext(['alias' => 'foo']))
             ->generate('foo', 'bar')
         ;
     }
 
-    private function mockGenerator(UrlGeneratorInterface $router, bool $prependLocale = false, bool $useAutoItem = true): UrlGenerator
+    private function getUrlGenerator(UrlGeneratorInterface $router, bool $prependLocale = false, bool $useAutoItem = true): UrlGenerator
     {
         $framework = $this->mockContaoFramework();
 

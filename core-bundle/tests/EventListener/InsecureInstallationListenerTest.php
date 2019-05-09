@@ -28,7 +28,7 @@ class InsecureInstallationListenerTest extends TestCase
 
         $this->expectException(InsecureInstallationException::class);
 
-        $listener->onKernelRequest($this->mockResponseEvent($this->getRequest()));
+        $listener->onKernelRequest($this->getResponseEvent($this->getRequest()));
     }
 
     public function testDoesNotThrowAnExceptionIfTheDocumentRootIsSecure(): void
@@ -38,7 +38,7 @@ class InsecureInstallationListenerTest extends TestCase
         $request->server->set('SCRIPT_FILENAME', $this->getTempDir().'/index.php');
 
         $listener = new InsecureInstallationListener();
-        $listener->onKernelRequest($this->mockResponseEvent($request));
+        $listener->onKernelRequest($this->getResponseEvent($request));
 
         $this->addToAssertionCount(1);  // does not throw an exception
     }
@@ -49,7 +49,7 @@ class InsecureInstallationListenerTest extends TestCase
         $request->server->set('REMOTE_ADDR', '127.0.0.1');
 
         $listener = new InsecureInstallationListener();
-        $listener->onKernelRequest($this->mockResponseEvent($request));
+        $listener->onKernelRequest($this->getResponseEvent($request));
 
         $this->addToAssertionCount(1);  // does not throw an exception
     }
@@ -65,7 +65,7 @@ class InsecureInstallationListenerTest extends TestCase
         return $request;
     }
 
-    private function mockResponseEvent(Request $request = null): GetResponseEvent
+    private function getResponseEvent(Request $request = null): GetResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 

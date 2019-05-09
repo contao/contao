@@ -13,13 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\AutomatorCommand;
+use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 
-class AutomatorCommandTest extends CommandTestCase
+class AutomatorCommandTest extends TestCase
 {
     public function testHandlesAnInvalidSelection(): void
     {
-        $command = $this->mockCommand();
+        $command = $this->getCommand();
         $tester = new CommandTester($command);
         $tester->setInputs(["4800\n"]);
 
@@ -31,7 +36,7 @@ class AutomatorCommandTest extends CommandTestCase
 
     public function testHandlesAnInvalidTaskName(): void
     {
-        $command = $this->mockCommand();
+        $command = $this->getCommand();
 
         $input = [
             'command' => $command->getName(),
@@ -45,10 +50,23 @@ class AutomatorCommandTest extends CommandTestCase
         $this->assertContains('Invalid task "fooBar" (see help contao:automator)', $tester->getDisplay());
     }
 
-    private function mockCommand(): AutomatorCommand
+    private function getCommand(): AutomatorCommand
     {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.project_dir', $this->getFixturesDir());
+        $container->set('filesystem', new Filesystem());
+
+        $kernel = $this->createMock(KernelInterface::class);
+        $kernel
+            ->method('getContainer')
+            ->willReturn($container)
+        ;
+
+        $application = new Application($kernel);
+        $application->setCatchExceptions(true);
+
         $command = new AutomatorCommand($this->mockContaoFramework());
-        $command->setApplication($this->mockApplication());
+        $command->setApplication($application);
 
         return $command;
     }

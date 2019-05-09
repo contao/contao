@@ -30,7 +30,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         parent::setUp();
 
-        System::setContainer($this->mockContainer());
+        System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
     public function testCreatesTheTemplateFromTheClassName(): void

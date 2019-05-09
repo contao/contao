@@ -47,7 +47,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
         parent::setUp();
 
         $this->command = new InstallWebDirCommand($this->getTempDir());
-        $this->command->setApplication($this->mockApplication());
+        $this->command->setApplication($this->getApplication());
         $this->filesystem = new Filesystem();
         $this->webFiles = Finder::create()->files()->in(__DIR__.'/../../src/Resources/skeleton/web');
     }
@@ -167,7 +167,7 @@ EOT;
         $this->assertFileExists($this->getTempDir().'/public/index.php');
     }
 
-    private function mockApplication(ManagerConfig $config = null): Application
+    private function getApplication(ManagerConfig $config = null): Application
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', $this->getTempDir());

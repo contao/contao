@@ -36,7 +36,7 @@ class TokenCheckerTest extends TestCase
     {
         $user = $this->mockUser($class);
         $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertSame($expect, $tokenChecker->hasFrontendUser());
     }
@@ -54,7 +54,7 @@ class TokenCheckerTest extends TestCase
     {
         $user = $this->mockUser($class);
         $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertSame($expect, $tokenChecker->hasBackendUser());
     }
@@ -69,7 +69,7 @@ class TokenCheckerTest extends TestCase
     {
         $user = $this->mockUser(FrontendUser::class);
         $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertSame('foobar', $tokenChecker->getFrontendUsername());
     }
@@ -78,7 +78,7 @@ class TokenCheckerTest extends TestCase
     {
         $user = $this->mockUser(BackendUser::class);
         $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertSame('foobar', $tokenChecker->getBackendUsername());
     }
@@ -88,7 +88,7 @@ class TokenCheckerTest extends TestCase
      */
     public function testChecksIfThePreviewModeIsActive(TokenInterface $token, bool $expect): void
     {
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertSame($expect, $tokenChecker->isPreviewMode());
     }
@@ -171,7 +171,7 @@ class TokenCheckerTest extends TestCase
     public function testDoesNotReturnATokenIfTheTokenIsNotAuthenticated(): void
     {
         $token = new UsernamePasswordToken('user', 'password', 'provider');
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertNull($tokenChecker->getBackendUsername());
     }
@@ -179,7 +179,7 @@ class TokenCheckerTest extends TestCase
     public function testDoesNotReturnATokenIfTheTokenIsAnonymous(): void
     {
         $token = new AnonymousToken('secret', 'anon.');
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertFalse($tokenChecker->isPreviewMode());
     }
@@ -194,7 +194,7 @@ class TokenCheckerTest extends TestCase
         return $user;
     }
 
-    private function mockTokenChecker(TokenInterface $token): TokenChecker
+    private function getTokenChecker(TokenInterface $token): TokenChecker
     {
         $session = $this->createMock(SessionInterface::class);
         $session

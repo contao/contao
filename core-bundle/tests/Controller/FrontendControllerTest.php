@@ -29,7 +29,7 @@ class FrontendControllerTest extends TestCase
             ->method('initialize')
         ;
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
 
         $controller = new FrontendController();
@@ -52,7 +52,7 @@ class FrontendControllerTest extends TestCase
             ->method('initialize')
         ;
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
 
         $controller = new FrontendController();
@@ -79,7 +79,7 @@ class FrontendControllerTest extends TestCase
             ->method('initialize')
         ;
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
 
         $controller = new FrontendController();
