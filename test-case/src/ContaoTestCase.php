@@ -74,9 +74,9 @@ abstract class ContaoTestCase extends TestCase
     }
 
     /**
-     * Mocks a Symfony container and loads the Contao core extension configuration.
+     * Returns a Symfony container with the Contao core extension configuration.
      */
-    protected function mockContainer(string $projectDir = ''): ContainerBuilder
+    protected function getContainerWithContaoConfiguration(string $projectDir = ''): ContainerBuilder
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.debug', false);
@@ -98,7 +98,7 @@ abstract class ContaoTestCase extends TestCase
      * A Config adapter with the default Contao configuration will be added
      * automatically if no Config adapter is given.
      *
-     * @return ContaoFramework|MockObject
+     * @return ContaoFramework&MockObject
      */
     protected function mockContaoFramework(array $adapters = []): ContaoFramework
     {
@@ -125,7 +125,7 @@ abstract class ContaoTestCase extends TestCase
     /**
      * Mocks an adapter with the given methods.
      *
-     * @return Adapter|MockObject
+     * @return Adapter&MockObject
      */
     protected function mockAdapter(array $methods): Adapter
     {
@@ -135,7 +135,7 @@ abstract class ContaoTestCase extends TestCase
     /**
      * Mocks a configured adapter with the given methods and return values.
      *
-     * @return Adapter|MockObject
+     * @return Adapter&MockObject
      */
     protected function mockConfiguredAdapter(array $configuration): Adapter
     {
@@ -184,44 +184,6 @@ abstract class ContaoTestCase extends TestCase
                 )
             ;
         }
-
-        return $mock;
-    }
-
-    /**
-     * Mocks a class with getters and setters.
-     */
-    protected function mockClassWithGetterSetter(string $class, array $properties = []): MockObject
-    {
-        @trigger_error('Using ContaoTestCase::mockClassWithGetterSetter() has been deprecated and will no longer work in version 3; use ContaoTestCase::mockClassWithProperties() instead.', E_USER_DEPRECATED);
-
-        $mock = $this->createMock($class);
-        $mock
-            ->method('__get')
-            ->willReturnCallback(
-                static function (string $key) use (&$properties) {
-                    return $properties[$key] ?? null;
-                }
-            )
-        ;
-
-        $mock
-            ->method('__set')
-            ->willReturnCallback(
-                static function (string $key, $value) use (&$properties): void {
-                    $properties[$key] = $value;
-                }
-            )
-        ;
-
-        $mock
-            ->method('__isset')
-            ->willReturnCallback(
-                static function (string $key) use (&$properties): bool {
-                    return isset($properties[$key]);
-                }
-            )
-        ;
 
         return $mock;
     }

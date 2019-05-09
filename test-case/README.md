@@ -21,11 +21,11 @@ class MyTest extends ContaoTestCase
 Mocking the Symfony container
 -----------------------------
 
-The `mockContainer()` method mocks a Symfony container with the default
-configuration of the Contao core extension.
+The `getContainerWithContaoConfiguration()` method mocks a Symfony container
+with the default configuration of the Contao core extension.
 
 ```php
-$container = $this->mockContainer();
+$container = $this->getContainerWithContaoConfiguration();
 
 echo $container->getParameter('contao.upload_path'); // will output "files"
 ```
@@ -33,7 +33,7 @@ echo $container->getParameter('contao.upload_path'); // will output "files"
 You can also set a project directory:
 
 ```php
-$container = $this->mockContainer('/tmp');
+$container = $this->getContainerWithContaoConfiguration('/tmp');
 
 echo $container->getParameter('kernel.project_dir'); // will output "/tmp"
 echo $container->getParameter('kernel.root_dir'); // will output "/tmp/app"
@@ -106,8 +106,19 @@ This code does exactly the same as the code above.
 Mocking a class with magic properties
 -------------------------------------
 
-The `mockClassWithProperties()` method mocks a class with a magic `__get()`
-method that returns the given properties.
+The `mockClassWithProperties()` method mocks a class that uses magic `__set()`
+and `__get()` methods to manage properties.
+
+```php
+$mock = $this->mockClassWithProperties(Contao\PageModel::class);
+$mock->id = 2;
+$mock->title = 'Home';
+
+echo $mock->title; // will output "Home"
+```
+
+If the class to be mocked is read-only, you can optionally pass the properties
+as constructor argument:
 
 ```php
 $properties = [
@@ -116,16 +127,6 @@ $properties = [
 ];
 
 $mock = $this->mockClassWithProperties(Contao\PageModel::class, $properties);
-
-echo $mock->title; // will output "Home"
-```
-
-If the class also has a magic `__set()` method, you can use it like this:
-
-```php
-$mock = $this->mockClassWithProperties(Contao\PageModel::class);
-$mock->id = 2;
-$mock->title = 'Home';
 
 echo $mock->title; // will output "Home"
 ```
