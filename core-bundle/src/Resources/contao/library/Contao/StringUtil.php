@@ -586,14 +586,14 @@ class StringUtil
 
 		$evaluateExpression = function ($strExpression) use ($arrData)
 		{
-			if (!preg_match('/^([^=!<>\s]+)[ ]*([=!<>]+)(.+)$/s', $strExpression, $arrMatches))
+			if (!preg_match('/^([^=!<>\s]+) *([=!<>]+)(.+)$/s', $strExpression, $arrMatches))
 			{
 				return false;
 			}
 
 			$strToken = $arrMatches[1];
 			$strOperator = $arrMatches[2];
-			$strValue = trim($arrMatches[3], " \t");
+			$strValue = trim($arrMatches[3], ' ');
 
 			if (!\array_key_exists($strToken, $arrData))
 			{
