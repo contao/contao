@@ -18,10 +18,6 @@
     <?= $this->stylesheets ?>
     <?= $this->mooScripts ?>
     <?= $this->head ?>
-
-    <?php $this->block('html5shiv'); ?>
-      <!--[if lt IE 9]><script src="<?= $this->asset('js/html5shiv-printshiv.min.js', 'contao-components/html5shiv') ?>"></script><![endif]-->
-    <?php $this->endblock(); ?>
   <?php $this->endblock(); ?>
 
 </head>
