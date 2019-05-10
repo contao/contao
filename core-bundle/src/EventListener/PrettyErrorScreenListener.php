@@ -247,6 +247,7 @@ class PrettyErrorScreenListener
             'statusName' => Response::$statusTexts[$statusCode],
             'template' => $view,
             'base' => $event->getRequest()->getBasePath(),
+            'language' => $event->getRequest()->getLocale(),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
             'exception' => $event->getException()->getMessage(),
         ];
