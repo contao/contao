@@ -719,7 +719,6 @@ CREATE TABLE `tl_layout` (
   `modules` blob DEFAULT NULL,
   `template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `webfonts` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `picturefill` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `viewport` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `titleTag` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `cssClass` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',

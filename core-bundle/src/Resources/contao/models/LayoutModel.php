@@ -36,7 +36,6 @@ use Contao\Model\Collection;
  * @property string  $template
  * @property string  $minifyMarkup
  * @property string  $webfonts
- * @property boolean $picturefill
  * @property string  $viewport
  * @property string  $titleTag
  * @property string  $cssClass
