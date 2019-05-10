@@ -1,8 +1,8 @@
--- MySQL dump 10.17  Distrib 10.3.12-MariaDB, for osx10.14 (x86_64)
+-- MySQL dump 10.17  Distrib 10.3.14-MariaDB, for osx10.14 (x86_64)
 --
 -- Host: localhost    Database: contao_test
 -- ------------------------------------------------------
--- Server version	10.3.12-MariaDB
+-- Server version	10.3.14-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -750,7 +750,7 @@ CREATE TABLE `tl_layout` (
 
 LOCK TABLES `tl_layout` WRITE;
 /*!40000 ALTER TABLE `tl_layout` DISABLE KEYS */;
-INSERT INTO `tl_layout` VALUES (1,1,1539617638,'Default','1rw','a:2:{s:4:\"unit\";s:0:\"\";s:5:\"value\";s:0:\"\";}','','1cl','a:2:{s:4:\"unit\";s:0:\"\";s:5:\"value\";s:0:\"\";}','','a:1:{i:0;a:4:{s:5:\"title\";s:0:\"\";s:2:\"id\";s:0:\"\";s:8:\"template\";s:13:\"block_section\";s:8:\"position\";s:3:\"top\";}}','',NULL,NULL,NULL,'external_first',NULL,NULL,'a:1:{i:0;a:3:{s:3:\"mod\";s:1:\"0\";s:3:\"col\";s:4:\"main\";s:6:\"enable\";s:1:\"1\";}}','fe_page','','','','','','',NULL,'','',NULL,'','moo_local',NULL,NULL,NULL,'','','center',NULL,'1',NULL,NULL,'');
+INSERT INTO `tl_layout` VALUES (1,1,1539617638,'Default','1rw','a:2:{s:4:\"unit\";s:0:\"\";s:5:\"value\";s:0:\"\";}','','1cl','a:2:{s:4:\"unit\";s:0:\"\";s:5:\"value\";s:0:\"\";}','','a:1:{i:0;a:4:{s:5:\"title\";s:0:\"\";s:2:\"id\";s:0:\"\";s:8:\"template\";s:13:\"block_section\";s:8:\"position\";s:3:\"top\";}}','',NULL,NULL,NULL,'external_first',NULL,NULL,'a:1:{i:0;a:3:{s:3:\"mod\";s:1:\"0\";s:3:\"col\";s:4:\"main\";s:6:\"enable\";s:1:\"1\";}}','fe_page','','','','','',NULL,'','',NULL,'','moo_local',NULL,NULL,NULL,'','','center',NULL,'1',NULL,NULL,'');
 /*!40000 ALTER TABLE `tl_layout` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1810,4 +1810,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-19 10:44:51
+-- Dump completed on 2019-05-10 16:56:15
