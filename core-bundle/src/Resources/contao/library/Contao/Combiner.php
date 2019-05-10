@@ -400,13 +400,7 @@ class Combiner extends System
 		if ($arrFile['extension'] == self::SCSS)
 		{
 			$objCompiler = new Compiler();
-
-			$objCompiler->setImportPaths(array
-			(
-				$this->strRootDir . '/' . \dirname($arrFile['name']),
-				$this->strRootDir . '/vendor/contao-components/compass/css'
-			));
-
+			$objCompiler->setImportPaths($this->strRootDir . '/' . \dirname($arrFile['name']));
 			$objCompiler->setFormatter((Config::get('debugMode') ? Expanded::class : Compressed::class));
 
 			return $this->fixPaths($objCompiler->compile($content), $arrFile);
