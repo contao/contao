@@ -298,6 +298,30 @@ class StringUtilTest extends TestCase
             ['value' => 'foobar'],
             '{{iflng::en}}hi{{iflng}}{{elseifinserttag::whodoesthisanyway}}',
         ];
+
+        yield 'Test single white space characters in expressions' => [
+            'This is my {if number > 5}match{endif}',
+            ['number' => 6],
+            'This is my match',
+        ];
+
+        yield 'Test multiple white space characters in expressions' => [
+            'This is my {if email  ==  "test@foobar.com"  }match{endif}',
+            ['email' => 'test@foobar.com'],
+            'This is my match',
+        ];
+
+        yield 'Test does not support tabs in expressions' => [
+            "This is my {if number\t>\t5}match{endif}",
+            ['number' => 6],
+            'This is my ',
+        ];
+
+        yield 'Test does not support line breaks in expressions' => [
+            "This is my {if number\n>\n5}match{endif}",
+            ['number' => 6],
+            'This is my ',
+        ];
     }
 
     /**
