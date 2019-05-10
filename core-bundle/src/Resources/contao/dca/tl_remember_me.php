@@ -18,7 +18,8 @@ $GLOBALS['TL_DCA']['tl_remember_me'] = array
 		(
 			'keys' => array
 			(
-				'series' => 'primary'
+				'value' => 'primary',
+				'series' => 'index'
 			)
 		)
 	),
@@ -35,6 +36,10 @@ $GLOBALS['TL_DCA']['tl_remember_me'] = array
 			'sql'                     => "char(88) NOT NULL"
 		),
 		'lastUsed' => array
+		(
+			'sql'                     => "datetime NULL"
+		),
+		'expires' => array
 		(
 			'sql'                     => "datetime NULL"
 		),

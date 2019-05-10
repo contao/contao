@@ -458,11 +458,17 @@ services:
             - '@contao.framework'
             - '@logger'
 
-    contao.security.database_token_provider:
-        class: Contao\CoreBundle\Security\Authentication\RememberMe\DatabaseTokenProvider
+    contao.security.expiring_rememberme_services:
+        class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
         arguments:
             - '@database_connection'
-            - '%kernel.secret%'
+            - ~ # User Providers
+            - ~ # Shared Token Key
+            - ~ # Shared Provider Key
+            - ~ # Options
+            - '@logger'
+        tags:
+            - { name: monolog.logger, channel: security }
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
