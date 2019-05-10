@@ -299,21 +299,27 @@ class StringUtilTest extends TestCase
             '{{iflng::en}}hi{{iflng}}{{elseifinserttag::whodoesthisanyway}}',
         ];
 
-        yield 'Test white space in expressions (spaces only)' => [
-            'This is my {if email  ==  "test@foobar.com"}match{endif}',
+        yield 'Test single white space characters in expressions' => [
+            'This is my {if number > 5}match{endif}',
+            ['number' => 6],
+            'This is my match',
+        ];
+
+        yield 'Test multiple white space characters in expressions' => [
+            'This is my {if email  ==  "test@foobar.com"  }match{endif}',
             ['email' => 'test@foobar.com'],
             'This is my match',
         ];
 
-        yield 'Test white space in expressions (with spaces and tabs)' => [
-            "This is my {if email \t== \t\"test@foobar.com\"}match{endif}",
-            ['email' => 'test@foobar.com'],
+        yield 'Test does not support tabs in expressions' => [
+            "This is my {if number\t>\t5}match{endif}",
+            ['number' => 6],
             'This is my ',
         ];
 
-        yield 'Test white space in expressions (with spaces and line breaks)' => [
-            "This is my {if email \n== \n\"test@foobar.com\"}match{endif}",
-            ['email' => 'test@foobar.com'],
+        yield 'Test does not support line breaks in expressions' => [
+            "This is my {if number\n>\n5}match{endif}",
+            ['number' => 6],
             'This is my ',
         ];
     }
