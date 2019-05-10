@@ -31,7 +31,6 @@
         "contao-components/jquery": "^1.12 || ^2.0 || ^3.0",
         "contao-components/jquery-ui": "^1.11.4",
         "contao-components/mediabox": "^1.5",
-        "contao-components/mediaelement": "^4.1",
         "contao-components/mootools": "^1.6.0.1",
         "contao-components/simplemodal": "^2.1",
         "contao-components/swipe": "^2.0.3",

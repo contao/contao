@@ -22,8 +22,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		'markAsCopy'                  => 'media',
 		'onload_callback' => array
 		(
-			array('tl_image_size_item', 'checkPermission'),
-			array('tl_image_size_item', 'showJsLibraryHint')
+			array('tl_image_size_item', 'checkPermission')
 		),
 		'sql' => array
 		(
@@ -259,23 +258,6 @@ class tl_image_size_item extends Contao\Backend
 		$html .= "</div>\n";
 
 		return $html;
-	}
-
-	/**
-	 * Show a hint if a JavaScript library needs to be included in the page layout
-	 */
-	public function showJsLibraryHint()
-	{
-		if ($_POST || Contao\Input::get('act') != 'edit')
-		{
-			return;
-		}
-
-		// Return if the user cannot access the layout module (see #6190)
-		if (!$this->User->hasAccess('themes', 'modules') || !$this->User->hasAccess('layout', 'themes'))
-		{
-			return;
-		}
 	}
 
 	/**
