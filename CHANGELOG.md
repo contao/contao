@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Do not cache file downloads in the HTTP cache (see #460).
  * Fix the "Recreate the symlinks" maintenance task (see #462).
  * Do not inherit cache timeouts on error pages (see #231).
 
