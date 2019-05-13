@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Fix the "Recreate the symlinks" maintenance task (see #462).
  * Do not inherit cache timeouts on error pages (see #231).
 
 ## 4.4.39 (2019-04-30)
