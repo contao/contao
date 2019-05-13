@@ -3320,24 +3320,26 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Remove the entries from the database
 			if (!empty($new_records[$this->strTable]))
 			{
+				$origId = $this->id;
+				$origActiveRecord = $this->activeRecord;
 				$ids = array_map('\intval', $new_records[$this->strTable]);
 
 				foreach ($ids as $id)
 				{
-					$dataContainer = static::class;
-					$dc = new $dataContainer($this->strTable);
-					$dc->id = $id;
-
 					// Get the current record
 					$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
 											 ->limit(1)
 											 ->execute($id);
 
-					$dc->activeRecord = $objRow;
+					$this->id = $id;
+					$this->activeRecord = $objRow;
 
 					// Invalidate cache tags (no need to invalidate the parent)
-					$this->invalidateCacheTags($dc);
+					$this->invalidateCacheTags($this);
 				}
+
+				$this->id = $origId;
+				$this->activeRecord = $origActiveRecord;
 
 				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', $ids) . ") AND tstamp=0");
 
