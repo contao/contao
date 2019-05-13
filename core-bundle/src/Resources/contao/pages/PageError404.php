@@ -33,6 +33,13 @@ class PageError404 extends Frontend
 		$obj404 = $this->prepare();
 		$objPage = $obj404->loadDetails();
 
+		// Reset inherited cache timeouts (see #231)
+		if (!$objPage->includeCache)
+		{
+			$objPage->cache = 0;
+			$objPage->clientCache = 0;
+		}
+
 		/** @var PageRegular $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY']['regular']();
 
@@ -52,6 +59,13 @@ class PageError404 extends Frontend
 
 		$obj404 = $this->prepare();
 		$objPage = $obj404->loadDetails();
+
+		// Reset inherited cache timeouts (see #231)
+		if (!$objPage->includeCache)
+		{
+			$objPage->cache = 0;
+			$objPage->clientCache = 0;
+		}
 
 		/** @var PageRegular $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY']['regular']();

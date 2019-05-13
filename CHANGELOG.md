@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Do not inherit cache timeouts on error pages (see #231).
  * Correctly show redirect pages in the navigation menu (see #466).
 
 ## 4.7.5 (2019-04-30)
