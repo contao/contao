@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Do not inherit cache timeouts on error pages (see #231).
+
 ## 4.4.39 (2019-04-30)
 
  * Prevent SQL injections in the file manager search (see CVE-2019-11512).
