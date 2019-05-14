@@ -3345,7 +3345,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		{
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
 			{
-				$objIds = $this->Database->execute("SELECT c.id FROM " . $this->strTable . " c LEFT JOIN " . $ptable . " p ON c.pid=p.id WHERE ptable='" . $ptable . "' AND p.id IS NULL");
+				$objIds = $this->Database->execute("SELECT c.id FROM " . $this->strTable . " c LEFT JOIN " . $ptable . " p ON c.pid=p.id WHERE c.ptable='" . $ptable . "' AND p.id IS NULL");
 			}
 			else
 			{
@@ -3378,7 +3378,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 					if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'])
 					{
-						$objIds = $this->Database->execute("SELECT c.id FROM " . $v . " c LEFT JOIN " . $this->strTable . " p ON c.pid=p.id WHERE ptable='" . $this->strTable . "' AND p.id IS NULL");
+						$objIds = $this->Database->execute("SELECT c.id FROM " . $v . " c LEFT JOIN " . $this->strTable . " p ON c.pid=p.id WHERE c.ptable='" . $this->strTable . "' AND p.id IS NULL");
 					}
 					else
 					{
