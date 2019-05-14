@@ -23,6 +23,8 @@ if (file_exists(__DIR__.'/../autoload.php')) {
 } elseif (file_exists(__DIR__.'/../../../../autoload.php')) {
     // Package bin directory (monorepo)
     $projectDir = \dirname(\dirname(\dirname(\dirname(\dirname(__DIR__)))));
+} elseif (false !== ($cwd = getcwd()) && file_exists($cwd.'/vendor/autoload.php')) {
+    $projectDir = $cwd;
 } else {
     // Package bin directory
     $projectDir = \dirname(\dirname(\dirname(\dirname(__DIR__))));
