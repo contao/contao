@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Remove the Google+ syndication links (see #484).
  * Add a splash image to the Vimeo and YouTube elements (see #300).
  * Make the notification bell counter more visible (see #289).
  * Replace the `BE_PAGE_OFFSET` cookie with a sessionStorage entry (see #467).

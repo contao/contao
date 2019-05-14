@@ -395,7 +395,6 @@ any other hook.
   <a href="..." class="pdf"></a>
   <a href="..." class="facebook"></a>
   <a href="..." class="twitter"></a>
-  <a href="..." class="gplus"></a>
 </div>
 ```
 

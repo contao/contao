@@ -232,7 +232,6 @@ class ModuleArticle extends Module
 					$this->Template->pdfButton = \in_array('pdf', $options);
 					$this->Template->facebookButton = \in_array('facebook', $options);
 					$this->Template->twitterButton = \in_array('twitter', $options);
-					$this->Template->gplusButton = \in_array('gplus', $options);
 				}
 			}
 		}
@@ -252,7 +251,6 @@ class ModuleArticle extends Module
 			$this->Template->pdfTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['printAsPdf']);
 			$this->Template->facebookTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['facebookShare']);
 			$this->Template->twitterTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['twitterShare']);
-			$this->Template->gplusTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['gplusShare']);
 		}
 
 		// HOOK: add custom logic

@@ -1700,9 +1700,6 @@
       <trans-unit id="MSC.twitterShare">
         <source>Share on Twitter</source>
       </trans-unit>
-      <trans-unit id="MSC.gplusShare">
-        <source>Share on Google+</source>
-      </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
       </trans-unit>

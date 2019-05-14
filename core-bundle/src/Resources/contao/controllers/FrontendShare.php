@@ -41,12 +41,6 @@ class FrontendShare extends Frontend
 						. '?url=' . rawurlencode(Input::get('u', true))
 						. '&text=' . rawurlencode(Input::get('t', true))
 				);
-
-			case 'gplus':
-				return new RedirectResponse(
-					'https://plus.google.com/share'
-						. '?url=' . rawurlencode(Input::get('u', true))
-				);
 		}
 
 		return new RedirectResponse('../');
