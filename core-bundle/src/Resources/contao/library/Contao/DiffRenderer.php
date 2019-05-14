@@ -56,7 +56,7 @@ class DiffRenderer extends \Diff_Renderer_Html_Array
 				{
 					foreach ($change['base']['lines'] as $line)
 					{
-						$html .= "\n  " . '<dt class="' . $change['tag'] . ' left">' . ($line ? $this->decodeEntities($line) : '&nbsp;') . '</dt>';
+						$html .= "\n  " . '<dt class="' . $change['tag'] . ' left">' . ($line ? $this->specialchars($line) : '&nbsp;') . '</dt>';
 					}
 
 				}
@@ -66,7 +66,7 @@ class DiffRenderer extends \Diff_Renderer_Html_Array
 				{
 					foreach ($change['changed']['lines'] as $line)
 					{
-						$html .= "\n " . '<dt class="' . $change['tag'] . ' right"><ins>' . ($line ? $this->decodeEntities($line) : '&nbsp;') . '</ins></dt>';
+						$html .= "\n " . '<dt class="' . $change['tag'] . ' right"><ins>' . ($line ? $this->specialchars($line) : '&nbsp;') . '</ins></dt>';
 					}
 				}
 
@@ -75,7 +75,7 @@ class DiffRenderer extends \Diff_Renderer_Html_Array
 				{
 					foreach ($change['base']['lines'] as $line)
 					{
-						$html .= "\n  " . '<dt class="' . $change['tag'] . ' left"><del>' . ($line ? $this->decodeEntities($line) : '&nbsp;') . '</del></dt>';
+						$html .= "\n  " . '<dt class="' . $change['tag'] . ' left"><del>' . ($line ? $this->specialchars($line) : '&nbsp;') . '</del></dt>';
 					}
 				}
 
@@ -84,12 +84,12 @@ class DiffRenderer extends \Diff_Renderer_Html_Array
 				{
 					foreach ($change['base']['lines'] as $line)
 					{
-						$html .= "\n  " . '<dt class="' . $change['tag'] . ' left"><span>' . ($line ? $this->decodeEntities($line) : '&nbsp;') . '</span></dt>';
+						$html .= "\n  " . '<dt class="' . $change['tag'] . ' left"><span>' . ($line ? $this->specialchars($line) : '&nbsp;') . '</span></dt>';
 					}
 
 					foreach ($change['changed']['lines'] as $line)
 					{
-						$html .= "\n  " . '<dd class="' . $change['tag'] . ' right"><span>' . ($line ? $this->decodeEntities($line) : '&nbsp;') . '</span></dd>';
+						$html .= "\n  " . '<dd class="' . $change['tag'] . ' right"><span>' . ($line ? $this->specialchars($line) : '&nbsp;') . '</span></dd>';
 					}
 				}
 			}
@@ -101,17 +101,17 @@ class DiffRenderer extends \Diff_Renderer_Html_Array
 	}
 
 	/**
-	 * Decodes entities and escapes specialchars (except <ins> and <del>)
+	 * Converts special characters to HTML entities preserving <ins> and <del> tags
 	 *
 	 * @param string $line
 	 *
 	 * @return string
 	 */
-	private function decodeEntities($line)
+	private function specialchars($line)
 	{
 		if ($this->options['decodeEntities'])
 		{
-			$line = StringUtil::specialchars(StringUtil::decodeEntities($line));
+			$line = StringUtil::specialchars($line);
 			$line = str_replace(array('&lt;ins&gt;', '&lt;/ins&gt;', '&lt;del&gt;', '&lt;/del&gt;'), array('<ins>', '</ins>', '<del>', '</del>'), $line);
 		}
 
