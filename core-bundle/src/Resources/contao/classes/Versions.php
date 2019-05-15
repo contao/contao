@@ -541,6 +541,13 @@ class Versions extends \Controller
 							$from[$k] = \Date::parse(\Config::get('datimFormat'), $from[$k] ?: '');
 						}
 
+						// Decode entities if the "decodeEntities" flag is not set (see #360)
+						if (empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['decodeEntities']))
+						{
+							$to[$k] = StringUtil::decodeEntities($to[$k]);
+							$from[$k] = StringUtil::decodeEntities($from[$k]);
+						}
+
 						// Convert strings into arrays
 						if (!\is_array($to[$k]))
 						{
