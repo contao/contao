@@ -56,7 +56,7 @@ class DiffRenderer extends \Diff_Renderer_Html_Array
 				{
 					foreach ($change['base']['lines'] as $line)
 					{
-						$html .= "\n  " . '<dt class="' . $change['tag'] . ' left">' . ($line ? $this->specialchars($line) : '&nbsp;') . '</dt>';
+						$html .= "\n  " . '<dt class="' . $change['tag'] . ' left">' . ($line ?: '&nbsp;') . '</dt>';
 					}
 
 				}
@@ -66,7 +66,7 @@ class DiffRenderer extends \Diff_Renderer_Html_Array
 				{
 					foreach ($change['changed']['lines'] as $line)
 					{
-						$html .= "\n " . '<dt class="' . $change['tag'] . ' right"><ins>' . ($line ? $this->specialchars($line) : '&nbsp;') . '</ins></dt>';
+						$html .= "\n " . '<dt class="' . $change['tag'] . ' right"><ins>' . ($line ?: '&nbsp;') . '</ins></dt>';
 					}
 				}
 
@@ -75,7 +75,7 @@ class DiffRenderer extends \Diff_Renderer_Html_Array
 				{
 					foreach ($change['base']['lines'] as $line)
 					{
-						$html .= "\n  " . '<dt class="' . $change['tag'] . ' left"><del>' . ($line ? $this->specialchars($line) : '&nbsp;') . '</del></dt>';
+						$html .= "\n  " . '<dt class="' . $change['tag'] . ' left"><del>' . ($line ?: '&nbsp;') . '</del></dt>';
 					}
 				}
 
@@ -84,12 +84,12 @@ class DiffRenderer extends \Diff_Renderer_Html_Array
 				{
 					foreach ($change['base']['lines'] as $line)
 					{
-						$html .= "\n  " . '<dt class="' . $change['tag'] . ' left"><span>' . ($line ? $this->specialchars($line) : '&nbsp;') . '</span></dt>';
+						$html .= "\n  " . '<dt class="' . $change['tag'] . ' left"><span>' . ($line ?: '&nbsp;') . '</span></dt>';
 					}
 
 					foreach ($change['changed']['lines'] as $line)
 					{
-						$html .= "\n  " . '<dd class="' . $change['tag'] . ' right"><span>' . ($line ? $this->specialchars($line) : '&nbsp;') . '</span></dd>';
+						$html .= "\n  " . '<dd class="' . $change['tag'] . ' right"><span>' . ($line ?: '&nbsp;') . '</span></dd>';
 					}
 				}
 			}
@@ -98,23 +98,5 @@ class DiffRenderer extends \Diff_Renderer_Html_Array
 		$html .= "\n</dl>\n</div>\n";
 
 		return $html;
-	}
-
-	/**
-	 * Converts special characters to HTML entities preserving <ins> and <del> tags
-	 *
-	 * @param string $line
-	 *
-	 * @return string
-	 */
-	private function specialchars($line)
-	{
-		if ($this->options['decodeEntities'])
-		{
-			$line = StringUtil::specialchars($line);
-			$line = str_replace(array('&lt;ins&gt;', '&lt;/ins&gt;', '&lt;del&gt;', '&lt;/del&gt;'), array('<ins>', '</ins>', '<del>', '</del>'), $line);
-		}
-
-		return $line;
 	}
 }
