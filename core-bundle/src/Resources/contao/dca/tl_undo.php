@@ -52,9 +52,9 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		),
 		'label' => array
 		(
-			'fields'                  => array('tstamp', 'query'),
-			'format'                  => '<span style="color:#999;padding-right:3px">[%s]</span>%s',
-			'label_callback'          => array('tl_undo', 'ellipsis')
+			'fields'                  => array('tstamp', 'pid', 'fromTable', 'query'),
+			'showColumns'             => true,
+			'label_callback'          => array('tl_undo', 'labelCallback')
 		),
 		'operations' => array
 		(
@@ -218,16 +218,17 @@ class tl_undo extends Backend
 		return $data;
 	}
 
-	/**
-	 * Add the surrounding ellipsis layer
-	 *
-	 * @param array  $row
-	 * @param string $label
-	 *
-	 * @return string
-	 */
-	public function ellipsis($row, $label)
+	public function labelCallback($row, $label, \DataContainer $dc, $args)
 	{
-		return '<div class="ellipsis">' . $label . '</div>';
+        $args[0] = sprintf('<span style="color:#999;padding-right:3px">%s</span>', $args[0]);
+
+        // Fetch username
+        $user = \Contao\UserModel::findById($args[1]);
+
+        if ($user !== null) {
+            $args[1] = $user->username;
+        }
+
+        return $args;
 	}
 }
