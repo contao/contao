@@ -47,8 +47,8 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'sorting' => array
 		(
 			'mode'                    => 2,
-			'fields'                  => array('tstamp'),
-			'panelLayout'             => 'sort,search,limit'
+			'fields'                  => array('tstamp DESC'),
+			'panelLayout'             => 'filter;sort,search,limit'
 		),
 		'label' => array
 		(
@@ -81,6 +81,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'pid' => array
 		(
 			'sorting'                 => true,
+			'filter'                  => true,
 			'foreignKey'              => 'tl_user.name',
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
@@ -94,7 +95,8 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'fromTable' => array
 		(
 			'sorting'                 => true,
-			'sql'                     => "varchar(255) NOT NULL default ''"
+            'filter'                  => true,
+            'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'query' => array
 		(
