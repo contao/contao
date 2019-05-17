@@ -220,14 +220,21 @@ class tl_undo extends Backend
 
 	public function labelCallback($row, $label, \DataContainer $dc, $args)
 	{
+        $table = $args[2];
+	    \Contao\System::loadLanguageFile($table);
+
+	    // Date
         $args[0] = sprintf('<span style="color:#999;padding-right:3px">%s</span>', $args[0]);
 
-        // Fetch username
+        // Username
         $user = \Contao\UserModel::findById($args[1]);
 
         if ($user !== null) {
             $args[1] = $user->username;
         }
+
+        // fromTable
+        $args[2] = ($GLOBALS['TL_LANG'][$table][$table]) ?: $args[2];
 
         return $args;
 	}
