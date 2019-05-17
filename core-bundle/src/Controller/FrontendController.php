@@ -101,4 +101,26 @@ class FrontendController extends AbstractController
     {
         throw new LogoutException('The user was not logged out correctly.');
     }
+
+    /**
+     * Generates a 1px transparent png image uncacheable response.
+     * This route can be used to include in e.g. a hidden <img> tag to force
+     * a request to the application. That way, cookies can be set even if
+     * the output is cached (used in core for the RememberMe cookie if
+     * the checkbox alwaysLoadFromCache is set).
+     *
+     * @Route("/_contao/check_cookies", name="contao_frontend_check_cookies")
+     */
+    public function checkCookiesAction(): Response
+    {
+        static $image = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+
+        $response = new Response(base64_decode($image));
+        $response->setPrivate();
+        $response->headers->set('Content-Type', 'image/png');
+        $response->headers->addCacheControlDirective('no-store');
+        $response->headers->addCacheControlDirective('must-revalidate');
+
+        return $response;
+    }
 }
