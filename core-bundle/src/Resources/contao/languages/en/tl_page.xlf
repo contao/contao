@@ -2,6 +2,9 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_page.php" source-language="en">
     <body>
+      <trans-unit id="tl_page.tl_page">
+        <source>Page</source>
+      </trans-unit>
       <trans-unit id="tl_page.title.0">
         <source>Page name</source>
       </trans-unit>

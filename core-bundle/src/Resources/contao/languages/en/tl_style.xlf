@@ -2,6 +2,9 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_style.php" source-language="en">
     <body>
+      <trans-unit id="tl_style.tl_style">
+        <source>Style</source>
+      </trans-unit>
       <trans-unit id="tl_style.invisible.0">
         <source>Invisible</source>
       </trans-unit>

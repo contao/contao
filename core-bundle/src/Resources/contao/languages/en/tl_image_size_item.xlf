@@ -2,6 +2,9 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_image_size_item.php" source-language="en">
     <body>
+      <trans-unit id="tl_image_size_item.tl_image_size_item">
+        <source>Image size item</source>
+      </trans-unit>
       <trans-unit id="tl_image_size_item.media.0">
         <source>Media query</source>
       </trans-unit>

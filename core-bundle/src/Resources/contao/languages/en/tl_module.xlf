@@ -2,6 +2,9 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_module.php" source-language="en">
     <body>
+      <trans-unit id="tl_module.tl_module">
+        <source>Module</source>
+      </trans-unit>
       <trans-unit id="tl_module.name.0">
         <source>Title</source>
       </trans-unit>
