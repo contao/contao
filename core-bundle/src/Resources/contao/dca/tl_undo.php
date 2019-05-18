@@ -52,7 +52,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		),
 		'label' => array
 		(
-			'fields'                  => array('tstamp', 'pid', 'fromTable', 'query'),
+			'fields'                  => array('tstamp', 'pid', 'fromTable', 'description'),
 			'showColumns'             => true,
 			'label_callback'          => array('tl_undo', 'labelCallback')
 		),
@@ -102,6 +102,11 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		(
 			'sql'                     => "text NULL"
 		),
+        'description' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['description'],
+            'sql'                     => "text NULL"
+        ),
 		'affectedRows' => array
 		(
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"

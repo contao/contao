@@ -53,6 +53,10 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			'headerFields'            => array('name', 'tstamp', 'width', 'height', 'resizeMode', 'zoom'),
 			'child_record_callback'   => array('tl_image_size_item', 'listImageSizeItem')
 		),
+        'restore' => array
+        (
+            'label_callback' => array('tl_image_size_item', 'restoreLabelCallback')
+        ),
 		'global_operations' => array
 		(
 			'all' => array
@@ -409,4 +413,16 @@ class tl_image_size_item extends Backend
 			$dc->invalidateCacheTags();
 		}
 	}
+
+    public function restoreLabelCallback($row)
+    {
+        $parent = 'PID ' . $row['pid'];
+
+        $imageSize = ImageSizeModel::findById($row['pid']);
+        if ($imageSize !== null) {
+            $parent = $imageSize->name;
+        }
+
+        return sprintf('%s (%s)', $row['media'], $parent);
+    }
 }
