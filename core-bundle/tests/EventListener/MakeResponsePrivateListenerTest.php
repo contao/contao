@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\CoreBundle\EventListener\CacheListener;
+use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class CacheListenerTest extends TestCase
+class MakeResponsePrivateListenerTest extends TestCase
 {
     public function testIgnoresSubRequests(): void
     {
@@ -38,7 +38,7 @@ class CacheListenerTest extends TestCase
             $response
         );
 
-        $listener = new CacheListener();
+        $listener = new MakeResponsePrivateListener();
         $listener->onKernelResponse($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
@@ -57,7 +57,7 @@ class CacheListenerTest extends TestCase
             $response
         );
 
-        $listener = new CacheListener();
+        $listener = new MakeResponsePrivateListener();
         $listener->onKernelResponse($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
@@ -84,7 +84,7 @@ class CacheListenerTest extends TestCase
             $response
         );
 
-        $listener = new CacheListener();
+        $listener = new MakeResponsePrivateListener();
         $listener->onKernelResponse($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
@@ -103,7 +103,7 @@ class CacheListenerTest extends TestCase
             $response
         );
 
-        $listener = new CacheListener();
+        $listener = new MakeResponsePrivateListener();
         $listener->onKernelResponse($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
@@ -124,7 +124,7 @@ class CacheListenerTest extends TestCase
             $response
         );
 
-        $listener = new CacheListener();
+        $listener = new MakeResponsePrivateListener();
         $listener->onKernelResponse($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
@@ -145,7 +145,7 @@ class CacheListenerTest extends TestCase
             $response
         );
 
-        $listener = new CacheListener();
+        $listener = new MakeResponsePrivateListener();
         $listener->onKernelResponse($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('public'));

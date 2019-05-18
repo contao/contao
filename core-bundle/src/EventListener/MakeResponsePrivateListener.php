@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
-class CacheListener
+class MakeResponsePrivateListener
 {
     /**
      * Make sure the current response becomes a private response if any of the following

@@ -35,7 +35,7 @@ use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\EventListener\BackendMenuListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
-use Contao\CoreBundle\EventListener\CacheListener;
+use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
@@ -311,13 +311,13 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(6, $tags['kernel.event_listener'][0]['priority']);
     }
 
-    public function testRegistersTheCacheListener(): void
+    public function testRegistersTheMakeResponsePrivateListener(): void
     {
-        $this->assertTrue($this->container->has('contao.listener.cache'));
+        $this->assertTrue($this->container->has('contao.listener.make_response_private'));
 
-        $definition = $this->container->getDefinition('contao.listener.cache');
+        $definition = $this->container->getDefinition('contao.listener.make_response_private');
 
-        $this->assertSame(CacheListener::class, $definition->getClass());
+        $this->assertSame(MakeResponsePrivateListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
         $tags = $definition->getTags();
