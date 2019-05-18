@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\GenerateDescriptorEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
@@ -1524,8 +1526,19 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		$this->import(BackendUser::class, 'User');
 
-		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data) VALUES (?, ?, ?, ?, ?, ?)")
-									  ->execute($this->User->id, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
+        $event = new GenerateDescriptorEvent($this->strTable, $data[$this->strTable][0], [
+            'fields' => $GLOBALS['TL_DCA'][$this->strTable]['list']['restore']['fields'],
+            'format' => $GLOBALS['TL_DCA'][$this->strTable]['list']['restore']['format']
+        ]);
+        System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::GENERATE_DESCRIPTOR, $event);
+
+        // Use ID as fallback
+        if (($descriptor = $event->getDescriptor()) === null) {
+            $descriptor = 'ID' . $data[$this->strTable][0]['id'];
+        }
+
+		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data, description) VALUES (?, ?, ?, ?, ?, ?, ?)")
+									  ->execute($this->User->id, time(), $this->strTable, 'DELETE FROM '.$this->strTable.' WHERE id='.$this->intId, $affected, serialize($data), $descriptor);
 
 		// Delete the records
 		if ($objUndoStmt->affectedRows)
