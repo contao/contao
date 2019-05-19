@@ -18,7 +18,7 @@ class GenerateContentDescriptorListener
         $data = $event->getData();
         $descriptor = null;
 
-        // TODO: Determine best descriptor for content element
+        // TODO: Determine best descriptor for each content element
 
         $event->setDescriptor($descriptor);
     }

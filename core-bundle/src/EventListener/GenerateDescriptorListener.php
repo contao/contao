@@ -52,7 +52,7 @@ class GenerateDescriptorListener
 
     private function getFallbackDescriptor(array $row): ?string
     {
-        foreach (['title', 'name', 'headline', 'email', 'username'] as $key) {
+        foreach ([ 'title', 'username', 'email', 'name', 'headline' ] as $key) {
             if (!empty($row[$key])) {
                 return $row[$key];
             }
