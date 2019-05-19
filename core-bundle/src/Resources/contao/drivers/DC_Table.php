@@ -1534,7 +1534,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
         // Use ID as fallback
         if (($descriptor = $event->getDescriptor()) === null) {
-            $descriptor = 'ID' . $data[$this->strTable][0]['id'];
+            $descriptor = 'ID ' . $data[$this->strTable][0]['id'];
         }
 
 		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data, description) VALUES (?, ?, ?, ?, ?, ?, ?)")

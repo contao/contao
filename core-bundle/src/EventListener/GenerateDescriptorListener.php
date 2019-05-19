@@ -13,17 +13,17 @@ class GenerateDescriptorListener
     public function onDescriptorGeneration(GenerateDescriptorEvent $event): void
     {
         $this->options = $event->getOptions();
-        $data = $event->getData();
+        $row = $event->getData();
         $descriptor = null;
 
         // Get description by defined fields and format
         if (isset($this->options['fields'])) {
-            $descriptor = $this->getDescriptorFromFields($data);
+            $descriptor = $this->getDescriptorFromFields($row);
         }
 
-        // Fallback: Get title, name, headline or id as description
+        // Fallback: Check for some often used fields
         if ($descriptor === null) {
-            $descriptor = $this->getFallbackDescriptor($data);
+            $descriptor = $this->getFallbackDescriptor($row);
         }
 
         $event->setDescriptor($descriptor);
@@ -40,7 +40,7 @@ class GenerateDescriptorListener
         }
 
         $fields = array_map(function($field) use($row) {
-            $values[] = $row[$field];
+            return $row[$field];
         }, $fields);
 
         if ($format === null) {
@@ -52,7 +52,7 @@ class GenerateDescriptorListener
 
     private function getFallbackDescriptor(array $row): ?string
     {
-        foreach (['title', 'name', 'headline'] as $key) {
+        foreach (['title', 'name', 'headline', 'email', 'username'] as $key) {
             if (!empty($row[$key])) {
                 return $row[$key];
             }
