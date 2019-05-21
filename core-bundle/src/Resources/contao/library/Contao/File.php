@@ -772,6 +772,8 @@ class File extends System
 	public function sendToBrowser($filename='', $inline=false)
 	{
 		$response = new BinaryFileResponse($this->strRootDir . '/' . $this->strFile);
+		$response->setPrivate(); // public by default
+		$response->setAutoEtag();
 
 		$response->setContentDisposition
 		(
@@ -781,8 +783,6 @@ class File extends System
 		);
 
 		$response->headers->addCacheControlDirective('must-revalidate');
-		$response->headers->addCacheControlDirective('post-check', 0);
-		$response->headers->addCacheControlDirective('pre-check', 0);
 		$response->headers->set('Connection', 'close');
 
 		throw new ResponseException($response);

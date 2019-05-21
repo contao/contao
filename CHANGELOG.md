@@ -2,6 +2,9 @@
 
 ## DEV
 
+ * Ignore the query string when marking pages as "active" (see #480).
+ * Do not cache file downloads in the HTTP cache (see #460).
+ * Fix the "Recreate the symlinks" maintenance task (see #462).
  * Do not inherit cache timeouts on error pages (see #231).
  * Correctly show redirect pages in the navigation menu (see #466).
 

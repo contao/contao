@@ -365,8 +365,11 @@ abstract class Module extends Frontend
 				$row = $objSubpage->row();
 				$trail = \in_array($objSubpage->id, $objPage->trail);
 
+				// Use the path without query string to check for active pages (see #480)
+				list($path) = explode('?', \Environment::get('request'), 2);
+
 				// Active page
-				if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == Environment::get('request'))
+				if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == $path)
 				{
 					// Mark active forward pages (see #4822)
 					$strClass = (($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) ? 'forward' . ($trail ? ' trail' : '') : 'active') . (($subitems != '') ? ' submenu' : '') . ($objSubpage->protected ? ' protected' : '') . (($objSubpage->cssClass != '') ? ' ' . $objSubpage->cssClass : '');

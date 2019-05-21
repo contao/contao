@@ -125,7 +125,7 @@ class PageRegular extends Frontend
 		// Get all modules in a single DB query
 		$objModules = ModuleModel::findMultipleByIds($arrModuleIds);
 
-		if ($objModules !== null || $arrModules[0]['mod'] == 0) // see #4137
+		if ($objModules !== null || \in_array(0, $arrModuleIds)) // see #4137
 		{
 			$arrMapper = array();
 
