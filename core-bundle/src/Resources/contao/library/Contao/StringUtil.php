@@ -107,7 +107,7 @@ class StringUtil
 		$intCharCount = 0;
 		$arrOpenTags = array();
 		$arrTagBuffer = array();
-		$arrEmptyTags = array('area', 'base', 'br', 'col', 'hr', 'img', 'input', 'frame', 'link', 'meta', 'param');
+		$arrEmptyTags = array('area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr');
 
 		$strString = preg_replace('/[\t\n\r]+/', ' ', $strString);
 		$strString = strip_tags($strString, Config::get('allowedTags'));

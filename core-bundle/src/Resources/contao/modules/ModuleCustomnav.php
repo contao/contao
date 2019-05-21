@@ -162,8 +162,11 @@ class ModuleCustomnav extends Module
 
 				$trail = \in_array($objModel->id, $objPage->trail);
 
+				// Use the path without query string to check for active pages (see #480)
+				list($path) = explode('?', \Environment::get('request'), 2);
+
 				// Active page
-				if ($objPage->id == $objModel->id && $href == Environment::get('request'))
+				if ($objPage->id == $objModel->id && $href == $path)
 				{
 					$strClass = trim($objModel->cssClass);
 					$row = $objModel->row();

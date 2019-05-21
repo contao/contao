@@ -3313,24 +3313,26 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Remove the entries from the database
 			if (!empty($new_records[$this->strTable]))
 			{
+				$origId = $this->id;
+				$origActiveRecord = $this->activeRecord;
 				$ids = array_map('\intval', $new_records[$this->strTable]);
 
 				foreach ($ids as $id)
 				{
-					$dataContainer = static::class;
-					$dc = new $dataContainer($this->strTable);
-					$dc->id = $id;
-
 					// Get the current record
 					$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
 											 ->limit(1)
 											 ->execute($id);
 
-					$dc->activeRecord = $objRow;
+					$this->id = $id;
+					$this->activeRecord = $objRow;
 
 					// Invalidate cache tags (no need to invalidate the parent)
-					$this->invalidateCacheTags($dc);
+					$this->invalidateCacheTags($this);
 				}
+
+				$this->id = $origId;
+				$this->activeRecord = $origActiveRecord;
 
 				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', $ids) . ") AND tstamp=0");
 
@@ -3358,16 +3360,21 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
 			{
-				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE ptable='" . $ptable . "' AND NOT EXISTS (SELECT * FROM " . $ptable . " WHERE " . $this->strTable . ".pid = " . $ptable . ".id)");
+				$objIds = $this->Database->execute("SELECT c.id FROM " . $this->strTable . " c LEFT JOIN " . $ptable . " p ON c.pid=p.id WHERE c.ptable='" . $ptable . "' AND p.id IS NULL");
 			}
 			else
 			{
-				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE NOT EXISTS (SELECT * FROM " . $ptable . " WHERE " . $this->strTable . ".pid = " . $ptable . ".id)");
+				$objIds = $this->Database->execute("SELECT c.id FROM " . $this->strTable . " c LEFT JOIN " . $ptable . " p ON c.pid=p.id WHERE p.id IS NULL");
 			}
 
-			if ($objStmt->affectedRows > 0)
+			if ($objIds->numRows)
 			{
-				$reload = true;
+				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', array_map('\intval', $objIds->fetchEach('id'))) . ")");
+
+				if ($objStmt->affectedRows > 0)
+				{
+					$reload = true;
+				}
 			}
 		}
 
@@ -3386,16 +3393,21 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 					if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'])
 					{
-						$objStmt = $this->Database->execute("DELETE FROM $v WHERE ptable='" . $this->strTable . "' AND NOT EXISTS (SELECT * FROM " . $this->strTable . " WHERE $v.pid = " . $this->strTable . ".id)");
+						$objIds = $this->Database->execute("SELECT c.id FROM " . $v . " c LEFT JOIN " . $this->strTable . " p ON c.pid=p.id WHERE c.ptable='" . $this->strTable . "' AND p.id IS NULL");
 					}
 					else
 					{
-						$objStmt = $this->Database->execute("DELETE FROM $v WHERE NOT EXISTS (SELECT * FROM " . $this->strTable . " WHERE $v.pid = " . $this->strTable . ".id)");
+						$objIds = $this->Database->execute("SELECT c.id FROM " . $v . " c LEFT JOIN " . $this->strTable . " p ON c.pid=p.id WHERE p.id IS NULL");
 					}
 
-					if ($objStmt->affectedRows > 0)
+					if ($objIds->numRows)
 					{
-						$reload = true;
+						$objStmt = $this->Database->execute("DELETE FROM " . $v . " WHERE id IN(" . implode(',', array_map('\intval', $objIds->fetchEach('id'))) . ")");
+
+						if ($objStmt->affectedRows > 0)
+						{
+							$reload = true;
+						}
 					}
 				}
 			}

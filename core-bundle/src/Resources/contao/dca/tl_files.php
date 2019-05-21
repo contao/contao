@@ -241,6 +241,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'eval'                    => array
 			(
 				'allowHtml'           => true,
+				'multiple'            => true,
 				'metaFields'          => array
 				(
 					'title'           => 'maxlength="255"',
