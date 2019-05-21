@@ -3,10 +3,11 @@
     <body>
       <trans-unit id="tl_layout.calendarfeeds.0">
         <source>Calendar feeds</source>
-        <target>Takvim akışları</target>
+        <target>Takvim beslemeleri</target>
       </trans-unit>
       <trans-unit id="tl_layout.calendarfeeds.1">
         <source>Please select the calendar feeds you want to add to the layout.</source>
+        <target>Lütfen sayfa düzeneğine eklemek istediğiniz takvim beslemelerini seçiniz.</target>
       </trans-unit>
       <trans-unit id="tl_layout.feed_legend">
         <source>RSS/Atom feeds</source>
