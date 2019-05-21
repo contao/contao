@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.7.6 (2019-05-21)
 
  * Ignore the query string when marking pages as "active" (see #480).
  * Do not cache file downloads in the HTTP cache (see #460).

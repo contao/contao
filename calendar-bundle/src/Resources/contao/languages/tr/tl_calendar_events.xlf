@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
         <source>Leave blank to create an open-ended event.</source>
+        <target>Bitişi açık olan bir etkinlik için boş bırak.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>
@@ -82,15 +83,19 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
+        <target>Yer adı</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.1">
         <source>Here you can enter the name of the event location.</source>
+        <target>Buraya etkinliğin gerçekleşeceği yerin adını girebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.address.0">
         <source>Location address</source>
+        <target>Yer adresi</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.address.1">
         <source>Here you can enter the address of the event location.</source>
+        <target>Buraya etkinliğin gerçekleşeceği yerin adresini girebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.0">
         <source>Event teaser</source>
@@ -198,6 +203,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
+        <target>Ziyaretçiler &quot;Devamını oku ...&quot; butonuna tıklayarak, başka bir sayfaya yönlendirileceklerdir.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
