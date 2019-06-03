@@ -36,6 +36,11 @@ class MakeResponsePrivateListener
         $request = $event->getRequest();
         $response = $event->getResponse();
 
+        // If the response is not cacheable for a reverse proxy, we don't have to do anything anyway
+        if (!$response->isCacheable()) {
+            return;
+        }
+
         // 1. If the session was started.
         if (null !== ($session = $request->getSession()) && $session->isStarted()) {
             $response->setPrivate();
