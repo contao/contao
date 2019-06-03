@@ -348,7 +348,7 @@ class FrontendTemplate extends Template
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		// Do not cache response if caching was not configured at all and make sure the response is private.
+		// Do not cache response if caching was not configured at all or disabled explicitly and make sure the response is private.
 		if (($objPage->cache === false || $objPage->cache < 1) && ($objPage->clientCache === false || $objPage->clientCache < 1))
 		{
 			$response->headers->set('Cache-Control', 'no-cache, no-store');
