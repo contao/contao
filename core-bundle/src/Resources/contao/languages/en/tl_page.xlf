@@ -180,7 +180,7 @@
         <source>Always load from shared cache (server cache)</source>
       </trans-unit>
       <trans-unit id="tl_page.alwaysLoadFromCache.1">
-        <source>Always load this page from the shared cache, even if a member is logged in. (Note that you can no longer personalize the page for logged in members in this case.)</source>
+        <source>Always load this page from the shared cache, even if a member is logged in. Note that you can no longer personalize the page for logged in members in this case!</source>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
         <source>Private cache (client cache) timeout</source>
