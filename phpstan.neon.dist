@@ -1,9 +1,3 @@
-includes:
-    - vendor/phpstan/phpstan-phpunit/extension.neon
-    - vendor/phpstan/phpstan-phpunit/rules.neon
-    - vendor/contao/phpstan/extension.neon
-    - vendor/phpstan/phpstan-symfony/extension.neon
-
 parameters:
     bootstrap: %currentWorkingDirectory%/vendor/autoload.php
 
