@@ -239,7 +239,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
                 'DELETE FROM tl_remember_me WHERE lastUsed<:lastUsed OR expires<:expires',
                 [
                     'lastUsed' => (new \DateTime())->sub(new \DateInterval('PT'.$this->options['lifetime'].'S')),
-                    'expires' => (new \DateTime())->sub(new \DateInterval('PT3600S')),
+                    'expires' => (new \DateTime())->sub(new \DateInterval('PT300S')),
                 ],
                 [
                     'lastUsed' => DoctrineType::DATETIME,
