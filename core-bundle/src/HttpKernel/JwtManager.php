@@ -161,6 +161,6 @@ class JwtManager
             return null;
         }
 
-        return $token->getClaims();
+        return array_map('strval', $token->getClaims());
     }
 }

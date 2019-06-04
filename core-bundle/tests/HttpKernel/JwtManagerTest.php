@@ -33,12 +33,12 @@ class JwtManagerTest extends ContaoTestCase
     {
         parent::setUp();
 
-        $this->jwtManager = new JwtManager($this->getTempDir());
+        $this->jwtManager = new JwtManager(static::getTempDir());
     }
 
     public function testCreatesASecret(): void
     {
-        $this->assertFileExists($this->getTempDir().'/var/jwt_secret');
+        $this->assertFileExists(static::getTempDir().'/var/jwt_secret');
     }
 
     public function testThrowsAnExceptionIfThereIsNoCookie(): void
