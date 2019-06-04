@@ -114,7 +114,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
             return $response;
         }
 
-        $jwtManager = $request->attributes->get(JwtManager::ATTRIBUTE);
+        $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
 
         if ($jwtManager instanceof JwtManager) {
             $jwtManager->addResponseCookie($response, ['debug' => false]);

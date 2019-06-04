@@ -149,7 +149,7 @@ class LogoutSuccessHandlerTest extends TestCase
         ;
 
         $request = new Request();
-        $request->attributes->set(JwtManager::ATTRIBUTE, $jwtManager);
+        $request->attributes->set(JwtManager::REQUEST_ATTRIBUTE, $jwtManager);
 
         $httpUtils = $this->createMock(HttpUtils::class);
         $httpUtils
@@ -181,7 +181,7 @@ class LogoutSuccessHandlerTest extends TestCase
         ;
 
         $request = new Request();
-        $request->attributes->set(JwtManager::ATTRIBUTE, $jwtManager);
+        $request->attributes->set(JwtManager::REQUEST_ATTRIBUTE, $jwtManager);
 
         $httpUtils = $this->createMock(HttpUtils::class);
         $httpUtils

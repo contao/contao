@@ -105,7 +105,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $request = new Request();
-        $request->attributes->set(JwtManager::ATTRIBUTE, $jwtManager);
+        $request->attributes->set(JwtManager::REQUEST_ATTRIBUTE, $jwtManager);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -127,7 +127,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         ;
 
         $request = new Request();
-        $request->attributes->set(JwtManager::ATTRIBUTE, $jwtManager);
+        $request->attributes->set(JwtManager::REQUEST_ATTRIBUTE, $jwtManager);
 
         $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);

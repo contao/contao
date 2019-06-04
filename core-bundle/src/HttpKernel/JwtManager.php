@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class JwtManager
 {
-    public const ATTRIBUTE = '_jwtManager';
+    public const REQUEST_ATTRIBUTE = '_jwtManager';
     public const COOKIE_NAME = '_contao_preview';
 
     /**
@@ -73,7 +73,7 @@ class JwtManager
 
     public function parseRequest(Request $request): ?array
     {
-        $request->attributes->set(self::ATTRIBUTE, $this);
+        $request->attributes->set(self::REQUEST_ATTRIBUTE, $this);
 
         if ($request->cookies->has(self::COOKIE_NAME)) {
             try {
