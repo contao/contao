@@ -33,24 +33,41 @@ class JwtManager
     private $signer;
 
     /**
+     * @var Builder
+     */
+    private $builder;
+
+    /**
+     * @var Parser
+     */
+    private $parser;
+
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
      * @var string
      */
     private $secret;
 
-    public function __construct(string $projectDir, Signer $signer = null)
+    public function __construct(string $projectDir, Signer $signer = null, Builder $builder = null, Parser $parser = null, Filesystem $filesystem = null)
     {
         $this->signer = $signer ?: new Sha256();
+        $this->builder = $builder ?: new Builder();
+        $this->parser = $parser ?: new Parser();
+        $this->filesystem = $filesystem ?: new Filesystem();
 
-        $filesystem = new Filesystem();
         $secretFile = $projectDir.'/var/jwt_secret';
 
-        if ($filesystem->exists($secretFile)) {
+        if ($this->filesystem->exists($secretFile)) {
             $this->secret = file_get_contents($secretFile);
         }
 
         if (!\is_string($this->secret) || 64 !== \strlen($this->secret)) {
             $this->secret = bin2hex(random_bytes(32));
-            $filesystem->dumpFile($secretFile, $this->secret);
+            $this->filesystem->dumpFile($secretFile, $this->secret);
         }
     }
 
@@ -88,13 +105,11 @@ class JwtManager
             return;
         }
 
-        $builder = new Builder();
-
         foreach ($payload as $k => $v) {
-            $builder->set($k, $v);
+            $this->builder->set($k, $v);
         }
 
-        $token = $builder
+        $token = $this->builder
             ->setIssuedAt(time())
             ->setExpiration(strtotime('+30 minutes'))
             ->sign($this->signer, $this->secret)
@@ -140,7 +155,7 @@ class JwtManager
 
     private function decodeJwt(string $data): array
     {
-        $token = (new Parser())->parse($data);
+        $token = $this->parser->parse($data);
 
         if ($token->isExpired() || !$token->verify($this->signer, $this->secret)) {
             return null;
