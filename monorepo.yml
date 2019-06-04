@@ -13,7 +13,8 @@ composer:
         'php-coveralls/php-coveralls': '^2.1'
         'phpstan/phpstan': '^0.11'
         'phpstan/extension-installer': '^1.0'
-        'phpstan/phpstan-phpunit': '^0.11'
+        'phpstan/phpstan-phpunit': '^0.11.2'
+        'phpstan/phpstan-symfony': '^0.11.6'
 
 repositories:
     core-bundle:
