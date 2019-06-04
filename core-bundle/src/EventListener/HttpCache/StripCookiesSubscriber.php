@@ -72,7 +72,7 @@ class StripCookiesSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($this->whitelist) {
+        if (0 !== \count($this->whitelist)) {
             $this->filterCookies($request, $this->whitelist, true);
 
             return;
