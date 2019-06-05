@@ -132,13 +132,13 @@ class ArticleModel extends Model
 	 *
 	 * @return ArticleModel|null The model or null if there is no article
 	 */
-	public static function findByIdOrAliasAndPid($varId, $intPid = null, array $arrOptions=array())
+	public static function findByIdOrAliasAndPid($varId, $intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("$t.alias=?") : array("$t.id=?");
 		$arrValues = array($varId);
 
-		if (!\is_numeric($varId) && $intPid)
+		if ($intPid)
 		{
 			$arrColumns[] = "$t.pid=?";
 			$arrValues[] = $intPid;

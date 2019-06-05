@@ -340,7 +340,8 @@ abstract class Controller extends System
 	 *
 	 * @param mixed   $varId          The article ID or a Model object
 	 * @param boolean $blnMultiMode   If true, only teasers will be shown
-	 * @param boolean $blnIsInsertTag If true, there will be no page relation
+	 * @param boolean $blnIsInsertTag If true, there will be no page relation and no HTML markup for the container
+	 *                                If null, there will be no page relation
 	 * @param string  $strColumn      The name of the column
 	 *
 	 * @return string|boolean The article HTML markup or false
@@ -361,7 +362,7 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, (!$blnIsInsertTag ? $objPage->id : null));
+			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, ($blnIsInsertTag === false ? $objPage->id : null));
 
 			if ($objRow === null)
 			{
