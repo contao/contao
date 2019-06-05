@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DcaLoader;
-use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,15 +31,9 @@ class DebugDcaCommand extends Command
      */
     private $framework;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    public function __construct(ContaoFramework $framework, Connection $connection)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
-        $this->connection = $connection;
 
         parent::__construct();
     }

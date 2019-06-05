@@ -16,7 +16,6 @@ services:
         class: Contao\CoreBundle\Command\DebugDcaCommand
         arguments:
             - '@contao.framework'
-            - '@database_connection'
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
