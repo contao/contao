@@ -17,6 +17,7 @@ use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,11 +44,6 @@ class JwtManager
     private $parser;
 
     /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
      * @var string
      */
     private $secret;
@@ -57,17 +53,20 @@ class JwtManager
         $this->signer = $signer ?: new Sha256();
         $this->builder = $builder ?: new Builder();
         $this->parser = $parser ?: new Parser();
-        $this->filesystem = $filesystem ?: new Filesystem();
+
+        if (null === $filesystem) {
+            $filesystem = new Filesystem();
+        }
 
         $secretFile = $projectDir.'/var/jwt_secret';
 
-        if ($this->filesystem->exists($secretFile)) {
+        if ($filesystem->exists($secretFile)) {
             $this->secret = file_get_contents($secretFile);
         }
 
         if (!\is_string($this->secret) || 64 !== \strlen($this->secret)) {
             $this->secret = bin2hex(random_bytes(32));
-            $this->filesystem->dumpFile($secretFile, $this->secret);
+            $filesystem->dumpFile($secretFile, $this->secret);
         }
     }
 
@@ -106,14 +105,13 @@ class JwtManager
         }
 
         foreach ($payload as $k => $v) {
-            $this->builder->set($k, $v);
+            $this->builder->withClaim($k, $v);
         }
 
         $token = $this->builder
-            ->setIssuedAt(time())
-            ->setExpiration(strtotime('+30 minutes'))
-            ->sign($this->signer, $this->secret)
-            ->getToken()
+            ->issuedAt(time())
+            ->expiresAt(strtotime('+30 minutes'))
+            ->getToken($this->signer, new Key($this->secret))
         ;
 
         if (method_exists(Cookie::class, 'create')) {
