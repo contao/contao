@@ -64,7 +64,7 @@ class BackendController extends AbstractController
             }
 
             $response = new RedirectResponse($this->get('router')->generate('contao_backend').$queryString);
-            $jwtManager = $request->attributes->get(JwtManager::ATTRIBUTE);
+            $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
 
             if ($jwtManager instanceof JwtManager) {
                 $jwtManager->addResponseCookie($response, ['debug' => false]);
