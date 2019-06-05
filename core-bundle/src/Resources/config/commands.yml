@@ -12,6 +12,11 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.command.debug_dca:
+        class: Contao\CoreBundle\Command\DebugDcaCommand
+        arguments:
+            - '@contao.framework'
+
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
 
