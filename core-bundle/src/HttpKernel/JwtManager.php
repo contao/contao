@@ -105,13 +105,14 @@ class JwtManager
         }
 
         foreach ($payload as $k => $v) {
-            $this->builder->withClaim($k, $v);
+            $this->builder->set($k, $v);
         }
 
         $token = $this->builder
-            ->issuedAt(time())
-            ->expiresAt(strtotime('+30 minutes'))
-            ->getToken($this->signer, new Key($this->secret))
+            ->setIssuedAt(time())
+            ->setExpiration(strtotime('+30 minutes'))
+            ->sign($this->signer, $this->secret)
+            ->getToken()
         ;
 
         if (method_exists(Cookie::class, 'create')) {
@@ -151,7 +152,7 @@ class JwtManager
         return false;
     }
 
-    private function decodeJwt(string $data): array
+    private function decodeJwt(string $data): ?array
     {
         $token = $this->parser->parse($data);
 
