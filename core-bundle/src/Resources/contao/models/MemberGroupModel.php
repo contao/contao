@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes member groups
  *
@@ -34,16 +36,16 @@ namespace Contao;
  * @method static MemberGroupModel|null findOneByStart($val, array $opt=array())
  * @method static MemberGroupModel|null findOneByStop($val, array $opt=array())
  *
- * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByName($val, array $opt=array())
- * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByRedirect($val, array $opt=array())
- * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByJumpTo($val, array $opt=array())
- * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByDisable($val, array $opt=array())
- * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByStart($val, array $opt=array())
- * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findByStop($val, array $opt=array())
- * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|MemberGroupModel[]|MemberGroupModel|null findAll(array $opt=array())
+ * @method static Collection|MemberGroupModel[]|MemberGroupModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|MemberGroupModel[]|MemberGroupModel|null findByName($val, array $opt=array())
+ * @method static Collection|MemberGroupModel[]|MemberGroupModel|null findByRedirect($val, array $opt=array())
+ * @method static Collection|MemberGroupModel[]|MemberGroupModel|null findByJumpTo($val, array $opt=array())
+ * @method static Collection|MemberGroupModel[]|MemberGroupModel|null findByDisable($val, array $opt=array())
+ * @method static Collection|MemberGroupModel[]|MemberGroupModel|null findByStart($val, array $opt=array())
+ * @method static Collection|MemberGroupModel[]|MemberGroupModel|null findByStop($val, array $opt=array())
+ * @method static Collection|MemberGroupModel[]|MemberGroupModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|MemberGroupModel[]|MemberGroupModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|MemberGroupModel[]|MemberGroupModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -80,7 +82,7 @@ class MemberGroupModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.disable=''";
 		}
 
@@ -92,12 +94,12 @@ class MemberGroupModel extends Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|MemberGroupModel|null A collection of models or null if there are no member groups
+	 * @return Collection|MemberGroupModel|null A collection of models or null if there are no member groups
 	 */
 	public static function findAllActive(array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 
 		return static::findBy(array("$t.disable='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "')"), null, $arrOptions);
 	}
@@ -121,8 +123,8 @@ class MemberGroupModel extends Model
 			return null;
 		}
 
-		$time = \Date::floorToMinute();
-		$objDatabase = \Database::getInstance();
+		$time = Date::floorToMinute();
+		$objDatabase = Database::getInstance();
 		$arrIds = array_map('\intval', $arrIds);
 
 		$objResult = $objDatabase->prepare("SELECT p.* FROM tl_member_group g LEFT JOIN tl_page p ON g.jumpTo=p.id WHERE g.id IN(" . implode(',', $arrIds) . ") AND g.jumpTo>0 AND g.redirect='1' AND g.disable!='1' AND (g.start='' OR g.start<='$time') AND (g.stop='' OR g.stop>'" . ($time + 60) . "') AND p.published='1' AND (p.start='' OR p.start<='$time') AND (p.stop='' OR p.stop>'" . ($time + 60) . "') ORDER BY " . $objDatabase->findInSet('g.id', $arrIds))

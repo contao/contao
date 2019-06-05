@@ -73,7 +73,7 @@ class SelectMenu extends Widget
 				break;
 
 			case 'options':
-				$this->arrOptions = \StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue);
 				break;
 
 			default:
@@ -124,7 +124,7 @@ class SelectMenu extends Widget
 			if (isset($arrOption['value']))
 			{
 				$arrOptions[] = sprintf('<option value="%s"%s>%s</option>',
-										 \StringUtil::specialchars($arrOption['value']),
+										 StringUtil::specialchars($arrOption['value']),
 										 $this->isSelected($arrOption),
 										 $arrOption['label']);
 			}
@@ -135,12 +135,12 @@ class SelectMenu extends Widget
 				foreach ($arrOption as $arrOptgroup)
 				{
 					$arrOptgroups[] = sprintf('<option value="%s"%s>%s</option>',
-											   \StringUtil::specialchars($arrOptgroup['value']),
+											   StringUtil::specialchars($arrOptgroup['value']),
 											   $this->isSelected($arrOptgroup),
 											   $arrOptgroup['label']);
 				}
 
-				$arrOptions[] = sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', \StringUtil::specialchars($strKey), implode('', $arrOptgroups));
+				$arrOptions[] = sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
 			}
 		}
 

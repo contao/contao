@@ -43,7 +43,7 @@ class ModuleComments extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['comments'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -64,7 +64,7 @@ class ModuleComments extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$this->import('Comments');
+		$this->import(Comments::class, 'Comments');
 		$objConfig = new \stdClass();
 
 		$objConfig->perPage = $this->perPage;

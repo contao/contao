@@ -188,11 +188,11 @@
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages in the site structure which are not website root pages.</source>
       </trans-unit>
-      <trans-unit id="ERR.invalidTokenUrl">
-        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
-      </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
+      </trans-unit>
+      <trans-unit id="ERR.formCookieWarning">
+        <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -217,6 +217,15 @@
       </trans-unit>
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
+      </trans-unit>
+      <trans-unit id="ERR.emptyTitleOrId">
+        <source>Please enter both title and ID!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionTitle">
+        <source>Duplicate layout section title "%s"!</source>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID "%s"!</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1028,18 +1037,6 @@
       <trans-unit id="MSC.move_down.1">
         <source>Move the item one position down</source>
       </trans-unit>
-      <trans-unit id="MSC.staticFiles.0">
-        <source>Files URL</source>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.1">
-        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.0">
-        <source>Assets URL</source>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.1">
-        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-      </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
       </trans-unit>
@@ -1102,9 +1099,6 @@
       </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
-      </trans-unit>
-      <trans-unit id="MSC.loginTo">
-        <source>Log into %s</source>
       </trans-unit>
       <trans-unit id="MSC.loginBT">
         <source>Login</source>
@@ -1283,9 +1277,6 @@
       <trans-unit id="MSC.justify">
         <source>justified</source>
       </trans-unit>
-      <trans-unit id="MSC.filetree">
-        <source>File system</source>
-      </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
       </trans-unit>
@@ -1331,8 +1322,8 @@
       <trans-unit id="MSC.backendModules">
         <source>Back end modules</source>
       </trans-unit>
-      <trans-unit id="MSC.welcomeTo">
-        <source>%s back end</source>
+      <trans-unit id="MSC.dashboard">
+        <source>Dashboard</source>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -1413,13 +1404,28 @@
         <source>Clear clipboard</source>
       </trans-unit>
       <trans-unit id="MSC.hiddenElements">
-        <source>Unpublished elements</source>
+        <source>Unpublished</source>
       </trans-unit>
       <trans-unit id="MSC.hiddenHide">
         <source>hide</source>
       </trans-unit>
       <trans-unit id="MSC.hiddenShow">
         <source>show</source>
+      </trans-unit>
+      <trans-unit id="MSC.enableDebugMode">
+        <source>Enable debug mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.disableDebugMode">
+        <source>Disable debug mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.debugMode">
+        <source>Debug mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.debugEnabled">
+        <source>enabled</source>
+      </trans-unit>
+      <trans-unit id="MSC.debugDisabled">
+        <source>disabled</source>
       </trans-unit>
       <trans-unit id="MSC.apply">
         <source>Apply</source>
@@ -1694,9 +1700,6 @@
       <trans-unit id="MSC.twitterShare">
         <source>Share on Twitter</source>
       </trans-unit>
-      <trans-unit id="MSC.gplusShare">
-        <source>Share on Google+</source>
-      </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
       </trans-unit>
@@ -1742,8 +1745,20 @@
       <trans-unit id="MSC.relevance">
         <source>%s relevance</source>
       </trans-unit>
-      <trans-unit id="MSC.invalidTokenUrl">
+      <trans-unit id="MSC.invalidToken">
         <source>Invalid token</source>
+      </trans-unit>
+      <trans-unit id="MSC.tokenConfirmed">
+        <source>This token has already been confirmed</source>
+      </trans-unit>
+      <trans-unit id="MSC.tokenEmailMismatch">
+        <source>The e-mail address of the token does not match</source>
+      </trans-unit>
+      <trans-unit id="MSC.resendToken">
+        <source>The token has been re-sent to %s.</source>
+      </trans-unit>
+      <trans-unit id="MSC.invalidTokenUrl">
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -1822,6 +1837,12 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorTextCode">
         <source>If you cannot scan the QR code, enter this key instead:</source>
+      </trans-unit>
+      <trans-unit id="MSC.userTemplateEditor">
+        <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupTemplateEditor">
+        <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>

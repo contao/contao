@@ -15,12 +15,11 @@ namespace Contao\CoreBundle\Controller;
 use Contao\BackendTemplate;
 use Contao\Config;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\FileUpload;
 use Contao\Message;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -35,7 +34,7 @@ class BackendCsvImportController
     public const SEPARATOR_TABULATOR = 'tabulator';
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -59,7 +58,7 @@ class BackendCsvImportController
      */
     private $projectDir;
 
-    public function __construct(ContaoFrameworkInterface $framework, Connection $connection, RequestStack $requestStack, TranslatorInterface $translator, string $projectDir)
+    public function __construct(ContaoFramework $framework, Connection $connection, RequestStack $requestStack, TranslatorInterface $translator, string $projectDir)
     {
         $this->framework = $framework;
         $this->connection = $connection;
@@ -71,7 +70,7 @@ class BackendCsvImportController
     public function importListWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
-            function (array $data, array $row): array {
+            static function (array $data, array $row): array {
                 return array_merge($data, $row);
             },
             $dc->table,
@@ -85,7 +84,7 @@ class BackendCsvImportController
     public function importTableWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
-            function (array $data, array $row): array {
+            static function (array $data, array $row): array {
                 $data[] = $row;
 
                 return $data;
@@ -100,7 +99,7 @@ class BackendCsvImportController
     public function importOptionWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
-            function (array $data, array $row): array {
+            static function (array $data, array $row): array {
                 $data[] = [
                     'value' => $row[0],
                     'label' => $row[1],
@@ -155,10 +154,7 @@ class BackendCsvImportController
                 ['id' => $id]
             );
 
-            $response = new RedirectResponse($this->getBackUrl($request));
-            $response->headers->setCookie(new Cookie('BE_PAGE_OFFSET', null, 0, $request->getBasePath(), null, false, false));
-
-            return $response;
+            return new RedirectResponse($this->getBackUrl($request));
         }
 
         return new Response($template->parse());
@@ -200,7 +196,7 @@ class BackendCsvImportController
         $delimiter = $this->getDelimiter($separator);
 
         foreach ($files as $file) {
-            $fp = fopen($file, 'rb');
+            $fp = fopen($file, 'r');
 
             while (false !== ($row = fgetcsv($fp, 0, $delimiter))) {
                 $data = $callback($data, $row);

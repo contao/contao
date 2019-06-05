@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+use Contao\Model\Registry;
+
 /**
  * Reads and writes members
  *
@@ -47,7 +50,6 @@ namespace Contao;
  * @property integer $locked
  * @property string  $session
  * @property integer $createdOn
- * @property string  $activation
  * @property string  $newsletter
  *
  * @method static MemberModel|null findById($id, array $opt=array())
@@ -87,46 +89,44 @@ namespace Contao;
  * @method static MemberModel|null findOneByLocked($val, array $opt=array())
  * @method static MemberModel|null findOneBySession($val, array $opt=array())
  * @method static MemberModel|null findOneByCreatedOn($val, array $opt=array())
- * @method static MemberModel|null findOneByActivation($val, array $opt=array())
  * @method static MemberModel|null findOneByNewsletter($val, array $opt=array())
  *
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByFirstname($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByLastname($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByDateOfBirth($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByGender($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByCompany($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByStreet($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByPostal($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByCity($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByState($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByCountry($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByPhone($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByMobile($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByFax($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByEmail($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByWebsite($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByLanguage($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByGroups($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByLogin($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByPassword($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByAssignDir($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByHomeDir($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByDisable($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByStart($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByStop($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByDateAdded($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByLastLogin($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByCurrentLogin($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByLoginCount($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByLocked($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findBySession($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByCreatedOn($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByActivation($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findByNewsletter($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|MemberModel[]|MemberModel|null findAll(array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByFirstname($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByLastname($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByDateOfBirth($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByGender($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByCompany($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByStreet($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByPostal($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByCity($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByState($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByCountry($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByPhone($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByMobile($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByFax($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByEmail($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByWebsite($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByLanguage($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByGroups($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByLogin($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByPassword($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByAssignDir($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByHomeDir($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByDisable($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByStart($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByStop($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByDateAdded($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByLastLogin($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByCurrentLogin($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByLoginCount($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByLocked($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findBySession($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByCreatedOn($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByNewsletter($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -162,7 +162,6 @@ namespace Contao;
  * @method static integer countByLocked($val, array $opt=array())
  * @method static integer countBySession($val, array $opt=array())
  * @method static integer countByCreatedOn($val, array $opt=array())
- * @method static integer countByActivation($val, array $opt=array())
  * @method static integer countByNewsletter($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -188,7 +187,7 @@ class MemberModel extends Model
 	public static function findActiveByEmailAndUsername($strEmail, $strUsername=null, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 
 		$arrColumns = array("$t.email=? AND $t.login='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.disable=''");
 
@@ -201,7 +200,7 @@ class MemberModel extends Model
 	}
 
 	/**
-	 * Find an unactivated member by their e-mail-address
+	 * Find an unactivated member with a valid opt-in token by their e-mail-address
 	 *
 	 * @param string $strEmail   The e-mail address
 	 * @param array  $arrOptions An optional options array
@@ -211,8 +210,26 @@ class MemberModel extends Model
 	public static function findUnactivatedByEmail($strEmail, array $arrOptions=array())
 	{
 		$t = static::$strTable;
+		$objDatabase = Database::getInstance();
 
-		return static::findOneBy(array("$t.email=? AND $t.activation LIKE 'RG%'"), $strEmail, $arrOptions);
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable='1' AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn>? AND o.confirmedOn=0)")
+								 ->limit(1)
+								 ->execute($strEmail, strtotime('-24 hours'));
+
+		if ($objResult->numRows < 1)
+		{
+			return null;
+		}
+
+		$objRegistry = Registry::getInstance();
+
+		/** @var MemberModel|Model $objMember */
+		if ($objMember = $objRegistry->fetch($t, $objResult->id))
+		{
+			return $objMember;
+		}
+
+		return new static($objResult);
 	}
 
 	/**
@@ -220,13 +237,22 @@ class MemberModel extends Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|MemberModel[]|MemberModel|null A collection of models or null if there are no expired registrations
+	 * @return Collection|MemberModel[]|MemberModel|null A collection of models or null if there are no expired registrations
 	 */
 	public static function findExpiredRegistrations(array $arrOptions=array())
 	{
 		$t = static::$strTable;
+		$objDatabase = Database::getInstance();
 
-		return static::findBy(array("$t.disable='1' AND $t.dateAdded<? AND $t.activation!=''"), strtotime('-1 day'), $arrOptions);
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE disable='1' AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
+								 ->execute(strtotime('-24 hours'));
+
+		if ($objResult->numRows < 1)
+		{
+			return null;
+		}
+
+		return static::createCollectionFromDbResult($objResult, $t);
 	}
 }
 

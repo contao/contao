@@ -25,6 +25,7 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\ServiceUnavailableException as ContaoServiceUnavailableException;
+use Doctrine\DBAL\Connection;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -33,15 +34,31 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class ExceptionConverterListener
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
     /**
      * Maps known exceptions to HTTP exceptions.
      */
     public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         $exception = $event->getException();
+
+        if ($exception->getPrevious() instanceof ResourceNotFoundException && !$this->hasRootPages()) {
+            $exception = new NoRootPageFoundException('No root page found', 0, $exception);
+        }
+
         $class = $this->getTargetClass($exception);
 
         if (null === $class) {
@@ -103,5 +120,18 @@ class ExceptionConverterListener
         }
 
         return null;
+    }
+
+    private function hasRootPages(): bool
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('COUNT(*)')
+            ->from('tl_page')
+            ->where('type = :type')
+            ->setParameter('type', 'root')
+        ;
+
+        return $qb->execute()->fetchColumn() > 0;
     }
 }

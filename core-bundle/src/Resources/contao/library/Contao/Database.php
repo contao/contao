@@ -88,7 +88,7 @@ class Database
 		}
 		else
 		{
-			$this->resConnection = \System::getContainer()->get('database_connection');
+			$this->resConnection = System::getContainer()->get('database_connection');
 		}
 
 		if (!\is_object($this->resConnection))
@@ -140,17 +140,17 @@ class Database
 	{
 		$arrConfig = array();
 
-		$arrDefaultConfig = array
-		(
-			'dbHost'     => \Config::get('dbHost'),
-			'dbPort'     => \Config::get('dbPort'),
-			'dbUser'     => \Config::get('dbUser'),
-			'dbPass'     => \Config::get('dbPass'),
-			'dbDatabase' => \Config::get('dbDatabase')
-		);
-
 		if (\is_array($arrCustomConfig))
 		{
+			$arrDefaultConfig = array
+			(
+				'dbHost'     => Config::get('dbHost'),
+				'dbPort'     => Config::get('dbPort'),
+				'dbUser'     => Config::get('dbUser'),
+				'dbPass'     => Config::get('dbPass'),
+				'dbDatabase' => Config::get('dbDatabase')
+			);
+
 			$arrConfig = array_merge($arrDefaultConfig, $arrCustomConfig);
 		}
 
@@ -696,7 +696,7 @@ class Database
 
 		if ($strQuoteCharacter === null)
 		{
-			$strQuoteCharacter = \System::getContainer()->get('database_connection')->getDatabasePlatform()->getIdentifierQuoteCharacter();
+			$strQuoteCharacter = System::getContainer()->get('database_connection')->getDatabasePlatform()->getIdentifierQuoteCharacter();
 		}
 
 		// The identifier is quoted already
@@ -711,7 +711,7 @@ class Database
 			return $strName;
 		}
 
-		return \System::getContainer()->get('database_connection')->quoteIdentifier($strName);
+		return System::getContainer()->get('database_connection')->quoteIdentifier($strName);
 	}
 
 	/**

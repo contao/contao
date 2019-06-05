@@ -12,6 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Framework;
 
+/**
+ * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0; use the
+ *             Contao\CoreBundle\Framework\ContaoFramework class instead
+ */
 interface ContaoFrameworkInterface extends \Contao\CoreBundle\ContaoFrameworkInterface
 {
     /**

@@ -280,7 +280,7 @@ abstract class Template extends Controller
 
 		$this->compile();
 
-		header('Content-Type: ' . $this->strContentType . '; charset=' . \Config::get('characterSet'));
+		header('Content-Type: ' . $this->strContentType . '; charset=' . Config::get('characterSet'));
 
 		echo $this->strBuffer;
 
@@ -313,8 +313,34 @@ abstract class Template extends Controller
 	 */
 	public function route($strName, $arrParams=array())
 	{
-		$strUrl = \System::getContainer()->get('router')->generate($strName, $arrParams);
-		$strUrl = substr($strUrl, \strlen(\Environment::get('path')) + 1);
+		$strUrl = System::getContainer()->get('router')->generate($strName, $arrParams);
+		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
+
+		return ampersand($strUrl);
+	}
+
+	/**
+	 * Return the preview route
+	 *
+	 * @param string $strName   The route name
+	 * @param array  $arrParams The route parameters
+	 *
+	 * @return string The route
+	 */
+	public function previewRoute($strName, $arrParams=array())
+	{
+		$objRouter = System::getContainer()->get('router');
+		$objContext = $objRouter->getContext();
+
+		$objPreviewContext = clone $objContext;
+		$objPreviewContext->setBaseUrl('/preview.php');
+
+		$objRouter->setContext($objPreviewContext);
+
+		$strUrl = $objRouter->generate($strName, $arrParams);
+		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
+
+		$objRouter->setContext($objContext);
 
 		return ampersand($strUrl);
 	}
@@ -330,7 +356,7 @@ abstract class Template extends Controller
 	 */
 	public function trans($strId, array $arrParams=array(), $strDomain='contao_default')
 	{
-		return \System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
+		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
 	}
 
 	/**
@@ -343,7 +369,7 @@ abstract class Template extends Controller
 	 */
 	public function asset($path, $packageName = null)
 	{
-		$url = \System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
+		$url = System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
 
 		// Contao paths are relative to the <base> tag, so remove leading slashes
 		return ltrim($url, '/');
@@ -360,9 +386,6 @@ abstract class Template extends Controller
 		{
 			$this->strBuffer = $this->parse();
 		}
-
-		// Minify the markup
-		$this->strBuffer = $this->minifyHtml($this->strBuffer);
 	}
 
 	/**
@@ -384,8 +407,7 @@ abstract class Template extends Controller
 	 */
 	public function minifyHtml($strHtml)
 	{
-		// The feature has been disabled
-		if (!\Config::get('minifyMarkup') || \Config::get('debugMode'))
+		if (Config::get('debugMode'))
 		{
 			return $strHtml;
 		}
@@ -489,7 +511,7 @@ abstract class Template extends Controller
 		// Add the filemtime if not given and not an external file
 		if ($mtime === null && !preg_match('@^https?://@', $href))
 		{
-			$container = \System::getContainer();
+			$container = System::getContainer();
 			$rootDir = $container->getParameter('kernel.project_dir');
 
 			if (file_exists($rootDir . '/' . $href))
@@ -498,7 +520,7 @@ abstract class Template extends Controller
 			}
 			else
 			{
-				$webDir = \StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
+				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 				// Handle public bundle resources in web/
 				if (file_exists($rootDir . '/' . $webDir . '/' . $href))
@@ -531,18 +553,20 @@ abstract class Template extends Controller
 	/**
 	 * Generate the markup for a JavaScript tag
 	 *
-	 * @param string  $src   The script path
-	 * @param boolean $async True to add the async attribute
-	 * @param mixed   $mtime The file mtime
+	 * @param string      $src         The script path
+	 * @param boolean     $async       True to add the async attribute
+	 * @param mixed       $mtime       The file mtime
+	 * @param string|null $hash        An optional integrity hash
+	 * @param string|null $crossorigin An optional crossorigin attribute
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateScriptTag($src, $async=false, $mtime=false)
+	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null, $crossorigin=null)
 	{
 		// Add the filemtime if not given and not an external file
 		if ($mtime === null && !preg_match('@^https?://@', $src))
 		{
-			$container = \System::getContainer();
+			$container = System::getContainer();
 			$rootDir = $container->getParameter('kernel.project_dir');
 
 			if (file_exists($rootDir . '/' . $src))
@@ -551,7 +575,7 @@ abstract class Template extends Controller
 			}
 			else
 			{
-				$webDir = \StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
+				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 				// Handle public bundle resources in web/
 				if (file_exists($rootDir . '/' . $webDir . '/' . $src))
@@ -566,7 +590,7 @@ abstract class Template extends Controller
 			$src .= '?v=' . substr(md5($mtime), 0, 8);
 		}
 
-		return '<script src="' . $src . '"' . ($async ? ' async' : '') . '></script>';
+		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($crossorigin ? ' crossorigin="' . $crossorigin . '"' : '') . '></script>';
 	}
 
 	/**
@@ -592,7 +616,7 @@ abstract class Template extends Controller
 	 */
 	public static function generateFeedTag($href, $format, $title)
 	{
-		return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . \StringUtil::specialchars($title) . '">';
+		return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . StringUtil::specialchars($title) . '">';
 	}
 
 	/**

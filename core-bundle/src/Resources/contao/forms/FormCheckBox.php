@@ -59,7 +59,7 @@ class FormCheckBox extends Widget
 		switch ($strKey)
 		{
 			case 'options':
-				$this->arrOptions = \StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue);
 				break;
 
 			case 'rgxp':
@@ -135,12 +135,6 @@ class FormCheckBox extends Widget
 		{
 			$this->mandatory = true;
 		}
-
-		// Clear result if nothing has been submitted
-		if (!isset($_POST[$this->strName]))
-		{
-			$this->varValue = '';
-		}
 	}
 
 	/**
@@ -186,7 +180,7 @@ class FormCheckBox extends Widget
 				$arrOptions[] = array
 				(
 					'type'  => 'group_start',
-					'label' => \StringUtil::specialchars($arrOption['label'])
+					'label' => StringUtil::specialchars($arrOption['label'])
 				);
 
 				$blnHasGroups = true;

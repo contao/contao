@@ -136,12 +136,12 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_theme.name',
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'name' => array
 		(
@@ -163,7 +163,7 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'cc' => array
 		(
@@ -181,13 +181,12 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 		'media' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_style_sheet']['media'],
-			'default'                 => array('all'),
 			'inputType'               => 'checkbox',
 			'exclude'                 => true,
 			'filter'                  => true,
 			'options'                 => array('all', 'aural', 'braille', 'embossed', 'handheld', 'print', 'projection', 'screen', 'tty', 'tv'),
 			'eval'                    => array('multiple'=>true, 'mandatory'=>true, 'tl_class'=>'clr'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(255) NOT NULL default 'a:1:{i:0;s:3:\"all\";}'"
 		),
 		'mediaQuery' => array
 		(
@@ -213,7 +212,7 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_style_sheet extends Backend
+class tl_style_sheet extends Contao\Backend
 {
 
 	/**
@@ -222,7 +221,7 @@ class tl_style_sheet extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -249,7 +248,7 @@ class tl_style_sheet extends Backend
 	public function updateStyleSheet()
 	{
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		$session = $objSession->get('style_sheet_updater');
 
@@ -258,7 +257,7 @@ class tl_style_sheet extends Backend
 			return;
 		}
 
-		$this->import('StyleSheets');
+		$this->import('Contao\StyleSheets', 'StyleSheets');
 
 		foreach ($session as $id)
 		{
@@ -285,13 +284,13 @@ class tl_style_sheet extends Backend
 		}
 
 		// Return if there is no ID
-		if (!$id || Input::get('act') == 'copy')
+		if (!$id || Contao\Input::get('act') == 'copy')
 		{
 			return;
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		// Store the ID in the session
 		$session = $objSession->get('style_sheet_updater');
@@ -309,7 +308,7 @@ class tl_style_sheet extends Backend
 	public function listStyleSheet($row)
 	{
 		$cc = '';
-		$media = StringUtil::deserialize($row['media']);
+		$media = Contao\StringUtil::deserialize($row['media']);
 
 		if ($row['cc'] != '')
 		{
@@ -373,6 +372,6 @@ class tl_style_sheet extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_style_sheet') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_style_sheet') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 }

@@ -19,9 +19,9 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class ContaoCoreExtension extends ConfigurableExtension
+class ContaoCoreExtension extends Extension
 {
     /**
      * {@inheritdoc}
@@ -36,21 +36,24 @@ class ContaoCoreExtension extends ConfigurableExtension
      */
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
-        // Add the resource to the container
-        parent::getConfiguration($config, $container);
-
         return new Configuration(
-            $container->getParameter('kernel.debug'),
-            $container->getParameter('kernel.project_dir'),
-            $container->getParameter('kernel.default_locale')
-        );
+             $container->getParameter('kernel.project_dir'),
+             $container->getParameter('kernel.default_locale')
+         );
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
+    public function load(array $configs, ContainerBuilder $container): void
     {
+        $configuration = new Configuration(
+            $container->getParameter('kernel.project_dir'),
+            $container->getParameter('kernel.default_locale')
+        );
+
+        $config = $this->processConfiguration($configuration, $configs);
+
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__.'/../Resources/config')
@@ -66,28 +69,28 @@ class ContaoCoreExtension extends ConfigurableExtension
             $loader->load($file);
         }
 
-        $container->setParameter('contao.web_dir', $mergedConfig['web_dir']);
-        $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
-        $container->setParameter('contao.encryption_key', $mergedConfig['encryption_key']);
-        $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
-        $container->setParameter('contao.upload_path', $mergedConfig['upload_path']);
-        $container->setParameter('contao.csrf_token_name', $mergedConfig['csrf_token_name']);
-        $container->setParameter('contao.pretty_error_screens', $mergedConfig['pretty_error_screens']);
-        $container->setParameter('contao.error_level', $mergedConfig['error_level']);
-        $container->setParameter('contao.locales', $mergedConfig['locales']);
-        $container->setParameter('contao.image.bypass_cache', $mergedConfig['image']['bypass_cache']);
-        $container->setParameter('contao.image.target_dir', $mergedConfig['image']['target_dir']);
-        $container->setParameter('contao.image.valid_extensions', $mergedConfig['image']['valid_extensions']);
-        $container->setParameter('contao.image.imagine_options', $mergedConfig['image']['imagine_options']);
-        $container->setParameter('contao.image.reject_large_uploads', $mergedConfig['image']['reject_large_uploads']);
-        $container->setParameter('contao.security.two_factor.enforce_backend', $mergedConfig['security']['two_factor']['enforce_backend']);
+        $container->setParameter('contao.web_dir', $config['web_dir']);
+        $container->setParameter('contao.prepend_locale', $config['prepend_locale']);
+        $container->setParameter('contao.encryption_key', $config['encryption_key']);
+        $container->setParameter('contao.url_suffix', $config['url_suffix']);
+        $container->setParameter('contao.upload_path', $config['upload_path']);
+        $container->setParameter('contao.csrf_token_name', $config['csrf_token_name']);
+        $container->setParameter('contao.pretty_error_screens', $config['pretty_error_screens']);
+        $container->setParameter('contao.error_level', $config['error_level']);
+        $container->setParameter('contao.locales', $config['locales']);
+        $container->setParameter('contao.image.bypass_cache', $config['image']['bypass_cache']);
+        $container->setParameter('contao.image.target_dir', $config['image']['target_dir']);
+        $container->setParameter('contao.image.valid_extensions', $config['image']['valid_extensions']);
+        $container->setParameter('contao.image.imagine_options', $config['image']['imagine_options']);
+        $container->setParameter('contao.image.reject_large_uploads', $config['image']['reject_large_uploads']);
+        $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
 
-        if (isset($mergedConfig['localconfig'])) {
-            $container->setParameter('contao.localconfig', $mergedConfig['localconfig']);
+        if (isset($config['localconfig'])) {
+            $container->setParameter('contao.localconfig', $config['localconfig']);
         }
 
-        $this->setImagineService($mergedConfig, $container);
-        $this->overwriteImageTargetDir($mergedConfig, $container);
+        $this->setImagineService($config, $container);
+        $this->overwriteImageTargetDir($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -98,9 +101,9 @@ class ContaoCoreExtension extends ConfigurableExtension
     /**
      * Configures the "contao.image.imagine" service.
      */
-    private function setImagineService(array $mergedConfig, ContainerBuilder $container): void
+    private function setImagineService(array $config, ContainerBuilder $container): void
     {
-        $imagineServiceId = $mergedConfig['image']['imagine_service'];
+        $imagineServiceId = $config['image']['imagine_service'];
 
         // Generate if not present
         if (null === $imagineServiceId) {
@@ -136,17 +139,17 @@ class ContaoCoreExtension extends ConfigurableExtension
     /**
      * Reads the old contao.image.target_path parameter.
      */
-    private function overwriteImageTargetDir(array $mergedConfig, ContainerBuilder $container): void
+    private function overwriteImageTargetDir(array $config, ContainerBuilder $container): void
     {
-        if (!isset($mergedConfig['image']['target_path'])) {
+        if (!isset($config['image']['target_path'])) {
             return;
         }
 
         $container->setParameter(
             'contao.image.target_dir',
-            $container->getParameter('kernel.project_dir').'/'.$mergedConfig['image']['target_path']
+            $container->getParameter('kernel.project_dir').'/'.$config['image']['target_path']
         );
 
-        @trigger_error('Using the contao.image.target_path parameter has been deprecated and will no longer work in Contao 5. Use the contao.image.target_dir parameter instead.', E_USER_DEPRECATED);
+        @trigger_error('Using the contao.image.target_path parameter has been deprecated and will no longer work in Contao 5.0. Use the contao.image.target_dir parameter instead.', E_USER_DEPRECATED);
     }
 }

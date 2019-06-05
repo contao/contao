@@ -21,6 +21,7 @@ use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -44,7 +45,7 @@ class FilePickerProviderTest extends ContaoTestCase
         $menuFactory
             ->method('createItem')
             ->willReturnCallback(
-                function (string $name, array $data) use ($menuFactory): ItemInterface {
+                static function (string $name, array $data) use ($menuFactory): ItemInterface {
                     $item = new MenuItem($name, $menuFactory);
                     $item->setLabel($data['label']);
                     $item->setLinkAttributes($data['linkAttributes']);
@@ -60,18 +61,16 @@ class FilePickerProviderTest extends ContaoTestCase
         $router
             ->method('generate')
             ->willReturnCallback(
-                function (string $name, array $params): ?string {
+                static function (string $name, array $params): ?string {
                     return $name.'?'.http_build_query($params);
                 }
             )
         ;
 
-        $properties = [
-            'path' => '/foobar',
-            'uuid' => StringUtil::uuidToBin('82243f46-a4c3-11e3-8e29-000c29e44aea'),
-        ];
-
-        $filesModel = $this->mockClassWithProperties(FilesModel::class, $properties);
+        /** @var FilesModel&MockObject $filesModel */
+        $filesModel = $this->mockClassWithProperties(FilesModel::class);
+        $filesModel->path = '/foobar';
+        $filesModel->uuid = StringUtil::uuidToBin('82243f46-a4c3-11e3-8e29-000c29e44aea');
 
         $adapter = $this->mockAdapter(['findByUuid', 'findByPath']);
         $adapter

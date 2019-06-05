@@ -14,11 +14,11 @@
         "contao/core-bundle": "self.version",
         "friendsofsymfony/http-cache": "^2.4",
         "patchwork/utf8": "^1.2",
-        "symfony/config": "3.4.* || 4.1.*",
-        "symfony/dependency-injection": "3.4.* || 4.1.*",
-        "symfony/http-foundation": "3.4.* || 4.1.*",
-        "symfony/http-kernel": "3.4.* || 4.1.*",
-        "symfony/yaml": "3.4.* || 4.1.*"
+        "symfony/config": "3.4.* || 4.1.* || 4.2.*",
+        "symfony/dependency-injection": "3.4.* || 4.1.* || 4.2.*",
+        "symfony/http-foundation": "3.4.* || 4.1.* || 4.2.*",
+        "symfony/http-kernel": "3.4.* || 4.1.* || 4.2.*",
+        "symfony/yaml": "3.4.* || 4.1.* || 4.2.*"
     },
     "conflict": {
         "contao/core": "*",
@@ -26,14 +26,14 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
-        "contao/test-case": "^1.4.1",
+        "contao/test-case": "^3.0",
         "php-http/guzzle6-adapter": "^1.1",
         "phpunit/phpunit": "^7.0",
         "symfony/phpunit-bridge": "^3.4.5"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.7.x-dev"
+            "dev-master": "4.8.x-dev"
         },
         "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
     },
@@ -57,7 +57,7 @@
         }
     },
     "support": {
-        "issues": "https://github.com/contao/news-bundle/issues",
+        "issues": "https://github.com/contao/contao/issues",
         "forum": "https://community.contao.org",
         "source": "https://github.com/contao/news-bundle",
         "docs": "https://docs.contao.org"

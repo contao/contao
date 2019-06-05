@@ -19,12 +19,12 @@ use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
 use Psr\Log\NullLogger;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
-use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
@@ -40,10 +40,10 @@ class AppKernel extends Kernel
             new MonologBundle(),
             new SwiftmailerBundle(),
             new DoctrineBundle(),
-            new SensioFrameworkExtraBundle(),
             new SchebTwoFactorBundle(),
             new KnpTimeBundle(),
             new KnpMenuBundle(),
+            new CmfRoutingBundle(),
             new ContaoCoreBundle(),
             new ContaoNewsBundle(),
         ];
@@ -54,6 +54,11 @@ class AppKernel extends Kernel
         return \dirname(__DIR__);
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @deprecated since Symfony 4.2, use getProjectDir() instead
+     */
     public function getRootDir(): string
     {
         return __DIR__;

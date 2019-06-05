@@ -22,8 +22,8 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'tokenRemove' => 'index',
-				'source,parent,tokenConfirm' => 'index'
+				'source,parent,active' => 'index',
+				'tokenRemove' => 'index'
 			)
 		)
 	),
@@ -37,7 +37,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'source' => array
 		(
@@ -45,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 		),
 		'parent' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'name' => array
 		(
@@ -53,7 +53,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 		),
 		'email' => array
 		(
-			'sql'                     => "varchar(128) NOT NULL default ''"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'url' => array
 		(
@@ -63,13 +63,9 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 		(
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
-		'ip' => array
+		'active' => array
 		(
-			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'tokenConfirm' => array
-		(
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'tokenRemove' => array
 		(

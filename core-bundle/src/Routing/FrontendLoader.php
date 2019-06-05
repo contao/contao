@@ -24,9 +24,15 @@ class FrontendLoader extends Loader
      */
     private $prependLocale;
 
-    public function __construct(bool $prependLocale)
+    /**
+     * @var string
+     */
+    private $urlSuffix;
+
+    public function __construct(bool $prependLocale, string $urlSuffix = '.html')
     {
         $this->prependLocale = $prependLocale;
+        $this->urlSuffix = $urlSuffix;
     }
 
     /**
@@ -61,7 +67,7 @@ class FrontendLoader extends Loader
      */
     private function addFrontendRoute(RouteCollection $routes, array $defaults): void
     {
-        $route = new Route('/{alias}%contao.url_suffix%', $defaults, ['alias' => '.+']);
+        $route = new Route('/{alias}'.$this->urlSuffix, $defaults, ['alias' => '.+']);
 
         $this->addLocaleToRoute($route);
 

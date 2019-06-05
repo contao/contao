@@ -39,12 +39,12 @@ class FragmentHandlerTest extends TestCase
     {
         parent::setUp();
 
-        System::setContainer($this->mockContainer());
+        System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
     public function testThrowsAnExceptionIfTheFragmentNameIsInvalid(): void
     {
-        $fragmentHandler = $this->mockFragmentHandler();
+        $fragmentHandler = $this->getFragmentHandler();
 
         $this->expectException(UnknownFragmentException::class);
 
@@ -68,16 +68,14 @@ class FragmentHandlerTest extends TestCase
             [$uri, $request, ['ignore_errors' => false]]
         );
 
-        $fragmentHandler = $this->mockFragmentHandler($fragmentRegistry, $renderers, null, $request);
+        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, null, $request);
         $fragmentHandler->render($uri);
     }
 
-    /**
-     * @return string[][]
-     */
-    public function getRenderingStrategies(): array
+    public function getRenderingStrategies(): \Generator
     {
-        return [['inline'], ['esi']];
+        yield ['inline'];
+        yield ['esi'];
     }
 
     /**
@@ -97,19 +95,14 @@ class FragmentHandlerTest extends TestCase
             [$uri, $request, $options + ['ignore_errors' => false]]
         );
 
-        $fragmentHandler = $this->mockFragmentHandler($fragmentRegistry, $renderers, null, $request);
+        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, null, $request);
         $fragmentHandler->render($uri);
     }
 
-    /**
-     * @return array<int,array<int,array<string,string>>>
-     */
-    public function getOptions(): array
+    public function getOptions(): \Generator
     {
-        return [
-            [['foo' => 'bar']],
-            [['bar' => 'baz']],
-        ];
+        yield [['foo' => 'bar']];
+        yield [['bar' => 'baz']];
     }
 
     public function testAddsThePageIdFromTheGlobalPageObject(): void
@@ -120,7 +113,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'inline', ['foo' => 'bar']));
 
         $callback = $this->callback(
-            function () use ($uri) {
+            static function () use ($uri) {
                 return isset($uri->attributes['pageModel']) && 42 === $uri->attributes['pageModel'];
             }
         );
@@ -130,7 +123,7 @@ class FragmentHandlerTest extends TestCase
         $GLOBALS['objPage'] = new PageModel();
         $GLOBALS['objPage']->id = 42;
 
-        $fragmentHandler = $this->mockFragmentHandler($fragmentRegistry, $renderers);
+        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers);
         $fragmentHandler->render($uri);
     }
 
@@ -142,7 +135,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'inline', ['foo' => 'bar']));
 
         $callback = $this->callback(
-            function () use ($uri) {
+            static function () use ($uri) {
                 return isset($uri->attributes['pageModel']) && 99 === $uri->attributes['pageModel'];
             }
         );
@@ -152,7 +145,7 @@ class FragmentHandlerTest extends TestCase
         $GLOBALS['objPage'] = new PageModel();
         $GLOBALS['objPage']->id = 42;
 
-        $fragmentHandler = $this->mockFragmentHandler($fragmentRegistry, $renderers);
+        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers);
         $fragmentHandler->render($uri);
     }
 
@@ -174,7 +167,7 @@ class FragmentHandlerTest extends TestCase
         $preHandlers = $this->mockServiceLocator('foo.bar', $preHandlers);
         $renderers = $this->mockServiceLocatorWithRenderer('inline');
 
-        $fragmentHandler = $this->mockFragmentHandler($fragmentRegistry, $renderers, $preHandlers);
+        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, $preHandlers);
         $fragmentHandler->render($uri);
     }
 
@@ -192,7 +185,7 @@ class FragmentHandlerTest extends TestCase
             ->method('get')
         ;
 
-        $fragmentHandler = $this->mockFragmentHandler($fragmentRegistry, null, null, null, $baseHandler);
+        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, null, null, null, $baseHandler);
         $fragmentHandler->render('foo.bar');
     }
 
@@ -209,14 +202,17 @@ class FragmentHandlerTest extends TestCase
         $response->setStatusCode(404);
 
         $renderers = $this->mockServiceLocatorWithRenderer('foobar', [$uri, $request], $response);
-        $fragmentHandler = $this->mockFragmentHandler($fragmentRegistry, $renderers, null, $request);
+        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, null, $request);
 
         $this->expectException(ResponseException::class);
 
         $fragmentHandler->render($uri);
     }
 
-    private function mockFragmentHandler(FragmentRegistry $registry = null, ServiceLocator $renderers = null, ServiceLocator $preHandlers = null, Request $request = null, BaseFragmentHandler $fragmentHandler = null): FragmentHandler
+    /**
+     * @param BaseFragmentHandler&MockObject $fragmentHandler
+     */
+    private function getFragmentHandler(FragmentRegistry $registry = null, ServiceLocator $renderers = null, ServiceLocator $preHandlers = null, Request $request = null, BaseFragmentHandler $fragmentHandler = null): FragmentHandler
     {
         if (null === $registry) {
             $registry = new FragmentRegistry();
@@ -245,7 +241,7 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * @return ServiceLocator|MockObject
+     * @return ServiceLocator&MockObject
      */
     private function mockServiceLocatorWithRenderer(string $name, array $with = null, Response $response = null): ServiceLocator
     {
@@ -276,7 +272,7 @@ class FragmentHandlerTest extends TestCase
     /**
      * @param object $service
      *
-     * @return ServiceLocator|MockObject
+     * @return ServiceLocator&MockObject
      */
     private function mockServiceLocator(string $name, $service): ServiceLocator
     {

@@ -70,7 +70,7 @@ class TimePeriod extends Widget
 				break;
 
 			case 'options':
-				$this->arrUnits = \StringUtil::deserialize($varValue);
+				$this->arrUnits = StringUtil::deserialize($varValue);
 				break;
 
 			default:
@@ -110,7 +110,7 @@ class TimePeriod extends Widget
 	{
 		if (empty($this->varValue) && empty($_POST) && $arrOption['default'])
 		{
-			return parent::optionSelected(1, 1);
+			return $this->optionSelected(1, 1);
 		}
 
 		if (empty($this->varValue) || !\is_array($this->varValue))
@@ -118,7 +118,7 @@ class TimePeriod extends Widget
 			return '';
 		}
 
-		return parent::optionSelected($arrOption['value'], $this->varValue['unit']);
+		return $this->optionSelected($arrOption['value'], $this->varValue['unit']);
 	}
 
 	/**
@@ -139,7 +139,7 @@ class TimePeriod extends Widget
 		foreach ($this->arrUnits as $arrUnit)
 		{
 			$arrUnits[] = sprintf('<option value="%s"%s>%s</option>',
-								   \StringUtil::specialchars($arrUnit['value']),
+								   StringUtil::specialchars($arrUnit['value']),
 								   $this->isSelected($arrUnit),
 								   $arrUnit['label']);
 		}
@@ -153,7 +153,7 @@ class TimePeriod extends Widget
 						$this->strName,
 						$this->strId,
 						(($this->strClass != '') ? ' ' . $this->strClass : ''),
-						\StringUtil::specialchars($this->varValue['value']),
+						StringUtil::specialchars($this->varValue['value']),
 						$this->getAttributes(),
 						$this->strName,
 						$this->getAttribute('disabled'),

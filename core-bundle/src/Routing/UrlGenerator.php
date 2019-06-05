@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\Config;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
@@ -26,7 +26,7 @@ class UrlGenerator implements UrlGeneratorInterface
     private $router;
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -35,7 +35,7 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private $prependLocale;
 
-    public function __construct(UrlGeneratorInterface $router, ContaoFrameworkInterface $framework, bool $prependLocale)
+    public function __construct(UrlGeneratorInterface $router, ContaoFramework $framework, bool $prependLocale)
     {
         $this->router = $router;
         $this->framework = $framework;
@@ -103,7 +103,7 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private function prepareLocale(array &$parameters): void
     {
-        if (!$this->prependLocale && array_key_exists('_locale', $parameters)) {
+        if (!$this->prependLocale && \array_key_exists('_locale', $parameters)) {
             unset($parameters['_locale']);
         }
     }
@@ -127,7 +127,7 @@ class UrlGenerator implements UrlGeneratorInterface
 
         $parameters['alias'] = preg_replace_callback(
             '/\{([^\}]+)\}/',
-            function (array $matches) use ($alias, &$parameters, $autoItems, &$hasAutoItem, $config): string {
+            static function (array $matches) use ($alias, &$parameters, $autoItems, &$hasAutoItem, $config): string {
                 $param = $matches[1];
 
                 if (!isset($parameters[$param])) {

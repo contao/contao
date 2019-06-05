@@ -53,9 +53,9 @@ class BackendTemplate extends Template
 	protected function compile()
 	{
 		// User agent class (see #3074 and #6277)
-		$this->ua = \Environment::get('agent')->class;
+		$this->ua = Environment::get('agent')->class;
 
-		if (\Config::get('fullscreen'))
+		if (Config::get('fullscreen'))
 		{
 			$this->ua .= ' fullscreen';
 		}
@@ -64,11 +64,11 @@ class BackendTemplate extends Template
 		if (!empty($GLOBALS['TL_CSS']) && \is_array($GLOBALS['TL_CSS']))
 		{
 			$strStyleSheets = '';
-			$objCombiner = new \Combiner();
+			$objCombiner = new Combiner();
 
 			foreach (array_unique($GLOBALS['TL_CSS']) as $stylesheet)
 			{
-				$options = \StringUtil::resolveFlaggedUrl($stylesheet);
+				$options = StringUtil::resolveFlaggedUrl($stylesheet);
 
 				if ($options->static)
 				{
@@ -76,13 +76,13 @@ class BackendTemplate extends Template
 				}
 				else
 				{
-					$strStyleSheets .= \Template::generateStyleTag($this->addStaticUrlTo($stylesheet), $options->media, $options->mtime);
+					$strStyleSheets .= Template::generateStyleTag($this->addStaticUrlTo($stylesheet), $options->media, $options->mtime);
 				}
 			}
 
 			if ($objCombiner->hasEntries())
 			{
-				$strStyleSheets = \Template::generateStyleTag($objCombiner->getCombinedFile(), 'all') . $strStyleSheets;
+				$strStyleSheets = Template::generateStyleTag($objCombiner->getCombinedFile(), 'all') . $strStyleSheets;
 			}
 
 			$this->stylesheets .= $strStyleSheets;
@@ -91,13 +91,13 @@ class BackendTemplate extends Template
 		// JavaScripts
 		if (!empty($GLOBALS['TL_JAVASCRIPT']) && \is_array($GLOBALS['TL_JAVASCRIPT']))
 		{
-			$objCombiner = new \Combiner();
-			$objCombinerAsync = new \Combiner();
+			$objCombiner = new Combiner();
+			$objCombinerAsync = new Combiner();
 			$strJavaScripts = '';
 
 			foreach (array_unique($GLOBALS['TL_JAVASCRIPT']) as $javascript)
 			{
-				$options = \StringUtil::resolveFlaggedUrl($javascript);
+				$options = StringUtil::resolveFlaggedUrl($javascript);
 
 				if ($options->static)
 				{
@@ -105,18 +105,18 @@ class BackendTemplate extends Template
 				}
 				else
 				{
-					$strJavaScripts .= \Template::generateScriptTag($this->addStaticUrlTo($javascript), $options->async, $options->mtime);
+					$strJavaScripts .= Template::generateScriptTag($this->addStaticUrlTo($javascript), $options->async, $options->mtime);
 				}
 			}
 
 			if ($objCombiner->hasEntries())
 			{
-				$strJavaScripts = \Template::generateScriptTag($objCombiner->getCombinedFile()) . $strJavaScripts;
+				$strJavaScripts = Template::generateScriptTag($objCombiner->getCombinedFile()) . $strJavaScripts;
 			}
 
 			if ($objCombinerAsync->hasEntries())
 			{
-				$strJavaScripts = \Template::generateScriptTag($objCombinerAsync->getCombinedFile(), true) . $strJavaScripts;
+				$strJavaScripts = Template::generateScriptTag($objCombinerAsync->getCombinedFile(), true) . $strJavaScripts;
 			}
 
 			$this->javascripts .= $strJavaScripts;
@@ -160,11 +160,11 @@ class BackendTemplate extends Template
 	 */
 	protected function getLocaleString()
 	{
-		$container = \System::getContainer();
+		$container = System::getContainer();
 
 		return
 			'var Contao={'
-				. 'theme:"' . \Backend::getTheme() . '",'
+				. 'theme:"' . Backend::getTheme() . '",'
 				. 'lang:{'
 					. 'close:"' . $GLOBALS['TL_LANG']['MSC']['close'] . '",'
 					. 'collapse:"' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '",'
@@ -173,7 +173,7 @@ class BackendTemplate extends Template
 					. 'apply:"' . $GLOBALS['TL_LANG']['MSC']['apply'] . '"'
 				. '},'
 				. 'script_url:"' . $container->get('contao.assets.assets_context')->getStaticUrl() . '",'
-				. 'path:"' . \Environment::get('path') . '",'
+				. 'path:"' . Environment::get('path') . '",'
 				. 'request_token:"' . REQUEST_TOKEN . '",'
 				. 'referer_id:"' . $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id') . '"'
 			. '};';

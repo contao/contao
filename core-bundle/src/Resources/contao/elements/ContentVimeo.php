@@ -38,7 +38,14 @@ class ContentVimeo extends ContentElement
 
 		if (TL_MODE == 'BE')
 		{
-			return '<p><a href="https://vimeo.com/' . $this->vimeo . '" target="_blank" rel="noreferrer noopener">vimeo.com/' . $this->vimeo . '</a></p>';
+			$return = '<p><a href="https://vimeo.com/' . $this->vimeo . '" target="_blank" rel="noreferrer noopener">vimeo.com/' . $this->vimeo . '</a></p>';
+
+			if ($this->headline != '')
+			{
+				$return = '<'. $this->hl .'>'. $this->headline .'</'. $this->hl .'>'. $return;
+			}
+
+			return $return;
 		}
 
 		return parent::generate();
@@ -49,19 +56,23 @@ class ContentVimeo extends ContentElement
 	 */
 	protected function compile()
 	{
-		$size = \StringUtil::deserialize($this->playerSize);
+		$size = StringUtil::deserialize($this->playerSize);
 
 		if (!\is_array($size) || empty($size[0]) || empty($size[1]))
 		{
 			$this->Template->size = ' width="640" height="360"';
+			$this->Template->width = 640;
+			$this->Template->height = 360;
 		}
 		else
 		{
 			$this->Template->size = ' width="' . $size[0] . '" height="' . $size[1] . '"';
+			$this->Template->width = $size[0];
+			$this->Template->height = $size[1];
 		}
 
 		$params = array();
-		$options = \StringUtil::deserialize($this->vimeoOptions);
+		$options = StringUtil::deserialize($this->vimeoOptions);
 		$url = 'https://player.vimeo.com/video/' . $this->vimeo;
 
 		if (\is_array($options))
@@ -95,6 +106,21 @@ class ContentVimeo extends ContentElement
 		if ($this->playerStart > 0)
 		{
 			$url .= '#t=' . (int) $this->playerStart . 's';
+		}
+
+		// Add a splash image
+		if ($this->splashImage)
+		{
+			$objFile = FilesModel::findByUuid($this->singleSRC);
+
+			if ($objFile !== null && is_file(TL_ROOT . '/' . $objFile->path))
+			{
+				$this->singleSRC = $objFile->path;
+
+				$objSplash = new \stdClass();
+				$this->addImageToTemplate($objSplash, $this->arrData, null, null, $objFile);
+				$this->Template->splashImage = $objSplash;
+			}
 		}
 
 		$this->Template->src = $url;

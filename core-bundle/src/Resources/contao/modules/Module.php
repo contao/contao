@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
 use FOS\HttpCache\ResponseTagger;
 
 /**
@@ -122,12 +123,12 @@ abstract class Module extends Frontend
 	 */
 	public function __construct($objModule, $strColumn='main')
 	{
-		if ($objModule instanceof Model || $objModule instanceof Model\Collection)
+		if ($objModule instanceof Model || $objModule instanceof Collection)
 		{
 			/** @var ModuleModel $objModel */
 			$objModel = $objModule;
 
-			if ($objModel instanceof Model\Collection)
+			if ($objModel instanceof Collection)
 			{
 				$objModel = $objModel->current();
 			}
@@ -138,14 +139,14 @@ abstract class Module extends Frontend
 		parent::__construct();
 
 		$this->arrData = $objModule->row();
-		$this->cssID = \StringUtil::deserialize($objModule->cssID, true);
+		$this->cssID = StringUtil::deserialize($objModule->cssID, true);
 
 		if ($this->customTpl != '' && TL_MODE == 'FE')
 		{
 			$this->strTemplate = $this->customTpl;
 		}
 
-		$arrHeadline = \StringUtil::deserialize($objModule->headline);
+		$arrHeadline = StringUtil::deserialize($objModule->headline);
 		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		$this->strColumn = $strColumn;
@@ -208,7 +209,7 @@ abstract class Module extends Frontend
 	 */
 	public function generate()
 	{
-		$this->Template = new \FrontendTemplate($this->strTemplate);
+		$this->Template = new FrontendTemplate($this->strTemplate);
 		$this->Template->setData($this->arrData);
 
 		$this->compile();
@@ -264,7 +265,7 @@ abstract class Module extends Frontend
 	protected function renderNavigation($pid, $level=1, $host=null, $language=null)
 	{
 		// Get all active subpages
-		$objSubpages = \PageModel::findPublishedSubpagesWithoutGuestsByPid($pid, $this->showHidden, $this instanceof ModuleSitemap);
+		$objSubpages = PageModel::findPublishedSubpagesWithoutGuestsByPid($pid, $this->showHidden, $this instanceof ModuleSitemap);
 
 		if ($objSubpages === null)
 		{
@@ -277,7 +278,7 @@ abstract class Module extends Frontend
 		// Get all groups of the current front end user
 		if (FE_USER_LOGGED_IN)
 		{
-			$this->import('FrontendUser', 'User');
+			$this->import(FrontendUser::class, 'User');
 			$groups = $this->User->groups;
 		}
 
@@ -287,7 +288,7 @@ abstract class Module extends Frontend
 			$this->navigationTpl = 'nav_default';
 		}
 
-		$objTemplate = new \FrontendTemplate($this->navigationTpl);
+		$objTemplate = new FrontendTemplate($this->navigationTpl);
 		$objTemplate->pid = $pid;
 		$objTemplate->type = \get_class($this);
 		$objTemplate->cssID = $this->cssID; // see #4897
@@ -306,7 +307,7 @@ abstract class Module extends Frontend
 			}
 
 			$subitems = '';
-			$_groups = \StringUtil::deserialize($objSubpage->groups);
+			$_groups = StringUtil::deserialize($objSubpage->groups);
 
 			// Override the domain (see #3765)
 			if ($host !== null)
@@ -315,7 +316,7 @@ abstract class Module extends Frontend
 			}
 
 			// Do not show protected pages unless a front end user is logged in
-			if (!$objSubpage->protected || (\is_array($_groups) && \count(array_intersect($_groups, $groups))) || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always'))
+			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || (\is_array($_groups) && \is_array($groups) && \count(array_intersect($_groups, $groups))))
 			{
 				// Check whether there will be subpages
 				if ($objSubpage->subpages > 0 && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))
@@ -333,25 +334,22 @@ abstract class Module extends Frontend
 
 						if (strncasecmp($href, 'mailto:', 7) === 0)
 						{
-							$href = \StringUtil::encodeEmail($href);
+							$href = StringUtil::encodeEmail($href);
 						}
 						break;
 
 					case 'forward':
 						if ($objSubpage->jumpTo)
 						{
-							/** @var PageModel $objNext */
-							$objNext = $objSubpage->getRelated('jumpTo');
+							$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
 						}
 						else
 						{
-							$objNext = \PageModel::findFirstPublishedRegularByPid($objSubpage->id);
+							$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
 						}
 
-						$isInvisible = !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time());
-
 						// Hide the link if the target page is invisible
-						if (!$objNext instanceof PageModel || ($isInvisible && !BE_USER_LOGGED_IN))
+						if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !BE_USER_LOGGED_IN))
 						{
 							continue 2;
 						}
@@ -367,8 +365,11 @@ abstract class Module extends Frontend
 				$row = $objSubpage->row();
 				$trail = \in_array($objSubpage->id, $objPage->trail);
 
+				// Use the path without query string to check for active pages (see #480)
+				list($path) = explode('?', \Environment::get('request'), 2);
+
 				// Active page
-				if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == \Environment::get('request'))
+				if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == $path)
 				{
 					// Mark active forward pages (see #4822)
 					$strClass = (($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) ? 'forward' . ($trail ? ' trail' : '') : 'active') . (($subitems != '') ? ' submenu' : '') . ($objSubpage->protected ? ' protected' : '') . (($objSubpage->cssClass != '') ? ' ' . $objSubpage->cssClass : '');
@@ -394,8 +395,8 @@ abstract class Module extends Frontend
 
 				$row['subitems'] = $subitems;
 				$row['class'] = trim($strClass);
-				$row['title'] = \StringUtil::specialchars($objSubpage->title, true);
-				$row['pageTitle'] = \StringUtil::specialchars($objSubpage->pageTitle, true);
+				$row['title'] = StringUtil::specialchars($objSubpage->title, true);
+				$row['pageTitle'] = StringUtil::specialchars($objSubpage->pageTitle, true);
 				$row['link'] = $objSubpage->title;
 				$row['href'] = $href;
 				$row['rel'] = '';

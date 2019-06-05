@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes themes
  *
@@ -36,17 +38,17 @@ namespace Contao;
  * @method static ThemeModel|null findOneByVars($val, array $opt=array())
  * @method static ThemeModel|null findOneByDefaultImageDensities($val, array $opt=array())
  *
- * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByName($val, array $opt=array())
- * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByAuthor($val, array $opt=array())
- * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByFolders($val, array $opt=array())
- * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByScreenshot($val, array $opt=array())
- * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByTemplates($val, array $opt=array())
- * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByVars($val, array $opt=array())
- * @method static Model\Collection|ThemeModel[]|ThemeModel|null findByDefaultImageDensities($val, array $opt=array())
- * @method static Model\Collection|ThemeModel[]|ThemeModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|ThemeModel[]|ThemeModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|ThemeModel[]|ThemeModel|null findAll(array $opt=array())
+ * @method static Collection|ThemeModel[]|ThemeModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|ThemeModel[]|ThemeModel|null findByName($val, array $opt=array())
+ * @method static Collection|ThemeModel[]|ThemeModel|null findByAuthor($val, array $opt=array())
+ * @method static Collection|ThemeModel[]|ThemeModel|null findByFolders($val, array $opt=array())
+ * @method static Collection|ThemeModel[]|ThemeModel|null findByScreenshot($val, array $opt=array())
+ * @method static Collection|ThemeModel[]|ThemeModel|null findByTemplates($val, array $opt=array())
+ * @method static Collection|ThemeModel[]|ThemeModel|null findByVars($val, array $opt=array())
+ * @method static Collection|ThemeModel[]|ThemeModel|null findByDefaultImageDensities($val, array $opt=array())
+ * @method static Collection|ThemeModel[]|ThemeModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|ThemeModel[]|ThemeModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|ThemeModel[]|ThemeModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())

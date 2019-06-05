@@ -32,14 +32,14 @@ class ContentModule extends ContentElement
 			return '';
 		}
 
-		$objModule = \ModuleModel::findByPk($this->module);
+		$objModule = ModuleModel::findByPk($this->module);
 
 		if ($objModule === null)
 		{
 			return '';
 		}
 
-		$strClass = \Module::findClass($objModule->type);
+		$strClass = Module::findClass($objModule->type);
 
 		if (!class_exists($strClass))
 		{
@@ -51,7 +51,7 @@ class ContentModule extends ContentElement
 		/** @var Module $objModule */
 		$objModule = new $strClass($objModule, $this->strColumn);
 
-		$cssID = \StringUtil::deserialize($objModule->cssID, true);
+		$cssID = StringUtil::deserialize($objModule->cssID, true);
 
 		// Override the CSS ID (see #305)
 		if (!empty($this->cssID[0]))

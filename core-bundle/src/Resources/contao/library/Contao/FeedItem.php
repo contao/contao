@@ -109,22 +109,22 @@ class FeedItem
 	 */
 	public function addEnclosure($strFile, $strUrl=null, $strMedia='enclosure')
 	{
-		if ($strFile == '' || !file_exists(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $strFile))
+		if ($strFile == '' || !file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $strFile))
 		{
 			return;
 		}
 
 		if ($strUrl === null)
 		{
-			$strUrl = \Environment::get('base');
+			$strUrl = Environment::get('base');
 		}
 
-		$objFile = new \File($strFile);
+		$objFile = new File($strFile);
 
 		$this->arrData['enclosure'][] = array
 		(
 			'media' => $strMedia,
-			'url' => $strUrl . \System::urlEncode($strFile),
+			'url' => $strUrl . System::urlEncode($strFile),
 			'length' => $objFile->size,
 			'type' => $objFile->mime
 		);

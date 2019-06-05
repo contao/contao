@@ -52,7 +52,7 @@ class RequestToken
 	 */
 	public static function get()
 	{
-		$container = \System::getContainer();
+		$container = System::getContainer();
 
 		return $container->get('contao.csrf.token_manager')->getToken($container->getParameter('contao.csrf_token_name'))->getValue();
 	}
@@ -67,17 +67,17 @@ class RequestToken
 	public static function validate($strToken)
 	{
 		// The feature has been disabled
-		if (\Config::get('disableRefererCheck') || \defined('BYPASS_TOKEN_CHECK'))
+		if (Config::get('disableRefererCheck') || \defined('BYPASS_TOKEN_CHECK'))
 		{
 			return true;
 		}
 
 		// Check against the whitelist (thanks to Tristan Lins) (see #3164)
-		if (\Config::get('requestTokenWhitelist'))
+		if (Config::get('requestTokenWhitelist'))
 		{
 			$strHostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
 
-			foreach (\Config::get('requestTokenWhitelist') as $strDomain)
+			foreach (Config::get('requestTokenWhitelist') as $strDomain)
 			{
 				if ($strDomain == $strHostname || preg_match('/\.' . preg_quote($strDomain, '/') . '$/', $strHostname))
 				{
@@ -86,7 +86,7 @@ class RequestToken
 			}
 		}
 
-		$container = \System::getContainer();
+		$container = System::getContainer();
 
 		return $container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), $strToken));
 	}

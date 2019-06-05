@@ -29,8 +29,9 @@ class BackendLocaleListenerTest extends TestCase
 {
     public function testSetsTheLocale(): void
     {
-        /** @var BackendUser|MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, ['language' => 'de']);
+        /** @var BackendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->language = 'de';
 
         $token = $this->createMock(TokenInterface::class);
         $token

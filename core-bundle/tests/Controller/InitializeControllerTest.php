@@ -32,7 +32,7 @@ class InitializeControllerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('request_stack', $requestStack);
 
         $controller = new InitializeController();

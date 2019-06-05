@@ -45,7 +45,7 @@ class CheckBoxWizard extends Widget
 		switch ($strKey)
 		{
 			case 'options':
-				$this->arrOptions = \StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue);
 				break;
 
 			default:
@@ -107,7 +107,7 @@ class CheckBoxWizard extends Widget
 		// Generate options and add buttons
 		foreach ($this->arrOptions as $i=>$arrOption)
 		{
-			$arrOptions[] = $this->generateCheckbox($arrOption, $i, '<button class="drag-handle" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . \Image::getHtml('drag.svg') . '</button> ');
+			$arrOptions[] = $this->generateCheckbox($arrOption, $i, '<button type="button" class="drag-handle" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button> ');
 		}
 
 		// Add a "no entries found" message if there are no options
@@ -145,7 +145,7 @@ class CheckBoxWizard extends Widget
 		return sprintf('<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> %s<label for="opt_%s">%s</label></span>',
 						$this->strName . ($this->multiple ? '[]' : ''),
 						$this->strId.'_'.$i,
-						($this->multiple ? \StringUtil::specialchars($arrOption['value']) : 1),
+						($this->multiple ? StringUtil::specialchars($arrOption['value']) : 1),
 						(((\is_array($this->varValue) && \in_array($arrOption['value'], $this->varValue)) || $this->varValue == $arrOption['value']) ? ' checked="checked"' : ''),
 						$this->getAttributes(),
 						$strButtons,

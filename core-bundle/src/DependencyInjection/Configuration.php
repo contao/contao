@@ -21,11 +21,6 @@ use Symfony\Component\Finder\SplFileInfo;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * @var bool
-     */
-    private $debug;
-
-    /**
      * @var string
      */
     private $projectDir;
@@ -35,18 +30,23 @@ class Configuration implements ConfigurationInterface
      */
     private $defaultLocale;
 
-    public function __construct(bool $debug, string $projectDir, string $defaultLocale)
+    public function __construct(string $projectDir, string $defaultLocale)
     {
-        $this->debug = $debug;
         $this->projectDir = $projectDir;
         $this->defaultLocale = $defaultLocale;
     }
 
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
+        $treeBuilder = new TreeBuilder('contao');
 
-        $rootNode = $treeBuilder->root('contao');
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            // Backwards compatibility with symfony/config <4.2
+            $rootNode = $treeBuilder->root('contao');
+        }
+
         $rootNode
             ->children()
                 ->scalarNode('web_dir')
@@ -75,7 +75,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('files')
                     ->validate()
                         ->ifTrue(
-                            function (string $v): int {
+                            static function (string $v): int {
                                 return preg_match(
                                     '@^(app|assets|bin|contao|plugins|share|system|templates|var|vendor|web)(/|$)@',
                                     $v
@@ -90,7 +90,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('contao_csrf_token')
                 ->end()
                 ->booleanNode('pretty_error_screens')
-                    ->defaultValue(!$this->debug)
+                    ->defaultValue(false)
                 ->end()
                 ->integerNode('error_level')
                     ->min(-1)

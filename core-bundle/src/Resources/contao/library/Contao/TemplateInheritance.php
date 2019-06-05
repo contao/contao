@@ -118,9 +118,9 @@ trait TemplateInheritance
 		$this->arrBlocks = array();
 
 		// Add start and end markers in debug mode
-		if (\Config::get('debugMode'))
+		if (Config::get('debugMode'))
 		{
-			$strRelPath = \StringUtil::stripRootDir($this->getTemplatePath($this->strTemplate, $this->strFormat));
+			$strRelPath = StringUtil::stripRootDir($this->getTemplatePath($this->strTemplate, $this->strFormat));
 			$strBuffer = "\n<!-- TEMPLATE START: $strRelPath -->\n$strBuffer\n<!-- TEMPLATE END: $strRelPath -->\n";
 		}
 
@@ -273,11 +273,11 @@ trait TemplateInheritance
 		}
 		elseif (TL_MODE == 'BE')
 		{
-			$tpl = new \BackendTemplate($name);
+			$tpl = new BackendTemplate($name);
 		}
 		else
 		{
-			$tpl = new \FrontendTemplate($name);
+			$tpl = new FrontendTemplate($name);
 		}
 
 		if ($data !== null)
@@ -301,10 +301,10 @@ trait TemplateInheritance
 	{
 		if ($blnDefault)
 		{
-			return \TemplateLoader::getDefaultPath($strTemplate, $strFormat);
+			return TemplateLoader::getDefaultPath($strTemplate, $strFormat);
 		}
 
-		return \Controller::getTemplate($strTemplate, $strFormat);
+		return Controller::getTemplate($strTemplate);
 	}
 }
 

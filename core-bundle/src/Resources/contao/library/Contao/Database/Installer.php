@@ -10,7 +10,12 @@
 
 namespace Contao\Database;
 
+use Contao\Config;
 use Contao\Controller;
+use Contao\Database;
+use Contao\DcaExtractor;
+use Contao\SqlFileParser;
+use Contao\System;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
@@ -161,7 +166,7 @@ class Installer extends Controller
 					{
 						$return['ALTER_ADD'][] = 'ALTER TABLE `'.$k.'` ADD '.$vv.';';
 					}
-					elseif ($sql_current[$k]['TABLE_FIELDS'][$kk] != $vv && $sql_current[$k]['TABLE_FIELDS'][$kk] != str_replace(' COLLATE ' . \Config::get('dbCollation'), '', $vv))
+					elseif ($sql_current[$k]['TABLE_FIELDS'][$kk] != $vv && $sql_current[$k]['TABLE_FIELDS'][$kk] != str_replace(' COLLATE ' . Config::get('dbCollation'), '', $vv))
 					{
 						$return['ALTER_CHANGE'][] = 'ALTER TABLE `'.$k.'` CHANGE `'.$kk.'` '.$vv.';';
 					}
@@ -266,7 +271,7 @@ class Installer extends Controller
 		$processed = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = \System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
+		$files = System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
 
 		foreach ($files as $file)
 		{
@@ -278,7 +283,7 @@ class Installer extends Controller
 			$processed[] = $file->getBasename();
 
 			$strTable = $file->getBasename('.php');
-			$objExtract = \DcaExtractor::getInstance($strTable);
+			$objExtract = DcaExtractor::getInstance($strTable);
 
 			if ($objExtract->isDbTable())
 			{
@@ -311,11 +316,11 @@ class Installer extends Controller
 		$return = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = \System::getContainer()->get('contao.resource_finder')->findIn('config')->depth(0)->files()->name('database.sql');
+		$files = System::getContainer()->get('contao.resource_finder')->findIn('config')->depth(0)->files()->name('database.sql');
 
 		foreach ($files as $file)
 		{
-			$return = array_replace_recursive($return, \SqlFileParser::parse($file));
+			$return = array_replace_recursive($return, SqlFileParser::parse($file));
 		}
 
 		ksort($return);
@@ -340,7 +345,7 @@ class Installer extends Controller
 	 */
 	public function getFromDb()
 	{
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 		$tables = preg_grep('/^tl_/', $this->Database->listTables(null, true));
 
 		if (empty($tables))
@@ -375,7 +380,7 @@ class Installer extends Controller
 					}
 
 					// Variant collation
-					if ($field['collation'] != '' && $field['collation'] != \Config::get('dbCollation'))
+					if ($field['collation'] != '' && $field['collation'] != Config::get('dbCollation'))
 					{
 						$field['collation'] = 'COLLATE ' . $field['collation'];
 					}

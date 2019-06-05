@@ -31,7 +31,7 @@ class ModuleProxy extends Module
 			$reference->setBackendScope();
 		}
 
-		return \System::getContainer()->get('fragment.handler')->render($reference);
+		return System::getContainer()->get('fragment.handler')->render($reference);
 	}
 
 	/**

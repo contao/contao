@@ -14,11 +14,12 @@ namespace Contao\CoreBundle\Tests\Cache;
 
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -36,7 +37,7 @@ class ContaoCacheWarmerTest extends TestCase
     {
         parent::setUp();
 
-        $this->warmer = $this->mockCacheWarmer();
+        $this->warmer = $this->getCacheWarmer();
     }
 
     /**
@@ -52,7 +53,7 @@ class ContaoCacheWarmerTest extends TestCase
 
     public function testCreatesTheCacheFolder(): void
     {
-        $container = $this->mockContainer($this->getFixturesDir());
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
         $container->set('database_connection', $this->createMock(Connection::class));
 
         System::setContainer($container);
@@ -76,7 +77,7 @@ class ContaoCacheWarmerTest extends TestCase
             ->willReturn($statement)
         ;
 
-        $warmer = $this->mockCacheWarmer($connection);
+        $warmer = $this->getCacheWarmer($connection);
         $warmer->warmUp($this->getFixturesDir().'/var/cache');
 
         $this->assertFileExists($this->getFixturesDir().'/var/cache/contao');
@@ -144,7 +145,7 @@ class ContaoCacheWarmerTest extends TestCase
             ->willReturn($statement)
         ;
 
-        $warmer = $this->mockCacheWarmer($connection, null, 'empty-bundle');
+        $warmer = $this->getCacheWarmer($connection, null, 'empty-bundle');
         $warmer->warmUp($this->getFixturesDir().'/var/cache/contao');
 
         $this->assertFileNotExists($this->getFixturesDir().'/var/cache/contao');
@@ -164,13 +165,17 @@ class ContaoCacheWarmerTest extends TestCase
             ->method('initialize')
         ;
 
-        $warmer = $this->mockCacheWarmer($connection, $framework);
+        $warmer = $this->getCacheWarmer($connection, $framework);
         $warmer->warmUp($this->getFixturesDir().'/var/cache/contao');
 
         $this->assertFileNotExists($this->getFixturesDir().'/var/cache/contao');
     }
 
-    private function mockCacheWarmer(Connection $connection = null, ContaoFrameworkInterface $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
+    /**
+     * @param Connection&MockObject      $connection
+     * @param ContaoFramework&MockObject $framework
+     */
+    private function getCacheWarmer(Connection $connection = null, ContaoFramework $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
     {
         if (null === $connection) {
             $connection = $this->createMock(Connection::class);

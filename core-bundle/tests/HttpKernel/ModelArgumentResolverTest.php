@@ -27,7 +27,7 @@ class ModelArgumentResolverTest extends TestCase
      */
     public function testResolvesTheModel(string $name, string $class): void
     {
-        System::setContainer($this->mockContainer());
+        System::setContainer($this->getContainerWithContaoConfiguration());
 
         $pageModel = new PageModel();
         $pageModel->setRow(['id' => 42]);
@@ -49,16 +49,11 @@ class ModelArgumentResolverTest extends TestCase
         }
     }
 
-    /**
-     * @return string[][]
-     */
-    public function getArguments(): array
+    public function getArguments(): \Generator
     {
-        return [
-            ['pageModel', PageModel::class],
-            ['foobar', PageModel::class],
-            ['foobar', 'PageModel'],
-        ];
+        yield ['pageModel', PageModel::class];
+        yield ['foobar', PageModel::class];
+        yield ['foobar', 'PageModel'];
     }
 
     public function testDoesNothingIfOutsideTheContaoScope(): void

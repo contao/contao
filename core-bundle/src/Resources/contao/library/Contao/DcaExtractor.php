@@ -109,7 +109,7 @@ class DcaExtractor extends Controller
 
 		$this->strTable = $strTable;
 
-		$strFile = \System::getContainer()->getParameter('kernel.cache_dir') . '/contao/sql/' . $strTable . '.php';
+		$strFile = System::getContainer()->getParameter('kernel.cache_dir') . '/contao/sql/' . $strTable . '.php';
 
 		// Try to load from cache
 		if (file_exists($strFile))
@@ -309,7 +309,7 @@ class DcaExtractor extends Controller
 			// Handle multi-column indexes (see #5556)
 			if (strpos($k, ',') !== false)
 			{
-				$f = array_map($quote, \StringUtil::trimsplit(',', $k));
+				$f = array_map($quote, StringUtil::trimsplit(',', $k));
 				$k = str_replace(',', '_', $k);
 			}
 			else
@@ -411,6 +411,12 @@ class DcaExtractor extends Controller
 					$table = substr($config['foreignKey'], 0, strrpos($config['foreignKey'], '.'));
 					$arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id'), $config['relation']);
 
+					// Store the field delimiter if the related IDs are stored in CSV format (see #257)
+					if (isset($config['eval']['csv']))
+					{
+						$arrRelations[$field]['delimiter'] = $config['eval']['csv'];
+					}
+
 					// Table name and field name are mandatory
 					if (empty($arrRelations[$field]['table']) || empty($arrRelations[$field]['field']))
 					{
@@ -434,7 +440,7 @@ class DcaExtractor extends Controller
 
 				try
 				{
-					$files = \System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
+					$files = System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
 				}
 				catch (\InvalidArgumentException $e)
 				{
@@ -443,7 +449,7 @@ class DcaExtractor extends Controller
 
 				foreach ($files as $file)
 				{
-					$arrSql = array_merge_recursive($arrSql, \SqlFileParser::parse($file));
+					$arrSql = array_merge_recursive($arrSql, SqlFileParser::parse($file));
 				}
 
 				static::$arrSql = $arrSql;
@@ -497,7 +503,7 @@ class DcaExtractor extends Controller
 			return;
 		}
 
-		$params = \System::getContainer()->get('database_connection')->getParams();
+		$params = System::getContainer()->get('database_connection')->getParams();
 
 		// Add the default engine and charset if none is given
 		if (empty($sql['engine']))

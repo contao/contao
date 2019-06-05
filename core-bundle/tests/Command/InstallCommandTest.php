@@ -16,8 +16,6 @@ use Contao\CoreBundle\Command\InstallCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Lock\Factory;
-use Symfony\Component\Lock\Store\FlockStore;
 
 class InstallCommandTest extends TestCase
 {
@@ -47,37 +45,25 @@ class InstallCommandTest extends TestCase
 
     public function testCreatesTheContaoFolders(): void
     {
-        $container = $this->mockContainer($this->getTempDir());
-        $container->set('filesystem', new Filesystem());
-
         $command = new InstallCommand($this->getTempDir(), 'files', $this->getTempDir().'/assets/images');
-        $command->setContainer($container);
-
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $output = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertContains(' * templates', $output);
-        $this->assertContains(' * web/system', $output);
         $this->assertContains(' * assets/css', $output);
         $this->assertContains(' * assets/images', $output);
         $this->assertContains(' * assets/js', $output);
         $this->assertContains(' * system/cache', $output);
         $this->assertContains(' * system/config', $output);
         $this->assertContains(' * system/tmp', $output);
+        $this->assertContains(' * templates', $output);
+        $this->assertContains(' * web/system', $output);
     }
 
     public function testHandlesCustomFilesAndImagesPaths(): void
     {
-        $container = $this->mockContainer($this->getTempDir());
-        $container->setParameter('contao.upload_path', 'files_test');
-        $container->setParameter('contao.image.target_dir', $this->getTempDir().'/assets/images_test');
-        $container->set('filesystem', new Filesystem());
-
         $command = new InstallCommand($this->getTempDir(), 'files_test', $this->getTempDir().'/assets/images_test');
-        $command->setContainer($container);
-
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
@@ -85,30 +71,5 @@ class InstallCommandTest extends TestCase
         $this->assertSame(0, $code);
         $this->assertContains(' * files_test', $display);
         $this->assertContains(' * assets/images_test', $display);
-    }
-
-    public function testIsLockedWhileRunning(): void
-    {
-        $tmpDir = sys_get_temp_dir().'/'.md5($this->getTempDir());
-
-        if (!is_dir($tmpDir)) {
-            (new Filesystem())->mkdir($tmpDir);
-        }
-
-        $factory = new Factory(new FlockStore($tmpDir));
-
-        $lock = $factory->createLock('contao:install');
-        $lock->acquire();
-
-        $command = new InstallCommand($this->getTempDir(), 'files', $this->getTempDir().'/assets/images');
-        $command->setContainer($this->mockContainer($this->getTempDir()));
-
-        $tester = new CommandTester($command);
-        $code = $tester->execute([]);
-
-        $this->assertSame(1, $code);
-        $this->assertContains('The command is already running in another process.', $tester->getDisplay());
-
-        $lock->release();
     }
 }

@@ -53,7 +53,7 @@ class CombinerTest extends ContaoTestCase
             ->willReturn('')
         ;
 
-        $this->container = $this->mockContainer($this->getTempDir());
+        $this->container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $this->container->setParameter('contao.web_dir', $this->getTempDir().'/web');
         $this->container->set('contao.assets.assets_context', $context);
 

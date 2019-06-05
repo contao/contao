@@ -1,9 +1,3 @@
-includes:
-    - vendor/phpstan/phpstan-phpunit/extension.neon
-    - vendor/phpstan/phpstan-phpunit/rules.neon
-    - vendor/contao/phpstan/extension.neon
-    - vendor/phpstan/phpstan-symfony/extension.neon
-
 parameters:
     bootstrap: %currentWorkingDirectory%/vendor/autoload.php
 
@@ -20,27 +14,15 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
 
     ignoreErrors:
-        # Missing constants that are defined at runtime
-        - '#Constant TL_MODE not found\.#'
-        - '#Constant TL_REFERER_ID not found\.#'
-        - '#Constant TL_PATH not found\.#'
+        # Ignore the missing TL_SCRIPT constant in the InitializeController class
         - '#Constant TL_SCRIPT not found\.#'
-        - '#Constant BE_USER_LOGGED_IN not found\.#'
-        - '#Constant FE_USER_LOGGED_IN not found\.#'
 
-        # Undefined properties in Contao fixtures
-        - '#Access to an undefined property Contao\\Fixtures\\#'
-
-        # Missing classes that are only used in BundleConfig::setLoadAfter()
-        - '#Class Symfony\\Bundle\\TwigBundle\\TwigBundle not found\.#'
-        - '#Class Symfony\\Bundle\\MonologBundle\\MonologBundle not found\.#'
-        - '#Class Nelmio\\SecurityBundle\\NelmioSecurityBundle not found\.#'
-        - '#Class Contao\\ManagerBundle\\ContaoManagerBundle not found\.#'
-
-        # Ignore Symfony Configuration errors
-        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
-
-        # Ignore missing method test
+        # Ignore the Adapter::missingMethod() warning
         - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter::missingMethod\(\)\.#'
+
+        # Ignore backwards compatibility layers when preferring lowest dependencies
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
+        - '#Class Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder does not have a constructor and must be instantiated without any parameters\.#'
+        - '#Call to an undefined static method Symfony\\Component\\HttpFoundation\\Cookie::create\(\)\.#'
 
     reportUnmatchedIgnoredErrors: false

@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\BackendUser;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\HttpKernel\JwtManager;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
 use Contao\PageModel;
@@ -30,7 +32,7 @@ use Symfony\Component\Security\Http\HttpUtils;
 class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     protected $framework;
 
@@ -44,7 +46,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     private $user;
 
-    public function __construct(HttpUtils $httpUtils, ContaoFrameworkInterface $framework, LoggerInterface $logger = null)
+    public function __construct(HttpUtils $httpUtils, ContaoFramework $framework, LoggerInterface $logger = null)
     {
         parent::__construct($httpUtils);
 
@@ -106,7 +108,19 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 
     private function getRedirectResponse(Request $request): RedirectResponse
     {
-        return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
+        $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
+
+        if (!$this->user instanceof BackendUser) {
+            return $response;
+        }
+
+        $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
+
+        if ($jwtManager instanceof JwtManager) {
+            $jwtManager->addResponseCookie($response, ['debug' => false]);
+        }
+
+        return $response;
     }
 
     private function triggerPostLoginHook(): void

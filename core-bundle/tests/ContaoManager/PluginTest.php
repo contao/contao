@@ -31,10 +31,10 @@ use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Terminal42\HeaderReplay\HeaderReplayBundle;
 
 class PluginTest extends TestCase
 {
@@ -59,7 +59,7 @@ class PluginTest extends TestCase
         $this->assertSame([], $bundles[2]->getReplace());
         $this->assertSame([], $bundles[2]->getLoadAfter());
 
-        $this->assertSame(HeaderReplayBundle::class, $bundles[3]->getName());
+        $this->assertSame(CmfRoutingBundle::class, $bundles[3]->getName());
         $this->assertSame([], $bundles[3]->getReplace());
         $this->assertSame([], $bundles[3]->getLoadAfter());
 
@@ -81,7 +81,7 @@ class PluginTest extends TestCase
                 NelmioCorsBundle::class,
                 NelmioSecurityBundle::class,
                 SchebTwoFactorBundle::class,
-                HeaderReplayBundle::class,
+                CmfRoutingBundle::class,
                 ContaoManagerBundle::class,
             ],
             $bundles[4]->getLoadAfter()

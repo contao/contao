@@ -80,7 +80,7 @@ class Config
 	 */
 	protected function __construct()
 	{
-		$this->strRootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$this->strRootDir = System::getContainer()->getParameter('kernel.project_dir');
 	}
 
 	/**
@@ -125,7 +125,7 @@ class Config
 			static::preload();
 		}
 
-		$strCacheDir = \System::getContainer()->getParameter('kernel.cache_dir');
+		$strCacheDir = System::getContainer()->getParameter('kernel.cache_dir');
 
 		if (file_exists($strCacheDir . '/contao/config/config.php'))
 		{
@@ -135,7 +135,7 @@ class Config
 		{
 			try
 			{
-				$files = \System::getContainer()->get('contao.resource_locator')->locate('config/config.php', null, false);
+				$files = System::getContainer()->get('contao.resource_locator')->locate('config/config.php', null, false);
 			}
 			catch (\InvalidArgumentException $e)
 			{
@@ -175,7 +175,7 @@ class Config
 		$this->strBottom = '';
 
 		// Import the Files object (required in the destructor)
-		$this->Files = \Files::getInstance();
+		$this->Files = Files::getInstance();
 
 		// Parse the local configuration file
 		if (static::$blnHasLcf)
@@ -260,7 +260,7 @@ class Config
 		// Make sure the file has been written (see #4483)
 		if (!filesize($this->strRootDir . '/system/tmp/' . $strTemp))
 		{
-			\System::log('The local configuration file could not be written. Have your reached your quota limit?', __METHOD__, TL_ERROR);
+			System::log('The local configuration file could not be written. Have your reached your quota limit?', __METHOD__, TL_ERROR);
 
 			return;
 		}
@@ -308,7 +308,7 @@ class Config
 	{
 		@trigger_error('Using Config::getActiveModules() has been deprecated and will no longer work in Contao 5.0. Use the container parameter "kernel.bundles" instead.', E_USER_DEPRECATED);
 
-		return \ModuleLoader::getActive();
+		return ModuleLoader::getActive();
 	}
 
 	/**
@@ -354,7 +354,7 @@ class Config
 	 */
 	public static function has($strKey)
 	{
-		return array_key_exists($strKey, $GLOBALS['TL_CONFIG']);
+		return \array_key_exists($strKey, $GLOBALS['TL_CONFIG']);
 	}
 
 	/**
@@ -430,7 +430,7 @@ class Config
 		include __DIR__ . '/../../config/agents.php';
 		include __DIR__ . '/../../config/mimetypes.php';
 
-		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Include the local configuration file
 		if (($blnHasLcf = file_exists($rootDir . '/system/config/localconfig.php')) === true)
@@ -448,7 +448,7 @@ class Config
 	 */
 	protected static function loadParameters()
 	{
-		$container = \System::getContainer();
+		$container = System::getContainer();
 
 		if ($container === null)
 		{

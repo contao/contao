@@ -42,9 +42,9 @@ class ContentImage extends ContentElement
 			return '';
 		}
 
-		$objFile = \FilesModel::findByUuid($this->singleSRC);
+		$objFile = FilesModel::findByUuid($this->singleSRC);
 
-		if ($objFile === null || !is_file(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFile->path))
+		if ($objFile === null || !is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFile->path))
 		{
 			return '';
 		}

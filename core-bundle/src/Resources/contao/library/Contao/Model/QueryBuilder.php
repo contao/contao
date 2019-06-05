@@ -10,6 +10,9 @@
 
 namespace Contao\Model;
 
+use Contao\Database;
+use Contao\DcaExtractor;
+
 /**
  * The class reads the relation meta data from the DCA and creates the necessary
  * JOIN queries to retrieve an object from the database.
@@ -28,7 +31,7 @@ class QueryBuilder
 	 */
 	public static function find(array $arrOptions)
 	{
-		$objBase = \DcaExtractor::getInstance($arrOptions['table']);
+		$objBase = DcaExtractor::getInstance($arrOptions['table']);
 
 		if (!$objBase->hasRelations())
 		{
@@ -48,14 +51,14 @@ class QueryBuilder
 					if ($arrConfig['type'] == 'hasOne' || $arrConfig['type'] == 'belongsTo')
 					{
 						++$intCount;
-						$objRelated = \DcaExtractor::getInstance($arrConfig['table']);
+						$objRelated = DcaExtractor::getInstance($arrConfig['table']);
 
 						foreach (array_keys($objRelated->getFields()) as $strField)
 						{
-							$arrFields[] = 'j' . $intCount . '.' . \Database::quoteIdentifier($strField) . ' AS ' . $strKey . '__' . $strField;
+							$arrFields[] = 'j' . $intCount . '.' . Database::quoteIdentifier($strField) . ' AS ' . $strKey . '__' . $strField;
 						}
 
-						$arrJoins[] = " LEFT JOIN " . $arrConfig['table'] . " j$intCount ON " . $arrOptions['table'] . "." . \Database::quoteIdentifier($strKey) . "=j$intCount." . $arrConfig['field'];
+						$arrJoins[] = " LEFT JOIN " . $arrConfig['table'] . " j$intCount ON " . $arrOptions['table'] . "." . Database::quoteIdentifier($strKey) . "=j$intCount." . $arrConfig['field'];
 					}
 				}
 			}
@@ -67,7 +70,7 @@ class QueryBuilder
 		// Where condition
 		if (isset($arrOptions['column']))
 		{
-			$strQuery .= " WHERE " . (\is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . \Database::quoteIdentifier($arrOptions['column']) . "=?");
+			$strQuery .= " WHERE " . (\is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . Database::quoteIdentifier($arrOptions['column']) . "=?");
 		}
 
 		// Group by
@@ -104,7 +107,7 @@ class QueryBuilder
 
 		if ($arrOptions['column'] !== null)
 		{
-			$strQuery .= " WHERE " . (\is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . \Database::quoteIdentifier($arrOptions['column']) . "=?");
+			$strQuery .= " WHERE " . (\is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . Database::quoteIdentifier($arrOptions['column']) . "=?");
 		}
 
 		return $strQuery;

@@ -1,8 +1,13 @@
-# Contao 4 bundles
+<p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg"></p>
 
-[![](https://img.shields.io/travis/contao/contao/master.svg?style=flat-square)](https://travis-ci.com/contao/contao/)
-[![](https://img.shields.io/coveralls/contao/contao/master.svg?style=flat-square)](https://coveralls.io/github/contao/contao)
-[![](https://img.shields.io/packagist/v/contao/contao.svg?style=flat-square)](https://packagist.org/packages/contao/contao)
+<p align="center">
+<a href="https://travis-ci.com/contao/contao/"><img src="https://img.shields.io/travis/com/contao/contao.svg" alt="Travis"></a>
+<a href="https://coveralls.io/github/contao/contao"><img src="https://img.shields.io/coveralls/github/contao/contao.svg" alt="Coveralls"></a>
+<a href="https://packagist.org/packages/contao/contao"><img src="https://img.shields.io/packagist/v/contao/contao.svg" alt="Packagist"></a>
+<a href="https://pullreminders.com?ref=badge"><img src="https://pullreminders.com/badge.svg" alt="Pullreminders"></a>
+</p>
+
+## About
 
 This is a monorepo holding the official Contao 4 bundles.
 
@@ -58,7 +63,7 @@ loads the monorepo instead of the individual bundles:
 Again, use `dev-master` if you want to add a new feature or
 `<lts-version>.x-dev` if you want to fix a bug.
 
-Next install the dependencies:
+Next, install the dependencies:
 
 ```bash
 composer update

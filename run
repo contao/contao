@@ -48,41 +48,23 @@ function phpstan() {
   vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3
 }
 
-function tx-push() {
-  client=$(which tx)
-
-  if [[ ! -e ${client} ]]; then
-    echo "The Transifex client is not installed."
+function composer() {
+  if [[ ! -e ./vendor/bin/monorepo-tools ]]; then
+    echo "The vendor/bin/monorepo-tools file is missing. Did you install the dependencies?"
     exit 1
   fi
 
-  local bundles=(
-    calendar-bundle
-    comments-bundle
-    core-bundle
-    faq-bundle
-    installation-bundle
-    listing-bundle
-    manager-bundle
-    news-bundle
-    newsletter-bundle
-  )
-
-  for bundle in ${bundles[*]}; do
-    cd ${bundle}
-    ${client} push -s
-    cd -
-  done
+  vendor/bin/monorepo-tools composer --validate
 }
 
 function usage() {
   cat <<HEREDOC
 Usage: ./run [task]
-  phpunit       Run the unit tests in each bundle
-  functional    Run the functional tests in each bundle
-  php-cs-fixer  Run the PHP-CS-Fixer in each bundle
-  phpstan       Run PhpStan
-  tx-push       Push the Transifex source files
+  phpunit       Run the unit tests
+  functional    Run the functional tests
+  php-cs-fixer  Run the PHP coding style fixer
+  phpstan       Run the static PHP analyzer
+  composer      Validate the composer.json files
 HEREDOC
 }
 
@@ -103,8 +85,16 @@ case "$1" in
     phpstan
     exit 0
   ;;
-  tx-push)
-    tx-push
+  composer)
+    composer
+    exit 0
+  ;;
+  all)
+    phpunit "${@:2}"
+    functional
+    php-cs-fixer "${@:2}"
+    phpstan
+    composer
     exit 0
   ;;
   *)

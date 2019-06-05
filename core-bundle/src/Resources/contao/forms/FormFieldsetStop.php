@@ -44,7 +44,7 @@ class FormFieldsetStop extends Widget
 		// Return a wildcard in the back end
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 
 			return $objTemplate->parse();
 		}

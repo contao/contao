@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\Model\Collection;
 
 /**
  * Front end content element "gallery".
@@ -22,7 +23,7 @@ class ContentGallery extends ContentElement
 
 	/**
 	 * Files object
-	 * @var Model\Collection|FilesModel
+	 * @var Collection|FilesModel
 	 */
 	protected $objFiles;
 
@@ -42,7 +43,7 @@ class ContentGallery extends ContentElement
 		// Use the home directory of the current user as file source
 		if ($this->useHomeDir && FE_USER_LOGGED_IN)
 		{
-			$this->import('FrontendUser', 'User');
+			$this->import(FrontendUser::class, 'User');
 
 			if ($this->User->assignDir && $this->User->homeDir)
 			{
@@ -51,7 +52,7 @@ class ContentGallery extends ContentElement
 		}
 		else
 		{
-			$this->multiSRC = \StringUtil::deserialize($this->multiSRC);
+			$this->multiSRC = StringUtil::deserialize($this->multiSRC);
 		}
 
 		// Return if there are no files
@@ -61,7 +62,7 @@ class ContentGallery extends ContentElement
 		}
 
 		// Get the file entries from the database
-		$this->objFiles = \FilesModel::findMultipleByUuids($this->multiSRC);
+		$this->objFiles = FilesModel::findMultipleByUuids($this->multiSRC);
 
 		if ($this->objFiles === null)
 		{
@@ -84,7 +85,7 @@ class ContentGallery extends ContentElement
 		while ($objFiles->next())
 		{
 			// Continue if the files has been processed or does not exist
-			if (isset($images[$objFiles->path]) || !file_exists(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFiles->path))
+			if (isset($images[$objFiles->path]) || !file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFiles->path))
 			{
 				continue;
 			}
@@ -92,7 +93,7 @@ class ContentGallery extends ContentElement
 			// Single files
 			if ($objFiles->type == 'file')
 			{
-				$objFile = new \File($objFiles->path);
+				$objFile = new File($objFiles->path);
 
 				if (!$objFile->isImage)
 				{
@@ -115,7 +116,7 @@ class ContentGallery extends ContentElement
 			// Folders
 			else
 			{
-				$objSubfiles = \FilesModel::findByPid($objFiles->uuid, array('order' => 'name'));
+				$objSubfiles = FilesModel::findByPid($objFiles->uuid, array('order' => 'name'));
 
 				if ($objSubfiles === null)
 				{
@@ -130,7 +131,7 @@ class ContentGallery extends ContentElement
 						continue;
 					}
 
-					$objFile = new \File($objSubfiles->path);
+					$objFile = new File($objSubfiles->path);
 
 					if (!$objFile->isImage)
 					{
@@ -180,7 +181,7 @@ class ContentGallery extends ContentElement
 			case 'custom':
 				if ($this->orderSRC != '')
 				{
-					$tmp = \StringUtil::deserialize($this->orderSRC);
+					$tmp = StringUtil::deserialize($this->orderSRC);
 
 					if (!empty($tmp) && \is_array($tmp))
 					{
@@ -190,7 +191,7 @@ class ContentGallery extends ContentElement
 						// Move the matching elements to their position in $arrOrder
 						foreach ($images as $k=>$v)
 						{
-							if (array_key_exists($v['uuid'], $arrOrder))
+							if (\array_key_exists($v['uuid'], $arrOrder))
 							{
 								$arrOrder[$v['uuid']] = $v;
 								unset($images[$k]);
@@ -233,19 +234,19 @@ class ContentGallery extends ContentElement
 		{
 			// Get the current page
 			$id = 'page_g' . $this->id;
-			$page = \Input::get($id) ?? 1;
+			$page = Input::get($id) ?? 1;
 
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))
 			{
-				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 			}
 
 			// Set limit and offset
 			$offset = ($page - 1) * $this->perPage;
 			$limit = min($this->perPage + $offset, $total);
 
-			$objPagination = new \Pagination($total, $this->perPage, \Config::get('maxPaginationLinks'), $id);
+			$objPagination = new Pagination($total, $this->perPage, Config::get('maxPaginationLinks'), $id);
 			$this->Template->pagination = $objPagination->generate("\n  ");
 		}
 
@@ -323,7 +324,7 @@ class ContentGallery extends ContentElement
 			$strTemplate = $this->galleryTpl;
 		}
 
-		$objTemplate = new \FrontendTemplate($strTemplate);
+		$objTemplate = new FrontendTemplate($strTemplate);
 		$objTemplate->setData($this->arrData);
 		$objTemplate->body = $body;
 		$objTemplate->headline = $this->headline; // see #1603

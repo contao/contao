@@ -147,16 +147,16 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_style_sheet.name',
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'sorting' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'selector' => array
 		(
@@ -372,7 +372,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_style']['bgimage'],
 			'inputType'               => 'text',
-			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>Config::get('validImageTypes')), 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>Contao\Config::get('validImageTypes')), 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'bgposition' => array
@@ -573,7 +573,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_style']['liststyleimage'],
 			'inputType'               => 'text',
-			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>Config::get('validImageTypes')), 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>Contao\Config::get('validImageTypes')), 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'own' => array
@@ -599,7 +599,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_style extends Backend
+class tl_style extends Contao\Backend
 {
 
 	/**
@@ -608,7 +608,7 @@ class tl_style extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -639,13 +639,13 @@ class tl_style extends Backend
 	public function checkCategory($varValue)
 	{
 		// Do not change the value if it has been set already
-		if (\strlen($varValue) || Input::post('FORM_SUBMIT') == 'tl_style')
+		if (\strlen($varValue) || Contao\Input::post('FORM_SUBMIT') == 'tl_style')
 		{
 			return $varValue;
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = Contao\System::getContainer()->get('session')->getBag('contao_backend');
 
 		$key = 'tl_style_' . CURRENT_ID;
 		$filter = $objSessionBag->get('filter');
@@ -665,7 +665,7 @@ class tl_style extends Backend
 	public function updateStyleSheet()
 	{
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		$session = $objSession->get('style_sheet_updater');
 
@@ -674,7 +674,7 @@ class tl_style extends Backend
 			return;
 		}
 
-		$this->import('StyleSheets');
+		$this->import('Contao\StyleSheets', 'StyleSheets');
 
 		foreach ($session as $id)
 		{
@@ -694,13 +694,13 @@ class tl_style extends Backend
 	public function scheduleUpdate()
 	{
 		// Return if there is no ID
-		if (!CURRENT_ID || Input::get('act') == 'copy')
+		if (!CURRENT_ID || Contao\Input::get('act') == 'copy')
 		{
 			return;
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = Contao\System::getContainer()->get('session');
 
 		// Store the ID in the session
 		$session = $objSession->get('style_sheet_updater');
@@ -727,7 +727,7 @@ class tl_style extends Backend
 					   ->execute(time(), $data['pid']);
 
 		// Update the CSS file
-		$this->import('StyleSheets');
+		$this->import('Contao\StyleSheets', 'StyleSheets');
 		$this->StyleSheets->updateStyleSheet($data['pid']);
 	}
 
@@ -745,9 +745,9 @@ class tl_style extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Input::get('tid')))
+		if (\strlen(Contao\Input::get('tid')))
 		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -758,21 +758,21 @@ class tl_style extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
 	}
 
 	/**
 	 * Toggle the visibility of a format definition
 	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
+	 * @param integer              $intId
+	 * @param boolean              $blnVisible
+	 * @param Contao\DataContainer $dc
 	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
+		Contao\Input::setGet('id', $intId);
+		Contao\Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -809,7 +809,7 @@ class tl_style extends Backend
 			}
 		}
 
-		$objVersions = new Versions('tl_style', $intId);
+		$objVersions = new Contao\Versions('tl_style', $intId);
 		$objVersions->initialize();
 
 		// Reverse the logic (styles have invisible=1)

@@ -168,21 +168,21 @@ class Version460Update extends AbstractVersionUpdate
             }
         }
 
-        $this->connection->query("
+        $this->connection->query('
             ALTER TABLE
                 tl_content
             ADD
-                playerStart int(10) unsigned NOT NULL default '0'
-        ");
+                playerStart int(10) unsigned NOT NULL default 0
+        ');
 
         $this->connection->query('UPDATE tl_content SET playerStart = youtubeStart');
 
-        $this->connection->query("
+        $this->connection->query('
             ALTER TABLE
                 tl_content
             ADD
-                playerStop int(10) unsigned NOT NULL default '0'
-        ");
+                playerStop int(10) unsigned NOT NULL default 0
+        ');
 
         $this->connection->query('UPDATE tl_content SET playerStop = youtubeStop');
     }

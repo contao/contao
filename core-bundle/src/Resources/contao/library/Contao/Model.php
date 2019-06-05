@@ -116,7 +116,7 @@ abstract class Model
 	{
 		$this->arrModified = array();
 
-		$objDca = \DcaExtractor::getInstance(static::$strTable);
+		$objDca = DcaExtractor::getInstance(static::$strTable);
 		$this->arrRelations = $objDca->getRelations();
 
 		if ($objResult !== null)
@@ -280,7 +280,7 @@ abstract class Model
 	 */
 	public static function getUniqueFields()
 	{
-		$objDca = \DcaExtractor::getInstance(static::getTable());
+		$objDca = DcaExtractor::getInstance(static::getTable());
 
 		return $objDca->getUniqueFields();
 	}
@@ -431,11 +431,11 @@ abstract class Model
 			throw new \RuntimeException('The model instance has been detached and cannot be saved');
 		}
 
-		$objDatabase = \Database::getInstance();
+		$objDatabase = Database::getInstance();
 		$arrFields = $objDatabase->getFieldNames(static::$strTable);
 
 		// The model is in the registry
-		if (\Model\Registry::getInstance()->isRegistered($this))
+		if (Registry::getInstance()->isRegistered($this))
 		{
 			$arrSet = array();
 			$arrRow = $this->row();
@@ -466,8 +466,13 @@ abstract class Model
 				$intPk = $this->arrModified[static::$strPk];
 			}
 
+			if ($intPk === null)
+			{
+				throw new \RuntimeException('The primary key has not been set');
+			}
+
 			// Update the row
-			$objDatabase->prepare("UPDATE " . static::$strTable . " %s WHERE " . \Database::quoteIdentifier(static::$strPk) . "=?")
+			$objDatabase->prepare("UPDATE " . static::$strTable . " %s WHERE " . Database::quoteIdentifier(static::$strPk) . "=?")
 						->set($arrSet)
 						->execute($intPk);
 
@@ -510,7 +515,7 @@ abstract class Model
 			$this->postSave(self::INSERT);
 			$this->arrModified = array(); // reset after postSave()
 
-			\Model\Registry::getInstance()->register($this);
+			Registry::getInstance()->register($this);
 		}
 
 		return $this;
@@ -557,14 +562,14 @@ abstract class Model
 		}
 
 		// Delete the row
-		$intAffected = \Database::getInstance()->prepare("DELETE FROM " . static::$strTable . " WHERE " . \Database::quoteIdentifier(static::$strPk) . "=?")
+		$intAffected = Database::getInstance()->prepare("DELETE FROM " . static::$strTable . " WHERE " . Database::quoteIdentifier(static::$strPk) . "=?")
 											   ->execute($intPk)
 											   ->affectedRows;
 
 		if ($intAffected)
 		{
 			// Unregister the model
-			\Model\Registry::getInstance()->unregister($this);
+			Registry::getInstance()->unregister($this);
 
 			// Remove the primary key (see #6162)
 			$this->arrData[static::$strPk] = null;
@@ -579,14 +584,14 @@ abstract class Model
 	 * @param string $strKey     The property name
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return static|Model\Collection|null The model or a model collection if there are multiple rows
+	 * @return static|Collection|null The model or a model collection if there are multiple rows
 	 *
 	 * @throws \Exception If $strKey is not a related field
 	 */
 	public function getRelated($strKey, array $arrOptions=array())
 	{
 		// The related model has been loaded before
-		if (array_key_exists($strKey, $this->arrRelated))
+		if (\array_key_exists($strKey, $this->arrRelated))
 		{
 			return $this->arrRelated[$strKey];
 		}
@@ -597,8 +602,8 @@ abstract class Model
 			throw new \Exception("Field $strKey does not seem to be related");
 		}
 
-		// The relation exists but there is no reference yet (see #6161)
-		if (!isset($this->$strKey))
+		// The relation exists but there is no reference yet (see #6161 and #458)
+		if (empty($this->$strKey))
 		{
 			return null;
 		}
@@ -611,33 +616,44 @@ abstract class Model
 		// Load the related record(s)
 		if ($arrRelation['type'] == 'hasOne' || $arrRelation['type'] == 'belongsTo')
 		{
-			$objModel = $strClass::findOneBy($arrRelation['field'], $this->$strKey, $arrOptions);
-			$this->arrRelated[$strKey] = $objModel;
+			$this->arrRelated[$strKey] = $strClass::findOneBy($arrRelation['field'], $this->$strKey, $arrOptions);
 		}
 		elseif ($arrRelation['type'] == 'hasMany' || $arrRelation['type'] == 'belongsToMany')
 		{
-			$arrValues = \StringUtil::deserialize($this->$strKey, true);
-			$strField = $arrRelation['table'] . '.' . \Database::quoteIdentifier($arrRelation['field']);
-
-			// Handle UUIDs (see #6525 and #8850)
-			if ($arrRelation['table'] == 'tl_files' && $arrRelation['field'] == 'uuid')
+			if (isset($arrRelation['delimiter']))
 			{
-				/** @var FilesModel $strClass */
-				$objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);
+				$arrValues = StringUtil::trimsplit($arrRelation['delimiter'], $this->$strKey);
 			}
 			else
 			{
-				$arrOptions = array_merge
-				(
-					array
+				$arrValues = StringUtil::deserialize($this->$strKey, true);
+			}
+
+			$objModel = null;
+
+			if (\is_array($arrValues))
+			{
+				// Handle UUIDs (see #6525 and #8850)
+				if ($arrRelation['table'] == 'tl_files' && $arrRelation['field'] == 'uuid')
+				{
+					/** @var FilesModel $strClass */
+					$objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);
+				}
+				else
+				{
+					$strField = $arrRelation['table'] . '.' . Database::quoteIdentifier($arrRelation['field']);
+
+					$arrOptions = array_merge
 					(
-						'order' => \Database::getInstance()->findInSet($strField, $arrValues)
-					),
+						array
+						(
+							'order' => Database::getInstance()->findInSet($strField, $arrValues)
+						),
+						$arrOptions
+					);
 
-					$arrOptions
-				);
-
-				$objModel = $strClass::findBy(array($strField . " IN('" . implode("','", $arrValues) . "')"), null, $arrOptions);
+					$objModel = $strClass::findBy(array($strField . " IN('" . implode("','", $arrValues) . "')"), null, $arrOptions);
+				}
 			}
 
 			$this->arrRelated[$strKey] = $objModel;
@@ -660,7 +676,7 @@ abstract class Model
 		}
 
 		// Reload the database record
-		$res = \Database::getInstance()->prepare("SELECT * FROM " . static::$strTable . " WHERE " . \Database::quoteIdentifier(static::$strPk) . "=?")
+		$res = Database::getInstance()->prepare("SELECT * FROM " . static::$strTable . " WHERE " . Database::quoteIdentifier(static::$strPk) . "=?")
 									   ->execute($intPk);
 
 		$this->setRow($res->row());
@@ -693,15 +709,15 @@ abstract class Model
 	 */
 	public function attach()
 	{
-		\Model\Registry::getInstance()->register($this);
+		Registry::getInstance()->register($this);
 	}
 
 	/**
 	 * Called when the model is attached to the model registry
 	 *
-	 * @param Model\Registry $registry The model registry
+	 * @param Registry $registry The model registry
 	 */
-	public function onRegister(Model\Registry $registry)
+	public function onRegister(Registry $registry)
 	{
 		// Register aliases to unique fields
 		foreach (static::getUniqueFields() as $strColumn)
@@ -718,9 +734,9 @@ abstract class Model
 	/**
 	 * Called when the model is detached from the model registry
 	 *
-	 * @param Model\Registry $registry The model registry
+	 * @param Registry $registry The model registry
 	 */
-	public function onUnregister(Model\Registry $registry)
+	public function onUnregister(Registry $registry)
 	{
 		// Unregister aliases to unique fields
 		foreach (static::getUniqueFields() as $strColumn)
@@ -792,7 +808,7 @@ abstract class Model
 	 */
 	public static function findByIdOrAlias($varId, array $arrOptions=array())
 	{
-		$isAlias = !is_numeric($varId);
+		$isAlias = !preg_match('/^[1-9]\d*$/', $varId);
 
 		// Try to load from the registry
 		if (!$isAlias && empty($arrOptions))
@@ -829,7 +845,7 @@ abstract class Model
 	 * @param array $arrIds     An array of IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|null The model collection or null if there are no records
+	 * @return Collection|null The model collection or null if there are no records
 	 */
 	public static function findMultipleByIds($arrIds, array $arrOptions=array())
 	{
@@ -866,7 +882,7 @@ abstract class Model
 				(
 					'column' => array("$t.id IN(" . implode(',', array_map('\intval', $arrUnregistered)) . ")"),
 					'value'  => null,
-					'order'  => \Database::getInstance()->findInSet("$t.id", $arrIds),
+					'order'  => Database::getInstance()->findInSet("$t.id", $arrIds),
 					'return' => 'Collection'
 				),
 
@@ -885,7 +901,14 @@ abstract class Model
 			}
 		}
 
-		return static::createCollection(array_filter(array_values($arrRegistered)), static::$strTable);
+		$arrRegistered = array_filter(array_values($arrRegistered));
+
+		if (empty($arrRegistered))
+		{
+			return null;
+		}
+
+		return static::createCollection($arrRegistered, static::$strTable);
 	}
 
 	/**
@@ -922,7 +945,7 @@ abstract class Model
 	 * @param mixed $varValue   The property value
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return static|Model\Collection|null A model, model collection or null if the result is empty
+	 * @return static|Collection|null A model, model collection or null if the result is empty
 	 */
 	public static function findBy($strColumn, $varValue, array $arrOptions=array())
 	{
@@ -954,7 +977,7 @@ abstract class Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|null The model collection or null if the result is empty
+	 * @return Collection|null The model collection or null if the result is empty
 	 */
 	public static function findAll(array $arrOptions=array())
 	{
@@ -977,7 +1000,7 @@ abstract class Model
 	 * @param string $name The method name
 	 * @param array  $args The passed arguments
 	 *
-	 * @return static|Model\Collection|integer|null A model or model collection
+	 * @return static|Collection|integer|null A model or model collection
 	 *
 	 * @throws \Exception If the method name is invalid
 	 */
@@ -1021,7 +1044,7 @@ abstract class Model
 	 *
 	 * @param array $arrOptions The options array
 	 *
-	 * @return Model|Model[]|Model\Collection|null A model, model collection or null if the result is empty
+	 * @return Model|Model[]|Collection|null A model, model collection or null if the result is empty
 	 */
 	protected static function find(array $arrOptions)
 	{
@@ -1056,7 +1079,7 @@ abstract class Model
 		$arrOptions['table'] = static::$strTable;
 		$strQuery = static::buildFindQuery($arrOptions);
 
-		$objStatement = \Database::getInstance()->prepare($strQuery);
+		$objStatement = Database::getInstance()->prepare($strQuery);
 
 		// Defaults for limit and offset
 		if (!isset($arrOptions['limit']))
@@ -1160,7 +1183,7 @@ abstract class Model
 
 		$strQuery = static::buildCountQuery($arrOptions);
 
-		return (int) \Database::getInstance()->prepare($strQuery)->execute($arrOptions['value'])->count;
+		return (int) Database::getInstance()->prepare($strQuery)->execute($arrOptions['value'])->count;
 	}
 
 	/**
@@ -1245,7 +1268,7 @@ abstract class Model
 	}
 
 	/**
-	 * Create a Model\Collection object
+	 * Create a Collection object
 	 *
 	 * @param array  $arrModels An array of models
 	 * @param string $strTable  The table name

@@ -31,7 +31,7 @@ class ContentHyperlink extends ContentElement
 	{
 		if (substr($this->url, 0, 7) == 'mailto:')
 		{
-			$this->url = \StringUtil::encodeEmail($this->url);
+			$this->url = StringUtil::encodeEmail($this->url);
 		}
 		else
 		{
@@ -43,9 +43,9 @@ class ContentHyperlink extends ContentElement
 		// Use an image instead of the title
 		if ($this->useImage && $this->singleSRC != '')
 		{
-			$objModel = \FilesModel::findByUuid($this->singleSRC);
+			$objModel = FilesModel::findByUuid($this->singleSRC);
 
-			if ($objModel !== null && is_file(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
+			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
 			{
 				$this->singleSRC = $objModel->path;
 				$this->addImageToTemplate($this->Template, $this->arrData, null, null, $objModel);
@@ -72,7 +72,7 @@ class ContentHyperlink extends ContentElement
 
 		if ($this->titleText)
 		{
-			$this->Template->linkTitle = \StringUtil::specialchars($this->titleText);
+			$this->Template->linkTitle = StringUtil::specialchars($this->titleText);
 		}
 
 		// Override the link target

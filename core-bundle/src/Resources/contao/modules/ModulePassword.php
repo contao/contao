@@ -10,8 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\OptIn\OptIn;
 use Patchwork\Utf8;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Front end module "lost password".
@@ -36,7 +37,7 @@ class ModulePassword extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['lostPassword'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -59,11 +60,11 @@ class ModulePassword extends Module
 
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
-		\System::loadLanguageFile('tl_member');
+		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
 		// Set new password
-		if (strncmp(\Input::get('token'), 'PW', 2) === 0)
+		if (strncmp(Input::get('token'), 'pw-', 3) === 0)
 		{
 			$this->setNewPassword();
 
@@ -120,7 +121,7 @@ class ModulePassword extends Module
 			++$row;
 
 			// Validate the widget
-			if (\Input::post('FORM_SUBMIT') == $strFormId)
+			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
 				$objWidget->validate();
 
@@ -137,15 +138,15 @@ class ModulePassword extends Module
 		$this->Template->hasError = $doNotSubmit;
 
 		// Look for an account and send the password link
-		if (\Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
+		if (Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
 		{
 			if ($this->reg_skipName)
 			{
-				$objMember = \MemberModel::findActiveByEmailAndUsername(\Input::post('email', true), null);
+				$objMember = MemberModel::findActiveByEmailAndUsername(Input::post('email', true), null);
 			}
 			else
 			{
-				$objMember = \MemberModel::findActiveByEmailAndUsername(\Input::post('email', true), \Input::post('username'));
+				$objMember = MemberModel::findActiveByEmailAndUsername(Input::post('email', true), Input::post('username'));
 			}
 
 			if ($objMember === null)
@@ -160,10 +161,10 @@ class ModulePassword extends Module
 		}
 
 		$this->Template->formId = $strFormId;
-		$this->Template->username = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['username']);
-		$this->Template->email = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['emailAddress']);
-		$this->Template->action = \Environment::get('indexFreeRequest');
-		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['requestPassword']);
+		$this->Template->username = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['username']);
+		$this->Template->email = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['emailAddress']);
+		$this->Template->action = Environment::get('indexFreeRequest');
+		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['requestPassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
 	}
 
@@ -172,23 +173,45 @@ class ModulePassword extends Module
 	 */
 	protected function setNewPassword()
 	{
-		$objMember = \MemberModel::findOneByActivation(\Input::get('token'));
+		/** @var OptIn $optIn */
+		$optIn = System::getContainer()->get('contao.opt-in');
 
-		if ($objMember === null || $objMember->login == '')
+		// Find an unconfirmed token with only one related record
+		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
 		{
 			$this->strTemplate = 'mod_message';
 
-			$this->Template = new \FrontendTemplate($this->strTemplate);
+			$this->Template = new FrontendTemplate($this->strTemplate);
 			$this->Template->type = 'error';
-			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['accountError'];
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 
 			return;
 		}
 
-		$strTable = $objMember->getTable();
+		if ($optInToken->isConfirmed())
+		{
+			$this->strTemplate = 'mod_message';
+
+			$this->Template = new FrontendTemplate($this->strTemplate);
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
+
+			return;
+		}
+
+		if ($optInToken->getEmail() != $objMember->email)
+		{
+			$this->strTemplate = 'mod_message';
+
+			$this->Template = new FrontendTemplate($this->strTemplate);
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
+
+			return;
+		}
 
 		// Initialize the versioning (see #8301)
-		$objVersions = new \Versions($strTable, $objMember->id);
+		$objVersions = new Versions('tl_member', $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
 		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
@@ -214,11 +237,11 @@ class ModulePassword extends Module
 		$objWidget->rowClassConfirm = 'row_1 odd';
 		$this->Template->rowLast = 'row_2 row_last even';
 
-		/** @var SessionInterface $objSession */
-		$objSession = \System::getContainer()->get('session');
+		/** @var Session $objSession */
+		$objSession = System::getContainer()->get('session');
 
 		// Validate the field
-		if (\strlen(\Input::post('FORM_SUBMIT')) && \Input::post('FORM_SUBMIT') == $objSession->get('setPasswordToken'))
+		if (\strlen(Input::post('FORM_SUBMIT')) && Input::post('FORM_SUBMIT') == $objSession->get('setPasswordToken'))
 		{
 			$objWidget->validate();
 
@@ -228,13 +251,14 @@ class ModulePassword extends Module
 				$objSession->set('setPasswordToken', '');
 
 				$objMember->tstamp = time();
-				$objMember->activation = '';
 				$objMember->locked = 0; // see #8545
 				$objMember->password = $objWidget->value;
 				$objMember->save();
 
+				$optInToken->confirm();
+
 				// Create a new version
-				if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'])
+				if ($GLOBALS['TL_DCA']['tl_member']['config']['enableVersioning'])
 				{
 					$objVersions->create();
 				}
@@ -259,7 +283,7 @@ class ModulePassword extends Module
 				// Confirm
 				$this->strTemplate = 'mod_message';
 
-				$this->Template = new \FrontendTemplate($this->strTemplate);
+				$this->Template = new FrontendTemplate($this->strTemplate);
 				$this->Template->type = 'confirm';
 				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['newPasswordSet'];
 
@@ -272,8 +296,8 @@ class ModulePassword extends Module
 
 		$this->Template->formId = $strToken;
 		$this->Template->fields = $objWidget->parse();
-		$this->Template->action = \Environment::get('indexFreeRequest');
-		$this->Template->slabel = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['setNewPassword']);
+		$this->Template->action = Environment::get('indexFreeRequest');
+		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['setNewPassword']);
 	}
 
 	/**
@@ -283,28 +307,20 @@ class ModulePassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
-		$strToken = 'PW' . substr(md5(uniqid(mt_rand(), true)), 2);
-
-		// Store the token
-		$objMember = \MemberModel::findByPk($objMember->id);
-		$objMember->activation = $strToken;
-		$objMember->save();
+		/** @var OptIn $optIn */
+		$optIn = System::getContainer()->get('contao.opt-in');
+		$optInToken = $optIn->create('pw', $objMember->email, array('tl_member'=>array($objMember->id)));
 
 		// Prepare the simple token data
 		$arrData = $objMember->row();
-		$arrData['domain'] = \Idna::decode(\Environment::get('host'));
-		$arrData['link'] = \Idna::decode(\Environment::get('base')) . \Environment::get('request') . ((strpos(\Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $strToken;
+		$arrData['activation'] = $optInToken->getIdentifier();
+		$arrData['domain'] = Idna::decode(Environment::get('host'));
+		$arrData['link'] = Idna::decode(Environment::get('base')) . Environment::get('request') . ((strpos(Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 
-		// Send e-mail
-		$objEmail = new \Email();
+		// Send the token
+		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))), StringUtil::parseSimpleTokens($this->reg_password, $arrData));
 
-		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], \Idna::decode(\Environment::get('host')));
-		$objEmail->text = \StringUtil::parseSimpleTokens($this->reg_password, $arrData);
-		$objEmail->sendTo($objMember->email);
-
-		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . \Idna::decodeEmail($objMember->email) . ')', __METHOD__, TL_ACCESS);
+		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')', __METHOD__, TL_ACCESS);
 
 		// Check whether there is a jumpTo page
 		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)

@@ -58,7 +58,7 @@ class AddAssetsPackagesPassTest extends TestCase
     public function testIgnoresBundlesWithoutPublicFolder(): void
     {
         $bundlePath = static::getTempDir().'/BarFooBundle';
-        $container = $this->mockContainerWithAssets('BarFooBundle', 'Bar\Foo\BarFooBundle', $bundlePath);
+        $container = $this->getContainerWithAssets('BarFooBundle', 'Bar\Foo\BarFooBundle', $bundlePath);
 
         $pass = new AddAssetsPackagesPass();
         $pass->process($container);
@@ -79,7 +79,7 @@ class AddAssetsPackagesPassTest extends TestCase
     public function testUsesTheBundleNameAsPackageName(): void
     {
         $bundlePath = static::getTempDir().'/FooBarBundle';
-        $container = $this->mockContainerWithAssets('FooBarBundle', 'Foo\Bar\FooBarBundle', $bundlePath);
+        $container = $this->getContainerWithAssets('FooBarBundle', 'Foo\Bar\FooBarBundle', $bundlePath);
 
         $pass = new AddAssetsPackagesPass();
         $pass->process($container);
@@ -107,7 +107,7 @@ class AddAssetsPackagesPassTest extends TestCase
     {
         $bundlePath = static::getTempDir().'/FooBarBundle';
 
-        $container = $this->mockContainerWithAssets('FooBarBundle', 'Foo\Bar\FooBarBundle', $bundlePath);
+        $container = $this->getContainerWithAssets('FooBarBundle', 'Foo\Bar\FooBarBundle', $bundlePath);
         $container->setDefinition('assets._version_default', new Definition(StaticVersionStrategy::class));
 
         $pass = new AddAssetsPackagesPass();
@@ -123,7 +123,7 @@ class AddAssetsPackagesPassTest extends TestCase
     public function testSupportsBundlesWithWrongSuffix(): void
     {
         $bundlePath = static::getTempDir().'/FooBarPackage';
-        $container = $this->mockContainerWithAssets('FooBarPackage', 'Foo\Bar\FooBarPackage', $bundlePath);
+        $container = $this->getContainerWithAssets('FooBarPackage', 'Foo\Bar\FooBarPackage', $bundlePath);
 
         $pass = new AddAssetsPackagesPass();
         $pass->process($container);
@@ -137,7 +137,7 @@ class AddAssetsPackagesPassTest extends TestCase
 
     public function testRegistersTheContaoComponents(): void
     {
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->setDefinition('assets.packages', new Definition(Packages::class));
         $container->setParameter('kernel.bundles', []);
         $container->setParameter('kernel.bundles_metadata', []);
@@ -160,9 +160,9 @@ class AddAssetsPackagesPassTest extends TestCase
         $this->assertSame($expectedVersion, $actualVersion);
     }
 
-    private function mockContainerWithAssets(string $name, string $class, string $path): ContainerBuilder
+    private function getContainerWithAssets(string $name, string $class, string $path): ContainerBuilder
     {
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->setDefinition('assets.packages', new Definition(Packages::class));
         $container->setDefinition('assets.empty_version_strategy', new Definition(EmptyVersionStrategy::class));
         $container->setParameter('kernel.bundles', [$name => $class]);

@@ -34,15 +34,15 @@ $GLOBALS['TL_DCA']['tl_version'] = array
 		),
 		'pid' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'version' => array
 		(
-			'sql'                     => "smallint(5) unsigned NOT NULL default '1'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 1"
 		),
 		'fromTable' => array
 		(
@@ -50,7 +50,7 @@ $GLOBALS['TL_DCA']['tl_version'] = array
 		),
 		'userid' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'username' => array
 		(

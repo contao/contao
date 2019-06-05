@@ -35,7 +35,6 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
-use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -91,7 +90,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(LexikMaintenanceBundle::class),
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),
-            BundleConfig::create(SensioFrameworkExtraBundle::class),
             BundleConfig::create(FOSHttpCacheBundle::class),
             BundleConfig::create(ContaoManagerBundle::class),
             BundleConfig::create(DebugBundle::class)->setLoadInProduction(false),
@@ -129,7 +127,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig): void
     {
         $loader->load(
-            function (ContainerBuilder $container) use ($loader): void {
+            static function (ContainerBuilder $container) use ($loader): void {
                 if ('dev' === $container->getParameter('kernel.environment')) {
                     $loader->load('@ContaoManagerBundle/Resources/skeleton/app/config_dev.yml');
                 } else {
@@ -168,7 +166,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $collection = array_reduce(
             $collections,
-            function (RouteCollection $carry, RouteCollection $item): RouteCollection {
+            static function (RouteCollection $carry, RouteCollection $item): RouteCollection {
                 $carry->addCollection($item);
 
                 return $carry;
@@ -259,7 +257,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             }
         }
 
-        @trigger_error('Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5. Define the "contao.prepend_locale" parameter in the config.yml file instead.', E_USER_DEPRECATED);
+        @trigger_error('Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5.0. Define the "contao.prepend_locale" parameter in the config.yml file instead.', E_USER_DEPRECATED);
 
         $extensionConfigs[] = [
             'prepend_locale' => '%prepend_locale%',

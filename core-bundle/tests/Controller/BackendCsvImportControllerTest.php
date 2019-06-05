@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Controller;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\FileUpload;
@@ -41,7 +41,7 @@ class BackendCsvImportControllerTest extends TestCase
 
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('session', new Session(new MockArraySessionStorage()));
         $container->set('contao.resource_finder', $finder);
 
@@ -54,7 +54,7 @@ class BackendCsvImportControllerTest extends TestCase
         $request->query->set('key', 'lw');
 
         $html = $this
-            ->mockController($request)
+            ->getController($request)
             ->importListWizardAction($this->mockDataContainer())
             ->getContent()
         ;
@@ -107,7 +107,7 @@ EOF;
         $request->query->set('key', 'tw');
 
         $html = $this
-            ->mockController($request)
+            ->getController($request)
             ->importTableWizardAction($this->mockDataContainer())
             ->getContent()
         ;
@@ -160,7 +160,7 @@ EOF;
         $request->query->set('key', 'ow');
 
         $html = $this
-            ->mockController($request)
+            ->getController($request)
             ->importOptionWizardAction($this->mockDataContainer())
             ->getContent()
         ;
@@ -321,7 +321,7 @@ EOF;
         $this->assertSame(303, $response->getStatusCode());
     }
 
-    private function mockFramework(array $files = [], bool $expectError = false): ContaoFrameworkInterface
+    private function mockFramework(array $files = [], bool $expectError = false): ContaoFramework
     {
         $uploader = $this->createMock(FileUpload::class);
         $uploader
@@ -344,7 +344,7 @@ EOF;
         return $framework;
     }
 
-    private function mockController(Request $request = null): BackendCsvImportController
+    private function getController(Request $request = null): BackendCsvImportController
     {
         $requestStack = new RequestStack();
         $requestStack->push($request ?: new Request());
@@ -365,29 +365,29 @@ EOF;
     }
 
     /**
-     * @return DataContainer|MockObject
+     * @return DataContainer&MockObject
      */
     private function mockDataContainer(): DataContainer
     {
-        $properties = [
-            'id' => 1,
-            'table' => 'tl_content',
-        ];
+        /** @var DataContainer&MockObject $mock */
+        $mock = $this->mockClassWithProperties(DataContainer::class);
+        $mock->id = 1;
+        $mock->table = 'tl_content';
 
-        return $this->mockClassWithProperties(DataContainer::class, $properties);
+        return $mock;
     }
 
     /**
      * Mocks a Contao framework with a file uploader.
      *
-     * @return ContaoFrameworkInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
      */
-    private function mockContaoFrameworkWithUploader(): ContaoFrameworkInterface
+    private function mockContaoFrameworkWithUploader(): ContaoFramework
     {
         $uploader = $this->createMock(FileUpload::class);
         $uploader
             ->method('uploadTo')
-            ->willReturn(['files/data.csv'])
+            ->willReturn(['files/data/data.csv'])
         ;
 
         $framework = $this->mockContaoFramework();

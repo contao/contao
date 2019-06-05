@@ -108,7 +108,7 @@ class Environment
 	 */
 	protected static function scriptName()
 	{
-		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request === null)
 		{
@@ -317,7 +317,7 @@ class Environment
 	 */
 	protected static function ssl()
 	{
-		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request === null)
 		{
@@ -338,7 +338,7 @@ class Environment
 		$xhost = static::get('httpXForwardedHost');
 
 		// SSL proxy
-		if ($xhost != '' && $xhost == \Config::get('sslProxyDomain'))
+		if ($xhost != '' && $xhost == Config::get('sslProxyDomain'))
 		{
 			return 'https://' .  $xhost . '/' . $host;
 		}
@@ -363,7 +363,7 @@ class Environment
 	 */
 	protected static function ip()
 	{
-		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request === null)
 		{
@@ -398,7 +398,7 @@ class Environment
 	 */
 	protected static function path()
 	{
-		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request === null)
 		{
@@ -505,7 +505,7 @@ class Environment
 		$engine = '';
 
 		// Operating system
-		foreach (\Config::get('os') as $k=>$v)
+		foreach (Config::get('os') as $k=>$v)
 		{
 			if (stripos($ua, $k) !== false)
 			{
@@ -518,7 +518,7 @@ class Environment
 		$return->os = $os;
 
 		// Browser and version
-		foreach (\Config::get('browser') as $k=>$v)
+		foreach (Config::get('browser') as $k=>$v)
 		{
 			if (stripos($ua, $k) !== false)
 			{

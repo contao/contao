@@ -33,6 +33,13 @@ class PageError404 extends Frontend
 		$obj404 = $this->prepare();
 		$objPage = $obj404->loadDetails();
 
+		// Reset inherited cache timeouts (see #231)
+		if (!$objPage->includeCache)
+		{
+			$objPage->cache = 0;
+			$objPage->clientCache = 0;
+		}
+
 		/** @var PageRegular $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY']['regular']();
 
@@ -53,6 +60,13 @@ class PageError404 extends Frontend
 		$obj404 = $this->prepare();
 		$objPage = $obj404->loadDetails();
 
+		// Reset inherited cache timeouts (see #231)
+		if (!$objPage->includeCache)
+		{
+			$objPage->cache = 0;
+			$objPage->clientCache = 0;
+		}
+
 		/** @var PageRegular $objHandler */
 		$objHandler = new $GLOBALS['TL_PTY']['regular']();
 
@@ -69,16 +83,16 @@ class PageError404 extends Frontend
 	protected function prepare()
 	{
 		// Check the search index (see #3761)
-		\Search::removeEntry(\Environment::get('base') . \Environment::get('relativeRequest'));
+		Search::removeEntry(Environment::get('base') . Environment::get('relativeRequest'));
 
 		// Find the matching root page
 		$objRootPage = $this->getRootPageFromUrl();
 
 		// Forward if the language should be but is not set (see #4028)
-		if (\Config::get('addLanguageToUrl'))
+		if (Config::get('addLanguageToUrl'))
 		{
 			// Get the request string without the script name
-			$strRequest = \Environment::get('relativeRequest');
+			$strRequest = Environment::get('relativeRequest');
 
 			// Only redirect if there is no language fragment (see #4669)
 			if ($strRequest != '' && !preg_match('@^[a-z]{2}(-[A-Z]{2})?/@', $strRequest))
@@ -86,17 +100,17 @@ class PageError404 extends Frontend
 				// Handle language fragments without trailing slash (see #7666)
 				if (preg_match('@^[a-z]{2}(-[A-Z]{2})?$@', $strRequest))
 				{
-					$this->redirect(\Environment::get('request') . '/', 301);
+					$this->redirect(Environment::get('request') . '/', 301);
 				}
 				else
 				{
-					if ($strRequest == \Environment::get('request'))
+					if ($strRequest == Environment::get('request'))
 					{
 						$strRequest = $objRootPage->language . '/' . $strRequest;
 					}
 					else
 					{
-						$strRequest = \Environment::get('script') . '/' . $objRootPage->language . '/' . $strRequest;
+						$strRequest = Environment::get('script') . '/' . $objRootPage->language . '/' . $strRequest;
 					}
 
 					$this->redirect($strRequest, 301);
@@ -105,18 +119,18 @@ class PageError404 extends Frontend
 		}
 
 		// Look for a 404 page
-		$obj404 = \PageModel::find404ByPid($objRootPage->id);
+		$obj404 = PageModel::find404ByPid($objRootPage->id);
 
 		// Die if there is no page at all
 		if (null === $obj404)
 		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Forward to another page
 		if ($obj404->autoforward && $obj404->jumpTo)
 		{
-			$objNextPage = \PageModel::findPublishedById($obj404->jumpTo);
+			$objNextPage = PageModel::findPublishedById($obj404->jumpTo);
 
 			if (null === $objNextPage)
 			{

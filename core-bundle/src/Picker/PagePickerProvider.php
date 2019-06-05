@@ -72,7 +72,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             }
 
             if ($value) {
-                $intval = function ($val) {
+                $intval = static function ($val) {
                     return (int) $val;
                 };
 

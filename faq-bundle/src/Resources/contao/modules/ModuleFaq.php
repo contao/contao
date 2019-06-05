@@ -37,10 +37,10 @@ class ModuleFaq extends Frontend
 		}
 
 		$arrProcessed = array();
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 
 		// Get all categories
-		$objFaq = \FaqCategoryModel::findAll();
+		$objFaq = FaqCategoryModel::findAll();
 
 		// Walk through each category
 		if ($objFaq !== null)
@@ -62,7 +62,7 @@ class ModuleFaq extends Frontend
 				// Get the URL of the jumpTo page
 				if (!isset($arrProcessed[$objFaq->jumpTo]))
 				{
-					$objParent = \PageModel::findWithDetails($objFaq->jumpTo);
+					$objParent = PageModel::findWithDetails($objFaq->jumpTo);
 
 					// The target page does not exist
 					if ($objParent === null)
@@ -92,13 +92,13 @@ class ModuleFaq extends Frontend
 					}
 
 					// Generate the URL
-					$arrProcessed[$objFaq->jumpTo] = $objParent->getAbsoluteUrl(\Config::get('useAutoItem') ? '/%s' : '/items/%s');
+					$arrProcessed[$objFaq->jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
 				}
 
 				$strUrl = $arrProcessed[$objFaq->jumpTo];
 
 				// Get the items
-				$objItems = \FaqModel::findPublishedByPid($objFaq->id);
+				$objItems = FaqModel::findPublishedByPid($objFaq->id);
 
 				if ($objItems !== null)
 				{

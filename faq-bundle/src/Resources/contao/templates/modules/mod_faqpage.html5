@@ -9,8 +9,8 @@
       <?php foreach ($category['items'] as $faq): ?>
         <section class="<?= $faq->class ?>">
           <h3 id="<?= $faq->alias ?>"><?= $faq->question ?></h3>
-          <div class="ce_text block">
 
+          <div class="ce_text block">
             <?php if (!$faq->addBefore): ?>
               <?= $faq->answer ?>
             <?php endif; ?>
@@ -22,7 +22,6 @@
             <?php if ($faq->addBefore): ?>
               <?= $faq->answer ?>
             <?php endif; ?>
-
           </div>
 
           <?php if ($faq->enclosure): ?>

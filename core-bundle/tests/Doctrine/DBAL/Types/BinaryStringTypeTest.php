@@ -49,7 +49,7 @@ class BinaryStringTypeTest extends TestCase
     {
         $fieldDefinition = ['fixed' => true];
 
-        /** @var AbstractPlatform|MockObject $platform */
+        /** @var AbstractPlatform&MockObject $platform */
         $platform = $this
             ->getMockBuilder(AbstractPlatform::class)
             ->setMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
@@ -74,7 +74,7 @@ class BinaryStringTypeTest extends TestCase
     {
         $fieldDefinition = ['fixed' => false];
 
-        /** @var AbstractPlatform|MockObject $platform */
+        /** @var AbstractPlatform&MockObject $platform */
         $platform = $this
             ->getMockBuilder(AbstractPlatform::class)
             ->setMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])

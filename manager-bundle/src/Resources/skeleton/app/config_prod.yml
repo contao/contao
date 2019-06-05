@@ -1,6 +1,10 @@
 imports:
     - { resource: config.yml }
 
+# Contao configuration
+contao:
+    pretty_error_screens: true
+
 # Monolog configuration
 monolog:
     handlers:
@@ -15,7 +19,7 @@ monolog:
         nested:
             type: rotating_file
             max_files: 10
-            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            path: '%kernel.logs_dir%/%kernel.environment%.log'
             level: info
         console:
             type: console

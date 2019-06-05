@@ -18,6 +18,7 @@ use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\Event\SchemaIndexDefinitionEventArgs;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 use Doctrine\DBAL\Schema\Index;
@@ -54,6 +55,10 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
 
     public function testChangesTheIndexIfThereIsASubpart(): void
     {
+        if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+            $this->markTestSkipped('This test is only relevant for doctrine/dbal < 2.9');
+        }
+
         $result = $this->createMock(ResultStatement::class);
         $result
             ->method('fetch')
@@ -105,7 +110,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
             ->willReturn($result)
         ;
 
-        /** @var SchemaIndexDefinitionEventArgs|MockObject $event */
+        /** @var SchemaIndexDefinitionEventArgs&MockObject $event */
         $event = $this
             ->getMockBuilder(SchemaIndexDefinitionEventArgs::class)
             ->disableOriginalConstructor()
@@ -151,6 +156,10 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
 
     public function testDoesNotChangeTheIndexIfThereIsNoSubpart(): void
     {
+        if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+            $this->markTestSkipped('This test is only relevant for doctrine/dbal < 2.9');
+        }
+
         $result = $this->createMock(ResultStatement::class);
         $result
             ->method('fetch')

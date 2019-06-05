@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-System::loadLanguageFile('tl_image_size');
+Contao\System::loadLanguageFile('tl_image_size');
 
 $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 (
@@ -22,8 +22,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		'markAsCopy'                  => 'media',
 		'onload_callback' => array
 		(
-			array('tl_image_size_item', 'checkPermission'),
-			array('tl_image_size_item', 'showJsLibraryHint')
+			array('tl_image_size_item', 'checkPermission')
 		),
 		'sql' => array
 		(
@@ -117,16 +116,16 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_image_size.name',
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'sorting' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'media' => array
 		(
@@ -204,7 +203,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_image_size_item extends Backend
+class tl_image_size_item extends Contao\Backend
 {
 
 	/**
@@ -213,7 +212,7 @@ class tl_image_size_item extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -262,26 +261,6 @@ class tl_image_size_item extends Backend
 	}
 
 	/**
-	 * Show a hint if a JavaScript library needs to be included in the page layout
-	 */
-	public function showJsLibraryHint()
-	{
-		if ($_POST || Input::get('act') != 'edit')
-		{
-			return;
-		}
-
-		// Return if the user cannot access the layout module (see #6190)
-		if (!$this->User->hasAccess('themes', 'modules') || !$this->User->hasAccess('layout', 'themes'))
-		{
-			return;
-		}
-
-		System::loadLanguageFile('tl_layout');
-		Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_image_size']['picturefill'], $GLOBALS['TL_LANG']['tl_layout']['picturefill'][0]));
-	}
-
-	/**
 	 * Return the "toggle visibility" button
 	 *
 	 * @param array  $row
@@ -295,9 +274,9 @@ class tl_image_size_item extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Input::get('tid')))
+		if (\strlen(Contao\Input::get('tid')))
 		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -314,21 +293,21 @@ class tl_image_size_item extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
 	}
 
 	/**
 	 * Toggle the visibility of a format definition
 	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
+	 * @param integer              $intId
+	 * @param boolean              $blnVisible
+	 * @param Contao\DataContainer $dc
 	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
+		Contao\Input::setGet('id', $intId);
+		Contao\Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -371,7 +350,7 @@ class tl_image_size_item extends Backend
 			}
 		}
 
-		$objVersions = new Versions('tl_image_size_item', $intId);
+		$objVersions = new Contao\Versions('tl_image_size_item', $intId);
 		$objVersions->initialize();
 
 		// Reverse the logic (image sizes have invisible=1)

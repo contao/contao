@@ -13,7 +13,7 @@
         "php": "^7.1",
         "contao/core-bundle": "self.version",
         "patchwork/utf8": "^1.2",
-        "symfony/http-kernel": "3.4.* || 4.1.*"
+        "symfony/http-kernel": "3.4.* || 4.1.* || 4.2.*"
     },
     "conflict": {
         "contao/core": "*",
@@ -25,7 +25,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.7.x-dev"
+            "dev-master": "4.8.x-dev"
         },
         "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin"
     },
@@ -44,7 +44,7 @@
         ]
     },
     "support": {
-        "issues": "https://github.com/contao/listing-bundle/issues",
+        "issues": "https://github.com/contao/contao/issues",
         "forum": "https://community.contao.org",
         "source": "https://github.com/contao/listing-bundle",
         "docs": "https://docs.contao.org"

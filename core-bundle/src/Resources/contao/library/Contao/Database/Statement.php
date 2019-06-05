@@ -10,6 +10,7 @@
 
 namespace Contao\Database;
 
+use Contao\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
 
@@ -188,7 +189,7 @@ class Statement
 
 			foreach ($arrParams as $k=>$v)
 			{
-				$arrSet[] = \Database::quoteIdentifier($k) . '=' . $v;
+				$arrSet[] = Database::quoteIdentifier($k) . '=' . $v;
 			}
 
 			$strQuery = 'SET ' . str_replace('%', '%%', implode(', ', $arrSet));

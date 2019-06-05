@@ -15,6 +15,7 @@ use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
+use Contao\Model\Collection;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 
@@ -66,7 +67,7 @@ class Picture
 	/**
 	 * The image size items collection
 	 *
-	 * @var ImageSizeItemModel[]|Model\Collection
+	 * @var ImageSizeItemModel[]|Collection
 	 */
 	protected $imageSizeItems = array();
 
@@ -77,7 +78,7 @@ class Picture
 	 */
 	public function __construct(File $file)
 	{
-		$this->image = new \Image($file);
+		$this->image = new Image($file);
 	}
 
 	/**
@@ -92,7 +93,7 @@ class Picture
 	{
 		if (\is_string($file))
 		{
-			$file = new \File(rawurldecode($file));
+			$file = new File(rawurldecode($file));
 		}
 
 		$imageSize = null;
@@ -108,7 +109,7 @@ class Picture
 
 		if (!\is_array($size))
 		{
-			$imageSize = \ImageSizeModel::findByPk($size);
+			$imageSize = ImageSizeModel::findByPk($size);
 
 			if ($imageSize === null)
 			{
@@ -131,10 +132,10 @@ class Picture
 
 		if ($imageSize !== null && !empty($imageSize->id))
 		{
-			$picture->setImageSizeItems(\ImageSizeItemModel::findVisibleByPid($imageSize->id, array('order'=>'sorting ASC')));
+			$picture->setImageSizeItems(ImageSizeItemModel::findVisibleByPid($imageSize->id, array('order'=>'sorting ASC')));
 		}
 
-		$fileRecord = \FilesModel::findByPath($file->path);
+		$fileRecord = FilesModel::findByPath($file->path);
 
 		if ($fileRecord !== null && $fileRecord->importantPartWidth && $fileRecord->importantPartHeight)
 		{
@@ -181,7 +182,7 @@ class Picture
 	/**
 	 * Set the image size items collection
 	 *
-	 * @param ImageSizeItemModel[]|Model\Collection $imageSizeItems The image size items collection
+	 * @param ImageSizeItemModel[]|Collection $imageSizeItems The image size items collection
 	 *
 	 * @return $this The picture object
 	 */
@@ -204,8 +205,8 @@ class Picture
 	 */
 	public function getTemplateData()
 	{
-		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
-		$image = \System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $this->image->getOriginalPath());
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $this->image->getOriginalPath());
 
 		$config = new PictureConfiguration();
 		$config->setSize($this->getConfigurationItem($this->imageSize));
@@ -228,7 +229,7 @@ class Picture
 			)
 		);
 
-		$container = \System::getContainer();
+		$container = System::getContainer();
 		$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
 
 		$picture = $container

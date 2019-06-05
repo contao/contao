@@ -83,7 +83,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => 6,
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'source' => array
 		(
@@ -137,7 +137,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_log extends Backend
+class tl_log extends Contao\Backend
 {
 
 	/**

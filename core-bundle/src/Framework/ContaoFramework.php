@@ -15,8 +15,8 @@ namespace Contao\CoreBundle\Framework;
 use Contao\ClassLoader;
 use Contao\Config;
 use Contao\CoreBundle\Exception\IncompleteInstallationException;
-use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\Input;
 use Contao\RequestToken;
@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * @internal Do not instantiate this class in your code; use the "contao.framework" service instead
@@ -46,14 +46,14 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private $requestStack;
 
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
      * @var ScopeMatcher
      */
     private $scopeMatcher;
+
+    /**
+     * @var TokenChecker
+     */
+    private $tokenChecker;
 
     /**
      * @var string
@@ -71,6 +71,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private $request;
 
     /**
+     * @var bool
+     */
+    private $isFrontend = false;
+
+    /**
      * @var array
      */
     private $adapterCache = [];
@@ -80,11 +85,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, RouterInterface $router, ScopeMatcher $scopeMatcher, string $rootDir, int $errorLevel)
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, string $rootDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
-        $this->router = $router;
         $this->scopeMatcher = $scopeMatcher;
+        $this->tokenChecker = $tokenChecker;
         $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
     }
@@ -102,7 +107,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @throws \LogicException
      */
-    public function initialize(): void
+    public function initialize(bool $isFrontend = false): void
     {
         if ($this->isInitialized()) {
             return;
@@ -115,8 +120,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             throw new \LogicException('The service container has not been set.');
         }
 
-        // Set the current request
-        $this->request = $this->requestStack->getCurrentRequest();
+        $this->isFrontend = $isFrontend;
+        $this->request = $this->requestStack->getMasterRequest();
 
         $this->setConstants();
         $this->initializeFramework();
@@ -170,8 +175,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             \define('TL_SCRIPT', $this->getRoute());
         }
 
-        // Define the login status constants in the back end (see #4099, #5279)
-        if (null === $this->request || !$this->scopeMatcher->isFrontendRequest($this->request)) {
+        // Define the login status constants (see #4099, #5279)
+        if ('FE' === $this->getMode() && ($session = $this->getSession()) && $this->request->hasPreviousSession()) {
+            $session->start();
+
+            \define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
+            \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
+        } else {
             \define('BE_USER_LOGGED_IN', false);
             \define('FE_USER_LOGGED_IN', false);
         }
@@ -182,6 +192,10 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
     private function getMode(): ?string
     {
+        if (true === $this->isFrontend) {
+            return 'FE';
+        }
+
         if (null === $this->request) {
             return null;
         }
@@ -212,30 +226,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return null;
         }
 
-        $attributes = $this->request->attributes;
-
-        if (!$attributes->has('_route')) {
-            return null;
-        }
-
-        try {
-            $route = $this->router->generate($attributes->get('_route'), $attributes->get('_route_params'));
-
-            // The Symfony router can return null even though the interface only allows strings
-            if (!\is_string($route)) {
-                return null;
-            }
-        } catch (\Exception $e) {
-            return null;
-        }
-
-        $basePath = $this->request->getBasePath().'/';
-
-        if (0 !== strncmp($route, $basePath, \strlen($basePath))) {
-            return null;
-        }
-
-        return substr($route, \strlen($basePath));
+        return substr($this->request->getBaseUrl().$this->request->getPathInfo(), \strlen($this->request->getBasePath().'/'));
     }
 
     private function getPath(): ?string
@@ -315,11 +306,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private function initializeLegacySessionAccess(): void
     {
-        if (null === $this->request || !$this->request->hasSession()) {
+        if (!$session = $this->getSession()) {
             return;
         }
-
-        $session = $this->request->getSession();
 
         if (!$session->isStarted()) {
             $_SESSION = new LazySessionAccess($session);
@@ -393,9 +382,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
     }
 
-    /**
-     * @throws InvalidRequestTokenException
-     */
     private function handleRequestToken(): void
     {
         /** @var RequestToken $requestToken */
@@ -405,12 +391,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         if (!\defined('REQUEST_TOKEN')) {
             \define('REQUEST_TOKEN', 'cli' === \PHP_SAPI ? null : $requestToken->get());
         }
-
-        if ($this->canSkipTokenCheck() || $requestToken->validate($this->request->request->get('REQUEST_TOKEN'))) {
-            return;
-        }
-
-        throw new InvalidRequestTokenException('Invalid request token. Please reload the page and try again.');
     }
 
     private function iniSet(string $key, string $value): void
@@ -420,14 +400,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
     }
 
-    private function canSkipTokenCheck(): bool
+    private function getSession(): ?SessionInterface
     {
-        return null === $this->request
-            || 'POST' !== $this->request->getRealMethod()
-            || $this->request->isXmlHttpRequest()
-            || !$this->request->attributes->has('_token_check')
-            || false === $this->request->attributes->get('_token_check')
-        ;
+        if (null === $this->request || !$this->request->hasSession()) {
+            return null;
+        }
+
+        return $this->request->getSession();
     }
 
     private function registerHookListeners(): void

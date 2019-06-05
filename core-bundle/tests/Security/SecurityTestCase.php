@@ -30,7 +30,7 @@ abstract class SecurityTestCase extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('request_stack', $requestStack);
 
         return $container;

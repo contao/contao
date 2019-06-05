@@ -31,7 +31,7 @@ class ConfigurationTest extends TestCase
     {
         parent::setUp();
 
-        $this->configuration = new Configuration(false, $this->getTempDir(), 'en');
+        $this->configuration = new Configuration($this->getTempDir(), 'en');
     }
 
     public function testAddsTheImagineService(): void
@@ -74,21 +74,16 @@ class ConfigurationTest extends TestCase
         $this->assertSame('C:\Temp\contao', $configuration['image']['target_dir']);
     }
 
-    /**
-     * @return string[][]
-     */
-    public function getPaths(): array
+    public function getPaths(): \Generator
     {
-        return [
-            ['/tmp/contao', 'C:\Temp\contao'],
-            ['/tmp/foo/../contao', 'C:\Temp\foo\..\contao'],
-            ['/tmp/foo/bar/../../contao', 'C:\Temp\foo\bar\..\..\contao'],
-            ['/tmp/./contao', 'C:\Temp\.\contao'],
-            ['/tmp//contao', 'C:\Temp\\\\contao'],
-            ['/tmp/contao/', 'C:\Temp\contao\\'],
-            ['/tmp/contao/.', 'C:\Temp\contao\.'],
-            ['/tmp/contao/foo/..', 'C:\Temp\contao\foo\..'],
-        ];
+        yield ['/tmp/contao', 'C:\Temp\contao'];
+        yield ['/tmp/foo/../contao', 'C:\Temp\foo\..\contao'];
+        yield ['/tmp/foo/bar/../../contao', 'C:\Temp\foo\bar\..\..\contao'];
+        yield ['/tmp/./contao', 'C:\Temp\.\contao'];
+        yield ['/tmp//contao', 'C:\Temp\\\\contao'];
+        yield ['/tmp/contao/', 'C:\Temp\contao\\'];
+        yield ['/tmp/contao/.', 'C:\Temp\contao\.'];
+        yield ['/tmp/contao/foo/..', 'C:\Temp\contao\foo\..'];
     }
 
     /**
@@ -108,24 +103,19 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    /**
-     * @return string[][]
-     */
-    public function getInvalidUploadPaths(): array
+    public function getInvalidUploadPaths(): \Generator
     {
-        return [
-            [''],
-            ['app'],
-            ['assets'],
-            ['bin'],
-            ['contao'],
-            ['plugins'],
-            ['share'],
-            ['system'],
-            ['templates'],
-            ['var'],
-            ['vendor'],
-            ['web'],
-        ];
+        yield [''];
+        yield ['app'];
+        yield ['assets'];
+        yield ['bin'];
+        yield ['contao'];
+        yield ['plugins'];
+        yield ['share'];
+        yield ['system'];
+        yield ['templates'];
+        yield ['var'];
+        yield ['vendor'];
+        yield ['web'];
     }
 }

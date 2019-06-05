@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes events
  *
@@ -24,6 +26,8 @@ namespace Contao;
  * @property integer $endTime
  * @property integer $startDate
  * @property integer $endDate
+ * @property string  $pageTitle
+ * @property string  $description
  * @property string  $location
  * @property string  $address
  * @property string  $teaser
@@ -67,6 +71,8 @@ namespace Contao;
  * @method static CalendarEventsModel|null findOneByEndTime($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByStartDate($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByEndDate($val, array $opt=array())
+ * @method static CalendarEventsModel|null findOneByPageTitle($val, array $opt=array())
+ * @method static CalendarEventsModel|null findOneByDescription($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByLocation($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByAddress($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByTeaser($val, array $opt=array())
@@ -96,47 +102,49 @@ namespace Contao;
  * @method static CalendarEventsModel|null findOneByStart($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByStop($val, array $opt=array())
  *
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByPid($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByTstamp($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByTitle($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAlias($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAuthor($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAddTime($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStartTime($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByEndTime($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStartDate($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByEndDate($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByLocation($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAddress($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByTeaser($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAddImage($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findBySingleSRC($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAlt($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findBySize($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByImagemargin($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByImageUrl($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByFullsize($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByCaption($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByFloating($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByRecurring($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByRepeatEach($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByRepeatEnd($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByRecurrences($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAddEnclosure($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByEnclosure($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findBySource($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByJumpTo($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByArticleId($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByUrl($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByTarget($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByCssClass($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByNoComments($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByPublished($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStart($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStop($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null findAll(array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByPid($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByTstamp($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByTitle($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAlias($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAuthor($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAddTime($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStartTime($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByEndTime($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStartDate($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByEndDate($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByPageTitle($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByDescription($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByLocation($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAddress($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByTeaser($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAddImage($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findBySingleSRC($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAlt($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findBySize($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByImagemargin($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByImageUrl($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByFullsize($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByCaption($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByFloating($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByRecurring($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByRepeatEach($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByRepeatEnd($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByRecurrences($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAddEnclosure($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByEnclosure($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findBySource($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByJumpTo($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByArticleId($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByUrl($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByTarget($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByCssClass($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByNoComments($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByPublished($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStart($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByStop($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
@@ -149,6 +157,8 @@ namespace Contao;
  * @method static integer countByEndTime($val, array $opt=array())
  * @method static integer countByStartDate($val, array $opt=array())
  * @method static integer countByEndDate($val, array $opt=array())
+ * @method static integer countByPageTitle($val, array $opt=array())
+ * @method static integer countByDescription($val, array $opt=array())
  * @method static integer countByLocation($val, array $opt=array())
  * @method static integer countByAddress($val, array $opt=array())
  * @method static integer countByTeaser($val, array $opt=array())
@@ -206,12 +216,12 @@ class CalendarEventsModel extends Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = !is_numeric($varId) ? array("$t.alias=?") : array("$t.id=?");
+		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("$t.alias=?") : array("$t.id=?");
 		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")";
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -226,7 +236,7 @@ class CalendarEventsModel extends Model
 	 * @param integer $intEnd     The end date as Unix timestamp
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null A collection of models or null if there are no events
+	 * @return Collection|CalendarEventsModel[]|CalendarEventsModel|null A collection of models or null if there are no events
 	 */
 	public static function findCurrentByPid($intPid, $intStart, $intEnd, array $arrOptions=array())
 	{
@@ -238,7 +248,7 @@ class CalendarEventsModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -256,7 +266,7 @@ class CalendarEventsModel extends Model
 	 * @param integer $intPid     The calendar ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null A collection of models or null if there are no events
+	 * @return Collection|CalendarEventsModel[]|CalendarEventsModel|null A collection of models or null if there are no events
 	 */
 	public static function findPublishedDefaultByPid($intPid, array $arrOptions=array())
 	{
@@ -265,7 +275,7 @@ class CalendarEventsModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$time = \Date::floorToMinute();
+			$time = Date::floorToMinute();
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
@@ -284,7 +294,7 @@ class CalendarEventsModel extends Model
 	 * @param integer $intLimit   An optional limit
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Model\Collection|CalendarEventsModel[]|CalendarEventsModel|null A collection of models or null if there are no events
+	 * @return Collection|CalendarEventsModel[]|CalendarEventsModel|null A collection of models or null if there are no events
 	 */
 	public static function findUpcomingByPids($arrIds, $intLimit=0, array $arrOptions=array())
 	{
@@ -294,7 +304,7 @@ class CalendarEventsModel extends Model
 		}
 
 		$t = static::$strTable;
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 
 		// Get upcoming events using endTime instead of startTime (see #3917)
 		$arrColumns = array("($t.endTime>=$time OR ($t.recurring='1' AND ($t.recurrences=0 OR $t.repeatEnd>=$time))) AND $t.pid IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'");

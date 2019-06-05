@@ -650,6 +650,8 @@ var AjaxRequest =
 	 */
 	toggleFieldset: function(el, id, table) {
 		el.blur();
+		Backend.getScrollOffset();
+
 		var fs = $('pal_' + id);
 
 		if (fs.hasClass('collapsed')) {
@@ -992,10 +994,79 @@ var Backend =
 	},
 
 	/**
-	 * Get the current scroll offset and store it in a cookie
+	 * Store the current scroll offset in sessionStorage
 	 */
 	getScrollOffset: function() {
-		document.cookie = "BE_PAGE_OFFSET=" + window.getScroll().y + "; path=" + (Contao.path || '/');
+		window.sessionStorage.setItem('contao_backend_offset', window.getScroll().y);
+	},
+
+	/**
+	 * Remove the legacy BE_PAGE_OFFSET cookie, scroll to the current offset if
+	 * it was defined and add the "down" CSS class to the header.
+	 */
+	initScrollOffset: function() {
+		// Kill the legacy cookie here; this way it can be sent by the server
+		// but it wont be resent by the client in the next request
+		Cookie.dispose('BE_PAGE_OFFSET');
+
+		// Add events to the submit buttons so they can reset the offset
+		// (except for "save", which always stays on the same page)
+		$$('.tl_submit_container button[name][name!="save"]').each(function(button) {
+			button.addEvent('click', function() {
+				window.sessionStorage.removeItem('contao_backend_offset');
+			});
+		});
+
+		var offset = window.sessionStorage.getItem('contao_backend_offset');
+		window.sessionStorage.removeItem('contao_backend_offset');
+
+		if (!offset) return;
+
+		var header = window.document.getElementById('header'),
+			additionalOffset = 0;
+
+		if (header) {
+			header.addClass('down');
+		}
+
+		$$('[data-add-to-scroll-offset]').each(function(el) {
+			var offset = el.get('data-add-to-scroll-offset'),
+				scrollSize = el.getScrollSize().y,
+				negative = false,
+				percent = false;
+
+			// No specific offset desired, take scrollSize
+			if (!offset) {
+				additionalOffset += scrollSize;
+				return;
+			}
+
+			// Negative
+			if (offset.charAt(0) === '-') {
+				negative = true;
+				offset = offset.substring(1);
+			}
+
+			// Percent
+			if (offset.charAt(offset.length - 1) === '%') {
+				percent = true;
+				offset = offset.substring(0, offset.length - 1);
+			}
+
+			offset = parseInt(offset, 10);
+
+			if (percent) {
+				offset = Math.round(scrollSize * offset / 100);
+			}
+
+			if (negative) {
+				offset = offset * -1;
+			}
+
+			additionalOffset += offset;
+		});
+
+		this.vScrollTo(parseInt(offset, 10) + additionalOffset);
 	},
 
 	/**
@@ -1210,14 +1281,7 @@ var Backend =
 		new Tips.Contao($$('#tmenu a[title]').filter(function(i) {
 			return i.title != '';
 		}), {
-			offset: {x:-12, y:42},
-			windowPadding: {x:200, y:0}
-		});
-
-		new Tips.Contao($$('#tmenu button[title]').filter(function(i) {
-			return i.title != '';
-		}), {
-			offset: {x:-14, y:42}
+			offset: {x:9, y:42}
 		});
 
 		// Navigation groups
@@ -1798,7 +1862,7 @@ var Backend =
 	 * @param {float} [factor] The resize factor
 	 */
 	tableWizardResize: function(factor) {
-		var size = Cookie.read('BE_CELL_SIZE');
+		var size = window.localStorage.getItem('contao_table_wizard_cell_size');
 
 		if (factor !== undefined) {
 			size = '';
@@ -1809,7 +1873,7 @@ var Backend =
 					size = el.getStyle('width') + '|' + el.getStyle('height');
 				}
 			});
-			Cookie.write('BE_CELL_SIZE', size, { path: Contao.path });
+			window.localStorage.setItem('contao_table_wizard_cell_size', size);
 		} else if (size !== null) {
 			var chunks = size.split('|');
 			$$('.tl_tablewizard textarea').each(function(el) {

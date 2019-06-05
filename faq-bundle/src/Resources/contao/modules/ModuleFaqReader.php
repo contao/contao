@@ -40,7 +40,7 @@ class ModuleFaqReader extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqreader'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -51,13 +51,13 @@ class ModuleFaqReader extends Module
 		}
 
 		// Set the item from the auto_item parameter
-		if (!isset($_GET['items']) && \Config::get('useAutoItem') && isset($_GET['auto_item']))
+		if (!isset($_GET['items']) && Config::get('useAutoItem') && isset($_GET['auto_item']))
 		{
-			\Input::setGet('items', \Input::get('auto_item'));
+			Input::setGet('items', Input::get('auto_item'));
 		}
 
 		// Do not index or cache the page if no FAQ has been specified
-		if (!\Input::get('items'))
+		if (!Input::get('items'))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;
@@ -68,7 +68,7 @@ class ModuleFaqReader extends Module
 			return '';
 		}
 
-		$this->faq_categories = \StringUtil::deserialize($this->faq_categories);
+		$this->faq_categories = StringUtil::deserialize($this->faq_categories);
 
 		// Do not index or cache the page if there are no categories
 		if (empty($this->faq_categories) || !\is_array($this->faq_categories))
@@ -96,34 +96,34 @@ class ModuleFaqReader extends Module
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 		$this->Template->referer = 'javascript:history.go(-1)';
 
-		$objFaq = \FaqModel::findPublishedByParentAndIdOrAlias(\Input::get('items'), $this->faq_categories);
+		$objFaq = FaqModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->faq_categories);
 
 		if (null === $objFaq)
 		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Overwrite the page title and description (see #2853 and #4955)
 		if ($objFaq->question != '')
 		{
-			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objFaq->question));
+			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objFaq->question));
 			$objPage->description = $this->prepareMetaDescription($objFaq->question);
 		}
 
 		$this->Template->question = $objFaq->question;
 
 		// Clean the RTE output
-		$objFaq->answer = \StringUtil::toHtml5($objFaq->answer);
+		$objFaq->answer = StringUtil::toHtml5($objFaq->answer);
 
-		$this->Template->answer = \StringUtil::encodeEmail($objFaq->answer);
+		$this->Template->answer = StringUtil::encodeEmail($objFaq->answer);
 		$this->Template->addImage = false;
 
 		// Add image
 		if ($objFaq->addImage && $objFaq->singleSRC != '')
 		{
-			$objModel = \FilesModel::findByUuid($objFaq->singleSRC);
+			$objModel = FilesModel::findByUuid($objFaq->singleSRC);
 
-			if ($objModel !== null && is_file(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
+			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
 			{
 				// Do not override the field now that we have a model registry (see #6303)
 				$arrFaq = $objFaq->row();
@@ -149,9 +149,9 @@ class ModuleFaqReader extends Module
 			$strAuthor = $objAuthor->name;
 		}
 
-		$this->Template->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], \Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
+		$this->Template->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
-		$bundles = \System::getContainer()->getParameter('kernel.bundles');
+		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
 		if ($objFaq->noComments || !isset($bundles['ContaoCommentsBundle']))
@@ -175,7 +175,7 @@ class ModuleFaqReader extends Module
 		$intHl = min((int) str_replace('h', '', $this->hl), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
-		$this->import('Comments');
+		$this->import(Comments::class, 'Comments');
 		$arrNotifies = array();
 
 		// Notify the system administrator

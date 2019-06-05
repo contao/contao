@@ -28,13 +28,12 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_archives'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_featured'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_featured'],
-	'default'                 => 'all_items',
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => array('all_items', 'featured', 'unfeatured'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50 clr'),
-	'sql'                     => "varchar(16) NOT NULL default ''"
+	'sql'                     => "varchar(16) NOT NULL default 'all_items'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_jumpToCurrent'] = array
@@ -56,36 +55,33 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_readerModule'] = array
 	'options_callback'        => array('tl_module_news', 'getReaderModules'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "int(10) unsigned NOT NULL default '0'"
+	'sql'                     => "int(10) unsigned NOT NULL default 0"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_metaFields'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_metaFields'],
-	'default'                 => array('date', 'author'),
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options'                 => array('date', 'author', 'comments'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "varchar(255) NOT NULL default ''"
+	'sql'                     => "varchar(255) NOT NULL default 'a:2:{i:0;s:4:\"date\";i:1;s:6:\"author\";}'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_template'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_template'],
-	'default'                 => 'news_latest',
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_news', 'getNewsTemplates'),
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default ''"
+	'sql'                     => "varchar(64) NOT NULL default 'news_latest'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_format'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_format'],
-	'default'                 => 'news_month',
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => array('news_day', 'news_month', 'news_year'),
@@ -95,31 +91,29 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_format'] = array
 	(
 		array('tl_module_news', 'hideStartDay')
 	),
-	'sql'                     => "varchar(32) NOT NULL default ''"
+	'sql'                     => "varchar(32) NOT NULL default 'news_month'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_startDay'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_startDay'],
-	'default'                 => 0,
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => array(0, 1, 2, 3, 4, 5, 6),
 	'reference'               => &$GLOBALS['TL_LANG']['DAYS'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+	'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_order'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_order'],
-	'default'                 => 'order_date_desc',
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_news', 'getSortingOptions'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(32) NOT NULL default ''"
+	'sql'                     => "varchar(32) NOT NULL default 'order_date_desc'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array
@@ -130,7 +124,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array
 	'sql'                     => "char(1) NOT NULL default ''"
 );
 
-$bundles = System::getContainer()->getParameter('kernel.bundles');
+$bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
 
 // Add the comments template drop-down menu
 if (isset($bundles['ContaoCommentsBundle']))
@@ -143,7 +137,7 @@ if (isset($bundles['ContaoCommentsBundle']))
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module_news extends Backend
+class tl_module_news extends Contao\Backend
 {
 
 	/**
@@ -152,7 +146,7 @@ class tl_module_news extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -241,11 +235,11 @@ class tl_module_news extends Backend
 	/**
 	 * Return the sorting options
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getSortingOptions(DataContainer $dc)
+	public function getSortingOptions(Contao\DataContainer $dc)
 	{
 		if ($dc->activeRecord && $dc->activeRecord->type == 'newsmenu')
 		{

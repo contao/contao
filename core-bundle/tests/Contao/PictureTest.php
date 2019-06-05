@@ -63,7 +63,7 @@ class PictureTest extends TestCase
         $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
 
-        System::setContainer($this->mockContainerWithImageServices());
+        System::setContainer($this->getContainerWithImageServices());
     }
 
     /**
@@ -303,7 +303,7 @@ class PictureTest extends TestCase
         $this->assertSame([], $pictureData['sources']);
     }
 
-    private function mockContainerWithImageServices(): ContainerBuilder
+    private function getContainerWithImageServices(): ContainerBuilder
     {
         $filesystem = new Filesystem();
 
@@ -320,7 +320,7 @@ class PictureTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
-        $container = $this->mockContainer($this->getTempDir());
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->setParameter('contao.web_dir', $this->getTempDir().'/web');
         $container->setParameter('contao.image.target_dir', $this->getTempDir().'/assets/images');
         $container->set('contao.assets.files_context', $context);

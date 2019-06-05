@@ -22,11 +22,11 @@ use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageError404;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -50,7 +50,7 @@ class PrettyErrorScreenListener
     private $twig;
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -58,11 +58,6 @@ class PrettyErrorScreenListener
      * @var TokenStorageInterface
      */
     private $tokenStorage;
-
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
 
     /**
      * @var LoggerInterface
@@ -82,13 +77,12 @@ class PrettyErrorScreenListener
         NoRootPageFoundException::class => 'no_root_page_found',
     ];
 
-    public function __construct(bool $prettyErrorScreens, \Twig_Environment $twig, ContaoFrameworkInterface $framework, TokenStorageInterface $tokenStorage, ScopeMatcher $scopeMatcher, LoggerInterface $logger = null)
+    public function __construct(bool $prettyErrorScreens, \Twig_Environment $twig, ContaoFramework $framework, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;
         $this->tokenStorage = $tokenStorage;
-        $this->scopeMatcher = $scopeMatcher;
         $this->logger = $logger;
     }
 
@@ -103,7 +97,11 @@ class PrettyErrorScreenListener
 
         $request = $event->getRequest();
 
-        if ('html' !== $request->getRequestFormat() || !$this->scopeMatcher->isContaoRequest($request)) {
+        if ('html' !== $request->getRequestFormat()) {
+            return;
+        }
+
+        if (!AcceptHeader::fromString($request->headers->get('Accept'))->has('text/html')) {
             return;
         }
 
@@ -167,16 +165,16 @@ class PrettyErrorScreenListener
 
     private function getResponseFromPageHandler(int $type): ?Response
     {
-        $this->framework->initialize();
+        $this->framework->initialize(true);
 
-        $type = 'error_'.$type;
+        $key = 'error_'.$type;
 
-        if (!isset($GLOBALS['TL_PTY'][$type]) || !class_exists($GLOBALS['TL_PTY'][$type])) {
+        if (!isset($GLOBALS['TL_PTY'][$key]) || !class_exists($GLOBALS['TL_PTY'][$key])) {
             return null;
         }
 
         /** @var PageError404 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY'][$type]();
+        $pageHandler = new $GLOBALS['TL_PTY'][$key]();
 
         try {
             return $pageHandler->getResponse();
@@ -249,6 +247,7 @@ class PrettyErrorScreenListener
             'statusName' => Response::$statusTexts[$statusCode],
             'template' => $view,
             'base' => $event->getRequest()->getBasePath(),
+            'language' => $event->getRequest()->getLocale(),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
             'exception' => $event->getException()->getMessage(),
         ];

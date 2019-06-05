@@ -34,7 +34,7 @@ class ModuleTwoFactor extends BackendModule
 	 */
 	protected function compile()
 	{
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 
 		$container = System::getContainer();
 		$ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');

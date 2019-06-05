@@ -37,7 +37,7 @@ class ModuleFaqPage extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqpage'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -47,7 +47,7 @@ class ModuleFaqPage extends Module
 			return $objTemplate->parse();
 		}
 
-		$this->faq_categories = \StringUtil::deserialize($this->faq_categories);
+		$this->faq_categories = StringUtil::deserialize($this->faq_categories);
 
 		// Return if there are no categories
 		if (empty($this->faq_categories) || !\is_array($this->faq_categories))
@@ -63,7 +63,7 @@ class ModuleFaqPage extends Module
 	 */
 	protected function compile()
 	{
-		$objFaq = \FaqModel::findPublishedByPids($this->faq_categories);
+		$objFaq = FaqModel::findPublishedByPids($this->faq_categories);
 
 		if ($objFaq === null)
 		{
@@ -76,7 +76,7 @@ class ModuleFaqPage extends Module
 		global $objPage;
 
 		$arrFaqs = array_fill_keys($this->faq_categories, array());
-		$rootDir = \System::getContainer()->getParameter('kernel.project_dir');
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Add FAQs
 		while ($objFaq->next())
@@ -85,15 +85,15 @@ class ModuleFaqPage extends Module
 			$objTemp = (object) $objFaq->row();
 
 			// Clean the RTE output
-			$objTemp->answer = \StringUtil::toHtml5($objFaq->answer);
+			$objTemp->answer = StringUtil::toHtml5($objFaq->answer);
 
-			$objTemp->answer = \StringUtil::encodeEmail($objTemp->answer);
+			$objTemp->answer = StringUtil::encodeEmail($objTemp->answer);
 			$objTemp->addImage = false;
 
 			// Add an image
 			if ($objFaq->addImage && $objFaq->singleSRC != '')
 			{
-				$objModel = \FilesModel::findByUuid($objFaq->singleSRC);
+				$objModel = FilesModel::findByUuid($objFaq->singleSRC);
 
 				if ($objModel !== null && is_file($rootDir . '/' . $objModel->path))
 				{
@@ -116,7 +116,7 @@ class ModuleFaqPage extends Module
 
 			/** @var UserModel $objAuthor */
 			$objAuthor = $objFaq->getRelated('author');
-			$objTemp->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], \Date::parse($objPage->dateFormat, $objFaq->tstamp), $objAuthor->name);
+			$objTemp->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $objAuthor->name);
 
 			/** @var FaqCategoryModel $objPid */
 			$objPid = $objFaq->getRelated('pid');
@@ -145,7 +145,7 @@ class ModuleFaqPage extends Module
 		}
 
 		$this->Template->faq = $arrFaqs;
-		$this->Template->request = \Environment::get('indexFreeRequest');
+		$this->Template->request = Environment::get('indexFreeRequest');
 		$this->Template->topLink = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 	}
 }

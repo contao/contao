@@ -43,7 +43,7 @@ class ModuleNewsReader extends ModuleNews
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsreader'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -54,18 +54,18 @@ class ModuleNewsReader extends ModuleNews
 		}
 
 		// Set the item from the auto_item parameter
-		if (!isset($_GET['items']) && \Config::get('useAutoItem') && isset($_GET['auto_item']))
+		if (!isset($_GET['items']) && Config::get('useAutoItem') && isset($_GET['auto_item']))
 		{
-			\Input::setGet('items', \Input::get('auto_item'));
+			Input::setGet('items', Input::get('auto_item'));
 		}
 
 		// Return an empty string if "items" is not set (to combine list and reader on same page)
-		if (!\Input::get('items'))
+		if (!Input::get('items'))
 		{
 			return '';
 		}
 
-		$this->news_archives = $this->sortOutProtected(\StringUtil::deserialize($this->news_archives));
+		$this->news_archives = $this->sortOutProtected(StringUtil::deserialize($this->news_archives));
 
 		if (empty($this->news_archives) || !\is_array($this->news_archives))
 		{
@@ -88,12 +88,12 @@ class ModuleNewsReader extends ModuleNews
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
 		// Get the news item
-		$objArticle = \NewsModel::findPublishedByParentAndIdOrAlias(\Input::get('items'), $this->news_archives);
+		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->news_archives);
 
 		// The news item does not exist or has an external target (see #33)
 		if (null === $objArticle || $objArticle->source != 'default')
 		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		$arrArticle = $this->parseArticle($objArticle);
@@ -106,7 +106,7 @@ class ModuleNewsReader extends ModuleNews
 		}
 		elseif ($objArticle->headline)
 		{
-			$objPage->pageTitle = strip_tags(\StringUtil::stripInsertTags($objArticle->headline));
+			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objArticle->headline));
 		}
 
 		// Overwrite the page description
@@ -119,7 +119,7 @@ class ModuleNewsReader extends ModuleNews
 			$objPage->description = $this->prepareMetaDescription($objArticle->teaser);
 		}
 
-		$bundles = \System::getContainer()->getParameter('kernel.bundles');
+		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
 		if ($objArticle->noComments || !isset($bundles['ContaoCommentsBundle']))
@@ -143,7 +143,7 @@ class ModuleNewsReader extends ModuleNews
 		$intHl = min((int) str_replace('h', '', $this->hl), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
-		$this->import('Comments');
+		$this->import(Comments::class, 'Comments');
 		$arrNotifies = array();
 
 		// Notify the system administrator

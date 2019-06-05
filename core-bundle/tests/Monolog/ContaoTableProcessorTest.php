@@ -17,6 +17,7 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Monolog\Logger;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -27,7 +28,7 @@ class ContaoTableProcessorTest extends TestCase
 {
     public function testCanBeInvoked(): void
     {
-        $processor = $this->mockContaoTableProcessor();
+        $processor = $this->getContaoTableProcessor();
 
         $this->assertEmpty($processor([]));
         $this->assertSame(['foo' => 'bar'], $processor(['foo' => 'bar']));
@@ -44,7 +45,7 @@ class ContaoTableProcessorTest extends TestCase
             'context' => ['contao' => new ContaoContext(__METHOD__)],
         ];
 
-        $processor = $this->mockContaoTableProcessor();
+        $processor = $this->getContaoTableProcessor();
         $record = $processor($data);
 
         /** @var ContaoContext $context */
@@ -63,7 +64,7 @@ class ContaoTableProcessorTest extends TestCase
             'context' => ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)],
         ];
 
-        $processor = $this->mockContaoTableProcessor();
+        $processor = $this->getContaoTableProcessor();
         $record = $processor($data);
 
         /** @var ContaoContext $context */
@@ -72,21 +73,16 @@ class ContaoTableProcessorTest extends TestCase
         $this->assertSame(ContaoContext::CRON, $context->getAction());
     }
 
-    /**
-     * @return (int|string)[][]
-     */
-    public function actionLevelProvider(): array
+    public function actionLevelProvider(): \Generator
     {
-        return [
-            [Logger::DEBUG, ContaoContext::GENERAL],
-            [Logger::INFO, ContaoContext::GENERAL],
-            [Logger::NOTICE, ContaoContext::GENERAL],
-            [Logger::WARNING, ContaoContext::GENERAL],
-            [Logger::ERROR, ContaoContext::ERROR],
-            [Logger::CRITICAL, ContaoContext::ERROR],
-            [Logger::ALERT, ContaoContext::ERROR],
-            [Logger::EMERGENCY, ContaoContext::ERROR],
-        ];
+        yield [Logger::DEBUG, ContaoContext::GENERAL];
+        yield [Logger::INFO, ContaoContext::GENERAL];
+        yield [Logger::NOTICE, ContaoContext::GENERAL];
+        yield [Logger::WARNING, ContaoContext::GENERAL];
+        yield [Logger::ERROR, ContaoContext::ERROR];
+        yield [Logger::CRITICAL, ContaoContext::ERROR];
+        yield [Logger::ALERT, ContaoContext::ERROR];
+        yield [Logger::EMERGENCY, ContaoContext::ERROR];
     }
 
     public function testAddsTheUserAgent(): void
@@ -96,7 +92,7 @@ class ContaoTableProcessorTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $processor = $this->mockContaoTableProcessor($requestStack);
+        $processor = $this->getContaoTableProcessor($requestStack);
 
         $data = [
             'context' => [
@@ -151,7 +147,7 @@ class ContaoTableProcessorTest extends TestCase
         $tokenStorage = new TokenStorage();
         $tokenStorage->setToken($token);
 
-        $processor = $this->mockContaoTableProcessor(null, $tokenStorage);
+        $processor = $this->getContaoTableProcessor(null, $tokenStorage);
 
         $data = [
             'context' => [
@@ -215,7 +211,7 @@ class ContaoTableProcessorTest extends TestCase
             ],
         ];
 
-        $processor = $this->mockContaoTableProcessor($requestStack);
+        $processor = $this->getContaoTableProcessor($requestStack);
         $result = $processor($data);
 
         /** @var ContaoContext $context */
@@ -224,27 +220,24 @@ class ContaoTableProcessorTest extends TestCase
         $this->assertSame($expectedSource, $context->getSource());
     }
 
-    /**
-     * @return (string|null)[][]
-     */
-    public function sourceProvider(): array
+    public function sourceProvider(): \Generator
     {
-        return [
-            [null, 'FE', 'FE'],
-            [null, 'BE', 'BE'],
-            [null, null, 'FE'],
-
-            [ContaoCoreBundle::SCOPE_FRONTEND, 'FE', 'FE'],
-            [ContaoCoreBundle::SCOPE_FRONTEND, 'BE', 'BE'],
-            [ContaoCoreBundle::SCOPE_FRONTEND, null, 'FE'],
-
-            [ContaoCoreBundle::SCOPE_BACKEND, 'FE', 'FE'],
-            [ContaoCoreBundle::SCOPE_BACKEND, 'BE', 'BE'],
-            [ContaoCoreBundle::SCOPE_BACKEND, null, 'BE'],
-        ];
+        yield [null, 'FE', 'FE'];
+        yield [null, 'BE', 'BE'];
+        yield [null, null, 'FE'];
+        yield [ContaoCoreBundle::SCOPE_FRONTEND, 'FE', 'FE'];
+        yield [ContaoCoreBundle::SCOPE_FRONTEND, 'BE', 'BE'];
+        yield [ContaoCoreBundle::SCOPE_FRONTEND, null, 'FE'];
+        yield [ContaoCoreBundle::SCOPE_BACKEND, 'FE', 'FE'];
+        yield [ContaoCoreBundle::SCOPE_BACKEND, 'BE', 'BE'];
+        yield [ContaoCoreBundle::SCOPE_BACKEND, null, 'BE'];
     }
 
-    private function mockContaoTableProcessor(RequestStack $requestStack = null, TokenStorageInterface $tokenStorage = null): ContaoTableProcessor
+    /**
+     * @param RequestStack&MockObject          $requestStack
+     * @param TokenStorageInterface&MockObject $tokenStorage
+     */
+    private function getContaoTableProcessor(RequestStack $requestStack = null, TokenStorageInterface $tokenStorage = null): ContaoTableProcessor
     {
         if (null === $requestStack) {
             $requestStack = $this->createMock(RequestStack::class);

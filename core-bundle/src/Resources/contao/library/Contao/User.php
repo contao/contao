@@ -88,7 +88,6 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string  $assignDir
  * @property string  $homeDir
  * @property integer $createdOn
- * @property string  $activation
  * @property string  $loginPage
  * @property object  $objImport
  * @property object  $objAuth
@@ -162,7 +161,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	protected function __construct()
 	{
 		parent::__construct();
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 	}
 
 	/**
@@ -304,7 +303,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 		try
 		{
-			$userChecker = \System::getContainer()->get('contao.security.user_checker');
+			$userChecker = System::getContainer()->get('contao.security.user_checker');
 			$userChecker->checkPreAuth($this);
 			$userChecker->checkPostAuth($this);
 		}
@@ -326,7 +325,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function findBy($strColumn, $varValue)
 	{
-		$objResult = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE " . \Database::quoteIdentifier($strColumn) . "=?")
+		$objResult = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($strColumn) . "=?")
 									->limit(1)
 									->execute($varValue);
 
@@ -363,7 +362,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	{
 		@trigger_error('Using User::regenerateSessionId() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
 
-		$container = \System::getContainer();
+		$container = System::getContainer();
 		$strategy = $container->getParameter('security.authentication.session_strategy.strategy');
 
 		// Regenerate the session ID to harden against session fixation attacks
@@ -408,7 +407,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	{
 		@trigger_error('Using User::logout() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
 
-		throw new RedirectResponseException(\System::getContainer()->get('security.logout_url_generator')->getLogoutUrl());
+		throw new RedirectResponseException(System::getContainer()->get('security.logout_url_generator')->getLogoutUrl());
 	}
 
 	/**
@@ -426,7 +425,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		$groups = \StringUtil::deserialize($this->arrData['groups']);
+		$groups = StringUtil::deserialize($this->groups);
 
 		// No groups assigned
 		if (empty($groups) || !\is_array($groups))
@@ -464,7 +463,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	public static function loadUserByUsername($username)
 	{
 		/** @var Request $request */
-		$request = \System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request === null)
 		{
@@ -490,7 +489,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 				return null;
 			}
 
-			if ($user->findBy('username', \Input::post('username')) === false)
+			if ($user->findBy('username', Input::post('username')) === false)
 			{
 				return null;
 			}
@@ -520,7 +519,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function getUsername()
 	{
-		return $this->arrData['username'];
+		return $this->username;
 	}
 
 	/**
@@ -528,7 +527,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function setUsername($username)
 	{
-		$this->arrData['username'] = $username;
+		$this->username = $username;
 
 		return $this;
 	}
@@ -538,7 +537,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function getPassword()
 	{
-		return $this->arrData['password'];
+		return $this->password;
 	}
 
 	/**
@@ -546,7 +545,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function setPassword($password)
 	{
-		$this->arrData['password'] = $password;
+		$this->password = $password;
 
 		return $this;
 	}
@@ -574,7 +573,18 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function serialize()
 	{
-		return serialize(array($this->id, $this->username, $this->disable, $this->admin, $this->groups));
+		$data = array
+		(
+			'id' => $this->id,
+			'username' => $this->username,
+			'password' => $this->password,
+			'admin' => $this->admin,
+			'disable' => $this->disable,
+			'start' => $this->start,
+			'stop' => $this->stop
+		);
+
+		return serialize($data);
 	}
 
 	/**
@@ -582,7 +592,14 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function unserialize($serialized)
 	{
-		list($this->id, $this->username, $this->disable, $this->admin, $this->groups) = unserialize($serialized, array('allowed_classes'=>false));
+		$data = unserialize($serialized, array('allowed_classes'=>false));
+
+		if (array_keys($data) != array('id', 'username', 'password', 'admin', 'disable', 'start', 'stop'))
+		{
+			return;
+		}
+
+		list($this->id, $this->username, $this->password, $this->admin, $this->disable, $this->start, $this->stop) = array_values($data);
 	}
 
 	/**
@@ -605,17 +622,29 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
+		if ($this->password !== $user->password)
+		{
+			return false;
+		}
+
 		if ((bool) $this->admin !== (bool) $user->admin)
 		{
 			return false;
 		}
 
-		if ($this->groups !== $user->groups)
+		if ((bool) $this->disable !== (bool) $user->disable)
 		{
 			return false;
 		}
 
-		if ((bool) $this->disable !== (bool) $user->disable)
+		$time = Date::floorToMinute();
+
+		if ($this->start !== '' && $this->start > $time)
+		{
+			return false;
+		}
+
+		if ($this->stop !== '' && $this->stop <= ($time + 60))
 		{
 			return false;
 		}

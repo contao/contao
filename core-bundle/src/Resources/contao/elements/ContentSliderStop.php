@@ -33,7 +33,7 @@ class ContentSliderStop extends ContentElement
 		{
 			$this->strTemplate = 'be_wildcard';
 
-			$this->Template = new \BackendTemplate($this->strTemplate);
+			$this->Template = new BackendTemplate($this->strTemplate);
 		}
 
 		// Previous and next labels

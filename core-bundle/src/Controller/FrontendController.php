@@ -75,13 +75,8 @@ class FrontendController extends AbstractController
         $this->get('contao.framework')->initialize();
 
         if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
-            throw new UnauthorizedHttpException('Not authorized');
+            throw new UnauthorizedHttpException('', 'Not authorized');
         }
-
-        $tokenChecker = $this->get('contao.security.token_checker');
-
-        \define('FE_USER_LOGGED_IN', $tokenChecker->hasFrontendUser());
-        \define('BE_USER_LOGGED_IN', $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode());
 
         /** @var PageError401 $pageHandler */
         $pageHandler = new $GLOBALS['TL_PTY']['error_401']();
@@ -91,7 +86,7 @@ class FrontendController extends AbstractController
         } catch (ResponseException $e) {
             return $e->getResponse();
         } catch (InsufficientAuthenticationException $e) {
-            throw new UnauthorizedHttpException($e->getMessage());
+            throw new UnauthorizedHttpException('', $e->getMessage());
         }
     }
 

@@ -37,6 +37,7 @@ return PhpCsFixer\Config::create()
         'native_function_casing' => true,
         'native_function_invocation' => [
             'include' => ['@compiler_optimized'],
+            'strict' => true,
         ],
         'new_with_braces' => true,
         'no_alternative_syntax' => true,
@@ -78,6 +79,7 @@ return PhpCsFixer\Config::create()
         'phpdoc_trim' => true,
         'phpdoc_trim_consecutive_blank_line_separation' => true,
         'phpdoc_types' => true,
+        'phpdoc_var_annotation_correct_order' => true,
         'phpdoc_var_without_name' => true,
         'return_type_declaration' => true,
         'self_accessor' => true,

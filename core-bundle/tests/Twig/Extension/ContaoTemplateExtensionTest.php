@@ -13,9 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
 use Contao\BackendCustom;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +47,7 @@ class ContaoTemplateExtensionTest extends TestCase
             ->willReturn($backendRoute)
         ;
 
-        $extension = $this->mockExtension($framework);
+        $extension = $this->getExtension($framework);
         $extension->renderContaoBackendTemplate(['a' => 'a', 'b' => 'b', 'c' => 'c']);
 
         $this->assertSame('a', $template->a);
@@ -56,11 +57,11 @@ class ContaoTemplateExtensionTest extends TestCase
 
     public function testAddsTheRenderContaoBackEndTemplateFunction(): void
     {
-        $functions = $this->mockExtension()->getFunctions();
+        $functions = $this->getExtension()->getFunctions();
 
         $renderBaseTemplateFunction = array_filter(
             $functions,
-            function (\Twig_SimpleFunction $function): bool {
+            static function (\Twig_SimpleFunction $function): bool {
                 return 'render_contao_backend_template' === $function->getName();
             }
         );
@@ -70,10 +71,13 @@ class ContaoTemplateExtensionTest extends TestCase
 
     public function testDoesNotRenderTheBackEndTemplateIfNotInBackEndScope(): void
     {
-        $this->assertEmpty($this->mockExtension(null, 'frontend')->renderContaoBackendTemplate());
+        $this->assertEmpty($this->getExtension(null, 'frontend')->renderContaoBackendTemplate());
     }
 
-    private function mockExtension(ContaoFrameworkInterface $framework = null, string $scope = 'backend'): ContaoTemplateExtension
+    /**
+     * @param ContaoFramework&MockObject $framework
+     */
+    private function getExtension(ContaoFramework $framework = null, string $scope = 'backend'): ContaoTemplateExtension
     {
         $request = new Request();
         $request->attributes->set('_scope', $scope);

@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\HttpKernel;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Model;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 class ModelArgumentResolver implements ArgumentValueResolverInterface
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -31,7 +31,7 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
      */
     private $scopeMatcher;
 
-    public function __construct(ContaoFrameworkInterface $framework, ScopeMatcher $scopeMatcher)
+    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher)
     {
         $this->framework = $framework;
         $this->scopeMatcher = $scopeMatcher;

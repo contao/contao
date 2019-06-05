@@ -36,20 +36,15 @@ class TokenCheckerTest extends TestCase
     {
         $user = $this->mockUser($class);
         $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertSame($expect, $tokenChecker->hasFrontendUser());
     }
 
-    /**
-     * @return (string|bool)[][]
-     */
-    public function getFrontendUserData(): array
+    public function getFrontendUserData(): \Generator
     {
-        return [
-            [FrontendUser::class, true],
-            [BackendUser::class, false],
-        ];
+        yield [FrontendUser::class, true];
+        yield [BackendUser::class, false];
     }
 
     /**
@@ -59,27 +54,22 @@ class TokenCheckerTest extends TestCase
     {
         $user = $this->mockUser($class);
         $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertSame($expect, $tokenChecker->hasBackendUser());
     }
 
-    /**
-     * @return (string|bool)[][]
-     */
-    public function getBackendUserData(): array
+    public function getBackendUserData(): \Generator
     {
-        return [
-            [BackendUser::class, true],
-            [FrontendUser::class, false],
-        ];
+        yield [BackendUser::class, true];
+        yield [FrontendUser::class, false];
     }
 
     public function testReturnsTheFrontendUsername(): void
     {
         $user = $this->mockUser(FrontendUser::class);
         $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertSame('foobar', $tokenChecker->getFrontendUsername());
     }
@@ -88,7 +78,7 @@ class TokenCheckerTest extends TestCase
     {
         $user = $this->mockUser(BackendUser::class);
         $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertSame('foobar', $tokenChecker->getBackendUsername());
     }
@@ -98,21 +88,16 @@ class TokenCheckerTest extends TestCase
      */
     public function testChecksIfThePreviewModeIsActive(TokenInterface $token, bool $expect): void
     {
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertSame($expect, $tokenChecker->isPreviewMode());
     }
 
-    /**
-     * @return (FrontendPreviewToken|UsernamePasswordToken|bool)[][]
-     */
-    public function getPreviewModeData(): array
+    public function getPreviewModeData(): \Generator
     {
-        return [
-            [new FrontendPreviewToken(null, true), true],
-            [new FrontendPreviewToken(null, false), false],
-            [new UsernamePasswordToken('user', 'password', 'provider'), false],
-        ];
+        yield [new FrontendPreviewToken(null, true), true];
+        yield [new FrontendPreviewToken(null, false), false];
+        yield [new UsernamePasswordToken('user', 'password', 'provider'), false];
     }
 
     public function testDoesNotReturnATokenIfTheSessionIsNotStarted(): void
@@ -186,7 +171,7 @@ class TokenCheckerTest extends TestCase
     public function testDoesNotReturnATokenIfTheTokenIsNotAuthenticated(): void
     {
         $token = new UsernamePasswordToken('user', 'password', 'provider');
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertNull($tokenChecker->getBackendUsername());
     }
@@ -194,44 +179,22 @@ class TokenCheckerTest extends TestCase
     public function testDoesNotReturnATokenIfTheTokenIsAnonymous(): void
     {
         $token = new AnonymousToken('secret', 'anon.');
-        $tokenChecker = $this->mockTokenChecker($token);
+        $tokenChecker = $this->getTokenChecker($token);
 
         $this->assertFalse($tokenChecker->isPreviewMode());
     }
 
     private function mockUser(string $class): User
     {
-        /** @var User|MockObject $user */
-        $user = $this->createPartialMock($class, ['__get']);
-        $user
-            ->method('__get')
-            ->willReturnCallback(
-                function (string $key) {
-                    switch ($key) {
-                        case 'id':
-                            return 1;
-
-                        case 'username':
-                            return 'foobar';
-
-                        case 'admin':
-                        case 'disable':
-                            return '';
-
-                        case 'groups':
-                            return [];
-
-                        default:
-                            return null;
-                    }
-                }
-            )
-        ;
+        /** @var User&MockObject $user */
+        $user = $this->createPartialMock($class, []);
+        $user->id = 1;
+        $user->username = 'foobar';
 
         return $user;
     }
 
-    private function mockTokenChecker(TokenInterface $token): TokenChecker
+    private function getTokenChecker(TokenInterface $token): TokenChecker
     {
         $session = $this->createMock(SessionInterface::class);
         $session

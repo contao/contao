@@ -102,7 +102,7 @@ class RouteLoaderTest extends ContaoTestCase
     }
 
     /**
-     * @return RoutingPluginInterface|MockObject
+     * @return RoutingPluginInterface&MockObject
      */
     private function mockRoutePlugin(string $routeName, string $routePath): RoutingPluginInterface
     {

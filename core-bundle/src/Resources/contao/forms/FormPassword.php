@@ -121,7 +121,7 @@ class FormPassword extends Widget
 		}
 
 		// Check password length either from DCA or use Config as fallback (#1087)
-		$intLength = $this->minlength ?: \Config::get('minPasswordLength');
+		$intLength = $this->minlength ?: Config::get('minPasswordLength');
 
 		if (Utf8::strlen($varInput) < $intLength)
 		{

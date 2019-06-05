@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
@@ -82,21 +83,21 @@ class InsertTags extends Controller
 		global $objPage;
 
 		// Preserve insert tags
-		if (\Config::get('disableInsertTags'))
+		if (Config::get('disableInsertTags'))
 		{
-			return \StringUtil::restoreBasicEntities($strBuffer);
+			return StringUtil::restoreBasicEntities($strBuffer);
 		}
 
 		// The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
-		$tags = preg_split('~{{([\pL\pN][^{}]*)}}~u', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$tags = preg_split('~{{([a-zA-Z0-9\x80-\xFF][^{}]*)}}~', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		if (\count($tags) < 2)
 		{
-			return \StringUtil::restoreBasicEntities($strBuffer);
+			return StringUtil::restoreBasicEntities($strBuffer);
 		}
 
 		$strBuffer = '';
-		$container = \System::getContainer();
+		$container = System::getContainer();
 
 		// Create one cache per cache setting (see #7700)
 		$arrCache = &static::$arrItCache[$blnCache];
@@ -117,7 +118,7 @@ class InsertTags extends Controller
 			$elements = explode('::', $tag);
 
 			// Load the value from cache
-			if (isset($arrCache[$strTag]) && !\in_array('refresh', $flags))
+			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && !\in_array('refresh', $flags))
 			{
 				$strBuffer .= $arrCache[$strTag];
 				continue;
@@ -126,16 +127,26 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || $elements[0] == 'toggle_view' || strncmp($elements[0], 'cache_', 6) === 0 || \in_array('uncached', $flags))
+				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || $elements[0] == 'request_token' || strncmp($elements[0], 'cache_', 6) === 0 || \in_array('uncached', $flags))
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
 
+					$attributes = array('insertTag' => '{{' . $strTag . '}}');
+
+					/** @var Request|null $request */
+					$request = $container->get('request_stack')->getCurrentRequest();
+
+					if (null !== $request && ($scope = $request->attributes->get('_scope')))
+					{
+						$attributes['_scope'] = $scope;
+					}
+
 					$strBuffer .= $fragmentHandler->render(
 						new ControllerReference(
 							'contao.controller.insert_tags:renderAction',
-							array('insertTag' => '{{' . $strTag . '}}'),
-							array('clientCache' => (int) $objPage->clientCache, 'pageId' => $objPage->id, 'request' => \Environment::get('request'))
+							$attributes,
+							array('clientCache' => (int) $objPage->clientCache, 'pageId' => $objPage->id, 'request' => Environment::get('request'))
 						),
 						'esi',
 						array('ignore_errors'=>false) // see #48
@@ -152,7 +163,7 @@ class InsertTags extends Controller
 			{
 				// Date
 				case 'date':
-					$arrCache[$strTag] = \Date::parse($elements[1] ?: \Config::get('dateFormat'));
+					$arrCache[$strTag] = Date::parse($elements[1] ?: Config::get('dateFormat'));
 					break;
 
 				// Accessibility tags
@@ -163,7 +174,7 @@ class InsertTags extends Controller
 					}
 					else
 					{
-						$arrCache[$strTag] = $arrCache[$strTag] = '<span lang="' . \StringUtil::specialchars($elements[1]) . '">';
+						$arrCache[$strTag] = $arrCache[$strTag] = '<span lang="' . StringUtil::specialchars($elements[1]) . '">';
 					}
 					break;
 
@@ -182,7 +193,7 @@ class InsertTags extends Controller
 						break;
 					}
 
-					$strEmail = \StringUtil::encodeEmail($elements[1]);
+					$strEmail = StringUtil::encodeEmail($elements[1]);
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
@@ -261,7 +272,7 @@ class InsertTags extends Controller
 							break;
 					}
 
-					\System::loadLanguageFile($file);
+					System::loadLanguageFile($file);
 
 					if (\count($keys) == 2)
 					{
@@ -277,7 +288,7 @@ class InsertTags extends Controller
 				case 'user':
 					if (FE_USER_LOGGED_IN)
 					{
-						$this->import('FrontendUser', 'User');
+						$this->import(FrontendUser::class, 'User');
 						$value = $this->User->{$elements[1]};
 
 						if ($value == '')
@@ -294,12 +305,12 @@ class InsertTags extends Controller
 							break;
 						}
 
-						$value = \StringUtil::deserialize($value);
+						$value = StringUtil::deserialize($value);
 
 						// Decrypt the value
 						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['encrypt'])
 						{
-							$value = \Encryption::decrypt($value);
+							$value = Encryption::decrypt($value);
 						}
 
 						$rgxp = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['rgxp'];
@@ -308,15 +319,15 @@ class InsertTags extends Controller
 
 						if ($rgxp == 'date')
 						{
-							$arrCache[$strTag] = \Date::parse(\Config::get('dateFormat'), $value);
+							$arrCache[$strTag] = Date::parse(Config::get('dateFormat'), $value);
 						}
 						elseif ($rgxp == 'time')
 						{
-							$arrCache[$strTag] = \Date::parse(\Config::get('timeFormat'), $value);
+							$arrCache[$strTag] = Date::parse(Config::get('timeFormat'), $value);
 						}
 						elseif ($rgxp == 'datim')
 						{
-							$arrCache[$strTag] = \Date::parse(\Config::get('datimFormat'), $value);
+							$arrCache[$strTag] = Date::parse(Config::get('datimFormat'), $value);
 						}
 						elseif (\is_array($value))
 						{
@@ -336,7 +347,7 @@ class InsertTags extends Controller
 						}
 
 						// Convert special characters (see #1890)
-						$arrCache[$strTag] = \StringUtil::specialchars($arrCache[$strTag]);
+						$arrCache[$strTag] = StringUtil::specialchars($arrCache[$strTag]);
 					}
 					break;
 
@@ -383,11 +394,11 @@ class InsertTags extends Controller
 								break;
 							}
 
-							$this->import('FrontendUser', 'User');
+							$this->import(FrontendUser::class, 'User');
 							$elements[1] = $this->User->loginPage;
 						}
 
-						$objNextPage = \PageModel::findByIdOrAlias($elements[1]);
+						$objNextPage = PageModel::findByIdOrAlias($elements[1]);
 
 						if ($objNextPage === null)
 						{
@@ -408,19 +419,18 @@ class InsertTags extends Controller
 
 								if (strncasecmp($strUrl, 'mailto:', 7) === 0)
 								{
-									$strUrl = \StringUtil::encodeEmail($strUrl);
+									$strUrl = StringUtil::encodeEmail($strUrl);
 								}
 								break;
 
 							case 'forward':
 								if ($objNextPage->jumpTo)
 								{
-									/** @var PageModel $objNext */
-									$objNext = $objNextPage->getRelated('jumpTo');
+									$objNext = PageModel::findPublishedById($objNextPage->jumpTo);
 								}
 								else
 								{
-									$objNext = \PageModel::findFirstPublishedRegularByPid($objNextPage->id);
+									$objNext = PageModel::findFirstPublishedRegularByPid($objNextPage->id);
 								}
 
 								if ($objNext instanceof PageModel)
@@ -444,11 +454,11 @@ class InsertTags extends Controller
 					switch (strtolower($elements[0]))
 					{
 						case 'link':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, \StringUtil::specialchars($strTitle), $strTarget, $strName);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, StringUtil::specialchars($strTitle), $strTarget, $strName);
 							break;
 
 						case 'link_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>', $strUrl, \StringUtil::specialchars($strTitle), $strTarget);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>', $strUrl, StringUtil::specialchars($strTitle), $strTarget);
 							break;
 
 						case 'link_url':
@@ -456,7 +466,7 @@ class InsertTags extends Controller
 							break;
 
 						case 'link_title':
-							$arrCache[$strTag] = \StringUtil::specialchars($strTitle);
+							$arrCache[$strTag] = StringUtil::specialchars($strTitle);
 							break;
 
 						case 'link_target':
@@ -507,7 +517,7 @@ class InsertTags extends Controller
 				case 'article_open':
 				case 'article_url':
 				case 'article_title':
-					if (($objArticle = \ArticleModel::findByIdOrAlias($elements[1])) === null || !(($objPid = $objArticle->getRelated('pid')) instanceof PageModel))
+					if (!(($objArticle = ArticleModel::findByIdOrAlias($elements[1])) instanceof ArticleModel) || !(($objPid = $objArticle->getRelated('pid')) instanceof PageModel))
 					{
 						break;
 					}
@@ -520,11 +530,11 @@ class InsertTags extends Controller
 					switch (strtolower($elements[0]))
 					{
 						case 'article':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, \StringUtil::specialchars($objArticle->title), $objArticle->title);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, StringUtil::specialchars($objArticle->title), $objArticle->title);
 							break;
 
 						case 'article_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, \StringUtil::specialchars($objArticle->title));
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, StringUtil::specialchars($objArticle->title));
 							break;
 
 						case 'article_url':
@@ -532,18 +542,18 @@ class InsertTags extends Controller
 							break;
 
 						case 'article_title':
-							$arrCache[$strTag] = \StringUtil::specialchars($objArticle->title);
+							$arrCache[$strTag] = StringUtil::specialchars($objArticle->title);
 							break;
 					}
 					break;
 
 				// Article teaser
 				case 'article_teaser':
-					$objTeaser = \ArticleModel::findByIdOrAlias($elements[1]);
+					$objTeaser = ArticleModel::findByIdOrAlias($elements[1]);
 
 					if ($objTeaser !== null)
 					{
-						$arrCache[$strTag] = \StringUtil::toHtml5($objTeaser->teaser);
+						$arrCache[$strTag] = StringUtil::toHtml5($objTeaser->teaser);
 					}
 					break;
 
@@ -563,11 +573,11 @@ class InsertTags extends Controller
 					}
 
 					$strQuery .= " FROM tl_content";
-					$objUpdate = \Database::getInstance()->query($strQuery);
+					$objUpdate = Database::getInstance()->query($strQuery);
 
 					if ($objUpdate->numRows)
 					{
-						$arrCache[$strTag] = \Date::parse($elements[1] ?: \Config::get('datimFormat'), max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
+						$arrCache[$strTag] = Date::parse($elements[1] ?: Config::get('datimFormat'), max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
 					}
 					break;
 
@@ -583,40 +593,14 @@ class InsertTags extends Controller
 
 				// POST data
 				case 'post':
-					$arrCache[$strTag] = \Input::post($elements[1]);
-					break;
-
-				// Mobile/desktop toggle (see #6469)
-				case 'toggle_view':
-					$strRequest = \Environment::get('request');
-
-					// ESI request
-					if (preg_match('/^' . preg_quote(ltrim($container->getParameter('fragment.path'), '/'), '/') . '/', $strRequest))
-					{
-						$request = $container->get('request_stack')->getCurrentRequest();
-						$strRequest = $request->query->get('request');
-					}
-
-					$strUrl = ampersand($strRequest);
-					$strGlue = (strpos($strUrl, '?') === false) ? '?' : '&amp;';
-
-					\System::loadLanguageFile('default');
-
-					if (\Input::cookie('TL_VIEW') == 'mobile' || (\Environment::get('agent')->mobile && \Input::cookie('TL_VIEW') != 'desktop'))
-					{
-						$arrCache[$strTag] = '<a href="' . $strUrl . $strGlue . 'toggle_view=desktop" class="toggle_desktop" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['toggleDesktop'][1]) . '">' . $GLOBALS['TL_LANG']['MSC']['toggleDesktop'][0] . '</a>';
-					}
-					else
-					{
-						$arrCache[$strTag] = '<a href="' . $strUrl . $strGlue . 'toggle_view=mobile" class="toggle_mobile" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['toggleMobile'][1]) . '">' . $GLOBALS['TL_LANG']['MSC']['toggleMobile'][0] . '</a>';
-					}
+					$arrCache[$strTag] = Input::post($elements[1]);
 					break;
 
 				// Conditional tags (if)
 				case 'iflng':
 					if ($elements[1] != '')
 					{
-						$langs = \StringUtil::trimsplit(',', $elements[1]);
+						$langs = StringUtil::trimsplit(',', $elements[1]);
 
 						// Check if there are wildcards (see #8313)
 						foreach ($langs as $k=>$v)
@@ -650,7 +634,7 @@ class InsertTags extends Controller
 				case 'ifnlng':
 					if ($elements[1] != '')
 					{
-						$langs = \StringUtil::trimsplit(',', $elements[1]);
+						$langs = StringUtil::trimsplit(',', $elements[1]);
 
 						// Check if there are wildcards (see #8313)
 						foreach ($langs as $k=>$v)
@@ -685,27 +669,27 @@ class InsertTags extends Controller
 					switch ($elements[1])
 					{
 						case 'host':
-							$arrCache[$strTag] = \Idna::decode(\Environment::get('host'));
+							$arrCache[$strTag] = Idna::decode(Environment::get('host'));
 							break;
 
 						case 'http_host':
-							$arrCache[$strTag] = \Idna::decode(\Environment::get('httpHost'));
+							$arrCache[$strTag] = Idna::decode(Environment::get('httpHost'));
 							break;
 
 						case 'url':
-							$arrCache[$strTag] = \Idna::decode(\Environment::get('url'));
+							$arrCache[$strTag] = Idna::decode(Environment::get('url'));
 							break;
 
 						case 'path':
-							$arrCache[$strTag] = \Idna::decode(\Environment::get('base'));
+							$arrCache[$strTag] = Idna::decode(Environment::get('base'));
 							break;
 
 						case 'request':
-							$arrCache[$strTag] = \Environment::get('indexFreeRequest');
+							$arrCache[$strTag] = Environment::get('indexFreeRequest');
 							break;
 
 						case 'ip':
-							$arrCache[$strTag] = \Environment::get('ip');
+							$arrCache[$strTag] = Environment::get('ip');
 							break;
 
 						case 'referer':
@@ -749,7 +733,7 @@ class InsertTags extends Controller
 
 				// User agent
 				case 'ua':
-					$ua = \Environment::get('agent');
+					$ua = Environment::get('agent');
 
 					if ($elements[1] != '')
 					{
@@ -766,7 +750,7 @@ class InsertTags extends Controller
 				case 'acronym':
 					if ($elements[1] != '')
 					{
-						$arrCache[$strTag] = '<abbr title="'. \StringUtil::specialchars($elements[1]) .'">';
+						$arrCache[$strTag] = '<abbr title="'. StringUtil::specialchars($elements[1]) .'">';
 					}
 					else
 					{
@@ -791,7 +775,7 @@ class InsertTags extends Controller
 					if (strpos($elements[1], '?') !== false)
 					{
 						$arrChunks = explode('?', urldecode($elements[1]), 2);
-						$strSource = \StringUtil::decodeEntities($arrChunks[1]);
+						$strSource = StringUtil::decodeEntities($arrChunks[1]);
 						$strSource = str_replace('[&]', '&', $strSource);
 						$arrParams = explode('&', $strSource);
 
@@ -838,10 +822,10 @@ class InsertTags extends Controller
 						$strFile = $arrChunks[0];
 					}
 
-					if (\Validator::isUuid($strFile))
+					if (Validator::isUuid($strFile))
 					{
 						// Handle UUIDs
-						$objFile = \FilesModel::findByUuid($strFile);
+						$objFile = FilesModel::findByUuid($strFile);
 
 						if ($objFile === null)
 						{
@@ -854,7 +838,7 @@ class InsertTags extends Controller
 					elseif (is_numeric($strFile))
 					{
 						// Handle numeric IDs (see #4805)
-						$objFile = \FilesModel::findByPk($strFile);
+						$objFile = FilesModel::findByPk($strFile);
 
 						if ($objFile === null)
 						{
@@ -867,25 +851,25 @@ class InsertTags extends Controller
 					else
 					{
 						// Check the path
-						if (\Validator::isInsecurePath($strFile))
+						if (Validator::isInsecurePath($strFile))
 						{
 							throw new \RuntimeException('Invalid path ' . $strFile);
 						}
 					}
 
 					// Check the maximum image width
-					if (\Config::get('maxImageWidth') > 0 && $width > \Config::get('maxImageWidth'))
+					if (Config::get('maxImageWidth') > 0 && $width > Config::get('maxImageWidth'))
 					{
 						@trigger_error('Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.', E_USER_DEPRECATED);
 
-						$width = \Config::get('maxImageWidth');
+						$width = Config::get('maxImageWidth');
 						$height = null;
 					}
 
 					// Use the alternative text from the image meta data if none is given
-					if (!$alt && ($objFile = \FilesModel::findByPath($strFile)))
+					if (!$alt && ($objFile = FilesModel::findByPath($strFile)))
 					{
-						$arrMeta = \Frontend::getMetaData($objFile->meta, $objPage->language);
+						$arrMeta = Frontend::getMetaData($objFile->meta, $objPage->language);
 
 						if (isset($arrMeta['alt']))
 						{
@@ -901,15 +885,15 @@ class InsertTags extends Controller
 						{
 							$dimensions = '';
 							$src = $container->get('contao.image.image_factory')->create($container->getParameter('kernel.project_dir') . '/' . rawurldecode($strFile), array($width, $height, $mode))->getUrl($container->getParameter('kernel.project_dir'));
-							$objFile = new \File(rawurldecode($src));
+							$objFile = new File(rawurldecode($src));
 
 							// Add the image dimensions
 							if (($imgSize = $objFile->imageSize) !== false)
 							{
-								$dimensions = ' width="' . \StringUtil::specialchars($imgSize[0]) . '" height="' . \StringUtil::specialchars($imgSize[1]) . '"';
+								$dimensions = ' width="' . StringUtil::specialchars($imgSize[0]) . '" height="' . StringUtil::specialchars($imgSize[1]) . '"';
 							}
 
-							$arrCache[$strTag] = '<img src="' . \Controller::addFilesUrlTo($src) . '" ' . $dimensions . ' alt="' . \StringUtil::specialchars($alt) . '"' . (($class != '') ? ' class="' . \StringUtil::specialchars($class) . '"' : '') . '>';
+							$arrCache[$strTag] = '<img src="' . Controller::addFilesUrlTo($src) . '" ' . $dimensions . ' alt="' . StringUtil::specialchars($alt) . '"' . (($class != '') ? ' class="' . StringUtil::specialchars($class) . '"' : '') . '>';
 						}
 
 						// Picture
@@ -926,7 +910,7 @@ class InsertTags extends Controller
 
 							$picture['alt'] = $alt;
 							$picture['class'] = $class;
-							$pictureTemplate = new \FrontendTemplate($strTemplate);
+							$pictureTemplate = new FrontendTemplate($strTemplate);
 							$pictureTemplate->setData($picture);
 							$arrCache[$strTag] = $pictureTemplate->parse();
 						}
@@ -934,7 +918,7 @@ class InsertTags extends Controller
 						// Add a lightbox link
 						if ($rel != '')
 						{
-							$arrCache[$strTag] = '<a href="' . \Controller::addFilesUrlTo($strFile) . '"' . (($alt != '') ? ' title="' . \StringUtil::specialchars($alt) . '"' : '') . ' data-lightbox="' . \StringUtil::specialchars($rel) . '">' . $arrCache[$strTag] . '</a>';
+							$arrCache[$strTag] = '<a href="' . Controller::addFilesUrlTo($strFile) . '"' . (($alt != '') ? ' title="' . StringUtil::specialchars($alt) . '"' : '') . ' data-lightbox="' . StringUtil::specialchars($rel) . '">' . $arrCache[$strTag] . '</a>';
 						}
 					}
 					catch (\Exception $e)
@@ -945,9 +929,9 @@ class InsertTags extends Controller
 
 				// Files (UUID or template path)
 				case 'file':
-					if (\Validator::isUuid($elements[1]))
+					if (Validator::isUuid($elements[1]))
 					{
-						$objFile = \FilesModel::findByUuid($elements[1]);
+						$objFile = FilesModel::findByUuid($elements[1]);
 
 						if ($objFile !== null)
 						{
@@ -957,14 +941,14 @@ class InsertTags extends Controller
 					}
 
 					$arrGet = $_GET;
-					\Input::resetCache();
+					Input::resetCache();
 					$strFile = $elements[1];
 
 					// Take arguments and add them to the $_GET array
 					if (strpos($elements[1], '?') !== false)
 					{
 						$arrChunks = explode('?', urldecode($elements[1]));
-						$strSource = \StringUtil::decodeEntities($arrChunks[1]);
+						$strSource = StringUtil::decodeEntities($arrChunks[1]);
 						$strSource = str_replace('[&]', '&', $strSource);
 						$arrParams = explode('&', $strSource);
 
@@ -978,7 +962,7 @@ class InsertTags extends Controller
 					}
 
 					// Check the path
-					if (\Validator::isInsecurePath($strFile))
+					if (Validator::isInsecurePath($strFile))
 					{
 						throw new \RuntimeException('Invalid path ' . $strFile);
 					}
@@ -1000,7 +984,7 @@ class InsertTags extends Controller
 					}
 
 					$_GET = $arrGet;
-					\Input::resetCache();
+					Input::resetCache();
 					break;
 
 				// HOOK: pass unknown tags to callback functions
@@ -1055,19 +1039,19 @@ class InsertTags extends Controller
 							break;
 
 						case 'encodeEmail':
-							$arrCache[$strTag] = \StringUtil::$flag($arrCache[$strTag]);
+							$arrCache[$strTag] = StringUtil::$flag($arrCache[$strTag]);
 							break;
 
 						case 'number_format':
-							$arrCache[$strTag] = \System::getFormattedNumber($arrCache[$strTag], 0);
+							$arrCache[$strTag] = System::getFormattedNumber($arrCache[$strTag], 0);
 							break;
 
 						case 'currency_format':
-							$arrCache[$strTag] = \System::getFormattedNumber($arrCache[$strTag], 2);
+							$arrCache[$strTag] = System::getFormattedNumber($arrCache[$strTag], 2);
 							break;
 
 						case 'readable_size':
-							$arrCache[$strTag] = \System::getReadableSize($arrCache[$strTag]);
+							$arrCache[$strTag] = System::getReadableSize($arrCache[$strTag]);
 							break;
 
 						case 'flatten':
@@ -1126,7 +1110,7 @@ class InsertTags extends Controller
 			$strBuffer .= $arrCache[$strTag];
 		}
 
-		return \StringUtil::restoreBasicEntities($strBuffer);
+		return StringUtil::restoreBasicEntities($strBuffer);
 	}
 }
 

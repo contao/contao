@@ -15,11 +15,11 @@ namespace Contao\CoreBundle\Framework;
 trait FrameworkAwareTrait
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     protected $framework;
 
-    public function setFramework(ContaoFrameworkInterface $framework = null): void
+    public function setFramework(ContaoFramework $framework = null): void
     {
         $this->framework = $framework;
     }
@@ -29,7 +29,7 @@ trait FrameworkAwareTrait
      *
      * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0
      */
-    public function getFramework(): ContaoFrameworkInterface
+    public function getFramework(): ContaoFramework
     {
         @trigger_error(
             'Using FrameworkAwareTrait::getFramework() has been deprecated and will no longer work in Contao 5.0.',

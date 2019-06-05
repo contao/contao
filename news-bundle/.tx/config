@@ -2,47 +2,47 @@
 host = https://www.transifex.com
 type = XLIFF
 
-[contao-news-bundle.v4_7-default]
+[contao-news-bundle.v4_8-default]
 source_file = src/Resources/contao/languages/en/default.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/default.xlf
 
-[contao-news-bundle.v4_7-modules]
+[contao-news-bundle.v4_8-modules]
 source_file = src/Resources/contao/languages/en/modules.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/modules.xlf
 
-[contao-news-bundle.v4_7-tl_layout]
+[contao-news-bundle.v4_8-tl_layout]
 source_file = src/Resources/contao/languages/en/tl_layout.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_layout.xlf
 
-[contao-news-bundle.v4_7-tl_module]
+[contao-news-bundle.v4_8-tl_module]
 source_file = src/Resources/contao/languages/en/tl_module.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_module.xlf
 
-[contao-news-bundle.v4_7-tl_news]
+[contao-news-bundle.v4_8-tl_news]
 source_file = src/Resources/contao/languages/en/tl_news.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_news.xlf
 
-[contao-news-bundle.v4_7-tl_news_archive]
+[contao-news-bundle.v4_8-tl_news_archive]
 source_file = src/Resources/contao/languages/en/tl_news_archive.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_news_archive.xlf
 
-[contao-news-bundle.v4_7-tl_news_feed]
+[contao-news-bundle.v4_8-tl_news_feed]
 source_file = src/Resources/contao/languages/en/tl_news_feed.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_news_feed.xlf
 
-[contao-news-bundle.v4_7-tl_user]
+[contao-news-bundle.v4_8-tl_user]
 source_file = src/Resources/contao/languages/en/tl_user.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_user.xlf
 
-[contao-news-bundle.v4_7-tl_user_group]
+[contao-news-bundle.v4_8-tl_user_group]
 source_file = src/Resources/contao/languages/en/tl_user_group.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_user_group.xlf

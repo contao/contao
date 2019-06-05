@@ -28,17 +28,17 @@ class InsecureInstallationListenerTest extends TestCase
 
         $this->expectException(InsecureInstallationException::class);
 
-        $listener->onKernelRequest($this->mockResponseEvent($this->getRequest()));
+        $listener->onKernelRequest($this->getResponseEvent($this->getRequest()));
     }
 
     public function testDoesNotThrowAnExceptionIfTheDocumentRootIsSecure(): void
     {
         $request = $this->getRequest();
-        $request->server->set('REQUEST_URI', '/app_dev.php?do=test');
-        $request->server->set('SCRIPT_FILENAME', $this->getTempDir().'/app_dev.php');
+        $request->server->set('REQUEST_URI', '/index.php?do=test');
+        $request->server->set('SCRIPT_FILENAME', $this->getTempDir().'/index.php');
 
         $listener = new InsecureInstallationListener();
-        $listener->onKernelRequest($this->mockResponseEvent($request));
+        $listener->onKernelRequest($this->getResponseEvent($request));
 
         $this->addToAssertionCount(1);  // does not throw an exception
     }
@@ -49,7 +49,7 @@ class InsecureInstallationListenerTest extends TestCase
         $request->server->set('REMOTE_ADDR', '127.0.0.1');
 
         $listener = new InsecureInstallationListener();
-        $listener->onKernelRequest($this->mockResponseEvent($request));
+        $listener->onKernelRequest($this->getResponseEvent($request));
 
         $this->addToAssertionCount(1);  // does not throw an exception
     }
@@ -57,15 +57,15 @@ class InsecureInstallationListenerTest extends TestCase
     private function getRequest(): Request
     {
         $request = new Request();
-        $request->server->set('SCRIPT_NAME', 'app_dev.php');
-        $request->server->set('SCRIPT_FILENAME', $this->getTempDir().'/web/app_dev.php');
+        $request->server->set('SCRIPT_NAME', 'index.php');
+        $request->server->set('SCRIPT_FILENAME', $this->getTempDir().'/web/index.php');
         $request->server->set('REMOTE_ADDR', '123.456.789.0');
-        $request->server->set('REQUEST_URI', '/web/app_dev.php?do=test');
+        $request->server->set('REQUEST_URI', '/web/index.php?do=test');
 
         return $request;
     }
 
-    private function mockResponseEvent(Request $request = null): GetResponseEvent
+    private function getResponseEvent(Request $request = null): GetResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 

@@ -35,7 +35,7 @@ class PageRoot extends Frontend
 	{
 		if (!$blnReturn)
 		{
-			$this->redirect($this->getRedirectUrl($rootPageId));
+			$this->redirect($this->getRedirectUrl($rootPageId), 302);
 		}
 
 		$objNextPage = $this->getNextPage($rootPageId);
@@ -66,7 +66,7 @@ class PageRoot extends Frontend
 	 */
 	protected function getNextPage($rootPageId)
 	{
-		$objNextPage = \PageModel::findFirstPublishedByPid($rootPageId);
+		$objNextPage = PageModel::findFirstPublishedByPid($rootPageId);
 
 		// No published pages yet
 		if (null === $objNextPage)

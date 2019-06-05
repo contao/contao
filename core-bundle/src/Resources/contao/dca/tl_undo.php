@@ -27,6 +27,10 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'onload_callback' => array
 		(
 			array('tl_undo', 'checkPermission')
+		),
+		'onshow_callback' => array
+		(
+			array('tl_undo', 'showDeletedRecords')
 		)
 	),
 
@@ -74,14 +78,14 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['pid'],
 			'sorting'                 => true,
 			'foreignKey'              => 'tl_user.name',
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
 			'sorting'                 => true,
 			'flag'                    => 6,
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'fromTable' => array
 		(
@@ -97,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'affectedRows' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['affectedRows'],
-			'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
+			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'data' => array
 		(
@@ -113,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_undo extends Backend
+class tl_undo extends Contao\Backend
 {
 
 	/**
@@ -122,7 +126,7 @@ class tl_undo extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -145,10 +149,61 @@ class tl_undo extends Backend
 		$GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root'] = $objSteps->numRows ? $objSteps->fetchEach('id') : array(0);
 
 		// Redirect if there is an error
-		if (Input::get('act') && !\in_array(Input::get('id'), $GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root']))
+		if (Contao\Input::get('act') && !\in_array(Contao\Input::get('id'), $GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root']))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' undo step ID ' . Input::get('id') . '.');
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' undo step ID ' . Contao\Input::get('id') . '.');
 		}
+	}
+
+	/**
+	 * Show the deleted records
+	 *
+	 * @param array $data
+	 * @param array $arrRow
+	 */
+	public function showDeletedRecords($data, $row)
+	{
+		$arrData = Contao\StringUtil::deserialize($row['data']);
+
+		foreach ($arrData as $strTable=>$arrTableData)
+		{
+			Contao\System::loadLanguageFile($strTable);
+			Contao\Controller::loadDataContainer($strTable);
+
+			foreach ($arrTableData as $arrRow)
+			{
+				$arrBuffer = array();
+
+				foreach ($arrRow as $i=>$v)
+				{
+					if (\is_array(Contao\StringUtil::deserialize($v)))
+					{
+						continue;
+					}
+
+					// Get the field label
+					if (isset($GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label']))
+					{
+						$label = \is_array($GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label']) ? $GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label'][0] : $GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label'];
+					}
+					else
+					{
+						$label = \is_array($GLOBALS['TL_LANG']['MSC'][$i]) ? $GLOBALS['TL_LANG']['MSC'][$i][0] : $GLOBALS['TL_LANG']['MSC'][$i];
+					}
+
+					if (!$label)
+					{
+						$label = $i;
+					}
+
+					$arrBuffer[$label] = $v;
+				}
+
+				$data[$strTable][] = $arrBuffer;
+			}
+		}
+
+		return $data;
 	}
 
 	/**

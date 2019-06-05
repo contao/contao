@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\Config;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FrontendCron;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 class CommandSchedulerListener
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -37,7 +37,7 @@ class CommandSchedulerListener
      */
     private $fragmentPath;
 
-    public function __construct(ContaoFrameworkInterface $framework, Connection $connection, string $fragmentPath = '_fragment')
+    public function __construct(ContaoFramework $framework, Connection $connection, string $fragmentPath = '_fragment')
     {
         $this->framework = $framework;
         $this->connection = $connection;

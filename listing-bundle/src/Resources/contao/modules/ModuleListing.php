@@ -52,7 +52,7 @@ class ModuleListing extends Module
 	{
 		if (TL_MODE == 'BE')
 		{
-			$objTemplate = new \BackendTemplate('be_wildcard');
+			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['listing'][0]) . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
@@ -69,7 +69,7 @@ class ModuleListing extends Module
 		}
 
 		// Disable the details page
-		if (\Input::get('show') && $this->list_info == '')
+		if (Input::get('show') && $this->list_info == '')
 		{
 			return '';
 		}
@@ -93,13 +93,13 @@ class ModuleListing extends Module
 	 */
 	protected function compile()
 	{
-		\System::loadLanguageFile($this->list_table);
+		System::loadLanguageFile($this->list_table);
 		$this->loadDataContainer($this->list_table);
 
 		// List a single record
-		if (\Input::get('show'))
+		if (Input::get('show'))
 		{
-			$this->listSingleRecord(\Input::get('show'));
+			$this->listSingleRecord(Input::get('show'));
 
 			return;
 		}
@@ -108,10 +108,10 @@ class ModuleListing extends Module
 		$strWhere = '';
 		$varKeyword = '';
 		$strOptions = '';
-		$strSearch = \Input::get('search');
-		$strFor = \Input::get('for');
-		$arrFields = \StringUtil::trimsplit(',', $this->list_fields);
-		$arrSearchFields = \StringUtil::trimsplit(',', $this->list_search);
+		$strSearch = Input::get('search');
+		$strFor = Input::get('for');
+		$arrFields = StringUtil::trimsplit(',', $this->list_fields);
+		$arrSearchFields = StringUtil::trimsplit(',', $this->list_search);
 
 		$this->Template->searchable = false;
 
@@ -128,7 +128,7 @@ class ModuleListing extends Module
 			if ($strSearch && $strFor)
 			{
 				$varKeyword = '%' . $strFor . '%';
-				$strWhere = (!$this->list_where ? " WHERE " : " AND ") . \Database::quoteIdentifier($strSearch) . " LIKE ?";
+				$strWhere = (!$this->list_where ? " WHERE " : " AND ") . Database::quoteIdentifier($strSearch) . " LIKE ?";
 			}
 
 			foreach ($arrSearchFields as $field)
@@ -152,21 +152,21 @@ class ModuleListing extends Module
 
 		// Validate the page count
 		$id = 'page_l' . $this->id;
-		$page = (\Input::get($id) !== null) ? (int) \Input::get($id) : 1;
-		$per_page = (int) \Input::get('per_page') ?: $this->perPage;
+		$page = (Input::get($id) !== null) ? (int) Input::get($id) : 1;
+		$per_page = (int) Input::get('per_page') ?: $this->perPage;
 
 		// Thanks to Hagen Klemp (see #4485)
 		if ($per_page > 0 && ($page < 1 || $page > max(ceil($objTotal->count/$per_page), 1)))
 		{
-			throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Get the selected records
-		$strQuery = "SELECT " . \Database::quoteIdentifier($this->strPk) . ", " . implode(', ', array_map('Database::quoteIdentifier', trimsplit(',', $this->list_fields)));
+		$strQuery = "SELECT " . Database::quoteIdentifier($this->strPk) . ", " . implode(', ', array_map('Database::quoteIdentifier', trimsplit(',', $this->list_fields)));
 
 		if ($this->list_info_where)
 		{
-			$strQuery .= ", (SELECT COUNT(*) FROM " . $this->list_table . " t2 WHERE t2." . \Database::quoteIdentifier($this->strPk) . "=t1." . \Database::quoteIdentifier($this->strPk) . " AND " . $this->list_info_where . ") AS _details";
+			$strQuery .= ", (SELECT COUNT(*) FROM " . $this->list_table . " t2 WHERE t2." . Database::quoteIdentifier($this->strPk) . "=t1." . Database::quoteIdentifier($this->strPk) . " AND " . $this->list_info_where . ") AS _details";
 		}
 
 		$strQuery .= " FROM " . $this->list_table . " t1";
@@ -184,14 +184,14 @@ class ModuleListing extends Module
 			return $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'date' || $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'time' || $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] == 'datim';
 		};
 
-		$order_by = \Input::get('order_by');
+		$order_by = Input::get('order_by');
 
 		if ($order_by && !\in_array($order_by, $arrFields, true))
 		{
 			$order_by = '';
 		}
 
-		$sort = \Input::get('sort');
+		$sort = Input::get('sort');
 
 		if ($sort && !\in_array($sort, array('asc', 'desc')))
 		{
@@ -207,7 +207,7 @@ class ModuleListing extends Module
 			}
 			else
 			{
-				$strQuery .= " ORDER BY " . \Database::quoteIdentifier($order_by) . ' ' . $sort;
+				$strQuery .= " ORDER BY " . Database::quoteIdentifier($order_by) . ' ' . $sort;
 			}
 		}
 		elseif ($this->list_sort)
@@ -237,10 +237,10 @@ class ModuleListing extends Module
 		$objData = $objDataStmt->execute($varKeyword);
 
 		// Prepare the URL
-		$strUrl = preg_replace('/\?.*$/', '', \Environment::get('request'));
+		$strUrl = preg_replace('/\?.*$/', '', Environment::get('request'));
 		$blnQuery = false;
 
-		foreach (preg_split('/&(amp;)?/', \Environment::get('queryString')) as $fragment)
+		foreach (preg_split('/&(amp;)?/', Environment::get('queryString')) as $fragment)
 		{
 			if ($fragment != '' && strncasecmp($fragment, 'order_by', 8) !== 0 && strncasecmp($fragment, 'sort', 4) !== 0 && strncasecmp($fragment, $id, \strlen($id)) !== 0)
 			{
@@ -286,7 +286,7 @@ class ModuleListing extends Module
 			(
 				'link' => $strField,
 				'href' => (ampersand($strUrl) . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&amp;sort=' . $sort,
-				'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
+				'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
 				'class' => $class . (($i == 0) ? ' col_first' : '') . ((($i + 1) == \count($arrFields)) ? ' col_last' : '')
 			);
 		}
@@ -338,16 +338,16 @@ class ModuleListing extends Module
 		$this->Template->tbody = $arrTd;
 
 		// Pagination
-		$objPagination = new \Pagination($objTotal->count, $per_page, \Config::get('maxPaginationLinks'), $id);
+		$objPagination = new Pagination($objTotal->count, $per_page, Config::get('maxPaginationLinks'), $id);
 		$this->Template->pagination = $objPagination->generate("\n  ");
 		$this->Template->per_page = $per_page;
 		$this->Template->total = $objTotal->count;
 
 		// Template variables
-		$this->Template->action = \Environment::get('indexFreeRequest');
+		$this->Template->action = Environment::get('indexFreeRequest');
 		$this->Template->details = (bool) $this->list_info;
-		$this->Template->search_label = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['search']);
-		$this->Template->per_page_label = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['list_perPage']);
+		$this->Template->search_label = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['search']);
+		$this->Template->per_page_label = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['list_perPage']);
 		$this->Template->fields_label = $GLOBALS['TL_LANG']['MSC']['all_fields'][0];
 		$this->Template->keywords_label = $GLOBALS['TL_LANG']['MSC']['keywords'];
 		$this->Template->search = $strSearch;
@@ -371,15 +371,15 @@ class ModuleListing extends Module
 			$this->list_info_layout = 'info_default';
 		}
 
-		$this->Template = new \FrontendTemplate($this->list_info_layout);
+		$this->Template = new FrontendTemplate($this->list_info_layout);
 		$this->Template->record = array();
 		$this->Template->referer = 'javascript:history.go(-1)';
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
-		$this->list_info = \StringUtil::deserialize($this->list_info);
+		$this->list_info = StringUtil::deserialize($this->list_info);
 		$this->list_info_where = $this->replaceInsertTags($this->list_info_where, false);
 
-		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map('Database::quoteIdentifier', trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . (($this->list_info_where != '') ? "(" . $this->list_info_where . ") AND " : "") . \Database::quoteIdentifier($this->strPk) . "=?")
+		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map('Database::quoteIdentifier', trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . (($this->list_info_where != '') ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
 									->limit(1)
 									->execute($id);
 
@@ -427,7 +427,7 @@ class ModuleListing extends Module
 	 */
 	protected function formatValue($k, $value, $blnListSingle=false)
 	{
-		$value = \StringUtil::deserialize($value);
+		$value = StringUtil::deserialize($value);
 
 		// Return if empty
 		if (empty($value))
@@ -447,32 +447,32 @@ class ModuleListing extends Module
 		// Date
 		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] == 'date')
 		{
-			$value = \Date::parse($objPage->dateFormat, $value);
+			$value = Date::parse($objPage->dateFormat, $value);
 		}
 
 		// Time
 		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] == 'time')
 		{
-			$value = \Date::parse($objPage->timeFormat, $value);
+			$value = Date::parse($objPage->timeFormat, $value);
 		}
 
 		// Date and time
 		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] == 'datim')
 		{
-			$value = \Date::parse($objPage->datimFormat, $value);
+			$value = Date::parse($objPage->datimFormat, $value);
 		}
 
 		// URLs
 		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] == 'url' && preg_match('@^(https?://|ftp://)@i', $value))
 		{
-			$value = \Idna::decode($value); // see #5946
+			$value = Idna::decode($value); // see #5946
 			$value = '<a href="' . $value . '" target="_blank" rel="noreferrer noopener">' . $value . '</a>';
 		}
 
 		// E-mail addresses
 		elseif ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] == 'email')
 		{
-			$value = \StringUtil::encodeEmail(\Idna::decode($value)); // see #5946
+			$value = StringUtil::encodeEmail(Idna::decode($value)); // see #5946
 			$value = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;' . $value . '">' . $value . '</a>';
 		}
 

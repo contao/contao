@@ -12,9 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Doctrine\Schema;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaConfig;
@@ -26,7 +27,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 class DcaSchemaProvider
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -35,7 +36,7 @@ class DcaSchemaProvider
      */
     private $doctrine;
 
-    public function __construct(ContaoFrameworkInterface $framework, Registry $doctrine)
+    public function __construct(ContaoFramework $framework, Registry $doctrine)
     {
         $this->framework = $framework;
         $this->doctrine = $doctrine;
@@ -172,8 +173,12 @@ class DcaSchemaProvider
             $length = null;
         }
 
-        if (preg_match('/default (\'[^\']*\'|\d+)/i', $def, $match)) {
-            $default = trim($match[1], "'");
+        if (preg_match('/default (\'[^\']*\'|\d+(?:\.\d+)?)/i', $def, $match)) {
+            if (is_numeric($match[1])) {
+                $default = $match[1] * 1;
+            } else {
+                $default = trim($match[1], "'");
+            }
         }
 
         if (preg_match('/collate ([^ ]+)/i', $def, $match)) {
@@ -282,17 +287,13 @@ class DcaSchemaProvider
 
         $columns = [];
         $flags = [];
+        $lengths = [];
 
         foreach (explode(',', $matches[3]) as $column) {
-            preg_match('/`([^`]+)`/', $column, $cm);
+            preg_match('/`([^`]+)`(\((\d+)\))?/', $column, $cm);
 
-            $column = $cm[1];
-
-            if (null !== ($indexLength = $this->getIndexLength($table, $column))) {
-                $column .= '('.$indexLength.')';
-            }
-
-            $columns[$cm[1]] = $column;
+            $columns[] = $cm[1];
+            $lengths[] = isset($cm[3]) ? (int) $cm[3] : $this->getIndexLength($table, $cm[1]);
         }
 
         if (false !== strpos($matches[1], 'unique')) {
@@ -302,7 +303,21 @@ class DcaSchemaProvider
                 $flags[] = 'fulltext';
             }
 
-            $table->addIndex($columns, $matches[2], $flags);
+            // Backwards compatibility for doctrine/dbal <2.9
+            if (array_filter($lengths) && !method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
+                $columns = array_combine(
+                    $columns,
+                    array_map(
+                        static function ($column, $length) {
+                            return $column.($length ? '('.$length.')' : '');
+                        },
+                        $columns,
+                        $lengths
+                    )
+                );
+            }
+
+            $table->addIndex($columns, $matches[2], $flags, ['lengths' => $lengths]);
         }
     }
 
@@ -397,9 +412,32 @@ class DcaSchemaProvider
             ->fetch(\PDO::FETCH_OBJ)
         ;
 
-        // The variable no longer exists (as of MySQL 8 and MariaDB 10.3)
+        // The variable no longer exists as of MySQL 8 and MariaDB 10.3
         if (false === $largePrefix) {
             return 3072;
+        }
+
+        $version = $this->doctrine
+            ->getConnection()
+            ->query('SELECT @@version as Value')
+            ->fetch(\PDO::FETCH_OBJ)
+        ;
+
+        [$ver] = explode('-', $version->Value);
+
+        // As there is no reliable way to get the vendor (see #84), we are
+        // guessing based on the version number. The check will not be run
+        // as of MySQL 8 and MariaDB 10.3, so this should be safe.
+        $vok = version_compare($ver, '10', '>=') ? '10.2.2' : '5.7.7';
+
+        // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
+        if (version_compare($ver, $vok, '>=')) {
+            return 3072;
+        }
+
+        // The innodb_large_prefix option is disabled
+        if (!\in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true)) {
+            return 767;
         }
 
         $filePerTable = $this->doctrine
@@ -419,14 +457,12 @@ class DcaSchemaProvider
             ->fetch(\PDO::FETCH_OBJ)
         ;
 
-        if (
-            'barracuda' === strtolower((string) $fileFormat->Value)
-            && \in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true)
-        ) {
-            return 3072;
+        // The InnoDB file format is not Barracuda
+        if ('barracuda' !== strtolower((string) $fileFormat->Value)) {
+            return 767;
         }
 
-        return 767;
+        return 3072;
     }
 
     private function isCaseSensitive(array $config): bool

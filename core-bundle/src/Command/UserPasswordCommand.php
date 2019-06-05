@@ -13,9 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\Config;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Doctrine\DBAL\Connection;
 use Patchwork\Utf8;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -29,16 +30,22 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Changes the password of a Contao back end user.
  */
-class UserPasswordCommand extends ContainerAwareCommand
+class UserPasswordCommand extends Command
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
-    public function __construct(ContaoFrameworkInterface $framework)
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    public function __construct(ContaoFramework $framework, Connection $connection)
     {
         $this->framework = $framework;
+        $this->connection = $connection;
 
         parent::__construct();
     }
@@ -95,15 +102,11 @@ class UserPasswordCommand extends ContainerAwareCommand
 
         $hash = $this->validateAndHashPassword($input->getOption('password'));
 
-        $affected = $this
-            ->getContainer()
-            ->get('database_connection')
-            ->update(
-                'tl_user',
-                ['password' => $hash],
-                ['username' => $input->getArgument('username')]
-            )
-        ;
+        $affected = $this->connection->update(
+            'tl_user',
+            ['password' => $hash],
+            ['username' => $input->getArgument('username')]
+        );
 
         if (0 === $affected) {
             throw new InvalidArgumentException(sprintf('Invalid username: %s', $input->getArgument('username')));

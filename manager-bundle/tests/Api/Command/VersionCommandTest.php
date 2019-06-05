@@ -23,12 +23,12 @@ use Symfony\Component\Console\Tester\CommandTester;
 class VersionCommandTest extends TestCase
 {
     /**
-     * @var Application|MockObject
+     * @var Application&MockObject
      */
     private $application;
 
     /**
-     * @var PluginLoader|MockObject
+     * @var PluginLoader&MockObject
      */
     private $pluginLoader;
 
@@ -78,7 +78,7 @@ class VersionCommandTest extends TestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $expected = \json_encode([
+        $expected = json_encode([
             'version' => Application::VERSION,
             'commands' => [],
             'features' => [],
@@ -106,7 +106,7 @@ class VersionCommandTest extends TestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $expected = \json_encode([
+        $expected = json_encode([
             'version' => Application::VERSION,
             'commands' => ['foo:bar'],
             'features' => [],
@@ -144,7 +144,7 @@ class VersionCommandTest extends TestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $expected = \json_encode([
+        $expected = json_encode([
             'version' => Application::VERSION,
             'commands' => [],
             'features' => [

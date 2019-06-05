@@ -32,7 +32,7 @@ class TemplateTest extends TestCase
         $fs = new Filesystem();
         $fs->mkdir($this->getFixturesDir().'/templates');
 
-        System::setContainer($this->mockContainer($this->getFixturesDir()));
+        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
     }
 
     /**
@@ -218,10 +218,10 @@ EOF
             ->willReturnArgument(0)
         ;
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('assets.packages', $packages);
 
-        \System::setContainer($container);
+        System::setContainer($container);
 
         $template = new FrontendTemplate();
         $template->asset('/path/to/asset', 'package_name');

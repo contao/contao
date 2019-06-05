@@ -29,14 +29,19 @@ class ContentTable extends ContentElement
 	 */
 	protected function compile()
 	{
-		$rows = \StringUtil::deserialize($this->tableitems);
+		$rows = StringUtil::deserialize($this->tableitems, true);
 
 		$this->Template->id = 'table_' . $this->id;
-		$this->Template->summary = \StringUtil::specialchars($this->summary);
+		$this->Template->summary = StringUtil::specialchars($this->summary);
 		$this->Template->useHeader = $this->thead ? true : false;
 		$this->Template->useFooter = $this->tfoot ? true : false;
 		$this->Template->useLeftTh = $this->tleft ? true : false;
 		$this->Template->sortable = $this->sortable ? true : false;
+
+		if ($this->sortable)
+		{
+			$this->Template->sortDefault = $this->sortIndex . '|' . ($this->sortOrder == 'descending' ? 'desc' : 'asc');
+		}
 
 		$arrHeader = array();
 		$arrBody = array();
@@ -47,19 +52,6 @@ class ContentTable extends ContentElement
 		{
 			foreach ($rows[0] as $i=>$v)
 			{
-				// Set table sort cookie
-				if ($this->sortable && $i == $this->sortIndex)
-				{
-					$co = 'TS_TABLE_' . $this->id;
-					$so = ($this->sortOrder == 'descending') ? 'desc' : 'asc';
-
-					if (\Input::cookie($co) == '')
-					{
-						\System::setCookie($co, $i . '|' . $so, 0);
-					}
-				}
-
-				// Add cell
 				$arrHeader[] = array
 				(
 					'class' => 'head_'.$i . (($i == 0) ? ' col_first' : '') . (($i == (\count($rows[0]) - 1)) ? ' col_last' : '') . (($i == 0 && $this->tleft) ? ' unsortable' : ''),

@@ -54,7 +54,7 @@ class PageTree extends Widget
 	 */
 	public function __construct($arrAttributes=null)
 	{
-		$this->import('Database');
+		$this->import(Database::class, 'Database');
 		parent::__construct($arrAttributes);
 
 		// Prepare the order field
@@ -64,11 +64,11 @@ class PageTree extends Widget
 			$this->strOrderName = $this->orderField . str_replace($this->strField, '', $this->strName);
 
 			// Retrieve the order value
-			$objRow = $this->Database->prepare("SELECT " . \Database::quoteIdentifier($this->orderField) . " FROM " . $this->strTable . " WHERE id=?")
+			$objRow = $this->Database->prepare("SELECT " . Database::quoteIdentifier($this->orderField) . " FROM " . $this->strTable . " WHERE id=?")
 						   ->limit(1)
 						   ->execute($this->activeRecord->id);
 
-			$tmp = \StringUtil::deserialize($objRow->{$this->orderField});
+			$tmp = StringUtil::deserialize($objRow->{$this->orderField});
 			$this->{$this->orderField} = (!empty($tmp) && \is_array($tmp)) ? array_filter($tmp) : array();
 		}
 	}
@@ -94,7 +94,7 @@ class PageTree extends Widget
 		{
 			$arrNew = array();
 
-			if ($order = \Input::post($this->strOrderName))
+			if ($order = Input::post($this->strOrderName))
 			{
 				$arrNew = explode(',', $order);
 			}
@@ -102,7 +102,7 @@ class PageTree extends Widget
 			// Only proceed if the value has changed
 			if ($arrNew !== $this->{$this->orderField})
 			{
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=?, " . \Database::quoteIdentifier($this->orderField) . "=? WHERE id=?")
+				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=?, " . Database::quoteIdentifier($this->orderField) . "=? WHERE id=?")
 							   ->execute(time(), serialize($arrNew), $this->activeRecord->id);
 
 				$this->objDca->createNewVersion = true; // see #6285
@@ -171,14 +171,14 @@ class PageTree extends Widget
 
 		if (!empty($this->varValue)) // can be an array
 		{
-			$objPages = \PageModel::findMultipleByIds((array) $this->varValue);
+			$objPages = PageModel::findMultipleByIds((array) $this->varValue);
 
 			if ($objPages !== null)
 			{
 				while ($objPages->next())
 				{
 					$arrSet[] = $objPages->id;
-					$arrValues[$objPages->id] = \Image::getHtml($this->getPageStatusIcon($objPages)) . ' ' . $objPages->title . ' (' . $objPages->alias . \Config::get('urlSuffix') . ')';
+					$arrValues[$objPages->id] = Image::getHtml($this->getPageStatusIcon($objPages)) . ' ' . $objPages->title . ' (' . $objPages->alias . Config::get('urlSuffix') . ')';
 				}
 			}
 
@@ -222,7 +222,7 @@ class PageTree extends Widget
 
 		$return .= '</ul>';
 
-		if (!\System::getContainer()->get('contao.picker.builder')->supportsContext('page'))
+		if (!System::getContainer()->get('contao.picker.builder')->supportsContext('page'))
 		{
 			$return .= '
 	<p><button class="tl_submit" disabled>'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</button></p>';
@@ -241,7 +241,7 @@ class PageTree extends Widget
 			}
 
 			$return .= '
-	<p><a href="' . ampersand(\System::getContainer()->get('contao.picker.builder')->getUrl('page', $extras)) . '" class="tl_submit" id="pt_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+	<p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl('page', $extras)) . '" class="tl_submit" id="pt_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
 	<script>
 	  $("pt_' . $this->strName . '").addEvent("click", function(e) {
 		e.preventDefault();

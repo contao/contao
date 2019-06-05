@@ -94,8 +94,8 @@ class Registry implements \Countable
 	public function fetch($strTable, $varKey, $strAlias=null)
 	{
 		/** @var Model $strClass */
-		$strClass = \Model::getClassFromTable($strTable);
-		$strPk    = $strClass::getPk();
+		$strClass = Model::getClassFromTable($strTable);
+		$strPk = $strClass::getPk();
 
 		// Search by PK (most common case)
 		if ($strAlias === null || $strAlias == $strPk)
@@ -167,6 +167,11 @@ class Registry implements \Countable
 
 		$strPk = $objModel->getPk();
 		$varPk = $objModel->$strPk;
+
+		if ($varPk === null)
+		{
+			throw new \RuntimeException('The primary key has not been set');
+		}
 
 		// Another model object is pointing to the DB record already
 		if (isset($this->arrRegistry[$strTable][$varPk]))

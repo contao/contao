@@ -83,12 +83,11 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_unsubscribe'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['nl_template'],
-	'default'                 => 'nl_simple',
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_newsletter', 'getNewsletterTemplates'),
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default ''"
+	'sql'                     => "varchar(64) NOT NULL default 'nl_simple'"
 );
 
 /**
@@ -96,7 +95,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_module_newsletter extends Backend
+class tl_module_newsletter extends Contao\Backend
 {
 
 	/**
@@ -105,7 +104,7 @@ class tl_module_newsletter extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**

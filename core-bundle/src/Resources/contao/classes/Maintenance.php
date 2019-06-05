@@ -35,14 +35,14 @@ class Maintenance extends Backend implements \executable
 	 */
 	public function run()
 	{
-		$objTemplate = new \BackendTemplate('be_maintenance_mode');
-		$objTemplate->action = ampersand(\Environment::get('request'));
+		$objTemplate = new BackendTemplate('be_maintenance_mode');
+		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->headline = $GLOBALS['TL_LANG']['tl_maintenance']['maintenanceMode'];
 		$objTemplate->isActive = $this->isActive();
 
 		try
 		{
-			$driver = \System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver();
+			$driver = System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver();
 			$isLocked = $driver->isExists();
 		}
 		catch (\Exception $e)
@@ -51,7 +51,7 @@ class Maintenance extends Backend implements \executable
 		}
 
 		// Toggle the maintenance mode
-		if (\Input::post('FORM_SUBMIT') == 'tl_maintenance_mode')
+		if (Input::post('FORM_SUBMIT') == 'tl_maintenance_mode')
 		{
 			if ($isLocked)
 			{

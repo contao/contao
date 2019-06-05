@@ -63,17 +63,21 @@ class FrontendPreviewTokenTest extends TestCase
     public function testSerializesItself(): void
     {
         $token = new FrontendPreviewToken(null, true);
+        $serialized = $token->serialize();
 
-        $this->assertSame($this->getSerializedToken(), $token->serialize());
-    }
+        if (false !== strpos($serialized, '"a:4:{')) {
+            $expected = serialize([true, serialize(['anon.', true, [], []])]);
+        } else {
+            $expected = serialize([true, ['anon.', true, [], []]]);
+        }
 
-    public function testUnserializesItself(): void
-    {
+        $this->assertSame($expected, $serialized);
+
         $token = new FrontendPreviewToken(null, false);
 
         $this->assertFalse($token->showUnpublished());
 
-        $token->unserialize($this->getSerializedToken());
+        $token->unserialize($expected);
 
         $this->assertTrue($token->showUnpublished());
     }
@@ -90,10 +94,5 @@ class FrontendPreviewTokenTest extends TestCase
         $token = new FrontendPreviewToken($user, false);
 
         $this->assertNull($token->getCredentials());
-    }
-
-    private function getSerializedToken(): string
-    {
-        return serialize([true, serialize(['anon.', true, [], []])]);
     }
 }

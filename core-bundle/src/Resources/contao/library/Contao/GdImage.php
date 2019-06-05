@@ -81,7 +81,7 @@ class GdImage
 			throw new \InvalidArgumentException('Image type "' . $file->extension . '" cannot be processed by GD');
 		}
 
-		$image = $function(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $file->path);
+		$image = $function(System::getContainer()->getParameter('kernel.project_dir') . '/' . $file->path);
 
 		if ($image === false)
 		{
@@ -169,12 +169,12 @@ class GdImage
 		}
 
 		// Get the relative path
-		$folder = \StringUtil::stripRootDir($path);
+		$folder = StringUtil::stripRootDir($path);
 
 		// Create the parent folder
-		if (($dirname = \dirname($folder)) != '.' && !is_dir(\System::getContainer()->getParameter('kernel.project_dir') . '/' . $dirname))
+		if (($dirname = \dirname($folder)) != '.' && !is_dir(System::getContainer()->getParameter('kernel.project_dir') . '/' . $dirname))
 		{
-			new \Folder($dirname);
+			new Folder($dirname);
 		}
 
 		// Create the new image
@@ -188,7 +188,7 @@ class GdImage
 			case 'jpg':
 			case 'jpeg':
 				imageinterlace($this->gdResource, 1); // see #6529
-				imagejpeg($this->gdResource, $path, (\System::getContainer()->getParameter('contao.image.imagine_options')['jpeg_quality'] ?: 80));
+				imagejpeg($this->gdResource, $path, (System::getContainer()->getParameter('contao.image.imagine_options')['jpeg_quality'] ?: 80));
 				break;
 
 			case 'png':

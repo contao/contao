@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CalendarBundle\EventListener;
 
 use Contao\CalendarFeedModel;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
 use Contao\LayoutModel;
 use Contao\Model\Collection;
@@ -24,11 +24,11 @@ use Contao\Template;
 class GeneratePageListener
 {
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
-    public function __construct(ContaoFrameworkInterface $framework)
+    public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
     }

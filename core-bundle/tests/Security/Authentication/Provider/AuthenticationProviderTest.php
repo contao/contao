@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Authentication\Provider;
 
 use Contao\Controller;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\CoreBundle\Tests\TestCase;
@@ -32,7 +32,7 @@ class AuthenticationProviderTest extends TestCase
 {
     public function testHandlesContaoUsers(): void
     {
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->loginCount = 3;
@@ -62,7 +62,7 @@ class AuthenticationProviderTest extends TestCase
             ->willReturn($currentUser)
         ;
 
-        $provider = $this->mockProvider();
+        $provider = $this->getProvider();
 
         $this->expectException(BadCredentialsException::class);
         $this->expectExceptionMessage('Invalid password submitted for username "foo"');
@@ -93,7 +93,7 @@ class AuthenticationProviderTest extends TestCase
             ->willReturn($currentUser)
         ;
 
-        $provider = $this->mockProvider();
+        $provider = $this->getProvider();
         $provider->checkAuthentication($user, $token);
 
         $this->addToAssertionCount(1); // does not throw an exception
@@ -101,7 +101,7 @@ class AuthenticationProviderTest extends TestCase
 
     public function testLocksAUserAfterThreeFailedLoginAttempts(): void
     {
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->locked = 0;
@@ -141,7 +141,7 @@ class AuthenticationProviderTest extends TestCase
             ->method('initialize')
         ;
 
-        $provider = $this->mockProvider($framework);
+        $provider = $this->getProvider($framework);
 
         $this->expectException(LockedException::class);
         $this->expectExceptionMessage('User "foo" has been locked for 5 minutes');
@@ -158,7 +158,7 @@ class AuthenticationProviderTest extends TestCase
             ->willThrowException(new AuthenticationException('Unsupported user'))
         ;
 
-        $provider = $this->mockProvider();
+        $provider = $this->getProvider();
 
         $this->expectException(AuthenticationException::class);
         $this->expectExceptionMessage('Unsupported user');
@@ -174,7 +174,7 @@ class AuthenticationProviderTest extends TestCase
      */
     public function testTriggersTheCheckCredentialsHook(bool $success): void
     {
-        /** @var FrontendUser|MockObject $user */
+        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->loginCount = 3;
@@ -240,7 +240,7 @@ class AuthenticationProviderTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['checkCredentials'] = [['HookListener', 'onCheckCredentials']];
 
-        $provider = $this->mockProvider($framework);
+        $provider = $this->getProvider($framework);
 
         if (!$success) {
             $this->expectException(BadCredentialsException::class);
@@ -252,18 +252,16 @@ class AuthenticationProviderTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
-    /**
-     * @return bool[][]
-     */
-    public function getCheckCredentialsHookData(): array
+    public function getCheckCredentialsHookData(): \Generator
     {
-        return [
-            [true],
-            [false],
-        ];
+        yield [true];
+        yield [false];
     }
 
-    private function mockProvider(ContaoFrameworkInterface $framework = null): AuthenticationProvider
+    /**
+     * @param ContaoFramework&MockObject $framework
+     */
+    private function getProvider(ContaoFramework $framework = null): AuthenticationProvider
     {
         $userProvider = $this->createMock(UserProviderInterface::class);
         $userChecker = $this->createMock(UserCheckerInterface::class);
@@ -271,7 +269,7 @@ class AuthenticationProviderTest extends TestCase
         $encoderFactory = $this->createMock(EncoderFactoryInterface::class);
 
         if (null === $framework) {
-            $framework = $this->createMock(ContaoFrameworkInterface::class);
+            $framework = $this->createMock(ContaoFramework::class);
         }
 
         return new AuthenticationProvider($userProvider, $userChecker, $providerKey, $encoderFactory, $framework);

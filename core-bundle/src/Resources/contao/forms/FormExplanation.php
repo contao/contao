@@ -37,9 +37,7 @@ class FormExplanation extends Widget
 	/**
 	 * Do not validate
 	 */
-	public function validate()
-	{
-	}
+	public function validate() {}
 
 	/**
 	 * Generate the widget and return it as string
@@ -48,16 +46,16 @@ class FormExplanation extends Widget
 	 */
 	public function generate()
 	{
-		$this->text = \StringUtil::toHtml5($this->text);
+		$this->text = StringUtil::toHtml5($this->text);
 
 		// Add the static files URL to images
-		if ($staticUrl = \System::getContainer()->get('contao.assets.files_context')->getStaticUrl())
+		if ($staticUrl = System::getContainer()->get('contao.assets.files_context')->getStaticUrl())
 		{
-			$path = \Config::get('uploadPath') . '/';
+			$path = Config::get('uploadPath') . '/';
 			$this->text = str_replace(' src="' . $path, ' src="' . $staticUrl . $path, $this->text);
 		}
 
-		return \StringUtil::encodeEmail($this->text);
+		return StringUtil::encodeEmail($this->text);
 	}
 }
 

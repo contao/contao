@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\Environment;
 use Contao\LayoutModel;
 use Contao\Model\Collection;
 use Contao\NewsBundle\EventListener\GeneratePageListener;
@@ -28,23 +29,24 @@ class GeneratePageListenerTest extends ContaoTestCase
     {
         $GLOBALS['TL_HEAD'] = [];
 
-        $properties = [
-            'feedBase' => 'http://localhost/',
-            'alias' => 'news',
-            'format' => 'rss',
-            'title' => 'Latest news',
-        ];
+        /** @var NewsFeedModel&MockObject $newsFeedModel */
+        $newsFeedModel = $this->mockClassWithProperties(NewsFeedModel::class);
+        $newsFeedModel->feedBase = 'http://localhost/';
+        $newsFeedModel->alias = 'news';
+        $newsFeedModel->format = 'rss';
+        $newsFeedModel->title = 'Latest news';
 
-        $newsFeedModel = $this->mockClassWithProperties(NewsFeedModel::class, $properties);
         $collection = new Collection([$newsFeedModel], 'tl_news_feeds');
 
         $adapters = [
+            Environment::class => $this->mockAdapter(['get']),
             NewsFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => $collection]),
             Template::class => new Adapter(Template::class),
         ];
 
-        /** @var LayoutModel|MockObject $layoutModel */
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['newsfeeds' => 'a:1:{i:0;i:3;}']);
+        /** @var LayoutModel&MockObject $layoutModel */
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel->newsfeeds = 'a:1:{i:0;i:3;}';
 
         $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
         $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
@@ -59,8 +61,9 @@ class GeneratePageListenerTest extends ContaoTestCase
     {
         $GLOBALS['TL_HEAD'] = [];
 
-        /** @var LayoutModel|MockObject $layoutModel */
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['newsfeeds' => '']);
+        /** @var LayoutModel&MockObject $layoutModel */
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel->newsfeeds = '';
 
         $listener = new GeneratePageListener($this->mockContaoFramework());
         $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
@@ -76,8 +79,9 @@ class GeneratePageListenerTest extends ContaoTestCase
             NewsFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => null]),
         ];
 
-        /** @var LayoutModel|MockObject $layoutModel */
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['newsfeeds' => 'a:1:{i:0;i:3;}']);
+        /** @var LayoutModel&MockObject $layoutModel */
+        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel->newsfeeds = 'a:1:{i:0;i:3;}';
 
         $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
         $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);

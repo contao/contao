@@ -47,7 +47,7 @@ class InitializeController extends AbstractController
         foreach (['REQUEST_URI', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PHP_SELF'] as $name) {
             $realRequest->server->set(
                 $name,
-                str_replace(TL_SCRIPT, 'app.php', $realRequest->server->get($name))
+                str_replace(TL_SCRIPT, 'index.php', $realRequest->server->get($name))
             );
         }
 

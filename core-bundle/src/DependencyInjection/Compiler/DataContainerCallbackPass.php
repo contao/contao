@@ -75,7 +75,11 @@ class DataContainerCallbackPass implements CompilerPassInterface
             );
         }
 
-        if (substr_compare($attributes['target'], '.wizard', -7) && '_callback' !== substr($attributes['target'], -9)) {
+        if (
+            '_callback' !== substr($attributes['target'], -9)
+            && false === strpos($attributes['target'], '.panel_callback.')
+            && !\in_array(substr($attributes['target'], -7), ['.wizard', '.xlabel'], true)
+        ) {
             $attributes['target'] .= '_callback';
         }
 

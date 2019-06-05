@@ -12,7 +12,6 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 @trigger_error('Using the Contao\Session class has been deprecated and will no longer work in Contao 5.0. Use the session service instead.', E_USER_DEPRECATED);
@@ -45,7 +44,7 @@ class Session
 
 	/**
 	 * Symfony session object
-	 * @var SessionInterface
+	 * @var SymfonySession
 	 */
 	private $session;
 
@@ -72,7 +71,7 @@ class Session
 		}
 		else
 		{
-			$this->session = \System::getContainer()->get('session');
+			$this->session = System::getContainer()->get('session');
 		}
 
 		$this->sessionBag = $this->session->getBag($this->getSessionBagKey());

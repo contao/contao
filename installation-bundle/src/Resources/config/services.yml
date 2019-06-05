@@ -2,15 +2,15 @@ services:
     contao.install_tool:
         class: Contao\InstallationBundle\InstallTool
         arguments:
-            - "@database_connection"
-            - "%kernel.project_dir%"
-            - "@logger"
+            - '@database_connection'
+            - '%kernel.project_dir%'
+            - '@logger'
         public: true
 
     contao.install_tool_user:
         class: Contao\InstallationBundle\InstallToolUser
         arguments:
-            - "@session"
+            - '@session'
         public: true
 
     contao.install_tool_twig_extension:
@@ -21,6 +21,6 @@ services:
     contao.installer:
         class: Contao\InstallationBundle\Database\Installer
         arguments:
-            - "@database_connection"
-            - "@contao.doctrine.schema_provider"
+            - '@database_connection'
+            - '@contao.doctrine.schema_provider'
         public: true

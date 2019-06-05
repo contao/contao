@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Reads and writes newsletter channels
  *
@@ -23,11 +25,11 @@ namespace Contao;
  * @method static NewsletterBlacklistModel|null findOneByPid($val, array $opt=array())
  * @method static NewsletterBlacklistModel|null findOneByHash($val, array $opt=array())
  *
- * @method static Model\Collection|NewsletterBlacklistModel|null findByPid($val, array $opt=array())
- * @method static Model\Collection|NewsletterBlacklistModel|null findByHash($val, array $opt=array())
- * @method static Model\Collection|NewsletterBlacklistModel|null findMultipleByIds($val, array $opt=array())
- * @method static Model\Collection|NewsletterBlacklistModel|null findBy($col, $val, array $opt=array())
- * @method static Model\Collection|NewsletterBlacklistModel|null findAll(array $opt=array())
+ * @method static Collection|NewsletterBlacklistModel|null findByPid($val, array $opt=array())
+ * @method static Collection|NewsletterBlacklistModel|null findByHash($val, array $opt=array())
+ * @method static Collection|NewsletterBlacklistModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|NewsletterBlacklistModel|null findBy($col, $val, array $opt=array())
+ * @method static Collection|NewsletterBlacklistModel|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())

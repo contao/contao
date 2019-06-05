@@ -34,16 +34,16 @@ class BackendPassword extends Backend
 	 */
 	public function __construct()
 	{
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 		parent::__construct();
 
-		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
 		{
 			throw new AccessDeniedException('Access denied');
 		}
 
-		\System::loadLanguageFile('default');
-		\System::loadLanguageFile('modules');
+		System::loadLanguageFile('default');
+		System::loadLanguageFile('modules');
 	}
 
 	/**
@@ -56,9 +56,9 @@ class BackendPassword extends Backend
 		/** @var Request $request */
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		$objTemplate = new \BackendTemplate('be_password');
+		$objTemplate = new BackendTemplate('be_password');
 
-		if (\Input::post('FORM_SUBMIT') == 'tl_password')
+		if (Input::post('FORM_SUBMIT') == 'tl_password')
 		{
 			$pw = $request->request->get('password');
 			$cnf = $request->request->get('confirm');
@@ -66,17 +66,17 @@ class BackendPassword extends Backend
 			// The passwords do not match
 			if ($pw != $cnf)
 			{
-				\Message::addError($GLOBALS['TL_LANG']['ERR']['passwordMatch']);
+				Message::addError($GLOBALS['TL_LANG']['ERR']['passwordMatch']);
 			}
 			// Password too short
-			elseif (Utf8::strlen($pw) < \Config::get('minPasswordLength'))
+			elseif (Utf8::strlen($pw) < Config::get('minPasswordLength'))
 			{
-				\Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], \Config::get('minPasswordLength')));
+				Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], Config::get('minPasswordLength')));
 			}
 			// Password and username are the same
 			elseif ($pw == $this->User->username)
 			{
-				\Message::addError($GLOBALS['TL_LANG']['ERR']['passwordName']);
+				Message::addError($GLOBALS['TL_LANG']['ERR']['passwordName']);
 			}
 			// Save the data
 			else
@@ -84,7 +84,7 @@ class BackendPassword extends Backend
 				// Make sure the password has been changed
 				if (password_verify($pw, $this->User->password))
 				{
-					\Message::addError($GLOBALS['TL_LANG']['MSC']['pw_change']);
+					Message::addError($GLOBALS['TL_LANG']['MSC']['pw_change']);
 				}
 				else
 				{
@@ -93,26 +93,29 @@ class BackendPassword extends Backend
 					// Trigger the save_callback
 					if (\is_array($GLOBALS['TL_DCA']['tl_user']['fields']['password']['save_callback']))
 					{
+						$dc = new DC_Table('tl_user');
+						$dc->id = $this->User->id;
+
 						foreach ($GLOBALS['TL_DCA']['tl_user']['fields']['password']['save_callback'] as $callback)
 						{
 							if (\is_array($callback))
 							{
 								$this->import($callback[0]);
-								$pw = $this->{$callback[0]}->{$callback[1]}($pw);
+								$pw = $this->{$callback[0]}->{$callback[1]}($pw, $dc);
 							}
 							elseif (\is_callable($callback))
 							{
-								$pw = $callback($pw);
+								$pw = $callback($pw, $dc);
 							}
 						}
 					}
 
-					$objUser = \UserModel::findByPk($this->User->id);
+					$objUser = UserModel::findByPk($this->User->id);
 					$objUser->pwChange = '';
 					$objUser->password = password_hash($pw, PASSWORD_DEFAULT);
 					$objUser->save();
 
-					\Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
+					Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
 					$this->redirect('contao/main.php');
 				}
 			}
@@ -120,16 +123,17 @@ class BackendPassword extends Backend
 			$this->reload();
 		}
 
-		$objTemplate->theme = \Backend::getTheme();
-		$objTemplate->messages = \Message::generate();
-		$objTemplate->base = \Environment::get('base');
+		$objTemplate->theme = Backend::getTheme();
+		$objTemplate->messages = Message::generate();
+		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->title = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pw_new']);
-		$objTemplate->charset = \Config::get('characterSet');
-		$objTemplate->action = ampersand(\Environment::get('request'));
+		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pw_new']);
+		$objTemplate->host = Environment::get('host');
+		$objTemplate->charset = Config::get('characterSet');
+		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['pw_new'];
 		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['pw_change'];
-		$objTemplate->submitButton = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
+		$objTemplate->submitButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];
 

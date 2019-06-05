@@ -22,8 +22,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'markAsCopy'                  => 'name',
 		'onload_callback' => array
 		(
-			array('tl_image_size', 'checkPermission'),
-			array('tl_image_size', 'showJsLibraryHint')
+			array('tl_image_size', 'checkPermission')
 		),
 		'oncreate_callback' => array
 		(
@@ -124,12 +123,12 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_theme.name',
-			'sql'                     => "int(10) unsigned NOT NULL default '0'",
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default '0'"
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'name' => array
 		(
@@ -210,7 +209,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_image_size extends Backend
+class tl_image_size extends Contao\Backend
 {
 
 	/**
@@ -219,7 +218,7 @@ class tl_image_size extends Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('BackendUser', 'User');
+		$this->import('Contao\BackendUser', 'User');
 	}
 
 	/**
@@ -275,7 +274,7 @@ class tl_image_size extends Backend
 		}
 
 		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = Contao\System::getContainer()->get('session')->getBag('contao_backend');
 
 		$arrNew = $objSessionBag->get('new_records');
 
@@ -288,11 +287,11 @@ class tl_image_size extends Backend
 
 				while ($objGroup->next())
 				{
-					$arrThemes = StringUtil::deserialize($objGroup->themes);
+					$arrThemes = Contao\StringUtil::deserialize($objGroup->themes);
 
 					if (\is_array($arrThemes) && \in_array('image_sizes', $arrThemes))
 					{
-						$arrImageSizes = StringUtil::deserialize($objGroup->imageSizes, true);
+						$arrImageSizes = Contao\StringUtil::deserialize($objGroup->imageSizes, true);
 						$arrImageSizes[] = $insertId;
 
 						$this->Database->prepare("UPDATE tl_user_group SET imageSizes=? WHERE id=?")
@@ -308,11 +307,11 @@ class tl_image_size extends Backend
 										   ->limit(1)
 										   ->execute($this->User->id);
 
-				$arrThemes = StringUtil::deserialize($objUser->themes);
+				$arrThemes = Contao\StringUtil::deserialize($objUser->themes);
 
 				if (\is_array($arrThemes) && \in_array('image_sizes', $arrThemes))
 				{
-					$arrImageSizes = StringUtil::deserialize($objUser->imageSizes, true);
+					$arrImageSizes = Contao\StringUtil::deserialize($objUser->imageSizes, true);
 					$arrImageSizes[] = $insertId;
 
 					$this->Database->prepare("UPDATE tl_user SET imageSizes=? WHERE id=?")
@@ -354,26 +353,6 @@ class tl_image_size extends Backend
 	}
 
 	/**
-	 * Show a hint if a JavaScript library needs to be included in the page layout
-	 */
-	public function showJsLibraryHint()
-	{
-		if ($_POST || Input::get('act') != 'edit')
-		{
-			return;
-		}
-
-		// Return if the user cannot access the layout module (see #6190)
-		if (!$this->User->hasAccess('themes', 'modules') || !$this->User->hasAccess('layout', 'themes'))
-		{
-			return;
-		}
-
-		System::loadLanguageFile('tl_layout');
-		Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_image_size']['picturefill'], $GLOBALS['TL_LANG']['tl_layout']['picturefill'][0]));
-	}
-
-	/**
 	 * Return the edit header button
 	 *
 	 * @param array  $row
@@ -387,6 +366,6 @@ class tl_image_size extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_image_size') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_image_size') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 }

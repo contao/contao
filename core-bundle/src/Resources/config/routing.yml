@@ -1,5 +1,5 @@
 contao:
-    resource: "@ContaoCoreBundle/Controller"
+    resource: '@ContaoCoreBundle/Controller'
     type: annotation
 
 # Redirect /contao/ to /contao
@@ -10,24 +10,3 @@ contao_backend_redirect:
         _controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
         route: contao_backend
         permanent: true
-
-contao_frontend:
-    resource: .
-    type: contao_frontend
-
-contao_root:
-    path: /
-    defaults:
-        _scope: frontend
-        _token_check: true
-        _controller: Contao\CoreBundle\Controller\FrontendController::indexAction
-
-# The catch all route must be the last one!
-contao_catch_all:
-    path: /{_url_fragment}
-    defaults:
-        _scope: frontend
-        _token_check: true
-        _controller: Contao\CoreBundle\Controller\FrontendController::indexAction
-    requirements:
-        _url_fragment: .*

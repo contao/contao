@@ -31,7 +31,7 @@ class BackendCustom extends BackendMain
 		parent::__construct();
 
 		// Initialize the template in the constructor so it is available in the getTemplateObject() method
-		$this->Template = new \BackendTemplate('be_main');
+		$this->Template = new BackendTemplate('be_main');
 	}
 
 	/**
@@ -60,9 +60,9 @@ class BackendCustom extends BackendMain
 		$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . $version;
 
 		// Ajax request
-		if ($_POST && \Environment::get('isAjaxRequest'))
+		if ($_POST && Environment::get('isAjaxRequest'))
 		{
-			$this->objAjax = new \Ajax(\Input::post('action'));
+			$this->objAjax = new Ajax(Input::post('action'));
 			$this->objAjax->executePreActions();
 		}
 

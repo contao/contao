@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\OptIn\OptIn;
+use FOS\HttpCache\ResponseTagger;
 
 /**
  * Class Comments
@@ -42,11 +44,19 @@ class Comments extends Frontend
 
 		$objTemplate->comments = array(); // see #4064
 
+		// Tag the response
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			/** @var ResponseTagger $responseTagger */
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array(sprintf('contao.comments.%s.%s', $strSource, $intParent)));
+		}
+
 		// Pagination
 		if ($objConfig->perPage > 0)
 		{
 			// Get the total number of comments
-			$intTotal = \CommentsModel::countPublishedBySourceAndParent($strSource, $intParent);
+			$intTotal = CommentsModel::countPublishedBySourceAndParent($strSource, $intParent);
 			$total = $gtotal = $intTotal;
 
 			// Calculate the key (e.g. tl_form_field becomes page_cff12)
@@ -60,12 +70,12 @@ class Comments extends Frontend
 
 			// Get the current page
 			$id = 'page_c' . $key . $intParent; // see #4141
-			$page = \Input::get($id) ?? 1;
+			$page = Input::get($id) ?? 1;
 
 			// Do not index or cache the page if the page number is outside the range
 			if ($page < 1 || $page > max(ceil($total/$objConfig->perPage), 1))
 			{
-				throw new PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 			}
 
 			// Set limit and offset
@@ -73,7 +83,7 @@ class Comments extends Frontend
 			$offset = ($page - 1) * $objConfig->perPage;
 
 			// Initialize the pagination menu
-			$objPagination = new \Pagination($total, $objConfig->perPage, \Config::get('maxPaginationLinks'), $id);
+			$objPagination = new Pagination($total, $objConfig->perPage, Config::get('maxPaginationLinks'), $id);
 			$objTemplate->pagination = $objPagination->generate("\n  ");
 		}
 
@@ -82,11 +92,11 @@ class Comments extends Frontend
 		// Get all published comments
 		if ($limit)
 		{
-			$objComments = \CommentsModel::findPublishedBySourceAndParent($strSource, $intParent, ($objConfig->order == 'descending'), $limit, $offset);
+			$objComments = CommentsModel::findPublishedBySourceAndParent($strSource, $intParent, ($objConfig->order == 'descending'), $limit, $offset);
 		}
 		else
 		{
-			$objComments = \CommentsModel::findPublishedBySourceAndParent($strSource, $intParent, ($objConfig->order == 'descending'));
+			$objComments = CommentsModel::findPublishedBySourceAndParent($strSource, $intParent, ($objConfig->order == 'descending'));
 		}
 
 		// Parse the comments
@@ -99,18 +109,18 @@ class Comments extends Frontend
 				$objConfig->template = 'com_default';
 			}
 
-			$objPartial = new \FrontendTemplate($objConfig->template);
+			$objPartial = new FrontendTemplate($objConfig->template);
 
 			while ($objComments->next())
 			{
 				$objPartial->setData($objComments->row());
 
 				// Clean the RTE output
-				$objPartial->comment = \StringUtil::toHtml5($objComments->comment);
+				$objPartial->comment = StringUtil::toHtml5($objComments->comment);
 				$objPartial->comment = trim(str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), $objPartial->comment));
 
-				$objPartial->datim = \Date::parse($objPage->datimFormat, $objComments->date);
-				$objPartial->date = \Date::parse($objPage->dateFormat, $objComments->date);
+				$objPartial->datim = Date::parse($objPage->datimFormat, $objComments->date);
+				$objPartial->date = Date::parse($objPage->dateFormat, $objComments->date);
 				$objPartial->class = (($count < 1) ? ' first' : '') . (($count >= ($total - 1)) ? ' last' : '') . (($count % 2 == 0) ? ' even' : ' odd');
 				$objPartial->by = $GLOBALS['TL_LANG']['MSC']['com_by'];
 				$objPartial->id = 'c' . $objComments->id;
@@ -129,7 +139,7 @@ class Comments extends Frontend
 						$objPartial->author = $objAuthor;
 
 						// Clean the RTE output
-						$objPartial->reply = \StringUtil::toHtml5($objPartial->reply);
+						$objPartial->reply = StringUtil::toHtml5($objPartial->reply);
 					}
 				}
 
@@ -161,7 +171,7 @@ class Comments extends Frontend
 	 */
 	protected function renderCommentForm(FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
-		$this->import('FrontendUser', 'User');
+		$this->import(FrontendUser::class, 'User');
 
 		// Access control
 		if ($objConfig->requireLogin && !FE_USER_LOGGED_IN)
@@ -173,7 +183,7 @@ class Comments extends Frontend
 		}
 
 		// Confirm or remove a subscription
-		if (\Input::get('token'))
+		if (strncmp(Input::get('token'), 'com-', 4) === 0 || strncmp(Input::get('token'), 'cor-', 4) === 0)
 		{
 			static::changeSubscriptionStatus($objTemplate);
 
@@ -263,7 +273,7 @@ class Comments extends Frontend
 			$objWidget->id .= '_' . $intParent;
 
 			// Validate the widget
-			if (\Input::post('FORM_SUBMIT') == $strFormId)
+			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
 				$objWidget->validate();
 
@@ -278,7 +288,7 @@ class Comments extends Frontend
 
 		$objTemplate->fields = $arrWidgets;
 		$objTemplate->submit = $GLOBALS['TL_LANG']['MSC']['com_submit'];
-		$objTemplate->action = ampersand(\Environment::get('request'));
+		$objTemplate->action = ampersand(Environment::get('request'));
 		$objTemplate->messages = ''; // Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$objTemplate->formId = $strFormId;
 		$objTemplate->hasError = $doNotSubmit;
@@ -297,7 +307,7 @@ class Comments extends Frontend
 		}
 
 		// Store the comment
-		if (!$doNotSubmit && \Input::post('FORM_SUBMIT') == $strFormId)
+		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId)
 		{
 			$strWebsite = $arrWidgets['website']->value;
 
@@ -308,7 +318,7 @@ class Comments extends Frontend
 			}
 
 			// Do not parse any tags in the comment
-			$strComment = \StringUtil::specialchars(trim($arrWidgets['comment']->value));
+			$strComment = StringUtil::specialchars(trim($arrWidgets['comment']->value));
 			$strComment = str_replace(array('&amp;', '&lt;', '&gt;'), array('[&]', '[lt]', '[gt]'), $strComment);
 
 			// Remove multiple line feeds
@@ -323,6 +333,13 @@ class Comments extends Frontend
 			// Prevent cross-site request forgeries
 			$strComment = preg_replace('/(href|src|on[a-z]+)="[^"]*(contao\/main\.php|typolight\/main\.php|javascript|vbscri?pt|script|alert|document|cookie|window)[^"]*"+/i', '$1="#"', $strComment);
 
+			$intMember = 0;
+
+			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+			{
+				$intMember = FrontendUser::getInstance()->id;
+			}
+
 			$time = time();
 
 			// Prepare the record
@@ -334,14 +351,15 @@ class Comments extends Frontend
 				'name'      => $arrWidgets['name']->value,
 				'email'     => $arrWidgets['email']->value,
 				'website'   => $strWebsite,
+				'member'    => $intMember,
 				'comment'   => $this->convertLineFeeds($strComment),
-				'ip'        => \Environment::get('ip'),
+				'ip'        => Environment::get('ip'),
 				'date'      => $time,
 				'published' => ($objConfig->moderate ? '' : 1)
 			);
 
 			// Store the comment
-			$objComment = new \CommentsModel();
+			$objComment = new CommentsModel();
 			$objComment->setRow($arrSet)->save();
 
 			// Store the subscription
@@ -361,22 +379,22 @@ class Comments extends Frontend
 			}
 
 			// Prepare the notification mail
-			$objEmail = new \Email();
+			$objEmail = new Email();
 			$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
 			$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-			$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], \Idna::decode(\Environment::get('host')));
+			$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host')));
 
 			// Convert the comment to plain text
 			$strComment = strip_tags($strComment);
-			$strComment = \StringUtil::decodeEntities($strComment);
+			$strComment = StringUtil::decodeEntities($strComment);
 			$strComment = str_replace(array('[&]', '[lt]', '[gt]'), array('&', '<', '>'), $strComment);
 
 			// Add the comment details
 			$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_message'],
 									  $arrSet['name'] . ' (' . $arrSet['email'] . ')',
 									  $strComment,
-									  \Idna::decode(\Environment::get('base')) . \Environment::get('request'),
-									  \Idna::decode(\Environment::get('base')) . 'contao?do=comments&act=edit&id=' . $objComment->id);
+									  Idna::decode(Environment::get('base')) . Environment::get('request'),
+									  Idna::decode(Environment::get('base')) . 'contao?do=comments&act=edit&id=' . $objComment->id);
 
 			// Add a moderation hint to the e-mail (see #7478)
 			if ($objConfig->moderate)
@@ -471,7 +489,7 @@ class Comments extends Frontend
 		// Encode e-mail addresses
 		if (strpos($strComment, 'mailto:') !== false)
 		{
-			$strComment = \StringUtil::encodeEmail($strComment);
+			$strComment = StringUtil::encodeEmail($strComment);
 		}
 
 		return $strComment;
@@ -510,17 +528,20 @@ class Comments extends Frontend
 	 */
 	public function purgeSubscriptions()
 	{
-		$objNotify = \CommentsNotifyModel::findExpiredSubscriptions();
+		$objNotify = CommentsNotifyModel::findExpiredSubscriptions();
 
 		if ($objNotify === null)
 		{
 			return;
 		}
 
-		foreach ($objNotify as $objModel)
+		while ($objNotify->next())
 		{
-			$objModel->delete();
+			$objNotify->delete();
 		}
+
+		// Add a log entry
+		$this->log('Purged the unactivated comment subscriptions', __METHOD__, TL_CRON);
 	}
 
 	/**
@@ -530,7 +551,7 @@ class Comments extends Frontend
 	 */
 	public static function addCommentsSubscription(CommentsModel $objComment)
 	{
-		$objNotify = \CommentsNotifyModel::findBySourceParentAndEmail($objComment->source, $objComment->parent, $objComment->email);
+		$objNotify = CommentsNotifyModel::findBySourceParentAndEmail($objComment->source, $objComment->parent, $objComment->email);
 
 		// The subscription exists already
 		if ($objNotify !== null)
@@ -548,27 +569,25 @@ class Comments extends Frontend
 			'parent'       => $objComment->parent,
 			'name'         => $objComment->name,
 			'email'        => $objComment->email,
-			'url'          => \Environment::get('request'),
+			'url'          => Environment::get('request'),
 			'addedOn'      => $time,
-			'ip'           => \Environment::get('ip'),
-			'tokenConfirm' => md5(uniqid(mt_rand(), true)),
-			'tokenRemove'  => md5(uniqid(mt_rand(), true))
+			'active'       => '',
+			'tokenRemove'  => 'cor-'.bin2hex(random_bytes(10))
 		);
 
 		// Store the subscription
-		$objNotify = new \CommentsNotifyModel();
+		$objNotify = new CommentsNotifyModel();
 		$objNotify->setRow($arrSet)->save();
 
-		$strUrl = \Idna::decode(\Environment::get('base')) . \Environment::get('request');
+		$strUrl = Idna::decode(Environment::get('base')) . Environment::get('request');
 		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
 
-		// Send the activation mail
-		$objEmail = new \Email();
-		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
-		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], \Idna::decode(\Environment::get('host')));
-		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $objNotify->tokenConfirm, $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove);
-		$objEmail->sendTo($objComment->email);
+		/** @var OptIn $optIn */
+		$optIn = System::getContainer()->get('contao.opt-in');
+		$optInToken = $optIn->create('com', $objComment->email, array('tl_comments_notify'=>array($objNotify->id)));
+
+		// Send the token
+		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], Idna::decode(Environment::get('host'))), sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $optInToken->getIdentifier(), $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove));
 	}
 
 	/**
@@ -578,23 +597,51 @@ class Comments extends Frontend
 	 */
 	public static function changeSubscriptionStatus(FrontendTemplate $objTemplate)
 	{
-		$objNotify = \CommentsNotifyModel::findByTokens(\Input::get('token'));
-
-		if ($objNotify === null)
+		if (strncmp(Input::get('token'), 'com-', 4) === 0)
 		{
-			$objTemplate->confirm = 'Invalid token';
+			/** @var OptIn $optIn */
+			$optIn = System::getContainer()->get('contao.opt-in');
 
-			return;
-		}
+			// Find an unconfirmed token with only one related record
+			if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || \count($arrIds = current($arrRelated)) != 1 || (!$objNotify = CommentsNotifyModel::findByPk($arrIds[0])))
+			{
+				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 
-		if ($objNotify->tokenConfirm != '' && $objNotify->tokenConfirm == \Input::get('token'))
-		{
-			$objNotify->tokenConfirm = '';
+				return;
+			}
+
+			if ($optInToken->isConfirmed())
+			{
+				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
+
+				return;
+			}
+
+			if ($optInToken->getEmail() != $objNotify->email)
+			{
+				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
+
+				return;
+			}
+
+			$objNotify->active = '1';
 			$objNotify->save();
+
+			$optInToken->confirm();
+
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInConfirm'];
 		}
-		elseif ($objNotify->tokenRemove != '' && $objNotify->tokenRemove == \Input::get('token'))
+		elseif (strncmp(Input::get('token'), 'cor-', 4) === 0)
 		{
+			$objNotify = CommentsNotifyModel::findOneByTokenRemove(Input::get('token'));
+
+			if ($objNotify === null)
+			{
+				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
+
+				return;
+			}
+
 			$objNotify->delete();
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInCancel'];
 		}
@@ -613,7 +660,7 @@ class Comments extends Frontend
 			return;
 		}
 
-		$objNotify = \CommentsNotifyModel::findActiveBySourceAndParent($objComment->source, $objComment->parent);
+		$objNotify = CommentsNotifyModel::findActiveBySourceAndParent($objComment->source, $objComment->parent);
 
 		if ($objNotify !== null)
 		{
@@ -626,18 +673,18 @@ class Comments extends Frontend
 				}
 
 				// Prepare the URL
-				$strUrl = \Idna::decode(\Environment::get('base')) . $objNotify->url;
+				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
 
-				$objEmail = new \Email();
+				$objEmail = new Email();
 				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
 				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
-				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], \Idna::decode(\Environment::get('host')));
+				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host')));
 				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove);
 				$objEmail->sendTo($objNotify->email);
 			}
 		}
 
-		$objComment->notified = 1;
+		$objComment->notified = '1';
 		$objComment->save();
 	}
 }

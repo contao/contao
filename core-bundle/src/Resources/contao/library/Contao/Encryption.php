@@ -76,7 +76,7 @@ class Encryption
 
 		if (!$strKey)
 		{
-			$strKey = \System::getContainer()->getParameter('contao.encryption_key');
+			$strKey = System::getContainer()->getParameter('contao.encryption_key');
 		}
 
 		$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size(static::$resTd));
@@ -131,7 +131,7 @@ class Encryption
 
 		if (!$strKey)
 		{
-			$strKey = \System::getContainer()->getParameter('contao.encryption_key');
+			$strKey = System::getContainer()->getParameter('contao.encryption_key');
 		}
 
 		mcrypt_generic_init(static::$resTd, md5($strKey), $iv);
@@ -153,7 +153,7 @@ class Encryption
 			throw new \Exception('The PHP mcrypt extension is not installed');
 		}
 
-		if (!self::$resTd = mcrypt_module_open(\Config::get('encryptionCipher'), '', \Config::get('encryptionMode'), ''))
+		if (!self::$resTd = mcrypt_module_open(Config::get('encryptionCipher'), '', Config::get('encryptionMode'), ''))
 		{
 			throw new \Exception('Error initializing encryption module');
 		}

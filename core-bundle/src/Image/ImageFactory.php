@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FilesModel;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;
@@ -46,7 +46,7 @@ class ImageFactory implements ImageFactoryInterface
     private $imagineSvg;
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -70,7 +70,7 @@ class ImageFactory implements ImageFactoryInterface
      */
     private $validExtensions;
 
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFrameworkInterface $framework, bool $bypassCache, array $imagineOptions, array $validExtensions)
+    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions)
     {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
@@ -108,6 +108,7 @@ class ImageFactory implements ImageFactoryInterface
         }
 
         if ($size instanceof ResizeConfigurationInterface) {
+            /** @var ResizeConfigurationInterface $resizeConfig */
             $resizeConfig = $size;
             $importantPart = null;
         } else {

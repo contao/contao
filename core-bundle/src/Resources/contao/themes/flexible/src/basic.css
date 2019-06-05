@@ -44,31 +44,40 @@ button {
 
 /* Font */
 body {
-	font:.875rem/1 Lato,sans-serif;
+	font:400 .875rem/1 -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+	color:#444;
+}
+h1,h2,h3,h4,h5,h6,strong,b,th {
 	color:#222;
+	font-weight:600;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	body {
-		font-family:"Lato Retina",Lato,sans-serif;
+		color:#222;
+		font-weight:300;
+	}
+	h1,h2,h3,h4,h5,h6,strong,b,th {
+		font-weight:500;
 	}
 }
 pre,code,.tl_textarea.monospace {
-	font:300 .75rem/1.25 "Roboto Mono",monospace;
+	font:300 .75rem/1.25 SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
 }
 h1,h2,h3,h4,h5,h6 {
 	font-size:1rem;
-	font-weight:bold;
 }
 input,textarea,select,button {
 	font:inherit;
 	color:inherit;
 	line-height:inherit;
 }
-input {
-	line-height:normal; /* see #501 */
+input,select {
+	line-height:17px; /* see #501 and #79 */
 }
-strong,b,th {
-	font-weight:bold;
+@supports (display:-ms-grid) {
+	input,select {
+		line-height:1.1;
+	}
 }
 .tl_gray {
 	color:#999;
@@ -91,8 +100,13 @@ span.mandatory {
 
 /* Basic elements */
 a {
-	color:#222;
+	color:#444;
 	text-decoration:none;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	a {
+		color:#222;
+	}
 }
 a:hover,a:active {
 	color:#006494;
@@ -198,7 +212,12 @@ fieldset.tl_radio_container {
 	line-height:16px;
 }
 fieldset.tl_checkbox_container legend,fieldset.tl_radio_container legend {
-	font-weight:bold;
+	font-weight:600;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	fieldset.tl_checkbox_container legend,fieldset.tl_radio_container legend {
+		font-weight:500;
+	}
 }
 fieldset.checkbox_container,fieldset.radio_container {
 	border:0;
@@ -247,8 +266,8 @@ fieldset.checkbox_container,fieldset.radio_container {
 	cursor:not-allowed;
 }
 .tl_textarea {
-	padding-top:7px;
-	padding-bottom:5px;
+	padding:4px 6px;
+	line-height:1.45;
 }
 .tl_text_2,.tl_text_3,.tl_text_4,.tl_text_unit,.tl_text_trbl,.tl_text_interval {
 	margin-right:1%;
@@ -264,11 +283,16 @@ fieldset.checkbox_container,fieldset.radio_container {
 		padding:5px 6px;
 	}
 }
+@supports (display:-ms-grid) {
+	.tl_text,.tl_text_2,.tl_text_3,.tl_text_4,.tl_textarea,.tl_text_unit,.tl_text_trbl,.tl_text_interval {
+		padding:4px 6px 5px;
+	}
+}
+
 
 /* Select menus */
 select {
 	text-transform:none;
-	line-height:normal;
 	-moz-appearance:none;
 	-webkit-appearance:none;
 }
@@ -312,6 +336,11 @@ select[multiple] {
 		padding:4px 18px 4px 2px;
 	}
 }
+@supports (display:-ms-grid) {
+	.tl_select,.tl_mselect,.tl_select_column,.tl_select_unit,.tl_select_interval {
+		padding:5px 18px 5px 2px;
+	}
+}
 
 /* Checkboxes */
 .tl_checkbox {
@@ -325,16 +354,26 @@ select[multiple] {
 }
 .tl_checkbox_single_container label {
 	margin-left:4px;
-	font-weight:bold;
+	font-weight:600;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	.tl_checkbox_single_container label {
+		font-weight:500;
+	}
 }
 
 /* Grouped checkboxes */
 .checkbox_toggler {
-	font-weight:bold;
+	font-weight:600;
 }
 .checkbox_toggler_first {
 	margin-top:3px;
-	font-weight:bold;
+	font-weight:600;
+}
+@media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+	.checkbox_toggler,.checkbox_toggler_first {
+		font-weight:500;
+	}
 }
 .checkbox_toggler img,.checkbox_toggler_first img {
 	position:relative;
@@ -452,10 +491,10 @@ a.tl_submit {
 	width:100%;
 }
 .m12 {
-	margin:16px 15px 8px;
+	margin:17px 15px;
 }
 .cbx {
-	min-height:56px;
+	min-height:auto;
 }
 .subpal {
 	clear:both;
@@ -477,7 +516,7 @@ a.tl_submit {
 
 /* Tips */
 .tl_tip {
-	height:14px;
+	height:15px;
 	overflow:hidden;
 	cursor:help;
 }
@@ -610,8 +649,9 @@ a.tl_submit {
 		float:none;
 		width:calc(100% - 30px);
 	}
-	.cbx {
-		min-height:32px;
+	.m12 {
+		margin-top:0;
+		margin-bottom:0;
 	}
 	.tip {
 		max-width:80vw;

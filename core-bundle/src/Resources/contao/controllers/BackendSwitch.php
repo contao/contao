@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\HttpKernel\JwtManager;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -32,15 +33,15 @@ class BackendSwitch extends Backend
 	 */
 	public function __construct()
 	{
-		$this->import('BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 		parent::__construct();
 
-		if (!\System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
+		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
 		{
 			throw new AccessDeniedException('Access denied');
 		}
 
-		\System::loadLanguageFile('default');
+		System::loadLanguageFile('default');
 	}
 
 	/**
@@ -52,28 +53,37 @@ class BackendSwitch extends Backend
 	{
 		$this->disableProfiler();
 
-		if (\Environment::get('isAjaxRequest'))
+		if (Environment::get('isAjaxRequest'))
 		{
 			$this->getDatalistOptions();
 		}
 
+		$objJwtManager = null;
+
+		if ($objRequest = System::getContainer()->get('request_stack')->getCurrentRequest())
+		{
+			$objJwtManager = $objRequest->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
+		}
+
 		$blnCanSwitchUser = ($this->User->isAdmin || (!empty($this->User->amg) && \is_array($this->User->amg)));
-		$objTokenChecker = \System::getContainer()->get('contao.security.token_checker');
+		$objTokenChecker = System::getContainer()->get('contao.security.token_checker');
 		$strUser = $objTokenChecker->getFrontendUsername();
 		$blnShowUnpublished = $objTokenChecker->isPreviewMode();
+		$blnDebug = System::getContainer()->get('kernel')->isDebug();
 		$blnUpdate = false;
 
 		// Switch
-		if (\Input::post('FORM_SUBMIT') == 'tl_switch')
+		if (Input::post('FORM_SUBMIT') == 'tl_switch')
 		{
 			$blnUpdate = true;
-			$objAuthenticator = \System::getContainer()->get('contao.security.frontend_preview_authenticator');
-			$blnShowUnpublished = \Input::post('unpublished') != 'hide';
+			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
+			$blnShowUnpublished = Input::post('unpublished') != 'hide';
+			$blnDebug = (bool) Input::post('debug');
 
 			// Switch user accounts
 			if ($blnCanSwitchUser && isset($_POST['user']))
 			{
-				$strUser = \Input::post('user');
+				$strUser = Input::post('user');
 			}
 
 			if ($strUser)
@@ -86,26 +96,38 @@ class BackendSwitch extends Backend
 			}
 		}
 
-		$objTemplate = new \BackendTemplate('be_switch');
+		$objTemplate = new BackendTemplate('be_switch');
 		$objTemplate->user = (string) $strUser;
 		$objTemplate->show = $blnShowUnpublished;
 		$objTemplate->update = $blnUpdate;
 		$objTemplate->canSwitchUser = $blnCanSwitchUser;
-		$objTemplate->theme = \Backend::getTheme();
-		$objTemplate->base = \Environment::get('base');
+		$objTemplate->canDebug = $this->User->isAdmin && $objJwtManager instanceof JwtManager;
+		$objTemplate->theme = Backend::getTheme();
+		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->apply = $GLOBALS['TL_LANG']['MSC']['apply'];
 		$objTemplate->reload = $GLOBALS['TL_LANG']['MSC']['reload'];
 		$objTemplate->feUser = $GLOBALS['TL_LANG']['MSC']['feUser'];
 		$objTemplate->username = $GLOBALS['TL_LANG']['MSC']['username'];
-		$objTemplate->charset = \Config::get('characterSet');
+		$objTemplate->charset = Config::get('characterSet');
 		$objTemplate->lblHide = $GLOBALS['TL_LANG']['MSC']['hiddenHide'];
 		$objTemplate->lblShow = $GLOBALS['TL_LANG']['MSC']['hiddenShow'];
 		$objTemplate->fePreview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
 		$objTemplate->hiddenElements = $GLOBALS['TL_LANG']['MSC']['hiddenElements'];
-		$objTemplate->action = ampersand(\Environment::get('request'));
+		$objTemplate->debug = $blnDebug;
+		$objTemplate->debugMode = $GLOBALS['TL_LANG']['MSC']['debugMode'];
+		$objTemplate->lblEnabled = $GLOBALS['TL_LANG']['MSC']['debugEnabled'];
+		$objTemplate->lblDisabled = $GLOBALS['TL_LANG']['MSC']['debugDisabled'];
+		$objTemplate->action = ampersand(Environment::get('request'));
 
-		return $objTemplate->getResponse();
+		$objResponse = $objTemplate->getResponse();
+
+		if ($blnUpdate && $objJwtManager instanceof JwtManager)
+		{
+			$objJwtManager->addResponseCookie($objResponse, array('debug' => $blnDebug));
+		}
+
+		return $objResponse;
 	}
 
 	/**
@@ -135,12 +157,12 @@ class BackendSwitch extends Backend
 		}
 
 		$arrUsers = array();
-		$time = \Date::floorToMinute();
+		$time = Date::floorToMinute();
 
 		// Get the active front end users
 		$objUsers = $this->Database->prepare("SELECT username FROM tl_member WHERE username LIKE ?$strGroups AND login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username")
 								   ->limit(10)
-								   ->execute(str_replace('%', '', \Input::post('value')) . '%');
+								   ->execute(str_replace('%', '', Input::post('value')) . '%');
 
 		if ($objUsers->numRows)
 		{
@@ -156,7 +178,7 @@ class BackendSwitch extends Backend
 	 */
 	private function disableProfiler()
 	{
-		$container = \System::getContainer();
+		$container = System::getContainer();
 
 		if ($container->has('profiler'))
 		{

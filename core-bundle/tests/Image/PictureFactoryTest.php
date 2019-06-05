@@ -12,8 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Tests\TestCase;
@@ -22,7 +21,6 @@ use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationInterface;
 use Contao\Image\PictureConfigurationItem;
-use Contao\Image\PictureGenerator;
 use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
@@ -101,31 +99,28 @@ class PictureFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        $properties = [
-            'width' => '100',
-            'height' => '200',
-            'resizeMode' => ResizeConfiguration::MODE_BOX,
-            'zoom' => '50',
-            'sizes' => '100vw',
-            'densities' => '1x, 2x',
-            'cssClass' => 'my-size',
-        ];
+        /** @var ImageSizeModel&MockObject $imageSizeModel */
+        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class);
+        $imageSizeModel->width = 100;
+        $imageSizeModel->height = 200;
+        $imageSizeModel->resizeMode = ResizeConfiguration::MODE_BOX;
+        $imageSizeModel->zoom = 50;
+        $imageSizeModel->sizes = '100vw';
+        $imageSizeModel->densities = '1x, 2x';
+        $imageSizeModel->cssClass = 'my-size';
 
-        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $properties);
         $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
 
-        $properties = [
-            'width' => '50',
-            'height' => '50',
-            'resizeMode' => ResizeConfiguration::MODE_CROP,
-            'zoom' => '100',
-            'sizes' => '50vw',
-            'densities' => '0.5x, 2x',
-            'media' => '(max-width: 900px)',
-        ];
+        /** @var ImageSizeItemModel&MockObject $imageSizeItemModel */
+        $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class);
+        $imageSizeItemModel->width = 50;
+        $imageSizeItemModel->height = 50;
+        $imageSizeItemModel->resizeMode = ResizeConfiguration::MODE_CROP;
+        $imageSizeItemModel->zoom = 100;
+        $imageSizeItemModel->sizes = '50vw';
+        $imageSizeItemModel->densities = '0.5x, 2x';
+        $imageSizeItemModel->media = '(max-width: 900px)';
 
-        /** @var ImageSizeItemModel|MockObject $imageSizeItemModel */
-        $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class, $properties);
         $imageSizeItemModel
             ->method('__isset')
             ->willReturn(true)
@@ -141,7 +136,7 @@ class PictureFactoryTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
-        $pictureFactory = $this->mockPictureFactory($pictureGenerator, $imageFactory, $framework);
+        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory, $framework);
         $picture = $pictureFactory->create($path, 1);
 
         $this->assertSame($imageMock, $picture->getImg()['src']);
@@ -200,7 +195,7 @@ class PictureFactoryTest extends TestCase
             ->willReturn($pictureMock)
         ;
 
-        $pictureFactory = $this->mockPictureFactory($pictureGenerator);
+        $pictureFactory = $this->getPictureFactory($pictureGenerator);
         $picture = $pictureFactory->create($imageMock, $pictureConfig);
 
         $this->assertSame($pictureMock, $picture);
@@ -216,7 +211,7 @@ class PictureFactoryTest extends TestCase
             ->method('generate')
             ->with(
                 $this->callback(
-                    function (): bool {
+                    static function (): bool {
                         return true;
                     }
                 ),
@@ -234,7 +229,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (): bool {
+                    static function (): bool {
                         return true;
                     }
                 )
@@ -265,7 +260,7 @@ class PictureFactoryTest extends TestCase
             ->method('getImportantPartFromLegacyMode')
             ->with(
                 $this->callback(
-                    function (): bool {
+                    static function (): bool {
                         return true;
                     }
                 ),
@@ -279,7 +274,7 @@ class PictureFactoryTest extends TestCase
             )
         ;
 
-        $pictureFactory = $this->mockPictureFactory($pictureGenerator, $imageFactory);
+        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, 'left_top']);
 
         $this->assertSame($pictureMock, $picture);
@@ -346,7 +341,7 @@ class PictureFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        $pictureFactory = $this->mockPictureFactory($pictureGenerator, $imageFactory);
+        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
         $this->assertSame($pictureMock, $picture);
@@ -359,10 +354,11 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
-     * @param PictureGenerator|MockObject|null $pictureGenerator
-     * @param ImageFactory|MockObject|null     $imageFactory
+     * @param PictureGeneratorInterface&MockObject $pictureGenerator
+     * @param ImageFactoryInterface&MockObject     $imageFactory
+     * @param ContaoFramework&MockObject           $framework
      */
-    private function mockPictureFactory($pictureGenerator = null, $imageFactory = null, ContaoFrameworkInterface $framework = null, bool $bypassCache = null, array $imagineOptions = null): PictureFactory
+    private function getPictureFactory(PictureGeneratorInterface $pictureGenerator = null, ImageFactoryInterface $imageFactory = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null): PictureFactory
     {
         if (null === $pictureGenerator) {
             $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
@@ -373,7 +369,7 @@ class PictureFactoryTest extends TestCase
         }
 
         if (null === $framework) {
-            $framework = $this->createMock(ContaoFrameworkInterface::class);
+            $framework = $this->createMock(ContaoFramework::class);
         }
 
         if (null === $bypassCache) {

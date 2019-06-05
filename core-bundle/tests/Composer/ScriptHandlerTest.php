@@ -48,7 +48,7 @@ class ScriptHandlerTest extends TestCase
         $this->assertRandomSecretDoesNotExist();
 
         $this->handler->generateRandomSecret(
-            $this->mockComposerEvent(
+            $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [
                         'file' => $this->getFixturesDir().'/app/config/parameters.yml',
@@ -67,7 +67,7 @@ class ScriptHandlerTest extends TestCase
         touch($this->getFixturesDir().'/app/config/parameters.yml');
 
         $this->handler->generateRandomSecret(
-            $this->mockComposerEvent(
+            $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [
                         'file' => __DIR__.'/../Fixtures/app/config/parameters.yml',
@@ -85,12 +85,12 @@ class ScriptHandlerTest extends TestCase
     {
         $this->assertRandomSecretDoesNotExist();
 
-        $this->handler->generateRandomSecret($this->mockComposerEvent());
+        $this->handler->generateRandomSecret($this->getComposerEvent());
 
         $this->assertRandomSecretDoesNotExist();
 
         $this->handler->generateRandomSecret(
-            $this->mockComposerEvent(
+            $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [],
                 ]
@@ -108,34 +108,29 @@ class ScriptHandlerTest extends TestCase
         $method = new \ReflectionMethod($this->handler, 'getBinDir');
         $method->setAccessible(true);
 
-        $this->assertSame($expected, $method->invokeArgs($this->handler, [$this->mockComposerEvent($extra)]));
+        $this->assertSame($expected, $method->invokeArgs($this->handler, [$this->getComposerEvent($extra)]));
     }
 
-    /**
-     * @return (array<string,string>|string)[][]
-     */
-    public function binDirProvider(): array
+    public function binDirProvider(): \Generator
     {
-        return [
-            [
-                [],
-                'app',
-            ],
-            [
-                ['symfony-app-dir' => 'foo/bar'],
-                'foo/bar',
-            ],
-            [
-                ['symfony-var-dir' => __DIR__],
-                'bin',
-            ],
-            [
-                [
-                    'symfony-var-dir' => __DIR__,
-                    'symfony-bin-dir' => 'app',
-                ],
-                'app',
-            ],
+        yield [
+            [],
+            'app',
+        ];
+
+        yield [
+            ['symfony-app-dir' => 'foo/bar'],
+            'foo/bar',
+        ];
+
+        yield [
+            ['symfony-var-dir' => __DIR__],
+            'bin',
+        ];
+
+        yield [
+            ['symfony-var-dir' => __DIR__, 'symfony-bin-dir' => 'app'],
+            'app',
         ];
     }
 
@@ -147,23 +142,19 @@ class ScriptHandlerTest extends TestCase
         $method = new \ReflectionMethod($this->handler, 'getWebDir');
         $method->setAccessible(true);
 
-        $this->assertSame($expected, $method->invokeArgs($this->handler, [$this->mockComposerEvent($extra)]));
+        $this->assertSame($expected, $method->invokeArgs($this->handler, [$this->getComposerEvent($extra)]));
     }
 
-    /**
-     * @return (array<string,string>|string)[][]
-     */
-    public function webDirProvider(): array
+    public function webDirProvider(): \Generator
     {
-        return [
-            [
-                [],
-                'web',
-            ],
-            [
-                ['symfony-web-dir' => 'foo/bar'],
-                'foo/bar',
-            ],
+        yield [
+            [],
+            'web',
+        ];
+
+        yield [
+            ['symfony-web-dir' => 'foo/bar'],
+            'foo/bar',
         ];
     }
 
@@ -174,22 +165,22 @@ class ScriptHandlerTest extends TestCase
 
         $this->assertSame(
             '',
-            $method->invokeArgs($this->handler, [$this->mockComposerEvent()])
+            $method->invokeArgs($this->handler, [$this->getComposerEvent()])
         );
 
         $this->assertSame(
             ' -v',
-            $method->invokeArgs($this->handler, [$this->mockComposerEvent([], 'isVerbose')])
+            $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isVerbose')])
         );
 
         $this->assertSame(
             ' -vv',
-            $method->invokeArgs($this->handler, [$this->mockComposerEvent([], 'isVeryVerbose')])
+            $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isVeryVerbose')])
         );
 
         $this->assertSame(
             ' -vvv',
-            $method->invokeArgs($this->handler, [$this->mockComposerEvent([], 'isDebug')])
+            $method->invokeArgs($this->handler, [$this->getComposerEvent([], 'isDebug')])
         );
     }
 
@@ -204,7 +195,7 @@ class ScriptHandlerTest extends TestCase
         $this->assertGreaterThanOrEqual(64, \strlen(getenv(ScriptHandler::RANDOM_SECRET_NAME)));
     }
 
-    private function mockComposerEvent(array $extra = [], string $method = null): Event
+    private function getComposerEvent(array $extra = [], string $method = null): Event
     {
         $package = $this->mockPackage($extra);
 
@@ -212,7 +203,7 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return Composer|MockObject
+     * @return Composer&MockObject
      */
     private function mockComposer(PackageInterface $package): Composer
     {
@@ -236,7 +227,7 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return IOInterface|MockObject
+     * @return IOInterface&MockObject
      */
     private function mockIO(string $method = null): IOInterface
     {
@@ -250,7 +241,7 @@ class ScriptHandlerTest extends TestCase
     }
 
     /**
-     * @return PackageInterface|MockObject
+     * @return PackageInterface&MockObject
      */
     private function mockPackage(array $extras = []): PackageInterface
     {

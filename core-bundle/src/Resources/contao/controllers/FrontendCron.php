@@ -21,25 +21,6 @@ class FrontendCron extends Frontend
 {
 
 	/**
-	 * Initialize the object (do not remove)
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-
-		// See #4099
-		if (!\defined('BE_USER_LOGGED_IN'))
-		{
-			\define('BE_USER_LOGGED_IN', false);
-		}
-
-		if (!\defined('FE_USER_LOGGED_IN'))
-		{
-			\define('FE_USER_LOGGED_IN', false);
-		}
-	}
-
-	/**
 	 * Run the controller
 	 *
 	 * @return Response
@@ -86,7 +67,7 @@ class FrontendCron extends Frontend
 		}
 
 		// Load the default language file (see #8719)
-		\System::loadLanguageFile('default');
+		System::loadLanguageFile('default');
 
 		// Run the jobs
 		foreach ($arrIntervals as $strInterval)
@@ -103,7 +84,7 @@ class FrontendCron extends Frontend
 			$this->Database->query("UPDATE tl_cron SET value=$intCurrent WHERE name='$strInterval'");
 
 			// Add a log entry if in debug mode (see #4729)
-			if (\Config::get('debugMode'))
+			if (Config::get('debugMode'))
 			{
 				$this->log('Running the ' . $strInterval . ' cron jobs', __METHOD__, TL_CRON);
 			}
@@ -115,7 +96,7 @@ class FrontendCron extends Frontend
 			}
 
 			// Add a log entry if in debug mode (see #4729)
-			if (\Config::get('debugMode'))
+			if (Config::get('debugMode'))
 			{
 				$this->log(ucfirst($strInterval) . ' cron jobs complete', __METHOD__, TL_CRON);
 			}

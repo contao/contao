@@ -24,6 +24,8 @@ class ContaoManagerExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
         $loader = new YamlFileLoader(
             $container,
             new FileLocator(__DIR__.'/../Resources/config')
@@ -32,5 +34,7 @@ class ContaoManagerExtension extends Extension
         $loader->load('commands.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
+
+        $container->setParameter('contao_manager.manager_path', $config['manager_path']);
     }
 }

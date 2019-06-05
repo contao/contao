@@ -15,7 +15,8 @@ namespace Contao\CoreBundle\Image;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -32,7 +33,7 @@ class ImageSizes
     private $eventDispatcher;
 
     /**
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
@@ -41,7 +42,7 @@ class ImageSizes
      */
     private $options;
 
-    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFrameworkInterface $framework)
+    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework)
     {
         $this->connection = $connection;
         $this->eventDispatcher = $eventDispatcher;
@@ -77,10 +78,10 @@ class ImageSizes
             $event = new ImageSizesEvent($this->options, $user);
         } else {
             $options = array_map(
-                function ($val) {
+                static function ($val) {
                     return is_numeric($val) ? (int) $val : $val;
                 },
-                \StringUtil::deserialize($user->imageSizes, true)
+                StringUtil::deserialize($user->imageSizes, true)
             );
 
             $event = new ImageSizesEvent($this->filterOptions($options), $user);

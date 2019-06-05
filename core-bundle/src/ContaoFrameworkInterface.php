@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle;
 
 /**
- * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5; use the
+ * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.0; use the
  *             Contao\CoreBundle\Framework\ContaoFrameworkInterface interface instead
  */
 interface ContaoFrameworkInterface

@@ -29,6 +29,38 @@
                 default_table_options:
                     engine: MyISAM</pre>
       </div>
+    {% elseif errorCode == 4 %}
+      <p class="tl_error">{{ 'engine_mismatch'|trans }}</p>
+      <p>{{ 'engine_mismatch_explain'|trans|format(engine)|raw }}</p>
+      <div id="sql_wrapper">
+        <pre>doctrine:
+    dbal:
+        connections:
+            default:
+                default_table_options:
+                    charset: utf8
+                    collate: utf8_unicode_ci</pre>
+      </div>
+    {% elseif errorCode == 5 %}
+      <p class="tl_error">{{ 'innodb_large_prefix'|trans }}</p>
+      <p>{{ 'innodb_large_prefix_explain'|trans|raw }}</p>
+      <div id="sql_wrapper">
+        <pre>doctrine:
+    dbal:
+        connections:
+            default:
+                default_table_options:
+                    charset: utf8
+                    collate: utf8_unicode_ci</pre>
+      </div>
+    {% elseif errorCode == 6 %}
+      <p class="tl_error">{{ 'innodb_additional'|trans }}</p>
+      <p>{{ 'innodb_additional_explain'|trans|raw }}</p>
+      <div id="sql_wrapper">
+        <pre>innodb_large_prefix = 1
+innodb_file_format = Barracuda
+innodb_file_per_table = 1</pre>
+      </div>
     {% endif %}
   </fieldset>
 {% endblock %}
