@@ -314,11 +314,6 @@ $GLOBALS['TL_PURGE'] = array
 			'callback' => array('Contao\Automator', 'purgeScriptCache'),
 			'affected' => array('assets/js', 'assets/css')
 		),
-		'pages' => array
-		(
-			'callback' => array('Contao\Automator', 'purgePageCache'),
-			'affected' => array('%s/http_cache')
-		),
 		'search' => array
 		(
 			'callback' => array('Contao\Automator', 'purgeSearchCache'),
@@ -332,6 +327,10 @@ $GLOBALS['TL_PURGE'] = array
 	),
 	'custom' => array
 	(
+		'pages' => array
+		(
+			'callback' => array('Contao\Automator', 'purgePageCache'),
+		),
 		'xml' => array
 		(
 			'callback' => array('Contao\Automator', 'generateXmlFiles')

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\OptIn\OptIn;
+use FOS\HttpCacheBundle\CacheManager;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
 
@@ -145,18 +146,32 @@ class Automator extends System
 
 	/**
 	 * Purge the page cache
-	 *
-	 * @todo Replace this with a more sophisticated invalidation routine
 	 */
 	public function purgePageCache()
 	{
-		$strCacheDir = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
+		$container = System::getContainer();
 
-		$objFolder = new Folder($strCacheDir . '/http_cache');
-		$objFolder->purge();
+		if (!$container->has('fos_http_cache.cache_manager'))
+		{
+			$this->log('Cannot purge the page cache; invalid reverse proxy configuration', __METHOD__, TL_ERROR);
+
+			return;
+		}
+
+		/** @var CacheManager $cacheManager */
+		$cacheManager = $container->get('fos_http_cache.cache_manager');
+
+		if (!$cacheManager->supports(CacheManager::CLEAR))
+		{
+			$this->log('Cannot purge the page cache; invalid reverse proxy configuration', __METHOD__, TL_ERROR);
+
+			return;
+		}
+
+		$cacheManager->clearCache();
 
 		// Add a log entry
-		$this->log('Purged the page cache', __METHOD__, TL_CRON);
+		$this->log('Purged the page cache (reverse proxy)', __METHOD__, TL_CRON);
 	}
 
 	/**
