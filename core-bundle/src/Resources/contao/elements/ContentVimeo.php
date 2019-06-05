@@ -113,7 +113,7 @@ class ContentVimeo extends ContentElement
 		{
 			$objFile = FilesModel::findByUuid($this->singleSRC);
 
-			if ($objFile !== null && \is_file(TL_ROOT . '/' . $objFile->path))
+			if ($objFile !== null && is_file(TL_ROOT . '/' . $objFile->path))
 			{
 				$this->singleSRC = $objFile->path;
 

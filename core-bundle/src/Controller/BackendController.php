@@ -60,7 +60,7 @@ class BackendController extends AbstractController
             $queryString = '';
 
             if ($request->query->has('referer')) {
-                $queryString = '?'.base64_decode($request->query->get('referer'));
+                $queryString = '?'.base64_decode($request->query->get('referer'), true);
             }
 
             $response = new RedirectResponse($this->get('router')->generate('contao_backend').$queryString);
