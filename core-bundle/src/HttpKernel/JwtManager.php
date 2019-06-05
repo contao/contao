@@ -60,14 +60,13 @@ class JwtManager
             return null;
         }
 
-        $qs = '';
-        if (null !== $qs = $request->getQueryString()) {
-            $qs = '?referer='.base64_encode($qs);
+        $query = '';
+
+        if (null !== ($qs = $request->getQueryString())) {
+            $query = '?referer='.base64_encode($qs);
         }
 
-        throw new RedirectResponseException(
-            '/preview.php/contao/login'.$qs
-        );
+        throw new RedirectResponseException('/preview.php/contao/login'.$query);
     }
 
     /**
