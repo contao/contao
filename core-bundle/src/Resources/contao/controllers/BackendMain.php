@@ -95,7 +95,7 @@ class BackendMain extends Backend
 				throw new \RuntimeException('The request stack did not contain a request');
 			}
 
-			$objJwtManager = $objRequest->attributes->get(JwtManager::ATTRIBUTE);
+			$objJwtManager = $objRequest->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
 
 			if (!$objJwtManager instanceof JwtManager)
 			{

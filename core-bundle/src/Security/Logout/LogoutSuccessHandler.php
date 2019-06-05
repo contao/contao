@@ -62,7 +62,7 @@ class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
 
     private function clearJwtToken(Request $request, Response $response): Response
     {
-        $jwtManager = $request->attributes->get(JwtManager::ATTRIBUTE);
+        $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
 
         if ($jwtManager instanceof JwtManager) {
             return $jwtManager->clearResponseCookie($response);

@@ -62,7 +62,7 @@ class BackendSwitch extends Backend
 
 		if ($objRequest = System::getContainer()->get('request_stack')->getCurrentRequest())
 		{
-			$objJwtManager = $objRequest->attributes->get(JwtManager::ATTRIBUTE);
+			$objJwtManager = $objRequest->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
 		}
 
 		$blnCanSwitchUser = ($this->User->isAdmin || (!empty($this->User->amg) && \is_array($this->User->amg)));

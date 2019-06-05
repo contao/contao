@@ -13,7 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\HttpKernel;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Firebase\JWT\JWT;
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,17 +25,39 @@ use Symfony\Component\HttpFoundation\Response;
 
 class JwtManager
 {
-    public const ATTRIBUTE = '_jwtManager';
+    public const REQUEST_ATTRIBUTE = '_jwtManager';
     public const COOKIE_NAME = '_contao_preview';
+
+    /**
+     * @var Signer
+     */
+    private $signer;
+
+    /**
+     * @var Builder
+     */
+    private $builder;
+
+    /**
+     * @var Parser
+     */
+    private $parser;
 
     /**
      * @var string
      */
     private $secret;
 
-    public function __construct(string $projectDir)
+    public function __construct(string $projectDir, Signer $signer = null, Builder $builder = null, Parser $parser = null, Filesystem $filesystem = null)
     {
-        $filesystem = new Filesystem();
+        $this->signer = $signer ?: new Sha256();
+        $this->builder = $builder ?: new Builder();
+        $this->parser = $parser ?: new Parser();
+
+        if (null === $filesystem) {
+            $filesystem = new Filesystem();
+        }
+
         $secretFile = $projectDir.'/var/jwt_secret';
 
         if ($filesystem->exists($secretFile)) {
@@ -46,7 +72,7 @@ class JwtManager
 
     public function parseRequest(Request $request): ?array
     {
-        $request->attributes->set(self::ATTRIBUTE, $this);
+        $request->attributes->set(self::REQUEST_ATTRIBUTE, $this);
 
         if ($request->cookies->has(self::COOKIE_NAME)) {
             try {
@@ -78,14 +104,21 @@ class JwtManager
             return;
         }
 
-        $payload['iat'] = time();
-        $payload['exp'] = strtotime('+30 minutes');
+        foreach ($payload as $k => $v) {
+            $this->builder->withClaim($k, $v);
+        }
+
+        $token = $this->builder
+            ->issuedAt(time())
+            ->expiresAt(strtotime('+30 minutes'))
+            ->getToken($this->signer, new Key($this->secret))
+        ;
 
         if (method_exists(Cookie::class, 'create')) {
-            $cookie = Cookie::create(self::COOKIE_NAME, JWT::encode($payload, $this->secret));
+            $cookie = Cookie::create(self::COOKIE_NAME, (string) $token);
         } else {
             // Backwards compatibility with symfony/http-foundation <4.2
-            $cookie = new Cookie(self::COOKIE_NAME, JWT::encode($payload, $this->secret));
+            $cookie = new Cookie(self::COOKIE_NAME, (string) $token);
         }
 
         $response->headers->setCookie($cookie);
@@ -120,9 +153,12 @@ class JwtManager
 
     private function decodeJwt(string $data): array
     {
-        $jwt = JWT::decode($data, $this->secret, ['HS256']);
+        $token = $this->parser->parse($data);
 
-        // Recursively decode the data as array instead of object
-        return json_decode(json_encode($jwt), true);
+        if ($token->isExpired() || !$token->verify($this->signer, $this->secret)) {
+            return null;
+        }
+
+        return array_map('strval', $token->getClaims());
     }
 }
