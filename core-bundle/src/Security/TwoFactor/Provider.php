@@ -72,4 +72,11 @@ class Provider implements TwoFactorProviderInterface
     {
         return $this->formRenderer;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prepareAuthentication($user): void
+    {
+    }
 }
