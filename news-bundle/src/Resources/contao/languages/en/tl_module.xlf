@@ -98,14 +98,14 @@
       <trans-unit id="tl_module.order_headline_desc">
         <source>Headline descending</source>
       </trans-unit>
-      <trans-unit id="tl_module.order_random">
-        <source>Random order</source>
-      </trans-unit>
       <trans-unit id="tl_module.order_featured_asc">
-        <source>Featured (date ascending)</source>
+        <source>Featured first, date ascending</source>
       </trans-unit>
       <trans-unit id="tl_module.order_featured_desc">
-        <source>Featured (date descending)</source>
+        <source>Featured first, date descending</source>
+      </trans-unit>
+      <trans-unit id="tl_module.order_random">
+        <source>Random order</source>
       </trans-unit>
     </body>
   </file>
