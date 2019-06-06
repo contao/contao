@@ -11,9 +11,9 @@
 
   <link rel="stylesheet" href="<?php
     $objCombiner = new Contao\Combiner();
-    $objCombiner->add('system/themes/'. $this->theme .'/fonts.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/diff.css');
+    $objCombiner->add('system/themes/'. $this->theme .'/fonts.min.css');
+    $objCombiner->add('system/themes/'. $this->theme .'/basic.min.css');
+    $objCombiner->add('system/themes/'. $this->theme .'/diff.min.css');
     echo $objCombiner->getCombinedFile();
   ?>">
   <?= $this->stylesheets ?>
