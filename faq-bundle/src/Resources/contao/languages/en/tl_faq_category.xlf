@@ -2,7 +2,7 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_faq_category.php" source-language="en">
     <body>
-      <trans-unit id="tl_faq.tl_faq">
+      <trans-unit id="tl_faq_category.display_name">
         <source>FAQ Category</source>
       </trans-unit>
       <trans-unit id="tl_faq_category.title.0">

@@ -2,7 +2,7 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_calendar.php" source-language="en">
     <body>
-      <trans-unit id="tl_calendar.tl_calendar">
+      <trans-unit id="tl_calendar.display_name">
         <source>Calendar</source>
       </trans-unit>
       <trans-unit id="tl_calendar.title.0">
