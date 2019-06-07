@@ -2597,6 +2597,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$md5 = substr(md5($folders[$f]), 0, 8);
 			$content = scan($folders[$f]);
 			$currentFolder = StringUtil::stripRootDir($folders[$f]);
+            $objFolder = FilesModel::findByPath($currentFolder);
 			$session['filetree'][$md5] = is_numeric($session['filetree'][$md5]) ? $session['filetree'][$md5] : 0;
 			$currentEncoded = $this->urlEncode($currentFolder);
 			$countFiles = \count($content);
@@ -2662,7 +2663,24 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 			// Add the current folder
 			$strFolderNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFolder)), Config::get('characterSet'));
-			$return .= Image::getHtml($folderImg, '').' <a href="' . $this->addToUrl('fn='.$currentEncoded) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'"><strong>'.$strFolderNameEncoded.'</strong></a></div> <div class="tl_right">';
+
+            $strFolderLabel = "<strong>$strFolderNameEncoded</strong>";
+
+            // Call the group callback ($strFolderLabel, $objFolder, $protected, $this)
+            if (\is_array($GLOBALS['TL_DCA']['tl_files']['list']['label']['group_callback']))
+            {
+                $strClass = $GLOBALS['TL_DCA']['tl_files']['list']['label']['group_callback'][0];
+                $strMethod = $GLOBALS['TL_DCA']['tl_files']['list']['label']['group_callback'][1];
+
+                $this->import($strClass);
+                $strFolderLabel = $this->$strClass->$strMethod($strFolderLabel, $objFolder, $protected, $this);
+            }
+            elseif (\is_callable($GLOBALS['TL_DCA']['tl_files']['list']['label']['group_callback']))
+            {
+                $strFolderLabel = $GLOBALS['TL_DCA']['tl_files']['list']['label']['group_callback']($strFolderLabel, $objFolder, $protected, $this);
+            }
+
+            $return .= \Image::getHtml($folderImg, '').' <a href="' . $this->addToUrl('fn='.$currentEncoded) . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">'.$strFolderLabel.'</a></div> <div class="tl_right">';
 
 			// Paste buttons
 			if ($arrClipboard !== false && Input::get('act') != 'select')
@@ -2777,6 +2795,20 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			$strFileNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), Config::get('characterSet'));
+
+            // Call the label_callback ($strFileNameEncoded, $thumbnail, $objFile, $protected, $this)
+            if (\is_array($GLOBALS['TL_DCA']['tl_files']['list']['label']['label_callback']))
+            {
+                $strClass = $GLOBALS['TL_DCA']['tl_files']['list']['label']['label_callback'][0];
+                $strMethod = $GLOBALS['TL_DCA']['tl_files']['list']['label']['label_callback'][1];
+
+                $this->import($strClass);
+                list($strFileNameEncoded, $thumbnail) = $this->$strClass->$strMethod($strFileNameEncoded, $thumbnail, $objFile, $protected, $this);
+            }
+            elseif (\is_callable($GLOBALS['TL_DCA']['tl_files']['list']['label']['label_callback']))
+            {
+                list($strFileNameEncoded, $thumbnail) = $GLOBALS['TL_DCA']['tl_files']['list']['label']['label_callback']($strFileNameEncoded, $thumbnail, $objFile, $protected, $this);
+            }
 
 			// No popup links for templates and in the popup file manager
 			if ($this->strTable == 'tl_templates' || Input::get('popup'))
