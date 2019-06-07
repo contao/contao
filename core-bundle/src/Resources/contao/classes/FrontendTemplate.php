@@ -348,40 +348,49 @@ class FrontendTemplate extends Template
 		/** @var PageModel $objPage */
 		global $objPage;
 
+		// Do not cache the response if caching was not configured at all or disabled explicitly
 		if (($objPage->cache === false || $objPage->cache < 1) && ($objPage->clientCache === false || $objPage->clientCache < 1))
 		{
-			$response->headers->addCacheControlDirective('no-cache');
-			$response->headers->addCacheControlDirective('no-store');
+			$response->headers->set('Cache-Control', 'no-cache, no-store');
 
-			return $response->setPrivate();
+			return $response->setPrivate(); // Make sure the response is private
 		}
 
-		// Do not cache the response if a user is logged in or the page is protected
-		// TODO: Add support for proxies so they can vary on member context
-		if (FE_USER_LOGGED_IN === true || BE_USER_LOGGED_IN === true || $objPage->protected || $this->hasAuthenticatedBackendUser())
-		{
-			$response->headers->addCacheControlDirective('no-cache');
-			$response->headers->addCacheControlDirective('no-store');
-
-			return $response->setPrivate();
-		}
-
+		// Private cache
 		if ($objPage->clientCache > 0)
 		{
 			$response->setMaxAge($objPage->clientCache);
+			$response->setPrivate(); // Make sure the response is private
 		}
 
+		// Shared cache
 		if ($objPage->cache > 0)
 		{
-			$response->setSharedMaxAge($objPage->cache);
-		}
+			$response->setSharedMaxAge($objPage->cache); // Automatically sets the response to public
 
-		// Tag the response
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			/** @var ResponseTagger $responseTagger */
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array('contao.db.tl_page.' . $objPage->id));
+			// We vary on cookies if a response is cacheable by the shared
+			// cache, so a reverse proxy does not load a response from cache if
+			// the _request_ contains a cookie.
+			//
+			// This DOES NOT mean that we generate a cache entry for every
+			// response containing a cookie! Responses with cookies will always
+			// be private (@see Contao\CoreBundle\EventListener\MakeResponsePrivateListener).
+			//
+			// However, we want to be able to force the reverse proxy to load a
+			// response from cache, even if the request contains a cookie – in
+			// case the admin has configured to do so. A typical use case would
+			// be serving public pages from cache to logged in members.
+			if (!$objPage->alwaysLoadFromCache) {
+				$response->setVary(array('Cookie'));
+			}
+
+			// Tag the response with cache tags für the shared cache only
+			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+			{
+				/** @var ResponseTagger $responseTagger */
+				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+				$responseTagger->addTags(array('contao.db.tl_page.' . $objPage->id));
+			}
 		}
 
 		return $response;

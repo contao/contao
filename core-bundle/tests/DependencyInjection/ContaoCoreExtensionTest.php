@@ -44,6 +44,7 @@ use Contao\CoreBundle\EventListener\ExceptionConverterListener;
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\EventListener\InsertTags\AssetListener;
 use Contao\CoreBundle\EventListener\LocaleListener;
+use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
 use Contao\CoreBundle\EventListener\RefererIdListener;
@@ -308,6 +309,31 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(6, $tags['kernel.event_listener'][0]['priority']);
+    }
+
+    public function testRegistersTheMakeResponsePrivateListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.make_response_private'));
+
+        $definition = $this->container->getDefinition('contao.listener.make_response_private');
+
+        $this->assertSame(MakeResponsePrivateListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
+        $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
+
+        $priority = $tags['kernel.event_listener'][0]['priority'] ?? 0;
+
+        $mergeHeadersListenerDefinition = $this->container->getDefinition('contao.listener.merge_http_headers');
+        $mergeHeadersListenerTags = $mergeHeadersListenerDefinition->getTags();
+        $mergeHeadersListenerPriority = $mergeHeadersListenerTags['kernel.event_listener'][0]['priority'] ?? 0;
+
+        // Ensure that the listener is registered after the MergeHeaderListener
+        $this->assertTrue($priority < $mergeHeadersListenerPriority);
     }
 
     public function testRegistersTheClearSessionDataListener(): void

@@ -94,5 +94,8 @@
 
   <?= $this->mootools ?>
 
+  <?php if ($this->checkCookiesUrl): ?>
+    <img src="<?= $this->checkCookiesUrl ?>" width="1" height="1" class="invisible" alt aria-hidden="true">
+  <?php endif; ?>
 </body>
 </html>
