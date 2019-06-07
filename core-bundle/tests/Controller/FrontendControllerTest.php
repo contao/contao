@@ -107,7 +107,6 @@ class FrontendControllerTest extends TestCase
     public function testCheckCookiesAction(): void
     {
         $controller = new FrontendController();
-
         $response = $controller->checkCookiesAction();
 
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));
