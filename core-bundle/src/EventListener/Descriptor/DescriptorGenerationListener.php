@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Contao\CoreBundle\EventListener;
+namespace Contao\CoreBundle\EventListener\Descriptor;
 
-use Contao\CoreBundle\Event\GenerateDescriptorEvent;
+use Contao\CoreBundle\Event\DescriptorGenerationEvent;
 
-class GenerateDescriptorListener
+class DescriptorGenerationListener
 {
     private $options;
 
-    public function onDescriptorGeneration(GenerateDescriptorEvent $event): void
+    public function onDescriptorGeneration(DescriptorGenerationEvent $event): void
     {
         $this->options = $event->getOptions();
         $row = $event->getData();

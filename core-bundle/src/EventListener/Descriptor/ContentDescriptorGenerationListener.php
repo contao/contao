@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Contao\CoreBundle\EventListener;
+namespace Contao\CoreBundle\EventListener\Descriptor;
 
-use Contao\CoreBundle\Event\GenerateDescriptorEvent;
+use Contao\CoreBundle\Event\DescriptorGenerationEvent;
 use Contao\FilesModel;
 use Contao\StringUtil;
 
-class GenerateContentDescriptorListener
+class ContentDescriptorGenerationListener
 {
-    public function onDescriptorGeneration(GenerateDescriptorEvent $event): void
+    public function onDescriptorGeneration(DescriptorGenerationEvent $event): void
     {
         if ($event->getTable() !== 'tl_content') {
             return;

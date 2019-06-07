@@ -80,5 +80,5 @@ final class ContaoCoreEvents
     /**
      * The contao.generate_descriptor event is triggered when a data row is displayed in the restore section
      */
-    public const GENERATE_DESCRIPTOR = 'contao.generate_descriptor';
+    public const DESCRIPTOR_GENERATION = 'contao.descriptor_generation';
 }

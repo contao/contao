@@ -23,14 +23,19 @@ class DescriptorGenerationEvent extends Event
      */
     private $descriptor;
 
+    /** @var array */
+    private $options;
+
     /**
-     * UndoLabelGenerationEvent constructor.
+     * @param string $table
      * @param array $data
+     * @param array $options
      */
-    public function __construct(string $table, array $data)
+    public function __construct(string $table, array $data, array $options = [])
     {
         $this->table = $table;
         $this->data = $data;
+        $this->options = $options;
     }
 
     /**
@@ -52,7 +57,7 @@ class DescriptorGenerationEvent extends Event
     /**
      * @param string $descriptor
      */
-    public function setDescriptor(string $descriptor): void
+    public function setDescriptor(string $descriptor = null): void
     {
         $this->descriptor = $descriptor;
     }
@@ -65,4 +70,11 @@ class DescriptorGenerationEvent extends Event
         return $this->table;
     }
 
+    /**
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
 }
