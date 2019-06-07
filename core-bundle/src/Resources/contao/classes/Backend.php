@@ -1107,6 +1107,7 @@ abstract class Backend extends Controller
         "url": this.href + "&value=" + document.getElementById("ctrl_' . $inputName . '").value,
         "callback": function(picker, value) {
           $("ctrl_' . $inputName . '").value = value.join(",");
+          $("ctrl_' . $inputName . '").fireEvent("change");
         }.bind(this)
       });
     });
