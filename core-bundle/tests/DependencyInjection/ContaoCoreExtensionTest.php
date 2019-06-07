@@ -35,7 +35,6 @@ use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\EventListener\BackendMenuListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
-use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
@@ -45,6 +44,7 @@ use Contao\CoreBundle\EventListener\ExceptionConverterListener;
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\EventListener\InsertTags\AssetListener;
 use Contao\CoreBundle\EventListener\LocaleListener;
+use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
 use Contao\CoreBundle\EventListener\RefererIdListener;
@@ -326,11 +326,14 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
 
-        // Ensure it's registered after the MergeHeaderListener
+        $priority = $tags['kernel.event_listener'][0]['priority'] ?? 0;
+
         $mergeHeadersListenerDefinition = $this->container->getDefinition('contao.listener.merge_http_headers');
         $mergeHeadersListenerTags = $mergeHeadersListenerDefinition->getTags();
+        $mergeHeadersListenerPriority = $mergeHeadersListenerTags['kernel.event_listener'][0]['priority'] ?? 0;
 
-        $this->assertTrue($tags['kernel.event_listener'][0]['priority'] ?? 0 < $mergeHeadersListenerTags['kernel.event_listener'][0]['priority'] ?? 0);
+        // Ensure that the listener is registered after the MergeHeaderListener
+        $this->assertTrue($priority < $mergeHeadersListenerPriority);
     }
 
     public function testRegistersTheClearSessionDataListener(): void

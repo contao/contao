@@ -40,8 +40,8 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         // Cloudflare
         '__cfduid',
 
-        // Facebook
-        '_fbp', // Facebook Pixel
+        // Facebook Pixel
+        '_fbp',
     ];
 
     /**
@@ -63,7 +63,7 @@ class StripCookiesSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
-        // Not a cacheable request anyway? Then we don't care
+        // Not a cacheable request anyway? Then we don't care.
         if (!$request->isMethodCacheable()) {
             return;
         }
@@ -72,13 +72,12 @@ class StripCookiesSubscriber implements EventSubscriberInterface
             return;
         }
 
+        // Use a custom whitelist if present, otherwise use the default blacklist
         if (0 !== \count($this->whitelist)) {
             $this->filterCookies($request, $this->whitelist, true);
-
-            return;
+        } else {
+            $this->filterCookies($request, self::BLACKLIST);
         }
-
-        $this->filterCookies($request, self::BLACKLIST);
     }
 
     /**

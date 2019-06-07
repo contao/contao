@@ -481,9 +481,9 @@ class PageRegular extends Frontend
 			$this->Template->positions = $arrPositions;
 		}
 
-		// Add the check cookies url to the fe_page template only if the alwaysLoadFromCache
-		// checkbox is configured
 		$this->Template->checkCookiesUrl = '';
+
+		// Add the check_cookies URL if the "alwaysLoadFromCache" option is enabled
 		if ($objPage->alwaysLoadFromCache) {
 			$this->Template->checkCookiesUrl = System::getContainer()->get('router')->generate('contao_frontend_check_cookies');
 		}

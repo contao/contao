@@ -74,6 +74,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         ;
 
         $response = new Response();
+
         $request = new Request();
         $request->setSession($session);
 
@@ -115,11 +116,9 @@ class MakeResponsePrivateListenerTest extends TestCase
         $response->setPublic();
         $response->setVary('Cookie');
 
-        $request = new Request([], [], [], ['super-cookie' => 'value']);
-
         $event = new FilterResponseEvent(
             $this->createMock(KernelInterface::class),
-            $request,
+            new Request([], [], [], ['super-cookie' => 'value']),
             HttpKernelInterface::MASTER_REQUEST,
             $response
         );
@@ -136,11 +135,9 @@ class MakeResponsePrivateListenerTest extends TestCase
         $response->setPublic();
         $response->setVary('Cookie');
 
-        $request = new Request();
-
         $event = new FilterResponseEvent(
             $this->createMock(KernelInterface::class),
-            $request,
+            new Request(),
             HttpKernelInterface::MASTER_REQUEST,
             $response
         );

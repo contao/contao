@@ -103,11 +103,12 @@ class FrontendController extends AbstractController
     }
 
     /**
-     * Generates a 1px transparent png image uncacheable response.
-     * This route can be used to include in e.g. a hidden <img> tag to force
+     * Generates a 1px transparent PNG image uncacheable response.
+     *
+     * This route can be used to include e.g. a hidden <img> tag to force
      * a request to the application. That way, cookies can be set even if
-     * the output is cached (used in core for the RememberMe cookie if
-     * the checkbox alwaysLoadFromCache is set).
+     * the output is cached (used in the core for the RememberMe cookie if
+     * the "alwaysLoadFromCache" option is enabled).
      *
      * @Route("/_contao/check_cookies", name="contao_frontend_check_cookies")
      */
@@ -115,7 +116,7 @@ class FrontendController extends AbstractController
     {
         static $image = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
 
-        $response = new Response(base64_decode($image));
+        $response = new Response(base64_decode($image, true));
         $response->setPrivate();
         $response->headers->set('Content-Type', 'image/png');
         $response->headers->addCacheControlDirective('no-store');

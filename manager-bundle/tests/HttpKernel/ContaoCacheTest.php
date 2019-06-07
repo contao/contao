@@ -49,8 +49,9 @@ class ContaoCacheTest extends ContaoTestCase
 
         $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
         $dispatcher = $cache->getEventDispatcher();
-
         $preHandle = $dispatcher->getListeners(Events::PRE_HANDLE);
+
+        /** @var StripCookiesSubscriber $cookieSubscriber */
         $cookieSubscriber = $preHandle[0][0];
 
         $this->assertSame($expectedList, $cookieSubscriber->getWhitelist());

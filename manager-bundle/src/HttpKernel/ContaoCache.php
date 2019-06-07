@@ -56,7 +56,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     /**
      * {@inheritdoc}
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         $options = parent::getOptions();
 
@@ -70,7 +70,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     /**
      * {@inheritdoc}
      */
-    protected function createStore()
+    protected function createStore(): Psr6Store
     {
         return new Psr6Store([
             'cache_directory' => $this->cacheDir ?: $this->kernel->getCacheDir().'/http_cache',
