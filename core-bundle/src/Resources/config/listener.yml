@@ -400,4 +400,9 @@ services:
     contao.listener.generate_descriptor:
         class: Contao\CoreBundle\EventListener\GenerateDescriptorListener
         tags:
-            - { name: kernel.event_listener, event: contao.generate_descriptor, method: onDescriptorGeneration}
+            - { name: kernel.event_listener, event: contao.generate_descriptor, method: onDescriptorGeneration }
+
+    contao.listener.generate_content_descriptor:
+        class: Contao\CoreBundle\EventListener\GenerateContentDescriptorListener
+        tags:
+            - { name: kernel.event_listener, event: contao.generate_descriptor, method: onDescriptorGeneration }
