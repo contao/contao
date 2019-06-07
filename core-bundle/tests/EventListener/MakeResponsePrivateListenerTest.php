@@ -29,6 +29,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         // Public response with cookie, should be turned into a private response if it was a master request
         $response = new Response();
         $response->setPublic();
+        $response->setMaxAge(600);
         $response->headers->setCookie(new Cookie('foobar', 'foobar'));
 
         $event = new FilterResponseEvent(
@@ -74,6 +75,8 @@ class MakeResponsePrivateListenerTest extends TestCase
         ;
 
         $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge(600);
 
         $request = new Request();
         $request->setSession($session);
@@ -95,6 +98,7 @@ class MakeResponsePrivateListenerTest extends TestCase
     {
         $response = new Response();
         $response->setPublic();
+        $response->setMaxAge(600);
         $response->headers->setCookie(new Cookie('foobar', 'foobar'));
 
         $event = new FilterResponseEvent(
@@ -114,6 +118,7 @@ class MakeResponsePrivateListenerTest extends TestCase
     {
         $response = new Response();
         $response->setPublic();
+        $response->setMaxAge(600);
         $response->setVary('Cookie');
 
         $event = new FilterResponseEvent(
@@ -133,6 +138,7 @@ class MakeResponsePrivateListenerTest extends TestCase
     {
         $response = new Response();
         $response->setPublic();
+        $response->setMaxAge(600);
         $response->setVary('Cookie');
 
         $event = new FilterResponseEvent(
