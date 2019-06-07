@@ -125,10 +125,9 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
     {
         try {
             $rows = $this->connection->executeQuery(
-                'SELECT * FROM tl_remember_me WHERE series=:series AND (expires IS NULL OR expires>=:expires) ORDER BY expires IS NULL DESC',
+                'SELECT * FROM tl_remember_me WHERE series=:series AND (expires IS NULL OR expires>=NOW()) ORDER BY expires IS NULL DESC',
                 [
                     'series' => $series,
-                    'expires' => new \DateTime(),
                 ],
                 [
                     'series' => \PDO::PARAM_STR,
@@ -139,13 +138,16 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
             $rows = [];
         }
 
-        if (empty($rows)) {
+        if (0 === \count($rows)) {
             throw new TokenNotFoundException('No token found.');
         }
 
         return $rows;
     }
 
+    /**
+     * @param object $token
+     */
     private function migrateToken($token): string
     {
         $tokenValue = base64_encode(random_bytes(64));
@@ -185,6 +187,9 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         );
     }
 
+    /**
+     * @return object
+     */
     private function findValidToken(array $rows, string $tokenValue)
     {
         $tokenValue = hash_hmac('sha256', $tokenValue, $this->secret);

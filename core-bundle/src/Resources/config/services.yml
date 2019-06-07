@@ -458,7 +458,7 @@ services:
             - '@contao.framework'
             - '@logger'
 
-    contao.security.expiring_rememberme_services:
+    contao.security.expiring_token_based_rememberme_services:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
         arguments:
             - '@database_connection'

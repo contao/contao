@@ -39,7 +39,7 @@ class RemembermeServicesPass implements CompilerPassInterface
             return;
         }
 
-        $templateId = 'contao.security.expiring_rememberme_services';
+        $templateId = 'contao.security.expiring_token_based_rememberme_services';
         $serviceId = $templateId.'.'.$this->firewallName;
 
         $override = $container->getDefinition($overrideId);
