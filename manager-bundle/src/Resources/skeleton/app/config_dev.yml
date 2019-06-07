@@ -5,6 +5,11 @@ imports:
 framework:
     profiler: { only_exceptions: false }
 
+# Doctrine configuration
+doctrine:
+    orm:
+        auto_generate_proxy_classes: true
+
 # Web profiler configuration
 web_profiler:
     toolbar: true
