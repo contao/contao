@@ -239,7 +239,7 @@ class tl_undo extends Backend
         }
 
         // fromTable
-        $args[2] = '<strong>' . ($GLOBALS['TL_LANG'][$table][$table]) ?: $args[2] . '</strong>';
+        $args[2] = '<strong>' . ($GLOBALS['TL_LANG'][$table]['display_name']) ?: $args[2] . '</strong>';
 
         // Description
         $args[3] = sprintf('<span title="%s">%s</span>', $args[3], \Contao\StringUtil::substr($args[3], 90));

@@ -2,7 +2,7 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_member_group.php" source-language="en">
     <body>
-      <trans-unit id="tl_member_group.tl_member_group">
+      <trans-unit id="tl_member_group.display_name">
         <source>Member group</source>
       </trans-unit>
       <trans-unit id="tl_member_group.name.0">

@@ -2,7 +2,7 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_user.php" source-language="en">
     <body>
-      <trans-unit id="tl_user.tl_user">
+      <trans-unit id="tl_user.display_name">
         <source>User</source>
       </trans-unit>
       <trans-unit id="tl_user.username.0">

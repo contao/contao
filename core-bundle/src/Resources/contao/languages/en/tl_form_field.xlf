@@ -2,7 +2,7 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_form_field.php" source-language="en">
     <body>
-      <trans-unit id="tl_form_field.tl_form_field">
+      <trans-unit id="tl_form_field.display_name">
         <source>Form field</source>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
