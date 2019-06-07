@@ -16,7 +16,7 @@
     $objCombiner->add('system/themes/'. $this->theme .'/diff.min.css');
     echo $objCombiner->getCombinedFile();
   ?>">
-  <link rel="stylesheet" href="<?= Contao\Controller::addAssetsUrlTo('system/themes/'.$this->theme.'/conflict.css') ?>">
+  <link rel="stylesheet" href="<?= Contao\Controller::addAssetsUrlTo('system/themes/'.$this->theme.'/conflict.min.css') ?>">
   <?= $this->stylesheets ?>
 
   <script><?= $this->getLocaleString() ?></script>

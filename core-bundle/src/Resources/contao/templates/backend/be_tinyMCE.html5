@@ -29,7 +29,7 @@ setTimeout(function() {
       Backend.openModalBrowser(field_name, url, type, win, '<?= $this->source ?>');
     },
     file_browser_callback_types: <?= json_encode($this->fileBrowserTypes) ?>,
-    content_css: 'system/themes/<?= Backend::getTheme() ?>/tinymce.css',
+    content_css: 'system/themes/<?= Backend::getTheme() ?>/tinymce.min.css',
     plugins: 'autosave charmap code fullscreen image importcss link lists paste searchreplace stripnbsp tabfocus table visualblocks visualchars',
     browser_spellcheck: true,
     tabfocus_elements: ':prev,:next',

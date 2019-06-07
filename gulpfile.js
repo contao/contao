@@ -78,16 +78,16 @@ gulp.task('watch', function () {
 
     gulp.watch(
         [
-            'core-bundle/src/Resources/contao/themes/flexible/src/*.js',
-            '!core-bundle/src/Resources/contao/themes/flexible/src/*.min.js'
+            'core-bundle/src/Resources/contao/themes/flexible/*.js',
+            '!core-bundle/src/Resources/contao/themes/flexible/*.min.js'
         ],
         gulp.series('minify-theme-js')
     );
 
     gulp.watch(
         [
-            'core-bundle/src/Resources/contao/themes/flexible/src/*.css',
-            '!core-bundle/src/Resources/contao/themes/flexible/src/*.min.css'
+            'core-bundle/src/Resources/contao/themes/flexible/*.css',
+            '!core-bundle/src/Resources/contao/themes/flexible/*.min.css'
         ],
         gulp.series('minify-theme-css')
     );
