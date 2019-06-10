@@ -2667,17 +2667,17 @@ class DC_Folder extends DataContainer implements \listable, \editable
             $strFolderLabel = "<strong>$strFolderNameEncoded</strong>";
 
             // Call the group callback ($strFolderLabel, $objFolder, $protected, $this)
-            if (\is_array($GLOBALS['TL_DCA']['tl_files']['list']['label']['group_callback']))
+            if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback']))
             {
-                $strClass = $GLOBALS['TL_DCA']['tl_files']['list']['label']['group_callback'][0];
-                $strMethod = $GLOBALS['TL_DCA']['tl_files']['list']['label']['group_callback'][1];
+                $strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][0];
+                $strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][1];
 
                 $this->import($strClass);
                 $strFolderLabel = $this->$strClass->$strMethod($strFolderLabel, $objFolder, $protected, $this);
             }
-            elseif (\is_callable($GLOBALS['TL_DCA']['tl_files']['list']['label']['group_callback']))
+            elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback']))
             {
-                $strFolderLabel = $GLOBALS['TL_DCA']['tl_files']['list']['label']['group_callback']($strFolderLabel, $objFolder, $protected, $this);
+                $strFolderLabel = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback']($strFolderLabel, $objFolder, $protected, $this);
             }
 
             $return .= \Image::getHtml($folderImg, '').' <a href="' . $this->addToUrl('fn='.$currentEncoded) . '" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">'.$strFolderLabel.'</a></div> <div class="tl_right">';
@@ -2797,17 +2797,17 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$strFileNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), Config::get('characterSet'));
 
             // Call the label_callback ($strFileNameEncoded, $thumbnail, $objFile, $protected, $this)
-            if (\is_array($GLOBALS['TL_DCA']['tl_files']['list']['label']['label_callback']))
+            if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']))
             {
-                $strClass = $GLOBALS['TL_DCA']['tl_files']['list']['label']['label_callback'][0];
-                $strMethod = $GLOBALS['TL_DCA']['tl_files']['list']['label']['label_callback'][1];
+                $strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'][0];
+                $strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'][1];
 
                 $this->import($strClass);
                 list($strFileNameEncoded, $thumbnail) = $this->$strClass->$strMethod($strFileNameEncoded, $thumbnail, $objFile, $protected, $this);
             }
-            elseif (\is_callable($GLOBALS['TL_DCA']['tl_files']['list']['label']['label_callback']))
+            elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']))
             {
-                list($strFileNameEncoded, $thumbnail) = $GLOBALS['TL_DCA']['tl_files']['list']['label']['label_callback']($strFileNameEncoded, $thumbnail, $objFile, $protected, $this);
+                list($strFileNameEncoded, $thumbnail) = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']($strFileNameEncoded, $thumbnail, $objFile, $protected, $this);
             }
 
 			// No popup links for templates and in the popup file manager
