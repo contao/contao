@@ -195,11 +195,6 @@ class InstallTool
 
         $options = $this->connection->getParams()['defaultTableOptions'];
 
-        // If Contao is used as bundle and there are no custom settings
-        if (empty($options)) {
-            return false;
-        }
-
         // Check the collation if the user has configured it
         if (isset($options['collate'])) {
             $statement = $this->connection->query("SHOW COLLATION LIKE '".$options['collate']."'");
@@ -211,6 +206,11 @@ class InstallTool
 
                 return true;
             }
+
+            // If there is no collation configured, use the default one
+            $statement = $this->connection->query("SHOW CHARACTER SET WHERE CHARSET = 'utf8'");
+            $row = $statement->fetch(\PDO::FETCH_ASSOC);
+            $options['collate'] = $row['Default collation'];
         }
 
         // Check the engine if the user has configured it
@@ -231,6 +231,16 @@ class InstallTool
                 $context['engine'] = $options['engine'];
 
                 return true;
+            }
+        } else {
+            // Use default engine if none is configured
+            $statement = $this->connection->query('SHOW ENGINES');
+
+            while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+                if ($row['support'] === 'DEFAULT') {
+                    $options['engine'] = $row['engine'];
+                    break;
+                }
             }
         }
 
