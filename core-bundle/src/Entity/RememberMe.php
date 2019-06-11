@@ -73,7 +73,7 @@ class RememberMe
 
     public function __clone()
     {
-        $this->value = null;
+        $this->value = '';
         $this->lastUsed = new \DateTime();
         $this->expires = null;
     }
