@@ -433,6 +433,12 @@ services:
             - '%contao.prepend_locale%'
         public: true
 
+    contao.repository.remember_me:
+        class: Contao\CoreBundle\Repository\RememberMeRepository
+        arguments:
+            - '@doctrine'
+            - 'Contao\CoreBundle\Entity\RememberMe'
+
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:
@@ -461,7 +467,7 @@ services:
     contao.security.expiring_token_based_rememberme_services:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
         arguments:
-            - '@database_connection'
+            - '@contao.repository.remember_me'
             - ~ # User Providers
             - ~ # Shared Token Key
             - ~ # Shared Provider Key

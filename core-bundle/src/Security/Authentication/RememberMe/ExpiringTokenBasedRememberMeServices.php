@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication\RememberMe;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Types\Type as DoctrineType;
+use Contao\CoreBundle\Entity\RememberMe;
+use Contao\CoreBundle\Repository\RememberMeRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,20 +28,27 @@ use Symfony\Component\Security\Http\RememberMe\AbstractRememberMeServices;
 class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
 {
     /**
-     * @var Connection
+     * This should be a firewall configuration, but that means we would need to override the firewall factory.
+     *
+     * @var int
      */
-    private $connection;
+    public const EXPIRATION = 60;
+
+    /**
+     * @var RememberMeRepository
+     */
+    private $repository;
 
     /**
      * @var string
      */
     private $secret;
 
-    public function __construct(Connection $connection, array $userProviders, string $secret, string $providerKey, array $options = [], LoggerInterface $logger = null)
+    public function __construct(RememberMeRepository $repository, array $userProviders, string $secret, string $providerKey, array $options = [], LoggerInterface $logger = null)
     {
         parent::__construct($userProviders, $secret, $providerKey, $options, $logger);
 
-        $this->connection = $connection;
+        $this->repository = $repository;
         $this->secret = $secret;
     }
 
@@ -58,7 +65,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
             && 2 === \count($parts = $this->decodeCookie($cookie))
         ) {
             [$series] = $parts;
-            $this->connection->delete('tl_remember_me', ['series' => $series]);
+            $this->repository->deleteBySeries($this->encodeSeries($series));
         }
     }
 
@@ -71,22 +78,22 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
             throw new AuthenticationException('The cookie is invalid.');
         }
 
-        [$series, $tokenValue] = $cookieParts;
+        [$series, $cookieValue] = $cookieParts;
 
         try {
-            $this->connection->exec('LOCK TABLES tl_remember_me WRITE');
+            $this->repository->lockTable();
 
-            $rows = $this->loadTokens($series);
+            $tokens = $this->loadTokens($series);
 
-            $currentToken = null === $rows[0]->expires ? $rows[0] : null;
-            $matchedToken = $this->findValidToken($rows, $tokenValue);
+            $currentToken = null === $tokens[0]->getExpires() ? $tokens[0] : null;
+            $matchedToken = $this->findValidToken($tokens, $cookieValue);
 
-            $this->cleanupExpiredTokens();
+            $this->repository->deleteExpired((int) $this->options['lifetime'], self::EXPIRATION);
 
-            if (null === $currentToken || $currentToken->value === $matchedToken->value || null !== $matchedToken->expires) {
-                $tokenValue = $this->migrateToken($matchedToken);
+            if (null === $currentToken || null !== $matchedToken->getExpires() || $currentToken->getValue() === $matchedToken->getValue()) {
+                $cookieValue = $this->migrateToken($matchedToken)->getValue();
             } else {
-                $tokenValue = $currentToken->value;
+                $cookieValue = $currentToken->getValue();
             }
         } catch (\Exception $e) {
             if ($e instanceof AuthenticationException) {
@@ -95,12 +102,12 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
 
             throw new AuthenticationException('Rememberme services failed.', 0, $e);
         } finally {
-            $this->connection->exec('UNLOCK TABLES');
+            $this->repository->unlockTable();
         }
 
-        $request->attributes->set(self::COOKIE_ATTR_NAME, $this->createCookie($request, $series, $tokenValue));
+        $request->attributes->set(self::COOKIE_ATTR_NAME, $this->createCookie($request, $series, $cookieValue));
 
-        return $this->getUserProvider($matchedToken->class)->loadUserByUsername($matchedToken->username);
+        return $this->getUserProvider($matchedToken->getClass())->loadUserByUsername($matchedToken->getUsername());
     }
 
     /**
@@ -108,32 +115,27 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
      */
     protected function onLoginSuccess(Request $request, Response $response, TokenInterface $token): void
     {
+        $user = $token->getUser();
+
+        if (!$user instanceof UserInterface) {
+            return;
+        }
+
         $series = base64_encode(random_bytes(64));
-        $tokenValue = base64_encode(random_bytes(64));
 
-        $this->insertToken(
-            \get_class($user = $token->getUser()),
-            $user->getUsername(),
-            $series,
-            $tokenValue
-        );
+        $entity = new RememberMe($user, $this->encodeSeries($series));
+        $this->repository->persist($entity);
 
-        $response->headers->setCookie($this->createCookie($request, $series, $tokenValue));
+        $response->headers->setCookie($this->createCookie($request, $series, $entity->getValue()));
     }
 
+    /**
+     * @return RememberMe[]
+     */
     private function loadTokens(string $series): array
     {
         try {
-            $rows = $this->connection->executeQuery(
-                'SELECT * FROM tl_remember_me WHERE series=:series AND (expires IS NULL OR expires>=NOW()) ORDER BY expires IS NULL DESC',
-                [
-                    'series' => $series,
-                ],
-                [
-                    'series' => \PDO::PARAM_STR,
-                    'expires' => DoctrineType::DATETIME,
-                ]
-            )->fetchAll(\PDO::FETCH_OBJ);
+            $this->repository->findBySeries($this->encodeSeries($series));
         } catch (\Exception $e) {
             $rows = [];
         }
@@ -145,64 +147,30 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         return $rows;
     }
 
-    /**
-     * @param object $token
-     */
-    private function migrateToken($token): string
+    private function migrateToken(RememberMe $token): RememberMe
     {
-        $tokenValue = base64_encode(random_bytes(64));
+        $token->setExpiresInSeconds(self::EXPIRATION);
+        $newToken = clone $token;
 
-        $this->connection->update(
-            'tl_remember_me',
-            ['expires' => (new \DateTime())->add(new \DateInterval('PT60S'))],
-            ['expires' => DoctrineType::DATETIME]
-        );
+        $this->repository->persist($token, $newToken);
 
-        $this->insertToken($token->class, $token->username, $token->series, $tokenValue);
-
-        return $tokenValue;
+        return $newToken;
     }
 
     /**
-     * Adds a new rememberme token to the database.
+     * @param RememberMe[]  $rows
      */
-    private function insertToken(string $class, string $username, string $series, string $tokenValue): void
+    private function findValidToken(array $rows, string $cookieValue): RememberMe
     {
-        $this->connection->insert(
-            'tl_remember_me',
-            [
-                'class' => $class,
-                'username' => $username,
-                'series' => $series,
-                'value' => hash_hmac('sha256', $tokenValue, $this->secret),
-                'lastUsed' => new \DateTime(),
-            ],
-            [
-                'class' => \PDO::PARAM_STR,
-                'username' => \PDO::PARAM_STR,
-                'series' => \PDO::PARAM_STR,
-                'value' => \PDO::PARAM_STR,
-                'lastUsed' => DoctrineType::DATETIME,
-            ]
-        );
-    }
-
-    /**
-     * @return object
-     */
-    private function findValidToken(array $rows, string $tokenValue)
-    {
-        $tokenValue = hash_hmac('sha256', $tokenValue, $this->secret);
-
         while ($token = array_shift($rows)) {
             try {
-                if (!hash_equals($token->value, $tokenValue)) {
+                if ($token->getValue() !== $cookieValue) {
                     throw new CookieTheftException(
                         'This token was already used. The account is possibly compromised.'
                     );
                 }
 
-                if ((new \DateTime($token->lastUsed))->getTimestamp() + $this->options['lifetime'] < time()) {
+                if ((new \DateTime($token->getLastUsed()))->getTimestamp() + $this->options['lifetime'] < time()) {
                     throw new AuthenticationException('The cookie has expired.');
                 }
 
@@ -218,11 +186,11 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
     /**
      * Creates a rememberme cookie.
      */
-    private function createCookie(Request $request, string $series, string $tokenValue): Cookie
+    private function createCookie(Request $request, string $series, string $cookieValue): Cookie
     {
         return new Cookie(
             $this->options['name'],
-            $this->encodeCookie([$series, $tokenValue]),
+            $this->encodeCookie([$series, $cookieValue]),
             time() + $this->options['lifetime'],
             $this->options['path'],
             $this->options['domain'],
@@ -233,26 +201,8 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         );
     }
 
-    /**
-     * Clean up expired tokens on successful login (lazy behavior).
-     * This will also clean other series that have expired, e.g. if a cookie was never used again within the lifetime.
-     */
-    private function cleanupExpiredTokens(): void
+    private function encodeSeries(string $series)
     {
-        try {
-            $this->connection->executeUpdate(
-                'DELETE FROM tl_remember_me WHERE lastUsed<:lastUsed OR expires<:expires',
-                [
-                    'lastUsed' => (new \DateTime())->sub(new \DateInterval('PT'.$this->options['lifetime'].'S')),
-                    'expires' => (new \DateTime())->sub(new \DateInterval('PT300S')),
-                ],
-                [
-                    'lastUsed' => DoctrineType::DATETIME,
-                    'expires' => DoctrineType::DATETIME,
-                ]
-            );
-        } catch (\Exception $e) {
-            // Do nothing
-        }
+        return hash_hmac('sha256', $series, $this->secret);
     }
 }
