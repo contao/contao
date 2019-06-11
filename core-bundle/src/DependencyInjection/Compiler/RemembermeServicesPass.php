@@ -45,13 +45,13 @@ class RemembermeServicesPass implements CompilerPassInterface
         $serviceId = self::TEMPLATE_ID.'.'.$this->firewallName;
 
         $override = $container->getDefinition($overrideId);
-        $definition = new ChildDefinition(self::TEMPLATE_ID);
-        $definition->setArgument(1, $override->getArgument(0));
-        $definition->setArgument(2, $override->getArgument(1));
-        $definition->setArgument(3, $override->getArgument(2));
-        $definition->setArgument(4, $override->getArgument(3));
 
-        $container->setDefinition($serviceId, $definition);
+        $definition = $container->setDefinition($serviceId, new ChildDefinition(self::TEMPLATE_ID));
+        $definition->replaceArgument(4, $override->getArgument(3));
+        $definition->replaceArgument(3, $override->getArgument(2));
+        $definition->replaceArgument(2, $override->getArgument(1));
+        $definition->replaceArgument(1, $override->getArgument(0));
+
         $container->setAlias($overrideId, $serviceId);
     }
 }

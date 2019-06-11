@@ -466,6 +466,7 @@ services:
 
     contao.security.expiring_token_based_rememberme_services:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
+        abstract: true
         arguments:
             - '@contao.repository.remember_me'
             - ~ # User Providers
