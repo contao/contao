@@ -68,11 +68,12 @@ class RememberMe
         $this->value = base64_encode(random_bytes(64));
         $this->username = $user->getUsername();
         $this->lastUsed = new \DateTime();
+        $this->expires = null;
     }
 
     public function __clone()
     {
-        $this->value = base64_encode(random_bytes(64));
+        $this->value = null;
         $this->lastUsed = new \DateTime();
         $this->expires = null;
     }
@@ -109,5 +110,14 @@ class RememberMe
     public function getUsername(): string
     {
         return $this->username;
+    }
+
+    public function cloneWithNewValue()
+    {
+        $clone = clone $this;
+
+        $clone->value = base64_encode(random_bytes(64));
+
+        return $clone;
     }
 }

@@ -64,8 +64,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         if (null !== ($cookie = $request->cookies->get($this->options['name']))
             && 2 === \count($parts = $this->decodeCookie($cookie))
         ) {
-            [$series] = $parts;
-            $this->repository->deleteBySeries($this->encodeSeries($series));
+            $this->repository->deleteBySeries($this->encodeSeries($parts[0]));
         }
     }
 
@@ -83,24 +82,21 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         try {
             $this->repository->lockTable();
 
-            $tokens = $this->loadTokens($series);
-
-            $currentToken = null === $tokens[0]->getExpires() ? $tokens[0] : null;
-            $matchedToken = $this->findValidToken($tokens, $cookieValue);
-
             $this->repository->deleteExpired((int) $this->options['lifetime'], self::EXPIRATION);
+            $rows = $this->repository->findBySeries($this->encodeSeries($series));
 
-            if (null === $currentToken || null !== $matchedToken->getExpires() || $currentToken->getValue() === $matchedToken->getValue()) {
+            if (0 === \count($rows)) {
+                throw new TokenNotFoundException('No token found.');
+            }
+
+            $matchedToken = $this->findValidToken($rows, $cookieValue);
+            $currentToken = $rows[0];
+
+            if ($currentToken === $matchedToken) {
                 $cookieValue = $this->migrateToken($matchedToken)->getValue();
             } else {
                 $cookieValue = $currentToken->getValue();
             }
-        } catch (\Exception $e) {
-            if ($e instanceof AuthenticationException) {
-                throw $e;
-            }
-
-            throw new AuthenticationException('Rememberme services failed.', 0, $e);
         } finally {
             $this->repository->unlockTable();
         }
@@ -129,28 +125,10 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         $response->headers->setCookie($this->createCookie($request, $series, $entity->getValue()));
     }
 
-    /**
-     * @return RememberMe[]
-     */
-    private function loadTokens(string $series): array
-    {
-        try {
-            $this->repository->findBySeries($this->encodeSeries($series));
-        } catch (\Exception $e) {
-            $rows = [];
-        }
-
-        if (0 === \count($rows)) {
-            throw new TokenNotFoundException('No token found.');
-        }
-
-        return $rows;
-    }
-
     private function migrateToken(RememberMe $token): RememberMe
     {
         $token->setExpiresInSeconds(self::EXPIRATION);
-        $newToken = clone $token;
+        $newToken = $token->cloneWithNewValue();
 
         $this->repository->persist($token, $newToken);
 
@@ -170,7 +148,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
                     );
                 }
 
-                if ((new \DateTime($token->getLastUsed()))->getTimestamp() + $this->options['lifetime'] < time()) {
+                if ($token->getLastUsed()->getTimestamp() + $this->options['lifetime'] < time()) {
                     throw new AuthenticationException('The cookie has expired.');
                 }
 
