@@ -234,14 +234,9 @@ class InstallTool
             }
         } else {
             // Use default engine if none is configured
-            $statement = $this->connection->query('SHOW ENGINES');
-
-            while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
-                if ($row['support'] === 'DEFAULT') {
-                    $options['engine'] = $row['engine'];
-                    break;
-                }
-            }
+            $statement = $this->connection->query('SHOW VARIABLES WHERE variable_name = "default_storage_engine"');
+            $row = $statement->fetch(\PDO::FETCH_ASSOC);
+            $options['engine'] = $row['value'];
         }
 
         // Check if utf8mb4 can be used if the user has configured it
