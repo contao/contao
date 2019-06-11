@@ -311,6 +311,12 @@ services:
     contao.referer_id.token_generator:
         class: Contao\CoreBundle\Referer\TokenGenerator
 
+    contao.repository.remember_me:
+        class: Contao\CoreBundle\Repository\RememberMeRepository
+        arguments:
+            - '@doctrine'
+            - 'Contao\CoreBundle\Entity\RememberMe'
+
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder
         arguments:
@@ -432,12 +438,6 @@ services:
             - '@contao.framework'
             - '%contao.prepend_locale%'
         public: true
-
-    contao.repository.remember_me:
-        class: Contao\CoreBundle\Repository\RememberMeRepository
-        arguments:
-            - '@doctrine'
-            - 'Contao\CoreBundle\Entity\RememberMe'
 
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler

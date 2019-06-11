@@ -18,6 +18,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class RemembermeServicesPass implements CompilerPassInterface
 {
+    public const OVERRIDE_PREFIX = 'security.authentication.rememberme.services.simplehash';
+    public const TEMPLATE_ID = 'contao.security.expiring_token_based_rememberme_services';
+
     /**
      * @var string
      */
@@ -33,23 +36,22 @@ class RemembermeServicesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        $overrideId = 'security.authentication.rememberme.services.simplehash.'.$this->firewallName;
+        $overrideId = self::OVERRIDE_PREFIX.'.'.$this->firewallName;
 
         if (!$container->hasDefinition($overrideId)) {
             return;
         }
 
-        $templateId = 'contao.security.expiring_token_based_rememberme_services';
-        $serviceId = $templateId.'.'.$this->firewallName;
+        $serviceId = self::TEMPLATE_ID.'.'.$this->firewallName;
 
         $override = $container->getDefinition($overrideId);
-        $definition = new ChildDefinition($templateId);
+        $definition = new ChildDefinition(self::TEMPLATE_ID);
         $definition->setArgument(1, $override->getArgument(0));
         $definition->setArgument(2, $override->getArgument(1));
         $definition->setArgument(3, $override->getArgument(2));
         $definition->setArgument(4, $override->getArgument(3));
 
         $container->setDefinition($serviceId, $definition);
-        $container->setAlias($overrideId, $templateId.'.'.$this->firewallName);
+        $container->setAlias($overrideId, $serviceId);
     }
 }

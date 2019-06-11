@@ -31,6 +31,7 @@ use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
+use Contao\CoreBundle\Entity\RememberMe;
 use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\EventListener\BackendMenuListener;
@@ -74,6 +75,7 @@ use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PagePickerProvider;
 use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Referer\TokenGenerator;
+use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Routing\FrontendLoader;
 use Contao\CoreBundle\Routing\LegacyRouteProvider;
@@ -90,7 +92,7 @@ use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
-use Contao\CoreBundle\Security\Authentication\RememberMe\DatabaseTokenProvider;
+use Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
@@ -1236,6 +1238,18 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
     }
 
+    public function testRegistersTheRememberMeRepository(): void
+    {
+        $this->assertTrue($this->container->has('contao.repository.remember_me'));
+
+        $definition = $this->container->getDefinition('contao.repository.remember_me');
+
+        $this->assertSame(RememberMeRepository::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('doctrine', (string) $definition->getArgument(0));
+        $this->assertSame(RememberMe::class, (string) $definition->getArgument(1));
+    }
+
     public function testRegistersTheResourceFinder(): void
     {
         $this->assertTrue($this->container->has('contao.resource_finder'));
@@ -1525,16 +1539,16 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('logger', (string) $definition->getArgument(2));
     }
 
-    public function testRegistersTheSecurityDatabaseTokenProvider(): void
+    public function testRegistersTheSecurityExpiringTokenBasedRemembermeServices(): void
     {
-        $this->assertTrue($this->container->has('contao.security.database_token_provider'));
+        $this->assertTrue($this->container->has('contao.security.expiring_token_based_rememberme_services'));
 
-        $definition = $this->container->getDefinition('contao.security.database_token_provider');
+        $definition = $this->container->getDefinition('contao.security.expiring_token_based_rememberme_services');
 
-        $this->assertSame(DatabaseTokenProvider::class, $definition->getClass());
+        $this->assertSame(ExpiringTokenBasedRememberMeServices::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('database_connection', (string) $definition->getArgument(0));
-        $this->assertSame('%kernel.secret%', (string) $definition->getArgument(1));
+        $this->assertSame('contao.repository.remember_me', (string) $definition->getArgument(0));
+        $this->assertSame('logger', (string) $definition->getArgument(5));
     }
 
     public function testRegistersTheSecurityBackendUserProvider(): void
