@@ -16,7 +16,6 @@ use Contao\CoreBundle\Entity\RememberMe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Types\Type as DoctrineType;
 
 class RememberMeRepository extends ServiceEntityRepository
 {
@@ -38,7 +37,7 @@ class RememberMeRepository extends ServiceEntityRepository
     {
         $table = $this->getClassMetadata()->getTableName();
 
-        $this->connection->exec("LOCK TABLES $table WRITE");
+        $this->connection->exec("LOCK TABLES $table WRITE, $table AS t0_ WRITE");
     }
 
     public function unlockTable()
@@ -58,11 +57,12 @@ class RememberMeRepository extends ServiceEntityRepository
             ->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->isNull('rm.expires'),
-                    $qb->expr()->lte('rm.expires', 'NOW()')
+                    $qb->expr()->lte('rm.expires', ':now')
                 )
             )
             ->setParameter('series', $encodedSeries)
-            ->orderBy($qb->expr()->isNull('rm.expires'), 'DESC')
+            ->setParameter('now', new \DateTime())
+            ->orderBy('rm.expires', 'ASC')
         ;
 
         return $qb->getQuery()->getResult();
@@ -75,21 +75,19 @@ class RememberMeRepository extends ServiceEntityRepository
         return $this->connection->delete($table, ['series' => $encodedSeries]);
     }
 
-    public function deleteExpired(int $lastUsedLifetime, int $expiresLifetime): int
+    public function deleteExpired(int $lastUsedLifetime, int $expiresLifetime): void
     {
-        $table = $this->getClassMetadata()->getTableName();
+        $qb = $this->_em->createQueryBuilder();
 
-        return $this->connection->executeUpdate(
-            "DELETE FROM $table WHERE lastUsed<:lastUsed OR expires<:expires",
-            [
-                'lastUsed' => (new \DateTime())->sub(new \DateInterval('PT'.$lastUsedLifetime.'S')),
-                'expires' => (new \DateTime())->sub(new \DateInterval('PT'.$expiresLifetime.'S')),
-            ],
-            [
-                'lastUsed' => DoctrineType::DATETIME,
-                'expires' => DoctrineType::DATETIME,
-            ]
-        );
+        $qb
+            ->delete($this->_entityName, 'rm')
+            ->where('rm.lastUsed<:lastUsed')
+            ->orWhere('rm.expires<:expires')
+            ->setParameter('lastUsed', (new \DateTime())->sub(new \DateInterval('PT'.$lastUsedLifetime.'S')))
+            ->setParameter('expires', (new \DateTime())->sub(new \DateInterval('PT'.$expiresLifetime.'S')))
+        ;
+
+        $qb->getQuery()->execute();
     }
 
     public function persist(RememberMe ...$entities)

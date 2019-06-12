@@ -21,7 +21,7 @@ class RememberMe
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=88, nullable=false, options={"fixed"=true})
+     * @ORM\Column(type="string", length=64, nullable=false, options={"fixed"=true})
      */
     protected $series;
 
