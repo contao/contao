@@ -23,6 +23,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
@@ -73,6 +74,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new PickerProviderPass());
         $container->addCompilerPass(new RegisterFragmentsPass());
         $container->addCompilerPass(new FragmentRendererPass('contao.fragment.handler'));
+        $container->addCompilerPass(new RemembermeServicesPass('contao_frontend'));
         $container->addCompilerPass(new MapFragmentsToGlobalsPass());
         $container->addCompilerPass(new DataContainerCallbackPass());
         $container->addCompilerPass(new RegisterHookListenersPass(), PassConfig::TYPE_OPTIMIZE);

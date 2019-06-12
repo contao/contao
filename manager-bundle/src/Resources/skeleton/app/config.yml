@@ -52,6 +52,35 @@ doctrine:
             binary_string:
                 class: 'Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType'
                 commented: true
+    orm:
+        auto_mapping: true
+        auto_generate_proxy_classes: false
+        naming_strategy: doctrine.orm.naming_strategy.default
+        metadata_cache_driver:
+            type: service
+            id: doctrine_cache.providers.doctrine_metadata_cache
+        result_cache_driver:
+            type: service
+            id: doctrine_cache.providers.doctrine_result_cache
+        query_cache_driver:
+            type: service
+            id: doctrine_cache.providers.doctrine_query_cache
+
+# Doctrine cache configuration
+doctrine_cache:
+    providers:
+        doctrine_metadata_cache:
+            file_system:
+                extension: '.cache'
+                directory: '%kernel.cache_dir%/doctrine/metadata'
+        doctrine_result_cache:
+            file_system:
+                extension: '.cache'
+                directory: '%kernel.cache_dir%/doctrine/result'
+        doctrine_query_cache:
+            file_system:
+                extension: '.cache'
+                directory: '%kernel.cache_dir%/doctrine/query'
 
 # SwiftMailer configuration
 swiftmailer:

@@ -311,6 +311,12 @@ services:
     contao.referer_id.token_generator:
         class: Contao\CoreBundle\Referer\TokenGenerator
 
+    contao.repository.remember_me:
+        class: Contao\CoreBundle\Repository\RememberMeRepository
+        arguments:
+            - '@doctrine'
+            - 'Contao\CoreBundle\Entity\RememberMe'
+
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder
         arguments:
@@ -445,9 +451,9 @@ services:
         class: Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider
         abstract: true
         arguments:
-            - ~ # User provider
-            - ~ # User checker
-            - ~ # Provider-shared key
+            - ~ # user provider
+            - ~ # user checker
+            - ~ # provider-shared key
             - '@security.encoder_factory'
             - '@contao.framework'
 
@@ -457,12 +463,6 @@ services:
             - '@security.http_utils'
             - '@contao.framework'
             - '@logger'
-
-    contao.security.database_token_provider:
-        class: Contao\CoreBundle\Security\Authentication\RememberMe\DatabaseTokenProvider
-        arguments:
-            - '@database_connection'
-            - '%kernel.secret%'
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
@@ -477,6 +477,19 @@ services:
         arguments:
             - '@security.http_utils'
             - '@router'
+
+    contao.security.expiring_token_based_remember_me_services:
+        class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
+        abstract: true
+        arguments:
+            - '@contao.repository.remember_me'
+            - ~ # user Providers
+            - ~ # shared Token Key
+            - ~ # shared Provider Key
+            - ~ # options
+            - '@logger'
+        tags:
+            - { name: monolog.logger, channel: security }
 
     contao.security.frontend_preview_authenticator:
         class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator
