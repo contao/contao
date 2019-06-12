@@ -68,11 +68,32 @@ class RememberMeRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function deleteBySeries(string $encodedSeries): int
+    public function deleteSiblings(RememberMe $entity): void
     {
-        $table = $this->getClassMetadata()->getTableName();
+        $qb = $this->_em->createQueryBuilder();
 
-        return $this->connection->delete($table, ['series' => $encodedSeries]);
+        $qb
+            ->delete($this->_entityName, 'rm')
+            ->where('rm.series=:series')
+            ->andWhere('rm.value!=:value')
+            ->setParameter('series', $entity->getSeries())
+            ->setParameter('value', $entity->getValue())
+        ;
+
+        $qb->getQuery()->execute();
+    }
+
+    public function deleteBySeries(string $encodedSeries): void
+    {
+        $qb = $this->_em->createQueryBuilder();
+
+        $qb
+            ->delete($this->_entityName, 'rm')
+            ->where('rm.series=:series')
+            ->setParameter('series', $encodedSeries)
+        ;
+
+        $qb->getQuery()->execute();
     }
 
     public function deleteExpired(int $lastUsedLifetime, int $expiresLifetime): void

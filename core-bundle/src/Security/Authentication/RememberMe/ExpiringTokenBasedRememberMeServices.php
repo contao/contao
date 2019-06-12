@@ -127,6 +127,8 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
 
     private function migrateToken(RememberMe $token): RememberMe
     {
+        $this->repository->deleteSiblings($token);
+
         $token->setExpiresInSeconds(self::EXPIRATION);
         $newToken = $token->cloneWithNewValue();
 

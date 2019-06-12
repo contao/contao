@@ -78,6 +78,11 @@ class RememberMe
         $this->expires = null;
     }
 
+    public function getSeries(): string
+    {
+        return $this->series;
+    }
+
     public function getValue(): string
     {
         return $this->value;
