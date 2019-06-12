@@ -14,12 +14,32 @@ namespace Contao\CoreBundle\Security\Authentication\Token;
 
 use Contao\BackendUser;
 use Contao\FrontendUser;
+use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
+use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class TokenChecker
 {
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var FirewallMapInterface
+     */
+    private $firewallMap;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
     /**
      * @var SessionInterface
      */
@@ -30,10 +50,13 @@ class TokenChecker
      */
     private $trustResolver;
 
-    public function __construct(SessionInterface $session, AuthenticationTrustResolverInterface $trustResolveer)
+    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver)
     {
+        $this->requestStack = $requestStack;
+        $this->firewallMap = $firewallMap;
+        $this->tokenStorage = $tokenStorage;
         $this->session = $session;
-        $this->trustResolver = $trustResolveer;
+        $this->trustResolver = $trustResolver;
     }
 
     /**
@@ -96,11 +119,11 @@ class TokenChecker
 
     private function getToken(string $sessionKey): ?TokenInterface
     {
-        if (!$this->session->isStarted() || !$this->session->has($sessionKey)) {
-            return null;
-        }
+        $token = $this->getTokenFromStorage(substr($sessionKey, 10));
 
-        $token = unserialize($this->session->get($sessionKey), ['allowed_classes' => true]);
+        if (null === $token) {
+            $token = $this->getTokenFromSession($sessionKey);
+        }
 
         if (!$token instanceof TokenInterface || !$token->isAuthenticated()) {
             return null;
@@ -111,5 +134,31 @@ class TokenChecker
         }
 
         return $token;
+    }
+
+    private function getTokenFromStorage(string $context): ?TokenInterface
+    {
+        $request = $this->requestStack->getMasterRequest();
+
+        if (!$this->firewallMap instanceof FirewallMap || null === $request) {
+            return null;
+        }
+
+        $config = $this->firewallMap->getFirewallConfig($request);
+
+        if (!$config instanceof FirewallConfig || $config->getContext() !== $context) {
+            return null;
+        }
+
+        return $this->tokenStorage->getToken();
+    }
+
+    private function getTokenFromSession(string $sessionKey)
+    {
+        if (!$this->session->isStarted() || !$this->session->has($sessionKey)) {
+            return null;
+        }
+
+        return unserialize($this->session->get($sessionKey), ['allowed_classes' => true]);
     }
 }
