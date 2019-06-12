@@ -451,9 +451,9 @@ services:
         class: Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider
         abstract: true
         arguments:
-            - ~ # User provider
-            - ~ # User checker
-            - ~ # Provider-shared key
+            - ~ # user provider
+            - ~ # user checker
+            - ~ # provider-shared key
             - '@security.encoder_factory'
             - '@contao.framework'
 
@@ -463,19 +463,6 @@ services:
             - '@security.http_utils'
             - '@contao.framework'
             - '@logger'
-
-    contao.security.expiring_token_based_rememberme_services:
-        class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
-        abstract: true
-        arguments:
-            - '@contao.repository.remember_me'
-            - ~ # User Providers
-            - ~ # Shared Token Key
-            - ~ # Shared Provider Key
-            - ~ # Options
-            - '@logger'
-        tags:
-            - { name: monolog.logger, channel: security }
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
@@ -490,6 +477,19 @@ services:
         arguments:
             - '@security.http_utils'
             - '@router'
+
+    contao.security.expiring_token_based_remember_me_services:
+        class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
+        abstract: true
+        arguments:
+            - '@contao.repository.remember_me'
+            - ~ # user Providers
+            - ~ # shared Token Key
+            - ~ # shared Provider Key
+            - ~ # options
+            - '@logger'
+        tags:
+            - { name: monolog.logger, channel: security }
 
     contao.security.frontend_preview_authenticator:
         class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator

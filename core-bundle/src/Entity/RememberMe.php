@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -117,10 +125,9 @@ class RememberMe
         return $this->username;
     }
 
-    public function cloneWithNewValue()
+    public function cloneWithNewValue(): self
     {
         $clone = clone $this;
-
         $clone->value = base64_encode(random_bytes(64));
 
         return $clone;

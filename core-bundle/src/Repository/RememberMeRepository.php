@@ -33,14 +33,14 @@ class RememberMeRepository extends ServiceEntityRepository
         }
     }
 
-    public function lockTable()
+    public function lockTable(): void
     {
         $table = $this->getClassMetadata()->getTableName();
 
         $this->connection->exec("LOCK TABLES $table WRITE, $table AS t0_ WRITE");
     }
 
-    public function unlockTable()
+    public function unlockTable(): void
     {
         $this->connection->exec('UNLOCK TABLES');
     }
@@ -51,7 +51,6 @@ class RememberMeRepository extends ServiceEntityRepository
     public function findBySeries(string $encodedSeries): array
     {
         $qb = $this->createQueryBuilder('rm');
-
         $qb
             ->where('rm.series = :series')
             ->andWhere(
@@ -71,7 +70,6 @@ class RememberMeRepository extends ServiceEntityRepository
     public function deleteSiblings(RememberMe $entity): void
     {
         $qb = $this->_em->createQueryBuilder();
-
         $qb
             ->delete($this->_entityName, 'rm')
             ->where('rm.series=:series')
@@ -86,7 +84,6 @@ class RememberMeRepository extends ServiceEntityRepository
     public function deleteBySeries(string $encodedSeries): void
     {
         $qb = $this->_em->createQueryBuilder();
-
         $qb
             ->delete($this->_entityName, 'rm')
             ->where('rm.series=:series')
@@ -99,7 +96,6 @@ class RememberMeRepository extends ServiceEntityRepository
     public function deleteExpired(int $lastUsedLifetime, int $expiresLifetime): void
     {
         $qb = $this->_em->createQueryBuilder();
-
         $qb
             ->delete($this->_entityName, 'rm')
             ->where('rm.lastUsed<:lastUsed')
@@ -111,7 +107,7 @@ class RememberMeRepository extends ServiceEntityRepository
         $qb->getQuery()->execute();
     }
 
-    public function persist(RememberMe ...$entities)
+    public function persist(RememberMe ...$entities): void
     {
         foreach ($entities as $entity) {
             $this->_em->persist($entity);

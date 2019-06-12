@@ -36,7 +36,7 @@ class RemembermeServicesPassTest extends TestCase
         $pass->process($container);
 
         $this->assertTrue($container->hasDefinition($serviceId));
-        $this->assertEquals($serviceId, $container->getAlias($overrideId));
+        $this->assertSame($serviceId, (string) $container->getAlias($overrideId));
     }
 
     public function testDoesNothingIfRemembermeIsNotEnabledForTheFirewall(): void
@@ -59,7 +59,6 @@ class RemembermeServicesPassTest extends TestCase
         $overrideId = RemembermeServicesPass::OVERRIDE_PREFIX.'.contao_frontend';
 
         $container = $this->getContainerWithContaoConfiguration();
-
         $container->setDefinition(
             $overrideId,
             new Definition(TokenBasedRememberMeServices::class, [1, 2, 3, 4])
@@ -77,10 +76,10 @@ class RemembermeServicesPassTest extends TestCase
         $def = $container->getDefinition($serviceId);
 
         $this->assertInstanceOf(ChildDefinition::class, $def);
-        $this->assertEquals(RemembermeServicesPass::TEMPLATE_ID, $def->getParent());
-        $this->assertEquals(1, $def->getArgument(1));
-        $this->assertEquals(2, $def->getArgument(2));
-        $this->assertEquals(3, $def->getArgument(3));
-        $this->assertEquals(4, $def->getArgument(4));
+        $this->assertSame(RemembermeServicesPass::TEMPLATE_ID, $def->getParent());
+        $this->assertSame(1, $def->getArgument(1));
+        $this->assertSame(2, $def->getArgument(2));
+        $this->assertSame(3, $def->getArgument(3));
+        $this->assertSame(4, $def->getArgument(4));
     }
 }

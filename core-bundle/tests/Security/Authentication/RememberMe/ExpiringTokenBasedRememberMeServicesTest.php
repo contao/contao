@@ -33,12 +33,12 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     private const SECRET = 'foobar';
 
     /**
-     * @var EntityRepository|\PHPUnit\Framework\MockObject\MockObject
+     * @var EntityRepository&MockObject
      */
     private $repository;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|UserProviderInterface
+     * @var UserProviderInterface&MockObject
      */
     private $userProvider;
 
@@ -47,7 +47,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
      */
     private $listener;
 
-    private $options = [
+    private static $options = [
         'name' => 'REMEMBERME',
         'lifetime' => 31536000,
         'path' => '/',
@@ -56,7 +56,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         'httponly' => true,
         'samesite' => null,
         'always_remember_me' => false,
-        'remember_me_parameter' => 'autologin'
+        'remember_me_parameter' => 'autologin',
     ];
 
     protected function setUp(): void
@@ -66,19 +66,16 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 
         $user = $this->createMock(UserInterface::class);
         $user
-            ->expects($this->any())
             ->method('getRoles')
             ->willReturn([])
         ;
 
         $this->userProvider
-            ->expects($this->any())
             ->method('supportsClass')
             ->willReturn(true)
         ;
 
         $this->userProvider
-            ->expects($this->any())
             ->method('loadUserByUsername')
             ->willReturn($user)
         ;
@@ -88,14 +85,13 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
             [$this->userProvider],
             self::SECRET,
             'contao_frontend',
-            $this->options
+            self::$options
         );
     }
 
-    public function testExpiresExistingRecordsAndCreatesNewCookieWithNewDatabaseRecord()
+    public function testExpiresExistingRecordsAndCreatesNewCookieWithNewDatabaseRecord(): void
     {
         $entity = $this->mockEntity('bar');
-
         $entity
             ->expects($this->once())
             ->method('setExpiresInSeconds')
@@ -119,20 +115,18 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         ;
 
         $request = $this->mockRequestWithCookie('foo', 'bar');
-
         $token = $this->listener->autoLogin($request);
 
         $this->assertRequestHasRememberMeCookie($request, 'foo', 'baz');
         $this->assertInstanceOf(RememberMeToken::class, $token);
     }
 
-    public function testUpdatesCookieValueFromDatabaseIfTwoRecordsExist()
+    public function testUpdatesCookieValueFromDatabaseIfTwoRecordsExist(): void
     {
         $this->expectTableLocking();
         $this->expectTableReturnsEntities($this->mockEntity('baz'), $this->mockEntity('bar', new \DateTime()));
 
         $request = $this->mockRequestWithCookie('foo', 'bar');
-
         $token = $this->listener->autoLogin($request);
 
         $this->assertRequestHasRememberMeCookie($request, 'foo', 'baz');
@@ -146,7 +140,6 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $this->expectTableReturnsEntities();
 
         $request = $this->mockRequestWithCookie('foo', 'bar');
-
         $this->listener->autoLogin($request);
 
         $this->assertCookieIsDeleted($request);
@@ -156,28 +149,23 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     {
         $this->expectTableLocking();
         $this->expectSeriesIsDeleted('foo');
-        $this->expectTableReturnsEntities(
-            $this->mockEntity('bar', null, new \DateTime('-2 years'))
-        );
+        $this->expectTableReturnsEntities($this->mockEntity('bar', null, new \DateTime('-2 years')));
 
         $request = $this->mockRequestWithCookie('foo', 'bar');
-
         $this->listener->autoLogin($request);
 
         $this->assertCookieIsDeleted($request);
     }
 
-
     public function testThrowsExceptionAndDeletesSeriesInDatabaseIfValueDoesNotMatch(): void
     {
-        $this->expectException(CookieTheftException::class);
-
         $this->expectTableLocking();
         $this->expectSeriesIsDeleted('foo');
-
         $this->expectTableReturnsEntities($this->mockEntity('baz'));
 
         $request = $this->mockRequestWithCookie('foo', 'bar');
+
+        $this->expectException(CookieTheftException::class);
 
         $this->listener->autoLogin($request);
 
@@ -194,18 +182,17 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $this->assertCookieIsDeleted($request);
     }
 
-    public function testDeletesCookieOnLogout()
+    public function testDeletesCookieOnLogout(): void
     {
         $this->expectSeriesIsDeleted('foo');
 
         $request = $this->mockRequestWithCookie('foo', 'bar');
-
         $this->listener->logout($request, $this->createMock(Response::class), $this->createMock(TokenInterface::class));
 
         $this->assertCookieIsDeleted($request);
     }
 
-    public function testCreatesDatabaseRecordAndCookieOnLogin()
+    public function testCreatesDatabaseRecordAndCookieOnLogin(): void
     {
         /** @var RememberMe $entity */
         $entity = null;
@@ -225,7 +212,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $this->repository
             ->expects($this->once())
             ->method('persist')
-            ->willReturnCallback(function (...$args) use (&$entity) {
+            ->willReturnCallback(static function (...$args) use (&$entity) {
                 $entity = $args[0];
 
                 return 1;
@@ -238,7 +225,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $this->assertResponseHasRememberMeCookie($response, $entity->getValue());
     }
 
-    public function testDoesNothingOnLoginIfUserIsNotValid()
+    public function testDoesNothingOnLoginIfUserIsNotValid(): void
     {
         $request = new Request();
         $request->request->set('autologin', '1');
@@ -266,26 +253,23 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     }
 
     /**
-     * @return RememberMe|MockObject
+     * @return RememberMe&MockObject
      */
     private function mockEntity(string $value, \DateTime $expires = null, \DateTime $lastUsed = null): RememberMe
     {
         $entity = $this->createMock(RememberMe::class);
 
         $entity
-            ->expects($this->any())
             ->method('getValue')
             ->willReturn($value)
         ;
 
         $entity
-            ->expects($this->any())
             ->method('getLastUsed')
             ->willReturn($lastUsed ?: new \DateTime())
         ;
 
         $entity
-            ->expects($this->any())
             ->method('getExpires')
             ->willReturn($expires)
         ;
@@ -337,7 +321,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $this->assertInstanceOf(Cookie::class, $request->attributes->get(AbstractRememberMeServices::COOKIE_ATTR_NAME));
     }
 
-    private function assertRequestHasRememberMeCookie(Request $request, string $series, string $value)
+    private function assertRequestHasRememberMeCookie(Request $request, string $series, string $value): void
     {
         $this->assertTrue($request->attributes->has(AbstractRememberMeServices::COOKIE_ATTR_NAME));
 
@@ -345,39 +329,38 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $cookie = $request->attributes->get(AbstractRememberMeServices::COOKIE_ATTR_NAME);
 
         $this->assertInstanceOf(Cookie::class, $cookie);
-
         $this->assertRememberMeCookie($cookie, $series, $value);
     }
 
-    private function assertResponseHasRememberMeCookie(Response $response, string $value)
+    private function assertResponseHasRememberMeCookie(Response $response, string $value): void
     {
         $cookies = $response->headers->getCookies();
+
         $this->assertCount(1, $cookies);
 
         /** @var Cookie $cookie */
         $cookie = $cookies[0];
 
         $this->assertInstanceOf(Cookie::class, $cookie);
-
         $this->assertRememberMeCookie($cookie, null, $value);
     }
 
-    private function assertRememberMeCookie(Cookie $cookie, ?string $series, string $value)
+    private function assertRememberMeCookie(Cookie $cookie, ?string $series, string $value): void
     {
-        $parts = explode(AbstractRememberMeServices::COOKIE_DELIMITER, base64_decode($cookie->getValue()));
+        $parts = explode(AbstractRememberMeServices::COOKIE_DELIMITER, base64_decode($cookie->getValue(), true));
 
-        $this->assertEquals($value, $parts[1]);
+        $this->assertSame($value, $parts[1]);
 
         if (null !== $series) {
             $this->assertSame($series, $parts[0]);
         }
 
-        $this->assertEquals($this->options['name'], $cookie->getName());
-        $this->assertEquals(time() + $this->options['lifetime'], $cookie->getExpiresTime());
-        $this->assertEquals($this->options['path'], $cookie->getPath());
-        $this->assertEquals($this->options['domain'], $cookie->getDomain());
-        $this->assertEquals($this->options['secure'], $cookie->isSecure());
-        $this->assertEquals($this->options['httponly'], $cookie->isHttpOnly());
-        $this->assertEquals($this->options['samesite'], $cookie->getSameSite());
+        $this->assertSame(self::$options['name'], $cookie->getName());
+        $this->assertSame(time() + self::$options['lifetime'], $cookie->getExpiresTime());
+        $this->assertSame(self::$options['path'], $cookie->getPath());
+        $this->assertSame(self::$options['domain'], $cookie->getDomain());
+        $this->assertSame(self::$options['secure'], $cookie->isSecure());
+        $this->assertSame(self::$options['httponly'], $cookie->isHttpOnly());
+        $this->assertSame(self::$options['samesite'], $cookie->getSameSite());
     }
 }

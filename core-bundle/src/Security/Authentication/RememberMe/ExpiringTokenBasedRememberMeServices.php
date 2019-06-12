@@ -28,9 +28,8 @@ use Symfony\Component\Security\Http\RememberMe\AbstractRememberMeServices;
 class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
 {
     /**
-     * This should be a firewall configuration, but that means we would need to override the firewall factory.
-     *
-     * @var int
+     * This should be a firewall configuration, but we would have to override
+     * the firewall factory for that.
      */
     public const EXPIRATION = 60;
 
@@ -57,10 +56,10 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
      */
     protected function cancelCookie(Request $request): void
     {
-        // Delete cookie on the client
+        // Delete the cookie on the client
         parent::cancelCookie($request);
 
-        // Delete cookie from the tokenProvider
+        // Delete the cookie from the tokenProvider
         if (null !== ($cookie = $request->cookies->get($this->options['name']))
             && 2 === \count($parts = $this->decodeCookie($cookie))
         ) {
@@ -74,19 +73,19 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
     protected function processAutoLoginCookie(array $cookieParts, Request $request): UserInterface
     {
         if (2 !== \count($cookieParts)) {
-            throw new AuthenticationException('The cookie is invalid.');
+            throw new AuthenticationException('The cookie is invalid');
         }
 
+        $matchedToken = null;
         [$series, $cookieValue] = $cookieParts;
 
         try {
             $this->repository->lockTable();
-
             $this->repository->deleteExpired((int) $this->options['lifetime'], self::EXPIRATION);
             $rows = $this->repository->findBySeries($this->encodeSeries($series));
 
             if (0 === \count($rows)) {
-                throw new TokenNotFoundException('No token found.');
+                throw new TokenNotFoundException('No token found');
             }
 
             $matchedToken = $this->findValidToken($rows, $cookieValue);
@@ -101,7 +100,10 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
             $this->repository->unlockTable();
         }
 
-        $request->attributes->set(self::COOKIE_ATTR_NAME, $this->createCookie($request, $series, $cookieValue));
+        $request->attributes->set(
+            self::COOKIE_ATTR_NAME,
+            $this->createRememberMeCookie($request, $series, $cookieValue)
+        );
 
         return $this->getUserProvider($matchedToken->getClass())->loadUserByUsername($matchedToken->getUsername());
     }
@@ -122,7 +124,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         $entity = new RememberMe($user, $this->encodeSeries($series));
         $this->repository->persist($entity);
 
-        $response->headers->setCookie($this->createCookie($request, $series, $entity->getValue()));
+        $response->headers->setCookie($this->createRememberMeCookie($request, $series, $entity->getValue()));
     }
 
     private function migrateToken(RememberMe $token): RememberMe
@@ -138,7 +140,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
     }
 
     /**
-     * @param RememberMe[]  $rows
+     * @param RememberMe[] $rows
      */
     private function findValidToken(array $rows, string $cookieValue): RememberMe
     {
@@ -147,13 +149,11 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         while ($token = array_shift($rows)) {
             try {
                 if ($token->getValue() !== $cookieValue) {
-                    throw new CookieTheftException(
-                        'This token was already used. The account is possibly compromised.'
-                    );
+                    throw new CookieTheftException('This token was already used; the account is possibly compromised');
                 }
 
                 if ($token->getLastUsed()->getTimestamp() + $this->options['lifetime'] < time()) {
-                    throw new AuthenticationException('The cookie has expired.');
+                    throw new AuthenticationException('The cookie has expired');
                 }
 
                 return $token;
@@ -165,10 +165,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         throw $lastException;
     }
 
-    /**
-     * Creates a rememberme cookie.
-     */
-    private function createCookie(Request $request, string $series, string $cookieValue): Cookie
+    private function createRememberMeCookie(Request $request, string $series, string $cookieValue): Cookie
     {
         return new Cookie(
             $this->options['name'],
@@ -183,7 +180,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         );
     }
 
-    private function encodeSeries(string $series)
+    private function encodeSeries(string $series): string
     {
         return hash_hmac('sha256', $series, $this->secret);
     }

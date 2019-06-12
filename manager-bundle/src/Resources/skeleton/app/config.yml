@@ -52,7 +52,6 @@ doctrine:
             binary_string:
                 class: 'Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType'
                 commented: true
-
     orm:
         auto_mapping: true
         auto_generate_proxy_classes: false
@@ -67,21 +66,21 @@ doctrine:
             type: service
             id: doctrine_cache.providers.doctrine_query_cache
 
-# Doctrine Cache configuration
+# Doctrine cache configuration
 doctrine_cache:
     providers:
         doctrine_metadata_cache:
             file_system:
-                extension: ".cache"
-                directory: "%kernel.cache_dir%/doctrine/metadata"
+                extension: '.cache'
+                directory: '%kernel.cache_dir%/doctrine/metadata'
         doctrine_result_cache:
             file_system:
-                extension: ".cache"
-                directory: "%kernel.cache_dir%/doctrine/result"
+                extension: '.cache'
+                directory: '%kernel.cache_dir%/doctrine/result'
         doctrine_query_cache:
             file_system:
-                extension: ".cache"
-                directory: "%kernel.cache_dir%/doctrine/query"
+                extension: '.cache'
+                directory: '%kernel.cache_dir%/doctrine/query'
 
 # SwiftMailer configuration
 swiftmailer:

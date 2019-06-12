@@ -1539,18 +1539,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('logger', (string) $definition->getArgument(2));
     }
 
-    public function testRegistersTheSecurityExpiringTokenBasedRemembermeServices(): void
-    {
-        $this->assertTrue($this->container->has('contao.security.expiring_token_based_rememberme_services'));
-
-        $definition = $this->container->getDefinition('contao.security.expiring_token_based_rememberme_services');
-
-        $this->assertSame(ExpiringTokenBasedRememberMeServices::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.repository.remember_me', (string) $definition->getArgument(0));
-        $this->assertSame('logger', (string) $definition->getArgument(5));
-    }
-
     public function testRegistersTheSecurityBackendUserProvider(): void
     {
         $this->assertTrue($this->container->has('contao.security.backend_user_provider'));
@@ -1575,6 +1563,22 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
         $this->assertSame('router', (string) $definition->getArgument(1));
+    }
+
+    public function testRegistersTheSecurityExpiringTokenBasedRemembermeServices(): void
+    {
+        $this->assertTrue($this->container->has('contao.security.expiring_token_based_remember_me_services'));
+
+        $definition = $this->container->getDefinition('contao.security.expiring_token_based_remember_me_services');
+
+        $this->assertSame(ExpiringTokenBasedRememberMeServices::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('contao.repository.remember_me', (string) $definition->getArgument(0));
+        $this->assertNull($definition->getArgument(1));
+        $this->assertNull($definition->getArgument(2));
+        $this->assertNull($definition->getArgument(3));
+        $this->assertNull($definition->getArgument(4));
+        $this->assertSame('logger', (string) $definition->getArgument(5));
     }
 
     public function testRegistersTheSecurityFrontendPreviewAuthenticator(): void
