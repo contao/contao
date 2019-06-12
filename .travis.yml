@@ -1,5 +1,5 @@
 language: php
-dist: trusty
+dist: xenial
 
 cache:
   directories:
@@ -14,8 +14,8 @@ env:
 jobs:
   include:
     - stage: test
-      name: "Test installing the split repos"
-      php: 7.2
+      name: 'Test installing the split repos'
+      php: 7.3
       script:
         - cd $TRAVIS_BUILD_DIR/calendar-bundle && run_split_tests
         - cd $TRAVIS_BUILD_DIR/core-bundle && run_split_tests
@@ -24,8 +24,8 @@ jobs:
         - cd $TRAVIS_BUILD_DIR/news-bundle && run_split_tests
 
     - stage: test
-      name: "Test installing the lowest dependencies"
-      php: 7.2
+      name: 'Test installing the lowest dependencies'
+      php: 7.3
       install:
         - phpenv config-rm xdebug.ini || true
         - composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
@@ -82,29 +82,31 @@ jobs:
       if: 'type = cron'
       php: 7.4snapshot
       install:
-          - phpenv config-rm xdebug.ini || true
-          - composer update --no-interaction --no-suggest
-      script:
-          - run_tests
-          - php vendor/bin/monorepo-tools composer-json --validate
-
-    - stage: test
-      if: 'type = cron'
-      php: nightly
-      install:
         - phpenv config-rm xdebug.ini || true
         - composer update --no-interaction --no-suggest
       script:
         - run_tests
         - php vendor/bin/monorepo-tools composer-json --validate
 
+    # Ignore the platform requirements for the upcoming PHP version
+    - stage: test
+      if: 'type = cron'
+      php: nightly
+      install:
+        - phpenv config-rm xdebug.ini || true
+        - composer update --ignore-platform-reqs --no-interaction --no-suggest
+      script:
+        - run_tests
+        - php vendor/bin/monorepo-tools composer-json --validate
+
     # Split the monorepo
     - stage: split
-      name: "Split the monorepo"
+      name: 'Split the monorepo'
       if: 'type = push AND (branch =~ /^(master|\d+\.\d+)$/ OR tag IS present)'
-      php: 7.2
+      php: 7.3
       before_install: true
       install:
+        - phpenv config-rm xdebug.ini || true
         - rm composer.json
         - composer require contao/monorepo-tools:dev-master --no-interaction --no-suggest
       script:
@@ -112,7 +114,7 @@ jobs:
 
     # Generate the coverage report
     - stage: coverage
-      php: 7.2
+      php: 7.3
       install:
         - composer update --no-interaction --no-suggest
       script:
