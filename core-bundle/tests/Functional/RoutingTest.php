@@ -19,7 +19,6 @@ use Contao\InsertTags;
 use Contao\System;
 use Contao\TestCase\ContaoDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Filesystem\Filesystem;
 
 class RoutingTest extends WebTestCase
 {
@@ -33,17 +32,6 @@ class RoutingTest extends WebTestCase
         parent::setUpBeforeClass();
 
         static::loadFileIntoDatabase(__DIR__.'/app/Resources/contao_test.sql');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        $fs = new Filesystem();
-        $fs->remove(__DIR__.'/var');
     }
 
     /**
