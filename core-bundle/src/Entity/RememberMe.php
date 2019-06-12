@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -20,12 +22,24 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     name="tl_remember_me",
  *     indexes={
  *         @ORM\Index(name="series", columns={"series"})
- *     }
+ *     },
+ *     uniqueConstraints={
+ *        @UniqueConstraint(name="value", columns={"value"})
+ *    }
  * )
  * @ORM\Entity(repositoryClass="Contao\CoreBundle\Repository\RememberMeRepository")
  */
 class RememberMe
 {
+    /**
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @GeneratedValue
+     */
+    protected $id;
+
     /**
      * @var string
      *
@@ -37,7 +51,6 @@ class RememberMe
      * @var string
      *
      * @ORM\Column(type="string", length=88, nullable=false, options={"fixed"=true})
-     * @ORM\Id
      */
     protected $value;
 
