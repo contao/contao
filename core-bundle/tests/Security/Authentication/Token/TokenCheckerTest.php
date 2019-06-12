@@ -19,6 +19,10 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\User;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
+use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
@@ -30,46 +34,80 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class TokenCheckerTest extends TestCase
 {
     /**
-     * @dataProvider getFrontendUserData
+     * @var AuthenticationTrustResolver
      */
-    public function testChecksIfThereIsAFrontendUser(string $class, bool $expect): void
-    {
-        $user = $this->mockUser($class);
-        $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-        $tokenChecker = $this->getTokenChecker($token);
+    private $trustResolver;
 
-        $this->assertSame($expect, $tokenChecker->hasFrontendUser());
-    }
-
-    public function getFrontendUserData(): \Generator
+    protected function setUp()
     {
-        yield [FrontendUser::class, true];
-        yield [BackendUser::class, false];
+        $this->trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
     }
 
     /**
-     * @dataProvider getBackendUserData
+     * @dataProvider getUserInTokenStorageData
      */
-    public function testChecksIfThereIsABackendUser(string $class, bool $expect): void
+    public function testChecksForUserInTokenStorageIfFirewallContextDoesMatch(string $class, string $firewallContext)
+    {
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->never())
+            ->method('isStarted')
+        ;
+
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext($firewallContext),
+            $this->mockTokenStorage($class),
+            $session,
+            $this->trustResolver
+        );
+
+        $this->assertTrue(FrontendUser::class === $class ? $tokenChecker->hasFrontendUser() : $tokenChecker->hasBackendUser());
+    }
+
+    public function getUserInTokenStorageData(): \Generator
+    {
+        yield [FrontendUser::class, 'contao_frontend'];
+        yield [BackendUser::class, 'contao_backend'];
+    }
+
+    /**
+     * @dataProvider getUserInSessionData
+     */
+    public function testChecksForUserInSessionIfFirewallContextDoesNotMatch(string $class, string $firewallContext)
     {
         $user = $this->mockUser($class);
         $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-        $tokenChecker = $this->getTokenChecker($token);
 
-        $this->assertSame($expect, $tokenChecker->hasBackendUser());
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext($firewallContext),
+            $this->mockTokenStorage($class),
+            $this->mockSessionWithToken($token),
+            $this->trustResolver
+        );
+
+        $this->assertTrue(FrontendUser::class === $class ? $tokenChecker->hasFrontendUser() : $tokenChecker->hasBackendUser());
     }
 
-    public function getBackendUserData(): \Generator
+    public function getUserInSessionData(): \Generator
     {
-        yield [BackendUser::class, true];
-        yield [FrontendUser::class, false];
+        yield [FrontendUser::class, 'contao_backend'];
+        yield [BackendUser::class, 'contao_frontend'];
     }
 
     public function testReturnsTheFrontendUsername(): void
     {
         $user = $this->mockUser(FrontendUser::class);
         $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-        $tokenChecker = $this->getTokenChecker($token);
+
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext('contao_backend'),
+            $this->mockTokenStorage(FrontendUser::class),
+            $this->mockSessionWithToken($token),
+            $this->trustResolver
+        );
 
         $this->assertSame('foobar', $tokenChecker->getFrontendUsername());
     }
@@ -78,7 +116,14 @@ class TokenCheckerTest extends TestCase
     {
         $user = $this->mockUser(BackendUser::class);
         $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-        $tokenChecker = $this->getTokenChecker($token);
+
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext('contao_frontend'),
+            $this->mockTokenStorage(BackendUser::class),
+            $this->mockSessionWithToken($token),
+            $this->trustResolver
+        );
 
         $this->assertSame('foobar', $tokenChecker->getBackendUsername());
     }
@@ -88,7 +133,13 @@ class TokenCheckerTest extends TestCase
      */
     public function testChecksIfThePreviewModeIsActive(TokenInterface $token, bool $expect): void
     {
-        $tokenChecker = $this->getTokenChecker($token);
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext('contao_backend'),
+            $this->mockTokenStorage(BackendUser::class),
+            $this->mockSessionWithToken($token),
+            $this->trustResolver
+        );
 
         $this->assertSame($expect, $tokenChecker->isPreviewMode());
     }
@@ -114,8 +165,13 @@ class TokenCheckerTest extends TestCase
             ->method('has')
         ;
 
-        $trustResolver = $this->createMock(AuthenticationTrustResolverInterface::class);
-        $tokenChecker = new TokenChecker($session, $trustResolver);
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext('contao_backend'),
+            $this->mockTokenStorage(BackendUser::class),
+            $session,
+            $this->trustResolver
+        );
 
         $this->assertFalse($tokenChecker->hasFrontendUser());
     }
@@ -135,8 +191,13 @@ class TokenCheckerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $trustResolver = $this->createMock(AuthenticationTrustResolverInterface::class);
-        $tokenChecker = new TokenChecker($session, $trustResolver);
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext('contao_frontend'),
+            $this->mockTokenStorage(FrontendUser::class),
+            $session,
+            $this->trustResolver
+        );
 
         $this->assertFalse($tokenChecker->hasBackendUser());
     }
@@ -162,8 +223,13 @@ class TokenCheckerTest extends TestCase
             ->willReturn(serialize(new \stdClass()))
         ;
 
-        $trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
-        $tokenChecker = new TokenChecker($session, $trustResolver);
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext('contao_backend'),
+            $this->mockTokenStorage(BackendUser::class),
+            $session,
+            $this->trustResolver
+        );
 
         $this->assertNull($tokenChecker->getFrontendUsername());
     }
@@ -171,7 +237,14 @@ class TokenCheckerTest extends TestCase
     public function testDoesNotReturnATokenIfTheTokenIsNotAuthenticated(): void
     {
         $token = new UsernamePasswordToken('user', 'password', 'provider');
-        $tokenChecker = $this->getTokenChecker($token);
+
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext('contao_frontend'),
+            $this->mockTokenStorage(FrontendUser::class),
+            $this->mockSessionWithToken($token),
+            $this->trustResolver
+        );
 
         $this->assertNull($tokenChecker->getBackendUsername());
     }
@@ -179,7 +252,14 @@ class TokenCheckerTest extends TestCase
     public function testDoesNotReturnATokenIfTheTokenIsAnonymous(): void
     {
         $token = new AnonymousToken('secret', 'anon.');
-        $tokenChecker = $this->getTokenChecker($token);
+
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext('contao_backend'),
+            $this->mockTokenStorage(BackendUser::class),
+            $this->mockSessionWithToken($token),
+            $this->trustResolver
+        );
 
         $this->assertFalse($tokenChecker->isPreviewMode());
     }
@@ -194,9 +274,43 @@ class TokenCheckerTest extends TestCase
         return $user;
     }
 
-    private function getTokenChecker(TokenInterface $token): TokenChecker
+    /**
+     * @return RequestStack|MockObject
+     */
+    private function mockRequestStack(): RequestStack
+    {
+        $requestStack = $this->createMock(RequestStack::class);
+
+        $requestStack
+            ->expects($this->any())
+            ->method('getMasterRequest')
+            ->willReturn($this->createMock(Request::class))
+        ;
+
+        return $requestStack;
+    }
+
+    /**
+     * @return FirewallMap|MockObject
+     */
+    private function mockFirewallMapWithConfigContext(string $context): FirewallMap
+    {
+        $config = new FirewallConfig('', '', null, true, false, null, $context);
+
+        $map = $this->createMock(FirewallMap::class);
+        $map
+            ->expects($this->any())
+            ->method('getFirewallConfig')
+            ->willReturn($config)
+        ;
+
+        return $map;
+    }
+
+    private function mockSessionWithToken(TokenInterface $token)
     {
         $session = $this->createMock(SessionInterface::class);
+
         $session
             ->expects($this->once())
             ->method('isStarted')
@@ -215,8 +329,6 @@ class TokenCheckerTest extends TestCase
             ->willReturn(serialize($token))
         ;
 
-        $trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
-
-        return new TokenChecker($session, $trustResolver);
+        return $session;
     }
 }
