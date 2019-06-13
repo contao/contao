@@ -40,13 +40,7 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('contao');
 
-        if (method_exists($treeBuilder, 'getRootNode')) {
-            $rootNode = $treeBuilder->getRootNode();
-        } else {
-            // Backwards compatibility with symfony/config <4.2
-            $rootNode = $treeBuilder->root('contao');
-        }
-
+        $rootNode = $treeBuilder->getRootNode();
         $rootNode
             ->children()
                 ->scalarNode('web_dir')

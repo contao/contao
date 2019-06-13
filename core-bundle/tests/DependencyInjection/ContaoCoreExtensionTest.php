@@ -178,19 +178,19 @@ class ContaoCoreExtensionTest extends TestCase
 
         $events = BaseLocaleListener::getSubscribedEvents();
 
-        $this->assertSame('onKernelRequest', $events['kernel.request'][0][0]);
-        $this->assertSame(16, $events['kernel.request'][0][1]);
+        if ('setDefaultLocale' === $events['kernel.request'][0][0]) {
+            $this->assertSame('onKernelRequest', $events['kernel.request'][1][0]);
+            $this->assertSame(16, $events['kernel.request'][1][1]);
+        } else {
+            // Backwards compatibility with symfony/http-kernel <4.3
+            $this->assertSame('onKernelRequest', $events['kernel.request'][0][0]);
+            $this->assertSame(16, $events['kernel.request'][0][1]);
+        }
 
         $events = ExceptionListener::getSubscribedEvents();
 
-        if (\is_array($events['kernel.exception'][0])) {
-            $this->assertSame('onKernelException', $events['kernel.exception'][1][0]);
-            $this->assertSame(-128, $events['kernel.exception'][1][1]);
-        } else {
-            // Backwards compatibility with symfony/http-kernel <4.1
-            $this->assertSame('onKernelException', $events['kernel.exception'][0]);
-            $this->assertSame(-128, $events['kernel.exception'][1]);
-        }
+        $this->assertSame('onKernelException', $events['kernel.exception'][1][0]);
+        $this->assertSame(-128, $events['kernel.exception'][1][1]);
 
         $events = Firewall::getSubscribedEvents();
 

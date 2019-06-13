@@ -65,10 +65,19 @@ class FrontendPreviewTokenTest extends TestCase
         $token = new FrontendPreviewToken(null, true);
         $serialized = $token->serialize();
 
-        if (false !== strpos($serialized, '"a:4:{')) {
-            $expected = serialize([true, serialize(['anon.', true, [], []])]);
-        } else {
-            $expected = serialize([true, ['anon.', true, [], []]]);
+        switch (true) {
+            case false !== strpos($serialized, '"a:4:{'):
+                // Backwards compatility with symfony/security <4.2.3
+                $expected = serialize([true, serialize(['anon.', true, [], []])]);
+                break;
+
+            case false !== strpos($serialized, ';a:4:{'):
+                // Backwards compatility with symfony/security <4.3
+                $expected = serialize([true, ['anon.', true, [], []]]);
+                break;
+
+            default:
+                $expected = serialize([true, ['anon.', true, [], [], []]]);
         }
 
         $this->assertSame($expected, $serialized);

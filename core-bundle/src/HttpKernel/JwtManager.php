@@ -114,14 +114,7 @@ class JwtManager
             ->getToken()
         ;
 
-        if (method_exists(Cookie::class, 'create')) {
-            $cookie = Cookie::create(self::COOKIE_NAME, (string) $token);
-        } else {
-            // Backwards compatibility with symfony/http-foundation <4.2
-            $cookie = new Cookie(self::COOKIE_NAME, (string) $token);
-        }
-
-        $response->headers->setCookie($cookie);
+        $response->headers->setCookie(Cookie::create(self::COOKIE_NAME, (string) $token));
     }
 
     /**
