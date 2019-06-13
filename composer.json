@@ -97,8 +97,9 @@
         "symfony/twig-bundle": "4.2.* || 4.3.*",
         "symfony/web-profiler-bundle": "4.2.* || 4.3.*",
         "symfony/yaml": "4.2.* || 4.3.*",
-        "toflar/psr6-symfony-http-cache-store": "^1.0.2",
-        "true/punycode": "^2.1"
+        "toflar/psr6-symfony-http-cache-store": "^2.0",
+        "true/punycode": "^2.1",
+        "twig/twig": "^2.7"
     },
     "replace": {
         "contao/core-bundle": "self.version",

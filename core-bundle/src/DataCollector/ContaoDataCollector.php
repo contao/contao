@@ -102,10 +102,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     {
         $data = $this->data;
 
-        if (!\is_array($data)) {
-            return [];
-        }
-
         unset(
             $data['summary'],
             $data['contao_version'],

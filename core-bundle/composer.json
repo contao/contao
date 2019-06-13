@@ -85,7 +85,8 @@
         "symfony/translation": "4.2.* || 4.3.*",
         "symfony/twig-bundle": "4.2.* || 4.3.*",
         "symfony/yaml": "4.2.* || 4.3.*",
-        "true/punycode": "^2.1"
+        "true/punycode": "^2.1",
+        "twig/twig": "^2.7"
     },
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",

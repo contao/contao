@@ -98,7 +98,6 @@ security:
             user_checker: contao.security.user_checker
             anonymous: ~
             switch_user: true
-            logout_on_user_change: true
 
             contao_login:
                 login_path: contao_backend_login
@@ -125,7 +124,6 @@ security:
             user_checker: contao.security.user_checker
             anonymous: ~
             switch_user: false
-            logout_on_user_change: true
 
             contao_login:
                 login_path: contao_frontend_login

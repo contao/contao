@@ -105,14 +105,6 @@ class ContaoDataCollectorTest extends TestCase
         unset($GLOBALS['objPage']);
     }
 
-    public function testReturnsAnEmtpyArrayIfTheDataIsNotAnArray(): void
-    {
-        $collector = new ContaoDataCollector();
-        $collector->unserialize('N;');
-
-        $this->assertSame([], $collector->getAdditionalData());
-    }
-
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
     {
         $collector = new ContaoDataCollector();

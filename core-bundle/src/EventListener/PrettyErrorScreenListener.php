@@ -36,6 +36,8 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Twig\Environment;
+use Twig\Error\Error;
 
 class PrettyErrorScreenListener
 {
@@ -45,7 +47,7 @@ class PrettyErrorScreenListener
     private $prettyErrorScreens;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $twig;
 
@@ -77,7 +79,7 @@ class PrettyErrorScreenListener
         NoRootPageFoundException::class => 'no_root_page_found',
     ];
 
-    public function __construct(bool $prettyErrorScreens, \Twig_Environment $twig, ContaoFramework $framework, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
+    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
@@ -228,7 +230,7 @@ class PrettyErrorScreenListener
 
         try {
             $event->setResponse(new Response($this->twig->render($view, $parameters), $statusCode));
-        } catch (\Twig_Error $e) {
+        } catch (Error $e) {
             $event->setResponse(new Response($this->twig->render('@ContaoCore/Error/error.html.twig'), 500));
         }
     }
