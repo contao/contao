@@ -39,6 +39,7 @@ class RequestTokenListenerTest extends TestCase
         $request = Request::create('/account.html');
         $request->setMethod('POST');
         $request->attributes->set('_token_check', true);
+        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
 
         $event = $this->createMock(GetResponseEvent::class);
         $event
@@ -72,6 +73,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
 
         $event = $this->createMock(GetResponseEvent::class);
         $event
@@ -100,6 +102,7 @@ class RequestTokenListenerTest extends TestCase
         $request = Request::create('/account.html');
         $request->setMethod('POST');
         $request->attributes->set('_token_check', true);
+        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
 
         $event = $this->createMock(GetResponseEvent::class);
         $event
@@ -129,6 +132,7 @@ class RequestTokenListenerTest extends TestCase
         $request = Request::create('/account.html');
         $request->setMethod('GET');
         $request->attributes->set('_token_check', true);
+        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
 
         $event = $this->createMock(GetResponseEvent::class);
         $event
@@ -155,6 +159,7 @@ class RequestTokenListenerTest extends TestCase
         $request = Request::create('/account.html');
         $request->setMethod('POST');
         $request->attributes->set('_token_check', true);
+        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
         $request->headers->set('X-Requested-With', 'XMLHttpRequest');
 
         $event = $this->createMock(GetResponseEvent::class);
@@ -181,6 +186,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
         $request->attributes->set('_token_check', false);
 
         $event = $this->createMock(GetResponseEvent::class);

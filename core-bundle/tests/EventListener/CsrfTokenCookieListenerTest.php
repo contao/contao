@@ -148,6 +148,7 @@ class CsrfTokenCookieListenerTest extends TestCase
     {
         $bag = new ParameterBag();
         $bag->set('csrf_foo', 'bar');
+        $bag->set('unrelated-cookie', 'to-activate-csrf');
 
         $request = $this->createMock(Request::class);
         $request->cookies = $bag;
@@ -179,6 +180,11 @@ class CsrfTokenCookieListenerTest extends TestCase
         $responseHeaders
             ->expects($this->never())
             ->method('setCookie')
+        ;
+
+        $responseHeaders
+            ->method('getCookies')
+            ->willReturn([])
         ;
 
         $response->headers = $responseHeaders;
