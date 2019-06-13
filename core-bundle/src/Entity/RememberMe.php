@@ -43,14 +43,14 @@ class RememberMe
     /**
      * @var string
      *
-     * @ORM\Column(type="binary_string", length=32, options={"fixed"=true})
+     * @ORM\Column(type="binary_string", length=32, nullable=false, options={"fixed"=true})
      */
     protected $series;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="binary_string", length=64, options={"fixed"=true})
+     * @ORM\Column(type="binary_string", length=64, nullable=false, options={"fixed"=true})
      */
     protected $value;
 
