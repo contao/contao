@@ -60,10 +60,13 @@ class CsrfTokenCookieListener
             return;
         }
 
-        if ($this->requiresCsrf($event->getRequest(), $event->getResponse())) {
-            $this->setCookies($event->getRequest(), $event->getResponse());
+        $request = $event->getRequest();
+        $response = $event->getResponse();
+
+        if ($this->requiresCsrf($request, $response)) {
+            $this->setCookies($request, $response);
         } else {
-            $this->removeCookies($event->getRequest(), $event->getResponse());
+            $this->removeCookies($request, $response);
         }
     }
 
