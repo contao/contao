@@ -69,7 +69,8 @@ class RequestTokenListener
         // Only check the request token if a) the request is a POST request, b)
         // the request is not an Ajax request, c) the _token_check attribute is
         // not false, d) the _token_check attribute is set or the request is a
-        // Contao request and e) the request has cookies, a session or is authenticated
+        // Contao request and e) the request has cookies, a session or is
+        // authenticated aka it even requires CSRF protection
         if (
             'POST' !== $request->getRealMethod()
             || $request->isXmlHttpRequest()
