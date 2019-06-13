@@ -266,7 +266,7 @@ class Picture
 
 		if (substr_count($mode, '_') === 1)
 		{
-			$importantPart = $this->image->setImportantPart(null)->getImportantPart();
+			$importantPart = $this->image->setImportantPart()->getImportantPart();
 
 			$mode = explode('_', $mode);
 

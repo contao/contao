@@ -133,7 +133,7 @@ class ContentDownload extends ContentElement
 		$this->Template->link = $this->linkTitle ?: $objFile->basename;
 		$this->Template->title = StringUtil::specialchars($this->titleText);
 		$this->Template->href = $strHref;
-		$this->Template->filesize = $this->getReadableSize($objFile->filesize, 1);
+		$this->Template->filesize = $this->getReadableSize($objFile->filesize);
 		$this->Template->icon = Image::getPath($objFile->icon);
 		$this->Template->mime = $objFile->mime;
 		$this->Template->extension = $objFile->extension;

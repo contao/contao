@@ -120,7 +120,7 @@ class ModuleCloseAccount extends Module
 				$container = System::getContainer();
 
 				// Log out the user (see #93)
-				$container->get('security.token_storage')->setToken(null);
+				$container->get('security.token_storage')->setToken();
 				$container->get('session')->invalidate();
 
 				// Check whether there is a jumpTo page

@@ -408,7 +408,7 @@ class News extends Frontend
 
 			if (!$objPage instanceof PageModel)
 			{
-				self::$arrUrlCache[$strCacheKey] = ampersand(Environment::get('request'), true);
+				self::$arrUrlCache[$strCacheKey] = ampersand(Environment::get('request'));
 			}
 			else
 			{

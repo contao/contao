@@ -451,7 +451,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 <a href="'.$this->addToUrl('&amp;act=paste&amp;mode=move').'" class="header_new" title="'.StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]).'" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['move'][0].'</a> ' : '') . ($blnClipboard ? '
 <a href="'.$this->addToUrl('clipboard=1').'" class="header_clipboard" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ' : $this->generateGlobalButtons()) . '
 </div>' . ((Input::get('act') == 'select') ? '
-<form action="'.ampersand(Environment::get('request'), true).'" id="tl_select" class="tl_form tl_edit_form'.((Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
+<form action="'.ampersand(Environment::get('request')).'" id="tl_select" class="tl_form tl_edit_form'.((Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' : '').($blnClipboard ? '
@@ -1243,7 +1243,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 <div id="tl_buttons">
 <a href="'.$this->getReferer(true).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
-<form action="'.ampersand(Environment::get('request'), true).'" id="'.$this->strTable.'" class="tl_form tl_edit_form" method="post"'.(!empty($this->onsubmit) ? ' onsubmit="'.implode(' ', $this->onsubmit).'"' : '').' enctype="multipart/form-data">
+<form action="'.ampersand(Environment::get('request')).'" id="'.$this->strTable.'" class="tl_form tl_edit_form" method="post"'.(!empty($this->onsubmit) ? ' onsubmit="'.implode(' ', $this->onsubmit).'"' : '').' enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_upload">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
@@ -1492,7 +1492,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 <div id="tl_buttons">
 <a href="'.$this->getReferer(true).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
-<form action="'.ampersand(Environment::get('request'), true).'" id="'.$this->strTable.'" class="tl_form tl_edit_form" method="post"'.(!empty($this->onsubmit) ? ' onsubmit="'.implode(' ', $this->onsubmit).'"' : '').'>
+<form action="'.ampersand(Environment::get('request')).'" id="'.$this->strTable.'" class="tl_form tl_edit_form" method="post"'.(!empty($this->onsubmit) ? ' onsubmit="'.implode(' ', $this->onsubmit).'"' : '').'>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="'.$this->strTable.'">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' . $return;
@@ -1816,7 +1816,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 			// Add the form
 			$return = '
-<form action="'.ampersand(Environment::get('request'), true).'" id="'.$this->strTable.'" class="tl_form tl_edit_form" method="post">
+<form action="'.ampersand(Environment::get('request')).'" id="'.$this->strTable.'" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="'.$this->strTable.'">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">'.($this->noReload ? '
@@ -1875,7 +1875,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 			// Return the select menu
 			$return .= '
-<form action="'.ampersand(Environment::get('request'), true).'&amp;fields=1" id="'.$this->strTable.'_all" class="tl_form tl_edit_form" method="post">
+<form action="'.ampersand(Environment::get('request')).'&amp;fields=1" id="'.$this->strTable.'_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="'.$this->strTable.'_all">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">'.($blnIsError ? '
@@ -2093,7 +2093,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 <div id="tl_buttons">
 <a href="'.$this->getReferer(true).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
 </div>
-<form action="'.ampersand(Environment::get('request'), true).'" id="tl_files" class="tl_form tl_edit_form" method="post">
+<form action="'.ampersand(Environment::get('request')).'" id="tl_files" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_files">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
@@ -2662,7 +2662,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 			// Add the current folder
 			$strFolderNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFolder)), Config::get('characterSet'));
-			$return .= Image::getHtml($folderImg, '').' <a href="' . $this->addToUrl('fn='.$currentEncoded) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'"><strong>'.$strFolderNameEncoded.'</strong></a></div> <div class="tl_right">';
+			$return .= Image::getHtml($folderImg).' <a href="' . $this->addToUrl('fn='.$currentEncoded) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'"><strong>'.$strFolderNameEncoded.'</strong></a></div> <div class="tl_right">';
 
 			// Paste buttons
 			if ($arrClipboard !== false && Input::get('act') != 'select')

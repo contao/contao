@@ -42,7 +42,7 @@ class MakeResponsePrivateListener
         }
 
         // 1) The session was started
-        if (null !== ($session = $request->getSession()) && $session->isStarted()) {
+        if ($request->hasSession() && $request->getSession()->isStarted()) {
             $response->setPrivate();
 
             return;

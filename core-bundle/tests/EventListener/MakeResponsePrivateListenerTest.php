@@ -30,7 +30,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge(600);
-        $response->headers->setCookie(new Cookie('foobar', 'foobar'));
+        $response->headers->setCookie($this->createCookie('foobar', 'foobar'));
 
         $event = new FilterResponseEvent(
             $this->createMock(KernelInterface::class),
@@ -99,7 +99,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge(600);
-        $response->headers->setCookie(new Cookie('foobar', 'foobar'));
+        $response->headers->setCookie($this->createCookie('foobar', 'foobar'));
 
         $event = new FilterResponseEvent(
             $this->createMock(KernelInterface::class),
@@ -152,5 +152,15 @@ class MakeResponsePrivateListenerTest extends TestCase
         $listener->onKernelResponse($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
+    }
+
+    private function createCookie(string $name, string $value): Cookie
+    {
+        if (method_exists(Cookie::class, 'create')) {
+            return Cookie::create($name, $value);
+        }
+
+        // Backwards compatibility with symfony/http-foundation <4.2
+        return new Cookie($name, $value);
     }
 }

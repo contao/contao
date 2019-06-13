@@ -483,7 +483,7 @@ class ZipReader
 		$this->arrHeader = $arrHeader;
 
 		// Reposition pointer to begin of the central directory
-		fseek($this->resFile, $this->arrHeader['offset_start_cd'], SEEK_SET);
+		fseek($this->resFile, $this->arrHeader['offset_start_cd']);
 		$strSignature = @fread($this->resFile, 4);
 
 		// Build file list

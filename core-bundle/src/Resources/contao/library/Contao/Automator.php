@@ -397,7 +397,7 @@ class Automator extends System
 				}
 
 				$strUrl = implode('/', $strUrl);
-				$strUrl = ampersand($strUrl, true);
+				$strUrl = ampersand($strUrl);
 
 				$objFile->append('  <url><loc>' . $strUrl . '</loc></url>');
 			}
