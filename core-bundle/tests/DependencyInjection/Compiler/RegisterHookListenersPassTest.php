@@ -304,9 +304,9 @@ class RegisterHookListenersPassTest extends TestCase
         $definition = $container->getDefinition('contao.framework');
         $methodCalls = $definition->getMethodCalls();
 
-        $this->assertInternalType('array', $methodCalls);
+        $this->assertIsArray($methodCalls);
         $this->assertSame('setHookListeners', $methodCalls[0][0]);
-        $this->assertInternalType('array', $methodCalls[0][1]);
+        $this->assertIsArray($methodCalls[0][1]);
 
         return $methodCalls[0][1];
     }

@@ -35,7 +35,7 @@ class FrontendPreviewTokenTest extends TestCase
 
         $this->assertTrue($token->isAuthenticated());
         $this->assertSame($user, $token->getUser());
-        $this->assertInternalType('array', $roles);
+        $this->assertIsArray($roles);
         $this->assertCount(1, $roles);
         $this->assertInstanceOf(Role::class, $roles[0]);
         $this->assertSame('ROLE_USER', $roles[0]->getRole());
@@ -49,7 +49,7 @@ class FrontendPreviewTokenTest extends TestCase
 
         $this->assertTrue($token->isAuthenticated());
         $this->assertSame('anon.', $token->getUser());
-        $this->assertInternalType('array', $roles);
+        $this->assertIsArray($roles);
         $this->assertCount(0, $roles);
     }
 

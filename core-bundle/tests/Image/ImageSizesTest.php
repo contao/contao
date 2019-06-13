@@ -69,7 +69,8 @@ class ImageSizesTest extends TestCase
 
         $options = $this->imageSizes->getAllOptions();
 
-        $this->assertArraySubset($GLOBALS['TL_CROP'], $options);
+        $this->assertArrayHasKey('relative', $options);
+        $this->assertArrayHasKey('exact', $options);
         $this->assertArrayHasKey('image_sizes', $options);
         $this->assertArrayHasKey('42', $options['image_sizes']);
     }
@@ -81,7 +82,8 @@ class ImageSizesTest extends TestCase
 
         $options = $this->imageSizes->getAllOptions();
 
-        $this->assertArraySubset($GLOBALS['TL_CROP'], $options);
+        $this->assertArrayHasKey('relative', $options);
+        $this->assertArrayHasKey('exact', $options);
         $this->assertArrayNotHasKey('image_sizes', $options);
     }
 
@@ -93,12 +95,12 @@ class ImageSizesTest extends TestCase
         /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->isAdmin = true;
-        $user->imageSizes = ['image_sizes' => '42'];
 
         $options = $this->imageSizes->getOptionsForUser($user);
 
-        // TL_CROP would not be returned if the admin check was not done (because it's not in the allowed imageSizes)
-        $this->assertArraySubset($GLOBALS['TL_CROP'], $options);
+        // TL_CROP would not be returned without the admin check, because it is
+        // not within the allowed image sizes
+        $this->assertArrayHasKey('relative', $options);
     }
 
     public function testReturnsTheRegularUserOptions(): void
