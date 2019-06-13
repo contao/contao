@@ -295,7 +295,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $this->repository
             ->expects($this->once())
             ->method('findBySeries')
-            ->with(hash_hmac('sha256', 'foo', self::SECRET))
+            ->with(hash_hmac('sha256', 'foo', self::SECRET, true))
             ->willReturn($entities)
         ;
 
@@ -311,7 +311,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         $this->repository
             ->expects($this->once())
             ->method('deleteBySeries')
-            ->with(hash_hmac('sha256', $series, self::SECRET))
+            ->with(hash_hmac('sha256', $series, self::SECRET, true))
         ;
     }
 

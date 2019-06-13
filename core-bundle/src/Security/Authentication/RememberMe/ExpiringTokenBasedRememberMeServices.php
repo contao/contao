@@ -182,6 +182,6 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
 
     private function encodeSeries(string $series): string
     {
-        return hash_hmac('sha256', $series, $this->secret);
+        return hash_hmac('sha256', $series, $this->secret, true);
     }
 }

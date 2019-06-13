@@ -48,7 +48,7 @@ class RememberMeRepository extends ServiceEntityRepository
     /**
      * @return RememberMe[]
      */
-    public function findBySeries(string $encodedSeries): array
+    public function findBySeries(string $series): array
     {
         $qb = $this->createQueryBuilder('rm');
         $qb
@@ -59,7 +59,7 @@ class RememberMeRepository extends ServiceEntityRepository
                     $qb->expr()->lte('rm.expires', ':now')
                 )
             )
-            ->setParameter('series', $encodedSeries)
+            ->setParameter('series', $series)
             ->setParameter('now', new \DateTime())
             ->orderBy('rm.expires', 'ASC')
         ;
@@ -72,8 +72,8 @@ class RememberMeRepository extends ServiceEntityRepository
         $qb = $this->_em->createQueryBuilder();
         $qb
             ->delete($this->_entityName, 'rm')
-            ->where('rm.series=:series')
-            ->andWhere('rm.value!=:value')
+            ->where('rm.series = :series')
+            ->andWhere('rm.value != :value')
             ->setParameter('series', $entity->getSeries())
             ->setParameter('value', $entity->getValue())
         ;
@@ -81,13 +81,13 @@ class RememberMeRepository extends ServiceEntityRepository
         $qb->getQuery()->execute();
     }
 
-    public function deleteBySeries(string $encodedSeries): void
+    public function deleteBySeries(string $series): void
     {
         $qb = $this->_em->createQueryBuilder();
         $qb
             ->delete($this->_entityName, 'rm')
-            ->where('rm.series=:series')
-            ->setParameter('series', $encodedSeries)
+            ->where('rm.series = :series')
+            ->setParameter('series', $series)
         ;
 
         $qb->getQuery()->execute();
@@ -98,8 +98,8 @@ class RememberMeRepository extends ServiceEntityRepository
         $qb = $this->_em->createQueryBuilder();
         $qb
             ->delete($this->_entityName, 'rm')
-            ->where('rm.lastUsed<:lastUsed')
-            ->orWhere('rm.expires<:expires')
+            ->where('rm.lastUsed < :lastUsed')
+            ->orWhere('rm.expires < :expires')
             ->setParameter('lastUsed', (new \DateTime())->sub(new \DateInterval('PT'.$lastUsedLifetime.'S')))
             ->setParameter('expires', (new \DateTime())->sub(new \DateInterval('PT'.$expiresLifetime.'S')))
         ;
