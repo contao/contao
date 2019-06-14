@@ -2597,7 +2597,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$md5 = substr(md5($folders[$f]), 0, 8);
 			$content = scan($folders[$f]);
 			$currentFolder = StringUtil::stripRootDir($folders[$f]);
-            $objFolder = FilesModel::findByPath($currentFolder);
+            $objFolder = $this->blnIsDbAssisted ? FilesModel::findByPath($currentFolder) : null;
 			$session['filetree'][$md5] = is_numeric($session['filetree'][$md5]) ? $session['filetree'][$md5] : 0;
 			$currentEncoded = $this->urlEncode($currentFolder);
 			$countFiles = \count($content);
