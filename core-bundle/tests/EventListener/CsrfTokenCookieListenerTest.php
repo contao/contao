@@ -83,11 +83,8 @@ class CsrfTokenCookieListenerTest extends TestCase
 
     public function testAddsTheTokenCookiesToTheResponse(): void
     {
-        $bag = new ParameterBag();
-        $bag->set('csrf_foo', '');
-
         $request = $this->createMock(Request::class);
-        $request->cookies = $bag;
+        $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
 
         $request
             ->method('isSecure')
@@ -148,6 +145,7 @@ class CsrfTokenCookieListenerTest extends TestCase
     {
         $bag = new ParameterBag();
         $bag->set('csrf_foo', 'bar');
+        $bag->set('unrelated-cookie', 'to-activate-csrf');
 
         $request = $this->createMock(Request::class);
         $request->cookies = $bag;
@@ -181,6 +179,11 @@ class CsrfTokenCookieListenerTest extends TestCase
             ->method('setCookie')
         ;
 
+        $responseHeaders
+            ->method('getCookies')
+            ->willReturn([])
+        ;
+
         $response->headers = $responseHeaders;
 
         $tokenStorage = $this->createMock(MemoryTokenStorage::class);
@@ -189,6 +192,62 @@ class CsrfTokenCookieListenerTest extends TestCase
             ->method('getUsedTokens')
             ->willReturn(['foo' => 'bar'])
         ;
+
+        $listener = new CsrfTokenCookieListener($tokenStorage);
+        $listener->onKernelResponse($responseEvent);
+    }
+
+    public function testRemovesTheTokenCookiesIfNoOtherCookiesArePresent(): void
+    {
+        $bag = new ParameterBag();
+        $bag->set('csrf_foo', 'bar');
+
+        $request = $this->createMock(Request::class);
+        $request->cookies = $bag;
+
+        $request
+            ->method('isSecure')
+            ->willReturn(true)
+        ;
+
+        $response = $this->createMock(Response::class);
+
+        $responseEvent = $this->createMock(FilterResponseEvent::class);
+        $responseEvent
+            ->method('isMasterRequest')
+            ->willReturn(true)
+        ;
+
+        $responseEvent
+            ->method('getRequest')
+            ->willReturn($request)
+        ;
+
+        $responseEvent
+            ->method('getResponse')
+            ->willReturn($response)
+        ;
+
+        $responseHeaders = $this->createMock(ResponseHeaderBag::class);
+        $responseHeaders
+            ->expects($this->never())
+            ->method('setCookie')
+        ;
+
+        $responseHeaders
+            ->method('getCookies')
+            ->willReturn([])
+        ;
+
+        $responseHeaders
+            ->expects($this->once())
+            ->method('clearCookie')
+            ->with('csrf_foo')
+        ;
+
+        $response->headers = $responseHeaders;
+
+        $tokenStorage = $this->createMock(MemoryTokenStorage::class);
 
         $listener = new CsrfTokenCookieListener($tokenStorage);
         $listener->onKernelResponse($responseEvent);

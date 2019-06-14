@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
@@ -59,6 +62,39 @@ class CsrfTokenCookieListener
 
         $request = $event->getRequest();
         $response = $event->getResponse();
+
+        if ($this->requiresCsrf($request, $response)) {
+            $this->setCookies($request, $response);
+        } else {
+            $this->removeCookies($request, $response);
+        }
+    }
+
+    private function requiresCsrf(Request $request, Response $response): bool
+    {
+        foreach ($request->cookies as $key => $value) {
+            if (!$this->isCsrfCookie($key, $value)) {
+                return true;
+            }
+        }
+
+        if (\count($response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY))) {
+            return true;
+        }
+
+        if ($request->getUserInfo()) {
+            return true;
+        }
+
+        if ($request->hasSession() && $request->getSession()->isStarted()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function setCookies(Request $request, Response $response): void
+    {
         $isSecure = $request->isSecure();
         $basePath = $request->getBasePath() ?: '/';
 
@@ -78,6 +114,18 @@ class CsrfTokenCookieListener
         }
     }
 
+    private function removeCookies(Request $request, Response $response): void
+    {
+        $isSecure = $request->isSecure();
+        $basePath = $request->getBasePath() ?: '/';
+
+        foreach ($request->cookies as $key => $value) {
+            if ($this->isCsrfCookie($key, $value)) {
+                $response->headers->clearCookie($key, $basePath, null, $isSecure, true);
+            }
+        }
+    }
+
     /**
      * @return array<string,string>
      */
@@ -86,15 +134,20 @@ class CsrfTokenCookieListener
         $tokens = [];
 
         foreach ($cookies as $key => $value) {
-            if (!\is_string($key)) {
-                continue;
-            }
-
-            if (0 === strpos($key, $this->cookiePrefix) && preg_match('/^[a-z0-9_-]+$/i', $value)) {
+            if ($this->isCsrfCookie($key, $value)) {
                 $tokens[substr($key, \strlen($this->cookiePrefix))] = $value;
             }
         }
 
         return $tokens;
+    }
+
+    private function isCsrfCookie($key, string $value): bool
+    {
+        if (!\is_string($key)) {
+            return false;
+        }
+
+        return 0 === strpos($key, $this->cookiePrefix) && preg_match('/^[a-z0-9_-]+$/i', $value);
     }
 }

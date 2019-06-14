@@ -546,6 +546,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
         $this->assertSame('contao.csrf.token_manager', (string) $definition->getArgument(2));
         $this->assertSame('%contao.csrf_token_name%', (string) $definition->getArgument(3));
+        $this->assertSame('%contao.csrf_cookie_prefix%', (string) $definition->getArgument(4));
 
         $tags = $definition->getTags();
 

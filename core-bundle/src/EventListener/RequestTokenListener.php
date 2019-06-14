@@ -45,12 +45,18 @@ class RequestTokenListener
      */
     private $csrfTokenName;
 
-    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, CsrfTokenManagerInterface $csrfTokenManager, string $csrfTokenName)
+    /**
+     * @var string
+     */
+    private $csrfCookiePrefix;
+
+    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, CsrfTokenManagerInterface $csrfTokenManager, string $csrfTokenName, string $csrfCookiePrefix = 'csrf_')
     {
         $this->framework = $framework;
         $this->scopeMatcher = $scopeMatcher;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->csrfTokenName = $csrfTokenName;
+        $this->csrfCookiePrefix = $csrfCookiePrefix;
     }
 
     /**
@@ -62,13 +68,19 @@ class RequestTokenListener
 
         // Only check the request token if a) the request is a POST request, b)
         // the request is not an Ajax request, c) the _token_check attribute is
-        // not false and d) the _token_check attribute is set or the request is
-        // a Contao request
+        // not false, d) the _token_check attribute is set or the request is a
+        // Contao request and e) the request has cookies, an authenticated user
+        // or the session has been started
         if (
             'POST' !== $request->getRealMethod()
             || $request->isXmlHttpRequest()
             || false === $request->attributes->get('_token_check')
             || (!$request->attributes->has('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
+            || (
+                (0 === $request->cookies->count() || $request->cookies->keys() === [$this->csrfCookiePrefix.$this->csrfTokenName])
+                && !$request->getUserInfo()
+                && !($request->hasSession() && $request->getSession()->isStarted())
+            )
         ) {
             return;
         }
