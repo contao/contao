@@ -44,7 +44,7 @@ class TwoFactorControllerTest extends TestCase
     {
         parent::setUp();
 
-        System::setContainer($this->mockContainer());
+        System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
     public function testReturnsIfUserIsNotInstanceOfFrontendUser(): void

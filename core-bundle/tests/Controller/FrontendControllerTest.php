@@ -127,7 +127,7 @@ class FrontendControllerTest extends TestCase
             ->willReturn('/')
         ;
 
-        $container = $this->mockContainer();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('router', $router);
 
         $controller = new FrontendController();
