@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 use Contao\BackendUser;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\Translator;
@@ -404,9 +405,16 @@ class TwoFactorControllerTest extends TestCase
             ->willReturn($template)
         ;
 
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->any())
+            ->method('isFrontendRequest')
+            ->willReturn(true)
+        ;
+
         $container = new ContainerBuilder();
         $container->set('contao.framework', $framework);
-        $container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
+        $container->set('contao.routing.scope_matcher', $scopeMatcher);
 
         return $container;
     }
