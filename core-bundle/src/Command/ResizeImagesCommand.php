@@ -34,11 +34,6 @@ use Symfony\Component\Process\Process;
 class ResizeImagesCommand extends Command
 {
     /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
      * @var ImageFactoryInterface
      */
     private $imageFactory;
@@ -59,17 +54,22 @@ class ResizeImagesCommand extends Command
     private $storage;
 
     /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    /**
      * @var int
      */
     private $terminalWidth;
 
-    public function __construct(Filesystem $filesystem, ImageFactoryInterface $imageFactory, ResizerInterface $resizer, string $targetDir, DeferredImageStorageInterface $storage)
+    public function __construct(ImageFactoryInterface $imageFactory, ResizerInterface $resizer, string $targetDir, DeferredImageStorageInterface $storage, Filesystem $filesystem = null)
     {
-        $this->filesystem = $filesystem;
         $this->imageFactory = $imageFactory;
         $this->resizer = $resizer instanceof DeferredResizerInterface ? $resizer : null;
         $this->targetDir = $targetDir;
         $this->storage = $storage;
+        $this->filesystem = $filesystem ?? new Filesystem();
         $this->terminalWidth = (new Terminal())->getWidth();
 
         parent::__construct();

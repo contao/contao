@@ -31,11 +31,11 @@ services:
     contao.command.resize_images:
         class: Contao\CoreBundle\Command\ResizeImagesCommand
         arguments:
-            - "@filesystem"
             - "@contao.image.image_factory"
             - "@contao.image.resizer"
             - "%contao.image.target_dir%"
             - '@contao.image.deferred_storage'
+            - "@filesystem"
 
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand
