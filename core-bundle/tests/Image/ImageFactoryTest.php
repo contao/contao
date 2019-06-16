@@ -174,10 +174,10 @@ class ImageFactoryTest extends TestCase
 
         /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
-        $filesModel->importantPartX = '0.5';
-        $filesModel->importantPartY = '0.5';
-        $filesModel->importantPartWidth = '0.25';
-        $filesModel->importantPartHeight = '0.25';
+        $filesModel->importantPartX = 0.5;
+        $filesModel->importantPartY = 0.5;
+        $filesModel->importantPartWidth = 0.25;
+        $filesModel->importantPartHeight = 0.25;
 
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
 
