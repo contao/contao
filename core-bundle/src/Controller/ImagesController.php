@@ -60,6 +60,6 @@ class ImagesController
             throw new NotFoundHttpException($exception->getMessage(), $exception);
         }
 
-        return new BinaryFileResponse($image->getPath());
+        return new BinaryFileResponse($image->getPath(), 200, ['Cache-Control' => 'maxage=31536000']);
     }
 }
