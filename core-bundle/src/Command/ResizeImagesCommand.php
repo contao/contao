@@ -109,7 +109,7 @@ class ResizeImagesCommand extends Command
         }
 
         if ($throttle < 0.001 || $throttle > 1) {
-            throw new InvalidArgumentException(sprintf('Throttle value "%s" is invalid.', $timeLimit));
+            throw new InvalidArgumentException(sprintf('Throttle value "%s" is invalid.', $throttle));
         }
 
         if ((string) (int) $concurrent !== $concurrent || (int) $concurrent < 1) {
