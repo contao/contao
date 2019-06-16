@@ -20,6 +20,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
 use Contao\FilesModel;
 use Contao\Image as ContaoImage;
+use Contao\Image\DeferredImageInterface;
+use Contao\Image\DeferredResizer;
 use Contao\Image\Image;
 use Contao\Image\ImageDimensionsInterface;
 use Contao\Image\ImageInterface;
@@ -274,6 +276,24 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($imageMock, new ResizeConfiguration());
 
         $this->assertSameImage($imageMock, $image);
+    }
+
+    public function testCreatesADeferredImageObjectFromAnImagePath(): void
+    {
+        $path = $this->getFixturesDir().'/images/non-existent-deferred.jpg';
+        $imageMock = $this->createMock(DeferredImageInterface::class);
+
+        $resizer = $this->createMock(DeferredResizer::class);
+        $resizer
+            ->method('getDeferredImage')
+            ->with($path)
+            ->willReturn($imageMock)
+        ;
+
+        $imageFactory = $this->getImageFactory($resizer);
+        $image = $imageFactory->create($path);
+
+        $this->assertSame($imageMock, $image);
     }
 
     /**
