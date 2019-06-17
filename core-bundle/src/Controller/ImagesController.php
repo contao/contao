@@ -16,6 +16,7 @@ use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ResizerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -37,11 +38,17 @@ class ImagesController
      */
     private $targetDir;
 
-    public function __construct(ImageFactoryInterface $imageFactory, ResizerInterface $resizer, string $targetDir)
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    public function __construct(ImageFactoryInterface $imageFactory, ResizerInterface $resizer, string $targetDir, Filesystem $filesystem = null)
     {
         $this->imageFactory = $imageFactory;
         $this->resizer = $resizer;
         $this->targetDir = $targetDir;
+        $this->filesystem = $filesystem ?? new Filesystem();
     }
 
     /**
@@ -58,6 +65,10 @@ class ImagesController
             }
         } catch (\Exception $exception) {
             throw new NotFoundHttpException($exception->getMessage(), $exception);
+        }
+
+        if (!$this->filesystem->exists($image->getPath())) {
+            throw new NotFoundHttpException('Image does not exist');
         }
 
         return new BinaryFileResponse($image->getPath(), 200, ['Cache-Control' => 'private, max-age=31536000'], false);

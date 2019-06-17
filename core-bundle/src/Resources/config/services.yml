@@ -69,6 +69,7 @@ services:
             - "@contao.image.image_factory"
             - "@contao.image.resizer"
             - "%contao.image.target_dir%"
+            - '@filesystem'
         public: true
 
     contao.controller.insert_tags:
