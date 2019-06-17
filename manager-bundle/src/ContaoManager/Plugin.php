@@ -208,7 +208,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             ],
             'jwt-cookie' => [
                 'debug',
-            ]
+            ],
         ];
     }
 

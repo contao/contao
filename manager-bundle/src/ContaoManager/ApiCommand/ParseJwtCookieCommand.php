@@ -17,7 +17,6 @@ use Contao\ManagerBundle\Api\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ParseJwtCookieCommand extends Command
@@ -27,11 +26,11 @@ class ParseJwtCookieCommand extends Command
      */
     private $jwtManager;
 
-    public function __construct(Application $application)
+    public function __construct(Application $application, JwtManager $jwtManager = null)
     {
         parent::__construct();
 
-        $this->jwtManager = new JwtManager($application->getProjectDir());
+        $this->jwtManager = $jwtManager ?: new JwtManager($application->getProjectDir());
     }
 
     /**
