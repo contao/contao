@@ -24,21 +24,13 @@ class Version480Update extends AbstractVersionUpdate
     {
         $schemaManager = $this->connection->getSchemaManager();
 
-        if (!$schemaManager->tablesExist(['tl_layout', 'tl_files'])) {
+        if (!$schemaManager->tablesExist(['tl_layout'])) {
             return false;
         }
 
-        $layoutColumns = $schemaManager->listTableColumns('tl_layout');
-        $filesColumns = $schemaManager->listTableColumns('tl_files');
+        $columns = $schemaManager->listTableColumns('tl_layout');
 
-        if (!isset($filesColumns['importantpartx'])) {
-            return false;
-        }
-
-        return
-            isset($layoutColumns['picturefill'])
-            && 'integer' === $filesColumns['importantpartx']->getType()->getName()
-        ;
+        return isset($columns['picturefill']);
     }
 
     /**
