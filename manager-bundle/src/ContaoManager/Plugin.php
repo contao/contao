@@ -198,10 +198,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     {
         return [
             'dot-env' => [
-                'APP_DEV_ACCESSKEY',
                 'TRUSTED_PROXIES',
                 'TRUSTED_HOSTS',
-                'DISABLE_HTTP_CACHE',
             ],
             'config' => [
                 'disable-packages',
