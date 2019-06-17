@@ -51,6 +51,8 @@ class ImagesControllerTest extends TestCase
 
         $this->assertInstanceOf(BinaryFileResponse::class, $response);
         $this->assertSame($this->getFixturesDir().'/images/dummy.jpg', $response->getFile()->getPathname());
+        $this->assertSame('31536000', $response->headers->getCacheControlDirective('max-age'));
+        $this->assertTrue($response->headers->getCacheControlDirective('private'));
     }
 
     public function testReturns404IfImageDoesNotExist(): void
