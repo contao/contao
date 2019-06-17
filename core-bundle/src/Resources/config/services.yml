@@ -66,9 +66,9 @@ services:
     contao.controller.images:
         class:  Contao\CoreBundle\Controller\ImagesController
         arguments:
-            - "@contao.image.image_factory"
-            - "@contao.image.resizer"
-            - "%contao.image.target_dir%"
+            - '@contao.image.image_factory'
+            - '@contao.image.resizer'
+            - '%contao.image.target_dir%'
             - '@filesystem'
         public: true
 
@@ -372,9 +372,9 @@ services:
     contao.routing.images_loader:
         class: Contao\CoreBundle\Routing\ImagesLoader
         arguments:
-            - "%kernel.project_dir%"
-            - "%contao.image.target_dir%"
-            - "@filesystem"
+            - '%kernel.project_dir%'
+            - '%contao.image.target_dir%'
+            - '@filesystem'
         tags:
             - { name: routing.loader }
 
