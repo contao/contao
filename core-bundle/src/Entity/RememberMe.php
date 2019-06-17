@@ -43,14 +43,14 @@ class RememberMe
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=64, nullable=false, options={"fixed"=true})
+     * @ORM\Column(type="binary_string", length=32, nullable=false, options={"fixed"=true})
      */
     protected $series;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=88, nullable=false, options={"fixed"=true})
+     * @ORM\Column(type="binary_string", length=64, nullable=false, options={"fixed"=true})
      */
     protected $value;
 
@@ -82,11 +82,11 @@ class RememberMe
      */
     protected $username;
 
-    public function __construct(UserInterface $user, string $encodedSeries)
+    public function __construct(UserInterface $user, string $series)
     {
         $this->class = \get_class($user);
-        $this->series = $encodedSeries;
-        $this->value = base64_encode(random_bytes(64));
+        $this->series = $series;
+        $this->value = random_bytes(64);
         $this->username = $user->getUsername();
         $this->lastUsed = new \DateTime();
         $this->expires = null;
@@ -141,7 +141,7 @@ class RememberMe
     public function cloneWithNewValue(): self
     {
         $clone = clone $this;
-        $clone->value = base64_encode(random_bytes(64));
+        $clone->value = random_bytes(64);
 
         return $clone;
     }

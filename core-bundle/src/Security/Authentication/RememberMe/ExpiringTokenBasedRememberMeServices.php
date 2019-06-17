@@ -119,12 +119,22 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
             return;
         }
 
-        $series = base64_encode(random_bytes(64));
+        $series = random_bytes(64);
 
         $entity = new RememberMe($user, $this->encodeSeries($series));
         $this->repository->persist($entity);
 
         $response->headers->setCookie($this->createRememberMeCookie($request, $series, $entity->getValue()));
+    }
+
+    protected function decodeCookie($rawCookie): array
+    {
+        return array_map('base64_decode', explode('-', $rawCookie));
+    }
+
+    protected function encodeCookie(array $cookieParts): string
+    {
+        return implode('-', array_map('base64_encode', $cookieParts));
     }
 
     private function migrateToken(RememberMe $token): RememberMe
@@ -182,6 +192,6 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
 
     private function encodeSeries(string $series): string
     {
-        return hash_hmac('sha256', $series, $this->secret);
+        return hash_hmac('sha256', $series, $this->secret, true);
     }
 }
