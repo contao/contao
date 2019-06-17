@@ -14,6 +14,7 @@ namespace Contao\ManagerBundle\ContaoManager;
 
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GetConfigCommand;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GetDotEnvCommand;
+use Contao\ManagerBundle\ContaoManager\ApiCommand\JwtCookieCommand;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\RemoveDotEnvCommand;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\SetConfigCommand;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\SetDotEnvCommand;
@@ -218,6 +219,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             GetDotEnvCommand::class,
             SetDotEnvCommand::class,
             RemoveDotEnvCommand::class,
+            JwtCookieCommand::class,
         ];
     }
 

@@ -103,6 +103,24 @@ class JwtManager
             return;
         }
 
+        $response->headers->setCookie($this->createCookie($payload));
+    }
+
+    /**
+     * Clears the JWT cookie in the response.
+     */
+    public function clearResponseCookie(Response $response): Response
+    {
+        $response->headers->clearCookie(self::COOKIE_NAME);
+
+        return $response;
+    }
+
+    /**
+     * Creates the JWT cookie for the preview entry point.
+     */
+    public function createCookie(array $payload = []): Cookie
+    {
         foreach ($payload as $k => $v) {
             $this->builder->set($k, $v);
         }
@@ -114,17 +132,7 @@ class JwtManager
             ->getToken()
         ;
 
-        $response->headers->setCookie(Cookie::create(self::COOKIE_NAME, (string) $token));
-    }
-
-    /**
-     * Clears the JWT cookie in the response.
-     */
-    public function clearResponseCookie(Response $response): Response
-    {
-        $response->headers->clearCookie(self::COOKIE_NAME);
-
-        return $response;
+        return Cookie::create(self::COOKIE_NAME, (string) $token);
     }
 
     /**
