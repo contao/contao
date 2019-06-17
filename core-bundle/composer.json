@@ -70,7 +70,6 @@
         "symfony/config": "4.2.* || 4.3.*",
         "symfony/console": "4.2.* || 4.3.*",
         "symfony/dependency-injection": "4.2.* || 4.3.*",
-        "symfony/doctrine-bridge": "4.2.* || 4.3.*",
         "symfony/expression-language": "4.2.* || 4.3.*",
         "symfony/event-dispatcher": "4.2.* || 4.3.*",
         "symfony/filesystem": "4.2.* || 4.3.*",
