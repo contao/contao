@@ -5,6 +5,8 @@
 
 The newsletter bundle adds newsletter functionality to Contao 4.
 
+The package can be installed with the specification `contao/newsletter-bundle` via the contao manager or composer. If a lower version than the current one must be installed, this must be specified - e.g. for the current LTS with `^4.4`.
+
 Contao is an Open Source PHP Content Management System for people who want a
 professional website that is easy to maintain. Visit the [project website][1]
 for more information.
