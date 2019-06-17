@@ -75,7 +75,7 @@ class JwtManager
 
         if ($request->cookies->has(self::COOKIE_NAME)) {
             try {
-                return $this->decodeJwt((string) $request->cookies->get(self::COOKIE_NAME));
+                return $this->parseCookie((string) $request->cookies->get(self::COOKIE_NAME));
             } catch (\Exception $e) {
                 // do nothing
             }
@@ -135,6 +135,17 @@ class JwtManager
         return Cookie::create(self::COOKIE_NAME, (string) $token);
     }
 
+    public function parseCookie(string $data): ?array
+    {
+        $token = $this->parser->parse($data);
+
+        if ($token->isExpired() || !$token->verify($this->signer, $this->secret)) {
+            return null;
+        }
+
+        return array_map('strval', $token->getClaims());
+    }
+
     /**
      * Returns whether the response has a cookie with that name.
      */
@@ -150,16 +161,5 @@ class JwtManager
         }
 
         return false;
-    }
-
-    private function decodeJwt(string $data): ?array
-    {
-        $token = $this->parser->parse($data);
-
-        if ($token->isExpired() || !$token->verify($this->signer, $this->secret)) {
-            return null;
-        }
-
-        return array_map('strval', $token->getClaims());
     }
 }

@@ -15,11 +15,12 @@ namespace Contao\ManagerBundle\ContaoManager\ApiCommand;
 use Contao\CoreBundle\HttpKernel\JwtManager;
 use Contao\ManagerBundle\Api\Application;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class JwtCookieCommand extends Command
+class ParseJwtCookieCommand extends Command
 {
     /**
      * @var JwtManager
@@ -41,9 +42,9 @@ class JwtCookieCommand extends Command
         parent::configure();
 
         $this
-            ->setName('jwt-cookie')
-            ->addOption('debug', null, InputOption::VALUE_NONE, 'Enable debug mode in the JWT cookie')
-            ->setDescription('Gets a JWT cookie for the preview entry point.')
+            ->setName('jwt-cookie:parse')
+            ->addArgument('content', InputArgument::REQUIRED, 'The JWT cookie content.')
+            ->setDescription('Parses the content of the preview entry point cookie.')
         ;
     }
 
@@ -52,8 +53,8 @@ class JwtCookieCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $cookie = $this->jwtManager->createCookie(['debug' => $input->getOption('debug')]);
+        $payload = $this->jwtManager->parseCookie($input->getArgument('content'));
 
-        $output->write(json_encode(['cookie' => (string) $cookie]));
+        $output->write(json_encode($payload));
     }
 }
