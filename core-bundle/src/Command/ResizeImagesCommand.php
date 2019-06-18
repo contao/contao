@@ -192,8 +192,8 @@ class ResizeImagesCommand extends Command
         /** @var Process[] $processes */
         $processes = [];
 
-        /** @var string[] $outputs */
-        $outputs = [];
+        /** @var string[] $buffers */
+        $buffers = [];
 
         for ($i = 0; $i < $count; ++$i) {
             $process = new Process(array_merge(
@@ -209,7 +209,7 @@ class ResizeImagesCommand extends Command
             $process->start();
 
             $processes[] = $process;
-            $outputs[] = '';
+            $buffers[] = '';
         }
 
         do {
@@ -219,9 +219,17 @@ class ResizeImagesCommand extends Command
                 if ($process->isRunning()) {
                     $isRunning = true;
                 }
-                $outputs[$index] .= $process->getIncrementalOutput();
-                $rows = explode("\n", $outputs[$index]);
-                $outputs[$index] = array_pop($rows);
+
+                // Append new output to remaining buffer from previous loop run
+                $buffers[$index] .= $process->getIncrementalOutput();
+
+                // Split output into rows
+                $rows = explode("\n", $buffers[$index]);
+
+                // Buffer and remove last line of output, as it might be incomplete
+                $buffers[$index] = array_pop($rows);
+
+                // Write remaining rows to the output with thread prefix
                 $output->write(array_map(function ($row) use ($index) {
                     return sprintf('%02d: ', $index + 1).preg_replace('/^.*\r/s', '', $row)."\n";
                 }, $rows));
@@ -230,7 +238,7 @@ class ResizeImagesCommand extends Command
             usleep(15000);
         } while ($isRunning);
 
-        $output->write($outputs);
+        $output->write($buffers);
 
         $output->write(array_map(function (Process $process): string {
             return $process->getErrorOutput();
