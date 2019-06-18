@@ -102,7 +102,7 @@ class ResizeImagesCommand extends Command
 
         $timeLimit = (float) $input->getOption('time-limit');
         $throttle = (float) $input->getOption('throttle');
-        $concurrent = (string) $input->getOption('concurrent');
+        $concurrent = (int) $input->getOption('concurrent');
 
         if ($timeLimit < 0) {
             throw new InvalidArgumentException(sprintf('Time-limit value "%s" is invalid.', $timeLimit));
@@ -112,12 +112,12 @@ class ResizeImagesCommand extends Command
             throw new InvalidArgumentException(sprintf('Throttle value "%s" is invalid.', $throttle));
         }
 
-        if ((string) (int) $concurrent !== $concurrent || (int) $concurrent < 1) {
+        if ($concurrent < 1) {
             throw new InvalidArgumentException(sprintf('Concurrent value "%s" is invalid.', $concurrent));
         }
 
-        if ((int) $concurrent > 1) {
-            return $this->executeConcurrent((int) $concurrent, $input, $output);
+        if ($concurrent > 1) {
+            return $this->executeConcurrent($concurrent, $input, $output);
         }
 
         $startTime = microtime(true);
