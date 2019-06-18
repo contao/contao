@@ -697,17 +697,12 @@ class Image
 				$deferredImage = null;
 			}
 
-			// Handle deferred images
-			if ($deferredImage instanceof DeferredImageInterface)
-			{
-				// ignore
-			}
 			// Handle public bundle resources
-			elseif (file_exists($rootDir . '/' . $webDir . '/' . $src))
+			if (file_exists($rootDir . '/' . $webDir . '/' . $src))
 			{
 				$src = $webDir . '/' . $src;
 			}
-			else
+			elseif (!$deferredImage instanceof DeferredImageInterface)
 			{
 				return '';
 			}
