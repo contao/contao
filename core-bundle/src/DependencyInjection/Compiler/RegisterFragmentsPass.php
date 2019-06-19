@@ -12,18 +12,26 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Contao\CoreBundle\Fragment\Annotations\ContentElement;
+use Contao\CoreBundle\Fragment\Annotations\FrontendModule;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\DocParser;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Registers Contao fragments in the registry.
@@ -44,8 +52,104 @@ class RegisterFragmentsPass implements CompilerPassInterface
             return;
         }
 
+        $this->registerAnnotatedControllers($container);
         $this->registerFragments($container, ContentElementReference::TAG_NAME);
         $this->registerFragments($container, FrontendModuleReference::TAG_NAME);
+    }
+
+    private function registerAnnotatedControllers(ContainerBuilder $container): void
+    {
+        if (count($dirs = $this->getAnnotatedControllersDirs($container)) === 0) {
+            return;
+        }
+
+        $preHandlers = [];
+        $registry = $container->findDefinition('contao.fragment.registry');
+        $annotationReader = new AnnotationReader(new DocParser());
+
+        foreach ($dirs as $dir => $namespace) {
+            $container->addResource(new DirectoryResource($dir, '/\.php$/'));
+
+            $finder = Finder::create()->files()->in($dir)->name('/\.php$/');
+
+            /** @var SplFileInfo $file */
+            foreach ($finder as $file) {
+                $class = $namespace . '\\' . $file->getFilenameWithoutExtension();
+
+                if (!class_exists($class)) {
+                    continue;
+                }
+
+                $reflection = new \ReflectionClass($class);
+                $annotation = $annotationReader->getClassAnnotation($reflection, ContentElement::class);
+
+                // The annotation might be a front end module
+                if ($annotation === null) {
+                    /** @var ContentElement|FrontendModule $annotation */
+                    $annotation = $annotationReader->getClassAnnotation($reflection, FrontendModule::class);
+
+                    if ($annotation === null) {
+                        continue;
+                    }
+                }
+
+                $serviceId = $annotation->service ?: $class;
+
+                if ($container->hasDefinition($serviceId)) {
+                    $definition = $container->getDefinition($serviceId);
+                } else {
+                    $definition = new Definition($class);
+                    $container->setDefinition($serviceId, $definition);
+                }
+
+                $definition->setPublic(true);
+
+                $attributes = [
+                    'category' => $annotation->category,
+                    'method' => '__invoke', // TODO
+                    //'options' => $annotation->options, // TODO
+                    'renderer' => $annotation->renderer,
+                    'template' => $annotation->template,
+                    'type' => $annotation->type,
+                ];
+
+                $attributes['type'] = $this->getFragmentType($definition, $attributes);
+
+                $tag = ($annotation instanceof ContentElement) ? ContentElementReference::TAG_NAME : FrontendModuleReference::TAG_NAME;
+
+                $identifier = sprintf('%s.%s', $tag, $attributes['type']);
+                $reference = new Reference($serviceId);
+                $config = $this->getFragmentConfig($container, $reference, $attributes);
+
+                if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
+                    $preHandlers[$identifier] = $reference;
+                }
+
+                if (is_a($definition->getClass(), FragmentOptionsAwareInterface::class, true)) {
+                    $definition->addMethodCall('setFragmentOptions', [$attributes]);
+                }
+
+                $registry->addMethodCall('add', [$identifier, $config]);
+            }
+        }
+
+        $this->addPreHandlers($container, $preHandlers);
+
+        exit;
+    }
+
+    private function getAnnotatedControllersDirs(ContainerBuilder $container)
+    {
+        $dirs = [];
+
+        foreach ($container->get('kernel.bundles') as $name => $class) {
+            $bundle = new \ReflectionClass($class);
+            $dirs[\dirname($bundle->getFileName())] = $bundle->getNamespaceName() . '\\Controller';
+        }
+
+        $dirs[$container->getParameter('kernel.project_dir') . '/src/Controller'] = 'App\\Controller';
+
+        return $dirs;
     }
 
     /**
