@@ -336,7 +336,8 @@ class PictureTest extends TestCase
             $framework,
             $container->getParameter('contao.image.bypass_cache'),
             $container->getParameter('contao.image.imagine_options'),
-            $container->getParameter('contao.image.valid_extensions')
+            $container->getParameter('contao.image.valid_extensions'),
+            $container->getParameter('kernel.project_dir').'/'.$container->getParameter('contao.upload_path')
         );
 
         $pictureGenerator = new PictureGenerator($resizer);

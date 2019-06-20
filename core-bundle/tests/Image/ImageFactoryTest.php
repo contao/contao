@@ -636,7 +636,7 @@ class ImageFactoryTest extends TestCase
      * @param ImagineInterface&MockObject $imagineSvg
      * @param ContaoFramework&MockObject  $framework
      */
-    private function getImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null): ImageFactory
+    private function getImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null, string $uploadDir = null): ImageFactory
     {
         if (null === $resizer) {
             $resizer = $this->createMock(ResizerInterface::class);
@@ -673,6 +673,10 @@ class ImageFactoryTest extends TestCase
             $validExtensions = ['jpg', 'svg'];
         }
 
+        if (null === $uploadDir) {
+            $uploadDir = $this->getFixturesDir();
+        }
+
         return new ImageFactory(
             $resizer,
             $imagine,
@@ -681,7 +685,8 @@ class ImageFactoryTest extends TestCase
             $framework,
             $bypassCache,
             $imagineOptions,
-            $validExtensions
+            $validExtensions,
+            $uploadDir
         );
     }
 
