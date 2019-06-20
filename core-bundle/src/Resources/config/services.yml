@@ -196,6 +196,7 @@ services:
             - '%contao.image.bypass_cache%'
             - '%contao.image.imagine_options%'
             - '%contao.image.valid_extensions%'
+            - '%kernel.project_dir%/%contao.upload_path%'
         public: true
 
     contao.image.image_sizes:

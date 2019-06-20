@@ -69,7 +69,12 @@ class ImageFactory implements ImageFactoryInterface
      */
     private $validExtensions;
 
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions)
+    /**
+     * @var string
+     */
+    private $uploadDir;
+
+    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir)
     {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
@@ -79,6 +84,7 @@ class ImageFactory implements ImageFactoryInterface
         $this->bypassCache = $bypassCache;
         $this->imagineOptions = $imagineOptions;
         $this->validExtensions = $validExtensions;
+        $this->uploadDir = $uploadDir;
     }
 
     /**
@@ -242,8 +248,12 @@ class ImageFactory implements ImageFactoryInterface
      */
     private function createImportantPart(ImageInterface $image): ?ImportantPart
     {
-        if (!$this->framework->isInitialized()) {
+        if (strncmp($image->getPath(), $this->uploadDir . '/', \strlen($this->uploadDir) + 1) !== 0) {
             return null;
+        }
+
+        if (!$this->framework->isInitialized()) {
+            throw new \RuntimeException('Contao framework was not initialized');
         }
 
         /** @var FilesModel $filesModel */
