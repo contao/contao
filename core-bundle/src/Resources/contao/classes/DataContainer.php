@@ -639,16 +639,9 @@ abstract class DataContainer extends Backend
 
 				if ($blnCanResize)
 				{
-					if ($objFile->width > 699 || $objFile->height > 524 || !$objFile->width || !$objFile->height)
-					{
-						$container = System::getContainer();
-						$rootDir = $container->getParameter('kernel.project_dir');
-						$image = rawurldecode($container->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($rootDir));
-					}
-					else
-					{
-						$image = $objFile->path;
-					}
+					$container = System::getContainer();
+					$rootDir = $container->getParameter('kernel.project_dir');
+					$image = rawurldecode($container->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($rootDir));
 				}
 
 				$objImage = new File($image);
