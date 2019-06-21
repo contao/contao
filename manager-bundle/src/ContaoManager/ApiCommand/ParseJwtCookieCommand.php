@@ -42,7 +42,7 @@ class ParseJwtCookieCommand extends Command
 
         $this
             ->setName('jwt-cookie:parse')
-            ->addArgument('content', InputArgument::REQUIRED, 'The JWT cookie content.')
+            ->addArgument('content', InputArgument::REQUIRED, 'The JWT cookie content')
             ->setDescription('Parses the content of the preview entry point cookie.')
         ;
     }

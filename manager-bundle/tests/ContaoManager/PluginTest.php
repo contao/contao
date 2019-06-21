@@ -12,13 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\ContaoManager;
 
-use Contao\ManagerBundle\ContaoManager\ApiCommand\GenerateJwtCookieCommand;
-use Contao\ManagerBundle\ContaoManager\ApiCommand\GetConfigCommand;
-use Contao\ManagerBundle\ContaoManager\ApiCommand\GetDotEnvCommand;
-use Contao\ManagerBundle\ContaoManager\ApiCommand\ParseJwtCookieCommand;
-use Contao\ManagerBundle\ContaoManager\ApiCommand\RemoveDotEnvCommand;
-use Contao\ManagerBundle\ContaoManager\ApiCommand\SetConfigCommand;
-use Contao\ManagerBundle\ContaoManager\ApiCommand\SetDotEnvCommand;
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
