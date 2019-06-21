@@ -2,6 +2,12 @@
 
 ## DEV
 
+ * Add deferred image resizing (see #354).
+ * Disable CSRF if the request has no cookies (see #515).
+ * Add expiration based persistent rememberme tokens (see #483).
+ * Rework caching for proxies (see #389).
+ * Add a command to debug a DCA (see #490).
+ * Support clearing any proxy cache in the maintenance module (see #173).
  * Remove the Google+ syndication links (see #484).
  * Add a splash image to the Vimeo and YouTube elements (see #300).
  * Make the notification bell counter more visible (see #289).
