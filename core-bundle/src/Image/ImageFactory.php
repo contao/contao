@@ -160,13 +160,7 @@ class ImageFactory implements ImageFactoryInterface
             throw new \InvalidArgumentException(sprintf('"%s" is not a legacy resize mode', $mode));
         }
 
-        $importantPart = [
-            0,
-            0,
-            1,
-            1,
-        ];
-
+        $importantPart = [0, 0, 1, 1];
         [$modeX, $modeY] = explode('_', $mode);
 
         if ('left' === $modeX) {
@@ -183,12 +177,7 @@ class ImageFactory implements ImageFactoryInterface
             $importantPart[3] = 0;
         }
 
-        return new ImportantPart(
-            $importantPart[0],
-            $importantPart[1],
-            $importantPart[2],
-            $importantPart[3]
-        );
+        return new ImportantPart($importantPart[0], $importantPart[1], $importantPart[2], $importantPart[3]);
     }
 
     /**
@@ -248,7 +237,7 @@ class ImageFactory implements ImageFactoryInterface
      */
     private function createImportantPart(ImageInterface $image): ?ImportantPart
     {
-        if (strncmp($image->getPath(), $this->uploadDir . '/', \strlen($this->uploadDir) + 1) !== 0) {
+        if (0 !== strncmp($image->getPath(), $this->uploadDir.'/', \strlen($this->uploadDir) + 1)) {
             return null;
         }
 

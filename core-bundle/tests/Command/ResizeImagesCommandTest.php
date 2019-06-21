@@ -19,6 +19,7 @@ use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredImageStorageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ImageInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -128,6 +129,11 @@ class ResizeImagesCommandTest extends TestCase
         $this->assertNotRegExp('/All images resized/', $display);
     }
 
+    /**
+     * @param ImageFactoryInterface&MockObject         $factory
+     * @param DeferredResizerInterface&MockObject      $resizer
+     * @param DeferredImageStorageInterface&MockObject $storage
+     */
     private function getCommand(ImageFactoryInterface $factory = null, DeferredResizerInterface $resizer = null, DeferredImageStorageInterface $storage = null): ResizeImagesCommand
     {
         return new ResizeImagesCommand(

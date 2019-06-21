@@ -64,7 +64,6 @@ class ImagesControllerTest extends TestCase
         ;
 
         $resizer = $this->createMock(ResizerInterface::class);
-
         $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images');
 
         $this->expectException(NotFoundHttpException::class);

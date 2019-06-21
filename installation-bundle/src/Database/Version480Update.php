@@ -95,10 +95,14 @@ class Version480Update extends AbstractVersionUpdate
         $this->connection->query('
             ALTER TABLE
                 tl_files
-            CHANGE importantPartX importantPartX DOUBLE PRECISION DEFAULT 0 NOT NULL,
-            CHANGE importantPartY importantPartY DOUBLE PRECISION DEFAULT 0 NOT NULL,
-            CHANGE importantPartWidth importantPartWidth DOUBLE PRECISION DEFAULT 0 NOT NULL,
-            CHANGE importantPartHeight importantPartHeight DOUBLE PRECISION DEFAULT 0 NOT NULL
+            CHANGE
+                importantPartX importantPartX DOUBLE PRECISION DEFAULT 0 NOT NULL,
+            CHANGE
+                importantPartY importantPartY DOUBLE PRECISION DEFAULT 0 NOT NULL,
+            CHANGE
+                importantPartWidth importantPartWidth DOUBLE PRECISION DEFAULT 0 NOT NULL,
+            CHANGE
+                importantPartHeight importantPartHeight DOUBLE PRECISION DEFAULT 0 NOT NULL
         ');
 
         $statement = $this->connection->query('

@@ -85,7 +85,7 @@ class ResizeImagesCommand extends Command
             ->setDefinition([
                 new InputOption('time-limit', 'l', InputArgument::OPTIONAL, 'Time limit in seconds', '0'),
                 new InputOption('concurrent', 'c', InputArgument::OPTIONAL, 'Run multiple processes concurrently', '1'),
-                new InputOption('throttle', 't', InputArgument::OPTIONAL, 'Pause between resizes to limit cpu utilization, 0.1 relates to 10% cpu usage', '1'),
+                new InputOption('throttle', 't', InputArgument::OPTIONAL, 'Pause between resizes to limit CPU utilization, 0.1 relates to 10% CPU usage', '1'),
             ])
             ->setDescription('Resizes deferred images that have not been processed yet.')
         ;
@@ -201,11 +201,9 @@ class ResizeImagesCommand extends Command
                 $_SERVER['argv'],
                 ['--concurrent=1', $output->isDecorated() ? '--ansi' : '--no-ansi']
             ));
+
             $process->setTimeout(null);
-            $process->setEnv([
-                'LINES' => getenv('LINES'),
-                'COLUMNS' => getenv('COLUMNS') - 4,
-            ]);
+            $process->setEnv(['LINES' => getenv('LINES'), 'COLUMNS' => getenv('COLUMNS') - 4]);
             $process->start();
 
             $processes[] = $process;
@@ -230,9 +228,12 @@ class ResizeImagesCommand extends Command
                 $buffers[$index] = array_pop($rows);
 
                 // Write remaining rows to the output with thread prefix
-                $output->write(array_map(function ($row) use ($index) {
-                    return sprintf('%02d: ', $index + 1).preg_replace('/^.*\r/s', '', $row)."\n";
-                }, $rows));
+                $output->write(array_map(
+                    static function ($row) use ($index) {
+                        return sprintf('%02d: ', $index + 1).preg_replace('/^.*\r/s', '', $row)."\n";
+                    },
+                    $rows
+                ));
             }
 
             usleep(15000);
@@ -240,12 +241,18 @@ class ResizeImagesCommand extends Command
 
         $output->write($buffers);
 
-        $output->write(array_map(function (Process $process): string {
-            return $process->getErrorOutput();
-        }, $processes));
+        $output->write(array_map(
+            static function (Process $process): string {
+                return $process->getErrorOutput();
+            },
+            $processes
+        ));
 
-        return max(...array_map(function (Process $process): int {
-            return (int) $process->getExitCode();
-        }, $processes));
+        return max(...array_map(
+            static function (Process $process): int {
+                return (int) $process->getExitCode();
+            },
+            $processes
+        ));
     }
 }

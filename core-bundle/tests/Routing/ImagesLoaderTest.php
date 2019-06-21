@@ -20,14 +20,23 @@ class ImagesLoaderTest extends TestCase
 {
     public function testSupportsTheContaoImagesRoute(): void
     {
-        $loader = new ImagesLoader($this->getFixturesDir(), $this->getFixturesDir().'/path/to/images', new Filesystem());
+        $loader = new ImagesLoader(
+            $this->getFixturesDir(),
+            $this->getFixturesDir().'/path/to/images',
+            new Filesystem()
+        );
 
         $this->assertTrue($loader->supports('.', 'contao_images'));
     }
 
     public function testUsesTheCorrectPath(): void
     {
-        $loader = new ImagesLoader($this->getFixturesDir(), $this->getFixturesDir().'/path/to/images', new Filesystem());
+        $loader = new ImagesLoader(
+            $this->getFixturesDir(),
+            $this->getFixturesDir().'/path/to/images',
+            new Filesystem()
+        );
+
         $route = $loader->load('.', 'contao_images')->get('contao_images');
 
         $this->assertNotNull($route);
