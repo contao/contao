@@ -17,11 +17,11 @@ use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\File;
 use Contao\Image as LegacyImage;
+use Contao\Image\DeferredResizer as ImageResizer;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeCoordinatesInterface;
 use Contao\Image\ResizeOptionsInterface;
-use Contao\Image\Resizer as ImageResizer;
 use Contao\System;
 use Imagine\Gd\Imagine as GdImagine;
 
@@ -66,12 +66,13 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
                 }
 
                 $importantPart = $image->getImportantPart();
+                $imageSize = $image->getDimensions()->getSize();
 
                 $this->legacyImage->setImportantPart([
-                    'x' => $importantPart->getPosition()->getX(),
-                    'y' => $importantPart->getPosition()->getY(),
-                    'width' => $importantPart->getSize()->getWidth(),
-                    'height' => $importantPart->getSize()->getHeight(),
+                    'x' => $importantPart->getX() * $imageSize->getWidth(),
+                    'y' => $importantPart->getY() * $imageSize->getHeight(),
+                    'width' => $importantPart->getWidth() * $imageSize->getWidth(),
+                    'height' => $importantPart->getHeight() * $imageSize->getHeight(),
                 ]);
             }
         }
@@ -92,7 +93,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     /**
      * {@inheritdoc}
      */
-    protected function executeResize(ImageInterface $image, ResizeCoordinatesInterface $coordinates, $path, ResizeOptionsInterface $options): ImageInterface
+    protected function executeResize(ImageInterface $image, ResizeCoordinatesInterface $coordinates, string $path, ResizeOptionsInterface $options): ImageInterface
     {
         if ($this->legacyImage && $this->hasGetImageHook()) {
             $rootDir = System::getContainer()->getParameter('kernel.project_dir');

@@ -192,10 +192,10 @@ class PictureFactory implements PictureFactoryInterface
 
         if (null !== $imageSize) {
             $resizeConfig
-                ->setWidth($imageSize->width)
-                ->setHeight($imageSize->height)
+                ->setWidth((int) $imageSize->width)
+                ->setHeight((int) $imageSize->height)
                 ->setMode($imageSize->resizeMode)
-                ->setZoomLevel($imageSize->zoom)
+                ->setZoomLevel((int) $imageSize->zoom)
             ;
 
             $configItem

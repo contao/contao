@@ -30,10 +30,10 @@ use Contao\Model\Registry;
  * @property boolean $found
  * @property string  $name
  * @property boolean $protected
- * @property integer $importantPartX
- * @property integer $importantPartY
- * @property integer $importantPartWidth
- * @property integer $importantPartHeight
+ * @property float $importantPartX
+ * @property float $importantPartY
+ * @property float $importantPartWidth
+ * @property float $importantPartHeight
  * @property string  $meta
  *
  * @method static FilesModel|null findByIdOrAlias($val, array $opt=array())
@@ -255,10 +255,16 @@ class FilesModel extends Model
 	public static function findByPath($path, array $arrOptions=array())
 	{
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$uploadPath = System::getContainer()->getParameter('contao.upload_path');
 
 		if (strncmp($path, $rootDir . '/', \strlen($rootDir) + 1) === 0)
 		{
 			$path = substr($path, \strlen($rootDir) + 1);
+		}
+
+		if (strncmp($path, $uploadPath . '/', \strlen($uploadPath) + 1) !== 0)
+		{
+			return null;
 		}
 
 		return static::findOneBy('path', $path, $arrOptions);

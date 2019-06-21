@@ -20,6 +20,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
 use Contao\FilesModel;
 use Contao\Image as ContaoImage;
+use Contao\Image\DeferredImageInterface;
+use Contao\Image\DeferredResizer;
 use Contao\Image\Image;
 use Contao\Image\ImageDimensionsInterface;
 use Contao\Image\ImageInterface;
@@ -36,7 +38,6 @@ use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
-use Imagine\Image\Point;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -131,7 +132,7 @@ class ImageFactoryTest extends TestCase
                         $this->assertSame($path, $image->getPath());
 
                         $this->assertSameImportantPart(
-                            new ImportantPart(new Point(50, 50), new Box(25, 25)),
+                            new ImportantPart(0.5, 0.5, 0.25, 0.25),
                             $image->getImportantPart()
                         );
 
@@ -175,10 +176,10 @@ class ImageFactoryTest extends TestCase
 
         /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
-        $filesModel->importantPartX = 50;
-        $filesModel->importantPartY = 50;
-        $filesModel->importantPartWidth = 25;
-        $filesModel->importantPartHeight = 25;
+        $filesModel->importantPartX = 0.5;
+        $filesModel->importantPartY = 0.5;
+        $filesModel->importantPartWidth = 0.25;
+        $filesModel->importantPartHeight = 0.25;
 
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
 
@@ -277,6 +278,24 @@ class ImageFactoryTest extends TestCase
         $this->assertSameImage($imageMock, $image);
     }
 
+    public function testCreatesADeferredImageObjectFromAnImagePath(): void
+    {
+        $path = $this->getFixturesDir().'/images/non-existent-deferred.jpg';
+        $imageMock = $this->createMock(DeferredImageInterface::class);
+
+        $resizer = $this->createMock(DeferredResizer::class);
+        $resizer
+            ->method('getDeferredImage')
+            ->with($path)
+            ->willReturn($imageMock)
+        ;
+
+        $imageFactory = $this->getImageFactory($resizer);
+        $image = $imageFactory->create($path);
+
+        $this->assertSame($imageMock, $image);
+    }
+
     /**
      * @dataProvider getCreateWithLegacyMode
      */
@@ -303,8 +322,10 @@ class ImageFactoryTest extends TestCase
 
                         $this->assertSameImportantPart(
                             new ImportantPart(
-                                new Point($expected[0], $expected[1]),
-                                new Box($expected[2], $expected[3])
+                                $expected[0],
+                                $expected[1],
+                                $expected[2],
+                                $expected[3]
                             ),
                             $image->getImportantPart()
                         );
@@ -326,19 +347,7 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        $imagineImageMock = $this->createMock(ImagineImageInterface::class);
-        $imagineImageMock
-            ->expects($this->once())
-            ->method('getSize')
-            ->willReturn(new Box(100, 100))
-        ;
-
         $imagine = $this->createMock(ImagineInterface::class);
-        $imagine
-            ->expects($this->once())
-            ->method('open')
-            ->willReturn($imagineImageMock)
-        ;
 
         /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
@@ -375,23 +384,28 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->getImageFactory();
 
         $this->assertSameImportantPart(
-            new ImportantPart(new Point($expected[0], $expected[1]), new Box($expected[2], $expected[3])),
+            new ImportantPart(
+                $expected[0],
+                $expected[1],
+                $expected[2],
+                $expected[3]
+            ),
             $imageFactory->getImportantPartFromLegacyMode($imageMock, $mode)
         );
     }
 
     public function getCreateWithLegacyMode(): \Generator
     {
-        yield 'Left Top' => ['left_top', [0, 0, 1, 1]];
-        yield 'Left Center' => ['left_center', [0, 0, 1, 100]];
-        yield 'Left Bottom' => ['left_bottom', [0, 99, 1, 1]];
-        yield 'Center Top' => ['center_top', [0, 0, 100, 1]];
-        yield 'Center Center' => ['center_center', [0, 0, 100, 100]];
-        yield 'Center Bottom' => ['center_bottom', [0, 99, 100, 1]];
-        yield 'Right Top' => ['right_top', [99, 0, 1, 1]];
-        yield 'Right Center' => ['right_center', [99, 0, 1, 100]];
-        yield 'Right Bottom' => ['right_bottom', [99, 99, 1, 1]];
-        yield 'Invalid' => ['top_left', [0, 0, 100, 100]];
+        yield 'Left Top' => ['left_top', [0, 0, 0, 0]];
+        yield 'Left Center' => ['left_center', [0, 0, 0, 1]];
+        yield 'Left Bottom' => ['left_bottom', [0, 1, 0, 0]];
+        yield 'Center Top' => ['center_top', [0, 0, 1, 0]];
+        yield 'Center Center' => ['center_center', [0, 0, 1, 1]];
+        yield 'Center Bottom' => ['center_bottom', [0, 1, 1, 0]];
+        yield 'Right Top' => ['right_top', [1, 0, 0, 0]];
+        yield 'Right Center' => ['right_center', [1, 0, 0, 1]];
+        yield 'Right Bottom' => ['right_bottom', [1, 1, 0, 0]];
+        yield 'Invalid' => ['top_left', [0, 0, 1, 1]];
     }
 
     public function testFailsToReturnTheImportantPartIfTheModeIsInvalid(): void
@@ -415,27 +429,6 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path);
 
         $this->assertSame($path, $image->getPath());
-    }
-
-    public function testIgnoresTheImportantPartIfItIsOutOfBounds(): void
-    {
-        $path = $this->getFixturesDir().'/images/dummy.jpg';
-
-        $filesModel = $this->mockClassWithProperties(FilesModel::class);
-        $filesModel->importantPartX = 50;
-        $filesModel->importantPartY = 50;
-        $filesModel->importantPartWidth = 175;
-        $filesModel->importantPartHeight = 175;
-
-        $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
-        $imageFactory = $this->getImageFactory(null, null, null, null, $framework);
-        $image = $imageFactory->create($path);
-
-        $this->assertSameImportantPart(
-            new ImportantPart(new Point(0, 0), new Box(200, 200)),
-            $image->getImportantPart()
-        );
     }
 
     /**
@@ -643,7 +636,7 @@ class ImageFactoryTest extends TestCase
      * @param ImagineInterface&MockObject $imagineSvg
      * @param ContaoFramework&MockObject  $framework
      */
-    private function getImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null): ImageFactory
+    private function getImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null, string $uploadDir = null): ImageFactory
     {
         if (null === $resizer) {
             $resizer = $this->createMock(ResizerInterface::class);
@@ -680,6 +673,10 @@ class ImageFactoryTest extends TestCase
             $validExtensions = ['jpg', 'svg'];
         }
 
+        if (null === $uploadDir) {
+            $uploadDir = $this->getFixturesDir();
+        }
+
         return new ImageFactory(
             $resizer,
             $imagine,
@@ -688,24 +685,32 @@ class ImageFactoryTest extends TestCase
             $framework,
             $bypassCache,
             $imagineOptions,
-            $validExtensions
+            $validExtensions,
+            $uploadDir
         );
     }
 
     private function assertSameImage(ImageInterface $imageA, ImageInterface $imageB): void
     {
-        $this->assertSame($imageA->getDimensions(), $imageB->getDimensions());
-        $this->assertSame($imageA->getImagine(), $imageB->getImagine());
-        $this->assertSame($imageA->getImportantPart(), $imageB->getImportantPart());
+        $this->assertSameDimensions($imageA->getDimensions(), $imageB->getDimensions());
+        $this->assertSameImportantPart($imageA->getImportantPart(), $imageB->getImportantPart());
         $this->assertSame($imageA->getPath(), $imageB->getPath());
         $this->assertSame($imageA->getUrl($this->getFixturesDir()), $imageB->getUrl($this->getFixturesDir()));
     }
 
     private function assertSameImportantPart(ImportantPartInterface $partA, ImportantPartInterface $partB): void
     {
-        $this->assertSame($partA->getPosition()->getX(), $partB->getPosition()->getX());
-        $this->assertSame($partA->getPosition()->getY(), $partB->getPosition()->getY());
-        $this->assertSame($partA->getSize()->getHeight(), $partB->getSize()->getHeight());
-        $this->assertSame($partA->getSize()->getWidth(), $partB->getSize()->getWidth());
+        $this->assertSame($partA->getX(), $partB->getX());
+        $this->assertSame($partA->getY(), $partB->getY());
+        $this->assertSame($partA->getHeight(), $partB->getHeight());
+        $this->assertSame($partA->getWidth(), $partB->getWidth());
+    }
+
+    private function assertSameDimensions(ImageDimensionsInterface $dimensionsA, ImageDimensionsInterface $dimensionsB): void
+    {
+        $this->assertSame($dimensionsA->getSize()->getHeight(), $dimensionsB->getSize()->getHeight());
+        $this->assertSame($dimensionsA->getSize()->getWidth(), $dimensionsB->getSize()->getWidth());
+        $this->assertSame($dimensionsA->isRelative(), $dimensionsB->isRelative());
+        $this->assertSame($dimensionsA->isUndefined(), $dimensionsB->isUndefined());
     }
 }

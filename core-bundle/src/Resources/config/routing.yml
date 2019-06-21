@@ -2,6 +2,10 @@ contao:
     resource: '@ContaoCoreBundle/Controller'
     type: annotation
 
+contao_images:
+    resource: .
+    type: contao_images
+
 # Redirect /contao/ to /contao
 contao_backend_redirect:
     path: /contao/

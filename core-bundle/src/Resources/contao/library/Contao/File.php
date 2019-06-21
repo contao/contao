@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\Image\DeferredImageInterface;
 use Contao\Image\Image as ContaoImage;
 use Contao\Image\ImageDimensions;
 use Patchwork\Utf8;
@@ -264,11 +265,44 @@ class File extends System
 			case 'imageSize':
 				if (empty($this->arrImageSize))
 				{
-					$strCacheKey = $this->strFile . '|' . $this->mtime;
+					$strCacheKey = $this->strFile . '|' . ($this->exists() ? $this->mtime : 0);
 
 					if (isset(static::$arrImageSizeCache[$strCacheKey]))
 					{
 						$this->arrImageSize = static::$arrImageSizeCache[$strCacheKey];
+					}
+					elseif (!$this->exists())
+					{
+						try
+						{
+							$deferredImage = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile);
+
+							if ($deferredImage)
+							{
+								$mapper = array
+								(
+									'gif' => IMAGETYPE_GIF,
+									'jpg' => IMAGETYPE_JPEG,
+									'jpeg' => IMAGETYPE_JPEG,
+									'png' => IMAGETYPE_PNG,
+								);
+
+								$this->arrImageSize = array
+								(
+									$deferredImage->getDimensions()->getSize()->getWidth(),
+									$deferredImage->getDimensions()->getSize()->getHeight(),
+									$mapper[$this->extension] ?? 0,
+									'width="' . $deferredImage->getDimensions()->getSize()->getWidth() . '" height="' . $deferredImage->getDimensions()->getSize()->getHeight() . '"',
+									'bits' => 8,
+									'channels' => 3,
+									'mime' => $this->getMimeType()
+								);
+							}
+						}
+						catch (\Exception $e)
+						{
+							// ignore
+						}
 					}
 					elseif ($this->isGdImage)
 					{
@@ -604,6 +638,23 @@ class File extends System
 	 */
 	public function getContent()
 	{
+		if (!$this->exists())
+		{
+			try
+			{
+				$image = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile);
+
+				if ($image instanceof DeferredImageInterface)
+				{
+					System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($image);
+				}
+			}
+			catch (\Throwable $e)
+			{
+				// ignore
+			}
+		}
+
 		$strContent = file_get_contents($this->strRootDir . '/' . ($this->strTmp ?: $this->strFile));
 
 		// Remove BOMs (see #4469)

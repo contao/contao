@@ -16,8 +16,6 @@ use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\Model\Collection;
-use Imagine\Image\Box;
-use Imagine\Image\Point;
 
 @trigger_error('Using the Contao\Picture class has been deprecated and will no longer work in Contao 5.0. Use the contao.image.picture_factory service instead.', E_USER_DEPRECATED);
 
@@ -136,15 +134,16 @@ class Picture
 		}
 
 		$fileRecord = FilesModel::findByPath($file->path);
+		$currentSize = $file->imageViewSize;
 
 		if ($fileRecord !== null && $fileRecord->importantPartWidth && $fileRecord->importantPartHeight)
 		{
 			$picture->setImportantPart(array
 			(
-				'x' => (int) $fileRecord->importantPartX,
-				'y' => (int) $fileRecord->importantPartY,
-				'width' => (int) $fileRecord->importantPartWidth,
-				'height' => (int) $fileRecord->importantPartHeight,
+				'x' => (int) ($fileRecord->importantPartX * $currentSize[0]),
+				'y' => (int) ($fileRecord->importantPartY * $currentSize[1]),
+				'width' => (int) ($fileRecord->importantPartWidth * $currentSize[0]),
+				'height' => (int) ($fileRecord->importantPartHeight * $currentSize[1]),
 			));
 		}
 
@@ -221,11 +220,14 @@ class Picture
 		$config->setSizeItems($sizeItems);
 
 		$importantPart = $this->image->getImportantPart();
+		$imageSize = $image->getDimensions()->getSize();
 
 		$image->setImportantPart(
 			new ImportantPart(
-				new Point($importantPart['x'], $importantPart['y']),
-				new Box($importantPart['width'], $importantPart['height'])
+				$importantPart['x'] / $imageSize->getWidth(),
+				$importantPart['y'] / $imageSize->getHeight(),
+				$importantPart['width'] / $imageSize->getWidth(),
+				$importantPart['height'] / $imageSize->getHeight()
 			)
 		);
 

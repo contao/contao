@@ -12,12 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
+use Contao\FilesModel;
 use Contao\Image;
+use Contao\Image\DeferredImageInterface;
 use Contao\Image\ResizeCalculator;
+use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Contao\System;
+use Imagine\Gd\Imagine as ImagineGd;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -1432,6 +1438,14 @@ class ImageTest extends TestCase
         $imageObj->setTargetWidth(50)->setTargetHeight(50);
         $imageObj->executeResize();
 
+        /** @var DeferredImageInterface $deferredImage */
+        $deferredImage = System::getContainer()
+            ->get('contao.image.image_factory')
+            ->create(System::getContainer()->getParameter('kernel.project_dir').'/'.$imageObj->getResizedPath())
+        ;
+
+        System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($deferredImage);
+
         $GLOBALS['TL_HOOKS'] = [
             'getImage' => [[\get_class($this), 'getImageHookCallback']],
         ];
@@ -1523,10 +1537,27 @@ class ImageTest extends TestCase
         $container->setParameter('contao.image.target_dir', $this->getTempDir().'/assets/images');
         $container->setParameter('contao.web_dir', $this->getTempDir().'/web');
 
+        $framework = $this->mockContaoFramework([
+            FilesModel::class => $this->createMock(Adapter::class),
+        ]);
+
         $resizer = new LegacyResizer($container->getParameter('contao.image.target_dir'), new ResizeCalculator());
-        $resizer->setFramework($this->mockContaoFramework());
+        $resizer->setFramework($framework);
+
+        $factory = new ImageFactory(
+            $resizer,
+            new ImagineGd(),
+            new ImagineSvg(),
+            new Filesystem(),
+            $framework,
+            $container->getParameter('contao.image.bypass_cache'),
+            $container->getParameter('contao.image.imagine_options'),
+            $container->getParameter('contao.image.valid_extensions'),
+            $container->getParameter('kernel.project_dir').'/'.$container->getParameter('contao.upload_path')
+        );
 
         $container->set('contao.image.resizer', $resizer);
+        $container->set('contao.image.image_factory', $factory);
         $container->set('filesystem', new Filesystem());
         $container->set('monolog.logger.contao', new NullLogger());
 

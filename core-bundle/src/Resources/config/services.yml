@@ -63,6 +63,15 @@ services:
             - '%kernel.project_dir%'
         public: true
 
+    contao.controller.images:
+        class:  Contao\CoreBundle\Controller\ImagesController
+        arguments:
+            - '@contao.image.image_factory'
+            - '@contao.image.resizer'
+            - '%contao.image.target_dir%'
+            - '@filesystem'
+        public: true
+
     contao.controller.insert_tags:
         class: Contao\CoreBundle\Controller\InsertTagsController
         arguments:
@@ -145,6 +154,12 @@ services:
             - '%contao.error_level%'
         public: true
 
+    contao.image.deferred_image_storage:
+        class: Contao\Image\DeferredImageStorageFilesystem
+        arguments:
+            - '%contao.image.target_dir%'
+            - '@filesystem'
+
     contao.image.imagine.gd:
         class: Imagine\Gd\Imagine
 
@@ -167,6 +182,7 @@ services:
             - '%contao.image.target_dir%'
             - '@contao.image.resize_calculator'
             - '@filesystem'
+            - '@contao.image.deferred_image_storage'
         public: true
 
     contao.image.image_factory:
@@ -180,6 +196,7 @@ services:
             - '%contao.image.bypass_cache%'
             - '%contao.image.imagine_options%'
             - '%contao.image.valid_extensions%'
+            - '%kernel.project_dir%/%contao.upload_path%'
         public: true
 
     contao.image.image_sizes:
@@ -352,6 +369,15 @@ services:
         class: Symfony\Component\HttpFoundation\RequestMatcher
         calls:
             - ['matchAttribute', ['_scope', 'frontend']]
+
+    contao.routing.images_loader:
+        class: Contao\CoreBundle\Routing\ImagesLoader
+        arguments:
+            - '%kernel.project_dir%'
+            - '%contao.image.target_dir%'
+            - '@filesystem'
+        tags:
+            - { name: routing.loader }
 
     contao.routing.input_enhancer:
         class: Contao\CoreBundle\Routing\Enhancer\InputEnhancer

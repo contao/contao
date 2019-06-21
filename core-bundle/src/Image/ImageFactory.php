@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FilesModel;
+use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
@@ -23,9 +24,7 @@ use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
 use Contao\Image\ResizerInterface;
 use Contao\ImageSizeModel;
-use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
-use Imagine\Image\Point;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ImageFactory implements ImageFactoryInterface
@@ -70,7 +69,12 @@ class ImageFactory implements ImageFactoryInterface
      */
     private $validExtensions;
 
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions)
+    /**
+     * @var string
+     */
+    private $uploadDir;
+
+    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir)
     {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
@@ -80,6 +84,7 @@ class ImageFactory implements ImageFactoryInterface
         $this->bypassCache = $bypassCache;
         $this->imagineOptions = $imagineOptions;
         $this->validExtensions = $validExtensions;
+        $this->uploadDir = $uploadDir;
     }
 
     /**
@@ -90,6 +95,7 @@ class ImageFactory implements ImageFactoryInterface
         if ($path instanceof ImageInterface) {
             $image = $path;
         } else {
+            $path = (string) $path;
             $fileExtension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
             if (\in_array($fileExtension, ['svg', 'svgz'], true)) {
@@ -104,7 +110,15 @@ class ImageFactory implements ImageFactoryInterface
                 );
             }
 
-            $image = new Image((string) $path, $imagine, $this->filesystem);
+            if (
+                $this->resizer instanceof DeferredResizerInterface
+                && !$this->filesystem->exists($path)
+                && $deferredImage = $this->resizer->getDeferredImage($path, $imagine)
+            ) {
+                $image = $deferredImage;
+            } else {
+                $image = new Image($path, $imagine, $this->filesystem);
+            }
         }
 
         if ($size instanceof ResizeConfigurationInterface) {
@@ -146,33 +160,24 @@ class ImageFactory implements ImageFactoryInterface
             throw new \InvalidArgumentException(sprintf('"%s" is not a legacy resize mode', $mode));
         }
 
-        $importantPart = [
-            0,
-            0,
-            $image->getDimensions()->getSize()->getWidth(),
-            $image->getDimensions()->getSize()->getHeight(),
-        ];
-
+        $importantPart = [0, 0, 1, 1];
         [$modeX, $modeY] = explode('_', $mode);
 
         if ('left' === $modeX) {
-            $importantPart[2] = 1;
+            $importantPart[2] = 0;
         } elseif ('right' === $modeX) {
-            $importantPart[0] = $importantPart[2] - 1;
-            $importantPart[2] = 1;
+            $importantPart[0] = 1;
+            $importantPart[2] = 0;
         }
 
         if ('top' === $modeY) {
-            $importantPart[3] = 1;
+            $importantPart[3] = 0;
         } elseif ('bottom' === $modeY) {
-            $importantPart[1] = $importantPart[3] - 1;
-            $importantPart[3] = 1;
+            $importantPart[1] = 1;
+            $importantPart[3] = 0;
         }
 
-        return new ImportantPart(
-            new Point($importantPart[0], $importantPart[1]),
-            new Box($importantPart[2], $importantPart[3])
-        );
+        return new ImportantPart($importantPart[0], $importantPart[1], $importantPart[2], $importantPart[3]);
     }
 
     /**
@@ -197,10 +202,10 @@ class ImageFactory implements ImageFactoryInterface
 
             if (null !== $imageSize) {
                 $config
-                    ->setWidth($imageSize->width)
-                    ->setHeight($imageSize->height)
+                    ->setWidth((int) $imageSize->width)
+                    ->setHeight((int) $imageSize->height)
                     ->setMode($imageSize->resizeMode)
-                    ->setZoomLevel($imageSize->zoom)
+                    ->setZoomLevel((int) $imageSize->zoom)
                 ;
             }
 
@@ -208,10 +213,10 @@ class ImageFactory implements ImageFactoryInterface
         }
 
         if (!empty($size[0])) {
-            $config->setWidth($size[0]);
+            $config->setWidth((int) $size[0]);
         }
         if (!empty($size[1])) {
-            $config->setHeight($size[1]);
+            $config->setHeight((int) $size[1]);
         }
 
         if (!isset($size[2]) || 1 !== substr_count($size[2], '_')) {
@@ -232,6 +237,14 @@ class ImageFactory implements ImageFactoryInterface
      */
     private function createImportantPart(ImageInterface $image): ?ImportantPart
     {
+        if (0 !== strncmp($image->getPath(), $this->uploadDir.'/', \strlen($this->uploadDir) + 1)) {
+            return null;
+        }
+
+        if (!$this->framework->isInitialized()) {
+            throw new \RuntimeException('Contao framework was not initialized');
+        }
+
         /** @var FilesModel $filesModel */
         $filesModel = $this->framework->getAdapter(FilesModel::class);
         $file = $filesModel->findByPath($image->getPath());
@@ -240,18 +253,11 @@ class ImageFactory implements ImageFactoryInterface
             return null;
         }
 
-        $imageSize = $image->getDimensions()->getSize();
-
-        if (
-            $file->importantPartX + $file->importantPartWidth > $imageSize->getWidth()
-            || $file->importantPartY + $file->importantPartHeight > $imageSize->getHeight()
-        ) {
-            return null;
-        }
-
         return new ImportantPart(
-            new Point((int) $file->importantPartX, (int) $file->importantPartY),
-            new Box((int) $file->importantPartWidth, (int) $file->importantPartHeight)
+            (float) $file->importantPartX,
+            (float) $file->importantPartY,
+            (float) $file->importantPartWidth,
+            (float) $file->importantPartHeight
         );
     }
 }

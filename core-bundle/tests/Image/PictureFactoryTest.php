@@ -21,6 +21,7 @@ use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationInterface;
 use Contao\Image\PictureConfigurationItem;
+use Contao\Image\PictureConfigurationItemInterface;
 use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
@@ -60,6 +61,7 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame('1x, 2x', $size->getDensities());
                         $this->assertSame('100vw', $size->getSizes());
 
+                        /** @var PictureConfigurationItemInterface $sizeItem */
                         $sizeItem = $pictureConfig->getSizeItems()[0];
 
                         $this->assertSame(50, $sizeItem->getResizeConfig()->getWidth());
