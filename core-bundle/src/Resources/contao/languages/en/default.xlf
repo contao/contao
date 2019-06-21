@@ -1283,6 +1283,9 @@
       <trans-unit id="MSC.female">
         <source>Female</source>
       </trans-unit>
+      <trans-unit id="MSC.other">
+        <source>Other</source>
+      </trans-unit>
       <trans-unit id="MSC.fileSize">
         <source>File size</source>
       </trans-unit>
