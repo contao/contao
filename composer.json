@@ -9,6 +9,7 @@
             "homepage": "https://github.com/leofeyer"
         }
     ],
+    "minimum-stability": "beta",
     "require": {
         "php": "^7.1",
         "ext-dom": "*",

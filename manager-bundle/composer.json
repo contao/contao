@@ -9,6 +9,7 @@
             "homepage": "https://github.com/aschempp"
         }
     ],
+    "minimum-stability": "beta",
     "require": {
         "php": "^7.1",
         "ext-json": "*",
