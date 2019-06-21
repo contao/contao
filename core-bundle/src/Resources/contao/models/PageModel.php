@@ -98,7 +98,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $template
  * @property string  $templateGroup
  * @property boolean $enforceTwoFactor
- * @property integer $twofactor_jumpTo
+ * @property integer $twoFactorJumpTo
  *
  * @method static PageModel|null findById($id, array $opt=array())
  * @method static PageModel|null findByPk($id, array $opt=array())
@@ -151,6 +151,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByPublished($val, array $opt=array())
  * @method static PageModel|null findOneByStart($val, array $opt=array())
  * @method static PageModel|null findOneByStop($val, array $opt=array())
+ * @method static PageModel|null findOneByEnforceTwoFactor($val, array $opt=array())
+ * @method static PageModel|null findOneByTwoFactorJumpTo($val, array $opt=array())
  *
  * @method static Collection|PageModel[]|PageModel|null findByPid($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findBySorting($val, array $opt=array())
@@ -199,6 +201,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByPublished($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByStart($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByStop($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByEnforceTwoFactor($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByTwoFactorJumpTo($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findAll(array $opt=array())
@@ -251,6 +255,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByPublished($val, array $opt=array())
  * @method static integer countByStart($val, array $opt=array())
  * @method static integer countByStop($val, array $opt=array())
+ * @method static integer countByEnforceTwoFactor($val, array $opt=array())
+ * @method static integer countByTwoFactorJumpTo($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -964,7 +970,7 @@ class PageModel extends Model
 			$this->validAliasCharacters = $objParentPage->validAliasCharacters;
 			$this->adminEmail = $objParentPage->adminEmail;
 			$this->enforceTwoFactor = $objParentPage->enforceTwoFactor;
-			$this->twofactor_jumpTo = $objParentPage->twofactor_jumpTo;
+			$this->twoFactorJumpTo = $objParentPage->twoFactorJumpTo;
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = ($objParentPage->published && ($objParentPage->start == '' || $objParentPage->start <= $time) && ($objParentPage->stop == '' || $objParentPage->stop > ($time + 60)));

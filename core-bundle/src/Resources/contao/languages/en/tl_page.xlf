@@ -284,10 +284,10 @@
       <trans-unit id="tl_page.enforceTwoFactor.1">
         <source>Enforce two-factor authentication for member logins.</source>
       </trans-unit>
-      <trans-unit id="tl_page.twofactor_jumpTo.0">
+      <trans-unit id="tl_page.twoFactorJumpTo.0">
         <source>Two-factor redirect page</source>
       </trans-unit>
-      <trans-unit id="tl_page.twofactor_jumpTo.1">
+      <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which visitors setting up two-factor authentication will be redirected.</source>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
@@ -338,7 +338,7 @@
       <trans-unit id="tl_page.publish_legend">
         <source>Publish settings</source>
       </trans-unit>
-      <trans-unit id="tl_page.twofactor_legend">
+      <trans-unit id="tl_page.twoFactor_legend">
         <source>Two-factor settings</source>
       </trans-unit>
       <trans-unit id="tl_page.permanent">

@@ -81,7 +81,7 @@ class TwoFactorFrontendListener
         // Check if user has two-factor disabled but is enforced
         if (!$user->useTwoFactor && $page->enforceTwoFactor) {
             // Search for two-factor page
-            $twoFactorPage = $adapter->findPublishedById($page->twofactor_jumpTo);
+            $twoFactorPage = $adapter->findPublishedById($page->twoFactorJumpTo);
 
             if (!$twoFactorPage instanceof PageModel) {
                 throw new PageNotFoundException('No two-factor authentication page found.');

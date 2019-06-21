@@ -92,7 +92,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'enforceTwoFactor' => true,
-            'twofactor_jumpTo' => null,
+            'twoFactorJumpTo' => null,
         ]);
 
         $adapter = $this->mockAdapter(['findPublishedById']);
@@ -126,7 +126,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'enforceTwoFactor' => true,
-            'twofactor_jumpTo' => null,
+            'twoFactorJumpTo' => null,
             'id' => 1,
         ]);
 
@@ -158,7 +158,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'enforceTwoFactor' => true,
-            'twofactor_jumpTo' => 1,
+            'twoFactorJumpTo' => 1,
             'id' => 1,
         ]);
 
