@@ -196,6 +196,9 @@ class PluginTest extends ContaoTestCase
                 'config' => [
                     'disable-packages',
                 ],
+                'jwt-cookie' => [
+                    'debug',
+                ],
             ],
             (new Plugin())->getApiFeatures()
         );

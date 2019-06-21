@@ -75,7 +75,7 @@ class JwtManager
 
         if ($request->cookies->has(self::COOKIE_NAME)) {
             try {
-                return $this->decodeJwt((string) $request->cookies->get(self::COOKIE_NAME));
+                return $this->parseCookie((string) $request->cookies->get(self::COOKIE_NAME));
             } catch (\Exception $e) {
                 // do nothing
             }
@@ -103,6 +103,24 @@ class JwtManager
             return;
         }
 
+        $response->headers->setCookie($this->createCookie($payload));
+    }
+
+    /**
+     * Clears the JWT cookie in the response.
+     */
+    public function clearResponseCookie(Response $response): Response
+    {
+        $response->headers->clearCookie(self::COOKIE_NAME);
+
+        return $response;
+    }
+
+    /**
+     * Creates the JWT cookie for the preview entry point.
+     */
+    public function createCookie(array $payload = []): Cookie
+    {
         foreach ($payload as $k => $v) {
             $this->builder->set($k, $v);
         }
@@ -114,17 +132,18 @@ class JwtManager
             ->getToken()
         ;
 
-        $response->headers->setCookie(Cookie::create(self::COOKIE_NAME, (string) $token));
+        return Cookie::create(self::COOKIE_NAME, (string) $token);
     }
 
-    /**
-     * Clears the JWT cookie in the response.
-     */
-    public function clearResponseCookie(Response $response): Response
+    public function parseCookie(string $data): ?array
     {
-        $response->headers->clearCookie(self::COOKIE_NAME);
+        $token = $this->parser->parse($data);
 
-        return $response;
+        if ($token->isExpired() || !$token->verify($this->signer, $this->secret)) {
+            return null;
+        }
+
+        return array_map('strval', $token->getClaims());
     }
 
     /**
@@ -142,16 +161,5 @@ class JwtManager
         }
 
         return false;
-    }
-
-    private function decodeJwt(string $data): ?array
-    {
-        $token = $this->parser->parse($data);
-
-        if ($token->isExpired() || !$token->verify($this->signer, $this->secret)) {
-            return null;
-        }
-
-        return array_map('strval', $token->getClaims());
     }
 }
