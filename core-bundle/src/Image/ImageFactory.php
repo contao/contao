@@ -79,7 +79,12 @@ class ImageFactory implements ImageFactoryInterface
      */
     private $predefinedSizes = [];
 
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir)
+    /**
+     * @var bool
+     */
+    private $forceReEncoding;
+
+    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir, bool $forceReEncoding)
     {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
@@ -90,6 +95,7 @@ class ImageFactory implements ImageFactoryInterface
         $this->imagineOptions = $imagineOptions;
         $this->validExtensions = $validExtensions;
         $this->uploadDir = $uploadDir;
+        $this->forceReEncoding = $forceReEncoding;
     }
 
     /**
@@ -150,7 +156,7 @@ class ImageFactory implements ImageFactoryInterface
             $image->setImportantPart($importantPart);
         }
 
-        if (null === $targetPath && $resizeConfig->isEmpty()) {
+        if (null === $targetPath && null === $size) {
             return $image;
         }
 
@@ -161,6 +167,7 @@ class ImageFactory implements ImageFactoryInterface
                 ->setImagineOptions($this->imagineOptions)
                 ->setTargetPath($targetPath)
                 ->setBypassCache($this->bypassCache)
+                ->setForceReEncoding($this->forceReEncoding)
         );
     }
 

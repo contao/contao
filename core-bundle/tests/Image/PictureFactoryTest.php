@@ -465,7 +465,7 @@ class PictureFactoryTest extends TestCase
      * @param ImageFactoryInterface&MockObject     $imageFactory
      * @param ContaoFramework&MockObject           $framework
      */
-    private function getPictureFactory(PictureGeneratorInterface $pictureGenerator = null, ImageFactoryInterface $imageFactory = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null): PictureFactory
+    private function getPictureFactory(PictureGeneratorInterface $pictureGenerator = null, ImageFactoryInterface $imageFactory = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, bool $forceReEncoding = null): PictureFactory
     {
         if (null === $pictureGenerator) {
             $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
@@ -487,6 +487,10 @@ class PictureFactoryTest extends TestCase
             $imagineOptions = [];
         }
 
-        return new PictureFactory($pictureGenerator, $imageFactory, $framework, $bypassCache, $imagineOptions);
+        if (null === $forceReEncoding) {
+            $forceReEncoding = false;
+        }
+
+        return new PictureFactory($pictureGenerator, $imageFactory, $framework, $bypassCache, $imagineOptions, $forceReEncoding);
     }
 }

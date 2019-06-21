@@ -86,6 +86,7 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.image.reject_large_uploads', $config['image']['reject_large_uploads']);
         $container->setParameter('contao.image.lightbox_size.width', $config['image']['lightbox_size']['width']);
         $container->setParameter('contao.image.lightbox_size.height', $config['image']['lightbox_size']['height']);
+        $container->setParameter('contao.image.force_re_encoding', $config['image']['force_re_encoding']);
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
 
         if (isset($config['localconfig'])) {

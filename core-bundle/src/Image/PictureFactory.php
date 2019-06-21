@@ -63,13 +63,19 @@ class PictureFactory implements PictureFactoryInterface
      */
     private $predefinedSizes = [];
 
-    public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFramework $framework, bool $bypassCache, array $imagineOptions)
+    /**
+     * @var bool
+     */
+    private $forceReEncoding;
+
+    public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, bool $forceReEncoding)
     {
         $this->pictureGenerator = $pictureGenerator;
         $this->imageFactory = $imageFactory;
         $this->framework = $framework;
         $this->bypassCache = $bypassCache;
         $this->imagineOptions = $imagineOptions;
+        $this->forceReEncoding = $forceReEncoding;
     }
 
     /**
@@ -123,7 +129,7 @@ class PictureFactory implements PictureFactoryInterface
         $picture = $this->pictureGenerator->generate(
             $image,
             $config,
-            (new ResizeOptions())->setImagineOptions($this->imagineOptions)->setBypassCache($this->bypassCache)
+            (new ResizeOptions())->setImagineOptions($this->imagineOptions)->setBypassCache($this->bypassCache)->setForceReEncoding($this->forceReEncoding)
         );
 
         return $this->addImageAttributes($picture, $attributes);

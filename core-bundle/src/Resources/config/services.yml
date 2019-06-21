@@ -197,6 +197,7 @@ services:
             - '%contao.image.imagine_options%'
             - '%contao.image.valid_extensions%'
             - '%kernel.project_dir%/%contao.upload_path%'
+            - '%contao.image.force_re_encoding%'
         public: true
 
     contao.image.image_sizes:
@@ -223,6 +224,7 @@ services:
             - '@contao.framework'
             - '%contao.image.bypass_cache%'
             - '%contao.image.imagine_options%'
+            - '%contao.image.force_re_encoding%'
         public: true
 
     contao.menu.backend_menu_renderer:
