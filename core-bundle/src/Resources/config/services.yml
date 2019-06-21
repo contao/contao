@@ -154,7 +154,7 @@ services:
             - '%contao.error_level%'
         public: true
 
-    contao.image.deferred_storage:
+    contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
         arguments:
             - '%contao.image.target_dir%'
@@ -182,7 +182,7 @@ services:
             - '%contao.image.target_dir%'
             - '@contao.image.resize_calculator'
             - '@filesystem'
-            - '@contao.image.deferred_storage'
+            - '@contao.image.deferred_image_storage'
         public: true
 
     contao.image.image_factory:
