@@ -1668,7 +1668,7 @@ abstract class Controller extends System
 					// Do not add the TL_FILES_URL to external URLs (see #4923)
 					if (strncmp($arrItem['imageUrl'], 'http://', 7) !== 0 && strncmp($arrItem['imageUrl'], 'https://', 8) !== 0)
 					{
-						$objTemplate->$strHrefKey = static::addFilesUrlTo($container->get('contao.image.image_factory')->create($rootDir . '/' . $arrItem['imageUrl'], [9999, 0, 'box'])->getUrl($rootDir));
+						$objTemplate->$strHrefKey = static::addFilesUrlTo($container->get('contao.image.image_factory')->create($rootDir . '/' . $arrItem['imageUrl'], [System::getContainer()->getParameter('contao.image.lightbox_size.width'), System::getContainer()->getParameter('contao.image.lightbox_size.height'), 'box'])->getUrl($rootDir));
 					}
 
 					$objTemplate->attributes = ' data-lightbox="' . $strLightboxId . '"';
@@ -1683,7 +1683,7 @@ abstract class Controller extends System
 		// Fullsize view
 		elseif ($arrItem['fullsize'] && TL_MODE == 'FE')
 		{
-			$objTemplate->$strHrefKey = static::addFilesUrlTo($container->get('contao.image.image_factory')->create($rootDir . '/' . $arrItem['singleSRC'], [9999, 0, 'box'])->getUrl($rootDir));
+			$objTemplate->$strHrefKey = static::addFilesUrlTo($container->get('contao.image.image_factory')->create($rootDir . '/' . $arrItem['singleSRC'], [System::getContainer()->getParameter('contao.image.lightbox_size.width'), System::getContainer()->getParameter('contao.image.lightbox_size.height'), 'box'])->getUrl($rootDir));
 			$objTemplate->attributes = ' data-lightbox="' . $strLightboxId . '"';
 		}
 
