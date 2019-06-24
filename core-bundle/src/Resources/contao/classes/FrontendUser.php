@@ -20,13 +20,6 @@ namespace Contao;
  */
 class FrontendUser extends User
 {
-
-	/**
-	 * Symfony Security session key
-	 * @var string
-	 */
-	const SECURITY_SESSION_KEY = '_security_contao_frontend';
-
 	/**
 	 * Current object instance (do not remove)
 	 * @var FrontendUser

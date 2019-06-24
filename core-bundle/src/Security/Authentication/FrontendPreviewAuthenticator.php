@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\FrontendUser;
@@ -25,6 +26,8 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticator
 {
+    private const SECURITY_SESSION_KEY = '_security_contao_'.ContaoCoreBundle::SCOPE_FRONTEND;
+
     /**
      * @var SessionInterface
      */
@@ -74,7 +77,7 @@ class FrontendPreviewAuthenticator
 
         $token = new FrontendPreviewToken($frontendUser, $showUnpublished);
 
-        $this->session->set(FrontendUser::SECURITY_SESSION_KEY, serialize($token));
+        $this->session->set(self::SECURITY_SESSION_KEY, serialize($token));
 
         return true;
     }
@@ -89,7 +92,7 @@ class FrontendPreviewAuthenticator
 
         $token = new FrontendPreviewToken(null, $showUnpublished);
 
-        $this->session->set(FrontendUser::SECURITY_SESSION_KEY, serialize($token));
+        $this->session->set(self::SECURITY_SESSION_KEY, serialize($token));
 
         return true;
     }
@@ -99,11 +102,11 @@ class FrontendPreviewAuthenticator
      */
     public function removeFrontendAuthentication(): bool
     {
-        if (!$this->session->isStarted() || !$this->session->has(FrontendUser::SECURITY_SESSION_KEY)) {
+        if (!$this->session->isStarted() || !$this->session->has(self::SECURITY_SESSION_KEY)) {
             return false;
         }
 
-        $this->session->remove(FrontendUser::SECURITY_SESSION_KEY);
+        $this->session->remove(self::SECURITY_SESSION_KEY);
 
         return true;
     }
