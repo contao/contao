@@ -95,6 +95,8 @@ class DcaLoader extends Controller
 			}
 		}
 
+		$this->addDefaultLabels();
+
 		// HOOK: allow to load custom settings
 		if (isset($GLOBALS['TL_HOOKS']['loadDataContainer']) && \is_array($GLOBALS['TL_HOOKS']['loadDataContainer']))
 		{
@@ -112,6 +114,77 @@ class DcaLoader extends Controller
 		{
 			@trigger_error('Using the dcaconfig.php file has been deprecated and will no longer work in Contao 5.0. Create one or more DCA files in app/Resources/contao/dca instead.', E_USER_DEPRECATED);
 			include $rootDir . '/system/config/dcaconfig.php';
+		}
+	}
+
+	/**
+	 * Adds the default labels (see #509)
+	 */
+	private function addDefaultLabels()
+	{
+		// Global operations
+		if (isset($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations']))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations'] as $k=>&$v)
+			{
+				if (isset($v['label']))
+				{
+					continue;
+				}
+
+				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]))
+				{
+					$v['label'] = $GLOBALS['TL_LANG'][$this->strTable][$k];
+				}
+				elseif (isset($GLOBALS['TL_LANG']['DCA'][$k]))
+				{
+					$v['label'] = $GLOBALS['TL_LANG']['DCA'][$k];
+				}
+			}
+
+			unset($v);
+		}
+
+		// Operations
+		if (isset($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['operations'] as $k=>&$v)
+			{
+				if (isset($v['label']))
+				{
+					continue;
+				}
+
+				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]))
+				{
+					$v['label'] = $GLOBALS['TL_LANG'][$this->strTable][$k];
+				}
+				elseif (isset($GLOBALS['TL_LANG']['DCA'][$k]))
+				{
+					$v['label'] = $GLOBALS['TL_LANG']['DCA'][$k];
+				}
+			}
+
+			unset($v);
+		}
+
+		// Fields
+		if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>&$v)
+			{
+				if (isset($v['label']))
+				{
+					continue;
+				}
+
+				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]))
+				{
+					$v['label'] = $GLOBALS['TL_LANG'][$this->strTable][$k];
+				}
+			}
+
+			unset($v);
 		}
 	}
 }

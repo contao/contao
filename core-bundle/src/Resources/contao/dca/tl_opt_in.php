@@ -52,14 +52,12 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		(
 			'resend' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_opt_in']['resend'],
 				'href'                => 'key=resend',
 				'icon'                => 'resend.svg',
 				'button_callback'     => array('tl_opt_in', 'resendButton')
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_opt_in']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			)
@@ -79,7 +77,6 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		),
 		'token' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['token'],
 			'search'                  => true,
 			'sql'                     => "varchar(24) NOT NULL default ''"
 		),
@@ -94,7 +91,6 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		),
 		'confirmedOn' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['confirmedOn'],
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => 6,
@@ -103,7 +99,6 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		),
 		'removeOn' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['removeOn'],
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => 6,
@@ -112,7 +107,6 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		),
 		'invalidatedThrough' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['invalidatedThrough'],
 			'search'                  => true,
 			'sql'                     => "varchar(24) NOT NULL default ''"
 		),
@@ -126,13 +120,11 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		),
 		'emailSubject' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['emailSubject'],
 			'search'                  => true,
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'emailText' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in']['emailText'],
 			'search'                  => true,
 			'sql'                     => "text NULL"
 		)

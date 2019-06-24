@@ -39,12 +39,10 @@ $GLOBALS['TL_DCA']['tl_opt_in_related'] = array
 		),
 		'relTable' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in_related']['relTable'],
 			'sql'                     => "varchar(64) NULL"
 		),
 		'relId' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_opt_in_related']['relId'],
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		)
 	)

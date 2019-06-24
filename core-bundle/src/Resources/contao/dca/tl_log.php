@@ -56,14 +56,12 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		(
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_log']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_log']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			)
@@ -79,7 +77,6 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		),
 		'tstamp' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_log']['tstamp'],
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => 6,
@@ -87,7 +84,6 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		),
 		'source' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_log']['source'],
 			'filter'                  => true,
 			'sorting'                 => true,
 			'reference'               => &$GLOBALS['TL_LANG']['tl_log'],
@@ -95,14 +91,12 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		),
 		'action' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_log']['action'],
 			'filter'                  => true,
 			'sorting'                 => true,
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'username' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_log']['username'],
 			'search'                  => true,
 			'filter'                  => true,
 			'sorting'                 => true,
@@ -110,13 +104,11 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		),
 		'text' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_log']['text'],
 			'search'                  => true,
 			'sql'                     => "text NULL"
 		),
 		'func' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_log']['func'],
 			'sorting'                 => true,
 			'filter'                  => true,
 			'search'                  => true,
@@ -124,7 +116,6 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		),
 		'browser' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_log']['browser'],
 			'sorting'                 => true,
 			'search'                  => true,
 			'sql'                     => "varchar(255) NOT NULL default ''"

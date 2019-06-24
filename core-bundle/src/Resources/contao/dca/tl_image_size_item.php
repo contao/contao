@@ -59,41 +59,35 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_image_size_item']['edit'],
 				'href'                => 'act=edit',
 				'icon'                => 'edit.svg'
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_image_size_item']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
 			'cut' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_image_size_item']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_image_size_item']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_image_size_item']['toggle'],
 				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_image_size_item', 'toggleIcon')
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_image_size_item']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			)
@@ -129,7 +123,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		),
 		'media' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size_item']['media'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'long', 'decodeEntities'=>true),
@@ -137,7 +130,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		),
 		'densities' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['densities'],
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
 			'exclude'                 => true,
@@ -146,7 +138,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		),
 		'sizes' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['sizes'],
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
 			'exclude'                 => true,
@@ -155,7 +146,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		),
 		'width' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['width'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'clr w50'),
@@ -163,7 +153,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		),
 		'height' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['height'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
@@ -171,7 +160,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		),
 		'resizeMode' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['resizeMode'],
 			'inputType'               => 'select',
 			'options'                 => array('proportional', 'box', 'crop'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size'],
@@ -181,7 +169,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		),
 		'zoom' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['zoom'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
@@ -189,7 +176,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		),
 		'invisible' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size_item']['invisible'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
