@@ -12,15 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Fragment\Annotations\ContentElement;
-use Contao\CoreBundle\Fragment\Annotations\FrontendModule;
+use Contao\CoreBundle\Fragment\Annotation\ContentElement;
+use Contao\CoreBundle\Fragment\Annotation\FrontendModule;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\DocParser;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -64,7 +62,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
         $preHandlers = [];
         $registry = $container->findDefinition('contao.fragment.registry');
-        $annotationReader = new AnnotationReader(new DocParser());
+        $annotationReader = $container->get('annotations.cached_reader');
 
         foreach ($dirs as $dir => $namespace) {
             $container->addResource(new DirectoryResource($dir, '/\.php$/'));
@@ -86,7 +84,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
                         continue;
                     }
 
-                    var_dump($class, $annotation);
                     $serviceId = $annotation->service ?: $class;
 
                     if ($container->hasDefinition($serviceId)) {
