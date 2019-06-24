@@ -26,11 +26,11 @@
       <trans-unit id="tl_templates.invalid">
         <source>Invalid source or target directory "%s"!</source>
       </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.0">
-        <source>New template</source>
+      <trans-unit id="tl_templates.overridesAnotherTpl">
+        <source>This template overrides "%s".</source>
       </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.1">
-        <source>Create a new template</source>
+      <trans-unit id="tl_templates.pleaseSelect">
+        <source>Please select a template from the list above and click "Show differences".</source>
       </trans-unit>
       <trans-unit id="tl_templates.new.0">
         <source>New folder</source>
@@ -38,23 +38,20 @@
       <trans-unit id="tl_templates.new.1">
         <source>Create a new folder</source>
       </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.0">
+        <source>New template</source>
+      </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.1">
+        <source>Create a new template</source>
+      </trans-unit>
       <trans-unit id="tl_templates.pasteinto.0">
-        <source>Paste into</source>
+        <source>Paste into the root folder</source>
       </trans-unit>
       <trans-unit id="tl_templates.pasteinto.1">
-        <source>Paste into this folder</source>
+        <source>Paste into folder "%s"</source>
       </trans-unit>
-      <trans-unit id="tl_templates.compare.0">
-        <source>Compare template</source>
-      </trans-unit>
-      <trans-unit id="tl_templates.compare.1">
+      <trans-unit id="tl_templates.compare">
         <source>Compare "%s" with another template</source>
-      </trans-unit>
-      <trans-unit id="tl_templates.overridesAnotherTpl">
-        <source>This template overrides "%s".</source>
-      </trans-unit>
-      <trans-unit id="tl_templates.pleaseSelect">
-        <source>Please select a template from the list above and click "Show differences".</source>
       </trans-unit>
     </body>
   </file>

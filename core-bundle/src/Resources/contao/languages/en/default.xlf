@@ -1986,10 +1986,10 @@
         <source>Paste after element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.pastenew.0">
-        <source>Add a new element at the top</source>
+        <source>Create a new element at the top</source>
       </trans-unit>
       <trans-unit id="DCA.pastenew.1">
-        <source>Add a new element after element ID %s</source>
+        <source>Create a new element after element ID %s</source>
       </trans-unit>
     </body>
   </file>

@@ -30,46 +30,31 @@
         <source>Visibility</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.0">
-        <source>New media query</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new media query</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.show.0">
-        <source>Media query details</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.show.1">
+      <trans-unit id="tl_image_size_item.show">
         <source>Show the details of media query ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.edit.0">
-        <source>Edit media query</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.edit.1">
+      <trans-unit id="tl_image_size_item.edit">
         <source>Edit media query ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.cut.0">
-        <source>Move media query</source>
+      <trans-unit id="tl_image_size_item.editheader">
+        <source>Edit the image size settings</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.cut.1">
+      <trans-unit id="tl_image_size_item.cut">
         <source>Move media query ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.copy.0">
-        <source>Duplicate media query</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.copy.1">
+      <trans-unit id="tl_image_size_item.copy">
         <source>Duplicate media query ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.delete.0">
-        <source>Delete media query</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.delete.1">
+      <trans-unit id="tl_image_size_item.delete">
         <source>Delete media query ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.editheader.0">
-        <source>Edit image size</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.editheader.1">
-        <source>Edit the image size settings</source>
+      <trans-unit id="tl_image_size_item.toggle">
+        <source>Activate/deactivate media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>
@@ -78,16 +63,10 @@
         <source>Paste after media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
-        <source>Add new at the top</source>
+        <source>Create a new media query at the top</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
-        <source>Add new after media query ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.toggle.0">
-        <source>Toggle visibility</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.toggle.1">
-        <source>Toggle the visibility of media query ID %s</source>
+        <source>Create a new media query after media query ID %s</source>
       </trans-unit>
     </body>
   </file>

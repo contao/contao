@@ -342,69 +342,42 @@
         <source>Show never</source>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
-        <source>New page</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>
       </trans-unit>
-      <trans-unit id="tl_page.show.0">
-        <source>Page details</source>
-      </trans-unit>
-      <trans-unit id="tl_page.show.1">
+      <trans-unit id="tl_page.show">
         <source>Show the details of page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.edit.0">
-        <source>Edit page</source>
-      </trans-unit>
-      <trans-unit id="tl_page.edit.1">
+      <trans-unit id="tl_page.edit">
         <source>Edit page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.cut.0">
-        <source>Move page</source>
-      </trans-unit>
-      <trans-unit id="tl_page.cut.1">
+      <trans-unit id="tl_page.cut">
         <source>Move page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.copy.0">
-        <source>Duplicate page</source>
-      </trans-unit>
-      <trans-unit id="tl_page.copy.1">
+      <trans-unit id="tl_page.copy">
         <source>Duplicate page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds.0">
-        <source>Duplicate with subpages</source>
-      </trans-unit>
-      <trans-unit id="tl_page.copyChilds.1">
+      <trans-unit id="tl_page.copyChilds">
         <source>Duplicate page ID %s with its subpages</source>
       </trans-unit>
-      <trans-unit id="tl_page.delete.0">
-        <source>Delete page</source>
-      </trans-unit>
-      <trans-unit id="tl_page.delete.1">
+      <trans-unit id="tl_page.delete">
         <source>Delete page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.toggle.0">
-        <source>Publish/unpublish page</source>
-      </trans-unit>
-      <trans-unit id="tl_page.toggle.1">
+      <trans-unit id="tl_page.toggle">
         <source>Publish/unpublish page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.pasteafter.0">
-        <source>Paste after</source>
-      </trans-unit>
-      <trans-unit id="tl_page.pasteafter.1">
-        <source>Paste after page ID %s</source>
-      </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
-        <source>Paste into</source>
+        <source>Paste at the top</source>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.1">
         <source>Paste into page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.articles.0">
-        <source>Edit articles</source>
+      <trans-unit id="tl_page.pasteafter.1">
+        <source>Paste after page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.articles.1">
+      <trans-unit id="tl_page.articles">
         <source>Edit the articles of page ID %s</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
