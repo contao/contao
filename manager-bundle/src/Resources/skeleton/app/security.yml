@@ -63,6 +63,13 @@ security:
                 remember_me: true
                 use_forward: true
 
+            two_factor:
+                auth_form_path: contao_frontend_two_factor
+                check_path: contao_frontend_two_factor
+                auth_code_parameter_name: verify
+                success_handler: contao.security.two_factor.frontend_success_handler
+                failure_handler: contao.security.two_factor.frontend_failure_handler
+
             remember_me:
                 secret: '%secret%'
                 remember_me_parameter: autologin
@@ -78,3 +85,5 @@ security:
         - { path: ^/contao/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/contao/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/contao(/|$), roles: ROLE_USER }
+        - { path: ^/_contao/two-factor, roles: [IS_AUTHENTICATED_2FA_IN_PROGRESS, ROLE_MEMBER] }
+        - { path: ^, roles: [IS_AUTHENTICATED_2FA_IN_PROGRESS, IS_AUTHENTICATED_ANONYMOUSLY] }
