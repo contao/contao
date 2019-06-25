@@ -181,7 +181,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		),
 		'invisible' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['invisible'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
