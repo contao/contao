@@ -19,7 +19,7 @@ use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Doctrine\Common\Annotations\CachedReader;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
@@ -49,19 +49,20 @@ class RegisterFragmentsPass implements CompilerPassInterface
             return;
         }
 
-        $this->registerAnnotatedControllers($container);
-        $this->registerFragments($container, ContentElementReference::TAG_NAME);
-        $this->registerFragments($container, FrontendModuleReference::TAG_NAME);
+        $this->registerAnnotatedControllers($container, ContentElement::class, ContentElementReference::TAG_NAME);
+        $this->registerAnnotatedControllers($container, FrontendModule::class, FrontendModuleReference::TAG_NAME);
+
+        $this->registerTaggedServices($container, ContentElementReference::TAG_NAME);
+        $this->registerTaggedServices($container, FrontendModuleReference::TAG_NAME);
     }
 
-    private function registerAnnotatedControllers(ContainerBuilder $container): void
+    private function registerAnnotatedControllers(ContainerBuilder $container, string $annotationName, string $tag): void
     {
         if (count($dirs = $this->getAnnotatedControllersDirs($container)) === 0) {
             return;
         }
 
-        $preHandlers = [];
-        $registry = $container->findDefinition('contao.fragment.registry');
+        /** @var CachedReader $annotationReader */
         $annotationReader = $container->get('annotations.cached_reader');
 
         foreach ($dirs as $dir => $namespace) {
@@ -71,7 +72,14 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
             /** @var SplFileInfo $file */
             foreach ($finder as $file) {
-                $class = $namespace . '\\' . \pathinfo($file->getFilename(), PATHINFO_FILENAME);
+                $currentNamespace = $namespace;
+
+                // Include subfolders in namespace
+                if (($subdirs = $file->getRelativePath()) !== '') {
+                    $currentNamespace .= '\\' . str_replace(DIRECTORY_SEPARATOR, '\\', $subdirs);
+                }
+
+                $class = $currentNamespace . '\\' . \pathinfo($file->getFilename(), PATHINFO_FILENAME);
 
                 if (!class_exists($class)) {
                     continue;
@@ -79,53 +87,32 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
                 $reflection = new \ReflectionClass($class);
 
-                foreach ($annotationReader->getClassAnnotations($reflection) as $annotation) {
-                    if (!$annotation instanceof ContentElement || !$annotation instanceof FrontendModule) {
-                        continue;
-                    }
-
-                    $serviceId = $annotation->service ?: $class;
-
-                    if ($container->hasDefinition($serviceId)) {
-                        $definition = $container->getDefinition($serviceId);
-                    } else {
-                        $definition = new Definition($class);
-                        $container->setDefinition($serviceId, $definition);
-                    }
-
-                    $definition->setPublic(true);
-
-                    $attributes = [
-                        'category' => $annotation->category,
-                        'method' => '__invoke', // TODO
-                        //'options' => $annotation->options, // TODO
-                        'renderer' => $annotation->renderer,
-                        'template' => $annotation->template,
-                        'type' => $annotation->type,
-                    ];
-
-                    $attributes['type'] = $this->getFragmentType($definition, $attributes);
-
-                    $tag = ($annotation instanceof ContentElement) ? ContentElementReference::TAG_NAME : FrontendModuleReference::TAG_NAME;
-
-                    $identifier = sprintf('%s.%s', $tag, $attributes['type']);
-                    $reference = new Reference($serviceId);
-                    $config = $this->getFragmentConfig($container, $reference, $attributes);
-
-                    if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
-                        $preHandlers[$identifier] = $reference;
-                    }
-
-                    if (is_a($definition->getClass(), FragmentOptionsAwareInterface::class, true)) {
-                        $definition->addMethodCall('setFragmentOptions', [$attributes]);
-                    }
-
-                    $registry->addMethodCall('add', [$identifier, $config]);
+                if (($annotation = $annotationReader->getClassAnnotation($reflection, $annotationName)) === null) {
+                    continue;
                 }
+
+                $serviceId = $annotation->service ?: $class;
+
+                if (!$container->hasDefinition($serviceId)) {
+                    $definition = new Definition($class);
+                    $container->setDefinition($serviceId, $definition);
+                }
+
+                $attributes = [
+                    'category' => $annotation->category,
+                    'method' => '__invoke', // TODO
+                    //'options' => $annotation->options, // TODO
+                    'renderer' => $annotation->renderer,
+                    'template' => $annotation->template,
+                    'type' => $annotation->type,
+                ];
+
+                $tag = ($annotation instanceof ContentElement) ? ContentElementReference::TAG_NAME : FrontendModuleReference::TAG_NAME;
+                $reference = new Reference($serviceId);
+
+                $this->registerFragment($container, $reference, $tag, $attributes);
             }
         }
-
-        $this->addPreHandlers($container, $preHandlers);
     }
 
     private function getAnnotatedControllersDirs(ContainerBuilder $container)
@@ -142,41 +129,50 @@ class RegisterFragmentsPass implements CompilerPassInterface
         return $dirs;
     }
 
-    /**
-     * @throws InvalidConfigurationException
-     */
-    protected function registerFragments(ContainerBuilder $container, string $tag): void
+    private function registerTaggedServices(ContainerBuilder $container, string $tag): void
+    {
+        foreach ($this->findAndSortTaggedServices($tag, $container) as $priority => $reference) {
+            foreach ($container->findDefinition($reference)->getTag($tag) as $attributes) {
+                $this->registerFragment($container, $reference, $tag, $attributes);
+            }
+        }
+    }
+
+    private function registerFragment(ContainerBuilder $container, Reference $reference, string $tag, array $attributes): void
     {
         $preHandlers = [];
         $registry = $container->findDefinition('contao.fragment.registry');
 
-        foreach ($this->findAndSortTaggedServices($tag, $container) as $priority => $reference) {
-            $definition = $container->findDefinition($reference);
-            $definition->setPublic(true);
+        $definition = $container->findDefinition($reference);
+        $definition->setPublic(true);
+        $definition->clearTag($tag);
 
-            $tags = $definition->getTag($tag);
-            $definition->clearTag($tag);
+        $attributes['type'] = $this->getFragmentType($definition, $attributes);
+        $identifier = sprintf('%s.%s', $tag, $attributes['type']);
+        $config = $this->getFragmentConfig($container, $reference, $attributes);
 
-            foreach ($tags as $attributes) {
-                $attributes['type'] = $this->getFragmentType($definition, $attributes);
-
-                $identifier = sprintf('%s.%s', $tag, $attributes['type']);
-                $config = $this->getFragmentConfig($container, $reference, $attributes);
-
-                if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
-                    $preHandlers[$identifier] = $reference;
-                }
-
-                if (is_a($definition->getClass(), FragmentOptionsAwareInterface::class, true)) {
-                    $definition->addMethodCall('setFragmentOptions', [$attributes]);
-                }
-
-                $registry->addMethodCall('add', [$identifier, $config]);
-                $definition->addTag($tag, $attributes);
-            }
+        if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
+            $preHandlers[$identifier] = $reference;
         }
 
+        if (is_a($definition->getClass(), FragmentOptionsAwareInterface::class, true)) {
+            $definition->addMethodCall('setFragmentOptions', [$attributes]);
+        }
+
+        $registry->addMethodCall('add', [$identifier, $config]);
+        $definition->addTag($tag, $attributes);
+
         $this->addPreHandlers($container, $preHandlers);
+    }
+
+    /**
+     * @deprecated Deprecated since Contao 4.8, to be removed in Contao 5.0
+     */
+    protected function registerFragments(ContainerBuilder $container, string $tag): void
+    {
+        @trigger_error('Using the RegisterFragmentsPass::registerFragments() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
+        $this->registerTaggedServices($container, $tag);
     }
 
     protected function getFragmentConfig(ContainerBuilder $container, Reference $reference, array $attributes): Reference

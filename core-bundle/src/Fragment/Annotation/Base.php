@@ -25,22 +25,22 @@ abstract class Base
     public $options = [];
 
     /**
-     * @var string
+     * @var string|null
      */
     public $renderer;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $service;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $template;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $type;
 
@@ -52,10 +52,10 @@ abstract class Base
     public function __construct(array $values)
     {
         $this->category = $values['category'];
-        $this->options = (array) $values['options'];
-        $this->service = $values['service'];
-        $this->renderer = $values['renderer'];
-        $this->template = $values['template'];
-        $this->type = $values['type'];
+        $this->options = $values['options'] ?? [];
+        $this->service = $values['service'] ?? null;
+        $this->renderer = $values['renderer'] ?? null;
+        $this->template = $values['template'] ?? null;
+        $this->type = $values['type'] ?? null;
     }
 }
