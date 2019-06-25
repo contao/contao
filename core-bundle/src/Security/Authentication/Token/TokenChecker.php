@@ -25,6 +25,9 @@ use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class TokenChecker
 {
+    private const FRONTEND_FIREWALL = 'contao_frontend';
+    private const BACKEND_FIREWALL = 'contao_backend';
+
     /**
      * @var RequestStack
      */
@@ -64,7 +67,7 @@ class TokenChecker
      */
     public function hasFrontendUser(): bool
     {
-        $token = $this->getToken(FrontendUser::SECURITY_SESSION_KEY);
+        $token = $this->getToken(self::FRONTEND_FIREWALL);
 
         return null !== $token && $token->getUser() instanceof FrontendUser;
     }
@@ -74,7 +77,7 @@ class TokenChecker
      */
     public function hasBackendUser(): bool
     {
-        $token = $this->getToken(BackendUser::SECURITY_SESSION_KEY);
+        $token = $this->getToken(self::BACKEND_FIREWALL);
 
         return null !== $token && $token->getUser() instanceof BackendUser;
     }
@@ -84,7 +87,7 @@ class TokenChecker
      */
     public function getFrontendUsername(): ?string
     {
-        $token = $this->getToken(FrontendUser::SECURITY_SESSION_KEY);
+        $token = $this->getToken(self::FRONTEND_FIREWALL);
 
         if (null === $token || !$token->getUser() instanceof FrontendUser) {
             return null;
@@ -98,7 +101,7 @@ class TokenChecker
      */
     public function getBackendUsername(): ?string
     {
-        $token = $this->getToken(BackendUser::SECURITY_SESSION_KEY);
+        $token = $this->getToken(self::BACKEND_FIREWALL);
 
         if (null === $token || !$token->getUser() instanceof BackendUser) {
             return null;
@@ -112,17 +115,17 @@ class TokenChecker
      */
     public function isPreviewMode(): bool
     {
-        $token = $this->getToken(FrontendUser::SECURITY_SESSION_KEY);
+        $token = $this->getToken(self::FRONTEND_FIREWALL);
 
         return $token instanceof FrontendPreviewToken && $token->showUnpublished();
     }
 
-    private function getToken(string $sessionKey): ?TokenInterface
+    private function getToken(string $context): ?TokenInterface
     {
-        $token = $this->getTokenFromStorage(substr($sessionKey, 10));
+        $token = $this->getTokenFromStorage($context);
 
         if (null === $token) {
-            $token = $this->getTokenFromSession($sessionKey);
+            $token = $this->getTokenFromSession('_security_'.$context);
         }
 
         if (!$token instanceof TokenInterface || !$token->isAuthenticated()) {
