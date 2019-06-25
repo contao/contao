@@ -50,11 +50,12 @@ class RegisterFragmentsPass implements CompilerPassInterface
             return;
         }
 
-        $this->registerAnnotatedControllers($container, ContentElement::class, ContentElementReference::TAG_NAME);
-        $this->registerAnnotatedControllers($container, FrontendModule::class, FrontendModuleReference::TAG_NAME);
-
         $this->registerTaggedServices($container, ContentElementReference::TAG_NAME);
         $this->registerTaggedServices($container, FrontendModuleReference::TAG_NAME);
+
+        // Load annotated controllers after tagged services, because annotated controllers get a tag which would then be parsed again
+        $this->registerAnnotatedControllers($container, ContentElement::class, ContentElementReference::TAG_NAME);
+        $this->registerAnnotatedControllers($container, FrontendModule::class, FrontendModuleReference::TAG_NAME);
     }
 
     private function registerAnnotatedControllers(ContainerBuilder $container, string $annotationName, string $tag): void
@@ -110,8 +111,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $serviceId = $annotation->service ?: $class;
 
         if (!$container->hasDefinition($serviceId)) {
-            $definition = new Definition($class);
-            $container->setDefinition($serviceId, $definition);
+            $container->setDefinition($serviceId, new Definition($class));
         }
 
         $this->registerFragment($container, new Reference($serviceId), $tag, [
@@ -141,7 +141,11 @@ class RegisterFragmentsPass implements CompilerPassInterface
     private function registerTaggedServices(ContainerBuilder $container, string $tag): void
     {
         foreach ($this->findAndSortTaggedServices($tag, $container) as $priority => $reference) {
-            foreach ($container->findDefinition($reference)->getTag($tag) as $attributes) {
+            $definition = $container->findDefinition($reference);
+
+            foreach ($definition->getTag($tag) as $attributes) {
+                // Clear the tag before registering a fragment
+                $definition = $definition->clearTag($tag);
                 $this->registerFragment($container, $reference, $tag, $attributes);
             }
         }
@@ -149,19 +153,17 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
     private function registerFragment(ContainerBuilder $container, Reference $reference, string $tag, array $attributes): void
     {
-        $preHandlers = [];
         $registry = $container->findDefinition('contao.fragment.registry');
 
         $definition = $container->findDefinition($reference);
         $definition->setPublic(true);
-        $definition->clearTag($tag);
 
         $attributes['type'] = $this->getFragmentType($definition, $attributes);
         $identifier = sprintf('%s.%s', $tag, $attributes['type']);
         $config = $this->getFragmentConfig($container, $reference, $attributes);
 
         if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
-            $preHandlers[$identifier] = $reference;
+            $this->addPreHandlers($container, [[$identifier => $reference]]);
         }
 
         if (is_a($definition->getClass(), FragmentOptionsAwareInterface::class, true)) {
@@ -174,8 +176,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $definition->addTag($tag, array_filter($attributes, function ($v) {
             return is_scalar($v);
         }));
-
-        $this->addPreHandlers($container, $preHandlers);
     }
 
     /**
