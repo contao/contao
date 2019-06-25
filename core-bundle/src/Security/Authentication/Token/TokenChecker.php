@@ -156,7 +156,7 @@ class TokenChecker
         return $this->tokenStorage->getToken();
     }
 
-    private function getTokenFromSession(string $sessionKey)
+    private function getTokenFromSession(string $sessionKey): ?TokenInterface
     {
         if (!$this->session->isStarted() || !$this->session->has($sessionKey)) {
             return null;
