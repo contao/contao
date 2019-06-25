@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -47,16 +48,25 @@ class TokenCheckerTest extends TestCase
      */
     public function testChecksForUserInTokenStorageIfFirewallContextDoesMatch(string $class, string $firewallContext): void
     {
+        $user = $this->mockUser($class);
+        $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
+
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
             ->method('isStarted')
         ;
 
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
         $tokenChecker = new TokenChecker(
             $this->mockRequestStack(),
             $this->mockFirewallMapWithConfigContext($firewallContext),
-            $this->mockTokenStorage($class),
+            $tokenStorage,
             $session,
             $this->trustResolver
         );
