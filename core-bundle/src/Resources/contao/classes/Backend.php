@@ -535,9 +535,9 @@ abstract class Backend extends Controller
 						{
 							$trail[] = ' › <span>' . $objRow->headline . '</span>';
 						}
-
 					}
 
+					System::loadLanguageFile($ptable);
 					$this->loadDataContainer($ptable);
 
 					// Next parent table

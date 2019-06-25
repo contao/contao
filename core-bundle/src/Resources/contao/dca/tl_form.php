@@ -60,7 +60,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		(
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -70,27 +69,23 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_form']['edit'],
 				'href'                => 'table=tl_form_field',
 				'icon'                => 'edit.svg'
 			),
 			'editheader' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_form']['editheader'],
 				'href'                => 'act=edit',
 				'icon'                => 'header.svg',
 				'button_callback'     => array('tl_form', 'editHeader')
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_form']['copy'],
 				'href'                => 'act=copy',
 				'icon'                => 'copy.svg',
 				'button_callback'     => array('tl_form', 'copyForm')
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_form']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
@@ -98,7 +93,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_form']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			)
@@ -132,7 +126,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'title' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['title'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -141,7 +134,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'alias' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['alias'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
@@ -153,7 +145,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'jumpTo' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['jumpTo'],
 			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
@@ -163,7 +154,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'sendViaEmail' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['sendViaEmail'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -172,7 +162,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'recipient' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['recipient'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -181,7 +170,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'subject' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['subject'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -190,7 +178,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'format' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['format'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('raw', 'xml', 'csv', 'email'),
@@ -200,7 +187,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'skipEmpty' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['skipEmtpy'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -209,7 +195,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'storeValues' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['storeValues'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -218,7 +203,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'targetTable' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['targetTable'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'select',
@@ -228,7 +212,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'customTpl' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['customTpl'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_form', 'getFormWrapperTemplates'),
@@ -237,7 +220,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'method' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['method'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
@@ -247,7 +229,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'novalidate' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['novalidate'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
@@ -255,7 +236,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'attributes' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['attributes'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50'),
@@ -263,7 +243,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'formID' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['formID'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -272,7 +251,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'allowTags' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form']['allowTags'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',

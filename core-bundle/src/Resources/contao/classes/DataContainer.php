@@ -778,10 +778,22 @@ abstract class DataContainer extends Backend
 		{
 			$v = \is_array($v) ? $v : array($v);
 			$id = StringUtil::specialchars(rawurldecode($arrRow['id']));
+			$label = $title = $k;
 
-			$label = $v['label'][0] ?: $k;
-			$title = sprintf($v['label'][1] ?: $k, $id);
-			$attributes = ($v['attributes'] != '') ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
+			if (isset($v['label']))
+			{
+				if (\is_array($v['label']))
+				{
+					$label = $v['label'][0];
+					$title = sprintf($v['label'][1], $id);
+				}
+				else
+				{
+					$label = $title = sprintf($v['label'], $id);
+				}
+			}
+
+			$attributes = !empty($v['attributes']) ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
 
 			// Add the key as CSS class
 			if (strpos($attributes, 'class="') !== false)
@@ -967,10 +979,22 @@ abstract class DataContainer extends Backend
 
 			$v = \is_array($v) ? $v : array($v);
 			$id = StringUtil::specialchars(rawurldecode($arrRow['id']));
+			$label = $title = $k;
 
-			$label = $v['label'][0] ?: $k;
-			$title = sprintf($v['label'][1] ?: $k, $id);
-			$attributes = ($v['attributes'] != '') ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
+			if (isset($v['label']))
+			{
+				if (\is_array($v['label']))
+				{
+					$label = $v['label'][0];
+					$title = sprintf($v['label'][1], $id);
+				}
+				else
+				{
+					$label = $title = sprintf($v['label'], $id);
+				}
+			}
+
+			$attributes = !empty($v['attributes']) ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
 
 			// Add the key as CSS class
 			if (strpos($attributes, 'class="') !== false)

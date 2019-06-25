@@ -49,7 +49,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -59,39 +58,33 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_faq']['edit'],
 				'href'                => 'act=edit',
 				'icon'                => 'edit.svg'
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_faq']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg'
 			),
 			'cut' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_faq']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg'
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_faq']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_faq']['toggle'],
 				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_faq', 'toggleIcon')
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_faq']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			)
@@ -139,7 +132,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'question' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq']['question'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
@@ -150,7 +142,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'alias' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq']['alias'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -163,7 +154,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'author' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq']['author'],
 			'default'                 => Contao\BackendUser::getInstance()->id,
 			'exclude'                 => true,
 			'search'                  => true,
@@ -178,7 +168,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'answer' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq']['answer'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
@@ -188,7 +177,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'addImage' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq']['addImage'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -289,7 +277,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'addEnclosure' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq']['addEnclosure'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -298,7 +285,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'enclosure' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq']['enclosure'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Contao\Config::get('allowedDownload'), 'mandatory'=>true, 'orderField'=>'orderEnclosure'),
@@ -311,7 +297,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'noComments' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq']['noComments'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -319,7 +304,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'published' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq']['published'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'flag'                    => 2,

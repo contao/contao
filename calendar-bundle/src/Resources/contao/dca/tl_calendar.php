@@ -64,7 +64,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		(
 			'feeds' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_calendar']['feeds'],
 				'href'                => 'table=tl_calendar_feed',
 				'class'               => 'header_rss',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
@@ -72,7 +71,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			),
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -82,27 +80,23 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_calendar']['edit'],
 				'href'                => 'table=tl_calendar_events',
 				'icon'                => 'edit.svg'
 			),
 			'editheader' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_calendar']['editheader'],
 				'href'                => 'act=edit',
 				'icon'                => 'header.svg',
 				'button_callback'     => array('tl_calendar', 'editHeader')
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_calendar']['copy'],
 				'href'                => 'act=copy',
 				'icon'                => 'copy.svg',
 				'button_callback'     => array('tl_calendar', 'copyCalendar')
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_calendar']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
@@ -110,7 +104,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_calendar']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			)
@@ -144,7 +137,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'title' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['title'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -153,7 +145,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'jumpTo' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['jumpTo'],
 			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
@@ -163,7 +154,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'protected' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['protected'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -172,7 +162,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'groups' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['groups'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
@@ -182,7 +171,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'allowComments' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['allowComments'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -191,7 +179,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'notify' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['notify'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('notify_admin', 'notify_author', 'notify_both'),
@@ -201,7 +188,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'sortOrder' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['sortOrder'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('ascending', 'descending'),
@@ -211,7 +197,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'perPage' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['perPage'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
@@ -219,7 +204,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'moderate' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['moderate'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -227,7 +211,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'bbcode' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['bbcode'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -235,7 +218,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'requireLogin' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['requireLogin'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -243,7 +225,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'disableCaptcha' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar']['disableCaptcha'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),

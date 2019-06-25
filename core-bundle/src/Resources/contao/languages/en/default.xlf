@@ -969,13 +969,13 @@
         <source>Edit multiple</source>
       </trans-unit>
       <trans-unit id="MSC.all.1">
-        <source>Edit multiple records at once</source>
+        <source>Edit multiple elements at once</source>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
-        <source>Override multiple records at once</source>
+        <source>Override multiple elements at once</source>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
@@ -1122,7 +1122,7 @@
         <source>Cancel</source>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
-        <source>Do you really want to delete entry ID %s?</source>
+        <source>Do you really want to delete element ID %s?</source>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
@@ -1942,6 +1942,66 @@
       </trans-unit>
       <trans-unit id="SECTIONS.manual">
         <source>Manual output</source>
+      </trans-unit>
+      <trans-unit id="DCA.all.0">
+        <source>Edit multiple</source>
+      </trans-unit>
+      <trans-unit id="DCA.all.1">
+        <source>Edit multiple elements at once</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.0">
+        <source>Toggle all</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.1">
+        <source>Expand or collapse all nodes</source>
+      </trans-unit>
+      <trans-unit id="DCA.new.0">
+        <source>New</source>
+      </trans-unit>
+      <trans-unit id="DCA.new.1">
+        <source>Create a new element</source>
+      </trans-unit>
+      <trans-unit id="DCA.show">
+        <source>Show the details of element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.edit">
+        <source>Edit element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.cut">
+        <source>Move element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.copy">
+        <source>Duplicate element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.delete">
+        <source>Delete element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.0">
+        <source>Edit the element settings</source>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.1">
+        <source>Edit the settings of element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggle">
+        <source>Publish/unpublish element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste at the top</source>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.1">
+        <source>Paste into element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.0">
+        <source>Paste at the top</source>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.1">
+        <source>Paste after element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.0">
+        <source>Create a new element at the top</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.1">
+        <source>Create a new element after element ID %s</source>
       </trans-unit>
     </body>
   </file>

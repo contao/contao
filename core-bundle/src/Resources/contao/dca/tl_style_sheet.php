@@ -57,14 +57,12 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 		(
 			'import' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_style_sheet']['import'],
 				'href'                => 'key=import',
 				'class'               => 'header_css_import',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -74,46 +72,39 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_style_sheet']['edit'],
 				'href'                => 'table=tl_style',
 				'icon'                => 'edit.svg'
 			),
 			'editheader' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_style_sheet']['editheader'],
 				'href'                => 'table=tl_style_sheet&amp;act=edit',
 				'icon'                => 'header.svg',
 				'button_callback'     => array('tl_style_sheet', 'editHeader')
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_style_sheet']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg'
 			),
 			'cut' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_style_sheet']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_style_sheet']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_style_sheet']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			),
 			'export' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_style_sheet']['export'],
 				'href'                => 'key=export',
 				'icon'                => 'theme_export.svg'
 			)
@@ -145,7 +136,6 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 		),
 		'name' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_style_sheet']['name'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'search'                  => true,
@@ -159,7 +149,6 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 		),
 		'embedImages' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_style_sheet']['embedImages'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
@@ -167,7 +156,6 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 		),
 		'cc' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_style_sheet']['cc'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'search'                  => true,
@@ -180,7 +168,6 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 		),
 		'media' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_style_sheet']['media'],
 			'inputType'               => 'checkbox',
 			'exclude'                 => true,
 			'filter'                  => true,
@@ -190,7 +177,6 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 		),
 		'mediaQuery' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_style_sheet']['mediaQuery'],
 			'inputType'               => 'textarea',
 			'exclude'                 => true,
 			'search'                  => true,
@@ -199,7 +185,6 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 		),
 		'vars' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_style_sheet']['vars'],
 			'inputType'               => 'keyValueWizard',
 			'exclude'                 => true,
 			'sql'                     => "text NULL"

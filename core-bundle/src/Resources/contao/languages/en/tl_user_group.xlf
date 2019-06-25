@@ -60,40 +60,25 @@
         <source>Account settings</source>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
-        <source>New user group</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_user_group.new.1">
         <source>Create a new user group</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.show.0">
-        <source>Group details</source>
+      <trans-unit id="tl_user_group.show">
+        <source>Show the details of user group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.show.1">
-        <source>Show the details of group ID %s</source>
+      <trans-unit id="tl_user_group.edit">
+        <source>Edit user group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.edit.0">
-        <source>Edit group</source>
+      <trans-unit id="tl_user_group.copy">
+        <source>Duplicate user group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.edit.1">
-        <source>Edit group ID %s</source>
+      <trans-unit id="tl_user_group.delete">
+        <source>Delete user group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.copy.0">
-        <source>Duplicate group</source>
-      </trans-unit>
-      <trans-unit id="tl_user_group.copy.1">
-        <source>Duplicate group ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_user_group.delete.0">
-        <source>Delete group</source>
-      </trans-unit>
-      <trans-unit id="tl_user_group.delete.1">
-        <source>Delete group ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_user_group.toggle.0">
-        <source>Activate/deactivate group</source>
-      </trans-unit>
-      <trans-unit id="tl_user_group.toggle.1">
-        <source>Activate/deactivate group ID %s</source>
+      <trans-unit id="tl_user_group.toggle">
+        <source>Activate/deactivate user group ID %s</source>
       </trans-unit>
     </body>
   </file>

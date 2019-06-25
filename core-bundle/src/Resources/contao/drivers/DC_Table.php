@@ -3514,12 +3514,15 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$icon = $GLOBALS['TL_DCA'][$table]['list']['sorting']['icon'] ?: 'pagemounts.svg';
 		$label = Image::getHtml($icon).' <label>'.$label.'</label>';
 
+		// Check the default labels (see #509)
+		$labelNew = $GLOBALS['TL_LANG'][$this->strTable]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
+
 		// Begin buttons container
 		$return = Message::generate() . '
 <div id="tl_buttons">'.((Input::get('act') == 'select') ? '
 <a href="'.$this->getReferer(true).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
 <a href="contao/main.php?'.$GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'].'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : '')) . ((Input::get('act') != 'select' && !$blnClipboard && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
-<a href="'.$this->addToUrl('act=paste&amp;mode=create').'" class="header_new" title="'.StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['new'][1]).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['new'][0].'</a> ' : '') . ($blnClipboard ? '
+<a href="'.$this->addToUrl('act=paste&amp;mode=create').'" class="header_new" title="'.StringUtil::specialchars($labelNew[1]).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$labelNew[0].'</a> ' : '') . ($blnClipboard ? '
 <a href="'.$this->addToUrl('clipboard=1').'" class="header_clipboard" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ' : $this->generateGlobalButtons()) . '
 </div>';
 
@@ -3628,8 +3631,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 			else
 			{
-				$imagePasteInto = Image::getHtml('pasteinto.svg', $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'][0]);
-				$_buttons = '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid=0'.(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pasteinto'][0]).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ';
+				$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
+				$imagePasteInto = Image::getHtml('pasteinto.svg', $labelPasteInto[0]);
+				$_buttons = '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid=0'.(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars($labelPasteInto[0]).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ';
 			}
 		}
 
@@ -3993,21 +3997,24 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 			else
 			{
-				$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][1], $id));
-				$imagePasteInto = Image::getHtml('pasteinto.svg', sprintf($GLOBALS['TL_LANG'][$this->strTable]['pasteinto'][1], $id));
+				$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
+				$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1], $id));
 
-				// Regular tree (on cut: disable buttons of the page all its childs to avoid circular references)
+				$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
+				$imagePasteInto = Image::getHtml('pasteinto.svg', sprintf($labelPasteInto[1], $id));
+
+				// Regular tree (on cut: disable buttons of the page and all its childs to avoid circular references)
 				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5)
 				{
-					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && !$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['rootPaste'] && \in_array($id, $this->root))) ? Image::getHtml('pasteafter_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$id.(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][1], $id)).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> ';
-					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id'])))) ? Image::getHtml('pasteinto_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$id.(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['pasteinto'][1], $id)).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ';
+					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && !$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['rootPaste'] && \in_array($id, $this->root))) ? Image::getHtml('pasteafter_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$id.(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> ';
+					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id'])))) ? Image::getHtml('pasteinto_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$id.(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($labelPasteInto[1], $id)).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ';
 				}
 
 				// Extended tree
 				else
 				{
-					$_buttons .= ($this->strTable == $table) ? ((($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id'])))) ? Image::getHtml('pasteafter_.svg') : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$id.(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][1], $id)).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> ') : '';
-					$_buttons .= ($this->strTable != $table) ? '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$id.(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['pasteinto'][1], $id)).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ' : '';
+					$_buttons .= ($this->strTable == $table) ? ((($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id'])))) ? Image::getHtml('pasteafter_.svg') : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$id.(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> ') : '';
+					$_buttons .= ($this->strTable != $table) ? '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$id.(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars(sprintf($labelPasteInto[1], $id)).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ' : '';
 				}
 			}
 		}
@@ -4106,11 +4113,23 @@ class DC_Table extends DataContainer implements \listable, \editable
 		System::loadLanguageFile($this->ptable);
 		$this->loadDataContainer($this->ptable);
 
+		// Check the default labels (see #509)
+		$labelNew = $GLOBALS['TL_LANG'][$this->strTable]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
+		$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
+		$labelPasteNew = $GLOBALS['TL_LANG'][$this->strTable]['pastenew'] ?? $GLOBALS['TL_LANG']['DCA']['pastenew'];
+		$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
+		$labelEditHeader = $GLOBALS['TL_LANG'][$this->strTable]['editheader'] ?? $GLOBALS['TL_LANG']['DCA']['editheader'];
+
+		if (isset($GLOBALS['TL_LANG'][$this->ptable]['editmeta']))
+		{
+			$labelEditHeader = $GLOBALS['TL_LANG'][$this->ptable]['editmeta'];
+		}
+
 		$return = Message::generate() . '
 <div id="tl_buttons">' . (Input::get('nb') ? '&nbsp;' : ($this->ptable ? '
 <a href="'.$this->getReferer(true, $this->ptable).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
 <a href="contao/main.php?'.$GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'].'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>' : ''))) . ' ' . ((Input::get('act') != 'select' && !$blnClipboard && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
-<a href="'.$this->addToUrl(($blnHasSorting ? 'act=paste&amp;mode=create' : 'act=create&amp;mode=2&amp;pid='.$this->intId)).'" class="header_new" title="'.StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['new'][1]).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['new'][0].'</a> ' : '') . ($blnClipboard ? '
+<a href="'.$this->addToUrl(($blnHasSorting ? 'act=paste&amp;mode=create' : 'act=create&amp;mode=2&amp;pid='.$this->intId)).'" class="header_new" title="'.StringUtil::specialchars($labelNew[1]).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$labelNew[0].'</a> ' : '') . ($blnClipboard ? '
 <a href="'.$this->addToUrl('clipboard=1').'" class="header_clipboard" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ' : $this->generateGlobalButtons()) . '
 </div>';
 
@@ -4142,16 +4161,16 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$this->import(BackendUser::class, 'User');
 
 			// Header
-			$imagePasteNew = Image::getHtml('new.svg', $GLOBALS['TL_LANG'][$this->strTable]['pastenew'][0]);
-			$imagePasteAfter = Image::getHtml('pasteafter.svg', $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][0]);
-			$imageEditHeader = Image::getHtml('header.svg', $GLOBALS['TL_LANG'][$this->strTable]['editheader'][0]);
+			$imagePasteNew = Image::getHtml('new.svg', $labelPasteNew[0]);
+			$imagePasteAfter = Image::getHtml('pasteafter.svg', $labelPasteAfter[0]);
+			$imageEditHeader = Image::getHtml('header.svg', sprintf(\is_array($labelEditHeader) ? $labelEditHeader[0] : $labelEditHeader, $objParent->id));
 
 			$return .= '
 <div class="tl_content_right">'.((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <label for="tl_select_trigger" class="tl_select_label">'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">' : ($blnClipboard ? '
-<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$objParent->id . (!$blnMultiboard ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][0]).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a>' : ((!$GLOBALS['TL_DCA'][$this->ptable]['config']['notEditable'] && $this->User->canEditFieldsOf($this->ptable)) ? '
-<a href="'.preg_replace('/&(amp;)?table=[^& ]*/i', (($this->ptable != '') ? '&amp;table='.$this->ptable : ''), $this->addToUrl('act=edit'.(Input::get('nb') ? '&amp;nc=1' : ''))).'" class="edit" title="'.StringUtil::specialchars($GLOBALS['TL_LANG'][$this->ptable]['editmeta'][1] ?? $GLOBALS['TL_LANG'][$this->strTable]['editheader'][1]).'">'.$imageEditHeader.'</a> ' . $this->generateHeaderButtons($objParent->row(), $this->ptable) : '') . (($blnHasSorting && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
-<a href="'.$this->addToUrl('act=create&amp;mode=2&amp;pid='.$objParent->id.'&amp;id='.$this->intId).'" title="'.StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['pastenew'][0]).'">'.$imagePasteNew.'</a>' : ''))) . '
+<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$objParent->id . (!$blnMultiboard ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.StringUtil::specialchars($labelPasteAfter[0]).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a>' : ((!$GLOBALS['TL_DCA'][$this->ptable]['config']['notEditable'] && $this->User->canEditFieldsOf($this->ptable)) ? '
+<a href="'.preg_replace('/&(amp;)?table=[^& ]*/i', (($this->ptable != '') ? '&amp;table='.$this->ptable : ''), $this->addToUrl('act=edit'.(Input::get('nb') ? '&amp;nc=1' : ''))).'" class="edit" title="'.StringUtil::specialchars(sprintf(\is_array($labelEditHeader) ? $labelEditHeader[1] : $labelEditHeader, $objParent->id)).'">'.$imageEditHeader.'</a> ' . $this->generateHeaderButtons($objParent->row(), $this->ptable) : '') . (($blnHasSorting && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
+<a href="'.$this->addToUrl('act=create&amp;mode=2&amp;pid='.$objParent->id.'&amp;id='.$this->intId).'" title="'.StringUtil::specialchars($labelPasteNew[0]).'">'.$imagePasteNew.'</a>' : ''))) . '
 </div>';
 
 			// Format header fields
@@ -4380,8 +4399,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 				for ($i=0, $c=\count($row); $i<$c; $i++)
 				{
 					$this->current[] = $row[$i]['id'];
-					$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][1], $row[$i]['id']));
-					$imagePasteNew = Image::getHtml('new.svg', sprintf($GLOBALS['TL_LANG'][$this->strTable]['pastenew'][1], $row[$i]['id']));
+					$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1], $row[$i]['id']));
+					$imagePasteNew = Image::getHtml('new.svg', sprintf($labelPasteNew[1], $row[$i]['id']));
 
 					// Decrypt encrypted value
 					foreach ($row[$i] as $k=>$v)
@@ -4458,7 +4477,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 							// Create new button
 							if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'])
 							{
-								$return .= ' <a href="'.$this->addToUrl('act=create&amp;mode=1&amp;pid='.$row[$i]['id'].'&amp;id='.$objParent->id.(Input::get('nb') ? '&amp;nc=1' : '')).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['pastenew'][1], $row[$i]['id'])).'">'.$imagePasteNew.'</a>';
+								$return .= ' <a href="'.$this->addToUrl('act=create&amp;mode=1&amp;pid='.$row[$i]['id'].'&amp;id='.$objParent->id.(Input::get('nb') ? '&amp;nc=1' : '')).'" title="'.StringUtil::specialchars(sprintf($labelPasteNew[1], $row[$i]['id'])).'">'.$imagePasteNew.'</a>';
 							}
 
 							// Prevent circular references
@@ -4470,19 +4489,19 @@ class DC_Table extends DataContainer implements \listable, \editable
 							// Copy/move multiple
 							elseif ($blnMultiboard)
 							{
-								$return .= ' <a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row[$i]['id']).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][1], $row[$i]['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a>';
+								$return .= ' <a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row[$i]['id']).'" title="'.StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a>';
 							}
 
 							// Paste buttons
 							elseif ($blnClipboard)
 							{
-								$return .= ' <a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row[$i]['id'].'&amp;id='.$arrClipboard['id']).'" title="'.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['pasteafter'][1], $row[$i]['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a>';
+								$return .= ' <a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row[$i]['id'].'&amp;id='.$arrClipboard['id']).'" title="'.StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a>';
 							}
 
 							// Drag handle
 							if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'])
 							{
-								$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$this->strTable]['cut'][1], $row[$i]['id'])) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
+								$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars(sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
 							}
 						}
 
@@ -4628,6 +4647,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$firstOrderBy = $this->firstOrderBy;
 		}
 
+		// Check the default labels (see #509)
+		$labelNew = $GLOBALS['TL_LANG'][$this->strTable]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
+
 		$query = "SELECT * FROM " . $this->strTable;
 
 		if (!empty($this->procedure))
@@ -4721,7 +4743,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div id="tl_buttons">'.((Input::get('act') == 'select' || $this->ptable) ? '
 <a href="'.$this->getReferer(true, $this->ptable).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
 <a href="contao/main.php?'.$GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'].'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : '')) . ((Input::get('act') != 'select' && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
-<a href="'.(($this->ptable != '') ? $this->addToUrl('act=create' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] < 4) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create')).'" class="header_new" title="'.StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['new'][1]).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['new'][0].'</a> ' : '') . $this->generateGlobalButtons() . '
+<a href="'.(($this->ptable != '') ? $this->addToUrl('act=create' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] < 4) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create')).'" class="header_new" title="'.StringUtil::specialchars($labelNew[1]).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$labelNew[0].'</a> ' : '') . $this->generateGlobalButtons() . '
 </div>';
 
 		// Return "no records found" message

@@ -147,61 +147,34 @@
         <source>Share on Twitter</source>
       </trans-unit>
       <trans-unit id="tl_article.new.0">
-        <source>New article</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
       </trans-unit>
-      <trans-unit id="tl_article.show.0">
-        <source>Article details</source>
-      </trans-unit>
-      <trans-unit id="tl_article.show.1">
+      <trans-unit id="tl_article.show">
         <source>Show the details of article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.edit.0">
-        <source>Edit article</source>
-      </trans-unit>
-      <trans-unit id="tl_article.edit.1">
+      <trans-unit id="tl_article.edit">
         <source>Edit article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.editheader.0">
-        <source>Edit article</source>
+      <trans-unit id="tl_article.editheader">
+        <source>Edit the settings of article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.editheader.1">
-        <source>Edit the article settings</source>
-      </trans-unit>
-      <trans-unit id="tl_article.copy.0">
-        <source>Duplicate article</source>
-      </trans-unit>
-      <trans-unit id="tl_article.copy.1">
+      <trans-unit id="tl_article.copy">
         <source>Duplicate article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.cut.0">
-        <source>Move article</source>
-      </trans-unit>
-      <trans-unit id="tl_article.cut.1">
+      <trans-unit id="tl_article.cut">
         <source>Move article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.delete.0">
-        <source>Delete article</source>
-      </trans-unit>
-      <trans-unit id="tl_article.delete.1">
+      <trans-unit id="tl_article.delete">
         <source>Delete article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.toggle.0">
-        <source>Publish/unpublish article</source>
-      </trans-unit>
-      <trans-unit id="tl_article.toggle.1">
+      <trans-unit id="tl_article.toggle">
         <source>Publish/unpublish article ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_article.pasteafter.0">
-        <source>Paste after</source>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_article.pasteinto.0">
-        <source>Paste into</source>
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>

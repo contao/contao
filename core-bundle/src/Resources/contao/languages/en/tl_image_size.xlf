@@ -81,45 +81,27 @@
         <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
-        <source>New image size</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_image_size.new.1">
         <source>Create a new image size</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.show.0">
-        <source>Image size details</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size.show.1">
+      <trans-unit id="tl_image_size.show">
         <source>Show the details of image size ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.edit.0">
-        <source>Edit image size</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size.edit.1">
+      <trans-unit id="tl_image_size.edit">
         <source>Edit image size ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.editheader.0">
-        <source>Edit image size</source>
+      <trans-unit id="tl_image_size.editheader">
+        <source>Edit the settings of image size ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.editheader.1">
-        <source>Edit the image size settings</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size.cut.0">
-        <source>Move image size</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size.cut.1">
+      <trans-unit id="tl_image_size.cut">
         <source>Move image size ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.copy.0">
-        <source>Duplicate image size</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size.copy.1">
+      <trans-unit id="tl_image_size.copy">
         <source>Duplicate image size ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.delete.0">
-        <source>Delete image size</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size.delete.1">
+      <trans-unit id="tl_image_size.delete">
         <source>Delete image size ID %s</source>
       </trans-unit>
     </body>

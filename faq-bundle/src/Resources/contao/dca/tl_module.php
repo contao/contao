@@ -16,7 +16,6 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['faqpage']   = '{title_legend},name,
 // Add fields to tl_module
 $GLOBALS['TL_DCA']['tl_module']['fields']['faq_categories'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['faq_categories'],
 	'exclude'                 => true,
 	'inputType'               => 'checkboxWizard',
 	'foreignKey'              => 'tl_faq_category.title',
@@ -26,7 +25,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['faq_categories'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['faq_readerModule'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['faq_readerModule'],
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_faq', 'getReaderModules'),

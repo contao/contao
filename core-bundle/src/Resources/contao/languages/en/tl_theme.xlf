@@ -101,64 +101,43 @@
       <trans-unit id="tl_theme.store.1">
         <source>Find more themes in the Contao theme store</source>
       </trans-unit>
+      <trans-unit id="tl_theme.importTheme.0">
+        <source>Import</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.1">
+        <source>Import a theme</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.editmeta">
+        <source>Edit the theme settings</source>
+      </trans-unit>
       <trans-unit id="tl_theme.new.0">
-        <source>New theme</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_theme.new.1">
         <source>Create a new theme</source>
       </trans-unit>
-      <trans-unit id="tl_theme.show.0">
-        <source>Theme details</source>
-      </trans-unit>
-      <trans-unit id="tl_theme.show.1">
+      <trans-unit id="tl_theme.show">
         <source>Show the details of theme ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_theme.edit.0">
-        <source>Edit theme</source>
-      </trans-unit>
-      <trans-unit id="tl_theme.edit.1">
+      <trans-unit id="tl_theme.edit">
         <source>Edit theme ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_theme.delete.0">
-        <source>Delete theme</source>
-      </trans-unit>
-      <trans-unit id="tl_theme.delete.1">
+      <trans-unit id="tl_theme.delete">
         <source>Delete theme ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_theme.css.0">
-        <source>Style sheets</source>
-      </trans-unit>
-      <trans-unit id="tl_theme.css.1">
+      <trans-unit id="tl_theme.css">
         <source>Edit the style sheets of theme ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_theme.modules.0">
-        <source>Modules</source>
-      </trans-unit>
-      <trans-unit id="tl_theme.modules.1">
+      <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_theme.layout.0">
-        <source>Layouts</source>
-      </trans-unit>
-      <trans-unit id="tl_theme.layout.1">
+      <trans-unit id="tl_theme.layout">
         <source>Edit the page layouts of theme ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_theme.imageSizes.0">
-        <source>Image sizes</source>
-      </trans-unit>
-      <trans-unit id="tl_theme.imageSizes.1">
+      <trans-unit id="tl_theme.imageSizes">
         <source>Edit the image sizes of theme ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_theme.importTheme.0">
-        <source>Theme import</source>
-      </trans-unit>
-      <trans-unit id="tl_theme.importTheme.1">
-        <source>Import new themes</source>
-      </trans-unit>
-      <trans-unit id="tl_theme.exportTheme.0">
-        <source>Export</source>
-      </trans-unit>
-      <trans-unit id="tl_theme.exportTheme.1">
+      <trans-unit id="tl_theme.exportTheme">
         <source>Export theme ID %s</source>
       </trans-unit>
     </body>

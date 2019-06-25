@@ -639,46 +639,31 @@
         <source>Hide the author</source>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
-        <source>New element</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>
       </trans-unit>
-      <trans-unit id="tl_content.show.0">
-        <source>Element details</source>
-      </trans-unit>
-      <trans-unit id="tl_content.show.1">
+      <trans-unit id="tl_content.show">
         <source>Show the details of content element ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_content.cut.0">
-        <source>Move element</source>
-      </trans-unit>
-      <trans-unit id="tl_content.cut.1">
+      <trans-unit id="tl_content.cut">
         <source>Move content element ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_content.copy.0">
-        <source>Duplicate element</source>
-      </trans-unit>
-      <trans-unit id="tl_content.copy.1">
+      <trans-unit id="tl_content.copy">
         <source>Duplicate content element ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_content.delete.0">
-        <source>Delete element</source>
-      </trans-unit>
-      <trans-unit id="tl_content.delete.1">
+      <trans-unit id="tl_content.delete">
         <source>Delete content element ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_content.edit.0">
-        <source>Edit element</source>
-      </trans-unit>
-      <trans-unit id="tl_content.edit.1">
+      <trans-unit id="tl_content.edit">
         <source>Edit content element ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_content.editheader.0">
-        <source>Edit article</source>
-      </trans-unit>
-      <trans-unit id="tl_content.editheader.1">
+      <trans-unit id="tl_content.editheader">
         <source>Edit the article settings</source>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle">
+        <source>Hide/unhide content element ID %s</source>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -687,27 +672,15 @@
         <source>Paste after content element ID %s</source>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
-        <source>Add new at the top</source>
+        <source>Create a new content element at the top</source>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
-        <source>Add new after content element ID %s</source>
+        <source>Create a new content element after content element ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_content.toggle.0">
-        <source>Toggle visibility</source>
-      </trans-unit>
-      <trans-unit id="tl_content.toggle.1">
-        <source>Toggle the visibility of element ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_content.editalias.0">
-        <source>Edit source element</source>
-      </trans-unit>
-      <trans-unit id="tl_content.editalias.1">
+      <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_content.editarticle.0">
-        <source>Edit article</source>
-      </trans-unit>
-      <trans-unit id="tl_content.editarticle.1">
+      <trans-unit id="tl_content.editarticle">
         <source>Edit article ID %s</source>
       </trans-unit>
       <trans-unit id="tl_content.list.1">

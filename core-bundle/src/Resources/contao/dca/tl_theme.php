@@ -60,21 +60,18 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		(
 			'importTheme' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['importTheme'],
 				'href'                => 'key=importTheme',
 				'class'               => 'header_theme_import',
 				'button_callback'     => array('tl_theme', 'importTheme')
 			),
 			'store' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['store'],
 				'href'                => 'key=themeStore',
 				'class'               => 'header_store',
 				'button_callback'     => array('tl_theme', 'themeStore')
 			),
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -84,55 +81,47 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['edit'],
 				'href'                => 'act=edit',
 				'icon'                => 'edit.svg'
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg',
 				'attributes'          => 'style="margin-right:3px"'
 			),
 			'css' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['css'],
 				'href'                => 'table=tl_style_sheet',
 				'icon'                => 'css.svg',
 				'button_callback'     => array('tl_theme', 'editCss')
 			),
 			'modules' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['modules'],
 				'href'                => 'table=tl_module',
 				'icon'                => 'modules.svg',
 				'button_callback'     => array('tl_theme', 'editModules')
 			),
 			'layout' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['layout'],
 				'href'                => 'table=tl_layout',
 				'icon'                => 'layout.svg',
 				'button_callback'     => array('tl_theme', 'editLayout')
 			),
 			'imageSizes' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['imageSizes'],
 				'href'                => 'table=tl_image_size',
 				'icon'                => 'sizes.svg',
 				'button_callback'     => array('tl_theme', 'editImageSizes')
 			),
 			'exportTheme' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_theme']['exportTheme'],
 				'href'                => 'key=exportTheme',
 				'icon'                => 'theme_export.svg',
 				'button_callback'     => array('tl_theme', 'exportTheme')
@@ -159,7 +148,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'name' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_theme']['name'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'sorting'                 => true,
@@ -170,7 +158,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'author' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_theme']['author'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'sorting'                 => true,
@@ -181,7 +168,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'folders' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_theme']['folders'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
@@ -189,7 +175,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'screenshot' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_theme']['screenshot'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'isGallery'=>true, 'extensions'=>Contao\Config::get('validImageTypes')),
@@ -197,7 +182,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'templates' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_theme']['templates'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_theme', 'getTemplateFolders'),
@@ -206,14 +190,12 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'vars' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_theme']['vars'],
 			'inputType'               => 'keyValueWizard',
 			'exclude'                 => true,
 			'sql'                     => "text NULL"
 		),
 		'defaultImageDensities' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_theme']['defaultImageDensities'],
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
 			'exclude'                 => true,

@@ -53,13 +53,11 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		(
 			'undo' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_undo']['undo'],
 				'href'                => '&amp;act=undo',
 				'icon'                => 'undo.svg'
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_undo']['show'],
 				'href'                => '&amp;act=show',
 				'icon'                => 'show.svg'
 			)
@@ -75,7 +73,6 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		),
 		'pid' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['pid'],
 			'sorting'                 => true,
 			'foreignKey'              => 'tl_user.name',
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
@@ -89,23 +86,19 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		),
 		'fromTable' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['fromTable'],
 			'sorting'                 => true,
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'query' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['query'],
 			'sql'                     => "text NULL"
 		),
 		'affectedRows' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['affectedRows'],
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'data' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['data'],
 			'search'                  => true,
 			'sql'                     => "mediumblob NULL"
 		)

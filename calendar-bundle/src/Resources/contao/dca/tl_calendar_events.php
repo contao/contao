@@ -66,7 +66,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -76,38 +75,32 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_calendar_events']['edit'],
 				'href'                => 'table=tl_content',
 				'icon'                => 'edit.svg'
 			),
 			'editheader' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_calendar_events']['editmeta'],
 				'href'                => 'act=edit',
 				'icon'                => 'header.svg'
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_calendar_events']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg'
 			),
 			'cut' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_calendar_events']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg'
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_calendar_events']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_calendar_events']['toggle'],
 				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_calendar_events', 'toggleIcon'),
@@ -115,7 +108,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_calendar_events']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			)
@@ -161,7 +153,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'title' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['title'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
@@ -172,7 +163,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'alias' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['alias'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -185,7 +175,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'author' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['author'],
 			'default'                 => Contao\BackendUser::getInstance()->id,
 			'exclude'                 => true,
 			'search'                  => true,
@@ -200,7 +189,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'addTime' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['addTime'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'doNotCopy'=>true),
@@ -208,7 +196,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'startTime' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['startTime'],
 			'default'                 => time(),
 			'exclude'                 => true,
 			'filter'                  => true,
@@ -224,7 +211,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'endTime' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['endTime'],
 			'default'                 => time(),
 			'exclude'                 => true,
 			'inputType'               => 'text',
@@ -241,7 +227,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'startDate' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['startDate'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'date', 'mandatory'=>true, 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
@@ -249,7 +234,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'endDate' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['endDate'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'date', 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
@@ -257,7 +241,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'pageTitle' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['pageTitle'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -266,7 +249,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'description' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['description'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
@@ -275,7 +257,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'location' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['location'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -284,7 +265,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'address' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['address'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -293,7 +273,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'teaser' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['teaser'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
@@ -302,7 +281,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'addImage' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['addImage'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -402,7 +380,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'recurring' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['recurring'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -411,7 +388,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'repeatEach' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['repeatEach'],
 			'exclude'                 => true,
 			'inputType'               => 'timePeriod',
 			'options'                 => array('days', 'weeks', 'months', 'years'),
@@ -421,12 +397,10 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'repeatEnd' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['repeatEnd'],
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'recurrences' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['recurrences'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'tl_class'=>'w50'),
@@ -434,7 +408,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'addEnclosure' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['addEnclosure'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -442,7 +415,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'enclosure' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['enclosure'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Contao\Config::get('allowedDownload'), 'mandatory'=>true, 'orderField'=>'orderEnclosure'),
@@ -455,7 +427,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'source' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['source'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'radio',
@@ -466,7 +437,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'jumpTo' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['jumpTo'],
 			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
@@ -476,7 +446,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'articleId' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['articleId'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_calendar_events', 'getArticleAlias'),
@@ -503,7 +472,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'cssClass' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['cssClass'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -511,7 +479,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'noComments' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['noComments'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -520,7 +487,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'published' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['published'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'flag'                    => 2,
@@ -530,7 +496,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'start' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['start'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
@@ -538,7 +503,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'stop' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_calendar_events']['stop'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),

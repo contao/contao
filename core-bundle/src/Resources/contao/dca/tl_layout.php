@@ -47,7 +47,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -57,33 +56,28 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_layout']['edit'],
 				'href'                => 'act=edit',
 				'icon'                => 'edit.svg'
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_layout']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg'
 			),
 			'cut' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_layout']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_layout']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_layout']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			)
@@ -130,7 +124,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'name' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['name'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'sorting'                 => true,
@@ -141,7 +134,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'rows' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['rows'],
 			'exclude'                 => true,
 			'inputType'               => 'radioTable',
 			'options'                 => array('1rw', '2rwh', '2rwf', '3rw'),
@@ -151,7 +143,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'headerHeight' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['headerHeight'],
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => $GLOBALS['TL_CSS_UNITS'],
@@ -160,7 +151,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'footerHeight' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['footerHeight'],
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => $GLOBALS['TL_CSS_UNITS'],
@@ -169,7 +159,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'cols' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['cols'],
 			'exclude'                 => true,
 			'inputType'               => 'radioTable',
 			'options'                 => array('1cl', '2cll', '2clr', '3cl'),
@@ -179,7 +168,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'widthLeft' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['widthLeft'],
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => $GLOBALS['TL_CSS_UNITS'],
@@ -188,7 +176,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'widthRight' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['widthRight'],
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => $GLOBALS['TL_CSS_UNITS'],
@@ -197,7 +184,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'sections' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['sections'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'sectionWizard',
@@ -205,7 +191,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'framework' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['framework'],
 			'exclude'                 => true,
 			'inputType'               => 'checkboxWizard',
 			'options'                 => array('layout.css', 'responsive.css', 'grid.css', 'reset.css', 'form.css', 'icons.css'),
@@ -219,7 +204,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'stylesheet' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['stylesheet'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkboxWizard',
@@ -235,7 +219,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'external' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['external'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'css,scss,less', 'orderField'=>'orderExt'),
@@ -248,7 +231,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'loadingOrder' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['loadingOrder'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('external_first', 'internal_first'),
@@ -258,7 +240,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'combineScripts' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['combineScripts'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
@@ -266,7 +247,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'modules' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['modules'],
 			'default'                 => array(array('mod'=>0, 'col'=>'main', 'enable'=>1)),
 			'exclude'                 => true,
 			'inputType'               => 'moduleWizard',
@@ -274,7 +254,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'template' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['template'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'search'                  => true,
@@ -287,7 +266,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'minifyMarkup' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['minifyMarkup'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
@@ -295,7 +273,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'webfonts' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['webfonts'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -304,7 +281,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'viewport' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['viewport'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -313,7 +289,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'titleTag' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['titleTag'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -322,7 +297,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'cssClass' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['cssClass'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -331,7 +305,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'onload' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['onload'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -340,7 +313,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'head' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['head'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
@@ -349,7 +321,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'addJQuery' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['addJQuery'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -357,7 +328,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'jSource' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['jSource'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('j_local', 'j_googleapis', 'j_fallback'),
@@ -367,7 +337,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'jquery' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['jquery'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'search'                  => true,
@@ -378,7 +347,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'addMooTools' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['addMooTools'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -386,7 +354,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'mooSource' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['mooSource'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('moo_local', 'moo_googleapis', 'moo_fallback'),
@@ -396,7 +363,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'mootools' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['mootools'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'search'                  => true,
@@ -407,7 +373,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'analytics' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['analytics'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
@@ -418,7 +383,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'externalJs' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['externalJs'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'js', 'orderField'=>'orderExtJs'),
@@ -431,7 +395,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'scripts' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['scripts'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
@@ -441,7 +404,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'script' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['script'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
@@ -450,7 +412,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'static' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['static'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -458,7 +419,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'width' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['width'],
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => $GLOBALS['TL_CSS_UNITS'],
@@ -467,7 +427,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'align' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_layout']['align'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('left', 'center', 'right'),

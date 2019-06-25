@@ -58,7 +58,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -68,21 +67,18 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_user']['edit'],
 				'href'                => 'act=edit',
 				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_user', 'editUser')
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_user']['copy'],
 				'href'                => 'act=copy',
 				'icon'                => 'copy.svg',
 				'button_callback'     => array('tl_user', 'copyUser')
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_user']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
@@ -90,20 +86,17 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			),
 			'toggle' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_user']['toggle'],
 				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_user', 'toggleIcon')
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_user']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			),
 			'su' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_user']['su'],
 				'href'                => 'key=su',
 				'icon'                => 'su.svg',
 				'button_callback'     => array('tl_user', 'switchUser')
@@ -136,7 +129,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'username' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['username'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
@@ -147,7 +139,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'name' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['name'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
@@ -158,7 +149,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'email' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['email'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -167,7 +157,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'language' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['language'],
 			'default'                 => str_replace('-', '_', $GLOBALS['TL_LANGUAGE']),
 			'exclude'                 => true,
 			'filter'                  => true,
@@ -181,7 +170,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'backendTheme' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['backendTheme'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback' => function ()
@@ -193,7 +181,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'fullscreen' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['fullscreen'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
@@ -201,7 +188,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'uploader' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['uploader'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('DropZone', 'FileUpload'),
@@ -211,7 +197,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'showHelp' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['showHelp'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -219,7 +204,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'thumbnails' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['thumbnails'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -227,7 +211,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'useRTE' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['useRTE'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -235,7 +218,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'useCE' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['useCE'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -251,7 +233,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'pwChange' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['pwChange'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'filter'                  => true,
@@ -259,7 +240,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'admin' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['admin'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'filter'                  => true,
@@ -272,7 +252,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'groups' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['groups'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkboxWizard',
@@ -283,7 +262,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'inherit' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['inherit'],
 			'exclude'                 => true,
 			'inputType'               => 'radio',
 			'options'                 => array('group', 'extend', 'custom'),
@@ -293,7 +271,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'modules' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['modules'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -304,7 +281,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'themes' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['themes'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array('css', 'modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
@@ -314,7 +290,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'pagemounts' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['pagemounts'],
 			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
@@ -322,7 +297,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'alpty' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['alpty'],
 			'default'                 => array('regular', 'redirect', 'forward'),
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
@@ -333,7 +307,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'filemounts' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['filemounts'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
@@ -352,7 +325,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'imageSizes' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
@@ -365,7 +337,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'forms' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['forms'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_form.title',
@@ -374,7 +345,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'formp' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['formp'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array('create', 'delete'),
@@ -384,7 +354,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'amg' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['amg'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
@@ -393,7 +362,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'disable' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['disable'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'flag'                    => 2,
@@ -406,7 +374,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'start' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['start'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
@@ -414,7 +381,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'stop' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['stop'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
@@ -422,7 +388,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'session' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['session'],
 			'exclude'                 => true,
 			'input_field_callback'    => array('tl_user', 'sessionField'),
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
@@ -444,7 +409,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'useTwoFactor' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['useTwoFactor'],
 			'eval'                    => array('isBoolean'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),

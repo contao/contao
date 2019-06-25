@@ -17,7 +17,6 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['newsmenu']    = '{title_legend},nam
 // Add fields to tl_module
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_archives'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_archives'],
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options_callback'        => array('tl_module_news', 'getNewsArchives'),
@@ -27,7 +26,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_archives'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_featured'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_featured'],
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => array('all_items', 'featured', 'unfeatured'),
@@ -38,7 +36,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_featured'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_jumpToCurrent'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_jumpToCurrent'],
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => array('hide_module', 'show_current', 'all_items'),
@@ -49,7 +46,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_jumpToCurrent'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_readerModule'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_readerModule'],
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_news', 'getReaderModules'),
@@ -60,7 +56,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_readerModule'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_metaFields'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_metaFields'],
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options'                 => array('date', 'author', 'comments'),
@@ -71,7 +66,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_metaFields'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_template'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_template'],
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_news', 'getNewsTemplates'),
@@ -81,7 +75,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_template'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_format'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_format'],
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => array('news_day', 'news_month', 'news_year'),
@@ -96,7 +89,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_format'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_startDay'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_startDay'],
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => array(0, 1, 2, 3, 4, 5, 6),
@@ -107,7 +99,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_startDay'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_order'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_order'],
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_news', 'getSortingOptions'),
@@ -118,7 +109,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_order'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['news_showQuantity'],
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'sql'                     => "char(1) NOT NULL default ''"
