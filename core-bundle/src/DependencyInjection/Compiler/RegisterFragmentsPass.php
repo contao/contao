@@ -101,9 +101,9 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $attributes = [
                     'category' => $annotation->category,
                     'method' => '__invoke', // TODO
-                    //'options' => $annotation->options, // TODO
-                    'renderer' => $annotation->renderer,
+                    'options' => $annotation->options,
                     'template' => $annotation->template,
+                    'renderer' => $annotation->renderer,
                     'type' => $annotation->type,
                 ];
 
@@ -160,7 +160,11 @@ class RegisterFragmentsPass implements CompilerPassInterface
         }
 
         $registry->addMethodCall('add', [$identifier, $config]);
-        $definition->addTag($tag, $attributes);
+
+        // Remove all the arrays from tag attribute as they are not supported
+        $definition->addTag($tag, array_filter($attributes, function ($v) {
+            return !is_array($v);
+        }));
 
         $this->addPreHandlers($container, $preHandlers);
     }
