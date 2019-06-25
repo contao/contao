@@ -163,7 +163,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
         // Remove all the arrays from tag attribute as they are not supported
         $definition->addTag($tag, array_filter($attributes, function ($v) {
-            return !is_scalar($v);
+            return !is_array($v);
         }));
 
         $this->addPreHandlers($container, $preHandlers);
