@@ -64,7 +64,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		(
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -74,20 +73,17 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_news_feed']['edit'],
 				'href'                => 'act=edit',
 				'icon'                => 'edit.svg'
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_news_feed']['copy'],
 				'href'                => 'act=copy',
 				'icon'                => 'copy.svg',
 				'button_callback'     => array('tl_news_feed', 'copyFeed')
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_news_feed']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
@@ -95,7 +91,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_news_feed']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			)
@@ -121,7 +116,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'title' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news_feed']['title'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -130,7 +124,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'alias' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news_feed']['alias'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -143,7 +136,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'language' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news_feed']['language'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'filter'                  => true,
@@ -153,7 +145,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'archives' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news_feed']['archives'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'checkbox',
@@ -163,7 +154,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'format' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news_feed']['format'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
@@ -173,7 +163,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'source' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news_feed']['source'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('source_teaser', 'source_text'),
@@ -183,7 +172,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'maxItems' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news_feed']['maxItems'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'tl_class'=>'w50'),
@@ -191,7 +179,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'feedBase' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news_feed']['feedBase'],
 			'default'                 => Contao\Environment::get('base'),
 			'exclude'                 => true,
 			'search'                  => true,
@@ -201,7 +188,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'description' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news_feed']['description'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',

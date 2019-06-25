@@ -67,7 +67,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		(
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -77,38 +76,32 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_news']['edit'],
 				'href'                => 'table=tl_content',
 				'icon'                => 'edit.svg'
 			),
 			'editheader' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_news']['editmeta'],
 				'href'                => 'act=edit',
 				'icon'                => 'header.svg'
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_news']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg'
 			),
 			'cut' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_news']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg'
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_news']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_news']['toggle'],
 				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_news', 'toggleIcon'),
@@ -116,14 +109,12 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			),
 			'feature' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_news']['feature'],
 				'icon'                => 'featured.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleFeatured(this,%s)"',
 				'button_callback'     => array('tl_news', 'iconFeatured')
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_news']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			)
@@ -167,7 +158,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'headline' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['headline'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
@@ -178,7 +168,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'alias' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['alias'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -191,7 +180,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'author' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['author'],
 			'default'                 => Contao\BackendUser::getInstance()->id,
 			'exclude'                 => true,
 			'search'                  => true,
@@ -206,7 +194,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'date' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['date'],
 			'default'                 => time(),
 			'exclude'                 => true,
 			'filter'                  => true,
@@ -222,7 +209,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'time' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['time'],
 			'default'                 => time(),
 			'exclude'                 => true,
 			'inputType'               => 'text',
@@ -235,7 +221,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'pageTitle' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['pageTitle'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -244,7 +229,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'description' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['description'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
@@ -253,7 +237,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'subheadline' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['subheadline'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -262,7 +245,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'teaser' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['teaser'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
@@ -271,7 +253,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'addImage' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['addImage'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -371,7 +352,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'addEnclosure' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['addEnclosure'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -379,7 +359,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'enclosure' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['enclosure'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Contao\Config::get('allowedDownload'), 'mandatory'=>true, 'orderField'=>'orderEnclosure'),
@@ -392,7 +371,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'source' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['source'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'radio',
@@ -403,7 +381,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'jumpTo' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['jumpTo'],
 			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
@@ -413,7 +390,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'articleId' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['articleId'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_news', 'getArticleAlias'),
@@ -440,7 +416,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'cssClass' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['cssClass'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -448,7 +423,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'noComments' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['noComments'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -457,7 +431,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'featured' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['featured'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -466,7 +439,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'published' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['published'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'flag'                    => 1,
@@ -476,7 +448,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'start' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['start'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
@@ -484,7 +455,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'stop' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_news']['stop'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),

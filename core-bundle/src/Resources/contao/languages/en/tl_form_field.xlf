@@ -378,7 +378,7 @@
         <source>Edit the form settings</source>
       </trans-unit>
       <trans-unit id="tl_form_field.toggle">
-        <source>Activate/deactivate form field ID %s</source>
+        <source>Hide/unhide form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>

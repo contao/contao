@@ -57,7 +57,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		(
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -126,7 +125,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'name' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['name'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'search'                  => true,
@@ -136,7 +134,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'cssClass' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['cssClass'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'search'                  => true,
@@ -145,7 +142,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'densities' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['densities'],
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
 			'exclude'                 => true,
@@ -154,7 +150,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'sizes' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['sizes'],
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
 			'exclude'                 => true,
@@ -163,7 +158,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'width' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['width'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'clr w50'),
@@ -171,7 +165,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'height' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['height'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
@@ -179,7 +172,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'resizeMode' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['resizeMode'],
 			'inputType'               => 'select',
 			'options'                 => array('proportional', 'box', 'crop'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size'],
@@ -189,7 +181,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'zoom' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['zoom'],
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),

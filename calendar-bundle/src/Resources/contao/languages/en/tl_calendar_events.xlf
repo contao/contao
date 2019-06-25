@@ -249,64 +249,34 @@
         <source>year(s)</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.0">
-        <source>New event</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.show.0">
-        <source>Event details</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.show.1">
+      <trans-unit id="tl_calendar_events.show">
         <source>Show the details of event ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.edit.0">
-        <source>Edit event</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.edit.1">
+      <trans-unit id="tl_calendar_events.edit">
         <source>Edit event ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.copy.0">
-        <source>Duplicate event</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.copy.1">
+      <trans-unit id="tl_calendar_events.copy">
         <source>Duplicate event ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.cut.0">
-        <source>Move event</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.cut.1">
+      <trans-unit id="tl_calendar_events.cut">
         <source>Move event ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.delete.0">
-        <source>Delete event</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.delete.1">
+      <trans-unit id="tl_calendar_events.delete">
         <source>Delete event ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle.0">
-        <source>Publish/unpublish event</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle.1">
+      <trans-unit id="tl_calendar_events.toggle">
         <source>Publish/unpublish event ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.editheader.0">
-        <source>Edit calendar</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.editheader.1">
-        <source>Edit the calendar settings</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.editmeta.0">
-        <source>Edit event settings</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.editmeta.1">
-        <source>Edit the event settings</source>
+      <trans-unit id="tl_calendar_events.editheader">
+        <source>Edit the settings of event ID %s</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.pasteafter.1">
-        <source>Paste after event ID %s</source>
       </trans-unit>
     </body>
   </file>

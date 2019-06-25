@@ -122,33 +122,15 @@ class DcaLoader extends Controller
 	 */
 	private function addDefaultLabels()
 	{
-		// Global operations
-		if (isset($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations']))
+		// Operations
+		foreach (array('global_operations', 'operations') as $key)
 		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations'] as $k=>&$v)
+			if (!isset($GLOBALS['TL_DCA'][$this->strTable]['list'][$key]))
 			{
-				if (isset($v['label']))
-				{
-					continue;
-				}
-
-				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]))
-				{
-					$v['label'] = $GLOBALS['TL_LANG'][$this->strTable][$k];
-				}
-				elseif (isset($GLOBALS['TL_LANG']['DCA'][$k]))
-				{
-					$v['label'] = $GLOBALS['TL_LANG']['DCA'][$k];
-				}
+				continue;
 			}
 
-			unset($v);
-		}
-
-		// Operations
-		if (isset($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['operations'] as $k=>&$v)
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list'][$key] as $k=>&$v)
 			{
 				if (isset($v['label']))
 				{

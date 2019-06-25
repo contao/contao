@@ -24,7 +24,6 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
 // Extend fields
 $GLOBALS['TL_DCA']['tl_layout']['fields']['newsfeeds'] = array
 (
-    'label'           => &$GLOBALS['TL_LANG']['tl_layout']['newsfeeds'],
     'exclude'         => true,
     'inputType'       => 'checkbox',
     'foreignKey'      => 'tl_news_feed.title',

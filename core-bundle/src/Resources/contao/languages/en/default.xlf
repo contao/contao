@@ -1943,6 +1943,18 @@
       <trans-unit id="SECTIONS.manual">
         <source>Manual output</source>
       </trans-unit>
+      <trans-unit id="DCA.all.0">
+        <source>Edit multiple</source>
+      </trans-unit>
+      <trans-unit id="DCA.all.1">
+        <source>Edit multiple elements at once</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.0">
+        <source>Toggle all</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.1">
+        <source>Expand or collapse all nodes</source>
+      </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
       </trans-unit>

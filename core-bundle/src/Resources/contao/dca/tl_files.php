@@ -47,21 +47,18 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			'sync' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['sync'],
 				'href'                => 'act=sync',
 				'class'               => 'header_sync',
 				'button_callback'     => array('tl_files', 'syncFiles')
 			),
 			'toggleNodes' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['toggleAll'],
 				'href'                => 'tg=all',
 				'class'               => 'header_toggle',
 				'showOnSelect'        => true
 			),
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -71,14 +68,12 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['edit'],
 				'href'                => 'act=edit',
 				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_files', 'editFile')
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
@@ -86,7 +81,6 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			),
 			'cut' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
@@ -94,7 +88,6 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirmFile'] . '\'))return false;Backend.getScrollOffset()"',
@@ -102,28 +95,24 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg',
 				'button_callback'     => array('tl_files', 'showFile')
 			),
 			'source' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],
 				'href'                => 'act=source',
 				'icon'                => 'editor.svg',
 				'button_callback'     => array('tl_files', 'editSource')
 			),
 			'upload' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['upload'],
 				'href'                => 'act=move&amp;mode=2',
 				'icon'                => 'new.svg',
 				'button_callback'     => array('tl_files', 'uploadFile')
 			),
 			'drag' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['cut'],
 				'icon'                => 'drag.svg',
 				'attributes'          => 'class="drag-handle" aria-hidden="true"',
 				'button_callback'     => array('tl_files', 'dragFile')
@@ -162,13 +151,11 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'path' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['path'],
 			'eval'                    => array('unique'=>true),
 			'sql'                     => "varchar(1022) BINARY NOT NULL default ''",
 		),
 		'extension' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['extension'],
 			'sql'                     => "varchar(16) BINARY NOT NULL default ''"
 		),
 		'hash' => array
@@ -181,7 +168,6 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'name' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['name'],
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50', 'addWizardClass'=>false),
 			'wizard' => array
@@ -196,47 +182,40 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'protected' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['protected'],
 			'input_field_callback'    => array('tl_files', 'protectFolder'),
 			'eval'                    => array('tl_class'=>'w50 clr')
 		),
 		'syncExclude' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['syncExclude'],
 			'input_field_callback'    => array('tl_files', 'excludeFolder'),
 			'eval'                    => array('tl_class'=>'w50')
 		),
 		'importantPartX' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['importantPartX'],
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
 		),
 		'importantPartY' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['importantPartY'],
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
 		),
 		'importantPartWidth' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['importantPartWidth'],
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
 		),
 		'importantPartHeight' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['importantPartHeight'],
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
 		),
 		'meta' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['meta'],
 			'inputType'               => 'metaWizard',
 			'eval'                    => array
 			(
