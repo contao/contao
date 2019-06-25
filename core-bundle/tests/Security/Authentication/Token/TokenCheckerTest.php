@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
-use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -38,7 +37,7 @@ class TokenCheckerTest extends TestCase
      */
     private $trustResolver;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
     }
@@ -46,7 +45,7 @@ class TokenCheckerTest extends TestCase
     /**
      * @dataProvider getUserInTokenStorageData
      */
-    public function testChecksForUserInTokenStorageIfFirewallContextDoesMatch(string $class, string $firewallContext)
+    public function testChecksForUserInTokenStorageIfFirewallContextDoesMatch(string $class, string $firewallContext): void
     {
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -74,7 +73,7 @@ class TokenCheckerTest extends TestCase
     /**
      * @dataProvider getUserInSessionData
      */
-    public function testChecksForUserInSessionIfFirewallContextDoesNotMatch(string $class, string $firewallContext)
+    public function testChecksForUserInSessionIfFirewallContextDoesNotMatch(string $class, string $firewallContext): void
     {
         $user = $this->mockUser($class);
         $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
