@@ -900,10 +900,10 @@ class tl_calendar_events extends Contao\Backend
 		// Recurring events
 		if ($dc->activeRecord->recurring)
 		{
-			// Unlimited recurrences end on 2038-01-01 00:00:00 (see #4862)
+			// Unlimited recurrences end on 2106-02-07 07:28:15 (see #4862 and #510)
 			if ($dc->activeRecord->recurrences == 0)
 			{
-				$arrSet['repeatEnd'] = 2145913200;
+				$arrSet['repeatEnd'] = 4294967295;
 			}
 			else
 			{

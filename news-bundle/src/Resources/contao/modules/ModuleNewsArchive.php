@@ -142,7 +142,7 @@ class ModuleNewsArchive extends ModuleNews
 			elseif ($this->news_jumpToCurrent == 'all_items')
 			{
 				$intBegin = 0; // 1970-01-01 00:00:00
-				$intEnd = 2145913200; // 2038-01-01 00:00:00
+				$intEnd = 4294967295; // 2106-02-07 07:28:15
 			}
 		}
 		catch (\OutOfBoundsException $e)
