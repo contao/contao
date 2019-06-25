@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\FrontendUser;
@@ -26,7 +25,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticator
 {
-    private const SECURITY_SESSION_KEY = '_security_contao_'.ContaoCoreBundle::SCOPE_FRONTEND;
+    private const SECURITY_SESSION_KEY = '_security_contao_frontend';
 
     /**
      * @var SessionInterface
