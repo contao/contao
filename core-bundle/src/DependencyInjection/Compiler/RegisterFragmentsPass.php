@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Contao\CoreBundle\Fragment\Annotation\Base;
 use Contao\CoreBundle\Fragment\Annotation\ContentElement;
 use Contao\CoreBundle\Fragment\Annotation\FrontendModule;
 use Contao\CoreBundle\Fragment\FragmentConfig;
@@ -87,32 +88,40 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
                 $reflection = new \ReflectionClass($class);
 
-                if (($annotation = $annotationReader->getClassAnnotation($reflection, $annotationName)) === null) {
-                    continue;
+                // Class annotations
+                /** @var $annotation Base */
+                if (($annotation = $annotationReader->getClassAnnotation($reflection, $annotationName)) !== null) {
+                    $this->registerAnnotationFragment($container, $annotation, $tag, $class, '__invoke');
                 }
 
-                $serviceId = $annotation->service ?: $class;
-
-                if (!$container->hasDefinition($serviceId)) {
-                    $definition = new Definition($class);
-                    $container->setDefinition($serviceId, $definition);
+                // Method annotations
+                foreach ($reflection->getMethods() as $method) {
+                    /** @var $annotation Base */
+                    if (($annotation = $annotationReader->getMethodAnnotation($method, $annotationName)) !== null) {
+                        $this->registerAnnotationFragment($container, $annotation, $tag, $class, $method->getName());
+                    }
                 }
-
-                $attributes = [
-                    'category' => $annotation->category,
-                    'method' => '__invoke', // TODO
-                    'options' => $annotation->options,
-                    'template' => $annotation->template,
-                    'renderer' => $annotation->renderer,
-                    'type' => $annotation->type,
-                ];
-
-                $tag = ($annotation instanceof ContentElement) ? ContentElementReference::TAG_NAME : FrontendModuleReference::TAG_NAME;
-                $reference = new Reference($serviceId);
-
-                $this->registerFragment($container, $reference, $tag, $attributes);
             }
         }
+    }
+
+    private function registerAnnotationFragment(ContainerBuilder $container, Base $annotation, string $tag, string $class, string $method): void
+    {
+        $serviceId = $annotation->service ?: $class;
+
+        if (!$container->hasDefinition($serviceId)) {
+            $definition = new Definition($class);
+            $container->setDefinition($serviceId, $definition);
+        }
+
+        $this->registerFragment($container, new Reference($serviceId), $tag, [
+            'category' => $annotation->category,
+            'method' => $method,
+            'options' => $annotation->options,
+            'template' => $annotation->template,
+            'renderer' => $annotation->renderer,
+            'type' => $annotation->type,
+        ]);
     }
 
     private function getAnnotatedControllersDirs(ContainerBuilder $container)
