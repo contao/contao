@@ -139,11 +139,11 @@ class DcaLoader extends Controller
 
 				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]))
 				{
-					$v['label'] = $GLOBALS['TL_LANG'][$this->strTable][$k];
+					$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
 				}
 				elseif (isset($GLOBALS['TL_LANG']['DCA'][$k]))
 				{
-					$v['label'] = $GLOBALS['TL_LANG']['DCA'][$k];
+					$v['label'] = &$GLOBALS['TL_LANG']['DCA'][$k];
 				}
 			}
 
@@ -162,7 +162,7 @@ class DcaLoader extends Controller
 
 				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]))
 				{
-					$v['label'] = $GLOBALS['TL_LANG'][$this->strTable][$k];
+					$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
 				}
 			}
 
