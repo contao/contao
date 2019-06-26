@@ -75,7 +75,7 @@ body:not(.fullscreen) #header .inner {
 	display:none;
 }
 #tmenu .burger button {
-	margin-right:-3px;
+	margin-right:-2px;
 	padding:8px 10px 9px;
 	background:none;
 	border:0;
@@ -173,9 +173,6 @@ body:not(.fullscreen) #header .inner {
 }
 #tmenu .icon-profile {
 	background:url("icons/profile_dark.svg") 20px center no-repeat;
-}
-#tmenu .icon-debug {
-	background:url("icons/debug_dark.svg") 20px center no-repeat;
 }
 #tmenu .icon-security {
 	background:url("icons/shield_dark.svg") 20px center no-repeat;
@@ -2001,89 +1998,34 @@ fieldset.collapsed > legend {
 		text-indent:34px; /* 22px width + 12px padding */
 		overflow:hidden;
 	}
-	#tmenu {
-		display:flex;
-		width:72%;
-		max-width:360px;
-		margin:0 auto;
-		padding-right:0;
-		text-align:center;
-	}
-	#tmenu li {
-		flex-grow:1;
-	}
-	#tmenu li.submenu {
-		flex-grow:2;
-	}
-	#tmenu li.burger {
-		width:auto;
-		position:absolute;
-		right:3px;
-		text-align:right;
-	}
-	#tmenu a {
-		width:40px;
-		margin-right:0;
-		text-align:center;
-		font-weight:600;
+	#tmenu > li > a {
+		width:16px;
+		margin-bottom:-2px;
+		position:relative;
+		overflow:hidden;
+		white-space:nowrap;
+		text-indent:28px; /* 16px width + 12px padding */
+		background-size:18px !important;
 	}
 	#tmenu sup {
-		top:3px;
-		font-size:.45rem;
-	}
-	#tmenu .icon-alert {
-		width:40px;
-		margin-bottom:0;
-		background-position:center 8px;
+		top:6px;
 		font-size:.5rem;
-		text-indent:0;
-		overflow:initial;
-		padding:24px 0 8px;
+	}
+	#tmenu .icon-debug {
+		background:url("icons/debug.svg") center center no-repeat;
 	}
 	#tmenu .icon-preview {
-		background:url("icons/preview.svg") center 8px no-repeat;
-		font-size:.5rem;
-		padding:24px 0 8px;
+		background:url("icons/preview.svg") center center no-repeat;
 	}
 	#tmenu h2 {
-		display:none;
-	}
-	#tmenu ul.level_2 {
-		display:flex;
-		min-width:unset;
-		margin-top:0;
-		position:initial;
-		box-shadow:none;
-		visibility:visible !important;
-		opacity:1 !important;
-		padding:0;
-		background:none;
-		color:#fff;
-		text-align:center;
-	}
-	#tmenu ul.level_2 li,#tmenu ul.level_2 li a {
-		display:inline-block;
-	}
-	#tmenu ul.level_2 li a:hover {
-		background-color:#e87600;
-	}
-	#tmenu ul.level_2 .info {
-		display:none;
-	}
-	#tmenu ul.level_2 .icon-profile {
-		background:url("icons/profile.svg") center 8px no-repeat;
-		font-size:.5rem;
-		padding:24px 0 8px;
-	}
-	#tmenu ul.level_2 .icon-security {
-		background:url("icons/shield.svg") center 8px no-repeat;
-		font-size:.5rem;
-		padding:24px 0 8px;
-	}
-	#tmenu ul.level_2 .icon-logout {
-		background:url("icons/exit.svg") center 8px no-repeat;
-		font-size:.5rem;
-		padding:24px 0 8px;
+		width:16px;
+		margin:0 0 -2px;
+		padding-right:12px;
+		overflow:hidden;
+		white-space:nowrap;
+		text-indent:28px; /* 16px width + 12px padding */
+		background:url("icons/profile.svg") center center no-repeat;
+		background-size:18px;
 	}
 	#main .content {
 		margin:15px 10px;

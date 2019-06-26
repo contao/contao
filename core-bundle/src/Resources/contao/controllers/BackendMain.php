@@ -295,7 +295,7 @@ class BackendMain extends Backend
 		$this->Template->profile = $GLOBALS['TL_LANG']['MSC']['profile'];
 		$this->Template->canDebug = $this->User->isAdmin;
 		$this->Template->isDebug = $container->get('kernel')->isDebug();
-		$this->Template->debug = $container->get('kernel')->isDebug() ? $GLOBALS['TL_LANG']['MSC']['disableDebugMode'] : $GLOBALS['TL_LANG']['MSC']['enableDebugMode'];
+		$this->Template->debugMode = $GLOBALS['TL_LANG']['MSC']['debugMode'];
 		$this->Template->referer = $referer;
 		$this->Template->profileTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['profileTitle']);
 		$this->Template->security = $GLOBALS['TL_LANG']['MSC']['security'];
