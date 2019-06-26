@@ -1641,8 +1641,11 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(TokenChecker::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('session', (string) $definition->getArgument(0));
-        $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(1));
+        $this->assertSame('request_stack', (string) $definition->getArgument(0));
+        $this->assertSame('security.firewall.map', (string) $definition->getArgument(1));
+        $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
+        $this->assertSame('session', (string) $definition->getArgument(3));
+        $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(4));
     }
 
     public function testRegistersTheSecurityTwoFactorAuthenticator(): void

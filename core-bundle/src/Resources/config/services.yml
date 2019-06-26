@@ -549,6 +549,9 @@ services:
     contao.security.token_checker:
         class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker
         arguments:
+            - '@request_stack'
+            - '@security.firewall.map'
+            - '@security.token_storage'
             - '@session'
             - '@security.authentication.trust_resolver'
         public: true
