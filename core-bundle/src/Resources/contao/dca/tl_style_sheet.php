@@ -216,6 +216,8 @@ class tl_style_sheet extends Contao\Backend
 	 */
 	public function checkPermission()
 	{
+		Contao\Message::addInfo($GLOBALS['TL_LANG']['MSC']['internalCssEditor']);
+
 		if ($this->User->isAdmin)
 		{
 			return;
