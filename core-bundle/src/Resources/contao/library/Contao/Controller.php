@@ -1055,9 +1055,25 @@ abstract class Controller extends System
 	{
 		$router = System::getContainer()->get('router');
 
-		$generate = function ($route) use ($router)
+		$generate = static function ($route) use ($router)
 		{
-			return substr($router->generate($route), \strlen(Environment::get('path')) + 1);
+			if ($route == 'contao_backend_preview')
+			{
+				$origContext = $router->getContext();
+
+				$context = clone $origContext;
+				$context->setBaseUrl('/preview.php');
+
+				$router->setContext($context);
+				$url = $router->generate($route);
+				$router->setContext($origContext);
+			}
+			else
+			{
+				$url = $router->generate($route);
+			}
+
+			return substr($url, \strlen(Environment::get('path')) + 1);
 		};
 
 		$arrMapper = array

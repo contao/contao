@@ -56,7 +56,7 @@
         </select>
         <button type="submit" class="tl_submit"><?= $this->apply ?></button>
         <button type="button" class="tl_submit" onclick="parent.frames[1].location.reload()"><?= $this->reload ?></button>
-        <a href="javascript:parent.location.href=parent.frames[1].location.href" class="close">&times;</a>
+        <a href="javascript:parent.location.href=parent.frames[1].location.href.replace('/preview.php', '')" class="close">&times;</a>
       </div>
     </form>
   </div>

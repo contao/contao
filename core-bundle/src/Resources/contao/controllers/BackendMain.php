@@ -96,6 +96,7 @@ class BackendMain extends Backend
 			}
 
 			$objJwtManager = $objRequest->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
+			$script = Input::get('enable') ? '/preview.php' : '';
 
 			if (!$objJwtManager instanceof JwtManager)
 			{
@@ -104,11 +105,11 @@ class BackendMain extends Backend
 					$qs = '?' . $qs;
 				}
 
-				$this->redirect('/preview.php' . $objRequest->getPathInfo() . $qs);
+				$this->redirect($script . $objRequest->getPathInfo() . $qs);
 			}
 
 			$strReferer = Input::get('referer') ? '?' . base64_decode(Input::get('referer', true)) : '';
-			$objResponse = new RedirectResponse('/preview.php' . $objRequest->getPathInfo() . $strReferer);
+			$objResponse = new RedirectResponse($script . $objRequest->getPathInfo() . $strReferer);
 
 			if (Input::get('enable') != $container->get('kernel')->isDebug())
 			{
