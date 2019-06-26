@@ -162,6 +162,12 @@ class TokenChecker
             return null;
         }
 
-        return unserialize($this->session->get($sessionKey), ['allowed_classes' => true]);
+        $token = unserialize($this->session->get($sessionKey), ['allowed_classes' => true]);
+
+        if (!$token instanceof TokenInterface) {
+            return null;
+        }
+
+        return $token;
     }
 }

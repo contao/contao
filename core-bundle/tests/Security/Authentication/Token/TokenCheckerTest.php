@@ -71,7 +71,11 @@ class TokenCheckerTest extends TestCase
             $this->trustResolver
         );
 
-        $this->assertTrue(FrontendUser::class === $class ? $tokenChecker->hasFrontendUser() : $tokenChecker->hasBackendUser());
+        if (FrontendUser::class === $class) {
+            $this->assertTrue($tokenChecker->hasFrontendUser());
+        } else {
+            $this->assertTrue($tokenChecker->hasBackendUser());
+        }
     }
 
     public function getUserInTokenStorageData(): \Generator
@@ -96,7 +100,11 @@ class TokenCheckerTest extends TestCase
             $this->trustResolver
         );
 
-        $this->assertTrue(FrontendUser::class === $class ? $tokenChecker->hasFrontendUser() : $tokenChecker->hasBackendUser());
+        if (FrontendUser::class === $class) {
+            $this->assertTrue($tokenChecker->hasFrontendUser());
+        } else {
+            $this->assertTrue($tokenChecker->hasBackendUser());
+        }
     }
 
     public function getUserInSessionData(): \Generator
@@ -284,14 +292,13 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
-     * @return RequestStack|MockObject
+     * @return RequestStack&MockObject
      */
     private function mockRequestStack(): RequestStack
     {
         $requestStack = $this->createMock(RequestStack::class);
 
         $requestStack
-            ->expects($this->any())
             ->method('getMasterRequest')
             ->willReturn($this->createMock(Request::class))
         ;
@@ -300,7 +307,7 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
-     * @return FirewallMap|MockObject
+     * @return FirewallMap&MockObject
      */
     private function mockFirewallMapWithConfigContext(string $context): FirewallMap
     {
@@ -308,7 +315,6 @@ class TokenCheckerTest extends TestCase
 
         $map = $this->createMock(FirewallMap::class);
         $map
-            ->expects($this->any())
             ->method('getFirewallConfig')
             ->willReturn($config)
         ;
@@ -316,10 +322,12 @@ class TokenCheckerTest extends TestCase
         return $map;
     }
 
-    private function mockSessionWithToken(TokenInterface $token)
+    /**
+     * @return SessionInterface&MockObject
+     */
+    private function mockSessionWithToken(TokenInterface $token): SessionInterface
     {
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($this->once())
             ->method('isStarted')
