@@ -413,7 +413,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			{
 				return Contao\System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(Contao\BackendUser::getInstance());
 			},
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'useCaption' => array
 		(

@@ -1821,4 +1821,65 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame($this->getTempDir().'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
     }
+
+    public function testRegistersTheImagePredefinedSizesParameter(): void
+    {
+        $extension = new ContaoCoreExtension();
+        $extension->load(
+            [
+                'contao' => [
+                    'image' => [
+                        'sizes' => [
+                            'foobar' => ['width' => 100, 'height' => 200],
+                        ],
+                    ],
+                ],
+            ],
+            $this->container
+        );
+
+        $this->assertArrayHasKey('_foobar', $this->container->getParameter('contao.image.sizes'));
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Image size name "123" cannot contain only digits!
+     */
+    public function testRegistersTheImagePredefinedSizesParameterInvalidDigitName(): void
+    {
+        $extension = new ContaoCoreExtension();
+        $extension->load(
+            [
+                'contao' => [
+                    'image' => [
+                        'sizes' => [
+                            '123' => ['width' => 100, 'height' => 200],
+                        ],
+                    ],
+                ],
+            ],
+            $this->container
+        );
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Image size name "box" is reserved and not allowed!
+     */
+    public function testRegistersTheImagePredefinedSizesParameterInvalidReservedName(): void
+    {
+        $extension = new ContaoCoreExtension();
+        $extension->load(
+            [
+                'contao' => [
+                    'image' => [
+                        'sizes' => [
+                            'box' => ['width' => 100, 'height' => 200],
+                        ],
+                    ],
+                ],
+            ],
+            $this->container
+        );
+    }
 }

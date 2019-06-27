@@ -103,7 +103,7 @@ class PictureFactory implements PictureFactoryInterface
             $image = $this->imageFactory->create($path);
         }
 
-        if (\is_array($size) && isset($size[2]) && \is_string($size[2]) && 1 === substr_count($size[2], '_')) {
+        if (\is_array($size) && isset($size[2]) && \is_string($size[2]) && 1 === substr_count($size[2], '_') && !isset($this->predefinedSizes[$size[2]])) {
             $image->setImportantPart($this->imageFactory->getImportantPartFromLegacyMode($image, $size[2]));
             $size[2] = ResizeConfigurationInterface::MODE_CROP;
         }
@@ -233,14 +233,17 @@ class PictureFactory implements PictureFactoryInterface
             $resizeConfig
                 ->setWidth((int) $imageSize['width'])
                 ->setHeight((int) $imageSize['height'])
-                ->setMode($imageSize['resizeMode'])
                 ->setZoomLevel((int) $imageSize['zoom'])
             ;
 
+            if (isset($imageSize['resizeMode'])) {
+                $resizeConfig->setMode($imageSize['resizeMode']);
+            }
+
             $configItem
                 ->setResizeConfig($resizeConfig)
-                ->setSizes($imageSize['sizes'])
-                ->setDensities($imageSize['densities'])
+                ->setSizes((string) $imageSize['sizes'])
+                ->setDensities((string) $imageSize['densities'])
             ;
 
             if (isset($imageSize['media'])) {

@@ -234,9 +234,12 @@ class ImageFactory implements ImageFactoryInterface
                 $config
                     ->setWidth((int) $imageSize['width'])
                     ->setHeight((int) $imageSize['height'])
-                    ->setMode($imageSize['resizeMode'])
                     ->setZoomLevel((int) $imageSize['zoom'])
                 ;
+
+                if (isset($imageSize['resizeMode'])) {
+                    $config->setMode($imageSize['resizeMode']);
+                }
 
                 return [$config, null];
             }

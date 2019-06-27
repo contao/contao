@@ -207,6 +207,7 @@ services:
             - '@database_connection'
             - '@event_dispatcher'
             - '@contao.framework'
+            - '@contao.translation.translator'
         calls:
             - { method: 'setPredefinedSizes', arguments: ['%contao.image.sizes%']}
         public: true

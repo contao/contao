@@ -17,6 +17,7 @@ use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Translation\Translator;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -59,7 +60,8 @@ class ImageSizesTest extends TestCase
 
         $this->connection = $this->createMock(Connection::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $this->imageSizes = new ImageSizes($this->connection, $this->eventDispatcher, $this->mockContaoFramework());
+        $this->translator = $this->createMock(Translator::class);
+        $this->imageSizes = new ImageSizes($this->connection, $this->eventDispatcher, $this->mockContaoFramework(), $this->translator);
     }
 
     public function testReturnsAllOptionsWithImageSizes(): void
@@ -74,8 +76,9 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('exact', $options);
         $this->assertArrayHasKey('My theme', $options);
         $this->assertArrayHasKey('42', $options['My theme']);
-        $this->assertArrayHasKey('foo', $options['image_sizes']);
-        $this->assertArrayHasKey('bar', $options['image_sizes']);
+        $this->assertArrayHasKey('42', $options['image_sizes']);
+        $this->assertArrayHasKey('_foo', $options['image_sizes']);
+        $this->assertArrayHasKey('_bar', $options['image_sizes']);
     }
 
     public function testReturnsAllOptionsWithoutImageSizes(): void
@@ -196,8 +199,8 @@ class ImageSizesTest extends TestCase
     private function expectExamplePredefinedImageSizes(): void
     {
         $this->imageSizes->setPredefinedSizes([
-            'foo' => ['width' => 123, 'height' => 456],
-            'bar' => ['width' => 123, 'height' => 456],
+            '_foo' => ['width' => 123, 'height' => 456],
+            '_bar' => ['width' => 123, 'height' => 456],
         ]);
     }
 }

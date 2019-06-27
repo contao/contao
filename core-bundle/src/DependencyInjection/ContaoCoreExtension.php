@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Picker\PickerProviderInterface;
+use Contao\Image\ResizeConfigurationInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
@@ -84,13 +85,13 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.image.valid_extensions', $config['image']['valid_extensions']);
         $container->setParameter('contao.image.imagine_options', $config['image']['imagine_options']);
         $container->setParameter('contao.image.reject_large_uploads', $config['image']['reject_large_uploads']);
-        $container->setParameter('contao.image.sizes', $config['image']['sizes']);
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
 
         if (isset($config['localconfig'])) {
             $container->setParameter('contao.localconfig', $config['localconfig']);
         }
 
+        $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
 
@@ -98,6 +99,32 @@ class ContaoCoreExtension extends Extension
             ->registerForAutoconfiguration(PickerProviderInterface::class)
             ->addTag('contao.picker_provider')
         ;
+    }
+
+    /**
+     * Validates and sets the "contao.image.sizes" parameter.
+     */
+    private function setPredefinedImageSizes(array $config, ContainerBuilder $container): void
+    {
+        if (!isset($config['image']['sizes'])) {
+            return;
+        }
+
+        $imageSizes = [];
+
+        foreach ($config['image']['sizes'] as $name => $value) {
+            if (preg_match('/^\d+$/', (string) $name)) {
+                throw new \RuntimeException(sprintf('Image size name "%s" cannot contain only digits!', $name));
+            }
+
+            if (in_array($name, [ResizeConfigurationInterface::MODE_BOX, ResizeConfigurationInterface::MODE_PROPORTIONAL, ResizeConfigurationInterface::MODE_CROP], true)) {
+                throw new \RuntimeException(sprintf('Image size name "%s" is reserved and not allowed!', $name));
+            }
+
+            $imageSizes['_' . $name] = $value;
+        }
+
+        $container->setParameter('contao.image.sizes', $imageSizes);
     }
 
     /**
