@@ -76,7 +76,7 @@
   <?php $this->endblock(); ?>
 
   <?php $this->block('container'); ?>
-    <div id="container" class="cf">
+    <div id="container">
 
       <?php $this->block('left'); ?>
         <?php if (!$this->isPopup): ?>

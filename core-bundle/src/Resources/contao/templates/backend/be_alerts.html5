@@ -32,7 +32,7 @@
 </head>
 <body class="<?= $this->ua ?> popup">
 
-  <div id="container" class="cf">
+  <div id="container">
     <main id="main">
       <div id="tl_soverview">
         <div id="tl_messages">

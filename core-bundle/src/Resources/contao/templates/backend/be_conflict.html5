@@ -33,7 +33,7 @@
 </head>
 <body class="<?= $this->ua ?>">
 
-  <div id="container" class="cf">
+  <div id="container">
     <main id="main">
       <h1><?= $this->h1 ?></h1>
       <p><?= $this->explain1 ?></p>

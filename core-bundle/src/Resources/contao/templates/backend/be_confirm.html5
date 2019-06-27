@@ -32,7 +32,7 @@
 </head>
 <body class="<?= $this->ua ?>">
 
-  <div id="container" class="cf">
+  <div id="container">
     <main id="main">
       <form action="<?= $this->route('contao_backend_confirm') ?>" class="tl_form" method="post">
         <div class="tl_formbody_edit">

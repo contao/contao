@@ -41,7 +41,7 @@
 </head>
 <body class="<?= $this->ua ?> popup">
 
-  <div id="container" class="cf">
+  <div id="container">
     <main id="main">
       <?php if ($this->managerHref || $this->switchHref): ?>
         <div id="manager" class="legacy">

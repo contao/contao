@@ -39,7 +39,7 @@
 <body class="<?= $this->ua ?>">
 
   <?php $this->block('container'); ?>
-    <div id="container" class="cf">
+    <div id="container">
       <main id="main">
         <form action="<?= $this->action ?>" class="tl_login_form" method="post">
           <div class="formbody">

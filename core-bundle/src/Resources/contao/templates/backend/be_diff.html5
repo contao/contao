@@ -25,7 +25,7 @@
 </head>
 <body class="<?= $this->ua ?>">
 
-  <div id="container" class="cf">
+  <div id="container">
     <main id="main">
       <form action="<?= $this->action ?>" method="post">
         <div class="formbody">

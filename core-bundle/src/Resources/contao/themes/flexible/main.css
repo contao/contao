@@ -1935,7 +1935,7 @@ fieldset.collapsed > legend {
 /* Tablet */
 @media (max-width:991px) {
 	body {
-		background:#fff;
+		background:#eaeaec;
 	}
 	#header {
 		width:100%;

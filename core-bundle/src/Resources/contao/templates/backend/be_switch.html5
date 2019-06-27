@@ -26,7 +26,7 @@
 </head>
 <body class="<?= $this->ua ?>">
 
-  <div id="container" class="cf">
+  <div id="container">
     <div class="title">
       <h1 id="page-title"><?= $this->fePreview ?></h1>
       <p id="page-uri"><?= $this->base ?></p>
