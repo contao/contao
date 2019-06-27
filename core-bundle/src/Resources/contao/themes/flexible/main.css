@@ -44,12 +44,11 @@ body:not(.fullscreen) #header .inner {
 	}
 }
 #tmenu {
-	text-align:right;
+	display:flex;
+	justify-content:flex-end;
 }
 #tmenu li {
-	display:inline-block;
 	position:relative;
-	vertical-align:top;
 }
 #tmenu a,#tmenu h2 {
 	padding:13px 12px;
@@ -97,6 +96,12 @@ body:not(.fullscreen) #header .inner {
 		font-weight:300;
 	}
 }
+#tmenu a,#tmenu h2,#tmenu .burger button {
+	transition:background-color .3s ease;
+}
+#tmenu a:hover,#tmenu a.hover,#tmenu li:hover h2,#tmenu .active h2,#tmenu .burger button:hover {
+	background-color:#e87600;
+}
 #tmenu ul.level_2 {
 	min-width:150px;
 	position:absolute;
@@ -110,14 +115,16 @@ body:not(.fullscreen) #header .inner {
 	text-align:left;
 	opacity:0;
 	visibility:hidden;
+	transition:opacity .3s ease, visibility .3s ease;
+}
+#tmenu .active ul.level_2 {
+	opacity:1;
+	visibility:visible;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	#tmenu ul.level_2 {
 		color:#222;
 	}
-}
-#tmenu ul.level_2 li {
-	display:block;
 }
 #tmenu ul.level_2 li a {
 	display:block;
@@ -158,9 +165,6 @@ body:not(.fullscreen) #header .inner {
 	height:5px;
 	position: absolute;
 	top:-5px;
-}
-#tmenu a:hover,#tmenu li:hover h2,#tmenu .burger button:hover {
-	background-color:#e87600;
 }
 #tmenu .icon-alert {
 	width:16px;
