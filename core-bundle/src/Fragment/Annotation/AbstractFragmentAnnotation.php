@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Fragment\Annotation;
 
-abstract class Base
+abstract class AbstractFragmentAnnotation
 {
     /**
      * @var string

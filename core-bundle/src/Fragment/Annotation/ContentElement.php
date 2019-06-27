@@ -30,6 +30,6 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *     @Attribute("type", type = "string"),
  * })
  */
-final class ContentElement extends Base
+final class ContentElement extends AbstractFragmentAnnotation
 {
 }

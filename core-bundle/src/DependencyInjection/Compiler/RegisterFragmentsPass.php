@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Fragment\Annotation\Base;
+use Contao\CoreBundle\Fragment\Annotation\AbstractFragmentAnnotation;
 use Contao\CoreBundle\Fragment\Annotation\ContentElement;
 use Contao\CoreBundle\Fragment\Annotation\FrontendModule;
 use Contao\CoreBundle\Fragment\FragmentConfig;
@@ -90,14 +90,14 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $reflection = new \ReflectionClass($class);
 
                 // Class annotations
-                /** @var $annotation Base */
+                /** @var $annotation AbstractFragmentAnnotation */
                 if (($annotation = $annotationReader->getClassAnnotation($reflection, $annotationName)) !== null) {
                     $this->registerAnnotationFragment($container, $annotation, $tag, $class);
                 }
 
                 // Method annotations
                 foreach ($reflection->getMethods() as $method) {
-                    /** @var $annotation Base */
+                    /** @var $annotation AbstractFragmentAnnotation */
                     if (($annotation = $annotationReader->getMethodAnnotation($method, $annotationName)) !== null) {
                         $this->registerAnnotationFragment($container, $annotation, $tag, $class, $method->getName());
                     }
@@ -106,7 +106,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         }
     }
 
-    private function registerAnnotationFragment(ContainerBuilder $container, Base $annotation, string $tag, string $class, string $method = null): void
+    private function registerAnnotationFragment(ContainerBuilder $container, AbstractFragmentAnnotation $annotation, string $tag, string $class, string $method = null): void
     {
         $serviceId = $annotation->service ?: $class;
 

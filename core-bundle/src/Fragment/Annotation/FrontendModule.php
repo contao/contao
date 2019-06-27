@@ -30,6 +30,6 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *     @Attribute("type", type = "string"),
  * })
  */
-final class FrontendModule extends Base
+final class FrontendModule extends AbstractFragmentAnnotation
 {
 }
