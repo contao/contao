@@ -92,7 +92,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 // Class annotations
                 /** @var $annotation Base */
                 if (($annotation = $annotationReader->getClassAnnotation($reflection, $annotationName)) !== null) {
-                    $this->registerAnnotationFragment($container, $annotation, $tag, $class, '__invoke');
+                    $this->registerAnnotationFragment($container, $annotation, $tag, $class);
                 }
 
                 // Method annotations
@@ -106,7 +106,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         }
     }
 
-    private function registerAnnotationFragment(ContainerBuilder $container, Base $annotation, string $tag, string $class, string $method): void
+    private function registerAnnotationFragment(ContainerBuilder $container, Base $annotation, string $tag, string $class, string $method = null): void
     {
         $serviceId = $annotation->service ?: $class;
 
