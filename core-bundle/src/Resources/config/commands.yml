@@ -52,6 +52,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
+            - '@security.encoder_factory'
 
     contao.command.version:
         class: Contao\CoreBundle\Command\VersionCommand

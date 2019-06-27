@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+
 @trigger_error('Using the Contao\Encryption class has been deprecated and will no longer work in Contao 5.0. Use the PHP password_* functions and a third-party library such as OpenSSL or phpseclib instead.', E_USER_DEPRECATED);
 
 /**
@@ -168,7 +170,11 @@ class Encryption
 	 */
 	public static function hash($strPassword)
 	{
-		return password_hash($strPassword, PASSWORD_DEFAULT);
+		/** @var EncoderFactoryInterface $encoderFactory */
+		$encoderFactory = System::getContainer()->get('security.encoder_factory');
+		$encoder = $encoderFactory->getEncoder(BackendUser::class); // This is hardcoded (BE and FE users/members should not have a different algo anyway but if you need it, do not rely on a deprecated class but use the services instead)
+
+		return $encoder->encodePassword($strPassword, null);
 	}
 
 	/**
@@ -212,7 +218,11 @@ class Encryption
 	 */
 	public static function verify($strPassword, $strHash)
 	{
-		return password_verify($strPassword, $strHash);
+		/** @var EncoderFactoryInterface $encoderFactory */
+		$encoderFactory = System::getContainer()->get('security.encoder_factory');
+		$encoder = $encoderFactory->getEncoder(BackendUser::class); // This is hardcoded (BE and FE users/members should not have a different algo anyway but if you need it, do not rely on a deprecated class but use the services instead)
+
+		return $encoder->isPasswordValid($strHash, $strPassword, null);
 	}
 
 	/**

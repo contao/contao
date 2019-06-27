@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Patchwork\Utf8;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
  * Front end module "change password".
@@ -142,8 +143,12 @@ class ModuleChangePassword extends Module
 			{
 				$objWidget->validate();
 
+				/** @var EncoderFactoryInterface $encoderFactory */
+				$encoderFactory = System::getContainer()->get('security.encoder_factory');
+				$encoder = $encoderFactory->getEncoder(FrontendUser::class);
+
 				// Validate the old password
-				if ($strKey == 'oldPassword' && !password_verify($objWidget->value, $objMember->password))
+				if ($strKey == 'oldPassword' && !$encoder->isPasswordValid($objMember->password, $objWidget->value, null))
 				{
 					$objWidget->value = '';
 					$objWidget->addError($GLOBALS['TL_LANG']['MSC']['oldPasswordWrong']);

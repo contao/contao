@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -498,15 +499,11 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		// Check if a passwords needs rehashing (see contao/core#8820)
 		if ($isLogin)
 		{
-			$blnAuthenticated = password_verify($request->request->get('password'), $user->password);
-			$blnNeedsRehash = password_needs_rehash($user->password, PASSWORD_DEFAULT);
+			/** @var EncoderFactoryInterface $encoderFactory */
+			$encoderFactory = System::getContainer()->get('security.encoder_factory');
+			$encoder = $encoderFactory->getEncoder(static::class);
 
-			// Re-hash the password if the algorithm has changed
-			if ($blnAuthenticated && $blnNeedsRehash)
-			{
-				$user->password = password_hash($request->request->get('password'), PASSWORD_DEFAULT);
-				$user->save();
-			}
+			$blnAuthenticated = $encoder->isPasswordValid($user->password, $request->request->get('password'), null);
 		}
 
 		$user->setUserFromDb();
