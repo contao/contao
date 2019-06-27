@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Patchwork\Utf8;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
  * Class FormPassword
@@ -139,7 +140,11 @@ class FormPassword extends Widget
 		{
 			$this->blnSubmitInput = true;
 
-			return password_hash($varInput, PASSWORD_DEFAULT);
+			/** @var EncoderFactoryInterface $encoderFactory */
+			$encoderFactory = System::getContainer()->get('security.encoder_factory');
+			$encoder = $encoderFactory->getEncoder(BackendUser::class);
+
+			return $encoder->encodePassword($varInput, null);
 		}
 
 		return '';

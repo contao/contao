@@ -26,6 +26,7 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
 
 class PluginTest extends ContaoTestCase
 {
@@ -256,6 +257,40 @@ class PluginTest extends ContaoTestCase
         );
 
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function testFallsBackToBcryptIfAutoModeIsNotAvailable()
+    {
+        if (class_exists(NativePasswordEncoder::class)) {
+            $this->markTestSkipped('Cannot test fallback as the auto mode is available.');
+        }
+
+        $pluginLoader = $this->createMock(PluginLoader::class);
+        $container = new PluginContainerBuilder($pluginLoader, []);
+
+        $extensionConfigs = [
+            [
+                'encoders' => [
+                    'Contao\User' => [
+                        'algorithm' => 'auto',
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = [
+            [
+                'encoders' => [
+                    'Contao\User' => [
+                        'algorithm' => 'bcrypt',
+                    ],
+                ],
+            ],
+        ];
+
+        $extensionConfig = (new Plugin())->getExtensionConfig('security', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
     }

@@ -52,6 +52,7 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
 
 class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface, ApiPluginInterface
 {
@@ -240,9 +241,34 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             case 'doctrine':
                 return $this->addDefaultServerVersion($extensionConfigs, $container);
 
+            case 'security':
+                return $this->handleSecurityEncoder($extensionConfigs, $container);
+
             default:
                 return $extensionConfigs;
         }
+    }
+
+    /**
+     * Fall back to the bcrypt password hashing algorithm if a version lower than Symfony 4.3
+     * is used. This can be removed as soon as Symfony 4.3 is the minimum required version.
+     *
+     * @return array<string,array<string,mixed>>
+     */
+    private function handleSecurityEncoder(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        $supportsAutoAlgorithm = class_exists(NativePasswordEncoder::class); // The NativePasswordEncoder was added in 4.3
+
+        foreach ($extensionConfigs as &$extensionConfig) {
+            if (!$supportsAutoAlgorithm
+                && isset($extensionConfig['encoders']['Contao\User']['algorithm'])
+                && 'auto' === $extensionConfig['encoders']['Contao\User']['algorithm']
+            ) {
+                $extensionConfig['encoders']['Contao\User']['algorithm'] = 'bcrypt'; // Fall back
+            }
+        }
+
+        return $extensionConfigs;
     }
 
     /**

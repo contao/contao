@@ -80,7 +80,7 @@ security:
 
     encoders:
         Contao\User:
-            algorithm: bcrypt
+            algorithm: auto
 
     firewalls:
         dev:
