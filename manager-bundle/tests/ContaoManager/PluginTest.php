@@ -261,7 +261,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expect, $extensionConfig);
     }
 
-    public function testFallsBackToBcryptIfAutoModeIsNotAvailable()
+    public function testFallsBackToBcryptIfAutoModeIsNotAvailable(): void
     {
         if (class_exists(NativePasswordEncoder::class)) {
             $this->markTestSkipped('Cannot test fallback as the auto mode is available.');
