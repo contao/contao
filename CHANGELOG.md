@@ -2,6 +2,10 @@
 
 ## DEV
 
+ * Add a news list option to show featured news first (see #371).
+ * Use the current firewall token if it matches the context (see #513).
+ * Extend the end date for unlimited event occurrences (see #510).
+ * Use generic labels in DCAs (see #532).
  * Add deferred image resizing (see #354).
  * Disable CSRF if the request has no cookies (see #515).
  * Add expiration based persistent rememberme tokens (see #483).

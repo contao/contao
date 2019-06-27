@@ -28,7 +28,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_featured'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options'                 => array('all_items', 'featured', 'unfeatured'),
+	'options'                 => array('all_items', 'featured', 'unfeatured', 'featured_first'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50 clr'),
 	'sql'                     => "varchar(16) NOT NULL default 'all_items'"
