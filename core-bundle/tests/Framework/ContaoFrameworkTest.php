@@ -38,42 +38,11 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testInitializesTheFrameworkWithAFrontEndRequest(): void
     {
-        $beBag = new ArrayAttributeBag();
-        $beBag->setName('contao_backend');
-
-        $feBag = new ArrayAttributeBag();
-        $feBag->setName('contao_frontend');
-
-        $session = new Session(new MockNativeSessionStorage());
-        $session->registerBag($beBag);
-        $session->registerBag($feBag);
-
         $request = Request::create('/index.html');
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'frontend');
-        $request->cookies->set($session->getName(), 'foobar');
-        $request->setSession($session);
 
-        $tokenChecker = $this->createMock(TokenChecker::class);
-        $tokenChecker
-            ->expects($this->once())
-            ->method('hasBackendUser')
-            ->willReturn(true)
-        ;
-
-        $tokenChecker
-            ->expects($this->once())
-            ->method('isPreviewMode')
-            ->willReturn(true)
-        ;
-
-        $tokenChecker
-            ->expects($this->once())
-            ->method('hasFrontendUser')
-            ->willReturn(true)
-        ;
-
-        $framework = $this->mockFramework($request, null, $tokenChecker);
+        $framework = $this->mockFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
@@ -89,12 +58,10 @@ class ContaoFrameworkTest extends TestCase
         $this->assertSame($this->getTempDir(), TL_ROOT);
         $this->assertSame('', TL_REFERER_ID);
         $this->assertSame('index.html', TL_SCRIPT);
-        $this->assertTrue(BE_USER_LOGGED_IN);
-        $this->assertTrue(FE_USER_LOGGED_IN);
+        $this->assertFalse(BE_USER_LOGGED_IN);
+        $this->assertFalse(FE_USER_LOGGED_IN);
         $this->assertSame('', TL_PATH);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
-        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['BE_DATA']);
-        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['FE_DATA']);
     }
 
     /**
@@ -269,6 +236,72 @@ class ContaoFrameworkTest extends TestCase
         $this->assertFalse(BE_USER_LOGGED_IN);
         $this->assertFalse(FE_USER_LOGGED_IN);
         $this->assertSame('', TL_PATH);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testInitializesTheFrameworkInPreviewMode(): void
+    {
+        $beBag = new ArrayAttributeBag();
+        $beBag->setName('contao_backend');
+
+        $feBag = new ArrayAttributeBag();
+        $feBag->setName('contao_frontend');
+
+        $session = new Session(new MockNativeSessionStorage());
+        $session->registerBag($beBag);
+        $session->registerBag($feBag);
+
+        $request = Request::create('index.html');
+        $request->server->set('SCRIPT_NAME', '/preview.php');
+        $request->attributes->set('_route', 'dummy');
+        $request->attributes->set('_scope', 'frontend');
+        $request->cookies->set($session->getName(), 'foobar');
+        $request->setSession($session);
+
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->expects($this->once())
+            ->method('hasBackendUser')
+            ->willReturn(true)
+        ;
+
+        $tokenChecker
+            ->expects($this->once())
+            ->method('isPreviewMode')
+            ->willReturn(true)
+        ;
+
+        $tokenChecker
+            ->expects($this->once())
+            ->method('hasFrontendUser')
+            ->willReturn(true)
+        ;
+
+        $framework = $this->mockFramework($request, null, $tokenChecker);
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
+        $framework->initialize();
+
+        $this->assertTrue(\defined('TL_MODE'));
+        $this->assertTrue(\defined('TL_START'));
+        $this->assertTrue(\defined('TL_ROOT'));
+        $this->assertTrue(\defined('TL_REFERER_ID'));
+        $this->assertTrue(\defined('TL_SCRIPT'));
+        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
+        $this->assertTrue(\defined('TL_PATH'));
+        $this->assertSame('FE', TL_MODE);
+        $this->assertSame($this->getTempDir(), TL_ROOT);
+        $this->assertSame('', TL_REFERER_ID);
+        $this->assertSame('index.html', TL_SCRIPT);
+        $this->assertTrue(BE_USER_LOGGED_IN);
+        $this->assertTrue(FE_USER_LOGGED_IN);
+        $this->assertSame('', TL_PATH);
+        $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
+        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['BE_DATA']);
+        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['FE_DATA']);
     }
 
     /**

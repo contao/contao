@@ -115,6 +115,12 @@ class TokenChecker
      */
     public function isPreviewMode(): bool
     {
+        $request = $this->requestStack->getMasterRequest();
+
+        if (null === $request || '/preview.php' !== $request->getScriptName()) {
+            return false;
+        }
+
         $token = $this->getToken(self::FRONTEND_FIREWALL);
 
         return $token instanceof FrontendPreviewToken && $token->showUnpublished();

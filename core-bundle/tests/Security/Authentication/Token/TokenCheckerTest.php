@@ -46,7 +46,7 @@ class TokenCheckerTest extends TestCase
     /**
      * @dataProvider getUserInTokenStorageData
      */
-    public function testChecksForUserInTokenStorageIfFirewallContextDoesMatch(string $class, string $firewallContext): void
+    public function testChecksForUserInTokenStorageIfFirewallContextMatches(string $class, string $firewallContext): void
     {
         $user = $this->mockUser($class);
         $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
@@ -148,13 +148,26 @@ class TokenCheckerTest extends TestCase
     /**
      * @dataProvider getPreviewModeData
      */
-    public function testChecksIfThePreviewModeIsActive(TokenInterface $token, bool $expect): void
+    public function testChecksIfThePreviewModeIsActive(TokenInterface $token, string $script, bool $expect): void
     {
+        $request = new Request();
+        $request->server->set('SCRIPT_NAME', $script);
+
+        if ('/preview.php' === $script) {
+            $session = $this->mockSessionWithToken($token);
+        } else {
+            $session = $this->createMock(SessionInterface::class);
+            $session
+                ->expects($this->never())
+                ->method('isStarted')
+            ;
+        }
+
         $tokenChecker = new TokenChecker(
-            $this->mockRequestStack(),
+            $this->mockRequestStack($request),
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(BackendUser::class),
-            $this->mockSessionWithToken($token),
+            $session,
             $this->trustResolver
         );
 
@@ -163,9 +176,10 @@ class TokenCheckerTest extends TestCase
 
     public function getPreviewModeData(): \Generator
     {
-        yield [new FrontendPreviewToken(null, true), true];
-        yield [new FrontendPreviewToken(null, false), false];
-        yield [new UsernamePasswordToken('user', 'password', 'provider'), false];
+        yield [new FrontendPreviewToken(null, true), '', false];
+        yield [new FrontendPreviewToken(null, true), '/preview.php', true];
+        yield [new FrontendPreviewToken(null, false), '/preview.php', false];
+        yield [new UsernamePasswordToken('user', 'password', 'provider'), '/preview.php', false];
     }
 
     public function testDoesNotReturnATokenIfTheSessionIsNotStarted(): void
@@ -278,7 +292,7 @@ class TokenCheckerTest extends TestCase
             $this->trustResolver
         );
 
-        $this->assertFalse($tokenChecker->isPreviewMode());
+        $this->assertNull($tokenChecker->getFrontendUsername());
     }
 
     private function mockUser(string $class): User
@@ -292,15 +306,20 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
+     * @param Request&MockObject $request
+     *
      * @return RequestStack&MockObject
      */
-    private function mockRequestStack(): RequestStack
+    private function mockRequestStack(Request $request = null): RequestStack
     {
-        $requestStack = $this->createMock(RequestStack::class);
+        if (null === $request) {
+            $request = $this->createMock(Request::class);
+        }
 
+        $requestStack = $this->createMock(RequestStack::class);
         $requestStack
             ->method('getMasterRequest')
-            ->willReturn($this->createMock(Request::class))
+            ->willReturn($request)
         ;
 
         return $requestStack;
