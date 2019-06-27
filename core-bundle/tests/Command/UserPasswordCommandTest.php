@@ -101,7 +101,6 @@ class UserPasswordCommandTest extends TestCase
     public function testFailsWithoutPasswordIfNotInteractive(): void
     {
         $command = $this->getCommand();
-
         $code = (new CommandTester($command))->execute(['username' => 'foobar'], ['interactive' => false]);
 
         $this->assertSame(1, $code);
@@ -198,7 +197,10 @@ class UserPasswordCommandTest extends TestCase
         yield ['k.jones', 'kevinjones'];
     }
 
-    private function getCommand($connection = null, $password = null)
+    /**
+     * @param Connection&MockObject $connection
+     */
+    private function getCommand(Connection $connection = null, string $password = null): UserPasswordCommand
     {
         if (null === $connection) {
             $connection = $this->createMock(Connection::class);
@@ -210,7 +212,6 @@ class UserPasswordCommandTest extends TestCase
 
         $encoder = $this->createMock(PasswordEncoderInterface::class);
         $encoder
-            ->expects($this->any())
             ->method('encodePassword')
             ->with($password, null)
             ->willReturn('$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ')
@@ -218,17 +219,12 @@ class UserPasswordCommandTest extends TestCase
 
         $encoderFactory = $this->createMock(EncoderFactoryInterface::class);
         $encoderFactory
-            ->expects($this->any())
             ->method('getEncoder')
             ->with(BackendUser::class)
             ->willReturn($encoder)
         ;
 
-        $command = new UserPasswordCommand(
-            $this->mockContaoFramework(),
-            $connection,
-            $encoderFactory
-        );
+        $command = new UserPasswordCommand($this->mockContaoFramework(), $connection, $encoderFactory);
         $command->setApplication(new Application());
 
         return $command;

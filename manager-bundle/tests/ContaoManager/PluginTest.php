@@ -17,6 +17,7 @@ use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
+use Contao\User;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -264,27 +265,26 @@ class PluginTest extends ContaoTestCase
     public function testFallsBackToBcryptIfAutoModeIsNotAvailable(): void
     {
         if (class_exists(NativePasswordEncoder::class)) {
-            $this->markTestSkipped('Cannot test fallback as the auto mode is available.');
+            $this->markTestSkipped('This test is only relevant for symfony/security <4.3');
         }
 
-        $pluginLoader = $this->createMock(PluginLoader::class);
-        $container = new PluginContainerBuilder($pluginLoader, []);
-
-        $extensionConfigs = [
+        $expect = [
             [
                 'encoders' => [
-                    'Contao\User' => [
-                        'algorithm' => 'auto',
+                    User::class => [
+                        'algorithm' => 'bcrypt',
                     ],
                 ],
             ],
         ];
 
-        $expect = [
+        $container = new PluginContainerBuilder($this->createMock(PluginLoader::class), []);
+
+        $extensionConfigs = [
             [
                 'encoders' => [
-                    'Contao\User' => [
-                        'algorithm' => 'bcrypt',
+                    User::class => [
+                        'algorithm' => 'auto',
                     ],
                 ],
             ],

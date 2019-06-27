@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
  * Back end help wizard.
@@ -82,9 +81,7 @@ class BackendPassword extends Backend
 			// Save the data
 			else
 			{
-				/** @var EncoderFactoryInterface $encoderFactory */
-				$encoderFactory = System::getContainer()->get('security.encoder_factory');
-				$encoder = $encoderFactory->getEncoder(BackendUser::class);
+				$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(BackendUser::class);
 
 				// Make sure the password has been changed
 				if ($encoder->isPasswordValid($this->User->password, $pw, null))

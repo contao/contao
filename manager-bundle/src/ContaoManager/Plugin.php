@@ -29,6 +29,7 @@ use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Contao\User;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Doctrine\DBAL\DriverManager;
@@ -250,21 +251,25 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
-     * Fall back to the bcrypt password hashing algorithm if a version lower than Symfony 4.3
-     * is used. This can be removed as soon as Symfony 4.3 is the minimum required version.
+     * Fall back to the bcrypt password hashing algorithm in Symfony <4.3.
+     *
+     * Backwards compatibility: This can be removed as soon as Symfony 4.3 is
+     * the minimum required version.
      *
      * @return array<string,array<string,mixed>>
      */
     private function handleSecurityEncoder(array $extensionConfigs, ContainerBuilder $container): array
     {
-        $supportsAutoAlgorithm = class_exists(NativePasswordEncoder::class); // The NativePasswordEncoder was added in 4.3
+        if (class_exists(NativePasswordEncoder::class)) {
+            return $extensionConfigs;
+        }
 
         foreach ($extensionConfigs as &$extensionConfig) {
-            if (!$supportsAutoAlgorithm
-                && isset($extensionConfig['encoders']['Contao\User']['algorithm'])
-                && 'auto' === $extensionConfig['encoders']['Contao\User']['algorithm']
+            if (
+                isset($extensionConfig['encoders'][User::class]['algorithm'])
+                && 'auto' === $extensionConfig['encoders'][User::class]['algorithm']
             ) {
-                $extensionConfig['encoders']['Contao\User']['algorithm'] = 'bcrypt'; // Fall back
+                $extensionConfig['encoders'][User::class]['algorithm'] = 'bcrypt';
             }
         }
 

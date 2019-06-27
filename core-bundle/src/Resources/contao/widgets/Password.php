@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Patchwork\Utf8;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
  * Provide methods to handle password fields.
@@ -136,9 +135,7 @@ class Password extends Widget
 			$this->blnSubmitInput = true;
 			Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
 
-			/** @var EncoderFactoryInterface $encoderFactory */
-			$encoderFactory = System::getContainer()->get('security.encoder_factory');
-			$encoder = $encoderFactory->getEncoder(BackendUser::class);
+			$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(BackendUser::class);
 
 			return $encoder->encodePassword($varInput, null);
 		}

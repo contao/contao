@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\OptIn\OptIn;
 use Patchwork\Utf8;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
  * Front end module "registration".
@@ -219,15 +218,12 @@ class ModuleRegistration extends Module
 			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
 				$objWidget->validate();
+
 				$varValue = $objWidget->value;
-
-
-				/** @var EncoderFactoryInterface $encoderFactory */
-				$encoderFactory = System::getContainer()->get('security.encoder_factory');
-				$encoder = $encoderFactory->getEncoder(FrontendUser::class);
+				$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
 
 				// Check whether the password matches the username
-				if ($objWidget instanceof FormPassword && $encoder->isPasswordValid($varValue, Input::post('username')))
+				if ($objWidget instanceof FormPassword && $encoder->isPasswordValid($varValue, Input::post('username'), null))
 				{
 					$objWidget->addError($GLOBALS['TL_LANG']['ERR']['passwordName']);
 				}

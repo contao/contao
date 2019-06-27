@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Patchwork\Utf8;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
  * Front end module "close account".
@@ -81,9 +80,7 @@ class ModuleCloseAccount extends Module
 		{
 			$objWidget->validate();
 
-			/** @var EncoderFactoryInterface $encoderFactory */
-			$encoderFactory = System::getContainer()->get('security.encoder_factory');
-			$encoder = $encoderFactory->getEncoder(FrontendUser::class);
+			$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
 
 			// Validate the password
 			if (!$objWidget->hasErrors() && !$encoder->isPasswordValid($this->User->password, $objWidget->value, null))
