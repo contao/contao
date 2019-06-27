@@ -25,8 +25,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticator
 {
-    private const SECURITY_SESSION_KEY = '_security_contao_frontend';
-
     /**
      * @var SessionInterface
      */
@@ -76,7 +74,7 @@ class FrontendPreviewAuthenticator
 
         $token = new FrontendPreviewToken($frontendUser, $showUnpublished);
 
-        $this->session->set(self::SECURITY_SESSION_KEY, serialize($token));
+        $this->session->set('_security_contao_frontend', serialize($token));
 
         return true;
     }
@@ -91,7 +89,7 @@ class FrontendPreviewAuthenticator
 
         $token = new FrontendPreviewToken(null, $showUnpublished);
 
-        $this->session->set(self::SECURITY_SESSION_KEY, serialize($token));
+        $this->session->set('_security_contao_frontend', serialize($token));
 
         return true;
     }
@@ -101,11 +99,11 @@ class FrontendPreviewAuthenticator
      */
     public function removeFrontendAuthentication(): bool
     {
-        if (!$this->session->isStarted() || !$this->session->has(self::SECURITY_SESSION_KEY)) {
+        if (!$this->session->isStarted() || !$this->session->has('_security_contao_frontend')) {
             return false;
         }
 
-        $this->session->remove(self::SECURITY_SESSION_KEY);
+        $this->session->remove('_security_contao_frontend');
 
         return true;
     }
