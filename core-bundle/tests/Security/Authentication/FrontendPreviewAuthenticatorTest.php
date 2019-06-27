@@ -306,9 +306,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = $this->getAuthenticator($session, $tokenStorage, $userProvider);
 
         $this->assertTrue($authenticator->authenticateFrontendUser('foobar', false));
-        $this->assertTrue($session->has(FrontendUser::SECURITY_SESSION_KEY));
+        $this->assertTrue($session->has('_security_contao_frontend'));
 
-        $token = unserialize($session->get(FrontendUser::SECURITY_SESSION_KEY), ['allowed_classes' => true]);
+        $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
 
         $this->assertInstanceOf(FrontendPreviewToken::class, $token);
         $this->assertInstanceOf(FrontendUser::class, $token->getUser());
@@ -360,9 +360,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = $this->getAuthenticator($session, $tokenStorage, $userProvider);
 
         $this->assertTrue($authenticator->authenticateFrontendUser('foobar', true));
-        $this->assertTrue($session->has(FrontendUser::SECURITY_SESSION_KEY));
+        $this->assertTrue($session->has('_security_contao_frontend'));
 
-        $token = unserialize($session->get(FrontendUser::SECURITY_SESSION_KEY), ['allowed_classes' => true]);
+        $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
 
         $this->assertInstanceOf(FrontendPreviewToken::class, $token);
         $this->assertInstanceOf(FrontendUser::class, $token->getUser());
@@ -414,9 +414,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = $this->getAuthenticator($session, $tokenStorage);
 
         $this->assertTrue($authenticator->authenticateFrontendGuest(false));
-        $this->assertTrue($session->has(FrontendUser::SECURITY_SESSION_KEY));
+        $this->assertTrue($session->has('_security_contao_frontend'));
 
-        $token = unserialize($session->get(FrontendUser::SECURITY_SESSION_KEY), ['allowed_classes' => true]);
+        $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
 
         $this->assertInstanceOf(FrontendPreviewToken::class, $token);
         $this->assertSame('anon.', $token->getUser());
@@ -451,9 +451,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = $this->getAuthenticator($session, $tokenStorage);
 
         $this->assertTrue($authenticator->authenticateFrontendGuest(true));
-        $this->assertTrue($session->has(FrontendUser::SECURITY_SESSION_KEY));
+        $this->assertTrue($session->has('_security_contao_frontend'));
 
-        $token = unserialize($session->get(FrontendUser::SECURITY_SESSION_KEY), ['allowed_classes' => true]);
+        $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
 
         $this->assertInstanceOf(FrontendPreviewToken::class, $token);
         $this->assertSame('anon.', $token->getUser());
@@ -472,14 +472,14 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session
             ->expects($this->once())
             ->method('has')
-            ->with(FrontendUser::SECURITY_SESSION_KEY)
+            ->with('_security_contao_frontend')
             ->willReturn(true)
         ;
 
         $session
             ->expects($this->once())
             ->method('remove')
-            ->with(FrontendUser::SECURITY_SESSION_KEY)
+            ->with('_security_contao_frontend')
         ;
 
         $authenticator = $this->getAuthenticator($session);
@@ -513,7 +513,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session
             ->expects($this->once())
             ->method('has')
-            ->with(FrontendUser::SECURITY_SESSION_KEY)
+            ->with('_security_contao_frontend')
             ->willReturn(false)
         ;
 

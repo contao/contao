@@ -69,6 +69,7 @@ class BackendUser extends User
 	/**
 	 * Symfony Security session key
 	 * @var string
+	 * @deprecated Deprecated since Contao 4.8, to be removed in Contao 5.0
 	 */
 	const SECURITY_SESSION_KEY = '_security_contao_backend';
 
