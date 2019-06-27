@@ -40,6 +40,11 @@ class ImageSizes
     /**
      * @var array
      */
+    private $predefinedSizes = [];
+
+    /**
+     * @var array
+     */
     private $options;
 
     public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework)
@@ -47,6 +52,14 @@ class ImageSizes
         $this->connection = $connection;
         $this->eventDispatcher = $eventDispatcher;
         $this->framework = $framework;
+    }
+
+    /**
+     * Sets the predefined image sizes.
+     */
+    public function setPredefinedSizes(array $predefinedSizes): void
+    {
+        $this->predefinedSizes = $predefinedSizes;
     }
 
     /**
@@ -133,6 +146,15 @@ class ImageSizes
         }
 
         $this->options = array_merge_recursive($options, $this->options);
+
+        foreach ($this->predefinedSizes as $name => $imageSize) {
+            $this->options['image_sizes'][$name] = sprintf(
+                '%s (%sx%s)',
+                $GLOBALS['TL_LANG']['IMAGE_SIZES'][$name] ?? $name,
+                $imageSize['width'],
+                $imageSize['height']
+            );
+        }
     }
 
     /**

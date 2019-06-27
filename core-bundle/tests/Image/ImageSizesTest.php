@@ -66,6 +66,7 @@ class ImageSizesTest extends TestCase
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_ALL);
         $this->expectExampleImageSizes();
+        $this->expectExamplePredefinedImageSizes();
 
         $options = $this->imageSizes->getAllOptions();
 
@@ -73,6 +74,8 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('exact', $options);
         $this->assertArrayHasKey('My theme', $options);
         $this->assertArrayHasKey('42', $options['My theme']);
+        $this->assertArrayHasKey('foo', $options['image_sizes']);
+        $this->assertArrayHasKey('bar', $options['image_sizes']);
     }
 
     public function testReturnsAllOptionsWithoutImageSizes(): void
@@ -184,6 +187,17 @@ class ImageSizesTest extends TestCase
                 'height' => '',
                 'theme' => 'My theme',
             ],
+        ]);
+    }
+
+    /**
+     * Adds expected example predefined image sizes.
+     */
+    private function expectExamplePredefinedImageSizes(): void
+    {
+        $this->imageSizes->setPredefinedSizes([
+            'foo' => ['width' => 123, 'height' => 456],
+            'bar' => ['width' => 123, 'height' => 456],
         ]);
     }
 }

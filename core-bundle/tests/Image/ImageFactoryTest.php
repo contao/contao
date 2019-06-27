@@ -213,6 +213,64 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($path, $image->getPath());
     }
 
+    public function testCreatesAnImageObjectFromAnImageObjectWithAPredefinedImageSize(): void
+    {
+        $predefinedSizes = [
+            'foobar' => [
+                'width' => 100,
+                'height' => 200,
+                'resizeMode' => ResizeConfiguration::MODE_BOX,
+                'zoom' => 50,
+            ],
+        ];
+
+        $imageMock = $this->createMock(ImageInterface::class);
+
+        $resizer = $this->createMock(ResizerInterface::class);
+        $resizer
+            ->expects($this->once())
+            ->method('resize')
+            ->with(
+                $this->callback(
+                    function (ImageInterface $image) use ($imageMock): bool {
+                        $this->assertSameImage($imageMock, $image);
+
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (ResizeConfigurationInterface $config) use ($predefinedSizes): bool {
+                        $this->assertSame($predefinedSizes['foobar']['width'], $config->getWidth());
+                        $this->assertSame($predefinedSizes['foobar']['height'], $config->getHeight());
+                        $this->assertSame($predefinedSizes['foobar']['resizeMode'], $config->getMode());
+                        $this->assertSame($predefinedSizes['foobar']['zoom'], $config->getZoomLevel());
+
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (ResizeOptions $options): bool {
+                        $this->assertSame([
+                            'jpeg_quality' => 80,
+                            'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+                        ], $options->getImagineOptions());
+
+                        $this->assertSame($this->getFixturesDir().'/target/path.jpg', $options->getTargetPath());
+
+                        return true;
+                    }
+                )
+            )
+            ->willReturn($imageMock)
+        ;
+
+        $imageFactory = $this->getImageFactory($resizer);
+        $imageFactory->setPredefinedSizes($predefinedSizes);
+        $image = $imageFactory->create($imageMock, [null, null, 'foobar'], $this->getFixturesDir().'/target/path.jpg');
+
+        $this->assertSameImage($imageMock, $image);
+    }
+
     public function testCreatesAnImageObjectFromAnImageObjectWithAResizeConfiguration(): void
     {
         $resizeConfig = (new ResizeConfiguration())

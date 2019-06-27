@@ -145,6 +145,79 @@ class PictureFactoryTest extends TestCase
         $this->assertSame('my-size', $picture->getImg()['class']);
     }
 
+    public function testCreatesAPictureObjectFromAnImageObjectWithAPredefinedImageSize(): void
+    {
+        $predefinedSizes = [
+            'foobar' => [
+                'width' => 100,
+                'height' => 200,
+                'resizeMode' => ResizeConfiguration::MODE_BOX,
+                'zoom' => 50,
+                'densities' => '1x, 2x',
+                'sizes' => '100vw',
+                'items' => [
+                    [
+                        'width' => 50,
+                        'height' => 50,
+                        'resizeMode' => ResizeConfiguration::MODE_BOX,
+                        'zoom' => 100,
+                        'densities' => '0.5x, 2x',
+                        'sizes' => '50vw',
+                        'media' => '(max-width: 900px)',
+                    ]
+                ],
+            ],
+        ];
+
+        $imageMock = $this->createMock(ImageInterface::class);
+        $pictureMock = $this->createMock(PictureInterface::class);
+
+        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
+        $pictureGenerator
+            ->method('generate')
+            ->with(
+                $this->callback(
+                    function (ImageInterface $image) use ($imageMock): bool {
+                        $this->assertSame($imageMock, $image);
+
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (PictureConfigurationInterface $config) use ($predefinedSizes): bool {
+                        $size = $config->getSize();
+
+                        $this->assertSame($predefinedSizes['foobar']['width'], $size->getResizeConfig()->getWidth());
+                        $this->assertSame($predefinedSizes['foobar']['height'], $size->getResizeConfig()->getHeight());
+                        $this->assertSame($predefinedSizes['foobar']['resizeMode'], $size->getResizeConfig()->getMode());
+                        $this->assertSame($predefinedSizes['foobar']['zoom'], $size->getResizeConfig()->getZoomLevel());
+                        $this->assertSame($predefinedSizes['foobar']['densities'], $size->getDensities());
+                        $this->assertSame($predefinedSizes['foobar']['sizes'], $size->getSizes());
+
+                        /** @var PictureConfigurationItemInterface $sizeItem */
+                        $sizeItem = $config->getSizeItems()[0];
+
+                        $this->assertSame($predefinedSizes['foobar']['items'][0]['width'], $sizeItem->getResizeConfig()->getWidth());
+                        $this->assertSame($predefinedSizes['foobar']['items'][0]['height'], $sizeItem->getResizeConfig()->getHeight());
+                        $this->assertSame($predefinedSizes['foobar']['items'][0]['resizeMode'], $sizeItem->getResizeConfig()->getMode());
+                        $this->assertSame($predefinedSizes['foobar']['items'][0]['zoom'], $sizeItem->getResizeConfig()->getZoomLevel());
+                        $this->assertSame($predefinedSizes['foobar']['items'][0]['densities'], $sizeItem->getDensities());
+                        $this->assertSame($predefinedSizes['foobar']['items'][0]['sizes'], $sizeItem->getSizes());
+
+                        return true;
+                    }
+                )
+            )
+            ->willReturn($pictureMock)
+        ;
+
+        $pictureFactory = $this->getPictureFactory($pictureGenerator);
+        $pictureFactory->setPredefinedSizes($predefinedSizes);
+        $picture = $pictureFactory->create($imageMock, [null, null, 'foobar']);
+
+        $this->assertSame($pictureMock, $picture);
+    }
+
     public function testCreatesAPictureObjectFromAnImageObjectWithAPictureConfiguration(): void
     {
         $pictureConfig = (new PictureConfiguration())

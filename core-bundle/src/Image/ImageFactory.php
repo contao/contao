@@ -74,6 +74,11 @@ class ImageFactory implements ImageFactoryInterface
      */
     private $uploadDir;
 
+    /**
+     * @var array
+     */
+    private $predefinedSizes = [];
+
     public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir)
     {
         $this->resizer = $resizer;
@@ -85,6 +90,14 @@ class ImageFactory implements ImageFactoryInterface
         $this->imagineOptions = $imagineOptions;
         $this->validExtensions = $validExtensions;
         $this->uploadDir = $uploadDir;
+    }
+
+    /**
+     * Set the predefined image sizes.
+     */
+    public function setPredefinedSizes(array $predefinedSizes): void
+    {
+        $this->predefinedSizes = $predefinedSizes;
     }
 
     /**
@@ -195,21 +208,38 @@ class ImageFactory implements ImageFactoryInterface
 
         $config = new ResizeConfiguration();
 
-        if (isset($size[2]) && is_numeric($size[2])) {
-            /** @var ImageSizeModel $imageModel */
-            $imageModel = $this->framework->getAdapter(ImageSizeModel::class);
-            $imageSize = $imageModel->findByPk($size[2]);
+        if (isset($size[2])) {
+            // Database record
+            if (is_numeric($size[2])) {
+                /** @var ImageSizeModel $imageModel */
+                $imageModel = $this->framework->getAdapter(ImageSizeModel::class);
+                $imageSize = $imageModel->findByPk($size[2]);
 
-            if (null !== $imageSize) {
-                $config
-                    ->setWidth((int) $imageSize->width)
-                    ->setHeight((int) $imageSize->height)
-                    ->setMode($imageSize->resizeMode)
-                    ->setZoomLevel((int) $imageSize->zoom)
-                ;
+                if (null !== $imageSize) {
+                    $config
+                        ->setWidth((int) $imageSize->width)
+                        ->setHeight((int) $imageSize->height)
+                        ->setMode($imageSize->resizeMode)
+                        ->setZoomLevel((int) $imageSize->zoom)
+                    ;
+                }
+
+                return [$config, null];
             }
 
-            return [$config, null];
+            // Predefined sizes
+            if (isset($this->predefinedSizes[$size[2]])) {
+                $imageSize = $this->predefinedSizes[$size[2]];
+
+                $config
+                    ->setWidth((int) $imageSize['width'])
+                    ->setHeight((int) $imageSize['height'])
+                    ->setMode($imageSize['resizeMode'])
+                    ->setZoomLevel((int) $imageSize['zoom'])
+                ;
+
+                return [$config, null];
+            }
         }
 
         if (!empty($size[0])) {
