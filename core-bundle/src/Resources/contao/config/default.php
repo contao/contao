@@ -53,7 +53,6 @@ $GLOBALS['TL_CONFIG']['dbCollation'] = 'utf8mb4_unicode_ci';
 // Encryption
 $GLOBALS['TL_CONFIG']['encryptionMode']   = 'cfb';
 $GLOBALS['TL_CONFIG']['encryptionCipher'] = 'rijndael-256';
-$GLOBALS['TL_CONFIG']['bcryptCost']       = 10;
 
 // File uploads
 $GLOBALS['TL_CONFIG']['uploadTypes']

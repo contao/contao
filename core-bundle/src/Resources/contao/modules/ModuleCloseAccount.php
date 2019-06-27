@@ -80,8 +80,10 @@ class ModuleCloseAccount extends Module
 		{
 			$objWidget->validate();
 
+			$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
+
 			// Validate the password
-			if (!$objWidget->hasErrors() && !password_verify($objWidget->value, $this->User->password))
+			if (!$objWidget->hasErrors() && !$encoder->isPasswordValid($this->User->password, $objWidget->value, null))
 			{
 				$objWidget->value = '';
 				$objWidget->addError($GLOBALS['TL_LANG']['ERR']['invalidPass']);

@@ -218,10 +218,12 @@ class ModuleRegistration extends Module
 			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
 				$objWidget->validate();
+
 				$varValue = $objWidget->value;
+				$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
 
 				// Check whether the password matches the username
-				if ($objWidget instanceof FormPassword && password_verify(Input::post('username'), $varValue))
+				if ($objWidget instanceof FormPassword && $encoder->isPasswordValid($varValue, Input::post('username'), null))
 				{
 					$objWidget->addError($GLOBALS['TL_LANG']['ERR']['passwordName']);
 				}

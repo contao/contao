@@ -47,6 +47,7 @@ class MakeServicesPublicPass implements CompilerPassInterface
         static $aliases = [
             'database_connection',
             'swiftmailer.mailer',
+            'security.encoder_factory',
         ];
 
         foreach ($aliases as $alias) {

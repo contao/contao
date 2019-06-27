@@ -143,11 +143,16 @@ class ModuleChangePassword extends Module
 				$objWidget->validate();
 
 				// Validate the old password
-				if ($strKey == 'oldPassword' && !password_verify($objWidget->value, $objMember->password))
+				if ($strKey == 'oldPassword')
 				{
-					$objWidget->value = '';
-					$objWidget->addError($GLOBALS['TL_LANG']['MSC']['oldPasswordWrong']);
-					sleep(2); // Wait 2 seconds while brute forcing :)
+					$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
+
+					if (!$encoder->isPasswordValid($objMember->password, $objWidget->value, null))
+					{
+						$objWidget->value = '';
+						$objWidget->addError($GLOBALS['TL_LANG']['MSC']['oldPasswordWrong']);
+						sleep(2); // Wait 2 seconds while brute forcing :)
+					}
 				}
 
 				if ($objWidget->hasErrors())
