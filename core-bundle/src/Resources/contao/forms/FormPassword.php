@@ -142,7 +142,7 @@ class FormPassword extends Widget
 
 			/** @var EncoderFactoryInterface $encoderFactory */
 			$encoderFactory = System::getContainer()->get('security.encoder_factory');
-			$encoder = $encoderFactory->getEncoder(BackendUser::class);
+			$encoder = $encoderFactory->getEncoder(FrontendUser::class);
 
 			return $encoder->encodePassword($varInput, null);
 		}

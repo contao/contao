@@ -172,7 +172,7 @@ class Encryption
 	{
 		/** @var EncoderFactoryInterface $encoderFactory */
 		$encoderFactory = System::getContainer()->get('security.encoder_factory');
-		$encoder = $encoderFactory->getEncoder(BackendUser::class); // This is hardcoded (BE and FE users/members should not have a different algo anyway but if you need it, do not rely on a deprecated class but use the services instead)
+		$encoder = $encoderFactory->getEncoder(User::class);
 
 		return $encoder->encodePassword($strPassword, null);
 	}
@@ -220,7 +220,7 @@ class Encryption
 	{
 		/** @var EncoderFactoryInterface $encoderFactory */
 		$encoderFactory = System::getContainer()->get('security.encoder_factory');
-		$encoder = $encoderFactory->getEncoder(BackendUser::class); // This is hardcoded (BE and FE users/members should not have a different algo anyway but if you need it, do not rely on a deprecated class but use the services instead)
+		$encoder = $encoderFactory->getEncoder(User::class);
 
 		return $encoder->isPasswordValid($strHash, $strPassword, null);
 	}
