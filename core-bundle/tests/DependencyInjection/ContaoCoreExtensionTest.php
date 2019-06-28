@@ -1755,7 +1755,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.translation.translator');
 
         $this->assertSame(Translator::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
+        $this->assertTrue($definition->isPublic());
         $this->assertSame('translator', $definition->getDecoratedService()[0]);
         $this->assertSame('contao.translation.translator.inner', (string) $definition->getArgument(0));
         $this->assertSame('contao.framework', (string) $definition->getArgument(1));
