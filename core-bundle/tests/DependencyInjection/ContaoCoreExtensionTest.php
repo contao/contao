@@ -1838,7 +1838,11 @@ class ContaoCoreExtensionTest extends TestCase
             $this->container
         );
 
-        $this->assertArrayHasKey('_foobar', $this->container->getParameter('contao.image.sizes'));
+        $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
+
+        foreach ($services as $service) {
+            $this->assertTrue($this->container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
+        }
     }
 
     /**

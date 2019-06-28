@@ -213,15 +213,9 @@ class ImageFactory implements ImageFactoryInterface
             if (is_numeric($size[2])) {
                 /** @var ImageSizeModel $imageModel */
                 $imageModel = $this->framework->getAdapter(ImageSizeModel::class);
-                $imageSize = $imageModel->findByPk($size[2]);
 
-                if (null !== $imageSize) {
-                    $config
-                        ->setWidth((int) $imageSize->width)
-                        ->setHeight((int) $imageSize->height)
-                        ->setMode($imageSize->resizeMode)
-                        ->setZoomLevel((int) $imageSize->zoom)
-                    ;
+                if (null !== ($imageSize = $imageModel->findByPk($size[2]))) {
+                    $this->enhanceResizeConfig($config, $imageSize->row());
                 }
 
                 return [$config, null];
@@ -229,17 +223,7 @@ class ImageFactory implements ImageFactoryInterface
 
             // Predefined sizes
             if (isset($this->predefinedSizes[$size[2]])) {
-                $imageSize = $this->predefinedSizes[$size[2]];
-
-                $config
-                    ->setWidth((int) $imageSize['width'])
-                    ->setHeight((int) $imageSize['height'])
-                    ->setZoomLevel((int) $imageSize['zoom'])
-                ;
-
-                if (isset($imageSize['resizeMode'])) {
-                    $config->setMode($imageSize['resizeMode']);
-                }
+                $this->enhanceResizeConfig($config, $this->predefinedSizes[$size[2]]);
 
                 return [$config, null];
             }
@@ -263,6 +247,22 @@ class ImageFactory implements ImageFactoryInterface
         $config->setMode(ResizeConfigurationInterface::MODE_CROP);
 
         return [$config, $this->getImportantPartFromLegacyMode($image, $size[2])];
+    }
+
+    /**
+     * Enhances the resize config by image size settings.
+     */
+    private function enhanceResizeConfig(ResizeConfigurationInterface $config, array $imageSize): void
+    {
+        $config
+            ->setWidth((int) $imageSize['width'])
+            ->setHeight((int) $imageSize['height'])
+            ->setZoomLevel((int) $imageSize['zoom'])
+        ;
+
+        if (isset($imageSize['resizeMode'])) {
+            $config->setMode($imageSize['resizeMode']);
+        }
     }
 
     /**

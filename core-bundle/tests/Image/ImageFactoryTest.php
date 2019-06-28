@@ -46,6 +46,16 @@ class ImageFactoryTest extends TestCase
     /**
      * {@inheritdoc}
      */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        System::setContainer($this->getContainerWithContaoConfiguration());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function tearDown(): void
     {
         parent::tearDown();
@@ -165,8 +175,8 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        /** @var ImageSizeModel&MockObject $imageSizeModel */
-        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class);
+        /** @var ImageSizeModel $imageSizeModel */
+        $imageSizeModel = new ImageSizeModel();
         $imageSizeModel->width = 100;
         $imageSizeModel->height = 200;
         $imageSizeModel->resizeMode = ResizeConfiguration::MODE_BOX;

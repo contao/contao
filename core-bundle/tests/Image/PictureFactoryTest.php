@@ -29,10 +29,21 @@ use Contao\Image\ResizeConfigurationInterface;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Model\Collection;
+use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class PictureFactoryTest extends TestCase
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        System::setContainer($this->getContainerWithContaoConfiguration());
+    }
+
     public function testCreatesAPictureObjectFromAnImagePath(): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';
@@ -101,8 +112,8 @@ class PictureFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        /** @var ImageSizeModel&MockObject $imageSizeModel */
-        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class);
+        /** @var ImageSizeModel $imageSizeModel */
+        $imageSizeModel = new ImageSizeModel();
         $imageSizeModel->width = 100;
         $imageSizeModel->height = 200;
         $imageSizeModel->resizeMode = ResizeConfiguration::MODE_BOX;
@@ -113,8 +124,8 @@ class PictureFactoryTest extends TestCase
 
         $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
 
-        /** @var ImageSizeItemModel&MockObject $imageSizeItemModel */
-        $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class);
+        /** @var ImageSizeItemModel $imageSizeItemModel */
+        $imageSizeItemModel = new ImageSizeItemModel();
         $imageSizeItemModel->width = 50;
         $imageSizeItemModel->height = 50;
         $imageSizeItemModel->resizeMode = ResizeConfiguration::MODE_CROP;
@@ -122,11 +133,6 @@ class PictureFactoryTest extends TestCase
         $imageSizeItemModel->sizes = '50vw';
         $imageSizeItemModel->densities = '0.5x, 2x';
         $imageSizeItemModel->media = '(max-width: 900px)';
-
-        $imageSizeItemModel
-            ->method('__isset')
-            ->willReturn(true)
-        ;
 
         $collection = new Collection([$imageSizeItemModel], 'tl_image_size_item');
         $imageSizeItemAdapter = $this->mockConfiguredAdapter(['findVisibleByPid' => $collection]);
