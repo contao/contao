@@ -34,12 +34,6 @@ class TwoFactorController extends AbstractFrontendModuleController
      * @var Translator
      */
     protected $translator;
-
-    /**
-     * @var RouterInterface
-     */
-    protected $router;
-
     /**
      * @var TokenStorage
      */
@@ -58,10 +52,9 @@ class TwoFactorController extends AbstractFrontendModuleController
     /** @var PageModel */
     protected $page;
 
-    public function __construct(Translator $translator, RouterInterface $router, TokenStorage $tokenStorage, Authenticator $authenticator, AuthenticationUtils $authenticationUtils)
+    public function __construct(Translator $translator, TokenStorage $tokenStorage, Authenticator $authenticator, AuthenticationUtils $authenticationUtils)
     {
         $this->translator = $translator;
-        $this->router = $router;
         $this->tokenStorage = $tokenStorage;
         $this->authenticator = $authenticator;
         $this->authenticationUtils = $authenticationUtils;
@@ -111,7 +104,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         $template->isEnabled = $user->useTwoFactor;
-        $template->href = $this->router->generate('tl_page.'.$this->page->id, ['2fa' => 'enable']);
+        $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
         $template->twoFactor = $this->translator->trans('MSC.twoFactorAuthentication', [], 'contao_default');
         $template->explain = $this->translator->trans('MSC.twoFactorExplain', [], 'contao_default');
         $template->active = $this->translator->trans('MSC.twoFactorActive', [], 'contao_default');
