@@ -155,6 +155,10 @@ class ImageSizes
         $this->options = array_merge_recursive($options, $this->options);
 
         foreach ($this->predefinedSizes as $name => $imageSize) {
+            if (!isset($this->options['image_sizes'])) {
+                $this->options['image_sizes'] = [];
+            }
+
             $this->options['image_sizes'][$name] = sprintf(
                 '%s (%sx%s)',
                 $this->translator->trans('IMAGE_SIZES.' . substr($name, 1), [], 'contao_default') ?: substr($name, 1),
