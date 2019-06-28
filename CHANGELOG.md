@@ -4,6 +4,7 @@
 
  * Add a news list option to show featured news first (see #371).
  * Use the current firewall token if it matches the context (see #513).
+ * Support Argon2 password hashing (see #536).
  * Extend the end date for unlimited event occurrences (see #510).
  * Use generic labels in DCAs (see #532).
  * Add deferred image resizing (see #354).
