@@ -197,8 +197,6 @@ services:
             - '%contao.image.imagine_options%'
             - '%contao.image.valid_extensions%'
             - '%kernel.project_dir%/%contao.upload_path%'
-        calls:
-            - { method: 'setPredefinedSizes', arguments: ['%contao.image.sizes%']}
         public: true
 
     contao.image.image_sizes:
@@ -208,8 +206,6 @@ services:
             - '@event_dispatcher'
             - '@contao.framework'
             - '@contao.translation.translator'
-        calls:
-            - { method: 'setPredefinedSizes', arguments: ['%contao.image.sizes%']}
         public: true
 
     contao.image.picture_generator:
@@ -227,8 +223,6 @@ services:
             - '@contao.framework'
             - '%contao.image.bypass_cache%'
             - '%contao.image.imagine_options%'
-        calls:
-            - { method: 'setPredefinedSizes', arguments: ['%contao.image.sizes%']}
         public: true
 
     contao.menu.backend_menu_renderer:

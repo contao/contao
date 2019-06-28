@@ -124,7 +124,11 @@ class ContaoCoreExtension extends Extension
             $imageSizes['_' . $name] = $value;
         }
 
-        $container->setParameter('contao.image.sizes', $imageSizes);
+        $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
+
+        foreach ($services as $service) {
+            $container->getDefinition($service)->addMethodCall('setPredefinedSizes', [$imageSizes]);
+        }
     }
 
     /**
