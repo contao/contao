@@ -863,6 +863,9 @@
       <trans-unit id="MSC.sw_position">
         <source>Position</source>
       </trans-unit>
+      <trans-unit id="MSC.image_sizes">
+        <source>Predefined dimensions</source>
+      </trans-unit>
       <trans-unit id="MSC.relative">
         <source>Relative dimensions</source>
       </trans-unit>
