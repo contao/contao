@@ -23,11 +23,11 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Annotation
  * @Target({"CLASS", "METHOD"})
  * @Attributes({
- *     @Attribute("type", type = "string"),
- *     @Attribute("category", required = true, type = "string"),
- *     @Attribute("template", type = "string"),
- *     @Attribute("renderer", type = "string"),
- *     @Attribute("attributes", type = "array"),
+ *     @Attribute("type", type="string"),
+ *     @Attribute("category", type="string", required = true),
+ *     @Attribute("template", type="string"),
+ *     @Attribute("renderer", type="string"),
+ *     @Attribute("attributes", type="array"),
  * })
  */
 final class FrontendModule extends AbstractFragmentAnnotation
