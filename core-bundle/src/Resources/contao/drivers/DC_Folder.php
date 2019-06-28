@@ -1497,6 +1497,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 <input type="hidden" name="FORM_SUBMIT" value="'.$this->strTable.'">
 <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">' . $return;
 
+		// Always create a new version if something has changed, even if the form has errors (see #237)
+		if ($this->noReload && $this->blnCreateNewVersion && $objModel !== null && Input::post('FORM_SUBMIT') == $this->strTable)
+		{
+			$objVersions->create();
+		}
+
 		// Reload the page to prevent _POST variables from being sent twice
 		if (Input::post('FORM_SUBMIT') == $this->strTable && !$this->noReload)
 		{
@@ -1719,6 +1725,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				$return .= '
   <input type="hidden" name="FORM_FIELDS_'.$strHash.'[]" value="'.StringUtil::specialchars(implode(',', $formFields)).'">
 </div>';
+
+				// Always create a new version if something has changed, even if the form has errors (see #237)
+				if ($this->noReload && $this->blnCreateNewVersion && $objModel !== null && Input::post('FORM_SUBMIT') == $this->strTable)
+				{
+					$objVersions->create();
+				}
 
 				// Save the record
 				if (Input::post('FORM_SUBMIT') == $this->strTable && !$this->noReload)

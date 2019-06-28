@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Always create a new version if something changes, even if the form has errors (see #237).
  * Add a news list option to show featured news first (see #371).
  * Use the current firewall token if it matches the context (see #513).
  * Support Argon2 password hashing (see #536).

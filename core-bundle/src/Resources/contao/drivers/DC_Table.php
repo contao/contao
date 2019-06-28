@@ -2070,6 +2070,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 </div>
 </form>';
 
+		// Always create a new version if something has changed, even if the form has errors (see #237)
+		if ($this->noReload && $this->blnCreateNewVersion && Input::post('FORM_SUBMIT') == $this->strTable)
+		{
+			$objVersions->create();
+		}
+
 		$strVersionField = '';
 
 		// Store the current version number (see #8412)
@@ -2479,6 +2485,12 @@ class DC_Table extends DataContainer implements \listable, \editable
   <input type="hidden" name="FORM_FIELDS_'.$this->intId.'[]" value="'.StringUtil::specialchars(implode(',', $formFields)).'">
 </div>';
 
+				// Always create a new version if something has changed, even if the form has errors (see #237)
+				if ($this->noReload && $this->blnCreateNewVersion && Input::post('FORM_SUBMIT') == $this->strTable)
+				{
+					$objVersions->create();
+				}
+
 				// Save record
 				if (Input::post('FORM_SUBMIT') == $this->strTable && !$this->noReload)
 				{
@@ -2764,6 +2776,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 						// Store value
 						$this->row();
+					}
+
+					// Always create a new version if something has changed, even if the form has errors (see #237)
+					if ($this->noReload && $this->blnCreateNewVersion)
+					{
+						$objVersions->create();
 					}
 
 					// Post processing
