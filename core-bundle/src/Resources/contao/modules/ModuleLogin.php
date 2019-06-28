@@ -85,7 +85,7 @@ class ModuleLogin extends Module
 		if ($tokenChecker->hasTwoFactorToken())
 		{
 			$user = FrontendUser::getInstance();
-			$redirectPage = PageModel::findByPk($this->jumpTo);
+			$redirectPage = $this->jumpTo > 0 ? PageModel::findByPk($this->jumpTo) : null;
 
 			$this->Template->action = $router->generate('contao_frontend_two_factor');
 			$this->Template->targetPath = $redirectPage instanceof PageModel ? $redirectPage->getAbsoluteUrl() : $objPage->getAbsoluteUrl();
