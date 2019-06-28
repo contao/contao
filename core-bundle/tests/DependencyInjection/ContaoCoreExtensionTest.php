@@ -1822,9 +1822,17 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame($this->getTempDir().'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
     }
 
-    public function testRegistersTheImagePredefinedSizesParameter(): void
+    public function testRegistersTheImagePredefinedSizesInjection(): void
     {
+        $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
+
         $extension = new ContaoCoreExtension();
+        $extension->load([], $this->container);
+
+        foreach ($services as $service) {
+            $this->assertFalse($this->container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
+        }
+
         $extension->load(
             [
                 'contao' => [
@@ -1837,8 +1845,6 @@ class ContaoCoreExtensionTest extends TestCase
             ],
             $this->container
         );
-
-        $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
 
         foreach ($services as $service) {
             $this->assertTrue($this->container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));

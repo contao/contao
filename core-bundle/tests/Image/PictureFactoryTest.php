@@ -161,6 +161,7 @@ class PictureFactoryTest extends TestCase
                 'zoom' => 50,
                 'densities' => '1x, 2x',
                 'sizes' => '100vw',
+                'cssClass' => 'foobar-class',
                 'items' => [
                     [
                         'width' => 50,
@@ -175,8 +176,9 @@ class PictureFactoryTest extends TestCase
             ],
         ];
 
+        $path = $this->getTempDir().'/images/dummy.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
-        $pictureMock = $this->createMock(PictureInterface::class);
+        $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
@@ -217,11 +219,35 @@ class PictureFactoryTest extends TestCase
             ->willReturn($pictureMock)
         ;
 
-        $pictureFactory = $this->getPictureFactory($pictureGenerator);
+        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory
+            ->method('create')
+            ->with(
+                $this->callback(
+                    function (string $imagePath) use ($path): bool {
+                        $this->assertSame($path, $imagePath);
+
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (?ResizeConfigurationInterface $size): bool {
+                        $this->assertNull($size);
+
+                        return true;
+                    }
+                )
+            )
+            ->willReturn($imageMock)
+        ;
+
+        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory, $this->mockContaoFramework());
         $pictureFactory->setPredefinedSizes($predefinedSizes);
+
         $picture = $pictureFactory->create($imageMock, [null, null, 'foobar']);
 
-        $this->assertSame($pictureMock, $picture);
+        $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertSame($predefinedSizes['foobar']['cssClass'], $picture->getImg()['class']);
     }
 
     public function testCreatesAPictureObjectFromAnImageObjectWithAPictureConfiguration(): void

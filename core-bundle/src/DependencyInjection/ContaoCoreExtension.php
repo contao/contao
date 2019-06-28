@@ -106,7 +106,7 @@ class ContaoCoreExtension extends Extension
      */
     private function setPredefinedImageSizes(array $config, ContainerBuilder $container): void
     {
-        if (!isset($config['image']['sizes'])) {
+        if (!isset($config['image']['sizes']) || count($config['image']['sizes']) === 0) {
             return;
         }
 
