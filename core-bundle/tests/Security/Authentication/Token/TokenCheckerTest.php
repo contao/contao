@@ -312,7 +312,7 @@ class TokenCheckerTest extends TestCase
         $user = $this->mockUser($class);
         $authenticatedToken = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
         $token = new TwoFactorToken($authenticatedToken, 'password', 'provider', []);
-        $tokenChecker = $this->mockTwoFactorTokenChecker($token);
+        $tokenChecker = $this->mockTwoFactorTokenChecker($token, $class);
 
         $this->assertSame($expect, $tokenChecker->hasTwoFactorToken());
     }
@@ -396,11 +396,10 @@ class TokenCheckerTest extends TestCase
         return $session;
     }
 
-    private function mockTwoFactorTokenChecker(TokenInterface $token): TokenChecker
+    private function mockTwoFactorTokenChecker(TokenInterface $token, string $class = null): TokenChecker
     {
         $session = $this->createMock(SessionInterface::class);
         $session
-            ->expects($this->atLeast(2))
             ->expects($this->atLeastOnce())
             ->method('isStarted')
             ->willReturn(true)
@@ -423,7 +422,7 @@ class TokenCheckerTest extends TestCase
         return new TokenChecker(
             $this->mockRequestStack(),
             $this->mockFirewallMapWithConfigContext('contao_backend'),
-            $this->mockTokenStorage(BackendUser::class),
+            $class instanceof User ? $this->mockTokenStorage($class) : $this->createMock(TokenStorageInterface::class),
             $session, 
             $trustResolver
         );
