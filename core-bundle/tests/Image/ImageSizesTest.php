@@ -71,8 +71,8 @@ class ImageSizesTest extends TestCase
 
         $this->assertArrayHasKey('relative', $options);
         $this->assertArrayHasKey('exact', $options);
-        $this->assertArrayHasKey('image_sizes', $options);
-        $this->assertArrayHasKey('42', $options['image_sizes']);
+        $this->assertArrayHasKey('My theme', $options);
+        $this->assertArrayHasKey('42', $options['My theme']);
     }
 
     public function testReturnsAllOptionsWithoutImageSizes(): void
@@ -84,7 +84,7 @@ class ImageSizesTest extends TestCase
 
         $this->assertArrayHasKey('relative', $options);
         $this->assertArrayHasKey('exact', $options);
-        $this->assertArrayNotHasKey('image_sizes', $options);
+        $this->assertArrayNotHasKey('My theme', $options);
     }
 
     public function testReturnsTheAdminUserOptions(): void
@@ -119,8 +119,8 @@ class ImageSizesTest extends TestCase
 
         $this->assertArrayNotHasKey('relative', $options);
         $this->assertArrayNotHasKey('exact', $options);
-        $this->assertArrayHasKey('image_sizes', $options);
-        $this->assertArrayHasKey('42', $options['image_sizes']);
+        $this->assertArrayHasKey('My theme', $options);
+        $this->assertArrayHasKey('42', $options['My theme']);
 
         /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
@@ -133,7 +133,7 @@ class ImageSizesTest extends TestCase
 
         $this->assertArrayHasKey('relative', $options);
         $this->assertArrayNotHasKey('exact', $options);
-        $this->assertArrayNotHasKey('image_sizes', $options);
+        $this->assertArrayNotHasKey('My theme', $options);
 
         /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
@@ -182,6 +182,7 @@ class ImageSizesTest extends TestCase
                 'name' => 'foobar',
                 'width' => '',
                 'height' => '',
+                'theme' => 'My theme',
             ],
         ]);
     }

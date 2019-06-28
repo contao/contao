@@ -345,10 +345,6 @@ $GLOBALS['TL_PURGE'] = array
 // Image crop modes
 $GLOBALS['TL_CROP'] = array
 (
-	'image_sizes' => array
-	(
-		// will be added dynamically
-	),
 	'relative' => array
 	(
 		'proportional', 'box'
