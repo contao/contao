@@ -37,7 +37,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $request = $this->mockRequest();
         $event = $this->mockGetResponseEvent($request);
         $framework = $this->mockContaoFramework();
-        $scopeMatcher = $this->mockScopeMatcher(false, $request);
+        $scopeMatcher = $this->mockScopeMatcher(false, $event);
         $tokenStorage = $this->mockTokenStorageWithToken();
 
         $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
@@ -49,7 +49,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $request = $this->mockRequest();
         $event = $this->mockGetResponseEvent($request);
         $framework = $this->mockContaoFramework();
-        $scopeMatcher = $this->mockScopeMatcher(true, $request);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken();
 
         $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
@@ -63,7 +63,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $request = $this->mockRequest();
         $framework = $this->mockContaoFramework();
         $event = $this->mockGetResponseEvent($request);
-        $scopeMatcher = $this->mockScopeMatcher(true, $request);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
@@ -77,7 +77,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $request = $this->mockRequest(true);
         $event = $this->mockGetResponseEvent($request);
         $framework = $this->mockContaoFramework();
-        $scopeMatcher = $this->mockScopeMatcher(true, $request);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
@@ -108,7 +108,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
         $request = $this->mockRequest(true, $pageModel);
         $event = $this->mockGetResponseEvent($request);
-        $scopeMatcher = $this->mockScopeMatcher(true, $request);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $this->expectException(PageNotFoundException::class);
@@ -143,7 +143,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
         $request = $this->mockRequest(true, $pageModel);
         $event = $this->mockGetResponseEvent($request);
-        $scopeMatcher = $this->mockScopeMatcher(true, $request);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
@@ -184,7 +184,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
         $request = $this->mockRequest(true, $pageModel);
         $event = $this->mockGetResponseEvent($request, $response);
-        $scopeMatcher = $this->mockScopeMatcher(true, $request);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
@@ -210,7 +210,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $token = $this->mockToken(UsernamePasswordToken::class, true, $user);
         $request = $this->mockRequest(true, $pageModel);
         $event = $this->mockGetResponseEvent($request);
-        $scopeMatcher = $this->mockScopeMatcher(true, $request);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
@@ -240,7 +240,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
         $request = $this->mockRequest(true, $pageModel);
         $event = $this->mockGetResponseEvent($request);
-        $scopeMatcher = $this->mockScopeMatcher(true, $request);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
@@ -279,7 +279,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
         $request = $this->mockRequest(true, $pageModel);
         $event = $this->mockGetResponseEvent($request);
-        $scopeMatcher = $this->mockScopeMatcher(true, $request);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
@@ -320,7 +320,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
         $request = $this->mockRequest(true, $pageModel);
         $event = $this->mockGetResponseEvent($request);
-        $scopeMatcher = $this->mockScopeMatcher(true, $request);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
@@ -361,7 +361,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
         $request = $this->mockRequest(true, $pageModel);
         $event = $this->mockGetResponseEvent($request);
-        $scopeMatcher = $this->mockScopeMatcher(true, $request);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $this->expectException(UnauthorizedHttpException::class);
@@ -419,13 +419,13 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         return $tokenStorage;
     }
 
-    private function mockScopeMatcher(bool $hasFrontendUser, Request $request): ScopeMatcher
+    private function mockScopeMatcher(bool $hasFrontendUser, GetResponseEvent $event): ScopeMatcher
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
-            ->method('isFrontendRequest')
-            ->with($request)
+            ->method('isFrontendMasterRequest')
+            ->with($event)
             ->willReturn($hasFrontendUser)
         ;
 

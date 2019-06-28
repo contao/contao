@@ -52,7 +52,7 @@ class TwoFactorFrontendListener
         $token = $this->tokenStorage->getToken();
 
         // Check if is frontend request
-        if (!$this->scopeMatcher->isFrontendRequest($request)) {
+        if (!$this->scopeMatcher->isFrontendMasterRequest($event)) {
             return;
         }
 
