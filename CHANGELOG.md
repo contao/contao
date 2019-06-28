@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Make the FAQ record accessible in the FAQ reader template (see #221).
  * Always create a new version if something changes, even if the form has errors (see #237).
  * Add a news list option to show featured news first (see #371).
  * Use the current firewall token if it matches the context (see #513).
