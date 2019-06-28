@@ -640,6 +640,7 @@ services:
         arguments:
             - '@contao.translation.translator.inner'
             - '@contao.framework'
+        public: true
 
     contao.twig.template_extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension
