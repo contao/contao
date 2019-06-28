@@ -104,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'login'                       => 'useTwoFactor,username,password',
+		'login'                       => 'username,password,useTwoFactor',
 		'assignDir'                   => 'homeDir'
 	),
 
