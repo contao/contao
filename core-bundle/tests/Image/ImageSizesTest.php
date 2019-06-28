@@ -40,6 +40,11 @@ class ImageSizesTest extends TestCase
     private $imageSizes;
 
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
      * {@inheritdoc}
      */
     public function setUp(): void
