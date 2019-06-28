@@ -35,7 +35,7 @@ class TwoFactorController extends AbstractFrontendModuleController
     {
         $this->page = $page;
 
-        if ($this->get('contao.routing.scope_matcher')->isFrontendRequest($request)) {
+        if ($this->page instanceof PageModel && $this->get('contao.routing.scope_matcher')->isFrontendRequest($request)) {
             $this->page->loadDetails();
         }
 
