@@ -50,10 +50,8 @@ class TwoFactorControllerTest extends TestCase
     public function testReturnsIfUserIsNotInstanceOfFrontendUser(): void
     {
         $token = $this->mockToken(TokenInterface::class, true, $this->createMock(BackendUser::class));
-        $translator = $this->createMock(Translator::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
-
         $authenticator = $this->mockAuthenticator();
         $authenticationUtils = $this->mockAuthenticationUtils();
 
@@ -61,8 +59,8 @@ class TwoFactorControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel();
 
-        $controller = new TwoFactorController($translator, $tokenStorage, $authenticator, $authenticationUtils);
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor'));
+        $controller = new TwoFactorController();
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
         $this->assertInstanceOf(TwoFactorController::class, $controller);
         $controller($request, $model, 'main', null, $page);
@@ -78,10 +76,8 @@ class TwoFactorControllerTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
-        $translator = $this->createMock(Translator::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
-
         $authenticator = $this->mockAuthenticator();
         $authenticationUtils = $this->mockAuthenticationUtils();
 
@@ -89,8 +85,8 @@ class TwoFactorControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel();
 
-        $controller = new TwoFactorController($translator, $tokenStorage, $authenticator, $authenticationUtils);
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor'));
+        $controller = new TwoFactorController();
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
         $this->assertInstanceOf(TwoFactorController::class, $controller);
         $controller($request, $model, 'main', null, $page);
@@ -106,10 +102,8 @@ class TwoFactorControllerTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
-        $translator = $this->createMock(Translator::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
-
         $authenticator = $this->mockAuthenticator();
         $authenticationUtils = $this->mockAuthenticationUtils();
 
@@ -119,8 +113,8 @@ class TwoFactorControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel(false);
 
-        $controller = new TwoFactorController($translator, $tokenStorage, $authenticator, $authenticationUtils);
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor'));
+        $controller = new TwoFactorController();
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
         $this->assertInstanceOf(TwoFactorController::class, $controller);
         $controller($request, $model, 'main', null, $page);
@@ -136,10 +130,8 @@ class TwoFactorControllerTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
-        $translator = $this->createMock(Translator::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
-
         $authenticator = $this->mockAuthenticator();
         $authenticationUtils = $this->mockAuthenticationUtils();
 
@@ -154,8 +146,8 @@ class TwoFactorControllerTest extends TestCase
             ->willReturn('https://localhost.wip/foobar')
         ;
 
-        $controller = new TwoFactorController($translator, $tokenStorage, $authenticator, $authenticationUtils);
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor'));
+        $controller = new TwoFactorController();
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
         $this->assertInstanceOf(TwoFactorController::class, $controller);
         $this->expectException(RedirectResponseException::class);
@@ -173,10 +165,8 @@ class TwoFactorControllerTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
-        $translator = $this->createMock(Translator::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
-
         $authenticator = $this->mockAuthenticator();
         $authenticationUtils = $this->mockAuthenticationUtils();
 
@@ -186,8 +176,8 @@ class TwoFactorControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel(false);
 
-        $controller = new TwoFactorController($translator, $tokenStorage, $authenticator, $authenticationUtils);
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor'));
+        $controller = new TwoFactorController();
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
         $this->assertInstanceOf(TwoFactorController::class, $controller);
         $controller($request, $model, 'main', null, $page);
@@ -203,10 +193,8 @@ class TwoFactorControllerTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
-        $translator = $this->createMock(Translator::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
-
         $authenticator = $this->mockAuthenticator();
         $authenticationUtils = $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException());
 
@@ -216,8 +204,8 @@ class TwoFactorControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel(false);
 
-        $controller = new TwoFactorController($translator, $tokenStorage, $authenticator, $authenticationUtils);
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor'));
+        $controller = new TwoFactorController();
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
         $this->assertInstanceOf(TwoFactorController::class, $controller);
         $controller($request, $model, 'main', null, $page);
@@ -233,10 +221,8 @@ class TwoFactorControllerTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
-        $translator = $this->createMock(Translator::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
-
         $authenticator = $this->mockAuthenticator($user, false);
         $authenticationUtils = $this->mockAuthenticationUtils();
 
@@ -248,8 +234,8 @@ class TwoFactorControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel(false);
 
-        $controller = new TwoFactorController($translator, $tokenStorage, $authenticator, $authenticationUtils);
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor'));
+        $controller = new TwoFactorController();
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
         $this->assertInstanceOf(TwoFactorController::class, $controller);
         $controller($request, $model, 'main', null, $page);
@@ -270,10 +256,8 @@ class TwoFactorControllerTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = $this->mockToken(TokenInterface::class, true, $user);
-        $translator = $this->createMock(Translator::class);
 
         $tokenStorage = $this->mockTokenStorageWithToken($token);
-
         $authenticator = $this->mockAuthenticator($user, true);
         $authenticationUtils = $this->mockAuthenticationUtils();
 
@@ -290,8 +274,8 @@ class TwoFactorControllerTest extends TestCase
             ->willReturn('https://localhost.wip/foobar')
         ;
 
-        $controller = new TwoFactorController($translator, $tokenStorage, $authenticator, $authenticationUtils);
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor'));
+        $controller = new TwoFactorController();
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
         $this->assertInstanceOf(TwoFactorController::class, $controller);
         $this->expectException(RedirectResponseException::class);
@@ -372,7 +356,7 @@ class TwoFactorControllerTest extends TestCase
         ]);
     }
 
-    private function mockContainerWithFrameworkTemplate(string $templateName): ContainerBuilder
+    private function mockContainerWithFrameworkTemplate(string $templateName, TokenStorage $tokenStorage, Authenticator $authenticator, AuthenticationUtils $authenticationUtils): ContainerBuilder
     {
         $template = $this->createMock(FrontendTemplate::class);
         $template
@@ -403,9 +387,15 @@ class TwoFactorControllerTest extends TestCase
             ->willReturn(true)
         ;
 
+        $translator = $this->createMock(Translator::class);
+
         $container = new ContainerBuilder();
         $container->set('contao.framework', $framework);
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
+        $container->set('contao.translation.translator', $translator);
+        $container->set('security.token_storage', $tokenStorage);
+        $container->set('contao.security.two_factor.authenticator', $authenticator);
+        $container->set('security.authentication_utils', $authenticationUtils);
 
         return $container;
     }

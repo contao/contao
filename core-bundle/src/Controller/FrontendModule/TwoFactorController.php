@@ -23,42 +23,13 @@ use ParagonIE\ConstantTime\Base32;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class TwoFactorController extends AbstractFrontendModuleController
 {
-    /**
-     * @var Translator
-     */
-    protected $translator;
-    /**
-     * @var TokenStorage
-     */
-    protected $tokenStorage;
-
-    /**
-     * @var Authenticator
-     */
-    protected $authenticator;
-
-    /**
-     * @var AuthenticationUtils
-     */
-    protected $authenticationUtils;
-
     /** @var PageModel */
     protected $page;
-
-    public function __construct(Translator $translator, TokenStorage $tokenStorage, Authenticator $authenticator, AuthenticationUtils $authenticationUtils)
-    {
-        $this->translator = $translator;
-        $this->tokenStorage = $tokenStorage;
-        $this->authenticator = $authenticator;
-        $this->authenticationUtils = $authenticationUtils;
-    }
 
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $page = null): Response
     {
@@ -73,7 +44,15 @@ class TwoFactorController extends AbstractFrontendModuleController
 
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        /** @var Translator $translator */
+        $translator = $this->get('contao.translation.translator');
+        $token = $this->get('security.token_storage')->getToken();
+
+        if (!$token instanceof TokenInterface) {
+            return $template->getResponse();
+        }
+
+        $user = $token->getUser();
 
         if (!$user instanceof FrontendUser) {
             return $template->getResponse();
@@ -92,7 +71,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         // Inform the user if 2FA is enforced
         if ($this->page->enforceTwoFactor) {
-            $template->message = $this->translator->trans('MSC.twoFactorEnforced', [], 'contao_default');
+            $template->message = $translator->trans('MSC.twoFactorEnforced', [], 'contao_default');
         }
 
         if ((!$user->useTwoFactor && $this->page->enforceTwoFactor) || 'enable' === $request->get('2fa')) {
@@ -105,11 +84,11 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $template->isEnabled = $user->useTwoFactor;
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
-        $template->twoFactor = $this->translator->trans('MSC.twoFactorAuthentication', [], 'contao_default');
-        $template->explain = $this->translator->trans('MSC.twoFactorExplain', [], 'contao_default');
-        $template->active = $this->translator->trans('MSC.twoFactorActive', [], 'contao_default');
-        $template->enableButton = $this->translator->trans('MSC.enable', [], 'contao_default');
-        $template->disableButton = $this->translator->trans('MSC.disable', [], 'contao_default');
+        $template->twoFactor = $translator->trans('MSC.twoFactorAuthentication', [], 'contao_default');
+        $template->explain = $translator->trans('MSC.twoFactorExplain', [], 'contao_default');
+        $template->active = $translator->trans('MSC.twoFactorActive', [], 'contao_default');
+        $template->enableButton = $translator->trans('MSC.enable', [], 'contao_default');
+        $template->disableButton = $translator->trans('MSC.disable', [], 'contao_default');
 
         return $template->getResponse();
     }
@@ -121,17 +100,23 @@ class TwoFactorController extends AbstractFrontendModuleController
             return;
         }
 
+        /** @var Translator $translator */
+        $translator = $this->get('contao.translation.translator');
+
+        /** @var Authenticator $authenticator */
+        $authenticator = $this->get('contao.security.two_factor.authenticator');
+
         /** @var AuthenticationException|null $exception */
-        $exception = $this->authenticationUtils->getLastAuthenticationError();
+        $exception = $this->get('security.authentication_utils')->getLastAuthenticationError();
 
         if ($exception instanceof InvalidTwoFactorCodeException) {
             $template->error = true;
-            $template->message = $this->translator->trans('ERR.invalidTwoFactor', [], 'contao_default');
+            $template->message = $translator->trans('ERR.invalidTwoFactor', [], 'contao_default');
         }
 
         // Validate the verification code
         if ('tl_two_factor' === $request->request->get('FORM_SUBMIT')) {
-            if ($this->authenticator->validateCode($user, $request->request->get('verify'))) {
+            if ($authenticator->validateCode($user, $request->request->get('verify'))) {
                 // Enable 2FA
                 $user->useTwoFactor = '1';
                 $user->save();
@@ -140,7 +125,7 @@ class TwoFactorController extends AbstractFrontendModuleController
             }
 
             $template->error = true;
-            $template->message = $this->translator->trans('ERR.invalidTwoFactor', [], 'contao_default');
+            $template->message = $translator->trans('ERR.invalidTwoFactor', [], 'contao_default');
         }
 
         // Generate the secret
@@ -151,11 +136,11 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $template->enable = true;
         $template->secret = Base32::encodeUpperUnpadded($user->secret);
-        $template->textCode = $this->translator->trans('MSC.twoFactorTextCode', [], 'contao_default');
-        $template->qrCode = base64_encode($this->authenticator->getQrCode($user, $request));
-        $template->scan = $this->translator->trans('MSC.twoFactorScan', [], 'contao_default');
-        $template->verify = $this->translator->trans('MSC.twoFactorVerification', [], 'contao_default');
-        $template->verifyHelp = $this->translator->trans('MSC.twoFactorVerificationHelp', [], 'contao_default');
+        $template->textCode = $translator->trans('MSC.twoFactorTextCode', [], 'contao_default');
+        $template->qrCode = base64_encode($authenticator->getQrCode($user, $request));
+        $template->scan = $translator->trans('MSC.twoFactorScan', [], 'contao_default');
+        $template->verify = $translator->trans('MSC.twoFactorVerification', [], 'contao_default');
+        $template->verifyHelp = $translator->trans('MSC.twoFactorVerificationHelp', [], 'contao_default');
     }
 
     private function disableTwoFactor(FrontendUser $user): void
