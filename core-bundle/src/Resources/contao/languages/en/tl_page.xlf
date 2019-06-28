@@ -339,7 +339,7 @@
         <source>Publish settings</source>
       </trans-unit>
       <trans-unit id="tl_page.twoFactor_legend">
-        <source>Two-factor settings</source>
+        <source>Two-factor authentication</source>
       </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
