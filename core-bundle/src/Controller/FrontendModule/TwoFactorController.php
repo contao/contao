@@ -44,8 +44,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
-        /** @var Translator $translator */
-        $translator = $this->get('contao.translation.translator');
+        $translator = $this->get('translator');
         $token = $this->get('security.token_storage')->getToken();
 
         if (!$token instanceof TokenInterface) {
@@ -100,8 +99,7 @@ class TwoFactorController extends AbstractFrontendModuleController
             return;
         }
 
-        /** @var Translator $translator */
-        $translator = $this->get('contao.translation.translator');
+        $translator = $this->get('translator');
 
         /** @var Authenticator $authenticator */
         $authenticator = $this->get('contao.security.two_factor.authenticator');
