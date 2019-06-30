@@ -52,13 +52,13 @@ class TwoFactorController extends AbstractFrontendModuleController
         $token = $this->get('security.token_storage')->getToken();
 
         if (!$token instanceof TokenInterface) {
-            return $template->getResponse();
+            return new Response('', Response::HTTP_NO_CONTENT);
         }
 
         $user = $token->getUser();
 
         if (!$user instanceof FrontendUser) {
-            return $template->getResponse();
+            return new Response('', Response::HTTP_NO_CONTENT);
         }
 
         /** @var PageModel $adapter */
@@ -93,7 +93,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->enableButton = $translator->trans('MSC.enable', [], 'contao_default');
         $template->disableButton = $translator->trans('MSC.disable', [], 'contao_default');
 
-        return $template->getResponse();
+        return new Response($template->parse());
     }
 
     private function enableTwoFactor(Template $template, Request $request, FrontendUser $user, $return): void
