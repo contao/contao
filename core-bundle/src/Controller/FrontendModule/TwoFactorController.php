@@ -13,8 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
-use Contao\CoreBundle\Translation\Translator;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -23,8 +24,11 @@ use ParagonIE\ConstantTime\Base32;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class TwoFactorController extends AbstractFrontendModuleController
 {
@@ -153,5 +157,19 @@ class TwoFactorController extends AbstractFrontendModuleController
         $user->save();
 
         throw new RedirectResponseException($this->page->getAbsoluteUrl());
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['contao.framework'] = ContaoFramework::class;
+        $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
+        $services['contao.security.two_factor.authenticator'] = Authenticator::class;
+        $services['security.authentication_utils'] = AuthenticationUtils::class;
+        $services['security.token_storage'] = TokenStorageInterface::class;
+        $services['translator'] = TranslatorInterface::class;
+
+        return $services;
     }
 }
