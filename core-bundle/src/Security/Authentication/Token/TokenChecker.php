@@ -91,11 +91,11 @@ class TokenChecker
         $token = null;
 
         if ($this->hasFrontendUser()) {
-            $token = $this->getToken('_security_contao_frontend');
+            $token = $this->getToken(self::FRONTEND_FIREWALL);
         }
 
         if ($this->hasBackendUser()) {
-            $token = $this->getToken('_security_contao_backend');
+            $token = $this->getToken(self::BACKEND_FIREWALL);
         }
 
         return $token instanceof TwoFactorToken;
