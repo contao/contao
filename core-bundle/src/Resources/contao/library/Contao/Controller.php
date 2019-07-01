@@ -1653,9 +1653,9 @@ abstract class Controller extends System
 
 		// Do not override the "href" key (see #6468)
 		$strHrefKey = ($objTemplate->href != '') ? 'imageHref' : 'href';
-		$lightboxSize = [];
+		$lightboxSize = StringUtil::deserialize($arrItem['lightboxSize'] ?? null, true);
 
-		if (isset($GLOBALS['objPage']->layoutId))
+		if ($arrItem['fullsize'] && !$lightboxSize && isset($GLOBALS['objPage']->layoutId))
 		{
 			$lightboxSize = StringUtil::deserialize(LayoutModel::findByPk($GLOBALS['objPage']->layoutId)->lightboxSize ?? null, true);
 		}
