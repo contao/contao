@@ -29,10 +29,16 @@ class Provider implements TwoFactorProviderInterface
      */
     private $formRenderer;
 
-    public function __construct(Authenticator $authenticator, TwoFactorFormRendererInterface $formRenderer)
+    /**
+     * @var string
+     */
+    private $firewallName;
+
+    public function __construct(Authenticator $authenticator, TwoFactorFormRendererInterface $formRenderer, string $firewallName)
     {
         $this->authenticator = $authenticator;
         $this->formRenderer = $formRenderer;
+        $this->firewallName = $firewallName;
     }
 
     /**
@@ -40,6 +46,10 @@ class Provider implements TwoFactorProviderInterface
      */
     public function beginAuthentication(AuthenticationContextInterface $context): bool
     {
+        if ($context->getFirewallName() !== $this->firewallName) {
+            return false;
+        }
+
         $user = $context->getUser();
 
         if (!$user instanceof User) {

@@ -563,6 +563,7 @@ services:
         arguments:
             - '@contao.security.two_factor.authenticator'
             - '@contao.security.two_factor.backend_form_renderer'
+            - 'contao_backend'
         tags:
             - { name: 'scheb_two_factor.provider', alias: 'contao_backend_two_factor' }
 
@@ -576,6 +577,7 @@ services:
         arguments:
             - '@contao.security.two_factor.authenticator'
             - '@contao.security.two_factor.frontend_form_renderer'
+            - 'contao_frontend'
         tags:
             - { name: 'scheb_two_factor.provider', alias: 'contao_frontend_two_factor' }
 
