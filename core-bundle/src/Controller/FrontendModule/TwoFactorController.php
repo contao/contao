@@ -22,6 +22,7 @@ use Contao\PageModel;
 use Contao\Template;
 use ParagonIE\ConstantTime\Base32;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -78,11 +79,19 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         if ((!$user->useTwoFactor && $this->page->enforceTwoFactor) || 'enable' === $request->get('2fa')) {
-            $this->enableTwoFactor($template, $request, $user, $return);
+            $response = $this->enableTwoFactor($template, $request, $user, $return);
+
+            if (null !== $response) {
+                return $response;
+            }
         }
 
         if (!$this->page->enforceTwoFactor && 'tl_two_factor_disable' === $request->request->get('FORM_SUBMIT')) {
-            $this->disableTwoFactor($user);
+            $response = $this->disableTwoFactor($user);
+
+            if (null !== $response) {
+                return $response;
+            }
         }
 
         $template->isEnabled = $user->useTwoFactor;
@@ -96,11 +105,11 @@ class TwoFactorController extends AbstractFrontendModuleController
         return new Response($template->parse());
     }
 
-    private function enableTwoFactor(Template $template, Request $request, FrontendUser $user, $return): void
+    private function enableTwoFactor(Template $template, Request $request, FrontendUser $user, string $return): ?Response
     {
         // Return if 2FA is enabled already
         if ($user->useTwoFactor) {
-            return;
+            return null;
         }
 
         $translator = $this->get('translator');
@@ -123,7 +132,7 @@ class TwoFactorController extends AbstractFrontendModuleController
                 $user->useTwoFactor = '1';
                 $user->save();
 
-                throw new RedirectResponseException($return);
+                return new RedirectResponse($return);
             }
 
             $template->error = true;
@@ -143,20 +152,22 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->scan = $translator->trans('MSC.twoFactorScan', [], 'contao_default');
         $template->verify = $translator->trans('MSC.twoFactorVerification', [], 'contao_default');
         $template->verifyHelp = $translator->trans('MSC.twoFactorVerificationHelp', [], 'contao_default');
+
+        return null;
     }
 
-    private function disableTwoFactor(FrontendUser $user): void
+    private function disableTwoFactor(FrontendUser $user): ?Response
     {
         // Return if 2FA is disabled already
         if (!$user->useTwoFactor) {
-            return;
+            return null;
         }
 
         $user->secret = null;
         $user->useTwoFactor = '';
         $user->save();
 
-        throw new RedirectResponseException($this->page->getAbsoluteUrl());
+        return new RedirectResponse($this->page->getAbsoluteUrl());
     }
 
     public static function getSubscribedServices(): array
