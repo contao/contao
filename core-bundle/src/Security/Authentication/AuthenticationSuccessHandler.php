@@ -29,9 +29,12 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
+    use TargetPathTrait;
+
     /**
      * @var ContaoFramework
      */
@@ -60,11 +63,19 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): RedirectResponse
     {
-        $user = $token->getUser();
+        if ($token instanceof TwoFactorTokenInterface) {
+            $response = $this->httpUtils->createRedirectResponse($request, $request->request->get('_failure_path') ?: 'contao_root');
+
+            $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $response->getTargetUrl());
+
+            return $response;
+        }
+
+        $this->user = $token->getUser();
 
         $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
 
-        if (!$this->user instanceof User || $token instanceof TwoFactorTokenInterface) {
+        if (!$this->user instanceof User) {
             return $response;
         }
 

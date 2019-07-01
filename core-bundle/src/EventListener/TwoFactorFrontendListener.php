@@ -22,10 +22,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class TwoFactorFrontendListener
 {
+    use TargetPathTrait;
+
     /** @var ContaoFramework */
     private $framework;
 
@@ -112,19 +114,25 @@ class TwoFactorFrontendListener
         // Search 401 error page
         $unauthorizedPage = $adapter->find401ByPid($page->rootId);
 
-        if (!$unauthorizedPage instanceof PageModel) {
+        if ($unauthorizedPage instanceof PageModel) {
             return;
         }
 
         // Check if 401 error page is available
         $redirect = $adapter->findPublishedById($unauthorizedPage->jumpTo);
 
-        if (!$redirect instanceof PageModel) {
+        if ($redirect instanceof PageModel && $page->id === $redirect->id) {
             return;
         }
 
-        // 401 page found, quit
-        if ($page->id === $redirect->id) {
+        $targetPath = $this->getTargetPath($request->getSession(), $token->getProviderKey());
+
+        if ($targetPath) {
+            if ($request->getSchemeAndHttpHost().$request->getRequestUri() === $targetPath) {
+                return;
+            }
+
+            $event->setResponse(new RedirectResponse($targetPath));
             return;
         }
 
