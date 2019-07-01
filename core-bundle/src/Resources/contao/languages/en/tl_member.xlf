@@ -110,12 +110,6 @@
       <trans-unit id="tl_member.login.1">
         <source>Allow the member to log into the front end.</source>
       </trans-unit>
-      <trans-unit id="tl_member.useTwoFactor.0">
-        <source>Use two-factor authentication</source>
-      </trans-unit>
-      <trans-unit id="tl_member.useTwoFactor.1">
-          <source>Activate two factor authentication for the member.</source>
-      </trans-unit>
       <trans-unit id="tl_member.username.0">
         <source>Username</source>
       </trans-unit>
@@ -151,6 +145,9 @@
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
         <source>Automatically deactivate the account on this day.</source>
+      </trans-unit>
+      <trans-unit id="tl_member.useTwoFactor">
+        <source>Use two-factor authentication</source>
       </trans-unit>
       <trans-unit id="tl_member.personal_legend">
         <source>Personal data</source>
