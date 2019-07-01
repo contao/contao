@@ -104,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'login'                       => 'username,useTwoFactor,password',
+		'login'                       => 'username,password',
 		'assignDir'                   => 'homeDir'
 	),
 
@@ -384,9 +384,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'useTwoFactor' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_member']['useTwoFactor'],
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('isBoolean'=>true, 'tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 	)
