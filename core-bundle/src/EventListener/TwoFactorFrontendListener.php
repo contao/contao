@@ -39,25 +39,31 @@ class TwoFactorFrontendListener
      */
     private $tokenStorage;
 
-    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, TokenStorageInterface $tokenStorage)
+    /**
+     * @var array
+     */
+    private $supportedTokens;
+
+    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, TokenStorageInterface $tokenStorage, array $supportedTokens)
     {
         $this->framework = $framework;
         $this->scopeMatcher = $scopeMatcher;
         $this->tokenStorage = $tokenStorage;
+        $this->supportedTokens = $supportedTokens;
     }
 
     public function onKernelRequest(GetResponseEvent $event): void
     {
-        $request = $event->getRequest();
-        $token = $this->tokenStorage->getToken();
-
         // Check if is frontend request
         if (!$this->scopeMatcher->isFrontendMasterRequest($event)) {
             return;
         }
 
+        $request = $event->getRequest();
+        $token = $this->tokenStorage->getToken();
+
         // Check if is a supported token
-        if (!$token instanceof TwoFactorToken && !$token instanceof UsernamePasswordToken) {
+        if (!$token instanceof TwoFactorToken && !\in_array(get_class($token), $this->supportedTokens)) {
             return;
         }
 
