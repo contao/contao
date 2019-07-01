@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
-use Contao\CoreBundle\Image\ImageFactory;
-use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\Image\ResizeConfigurationInterface;
 use Imagine\Exception\RuntimeException;
