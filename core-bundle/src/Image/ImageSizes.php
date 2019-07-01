@@ -142,7 +142,7 @@ class ImageSizes
         foreach ($this->predefinedSizes as $name => $imageSize) {
             $options['image_sizes'][$name] = sprintf(
                 '%s (%sx%s)',
-                $this->translator->trans('IMAGE_SIZES.' . substr($name, 1), [], 'contao_default') ?: substr($name, 1),
+                $this->translator->trans(substr($name, 1), [], 'image_sizes') ?: substr($name, 1),
                 $imageSize['width'],
                 $imageSize['height']
             );
