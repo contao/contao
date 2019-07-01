@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\TwoFactor;
 
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorFormRendererInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,14 +27,14 @@ class FormRenderer implements TwoFactorFormRendererInterface
     protected $router;
 
     /**
-     * @var string
+     * @var ScopeMatcher
      */
-    private $redirectRoute;
+    private $scopeMatcher;
 
-    public function __construct(RouterInterface $router, string $redirectRoute)
+    public function __construct(RouterInterface $router, ScopeMatcher $scopeMatcher)
     {
         $this->router = $router;
-        $this->redirectRoute = $redirectRoute;
+        $this->scopeMatcher = $scopeMatcher;
     }
 
     /**
@@ -41,6 +42,19 @@ class FormRenderer implements TwoFactorFormRendererInterface
      */
     public function renderForm(Request $request, array $templateVars): Response
     {
-        return new RedirectResponse($this->router->generate($this->redirectRoute));
+        return new RedirectResponse($this->router->generate($this->getRedirectRoute($request)));
+    }
+
+    private function getRedirectRoute(Request $request)
+    {
+        if ($this->scopeMatcher->isFrontendRequest($request)) {
+            return 'contao_frontend_two_factor';
+        }
+
+        if ($this->scopeMatcher->isBackendRequest($request)) {
+            return 'contao_backend_two_factor';
+        }
+
+        throw new \RuntimeException('Invalid scrope');
     }
 }

@@ -553,35 +553,19 @@ services:
         class: Contao\CoreBundle\Security\TwoFactor\Authenticator
         public: true
 
-    contao.security.two_factor.backend_form_renderer:
+    contao.security.two_factor.form_renderer:
         class: Contao\CoreBundle\Security\TwoFactor\FormRenderer
         arguments:
             - '@router'
-            - 'contao_backend_two_factor'
+            - '@contao.routing.scope_matcher'
 
-    contao.security.two_factor.backend_provider:
+    contao.security.two_factor.provider:
         class: Contao\CoreBundle\Security\TwoFactor\Provider
         arguments:
             - '@contao.security.two_factor.authenticator'
-            - '@contao.security.two_factor.backend_form_renderer'
-            - 'contao_backend'
+            - '@contao.security.two_factor.form_renderer'
         tags:
-            - { name: 'scheb_two_factor.provider', alias: 'contao_backend_two_factor' }
-
-    contao.security.two_factor.frontend_form_renderer:
-        class: Contao\CoreBundle\Security\TwoFactor\FormRenderer
-        arguments:
-            - '@router'
-            - 'contao_frontend_two_factor'
-
-    contao.security.two_factor.frontend_provider:
-        class: Contao\CoreBundle\Security\TwoFactor\Provider
-        arguments:
-            - '@contao.security.two_factor.authenticator'
-            - '@contao.security.two_factor.frontend_form_renderer'
-            - 'contao_frontend'
-        tags:
-            - { name: 'scheb_two_factor.provider', alias: 'contao_frontend_two_factor' }
+            - { name: 'scheb_two_factor.provider', alias: 'contao' }
 
     contao.security.two_factor.frontend_success_handler:
         class: Contao\CoreBundle\Security\TwoFactor\FrontendAuthenticationSuccessHandler
@@ -645,7 +629,6 @@ services:
         arguments:
             - '@contao.translation.translator.inner'
             - '@contao.framework'
-        public: true
 
     contao.twig.template_extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension
