@@ -87,7 +87,10 @@ class BackendHelp extends Backend
 			}
 
 			// Unset the predefined image sizes
-			unset($options['image_sizes']);
+			if ($table == 'tl_content' && $field == 'size')
+			{
+				$options = array('relative'=>$options['relative'], 'exact'=>$options['exact']);
+			}
 
 			foreach ($options as $key=>$option)
 			{

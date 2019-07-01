@@ -107,17 +107,32 @@ class ImageSizes
         $this->options = $GLOBALS['TL_CROP'];
 
         $rows = $this->connection->fetchAll(
-            'SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name'
+            'SELECT
+                s.id, s.name, s.width, s.height, t.name as theme
+            FROM
+                tl_image_size s
+            LEFT JOIN
+                tl_theme t ON s.pid=t.id
+            ORDER BY
+                s.pid, s.name'
         );
 
+        $options = [];
+
         foreach ($rows as $imageSize) {
-            $this->options['image_sizes'][$imageSize['id']] = sprintf(
+            if (!isset($options[$imageSize['theme']])) {
+                $options[$imageSize['theme']] = [];
+            }
+
+            $options[$imageSize['theme']][$imageSize['id']] = sprintf(
                 '%s (%sx%s)',
                 $imageSize['name'],
                 $imageSize['width'],
                 $imageSize['height']
             );
         }
+
+        $this->options = array_merge_recursive($options, $this->options);
     }
 
     /**
@@ -134,10 +149,10 @@ class ImageSizes
         $filteredSizes = [];
 
         foreach ($this->options as $group => $sizes) {
-            if ('image_sizes' === $group) {
-                $this->filterImageSizes($sizes, $allowedSizes, $filteredSizes, $group);
-            } else {
+            if ('relative' === $group || 'exact' === $group) {
                 $this->filterResizeModes($sizes, $allowedSizes, $filteredSizes, $group);
+            } else {
+                $this->filterImageSizes($sizes, $allowedSizes, $filteredSizes, $group);
             }
         }
 

@@ -135,14 +135,14 @@ class ImageSize extends Widget
 
 		foreach ($this->arrAvailableOptions as $strGroup=>$arrValues)
 		{
-			if ($strGroup == 'image_sizes')
+			if ($strGroup == 'relative' || $strGroup == 'exact')
 			{
-				if (isset($arrValues[$varInput]))
+				if (\in_array($varInput, $arrValues))
 				{
 					return true;
 				}
 			}
-			elseif (\in_array($varInput, $arrValues))
+			elseif (isset($arrValues[$varInput]))
 			{
 				return true;
 			}
