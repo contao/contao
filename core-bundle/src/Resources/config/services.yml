@@ -554,9 +554,10 @@ services:
         public: true
 
     contao.security.two_factor.backend_form_renderer:
-        class: Contao\CoreBundle\Security\TwoFactor\BackendFormRenderer
+        class: Contao\CoreBundle\Security\TwoFactor\FormRenderer
         arguments:
             - '@router'
+            - 'contao_backend_two_factor'
 
     contao.security.two_factor.backend_provider:
         class: Contao\CoreBundle\Security\TwoFactor\Provider
@@ -568,9 +569,10 @@ services:
             - { name: 'scheb_two_factor.provider', alias: 'contao_backend_two_factor' }
 
     contao.security.two_factor.frontend_form_renderer:
-        class: Contao\CoreBundle\Security\TwoFactor\FrontendFormRenderer
+        class: Contao\CoreBundle\Security\TwoFactor\FormRenderer
         arguments:
             - '@router'
+            - 'contao_frontend_two_factor'
 
     contao.security.two_factor.frontend_provider:
         class: Contao\CoreBundle\Security\TwoFactor\Provider

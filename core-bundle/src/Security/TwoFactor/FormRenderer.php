@@ -18,16 +18,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 
-class BackendFormRenderer implements TwoFactorFormRendererInterface
+class FormRenderer implements TwoFactorFormRendererInterface
 {
     /**
      * @var RouterInterface
      */
     protected $router;
 
-    public function __construct(RouterInterface $router)
+    /**
+     * @var string
+     */
+    private $redirectRoute;
+
+    public function __construct(RouterInterface $router, string $redirectRoute)
     {
         $this->router = $router;
+        $this->redirectRoute = $redirectRoute;
     }
 
     /**
@@ -35,6 +41,6 @@ class BackendFormRenderer implements TwoFactorFormRendererInterface
      */
     public function renderForm(Request $request, array $templateVars): Response
     {
-        return new RedirectResponse($this->router->generate('contao_backend_two_factor'));
+        return new RedirectResponse($this->router->generate($this->redirectRoute));
     }
 }
