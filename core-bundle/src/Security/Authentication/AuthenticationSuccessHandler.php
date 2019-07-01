@@ -22,6 +22,7 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\User;
 use Psr\Log\LoggerInterface;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -61,8 +62,18 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     {
         $user = $token->getUser();
 
-        if (!$user instanceof User) {
-            return $this->getRedirectResponse($request);
+        $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
+
+        if (!$this->user instanceof User || $token instanceof TwoFactorTokenInterface) {
+            return $response;
+        }
+
+        if ($this->user instanceof BackendUser) {
+            $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
+
+            if ($jwtManager instanceof JwtManager) {
+                $jwtManager->addResponseCookie($response, ['debug' => false]);
+            }
         }
 
         $this->user = $user;
@@ -79,7 +90,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 
         $this->triggerPostLoginHook();
 
-        return $this->getRedirectResponse($request);
+        return $response;
     }
 
     /**
@@ -105,23 +116,6 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         }
 
         return parent::determineTargetUrl($request);
-    }
-
-    private function getRedirectResponse(Request $request): RedirectResponse
-    {
-        $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
-
-        if (!$this->user instanceof BackendUser) {
-            return $response;
-        }
-
-        $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
-
-        if ($jwtManager instanceof JwtManager) {
-            $jwtManager->addResponseCookie($response, ['debug' => false]);
-        }
-
-        return $response;
     }
 
     private function triggerPostLoginHook(): void

@@ -38,6 +38,9 @@ security:
             two_factor:
                 auth_form_path: contao_backend_login
                 check_path: contao_backend_two_factor
+                default_target_path: contao_backend
+                success_handler: contao.security.authentication_success_handler
+                failure_handler: contao.security.authentication_failure_handler
                 auth_code_parameter_name: verify
 
             logout:
