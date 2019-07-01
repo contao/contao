@@ -133,6 +133,21 @@ class FrontendController extends AbstractController
      */
     public function twoFactorAuthenticationAction(): Response
     {
-        return $this->redirectToRoute('contao_index');
+        $this->get('contao.framework')->initialize();
+
+        if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
+            throw new UnauthorizedHttpException('', 'Not authorized');
+        }
+
+        /** @var PageError401 $pageHandler */
+        $pageHandler = new $GLOBALS['TL_PTY']['error_401']();
+
+        try {
+            return $pageHandler->getResponse();
+        } catch (ResponseException $e) {
+            return $e->getResponse();
+        } catch (InsufficientAuthenticationException $e) {
+            throw new UnauthorizedHttpException('', $e->getMessage());
+        }
     }
 }
