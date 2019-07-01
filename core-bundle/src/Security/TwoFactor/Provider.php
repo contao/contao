@@ -24,11 +24,6 @@ class Provider implements TwoFactorProviderInterface
      */
     private $authenticator;
 
-    /**
-     * @var string
-     */
-    private $firewallName;
-
     public function __construct(Authenticator $authenticator)
     {
         $this->authenticator = $authenticator;
