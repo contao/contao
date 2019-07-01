@@ -1874,7 +1874,7 @@ class ContaoCoreExtensionTest extends TestCase
 
     /**
      * @expectedException \RuntimeException
-     * @expectedExceptionMessage Image size name "box" is reserved and not allowed!
+     * @expectedExceptionMessage Image size name "box" is reserved and not allowed (reserved words: box, proportional, crop)!
      */
     public function testRegistersTheImagePredefinedSizesParameterInvalidReservedName(): void
     {

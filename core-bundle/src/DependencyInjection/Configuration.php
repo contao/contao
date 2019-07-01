@@ -156,6 +156,21 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->arrayNode('sizes')
                             ->useAttributeAsKey('name')
+                            ->validate()
+                                ->always(function ($value) {
+                                    foreach ($value as $name => $config) {
+                                        if (preg_match('/^\d+$/', (string) $name)) {
+                                            throw new \InvalidArgumentException(sprintf('Image size name "%s" cannot contain only digits!', $name));
+                                        }
+
+                                        if (in_array($name, [ResizeConfigurationInterface::MODE_BOX, ResizeConfigurationInterface::MODE_PROPORTIONAL, ResizeConfigurationInterface::MODE_CROP], true)) {
+                                            throw new \InvalidArgumentException(sprintf('Image size name "%s" is reserved and not allowed (reserved words: %s)!', $name, implode(', ', [ResizeConfigurationInterface::MODE_BOX, ResizeConfigurationInterface::MODE_PROPORTIONAL, ResizeConfigurationInterface::MODE_CROP])));
+                                        }
+                                    }
+
+                                    return $value;
+                                })
+                            ->end()
                             ->arrayPrototype()
                                 ->children()
                                     ->integerNode('width')
