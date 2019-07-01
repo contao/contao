@@ -1653,6 +1653,12 @@ abstract class Controller extends System
 
 		// Do not override the "href" key (see #6468)
 		$strHrefKey = ($objTemplate->href != '') ? 'imageHref' : 'href';
+		$lightboxSize = [];
+
+		if (isset($GLOBALS['objPage']->layoutId))
+		{
+			$lightboxSize = StringUtil::deserialize(LayoutModel::findByPk($GLOBALS['objPage']->layoutId)->lightboxSize ?? null, true);
+		}
 
 		// Image link
 		if ($arrItem['imageUrl'] && TL_MODE == 'FE')
@@ -1668,7 +1674,7 @@ abstract class Controller extends System
 					// Do not add the TL_FILES_URL to external URLs (see #4923)
 					if (strncmp($arrItem['imageUrl'], 'http://', 7) !== 0 && strncmp($arrItem['imageUrl'], 'https://', 8) !== 0)
 					{
-						$objTemplate->$strHrefKey = static::addFilesUrlTo($container->get('contao.image.image_factory')->create($rootDir . '/' . $arrItem['imageUrl'], [System::getContainer()->getParameter('contao.image.lightbox_size.width'), System::getContainer()->getParameter('contao.image.lightbox_size.height'), 'box'])->getUrl($rootDir));
+						$objTemplate->$strHrefKey = static::addFilesUrlTo($container->get('contao.image.image_factory')->create($rootDir . '/' . $arrItem['imageUrl'], $lightboxSize)->getUrl($rootDir));
 					}
 
 					$objTemplate->attributes = ' data-lightbox="' . $strLightboxId . '"';
@@ -1683,7 +1689,7 @@ abstract class Controller extends System
 		// Fullsize view
 		elseif ($arrItem['fullsize'] && TL_MODE == 'FE')
 		{
-			$objTemplate->$strHrefKey = static::addFilesUrlTo($container->get('contao.image.image_factory')->create($rootDir . '/' . $arrItem['singleSRC'], [System::getContainer()->getParameter('contao.image.lightbox_size.width'), System::getContainer()->getParameter('contao.image.lightbox_size.height'), 'box'])->getUrl($rootDir));
+			$objTemplate->$strHrefKey = static::addFilesUrlTo($container->get('contao.image.image_factory')->create($rootDir . '/' . $arrItem['singleSRC'], $lightboxSize)->getUrl($rootDir));
 			$objTemplate->attributes = ' data-lightbox="' . $strLightboxId . '"';
 		}
 
