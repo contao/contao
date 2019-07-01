@@ -25,19 +25,13 @@ class Provider implements TwoFactorProviderInterface
     private $authenticator;
 
     /**
-     * @var TwoFactorFormRendererInterface
-     */
-    private $formRenderer;
-
-    /**
      * @var string
      */
     private $firewallName;
 
-    public function __construct(Authenticator $authenticator, TwoFactorFormRendererInterface $formRenderer)
+    public function __construct(Authenticator $authenticator)
     {
         $this->authenticator = $authenticator;
-        $this->formRenderer = $formRenderer;
     }
 
     /**
@@ -75,7 +69,7 @@ class Provider implements TwoFactorProviderInterface
      */
     public function getFormRenderer(): TwoFactorFormRendererInterface
     {
-        return $this->formRenderer;
+        throw new \RuntimeException('The "contao" two-factor provider does not support forms');
     }
 
     /**

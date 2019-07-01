@@ -553,17 +553,10 @@ services:
         class: Contao\CoreBundle\Security\TwoFactor\Authenticator
         public: true
 
-    contao.security.two_factor.form_renderer:
-        class: Contao\CoreBundle\Security\TwoFactor\FormRenderer
-        arguments:
-            - '@router'
-            - '@contao.routing.scope_matcher'
-
     contao.security.two_factor.provider:
         class: Contao\CoreBundle\Security\TwoFactor\Provider
         arguments:
             - '@contao.security.two_factor.authenticator'
-            - '@contao.security.two_factor.form_renderer'
         tags:
             - { name: 'scheb_two_factor.provider', alias: 'contao' }
 
