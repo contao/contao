@@ -103,7 +103,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{expert_legend},cssClass,densities,sizes'
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{expert_legend},cssClass,densities,sizes,skipIfDimensionsMatch'
 	),
 
 	// Fields
@@ -185,6 +185,14 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) NULL"
+		),
+		'skipIfDimensionsMatch' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['skipIfDimensionsMatch'],
+			'inputType'               => 'checkbox',
+			'exclude'                 => true,
+			'eval'                    => array('tl_class'=>'clr'),
+			'sql'                     => "char(1) NOT NULL default '1'"
 		)
 	)
 );

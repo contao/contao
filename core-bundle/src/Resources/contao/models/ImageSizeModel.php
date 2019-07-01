@@ -26,6 +26,7 @@ use Contao\Model\Collection;
  * @property integer $height
  * @property string  $resizeMode
  * @property integer $zoom
+ * @property boolean $skipIfDimensionsMatch
  *
  * @method static ImageSizeModel|null findById($id, array $opt=array())
  * @method static ImageSizeModel|null findByPk($id, array $opt=array())
@@ -41,6 +42,7 @@ use Contao\Model\Collection;
  * @method static ImageSizeModel|null findOneByHeight($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByResizeMode($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByZoom($val, array $opt=array())
+ * @method static ImageSizeModel|null findOneBySkipIfDimensionsMatch($val, array $opt=array())
  *
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByPid($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByTstamp($val, array $opt=array())
@@ -52,6 +54,7 @@ use Contao\Model\Collection;
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByHeight($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByResizeMode($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByZoom($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findBySkipIfDimensionsMatch($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findAll(array $opt=array())
@@ -67,6 +70,7 @@ use Contao\Model\Collection;
  * @method static integer countByHeight($val, array $opt=array())
  * @method static integer countByResizeMode($val, array $opt=array())
  * @method static integer countByZoom($val, array $opt=array())
+ * @method static integer countBySkipIfDimensionsMatch($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
