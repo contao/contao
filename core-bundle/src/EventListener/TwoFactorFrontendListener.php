@@ -65,7 +65,7 @@ class TwoFactorFrontendListener
         $token = $this->tokenStorage->getToken();
 
         // Check if is a supported token
-        if (!$token instanceof TwoFactorToken && !\in_array(get_class($token), $this->supportedTokens)) {
+        if (!$token instanceof TwoFactorToken && !\in_array(\get_class($token), $this->supportedTokens, true)) {
             return;
         }
 
@@ -133,6 +133,7 @@ class TwoFactorFrontendListener
             }
 
             $event->setResponse(new RedirectResponse($targetPath));
+
             return;
         }
 
