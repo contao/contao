@@ -139,19 +139,6 @@ class ImageSizes
 
         $options = [];
 
-        foreach ($rows as $imageSize) {
-            if (!isset($options[$imageSize['theme']])) {
-                $options[$imageSize['theme']] = [];
-            }
-
-            $options[$imageSize['theme']][$imageSize['id']] = sprintf(
-                '%s (%sx%s)',
-                $imageSize['name'],
-                $imageSize['width'],
-                $imageSize['height']
-            );
-        }
-
         foreach ($this->predefinedSizes as $name => $imageSize) {
             if (!isset($options['image_sizes'])) {
                 $options['image_sizes'] = [];
@@ -160,6 +147,19 @@ class ImageSizes
             $options['image_sizes'][$name] = sprintf(
                 '%s (%sx%s)',
                 $this->translator->trans('IMAGE_SIZES.' . substr($name, 1), [], 'contao_default') ?: substr($name, 1),
+                $imageSize['width'],
+                $imageSize['height']
+            );
+        }
+
+        foreach ($rows as $imageSize) {
+            if (!isset($options[$imageSize['theme']])) {
+                $options[$imageSize['theme']] = [];
+            }
+
+            $options[$imageSize['theme']][$imageSize['id']] = sprintf(
+                '%s (%sx%s)',
+                $imageSize['name'],
                 $imageSize['width'],
                 $imageSize['height']
             );
