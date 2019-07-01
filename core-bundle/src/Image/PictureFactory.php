@@ -141,7 +141,7 @@ class PictureFactory implements PictureFactoryInterface
      *
      * @param int|array|null $size
      *
-     * @return (PictureConfiguration|array<string,string>|?ResizeOptions)[]
+     * @return (PictureConfiguration|array<string,string>|ResizeOptionsInterface|null)[]
      */
     private function createConfig($size): array
     {

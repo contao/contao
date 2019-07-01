@@ -212,7 +212,7 @@ class ImageFactory implements ImageFactoryInterface
      *
      * @param int|array|null $size An image size or an array with width, height and resize mode
      *
-     * @return (ResizeConfigurationInterface|ImportantPartInterface|null)[]
+     * @return (ResizeConfiguration|ImportantPartInterface|ResizeOptions|null)[]
      */
     private function createConfig($size, ImageInterface $image): array
     {
