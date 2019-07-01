@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\ServiceAnnotation;
 use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
 
 /**
  * Annotation that can be used to register a DCA callback.
@@ -27,7 +28,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  *     @Attribute("priority", type="int"),
  * })
  */
-final class Callback extends AbstractFragmentAnnotation
+final class Callback extends ServiceTag
 {
     /**
      * @var string
