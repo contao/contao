@@ -623,12 +623,6 @@ services:
 
     contao.controller.frontend_module.two_factor:
         class: Contao\CoreBundle\Controller\FrontendModule\TwoFactorController
-        arguments:
-            - '@translator'
-            - '@router'
-            - '@security.token_storage'
-            - '@contao.security.two_factor.authenticator'
-            - '@security.authentication_utils'
         tags:
             - { name: contao.frontend_module, category: user }
             - { name: container.service_subscriber }
