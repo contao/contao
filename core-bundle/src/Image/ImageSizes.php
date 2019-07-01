@@ -132,7 +132,7 @@ class ImageSizes
             );
         }
 
-        $this->options = $options + $this->options;
+        $this->options = array_merge_recursive($options, $this->options);
     }
 
     /**
