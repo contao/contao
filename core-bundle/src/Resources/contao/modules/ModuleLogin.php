@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Patchwork\Utf8;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
@@ -73,16 +72,15 @@ class ModuleLogin extends Module
 		/** @var Router $router */
 		$router = $container->get('router');
 
-		/** @var TokenChecker $tokenChecker */
-		$tokenChecker = $container->get('contao.security.token_checker');
-
 		/** @var AuthenticationException|null $exception */
 		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
 
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		if ($tokenChecker->hasTwoFactorToken())
+		$authorizationChecker = $container->get('security.authorization_checker');
+
+		if ($authorizationChecker->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS'))
 		{
 			$user = FrontendUser::getInstance();
 			$redirectPage = $this->jumpTo > 0 ? PageModel::findByPk($this->jumpTo) : null;
@@ -104,7 +102,7 @@ class ModuleLogin extends Module
 			return;
 		}
 
-		if ($tokenChecker->hasFrontendUser())
+		if ($authorizationChecker->isGranted('ROLE_MEMBER'))
 		{
 			$this->import(FrontendUser::class, 'User');
 

@@ -23,7 +23,6 @@ use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -296,33 +295,6 @@ class TokenCheckerTest extends TestCase
         $this->assertNull($tokenChecker->getFrontendUsername());
     }
 
-    public function testDoesReturnFalseIfAUserDoesNotHaveATwoFactorToken(): void
-    {
-        $token = new AnonymousToken('secret', 'anon.');
-        $tokenChecker = $this->mockTwoFactorTokenChecker($token);
-
-        $this->assertFalse($tokenChecker->hasTwoFactorToken());
-    }
-
-    /**
-     * @dataProvider getTwoFactorUserData
-     */
-    public function testDoesReturnTrueIfAUserDoesHaveATwoFactorToken(string $class, bool $expect): void
-    {
-        $user = $this->mockUser($class);
-        $authenticatedToken = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
-        $token = new TwoFactorToken($authenticatedToken, 'password', 'provider', []);
-        $tokenChecker = $this->mockTwoFactorTokenChecker($token, $class);
-
-        $this->assertSame($expect, $tokenChecker->hasTwoFactorToken());
-    }
-
-    public function getTwoFactorUserData(): \Generator
-    {
-        yield [FrontendUser::class, true];
-        yield [BackendUser::class, true];
-    }
-
     private function mockUser(string $class): User
     {
         /** @var User&MockObject $user */
@@ -394,37 +366,5 @@ class TokenCheckerTest extends TestCase
         ;
 
         return $session;
-    }
-
-    private function mockTwoFactorTokenChecker(TokenInterface $token, string $class = null): TokenChecker
-    {
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->expects($this->atLeastOnce())
-            ->method('isStarted')
-            ->willReturn(true)
-        ;
-
-        $session
-            ->expects($this->atLeastOnce())
-            ->method('has')
-            ->willReturn(true)
-        ;
-
-        $session
-            ->expects($this->atLeastOnce())
-            ->method('get')
-            ->willReturn(serialize($token))
-        ;
-
-        $trustResolver = new AuthenticationTrustResolver(AnonymousToken::class, RememberMeToken::class);
-
-        return new TokenChecker(
-            $this->mockRequestStack(),
-            $this->mockFirewallMapWithConfigContext('contao_backend'),
-            $class instanceof User ? $this->mockTokenStorage($class) : $this->createMock(TokenStorageInterface::class),
-            $session, 
-            $trustResolver
-        );
     }
 }
