@@ -81,7 +81,7 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('exact', $options);
         $this->assertArrayHasKey('My theme', $options);
         $this->assertArrayHasKey('42', $options['My theme']);
-        $this->assertArrayHasKey('42', $options['image_sizes']);
+        $this->assertArrayHasKey('image_sizes', $options);
         $this->assertArrayHasKey('_foo', $options['image_sizes']);
         $this->assertArrayHasKey('_bar', $options['image_sizes']);
     }
