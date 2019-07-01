@@ -377,6 +377,12 @@
       <trans-unit id="tl_layout.analytics_piwik">
         <source>Piwik</source>
       </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.0">
+        <source>Lightbox image size</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.1">
+        <source>Image size used for images shown in the lightbox.</source>
+      </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>
       </trans-unit>
