@@ -121,16 +121,9 @@ class ContaoCoreExtension extends Extension
         $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
 
         foreach ($services as $service) {
-            $class = $container->getDefinition($service)->getClass();
-
-            // Avoid BC break as interfaces do not have setPredefinedSizes() method
-            if (($service === 'contao.image.image_factory' && !is_a($class, ImageFactory::class, true))
-                || ($service === 'contao.image.picture_factory' && !is_a($class, PictureFactory::class, true))
-            ) {
-                continue;
+            if (method_exists($container->getDefinition($service)->getClass(), 'setPredefinedSizes')) {
+                $container->getDefinition($service)->addMethodCall('setPredefinedSizes', [$imageSizes]);
             }
-
-            $container->getDefinition($service)->addMethodCall('setPredefinedSizes', [$imageSizes]);
         }
     }
 
