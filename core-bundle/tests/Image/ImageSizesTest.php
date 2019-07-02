@@ -198,9 +198,6 @@ class ImageSizesTest extends TestCase
         ]);
     }
 
-    /**
-     * Adds expected example predefined image sizes.
-     */
     private function expectExamplePredefinedImageSizes(): void
     {
         $this->imageSizes->setPredefinedSizes([

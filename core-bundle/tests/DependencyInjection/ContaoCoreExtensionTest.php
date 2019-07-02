@@ -1851,12 +1851,11 @@ class ContaoCoreExtensionTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Image size name "123" cannot contain only digits!
-     */
     public function testRegistersTheImagePredefinedSizesParameterInvalidDigitName(): void
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Image size name "123" cannot contain only digits!');
+
         $extension = new ContaoCoreExtension();
         $extension->load(
             [
@@ -1872,12 +1871,11 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Image size name "box" is reserved and not allowed (reserved words: box, proportional, crop)!
-     */
     public function testRegistersTheImagePredefinedSizesParameterInvalidReservedName(): void
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessageRegExp('/^Invalid configuration for path "contao\.image\.sizes": Image size name "box" is reserved and not allowed \(reserved words: (.*)\)!$/');
+
         $extension = new ContaoCoreExtension();
         $extension->load(
             [

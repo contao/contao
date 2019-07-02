@@ -27,6 +27,24 @@ class Configuration implements ConfigurationInterface
     private $projectDir;
 
     /**
+     * @var array
+     */
+    private $disallowedImageSizeNames = [
+        ResizeConfigurationInterface::MODE_BOX,
+        ResizeConfigurationInterface::MODE_PROPORTIONAL,
+        ResizeConfigurationInterface::MODE_CROP,
+        'left_top',
+        'center_top',
+        'right_top',
+        'left_center',
+        'center_center',
+        'right_center',
+        'left_bottom',
+        'center_bottom',
+        'right_bottom',
+    ];
+
+    /**
      * @var string
      */
     private $defaultLocale;
@@ -163,8 +181,8 @@ class Configuration implements ConfigurationInterface
                                             throw new \InvalidArgumentException(sprintf('Image size name "%s" cannot contain only digits!', $name));
                                         }
 
-                                        if (in_array($name, [ResizeConfigurationInterface::MODE_BOX, ResizeConfigurationInterface::MODE_PROPORTIONAL, ResizeConfigurationInterface::MODE_CROP], true)) {
-                                            throw new \InvalidArgumentException(sprintf('Image size name "%s" is reserved and not allowed (reserved words: %s)!', $name, implode(', ', [ResizeConfigurationInterface::MODE_BOX, ResizeConfigurationInterface::MODE_PROPORTIONAL, ResizeConfigurationInterface::MODE_CROP])));
+                                        if (in_array($name, $this->disallowedImageSizeNames, true)) {
+                                            throw new \InvalidArgumentException(sprintf('Image size name "%s" is reserved and not allowed (reserved words: %s)!', $name, implode(', ', $this->disallowedImageSizeNames)));
                                         }
                                     }
 
