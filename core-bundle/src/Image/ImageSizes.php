@@ -156,8 +156,8 @@ class ImageSizes
             $options[$imageSize['theme']][$imageSize['id']] = sprintf(
                 '%s (%sx%s)',
                 $imageSize['name'],
-                $imageSize['width'],
-                $imageSize['height']
+                $imageSize['width'] ?? '',
+                $imageSize['height'] ?? ''
             );
         }
 

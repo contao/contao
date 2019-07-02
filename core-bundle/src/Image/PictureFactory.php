@@ -230,24 +230,34 @@ class PictureFactory implements PictureFactoryInterface
         $resizeConfig = new ResizeConfiguration();
 
         if (null !== $imageSize) {
-            $resizeConfig
-                ->setWidth((int) $imageSize['width'])
-                ->setHeight((int) $imageSize['height'])
-                ->setZoomLevel((int) $imageSize['zoom'])
-            ;
-
-            if (isset($imageSize['resizeMode'])) {
-                $resizeConfig->setMode($imageSize['resizeMode']);
+            if (isset($imageSize['width'])) {
+                $resizeConfig->setWidth((int) $imageSize['width']);
             }
 
-            $configItem
-                ->setResizeConfig($resizeConfig)
-                ->setSizes((string) $imageSize['sizes'])
-                ->setDensities((string) $imageSize['densities'])
-            ;
+            if (isset($imageSize['height'])) {
+                $resizeConfig->setHeight((int) $imageSize['height']);
+            }
+
+            if (isset($imageSize['zoom'])) {
+                $resizeConfig->setZoomLevel((int) $imageSize['zoom']);
+            }
+
+            if (isset($imageSize['resizeMode'])) {
+                $resizeConfig->setMode((string) $imageSize['resizeMode']);
+            }
+
+            $configItem->setResizeConfig($resizeConfig);
+
+            if (isset($imageSize['sizes'])) {
+                $configItem->setSizes((string) $imageSize['sizes']);
+            }
+
+            if (isset($imageSize['densities'])) {
+                $configItem->setDensities((string) $imageSize['densities']);
+            }
 
             if (isset($imageSize['media'])) {
-                $configItem->setMedia($imageSize['media']);
+                $configItem->setMedia((string) $imageSize['media']);
             }
         }
 

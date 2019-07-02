@@ -254,14 +254,20 @@ class ImageFactory implements ImageFactoryInterface
      */
     private function enhanceResizeConfig(ResizeConfigurationInterface $config, array $imageSize): void
     {
-        $config
-            ->setWidth((int) $imageSize['width'])
-            ->setHeight((int) $imageSize['height'])
-            ->setZoomLevel((int) $imageSize['zoom'])
-        ;
+        if (isset($imageSize['width'])) {
+            $config->setWidth((int) $imageSize['width']);
+        }
+
+        if (isset($imageSize['height'])) {
+            $config->setHeight((int) $imageSize['height']);
+        }
+
+        if (isset($imageSize['zoom'])) {
+            $config->setZoomLevel((int) $imageSize['zoom']);
+        }
 
         if (isset($imageSize['resizeMode'])) {
-            $config->setMode($imageSize['resizeMode']);
+            $config->setMode((string) $imageSize['resizeMode']);
         }
     }
 
