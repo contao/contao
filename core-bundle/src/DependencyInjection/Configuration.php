@@ -222,6 +222,8 @@ class Configuration implements ConfigurationInterface
                                     ->end()
                                     ->scalarNode('sizes')
                                     ->end()
+                                    ->booleanNode('skipIfDimensionsMatch')
+                                    ->end()
                                     ->arrayNode('items')
                                         ->arrayPrototype()
                                             ->children()
