@@ -24,6 +24,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Component\Console\Application;
@@ -57,6 +58,7 @@ class ContaoCoreBundleTest extends TestCase
             RemembermeServicesPass::class,
             MapFragmentsToGlobalsPass::class,
             DataContainerCallbackPass::class,
+            TranslationDataCollectorPass::class,
             RegisterHookListenersPass::class,
         ];
 

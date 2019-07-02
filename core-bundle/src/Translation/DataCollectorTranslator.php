@@ -12,28 +12,25 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Translation;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\System;
+use Symfony\Component\Translation\DataCollectorTranslator as SymfonyDataCollectorTranslator;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class Translator implements TranslatorInterface, TranslatorBagInterface
+class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements TranslatorInterface, TranslatorBagInterface
 {
     /**
      * @var TranslatorInterface|TranslatorBagInterface
      */
     private $translator;
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private $messages = [];
 
-    public function __construct(TranslatorInterface $translator, ContaoFramework $framework)
+    public function __construct($translator)
     {
+        parent::__construct($translator);
+
         $this->translator = $translator;
-        $this->framework = $framework;
     }
 
     /**
@@ -44,23 +41,14 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
      */
     public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
+        $translated = $this->translator->trans($id, $parameters, $domain, $locale);
+
         // Forward to the default translator
         if (null === $domain || 0 !== strncmp($domain, 'contao_', 7)) {
-            return $this->translator->trans($id, $parameters, $domain, $locale);
+            return $translated;
         }
 
-        $this->framework->initialize();
-        $this->loadLanguageFile(substr($domain, 7));
-
-        $translated = $this->getFromGlobals($id);
-
-        if (null === $translated) {
-            return $id;
-        }
-
-        if (!empty($parameters)) {
-            $translated = vsprintf($translated, $parameters);
-        }
+        $this->collectMessage($GLOBALS['TL_LANGUAGE'] ?? '', (string) $domain, $id, $translated, $parameters);
 
         return $translated;
     }
@@ -97,44 +85,41 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
         return $this->translator->getCatalogue($locale);
     }
 
-    public function getCollectedMessages(): array
+    /**
+     * @return array
+     */
+    public function getCollectedMessages()
     {
         if (\method_exists($this->translator, 'getCollectedMessages')) {
-            return $this->translator->getCollectedMessages();
+            return array_merge($this->translator->getCollectedMessages(), $this->messages);
         }
 
-        return [];
+        return $this->messages;
     }
 
     /**
-     * Returns the labels from $GLOBALS['TL_LANG'] based on a message ID like "MSC.view".
+     * @param string $locale
+     * @param string $domain
+     * @param string $id
+     * @param string $translation
+     * @param array  $parameters
      */
-    private function getFromGlobals(string $id): ?string
+    private function collectMessage(string $locale, string $domain, string $id, string $translation, array $parameters = [])
     {
-        // Split the ID into chunks allowing escaped dots (\.) and backslashes (\\)
-        preg_match_all('/(?:\\\\[\.\\\\]|[^\.])++/', $id, $matches);
-        $parts = preg_replace('/\\\\([\.\\\\])/', '$1', $matches[0]);
-
-        $item = &$GLOBALS['TL_LANG'];
-
-        foreach ($parts as $part) {
-            if (!isset($item[$part])) {
-                return null;
-            }
-
-            $item = &$item[$part];
+        if ($id === $translation) {
+            $state = SymfonyDataCollectorTranslator::MESSAGE_MISSING;
+        } else {
+            $state = SymfonyDataCollectorTranslator::MESSAGE_DEFINED;
         }
 
-        return $item;
-    }
-
-    /**
-     * Loads a Contao framework language file.
-     */
-    private function loadLanguageFile(string $name): void
-    {
-        /** @var System $system */
-        $system = $this->framework->getAdapter(System::class);
-        $system->loadLanguageFile($name);
+        $this->messages[] = [
+            'locale' => $locale,
+            'domain' => $domain,
+            'id' => $id,
+            'translation' => $translation,
+            'parameters' => $parameters,
+            'state' => $state,
+            'transChoiceNumber' => isset($parameters['%count%']) && is_numeric($parameters['%count%']) ? $parameters['%count%'] : null,
+        ];
     }
 }
