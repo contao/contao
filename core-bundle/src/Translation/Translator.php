@@ -99,7 +99,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
 
     public function getCollectedMessages(): array
     {
-        if (\method_exists($this->translator, 'getCollectedMessages')) {
+        if (method_exists($this->translator, 'getCollectedMessages')) {
             return $this->translator->getCollectedMessages();
         }
 

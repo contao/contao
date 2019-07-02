@@ -15,12 +15,13 @@ namespace Contao\CoreBundle\Translation;
 use Symfony\Component\Translation\DataCollectorTranslator as SymfonyDataCollectorTranslator;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements TranslatorInterface, TranslatorBagInterface
+class DataCollectorTranslator extends SymfonyDataCollectorTranslator
 {
     /**
-     * @var TranslatorInterface|TranslatorBagInterface
+     * @var TranslatorInterface|TranslatorBagInterface|LegacyTranslatorInterface
      */
     private $translator;
 
@@ -90,21 +91,14 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
      */
     public function getCollectedMessages()
     {
-        if (\method_exists($this->translator, 'getCollectedMessages')) {
+        if (method_exists($this->translator, 'getCollectedMessages')) {
             return array_merge($this->translator->getCollectedMessages(), $this->messages);
         }
 
         return $this->messages;
     }
 
-    /**
-     * @param string $locale
-     * @param string $domain
-     * @param string $id
-     * @param string $translation
-     * @param array  $parameters
-     */
-    private function collectMessage(string $locale, string $domain, string $id, string $translation, array $parameters = [])
+    private function collectMessage(string $locale, string $domain, string $id, string $translation, array $parameters = []): void
     {
         if ($id === $translation) {
             $state = SymfonyDataCollectorTranslator::MESSAGE_MISSING;
