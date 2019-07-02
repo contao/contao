@@ -146,7 +146,7 @@ class PictureFactory implements PictureFactoryInterface
                 $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
                 $imageSizes = $imageSizeModel->findByPk($size[2]);
 
-                $config->setSize($this->createConfigItem(($imageSizes !== null) ? $imageSizes->row() : null));
+                $config->setSize($this->createConfigItem((null !== $imageSizes) ? $imageSizes->row() : null));
 
                 if ($imageSizes && $imageSizes->cssClass) {
                     $attributes['class'] = $imageSizes->cssClass;
@@ -179,7 +179,7 @@ class PictureFactory implements PictureFactoryInterface
                     $attributes['class'] = $imageSizes['cssClass'];
                 }
 
-                if (count($imageSizes['items']) > 0) {
+                if (\count($imageSizes['items']) > 0) {
                     $configItems = [];
 
                     foreach ($imageSizes['items'] as $imageSizeItem) {
@@ -221,8 +221,6 @@ class PictureFactory implements PictureFactoryInterface
 
     /**
      * Creates a picture configuration item.
-     *
-     * @param array|null $imageSize
      */
     private function createConfigItem(array $imageSize = null): PictureConfigurationItem
     {

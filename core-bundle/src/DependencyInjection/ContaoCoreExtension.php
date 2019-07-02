@@ -105,14 +105,14 @@ class ContaoCoreExtension extends Extension
      */
     private function setPredefinedImageSizes(array $config, ContainerBuilder $container): void
     {
-        if (!isset($config['image']['sizes']) || count($config['image']['sizes']) === 0) {
+        if (!isset($config['image']['sizes']) || 0 === \count($config['image']['sizes'])) {
             return;
         }
 
         $imageSizes = [];
 
         foreach ($config['image']['sizes'] as $name => $value) {
-            $imageSizes['_' . $name] = $value;
+            $imageSizes['_'.$name] = $value;
         }
 
         $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];

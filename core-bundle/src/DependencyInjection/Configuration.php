@@ -181,7 +181,7 @@ class Configuration implements ConfigurationInterface
                                             throw new \InvalidArgumentException(sprintf('Image size name "%s" cannot contain only digits!', $name));
                                         }
 
-                                        if (in_array($name, $this->disallowedImageSizeNames, true)) {
+                                        if (\in_array($name, $this->disallowedImageSizeNames, true)) {
                                             throw new \InvalidArgumentException(sprintf('Image size name "%s" is reserved and not allowed (reserved words: %s)!', $name, implode(', ', $this->disallowedImageSizeNames)));
                                         }
                                     }

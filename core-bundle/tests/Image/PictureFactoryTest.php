@@ -37,7 +37,7 @@ class PictureFactoryTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -171,7 +171,7 @@ class PictureFactoryTest extends TestCase
                         'densities' => '0.5x, 2x',
                         'sizes' => '50vw',
                         'media' => '(max-width: 900px)',
-                    ]
+                    ],
                 ],
             ],
         ];
