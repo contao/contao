@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\ServiceAnnotation;
 use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Doctrine\Common\Annotations\AnnotationException;
 use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
 
 /**
@@ -47,19 +48,28 @@ final class Callback extends ServiceTag
 
     public function __construct(array $values)
     {
-        parent::__construct($values);
+        parent::__construct([]);
+
+        if (empty($values['table'])) {
+            throw AnnotationException::typeError('Attribute "table" of @'.static::class.' should not be null.');
+        }
+
+        if (empty($values['target'])) {
+            throw AnnotationException::typeError('Attribute "target" of @'.static::class.' should not be null.');
+        }
 
         $this->name = 'contao.callback';
-        $this->table = $values['table'] ?? null;
-        $this->target = $values['target'] ?? null;
+        $this->table = $values['table'];
+        $this->target = $values['target'];
         $this->priority = $values['priority'] ?? null;
     }
 
     public function getAttributes(): array
     {
-        $attributes = parent::getAttributes();
-        $attributes['table'] = $this->table;
-        $attributes['target'] = $this->target;
+        $attributes = [
+            'table' => $this->table,
+            'target' => $this->target,
+        ];
 
         if ($this->priority) {
             $attributes['priority'] = $this->priority;

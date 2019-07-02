@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\ServiceAnnotation;
 use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Doctrine\Common\Annotations\AnnotationException;
 use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
 
 /**
@@ -41,17 +42,20 @@ final class Hook extends ServiceTag
 
     public function __construct(array $values)
     {
-        parent::__construct($values);
+        parent::__construct([]);
+
+        if (empty($values['hook'])) {
+            throw AnnotationException::typeError('Attribute "hook" of @'.static::class.' should not be null.');
+        }
 
         $this->name = 'contao.hook';
-        $this->hook = $values['hook'] ?? null;
+        $this->hook = $values['hook'];
         $this->priority = $values['priority'] ?? null;
     }
 
     public function getAttributes(): array
     {
-        $attributes = parent::getAttributes();
-        $attributes['hook'] = $this->hook;
+        $attributes = ['hook' => $this->hook];
 
         if ($this->priority) {
             $attributes['priority'] = $this->priority;

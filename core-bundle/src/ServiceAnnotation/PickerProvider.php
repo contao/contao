@@ -35,7 +35,7 @@ final class PickerProvider extends ServiceTag
 
     public function __construct(array $values)
     {
-        parent::__construct($values);
+        parent::__construct([]);
 
         $this->name = 'contao.picker_provider';
         $this->priority = $values['priority'] ?? null;
@@ -43,12 +43,10 @@ final class PickerProvider extends ServiceTag
 
     public function getAttributes(): array
     {
-        $attributes = parent::getAttributes();
-
         if ($this->priority) {
-            $attributes['priority'] = $this->priority;
+            return ['priority' => $this->priority];
         }
 
-        return $attributes;
+        return [];
     }
 }
