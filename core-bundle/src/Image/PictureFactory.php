@@ -163,7 +163,7 @@ class PictureFactory implements PictureFactoryInterface
                 $config->setSize($this->createConfigItem((null !== $imageSizes) ? $imageSizes->row() : null));
 
                 if (null !== $imageSizes) {
-                    $options->setForceReEncoding(!$imageSizes->skipIfDimensionsMatch);
+                    $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
                 }
 
                 if ($imageSizes && $imageSizes->cssClass) {
@@ -195,7 +195,7 @@ class PictureFactory implements PictureFactoryInterface
 
                 $options = new ResizeOptions();
 
-                $options->setForceReEncoding(!($imageSizes['skipIfDimensionsMatch'] ?? true));
+                $options->setSkipIfDimensionsMatch($imageSizes['skipIfDimensionsMatch'] ?? true);
 
                 if ($imageSizes && isset($imageSizes['cssClass']) && $imageSizes['cssClass']) {
                     $attributes['class'] = $imageSizes['cssClass'];

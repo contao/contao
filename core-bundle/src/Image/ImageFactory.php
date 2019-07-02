@@ -231,7 +231,7 @@ class ImageFactory implements ImageFactoryInterface
 
                 if (null !== ($imageSize = $imageModel->findByPk($size[2]))) {
                     $this->enhanceResizeConfig($config, $imageSize->row());
-                    $options->setForceReEncoding(!$imageSize->skipIfDimensionsMatch);
+                    $options->setSkipIfDimensionsMatch((bool) $imageSize->skipIfDimensionsMatch);
                 }
 
                 return [$config, null, $options];
@@ -240,7 +240,7 @@ class ImageFactory implements ImageFactoryInterface
             // Predefined sizes
             if (isset($this->predefinedSizes[$size[2]])) {
                 $this->enhanceResizeConfig($config, $this->predefinedSizes[$size[2]]);
-                $options->setForceReEncoding(!($this->predefinedSizes[$size[2]]['skipIfDimensionsMatch'] ?? true));
+                $options->setSkipIfDimensionsMatch($this->predefinedSizes[$size[2]]['skipIfDimensionsMatch'] ?? true);
 
                 return [$config, null, $options];
             }
