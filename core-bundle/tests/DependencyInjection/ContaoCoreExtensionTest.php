@@ -1790,6 +1790,35 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertArrayHasKey('twig.extension', $tags);
     }
 
+    public function testRegistersThePredefinedImageSizes(): void
+    {
+        $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
+
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $this->container);
+
+        foreach ($services as $service) {
+            $this->assertFalse($this->container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
+        }
+
+        $extension->load(
+            [
+                'contao' => [
+                    'image' => [
+                        'sizes' => [
+                            'foobar' => ['width' => 100, 'height' => 200],
+                        ],
+                    ],
+                ],
+            ],
+            $this->container
+        );
+
+        foreach ($services as $service) {
+            $this->assertTrue($this->container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
+        }
+    }
+
     /**
      * @group legacy
      *
@@ -1820,74 +1849,5 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load($params, $container);
 
         $this->assertSame($this->getTempDir().'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
-    }
-
-    public function testRegistersTheImagePredefinedSizesInjection(): void
-    {
-        $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
-
-        $extension = new ContaoCoreExtension();
-        $extension->load([], $this->container);
-
-        foreach ($services as $service) {
-            $this->assertFalse($this->container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
-        }
-
-        $extension->load(
-            [
-                'contao' => [
-                    'image' => [
-                        'sizes' => [
-                            'foobar' => ['width' => 100, 'height' => 200],
-                        ],
-                    ],
-                ],
-            ],
-            $this->container
-        );
-
-        foreach ($services as $service) {
-            $this->assertTrue($this->container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
-        }
-    }
-
-    public function testRegistersTheImagePredefinedSizesParameterInvalidDigitName(): void
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Image size name "123" cannot contain only digits!');
-
-        $extension = new ContaoCoreExtension();
-        $extension->load(
-            [
-                'contao' => [
-                    'image' => [
-                        'sizes' => [
-                            '123' => ['width' => 100, 'height' => 200],
-                        ],
-                    ],
-                ],
-            ],
-            $this->container
-        );
-    }
-
-    public function testRegistersTheImagePredefinedSizesParameterInvalidReservedName(): void
-    {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessageRegExp('/^Invalid configuration for path "contao\.image\.sizes": Image size name "box" is reserved and not allowed \(reserved words: (.*)\)!$/');
-
-        $extension = new ContaoCoreExtension();
-        $extension->load(
-            [
-                'contao' => [
-                    'image' => [
-                        'sizes' => [
-                            'box' => ['width' => 100, 'height' => 200],
-                        ],
-                    ],
-                ],
-            ],
-            $this->container
-        );
     }
 }

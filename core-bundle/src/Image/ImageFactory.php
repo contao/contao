@@ -93,7 +93,7 @@ class ImageFactory implements ImageFactoryInterface
     }
 
     /**
-     * Set the predefined image sizes.
+     * Sets the predefined image sizes.
      */
     public function setPredefinedSizes(array $predefinedSizes): void
     {
@@ -232,6 +232,7 @@ class ImageFactory implements ImageFactoryInterface
         if (!empty($size[0])) {
             $config->setWidth((int) $size[0]);
         }
+
         if (!empty($size[1])) {
             $config->setHeight((int) $size[1]);
         }
@@ -250,7 +251,7 @@ class ImageFactory implements ImageFactoryInterface
     }
 
     /**
-     * Enhances the resize config by image size settings.
+     * Enhances the resize configuration with the image size settings.
      */
     private function enhanceResizeConfig(ResizeConfigurationInterface $config, array $imageSize): void
     {

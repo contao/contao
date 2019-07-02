@@ -260,10 +260,13 @@ class ImageFactoryTest extends TestCase
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
-                        $this->assertSame([
-                            'jpeg_quality' => 80,
-                            'interlace' => ImagineImageInterface::INTERLACE_PLANE,
-                        ], $options->getImagineOptions());
+                        $this->assertSame(
+                            [
+                                'jpeg_quality' => 80,
+                                'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+                            ],
+                            $options->getImagineOptions()
+                        );
 
                         $this->assertSame($this->getFixturesDir().'/target/path.jpg', $options->getTargetPath());
 
@@ -276,6 +279,7 @@ class ImageFactoryTest extends TestCase
 
         $imageFactory = $this->getImageFactory($resizer);
         $imageFactory->setPredefinedSizes($predefinedSizes);
+
         $image = $imageFactory->create($imageMock, [null, null, 'foobar'], $this->getFixturesDir().'/target/path.jpg');
 
         $this->assertSameImage($imageMock, $image);

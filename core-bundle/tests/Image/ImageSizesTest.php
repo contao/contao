@@ -66,7 +66,13 @@ class ImageSizesTest extends TestCase
         $this->connection = $this->createMock(Connection::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $this->translator = $this->createMock(Translator::class);
-        $this->imageSizes = new ImageSizes($this->connection, $this->eventDispatcher, $this->mockContaoFramework(), $this->translator);
+
+        $this->imageSizes = new ImageSizes(
+            $this->connection,
+            $this->eventDispatcher,
+            $this->mockContaoFramework(),
+            $this->translator
+        );
     }
 
     public function testReturnsAllOptionsWithImageSizes(): void

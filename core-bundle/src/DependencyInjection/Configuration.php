@@ -27,24 +27,6 @@ class Configuration implements ConfigurationInterface
     private $projectDir;
 
     /**
-     * @var array
-     */
-    private $disallowedImageSizeNames = [
-        ResizeConfigurationInterface::MODE_BOX,
-        ResizeConfigurationInterface::MODE_PROPORTIONAL,
-        ResizeConfigurationInterface::MODE_CROP,
-        'left_top',
-        'center_top',
-        'right_top',
-        'left_center',
-        'center_center',
-        'right_center',
-        'left_bottom',
-        'center_bottom',
-        'right_bottom',
-    ];
-
-    /**
      * @var string
      */
     private $defaultLocale;
@@ -175,19 +157,47 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('sizes')
                             ->useAttributeAsKey('name')
                             ->validate()
-                                ->always(function ($value) {
-                                    foreach ($value as $name => $config) {
-                                        if (preg_match('/^\d+$/', (string) $name)) {
-                                            throw new \InvalidArgumentException(sprintf('Image size name "%s" cannot contain only digits!', $name));
+                                ->always(
+                                    static function (array $value): array {
+                                        static $reservedImageSizeNames = [
+                                            ResizeConfigurationInterface::MODE_BOX,
+                                            ResizeConfigurationInterface::MODE_PROPORTIONAL,
+                                            ResizeConfigurationInterface::MODE_CROP,
+                                            'left_top',
+                                            'center_top',
+                                            'right_top',
+                                            'left_center',
+                                            'center_center',
+                                            'right_center',
+                                            'left_bottom',
+                                            'center_bottom',
+                                            'right_bottom',
+                                        ];
+
+                                        foreach ($value as $name => $config) {
+                                            if (preg_match('/^\d+$/', (string) $name)) {
+                                                throw new \InvalidArgumentException(
+                                                    sprintf(
+                                                        'The image size name "%s" cannot contain only digits',
+                                                        $name
+                                                    )
+                                                );
+                                            }
+
+                                            if (\in_array($name, $reservedImageSizeNames, true)) {
+                                                throw new \InvalidArgumentException(
+                                                    sprintf(
+                                                        '"%s" is a reserved image size name (reserved names: %s)',
+                                                        $name,
+                                                        implode(', ', $reservedImageSizeNames)
+                                                    )
+                                                );
+                                            }
                                         }
 
-                                        if (\in_array($name, $this->disallowedImageSizeNames, true)) {
-                                            throw new \InvalidArgumentException(sprintf('Image size name "%s" is reserved and not allowed (reserved words: %s)!', $name, implode(', ', $this->disallowedImageSizeNames)));
-                                        }
+                                        return $value;
                                     }
-
-                                    return $value;
-                                })
+                                )
                             ->end()
                             ->arrayPrototype()
                                 ->children()
@@ -196,7 +206,11 @@ class Configuration implements ConfigurationInterface
                                     ->integerNode('height')
                                     ->end()
                                     ->enumNode('resizeMode')
-                                        ->values([ResizeConfigurationInterface::MODE_CROP, ResizeConfigurationInterface::MODE_BOX, ResizeConfigurationInterface::MODE_PROPORTIONAL])
+                                        ->values([
+                                            ResizeConfigurationInterface::MODE_CROP,
+                                            ResizeConfigurationInterface::MODE_BOX,
+                                            ResizeConfigurationInterface::MODE_PROPORTIONAL,
+                                        ])
                                     ->end()
                                     ->integerNode('zoom')
                                         ->min(0)
@@ -216,7 +230,11 @@ class Configuration implements ConfigurationInterface
                                                 ->integerNode('height')
                                                 ->end()
                                                 ->enumNode('resizeMode')
-                                                    ->values([ResizeConfigurationInterface::MODE_CROP, ResizeConfigurationInterface::MODE_BOX, ResizeConfigurationInterface::MODE_PROPORTIONAL])
+                                                    ->values([
+                                                        ResizeConfigurationInterface::MODE_CROP,
+                                                        ResizeConfigurationInterface::MODE_BOX,
+                                                        ResizeConfigurationInterface::MODE_PROPORTIONAL,
+                                                    ])
                                                 ->end()
                                                 ->integerNode('zoom')
                                                     ->min(0)
