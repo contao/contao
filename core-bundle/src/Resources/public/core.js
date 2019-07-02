@@ -2476,7 +2476,7 @@ var Backend =
 				widthInput = el.getChildren('input')[0],
 				heightInput = el.getChildren('input')[1],
 				update = function() {
-					if (select.get('value') === '' || select.get('value').toInt().toString() === select.get('value')) {
+					if (select.get('value') === '' || select.get('value').indexOf('_') === 0 || select.get('value').toInt().toString() === select.get('value')) {
 						widthInput.readOnly = true;
 						heightInput.readOnly = true;
 						var dimensions = $(select.getSelected()[0]).get('text');
@@ -2485,8 +2485,7 @@ var Backend =
 							: ['', ''];
 						widthInput.set('value', '').set('placeholder', dimensions[0] * 1 || '');
 						heightInput.set('value', '').set('placeholder', dimensions[1] * 1 || '');
-					}
-					else {
+					} else {
 						widthInput.set('placeholder', '');
 						heightInput.set('placeholder', '');
 						widthInput.readOnly = false;

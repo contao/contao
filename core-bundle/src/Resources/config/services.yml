@@ -205,6 +205,7 @@ services:
             - '@database_connection'
             - '@event_dispatcher'
             - '@contao.framework'
+            - '@contao.translation.translator'
         public: true
 
     contao.image.picture_generator:

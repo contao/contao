@@ -17,6 +17,7 @@ use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Translation\Translator;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -39,6 +40,11 @@ class ImageSizesTest extends TestCase
     private $imageSizes;
 
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
      * {@inheritdoc}
      */
     public function setUp(): void
@@ -59,13 +65,21 @@ class ImageSizesTest extends TestCase
 
         $this->connection = $this->createMock(Connection::class);
         $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $this->imageSizes = new ImageSizes($this->connection, $this->eventDispatcher, $this->mockContaoFramework());
+        $this->translator = $this->createMock(Translator::class);
+
+        $this->imageSizes = new ImageSizes(
+            $this->connection,
+            $this->eventDispatcher,
+            $this->mockContaoFramework(),
+            $this->translator
+        );
     }
 
     public function testReturnsAllOptionsWithImageSizes(): void
     {
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_ALL);
         $this->expectExampleImageSizes();
+        $this->expectExamplePredefinedImageSizes();
 
         $options = $this->imageSizes->getAllOptions();
 
@@ -73,6 +87,9 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('exact', $options);
         $this->assertArrayHasKey('My theme', $options);
         $this->assertArrayHasKey('42', $options['My theme']);
+        $this->assertArrayHasKey('image_sizes', $options);
+        $this->assertArrayHasKey('_foo', $options['image_sizes']);
+        $this->assertArrayHasKey('_bar', $options['image_sizes']);
     }
 
     public function testReturnsAllOptionsWithoutImageSizes(): void
@@ -184,6 +201,14 @@ class ImageSizesTest extends TestCase
                 'height' => '',
                 'theme' => 'My theme',
             ],
+        ]);
+    }
+
+    private function expectExamplePredefinedImageSizes(): void
+    {
+        $this->imageSizes->setPredefinedSizes([
+            '_foo' => ['width' => 123, 'height' => 456],
+            '_bar' => ['width' => 123, 'height' => 456],
         ]);
     }
 }

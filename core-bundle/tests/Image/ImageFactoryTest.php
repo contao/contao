@@ -46,6 +46,16 @@ class ImageFactoryTest extends TestCase
     /**
      * {@inheritdoc}
      */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        System::setContainer($this->getContainerWithContaoConfiguration());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function tearDown(): void
     {
         parent::tearDown();
@@ -165,8 +175,8 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        /** @var ImageSizeModel&MockObject $imageSizeModel */
-        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class);
+        /** @var ImageSizeModel $imageSizeModel */
+        $imageSizeModel = new ImageSizeModel();
         $imageSizeModel->width = 100;
         $imageSizeModel->height = 200;
         $imageSizeModel->resizeMode = ResizeConfiguration::MODE_BOX;
@@ -211,6 +221,68 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, 1);
 
         $this->assertSame($path, $image->getPath());
+    }
+
+    public function testCreatesAnImageObjectFromAnImageObjectWithAPredefinedImageSize(): void
+    {
+        $predefinedSizes = [
+            'foobar' => [
+                'width' => 100,
+                'height' => 200,
+                'resizeMode' => ResizeConfiguration::MODE_BOX,
+                'zoom' => 50,
+            ],
+        ];
+
+        $imageMock = $this->createMock(ImageInterface::class);
+
+        $resizer = $this->createMock(ResizerInterface::class);
+        $resizer
+            ->expects($this->once())
+            ->method('resize')
+            ->with(
+                $this->callback(
+                    function (ImageInterface $image) use ($imageMock): bool {
+                        $this->assertSameImage($imageMock, $image);
+
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (ResizeConfigurationInterface $config) use ($predefinedSizes): bool {
+                        $this->assertSame($predefinedSizes['foobar']['width'], $config->getWidth());
+                        $this->assertSame($predefinedSizes['foobar']['height'], $config->getHeight());
+                        $this->assertSame($predefinedSizes['foobar']['resizeMode'], $config->getMode());
+                        $this->assertSame($predefinedSizes['foobar']['zoom'], $config->getZoomLevel());
+
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (ResizeOptions $options): bool {
+                        $this->assertSame(
+                            [
+                                'jpeg_quality' => 80,
+                                'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+                            ],
+                            $options->getImagineOptions()
+                        );
+
+                        $this->assertSame($this->getFixturesDir().'/target/path.jpg', $options->getTargetPath());
+
+                        return true;
+                    }
+                )
+            )
+            ->willReturn($imageMock)
+        ;
+
+        $imageFactory = $this->getImageFactory($resizer);
+        $imageFactory->setPredefinedSizes($predefinedSizes);
+
+        $image = $imageFactory->create($imageMock, [null, null, 'foobar'], $this->getFixturesDir().'/target/path.jpg');
+
+        $this->assertSameImage($imageMock, $image);
     }
 
     public function testCreatesAnImageObjectFromAnImageObjectWithAResizeConfiguration(): void

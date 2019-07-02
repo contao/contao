@@ -1790,6 +1790,35 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertArrayHasKey('twig.extension', $tags);
     }
 
+    public function testRegistersThePredefinedImageSizes(): void
+    {
+        $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
+
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $this->container);
+
+        foreach ($services as $service) {
+            $this->assertFalse($this->container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
+        }
+
+        $extension->load(
+            [
+                'contao' => [
+                    'image' => [
+                        'sizes' => [
+                            'foobar' => ['width' => 100, 'height' => 200],
+                        ],
+                    ],
+                ],
+            ],
+            $this->container
+        );
+
+        foreach ($services as $service) {
+            $this->assertTrue($this->container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
+        }
+    }
+
     /**
      * @group legacy
      *

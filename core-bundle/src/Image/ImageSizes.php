@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Translation\Translator;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -38,15 +39,34 @@ class ImageSizes
     private $framework;
 
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
+     * @var array
+     */
+    private $predefinedSizes = [];
+
+    /**
      * @var array
      */
     private $options;
 
-    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework)
+    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework, Translator $translator)
     {
         $this->connection = $connection;
         $this->eventDispatcher = $eventDispatcher;
         $this->framework = $framework;
+        $this->translator = $translator;
+    }
+
+    /**
+     * Sets the predefined image sizes.
+     */
+    public function setPredefinedSizes(array $predefinedSizes): void
+    {
+        $this->predefinedSizes = $predefinedSizes;
     }
 
     /**
@@ -118,6 +138,15 @@ class ImageSizes
         );
 
         $options = [];
+
+        foreach ($this->predefinedSizes as $name => $imageSize) {
+            $options['image_sizes'][$name] = sprintf(
+                '%s (%sx%s)',
+                $this->translator->trans(substr($name, 1), [], 'image_sizes') ?: substr($name, 1),
+                $imageSize['width'] ?? '',
+                $imageSize['height'] ?? ''
+            );
+        }
 
         foreach ($rows as $imageSize) {
             if (!isset($options[$imageSize['theme']])) {

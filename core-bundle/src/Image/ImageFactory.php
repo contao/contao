@@ -74,6 +74,11 @@ class ImageFactory implements ImageFactoryInterface
      */
     private $uploadDir;
 
+    /**
+     * @var array
+     */
+    private $predefinedSizes = [];
+
     public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir)
     {
         $this->resizer = $resizer;
@@ -85,6 +90,14 @@ class ImageFactory implements ImageFactoryInterface
         $this->imagineOptions = $imagineOptions;
         $this->validExtensions = $validExtensions;
         $this->uploadDir = $uploadDir;
+    }
+
+    /**
+     * Sets the predefined image sizes.
+     */
+    public function setPredefinedSizes(array $predefinedSizes): void
+    {
+        $this->predefinedSizes = $predefinedSizes;
     }
 
     /**
@@ -195,26 +208,31 @@ class ImageFactory implements ImageFactoryInterface
 
         $config = new ResizeConfiguration();
 
-        if (isset($size[2]) && is_numeric($size[2])) {
-            /** @var ImageSizeModel $imageModel */
-            $imageModel = $this->framework->getAdapter(ImageSizeModel::class);
-            $imageSize = $imageModel->findByPk($size[2]);
+        if (isset($size[2])) {
+            // Database record
+            if (is_numeric($size[2])) {
+                /** @var ImageSizeModel $imageModel */
+                $imageModel = $this->framework->getAdapter(ImageSizeModel::class);
 
-            if (null !== $imageSize) {
-                $config
-                    ->setWidth((int) $imageSize->width)
-                    ->setHeight((int) $imageSize->height)
-                    ->setMode($imageSize->resizeMode)
-                    ->setZoomLevel((int) $imageSize->zoom)
-                ;
+                if (null !== ($imageSize = $imageModel->findByPk($size[2]))) {
+                    $this->enhanceResizeConfig($config, $imageSize->row());
+                }
+
+                return [$config, null];
             }
 
-            return [$config, null];
+            // Predefined sizes
+            if (isset($this->predefinedSizes[$size[2]])) {
+                $this->enhanceResizeConfig($config, $this->predefinedSizes[$size[2]]);
+
+                return [$config, null];
+            }
         }
 
         if (!empty($size[0])) {
             $config->setWidth((int) $size[0]);
         }
+
         if (!empty($size[1])) {
             $config->setHeight((int) $size[1]);
         }
@@ -230,6 +248,28 @@ class ImageFactory implements ImageFactoryInterface
         $config->setMode(ResizeConfigurationInterface::MODE_CROP);
 
         return [$config, $this->getImportantPartFromLegacyMode($image, $size[2])];
+    }
+
+    /**
+     * Enhances the resize configuration with the image size settings.
+     */
+    private function enhanceResizeConfig(ResizeConfigurationInterface $config, array $imageSize): void
+    {
+        if (isset($imageSize['width'])) {
+            $config->setWidth((int) $imageSize['width']);
+        }
+
+        if (isset($imageSize['height'])) {
+            $config->setHeight((int) $imageSize['height']);
+        }
+
+        if (isset($imageSize['zoom'])) {
+            $config->setZoomLevel((int) $imageSize['zoom']);
+        }
+
+        if (isset($imageSize['resizeMode'])) {
+            $config->setMode((string) $imageSize['resizeMode']);
+        }
     }
 
     /**

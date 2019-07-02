@@ -90,6 +90,7 @@ class ContaoCoreExtension extends Extension
             $container->setParameter('contao.localconfig', $config['localconfig']);
         }
 
+        $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
 
@@ -97,6 +98,30 @@ class ContaoCoreExtension extends Extension
             ->registerForAutoconfiguration(PickerProviderInterface::class)
             ->addTag('contao.picker_provider')
         ;
+    }
+
+    /**
+     * Validates and sets the "contao.image.sizes" parameter.
+     */
+    private function setPredefinedImageSizes(array $config, ContainerBuilder $container): void
+    {
+        if (!isset($config['image']['sizes']) || 0 === \count($config['image']['sizes'])) {
+            return;
+        }
+
+        $imageSizes = [];
+
+        foreach ($config['image']['sizes'] as $name => $value) {
+            $imageSizes['_'.$name] = $value;
+        }
+
+        $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
+
+        foreach ($services as $service) {
+            if (method_exists($container->getDefinition($service)->getClass(), 'setPredefinedSizes')) {
+                $container->getDefinition($service)->addMethodCall('setPredefinedSizes', [$imageSizes]);
+            }
+        }
     }
 
     /**

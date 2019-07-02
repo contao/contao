@@ -58,6 +58,11 @@ class PictureFactory implements PictureFactoryInterface
      */
     private $defaultDensities = '';
 
+    /**
+     * @var array
+     */
+    private $predefinedSizes = [];
+
     public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFramework $framework, bool $bypassCache, array $imagineOptions)
     {
         $this->pictureGenerator = $pictureGenerator;
@@ -78,6 +83,14 @@ class PictureFactory implements PictureFactoryInterface
     }
 
     /**
+     * Sets the predefined image sizes.
+     */
+    public function setPredefinedSizes(array $predefinedSizes): void
+    {
+        $this->predefinedSizes = $predefinedSizes;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function create($path, $size = null): PictureInterface
@@ -90,7 +103,13 @@ class PictureFactory implements PictureFactoryInterface
             $image = $this->imageFactory->create($path);
         }
 
-        if (\is_array($size) && isset($size[2]) && \is_string($size[2]) && 1 === substr_count($size[2], '_')) {
+        if (
+            \is_array($size)
+            && isset($size[2])
+            && \is_string($size[2])
+            && !isset($this->predefinedSizes[$size[2]])
+            && 1 === substr_count($size[2], '_')
+        ) {
             $image->setImportantPart($this->imageFactory->getImportantPartFromLegacyMode($image, $size[2]));
             $size[2] = ResizeConfigurationInterface::MODE_CROP;
         }
@@ -126,86 +145,123 @@ class PictureFactory implements PictureFactoryInterface
         $config = new PictureConfiguration();
         $attributes = [];
 
-        if (!isset($size[2]) || !is_numeric($size[2])) {
-            $resizeConfig = new ResizeConfiguration();
+        if (isset($size[2])) {
+            // Database record
+            if (is_numeric($size[2])) {
+                /** @var ImageSizeModel $imageSizeModel */
+                $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
+                $imageSizes = $imageSizeModel->findByPk($size[2]);
 
-            if (!empty($size[0])) {
-                $resizeConfig->setWidth((int) $size[0]);
+                $config->setSize($this->createConfigItem((null !== $imageSizes) ? $imageSizes->row() : null));
+
+                if ($imageSizes && $imageSizes->cssClass) {
+                    $attributes['class'] = $imageSizes->cssClass;
+                }
+
+                /** @var ImageSizeItemModel $imageSizeItemModel */
+                $imageSizeItemModel = $this->framework->getAdapter(ImageSizeItemModel::class);
+                $imageSizeItems = $imageSizeItemModel->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
+
+                if (null !== $imageSizeItems) {
+                    $configItems = [];
+
+                    foreach ($imageSizeItems as $imageSizeItem) {
+                        $configItems[] = $this->createConfigItem($imageSizeItem->row());
+                    }
+
+                    $config->setSizeItems($configItems);
+                }
+
+                return [$config, $attributes];
             }
 
-            if (!empty($size[1])) {
-                $resizeConfig->setHeight((int) $size[1]);
+            // Predefined size
+            if (isset($this->predefinedSizes[$size[2]])) {
+                $imageSizes = $this->predefinedSizes[$size[2]];
+
+                $config->setSize($this->createConfigItem($imageSizes));
+
+                if ($imageSizes && isset($imageSizes['cssClass']) && $imageSizes['cssClass']) {
+                    $attributes['class'] = $imageSizes['cssClass'];
+                }
+
+                if (\count($imageSizes['items']) > 0) {
+                    $configItems = [];
+
+                    foreach ($imageSizes['items'] as $imageSizeItem) {
+                        $configItems[] = $this->createConfigItem($imageSizeItem);
+                    }
+
+                    $config->setSizeItems($configItems);
+                }
+
+                return [$config, $attributes];
             }
-
-            if (!empty($size[2])) {
-                $resizeConfig->setMode($size[2]);
-            }
-
-            $configItem = new PictureConfigurationItem();
-            $configItem->setResizeConfig($resizeConfig);
-
-            if ($this->defaultDensities) {
-                $configItem->setDensities($this->defaultDensities);
-            }
-
-            $config->setSize($configItem);
-
-            return [$config, $attributes];
         }
 
-        /** @var ImageSizeModel $imageSizeModel */
-        $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
-        $imageSizes = $imageSizeModel->findByPk($size[2]);
+        $resizeConfig = new ResizeConfiguration();
 
-        $config->setSize($this->createConfigItem($imageSizes));
-
-        if ($imageSizes && $imageSizes->cssClass) {
-            $attributes['class'] = $imageSizes->cssClass;
+        if (!empty($size[0])) {
+            $resizeConfig->setWidth((int) $size[0]);
         }
 
-        /** @var ImageSizeItemModel $imageSizeItemModel */
-        $imageSizeItemModel = $this->framework->getAdapter(ImageSizeItemModel::class);
-        $imageSizeItems = $imageSizeItemModel->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
-
-        if (null !== $imageSizeItems) {
-            $configItems = [];
-
-            foreach ($imageSizeItems as $imageSizeItem) {
-                $configItems[] = $this->createConfigItem($imageSizeItem);
-            }
-
-            $config->setSizeItems($configItems);
+        if (!empty($size[1])) {
+            $resizeConfig->setHeight((int) $size[1]);
         }
+
+        if (!empty($size[2])) {
+            $resizeConfig->setMode($size[2]);
+        }
+
+        $configItem = new PictureConfigurationItem();
+        $configItem->setResizeConfig($resizeConfig);
+
+        if ($this->defaultDensities) {
+            $configItem->setDensities($this->defaultDensities);
+        }
+
+        $config->setSize($configItem);
 
         return [$config, $attributes];
     }
 
     /**
      * Creates a picture configuration item.
-     *
-     * @param ImageSizeModel|ImageSizeItemModel|null $imageSize
      */
-    private function createConfigItem($imageSize): PictureConfigurationItem
+    private function createConfigItem(array $imageSize = null): PictureConfigurationItem
     {
         $configItem = new PictureConfigurationItem();
         $resizeConfig = new ResizeConfiguration();
 
         if (null !== $imageSize) {
-            $resizeConfig
-                ->setWidth((int) $imageSize->width)
-                ->setHeight((int) $imageSize->height)
-                ->setMode($imageSize->resizeMode)
-                ->setZoomLevel((int) $imageSize->zoom)
-            ;
+            if (isset($imageSize['width'])) {
+                $resizeConfig->setWidth((int) $imageSize['width']);
+            }
 
-            $configItem
-                ->setResizeConfig($resizeConfig)
-                ->setSizes($imageSize->sizes)
-                ->setDensities($imageSize->densities)
-            ;
+            if (isset($imageSize['height'])) {
+                $resizeConfig->setHeight((int) $imageSize['height']);
+            }
 
-            if (isset($imageSize->media)) {
-                $configItem->setMedia($imageSize->media);
+            if (isset($imageSize['zoom'])) {
+                $resizeConfig->setZoomLevel((int) $imageSize['zoom']);
+            }
+
+            if (isset($imageSize['resizeMode'])) {
+                $resizeConfig->setMode((string) $imageSize['resizeMode']);
+            }
+
+            $configItem->setResizeConfig($resizeConfig);
+
+            if (isset($imageSize['sizes'])) {
+                $configItem->setSizes((string) $imageSize['sizes']);
+            }
+
+            if (isset($imageSize['densities'])) {
+                $configItem->setDensities((string) $imageSize['densities']);
+            }
+
+            if (isset($imageSize['media'])) {
+                $configItem->setMedia((string) $imageSize['media']);
             }
         }
 

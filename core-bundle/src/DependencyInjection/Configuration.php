@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\Image\ResizeConfigurationInterface;
 use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -152,6 +153,104 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->booleanNode('reject_large_uploads')
                             ->defaultValue(false)
+                        ->end()
+                        ->arrayNode('sizes')
+                            ->useAttributeAsKey('name')
+                            ->validate()
+                                ->always(
+                                    static function (array $value): array {
+                                        static $reservedImageSizeNames = [
+                                            ResizeConfigurationInterface::MODE_BOX,
+                                            ResizeConfigurationInterface::MODE_PROPORTIONAL,
+                                            ResizeConfigurationInterface::MODE_CROP,
+                                            'left_top',
+                                            'center_top',
+                                            'right_top',
+                                            'left_center',
+                                            'center_center',
+                                            'right_center',
+                                            'left_bottom',
+                                            'center_bottom',
+                                            'right_bottom',
+                                        ];
+
+                                        foreach ($value as $name => $config) {
+                                            if (preg_match('/^\d+$/', (string) $name)) {
+                                                throw new \InvalidArgumentException(
+                                                    sprintf(
+                                                        'The image size name "%s" cannot contain only digits',
+                                                        $name
+                                                    )
+                                                );
+                                            }
+
+                                            if (\in_array($name, $reservedImageSizeNames, true)) {
+                                                throw new \InvalidArgumentException(
+                                                    sprintf(
+                                                        '"%s" is a reserved image size name (reserved names: %s)',
+                                                        $name,
+                                                        implode(', ', $reservedImageSizeNames)
+                                                    )
+                                                );
+                                            }
+                                        }
+
+                                        return $value;
+                                    }
+                                )
+                            ->end()
+                            ->arrayPrototype()
+                                ->children()
+                                    ->integerNode('width')
+                                    ->end()
+                                    ->integerNode('height')
+                                    ->end()
+                                    ->enumNode('resizeMode')
+                                        ->values([
+                                            ResizeConfigurationInterface::MODE_CROP,
+                                            ResizeConfigurationInterface::MODE_BOX,
+                                            ResizeConfigurationInterface::MODE_PROPORTIONAL,
+                                        ])
+                                    ->end()
+                                    ->integerNode('zoom')
+                                        ->min(0)
+                                        ->max(100)
+                                    ->end()
+                                    ->scalarNode('cssClass')
+                                    ->end()
+                                    ->scalarNode('densities')
+                                    ->end()
+                                    ->scalarNode('sizes')
+                                    ->end()
+                                    ->arrayNode('items')
+                                        ->arrayPrototype()
+                                            ->children()
+                                                ->integerNode('width')
+                                                ->end()
+                                                ->integerNode('height')
+                                                ->end()
+                                                ->enumNode('resizeMode')
+                                                    ->values([
+                                                        ResizeConfigurationInterface::MODE_CROP,
+                                                        ResizeConfigurationInterface::MODE_BOX,
+                                                        ResizeConfigurationInterface::MODE_PROPORTIONAL,
+                                                    ])
+                                                ->end()
+                                                ->integerNode('zoom')
+                                                    ->min(0)
+                                                    ->max(100)
+                                                ->end()
+                                                ->scalarNode('media')
+                                                ->end()
+                                                ->scalarNode('densities')
+                                                ->end()
+                                                ->scalarNode('sizes')
+                                                ->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()
