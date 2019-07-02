@@ -143,8 +143,8 @@ class ImageSizes
             $options['image_sizes'][$name] = sprintf(
                 '%s (%sx%s)',
                 $this->translator->trans(substr($name, 1), [], 'image_sizes') ?: substr($name, 1),
-                $imageSize['width'],
-                $imageSize['height']
+                $imageSize['width'] ?? '',
+                $imageSize['height'] ?? ''
             );
         }
 
@@ -156,8 +156,8 @@ class ImageSizes
             $options[$imageSize['theme']][$imageSize['id']] = sprintf(
                 '%s (%sx%s)',
                 $imageSize['name'],
-                $imageSize['width'] ?? '',
-                $imageSize['height'] ?? ''
+                $imageSize['width'],
+                $imageSize['height']
             );
         }
 
