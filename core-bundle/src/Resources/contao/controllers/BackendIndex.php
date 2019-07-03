@@ -15,6 +15,7 @@ use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCode
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
@@ -112,8 +113,26 @@ class BackendIndex extends Backend
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
 		$objTemplate->targetPath = StringUtil::specialchars($router->generate('contao_backend', array(), Router::ABSOLUTE_URL) . $queryString);
 		$objTemplate->failurePath = StringUtil::specialchars($router->generate('contao_backend_login', $arrParams, Router::ABSOLUTE_URL));
+		$objTemplate->frontendUrl = $this->getFrontendUrl($router);
 
 		return $objTemplate->getResponse();
+	}
+
+	/**
+	 * Generate the front end URL without the "/preview.php" fragment
+	 */
+	private function getFrontendUrl(RouterInterface $router)
+	{
+		$origContext = $router->getContext();
+
+		$context = clone $origContext;
+		$context->setBaseUrl('');
+
+		$router->setContext($context);
+		$url = $router->generate('contao_root', array(), Router::ABSOLUTE_URL);
+		$router->setContext($origContext);
+
+		return $url;
 	}
 }
 
