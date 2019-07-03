@@ -21,7 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class DataCollectorTranslator extends SymfonyDataCollectorTranslator
 {
     /**
-     * @var TranslatorInterface|TranslatorBagInterface|LegacyTranslatorInterface
+     * @var TranslatorInterface&TranslatorBagInterface&LegacyTranslatorInterface
      */
     private $translator;
 
