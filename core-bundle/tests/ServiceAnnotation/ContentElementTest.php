@@ -36,10 +36,10 @@ class ContentElementTest extends TestCase
 
         $this->assertSame(
             [
-                'type' => 'foobar',
                 'category' => 'foobar',
                 'template' => 'mod_foobar',
                 'renderer' => 'esi',
+                'type' => 'foobar',
             ],
             $annotation->getAttributes()
         );
