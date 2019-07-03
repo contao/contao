@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Tests\TestCase;
@@ -27,12 +26,12 @@ use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class TwoFactorControllerTest extends TestCase
@@ -45,6 +44,25 @@ class TwoFactorControllerTest extends TestCase
         parent::setUp();
 
         System::setContainer($this->getContainerWithContaoConfiguration());
+    }
+
+    public function testReturnsIfNoTokenIsGiven(): void
+    {
+        $tokenStorage = $this->mockTokenStorageWithToken();
+        $authenticator = $this->mockAuthenticator();
+        $authenticationUtils = $this->mockAuthenticationUtils();
+
+        $request = new Request();
+        $model = $this->mockClassWithProperties(ModuleModel::class);
+        $page = $this->mockPageModel();
+
+        $controller = new TwoFactorController();
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
+
+        $response = $controller($request, $model, 'main', null, $page);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 
     public function testReturnsIfUserIsNotInstanceOfFrontendUser(): void
@@ -62,8 +80,10 @@ class TwoFactorControllerTest extends TestCase
         $controller = new TwoFactorController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
-        $this->assertInstanceOf(TwoFactorController::class, $controller);
-        $controller($request, $model, 'main', null, $page);
+        $response = $controller($request, $model, 'main', null, $page);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 
     public function testReturnsResponseIfUserIsAInstanceOfFrontendUser(): void
@@ -88,8 +108,10 @@ class TwoFactorControllerTest extends TestCase
         $controller = new TwoFactorController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
-        $this->assertInstanceOf(TwoFactorController::class, $controller);
-        $controller($request, $model, 'main', null, $page);
+        $response = $controller($request, $model, 'main', null, $page);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
     public function testReturnsIfTwoFactorIsAlreadyDisabled(): void
@@ -116,8 +138,10 @@ class TwoFactorControllerTest extends TestCase
         $controller = new TwoFactorController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
-        $this->assertInstanceOf(TwoFactorController::class, $controller);
-        $controller($request, $model, 'main', null, $page);
+        $response = $controller($request, $model, 'main', null, $page);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
     public function testRedirectsAfterDisableTwoFactor(): void
@@ -149,10 +173,11 @@ class TwoFactorControllerTest extends TestCase
         $controller = new TwoFactorController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
-        $this->assertInstanceOf(TwoFactorController::class, $controller);
-        $this->expectException(RedirectResponseException::class);
+        /** @var RedirectResponse $response */
+        $response = $controller($request, $model, 'main', null, $page);
 
-        $controller($request, $model, 'main', null, $page);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('https://localhost.wip/foobar', $response->getTargetUrl());
     }
 
     public function testReturnsIfTwoFactorAlreadyEnabled(): void
@@ -175,12 +200,19 @@ class TwoFactorControllerTest extends TestCase
 
         $model = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel(false);
+        $page
+            ->expects($this->any())
+            ->method('getAbsoluteUrl')
+            ->willReturn('https://localhost.wip/foobar')
+        ;
 
         $controller = new TwoFactorController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
-        $this->assertInstanceOf(TwoFactorController::class, $controller);
-        $controller($request, $model, 'main', null, $page);
+        $response = $controller($request, $model, 'main', null, $page);
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
     public function testTwoFactorExceptionHandling(): void
@@ -203,11 +235,15 @@ class TwoFactorControllerTest extends TestCase
 
         $model = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel(false);
+        $page
+            ->expects($this->exactly(2))
+            ->method('getAbsoluteUrl')
+            ->willReturn('https://localhost.wip/foobar')
+        ;
 
         $controller = new TwoFactorController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
-        $this->assertInstanceOf(TwoFactorController::class, $controller);
         $controller($request, $model, 'main', null, $page);
     }
 
@@ -233,11 +269,15 @@ class TwoFactorControllerTest extends TestCase
 
         $model = $this->mockClassWithProperties(ModuleModel::class);
         $page = $this->mockPageModel(false);
+        $page
+            ->expects($this->exactly(2))
+            ->method('getAbsoluteUrl')
+            ->willReturn('https://localhost.wip/foobar')
+        ;
 
         $controller = new TwoFactorController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
-        $this->assertInstanceOf(TwoFactorController::class, $controller);
         $controller($request, $model, 'main', null, $page);
     }
 
@@ -277,13 +317,24 @@ class TwoFactorControllerTest extends TestCase
         $controller = new TwoFactorController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_two_factor', $tokenStorage, $authenticator, $authenticationUtils));
 
-        $this->assertInstanceOf(TwoFactorController::class, $controller);
-        $this->expectException(RedirectResponseException::class);
+        $response = $controller($request, $model, 'main', null, $page);
 
-        $controller($request, $model, 'main', null, $page);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
-    private function mockToken(string $class, bool $withFrontendUser = false, UserInterface $user = null)
+    public function testSubscribedServices(): void
+    {
+        $services = TwoFactorController::getSubscribedServices();
+
+        $this->assertArrayHasKey('contao.framework', $services);
+        $this->assertArrayHasKey('contao.routing.scope_matcher', $services);
+        $this->assertArrayHasKey('contao.security.two_factor.authenticator', $services);
+        $this->assertArrayHasKey('security.authentication_utils', $services);
+        $this->assertArrayHasKey('security.token_storage', $services);
+        $this->assertArrayHasKey('translator', $services);
+    }
+
+    private function mockToken(string $class, bool $withFrontendUser = false, $user = null)
     {
         $token = $this->createMock($class);
 
@@ -392,7 +443,7 @@ class TwoFactorControllerTest extends TestCase
         $container = new ContainerBuilder();
         $container->set('contao.framework', $framework);
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
-        $container->set('contao.translation.translator', $translator);
+        $container->set('translator', $translator);
         $container->set('security.token_storage', $tokenStorage);
         $container->set('contao.security.two_factor.authenticator', $authenticator);
         $container->set('security.authentication_utils', $authenticationUtils);

@@ -96,7 +96,6 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
-use Contao\CoreBundle\Security\TwoFactor\BackendFormRenderer;
 use Contao\CoreBundle\Security\TwoFactor\Provider;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Security\User\UserChecker;
@@ -1636,27 +1635,15 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPublic());
     }
 
-    public function testRegistersTheSecurityTwoFactorBackendFormRenderer(): void
+    public function testRegistersTheSecurityTwoFactorProvider(): void
     {
-        $this->assertTrue($this->container->has('contao.security.two_factor.backend_form_renderer'));
+        $this->assertTrue($this->container->has('contao.security.two_factor.provider'));
 
-        $definition = $this->container->getDefinition('contao.security.two_factor.backend_form_renderer');
-
-        $this->assertSame(BackendFormRenderer::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('router', (string) $definition->getArgument(0));
-    }
-
-    public function testRegistersTheSecurityTwoFactorBackendProvider(): void
-    {
-        $this->assertTrue($this->container->has('contao.security.two_factor.backend_provider'));
-
-        $definition = $this->container->getDefinition('contao.security.two_factor.backend_provider');
+        $definition = $this->container->getDefinition('contao.security.two_factor.provider');
 
         $this->assertSame(Provider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('contao.security.two_factor.authenticator', (string) $definition->getArgument(0));
-        $this->assertSame('contao.security.two_factor.backend_form_renderer', (string) $definition->getArgument(1));
     }
 
     public function testRegistersTheSecurityUserChecker(): void

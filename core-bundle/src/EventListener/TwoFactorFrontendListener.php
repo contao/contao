@@ -115,14 +115,15 @@ class TwoFactorFrontendListener
         $unauthorizedPage = $adapter->find401ByPid($page->rootId);
 
         if ($unauthorizedPage instanceof PageModel) {
-            return;
-        }
+            if ($unauthorizedPage->redirect) {
+                $redirect = $adapter->findPublishedById($unauthorizedPage->jumpTo);
 
-        // Check if 401 error page is available
-        $redirect = $adapter->findPublishedById($unauthorizedPage->jumpTo);
-
-        if ($redirect instanceof PageModel && $page->id === $redirect->id) {
-            return;
+                if ($redirect instanceof PageModel && $page->id === $redirect->id) {
+                    return;
+                }
+            } else {
+                return;
+            }
         }
 
         $targetPath = $this->getTargetPath($request->getSession(), $token->getProviderKey());

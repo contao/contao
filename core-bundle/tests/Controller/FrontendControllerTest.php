@@ -16,9 +16,7 @@ use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Fixtures\Controller\PageError401Controller;
 use Contao\CoreBundle\Fixtures\Exception\PageError401Exception;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\LogoutException;
 
 class FrontendControllerTest extends TestCase
@@ -117,24 +115,30 @@ class FrontendControllerTest extends TestCase
         $this->assertSame('image/png', $response->headers->get('Content-Type'));
     }
 
-    public function testRedirectsToRootPageIfTheTwoFactorRouteIsCalledManually(): void
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testRendersTheError401PageForTwoFactorRoute(): void
     {
-        $router = $this->createMock(RouterInterface::class);
-        $router
+        $framework = $this->mockContaoFramework();
+        $framework
             ->expects($this->once())
-            ->method('generate')
-            ->with('contao_index')
-            ->willReturn('/')
+            ->method('initialize')
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('router', $router);
+        $container->set('contao.framework', $framework);
 
         $controller = new FrontendController();
         $controller->setContainer($container);
 
+        $GLOBALS['TL_PTY']['error_401'] = PageError401Controller::class;
+
         $response = $controller->twoFactorAuthenticationAction();
 
-        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame(401, $response->getStatusCode());
+
+        unset($GLOBALS['TL_PTY']);
     }
 }
