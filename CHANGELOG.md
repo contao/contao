@@ -2,6 +2,9 @@
 
 ## DEV
 
+ * Adjust the container CSS class in the "video/audio" element based on the media type (see #441).
+ * Autorotate images based on their EXIF metadata (see #529).
+ * Add a configuration option to define predefined image sizes (see #537).
  * Make the FAQ record accessible in the FAQ reader template (see #221).
  * Always create a new version if something changes, even if the form has errors (see #237).
  * Add a news list option to show featured news first (see #371).
