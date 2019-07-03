@@ -22,6 +22,7 @@ use Contao\Image\ImportantPartInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
+use Contao\Image\ResizeOptionsInterface;
 use Contao\Image\ResizerInterface;
 use Contao\ImageSizeModel;
 use Imagine\Image\ImagineInterface;
@@ -103,8 +104,14 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function create($path, $size = null, $targetPath = null): ImageInterface
+    public function create($path, $size = null, $options = null): ImageInterface
     {
+        if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptionsInterface) {
+            throw new \InvalidArgumentException(
+                'Options must be of type null, string or '.ResizeOptionsInterface::class
+            );
+        }
+
         if ($path instanceof ImageInterface) {
             $image = $path;
         } else {
@@ -134,12 +141,14 @@ class ImageFactory implements ImageFactoryInterface
             }
         }
 
+        $targetPath = $options instanceof ResizeOptionsInterface ? $options->getTargetPath() : $options;
+
         if ($size instanceof ResizeConfigurationInterface) {
             /** @var ResizeConfigurationInterface $resizeConfig */
             $resizeConfig = $size;
             $importantPart = null;
         } else {
-            [$resizeConfig, $importantPart] = $this->createConfig($size, $image);
+            [$resizeConfig, $importantPart, $options] = $this->createConfig($size, $image);
         }
 
         if (!\is_object($path) || !($path instanceof ImageInterface)) {
@@ -150,18 +159,25 @@ class ImageFactory implements ImageFactoryInterface
             $image->setImportantPart($importantPart);
         }
 
-        if (null === $targetPath && $resizeConfig->isEmpty()) {
+        if (null === $options && null === $targetPath && null === $size) {
             return $image;
         }
 
-        return $this->resizer->resize(
-            $image,
-            $resizeConfig,
-            (new ResizeOptions())
-                ->setImagineOptions($this->imagineOptions)
-                ->setTargetPath($targetPath)
-                ->setBypassCache($this->bypassCache)
-        );
+        if (!$options instanceof ResizeOptionsInterface) {
+            $options = new ResizeOptions();
+        }
+
+        if (null !== $targetPath) {
+            $options->setTargetPath($targetPath);
+        }
+
+        if (!$options->getImagineOptions()) {
+            $options->setImagineOptions($this->imagineOptions);
+        }
+
+        $options->setBypassCache($options->getBypassCache() || $this->bypassCache);
+
+        return $this->resizer->resize($image, $resizeConfig, $options);
     }
 
     /**
@@ -198,7 +214,7 @@ class ImageFactory implements ImageFactoryInterface
      *
      * @param int|array|null $size An image size or an array with width, height and resize mode
      *
-     * @return (ResizeConfigurationInterface|ImportantPartInterface|null)[]
+     * @return (ResizeConfiguration|ImportantPartInterface|ResizeOptions|null)[]
      */
     private function createConfig($size, ImageInterface $image): array
     {
@@ -207,6 +223,7 @@ class ImageFactory implements ImageFactoryInterface
         }
 
         $config = new ResizeConfiguration();
+        $options = new ResizeOptions();
 
         if (isset($size[2])) {
             // Database record
@@ -216,16 +233,18 @@ class ImageFactory implements ImageFactoryInterface
 
                 if (null !== ($imageSize = $imageModel->findByPk($size[2]))) {
                     $this->enhanceResizeConfig($config, $imageSize->row());
+                    $options->setSkipIfDimensionsMatch((bool) $imageSize->skipIfDimensionsMatch);
                 }
 
-                return [$config, null];
+                return [$config, null, $options];
             }
 
             // Predefined sizes
             if (isset($this->predefinedSizes[$size[2]])) {
                 $this->enhanceResizeConfig($config, $this->predefinedSizes[$size[2]]);
+                $options->setSkipIfDimensionsMatch($this->predefinedSizes[$size[2]]['skipIfDimensionsMatch'] ?? true);
 
-                return [$config, null];
+                return [$config, null, $options];
             }
         }
 
@@ -242,12 +261,12 @@ class ImageFactory implements ImageFactoryInterface
                 $config->setMode($size[2]);
             }
 
-            return [$config, null];
+            return [$config, null, null];
         }
 
         $config->setMode(ResizeConfigurationInterface::MODE_CROP);
 
-        return [$config, $this->getImportantPartFromLegacyMode($image, $size[2])];
+        return [$config, $this->getImportantPartFromLegacyMode($image, $size[2]), null];
     }
 
     /**

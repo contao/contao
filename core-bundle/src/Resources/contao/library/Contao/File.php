@@ -271,13 +271,13 @@ class File extends System
 					{
 						$this->arrImageSize = static::$arrImageSizeCache[$strCacheKey];
 					}
-					elseif (!$this->exists())
+					else
 					{
 						try
 						{
-							$deferredImage = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile);
+							$dimensions = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile)->getDimensions();
 
-							if ($deferredImage)
+							if (!$dimensions->isRelative() && !$dimensions->isUndefined())
 							{
 								$mapper = array
 								(
@@ -289,10 +289,10 @@ class File extends System
 
 								$this->arrImageSize = array
 								(
-									$deferredImage->getDimensions()->getSize()->getWidth(),
-									$deferredImage->getDimensions()->getSize()->getHeight(),
+									$dimensions->getSize()->getWidth(),
+									$dimensions->getSize()->getHeight(),
 									$mapper[$this->extension] ?? 0,
-									'width="' . $deferredImage->getDimensions()->getSize()->getWidth() . '" height="' . $deferredImage->getDimensions()->getSize()->getHeight() . '"',
+									'width="' . $dimensions->getSize()->getWidth() . '" height="' . $dimensions->getSize()->getHeight() . '"',
 									'bits' => 8,
 									'channels' => 3,
 									'mime' => $this->getMimeType()
@@ -303,38 +303,10 @@ class File extends System
 						{
 							// ignore
 						}
-					}
-					elseif ($this->isGdImage)
-					{
-						$this->arrImageSize = @getimagesize($this->strRootDir . '/' . $this->strFile);
-					}
-					elseif ($this->isSvgImage)
-					{
-						try
-						{
-							$dimensions = (new ContaoImage($this->strRootDir . '/' . $this->strFile, System::getContainer()->get('contao.image.imagine_svg')))->getDimensions();
 
-							if (!$dimensions->isRelative() && !$dimensions->isUndefined())
-							{
-								$this->arrImageSize = array
-								(
-									$dimensions->getSize()->getWidth(),
-									$dimensions->getSize()->getHeight(),
-									0, // replace this with IMAGETYPE_SVG when it becomes available
-									'width="' . $dimensions->getSize()->getWidth() . '" height="' . $dimensions->getSize()->getHeight() . '"',
-									'bits' => 8,
-									'channels' => 3,
-									'mime' => $this->getMimeType()
-								);
-							}
-							else
-							{
-								$this->arrImageSize = false;
-							}
-						}
-						catch(\Exception $e)
+						if (!$this->arrImageSize)
 						{
-							$this->arrImageSize = false;
+							$this->arrImageSize = @getimagesize($this->strRootDir . '/' . $this->strFile);
 						}
 					}
 
