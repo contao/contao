@@ -21,7 +21,7 @@ use Contao\Template;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Container;
-use Terminal42\ServiceAnnotationBundle\Annotation\ServiceAnnotationInterface;
+use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface, ServiceAnnotationInterface
 {
