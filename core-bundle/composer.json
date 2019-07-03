@@ -85,6 +85,7 @@
         "symfony/translation": "4.2.* || 4.3.*",
         "symfony/twig-bundle": "4.2.* || 4.3.*",
         "symfony/yaml": "4.2.* || 4.3.*",
+        "terminal42/service-annotation-bundle": "^1.0",
         "true/punycode": "^2.1",
         "twig/twig": "^2.7"
     },
