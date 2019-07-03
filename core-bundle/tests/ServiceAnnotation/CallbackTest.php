@@ -33,10 +33,13 @@ class CallbackTest extends TestCase
         $annotation->target = 'foo.bar';
         $annotation->priority = 17;
 
-        $this->assertSame(['table' => 'tl_foobar', 'target' => 'foo.bar', 'priority' => 17], $annotation->getAttributes());
+        $this->assertSame(
+            ['table' => 'tl_foobar', 'target' => 'foo.bar', 'priority' => 17],
+            $annotation->getAttributes()
+        );
     }
 
-    public function testDoesNotReturnPriorityIfNotSet(): void
+    public function testDoesNotReturnThePriorityIfNotSet(): void
     {
         $annotation = new Callback();
         $annotation->table = 'tl_foobar';

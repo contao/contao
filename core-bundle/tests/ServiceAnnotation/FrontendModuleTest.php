@@ -27,9 +27,22 @@ class FrontendModuleTest extends TestCase
 
     public function testReturnsTheArguments(): void
     {
-        $annotation = new FrontendModule(['value' => 'foobar', 'category' => 'foobar', 'template' => 'mod_foobar', 'renderer' => 'esi']);
+        $annotation = new FrontendModule([
+            'value' => 'foobar',
+            'category' => 'foobar',
+            'template' => 'mod_foobar',
+            'renderer' => 'esi',
+        ]);
 
-        $this->assertSame(['type' => 'foobar', 'category' => 'foobar', 'template' => 'mod_foobar', 'renderer' => 'esi'], $annotation->getAttributes());
+        $this->assertSame(
+            [
+                'type' => 'foobar',
+                'category' => 'foobar',
+                'template' => 'mod_foobar',
+                'renderer' => 'esi',
+            ],
+            $annotation->getAttributes()
+        );
     }
 
     public function testDoesNotReturnOptionalArguments(): void

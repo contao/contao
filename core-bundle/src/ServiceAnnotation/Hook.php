@@ -18,7 +18,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
 use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 
 /**
- * Annotation that can be used to register a Contao hook.
+ * Annotation to register a Contao hook.
  *
  * @Annotation
  * @Target({"METHOD"})

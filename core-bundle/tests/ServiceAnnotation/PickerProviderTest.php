@@ -32,7 +32,7 @@ class PickerProviderTest extends TestCase
         $this->assertSame(['priority' => 17], $annotation->getAttributes());
     }
 
-    public function testDoesNotReturnPriorityIfNotSet(): void
+    public function testDoesNotReturnThePriorityIfNotSet(): void
     {
         $annotation = new PickerProvider();
 

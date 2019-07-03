@@ -33,7 +33,7 @@ class HookTest extends TestCase
         $this->assertSame(['hook' => 'foobar', 'priority' => 17], $annotation->getAttributes());
     }
 
-    public function testDoesNotReturnPriorityIfNotSet(): void
+    public function testDoesNotReturnThePriorityIfNotSet(): void
     {
         $annotation = new Hook();
         $annotation->value = 'foobar';

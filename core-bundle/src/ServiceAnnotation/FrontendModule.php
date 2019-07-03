@@ -18,7 +18,7 @@ use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * Annotation that can be used to define controller as a frontend module.
+ * Annotation to define a controller as frontend module.
  *
  * @Annotation
  * @Target({"CLASS", "METHOD"})

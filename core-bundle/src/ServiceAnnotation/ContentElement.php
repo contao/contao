@@ -18,7 +18,7 @@ use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
- * Annotation that can be used to define controller as a content element.
+ * Annotation to define a controller as content element.
  *
  * @Annotation
  * @Target({"CLASS", "METHOD"})
