@@ -51,10 +51,10 @@
         <source>The CSS classes will be applied to the image tag.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
-        <source>Skip if dimensions match</source>
+        <source>Use original image if dimensions match</source>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
-        <source>Skip image processing if no resize is needed and use the original image file instead. If processing is skipped, no optimizations such as meta data stripping and JPEG compression are applied.</source>
+        <source>Skip image processing if resizing is not needed. Note that no optimizations such as meta data stripping or JPEG compression will be applied in this case.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
@@ -64,6 +64,9 @@
       </trans-unit>
       <trans-unit id="tl_image_size.title_legend">
         <source>Image size settings</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.processing_legend">
+        <source>Image processing</source>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>
