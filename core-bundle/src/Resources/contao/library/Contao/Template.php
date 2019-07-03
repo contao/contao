@@ -313,8 +313,18 @@ abstract class Template extends Controller
 	 */
 	public function route($strName, $arrParams=array())
 	{
-		$strUrl = System::getContainer()->get('router')->generate($strName, $arrParams);
+		$objRouter = System::getContainer()->get('router');
+		$objBuffer = $objRouter->getContext();
+
+		$objContext = clone $objBuffer;
+		$objContext->setBaseUrl('');
+
+		$objRouter->setContext($objContext);
+
+		$strUrl = $objRouter->generate($strName, $arrParams);
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
+
+		$objRouter->setContext($objBuffer);
 
 		return ampersand($strUrl);
 	}
@@ -330,17 +340,17 @@ abstract class Template extends Controller
 	public function previewRoute($strName, $arrParams=array())
 	{
 		$objRouter = System::getContainer()->get('router');
-		$objContext = $objRouter->getContext();
+		$objBuffer = $objRouter->getContext();
 
-		$objPreviewContext = clone $objContext;
-		$objPreviewContext->setBaseUrl('/preview.php');
+		$objContext = clone $objBuffer;
+		$objContext->setBaseUrl('/preview.php');
 
-		$objRouter->setContext($objPreviewContext);
+		$objRouter->setContext($objContext);
 
 		$strUrl = $objRouter->generate($strName, $arrParams);
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
-		$objRouter->setContext($objContext);
+		$objRouter->setContext($objBuffer);
 
 		return ampersand($strUrl);
 	}
