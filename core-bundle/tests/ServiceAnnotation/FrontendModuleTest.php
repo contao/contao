@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\ServiceAnnotation;
 
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
-use Doctrine\Common\Annotations\AnnotationException;
 use PHPUnit\Framework\TestCase;
 
 class FrontendModuleTest extends TestCase
@@ -26,16 +25,9 @@ class FrontendModuleTest extends TestCase
         $this->assertSame(FrontendModuleReference::TAG_NAME, $annotation->getName());
     }
 
-    public function testTheNameCannotBeSet(): void
-    {
-        $annotation = new FrontendModule(['category' => 'foobar', 'name' => 'foobar']);
-
-        $this->assertSame(FrontendModuleReference::TAG_NAME, $annotation->getName());
-    }
-
     public function testReturnsTheArguments(): void
     {
-        $annotation = new FrontendModule(['type' => 'foobar', 'category' => 'foobar', 'template' => 'mod_foobar', 'renderer' => 'esi']);
+        $annotation = new FrontendModule(['value' => 'foobar', 'category' => 'foobar', 'template' => 'mod_foobar', 'renderer' => 'esi']);
 
         $this->assertSame(['type' => 'foobar', 'category' => 'foobar', 'template' => 'mod_foobar', 'renderer' => 'esi'], $annotation->getAttributes());
     }
@@ -47,25 +39,10 @@ class FrontendModuleTest extends TestCase
         $this->assertSame(['category' => 'foobar'], $annotation->getAttributes());
     }
 
-    public function testIgnoresUnknownAttributes(): void
+    public function testReturnsAdditionalAttributes(): void
     {
         $annotation = new FrontendModule(['category' => 'foobar', 'foo' => 'bar']);
 
-        $this->assertSame(['category' => 'foobar'], $annotation->getAttributes());
-    }
-
-    public function testReturnsAdditionalAttributes(): void
-    {
-        $annotation = new FrontendModule(['category' => 'foobar', 'attributes' => ['foo' => 'bar']]);
-
-        $this->assertSame(['foo' => 'bar', 'category' => 'foobar'], $annotation->getAttributes());
-    }
-
-    public function testThrowsExceptionIfTheTableAttributeIsNotSet(): void
-    {
-        $this->expectException(AnnotationException::class);
-        $this->expectExceptionMessage('[Type Error] Attribute "category" of @Contao\CoreBundle\ServiceAnnotation\FrontendModule should not be null.');
-
-        new FrontendModule([]);
+        $this->assertSame(['category' => 'foobar', 'foo' => 'bar'], $annotation->getAttributes());
     }
 }

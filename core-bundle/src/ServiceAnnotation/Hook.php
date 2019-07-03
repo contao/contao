@@ -15,8 +15,7 @@ namespace Contao\CoreBundle\ServiceAnnotation;
 use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Doctrine\Common\Annotations\AnnotationException;
-use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
+use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 
 /**
  * Annotation that can be used to register a Contao hook.
@@ -24,38 +23,30 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
  * @Annotation
  * @Target({"METHOD"})
  * @Attributes({
- *     @Attribute("hook", type="string", required=true),
+ *     @Attribute("value", type="string", required=true),
  *     @Attribute("priority", type="int"),
  * })
  */
-final class Hook extends ServiceTag
+final class Hook implements ServiceTagInterface
 {
     /**
      * @var string
      */
-    private $hook;
+    public $value;
 
     /**
      * @var int|null
      */
-    private $priority;
+    public $priority;
 
-    public function __construct(array $values)
+    public function getName(): string
     {
-        parent::__construct([]);
-
-        if (empty($values['hook'])) {
-            throw AnnotationException::typeError('Attribute "hook" of @'.static::class.' should not be null.');
-        }
-
-        $this->name = 'contao.hook';
-        $this->hook = $values['hook'];
-        $this->priority = $values['priority'] ?? null;
+        return 'contao.hook';
     }
 
     public function getAttributes(): array
     {
-        $attributes = ['hook' => $this->hook];
+        $attributes = ['hook' => $this->value];
 
         if ($this->priority) {
             $attributes['priority'] = $this->priority;

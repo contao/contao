@@ -15,8 +15,7 @@ namespace Contao\CoreBundle\ServiceAnnotation;
 use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Doctrine\Common\Annotations\AnnotationException;
-use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
+use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 
 /**
  * Annotation that can be used to register a DCA callback.
@@ -29,39 +28,26 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
  *     @Attribute("priority", type="int"),
  * })
  */
-final class Callback extends ServiceTag
+final class Callback implements ServiceTagInterface
 {
     /**
      * @var string
      */
-    private $table;
+    public $table;
 
     /**
      * @var string
      */
-    private $target;
+    public $target;
 
     /**
      * @var int|null
      */
-    private $priority;
+    public $priority;
 
-    public function __construct(array $values)
+    public function getName(): string
     {
-        parent::__construct([]);
-
-        if (empty($values['table'])) {
-            throw AnnotationException::typeError('Attribute "table" of @'.static::class.' should not be null.');
-        }
-
-        if (empty($values['target'])) {
-            throw AnnotationException::typeError('Attribute "target" of @'.static::class.' should not be null.');
-        }
-
-        $this->name = 'contao.callback';
-        $this->table = $values['table'];
-        $this->target = $values['target'];
-        $this->priority = $values['priority'] ?? null;
+        return 'contao.callback';
     }
 
     public function getAttributes(): array

@@ -23,7 +23,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Annotation
  * @Target({"CLASS", "METHOD"})
  * @Attributes({
- *     @Attribute("type", type = "string"),
+ *     @Attribute("value", type = "string"),
  *     @Attribute("category", required = true, type = "string"),
  *     @Attribute("template", type = "string"),
  *     @Attribute("renderer", type = "string"),
@@ -32,10 +32,8 @@ use Doctrine\Common\Annotations\Annotation\Target;
  */
 final class ContentElement extends AbstractFragmentAnnotation
 {
-    public function __construct(array $values)
+    public function getName(): string
     {
-        parent::__construct($values);
-
-        $this->name = ContentElementReference::TAG_NAME;
+        return ContentElementReference::TAG_NAME;
     }
 }

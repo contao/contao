@@ -23,19 +23,16 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @Annotation
  * @Target({"CLASS", "METHOD"})
  * @Attributes({
- *     @Attribute("type", type="string"),
+ *     @Attribute("value", type="string"),
  *     @Attribute("category", type="string", required = true),
  *     @Attribute("template", type="string"),
  *     @Attribute("renderer", type="string"),
- *     @Attribute("attributes", type="array"),
  * })
  */
 final class FrontendModule extends AbstractFragmentAnnotation
 {
-    public function __construct(array $values)
+    public function getName(): string
     {
-        parent::__construct($values);
-
-        $this->name = FrontendModuleReference::TAG_NAME;
+        return FrontendModuleReference::TAG_NAME;
     }
 }

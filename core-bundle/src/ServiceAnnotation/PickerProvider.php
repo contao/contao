@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\ServiceAnnotation;
 use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Attributes;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
+use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 
 /**
  * Annotation that can be used to register a Contao picker.
@@ -26,19 +26,16 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
  *     @Attribute("priority", type="int"),
  * })
  */
-final class PickerProvider extends ServiceTag
+final class PickerProvider implements ServiceTagInterface
 {
     /**
      * @var int|null
      */
-    private $priority;
+    public $priority;
 
-    public function __construct(array $values)
+    public function getName(): string
     {
-        parent::__construct([]);
-
-        $this->name = 'contao.picker_provider';
-        $this->priority = $values['priority'] ?? null;
+        return 'contao.picker_provider';
     }
 
     public function getAttributes(): array

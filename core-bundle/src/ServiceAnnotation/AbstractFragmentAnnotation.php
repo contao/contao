@@ -12,63 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\ServiceAnnotation;
 
-use Doctrine\Common\Annotations\AnnotationException;
-use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
+use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 
-abstract class AbstractFragmentAnnotation extends ServiceTag
+abstract class AbstractFragmentAnnotation implements ServiceTagInterface
 {
     /**
-     * @var string|null
+     * @var array
      */
-    protected $type;
+    private $attributes;
 
-    /**
-     * @var string
-     */
-    protected $category;
-
-    /**
-     * @var string|null
-     */
-    protected $renderer;
-
-    /**
-     * @var string|null
-     */
-    protected $template;
-
-    public function __construct(array $values)
+    public function __construct(array $attributes)
     {
-        parent::__construct($values);
-
-        if (empty($values['category'])) {
-            throw AnnotationException::typeError('Attribute "category" of @'.static::class.' should not be null.');
+        if (isset($attributes['value'])) {
+            $attributes['type'] = $attributes['value'];
+            unset($attributes['value']);
         }
 
-        $this->type = $values['type'] ?? null;
-        $this->category = $values['category'];
-        $this->template = $values['template'] ?? null;
-        $this->renderer = $values['renderer'] ?? null;
+        $this->attributes = $attributes;
     }
 
     public function getAttributes(): array
     {
-        $attributes = parent::getAttributes();
-
-        if ($this->type) {
-            $attributes['type'] = $this->type;
-        }
-
-        $attributes['category'] = $this->category;
-
-        if ($this->template) {
-            $attributes['template'] = $this->template;
-        }
-
-        if ($this->renderer) {
-            $attributes['renderer'] = $this->renderer;
-        }
-
-        return $attributes;
+        return $this->attributes;
     }
 }

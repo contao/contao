@@ -19,36 +19,23 @@ class PickerProviderTest extends TestCase
 {
     public function testReturnsTheTagName(): void
     {
-        $annotation = new PickerProvider([]);
-
-        $this->assertSame('contao.picker_provider', $annotation->getName());
-    }
-
-    public function testTheNameCannotBeSet(): void
-    {
-        $annotation = new PickerProvider(['name' => 'foobar']);
+        $annotation = new PickerProvider();
 
         $this->assertSame('contao.picker_provider', $annotation->getName());
     }
 
     public function testReturnsTheArguments(): void
     {
-        $annotation = new PickerProvider(['priority' => 17]);
+        $annotation = new PickerProvider();
+        $annotation->priority = 17;
 
         $this->assertSame(['priority' => 17], $annotation->getAttributes());
     }
 
     public function testDoesNotReturnPriorityIfNotSet(): void
     {
-        $annotation = new PickerProvider([]);
+        $annotation = new PickerProvider();
 
         $this->assertSame([], $annotation->getAttributes());
-    }
-
-    public function testIgnoresUnknownAttributes(): void
-    {
-        $annotation = new PickerProvider(['priority' => 17, 'foo' => 'bar']);
-
-        $this->assertSame(['priority' => 17], $annotation->getAttributes());
     }
 }
