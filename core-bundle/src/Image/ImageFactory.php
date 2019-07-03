@@ -107,7 +107,9 @@ class ImageFactory implements ImageFactoryInterface
     public function create($path, $size = null, $options = null): ImageInterface
     {
         if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptionsInterface) {
-            throw new \InvalidArgumentException('Options must be of type null, string or '.ResizeOptionsInterface::class);
+            throw new \InvalidArgumentException(
+                'Options must be of type null, string or '.ResizeOptionsInterface::class
+            );
         }
 
         if ($path instanceof ImageInterface) {

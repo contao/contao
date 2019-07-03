@@ -219,11 +219,13 @@ class ImageFactoryTest extends TestCase
         $resizer = $this->createMock(ResizerInterface::class);
         $resizer
             ->method('resize')
-            ->willReturnCallback(function (ImageInterface $image, ResizeConfigurationInterface $config) {
-                $this->assertTrue($config->isEmpty());
+            ->willReturnCallback(
+                function (ImageInterface $image, ResizeConfigurationInterface $config) {
+                    $this->assertTrue($config->isEmpty());
 
-                return $image;
-            })
+                    return $image;
+                }
+            )
         ;
 
         $framework = $this->mockContaoFramework($adapters);
@@ -527,8 +529,10 @@ class ImageFactoryTest extends TestCase
         $path = $this->getFixturesDir().'/images/dummy.jpg';
         $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
         $framework = $this->mockContaoFramework([FilesModel::class => $adapter]);
+
         $resizer = new LegacyResizer($this->getFixturesDir().'/assets/images', new ResizeCalculator());
         $resizer->setFramework($framework);
+
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
 
@@ -603,8 +607,10 @@ class ImageFactoryTest extends TestCase
         $path = $this->getFixturesDir().'/images/dummy.jpg';
         $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
         $framework = $this->mockContaoFramework([FilesModel::class => $adapter]);
+
         $resizer = new LegacyResizer($this->getFixturesDir().'/assets/images', new ResizeCalculator());
         $resizer->setFramework($framework);
+
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
 

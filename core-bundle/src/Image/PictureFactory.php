@@ -192,7 +192,6 @@ class PictureFactory implements PictureFactoryInterface
                 $imageSizes = $this->predefinedSizes[$size[2]];
 
                 $config->setSize($this->createConfigItem($imageSizes));
-
                 $options->setSkipIfDimensionsMatch($imageSizes['skipIfDimensionsMatch'] ?? true);
 
                 if ($imageSizes && isset($imageSizes['cssClass']) && $imageSizes['cssClass']) {
