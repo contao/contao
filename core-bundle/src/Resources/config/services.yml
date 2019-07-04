@@ -320,15 +320,6 @@ services:
         tags:
             - { name: contao.picker_provider }
 
-    contao.referer_id.manager:
-        class: Symfony\Component\Security\Csrf\CsrfTokenManager
-        arguments:
-            - '@contao.referer_id.token_generator'
-            - '@security.csrf.token_storage'
-
-    contao.referer_id.token_generator:
-        class: Contao\CoreBundle\Referer\TokenGenerator
-
     contao.repository.remember_me:
         class: Contao\CoreBundle\Repository\RememberMeRepository
         arguments:
@@ -613,6 +604,11 @@ services:
             - '@event_dispatcher'
             - '@translator'
         public: true
+
+    contao.token_generator:
+        class: Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator
+        arguments:
+            - 48
 
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator

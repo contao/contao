@@ -74,7 +74,6 @@ use Contao\CoreBundle\Picker\ArticlePickerProvider;
 use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PagePickerProvider;
 use Contao\CoreBundle\Picker\PickerBuilder;
-use Contao\CoreBundle\Referer\TokenGenerator;
 use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Routing\FrontendLoader;
@@ -127,6 +126,7 @@ use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
 use Symfony\Component\HttpKernel\EventListener\LocaleListener as BaseLocaleListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
@@ -523,7 +523,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(RefererIdListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.referer_id.manager', (string) $definition->getArgument(0));
+        $this->assertSame('contao.token_generator', (string) $definition->getArgument(0));
         $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
 
         $tags = $definition->getTags();
@@ -1217,28 +1217,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertArrayHasKey('contao.picker_provider', $tags);
     }
 
-    public function testRegistersTheRefererIdManager(): void
-    {
-        $this->assertTrue($this->container->has('contao.referer_id.manager'));
-
-        $definition = $this->container->getDefinition('contao.referer_id.manager');
-
-        $this->assertSame(CsrfTokenManager::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.referer_id.token_generator', (string) $definition->getArgument(0));
-        $this->assertSame('security.csrf.token_storage', (string) $definition->getArgument(1));
-    }
-
-    public function testRegistersTheRefererIdTokenGenerator(): void
-    {
-        $this->assertTrue($this->container->has('contao.referer_id.token_generator'));
-
-        $definition = $this->container->getDefinition('contao.referer_id.token_generator');
-
-        $this->assertSame(TokenGenerator::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-    }
-
     public function testRegistersTheRememberMeRepository(): void
     {
         $this->assertTrue($this->container->has('contao.repository.remember_me'));
@@ -1691,6 +1669,16 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
         $this->assertSame('logger', (string) $definition->getArgument(1));
+    }
+
+    public function testRegistersTheTokenGenerator(): void
+    {
+        $this->assertTrue($this->container->has('contao.token_generator'));
+
+        $definition = $this->container->getDefinition('contao.token_generator');
+
+        $this->assertSame(UriSafeTokenGenerator::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
     }
 
     public function testRegistersTheContaoBackendSession(): void

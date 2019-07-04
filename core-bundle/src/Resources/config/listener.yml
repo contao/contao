@@ -133,7 +133,7 @@ services:
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener
         arguments:
-            - '@contao.referer_id.manager'
+            - '@contao.token_generator'
             - '@contao.routing.scope_matcher'
         tags:
             # The priority must be lower than the one of the Symfony route listener (defaults to 32)

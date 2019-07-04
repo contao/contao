@@ -20,8 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class RefererIdListenerTest extends TestCase
 {
@@ -33,7 +32,7 @@ class RefererIdListenerTest extends TestCase
         $kernel = $this->createMock(KernelInterface::class);
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
+        $listener = new RefererIdListener($this->mockTokenGenerator(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertTrue($request->attributes->has('_contao_referer_id'));
@@ -48,7 +47,7 @@ class RefererIdListenerTest extends TestCase
         $kernel = $this->createMock(KernelInterface::class);
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
+        $listener = new RefererIdListener($this->mockTokenGenerator(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertFalse($request->attributes->has('_contao_referer_id'));
@@ -62,7 +61,7 @@ class RefererIdListenerTest extends TestCase
         $kernel = $this->createMock(KernelInterface::class);
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
 
-        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
+        $listener = new RefererIdListener($this->mockTokenGenerator(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertFalse($request->attributes->has('_contao_referer_id'));
@@ -76,7 +75,7 @@ class RefererIdListenerTest extends TestCase
         $kernel = $this->createMock(KernelInterface::class);
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new RefererIdListener($this->mockTokenManager(), $this->mockScopeMatcher());
+        $listener = new RefererIdListener($this->mockTokenGenerator(), $this->mockScopeMatcher());
         $listener->onKernelRequest($event);
 
         $this->assertTrue($request->attributes->has('_contao_referer_id'));
@@ -89,21 +88,16 @@ class RefererIdListenerTest extends TestCase
     }
 
     /**
-     * @return CsrfTokenManagerInterface&MockObject
+     * @return TokenGeneratorInterface&MockObject
      */
-    private function mockTokenManager(): CsrfTokenManagerInterface
+    private function mockTokenGenerator(): TokenGeneratorInterface
     {
-        $tokenManager = $this->createMock(CsrfTokenManagerInterface::class);
-        $tokenManager
-            ->method('getToken')
-            ->willReturn(new CsrfToken('_csrf', 'testValue'))
+        $tokenGenerator = $this->createMock(TokenGeneratorInterface::class);
+        $tokenGenerator
+            ->method('generateToken')
+            ->willReturn('testValue')
         ;
 
-        $tokenManager
-            ->method('refreshToken')
-            ->willReturnOnConsecutiveCalls(new CsrfToken('_csrf', 'testValue'), new CsrfToken('_csrf', 'foo'))
-        ;
-
-        return $tokenManager;
+        return $tokenGenerator;
     }
 }
