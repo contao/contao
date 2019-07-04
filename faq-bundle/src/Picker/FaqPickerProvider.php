@@ -24,8 +24,6 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
 {
     use FrameworkAwareTrait;
 
-    protected const DEFAULT_INSERTTAG = '{{faq_url::%s}}';
-
     /**
      * {@inheritdoc}
      */
@@ -47,7 +45,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG)[0]);
+        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config)[0]);
     }
 
     /**
@@ -71,7 +69,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
 
         if ($this->supportsValue($config)) {
             $attributes['value'] = str_replace(
-                $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG),
+                $this->getInsertTagChunks($config),
                 '',
                 $config->getValue()
             );
@@ -85,7 +83,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
      */
     public function convertDcaValue(PickerConfig $config, $value): string
     {
-        return sprintf($this->getInsertTag($config, self::DEFAULT_INSERTTAG), $value);
+        return sprintf($this->getInsertTag($config), $value);
     }
 
     /**
@@ -99,7 +97,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
             return $params;
         }
 
-        $insertTagChunks = $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG);
+        $insertTagChunks = $this->getInsertTagChunks($config);
 
         if (false === strpos($config->getValue(), $insertTagChunks[0])) {
             return $params;
@@ -113,6 +111,14 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
         }
 
         return $params;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFallbackInsertTag(): string
+    {
+        return '{{faq_url::%s}}';
     }
 
     /**

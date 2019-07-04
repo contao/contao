@@ -25,8 +25,6 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
 {
     use FrameworkAwareTrait;
 
-    protected const DEFAULT_INSERTTAG = '{{file::%s}}';
-
     /**
      * @var string
      */
@@ -66,7 +64,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return Validator::isUuid($value);
         }
 
-        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG)[0])
+        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config)[0])
             || 0 === strpos($value, $this->uploadPath);
     }
 
@@ -104,7 +102,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
         $filesModel = $filesAdapter->findByPath(rawurldecode($value));
 
         if ($filesModel instanceof FilesModel) {
-            return sprintf($this->getInsertTag($config, self::DEFAULT_INSERTTAG), StringUtil::binToUuid($filesModel->uuid));
+            return sprintf($this->getInsertTag($config), StringUtil::binToUuid($filesModel->uuid));
         }
 
         return $value;
@@ -116,6 +114,14 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'files'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFallbackInsertTag(): string
+    {
+        return '{{file::%s}}';
     }
 
     /**
@@ -183,7 +189,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
         $value = $config->getValue();
 
         if ($value) {
-            $insertTagChunks = $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG);
+            $insertTagChunks = $this->getInsertTagChunks($config);
 
             if (false !== strpos($value, $insertTagChunks[0])) {
                 $value = str_replace($insertTagChunks, '', $value);

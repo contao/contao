@@ -122,22 +122,33 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     /**
      * Provides a shortcut to get the "insertTag" extra value for child classes.
      */
-    protected function getInsertTag(PickerConfig $config, string $default): string
+    protected function getInsertTag(PickerConfig $config): string
     {
         if ($insertTag = $config->getExtraForProvider('insertTag', $this->getName())) {
             return (string) $insertTag;
         }
 
-        return $default;
+        return $this->getFallbackInsertTag();
     }
 
     /**
      * Provides a shortcut get the "insertTag" extra value for child classes and
      * split them at the placeholder (%s).
      */
-    protected function getInsertTagChunks(PickerConfig $config, string $default): array
+    protected function getInsertTagChunks(PickerConfig $config): array
     {
-        return explode('%s', $this->getInsertTag($config, $default), 2);
+        return explode('%s', $this->getInsertTag($config), 2);
+    }
+
+    /**
+     * Defines the fallback insert tag to work with if no specifc configuration
+     * was provided.
+     */
+    protected function getFallbackInsertTag(): string
+    {
+        throw new \RuntimeException('If you deal with insert tags in your picker provider you have to specify a
+        fallback insert tag in case no specific insert tag was passed on via configuration. You must override
+        the AbstractPickerProvider::getFallbackInsertTag() method.');
     }
 
     /**

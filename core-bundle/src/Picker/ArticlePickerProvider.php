@@ -14,8 +14,6 @@ namespace Contao\CoreBundle\Picker;
 
 class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface
 {
-    protected const DEFAULT_INSERTTAG = '{{article_url::%s}}';
-
     /**
      * {@inheritdoc}
      */
@@ -37,7 +35,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG)[0]);
+        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config)[0]);
     }
 
     /**
@@ -61,7 +59,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
 
         if ($this->supportsValue($config)) {
             $attributes['value'] = str_replace(
-                $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG),
+                $this->getInsertTagChunks($config),
                 '',
                 $config->getValue()
             );
@@ -75,7 +73,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
      */
     public function convertDcaValue(PickerConfig $config, $value): string
     {
-        return sprintf($this->getInsertTag($config, self::DEFAULT_INSERTTAG), $value);
+        return sprintf($this->getInsertTag($config), $value);
     }
 
     /**
@@ -84,5 +82,13 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
     protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'article'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFallbackInsertTag(): string
+    {
+        return '{{article_url::%s}}';
     }
 }

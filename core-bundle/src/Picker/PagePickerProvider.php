@@ -14,8 +14,6 @@ namespace Contao\CoreBundle\Picker;
 
 class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface
 {
-    protected const DEFAULT_INSERTTAG = '{{link_url::%s}}';
-
     /**
      * {@inheritdoc}
      */
@@ -41,7 +39,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return is_numeric($config->getValue());
         }
 
-        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG)[0]);
+        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config)[0]);
     }
 
     /**
@@ -84,7 +82,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return $attributes;
         }
 
-        $insertTagChunks = $this->getInsertTagChunks($config, self::DEFAULT_INSERTTAG);
+        $insertTagChunks = $this->getInsertTagChunks($config);
 
         if ($value && false !== strpos($value, $insertTagChunks[0])) {
             $attributes['value'] = str_replace($insertTagChunks, '', $value);
@@ -102,7 +100,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return (int) $value;
         }
 
-        return sprintf($this->getInsertTag($config, self::DEFAULT_INSERTTAG), $value);
+        return sprintf($this->getInsertTag($config), $value);
     }
 
     /**
@@ -111,5 +109,13 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'page'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getFallbackInsertTag(): string
+    {
+        return '{{link_url::%s}}';
     }
 }
