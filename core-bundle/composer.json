@@ -37,7 +37,7 @@
         "contao-components/tablesort": "^4.0",
         "contao-components/tablesorter": "^2.1",
         "contao-components/tinymce4": "^4.7",
-        "contao/image": "^1.0.0-beta2@beta",
+        "contao/image": "^1.0.0-beta3@beta",
         "contao/imagine-svg": "^0.1.2 || ^0.2",
         "doctrine/dbal": "^2.6",
         "doctrine/doctrine-bundle": "^1.8",
