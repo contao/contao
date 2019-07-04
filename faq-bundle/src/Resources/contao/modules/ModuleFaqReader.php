@@ -103,6 +103,9 @@ class ModuleFaqReader extends Module
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
+		// Add the FAQ record to the template (see #221)
+		$this->Template->faq = $objFaq->row();
+
 		// Overwrite the page title and description (see #2853 and #4955)
 		if ($objFaq->question != '')
 		{

@@ -147,39 +147,24 @@
         <source>Template settings</source>
       </trans-unit>
       <trans-unit id="tl_form.new.0">
-        <source>New form</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
       </trans-unit>
-      <trans-unit id="tl_form.show.0">
-        <source>Form details</source>
-      </trans-unit>
-      <trans-unit id="tl_form.show.1">
+      <trans-unit id="tl_form.show">
         <source>Show the details of form ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form.edit.0">
-        <source>Edit form</source>
-      </trans-unit>
-      <trans-unit id="tl_form.edit.1">
+      <trans-unit id="tl_form.edit">
         <source>Edit form ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.0">
-        <source>Edit form</source>
+      <trans-unit id="tl_form.editheader">
+        <source>Edit the settings of form ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.1">
-        <source>Edit the form settings</source>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.0">
-        <source>Duplicate form</source>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.1">
+      <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form.delete.0">
-        <source>Delete form</source>
-      </trans-unit>
-      <trans-unit id="tl_form.delete.1">
+      <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
       </trans-unit>
     </body>

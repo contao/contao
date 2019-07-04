@@ -566,7 +566,7 @@ class FileSelector extends Widget
 					$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($rootDir), '', 'style="margin:0 0 2px -18px"');
 					$importantPart = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
-					if ($importantPart->getPosition()->getX() > 0 || $importantPart->getPosition()->getY() > 0 || $importantPart->getSize()->getWidth() < $objFile->width || $importantPart->getSize()->getHeight() < $objFile->height)
+					if ($importantPart->getX() > 0 || $importantPart->getY() > 0 || $importantPart->getWidth() < 1 || $importantPart->getHeight() < 1)
 					{
 						$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($rootDir), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
 					}

@@ -32,7 +32,7 @@ class AddPackagesPassTest extends TestCase
         $keys = array_keys(Versions::VERSIONS);
         $packages = $container->getParameter('kernel.packages');
 
-        $this->assertInternalType('array', $packages);
+        $this->assertIsArray($packages);
         $this->assertArrayHasKey($keys[0], $packages);
         $this->assertArrayHasKey($keys[1], $packages);
         $this->assertArrayHasKey($keys[2], $packages);

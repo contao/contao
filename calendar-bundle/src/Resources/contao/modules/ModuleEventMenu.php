@@ -86,7 +86,7 @@ class ModuleEventMenu extends ModuleCalendar
 	protected function compileYearlyMenu()
 	{
 		$arrData = array();
-		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, 2145913200);
+		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, 4294967295); // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
 
 		foreach ($arrAllEvents as $intDay=>$arrDay)
 		{
@@ -129,7 +129,7 @@ class ModuleEventMenu extends ModuleCalendar
 	protected function compileMonthlyMenu()
 	{
 		$arrData = array();
-		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, 2145913200);
+		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, 4294967295); // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
 
 		foreach ($arrAllEvents as $intDay=>$arrDay)
 		{

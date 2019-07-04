@@ -58,7 +58,7 @@ class GetDotEnvCommand extends Command
             return;
         }
 
-        $vars = (new Dotenv())->parse(file_get_contents($path));
+        $vars = (new Dotenv(false))->parse(file_get_contents($path));
         $key = $input->getArgument('key');
 
         if (!$key) {

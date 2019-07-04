@@ -39,6 +39,8 @@ use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Twig\Environment;
+use Twig\Error\Error;
 
 class PrettyErrorScreenListenerTest extends TestCase
 {
@@ -56,7 +58,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testDoesNotRenderBackEndExceptionsIfThereIsNoToken(): void
     {
-        $twig = $this->createMock('Twig_Environment');
+        $twig = $this->createMock(Environment::class);
         $framework = $this->mockContaoFramework();
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
@@ -83,7 +85,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testDoesNotRenderBackEndExceptionsIfThereIsNoUser(): void
     {
-        $twig = $this->createMock('Twig_Environment');
+        $twig = $this->createMock(Environment::class);
         $framework = $this->mockContaoFramework();
 
         $token = $this->createMock(TokenInterface::class);
@@ -186,7 +188,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new ServiceUnavailableHttpException(null, null, new ServiceUnavailableException());
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
-        $twig = $this->createMock('Twig_Environment');
+        $twig = $this->createMock(Environment::class);
         $framework = $this->mockContaoFramework();
         $tokenStorage = $this->mockTokenStorage(FrontendUser::class);
 
@@ -198,7 +200,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testDoesNotRenderExceptionsUponSubrequests(): void
     {
-        $twig = $this->createMock('Twig_Environment');
+        $twig = $this->createMock(Environment::class);
         $framework = $this->mockContaoFramework();
         $tokenStorage = $this->mockTokenStorage(BackendUser::class);
 
@@ -226,14 +228,14 @@ class PrettyErrorScreenListenerTest extends TestCase
     {
         $exception = new InternalServerErrorHttpException('', new ForwardPageNotFoundException());
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
-        $twig = $this->createMock('Twig_Environment');
+        $twig = $this->createMock(Environment::class);
         $count = 0;
 
         $twig
             ->method('render')
             ->willReturnCallback(static function () use (&$count): void {
                 if (0 === $count++) {
-                    throw new \Twig_Error('foo');
+                    throw new Error('foo');
                 }
             })
         ;
@@ -247,7 +249,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testDoesNothingIfTheFormatIsNotHtml(): void
     {
-        $twig = $this->createMock('Twig_Environment');
+        $twig = $this->createMock(Environment::class);
         $framework = $this->mockContaoFramework();
         $tokenStorage = $this->mockTokenStorage(BackendUser::class);
 
@@ -265,7 +267,7 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testDoesNothingIfTextHtmlIsNotAccepted(): void
     {
-        $twig = $this->createMock('Twig_Environment');
+        $twig = $this->createMock(Environment::class);
         $framework = $this->mockContaoFramework();
         $tokenStorage = $this->mockTokenStorage(BackendUser::class);
 
@@ -302,12 +304,12 @@ class PrettyErrorScreenListenerTest extends TestCase
     }
 
     /**
-     * @param \Twig_Environment&MockObject $twig
+     * @param Environment&MockObject $twig
      */
-    private function getListener(string $userClass, bool $expectLogging = false, \Twig_Environment $twig = null): PrettyErrorScreenListener
+    private function getListener(string $userClass, bool $expectLogging = false, Environment $twig = null): PrettyErrorScreenListener
     {
         if (null === $twig) {
-            $twig = $this->createMock('Twig_Environment');
+            $twig = $this->createMock(Environment::class);
         }
 
         $framework = $this->mockContaoFramework();

@@ -36,8 +36,8 @@ Install Contao and all its dependencies by executing the following command:
 
 ```
 composer require \
-    contao/core-bundle:4.7.* \
-    contao/installation-bundle:^4.7 \
+    contao/core-bundle:4.8.* \
+    contao/installation-bundle:^4.8 \
     php-http/guzzle6-adapter:^1.1
 ```
 
@@ -80,7 +80,7 @@ security:
 
     encoders:
         Contao\User:
-            algorithm: bcrypt
+            algorithm: auto
 
     firewalls:
         dev:
@@ -98,7 +98,6 @@ security:
             user_checker: contao.security.user_checker
             anonymous: ~
             switch_user: true
-            logout_on_user_change: true
 
             contao_login:
                 login_path: contao_backend_login
@@ -125,7 +124,6 @@ security:
             user_checker: contao.security.user_checker
             anonymous: ~
             switch_user: false
-            logout_on_user_change: true
 
             contao_login:
                 login_path: contao_frontend_login
@@ -140,7 +138,6 @@ security:
             remember_me:
                 secret: '%secret%'
                 remember_me_parameter: autologin
-                token_provider: contao.security.database_token_provider
 
             logout:
                 path: contao_frontend_logout

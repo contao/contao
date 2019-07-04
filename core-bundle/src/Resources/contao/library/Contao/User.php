@@ -495,20 +495,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			}
 		}
 
-		// Check if a passwords needs rehashing (see contao/core#8820)
-		if ($isLogin)
-		{
-			$blnAuthenticated = password_verify($request->request->get('password'), $user->password);
-			$blnNeedsRehash = password_needs_rehash($user->password, PASSWORD_DEFAULT);
-
-			// Re-hash the password if the algorithm has changed
-			if ($blnAuthenticated && $blnNeedsRehash)
-			{
-				$user->password = password_hash($request->request->get('password'), PASSWORD_DEFAULT);
-				$user->save();
-			}
-		}
-
 		$user->setUserFromDb();
 
 		return $user;

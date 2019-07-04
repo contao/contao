@@ -59,7 +59,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		(
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -69,27 +68,23 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_faq_category']['edit'],
 				'href'                => 'table=tl_faq',
 				'icon'                => 'edit.svg'
 			),
 			'editheader' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_faq_category']['editheader'],
 				'href'                => 'act=edit',
 				'icon'                => 'header.svg',
 				'button_callback'     => array('tl_faq_category', 'editHeader')
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_faq_category']['copy'],
 				'href'                => 'act=copy',
 				'icon'                => 'copy.svg',
 				'button_callback'     => array('tl_faq_category', 'copyCategory')
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_faq_category']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['tl_faq_category']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
@@ -97,7 +92,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_faq_category']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			)
@@ -130,7 +124,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		),
 		'title' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq_category']['title'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -139,7 +132,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		),
 		'headline' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq_category']['headline'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -148,7 +140,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		),
 		'jumpTo' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq_category']['jumpTo'],
 			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
@@ -158,7 +149,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		),
 		'allowComments' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq_category']['allowComments'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -167,7 +157,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		),
 		'notify' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq_category']['notify'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('notify_admin', 'notify_author', 'notify_both'),
@@ -177,7 +166,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		),
 		'sortOrder' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq_category']['sortOrder'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('ascending', 'descending'),
@@ -187,7 +175,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		),
 		'perPage' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq_category']['perPage'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
@@ -195,7 +182,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		),
 		'moderate' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq_category']['moderate'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -203,7 +189,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		),
 		'bbcode' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq_category']['bbcode'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -211,7 +196,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		),
 		'requireLogin' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq_category']['requireLogin'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -219,7 +203,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		),
 		'disableCaptcha' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_faq_category']['disableCaptcha'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),

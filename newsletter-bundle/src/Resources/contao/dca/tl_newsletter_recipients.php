@@ -52,14 +52,12 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		(
 			'import' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['import'],
 				'href'                => 'key=import',
 				'class'               => 'header_css_import',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -69,39 +67,33 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['edit'],
 				'href'                => 'act=edit',
 				'icon'                => 'edit.svg'
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg'
 			),
 			'cut' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg'
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['toggle'],
 				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_newsletter_recipients', 'toggleIcon')
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			)
@@ -133,7 +125,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		),
 		'email' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['email'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
@@ -149,7 +140,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		),
 		'active' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['active'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -158,7 +148,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		),
 		'addedOn' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter_recipients']['addedOn'],
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => 8,

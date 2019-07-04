@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\HttpKernel;
 
+use Contao\CoreBundle\EventListener\HttpCache\StripCookiesSubscriber;
 use Contao\ManagerBundle\HttpKernel\ContaoCache;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\TestCase\ContaoTestCase;
@@ -19,8 +20,6 @@ use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\Events;
 use FOS\HttpCache\SymfonyCache\PurgeListener;
 use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
 
 class ContaoCacheTest extends ContaoTestCase
@@ -29,14 +28,36 @@ class ContaoCacheTest extends ContaoTestCase
     {
         $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
         $dispatcher = $cache->getEventDispatcher();
+        $preHandle = $dispatcher->getListeners(Events::PRE_HANDLE);
         $preInvalidateListeners = $dispatcher->getListeners(Events::PRE_INVALIDATE);
 
+        $this->assertInstanceOf(StripCookiesSubscriber::class, $preHandle[0][0]);
         $this->assertInstanceOf(PurgeListener::class, $preInvalidateListeners[0][0]);
         $this->assertInstanceOf(PurgeTagsListener::class, $preInvalidateListeners[1][0]);
 
         $postHandleListeners = $dispatcher->getListeners(Events::POST_HANDLE);
 
         $this->assertInstanceOf(CleanupCacheTagsListener::class, $postHandleListeners[0][0]);
+    }
+
+    /**
+     * @dataProvider cookeWhitelistProvider
+     */
+    public function testCookieWhiteListEnvVariable(string $env, array $expectedList): void
+    {
+        putenv('COOKIE_WHITELIST='.$env);
+
+        $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
+        $dispatcher = $cache->getEventDispatcher();
+        $preHandle = $dispatcher->getListeners(Events::PRE_HANDLE);
+
+        /** @var StripCookiesSubscriber $cookieSubscriber */
+        $cookieSubscriber = $preHandle[0][0];
+
+        $this->assertSame($expectedList, $cookieSubscriber->getWhitelist());
+
+        // Cleanup
+        putenv('COOKIE_WHITELIST=null');
     }
 
     public function testCreatesTheCacheStore(): void
@@ -46,48 +67,21 @@ class ContaoCacheTest extends ContaoTestCase
         $this->assertInstanceOf(Psr6Store::class, $cache->getStore());
     }
 
-    /**
-     * @dataProvider requestProvider
-     */
-    public function testPrivateRequestsNeverHitTheCache(Request $request, bool $shouldBypassCache): void
-    {
-        $kernel = $this->createMock(ContaoKernel::class);
-        $kernel
-            ->method('getContainer')
-            ->willReturn($this->getContainerWithContaoConfiguration())
-        ;
-
-        $kernel
-            ->method('handle')
-            ->willReturn(new Response())
-        ;
-
-        $cache = new ContaoCache($kernel, $this->getTempDir());
-        $cache->handle($request);
-
-        $this->assertSame($shouldBypassCache, $cache->wasBypassed());
-    }
-
-    public function requestProvider(): \Generator
+    public function cookeWhitelistProvider(): \Generator
     {
         yield [
-            Request::create('/foobar'),
-            false,
+            '',
+            [],
         ];
 
         yield [
-            Request::create('/foobar', 'GET', [], [], [], ['HTTP_ACCEPT' => 'application/json']),
-            false,
+            'PHPSESSID',
+            ['PHPSESSID'],
         ];
 
         yield [
-            Request::create('/foobar', 'GET', [], ['Cookie' => 'Value']),
-            true,
-        ];
-
-        yield [
-            Request::create('/foobar', 'GET', [], [], [], ['HTTP_AUTHORIZATION' => 'Basic foobar']),
-            true,
+            'PHPSESSID,^my-regex$,another_cookie',
+            ['PHPSESSID', '^my-regex$', 'another_cookie'],
         ];
     }
 }

@@ -346,8 +346,8 @@ class Updater extends Controller
 			}
 		}
 
-		// Make unlimited recurrences end on 2038-01-01 00:00:00 (see #4862)
-		$this->Database->query("UPDATE `tl_calendar_events` SET `repeatEnd`=2145913200 WHERE `recurring`=1 AND `recurrences`=0");
+		// Make unlimited recurrences end on 2106-02-07 07:28:15 (see #4862 and #510)
+		$this->Database->query("UPDATE `tl_calendar_events` SET `repeatEnd`=4294967295 WHERE `recurring`=1 AND `recurrences`=0");
 	}
 
 	/**

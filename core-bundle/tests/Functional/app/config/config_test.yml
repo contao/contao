@@ -15,8 +15,6 @@ framework:
         resource: '%kernel.project_dir%/../../src/Resources/config/routing.yml'
         strict_requirements: '%kernel.debug%'
     csrf_protection: ~
-    templating:
-        engines: ['twig']
     default_locale:  '%locale%'
     session:
         storage_id: session.storage.mock_file
@@ -41,6 +39,9 @@ doctrine:
                     charset: utf8mb4
                     collate: utf8mb4_unicode_ci
                     engine: InnoDB
+    orm:
+        auto_mapping: true
+        auto_generate_proxy_classes: true
 
 contao:
     localconfig:

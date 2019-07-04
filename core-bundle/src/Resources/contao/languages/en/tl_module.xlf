@@ -171,16 +171,16 @@
         <source>Contains an input field and a radio button menu to choose the query type.</source>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
-        <source>Context range</source>
+        <source>Context length</source>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
-        <source>The number of characters on the left and right side of each keyword that are used as context.</source>
+        <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
       </trans-unit>
-      <trans-unit id="tl_module.totalLength.0">
-        <source>Maximum context length</source>
+      <trans-unit id="tl_module.minKeywordLength.0">
+        <source>Minimum keyword length</source>
       </trans-unit>
-      <trans-unit id="tl_module.totalLength.1">
-        <source>Here you can limit the overall context length per result.</source>
+      <trans-unit id="tl_module.minKeywordLength.1">
+        <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>
@@ -457,52 +457,25 @@ If you did not request this e-mail, please contact the website administrator.
         <source>Irrevocably delete account</source>
       </trans-unit>
       <trans-unit id="tl_module.new.0">
-        <source>Add module</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_module.new.1">
-        <source>Add a module</source>
+        <source>Create a new module</source>
       </trans-unit>
-      <trans-unit id="tl_module.show.0">
-        <source>Module details</source>
-      </trans-unit>
-      <trans-unit id="tl_module.show.1">
+      <trans-unit id="tl_module.show">
         <source>Show the details of module ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_module.edit.0">
-        <source>Edit module</source>
-      </trans-unit>
-      <trans-unit id="tl_module.edit.1">
+      <trans-unit id="tl_module.edit">
         <source>Edit module ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_module.cut.0">
-        <source>Move module</source>
-      </trans-unit>
-      <trans-unit id="tl_module.cut.1">
-        <source>Move module ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_module.copy.0">
-        <source>Duplicate module</source>
-      </trans-unit>
-      <trans-unit id="tl_module.copy.1">
+      <trans-unit id="tl_module.copy">
         <source>Duplicate module ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_module.delete.0">
-        <source>Delete module</source>
+      <trans-unit id="tl_module.cut">
+        <source>Move module ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_module.delete.1">
+      <trans-unit id="tl_module.delete">
         <source>Delete module ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_module.editheader.0">
-        <source>Edit theme</source>
-      </trans-unit>
-      <trans-unit id="tl_module.editheader.1">
-        <source>Edit the theme settings</source>
-      </trans-unit>
-      <trans-unit id="tl_module.pasteafter.0">
-        <source>Paste here</source>
-      </trans-unit>
-      <trans-unit id="tl_module.pasteafter.1">
-        <source>Paste after module ID %s</source>
       </trans-unit>
     </body>
   </file>

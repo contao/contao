@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Image\ResizeConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 
@@ -117,5 +118,60 @@ class ConfigurationTest extends TestCase
         yield ['var'];
         yield ['vendor'];
         yield ['web'];
+    }
+
+    public function testFailsIfAPredefinedImageSizeNameContainsOnlyDigits(): void
+    {
+        $params = [
+            'contao' => [
+                'image' => [
+                    'sizes' => [
+                        '123' => ['width' => 100, 'height' => 200],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessageRegExp('/The image size name "123" cannot contain only digits/');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    /**
+     * @dataProvider getReservedImageSizeNames
+     */
+    public function testFailsIfAPredefinedImageSizeNameIsReserved(string $name): void
+    {
+        $params = [
+            'contao' => [
+                'image' => [
+                    'sizes' => [
+                        $name => ['width' => 100, 'height' => 200],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessageRegExp('/"'.$name.'" is a reserved image size name/');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    public function getReservedImageSizeNames(): \Generator
+    {
+        yield [ResizeConfigurationInterface::MODE_BOX];
+        yield [ResizeConfigurationInterface::MODE_PROPORTIONAL];
+        yield [ResizeConfigurationInterface::MODE_CROP];
+        yield ['left_top'];
+        yield ['center_top'];
+        yield ['right_top'];
+        yield ['left_center'];
+        yield ['center_center'];
+        yield ['right_center'];
+        yield ['left_bottom'];
+        yield ['center_bottom'];
+        yield ['right_bottom'];
     }
 }

@@ -241,27 +241,28 @@ class PageTree extends Widget
 			}
 
 			$return .= '
-	<p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl('page', $extras)) . '" class="tl_submit" id="pt_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
-	<script>
-	  $("pt_' . $this->strName . '").addEvent("click", function(e) {
-		e.preventDefault();
-		Backend.openModalSelector({
-		  "id": "tl_listing",
-		  "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0]) . ',
-		  "url": this.href + document.getElementById("ctrl_' . $this->strId . '").value,
-		  "callback": function(table, value) {
-			new Request.Contao({
-			  evalScripts: false,
-			  onSuccess: function(txt, json) {
-				$("ctrl_' . $this->strId . '").getParent("div").set("html", json.content);
-				json.javascript && Browser.exec(json.javascript);
-			  }
-			}).post({"action":"reloadPagetree", "name":"' . $this->strId . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
-		  }
-		});
-	  });
-	</script>' . ($blnHasOrder ? '
-	<script>Backend.makeMultiSrcSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'", "ctrl_'.$this->strId.'")</script>' : '');
+    <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl('page', $extras)) . '" class="tl_submit" id="pt_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+    <script>
+      $("pt_' . $this->strName . '").addEvent("click", function(e) {
+        e.preventDefault();
+        Backend.openModalSelector({
+          "id": "tl_listing",
+          "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0]) . ',
+          "url": this.href + document.getElementById("ctrl_' . $this->strId . '").value,
+          "callback": function(table, value) {
+            new Request.Contao({
+              evalScripts: false,
+              onSuccess: function(txt, json) {
+                $("ctrl_' . $this->strId . '").getParent("div").set("html", json.content);
+                json.javascript && Browser.exec(json.javascript);
+                $("ctrl_' . $this->strId . '").fireEvent("change");
+              }
+            }).post({"action":"reloadPagetree", "name":"' . $this->strId . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
+          }
+        });
+      });
+    </script>' . ($blnHasOrder ? '
+    <script>Backend.makeMultiSrcSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'", "ctrl_'.$this->strId.'")</script>' : '');
 		}
 
 		$return = '<div>' . $return . '</div></div>';

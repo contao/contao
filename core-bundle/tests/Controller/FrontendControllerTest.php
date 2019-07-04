@@ -103,4 +103,15 @@ class FrontendControllerTest extends TestCase
 
         $controller->logoutAction();
     }
+
+    public function testCheckCookiesAction(): void
+    {
+        $controller = new FrontendController();
+        $response = $controller->checkCookiesAction();
+
+        $this->assertTrue($response->headers->hasCacheControlDirective('private'));
+        $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
+        $this->assertTrue($response->headers->hasCacheControlDirective('must-revalidate'));
+        $this->assertSame('image/png', $response->headers->get('Content-Type'));
+    }
 }

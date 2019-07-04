@@ -20,6 +20,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\TwigFunction;
 
 class ContaoTemplateExtensionTest extends TestCase
 {
@@ -61,7 +62,7 @@ class ContaoTemplateExtensionTest extends TestCase
 
         $renderBaseTemplateFunction = array_filter(
             $functions,
-            static function (\Twig_SimpleFunction $function): bool {
+            static function (TwigFunction $function): bool {
                 return 'render_contao_backend_template' === $function->getName();
             }
         );

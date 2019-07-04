@@ -10,9 +10,9 @@
 
 namespace Contao;
 
-use Leafo\ScssPhp\Compiler;
-use Leafo\ScssPhp\Formatter\Compressed;
-use Leafo\ScssPhp\Formatter\Expanded;
+use ScssPhp\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Formatter\Compressed;
+use ScssPhp\ScssPhp\Formatter\Expanded;
 
 /**
  * Combines .css or .js files into one single file

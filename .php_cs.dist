@@ -11,6 +11,7 @@ EOF;
 $finder = PhpCsFixer\Finder::create()
     ->exclude('Resources')
     ->exclude('Fixtures')
+    ->notPath('var/cache')
     ->in([
         __DIR__.'/calendar-bundle/src',
         __DIR__.'/calendar-bundle/tests',

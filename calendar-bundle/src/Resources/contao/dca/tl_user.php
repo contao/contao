@@ -19,7 +19,6 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
 // Add fields to tl_user
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendars'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['calendars'],
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_calendar.title',
@@ -29,7 +28,6 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendars'] = array
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendarp'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['calendarp'],
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options'                 => array('create', 'delete'),
@@ -40,7 +38,6 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendarp'] = array
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeeds'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['calendarfeeds'],
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_calendar_feed.title',
@@ -50,7 +47,6 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeeds'] = array
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeedp'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['calendarfeedp'],
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options'                 => array('create', 'delete'),

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
+use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
@@ -26,6 +27,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
  * Changes the password of a Contao back end user.
@@ -42,10 +44,16 @@ class UserPasswordCommand extends Command
      */
     private $connection;
 
-    public function __construct(ContaoFramework $framework, Connection $connection)
+    /**
+     * @var EncoderFactoryInterface
+     */
+    private $encoderFactory;
+
+    public function __construct(ContaoFramework $framework, Connection $connection, EncoderFactoryInterface $encoderFactory)
     {
         $this->framework = $framework;
         $this->connection = $connection;
+        $this->encoderFactory = $encoderFactory;
 
         parent::__construct();
     }
@@ -150,6 +158,8 @@ class UserPasswordCommand extends Command
             );
         }
 
-        return password_hash($password, PASSWORD_DEFAULT);
+        $encoder = $this->encoderFactory->getEncoder(BackendUser::class);
+
+        return $encoder->encodePassword($password, null);
     }
 }

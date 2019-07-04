@@ -10,13 +10,13 @@
 
 namespace Contao;
 
+use Contao\Image\DeferredImageInterface;
 use Contao\Image\Image as NewImage;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ImportantPart;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Imagine\Image\Box;
-use Imagine\Image\Point;
 
 /**
  * Resizes images
@@ -534,8 +534,10 @@ class Image
 		}
 
 		return new ImportantPart(
-			new Point($importantPart['x'], $importantPart['y']),
-			new Box($importantPart['width'], $importantPart['height'])
+			$importantPart['x'] / $this->fileObj->viewWidth,
+			$importantPart['y'] / $this->fileObj->viewHeight,
+			$importantPart['width'] / $this->fileObj->viewWidth,
+			$importantPart['height'] / $this->fileObj->viewHeight
 		);
 	}
 
@@ -562,7 +564,7 @@ class Image
 			{
 				$resizeConfig->setMode($this->resizeMode);
 			}
-			catch (\InvalidArgumentException $exception)
+			catch (\Throwable $exception)
 			{
 				$resizeConfig->setMode(ResizeConfiguration::MODE_CROP);
 			}
@@ -686,12 +688,21 @@ class Image
 
 		if (!is_file($rootDir . '/' . $src))
 		{
+			try
+			{
+				$deferredImage = $container->get('contao.image.image_factory')->create($rootDir . '/' . $src);
+			}
+			catch (\Exception $e)
+			{
+				$deferredImage = null;
+			}
+
 			// Handle public bundle resources
 			if (file_exists($rootDir . '/' . $webDir . '/' . $src))
 			{
 				$src = $webDir . '/' . $src;
 			}
-			else
+			elseif (!$deferredImage instanceof DeferredImageInterface)
 			{
 				return '';
 			}
@@ -782,16 +793,17 @@ class Image
 		}
 
 		$fileRecord = FilesModel::findByPath($image->path);
+		$currentSize = $image->imageViewSize;
 
 		// Set the important part
 		if ($fileRecord !== null && $fileRecord->importantPartWidth && $fileRecord->importantPartHeight)
 		{
 			$imageObj->setImportantPart(array
 			(
-				'x' => (int) $fileRecord->importantPartX,
-				'y' => (int) $fileRecord->importantPartY,
-				'width' => (int) $fileRecord->importantPartWidth,
-				'height' => (int) $fileRecord->importantPartHeight,
+				'x' => (int) ($fileRecord->importantPartX * $currentSize[0]),
+				'y' => (int) ($fileRecord->importantPartY * $currentSize[1]),
+				'width' => (int) ($fileRecord->importantPartWidth * $currentSize[0]),
+				'height' => (int) ($fileRecord->importantPartHeight * $currentSize[1]),
 			));
 		}
 

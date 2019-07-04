@@ -148,7 +148,7 @@ class ModuleFaqList extends Module
 		// Get the URL from the jumpTo page of the category
 		if (!isset($this->arrTargets[$jumpTo]))
 		{
-			$this->arrTargets[$jumpTo] = ampersand(Environment::get('request'), true);
+			$this->arrTargets[$jumpTo] = ampersand(Environment::get('request'));
 
 			if ($jumpTo > 0 && ($objTarget = PageModel::findByPk($jumpTo)) !== null)
 			{

@@ -2,7 +2,7 @@
 
 <?php $this->block('content'); ?>
 
-  <figure class="video_container">
+  <figure class="<?= $this->containerClass ?>">
     <?php if ($this->isVideo): ?>
       <video<?= $this->size ?><?php if ($this->poster): ?> poster="<?= $this->poster ?>" preload="<?= $this->preload ?>"<?php endif; ?> <?= implode(' ', $this->attributes) ?>>
         <?php foreach ($this->files as $file): ?>

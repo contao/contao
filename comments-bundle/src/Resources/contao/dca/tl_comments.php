@@ -61,7 +61,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -71,14 +70,12 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_comments']['edit'],
 				'href'                => 'act=edit',
 				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_comments', 'editComment')
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_comments']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
@@ -86,14 +83,12 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			),
 			'toggle' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_comments']['toggle'],
 				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_comments', 'toggleIcon')
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_comments']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			)
@@ -126,7 +121,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'source' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['source'],
 			'filter'                  => true,
 			'sorting'                 => true,
 			'reference'               => &$GLOBALS['TL_LANG']['tl_comments'],
@@ -134,14 +128,12 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'parent' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['parent'],
 			'filter'                  => true,
 			'sorting'                 => true,
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'date' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['date'],
 			'sorting'                 => true,
 			'filter'                  => true,
 			'flag'                    => 8,
@@ -150,7 +142,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'name' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['name'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -159,7 +150,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'email' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['email'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -168,7 +158,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'website' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['website'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -177,7 +166,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'member' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['member'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_member.CONCAT(firstname," ",lastname)',
@@ -187,7 +175,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'comment' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['comment'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
@@ -196,7 +183,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'addReply' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['addReply'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -205,7 +191,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'author' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['author'],
 			'default'                 => Contao\BackendUser::getInstance()->id,
 			'exclude'                 => true,
 			'inputType'               => 'select',
@@ -216,7 +201,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'reply' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['reply'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
@@ -225,7 +209,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'published' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['published'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -238,17 +221,14 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'ip' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['ip'],
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'notified' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['notified'],
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'notifiedReply' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_comments']['notifiedReply'],
 			'sql'                     => "char(1) NOT NULL default ''"
 		)
 	)

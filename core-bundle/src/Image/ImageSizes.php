@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Translation\Translator;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -38,15 +39,34 @@ class ImageSizes
     private $framework;
 
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
+     * @var array
+     */
+    private $predefinedSizes = [];
+
+    /**
      * @var array
      */
     private $options;
 
-    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework)
+    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework, Translator $translator)
     {
         $this->connection = $connection;
         $this->eventDispatcher = $eventDispatcher;
         $this->framework = $framework;
+        $this->translator = $translator;
+    }
+
+    /**
+     * Sets the predefined image sizes.
+     */
+    public function setPredefinedSizes(array $predefinedSizes): void
+    {
+        $this->predefinedSizes = $predefinedSizes;
     }
 
     /**
@@ -107,17 +127,41 @@ class ImageSizes
         $this->options = $GLOBALS['TL_CROP'];
 
         $rows = $this->connection->fetchAll(
-            'SELECT id, name, width, height FROM tl_image_size ORDER BY pid, name'
+            'SELECT
+                s.id, s.name, s.width, s.height, t.name as theme
+            FROM
+                tl_image_size s
+            LEFT JOIN
+                tl_theme t ON s.pid=t.id
+            ORDER BY
+                s.pid, s.name'
         );
 
+        $options = [];
+
+        foreach ($this->predefinedSizes as $name => $imageSize) {
+            $options['image_sizes'][$name] = sprintf(
+                '%s (%sx%s)',
+                $this->translator->trans(substr($name, 1), [], 'image_sizes') ?: substr($name, 1),
+                $imageSize['width'] ?? '',
+                $imageSize['height'] ?? ''
+            );
+        }
+
         foreach ($rows as $imageSize) {
-            $this->options['image_sizes'][$imageSize['id']] = sprintf(
+            if (!isset($options[$imageSize['theme']])) {
+                $options[$imageSize['theme']] = [];
+            }
+
+            $options[$imageSize['theme']][$imageSize['id']] = sprintf(
                 '%s (%sx%s)',
                 $imageSize['name'],
                 $imageSize['width'],
                 $imageSize['height']
             );
         }
+
+        $this->options = array_merge_recursive($options, $this->options);
     }
 
     /**
@@ -134,10 +178,10 @@ class ImageSizes
         $filteredSizes = [];
 
         foreach ($this->options as $group => $sizes) {
-            if ('image_sizes' === $group) {
-                $this->filterImageSizes($sizes, $allowedSizes, $filteredSizes, $group);
-            } else {
+            if ('relative' === $group || 'exact' === $group) {
                 $this->filterResizeModes($sizes, $allowedSizes, $filteredSizes, $group);
+            } else {
+                $this->filterImageSizes($sizes, $allowedSizes, $filteredSizes, $group);
             }
         }
 

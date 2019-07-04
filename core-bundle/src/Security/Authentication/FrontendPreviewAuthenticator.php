@@ -74,7 +74,7 @@ class FrontendPreviewAuthenticator
 
         $token = new FrontendPreviewToken($frontendUser, $showUnpublished);
 
-        $this->session->set(FrontendUser::SECURITY_SESSION_KEY, serialize($token));
+        $this->session->set('_security_contao_frontend', serialize($token));
 
         return true;
     }
@@ -89,7 +89,7 @@ class FrontendPreviewAuthenticator
 
         $token = new FrontendPreviewToken(null, $showUnpublished);
 
-        $this->session->set(FrontendUser::SECURITY_SESSION_KEY, serialize($token));
+        $this->session->set('_security_contao_frontend', serialize($token));
 
         return true;
     }
@@ -99,11 +99,11 @@ class FrontendPreviewAuthenticator
      */
     public function removeFrontendAuthentication(): bool
     {
-        if (!$this->session->isStarted() || !$this->session->has(FrontendUser::SECURITY_SESSION_KEY)) {
+        if (!$this->session->isStarted() || !$this->session->has('_security_contao_frontend')) {
             return false;
         }
 
-        $this->session->remove(FrontendUser::SECURITY_SESSION_KEY);
+        $this->session->remove('_security_contao_frontend');
 
         return true;
     }

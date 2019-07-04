@@ -168,7 +168,9 @@ class Encryption
 	 */
 	public static function hash($strPassword)
 	{
-		return password_hash($strPassword, PASSWORD_DEFAULT);
+		$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(User::class);
+
+		return $encoder->encodePassword($strPassword, null);
 	}
 
 	/**
@@ -212,7 +214,9 @@ class Encryption
 	 */
 	public static function verify($strPassword, $strHash)
 	{
-		return password_verify($strPassword, $strHash);
+		$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(User::class);
+
+		return $encoder->isPasswordValid($strHash, $strPassword, null);
 	}
 
 	/**

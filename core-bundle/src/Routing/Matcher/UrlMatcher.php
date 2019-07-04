@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Matcher;
 
-use Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher;
 use Symfony\Cmf\Component\Routing\NestedMatcher\FinalMatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -43,5 +43,21 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
         $this->setContext($context);
 
         return $this->matchRequest($request);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function redirect($path, $route, $scheme = null): array
+    {
+        return [
+            '_controller' => 'Symfony\\Bundle\\FrameworkBundle\\Controller\\RedirectController::urlRedirectAction',
+            'path' => $path,
+            'permanent' => true,
+            'scheme' => $scheme,
+            'httpPort' => $this->context->getHttpPort(),
+            'httpsPort' => $this->context->getHttpsPort(),
+            '_route' => $route,
+        ];
     }
 }

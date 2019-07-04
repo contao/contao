@@ -535,9 +535,9 @@ abstract class Backend extends Controller
 						{
 							$trail[] = ' › <span>' . $objRow->headline . '</span>';
 						}
-
 					}
 
+					System::loadLanguageFile($ptable);
 					$this->loadDataContainer($ptable);
 
 					// Next parent table
@@ -590,9 +590,16 @@ abstract class Backend extends Controller
 							$this->Template->headline .= ' › <span>' . Input::get('id') . '</span>';
 						}
 					}
-					elseif (isset($GLOBALS['TL_LANG'][$strTable][$act][1]))
+					elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
 					{
-						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
+						if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
+						{
+							$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
+						}
+						else
+						{
+							$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
+						}
 					}
 				}
 				elseif (Input::get('pid'))
@@ -608,9 +615,16 @@ abstract class Backend extends Controller
 							$this->Template->headline .= ' › <span>' . Input::get('pid') . '</span>';
 						}
 					}
-					elseif (isset($GLOBALS['TL_LANG'][$strTable][$act][1]))
+					elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
 					{
-						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
+						if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
+						{
+							$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
+						}
+						else
+						{
+							$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
+						}
 					}
 				}
 			}
@@ -1107,6 +1121,7 @@ abstract class Backend extends Controller
         "url": this.href + "&value=" + document.getElementById("ctrl_' . $inputName . '").value,
         "callback": function(picker, value) {
           $("ctrl_' . $inputName . '").value = value.join(",");
+          $("ctrl_' . $inputName . '").fireEvent("change");
         }.bind(this)
       });
     });

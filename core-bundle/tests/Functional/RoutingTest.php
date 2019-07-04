@@ -19,7 +19,7 @@ use Contao\InsertTags;
 use Contao\System;
 use Contao\TestCase\ContaoDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Response;
 
 class RoutingTest extends WebTestCase
 {
@@ -33,17 +33,6 @@ class RoutingTest extends WebTestCase
         parent::setUpBeforeClass();
 
         static::loadFileIntoDatabase(__DIR__.'/app/Resources/contao_test.sql');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        $fs = new Filesystem();
-        $fs->remove(__DIR__.'/var');
     }
 
     /**
@@ -81,6 +70,8 @@ class RoutingTest extends WebTestCase
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -339,6 +330,8 @@ class RoutingTest extends WebTestCase
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -587,6 +580,8 @@ class RoutingTest extends WebTestCase
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -803,6 +798,8 @@ class RoutingTest extends WebTestCase
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -892,6 +889,8 @@ class RoutingTest extends WebTestCase
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -1020,6 +1019,8 @@ class RoutingTest extends WebTestCase
 
         $crawler = $client->request('GET', '/en/');
         $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame(500, $response->getStatusCode());

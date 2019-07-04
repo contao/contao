@@ -47,7 +47,7 @@ class ContaoLoginFactoryTest extends TestCase
             ->getArguments()
         ;
 
-        $this->assertInternalType('array', $arguments);
+        $this->assertIsArray($arguments);
         $this->assertCount(4, $arguments);
         $this->assertSame('contao.security.frontend_user_provider', (string) $arguments['index_0']);
         $this->assertSame('security.user_checker.contao_frontend', (string) $arguments['index_1']);
@@ -68,7 +68,7 @@ class ContaoLoginFactoryTest extends TestCase
             ->getArguments()
         ;
 
-        $this->assertInternalType('array', $arguments);
+        $this->assertIsArray($arguments);
         $this->assertCount(5, $arguments);
 
         $this->assertSame('contao_frontend', $arguments['index_4']);

@@ -55,11 +55,6 @@ class ControllerResolverTest extends TestCase
         $resolver->getController(new Request());
     }
 
-    /**
-     * @group legacy
-     *
-     * @expectedDeprecation The Symfony\Component\HttpKernel\Controller\ControllerResolverInterface::getArguments method is deprecated %s.
-     */
     public function testForwardsArgumentsToDecoratedClass(): void
     {
         if (Kernel::MAJOR_VERSION > 3) {

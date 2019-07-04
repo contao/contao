@@ -28,6 +28,15 @@ services:
             - '%contao.image.target_dir%'
         public: true
 
+    contao.command.resize_images:
+        class: Contao\CoreBundle\Command\ResizeImagesCommand
+        arguments:
+            - '@contao.image.image_factory'
+            - '@contao.image.resizer'
+            - '%contao.image.target_dir%'
+            - '@contao.image.deferred_image_storage'
+            - '@filesystem'
+
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand
         arguments:
@@ -43,6 +52,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
+            - '@security.encoder_factory'
 
     contao.command.version:
         class: Contao\CoreBundle\Command\VersionCommand

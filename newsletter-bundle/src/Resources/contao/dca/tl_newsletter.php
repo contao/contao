@@ -47,7 +47,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -57,38 +56,32 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'edit' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter']['edit'],
 				'href'                => 'act=edit',
 				'icon'                => 'edit.svg'
 			),
 			'copy' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg'
 			),
 			'cut' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter']['cut'],
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg'
 			),
 			'delete' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
 				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'show' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter']['show'],
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
 			),
 			'send' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_newsletter']['send'],
 				'href'                => 'key=send',
 				'icon'                => 'bundles/contaonewsletter/send.svg'
 			)
@@ -127,7 +120,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'subject' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['subject'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
@@ -138,7 +130,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'alias' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['alias'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -151,7 +142,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'content' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['content'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
@@ -169,7 +159,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'text' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['text'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
@@ -178,7 +167,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'addFile' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['addFile'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -187,7 +175,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'files' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['files'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'mandatory'=>true),
@@ -195,7 +182,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'template' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['template'],
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -207,7 +193,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'sendText' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['sendText'],
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -216,7 +201,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'externalImages' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['externalImages'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -224,7 +208,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'sender' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['sender'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'filter'                  => true,
@@ -238,7 +221,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'senderName' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['senderName'],
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
@@ -253,7 +235,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'sent' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['sent'],
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => 11,
@@ -262,7 +243,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'date' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_newsletter']['mailingDate'],
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => 8,

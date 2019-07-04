@@ -2476,7 +2476,7 @@ var Backend =
 				widthInput = el.getChildren('input')[0],
 				heightInput = el.getChildren('input')[1],
 				update = function() {
-					if (select.get('value') === '' || select.get('value').toInt().toString() === select.get('value')) {
+					if (select.get('value') === '' || select.get('value').indexOf('_') === 0 || select.get('value').toInt().toString() === select.get('value')) {
 						widthInput.readOnly = true;
 						heightInput.readOnly = true;
 						var dimensions = $(select.getSelected()[0]).get('text');
@@ -2485,8 +2485,7 @@ var Backend =
 							: ['', ''];
 						widthInput.set('value', '').set('placeholder', dimensions[0] * 1 || '');
 						heightInput.set('value', '').set('placeholder', dimensions[1] * 1 || '');
-					}
-					else {
+					} else {
 						widthInput.set('placeholder', '');
 						heightInput.set('placeholder', '');
 						widthInput.readOnly = false;
@@ -2615,22 +2614,23 @@ var Backend =
 		var imageElement = el.getElement('img'),
 			inputElements = {},
 			isDrawing = false,
-			originalWidth = el.get('data-original-width'),
-			originalHeight = el.get('data-original-height'),
 			partElement, startPos,
 			getScale = function() {
-				return imageElement.getComputedSize().width / originalWidth;
+				return {
+					x: imageElement.getComputedSize().width,
+					y: imageElement.getComputedSize().height,
+				};
 			},
 			updateImage = function() {
 				var scale = getScale(),
 					imageSize = imageElement.getComputedSize();
 				partElement.setStyles({
-					top: imageSize.computedTop + (inputElements.y.get('value') * scale).round() + 'px',
-					left: imageSize.computedLeft + (inputElements.x.get('value') * scale).round() + 'px',
-					width: (inputElements.width.get('value') * scale).round() + 'px',
-					height: (inputElements.height.get('value') * scale).round() + 'px'
+					top: imageSize.computedTop + (inputElements.y.get('value') * scale.y).round() + 'px',
+					left: imageSize.computedLeft + (inputElements.x.get('value') * scale.x).round() + 'px',
+					width: (inputElements.width.get('value') * scale.x).round() + 'px',
+					height: (inputElements.height.get('value') * scale.y).round() + 'px'
 				});
-				if (!inputElements.width.get('value').toInt() || !inputElements.height.get('value').toInt()) {
+				if (!inputElements.width.get('value').toFloat() || !inputElements.height.get('value').toFloat()) {
 					partElement.setStyle('display', 'none');
 				} else {
 					partElement.setStyle('display', null);
@@ -2641,11 +2641,11 @@ var Backend =
 					styles = partElement.getStyles('top', 'left', 'width', 'height'),
 					imageSize = imageElement.getComputedSize(),
 					values = {
-						x: Math.max(0, Math.min(originalWidth, (styles.left.toFloat() - imageSize.computedLeft) / scale)).round(),
-						y: Math.max(0, Math.min(originalHeight, (styles.top.toFloat() - imageSize.computedTop) / scale)).round()
+						x: Math.max(0, Math.min(1, (styles.left.toFloat() - imageSize.computedLeft) / scale.x)),
+						y: Math.max(0, Math.min(1, (styles.top.toFloat() - imageSize.computedTop) / scale.y))
 					};
-				values.width = Math.min(originalWidth - values.x, styles.width.toFloat() / scale).round();
-				values.height = Math.min(originalHeight - values.y, styles.height.toFloat() / scale).round();
+				values.width = Math.min(1 - values.x, styles.width.toFloat() / scale.x);
+				values.height = Math.min(1 - values.y, styles.height.toFloat() / scale.y);
 				if (!values.width || !values.height) {
 					values.x = values.y = values.width = values.height = '';
 					partElement.setStyle('display', 'none');

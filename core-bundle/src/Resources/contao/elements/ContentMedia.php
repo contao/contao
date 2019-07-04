@@ -112,11 +112,15 @@ class ContentMedia extends ContentElement
 		if (\in_array($objFirst->extension, array('mp4', 'm4v', 'mov', 'wmv', 'webm', 'ogv')))
 		{
 			$this->Template->isVideo = true;
+			$this->Template->containerClass = 'video_container';
+
 			$arrFiles = array('mp4'=>null, 'm4v'=>null, 'mov'=>null, 'wmv'=>null, 'webm'=>null, 'ogv'=>null);
 		}
 		else
 		{
 			$this->Template->isVideo = false;
+			$this->Template->containerClass = 'audio_container';
+
 			$arrFiles = array('m4a'=>null, 'mp3'=>null, 'wma'=>null, 'mpeg'=>null, 'wav'=>null, 'ogg'=>null);
 		}
 

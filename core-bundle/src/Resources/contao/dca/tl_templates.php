@@ -33,26 +33,22 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 		(
 			'new' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_templates']['new'],
 				'href'                => 'act=paste&amp;mode=create',
 				'class'               => 'header_new_folder'
 			),
 			'new_tpl' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_templates']['new_tpl'],
 				'href'                => 'key=new_tpl',
 				'class'               => 'header_new'
 			),
 			'toggleNodes' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['toggleAll'],
 				'href'                => 'tg=all',
 				'class'               => 'header_toggle',
 				'showOnSelect'        => true
 			),
 			'all' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
 				'href'                => 'act=select',
 				'class'               => 'header_edit_all',
 				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
@@ -96,7 +92,6 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 			),
 			'compare' => array
 			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_templates']['compare'],
 				'href'                => 'key=compare',
 				'icon'                => 'diffTemplate.svg',
 				'button_callback'     => array('tl_templates', 'compareButton')

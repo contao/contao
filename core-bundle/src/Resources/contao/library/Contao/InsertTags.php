@@ -1047,7 +1047,7 @@ class InsertTags extends Controller
 							break;
 
 						case 'currency_format':
-							$arrCache[$strTag] = System::getFormattedNumber($arrCache[$strTag], 2);
+							$arrCache[$strTag] = System::getFormattedNumber($arrCache[$strTag]);
 							break;
 
 						case 'readable_size':

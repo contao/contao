@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\Image\DeferredImageInterface;
 use Contao\Image\Image as ContaoImage;
 use Contao\Image\ImageDimensions;
 use Patchwork\Utf8;
@@ -264,43 +265,48 @@ class File extends System
 			case 'imageSize':
 				if (empty($this->arrImageSize))
 				{
-					$strCacheKey = $this->strFile . '|' . $this->mtime;
+					$strCacheKey = $this->strFile . '|' . ($this->exists() ? $this->mtime : 0);
 
 					if (isset(static::$arrImageSizeCache[$strCacheKey]))
 					{
 						$this->arrImageSize = static::$arrImageSizeCache[$strCacheKey];
 					}
-					elseif ($this->isGdImage)
-					{
-						$this->arrImageSize = @getimagesize($this->strRootDir . '/' . $this->strFile);
-					}
-					elseif ($this->isSvgImage)
+					else
 					{
 						try
 						{
-							$dimensions = (new ContaoImage($this->strRootDir . '/' . $this->strFile, System::getContainer()->get('contao.image.imagine_svg')))->getDimensions();
+							$dimensions = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile)->getDimensions();
 
 							if (!$dimensions->isRelative() && !$dimensions->isUndefined())
 							{
+								$mapper = array
+								(
+									'gif' => IMAGETYPE_GIF,
+									'jpg' => IMAGETYPE_JPEG,
+									'jpeg' => IMAGETYPE_JPEG,
+									'png' => IMAGETYPE_PNG,
+								);
+
 								$this->arrImageSize = array
 								(
 									$dimensions->getSize()->getWidth(),
 									$dimensions->getSize()->getHeight(),
-									0, // replace this with IMAGETYPE_SVG when it becomes available
+									$mapper[$this->extension] ?? 0,
 									'width="' . $dimensions->getSize()->getWidth() . '" height="' . $dimensions->getSize()->getHeight() . '"',
 									'bits' => 8,
 									'channels' => 3,
 									'mime' => $this->getMimeType()
 								);
 							}
-							else
-							{
-								$this->arrImageSize = false;
-							}
 						}
-						catch(\Exception $e)
+						catch (\Exception $e)
 						{
-							$this->arrImageSize = false;
+							// ignore
+						}
+
+						if (!$this->arrImageSize)
+						{
+							$this->arrImageSize = @getimagesize($this->strRootDir . '/' . $this->strFile);
 						}
 					}
 
@@ -604,6 +610,23 @@ class File extends System
 	 */
 	public function getContent()
 	{
+		if (!$this->exists())
+		{
+			try
+			{
+				$image = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile);
+
+				if ($image instanceof DeferredImageInterface)
+				{
+					System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($image);
+				}
+			}
+			catch (\Throwable $e)
+			{
+				// ignore
+			}
+		}
+
 		$strContent = file_get_contents($this->strRootDir . '/' . ($this->strTmp ?: $this->strFile));
 
 		// Remove BOMs (see #4469)

@@ -296,18 +296,19 @@ class Search
 	/**
 	 * Search the index and return the result object
 	 *
-	 * @param string  $strKeywords The keyword string
-	 * @param boolean $blnOrSearch If true, the result can contain any keyword
-	 * @param array   $arrPid      An optional array of page IDs to limit the result to
-	 * @param integer $intRows     An optional maximum number of result rows
-	 * @param integer $intOffset   An optional result offset
-	 * @param boolean $blnFuzzy    If true, the search will be fuzzy
+	 * @param string  $strKeywords  The keyword string
+	 * @param boolean $blnOrSearch  If true, the result can contain any keyword
+	 * @param array   $arrPid       An optional array of page IDs to limit the result to
+	 * @param integer $intRows      An optional maximum number of result rows
+	 * @param integer $intOffset    An optional result offset
+	 * @param boolean $blnFuzzy     If true, the search will be fuzzy
+	 * @param integer $intMinlength Ignore keywords deceeding the minimum length
 	 *
 	 * @return Result The database result object
 	 *
 	 * @throws \Exception If the cleaned keyword string is empty
 	 */
-	public static function searchFor($strKeywords, $blnOrSearch=false, $arrPid=array(), $intRows=0, $intOffset=0, $blnFuzzy=false)
+	public static function searchFor($strKeywords, $blnOrSearch=false, $arrPid=array(), $intRows=0, $intOffset=0, $blnFuzzy=false, $intMinlength=0)
 	{
 		// Clean the keywords
 		$strKeywords = StringUtil::decodeEntities($strKeywords);
@@ -381,6 +382,11 @@ class Search
 				default:
 					foreach (self::splitIntoWords($strKeyword, $GLOBALS['TL_LANGUAGE']) as $strWord)
 					{
+						if ($intMinlength > 0 && \strlen($strWord) < $intMinlength)
+						{
+							continue;
+						}
+
 						$arrKeywords[] = $strWord;
 					}
 					break;

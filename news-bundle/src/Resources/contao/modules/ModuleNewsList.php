@@ -216,31 +216,36 @@ class ModuleNewsList extends ModuleNews
 
 		// Determine sorting
 		$t = NewsModel::getTable();
-		$arrOptions = array();
+		$order = '';
+
+		if ($this->news_featured == 'featured_first')
+		{
+			$order .= "$t.featured DESC, ";
+		}
 
 		switch ($this->news_order)
 		{
 			case 'order_headline_asc':
-				$arrOptions['order'] = "$t.headline";
+				$order .= "$t.headline";
 				break;
 
 			case 'order_headline_desc':
-				$arrOptions['order'] = "$t.headline DESC";
+				$order .= "$t.headline DESC";
 				break;
 
 			case 'order_random':
-				$arrOptions['order'] = "RAND()";
+				$order .= "RAND()";
 				break;
 
 			case 'order_date_asc':
-				$arrOptions['order'] = "$t.date";
+				$order .= "$t.date";
 				break;
 
 			default:
-				$arrOptions['order'] = "$t.date DESC";
+				$order .= "$t.date DESC";
 		}
 
-		return NewsModel::findPublishedByPids($newsArchives, $blnFeatured, $limit, $offset, $arrOptions);
+		return NewsModel::findPublishedByPids($newsArchives, $blnFeatured, $limit, $offset, array('order'=>$order));
 	}
 }
 

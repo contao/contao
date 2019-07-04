@@ -11,9 +11,9 @@
 
   <link rel="stylesheet" href="<?php
     $objCombiner = new Contao\Combiner();
-    $objCombiner->add('system/themes/'. $this->theme .'/fonts.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/basic.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/popup.css');
+    $objCombiner->add('system/themes/'. $this->theme .'/fonts.min.css');
+    $objCombiner->add('system/themes/'. $this->theme .'/basic.min.css');
+    $objCombiner->add('system/themes/'. $this->theme .'/popup.min.css');
     echo $objCombiner->getCombinedFile();
   ?>">
   <?= $this->stylesheets ?>
@@ -32,7 +32,7 @@
 </head>
 <body class="<?= $this->ua ?> popup">
 
-  <div id="container" class="cf">
+  <div id="container">
     <main id="main">
       <table class="tl_show">
         <tr>
@@ -97,7 +97,7 @@
       <?php if ($this->isImage): ?>
         <div id="preview">
           <div class="checkerbox" style="width:<?= $this->width ?>px;height:<?= $this->height ?>px">
-            <img src="<?= $this->dataUri ?>" width="<?= $this->width ?>" height="<?= $this->height ?>" alt="">
+            <img src="<?= $this->dataUri ?>" width="<?= $this->width ?>" height="<?= $this->height ?>" alt="" style="image-orientation:from-image">
           </div>
         </div>
       <?php endif; ?>

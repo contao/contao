@@ -142,7 +142,7 @@ class ModulePassword extends Module
 		{
 			if ($this->reg_skipName)
 			{
-				$objMember = MemberModel::findActiveByEmailAndUsername(Input::post('email', true), null);
+				$objMember = MemberModel::findActiveByEmailAndUsername(Input::post('email', true));
 			}
 			else
 			{

@@ -147,58 +147,31 @@
         <source>Do you really want to send the newsletter?</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
-        <source>New newsletter</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter.show.0">
-        <source>Newsletter details</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.show.1">
+      <trans-unit id="tl_newsletter.show">
         <source>Show the details of newsletter ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter.edit.0">
-        <source>Edit newsletter</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.edit.1">
+      <trans-unit id="tl_newsletter.edit">
         <source>Edit newsletter ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter.copy.0">
-        <source>Duplicate newsletter</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.copy.1">
+      <trans-unit id="tl_newsletter.copy">
         <source>Duplicate newsletter ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter.cut.0">
-        <source>Move newsletter</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.cut.1">
+      <trans-unit id="tl_newsletter.cut">
         <source>Move newsletter ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter.delete.0">
-        <source>Delete newsletter</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.delete.1">
+      <trans-unit id="tl_newsletter.delete">
         <source>Delete newsletter ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.0">
-        <source>Edit channel</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.1">
-        <source>Edit the channel settings</source>
+      <trans-unit id="tl_newsletter.send">
+        <source>Send newsletter ID %s</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.pasteafter.1">
-        <source>Paste after newsletter ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.send.0">
-        <source>Send newsletter</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.send.1">
-        <source>Send newsletter ID %s</source>
       </trans-unit>
     </body>
   </file>

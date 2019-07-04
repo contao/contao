@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\File;
 use Contao\StringUtil;
 
 class Version480Update extends AbstractVersionUpdate
@@ -51,6 +52,7 @@ class Version480Update extends AbstractVersionUpdate
                 tl_layout
         ');
 
+        // Remove the "j_mediaelement" and "js_mediaelement" templates
         while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
             if ($row->jquery) {
                 $jquery = StringUtil::deserialize($row->jquery);
@@ -89,6 +91,130 @@ class Version480Update extends AbstractVersionUpdate
                     $stmt->execute([':scripts' => serialize(array_values($scripts)), ':id' => $row->id]);
                 }
             }
+        }
+
+        $this->connection->query("
+            ALTER TABLE
+                tl_image_size
+            ADD
+                skipIfDimensionsMatch char(1) NOT NULL default ''
+        ");
+
+        // Enable the "skipIfDimensionsMatch" option for existing image sizes (backwards compatibility)
+        $this->connection->query("
+            UPDATE
+                tl_image_size
+            SET
+                skipIfDimensionsMatch = '1'
+        ");
+
+        $this->connection->query('
+            ALTER TABLE
+                tl_files
+            CHANGE
+                importantPartX importantPartX DOUBLE PRECISION DEFAULT 0 NOT NULL,
+            CHANGE
+                importantPartY importantPartY DOUBLE PRECISION DEFAULT 0 NOT NULL,
+            CHANGE
+                importantPartWidth importantPartWidth DOUBLE PRECISION DEFAULT 0 NOT NULL,
+            CHANGE
+                importantPartHeight importantPartHeight DOUBLE PRECISION DEFAULT 0 NOT NULL
+        ');
+
+        $statement = $this->connection->query('
+            SELECT
+                id, path, importantPartX, importantPartY, importantPartWidth, importantPartHeight
+            FROM
+                tl_files
+            WHERE
+                importantPartWidth > 0 OR importantPartHeight > 0
+        ');
+
+        $rootDir = $this->container->getParameter('kernel.project_dir');
+
+        // Convert the important part to relative values as fractions
+        while (false !== ($file = $statement->fetch(\PDO::FETCH_OBJ))) {
+            if (!file_exists($rootDir.'/'.$file->path) || is_dir($rootDir.'/'.$file->path)) {
+                continue;
+            }
+
+            $imageSize = (new File($file->path))->imageViewSize;
+
+            if (empty($imageSize[0]) || empty($imageSize[1])) {
+                continue;
+            }
+
+            $stmt = $this->connection->prepare('
+                UPDATE
+                    tl_files
+                SET
+                    importantPartX = :x,
+                    importantPartY = :y,
+                    importantPartWidth = :width,
+                    importantPartHeight = :height
+                WHERE
+                    id = :id
+            ');
+
+            $stmt->execute([
+                ':id' => $file->id,
+                ':x' => $file->importantPartX / $imageSize[0],
+                ':y' => $file->importantPartY / $imageSize[1],
+                ':width' => $file->importantPartWidth / $imageSize[0],
+                ':height' => $file->importantPartHeight / $imageSize[1],
+            ]);
+        }
+
+        $this->connection->query('
+            ALTER TABLE
+                tl_module
+            ADD
+                minKeywordLength smallint(5) unsigned NOT NULL default 4
+            AFTER
+                contextLength
+        ');
+
+        // Disable the minimum keyword length for existing modules (backwards compatibility)
+        $this->connection->query("
+            UPDATE
+                tl_module
+            SET
+                minKeywordLength = 0
+            WHERE
+                type = 'search'
+        ");
+
+        $this->connection->query("
+            ALTER TABLE
+                tl_module
+            CHANGE
+                contextLength contextLength varchar(64) NOT NULL default ''
+        ");
+
+        $statement = $this->connection->query("
+            SELECT
+                id, contextLength, totalLength
+            FROM
+                tl_module
+            WHERE
+                type = 'search'
+        ");
+
+        // Consolidate the search context fields
+        while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+            $stmt = $this->connection->prepare('
+                UPDATE
+                    tl_module
+                SET
+                    contextLength = :context
+                WHERE
+                    id = :id
+            ');
+
+            $stmt->execute([
+                ':id' => $row->id,
+                ':context' => serialize([$row->contextLength, $row->totalLength]),
+            ]);
         }
     }
 }

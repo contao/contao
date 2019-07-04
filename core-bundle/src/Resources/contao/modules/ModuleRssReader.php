@@ -70,7 +70,7 @@ class ModuleRssReader extends Module
 
 		if ($this->rss_cache > 0)
 		{
-			$this->objFeed->enable_cache(true);
+			$this->objFeed->enable_cache();
 			$this->objFeed->set_cache_duration($this->rss_cache);
 		}
 
@@ -160,18 +160,18 @@ class ModuleRssReader extends Module
 				'description' => str_replace(array('<?', '?>'), array('&lt;?', '?&gt;'), $arrItems[$i]->get_description()),
 				'class' => (($i == 0) ? ' first' : '') . (($i == $last) ? ' last' : '') . ((($i % 2) == 0) ? ' even' : ' odd'),
 				'pubdate' => Date::parse($objPage->datimFormat, $arrItems[$i]->get_date('U')),
-				'category' => $arrItems[$i]->get_category(0),
+				'category' => $arrItems[$i]->get_category(),
 				'object' => $arrItems[$i]
 			);
 
 			// Add author
-			if ($objAuthor = $arrItems[$i]->get_author(0))
+			if ($objAuthor = $arrItems[$i]->get_author())
 			{
 				$items[$i]['author'] = trim($objAuthor->name . ' ' . $objAuthor->email);
 			}
 
 			// Add enclosure
-			if ($objEnclosure = $arrItems[$i]->get_enclosure(0))
+			if ($objEnclosure = $arrItems[$i]->get_enclosure())
 			{
 				$items[$i]['enclosure'] = $objEnclosure->get_link();
 			}

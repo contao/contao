@@ -1,0 +1,93 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\ManagerBundle\Tests\ContaoManager\ApiCommand;
+
+use Contao\CoreBundle\HttpKernel\JwtManager;
+use Contao\ManagerBundle\Api\Application;
+use Contao\ManagerBundle\ContaoManager\ApiCommand\GenerateJwtCookieCommand;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\HttpFoundation\Cookie;
+
+class GenerateJwtCookieCommandTest extends TestCase
+{
+    /**
+     * @var JwtManager&MockObject
+     */
+    private $jwtManager;
+
+    /**
+     * @var GenerateJwtCookieCommand
+     */
+    private $command;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->jwtManager = $this->createMock(JwtManager::class);
+
+        $application = $this->createMock(Application::class);
+        $application
+            ->method('getProjectDir')
+            ->willReturn(sys_get_temp_dir())
+        ;
+
+        $this->command = new GenerateJwtCookieCommand($application, $this->jwtManager);
+    }
+
+    public function testHasCorrectName(): void
+    {
+        $this->assertSame('jwt-cookie:generate', $this->command->getName());
+    }
+
+    public function testGeneratesCookieWithDebugEnabled(): void
+    {
+        $cookie = Cookie::create('_contao_preview', 'foobar');
+
+        $this->jwtManager
+            ->expects($this->once())
+            ->method('createCookie')
+            ->with(['debug' => true])
+            ->willReturn($cookie)
+        ;
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(['--debug' => true]);
+
+        $this->assertSame((string) $cookie, $commandTester->getDisplay());
+        $this->assertSame(0, $commandTester->getStatusCode());
+    }
+
+    public function testGeneratesCookieWithDebugDisabled(): void
+    {
+        $cookie = Cookie::create('_contao_preview', 'foobar');
+
+        $this->jwtManager
+            ->expects($this->once())
+            ->method('createCookie')
+            ->with(['debug' => false])
+            ->willReturn($cookie)
+        ;
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute([]);
+
+        $this->assertSame((string) $cookie, $commandTester->getDisplay());
+        $this->assertSame(0, $commandTester->getStatusCode());
+    }
+}

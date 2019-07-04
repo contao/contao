@@ -19,7 +19,6 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
 // Add fields to tl_user_group
 $GLOBALS['TL_DCA']['tl_user']['fields']['newsletters'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['newsletters'],
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_newsletter_channel.title',
@@ -29,7 +28,6 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['newsletters'] = array
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['newsletterp'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['newsletterp'],
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options'                 => array('create', 'delete'),

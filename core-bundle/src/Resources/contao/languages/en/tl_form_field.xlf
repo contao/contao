@@ -354,64 +354,43 @@
         <source>Visibility</source>
       </trans-unit>
       <trans-unit id="tl_form_field.new.0">
-        <source>New field</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_form_field.new.1">
-        <source>Create a new field</source>
+        <source>Create a new form field</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.show.0">
-        <source>Field details</source>
+      <trans-unit id="tl_form_field.show">
+        <source>Show the details of form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.show.1">
-        <source>Show the details of field ID %s</source>
+      <trans-unit id="tl_form_field.edit">
+        <source>Edit form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit.0">
-        <source>Edit field</source>
+      <trans-unit id="tl_form_field.cut">
+        <source>Move form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit.1">
-        <source>Edit field ID %s</source>
+      <trans-unit id="tl_form_field.copy">
+        <source>Duplicate form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut.0">
-        <source>Move field</source>
+      <trans-unit id="tl_form_field.delete">
+        <source>Delete form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut.1">
-        <source>Move field ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_form_field.copy.0">
-        <source>Duplicate field</source>
-      </trans-unit>
-      <trans-unit id="tl_form_field.copy.1">
-        <source>Duplicate field ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_form_field.delete.0">
-        <source>Delete field</source>
-      </trans-unit>
-      <trans-unit id="tl_form_field.delete.1">
-        <source>Delete field ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_form_field.editheader.0">
-        <source>Edit form</source>
-      </trans-unit>
-      <trans-unit id="tl_form_field.editheader.1">
+      <trans-unit id="tl_form_field.editheader">
         <source>Edit the form settings</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle">
+        <source>Hide/unhide form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
-        <source>Paste after field ID %s</source>
+        <source>Paste after form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
-        <source>Add new at the top</source>
+        <source>Create a new form field at the top</source>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
-        <source>Add new after field ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_form_field.toggle.0">
-        <source>Toggle visibility</source>
-      </trans-unit>
-      <trans-unit id="tl_form_field.toggle.1">
-        <source>Toggle the visibility of field ID %s</source>
+        <source>Create a new form field after form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>

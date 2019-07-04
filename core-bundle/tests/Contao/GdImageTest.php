@@ -39,14 +39,14 @@ class GdImageTest extends TestCase
         $resource = imagecreate(1, 1);
         $image = new GdImage($resource);
 
-        $this->assertInternalType('resource', $image->getResource());
+        $this->assertIsResource($image->getResource());
     }
 
     public function testCreatesImagesFromDimensions(): void
     {
         $image = GdImage::fromDimensions(100, 100);
 
-        $this->assertInternalType('resource', $image->getResource());
+        $this->assertIsResource($image->getResource());
         $this->assertTrue(imageistruecolor($image->getResource()));
         $this->assertSame(100, imagesx($image->getResource()));
         $this->assertSame(100, imagesy($image->getResource()));
@@ -78,7 +78,7 @@ class GdImageTest extends TestCase
 
         $image = GdImage::fromFile(new File('test.'.$type));
 
-        $this->assertInternalType('resource', $image->getResource());
+        $this->assertIsResource($image->getResource());
         $this->assertSame(100, imagesx($image->getResource()));
         $this->assertSame(100, imagesy($image->getResource()));
     }
@@ -183,7 +183,7 @@ class GdImageTest extends TestCase
         $image = new GdImage($image);
         $image->convertToPaletteImage();
 
-        $this->assertInternalType('resource', $image->getResource());
+        $this->assertIsResource($image->getResource());
         $this->assertFalse(imageistruecolor($image->getResource()));
 
         $this->assertSame(
@@ -216,7 +216,7 @@ class GdImageTest extends TestCase
         $image = new GdImage($image);
         $image->convertToPaletteImage();
 
-        $this->assertInternalType('resource', $image->getResource());
+        $this->assertIsResource($image->getResource());
         $this->assertFalse(imageistruecolor($image->getResource()));
         $this->assertSame(256, imagecolorstotal($image->getResource()));
 

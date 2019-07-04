@@ -63,6 +63,15 @@ services:
             - '%kernel.project_dir%'
         public: true
 
+    contao.controller.images:
+        class:  Contao\CoreBundle\Controller\ImagesController
+        arguments:
+            - '@contao.image.image_factory'
+            - '@contao.image.resizer'
+            - '%contao.image.target_dir%'
+            - '@filesystem'
+        public: true
+
     contao.controller.insert_tags:
         class: Contao\CoreBundle\Controller\InsertTagsController
         arguments:
@@ -145,6 +154,12 @@ services:
             - '%contao.error_level%'
         public: true
 
+    contao.image.deferred_image_storage:
+        class: Contao\Image\DeferredImageStorageFilesystem
+        arguments:
+            - '%contao.image.target_dir%'
+            - '@filesystem'
+
     contao.image.imagine.gd:
         class: Imagine\Gd\Imagine
 
@@ -167,6 +182,7 @@ services:
             - '%contao.image.target_dir%'
             - '@contao.image.resize_calculator'
             - '@filesystem'
+            - '@contao.image.deferred_image_storage'
         public: true
 
     contao.image.image_factory:
@@ -180,6 +196,7 @@ services:
             - '%contao.image.bypass_cache%'
             - '%contao.image.imagine_options%'
             - '%contao.image.valid_extensions%'
+            - '%kernel.project_dir%/%contao.upload_path%'
         public: true
 
     contao.image.image_sizes:
@@ -188,6 +205,7 @@ services:
             - '@database_connection'
             - '@event_dispatcher'
             - '@contao.framework'
+            - '@contao.translation.translator'
         public: true
 
     contao.image.picture_generator:
@@ -311,6 +329,12 @@ services:
     contao.referer_id.token_generator:
         class: Contao\CoreBundle\Referer\TokenGenerator
 
+    contao.repository.remember_me:
+        class: Contao\CoreBundle\Repository\RememberMeRepository
+        arguments:
+            - '@doctrine'
+            - 'Contao\CoreBundle\Entity\RememberMe'
+
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder
         arguments:
@@ -346,6 +370,15 @@ services:
         class: Symfony\Component\HttpFoundation\RequestMatcher
         calls:
             - ['matchAttribute', ['_scope', 'frontend']]
+
+    contao.routing.images_loader:
+        class: Contao\CoreBundle\Routing\ImagesLoader
+        arguments:
+            - '%kernel.project_dir%'
+            - '%contao.image.target_dir%'
+            - '@filesystem'
+        tags:
+            - { name: routing.loader }
 
     contao.routing.input_enhancer:
         class: Contao\CoreBundle\Routing\Enhancer\InputEnhancer
@@ -445,9 +478,9 @@ services:
         class: Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider
         abstract: true
         arguments:
-            - ~ # User provider
-            - ~ # User checker
-            - ~ # Provider-shared key
+            - ~ # user provider
+            - ~ # user checker
+            - ~ # provider-shared key
             - '@security.encoder_factory'
             - '@contao.framework'
 
@@ -457,12 +490,6 @@ services:
             - '@security.http_utils'
             - '@contao.framework'
             - '@logger'
-
-    contao.security.database_token_provider:
-        class: Contao\CoreBundle\Security\Authentication\RememberMe\DatabaseTokenProvider
-        arguments:
-            - '@database_connection'
-            - '%kernel.secret%'
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
@@ -477,6 +504,19 @@ services:
         arguments:
             - '@security.http_utils'
             - '@router'
+
+    contao.security.expiring_token_based_remember_me_services:
+        class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
+        abstract: true
+        arguments:
+            - '@contao.repository.remember_me'
+            - ~ # user Providers
+            - ~ # shared Token Key
+            - ~ # shared Provider Key
+            - ~ # options
+            - '@logger'
+        tags:
+            - { name: monolog.logger, channel: security }
 
     contao.security.frontend_preview_authenticator:
         class: Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator
@@ -510,6 +550,9 @@ services:
     contao.security.token_checker:
         class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker
         arguments:
+            - '@request_stack'
+            - '@security.firewall.map'
+            - '@security.token_storage'
             - '@session'
             - '@security.authentication.trust_resolver'
         public: true

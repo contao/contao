@@ -639,23 +639,16 @@ abstract class DataContainer extends Backend
 
 				if ($blnCanResize)
 				{
-					if ($objFile->width > 699 || $objFile->height > 524 || !$objFile->width || !$objFile->height)
-					{
-						$container = System::getContainer();
-						$rootDir = $container->getParameter('kernel.project_dir');
-						$image = rawurldecode($container->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($rootDir));
-					}
-					else
-					{
-						$image = $objFile->path;
-					}
+					$container = System::getContainer();
+					$rootDir = $container->getParameter('kernel.project_dir');
+					$image = rawurldecode($container->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($rootDir));
 				}
 
 				$objImage = new File($image);
 				$ctrl = 'ctrl_preview_' . substr(md5($image), 0, 8);
 
 				$strPreview = '
-<div id="' . $ctrl . '" class="tl_edit_preview" data-original-width="' . $objFile->viewWidth . '" data-original-height="' . $objFile->viewHeight . '">
+<div id="' . $ctrl . '" class="tl_edit_preview">
   <img src="' . $objImage->dataUri . '" width="' . $objImage->width . '" height="' . $objImage->height . '" alt="">
 </div>';
 
@@ -778,10 +771,22 @@ abstract class DataContainer extends Backend
 		{
 			$v = \is_array($v) ? $v : array($v);
 			$id = StringUtil::specialchars(rawurldecode($arrRow['id']));
+			$label = $title = $k;
 
-			$label = $v['label'][0] ?: $k;
-			$title = sprintf($v['label'][1] ?: $k, $id);
-			$attributes = ($v['attributes'] != '') ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
+			if (isset($v['label']))
+			{
+				if (\is_array($v['label']))
+				{
+					$label = $v['label'][0];
+					$title = sprintf($v['label'][1], $id);
+				}
+				else
+				{
+					$label = $title = sprintf($v['label'], $id);
+				}
+			}
+
+			$attributes = !empty($v['attributes']) ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
 
 			// Add the key as CSS class
 			if (strpos($attributes, 'class="') !== false)
@@ -820,7 +825,7 @@ abstract class DataContainer extends Backend
 						$href = $this->addToUrl($v['href'].'&amp;id='.$arrRow['id'].'&amp;popup=1');
 					}
 
-					$return .= '<a href="'.$href.'" title="'.StringUtil::specialchars($title).'" onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG'][$strTable]['show'][1], $arrRow['id']))).'\',\'url\':this.href});return false"'.$attributes.'>'.Image::getHtml($v['icon'], $label).'</a> ';
+					$return .= '<a href="'.$href.'" title="'.StringUtil::specialchars($title).'" onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", sprintf(\is_array($GLOBALS['TL_LANG'][$strTable]['show']) ? $GLOBALS['TL_LANG'][$strTable]['show'][1] : $GLOBALS['TL_LANG'][$strTable]['show'], $arrRow['id']))).'\',\'url\':this.href});return false"'.$attributes.'>'.Image::getHtml($v['icon'], $label).'</a> ';
 				}
 				else
 				{
@@ -967,10 +972,22 @@ abstract class DataContainer extends Backend
 
 			$v = \is_array($v) ? $v : array($v);
 			$id = StringUtil::specialchars(rawurldecode($arrRow['id']));
+			$label = $title = $k;
 
-			$label = $v['label'][0] ?: $k;
-			$title = sprintf($v['label'][1] ?: $k, $id);
-			$attributes = ($v['attributes'] != '') ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
+			if (isset($v['label']))
+			{
+				if (\is_array($v['label']))
+				{
+					$label = $v['label'][0];
+					$title = sprintf($v['label'][1], $id);
+				}
+				else
+				{
+					$label = $title = sprintf($v['label'], $id);
+				}
+			}
+
+			$attributes = !empty($v['attributes']) ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
 
 			// Add the key as CSS class
 			if (strpos($attributes, 'class="') !== false)
@@ -1016,7 +1033,7 @@ abstract class DataContainer extends Backend
 					$href = $this->addToUrl($v['href'].'&amp;id='.$arrRow['id'].'&amp;popup=1');
 				}
 
-				$return .= '<a href="'.$href.'" title="'.StringUtil::specialchars($title).'" onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG'][$strPtable]['show'][1], $arrRow['id']))).'\',\'url\':this.href});return false"'.$attributes.'>'.Image::getHtml($v['icon'], $label).'</a> ';
+				$return .= '<a href="'.$href.'" title="'.StringUtil::specialchars($title).'" onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", sprintf(\is_array($GLOBALS['TL_LANG'][$strPtable]['show']) ? $GLOBALS['TL_LANG'][$strPtable]['show'][1] : $GLOBALS['TL_LANG'][$strPtable]['show'], $arrRow['id']))).'\',\'url\':this.href});return false"'.$attributes.'>'.Image::getHtml($v['icon'], $label).'</a> ';
 			}
 			else
 			{
@@ -1218,7 +1235,7 @@ abstract class DataContainer extends Backend
 		}
 
 		$return = '
-<form action="'.ampersand(Environment::get('request'), true).'" class="tl_form" method="post" aria-label="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']).'">
+<form action="'.ampersand(Environment::get('request')).'" class="tl_form" method="post" aria-label="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']).'">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
   <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">

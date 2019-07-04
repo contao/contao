@@ -415,6 +415,7 @@ class FileTree extends Widget
               onSuccess: function(txt, json) {
                 $("ctrl_' . $this->strId . '").getParent("div").set("html", json.content);
                 json.javascript && Browser.exec(json.javascript);
+                $("ctrl_' . $this->strId . '").fireEvent("change");
               }
             }).post({"action":"reloadFiletree", "name":"' . $this->strId . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
           }
