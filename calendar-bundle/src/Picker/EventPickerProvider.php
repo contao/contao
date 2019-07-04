@@ -24,6 +24,8 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
 {
     use FrameworkAwareTrait;
 
+    protected const INSERTTAG = '{{event_url::%s}}';
+
     /**
      * {@inheritdoc}
      */
@@ -111,14 +113,6 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
         }
 
         return $params;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getFallbackInsertTag(): string
-    {
-        return '{{event_url::%s}}';
     }
 
     /**

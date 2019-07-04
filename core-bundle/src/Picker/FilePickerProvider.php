@@ -25,6 +25,8 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
 {
     use FrameworkAwareTrait;
 
+    protected const INSERTTAG = '{{file::%s}}';
+
     /**
      * @var string
      */
@@ -114,14 +116,6 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'files'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getFallbackInsertTag(): string
-    {
-        return '{{file::%s}}';
     }
 
     /**

@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Picker;
 
 class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface
 {
+    protected const INSERTTAG = '{{link_url::%s}}';
+
     /**
      * {@inheritdoc}
      */
@@ -109,13 +111,5 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
     protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'page'];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getFallbackInsertTag(): string
-    {
-        return '{{link_url::%s}}';
     }
 }

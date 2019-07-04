@@ -24,6 +24,8 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
 {
     use FrameworkAwareTrait;
 
+    protected const INSERTTAG = '{{news_url::%s}}';
+
     /**
      * {@inheritdoc}
      */
@@ -111,14 +113,6 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
         }
 
         return $params;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getFallbackInsertTag(): string
-    {
-        return '{{news_url::%s}}';
     }
 
     /**

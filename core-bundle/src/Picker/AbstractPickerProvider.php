@@ -20,6 +20,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 abstract class AbstractPickerProvider implements PickerProviderInterface
 {
+    protected const INSERTTAG = null;
+
     /**
      * @var FactoryInterface
      */
@@ -128,7 +130,11 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
             return (string) $insertTag;
         }
 
-        return $this->getFallbackInsertTag();
+        if (null === static::INSERTTAG) {
+            throw new \LogicException('Please add a protected INSERTTAG constant in your picker provider class');
+        }
+
+        return static::INSERTTAG;
     }
 
     /**
@@ -138,17 +144,6 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     protected function getInsertTagChunks(PickerConfig $config): array
     {
         return explode('%s', $this->getInsertTag($config), 2);
-    }
-
-    /**
-     * Defines the fallback insert tag to work with if no specifc configuration
-     * was provided.
-     */
-    protected function getFallbackInsertTag(): string
-    {
-        throw new \RuntimeException('If you deal with insert tags in your picker provider you have to specify a
-        fallback insert tag in case no specific insert tag was passed on via configuration. You must override
-        the AbstractPickerProvider::getFallbackInsertTag() method.');
     }
 
     /**

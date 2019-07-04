@@ -24,6 +24,8 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
 {
     use FrameworkAwareTrait;
 
+    protected const INSERTTAG = '{{faq_url::%s}}';
+
     /**
      * {@inheritdoc}
      */
@@ -111,14 +113,6 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
         }
 
         return $params;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getFallbackInsertTag(): string
-    {
-        return '{{faq_url::%s}}';
     }
 
     /**
