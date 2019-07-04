@@ -62,6 +62,9 @@
       <trans-unit id="tl_image_size.formats.1">
         <source>Select which format conversion should be applied.</source>
       </trans-unit>
+      <trans-unit id="tl_image_size.formatsMissingWebp">
+        <source>WEBP images are disabled. You can enable them by adding "webp" to contao.image.valid_extensions.</source>
+      </trans-unit>
       <trans-unit id="tl_image_size.formatsOptions.{&quot;webp&quot;:[&quot;webp&quot;,&quot;jpg&quot;]}">
         <source>WEBP to JPEG</source>
       </trans-unit>

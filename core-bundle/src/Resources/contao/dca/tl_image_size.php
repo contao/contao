@@ -380,6 +380,13 @@ class tl_image_size extends Contao\Backend
 			$options[] = '{"jpg":["webp","jpg"],"jpeg":["webp","jpeg"]}';
 		}
 
+		if (!$options) {
+			$GLOBALS['TL_DCA']['tl_image_size']['fields']['formats']['label'] = [
+				$GLOBALS['TL_LANG']['tl_image_size']['formats'][0],
+				$GLOBALS['TL_LANG']['tl_image_size']['formatsMissingWebp'],
+			];
+		}
+
 		return $options;
 	}
 }
