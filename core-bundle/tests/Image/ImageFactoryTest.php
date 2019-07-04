@@ -640,7 +640,11 @@ class ImageFactoryTest extends TestCase
             'Hook should not get called for cached images'
         );
 
-        $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
+        $image = $imageFactory->create(
+            $path,
+            (new ResizeConfiguration())->setWidth(200)->setHeight(200),
+            (new ResizeOptions())->setSkipIfDimensionsMatch(true)
+        );
 
         $this->assertSame(
             $this->getFixturesDir().'/images/dummy.jpg',
