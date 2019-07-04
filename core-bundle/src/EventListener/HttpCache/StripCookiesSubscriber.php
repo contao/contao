@@ -42,6 +42,9 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
         // Facebook Pixel
         '_fbp',
+
+        // Blackfire
+        '__blackfire',
     ];
 
     /**
