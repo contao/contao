@@ -56,6 +56,18 @@
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
         <source>Skip image processing if resizing is not needed. Note that no optimizations such as meta data stripping or JPEG compression will be applied in this case.</source>
       </trans-unit>
+      <trans-unit id="tl_image_size.formats.0">
+        <source>Convert image formats</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formats.1">
+        <source>Select which format conversion should be applied.</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formatsOptions.{&quot;webp&quot;:[&quot;webp&quot;,&quot;jpg&quot;]}">
+        <source>WEBP to JPEG</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formatsOptions.{&quot;jpg&quot;:[&quot;webp&quot;,&quot;jpg&quot;],&quot;jpeg&quot;:[&quot;webp&quot;,&quot;jpeg&quot;]}">
+        <source>JPEG to WEBP</source>
+      </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
       </trans-unit>

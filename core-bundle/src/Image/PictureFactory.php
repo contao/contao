@@ -26,6 +26,7 @@ use Contao\Image\ResizeOptions;
 use Contao\Image\ResizeOptionsInterface;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
+use Contao\StringUtil;
 
 class PictureFactory implements PictureFactoryInterface
 {
@@ -164,6 +165,12 @@ class PictureFactory implements PictureFactoryInterface
 
                 if (null !== $imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
+
+                    $config->setFormats(
+                        array_merge([], ...array_map(function ($format) {
+                            return json_decode($format, true);
+                        }, StringUtil::deserialize($imageSizes->formats, true)))
+                    );
                 }
 
                 if ($imageSizes && $imageSizes->cssClass) {

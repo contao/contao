@@ -3,7 +3,7 @@
   <picture>
     <!--[if IE 9]><video style="display: none;"><![endif]-->
     <?php foreach ($this->sources as $source): ?>
-      <source srcset="<?= $source['srcset'] ?>"<?php if (!empty($source['sizes'])): ?> sizes="<?= $source['sizes'] ?>"<?php endif; ?><?php if (!empty($source['media'])): ?> media="<?= $source['media'] ?>"<?php endif; ?>>
+      <source srcset="<?= $source['srcset'] ?>"<?php if (!empty($source['sizes'])): ?> sizes="<?= $source['sizes'] ?>"<?php endif; ?><?php if (!empty($source['media'])): ?> media="<?= $source['media'] ?>"<?php endif; ?><?php if (!empty($source['type'])): ?> type="<?= $source['type'] ?>"<?php endif; ?>>
     <?php endforeach; ?>
     <!--[if IE 9]></video><![endif]-->
 <?php endif; ?>
