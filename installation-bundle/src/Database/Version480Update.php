@@ -52,6 +52,7 @@ class Version480Update extends AbstractVersionUpdate
                 tl_layout
         ');
 
+        // Remove the "j_mediaelement" and "js_mediaelement" templates
         while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
             if ($row->jquery) {
                 $jquery = StringUtil::deserialize($row->jquery);
@@ -92,6 +93,21 @@ class Version480Update extends AbstractVersionUpdate
             }
         }
 
+        $this->connection->query("
+            ALTER TABLE
+                tl_image_size
+            ADD
+                skipIfDimensionsMatch char(1) NOT NULL default ''
+        ");
+
+        // Enable the "skipIfDimensionsMatch" option for existing image sizes (backwards compatibility)
+        $this->connection->query("
+            UPDATE
+                tl_image_size
+            SET
+                skipIfDimensionsMatch = '1'
+        ");
+
         $this->connection->query('
             ALTER TABLE
                 tl_files
@@ -116,6 +132,7 @@ class Version480Update extends AbstractVersionUpdate
 
         $rootDir = $this->container->getParameter('kernel.project_dir');
 
+        // Convert the important part to relative values as fractions
         while (false !== ($file = $statement->fetch(\PDO::FETCH_OBJ))) {
             if (!file_exists($rootDir.'/'.$file->path) || is_dir($rootDir.'/'.$file->path)) {
                 continue;

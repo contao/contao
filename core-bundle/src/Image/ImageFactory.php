@@ -242,7 +242,7 @@ class ImageFactory implements ImageFactoryInterface
             // Predefined sizes
             if (isset($this->predefinedSizes[$size[2]])) {
                 $this->enhanceResizeConfig($config, $this->predefinedSizes[$size[2]]);
-                $options->setSkipIfDimensionsMatch($this->predefinedSizes[$size[2]]['skipIfDimensionsMatch'] ?? true);
+                $options->setSkipIfDimensionsMatch($this->predefinedSizes[$size[2]]['skipIfDimensionsMatch'] ?? false);
 
                 return [$config, null, $options];
             }

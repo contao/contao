@@ -192,7 +192,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'inputType'               => 'checkbox',
 			'exclude'                 => true,
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default '1'"
+			'sql'                     => "char(1) NOT NULL default ''"
 		)
 	)
 );
