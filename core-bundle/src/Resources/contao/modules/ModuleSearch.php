@@ -73,7 +73,6 @@ class ModuleSearch extends Module
 
 		$blnFuzzy = $this->fuzzy;
 		$strQueryType = Input::get('query_type') ?: $this->queryType;
-
 		$strKeywords = trim(Input::get('keywords'));
 
 		$this->Template->uniqueId = $this->id;
@@ -145,11 +144,10 @@ class ModuleSearch extends Module
 				return;
 			}
 
-			$strCachePath = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
-
 			$arrResult = null;
 			$strChecksum = md5($strKeywords . $strQueryType . $varRootId . $blnFuzzy);
 			$query_starttime = microtime(true);
+			$strCachePath = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
 			$strCacheFile = $strCachePath . '/contao/search/' . $strChecksum . '.json';
 
 			// Load the cached result
@@ -172,7 +170,7 @@ class ModuleSearch extends Module
 			{
 				try
 				{
-					$objSearch = Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy);
+					$objSearch = Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy, $this->minKeywordLength);
 					$arrResult = $objSearch->fetchAllAssoc();
 				}
 				catch (\Exception $e)
@@ -220,6 +218,11 @@ class ModuleSearch extends Module
 			$this->Template->page = null;
 			$this->Template->keywords = $strKeywords;
 
+			if ($this->minKeywordLength > 0)
+			{
+				$this->Template->keywordHint = sprintf($GLOBALS['TL_LANG']['MSC']['sKeywordHint'], $this->minKeywordLength);
+			}
+
 			// No results
 			if ($count < 1)
 			{
@@ -258,6 +261,8 @@ class ModuleSearch extends Module
 				$this->Template->page = $page;
 			}
 
+			list($contextLength, $totalLength) = StringUtil::deserialize($this->contextLength);
+
 			// Get the results
 			for ($i=($from-1); $i<$to && $i<$count; $i++)
 			{
@@ -278,7 +283,7 @@ class ModuleSearch extends Module
 				foreach ($arrMatches as $strWord)
 				{
 					$arrChunks = array();
-					preg_match_all('/(^|\b.{0,'.$this->contextLength.'}(?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}))' . preg_quote($strWord, '/') . '((?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}).{0,'.$this->contextLength.'}\b|$)/ui', $strText, $arrChunks);
+					preg_match_all('/(^|\b.{0,'.$contextLength.'}(?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}))' . preg_quote($strWord, '/') . '((?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}).{0,'.$contextLength.'}\b|$)/ui', $strText, $arrChunks);
 
 					foreach ($arrChunks[0] as $strContext)
 					{
@@ -289,7 +294,7 @@ class ModuleSearch extends Module
 				// Shorten the context and highlight all keywords
 				if (!empty($arrContext))
 				{
-					$objTemplate->context = trim(StringUtil::substrHtml(implode('…', $arrContext), $this->totalLength));
+					$objTemplate->context = trim(StringUtil::substrHtml(implode('…', $arrContext), $totalLength));
 					$objTemplate->context = preg_replace('/(?<=^|\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan})(' . implode('|', array_map('preg_quote', $arrMatches)) . ')(?=\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}|$)/ui', '<mark class="highlight">$1</mark>', $objTemplate->context);
 
 					$objTemplate->hasContext = true;

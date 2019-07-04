@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Add the "minimum keyword length" field to the search module (see #274).
  * Adjust the container CSS class in the "video/audio" element based on the media type (see #441).
  * Autorotate images based on their EXIF metadata (see #529).
  * Add a configuration option to define predefined image sizes (see #537).

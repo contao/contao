@@ -43,8 +43,8 @@ use FOS\HttpCache\ResponseTagger;
  * @property integer $form
  * @property string  $queryType
  * @property boolean $fuzzy
- * @property integer $contextLength
- * @property integer $totalLength
+ * @property string  $contextLength
+ * @property integer $minKeywordLength
  * @property integer $perPage
  * @property string  $searchType
  * @property string  $searchTpl

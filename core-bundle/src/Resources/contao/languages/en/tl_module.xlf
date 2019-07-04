@@ -171,16 +171,16 @@
         <source>Contains an input field and a radio button menu to choose the query type.</source>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
-        <source>Context range</source>
+        <source>Context length</source>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
-        <source>The number of characters on the left and right side of each keyword that are used as context.</source>
+        <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
       </trans-unit>
-      <trans-unit id="tl_module.totalLength.0">
-        <source>Maximum context length</source>
+      <trans-unit id="tl_module.minKeywordLength.0">
+        <source>Minimum keyword length</source>
       </trans-unit>
-      <trans-unit id="tl_module.totalLength.1">
-        <source>Here you can limit the overall context length per result.</source>
+      <trans-unit id="tl_module.minKeywordLength.1">
+        <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>

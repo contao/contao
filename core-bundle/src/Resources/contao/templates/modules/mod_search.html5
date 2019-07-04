@@ -25,6 +25,9 @@
 
   <?php if ($this->header): ?>
     <p class="header"><?= $this->header ?> (<?= $this->duration ?>)</p>
+    <?php if ($this->keywordHint): ?>
+      <p class="info"><?= $this->keywordHint ?></p>
+    <?php endif; ?>
   <?php endif; ?>
 
   <?= $this->results . $this->pagination ?>

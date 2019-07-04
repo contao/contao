@@ -164,5 +164,57 @@ class Version480Update extends AbstractVersionUpdate
                 ':height' => $file->importantPartHeight / $imageSize[1],
             ]);
         }
+
+        $this->connection->query('
+            ALTER TABLE
+                tl_module
+            ADD
+                minKeywordLength smallint(5) unsigned NOT NULL default 4
+            AFTER
+                contextLength
+        ');
+
+        // Disable the minimum keyword length for existing modules (backwards compatibility)
+        $this->connection->query("
+            UPDATE
+                tl_module
+            SET
+                minKeywordLength = 0
+            WHERE
+                type = 'search'
+        ");
+
+        $this->connection->query("
+            ALTER TABLE
+                tl_module
+            CHANGE
+                contextLength contextLength varchar(64) NOT NULL default ''
+        ");
+
+        $statement = $this->connection->query("
+            SELECT
+                id, contextLength, totalLength
+            FROM
+                tl_module
+            WHERE
+                type = 'search'
+        ");
+
+        // Consolidate the search context fields
+        while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+            $stmt = $this->connection->prepare('
+                UPDATE
+                    tl_module
+                SET
+                    contextLength = :context
+                WHERE
+                    id = :id
+            ');
+
+            $stmt->execute([
+                ':id' => $row->id,
+                ':context' => serialize([$row->contextLength, $row->totalLength]),
+            ]);
+        }
     }
 }

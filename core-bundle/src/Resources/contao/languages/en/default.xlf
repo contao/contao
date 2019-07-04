@@ -1628,6 +1628,9 @@
       <trans-unit id="MSC.sNoResult">
         <source>Your search for &lt;strong&gt;%s&lt;/strong&gt; returned no results.</source>
       </trans-unit>
+      <trans-unit id="MSC.sKeywordHint">
+        <source>Note that keywords shorter than %s characters and without a modifier have been ignored.</source>
+      </trans-unit>
       <trans-unit id="MSC.seconds">
         <source>seconds</source>
       </trans-unit>
