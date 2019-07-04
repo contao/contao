@@ -341,12 +341,12 @@ abstract class Controller extends System
 	 * @param mixed   $varId          The article ID or a Model object
 	 * @param boolean $blnMultiMode   If true, only teasers will be shown
 	 * @param boolean $blnIsInsertTag If true, there will be no page relation and no HTML markup for the container
-	 *                                If null, there will be no page relation
 	 * @param string  $strColumn      The name of the column
+	 * @param boolean $blnIgnorePid   If true, there will be no page relation
 	 *
 	 * @return string|boolean The article HTML markup or false
 	 */
-	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
+	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main', $blnIgnorePid=false)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
@@ -362,7 +362,7 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, ($blnIsInsertTag === false ? $objPage->id : null));
+			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, (!$blnIsInsertTag && !$blnIgnorePid ? $objPage->id : null));
 
 			if ($objRow === null)
 			{
@@ -421,6 +421,21 @@ abstract class Controller extends System
 		}
 
 		return $strBuffer;
+	}
+
+	/**
+	 * Generate an article and return it as string
+	 *
+	 * @param mixed   $intId          The article ID
+	 * @param boolean $blnMultiMode   If true, only teasers will be shown
+	 * @param boolean $blnIsInsertTag If true, there will be no page relation and no HTML markup for the container
+	 * @param string  $strColumn      The name of the column
+	 *
+	 * @return string|boolean The article HTML markup or false
+	 */
+	public static function getArticleById($intId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
+	{
+		return $this->getArticle($intId, $blnMultiMode, $blnIsInsertTag, $strColumn, true);
 	}
 
 	/**
