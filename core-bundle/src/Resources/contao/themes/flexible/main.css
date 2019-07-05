@@ -1770,6 +1770,7 @@ label.error,legend.error,.tl_checkbox_container.error legend {
 .tl_tbox .tl_error,.tl_box .tl_error {
 	background:none;
 	padding:0;
+	margin-bottom:0;
 	font-size:.75rem;
 }
 .tl_formbody_edit > .tl_error {

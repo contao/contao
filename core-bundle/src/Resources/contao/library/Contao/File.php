@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\Image\DeferredImageInterface;
-use Contao\Image\Image as ContaoImage;
 use Contao\Image\ImageDimensions;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
