@@ -240,7 +240,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (ResizeOptionsInterface $options) use ($predefinedSizes): bool {
+                    function (ResizeOptionsInterface $options): bool {
                         $this->assertTrue($options->getSkipIfDimensionsMatch());
                         return true;
                     }
