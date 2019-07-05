@@ -54,10 +54,10 @@
         <source>Convert image formats</source>
       </trans-unit>
       <trans-unit id="tl_image_size.formats.1">
-        <source>Here you can select the format conversion to be applied.</source>
+        <source>Here you can select which image formats shall be converted.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.formatsMissingWebp">
-        <source>WEBP images are disabled. You can enable them by adding "webp" to contao.image.valid_extensions.</source>
+        <source>You can enable WEBP images by adding "webp" to &lt;em&gt;contao.image.valid_extensions&lt;/em&gt;.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
