@@ -171,10 +171,12 @@ class PictureFactory implements PictureFactoryInterface
                         ...array_map(
                             static function ($formatsString) {
                                 $formats = [];
+
                                 foreach (explode(';', $formatsString) as $format) {
                                     [$source, $targets] = explode(':', $format, 2);
                                     $formats[$source] = explode(',', $targets);
                                 }
+
                                 return $formats;
                             },
                             StringUtil::deserialize($imageSizes->formats, true)
