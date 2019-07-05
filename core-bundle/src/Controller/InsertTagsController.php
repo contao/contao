@@ -43,7 +43,13 @@ class InsertTagsController
         /** @var InsertTags $it */
         $it = $this->framework->createInstance(InsertTags::class);
 
-        $response = Response::create($it->replace($insertTag, false));
+        $result = $it->replace($insertTag, false, true);
+        
+        if ($result instanceof Response) {
+            return $response;
+        }
+
+        $response = Response::create($result);
         $response->setPrivate(); // always private
 
         if ($clientCache = $request->query->getInt('clientCache')) {

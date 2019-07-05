@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
@@ -43,17 +44,22 @@ class InsertTags extends Controller
 	/**
 	 * Recursively replace insert tags with their values
 	 *
-	 * @param string  $strBuffer The text with the tags to be replaced
-	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
+	 * @param string  $strBuffer 		 The text with the tags to be replaced
+	 * @param boolean $blnCache  		 If false, non-cacheable tags will be replaced
+	 * @param boolean $blnAcceptResponse If true, insert tags are allowed to return a Response instance instead of a string
 	 *
-	 * @return string The text with the replaced tags
+	 * @return string|Response The text with the replaced tags or a Response instance in case $blnAcceptResponse was set to true
 	 */
-	public function replace($strBuffer, $blnCache=true)
+	public function replace($strBuffer, $blnCache=true, $blnAcceptResponse = false)
 	{
-		$strBuffer = $this->doReplace($strBuffer, $blnCache);
+		$strBuffer = $this->doReplace($strBuffer, $blnCache, $blnAcceptResponse);
+
+		if ($strBuffer instanceof Response) {
+			return $strBuffer;
+		}
 
 		// Run the replacement recursively (see #8172)
-		while (strpos($strBuffer, '{{') !== false && ($strTmp = $this->doReplace($strBuffer, $blnCache)) != $strBuffer)
+		while (strpos($strBuffer, '{{') !== false && ($strTmp = $this->doReplace($strBuffer, $blnCache, false)) != $strBuffer)
 		{
 			$strBuffer = $strTmp;
 		}
@@ -74,10 +80,11 @@ class InsertTags extends Controller
 	 *
 	 * @param string  $strBuffer The text with the tags to be replaced
 	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
-	 *
-	 * @return string The text with the replaced tags
+	 * @param boolean $blnAcceptResponse If true, insert tags are allowed to return a Response instance instead of a string
+
+	 * @return string|Response The text with the replaced tags or a Response instance in case $blnAcceptResponse was set to true
 	 */
-	protected function doReplace($strBuffer, $blnCache)
+	protected function doReplace($strBuffer, $blnCache, $blnAcceptResponse)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
@@ -100,7 +107,7 @@ class InsertTags extends Controller
 		$container = System::getContainer();
 
 		// Create one cache per cache setting (see #7700)
-		$arrCache = &static::$arrItCache[$blnCache];
+		$arrCache = &static::$arrItCache[$blnCache][$blnAcceptResponse];
 
 		for ($_rit=0, $_cnt=\count($tags); $_rit<$_cnt; $_rit+=2)
 		{
@@ -994,7 +1001,7 @@ class InsertTags extends Controller
 						foreach ($GLOBALS['TL_HOOKS']['replaceInsertTags'] as $callback)
 						{
 							$this->import($callback[0]);
-							$varValue = $this->{$callback[0]}->{$callback[1]}($tag, $blnCache, $arrCache[$strTag], $flags, $tags, $arrCache, $_rit, $_cnt); // see #6672
+							$varValue = $this->{$callback[0]}->{$callback[1]}($tag, $blnCache, $arrCache[$strTag], $flags, $tags, $arrCache, $_rit, $_cnt, $blnAcceptResponse); // see #6672
 
 							// Replace the tag and stop the loop
 							if ($varValue !== false)
