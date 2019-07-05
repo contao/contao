@@ -175,12 +175,20 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        /** @var ImageSizeModel $imageSizeModel */
-        $imageSizeModel = new ImageSizeModel();
-        $imageSizeModel->width = 100;
-        $imageSizeModel->height = 200;
-        $imageSizeModel->resizeMode = ResizeConfiguration::MODE_BOX;
-        $imageSizeModel->zoom = 50;
+        $imageSizeProperties = [
+            'width' => 100,
+            'height' => 200,
+            'resizeMode' => ResizeConfiguration::MODE_BOX,
+            'zoom' => 50,
+        ];
+
+        /** @var ImageSizeModel&MockObject $imageSizeModel */
+        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
+
+        $imageSizeModel
+            ->method('row')
+            ->willReturn($imageSizeProperties)
+        ;
 
         $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
 
