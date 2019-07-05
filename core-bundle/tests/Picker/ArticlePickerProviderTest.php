@@ -216,8 +216,11 @@ class ArticlePickerProviderTest extends ContaoTestCase
         $this->assertSame('{{article_url::5}}', $this->provider->convertDcaValue(new PickerConfig('link'), 5));
     }
 
-    public function testConvertsTheDcaValueWithCustomInsertTag(): void
+    public function testConvertsTheDcaValueWithACustomInsertTag(): void
     {
-        $this->assertSame('{{article_title::5}}', $this->provider->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{article_title::%s}}']), 5));
+        $this->assertSame(
+            '{{article_title::5}}',
+            $this->provider->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{article_title::%s}}']), 5)
+        );
     }
 }

@@ -53,12 +53,10 @@ class PickerConfigTest extends TestCase
     public function testCanReadProviderExtras(): void
     {
         $this->config->setExtra('insertTag', '{{fallback}}');
-        $this->config->setExtra('foobarProvider', [
-            'insertTag' => '{{foobarProviderSpecific}}',
-        ]);
+        $this->config->setExtra('foobar', ['insertTag' => '{{foobarSpecific}}']);
 
         $this->assertSame('{{fallback}}', $this->config->getExtraForProvider('insertTag', 'notExistingProvider'));
-        $this->assertSame('{{foobarProviderSpecific}}', $this->config->getExtraForProvider('insertTag', 'foobarProvider'));
+        $this->assertSame('{{foobarSpecific}}', $this->config->getExtraForProvider('insertTag', 'foobar'));
     }
 
     public function testClonesTheCurrentObject(): void

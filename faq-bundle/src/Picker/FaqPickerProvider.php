@@ -70,11 +70,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = str_replace(
-                $this->getInsertTagChunks($config),
-                '',
-                $config->getValue()
-            );
+            $attributes['value'] = str_replace($this->getInsertTagChunks($config), '', $config->getValue());
         }
 
         return $attributes;
@@ -99,13 +95,11 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
             return $params;
         }
 
-        $insertTagChunks = $this->getInsertTagChunks($config);
-
-        if (false === strpos($config->getValue(), $insertTagChunks[0])) {
+        if (!$this->supportsValue($config)) {
             return $params;
         }
 
-        $value = str_replace($insertTagChunks, '', $config->getValue());
+        $value = str_replace($this->getInsertTagChunks($config), '', $config->getValue());
 
         if (null !== ($faqId = $this->getFaqCategoryId($value))) {
             $params['table'] = 'tl_faq';

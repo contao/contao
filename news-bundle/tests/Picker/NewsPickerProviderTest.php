@@ -201,9 +201,12 @@ class NewsPickerProviderTest extends ContaoTestCase
         $this->assertSame('{{news_url::5}}', $this->provider->convertDcaValue(new PickerConfig('link'), 5));
     }
 
-    public function testConvertsTheDcaValueWithCustomInsertTag(): void
+    public function testConvertsTheDcaValueWithACustomInsertTag(): void
     {
-        $this->assertSame('{{news_title::5}}', $this->provider->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{news_title::%s}}']), 5));
+        $this->assertSame(
+            '{{news_title::5}}',
+            $this->provider->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{news_title::%s}}']), 5)
+        );
     }
 
     public function testAddsTableAndIdIfThereIsAValue(): void

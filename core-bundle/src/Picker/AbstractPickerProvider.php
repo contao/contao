@@ -122,7 +122,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     }
 
     /**
-     * Provides a shortcut to get the "insertTag" extra value for child classes.
+     * Returns the configured insert tag or the default one.
      */
     protected function getInsertTag(PickerConfig $config): string
     {
@@ -134,12 +134,11 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
             throw new \LogicException('Please add a protected INSERTTAG constant in your picker provider class');
         }
 
-        return static::INSERTTAG;
+        return (string) static::INSERTTAG;
     }
 
     /**
-     * Provides a shortcut get the "insertTag" extra value for child classes and
-     * split them at the placeholder (%s).
+     * Splits an insert tag at the placeholder (%s) and returns the chunks.
      */
     protected function getInsertTagChunks(PickerConfig $config): array
     {

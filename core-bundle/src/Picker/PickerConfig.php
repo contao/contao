@@ -72,8 +72,7 @@ class PickerConfig implements \JsonSerializable
     }
 
     /**
-     * Checks if there's an extra value for a given provider and if not,
-     * falls back to the general extra.
+     * Returns an extra value for a given provider or the general extra value.
      */
     public function getExtraForProvider(string $name, string $provider)
     {

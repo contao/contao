@@ -60,11 +60,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = str_replace(
-                $this->getInsertTagChunks($config),
-                '',
-                $config->getValue()
-            );
+            $attributes['value'] = str_replace($this->getInsertTagChunks($config), '', $config->getValue());
         }
 
         return $attributes;

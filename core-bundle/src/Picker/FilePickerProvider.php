@@ -66,8 +66,9 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return Validator::isUuid($value);
         }
 
-        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config)[0])
-            || 0 === strpos($value, $this->uploadPath);
+        return 0 === strpos($value, $this->uploadPath)
+            || false !== strpos($config->getValue(), $this->getInsertTagChunks($config)[0])
+        ;
     }
 
     /**

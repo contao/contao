@@ -291,7 +291,7 @@ class FilePickerProviderTest extends ContaoTestCase
         );
     }
 
-    public function testConvertsTheDcaValueWithCustomInsertTag(): void
+    public function testConvertsTheDcaValueWithACustomInsertTag(): void
     {
         $this->assertSame(
             '/foobar',
