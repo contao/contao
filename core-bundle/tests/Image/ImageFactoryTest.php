@@ -175,12 +175,19 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        /** @var ImageSizeModel $imageSizeModel */
-        $imageSizeModel = new ImageSizeModel();
-        $imageSizeModel->width = 100;
-        $imageSizeModel->height = 200;
-        $imageSizeModel->resizeMode = ResizeConfiguration::MODE_BOX;
-        $imageSizeModel->zoom = 50;
+        $imageSizeProperties = [
+            'width' => 100,
+            'height' => 200,
+            'resizeMode' => ResizeConfiguration::MODE_BOX,
+            'zoom' => 50,
+        ];
+
+        /** @var ImageSizeModel&MockObject $imageSizeModel */
+        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
+        $imageSizeModel
+            ->method('row')
+            ->willReturn($imageSizeProperties)
+        ;
 
         $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
 
@@ -640,7 +647,11 @@ class ImageFactoryTest extends TestCase
             'Hook should not get called for cached images'
         );
 
-        $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
+        $image = $imageFactory->create(
+            $path,
+            (new ResizeConfiguration())->setWidth(200)->setHeight(200),
+            (new ResizeOptions())->setSkipIfDimensionsMatch(true)
+        );
 
         $this->assertSame(
             $this->getFixturesDir().'/images/dummy.jpg',

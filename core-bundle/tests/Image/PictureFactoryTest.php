@@ -26,6 +26,7 @@ use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeConfigurationInterface;
+use Contao\Image\ResizeOptionsInterface;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Model\Collection;
@@ -112,27 +113,41 @@ class PictureFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        /** @var ImageSizeModel $imageSizeModel */
-        $imageSizeModel = new ImageSizeModel();
-        $imageSizeModel->width = 100;
-        $imageSizeModel->height = 200;
-        $imageSizeModel->resizeMode = ResizeConfiguration::MODE_BOX;
-        $imageSizeModel->zoom = 50;
-        $imageSizeModel->sizes = '100vw';
-        $imageSizeModel->densities = '1x, 2x';
-        $imageSizeModel->cssClass = 'my-size';
+        $imageSizeProperties = [
+            'width' => 100,
+            'height' => 200,
+            'resizeMode' => ResizeConfiguration::MODE_BOX,
+            'zoom' => 50,
+            'sizes' => '100vw',
+            'densities' => '1x, 2x',
+            'cssClass' => 'my-size',
+        ];
+
+        /** @var ImageSizeModel&MockObject $imageSizeModel */
+        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
+        $imageSizeModel
+            ->method('row')
+            ->willReturn($imageSizeProperties)
+        ;
 
         $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
 
-        /** @var ImageSizeItemModel $imageSizeItemModel */
-        $imageSizeItemModel = new ImageSizeItemModel();
-        $imageSizeItemModel->width = 50;
-        $imageSizeItemModel->height = 50;
-        $imageSizeItemModel->resizeMode = ResizeConfiguration::MODE_CROP;
-        $imageSizeItemModel->zoom = 100;
-        $imageSizeItemModel->sizes = '50vw';
-        $imageSizeItemModel->densities = '0.5x, 2x';
-        $imageSizeItemModel->media = '(max-width: 900px)';
+        $imageSizeItemProperties = [
+            'width' => 50,
+            'height' => 50,
+            'resizeMode' => ResizeConfiguration::MODE_CROP,
+            'zoom' => 100,
+            'sizes' => '50vw',
+            'densities' => '0.5x, 2x',
+            'media' => '(max-width: 900px)',
+        ];
+
+        /** @var ImageSizeItemModel&MockObject $imageSizeItemModel */
+        $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class, $imageSizeItemProperties);
+        $imageSizeItemModel
+            ->method('row')
+            ->willReturn($imageSizeItemProperties)
+        ;
 
         $collection = new Collection([$imageSizeItemModel], 'tl_image_size_item');
         $imageSizeItemAdapter = $this->mockConfiguredAdapter(['findVisibleByPid' => $collection]);
@@ -162,6 +177,10 @@ class PictureFactoryTest extends TestCase
                 'densities' => '1x, 2x',
                 'sizes' => '100vw',
                 'cssClass' => 'foobar-class',
+                'skipIfDimensionsMatch' => true,
+                'formats' => [
+                    'jpg' => ['webp', 'jpg'],
+                ],
                 'items' => [
                     [
                         'width' => 50,
@@ -193,6 +212,8 @@ class PictureFactoryTest extends TestCase
                 ),
                 $this->callback(
                     function (PictureConfigurationInterface $config) use ($predefinedSizes): bool {
+                        $this->assertSame($predefinedSizes['foobar']['formats']['jpg'], $config->getFormats()['jpg']);
+
                         $size = $config->getSize();
 
                         $this->assertSame($predefinedSizes['foobar']['width'], $size->getResizeConfig()->getWidth());
@@ -200,6 +221,7 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($predefinedSizes['foobar']['resizeMode'], $size->getResizeConfig()->getMode());
                         $this->assertSame($predefinedSizes['foobar']['zoom'], $size->getResizeConfig()->getZoomLevel());
                         $this->assertSame($predefinedSizes['foobar']['densities'], $size->getDensities());
+                        $this->assertSame($predefinedSizes['foobar']['sizes'], $size->getSizes());
                         $this->assertSame($predefinedSizes['foobar']['sizes'], $size->getSizes());
 
                         /** @var PictureConfigurationItemInterface $sizeItem */
@@ -211,6 +233,13 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($predefinedSizes['foobar']['items'][0]['zoom'], $sizeItem->getResizeConfig()->getZoomLevel());
                         $this->assertSame($predefinedSizes['foobar']['items'][0]['densities'], $sizeItem->getDensities());
                         $this->assertSame($predefinedSizes['foobar']['items'][0]['sizes'], $sizeItem->getSizes());
+
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (ResizeOptionsInterface $options): bool {
+                        $this->assertTrue($options->getSkipIfDimensionsMatch());
 
                         return true;
                     }

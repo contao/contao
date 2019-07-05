@@ -242,6 +242,7 @@ class Picture
 				(new ResizeOptions())
 					->setImagineOptions($container->getParameter('contao.image.imagine_options'))
 					->setBypassCache($container->getParameter('contao.image.bypass_cache'))
+					->setSkipIfDimensionsMatch(true)
 			)
 		;
 

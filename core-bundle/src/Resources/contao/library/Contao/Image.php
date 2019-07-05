@@ -456,6 +456,7 @@ class Image
 					->setImagineOptions(System::getContainer()->getParameter('contao.image.imagine_options'))
 					->setTargetPath($this->targetPath ? $this->strRootDir . '/' . $this->targetPath : null)
 					->setBypassCache(System::getContainer()->getParameter('contao.image.bypass_cache'))
+					->setSkipIfDimensionsMatch(true)
 			)
 		;
 

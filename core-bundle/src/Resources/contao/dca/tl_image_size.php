@@ -103,7 +103,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{processing_legend},skipIfDimensionsMatch;{expert_legend},cssClass,densities,sizes'
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{processing_legend},formats,skipIfDimensionsMatch;{expert_legend},cssClass,densities,sizes'
 	),
 
 	// Fields
@@ -193,6 +193,15 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'exclude'                 => true,
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default ''"
+		),
+		'formats' => array
+		(
+			'inputType'               => 'checkboxWizard',
+			'exclude'                 => true,
+			'options_callback'        => array('tl_image_size', 'getFormats'),
+			'eval'                    => array('multiple'=>true, 'tl_class'=>'w50'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size']['formatsOptions'],
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		)
 	)
 );
@@ -360,5 +369,32 @@ class tl_image_size extends Contao\Backend
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
 		return $this->User->canEditFieldsOf('tl_image_size') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+	}
+
+	/**
+	 * Return the image format options
+	 *
+	 * @return array
+	 */
+	public function getFormats()
+	{
+		$options = array();
+
+		if (\in_array('webp', StringUtil::trimsplit(',', \Config::get('validImageTypes'))))
+		{
+			$options[] = 'webp:webp,jpg';
+			$options[] = 'jpg:webp,jpg;jpeg:webp,jpeg';
+		}
+
+		if (!$options)
+		{
+			$GLOBALS['TL_DCA']['tl_image_size']['fields']['formats']['label'] = array
+			(
+				$GLOBALS['TL_LANG']['tl_image_size']['formats'][0],
+				$GLOBALS['TL_LANG']['tl_image_size']['formatsMissingWebp'],
+			);
+		}
+
+		return $options;
 	}
 }
