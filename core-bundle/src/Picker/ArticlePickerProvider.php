@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
-class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface
+class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
     protected const INSERTTAG = '{{article_url::%s}}';
 
