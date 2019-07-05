@@ -186,6 +186,15 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) NULL"
 		),
+		'formats' => array
+		(
+			'inputType'               => 'checkboxWizard',
+			'exclude'                 => true,
+			'options_callback'        => array('tl_image_size', 'getFormats'),
+			'eval'                    => array('multiple'=>true),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size']['formatsOptions'],
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 		'skipIfDimensionsMatch' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['skipIfDimensionsMatch'],
@@ -193,15 +202,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'exclude'                 => true,
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default ''"
-		),
-		'formats' => array
-		(
-			'inputType'               => 'checkboxWizard',
-			'exclude'                 => true,
-			'options_callback'        => array('tl_image_size', 'getFormats'),
-			'eval'                    => array('multiple'=>true, 'tl_class'=>'w50'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size']['formatsOptions'],
-			'sql'                     => "varchar(255) NOT NULL default ''"
 		)
 	)
 );

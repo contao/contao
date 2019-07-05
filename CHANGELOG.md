@@ -2,6 +2,8 @@
 
 ## DEV
 
+ * Add support for image format conversion (see #552).
+ * Make the insert tags in picker providers configurable (see #450).
  * Add the "minimum keyword length" field to the search module (see #274).
  * Adjust the container CSS class in the "video/audio" element based on the media type (see #441).
  * Autorotate images based on their EXIF metadata (see #529).
