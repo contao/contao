@@ -23,8 +23,8 @@
       <trans-unit id="tl_image_size_item.title_legend">
         <source>Image size settings</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.expert_legend">
-        <source>Expert settings</source>
+      <trans-unit id="tl_image_size_item.source_legend">
+        <source>Image source settings</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.visibility_legend">
         <source>Visibility</source>

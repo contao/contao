@@ -86,16 +86,15 @@ class BackendHelp extends Backend
 				$options = array_keys($arrData['reference']);
 			}
 
-			// Unset the predefined image sizes
-			if ($table == 'tl_content' && $field == 'size')
-			{
-				$options = array('relative'=>$options['relative'], 'exact'=>$options['exact']);
-			}
-
 			foreach ($options as $key=>$option)
 			{
 				if (\is_array($option))
 				{
+					if (empty($option) || !isset($arrData['reference'][$key]))
+					{
+						continue;
+					}
+
 					if (\is_array($arrData['reference'][$key]))
 					{
 						$rows[] = array('headspan', $arrData['reference'][$key][0]);

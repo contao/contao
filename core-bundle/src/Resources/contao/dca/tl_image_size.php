@@ -103,7 +103,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{processing_legend},formats,skipIfDimensionsMatch;{expert_legend},cssClass,densities,sizes'
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{expert_legend:hide},formats,cssClass,skipIfDimensionsMatch'
 	),
 
 	// Fields
@@ -189,10 +189,10 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'formats' => array
 		(
 			'inputType'               => 'checkboxWizard',
-			'exclude'                 => true,
 			'options_callback'        => array('tl_image_size', 'getFormats'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size'],
+			'exclude'                 => true,
 			'eval'                    => array('multiple'=>true),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size']['formatsOptions'],
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'skipIfDimensionsMatch' => array
@@ -200,7 +200,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['skipIfDimensionsMatch'],
 			'inputType'               => 'checkbox',
 			'exclude'                 => true,
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		)
 	)
@@ -382,8 +382,9 @@ class tl_image_size extends Contao\Backend
 
 		if (\in_array('webp', StringUtil::trimsplit(',', \Config::get('validImageTypes'))))
 		{
-			$options[] = 'webp:webp,jpg';
+			$options[] = 'png:webp,png';
 			$options[] = 'jpg:webp,jpg;jpeg:webp,jpeg';
+			$options[] = 'gif:webp,gif';
 		}
 
 		if (!$options)

@@ -96,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},media,width,height,resizeMode,zoom;{expert_legend},densities,sizes;{visibility_legend},invisible',
+		'default'                     => '{title_legend},media,width,height,resizeMode,zoom;{source_legend},densities,sizes;{visibility_legend:hide},invisible',
 	),
 
 	// Fields
