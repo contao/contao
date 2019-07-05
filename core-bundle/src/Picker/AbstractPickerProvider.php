@@ -154,6 +154,14 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     }
 
     /**
+     * Checks if the value matches the insert tag.
+     */
+    protected function isMatchingTag(PickerConfig $config): bool
+    {
+        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config)[0]);
+    }
+
+    /**
      * Returns the routing parameters for the back end picker.
      *
      * @return array<string,string|int>

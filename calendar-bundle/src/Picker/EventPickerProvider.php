@@ -47,7 +47,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return false !== strpos($config->getValue(), $this->getInsertTagChunks($config)[0]);
+        return $this->isMatchingTag($config);
     }
 
     /**

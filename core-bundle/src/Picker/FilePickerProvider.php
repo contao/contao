@@ -60,15 +60,11 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        $value = $config->getValue();
-
         if ('file' === $config->getContext()) {
-            return Validator::isUuid($value);
+            return Validator::isUuid($config->getValue());
         }
 
-        return 0 === strpos($value, $this->uploadPath.'/')
-            || false !== strpos($config->getValue(), $this->getInsertTagChunks($config)[0])
-        ;
+        return $this->isMatchingTag($config) || 0 === strpos($config->getValue(), $this->uploadPath.'/');
     }
 
     /**
