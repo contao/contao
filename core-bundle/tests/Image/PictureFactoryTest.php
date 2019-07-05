@@ -241,7 +241,7 @@ class PictureFactoryTest extends TestCase
                 ),
                 $this->callback(
                     function (ResizeOptionsInterface $options) use ($predefinedSizes): bool {
-                        $this->assertSame($predefinedSizes['foobar']['skipIfDimensionsMatch'], $options->getSkipIfDimensionsMatch());
+                        $this->assertTrue($options->getSkipIfDimensionsMatch());
                         return true;
                     }
                 )
