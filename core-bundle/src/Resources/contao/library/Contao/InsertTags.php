@@ -170,7 +170,17 @@ class InsertTags extends Controller
 			{
 				// Date
 				case 'date':
-					$arrCache[$strTag] = Date::parse($elements[1] ?: Config::get('dateFormat'));
+					$format = $elements[1] ?: Config::get('dateFormat');
+					if ($blnAcceptResponse && 'Y' === $format) {
+						$datetime = new \DateTime('last day of December 23:59:59');
+						$response = new Response($datetime->format('Y'));
+						$response->setPublic();
+						$response->setExpires($datetime);
+
+						$arrCache[$strTag] = $response;
+					}
+
+					$arrCache[$strTag] = Date::parse($format);
 					break;
 
 				// Accessibility tags
