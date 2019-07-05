@@ -382,8 +382,8 @@ class tl_image_size extends Contao\Backend
 
 		if (\in_array('webp', StringUtil::trimsplit(',', \Config::get('validImageTypes'))))
 		{
-			$options[] = '{"webp":["webp","jpg"]}';
-			$options[] = '{"jpg":["webp","jpg"],"jpeg":["webp","jpeg"]}';
+			$options[] = 'webp:webp,jpg';
+			$options[] = 'jpg:webp,jpg;jpeg:webp,jpeg';
 		}
 
 		if (!$options)

@@ -65,10 +65,10 @@
       <trans-unit id="tl_image_size.formatsMissingWebp">
         <source>WEBP images are disabled. You can enable them by adding "webp" to contao.image.valid_extensions.</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.formatsOptions.{&quot;webp&quot;:[&quot;webp&quot;,&quot;jpg&quot;]}">
+      <trans-unit id="tl_image_size.formatsOptions.webp:webp,jpg">
         <source>WEBP to JPEG</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.formatsOptions.{&quot;jpg&quot;:[&quot;webp&quot;,&quot;jpg&quot;],&quot;jpeg&quot;:[&quot;webp&quot;,&quot;jpeg&quot;]}">
+      <trans-unit id="tl_image_size.formatsOptions.jpg:webp,jpg;jpeg:webp,jpeg">
         <source>JPEG to WEBP</source>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
