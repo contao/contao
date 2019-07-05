@@ -26,6 +26,7 @@ use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeConfigurationInterface;
+use Contao\Image\ResizeOptionsInterface;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Model\Collection;
@@ -162,6 +163,10 @@ class PictureFactoryTest extends TestCase
                 'densities' => '1x, 2x',
                 'sizes' => '100vw',
                 'cssClass' => 'foobar-class',
+                'skipIfDimensionsMatch' => true,
+                'formats' => [
+                    'jpg' => ['webp', 'jpg'],
+                ],
                 'items' => [
                     [
                         'width' => 50,
@@ -193,6 +198,8 @@ class PictureFactoryTest extends TestCase
                 ),
                 $this->callback(
                     function (PictureConfigurationInterface $config) use ($predefinedSizes): bool {
+                        $this->assertSame($predefinedSizes['foobar']['formats']['jpg'], $config->getFormats()['jpg']);
+
                         $size = $config->getSize();
 
                         $this->assertSame($predefinedSizes['foobar']['width'], $size->getResizeConfig()->getWidth());
@@ -200,6 +207,7 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($predefinedSizes['foobar']['resizeMode'], $size->getResizeConfig()->getMode());
                         $this->assertSame($predefinedSizes['foobar']['zoom'], $size->getResizeConfig()->getZoomLevel());
                         $this->assertSame($predefinedSizes['foobar']['densities'], $size->getDensities());
+                        $this->assertSame($predefinedSizes['foobar']['sizes'], $size->getSizes());
                         $this->assertSame($predefinedSizes['foobar']['sizes'], $size->getSizes());
 
                         /** @var PictureConfigurationItemInterface $sizeItem */
@@ -212,6 +220,12 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($predefinedSizes['foobar']['items'][0]['densities'], $sizeItem->getDensities());
                         $this->assertSame($predefinedSizes['foobar']['items'][0]['sizes'], $sizeItem->getSizes());
 
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (ResizeOptionsInterface $options) use ($predefinedSizes): bool {
+                        $this->assertSame($predefinedSizes['foobar']['skipIfDimensionsMatch'], $options->getSkipIfDimensionsMatch());
                         return true;
                     }
                 )
