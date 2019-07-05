@@ -47,7 +47,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return $this->isMatchingTag($config);
+        return $this->isMatchingInsertTag($config);
     }
 
     /**
@@ -70,7 +70,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = $this->getValue($config);
+            $attributes['value'] = $this->getInsertTagValue($config);
         }
 
         return $attributes;
@@ -95,7 +95,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return $params;
         }
 
-        if (null !== ($newsArchiveId = $this->getNewsArchiveId($this->getValue($config)))) {
+        if (null !== ($newsArchiveId = $this->getNewsArchiveId($this->getInsertTagValue($config)))) {
             $params['table'] = 'tl_news';
             $params['id'] = $newsArchiveId;
         }

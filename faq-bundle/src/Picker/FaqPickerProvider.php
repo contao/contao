@@ -47,7 +47,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return $this->isMatchingTag($config);
+        return $this->isMatchingInsertTag($config);
     }
 
     /**
@@ -70,7 +70,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = $this->getValue($config);
+            $attributes['value'] = $this->getInsertTagValue($config);
         }
 
         return $attributes;
@@ -95,7 +95,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
             return $params;
         }
 
-        if (null !== ($faqId = $this->getFaqCategoryId($this->getValue($config)))) {
+        if (null !== ($faqId = $this->getFaqCategoryId($this->getInsertTagValue($config)))) {
             $params['table'] = 'tl_faq';
             $params['id'] = $faqId;
         }

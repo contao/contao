@@ -47,7 +47,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return $this->isMatchingTag($config);
+        return $this->isMatchingInsertTag($config);
     }
 
     /**
@@ -70,7 +70,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = $this->getValue($config);
+            $attributes['value'] = $this->getInsertTagValue($config);
         }
 
         return $attributes;
@@ -95,7 +95,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
             return $params;
         }
 
-        if (null !== ($calendarId = $this->getCalendarId($this->getValue($config)))) {
+        if (null !== ($calendarId = $this->getCalendarId($this->getInsertTagValue($config)))) {
             $params['table'] = 'tl_calendar_events';
             $params['id'] = $calendarId;
         }

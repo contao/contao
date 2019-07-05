@@ -41,7 +41,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return is_numeric($config->getValue());
         }
 
-        return $this->isMatchingTag($config);
+        return $this->isMatchingInsertTag($config);
     }
 
     /**

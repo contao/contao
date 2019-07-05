@@ -37,7 +37,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return $this->isMatchingTag($config);
+        return $this->isMatchingInsertTag($config);
     }
 
     /**
@@ -60,7 +60,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = $this->getValue($config);
+            $attributes['value'] = $this->getInsertTagValue($config);
         }
 
         return $attributes;
