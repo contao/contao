@@ -70,7 +70,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = str_replace($this->getInsertTagChunks($config), '', $config->getValue());
+            $attributes['value'] = $this->getValue($config);
         }
 
         return $attributes;
@@ -91,17 +91,11 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     {
         $params = ['do' => 'news'];
 
-        if (null === $config || !$config->getValue()) {
+        if (null === $config || !$config->getValue() || !$this->supportsValue($config)) {
             return $params;
         }
 
-        if (!$this->supportsValue($config)) {
-            return $params;
-        }
-
-        $value = str_replace($this->getInsertTagChunks($config), '', $config->getValue());
-
-        if (null !== ($newsArchiveId = $this->getNewsArchiveId($value))) {
+        if (null !== ($newsArchiveId = $this->getNewsArchiveId($this->getValue($config)))) {
             $params['table'] = 'tl_news';
             $params['id'] = $newsArchiveId;
         }

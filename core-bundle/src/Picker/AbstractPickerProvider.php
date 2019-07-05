@@ -146,6 +146,14 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     }
 
     /**
+     * Returns the value without the surrounding insert tag chunks.
+     */
+    protected function getValue(PickerConfig $config)
+    {
+        return str_replace($this->getInsertTagChunks($config), '', $config->getValue());
+    }
+
+    /**
      * Returns the routing parameters for the back end picker.
      *
      * @return array<string,string|int>

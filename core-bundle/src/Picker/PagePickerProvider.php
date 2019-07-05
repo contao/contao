@@ -84,10 +84,10 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return $attributes;
         }
 
-        $insertTagChunks = $this->getInsertTagChunks($config);
+        $chunks = $this->getInsertTagChunks($config);
 
-        if ($value && false !== strpos($value, $insertTagChunks[0])) {
-            $attributes['value'] = str_replace($insertTagChunks, '', $value);
+        if ($value && false !== strpos($value, $chunks[0])) {
+            $attributes['value'] = str_replace($chunks, '', $value);
         }
 
         return $attributes;

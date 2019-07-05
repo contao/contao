@@ -70,7 +70,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = str_replace($this->getInsertTagChunks($config), '', $config->getValue());
+            $attributes['value'] = $this->getValue($config);
         }
 
         return $attributes;
@@ -91,17 +91,11 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     {
         $params = ['do' => 'calendar'];
 
-        if (null === $config || !$config->getValue()) {
+        if (null === $config || !$config->getValue() || !$this->supportsValue($config)) {
             return $params;
         }
 
-        if (!$this->supportsValue($config)) {
-            return $params;
-        }
-
-        $value = str_replace($this->getInsertTagChunks($config), '', $config->getValue());
-
-        if (null !== ($calendarId = $this->getCalendarId($value))) {
+        if (null !== ($calendarId = $this->getCalendarId($this->getValue($config)))) {
             $params['table'] = 'tl_calendar_events';
             $params['id'] = $calendarId;
         }
