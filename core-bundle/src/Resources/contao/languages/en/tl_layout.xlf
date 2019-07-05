@@ -182,6 +182,18 @@
       <trans-unit id="tl_layout.webfonts.1">
         <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
       </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.0">
+        <source>Lightbox image size</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.1">
+        <source>Here you can select an image size for the images shown in the lightbox.</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.defaultImageDensities.0">
+        <source>Default image pixel densities</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.defaultImageDensities.1">
+        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
+      </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included modules</source>
       </trans-unit>
@@ -323,6 +335,9 @@
       <trans-unit id="tl_layout.webfonts_legend">
         <source>Web fonts</source>
       </trans-unit>
+      <trans-unit id="tl_layout.image_legend">
+        <source>Image sizes</source>
+      </trans-unit>
       <trans-unit id="tl_layout.style_legend">
         <source>Style sheets</source>
       </trans-unit>
@@ -376,12 +391,6 @@
       </trans-unit>
       <trans-unit id="tl_layout.analytics_piwik">
         <source>Piwik</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.lightboxSize.0">
-        <source>Lightbox image size</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.lightboxSize.1">
-        <source>Image size used for images shown in the lightbox.</source>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>

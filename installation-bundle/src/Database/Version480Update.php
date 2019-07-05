@@ -216,5 +216,20 @@ class Version480Update extends AbstractVersionUpdate
                 ':context' => serialize([$row->contextLength, $row->totalLength]),
             ]);
         }
+
+        $this->connection->query("
+            ALTER TABLE
+                tl_layout
+            ADD
+                defaultImageDensities varchar(255) NOT NULL default ''
+        ");
+
+        // Move the default image densities to the page layout
+        $this->connection->query('
+            UPDATE
+                tl_layout l
+            SET
+                defaultImageDensities = (SELECT defaultImageDensities FROM tl_theme t WHERE t.id = l.pid)
+        ');
     }
 }

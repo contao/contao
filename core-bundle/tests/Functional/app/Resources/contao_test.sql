@@ -1,8 +1,8 @@
--- MySQL dump 10.17  Distrib 10.3.14-MariaDB, for osx10.14 (x86_64)
+-- MySQL dump 10.17  Distrib 10.3.15-MariaDB, for osx10.14 (x86_64)
 --
 -- Host: localhost    Database: contao_test
 -- ------------------------------------------------------
--- Server version	10.3.14-MariaDB
+-- Server version	10.3.15-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -30,7 +30,7 @@ CREATE TABLE `tl_article` (
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `author` int(10) unsigned NOT NULL DEFAULT 0,
-  `inColumn` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `inColumn` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'main',
   `keywords` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `showTeaser` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `teaserCssID` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -75,8 +75,8 @@ CREATE TABLE `tl_calendar` (
   `protected` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `groups` blob DEFAULT NULL,
   `allowComments` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `notify` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `sortOrder` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `notify` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'notify_admin',
+  `sortOrder` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ascending',
   `perPage` smallint(5) unsigned NOT NULL DEFAULT 0,
   `moderate` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `bbcode` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -110,8 +110,8 @@ CREATE TABLE `tl_calendar_events` (
   `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `author` int(10) unsigned NOT NULL DEFAULT 0,
   `addTime` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `startTime` int(10) unsigned DEFAULT NULL,
-  `endTime` int(10) unsigned DEFAULT NULL,
+  `startTime` int(11) DEFAULT NULL,
+  `endTime` int(11) DEFAULT NULL,
   `startDate` int(10) unsigned DEFAULT NULL,
   `endDate` int(10) unsigned DEFAULT NULL,
   `location` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -124,14 +124,14 @@ CREATE TABLE `tl_calendar_events` (
   `imageUrl` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `fullsize` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `caption` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `floating` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `floating` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'above',
   `recurring` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `repeatEach` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `repeatEnd` int(10) unsigned NOT NULL DEFAULT 0,
   `recurrences` smallint(5) unsigned NOT NULL DEFAULT 0,
   `addEnclosure` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `enclosure` blob DEFAULT NULL,
-  `source` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `source` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'default',
   `jumpTo` int(10) unsigned NOT NULL DEFAULT 0,
   `articleId` int(10) unsigned NOT NULL DEFAULT 0,
   `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -176,9 +176,9 @@ CREATE TABLE `tl_calendar_feed` (
   `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `language` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `calendars` blob DEFAULT NULL,
-  `format` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `source` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `maxItems` smallint(5) unsigned NOT NULL DEFAULT 0,
+  `format` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'rss',
+  `source` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'source_teaser',
+  `maxItems` smallint(5) unsigned NOT NULL DEFAULT 25,
   `feedBase` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `description` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -219,7 +219,7 @@ CREATE TABLE `tl_comments` (
   `ip` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `notified` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `notifiedReply` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `member` int(10) unsigned DEFAULT 0,
+  `member` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `published` (`published`),
   KEY `source_parent_published` (`source`,`parent`,`published`)
@@ -281,19 +281,19 @@ CREATE TABLE `tl_content` (
   `ptable` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `sorting` int(10) unsigned NOT NULL DEFAULT 0,
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
-  `type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `headline` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'text',
+  `headline` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'a:2:{s:5:"value";s:0:"";s:4:"unit";s:2:"h2";}',
   `text` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `addImage` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `singleSRC` binary(16) DEFAULT NULL,
   `alt` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `imageTitle` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `size` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `size` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `imagemargin` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `imageUrl` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `fullsize` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `caption` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `floating` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `floating` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'above',
   `html` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `listtype` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `listitems` blob DEFAULT NULL,
@@ -304,7 +304,7 @@ CREATE TABLE `tl_content` (
   `tleft` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `sortable` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `sortIndex` smallint(5) unsigned NOT NULL DEFAULT 0,
-  `sortOrder` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `sortOrder` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ascending',
   `mooHeadline` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `mooStyle` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `mooClasses` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -320,7 +320,7 @@ CREATE TABLE `tl_content` (
   `multiSRC` blob DEFAULT NULL,
   `orderSRC` blob DEFAULT NULL,
   `useHomeDir` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `perRow` smallint(5) unsigned NOT NULL DEFAULT 0,
+  `perRow` smallint(5) unsigned NOT NULL DEFAULT 4,
   `perPage` smallint(5) unsigned NOT NULL DEFAULT 0,
   `numberOfItems` smallint(5) unsigned NOT NULL DEFAULT 0,
   `sortBy` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -347,13 +347,13 @@ CREATE TABLE `tl_content` (
   `invisible` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `start` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `stop` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `com_order` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `com_order` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ascending',
   `com_perPage` smallint(5) unsigned NOT NULL DEFAULT 0,
   `com_moderate` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `com_bbcode` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `com_disableCaptcha` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `com_requireLogin` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `com_template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `com_template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'com_default',
   `overwriteMeta` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `youtubeOptions` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `vimeo` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -363,10 +363,11 @@ CREATE TABLE `tl_content` (
   `playerStop` int(10) unsigned NOT NULL DEFAULT 0,
   `playerColor` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `playerPreload` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `playerAspect` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `playerAspect` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'none',
   `playerCaption` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `overwriteLink` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `inline` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `splashImage` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `pid_ptable_invisible_sorting` (`pid`,`ptable`,`invisible`,`sorting`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
@@ -378,7 +379,7 @@ CREATE TABLE `tl_content` (
 
 LOCK TABLES `tl_content` WRITE;
 /*!40000 ALTER TABLE `tl_content` DISABLE KEYS */;
-INSERT INTO `tl_content` VALUES (9,4,'tl_article',128,1539686688,'module','a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}',NULL,'',NULL,'','','','','','','','above',NULL,'',NULL,NULL,'','','','','',0,'ascending','','','','',NULL,'','','','','','','',NULL,NULL,'',4,0,0,'','','','',NULL,'',NULL,'',0,300,0,'',0,0,0,0,1,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}','','','','ascending',0,'','','','','com_default','',NULL,'',NULL,NULL,0,0,'','','none','','',''),(10,13,'tl_article',128,1539686730,'module','a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}',NULL,'',NULL,'','','','','','','','above',NULL,'',NULL,NULL,'','','','','',0,'ascending','','','','',NULL,'','','','','','','',NULL,NULL,'',4,0,0,'','','','',NULL,'',NULL,'',0,300,0,'',0,0,0,0,1,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}','','','','ascending',0,'','','','','com_default','',NULL,'',NULL,NULL,0,0,'','','none','','','');
+INSERT INTO `tl_content` VALUES (9,4,'tl_article',128,1539686688,'module','a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}',NULL,'',NULL,'','','','','','','','above',NULL,'',NULL,NULL,'','','','','',0,'ascending','','','','',NULL,'','','','','','','',NULL,NULL,'',4,0,0,'','','','',NULL,'',NULL,'',0,300,0,'',0,0,0,0,1,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}','','','','ascending',0,'','','','','com_default','',NULL,'',NULL,NULL,0,0,'','','none','','','',''),(10,13,'tl_article',128,1539686730,'module','a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}',NULL,'',NULL,'','','','','','','','above',NULL,'',NULL,NULL,'','','','','',0,'ascending','','','','',NULL,'','','','','','','',NULL,NULL,'',4,0,0,'','','','',NULL,'',NULL,'',0,300,0,'',0,0,0,0,1,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}','','','','ascending',0,'','','','','com_default','',NULL,'',NULL,NULL,0,0,'','','none','','','','');
 /*!40000 ALTER TABLE `tl_content` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -432,7 +433,7 @@ CREATE TABLE `tl_faq` (
   `imageUrl` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `fullsize` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `caption` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `floating` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `floating` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'above',
   `addEnclosure` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `enclosure` blob DEFAULT NULL,
   `noComments` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -468,8 +469,8 @@ CREATE TABLE `tl_faq_category` (
   `headline` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `jumpTo` int(10) unsigned NOT NULL DEFAULT 0,
   `allowComments` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `notify` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `sortOrder` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `notify` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'notify_admin',
+  `sortOrder` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ascending',
   `perPage` smallint(5) unsigned NOT NULL DEFAULT 0,
   `moderate` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `bbcode` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -506,10 +507,10 @@ CREATE TABLE `tl_files` (
   `hash` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `found` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
-  `importantPartX` int(10) NOT NULL DEFAULT 0,
-  `importantPartY` int(10) NOT NULL DEFAULT 0,
-  `importantPartWidth` int(10) NOT NULL DEFAULT 0,
-  `importantPartHeight` int(10) NOT NULL DEFAULT 0,
+  `importantPartX` double unsigned NOT NULL DEFAULT 0,
+  `importantPartY` double unsigned NOT NULL DEFAULT 0,
+  `importantPartWidth` double unsigned NOT NULL DEFAULT 0,
+  `importantPartHeight` double unsigned NOT NULL DEFAULT 0,
   `meta` blob DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uuid` (`uuid`),
@@ -544,11 +545,11 @@ CREATE TABLE `tl_form` (
   `sendViaEmail` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `recipient` varchar(1022) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `subject` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `format` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `format` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'raw',
   `skipEmpty` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `storeValues` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `targetTable` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `method` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `method` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'POST',
   `novalidate` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `attributes` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `formID` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -581,7 +582,7 @@ CREATE TABLE `tl_form_field` (
   `sorting` int(10) unsigned NOT NULL DEFAULT 0,
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
   `invisible` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'text',
   `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `label` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `text` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -592,10 +593,10 @@ CREATE TABLE `tl_form_field` (
   `placeholder` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `minlength` int(10) unsigned NOT NULL DEFAULT 0,
   `maxlength` int(10) unsigned NOT NULL DEFAULT 0,
-  `size` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `size` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'a:2:{i:0;i:4;i:1;i:40;}',
   `multiple` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `mSize` smallint(5) unsigned NOT NULL DEFAULT 0,
-  `extensions` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `extensions` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,ppt,pptx',
   `storeFile` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `uploadFolder` binary(16) DEFAULT NULL,
   `useHomeDir` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -642,6 +643,8 @@ CREATE TABLE `tl_image_size` (
   `resizeMode` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `zoom` int(10) DEFAULT NULL,
   `cssClass` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `skipIfDimensionsMatch` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `formats` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `pid` (`pid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
@@ -702,18 +705,18 @@ CREATE TABLE `tl_layout` (
   `pid` int(10) unsigned NOT NULL DEFAULT 0,
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `rows` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `rows` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '2rwh',
   `headerHeight` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `footerHeight` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `cols` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `cols` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '2cll',
   `widthLeft` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `widthRight` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `sections` blob DEFAULT NULL,
-  `framework` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `framework` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'a:2:{i:0;s:10:"layout.css";i:1;s:14:"responsive.css";}',
   `stylesheet` blob DEFAULT NULL,
   `external` blob DEFAULT NULL,
   `orderExt` blob DEFAULT NULL,
-  `loadingOrder` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `loadingOrder` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'external_first',
   `newsfeeds` blob DEFAULT NULL,
   `calendarfeeds` blob DEFAULT NULL,
   `modules` blob DEFAULT NULL,
@@ -728,18 +731,20 @@ CREATE TABLE `tl_layout` (
   `jSource` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `jquery` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `addMooTools` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `mooSource` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `mooSource` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'moo_local',
   `mootools` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `analytics` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `script` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `static` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `width` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `align` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `align` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'center',
   `scripts` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `combineScripts` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `combineScripts` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1',
   `externalJs` blob DEFAULT NULL,
   `orderExtJs` blob DEFAULT NULL,
-  `minifyMarkup` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `minifyMarkup` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1',
+  `defaultImageDensities` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `lightboxSize` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -750,7 +755,7 @@ CREATE TABLE `tl_layout` (
 
 LOCK TABLES `tl_layout` WRITE;
 /*!40000 ALTER TABLE `tl_layout` DISABLE KEYS */;
-INSERT INTO `tl_layout` VALUES (1,1,1539617638,'Default','1rw','a:2:{s:4:\"unit\";s:0:\"\";s:5:\"value\";s:0:\"\";}','','1cl','a:2:{s:4:\"unit\";s:0:\"\";s:5:\"value\";s:0:\"\";}','','a:1:{i:0;a:4:{s:5:\"title\";s:0:\"\";s:2:\"id\";s:0:\"\";s:8:\"template\";s:13:\"block_section\";s:8:\"position\";s:3:\"top\";}}','',NULL,NULL,NULL,'external_first',NULL,NULL,'a:1:{i:0;a:3:{s:3:\"mod\";s:1:\"0\";s:3:\"col\";s:4:\"main\";s:6:\"enable\";s:1:\"1\";}}','fe_page','','','','','',NULL,'','',NULL,'','moo_local',NULL,NULL,NULL,'','','center',NULL,'1',NULL,NULL,'');
+INSERT INTO `tl_layout` VALUES (1,1,1539617638,'Default','1rw','a:2:{s:4:\"unit\";s:0:\"\";s:5:\"value\";s:0:\"\";}','','1cl','a:2:{s:4:\"unit\";s:0:\"\";s:5:\"value\";s:0:\"\";}','','a:1:{i:0;a:4:{s:5:\"title\";s:0:\"\";s:2:\"id\";s:0:\"\";s:8:\"template\";s:13:\"block_section\";s:8:\"position\";s:3:\"top\";}}','',NULL,NULL,NULL,'external_first',NULL,NULL,'a:1:{i:0;a:3:{s:3:\"mod\";s:1:\"0\";s:3:\"col\";s:4:\"main\";s:6:\"enable\";s:1:\"1\";}}','fe_page','','','','','',NULL,'','',NULL,'','moo_local',NULL,NULL,NULL,'','','center',NULL,'1',NULL,NULL,'','','');
 /*!40000 ALTER TABLE `tl_layout` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -881,8 +886,8 @@ CREATE TABLE `tl_module` (
   `pid` int(10) unsigned NOT NULL DEFAULT 0,
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `headline` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `headline` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'a:2:{s:5:"value";s:0:"";s:4:"unit";s:2:"h2";}',
+  `type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'navigation',
   `levelOffset` smallint(5) unsigned NOT NULL DEFAULT 0,
   `showLevel` smallint(5) unsigned NOT NULL DEFAULT 0,
   `hardLimit` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -902,28 +907,28 @@ CREATE TABLE `tl_module` (
   `memberTpl` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `cal_hideRunning` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `form` int(10) unsigned NOT NULL DEFAULT 0,
-  `queryType` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `queryType` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'and',
   `fuzzy` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `contextLength` varchar(64) NOT NULL default '',
+  `contextLength` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `minKeywordLength` smallint(5) unsigned NOT NULL DEFAULT 4,
   `perPage` smallint(5) unsigned NOT NULL DEFAULT 0,
-  `searchType` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `searchType` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'simple',
   `searchTpl` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `inColumn` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `inColumn` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'main',
   `skipFirst` smallint(5) unsigned NOT NULL DEFAULT 0,
   `loadFirst` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `singleSRC` binary(16) DEFAULT NULL,
   `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `imgSize` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `imgSize` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `useCaption` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `fullsize` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `multiSRC` blob DEFAULT NULL,
   `orderSRC` blob DEFAULT NULL,
   `html` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `rss_cache` int(10) unsigned NOT NULL DEFAULT 0,
+  `rss_cache` int(10) unsigned NOT NULL DEFAULT 3600,
   `rss_feed` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `rss_template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `numberOfItems` smallint(5) unsigned NOT NULL DEFAULT 0,
+  `rss_template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'rss_default',
+  `numberOfItems` smallint(5) unsigned NOT NULL DEFAULT 3,
   `disableCaptcha` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `reg_groups` blob DEFAULT NULL,
   `reg_allowLogin` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -942,20 +947,20 @@ CREATE TABLE `tl_module` (
   `cal_calendar` blob DEFAULT NULL,
   `cal_noSpan` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `cal_startDay` smallint(5) unsigned NOT NULL DEFAULT 1,
-  `cal_format` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `cal_format` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'cal_month',
   `cal_ignoreDynamic` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `cal_order` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `cal_order` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ascending',
   `cal_readerModule` int(10) unsigned NOT NULL DEFAULT 0,
   `cal_limit` smallint(5) unsigned NOT NULL DEFAULT 0,
-  `cal_template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `cal_ctemplate` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `cal_template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'event_full',
+  `cal_ctemplate` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'cal_default',
   `cal_showQuantity` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `com_order` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `com_order` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ascending',
   `com_moderate` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `com_bbcode` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `com_requireLogin` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `com_disableCaptcha` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `com_template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `com_template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'com_default',
   `list_table` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `list_fields` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `list_where` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -963,24 +968,24 @@ CREATE TABLE `tl_module` (
   `list_sort` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `list_info` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `list_info_where` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `list_layout` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `list_info_layout` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `list_layout` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'list_default',
+  `list_info_layout` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'info_default',
   `news_archives` blob DEFAULT NULL,
-  `news_featured` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `news_featured` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'all_items',
   `news_jumpToCurrent` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `news_readerModule` int(10) unsigned NOT NULL DEFAULT 0,
-  `news_metaFields` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `news_template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `news_format` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `news_metaFields` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'a:2:{i:0;s:4:"date";i:1;s:6:"author";}',
+  `news_template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'news_latest',
+  `news_format` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'news_month',
   `news_startDay` smallint(5) unsigned NOT NULL DEFAULT 0,
-  `news_order` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `news_order` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'order_date_desc',
   `news_showQuantity` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `newsletters` blob DEFAULT NULL,
   `nl_channels` blob DEFAULT NULL,
   `nl_hideChannels` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `nl_subscribe` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `nl_unsubscribe` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `nl_template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `nl_template` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'nl_simple',
   `faq_categories` blob DEFAULT NULL,
   `faq_readerModule` int(10) unsigned NOT NULL DEFAULT 0,
   `nl_text` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -994,7 +999,7 @@ CREATE TABLE `tl_module` (
 
 LOCK TABLES `tl_module` WRITE;
 /*!40000 ALTER TABLE `tl_module` DISABLE KEYS */;
-INSERT INTO `tl_module` VALUES (1,1,1539616752,'News archive','a:2:{s:4:\"unit\";s:2:\"h2\";s:5:\"value\";s:0:\"\";}','newsarchive',0,0,'','','',0,'','',NULL,NULL,'','','',0,'',NULL,'','',0,'and','',48,1000,0,'simple','','main',0,'',NULL,'','a:3:{i:0;s:0:\"\";i:1;s:0:\"\";i:2;s:0:\"\";}','','',NULL,NULL,NULL,3600,NULL,'rss_default',3,'',NULL,'','','','',NULL,'',0,NULL,NULL,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}',NULL,'',1,'cal_month','','ascending',0,0,'event_full','cal_default','','ascending','','','','','com_default','','','','','','','','list_default','info_default','a:1:{i:0;s:1:\"1\";}','all_items','hide_module',2,'a:2:{i:0;s:4:\"date\";i:1;s:6:\"author\";}','news_latest','news_month',0,'order_date_desc','',NULL,NULL,'',NULL,NULL,'nl_simple',NULL,0,NULL),(2,1,1539616572,'News reader','a:2:{s:4:\"unit\";s:2:\"h2\";s:5:\"value\";s:0:\"\";}','newsreader',0,0,'','','',0,'','',NULL,NULL,'','','',0,'',NULL,'','',0,'and','',48,1000,0,'simple','','main',0,'',NULL,'','a:3:{i:0;s:0:\"\";i:1;s:0:\"\";i:2;s:0:\"\";}','','',NULL,NULL,NULL,3600,NULL,'rss_default',3,'',NULL,'','','','',NULL,'',0,NULL,NULL,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}',NULL,'',1,'cal_month','','ascending',0,0,'event_full','cal_default','','ascending','','','','','com_default','','','','','','','','list_default','info_default','a:1:{i:0;s:1:\"1\";}','all_items','',0,'a:2:{i:0;s:4:\"date\";i:1;s:6:\"author\";}','news_latest','news_month',0,'order_date_desc','',NULL,NULL,'',NULL,NULL,'nl_simple',NULL,0,NULL);
+INSERT INTO `tl_module` VALUES (1,1,1539616752,'News archive','a:2:{s:4:\"unit\";s:2:\"h2\";s:5:\"value\";s:0:\"\";}','newsarchive',0,0,'','','',0,'','',NULL,NULL,'','','',0,'',NULL,'','',0,'and','','48',1000,0,'simple','','main',0,'',NULL,'','a:3:{i:0;s:0:\"\";i:1;s:0:\"\";i:2;s:0:\"\";}','','',NULL,NULL,NULL,3600,NULL,'rss_default',3,'',NULL,'','','','',NULL,'',0,NULL,NULL,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}',NULL,'',1,'cal_month','','ascending',0,0,'event_full','cal_default','','ascending','','','','','com_default','','','','','','','','list_default','info_default','a:1:{i:0;s:1:\"1\";}','all_items','hide_module',2,'a:2:{i:0;s:4:\"date\";i:1;s:6:\"author\";}','news_latest','news_month',0,'order_date_desc','',NULL,NULL,'',NULL,NULL,'nl_simple',NULL,0,NULL),(2,1,1539616572,'News reader','a:2:{s:4:\"unit\";s:2:\"h2\";s:5:\"value\";s:0:\"\";}','newsreader',0,0,'','','',0,'','',NULL,NULL,'','','',0,'',NULL,'','',0,'and','','48',1000,0,'simple','','main',0,'',NULL,'','a:3:{i:0;s:0:\"\";i:1;s:0:\"\";i:2;s:0:\"\";}','','',NULL,NULL,NULL,3600,NULL,'rss_default',3,'',NULL,'','','','',NULL,'',0,NULL,NULL,'',NULL,'','a:2:{i:0;s:0:\"\";i:1;s:0:\"\";}',NULL,'',1,'cal_month','','ascending',0,0,'event_full','cal_default','','ascending','','','','','com_default','','','','','','','','list_default','info_default','a:1:{i:0;s:1:\"1\";}','all_items','',0,'a:2:{i:0;s:4:\"date\";i:1;s:6:\"author\";}','news_latest','news_month',0,'order_date_desc','',NULL,NULL,'',NULL,NULL,'nl_simple',NULL,0,NULL);
 /*!40000 ALTER TABLE `tl_module` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1013,7 +1018,7 @@ CREATE TABLE `tl_news` (
   `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `author` int(10) unsigned NOT NULL DEFAULT 0,
   `date` int(10) unsigned NOT NULL DEFAULT 0,
-  `time` int(10) unsigned NOT NULL DEFAULT 0,
+  `time` int(11) NOT NULL DEFAULT 0,
   `subheadline` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `teaser` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `addImage` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -1024,10 +1029,10 @@ CREATE TABLE `tl_news` (
   `imageUrl` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `fullsize` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `caption` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `floating` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `floating` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'above',
   `addEnclosure` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `enclosure` blob DEFAULT NULL,
-  `source` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `source` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'default',
   `jumpTo` int(10) unsigned NOT NULL DEFAULT 0,
   `articleId` int(10) unsigned NOT NULL DEFAULT 0,
   `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -1074,8 +1079,8 @@ CREATE TABLE `tl_news_archive` (
   `protected` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `groups` blob DEFAULT NULL,
   `allowComments` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `notify` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `sortOrder` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `notify` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'notify_admin',
+  `sortOrder` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ascending',
   `perPage` smallint(5) unsigned NOT NULL DEFAULT 0,
   `moderate` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `bbcode` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -1109,9 +1114,9 @@ CREATE TABLE `tl_news_feed` (
   `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `language` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `archives` blob DEFAULT NULL,
-  `format` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `source` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `maxItems` smallint(5) unsigned NOT NULL DEFAULT 0,
+  `format` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'rss',
+  `source` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'source_teaser',
+  `maxItems` smallint(5) unsigned NOT NULL DEFAULT 25,
   `feedBase` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1205,7 +1210,7 @@ CREATE TABLE `tl_newsletter_channel` (
   `jumpTo` int(10) unsigned NOT NULL DEFAULT 0,
   `senderName` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `sender` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `template` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `template` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'mail_default',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1266,6 +1271,7 @@ CREATE TABLE `tl_opt_in` (
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `emailSubject` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `emailText` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `invalidatedThrough` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `token` (`token`),
   KEY `removeon` (`removeOn`)
@@ -1321,12 +1327,12 @@ CREATE TABLE `tl_page` (
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
-  `type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'regular',
   `pageTitle` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `language` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `robots` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `redirect` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `redirect` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'permanent',
   `jumpTo` int(10) unsigned NOT NULL DEFAULT 0,
   `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `target` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -1366,6 +1372,7 @@ CREATE TABLE `tl_page` (
   `clientCache` int(10) unsigned NOT NULL DEFAULT 0,
   `validAliasCharacters` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `redirectBack` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `alwaysLoadFromCache` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `alias` (`alias`),
   KEY `pid_type_start_stop_published` (`pid`,`type`,`start`,`stop`,`published`),
@@ -1379,7 +1386,7 @@ CREATE TABLE `tl_page` (
 
 LOCK TABLES `tl_page` WRITE;
 /*!40000 ALTER TABLE `tl_page` DISABLE KEYS */;
-INSERT INTO `tl_page` VALUES (1,0,128,1539679763,'Root with index page','root-with-index-page','root','','en','',NULL,'permanent',0,'','','root-with-index.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(2,1,128,1539698035,'Index','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(3,0,256,1539679767,'Root with home page','root-with-home-page','root','','en','',NULL,'permanent',0,'','','root-with-home.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(4,3,128,1539698035,'Home','home','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(5,0,384,1539680233,'Root with special chars','root-with-special-chars','root','','en','',NULL,'permanent',0,'','','root-with-special-chars.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(6,5,128,1539698035,'Höme','höme','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(7,0,512,1539680468,'Root with folder URLs','root-with-folder-urls','root','','en','',NULL,'permanent',0,'','','root-with-folder-urls.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(8,7,128,1539698035,'Home','folder/url/home','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(9,0,640,1539694676,'Root without fallback language','root-without-fallback-language','root','','en','',NULL,'permanent',0,'','','root-without-fallback-language.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(10,9,128,1539698035,'English','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(11,0,768,1550250980,'Same domain root English','same-domain-root-english','root','','en','',NULL,'permanent',0,'','','same-domain-root.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(12,11,128,1539698035,'English site','english-site','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(13,0,896,1550250980,'Same domain root German','same-domain-root-german','root','','de','',NULL,'permanent',0,'','','same-domain-root.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(14,13,128,1539698035,'German site','german-site','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(15,0,960,1550250933,'Same domain root English with index','same-domain-root-english-with-index','root','','en','',NULL,'permanent',0,'','','same-domain-root-with-index.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(16,15,128,1539698035,'English site','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(17,0,896,1539696285,'Same domain root German with index','same-domain-root-german-with-index','root','','de','',NULL,'permanent',0,'','','same-domain-root-with-index.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(18,17,128,1539698035,'German site','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(19,0,1024,1539696285,'Domain without hostname','domain-without-hostname','root','','en','',NULL,'permanent',0,'','','','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(20,19,128,1539698035,'Home','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'',''),(21,0,1024,1539696285,'Domain with port','domain-with-port','root','','en','',NULL,'permanent',0,'','','domain-with-port.local:8080','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'',''),(22,21,128,1539698035,'Home','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','');
+INSERT INTO `tl_page` VALUES (1,0,128,1539679763,'Root with index page','root-with-index-page','root','','en','',NULL,'permanent',0,'','','root-with-index.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(2,1,128,1539698035,'Index','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(3,0,256,1539679767,'Root with home page','root-with-home-page','root','','en','',NULL,'permanent',0,'','','root-with-home.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(4,3,128,1539698035,'Home','home','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(5,0,384,1539680233,'Root with special chars','root-with-special-chars','root','','en','',NULL,'permanent',0,'','','root-with-special-chars.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(6,5,128,1539698035,'Höme','höme','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(7,0,512,1539680468,'Root with folder URLs','root-with-folder-urls','root','','en','',NULL,'permanent',0,'','','root-with-folder-urls.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(8,7,128,1539698035,'Home','folder/url/home','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(9,0,640,1539694676,'Root without fallback language','root-without-fallback-language','root','','en','',NULL,'permanent',0,'','','root-without-fallback-language.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(10,9,128,1539698035,'English','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(11,0,768,1550250980,'Same domain root English','same-domain-root-english','root','','en','',NULL,'permanent',0,'','','same-domain-root.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(12,11,128,1539698035,'English site','english-site','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(13,0,896,1550250980,'Same domain root German','same-domain-root-german','root','','de','',NULL,'permanent',0,'','','same-domain-root.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(14,13,128,1539698035,'German site','german-site','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(15,0,960,1550250933,'Same domain root English with index','same-domain-root-english-with-index','root','','en','',NULL,'permanent',0,'','','same-domain-root-with-index.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(16,15,128,1539698035,'English site','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(17,0,896,1539696285,'Same domain root German with index','same-domain-root-german-with-index','root','','de','',NULL,'permanent',0,'','','same-domain-root-with-index.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(18,17,128,1539698035,'German site','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(19,0,1024,1539696285,'Domain without hostname','domain-without-hostname','root','','en','',NULL,'permanent',0,'','','','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(20,19,128,1539698035,'Home','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(21,0,1024,1539696285,'Domain with port','domain-with-port','root','','en','',NULL,'permanent',0,'','','domain-with-port.local:8080','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(22,21,128,1539698035,'Home','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','');
 /*!40000 ALTER TABLE `tl_page` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1391,12 +1398,16 @@ DROP TABLE IF EXISTS `tl_remember_me`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tl_remember_me` (
-  `series` char(88) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` char(88) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lastUsed` datetime DEFAULT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `series` binary(32) NOT NULL COMMENT '(DC2Type:binary_string)',
+  `value` binary(64) NOT NULL COMMENT '(DC2Type:binary_string)',
+  `lastUsed` datetime NOT NULL,
   `class` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `username` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`series`)
+  `expires` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `value` (`value`),
+  KEY `series` (`series`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1566,7 +1577,7 @@ CREATE TABLE `tl_style_sheet` (
   `name` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `embedImages` int(10) unsigned NOT NULL DEFAULT 0,
   `cc` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `media` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `media` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'a:1:{i:0;s:3:"all";}',
   `mediaQuery` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `vars` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1599,7 +1610,6 @@ CREATE TABLE `tl_theme` (
   `screenshot` binary(16) DEFAULT NULL,
   `templates` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `vars` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `defaultImageDensities` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1610,7 +1620,7 @@ CREATE TABLE `tl_theme` (
 
 LOCK TABLES `tl_theme` WRITE;
 /*!40000 ALTER TABLE `tl_theme` DISABLE KEYS */;
-INSERT INTO `tl_theme` VALUES (1,1539598899,'Default','Leo Feyer',NULL,NULL,'','a:0:{}','');
+INSERT INTO `tl_theme` VALUES (1,1539598899,'Default','Leo Feyer',NULL,NULL,'','a:0:{}');
 /*!40000 ALTER TABLE `tl_theme` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1658,15 +1668,15 @@ CREATE TABLE `tl_user` (
   `language` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `backendTheme` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `uploader` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `showHelp` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `thumbnails` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `useRTE` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `useCE` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `showHelp` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1',
+  `thumbnails` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1',
+  `useRTE` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1',
+  `useCE` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '1',
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `pwChange` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `admin` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `groups` blob DEFAULT NULL,
-  `inherit` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `inherit` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'group',
   `modules` blob DEFAULT NULL,
   `themes` blob DEFAULT NULL,
   `pagemounts` blob DEFAULT NULL,
@@ -1810,4 +1820,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-10 16:56:15
+-- Dump completed on 2019-07-05 16:14:50

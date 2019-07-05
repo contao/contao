@@ -132,7 +132,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name,author;{config_legend},folders,screenshot,templates;{image_legend:hide},defaultImageDensities;{vars_legend},vars'
+		'default'                     => '{title_legend},name,author;{config_legend},folders,screenshot,templates;{vars_legend},vars'
 	),
 
 	// Fields
@@ -193,14 +193,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'inputType'               => 'keyValueWizard',
 			'exclude'                 => true,
 			'sql'                     => "text NULL"
-		),
-		'defaultImageDensities' => array
-		(
-			'inputType'               => 'text',
-			'explanation'             => 'imageSizeDensities',
-			'exclude'                 => true,
-			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
 		)
 	)
 );
