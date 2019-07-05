@@ -184,7 +184,6 @@ class ImageFactoryTest extends TestCase
 
         /** @var ImageSizeModel&MockObject $imageSizeModel */
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
-
         $imageSizeModel
             ->method('row')
             ->willReturn($imageSizeProperties)

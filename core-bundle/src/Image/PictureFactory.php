@@ -166,11 +166,15 @@ class PictureFactory implements PictureFactoryInterface
                 if (null !== $imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
 
-                    $config->setFormats(
-                        array_merge([], ...array_map(function ($format) {
-                            return json_decode($format, true);
-                        }, StringUtil::deserialize($imageSizes->formats, true)))
-                    );
+                    $config->setFormats(array_merge(
+                        [],
+                        ...array_map(
+                            static function ($format) {
+                                return json_decode($format, true);
+                            },
+                            StringUtil::deserialize($imageSizes->formats, true)
+                        )
+                    ));
                 }
 
                 if ($imageSizes && $imageSizes->cssClass) {

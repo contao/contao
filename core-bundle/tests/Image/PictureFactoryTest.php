@@ -125,7 +125,6 @@ class PictureFactoryTest extends TestCase
 
         /** @var ImageSizeModel&MockObject $imageSizeModel */
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
-
         $imageSizeModel
             ->method('row')
             ->willReturn($imageSizeProperties)
@@ -145,7 +144,6 @@ class PictureFactoryTest extends TestCase
 
         /** @var ImageSizeItemModel&MockObject $imageSizeItemModel */
         $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class, $imageSizeItemProperties);
-
         $imageSizeItemModel
             ->method('row')
             ->willReturn($imageSizeItemProperties)
@@ -242,6 +240,7 @@ class PictureFactoryTest extends TestCase
                 $this->callback(
                     function (ResizeOptionsInterface $options): bool {
                         $this->assertTrue($options->getSkipIfDimensionsMatch());
+
                         return true;
                     }
                 )
