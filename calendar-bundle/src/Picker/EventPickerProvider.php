@@ -16,13 +16,15 @@ use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
-use Contao\CoreBundle\Picker\AbstractPickerProvider;
+use Contao\CoreBundle\Picker\AbstractInsertTagPickerProvider;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
 
-class EventPickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
+class EventPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
+
+    protected const INSERTTAG = '{{event_url::%s}}';
 
     /**
      * {@inheritdoc}
@@ -45,7 +47,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return false !== strpos($config->getValue(), '{{event_url::');
+        return $this->isMatchingInsertTag($config);
     }
 
     /**
@@ -68,7 +70,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = str_replace(['{{event_url::', '}}'], '', $config->getValue());
+            $attributes['value'] = $this->getInsertTagValue($config);
         }
 
         return $attributes;
@@ -79,7 +81,7 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
      */
     public function convertDcaValue(PickerConfig $config, $value): string
     {
-        return '{{event_url::'.$value.'}}';
+        return sprintf($this->getInsertTag($config), $value);
     }
 
     /**
@@ -89,13 +91,11 @@ class EventPickerProvider extends AbstractPickerProvider implements DcaPickerPro
     {
         $params = ['do' => 'calendar'];
 
-        if (null === $config || !$config->getValue() || false === strpos($config->getValue(), '{{event_url::')) {
+        if (null === $config || !$config->getValue() || !$this->supportsValue($config)) {
             return $params;
         }
 
-        $value = str_replace(['{{event_url::', '}}'], '', $config->getValue());
-
-        if (null !== ($calendarId = $this->getCalendarId($value))) {
+        if (null !== ($calendarId = $this->getCalendarId($this->getInsertTagValue($config)))) {
             $params['table'] = 'tl_calendar_events';
             $params['id'] = $calendarId;
         }

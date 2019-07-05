@@ -14,15 +14,17 @@ namespace Contao\NewsBundle\Picker;
 
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
-use Contao\CoreBundle\Picker\AbstractPickerProvider;
+use Contao\CoreBundle\Picker\AbstractInsertTagPickerProvider;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 
-class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
+class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
+
+    protected const INSERTTAG = '{{news_url::%s}}';
 
     /**
      * {@inheritdoc}
@@ -45,7 +47,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return false !== strpos($config->getValue(), '{{news_url::');
+        return $this->isMatchingInsertTag($config);
     }
 
     /**
@@ -68,7 +70,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = str_replace(['{{news_url::', '}}'], '', $config->getValue());
+            $attributes['value'] = $this->getInsertTagValue($config);
         }
 
         return $attributes;
@@ -79,7 +81,7 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
      */
     public function convertDcaValue(PickerConfig $config, $value): string
     {
-        return '{{news_url::'.$value.'}}';
+        return sprintf($this->getInsertTag($config), $value);
     }
 
     /**
@@ -89,13 +91,11 @@ class NewsPickerProvider extends AbstractPickerProvider implements DcaPickerProv
     {
         $params = ['do' => 'news'];
 
-        if (null === $config || !$config->getValue() || false === strpos($config->getValue(), '{{news_url::')) {
+        if (null === $config || !$config->getValue() || !$this->supportsValue($config)) {
             return $params;
         }
 
-        $value = str_replace(['{{news_url::', '}}'], '', $config->getValue());
-
-        if (null !== ($newsArchiveId = $this->getNewsArchiveId($value))) {
+        if (null !== ($newsArchiveId = $this->getNewsArchiveId($this->getInsertTagValue($config)))) {
             $params['table'] = 'tl_news';
             $params['id'] = $newsArchiveId;
         }

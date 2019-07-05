@@ -14,15 +14,17 @@ namespace Contao\FaqBundle\Picker;
 
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
-use Contao\CoreBundle\Picker\AbstractPickerProvider;
+use Contao\CoreBundle\Picker\AbstractInsertTagPickerProvider;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 
-class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
+class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
+
+    protected const INSERTTAG = '{{faq_url::%s}}';
 
     /**
      * {@inheritdoc}
@@ -45,7 +47,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return false !== strpos($config->getValue(), '{{faq_url::');
+        return $this->isMatchingInsertTag($config);
     }
 
     /**
@@ -68,7 +70,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = str_replace(['{{faq_url::', '}}'], '', $config->getValue());
+            $attributes['value'] = $this->getInsertTagValue($config);
         }
 
         return $attributes;
@@ -79,7 +81,7 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
      */
     public function convertDcaValue(PickerConfig $config, $value): string
     {
-        return '{{faq_url::'.$value.'}}';
+        return sprintf($this->getInsertTag($config), $value);
     }
 
     /**
@@ -89,13 +91,11 @@ class FaqPickerProvider extends AbstractPickerProvider implements DcaPickerProvi
     {
         $params = ['do' => 'faq'];
 
-        if (null === $config || !$config->getValue() || false === strpos($config->getValue(), '{{faq_url::')) {
+        if (null === $config || !$config->getValue() || !$this->supportsValue($config)) {
             return $params;
         }
 
-        $value = str_replace(['{{faq_url::', '}}'], '', $config->getValue());
-
-        if (null !== ($faqId = $this->getFaqCategoryId($value))) {
+        if (null !== ($faqId = $this->getFaqCategoryId($this->getInsertTagValue($config)))) {
             $params['table'] = 'tl_faq';
             $params['id'] = $faqId;
         }

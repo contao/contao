@@ -290,4 +290,22 @@ class FilePickerProviderTest extends ContaoTestCase
             $this->provider->convertDcaValue(new PickerConfig('link'), '/foobar')
         );
     }
+
+    public function testConvertsTheDcaValueWithACustomInsertTag(): void
+    {
+        $this->assertSame(
+            '/foobar',
+            $this->provider->convertDcaValue(new PickerConfig('file', ['insertTag' => '{{file_name::%s}}']), '/foobar')
+        );
+
+        $this->assertSame(
+            '{{file_name::82243f46-a4c3-11e3-8e29-000c29e44aea}}',
+            $this->provider->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{file_name::%s}}']), '/foobar')
+        );
+
+        $this->assertSame(
+            '/foobar',
+            $this->provider->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{file_name::%s}}']), '/foobar')
+        );
+    }
 }

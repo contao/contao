@@ -201,6 +201,14 @@ class EventPickerProviderTest extends ContaoTestCase
         $this->assertSame('{{event_url::5}}', $this->provider->convertDcaValue(new PickerConfig('link'), 5));
     }
 
+    public function testConvertsTheDcaValueWithACustomInsertTag(): void
+    {
+        $this->assertSame(
+            '{{event_title::5}}',
+            $this->provider->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{event_title::%s}}']), 5)
+        );
+    }
+
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
         /** @var CalendarModel&MockObject $calendarModel */

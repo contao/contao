@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
-class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface
+class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
+    protected const INSERTTAG = '{{link_url::%s}}';
+
     /**
      * {@inheritdoc}
      */
@@ -39,7 +41,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return is_numeric($config->getValue());
         }
 
-        return false !== strpos($config->getValue(), '{{link_url::');
+        return $this->isMatchingInsertTag($config);
     }
 
     /**
@@ -82,8 +84,10 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return $attributes;
         }
 
-        if ($value && false !== strpos($value, '{{link_url::')) {
-            $attributes['value'] = str_replace(['{{link_url::', '}}'], '', $value);
+        $chunks = $this->getInsertTagChunks($config);
+
+        if ($value && false !== strpos($value, $chunks[0])) {
+            $attributes['value'] = str_replace($chunks, '', $value);
         }
 
         return $attributes;
@@ -98,7 +102,7 @@ class PagePickerProvider extends AbstractPickerProvider implements DcaPickerProv
             return (int) $value;
         }
 
-        return '{{link_url::'.$value.'}}';
+        return sprintf($this->getInsertTag($config), $value);
     }
 
     /**

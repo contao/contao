@@ -21,9 +21,11 @@ use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
+class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
+
+    protected const INSERTTAG = '{{file::%s}}';
 
     /**
      * @var string
@@ -58,13 +60,11 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        $value = $config->getValue();
-
         if ('file' === $config->getContext()) {
-            return Validator::isUuid($value);
+            return Validator::isUuid($config->getValue());
         }
 
-        return false !== strpos($value, '{{file::') || 0 === strpos($value, $this->uploadPath);
+        return $this->isMatchingInsertTag($config) || 0 === strpos($config->getValue(), $this->uploadPath.'/');
     }
 
     /**
@@ -101,7 +101,7 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
         $filesModel = $filesAdapter->findByPath(rawurldecode($value));
 
         if ($filesModel instanceof FilesModel) {
-            return '{{file::'.StringUtil::binToUuid($filesModel->uuid).'}}';
+            return sprintf($this->getInsertTag($config), StringUtil::binToUuid($filesModel->uuid));
         }
 
         return $value;
@@ -180,8 +180,10 @@ class FilePickerProvider extends AbstractPickerProvider implements DcaPickerProv
         $value = $config->getValue();
 
         if ($value) {
-            if (false !== strpos($value, '{{file::')) {
-                $value = str_replace(['{{file::', '}}'], '', $value);
+            $chunks = $this->getInsertTagChunks($config);
+
+            if (false !== strpos($value, $chunks[0])) {
+                $value = str_replace($chunks, '', $value);
             }
 
             if (0 === strpos($value, $this->uploadPath.'/')) {

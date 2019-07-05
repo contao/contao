@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
-class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerProviderInterface
+class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
+    protected const INSERTTAG = '{{article_url::%s}}';
+
     /**
      * {@inheritdoc}
      */
@@ -35,7 +37,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
      */
     public function supportsValue(PickerConfig $config): bool
     {
-        return false !== strpos($config->getValue(), '{{article_url::');
+        return $this->isMatchingInsertTag($config);
     }
 
     /**
@@ -58,7 +60,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
         }
 
         if ($this->supportsValue($config)) {
-            $attributes['value'] = str_replace(['{{article_url::', '}}'], '', $config->getValue());
+            $attributes['value'] = $this->getInsertTagValue($config);
         }
 
         return $attributes;
@@ -69,7 +71,7 @@ class ArticlePickerProvider extends AbstractPickerProvider implements DcaPickerP
      */
     public function convertDcaValue(PickerConfig $config, $value): string
     {
-        return '{{article_url::'.$value.'}}';
+        return sprintf($this->getInsertTag($config), $value);
     }
 
     /**
