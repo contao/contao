@@ -89,8 +89,21 @@ class ModuleTwoFactor extends BackendModule
 			$this->Template->showBackupCodes = true;
 		}
 
+		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_clear_trusted_devices')
+		{
+			$this->clearTrustedDevices($user, $return);
+		}
+
 		$this->Template->isEnabled = (bool) $user->useTwoFactor;
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
+
+		$this->Template->isEnabled = (bool) $this->User->useTwoFactor;
+		$this->Template->twoFactor = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
+		$this->Template->explain = $GLOBALS['TL_LANG']['MSC']['twoFactorExplain'];
+		$this->Template->active = $GLOBALS['TL_LANG']['MSC']['twoFactorActive'];
+		$this->Template->enableButton = $GLOBALS['TL_LANG']['MSC']['enable'];
+		$this->Template->disableButton = $GLOBALS['TL_LANG']['MSC']['disable'];
+		$this->Template->clearTrustedDevicesButton = $GLOBALS['TL_LANG']['MSC']['clearTrustedDevices'];
 	}
 
 	/**
@@ -177,5 +190,19 @@ class ModuleTwoFactor extends BackendModule
 		/** @var BackupCodeManager $backupCodeManager */
 		$backupCodeManager = System::getContainer()->get(BackupCodeManager::class);
 		$backupCodeManager->generateBackupCodes($user);
+	}
+
+	/**
+	 * Clears trusted devices with incrementing the trustedVersion number
+	 *
+	 * @param BackendUser $user
+	 * @param $return
+	 */
+	protected function clearTrustedDevices(BackendUser $user, $return)
+	{
+		$user->trustedVersion++;
+		$user->save();
+
+		throw new RedirectResponseException($return);
 	}
 }

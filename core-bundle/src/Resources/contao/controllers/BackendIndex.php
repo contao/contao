@@ -101,6 +101,7 @@ class BackendIndex extends Backend
 			$objTemplate = new BackendTemplate('be_login_two_factor');
 			$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 			$objTemplate->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
+			$objTemplate->trustDevice = $GLOBALS['TL_LANG']['MSC']['twoFactorTrustDevice'];
 			$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
 		}
 
