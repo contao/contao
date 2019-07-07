@@ -141,4 +141,55 @@ class FrontendControllerTest extends TestCase
 
         unset($GLOBALS['TL_PTY']);
     }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testThrowsUnauthorizedHttpExceptionIfNoError401PageTypeIsAvailableForTwoFactorRoute(): void
+    {
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $framework);
+
+        $controller = new FrontendController();
+        $controller->setContainer($container);
+
+        $this->expectException(UnauthorizedHttpException::class);
+        $this->expectExceptionMessage('Not authorized');
+
+        $controller->twoFactorAuthenticationAction();
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testThrowsAnExceptionUponTwoFactorAuthenticationIfTheError401PageThrowsAnException(): void
+    {
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $framework);
+
+        $controller = new FrontendController();
+        $controller->setContainer($container);
+
+        $GLOBALS['TL_PTY']['error_401'] = PageError401Exception::class;
+
+        $this->expectException(UnauthorizedHttpException::class);
+
+        $controller->twoFactorAuthenticationAction();
+
+        unset($GLOBALS['TL_PTY']);
+    }
 }
