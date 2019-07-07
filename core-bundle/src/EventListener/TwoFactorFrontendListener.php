@@ -99,7 +99,7 @@ class TwoFactorFrontendListener
                 throw new PageNotFoundException('No two-factor authentication page found.');
             }
 
-            // Two-factor page found, quit
+            // Already on two-factor page, return
             if ($page->id === $twoFactorPage->id) {
                 return;
             }
