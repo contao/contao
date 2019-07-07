@@ -110,22 +110,17 @@ class TwoFactorFrontendListener
             return;
         }
 
-        // Check if user has TwoFactorToken
-        if (!$token instanceof TwoFactorToken) {
-            return;
-        }
-
         // Search 401 error page
         $unauthorizedPage = $adapter->find401ByPid($page->rootId);
 
         if ($unauthorizedPage instanceof PageModel) {
-            if ($unauthorizedPage->redirect) {
-                $redirect = $adapter->findPublishedById($unauthorizedPage->jumpTo);
+            if (!$unauthorizedPage->redirect) {
+                return;
+            }
 
-                if ($redirect instanceof PageModel && $page->id === $redirect->id) {
-                    return;
-                }
-            } else {
+            $redirect = $adapter->findPublishedById($unauthorizedPage->jumpTo);
+
+            if ($redirect instanceof PageModel && $page->id === $redirect->id) {
                 return;
             }
         }

@@ -24,7 +24,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -51,6 +53,19 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework();
         $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken();
+
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
+        $listener->onKernelRequest($event);
+    }
+
+    public function testReturnsIfTokenIsNotASupportedToken(): void
+    {
+        $token = $this->createMock(AnonymousToken::class);
+        $request = $this->mockRequest();
+        $event = $this->mockGetResponseEvent($request);
+        $framework = $this->mockContaoFramework();
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
+        $tokenStorage = $this->mockTokenStorageWithToken($token);
 
         $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
         $listener->onKernelRequest($event);
@@ -193,6 +208,207 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $this->assertInstanceOf(RedirectResponse::class, $event->getResponse());
     }
 
+    public function testReturnsIfUnauthorizedPageHasNoRedirect(): void
+    {
+        /** @var FrontendUser $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['useTwoFactor' => false]);
+
+        /** @var PageModel $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'enforceTwoFactor' => false,
+            'twoFactorJumpTo' => 1,
+            'id' => 1,
+        ]);
+
+        $response = new RedirectResponse('http://localhost/two_factor');
+
+        $unauthorizedPageModel = $this->mockClassWithProperties(PageModel::class, ['redirect' => '']);
+
+        $adapter = $this->mockAdapter(['find401ByPid']);
+        $adapter
+            ->expects($this->once())
+            ->method('find401ByPid')
+            ->willReturn($unauthorizedPageModel)
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+
+        /** @var TokenInterface $token */
+        $token = $this->mockToken(TwoFactorToken::class, true, $user);
+        $request = $this->mockRequest(true, $pageModel);
+        $event = $this->mockGetResponseEvent($request, $response);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
+        $tokenStorage = $this->mockTokenStorageWithToken($token);
+
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
+        $listener->onKernelRequest($event);
+    }
+
+    public function testReturnsIfUnauthorizedPageIsSameAsActual(): void
+    {
+        /** @var FrontendUser $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['useTwoFactor' => false]);
+
+        /** @var PageModel $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'enforceTwoFactor' => false,
+            'twoFactorJumpTo' => 1,
+            'id' => 1,
+        ]);
+
+        $response = new RedirectResponse('http://localhost/two_factor');
+
+        $unauthorizedPageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 1, 'redirect' => '1']);
+
+        $adapter = $this->mockAdapter(['find401ByPid', 'findPublishedById']);
+        $adapter
+            ->expects($this->once())
+            ->method('find401ByPid')
+            ->willReturn($unauthorizedPageModel)
+        ;
+
+        $adapter
+            ->expects($this->once())
+            ->method('findPublishedById')
+            ->willReturn($pageModel)
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+
+        /** @var TokenInterface $token */
+        $token = $this->mockToken(TwoFactorToken::class, true, $user);
+        $request = $this->mockRequest(true, $pageModel);
+        $event = $this->mockGetResponseEvent($request, $response);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
+        $tokenStorage = $this->mockTokenStorageWithToken($token);
+
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
+        $listener->onKernelRequest($event);
+    }
+
+    public function testThrowsUnauthorizedHttpException(): void
+    {
+        /** @var FrontendUser $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['useTwoFactor' => false]);
+
+        /** @var PageModel $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'enforceTwoFactor' => false,
+            'twoFactorJumpTo' => 1,
+            'id' => 1,
+        ]);
+
+        $response = new RedirectResponse('http://localhost/two_factor');
+
+        $adapter = $this->mockAdapter(['find401ByPid']);
+        $adapter
+            ->expects($this->once())
+            ->method('find401ByPid')
+            ->willReturn(null)
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+
+        /** @var TokenInterface $token */
+        $token = $this->mockToken(TwoFactorToken::class, true, $user);
+        $request = $this->mockRequest(true, $pageModel);
+        $event = $this->mockGetResponseEvent($request, $response);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
+        $tokenStorage = $this->mockTokenStorageWithToken($token);
+
+        $this->expectException(UnauthorizedHttpException::class);
+
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
+        $listener->onKernelRequest($event);
+    }
+
+    public function testReturnsIfTargetPathIsEqualToCurrentRequest(): void
+    {
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->once())
+            ->method('get')
+            ->willReturn('http://:')
+        ;
+
+        /** @var FrontendUser $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['useTwoFactor' => false]);
+
+        /** @var PageModel $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'enforceTwoFactor' => false,
+            'twoFactorJumpTo' => 1,
+            'id' => 1,
+        ]);
+
+        $response = new RedirectResponse('http://localhost/two_factor');
+
+        $adapter = $this->mockAdapter(['find401ByPid']);
+        $adapter
+            ->expects($this->once())
+            ->method('find401ByPid')
+            ->willReturn(null)
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+
+        /** @var TokenInterface $token */
+        $token = $this->mockToken(TwoFactorToken::class, true, $user);
+        $request = $this->mockRequest(true, $pageModel);
+        $request->setSession($session);
+        $event = $this->mockGetResponseEvent($request, $response);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
+        $tokenStorage = $this->mockTokenStorageWithToken($token);
+
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
+        $listener->onKernelRequest($event);
+    }
+
+    public function testSetsEventResponseIfTargetPathIsNotEqualToCurrentRequest(): void
+    {
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->once())
+            ->method('get')
+            ->willReturn('http://localhost/foobar')
+        ;
+
+        /** @var FrontendUser $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['useTwoFactor' => false]);
+
+        /** @var PageModel $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'enforceTwoFactor' => false,
+            'twoFactorJumpTo' => 1,
+            'id' => 1,
+        ]);
+
+        $response = new RedirectResponse('http://localhost/two_factor');
+
+        $adapter = $this->mockAdapter(['find401ByPid']);
+        $adapter
+            ->expects($this->once())
+            ->method('find401ByPid')
+            ->willReturn(null)
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+
+        /** @var TokenInterface $token */
+        $token = $this->mockToken(TwoFactorToken::class, true, $user);
+        $request = $this->mockRequest(true, $pageModel);
+        $request->setSession($session);
+        $event = $this->mockGetResponseEvent($request, $response);
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
+        $tokenStorage = $this->mockTokenStorageWithToken($token);
+
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
+        $listener->onKernelRequest($event);
+
+        $this->assertInstanceOf(RedirectResponse::class, $event->getResponse());
+        $this->assertSame('http://localhost/foobar', $event->getResponse()->getTargetUrl());
+    }
+
     private function mockToken(string $class, bool $withFrontendUser = false, FrontendUser $user = null)
     {
         $token = $this->createMock($class);
@@ -208,6 +424,12 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
                 ->willReturn($user)
             ;
         }
+
+        $token
+            ->expects($this->atMost(2))
+            ->method('getProviderKey')
+            ->willReturn('contao_frontend')
+        ;
 
         return $token;
     }
