@@ -64,6 +64,10 @@ class TwoFactorFrontendListener
         $request = $event->getRequest();
         $token = $this->tokenStorage->getToken();
 
+        if (null === $token) {
+            return;
+        }
+
         // Check if is a supported token
         if (!$token instanceof TwoFactorToken && !\in_array(\get_class($token), $this->supportedTokens, true)) {
             return;
