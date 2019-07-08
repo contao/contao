@@ -125,16 +125,18 @@ class TwoFactorFrontendListener
             }
         }
 
-        $targetPath = $this->getTargetPath($request->getSession(), $token->getProviderKey());
+        if ($token instanceof TwoFactorToken) {
+            $targetPath = $this->getTargetPath($request->getSession(), $token->getProviderKey());
 
-        if ($targetPath) {
-            if ($request->getSchemeAndHttpHost().$request->getRequestUri() === $targetPath) {
+            if ($targetPath) {
+                if ($request->getSchemeAndHttpHost().$request->getRequestUri() === $targetPath) {
+                    return;
+                }
+
+                $event->setResponse(new RedirectResponse($targetPath));
+
                 return;
             }
-
-            $event->setResponse(new RedirectResponse($targetPath));
-
-            return;
         }
 
         throw new UnauthorizedHttpException('', 'Missing two-factor authentication.');
