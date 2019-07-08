@@ -73,16 +73,16 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 
         $user = $token->getUser();
 
-        $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
-
         if (!$user instanceof User) {
-            return $response;
+            return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
         }
 
         $this->user = $user;
         $this->user->lastLogin = $this->user->currentLogin;
         $this->user->currentLogin = time();
         $this->user->save();
+
+        $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
 
         if ($this->user instanceof BackendUser) {
             $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
