@@ -46,7 +46,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     protected $logger;
 
     /**
-     * @var User|UserInterface
+     * @var User|UserInterface|string
      */
     private $user;
 
