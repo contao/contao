@@ -231,5 +231,22 @@ class Version480Update extends AbstractVersionUpdate
             SET
                 defaultImageDensities = (SELECT defaultImageDensities FROM tl_theme t WHERE t.id = l.pid)
         ');
+
+        // Switch the primary key of the tl_remember_me table
+        $this->connection->query('
+            ALTER TABLE
+                tl_remember_me
+            DROP
+                PRIMARY KEY
+        ');
+
+        $this->connection->query('
+            ALTER TABLE
+                tl_remember_me
+            ADD
+                id INT UNSIGNED AUTO_INCREMENT NOT NULL FIRST,
+            ADD
+                PRIMARY KEY (id)
+        ');
     }
 }
