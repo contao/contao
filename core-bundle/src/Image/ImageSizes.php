@@ -149,6 +149,11 @@ class ImageSizes
         }
 
         foreach ($rows as $imageSize) {
+            // Prefix theme names that collide with existing group names
+            if (\in_array($imageSize['theme'], ['exact', 'relative', 'image_sizes'], true)) {
+                $imageSize['theme'] = 'Theme '.$imageSize['theme'];
+            }
+
             if (!isset($options[$imageSize['theme']])) {
                 $options[$imageSize['theme']] = [];
             }
