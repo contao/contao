@@ -59,6 +59,9 @@
       <trans-unit id="tl_image_size.formatsMissingWebp">
         <source>You can enable WEBP images by adding "webp" to &lt;em&gt;contao.image.valid_extensions&lt;/em&gt;.</source>
       </trans-unit>
+      <trans-unit id="tl_image_size.formatsWebpNotSupported">
+        <source>WEBP is not supported on your platform.</source>
+      </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
       </trans-unit>

@@ -122,7 +122,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->arrayNode('valid_extensions')
                             ->prototype('scalar')->end()
-                            ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz'])
+                            ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'])
                         ->end()
                         ->scalarNode('imagine_service')
                             ->defaultNull()

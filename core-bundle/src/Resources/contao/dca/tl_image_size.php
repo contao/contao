@@ -378,24 +378,59 @@ class tl_image_size extends Contao\Backend
 	 */
 	public function getFormats()
 	{
-		$options = array();
-
-		if (\in_array('webp', StringUtil::trimsplit(',', \Config::get('validImageTypes'))))
-		{
-			$options[] = 'png:webp,png';
-			$options[] = 'jpg:webp,jpg;jpeg:webp,jpeg';
-			$options[] = 'gif:webp,gif';
-		}
-
-		if (!$options)
+		if (!\in_array('webp', StringUtil::trimsplit(',', \Config::get('validImageTypes'))))
 		{
 			$GLOBALS['TL_DCA']['tl_image_size']['fields']['formats']['label'] = array
 			(
 				$GLOBALS['TL_LANG']['tl_image_size']['formats'][0],
 				$GLOBALS['TL_LANG']['tl_image_size']['formatsMissingWebp'],
 			);
+
+			return array();
 		}
 
-		return $options;
+		if (!self::isWebpSupported())
+		{
+			$GLOBALS['TL_DCA']['tl_image_size']['fields']['formats']['label'] = array
+			(
+				$GLOBALS['TL_LANG']['tl_image_size']['formats'][0],
+				$GLOBALS['TL_LANG']['tl_image_size']['formatsWebpNotSupported'],
+			);
+
+			return array();
+		}
+
+		return array(
+			'png:webp,png',
+			'jpg:webp,jpg;jpeg:webp,jpeg',
+			'gif:webp,gif',
+		);
+	}
+
+	/**
+	 * Check if WEBP is supported
+	 *
+	 * @return bool
+	 */
+	public static function isWebpSupported()
+	{
+		$imagine = Contao\System::getContainer()->get('contao.image.imagine');
+
+		if ($imagine instanceof Imagine\Imagick\Imagine)
+		{
+			return \in_array('WEBP', Imagick::queryFormats('WEBP'), true);
+		}
+
+		if ($imagine instanceof Imagine\Gmagick\Imagine)
+		{
+			return \in_array('WEBP', (new Gmagick())->queryformats('WEBP'), true);
+		}
+
+		if ($imagine instanceof Imagine\Gd\Imagine)
+		{
+			return function_exists('imagewebp');
+		}
+
+		return false;
 	}
 }
