@@ -380,12 +380,6 @@ class tl_image_size extends Contao\Backend
 	{
 		if (!\in_array('webp', StringUtil::trimsplit(',', \Config::get('validImageTypes'))))
 		{
-			$GLOBALS['TL_DCA']['tl_image_size']['fields']['formats']['label'] = array
-			(
-				$GLOBALS['TL_LANG']['tl_image_size']['formats'][0],
-				$GLOBALS['TL_LANG']['tl_image_size']['formatsMissingWebp'],
-			);
-
 			return array();
 		}
 
