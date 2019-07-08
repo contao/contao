@@ -169,9 +169,7 @@ class Version480Update extends AbstractVersionUpdate
             ALTER TABLE
                 tl_module
             ADD
-                minKeywordLength smallint(5) unsigned NOT NULL default 4
-            AFTER
-                contextLength
+                minKeywordLength smallint(5) unsigned NOT NULL default 4 AFTER contextLength
         ');
 
         // Disable the minimum keyword length for existing modules (backwards compatibility)
@@ -232,21 +230,9 @@ class Version480Update extends AbstractVersionUpdate
                 defaultImageDensities = (SELECT defaultImageDensities FROM tl_theme t WHERE t.id = l.pid)
         ');
 
-        // Switch the primary key of the tl_remember_me table
-        $this->connection->query('
-            ALTER TABLE
-                tl_remember_me
-            DROP
-                PRIMARY KEY
-        ');
-
-        $this->connection->query('
-            ALTER TABLE
-                tl_remember_me
-            ADD
-                id INT UNSIGNED AUTO_INCREMENT NOT NULL FIRST,
-            ADD
-                PRIMARY KEY (id)
-        ');
+        // Since rememberme is broken in Contao 4.7 and there are no valid
+        // cookies out there, we can simply drop the old table here and let the
+        // install tool create the new one
+        $this->connection->query('DROP TABLE tl_remember_me');
     }
 }
