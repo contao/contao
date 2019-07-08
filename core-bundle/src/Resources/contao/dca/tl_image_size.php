@@ -378,24 +378,49 @@ class tl_image_size extends Contao\Backend
 	 */
 	public function getFormats()
 	{
-		$options = array();
-
-		if (\in_array('webp', StringUtil::trimsplit(',', \Config::get('validImageTypes'))))
+		if (!\in_array('webp', StringUtil::trimsplit(',', \Config::get('validImageTypes'))))
 		{
-			$options[] = 'png:webp,png';
-			$options[] = 'jpg:webp,jpg;jpeg:webp,jpeg';
-			$options[] = 'gif:webp,gif';
+			return array();
 		}
 
-		if (!$options)
+		if (!$this->supportsWebp())
 		{
 			$GLOBALS['TL_DCA']['tl_image_size']['fields']['formats']['label'] = array
 			(
 				$GLOBALS['TL_LANG']['tl_image_size']['formats'][0],
-				$GLOBALS['TL_LANG']['tl_image_size']['formatsMissingWebp'],
+				$GLOBALS['TL_LANG']['tl_image_size']['formatsWebpNotSupported'],
 			);
+
+			return array();
 		}
 
-		return $options;
+		return array('png:webp,png', 'jpg:webp,jpg;jpeg:webp,jpeg', 'gif:webp,gif');
+	}
+
+	/**
+	 * Check if WEBP is supported
+	 *
+	 * @return boolean
+	 */
+	private function supportsWebp()
+	{
+		$imagine = Contao\System::getContainer()->get('contao.image.imagine');
+
+		if ($imagine instanceof Imagine\Imagick\Imagine)
+		{
+			return \in_array('WEBP', Imagick::queryFormats('WEBP'), true);
+		}
+
+		if ($imagine instanceof Imagine\Gmagick\Imagine)
+		{
+			return \in_array('WEBP', (new Gmagick())->queryformats('WEBP'), true);
+		}
+
+		if ($imagine instanceof Imagine\Gd\Imagine)
+		{
+			return function_exists('imagewebp');
+		}
+
+		return false;
 	}
 }
