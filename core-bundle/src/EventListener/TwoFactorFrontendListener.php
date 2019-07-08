@@ -41,11 +41,17 @@ class TwoFactorFrontendListener
      */
     private $tokenStorage;
 
-    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, TokenStorageInterface $tokenStorage)
+    /**
+     * @var array
+     */
+    private $supportedTokens;
+
+    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, TokenStorageInterface $tokenStorage, array $supportedTokens)
     {
         $this->framework = $framework;
         $this->scopeMatcher = $scopeMatcher;
         $this->tokenStorage = $tokenStorage;
+        $this->supportedTokens = $supportedTokens;
     }
 
     public function onKernelRequest(GetResponseEvent $event): void
@@ -58,7 +64,12 @@ class TwoFactorFrontendListener
         $request = $event->getRequest();
         $token = $this->tokenStorage->getToken();
 
-        if (!$token instanceof TwoFactorToken) {
+        if (null === $token) {
+            return;
+        }
+
+        // Check if is a supported token
+        if (!$token instanceof TwoFactorToken && !\in_array(\get_class($token), $this->supportedTokens, true)) {
             return;
         }
 

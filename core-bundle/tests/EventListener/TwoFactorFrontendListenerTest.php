@@ -30,6 +30,7 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class TwoFactorFrontendListenerTest extends ContaoTestCase
 {
@@ -41,7 +42,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $scopeMatcher = $this->mockScopeMatcher(false, $event);
         $tokenStorage = $this->createMock(TokenStorage::class);
 
-        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
         $listener->onKernelRequest($event);
     }
 
@@ -53,7 +54,20 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken();
 
-        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
+        $listener->onKernelRequest($event);
+    }
+
+    public function testReturnsIfTokenIsNotASupportedToken(): void
+    {
+        $token = $this->createMock(AnonymousToken::class);
+        $request = $this->mockRequest();
+        $event = $this->mockGetResponseEvent($request);
+        $framework = $this->mockContaoFramework();
+        $scopeMatcher = $this->mockScopeMatcher(true, $event);
+        $tokenStorage = $this->mockTokenStorageWithToken($token);
+
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
         $listener->onKernelRequest($event);
     }
 
@@ -67,7 +81,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
-        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
         $listener->onKernelRequest($event);
     }
 
@@ -81,7 +95,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
-        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
         $listener->onKernelRequest($event);
     }
 
@@ -115,7 +129,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $this->expectException(PageNotFoundException::class);
         $this->expectExceptionMessage('No two-factor authentication page found.');
 
-        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
         $listener->onKernelRequest($event);
     }
 
@@ -147,7 +161,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
-        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
         $listener->onKernelRequest($event);
     }
 
@@ -188,7 +202,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
-        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
         $listener->onKernelRequest($event);
 
         $this->assertInstanceOf(RedirectResponse::class, $event->getResponse());
@@ -226,7 +240,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
-        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
         $listener->onKernelRequest($event);
     }
 
@@ -268,7 +282,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
-        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
         $listener->onKernelRequest($event);
     }
 
@@ -304,7 +318,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
 
         $this->expectException(UnauthorizedHttpException::class);
 
-        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
         $listener->onKernelRequest($event);
     }
 
@@ -346,7 +360,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
-        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
         $listener->onKernelRequest($event);
     }
 
@@ -388,7 +402,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $scopeMatcher = $this->mockScopeMatcher(true, $event);
         $tokenStorage = $this->mockTokenStorageWithToken($token);
 
-        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage);
+        $listener = new TwoFactorFrontendListener($framework, $scopeMatcher, $tokenStorage, [UsernamePasswordToken::class]);
         $listener->onKernelRequest($event);
 
         $this->assertInstanceOf(RedirectResponse::class, $event->getResponse());
