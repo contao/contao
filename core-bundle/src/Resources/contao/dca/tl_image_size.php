@@ -383,7 +383,7 @@ class tl_image_size extends Contao\Backend
 			return array();
 		}
 
-		if (!self::isWebpSupported())
+		if (!$this->supportsWebp())
 		{
 			$GLOBALS['TL_DCA']['tl_image_size']['fields']['formats']['label'] = array
 			(
@@ -394,19 +394,15 @@ class tl_image_size extends Contao\Backend
 			return array();
 		}
 
-		return array(
-			'png:webp,png',
-			'jpg:webp,jpg;jpeg:webp,jpeg',
-			'gif:webp,gif',
-		);
+		return array('png:webp,png', 'jpg:webp,jpg;jpeg:webp,jpeg', 'gif:webp,gif');
 	}
 
 	/**
 	 * Check if WEBP is supported
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
-	public static function isWebpSupported()
+	private function supportsWebp()
 	{
 		$imagine = Contao\System::getContainer()->get('contao.image.imagine');
 
