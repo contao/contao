@@ -418,7 +418,7 @@ class tl_image_size extends Contao\Backend
 
 		if ($imagine instanceof Imagine\Gd\Imagine)
 		{
-			return function_exists('imagewebp');
+			return \function_exists('imagewebp');
 		}
 
 		return false;

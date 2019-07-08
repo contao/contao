@@ -299,9 +299,9 @@ class Picture
 		}
 
 		$resizeConfig
-			->setWidth($imageSize->width)
-			->setHeight($imageSize->height)
-			->setZoomLevel($imageSize->zoom)
+			->setWidth((int) $imageSize->width)
+			->setHeight((int) $imageSize->height)
+			->setZoomLevel((int) $imageSize->zoom)
 		;
 
 		if ($mode)
