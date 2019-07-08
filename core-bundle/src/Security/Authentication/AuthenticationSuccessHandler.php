@@ -59,12 +59,13 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): RedirectResponse
     {
-        $this->user = $token->getUser();
+        $user = $token->getUser();
 
-        if (!$this->user instanceof User) {
+        if (!$user instanceof User) {
             return $this->getRedirectResponse($request);
         }
 
+        $this->user = $user;
         $this->user->lastLogin = $this->user->currentLogin;
         $this->user->currentLogin = time();
         $this->user->save();
