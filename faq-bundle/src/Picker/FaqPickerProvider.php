@@ -24,8 +24,6 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
 {
     use FrameworkAwareTrait;
 
-    protected const INSERTTAG = '{{faq_url::%s}}';
-
     /**
      * {@inheritdoc}
      */
@@ -101,6 +99,14 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         }
 
         return $params;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefaultInsertTag(): string
+    {
+        return '{{faq_url::%s}}';
     }
 
     /**

@@ -14,8 +14,6 @@ namespace Contao\CoreBundle\Picker;
 
 class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
-    protected const INSERTTAG = '{{article_url::%s}}';
-
     /**
      * {@inheritdoc}
      */
@@ -80,5 +78,13 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
     protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'article'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefaultInsertTag(): string
+    {
+        return '{{article_url::%s}}';
     }
 }

@@ -25,8 +25,6 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
 {
     use FrameworkAwareTrait;
 
-    protected const INSERTTAG = '{{file::%s}}';
-
     /**
      * @var string
      */
@@ -113,6 +111,14 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     protected function getRouteParameters(PickerConfig $config = null): array
     {
         return ['do' => 'files'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefaultInsertTag(): string
+    {
+        return '{{file::%s}}';
     }
 
     /**

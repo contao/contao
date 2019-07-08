@@ -24,8 +24,6 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
 {
     use FrameworkAwareTrait;
 
-    protected const INSERTTAG = '{{news_url::%s}}';
-
     /**
      * {@inheritdoc}
      */
@@ -101,6 +99,14 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         }
 
         return $params;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefaultInsertTag(): string
+    {
+        return '{{news_url::%s}}';
     }
 
     /**

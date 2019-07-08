@@ -14,8 +14,6 @@ namespace Contao\CoreBundle\Picker;
 
 abstract class AbstractInsertTagPickerProvider extends AbstractPickerProvider
 {
-    protected const INSERTTAG = null;
-
     /**
      * Returns the configured insert tag or the default one.
      */
@@ -25,12 +23,13 @@ abstract class AbstractInsertTagPickerProvider extends AbstractPickerProvider
             return (string) $insertTag;
         }
 
-        if (null === static::INSERTTAG) {
-            throw new \LogicException('Please add a protected INSERTTAG constant in your picker provider class');
-        }
-
-        return (string) static::INSERTTAG;
+        return $this->getDefaultInsertTag();
     }
+
+    /**
+     * Returns the default insert tag.
+     */
+    abstract protected function getDefaultInsertTag(): string;
 
     /**
      * Splits an insert tag at the placeholder (%s) and returns the chunks.

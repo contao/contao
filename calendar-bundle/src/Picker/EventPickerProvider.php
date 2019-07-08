@@ -24,8 +24,6 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
 {
     use FrameworkAwareTrait;
 
-    protected const INSERTTAG = '{{event_url::%s}}';
-
     /**
      * {@inheritdoc}
      */
@@ -101,6 +99,14 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
         }
 
         return $params;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefaultInsertTag(): string
+    {
+        return '{{event_url::%s}}';
     }
 
     /**
