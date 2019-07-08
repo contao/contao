@@ -36,6 +36,11 @@ class ModuleLogin extends Module
 	protected $strFlashType = 'contao.FE.error';
 
 	/**
+	 * @var string
+	 */
+	private $targetPath;
+
+	/**
 	 * Display a login form
 	 *
 	 * @return string
@@ -54,9 +59,15 @@ class ModuleLogin extends Module
 			return $objTemplate->parse();
 		}
 
+		$this->targetPath = '';
+
 		if (!$_POST && $this->redirectBack && ($strReferer = $this->getReferer()) != Environment::get('request'))
 		{
-			$_SESSION['LAST_PAGE_VISITED'] = $strReferer;
+			$this->targetPath = Environment::get('base').$strReferer;
+		}
+		else
+		{
+			$this->targetPath = (string) Input::post('_target_path');
 		}
 
 		return parent::generate();
@@ -68,6 +79,7 @@ class ModuleLogin extends Module
 	protected function compile()
 	{
 		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
 		/** @var RouterInterface $router */
 		$router = $container->get('router');
@@ -82,9 +94,9 @@ class ModuleLogin extends Module
 			$strRedirect = Environment::get('base').Environment::get('request');
 
 			// Redirect to last page visited
-			if ($this->redirectBack && $_SESSION['LAST_PAGE_VISITED'] != '')
+			if ($this->redirectBack && $this->targetPath != '')
 			{
-				$strRedirect = Environment::get('base').$_SESSION['LAST_PAGE_VISITED'];
+				$strRedirect = $this->targetPath;
 			}
 
 			// Redirect home if the page is protected
@@ -108,7 +120,15 @@ class ModuleLogin extends Module
 			return;
 		}
 
-		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
+		$exception = null;
+		$lastUsername = '';
+
+		if ($request->hasPreviousSession())
+		{
+			$authenticationUtils = $container->get('security.authentication_utils');
+			$exception = $authenticationUtils->getLastAuthenticationError();
+			$lastUsername = $authenticationUtils->getLastUsername();
+		}
 
 		if ($exception instanceof LockedException)
 		{
@@ -125,10 +145,10 @@ class ModuleLogin extends Module
 		$strRedirect = Environment::get('base').Environment::get('request');
 
 		// Redirect to the last page visited
-		if ($this->redirectBack && $_SESSION['LAST_PAGE_VISITED'] != '')
+		if ($this->redirectBack && $this->targetPath != '')
 		{
 			$blnRedirectBack = true;
-			$strRedirect = $_SESSION['LAST_PAGE_VISITED'];
+			$strRedirect = $this->targetPath;
 		}
 
 		// Redirect to the jumpTo page
@@ -142,7 +162,7 @@ class ModuleLogin extends Module
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->action = $router->generate('contao_frontend_login');
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
-		$this->Template->value = StringUtil::specialchars($container->get('security.authentication_utils')->getLastUsername());
+		$this->Template->value = StringUtil::specialchars($lastUsername);
 		$this->Template->formId = 'tl_login_' . $this->id;
 		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
