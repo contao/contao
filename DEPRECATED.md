@@ -350,7 +350,7 @@ $GLOBALS['TL_DCA']['tl_example'] = array
 
 Using the `dcaconfig.php` file to adjust a data container is deprecated in
 Contao 4.0 and will no longer be supported in Contao 5.0. Add the DCA files
-with your modifications to the `app/Resources/contao/dca` folder instead.
+with your modifications to the `contao/dca` folder instead.
 
 ## initconfig.php
 
@@ -362,4 +362,4 @@ Subscribe to one of the Symfony events instead (e.g. `kernel.request`).
 
 Using the `langconfig.php` file to adjust translations is deprecated in Contao
 4.0 and will no longer be supported in Contao 5.0. Add the language files with
-your modifications to the `app/Resources/contao/languages` folder instead.
+your modifications to the `contao/languages` folder instead.

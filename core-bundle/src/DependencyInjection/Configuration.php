@@ -330,7 +330,11 @@ class Configuration implements ConfigurationInterface
     {
         $dirs = [__DIR__.'/../Resources/contao/languages'];
 
-        // app/Resources/contao/languages
+        if (is_dir($this->projectDir.'/contao/languages')) {
+            $dirs[] = $this->projectDir.'/contao/languages';
+        }
+
+        // Backwards compatibility
         if (is_dir($this->projectDir.'/app/Resources/contao/languages')) {
             $dirs[] = $this->projectDir.'/app/Resources/contao/languages';
         }
