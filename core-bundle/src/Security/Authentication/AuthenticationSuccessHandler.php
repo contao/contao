@@ -46,7 +46,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     protected $logger;
 
     /**
-     * @var User|UserInterface|string
+     * @var User|UserInterface
      */
     private $user;
 
@@ -71,13 +71,18 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
             return $response;
         }
 
-        $this->user = $token->getUser();
+        $user = $token->getUser();
 
         $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
 
-        if (!$this->user instanceof User) {
+        if (!$user instanceof User) {
             return $response;
         }
+
+        $this->user = $user;
+        $this->user->lastLogin = $this->user->currentLogin;
+        $this->user->currentLogin = time();
+        $this->user->save();
 
         if ($this->user instanceof BackendUser) {
             $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
@@ -86,11 +91,6 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
                 $jwtManager->addResponseCookie($response, ['debug' => false]);
             }
         }
-
-        $this->user = $user;
-        $this->user->lastLogin = $this->user->currentLogin;
-        $this->user->currentLogin = time();
-        $this->user->save();
 
         if (null !== $this->logger) {
             $this->logger->info(
