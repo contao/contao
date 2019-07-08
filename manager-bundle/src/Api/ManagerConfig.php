@@ -38,7 +38,7 @@ class ManagerConfig
             $projectDir = (string) $realpath;
         }
 
-        $this->configFile = $projectDir.'/app/config/contao-manager.yml';
+        $this->configFile = $projectDir.'/config/contao-manager.yml';
         $this->filesystem = $filesystem ?: new Filesystem();
     }
 

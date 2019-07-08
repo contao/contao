@@ -172,10 +172,16 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $configDir = $this->getProjectDir().'/app/config';
+        $legacyDir = $this->getProjectDir().'/app/config';
+        $configDir = $this->getProjectDir().'/config';
 
         if (file_exists($configDir.'/parameters.yml')) {
             $loader->load($configDir.'/parameters.yml');
+        }
+
+        if (file_exists($legacyDir.'/parameters.yml')) {
+            @trigger_error('Placing a parameters.yml in /app/config is deprecated since Contao 4.8. Place it in the root /config folder instead.', E_USER_DEPRECATED);
+            $loader->load($legacyDir.'/parameters.yml');
         }
 
         $config = $this->getManagerConfig()->all();
@@ -191,10 +197,23 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $loader->load($configDir.'/parameters.yml');
         }
 
+        if (file_exists($legacyDir.'/parameters.yml')) {
+            // Deprecation warning is already triggered above
+            $loader->load($legacyDir.'/parameters.yml');
+        }
+
         if (file_exists($configDir.'/config_'.$this->getEnvironment().'.yml')) {
             $loader->load($configDir.'/config_'.$this->getEnvironment().'.yml');
         } elseif (file_exists($configDir.'/config.yml')) {
             $loader->load($configDir.'/config.yml');
+        }
+
+        if (file_exists($legacyDir.'/config_'.$this->getEnvironment().'.yml')) {
+            @trigger_error('Placing a config_'.$this->getEnvironment().'.yml in /app/config is deprecated since Contao 4.8. Place it in the root /config folder instead.', E_USER_DEPRECATED);
+            $loader->load($legacyDir.'/config_'.$this->getEnvironment().'.yml');
+        } elseif (file_exists($legacyDir.'/config.yml')) {
+            @trigger_error('Placing a config.yml in /app/config is deprecated since Contao 4.8. Place it in the root /config folder instead.', E_USER_DEPRECATED);
+            $loader->load($legacyDir.'/config.yml');
         }
     }
 

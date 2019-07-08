@@ -12,11 +12,20 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Config;
 
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
 class ParameterDumper
 {
+    private const CONFIG_FILES = [
+        'app/config/parameters.yml.dist',
+        'config/parameters.yml.dist',
+        'app/config/parameters.yml',
+        'config/parameters.yml',
+    ];
+
     /**
      * @var string
      */
@@ -38,13 +47,13 @@ class ParameterDumper
         $this->filesystem = $filesystem ?: new Filesystem();
         $parameters = [];
 
-        foreach (['app/config/parameters.yml.dist', 'app/config/parameters.yml'] as $file) {
+        foreach (self::CONFIG_FILES as $file) {
             if (file_exists($rootDir.'/'.$file)) {
                 $parameters[] = Yaml::parse(file_get_contents($rootDir.'/'.$file));
             }
         }
 
-        if (!empty($parameters)) {
+        if (0 !== count($parameters)) {
             $this->parameters = array_merge($this->parameters, ...$parameters);
         }
     }
@@ -78,9 +87,17 @@ class ParameterDumper
         }
 
         $this->filesystem->dumpFile(
-            $this->rootDir.'/app/config/parameters.yml',
+            $this->rootDir.'/config/parameters.yml',
             "# This file has been auto-generated during installation\n".Yaml::dump($this->getEscapedValues())
         );
+
+        if ($this->filesystem->exists($this->rootDir.'/app/config/parameters.yml')) {
+            $this->filesystem->remove($this->rootDir.'/app/config/parameters.yml');
+
+            if ($this->removeEmptyDirectory('app/config')) {
+                $this->removeEmptyDirectory('app');
+            }
+        }
     }
 
     /**
@@ -109,5 +126,27 @@ class ParameterDumper
         }
 
         return ['parameters' => $parameters];
+    }
+
+    private function removeEmptyDirectory(string $path)
+    {
+        $finder = Finder::create()
+            ->ignoreVCS(false)
+            ->ignoreDotFiles(false)
+            ->depth(0)
+            ->in($path)
+        ;
+
+        if (count($finder) > 0) {
+            return false;
+        }
+
+        try {
+            $this->filesystem->remove($this->rootDir.'/'.$path);
+
+            return true;
+        } catch (IOException $e) {
+            return false;
+        }
     }
 }

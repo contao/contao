@@ -69,6 +69,16 @@ class RouteLoader
 
         // Load the app/config/routing.yml file if it exists
         if (file_exists($configFile = $this->rootDir.'/app/config/routing.yml')) {
+            @trigger_error('Placing a routing.yml in /app/config is deprecated since Contao 4.8. Place it in the root /config folder instead.', E_USER_DEPRECATED);
+            $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
+
+            if ($routes instanceof RouteCollection) {
+                $collection->addCollection($routes);
+            }
+        }
+
+        // Load the config/routing.yml file if it exists
+        if (file_exists($configFile = $this->rootDir.'/config/routing.yml')) {
             $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
 
             if ($routes instanceof RouteCollection) {
