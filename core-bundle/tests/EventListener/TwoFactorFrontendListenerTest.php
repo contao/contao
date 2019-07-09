@@ -219,6 +219,29 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $this->assertInstanceOf(RedirectResponse::class, $event->getResponse());
     }
 
+    public function testReturnsIfUserIsAlreadyAuthenticated(): void
+    {
+        /** @var FrontendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user->useTwoFactor = '1';
+
+        /** @var PageModel&MockObject $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+
+        $response = new RedirectResponse('http://localhost/two_factor');
+        $token = $this->mockToken(UsernamePasswordToken::class, true, $user);
+        $event = $this->getResponseEvent($this->getRequest(true, $pageModel), $response);
+
+        $listener = new TwoFactorFrontendListener(
+            $this->mockContaoFramework([PageModel::class => $this->mockAdapter([])]),
+            $this->mockScopeMatcher(true, $event),
+            $this->mockTokenStorageWithToken($token),
+            [UsernamePasswordToken::class, get_class($token)]
+        );
+
+        $listener->onKernelRequest($event);
+    }
+
     public function testReturnsIfAnUnauthorizedPageHasNoRedirect(): void
     {
         /** @var FrontendUser&MockObject $user */
@@ -233,7 +256,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
 
         /** @var PageModel&MockObject $unauthorizedPageModel */
         $unauthorizedPageModel = $this->mockClassWithProperties(PageModel::class);
-        $unauthorizedPageModel->redirect = '';
+        $unauthorizedPageModel->autoforward = false;
 
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
@@ -271,7 +294,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         /** @var PageModel&MockObject $unauthorizedPageModel */
         $unauthorizedPageModel = $this->mockClassWithProperties(PageModel::class);
         $unauthorizedPageModel->id = 1;
-        $unauthorizedPageModel->redirect = '1';
+        $unauthorizedPageModel->autoforward = true;
 
         $adapter = $this->mockAdapter(['find401ByPid', 'findPublishedById']);
         $adapter

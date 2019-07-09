@@ -109,11 +109,16 @@ class TwoFactorFrontendListener
             return;
         }
 
+        // Return if user is authenticated
+        if (!$token instanceof TwoFactorToken) {
+            return;
+        }
+
         // Search 401 error page
         $unauthorizedPage = $adapter->find401ByPid($page->rootId);
 
         if ($unauthorizedPage instanceof PageModel) {
-            if (!$unauthorizedPage->redirect) {
+            if (!$unauthorizedPage->autoforward) {
                 return;
             }
 
@@ -124,18 +129,16 @@ class TwoFactorFrontendListener
             }
         }
 
-        if ($token instanceof TwoFactorToken) {
-            $targetPath = $this->getTargetPath($request->getSession(), $token->getProviderKey());
+        $targetPath = $this->getTargetPath($request->getSession(), $token->getProviderKey());
 
-            if ($targetPath) {
-                if ($request->getSchemeAndHttpHost().$request->getRequestUri() === $targetPath) {
-                    return;
-                }
-
-                $event->setResponse(new RedirectResponse($targetPath));
-
+        if ($targetPath) {
+            if ($request->getSchemeAndHttpHost().$request->getRequestUri() === $targetPath) {
                 return;
             }
+
+            $event->setResponse(new RedirectResponse($targetPath));
+
+            return;
         }
 
         throw new UnauthorizedHttpException('', 'Missing two-factor authentication');
