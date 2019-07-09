@@ -193,19 +193,13 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         // Reload the parameters.yml file
-        if (file_exists($configDir.'/parameters.yml')) {
-            $loader->load($configDir.'/parameters.yml');
-        }
-
         if (file_exists($legacyDir.'/parameters.yml')) {
             // Deprecation warning is already triggered above
             $loader->load($legacyDir.'/parameters.yml');
         }
 
-        if (file_exists($configDir.'/config_'.$this->getEnvironment().'.yml')) {
-            $loader->load($configDir.'/config_'.$this->getEnvironment().'.yml');
-        } elseif (file_exists($configDir.'/config.yml')) {
-            $loader->load($configDir.'/config.yml');
+        if (file_exists($configDir.'/parameters.yml')) {
+            $loader->load($configDir.'/parameters.yml');
         }
 
         if (file_exists($legacyDir.'/config_'.$this->getEnvironment().'.yml')) {
@@ -214,6 +208,12 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         } elseif (file_exists($legacyDir.'/config.yml')) {
             @trigger_error('Placing a config.yml in /app/config is deprecated since Contao 4.8. Place it in the root /config folder instead.', E_USER_DEPRECATED);
             $loader->load($legacyDir.'/config.yml');
+        }
+
+        if (file_exists($configDir.'/config_'.$this->getEnvironment().'.yml')) {
+            $loader->load($configDir.'/config_'.$this->getEnvironment().'.yml');
+        } elseif (file_exists($configDir.'/config.yml')) {
+            $loader->load($configDir.'/config.yml');
         }
     }
 
