@@ -118,7 +118,7 @@ class TwoFactorFrontendListener
         $unauthorizedPage = $adapter->find401ByPid($page->rootId);
 
         if ($unauthorizedPage instanceof PageModel) {
-            if (!$unauthorizedPage->redirect) {
+            if (!$unauthorizedPage->autoforward) {
                 return;
             }
 
