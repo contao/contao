@@ -91,20 +91,17 @@ class TwoFactorFrontendListener
         $adapter = $this->framework->getAdapter(PageModel::class);
 
         // Check if user has two-factor disabled but is enforced
-        if (!$user->useTwoFactor && $page->enforceTwoFactor) {
+        if ($page->enforceTwoFactor && !$user->useTwoFactor) {
             $twoFactorPage = $adapter->findPublishedById($page->twoFactorJumpTo);
 
             if (!$twoFactorPage instanceof PageModel) {
                 throw new PageNotFoundException('No two-factor authentication page found');
             }
 
-            // Already on two-factor page, return
-            if ($page->id === $twoFactorPage->id) {
-                return;
-            }
-
             // Redirect to two-factor page
-            $event->setResponse(new RedirectResponse($twoFactorPage->getAbsoluteUrl()));
+            if ($page->id !== $twoFactorPage->id) {
+                $event->setResponse(new RedirectResponse($twoFactorPage->getAbsoluteUrl()));
+            }
 
             return;
         }

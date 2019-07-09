@@ -61,7 +61,7 @@ class ModuleLogin extends Module
 
 		if (!$_POST && $this->redirectBack && ($strReferer = $this->getReferer()) != Environment::get('request'))
 		{
-			$this->targetPath = Environment::get('base') . $strReferer;
+			$this->targetPath = $strReferer;
 		}
 		else
 		{

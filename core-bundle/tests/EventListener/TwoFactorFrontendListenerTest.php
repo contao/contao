@@ -219,7 +219,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $this->assertInstanceOf(RedirectResponse::class, $event->getResponse());
     }
 
-    public function testReturnsIfUserIsAlreadyAuthenticated(): void
+    public function testReturnsIfTheUserIsAlreadyAuthenticated(): void
     {
         /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
@@ -236,7 +236,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             $this->mockContaoFramework([PageModel::class => $this->mockAdapter([])]),
             $this->mockScopeMatcher(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class, get_class($token)]
+            [UsernamePasswordToken::class, \get_class($token)]
         );
 
         $listener->onKernelRequest($event);
@@ -256,7 +256,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
 
         /** @var PageModel&MockObject $unauthorizedPageModel */
         $unauthorizedPageModel = $this->mockClassWithProperties(PageModel::class);
-        $unauthorizedPageModel->autoforward = false;
+        $unauthorizedPageModel->autoforward = '';
 
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
@@ -294,7 +294,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         /** @var PageModel&MockObject $unauthorizedPageModel */
         $unauthorizedPageModel = $this->mockClassWithProperties(PageModel::class);
         $unauthorizedPageModel->id = 1;
-        $unauthorizedPageModel->autoforward = true;
+        $unauthorizedPageModel->autoforward = '1';
 
         $adapter = $this->mockAdapter(['find401ByPid', 'findPublishedById']);
         $adapter

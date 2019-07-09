@@ -31,43 +31,43 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $description
  * @property string  $redirect
  * @property integer $jumpTo
- * @property boolean $redirectBack
+ * @property string  $redirectBack
  * @property string  $url
- * @property boolean $target
+ * @property string  $target
  * @property string  $dns
  * @property string  $staticFiles
  * @property string  $staticPlugins
- * @property boolean $fallback
+ * @property string  $fallback
  * @property string  $adminEmail
  * @property string  $dateFormat
  * @property string  $timeFormat
  * @property string  $datimFormat
  * @property string  $validAliasCharacters
- * @property boolean $createSitemap
+ * @property string  $createSitemap
  * @property string  $sitemapName
- * @property boolean $useSSL
- * @property boolean $autoforward
- * @property boolean $protected
+ * @property string  $useSSL
+ * @property string  $autoforward
+ * @property string  $protected
  * @property string  $groups
- * @property boolean $includeLayout
+ * @property string  $includeLayout
  * @property integer $layout
- * @property boolean $includeCache
+ * @property string  $includeCache
  * @property integer $cache
- * @property boolean $alwaysLoadFromCache
+ * @property string  $alwaysLoadFromCache
  * @property integer $clientCache
- * @property boolean $includeChmod
+ * @property string  $includeChmod
  * @property integer $cuser
  * @property integer $cgroup
  * @property string  $chmod
- * @property boolean $noSearch
- * @property boolean $requireItem
+ * @property string  $noSearch
+ * @property string  $requireItem
  * @property string  $cssClass
  * @property string  $sitemap
- * @property boolean $hide
- * @property boolean $guests
+ * @property string  $hide
+ * @property string  $guests
  * @property integer $tabindex
- * @property boolean $accesskey
- * @property boolean $published
+ * @property string  $accesskey
+ * @property string  $published
  * @property string  $start
  * @property string  $stop
  * @property array   $trail
