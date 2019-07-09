@@ -36,6 +36,11 @@ class ModuleLogin extends Module
 	protected $strFlashType = 'contao.FE.error';
 
 	/**
+	 * @var string
+	 */
+	private $targetPath = '';
+
+	/**
 	 * Display a login form
 	 *
 	 * @return string
@@ -56,7 +61,11 @@ class ModuleLogin extends Module
 
 		if (!$_POST && $this->redirectBack && ($strReferer = $this->getReferer()) != Environment::get('request'))
 		{
-			$_SESSION['LAST_PAGE_VISITED'] = $strReferer;
+			$this->targetPath = Environment::get('base') . $strReferer;
+		}
+		else
+		{
+			$this->targetPath = (string) Input::post('_target_path');
 		}
 
 		return parent::generate();
@@ -108,9 +117,9 @@ class ModuleLogin extends Module
 			$strRedirect = Environment::get('base').Environment::get('request');
 
 			// Redirect to last page visited
-			if ($this->redirectBack && $_SESSION['LAST_PAGE_VISITED'] != '')
+			if ($this->redirectBack && $this->targetPath)
 			{
-				$strRedirect = Environment::get('base').$_SESSION['LAST_PAGE_VISITED'];
+				$strRedirect = $this->targetPath;
 			}
 
 			// Redirect home if the page is protected
@@ -149,10 +158,10 @@ class ModuleLogin extends Module
 		$strRedirect = Environment::get('base').Environment::get('request');
 
 		// Redirect to the last page visited
-		if ($this->redirectBack && $_SESSION['LAST_PAGE_VISITED'] != '')
+		if ($this->redirectBack && $this->targetPath)
 		{
 			$blnRedirectBack = true;
-			$strRedirect = $_SESSION['LAST_PAGE_VISITED'];
+			$strRedirect = $this->targetPath;
 		}
 
 		// Redirect to the jumpTo page

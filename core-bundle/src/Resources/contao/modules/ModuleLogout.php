@@ -52,19 +52,13 @@ class ModuleLogout extends Module
 			return $objTemplate->parse();
 		}
 
-		// Set last page visited
-		if ($this->redirectBack)
-		{
-			$_SESSION['LAST_PAGE_VISITED'] = $this->getReferer();
-		}
-
 		$strLogoutUrl = System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
 		$strRedirect = Environment::get('base');
 
 		// Redirect to last page visited
-		if ($this->redirectBack && !empty($_SESSION['LAST_PAGE_VISITED']))
+		if ($this->redirectBack && ($strReferer = $this->getReferer()))
 		{
-			$strRedirect = $_SESSION['LAST_PAGE_VISITED'];
+			$strRedirect = $strReferer;
 		}
 
 		// Redirect to jumpTo page
