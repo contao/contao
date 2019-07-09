@@ -256,7 +256,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
 
         /** @var PageModel&MockObject $unauthorizedPageModel */
         $unauthorizedPageModel = $this->mockClassWithProperties(PageModel::class);
-        $unauthorizedPageModel->autoforward = '';
+        $unauthorizedPageModel->autoforward = false;
 
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
@@ -294,7 +294,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         /** @var PageModel&MockObject $unauthorizedPageModel */
         $unauthorizedPageModel = $this->mockClassWithProperties(PageModel::class);
         $unauthorizedPageModel->id = 1;
-        $unauthorizedPageModel->autoforward = '1';
+        $unauthorizedPageModel->autoforward = true;
 
         $adapter = $this->mockAdapter(['find401ByPid', 'findPublishedById']);
         $adapter
