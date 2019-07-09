@@ -79,7 +79,6 @@ class ModuleLogin extends Module
 	protected function compile()
 	{
 		$container = System::getContainer();
-		$request = $container->get('request_stack')->getCurrentRequest();
 
 		/** @var RouterInterface $router */
 		$router = $container->get('router');
@@ -120,15 +119,7 @@ class ModuleLogin extends Module
 			return;
 		}
 
-		$exception = null;
-		$lastUsername = '';
-
-		if ($request->hasPreviousSession())
-		{
-			$authenticationUtils = $container->get('security.authentication_utils');
-			$exception = $authenticationUtils->getLastAuthenticationError();
-			$lastUsername = $authenticationUtils->getLastUsername();
-		}
+		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
 
 		if ($exception instanceof LockedException)
 		{
@@ -162,7 +153,7 @@ class ModuleLogin extends Module
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->action = $router->generate('contao_frontend_login');
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
-		$this->Template->value = StringUtil::specialchars($lastUsername);
+		$this->Template->value = StringUtil::specialchars($container->get('security.authentication_utils')->getLastUsername());
 		$this->Template->formId = 'tl_login_' . $this->id;
 		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
