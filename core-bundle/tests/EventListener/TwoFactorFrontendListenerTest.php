@@ -227,14 +227,13 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
 
         /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $adapter = $this->mockAdapter([]);
 
         $response = new RedirectResponse('http://localhost/two_factor');
         $token = $this->mockToken(UsernamePasswordToken::class, true, $user);
         $event = $this->getResponseEvent($this->getRequest(true, $pageModel), $response);
 
         $listener = new TwoFactorFrontendListener(
-            $this->mockContaoFramework([PageModel::class => $adapter]),
+            $this->mockContaoFramework([PageModel::class => $this->mockAdapter([])]),
             $this->mockScopeMatcher(true, $event),
             $this->mockTokenStorageWithToken($token),
             [UsernamePasswordToken::class, get_class($token)]
