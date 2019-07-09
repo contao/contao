@@ -17,6 +17,7 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\System;
 use Contao\User;
 use Psr\Log\LoggerInterface;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -47,7 +48,7 @@ class LogoutHandler implements LogoutHandlerInterface
     {
         $user = $token->getUser();
 
-        if (!$user instanceof User) {
+        if (!$user instanceof User || $token instanceof TwoFactorTokenInterface) {
             return;
         }
 

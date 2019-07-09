@@ -16,6 +16,12 @@
       <input type="hidden" name="_target_path" value="<?= $this->targetPath ?>">
       <?php if ($this->logout): ?>
         <p class="login_info"><?= $this->loggedInAs ?><br><?= $this->lastLogin ?></p>
+      <?php elseif ($this->twoFactorEnabled): ?>
+        <h3><?= $this->twoFactorAuthentication ?></h3>
+        <div class="widget widget-text">
+          <label for="verify"><?= $this->authCode ?></label>
+          <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="off" required>
+        </div>
       <?php else: ?>
         <input type="hidden" name="_failure_path" value="<?= $this->failurePath ?>">
         <input type="hidden" name="_always_use_target_path" value="<?= $this->forceTargetPath ?>">
@@ -37,6 +43,9 @@
       <?php endif; ?>
       <div class="widget widget-submit">
         <button type="submit" class="submit"><?= $this->slabel ?></button>
+        <?php if ($this->twoFactorEnabled): ?>
+          <a href="<?= $this->route('contao_frontend_logout') ?>"><?= $this->cancel ?> ›</a>
+        <?php endif; ?>
       </div>
     </div>
   </form>

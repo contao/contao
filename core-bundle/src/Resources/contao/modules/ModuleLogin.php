@@ -12,7 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Patchwork\Utf8;
-use Symfony\Component\Routing\RouterInterface;
+use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
@@ -22,7 +23,6 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  */
 class ModuleLogin extends Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -67,16 +67,42 @@ class ModuleLogin extends Module
 	 */
 	protected function compile()
 	{
+		/** @var PageModel $objPage */
+		global $objPage;
+
 		$container = System::getContainer();
 
-		/** @var RouterInterface $router */
+		/** @var Router $router */
 		$router = $container->get('router');
 
-		if ($container->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			/** @var PageModel $objPage */
-			global $objPage;
+		/** @var AuthenticationException|null $exception */
+		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
+		$authorizationChecker = $container->get('security.authorization_checker');
 
+		if ($authorizationChecker->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS'))
+		{
+			$user = FrontendUser::getInstance();
+			$redirectPage = $this->jumpTo > 0 ? PageModel::findByPk($this->jumpTo) : null;
+
+			$this->Template->action = $router->generate('contao_frontend_two_factor');
+			$this->Template->targetPath = $redirectPage instanceof PageModel ? $redirectPage->getAbsoluteUrl() : $objPage->getAbsoluteUrl();
+			$this->Template->twoFactorEnabled = $user->useTwoFactor;
+			$this->Template->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
+			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
+			$this->Template->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
+			$this->Template->twoFactorAuthentication = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
+
+			if ($exception instanceof InvalidTwoFactorCodeException)
+			{
+				$this->Template->hasError = true;
+				$this->Template->message = $GLOBALS['TL_LANG']['ERR']['invalidTwoFactor'];
+			}
+
+			return;
+		}
+
+		if ($authorizationChecker->isGranted('ROLE_MEMBER'))
+		{
 			$this->import(FrontendUser::class, 'User');
 
 			$strRedirect = Environment::get('base').Environment::get('request');
@@ -107,8 +133,6 @@ class ModuleLogin extends Module
 
 			return;
 		}
-
-		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
 
 		if ($exception instanceof LockedException)
 		{

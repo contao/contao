@@ -22,15 +22,19 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\User;
 use Psr\Log\LoggerInterface;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
+    use TargetPathTrait;
+
     /**
      * @var ContaoFramework
      */
@@ -59,16 +63,37 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): RedirectResponse
     {
+        if ($token instanceof TwoFactorTokenInterface) {
+            $response = $this->httpUtils->createRedirectResponse(
+                $request,
+                $request->request->get('_failure_path') ?: 'contao_root')
+            ;
+
+            $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $response->getTargetUrl());
+
+            return $response;
+        }
+
         $user = $token->getUser();
 
         if (!$user instanceof User) {
-            return $this->getRedirectResponse($request);
+            return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
         }
 
         $this->user = $user;
         $this->user->lastLogin = $this->user->currentLogin;
         $this->user->currentLogin = time();
         $this->user->save();
+
+        $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
+
+        if ($this->user instanceof BackendUser) {
+            $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
+
+            if ($jwtManager instanceof JwtManager) {
+                $jwtManager->addResponseCookie($response, ['debug' => false]);
+            }
+        }
 
         if (null !== $this->logger) {
             $this->logger->info(
@@ -79,7 +104,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 
         $this->triggerPostLoginHook();
 
-        return $this->getRedirectResponse($request);
+        return $response;
     }
 
     /**
@@ -105,23 +130,6 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         }
 
         return parent::determineTargetUrl($request);
-    }
-
-    private function getRedirectResponse(Request $request): RedirectResponse
-    {
-        $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
-
-        if (!$this->user instanceof BackendUser) {
-            return $response;
-        }
-
-        $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
-
-        if ($jwtManager instanceof JwtManager) {
-            $jwtManager->addResponseCookie($response, ['debug' => false]);
-        }
-
-        return $response;
     }
 
     private function triggerPostLoginHook(): void

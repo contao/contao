@@ -409,7 +409,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'useTwoFactor' => array
 		(
-			'eval'                    => array('isBoolean'=>true),
+			'eval'                    => array('isBoolean'=>true, 'doNotCopy'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'lastLogin' => array

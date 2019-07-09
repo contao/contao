@@ -146,6 +146,9 @@
       <trans-unit id="tl_member.stop.1">
         <source>Automatically deactivate the account on this day.</source>
       </trans-unit>
+      <trans-unit id="tl_member.useTwoFactor">
+        <source>Use two-factor authentication</source>
+      </trans-unit>
       <trans-unit id="tl_member.personal_legend">
         <source>Personal data</source>
       </trans-unit>

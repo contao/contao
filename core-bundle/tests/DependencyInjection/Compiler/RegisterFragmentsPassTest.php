@@ -47,10 +47,14 @@ class RegisterFragmentsPassTest extends TestCase
         $this->assertSame('forward', $arguments[1]);
 
         $this->assertSame('add', $methodCalls[1][0]);
-        $this->assertSame('contao.frontend_module.login', $methodCalls[1][1][0]);
+        $this->assertSame('contao.frontend_module.two_factor', $methodCalls[1][1][0]);
         $this->assertRegExp('/^contao.fragment._config_/', (string) $methodCalls[1][1][1]);
 
-        $arguments = $container->getDefinition((string) $methodCalls[1][1][1])->getArguments();
+        $this->assertSame('add', $methodCalls[2][0]);
+        $this->assertSame('contao.frontend_module.login', $methodCalls[2][1][0]);
+        $this->assertRegExp('/^contao.fragment._config_/', (string) $methodCalls[2][1][1]);
+
+        $arguments = $container->getDefinition((string) $methodCalls[2][1][1])->getArguments();
 
         $this->assertSame('app.fragments.module_controller', $arguments[0]);
         $this->assertSame('forward', $arguments[1]);

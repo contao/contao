@@ -13,6 +13,7 @@ services:
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
+    Contao\CoreBundle\Security\TwoFactor\Authenticator: '@contao.security.two_factor.authenticator'
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
 
     # Backwards compatibility
@@ -62,6 +63,14 @@ services:
             - '@translator'
             - '%kernel.project_dir%'
         public: true
+
+    contao.controller.frontend_module.two_factor:
+        class: Contao\CoreBundle\Controller\FrontendModule\TwoFactorController
+        calls:
+            - ['setContainer', ['@Psr\Container\ContainerInterface']]
+        tags:
+            - { name: contao.frontend_module, category: user }
+            - { name: container.service_subscriber }
 
     contao.controller.images:
         class:  Contao\CoreBundle\Controller\ImagesController
@@ -552,18 +561,12 @@ services:
         class: Contao\CoreBundle\Security\TwoFactor\Authenticator
         public: true
 
-    contao.security.two_factor.backend_form_renderer:
-        class: Contao\CoreBundle\Security\TwoFactor\BackendFormRenderer
-        arguments:
-            - '@router'
-
-    contao.security.two_factor.backend_provider:
+    contao.security.two_factor.provider:
         class: Contao\CoreBundle\Security\TwoFactor\Provider
         arguments:
             - '@contao.security.two_factor.authenticator'
-            - '@contao.security.two_factor.backend_form_renderer'
         tags:
-            - { name: 'scheb_two_factor.provider', alias: 'contao_backend_two_factor' }
+            - { name: 'scheb_two_factor.provider', alias: 'contao' }
 
     contao.security.user_checker:
         class: Contao\CoreBundle\Security\User\UserChecker

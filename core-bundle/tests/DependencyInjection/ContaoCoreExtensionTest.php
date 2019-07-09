@@ -25,6 +25,7 @@ use Contao\CoreBundle\Command\UserPasswordCommand;
 use Contao\CoreBundle\Command\VersionCommand;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
+use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
@@ -53,6 +54,7 @@ use Contao\CoreBundle\EventListener\RequestTokenListener;
 use Contao\CoreBundle\EventListener\ResponseExceptionListener;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
+use Contao\CoreBundle\EventListener\TwoFactorFrontendListener;
 use Contao\CoreBundle\EventListener\UserSessionListener as EventUserSessionListener;
 use Contao\CoreBundle\Fragment\ForwardFragmentRenderer;
 use Contao\CoreBundle\Fragment\FragmentHandler;
@@ -96,7 +98,6 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
-use Contao\CoreBundle\Security\TwoFactor\BackendFormRenderer;
 use Contao\CoreBundle\Security\TwoFactor\Provider;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Security\User\UserChecker;
@@ -112,6 +113,7 @@ use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
+use Psr\Container\ContainerInterface;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
@@ -610,6 +612,26 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('onSwitchUser', $tags['kernel.event_listener'][0]['method']);
     }
 
+    public function testRegistersTheTwoFactorFrontendListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.two_factor.frontend'));
+
+        $definition = $this->container->getDefinition('contao.listener.two_factor.frontend');
+
+        $this->assertSame(TwoFactorFrontendListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
+        $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
+        $this->assertSame('%scheb_two_factor.security_tokens%', (string) $definition->getArgument(3));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
+        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
+    }
+
     public function testRegistersTheCsrfTokenCookieListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.csrf_token_cookie'));
@@ -727,7 +749,28 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(4));
     }
 
-    public function tesRegistersThetInsertTagsController(): void
+    public function testRegistersTheFrontendModuleTwoFactorController(): void
+    {
+        $this->assertTrue($this->container->has('contao.controller.frontend_module.two_factor'));
+
+        $definition = $this->container->getDefinition('contao.controller.frontend_module.two_factor');
+
+        $this->assertSame(TwoFactorController::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+
+        $calls = $definition->getMethodCalls();
+
+        $this->assertSame('setContainer', $calls[0][0]);
+        $this->assertSame(ContainerInterface::class, (string) $calls[0][1][0]);
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('contao.frontend_module', $tags);
+        $this->assertSame('user', $tags['contao.frontend_module'][0]['category']);
+        $this->assertArrayHasKey('container.service_subscriber', $tags);
+    }
+
+    public function tesRegistersTheInsertTagsController(): void
     {
         $this->assertTrue($this->container->has('contao.controller.insert_tags'));
 
@@ -1636,27 +1679,15 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPublic());
     }
 
-    public function testRegistersTheSecurityTwoFactorBackendFormRenderer(): void
+    public function testRegistersTheSecurityTwoFactorProvider(): void
     {
-        $this->assertTrue($this->container->has('contao.security.two_factor.backend_form_renderer'));
+        $this->assertTrue($this->container->has('contao.security.two_factor.provider'));
 
-        $definition = $this->container->getDefinition('contao.security.two_factor.backend_form_renderer');
-
-        $this->assertSame(BackendFormRenderer::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('router', (string) $definition->getArgument(0));
-    }
-
-    public function testRegistersTheSecurityTwoFactorBackendProvider(): void
-    {
-        $this->assertTrue($this->container->has('contao.security.two_factor.backend_provider'));
-
-        $definition = $this->container->getDefinition('contao.security.two_factor.backend_provider');
+        $definition = $this->container->getDefinition('contao.security.two_factor.provider');
 
         $this->assertSame(Provider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('contao.security.two_factor.authenticator', (string) $definition->getArgument(0));
-        $this->assertSame('contao.security.two_factor.backend_form_renderer', (string) $definition->getArgument(1));
     }
 
     public function testRegistersTheSecurityUserChecker(): void

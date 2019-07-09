@@ -173,6 +173,16 @@ services:
         tags:
             - { name: kernel.event_listener, event: security.switch_user, method: onSwitchUser }
 
+    contao.listener.two_factor.frontend:
+        class: Contao\CoreBundle\EventListener\TwoFactorFrontendListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.scope_matcher'
+            - '@security.token_storage'
+            - '%scheb_two_factor.security_tokens%'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
     contao.listener.csrf_token_cookie:
         class: Contao\CoreBundle\EventListener\CsrfTokenCookieListener
         arguments:

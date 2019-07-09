@@ -124,4 +124,30 @@ class FrontendController extends AbstractController
 
         return $response;
     }
+
+    /**
+     * Redirects the user to the Contao front end in case they manually call the
+     * /_contao/two-factor route. Will be intercepted by the two factor bundle otherwise.
+     *
+     * @Route("/_contao/two-factor", name="contao_frontend_two_factor")
+     */
+    public function twoFactorAuthenticationAction(): Response
+    {
+        $this->get('contao.framework')->initialize();
+
+        if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
+            throw new UnauthorizedHttpException('', 'Not authorized');
+        }
+
+        /** @var PageError401 $pageHandler */
+        $pageHandler = new $GLOBALS['TL_PTY']['error_401']();
+
+        try {
+            return $pageHandler->getResponse();
+        } catch (ResponseException $e) {
+            return $e->getResponse();
+        } catch (InsufficientAuthenticationException $e) {
+            throw new UnauthorizedHttpException('', $e->getMessage());
+        }
+    }
 }

@@ -23,8 +23,10 @@ use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -327,6 +329,18 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
+    }
+
+    public function testRedirectsIfTwoFactorAuthenticationIsEnabled(): void
+    {
+        $request = new Request();
+        $request->request->set('_failure_path', 'http://localhost/failure');
+        $request->setSession($this->createMock(SessionInterface::class));
+
+        $token = $this->createMock(TwoFactorTokenInterface::class);
+        $response = $this->getHandler()->onAuthenticationSuccess($request, $token);
+
+        $this->assertSame('http://localhost/failure', $response->getTargetUrl());
     }
 
     /**

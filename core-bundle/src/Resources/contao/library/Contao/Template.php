@@ -33,6 +33,24 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property string       $inColumn
  * @property string       $headline
  * @property array        $hl
+ * @property string       $action
+ * @property string       $enforceTwoFactor
+ * @property string       $targetPath
+ * @property string       $message
+ * @property string       $href
+ * @property string       $twoFactor
+ * @property string       $explain
+ * @property string       $active
+ * @property string       $enableButton
+ * @property string       $disableButton
+ * @property boolean      $enable
+ * @property boolean      $isEnabled
+ * @property string       $secret
+ * @property string       $textCode
+ * @property string       $qrCode
+ * @property string       $scan
+ * @property string       $verify
+ * @property string       $verifyHelp
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
