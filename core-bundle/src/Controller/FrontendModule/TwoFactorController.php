@@ -84,7 +84,6 @@ class TwoFactorController extends AbstractFrontendModuleController
         $redirectPage = $model->jumpTo > 0 ? $adapter->findByPk($model->jumpTo) : null;
         $return = $redirectPage instanceof PageModel ? $redirectPage->getAbsoluteUrl() : $this->page->getAbsoluteUrl();
 
-        $template->error = false;
         $template->action = '';
         $template->enforceTwoFactor = $this->page->enforceTwoFactor;
         $template->targetPath = $return;
@@ -135,7 +134,6 @@ class TwoFactorController extends AbstractFrontendModuleController
         $exception = $this->get('security.authentication_utils')->getLastAuthenticationError();
 
         if ($exception instanceof InvalidTwoFactorCodeException) {
-            $template->error = true;
             $template->message = $translator->trans('ERR.invalidTwoFactor', [], 'contao_default');
         }
 
@@ -149,7 +147,6 @@ class TwoFactorController extends AbstractFrontendModuleController
                 return new RedirectResponse($return);
             }
 
-            $template->error = true;
             $template->message = $translator->trans('ERR.invalidTwoFactor', [], 'contao_default');
         }
 

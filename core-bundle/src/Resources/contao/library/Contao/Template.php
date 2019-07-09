@@ -33,7 +33,6 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property string       $inColumn
  * @property string       $headline
  * @property array        $hl
- * @property boolean      $error
  * @property string       $action
  * @property string       $enforceTwoFactor
  * @property string       $targetPath
