@@ -109,6 +109,11 @@ class TwoFactorFrontendListener
             return;
         }
 
+        // Check if user has TwoFactorToken
+        if (!$token instanceof TwoFactorToken) {
+            return;
+        }
+
         // Search 401 error page
         $unauthorizedPage = $adapter->find401ByPid($page->rootId);
 
