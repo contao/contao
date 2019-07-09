@@ -18,7 +18,7 @@
         </div>
         <div class="widget w50">
           <p><?= $this->textCode ?></p>
-          <code><?= $this->secret ?></code>
+          <code style="word-break:break-all"><?= $this->secret ?></code>
         </div>
         <div class="widget w50 clr">
           <h3><label for="verify"<?php if ($this->error): ?> class="error"<?php endif; ?>><?= $this->verify ?></label></h3>

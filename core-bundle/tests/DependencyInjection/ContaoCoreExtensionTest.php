@@ -376,6 +376,26 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('onKernelTerminate', $tags['kernel.event_listener'][0]['method']);
     }
 
+    public function testRegistersTheCsrfTokenCookieListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.csrf_token_cookie'));
+
+        $definition = $this->container->getDefinition('contao.listener.csrf_token_cookie');
+
+        $this->assertSame(CsrfTokenCookieListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('contao.csrf.token_storage', (string) $definition->getArgument(0));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
+        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(36, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame('kernel.response', $tags['kernel.event_listener'][1]['event']);
+        $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][1]['method']);
+    }
+
     public function testRegistersTheDataContainerCallbackListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.data_container_callback'));
@@ -630,26 +650,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertArrayHasKey('kernel.event_listener', $tags);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-    }
-
-    public function testRegistersTheCsrfTokenCookieListener(): void
-    {
-        $this->assertTrue($this->container->has('contao.listener.csrf_token_cookie'));
-
-        $definition = $this->container->getDefinition('contao.listener.csrf_token_cookie');
-
-        $this->assertSame(CsrfTokenCookieListener::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.csrf.token_storage', (string) $definition->getArgument(0));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(36, $tags['kernel.event_listener'][0]['priority']);
-        $this->assertSame('kernel.response', $tags['kernel.event_listener'][1]['event']);
-        $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][1]['method']);
     }
 
     public function testRegistersTheUserSessionListener(): void

@@ -138,6 +138,6 @@ class TwoFactorFrontendListener
             }
         }
 
-        throw new UnauthorizedHttpException('', 'Missing two-factor authentication.');
+        throw new UnauthorizedHttpException('', 'Missing two-factor authentication');
     }
 }
