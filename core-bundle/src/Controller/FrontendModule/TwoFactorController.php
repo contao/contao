@@ -26,20 +26,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class TwoFactorController extends AbstractFrontendModuleController
 {
-    /** @var PageModel */
+    /**
+     * @var PageModel
+     */
     protected $page;
 
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $page = null): Response
     {
         $this->page = $page;
 
-        if ($this->page instanceof PageModel && $this->get('contao.routing.scope_matcher')->isFrontendRequest($request)) {
+        if (
+            $this->page instanceof PageModel
+            && $this->get('contao.routing.scope_matcher')->isFrontendRequest($request)
+        ) {
             $this->page->loadDetails();
         }
 
@@ -62,7 +66,6 @@ class TwoFactorController extends AbstractFrontendModuleController
 
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
-        $translator = $this->get('translator');
         $token = $this->get('security.token_storage')->getToken();
 
         if (!$token instanceof TokenInterface) {
@@ -86,6 +89,8 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->enforceTwoFactor = $this->page->enforceTwoFactor;
         $template->targetPath = $return;
 
+        $translator = $this->get('translator');
+
         // Inform the user if 2FA is enforced
         if ($this->page->enforceTwoFactor) {
             $template->message = $translator->trans('MSC.twoFactorEnforced', [], 'contao_default');
@@ -107,7 +112,7 @@ class TwoFactorController extends AbstractFrontendModuleController
             }
         }
 
-        $template->isEnabled = $user->useTwoFactor;
+        $template->isEnabled = (bool) $user->useTwoFactor;
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
         $template->twoFactor = $translator->trans('MSC.twoFactorAuthentication', [], 'contao_default');
         $template->explain = $translator->trans('MSC.twoFactorExplain', [], 'contao_default');
@@ -126,11 +131,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         $translator = $this->get('translator');
-
-        /** @var Authenticator $authenticator */
         $authenticator = $this->get('contao.security.two_factor.authenticator');
-
-        /** @var AuthenticationException|null $exception */
         $exception = $this->get('security.authentication_utils')->getLastAuthenticationError();
 
         if ($exception instanceof InvalidTwoFactorCodeException) {

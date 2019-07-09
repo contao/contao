@@ -42,7 +42,8 @@ class ProviderTest extends TestCase
         $authenticator = $this->createMock(Authenticator::class);
 
         /** @var User&MockObject $user */
-        $user = $this->mockClassWithProperties(User::class, ['useTwoFactor' => '']);
+        $user = $this->mockClassWithProperties(User::class);
+        $user->useTwoFactor = '';
 
         $context = $this->createMock(AuthenticationContextInterface::class);
         $context
@@ -61,7 +62,8 @@ class ProviderTest extends TestCase
         $authenticator = $this->createMock(Authenticator::class);
 
         /** @var User&MockObject $user */
-        $user = $this->mockClassWithProperties(User::class, ['useTwoFactor' => '1']);
+        $user = $this->mockClassWithProperties(User::class);
+        $user->useTwoFactor = '1';
 
         $context = $this->createMock(AuthenticationContextInterface::class);
         $context
@@ -118,13 +120,13 @@ class ProviderTest extends TestCase
         $this->assertTrue($provider->validateAuthenticationCode($user, '123456'));
     }
 
-    public function testThrowsExceptionWhenTryingToGetFormRenderer(): void
+    public function testThrowsAnExceptionWhenTryingToGetTheFormRenderer(): void
     {
-        $this->expectException(\RuntimeException::class);
-
         $authenticator = $this->createMock(Authenticator::class);
-
         $provider = new Provider($authenticator);
+
+        $this->expectException('RuntimeException');
+
         $provider->getFormRenderer();
     }
 }

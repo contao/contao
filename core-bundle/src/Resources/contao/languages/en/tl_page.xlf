@@ -282,13 +282,13 @@
         <source>Enforce two-factor authentication</source>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.1">
-        <source>Enforce two-factor authentication for member logins.</source>
+        <source>Enforce two-factor authentication for all members.</source>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.0">
         <source>Two-factor redirect page</source>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
-        <source>Please choose the page to which visitors setting up two-factor authentication will be redirected.</source>
+        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>

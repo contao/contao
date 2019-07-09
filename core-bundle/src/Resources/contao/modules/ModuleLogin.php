@@ -67,6 +67,9 @@ class ModuleLogin extends Module
 	 */
 	protected function compile()
 	{
+		/** @var PageModel $objPage */
+		global $objPage;
+
 		$container = System::getContainer();
 
 		/** @var Router $router */
@@ -74,10 +77,6 @@ class ModuleLogin extends Module
 
 		/** @var AuthenticationException|null $exception */
 		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
-
-		/** @var PageModel $objPage */
-		global $objPage;
-
 		$authorizationChecker = $container->get('security.authorization_checker');
 
 		if ($authorizationChecker->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS'))

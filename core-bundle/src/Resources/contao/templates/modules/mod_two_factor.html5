@@ -1,4 +1,7 @@
+
+<!-- indexer::stop -->
 <div class="<?= $this->class ?> two-factor block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+
   <?php if ($this->headline): ?>
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
   <?php endif; ?>
@@ -13,7 +16,7 @@
         <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor">
         <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
         <div class="qr-code">
-          <img src="data:image/svg+xml;base64,<?= $this->qrCode; ?>">
+          <img src="data:image/svg+xml;base64,<?= $this->qrCode ?>" alt>
         </div>
         <div class="widget">
           <p><?= $this->textCode; ?></p>
@@ -52,3 +55,4 @@
   <?php endif; ?>
 
 </div>
+<!-- indexer::continue -->

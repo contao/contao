@@ -97,7 +97,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property boolean $hasMooTools
  * @property string  $template
  * @property string  $templateGroup
- * @property boolean $enforceTwoFactor
+ * @property string  $enforceTwoFactor
  * @property integer $twoFactorJumpTo
  *
  * @method static PageModel|null findById($id, array $opt=array())

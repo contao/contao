@@ -173,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'includeLayout'               => 'layout',
 		'includeCache'                => 'clientCache,cache,alwaysLoadFromCache',
 		'includeChmod'                => 'cuser,cgroup,chmod',
-		'enforceTwoFactor'            => 'twoFactorJumpTo',
+		'enforceTwoFactor'            => 'twoFactorJumpTo'
 	),
 
 	// Fields
@@ -627,7 +627,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'enforceTwoFactor' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['enforceTwoFactor'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -635,7 +634,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'twoFactorJumpTo' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['twoFactorJumpTo'],
 			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',

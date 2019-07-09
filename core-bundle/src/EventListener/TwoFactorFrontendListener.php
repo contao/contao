@@ -28,7 +28,9 @@ class TwoFactorFrontendListener
 {
     use TargetPathTrait;
 
-    /** @var ContaoFramework */
+    /**
+     * @var ContaoFramework
+     */
     private $framework;
 
     /**
@@ -56,12 +58,10 @@ class TwoFactorFrontendListener
 
     public function onKernelRequest(GetResponseEvent $event): void
     {
-        // Check if is frontend request
         if (!$this->scopeMatcher->isFrontendMasterRequest($event)) {
             return;
         }
 
-        $request = $event->getRequest();
         $token = $this->tokenStorage->getToken();
 
         if (null === $token) {
@@ -73,6 +73,7 @@ class TwoFactorFrontendListener
             return;
         }
 
+        $request = $event->getRequest();
         $page = $request->attributes->get('pageModel');
 
         // Check if actual page is available
@@ -82,7 +83,6 @@ class TwoFactorFrontendListener
 
         $user = $token->getUser();
 
-        // Check if FrontendUser
         if (!$user instanceof FrontendUser) {
             return;
         }
@@ -92,11 +92,10 @@ class TwoFactorFrontendListener
 
         // Check if user has two-factor disabled but is enforced
         if (!$user->useTwoFactor && $page->enforceTwoFactor) {
-            // Search for two-factor page
             $twoFactorPage = $adapter->findPublishedById($page->twoFactorJumpTo);
 
             if (!$twoFactorPage instanceof PageModel) {
-                throw new PageNotFoundException('No two-factor authentication page found.');
+                throw new PageNotFoundException('No two-factor authentication page found');
             }
 
             // Already on two-factor page, return

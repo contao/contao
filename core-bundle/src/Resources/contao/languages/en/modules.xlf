@@ -300,7 +300,7 @@
         <source>Two-factor authentication</source>
       </trans-unit>
       <trans-unit id="FMD.two_factor.1">
-        <source>Set up or change two-factor authentication</source>
+        <source>Generates a form to set up or change two-factor authentication</source>
       </trans-unit>
     </body>
   </file>

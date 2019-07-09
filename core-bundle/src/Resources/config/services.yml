@@ -64,6 +64,14 @@ services:
             - '%kernel.project_dir%'
         public: true
 
+    contao.controller.frontend_module.two_factor:
+        class: Contao\CoreBundle\Controller\FrontendModule\TwoFactorController
+        calls:
+            - ['setContainer', ['@Psr\Container\ContainerInterface']]
+        tags:
+            - { name: contao.frontend_module, category: user }
+            - { name: container.service_subscriber }
+
     contao.controller.images:
         class:  Contao\CoreBundle\Controller\ImagesController
         arguments:
@@ -620,11 +628,3 @@ services:
             - '@contao.routing.scope_matcher'
         tags:
             - { name: twig.extension }
-
-    contao.controller.frontend_module.two_factor:
-        class: Contao\CoreBundle\Controller\FrontendModule\TwoFactorController
-        tags:
-            - { name: contao.frontend_module, category: user }
-            - { name: container.service_subscriber }
-        calls:
-            - ['setContainer', ['@Psr\Container\ContainerInterface']]
