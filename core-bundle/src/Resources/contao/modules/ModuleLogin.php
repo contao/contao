@@ -38,7 +38,7 @@ class ModuleLogin extends Module
 	/**
 	 * @var string
 	 */
-	private $targetPath;
+	private $targetPath = '';
 
 	/**
 	 * Display a login form
@@ -59,11 +59,9 @@ class ModuleLogin extends Module
 			return $objTemplate->parse();
 		}
 
-		$this->targetPath = '';
-
 		if (!$_POST && $this->redirectBack && ($strReferer = $this->getReferer()) != Environment::get('request'))
 		{
-			$this->targetPath = Environment::get('base').$strReferer;
+			$this->targetPath = Environment::get('base') . $strReferer;
 		}
 		else
 		{
@@ -93,7 +91,7 @@ class ModuleLogin extends Module
 			$strRedirect = Environment::get('base').Environment::get('request');
 
 			// Redirect to last page visited
-			if ($this->redirectBack && $this->targetPath != '')
+			if ($this->redirectBack && $this->targetPath)
 			{
 				$strRedirect = $this->targetPath;
 			}
@@ -136,7 +134,7 @@ class ModuleLogin extends Module
 		$strRedirect = Environment::get('base').Environment::get('request');
 
 		// Redirect to the last page visited
-		if ($this->redirectBack && $this->targetPath != '')
+		if ($this->redirectBack && $this->targetPath)
 		{
 			$blnRedirectBack = true;
 			$strRedirect = $this->targetPath;
