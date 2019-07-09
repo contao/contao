@@ -359,6 +359,7 @@ class InsertTags extends Controller
 				case 'link_target':
 				case 'link_name':
 					$strTarget = null;
+					$strClass = '';
 
 					// Back link
 					if ($elements[1] == 'back')
@@ -447,6 +448,7 @@ class InsertTags extends Controller
 
 						$strName = $objNextPage->title;
 						$strTarget = $objNextPage->target ? ' target="_blank"' : '';
+						$strClass = $objNextPage->cssClass ? sprintf(' class="%s"', $objNextPage->cssClass) : '';
 						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
 					}
 
@@ -454,11 +456,11 @@ class InsertTags extends Controller
 					switch (strtolower($elements[0]))
 					{
 						case 'link':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, StringUtil::specialchars($strTitle), $strTarget, $strName);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl, StringUtil::specialchars($strTitle), $strClass, $strTarget, $strName);
 							break;
 
 						case 'link_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>', $strUrl, StringUtil::specialchars($strTitle), $strTarget);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl, StringUtil::specialchars($strTitle), $strClass, $strTarget);
 							break;
 
 						case 'link_url':
