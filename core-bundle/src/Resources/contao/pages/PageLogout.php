@@ -33,10 +33,9 @@ class PageLogout extends Frontend
 	{
 		$strLogoutUrl = System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
 		$strRedirect = Environment::get('base');
-		$strReferer = $this->getReferer();
 
 		// Redirect to last page visited
-		if ($objPage->redirectBack && !empty($strReferer))
+		if ($objPage->redirectBack && ($strReferer = $this->getReferer()))
 		{
 			$strRedirect = $strReferer;
 		}

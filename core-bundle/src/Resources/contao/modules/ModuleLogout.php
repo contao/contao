@@ -54,10 +54,9 @@ class ModuleLogout extends Module
 
 		$strLogoutUrl = System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
 		$strRedirect = Environment::get('base');
-		$strReferer = $this->getReferer();
 
 		// Redirect to last page visited
-		if ($this->redirectBack && !empty($strReferer))
+		if ($this->redirectBack && ($strReferer = $this->getReferer()))
 		{
 			$strRedirect = $strReferer;
 		}
