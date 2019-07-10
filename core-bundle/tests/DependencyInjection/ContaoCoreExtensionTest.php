@@ -105,6 +105,7 @@ use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\CoreBundle\Slug\ValidCharacters;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Translation\DataCollectorTranslator;
 use Contao\CoreBundle\Translation\Translator;
 use Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension;
 use Contao\FrontendUser;
@@ -1790,6 +1791,18 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('translator', $definition->getDecoratedService()[0]);
         $this->assertSame('contao.translation.translator.inner', (string) $definition->getArgument(0));
         $this->assertSame('contao.framework', (string) $definition->getArgument(1));
+    }
+
+    public function testRegistersTheContaoTranslatorDataCollector(): void
+    {
+        $this->assertTrue($this->container->has('contao.translation.translator.data_collector'));
+
+        $definition = $this->container->getDefinition('contao.translation.translator.data_collector');
+
+        $this->assertSame(DataCollectorTranslator::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertNull($definition->getDecoratedService()[0]);
+        $this->assertSame('contao.translation.translator.data_collector.inner', (string) $definition->getArgument(0));
     }
 
     public function testRegistersTheTwigTemplateExtension(): void

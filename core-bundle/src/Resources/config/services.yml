@@ -620,6 +620,11 @@ services:
             - '@contao.translation.translator.inner'
             - '@contao.framework'
 
+    contao.translation.translator.data_collector:
+        class: Contao\CoreBundle\Translation\DataCollectorTranslator
+        arguments:
+            - '@contao.translation.translator.data_collector.inner'
+
     contao.twig.template_extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension
         arguments:
