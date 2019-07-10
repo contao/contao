@@ -13,13 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Translation;
 
 use Symfony\Component\Translation\DataCollectorTranslator as SymfonyDataCollectorTranslator;
+use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DataCollectorTranslator extends SymfonyDataCollectorTranslator
 {
     /**
-     * @var TranslatorInterface|LegacyTranslatorInterface
+     * @var TranslatorInterface|TranslatorBagInterface|LegacyTranslatorInterface
      */
     private $translator;
 
@@ -61,6 +63,30 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator
     public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null): string
     {
         return $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLocale($locale): ?string
+    {
+        return $this->translator->setLocale($locale);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocale(): string
+    {
+        return $this->translator->getLocale();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCatalogue($locale = null): MessageCatalogueInterface
+    {
+        return $this->translator->getCatalogue($locale);
     }
 
     /**
