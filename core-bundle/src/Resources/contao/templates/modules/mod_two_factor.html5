@@ -19,7 +19,7 @@
           <img src="data:image/svg+xml;base64,<?= $this->qrCode ?>" alt>
         </div>
         <div class="widget">
-          <p><?= $this->textCode; ?></p>
+          <p><?= $this->textCode ?></p>
           <code style="word-break:break-all"><?= $this->secret ?></code>
         </div>
         <div class="widget widget-text">

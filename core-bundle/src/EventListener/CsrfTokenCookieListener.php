@@ -121,7 +121,7 @@ class CsrfTokenCookieListener
 
         foreach ($request->cookies as $key => $value) {
             if ($this->isCsrfCookie($key, $value)) {
-                $response->headers->clearCookie($key, $basePath, null, $isSecure, true);
+                $response->headers->clearCookie($key, $basePath, null, $isSecure);
             }
         }
     }

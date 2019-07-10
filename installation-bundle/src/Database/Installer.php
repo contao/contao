@@ -146,7 +146,7 @@ class Installer
                                 break;
 
                             default:
-                                $parts[$i + 1] = $parts[$i + 1].','.$part;
+                                $parts[$i + 1] .= ','.$part;
                                 break;
                         }
                     }
