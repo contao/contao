@@ -50,7 +50,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
         }
 
         $this->framework->initialize();
-        $this->loadLanguageFile(substr($domain, 7));
+        $this->loadLanguageFile(substr($domain, 7), $locale);
 
         $translated = $this->getFromGlobals($id);
 
@@ -146,10 +146,10 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     /**
      * Loads a Contao framework language file.
      */
-    private function loadLanguageFile(string $name): void
+    private function loadLanguageFile(string $name, string $locale = null): void
     {
         /** @var System $system */
         $system = $this->framework->getAdapter(System::class);
-        $system->loadLanguageFile($name);
+        $system->loadLanguageFile($name, $locale);
     }
 }

@@ -50,7 +50,7 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator
             return $translated;
         }
 
-        $this->collectMessage($GLOBALS['TL_LANGUAGE'] ?? '', (string) $domain, $id, $translated, $parameters);
+        $this->collectMessage($this->getLocale(), (string) $domain, $id, $translated, $parameters);
 
         return $translated;
     }
