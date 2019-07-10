@@ -47,6 +47,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         );
 
         $listener->onKernelRequest($event);
+
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
 
     public function testReturnsIfTheTokenIsNotATwoFactorToken(): void
@@ -61,6 +63,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         );
 
         $listener->onKernelRequest($event);
+
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
 
     public function testReturnsIfTheTokenIsNotSupported(): void
@@ -76,6 +80,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         );
 
         $listener->onKernelRequest($event);
+
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
 
     public function testReturnsIfTheRequestHasNoPageModel(): void
@@ -91,6 +97,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         );
 
         $listener->onKernelRequest($event);
+
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
 
     public function testReturnsIfTheUserIsNotAFrontendUser(): void
@@ -106,6 +114,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         );
 
         $listener->onKernelRequest($event);
+
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
 
     public function testThrowsAPageNotFoundExceptionIfThereIsNoTwoFactorPage(): void
@@ -152,7 +162,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
         $pageModel->enforceTwoFactor = '1';
-        $pageModel->twoFactorJumpTo = 0;
+        $pageModel->twoFactorJumpTo = 1;
 
         $adapter = $this->mockAdapter(['findPublishedById']);
         $adapter
@@ -172,6 +182,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         );
 
         $listener->onKernelRequest($event);
+
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
 
     public function testRedirectsToTheTwoFactorPageIfTwoFactorAuthenticationIsEnforced(): void
@@ -184,7 +196,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
         $pageModel->enforceTwoFactor = '1';
-        $pageModel->twoFactorJumpTo = 1;
+        $pageModel->twoFactorJumpTo = 2;
 
         /** @var PageModel&MockObject $twoFactorPageModel */
         $twoFactorPageModel = $this->mockClassWithProperties(PageModel::class);
@@ -216,7 +228,11 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
 
         $listener->onKernelRequest($event);
 
-        $this->assertInstanceOf(RedirectResponse::class, $event->getResponse());
+        /** @var RedirectResponse $response */
+        $response = $event->getResponse();
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('http://localhost/two_factor', $response->getTargetUrl());
     }
 
     public function testReturnsIfTheUserIsAlreadyAuthenticated(): void
@@ -228,21 +244,29 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
+        $adapter = $this->mockAdapter(['find401ByPid']);
+        $adapter
+            ->expects($this->never())
+            ->method('find401ByPid')
+        ;
+
         $response = new RedirectResponse('http://localhost/two_factor');
         $token = $this->mockToken(UsernamePasswordToken::class, true, $user);
         $event = $this->getResponseEvent($this->getRequest(true, $pageModel), $response);
 
         $listener = new TwoFactorFrontendListener(
-            $this->mockContaoFramework([PageModel::class => $this->mockAdapter([])]),
+            $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcher(true, $event),
             $this->mockTokenStorageWithToken($token),
             [UsernamePasswordToken::class, \get_class($token)]
         );
 
         $listener->onKernelRequest($event);
+
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
 
-    public function testRedirectsIfAnUnauthorizedPageHasNoRedirect(): void
+    public function testRedirectsToTheTargetPathIfThe401PageHasNoRedirect(): void
     {
         /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
@@ -254,10 +278,9 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $pageModel->enforceTwoFactor = '';
         $pageModel->twoFactorJumpTo = 1;
 
-        /** @var PageModel&MockObject $unauthorizedPageModel */
-        $unauthorizedPageModel = $this->mockClassWithProperties(PageModel::class);
-        $unauthorizedPageModel->id = 1;
-        $unauthorizedPageModel->autoforward = '';
+        /** @var PageModel&MockObject $page401 */
+        $page401 = $this->mockClassWithProperties(PageModel::class);
+        $page401->autoforward = '';
 
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -270,7 +293,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $adapter
             ->expects($this->once())
             ->method('find401ByPid')
-            ->willReturn($unauthorizedPageModel)
+            ->willReturn($page401)
         ;
 
         $response = new RedirectResponse('http://localhost/two_factor');
@@ -297,7 +320,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $this->assertSame('http://localhost/foobar', $response->getTargetUrl());
     }
 
-    public function testReturnsIfTheCurrentPageIsUnauthorized(): void
+    public function testReturnsIfTheCurrentPageIsThe401AutoforwardTarget(): void
     {
         /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
@@ -309,22 +332,16 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $pageModel->enforceTwoFactor = '';
         $pageModel->twoFactorJumpTo = 1;
 
-        /** @var PageModel&MockObject $unauthorizedPageModel */
-        $unauthorizedPageModel = $this->mockClassWithProperties(PageModel::class);
-        $unauthorizedPageModel->id = 1;
-        $unauthorizedPageModel->autoforward = '1';
+        /** @var PageModel&MockObject $page401 */
+        $page401 = $this->mockClassWithProperties(PageModel::class);
+        $page401->autoforward = '1';
+        $page401->jumpTo = 1;
 
-        $adapter = $this->mockAdapter(['find401ByPid', 'findPublishedById']);
+        $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
             ->expects($this->once())
             ->method('find401ByPid')
-            ->willReturn($unauthorizedPageModel)
-        ;
-
-        $adapter
-            ->expects($this->once())
-            ->method('findPublishedById')
-            ->willReturn($pageModel)
+            ->willReturn($page401)
         ;
 
         $response = new RedirectResponse('http://localhost/two_factor');
@@ -339,6 +356,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         );
 
         $listener->onKernelRequest($event);
+
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
 
     public function testThrowsAnUnauthorizedHttpException(): void
@@ -351,7 +370,6 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
         $pageModel->enforceTwoFactor = '';
-        $pageModel->twoFactorJumpTo = 1;
 
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
@@ -364,8 +382,6 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
         $event = $this->getResponseEvent($this->getRequest(true, $pageModel), $response);
 
-        $this->expectException(UnauthorizedHttpException::class);
-
         $listener = new TwoFactorFrontendListener(
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcher(true, $event),
@@ -373,10 +389,12 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             [UsernamePasswordToken::class]
         );
 
+        $this->expectException(UnauthorizedHttpException::class);
+
         $listener->onKernelRequest($event);
     }
 
-    public function testReturnsIfTheTargetPathEqualsTheCurrentRequest(): void
+    public function testReturnsIfTheCurrentPageIsTheTargetPath(): void
     {
         /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
@@ -386,7 +404,6 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
         $pageModel->enforceTwoFactor = '';
-        $pageModel->twoFactorJumpTo = 1;
 
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -418,6 +435,8 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         );
 
         $listener->onKernelRequest($event);
+
+        $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
 
     public function testRedirectsToTheTargetPath(): void
@@ -430,7 +449,6 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 1;
         $pageModel->enforceTwoFactor = '';
-        $pageModel->twoFactorJumpTo = 1;
 
         $session = $this->createMock(SessionInterface::class);
         $session

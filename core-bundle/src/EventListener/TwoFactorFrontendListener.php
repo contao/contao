@@ -111,25 +111,20 @@ class TwoFactorFrontendListener
             return;
         }
 
-        // Search 401 error page
-        $unauthorizedPage = $adapter->find401ByPid($page->rootId);
+        $page401 = $adapter->find401ByPid($page->rootId);
 
-        if ($unauthorizedPage instanceof PageModel && $unauthorizedPage->autoforward) {
-            $redirect = $adapter->findPublishedById($unauthorizedPage->jumpTo);
-
-            if ($redirect instanceof PageModel && $page->id === $redirect->id) {
-                return;
-            }
+        // Return if we are on the 401 target page already
+        if ($page401 instanceof PageModel && $page401->autoforward && $page->id === $page401->jumpTo) {
+            return;
         }
 
         $targetPath = $this->getTargetPath($request->getSession(), $token->getProviderKey());
 
         if ($targetPath) {
-            if ($request->getSchemeAndHttpHost().$request->getRequestUri() === $targetPath) {
-                return;
+            // Redirect to the target path
+            if ($targetPath !== $request->getSchemeAndHttpHost().$request->getRequestUri()) {
+                $event->setResponse(new RedirectResponse($targetPath));
             }
-
-            $event->setResponse(new RedirectResponse($targetPath));
 
             return;
         }
