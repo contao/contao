@@ -114,11 +114,7 @@ class TwoFactorFrontendListener
         // Search 401 error page
         $unauthorizedPage = $adapter->find401ByPid($page->rootId);
 
-        if ($unauthorizedPage instanceof PageModel) {
-            if (!$unauthorizedPage->autoforward) {
-                return;
-            }
-
+        if ($unauthorizedPage instanceof PageModel && $unauthorizedPage->autoforward) {
             $redirect = $adapter->findPublishedById($unauthorizedPage->jumpTo);
 
             if ($redirect instanceof PageModel && $page->id === $redirect->id) {

@@ -242,7 +242,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $listener->onKernelRequest($event);
     }
 
-    public function testReturnsIfAnUnauthorizedPageHasNoRedirect(): void
+    public function testRedirectsIfAnUnauthorizedPageHasNoRedirect(): void
     {
         /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
@@ -256,7 +256,15 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
 
         /** @var PageModel&MockObject $unauthorizedPageModel */
         $unauthorizedPageModel = $this->mockClassWithProperties(PageModel::class);
+        $unauthorizedPageModel->id = 1;
         $unauthorizedPageModel->autoforward = '';
+
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->once())
+            ->method('get')
+            ->willReturn('http://localhost/foobar')
+        ;
 
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter
@@ -267,7 +275,11 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
 
         $response = new RedirectResponse('http://localhost/two_factor');
         $token = $this->mockToken(TwoFactorToken::class, true, $user);
-        $event = $this->getResponseEvent($this->getRequest(true, $pageModel), $response);
+
+        $request = $this->getRequest(true, $pageModel);
+        $request->setSession($session);
+
+        $event = $this->getResponseEvent($request, $response);
 
         $listener = new TwoFactorFrontendListener(
             $this->mockContaoFramework([PageModel::class => $adapter]),
@@ -277,6 +289,12 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         );
 
         $listener->onKernelRequest($event);
+
+        /** @var RedirectResponse $response */
+        $response = $event->getResponse();
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('http://localhost/foobar', $response->getTargetUrl());
     }
 
     public function testReturnsIfTheCurrentPageIsUnauthorized(): void
