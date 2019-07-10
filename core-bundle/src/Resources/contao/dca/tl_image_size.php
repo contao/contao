@@ -378,7 +378,7 @@ class tl_image_size extends Contao\Backend
 	 */
 	public function getFormats()
 	{
-		if (!\in_array('webp', StringUtil::trimsplit(',', \Config::get('validImageTypes'))))
+		if (!\in_array('webp', Contao\StringUtil::trimsplit(',', Contao\Config::get('validImageTypes'))))
 		{
 			return array();
 		}
