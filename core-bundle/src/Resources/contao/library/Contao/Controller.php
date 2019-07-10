@@ -1532,9 +1532,10 @@ abstract class Controller extends System
 			}
 		}
 
+		$container = System::getContainer();
+
 		try
 		{
-			$container = System::getContainer();
 			$rootDir = $container->getParameter('kernel.project_dir');
 			$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
 			$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['singleSRC'], $size);
@@ -1674,7 +1675,25 @@ abstract class Controller extends System
 					// Do not add the TL_FILES_URL to external URLs (see #4923)
 					if (strncmp($arrItem['imageUrl'], 'http://', 7) !== 0 && strncmp($arrItem['imageUrl'], 'https://', 8) !== 0)
 					{
-						$objTemplate->$strHrefKey = static::addFilesUrlTo($container->get('contao.image.image_factory')->create($rootDir . '/' . $arrItem['imageUrl'], $lightboxSize)->getUrl($rootDir));
+						try
+						{
+							$rootDir = $container->getParameter('kernel.project_dir');
+							$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
+							$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['imageUrl'], $lightboxSize);
+
+							$objTemplate->lightboxPicture = array
+							(
+								'img' => $picture->getImg($rootDir, $staticUrl),
+								'sources' => $picture->getSources($rootDir, $staticUrl)
+							);
+
+							$objTemplate->$strHrefKey = $objTemplate->lightboxPicture['img']['src'];
+						}
+						catch (\Exception $e)
+						{
+							$objTemplate->$strHrefKey = static::addFilesUrlTo(System::urlEncode($arrItem['imageUrl']));
+							$objTemplate->lightboxPicture = array('img'=>array('src'=>$objTemplate->$strHrefKey, 'srcset'=>$objTemplate->$strHrefKey), 'sources'=>array());
+						}
 					}
 
 					$objTemplate->attributes = ' data-lightbox="' . $strLightboxId . '"';
@@ -1689,7 +1708,26 @@ abstract class Controller extends System
 		// Fullsize view
 		elseif ($arrItem['fullsize'] && TL_MODE == 'FE')
 		{
-			$objTemplate->$strHrefKey = static::addFilesUrlTo($container->get('contao.image.image_factory')->create($rootDir . '/' . $arrItem['singleSRC'], $lightboxSize)->getUrl($rootDir));
+			try
+			{
+				$rootDir = $container->getParameter('kernel.project_dir');
+				$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
+				$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['singleSRC'], $lightboxSize);
+
+				$objTemplate->lightboxPicture = array
+				(
+					'img' => $picture->getImg($rootDir, $staticUrl),
+					'sources' => $picture->getSources($rootDir, $staticUrl)
+				);
+
+				$objTemplate->$strHrefKey = $objTemplate->lightboxPicture['img']['src'];
+			}
+			catch (\Exception $e)
+			{
+				$objTemplate->$strHrefKey = static::addFilesUrlTo(System::urlEncode($arrItem['singleSRC']));
+				$objTemplate->lightboxPicture = array('img'=>array('src'=>$objTemplate->$strHrefKey, 'srcset'=>$objTemplate->$strHrefKey), 'sources'=>array());
+			}
+
 			$objTemplate->attributes = ' data-lightbox="' . $strLightboxId . '"';
 		}
 
