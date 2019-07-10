@@ -28,7 +28,7 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator
     private $messages = [];
 
     /**
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface|TranslatorBagInterface|LegacyTranslatorInterface $translator
      */
     public function __construct($translator)
     {
