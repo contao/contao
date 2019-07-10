@@ -113,7 +113,7 @@ class Automator extends System
 			}
 		}
 
-		// Also empty the page cache so there are no links to deleted images
+		// Also empty the shared cache so there are no links to deleted images
 		$this->purgePageCache();
 
 		// Add a log entry
@@ -137,7 +137,7 @@ class Automator extends System
 		$this->import(StyleSheets::class, 'StyleSheets');
 		$this->StyleSheets->updateStyleSheets();
 
-		// Also empty the page cache so there are no links to deleted scripts
+		// Also empty the shared cache so there are no links to deleted scripts
 		$this->purgePageCache();
 
 		// Add a log entry
@@ -145,7 +145,7 @@ class Automator extends System
 	}
 
 	/**
-	 * Purge the page cache
+	 * Purge the shared cache
 	 */
 	public function purgePageCache()
 	{
@@ -153,7 +153,7 @@ class Automator extends System
 
 		if (!$container->has('fos_http_cache.cache_manager'))
 		{
-			$this->log('Cannot purge the page cache; invalid reverse proxy configuration', __METHOD__, TL_ERROR);
+			$this->log('Cannot purge the shared cache; invalid reverse proxy configuration', __METHOD__, TL_ERROR);
 
 			return;
 		}
@@ -163,7 +163,7 @@ class Automator extends System
 
 		if (!$cacheManager->supports(CacheManager::CLEAR))
 		{
-			$this->log('Cannot purge the page cache; invalid reverse proxy configuration', __METHOD__, TL_ERROR);
+			$this->log('Cannot purge the shared cache; invalid reverse proxy configuration', __METHOD__, TL_ERROR);
 
 			return;
 		}
@@ -171,7 +171,7 @@ class Automator extends System
 		$cacheManager->clearCache();
 
 		// Add a log entry
-		$this->log('Purged the page cache (reverse proxy)', __METHOD__, TL_CRON);
+		$this->log('Purged the shared cache', __METHOD__, TL_CRON);
 	}
 
 	/**
@@ -428,7 +428,7 @@ class Automator extends System
 			}
 		}
 
-		// Also empty the page cache so there are no links to deleted files
+		// Also empty the shared cache so there are no links to deleted files
 		$this->purgePageCache();
 
 		// Add a log entry
