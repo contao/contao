@@ -49,7 +49,6 @@ doctrine:
         types:
             binary_string:
                 class: 'Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType'
-                commented: true
     orm:
         auto_mapping: true
         auto_generate_proxy_classes: false

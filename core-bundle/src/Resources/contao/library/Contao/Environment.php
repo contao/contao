@@ -98,7 +98,7 @@ class Environment
 	 */
 	protected static function scriptFilename()
 	{
-		return str_replace('//', '/', strtr((static::$strSapi == 'cgi' || static::$strSapi == 'isapi' || static::$strSapi == 'cgi-fcgi' || static::$strSapi == 'fpm-fcgi') && (@$_SERVER['ORIG_PATH_TRANSLATED'] ?: $_SERVER['PATH_TRANSLATED']) ? (@$_SERVER['ORIG_PATH_TRANSLATED'] ?: $_SERVER['PATH_TRANSLATED']) : (@$_SERVER['ORIG_SCRIPT_FILENAME'] ?: $_SERVER['SCRIPT_FILENAME']), '\\', '/'));
+		return str_replace('//', '/', strtr((static::$strSapi == 'cgi' || static::$strSapi == 'isapi' || static::$strSapi == 'cgi-fcgi' || static::$strSapi == 'fpm-fcgi') && ($_SERVER['ORIG_PATH_TRANSLATED'] ?? $_SERVER['PATH_TRANSLATED']) ? ($_SERVER['ORIG_PATH_TRANSLATED'] ?? $_SERVER['PATH_TRANSLATED']) : ($_SERVER['ORIG_SCRIPT_FILENAME'] ?? $_SERVER['SCRIPT_FILENAME']), '\\', '/'));
 	}
 
 	/**
@@ -112,7 +112,7 @@ class Environment
 
 		if ($request === null)
 		{
-			return @$_SERVER['ORIG_SCRIPT_NAME'] ?: $_SERVER['SCRIPT_NAME'];
+			return $_SERVER['ORIG_SCRIPT_NAME'] ?? $_SERVER['SCRIPT_NAME'];
 		}
 
 		return $request->getScriptName();
@@ -307,7 +307,12 @@ class Environment
 	 */
 	protected static function httpXForwardedHost()
 	{
-		return preg_replace('/[^A-Za-z0-9[\].:-]/', '', @$_SERVER['HTTP_X_FORWARDED_HOST']);
+		if (!isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+		{
+			return '';
+		}
+
+		return preg_replace('/[^A-Za-z0-9[\].:-]/', '', $_SERVER['HTTP_X_FORWARDED_HOST']);
 	}
 
 	/**
@@ -482,7 +487,12 @@ class Environment
 	 */
 	protected static function isAjaxRequest()
 	{
-		return @$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+		if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']))
+		{
+			return false;
+		}
+
+		return $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
 	}
 
 	/**
