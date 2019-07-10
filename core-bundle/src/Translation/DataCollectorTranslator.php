@@ -25,6 +25,9 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator
 
     private $messages = [];
 
+    /**
+     * @param TranslatorInterface $translator
+     */
     public function __construct($translator)
     {
         parent::__construct($translator);
@@ -35,9 +38,8 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator
     /**
      * {@inheritdoc}
      *
-     * Gets the translation from Contao’s $GLOBALS['TL_LANG'] array if the
-     * message domain starts with "contao_". The locale parameter is ignored in
-     * this case.
+     * Gets the translation from Contao’s $GLOBALS['TL_LANG'] array if the message
+     * domain starts with "contao_". The locale parameter is ignored in this case.
      */
     public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
@@ -61,6 +63,9 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator
         return $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
     }
 
+    /**
+     * Merges the collected messages from the decorated translator.
+     */
     public function getCollectedMessages(): array
     {
         if (method_exists($this->translator, 'getCollectedMessages')) {

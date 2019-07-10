@@ -39,8 +39,8 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     /**
      * {@inheritdoc}
      *
-     * Gets the translation from Contao’s $GLOBALS['TL_LANG'] array if the message domain starts with
-     * "contao_". The locale parameter is ignored in this case.
+     * Gets the translation from Contao’s $GLOBALS['TL_LANG'] array if the message
+     * domain starts with "contao_". The locale parameter is ignored in this case.
      */
     public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
@@ -97,10 +97,25 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
         return $this->translator->getCatalogue($locale);
     }
 
+    /**
+     * Returns the collected messages of the decorated translator.
+     */
     public function getCollectedMessages(): array
     {
         if (method_exists($this->translator, 'getCollectedMessages')) {
             return $this->translator->getCollectedMessages();
+        }
+
+        return [];
+    }
+
+    /**
+     * Returns the fallback locales of the decorated translator.
+     */
+    public function getFallbackLocales(): array
+    {
+        if (method_exists($this->translator, 'getFallbackLocales')) {
+            return $this->translator->getFallbackLocales();
         }
 
         return [];
