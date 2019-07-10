@@ -39,20 +39,16 @@ class ParameterDumper
 
         if (file_exists($rootDir.'/config/parameters.yml') || !file_exists($rootDir.'/app/config/parameters.yml')) {
             $this->configFile = $rootDir.'/config/parameters.yml';
-            $files = ['config/parameters.yml.dist', 'config/parameters.yml'];
         } else {
             $this->configFile = $rootDir.'/app/config/parameters.yml';
-            $files = ['app/config/parameters.yml.dist', 'app/config/parameters.yml'];
         }
 
-        foreach ($files as $file) {
-            if (file_exists($rootDir.'/'.$file)) {
-                $parameters[] = Yaml::parse(file_get_contents($rootDir.'/'.$file));
-            }
+        if (file_exists($this->configFile)) {
+            $parameters = Yaml::parse(file_get_contents($this->configFile));
         }
 
         if (0 !== count($parameters)) {
-            $this->parameters = array_merge($this->parameters, ...$parameters);
+            $this->parameters = array_merge($this->parameters, $parameters);
         }
     }
 
