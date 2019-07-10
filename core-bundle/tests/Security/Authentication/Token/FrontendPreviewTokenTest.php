@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Security\Authentication\Token;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\FrontendUser;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Security\Core\Role\Role;
 
 class FrontendPreviewTokenTest extends TestCase
 {
@@ -25,29 +24,27 @@ class FrontendPreviewTokenTest extends TestCase
         $user
             ->expects($this->once())
             ->method('getRoles')
-            ->willReturn(['ROLE_USER'])
+            ->willReturn(['ROLE_MEMBER'])
         ;
 
         $token = new FrontendPreviewToken($user, false);
-        $roles = $token->getRoles();
 
         $this->assertTrue($token->isAuthenticated());
         $this->assertSame($user, $token->getUser());
+
+        $roles = $token->getRoles();
+
         $this->assertIsArray($roles);
         $this->assertCount(1, $roles);
-        $this->assertInstanceOf(Role::class, $roles[0]);
-        $this->assertSame('ROLE_USER', $roles[0]->getRole());
+        $this->assertSame('ROLE_MEMBER', $roles[0]->getRole());
     }
 
     public function testAuthenticatesGuests(): void
     {
         $token = new FrontendPreviewToken(null, false);
-        $roles = $token->getRoles();
 
         $this->assertTrue($token->isAuthenticated());
         $this->assertSame('anon.', $token->getUser());
-        $this->assertIsArray($roles);
-        $this->assertCount(0, $roles);
     }
 
     public function testReturnsThePublicationStatus(): void
