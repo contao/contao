@@ -1670,7 +1670,7 @@ abstract class Controller extends System
 			if ($arrItem['fullsize'])
 			{
 				// Open images in the lightbox
-				if (preg_match('/\.(' . strtr(preg_quote(Config::get('validImageTypes'), '/'), ',', '|'). ')$/', $arrItem['imageUrl']))
+				if (preg_match('/\.(' . strtr(preg_quote(Config::get('validImageTypes'), '/'), ',', '|'). ')$/i', $arrItem['imageUrl']))
 				{
 					// Do not add the TL_FILES_URL to external URLs (see #4923)
 					if (strncmp($arrItem['imageUrl'], 'http://', 7) !== 0 && strncmp($arrItem['imageUrl'], 'https://', 8) !== 0)
