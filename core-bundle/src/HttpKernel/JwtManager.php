@@ -81,7 +81,7 @@ class JwtManager
             }
         }
 
-        if (0 === strpos($request->getPathInfo(), '/contao/')) {
+        if (0 === strncmp($request->getPathInfo(), '/contao/', 8)) {
             return null;
         }
 
