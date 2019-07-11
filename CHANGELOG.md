@@ -2,6 +2,10 @@
 
 ## DEV
 
+ * Track profiler messages in the Contao translator (see #544).
+ * Add lightboxPicture in addition to imageHref (see #561).
+ * Add two-factor authentication in the front end (see #363).
+ * Move the default image densities into the page layout (see #545).
  * Add support for image format conversion (see #552).
  * Make the insert tags in picker providers configurable (see #450).
  * Add the "minimum keyword length" field to the search module (see #274).
