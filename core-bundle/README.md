@@ -66,8 +66,8 @@ ContaoCoreBundle:
     resource: "@ContaoCoreBundle/Resources/config/routing.yml"
 ```
 
-Edit your `app/config/security.yml` file and merge all the `providers`,
-`encoders`, `firewalls` and `access_control` sections:
+Edit your `config/security.yml` file and merge all the `providers`, `encoders`,
+`firewalls` and `access_control` sections:
 
 ```yml
 security:
