@@ -20,7 +20,7 @@ class ParameterDumper
     /**
      * @var string
      */
-    private $rootDir;
+    private $configFile;
 
     /**
      * @var Filesystem
@@ -34,18 +34,20 @@ class ParameterDumper
 
     public function __construct(string $rootDir, Filesystem $filesystem = null)
     {
-        $this->rootDir = $rootDir;
+        $this->configFile = $rootDir.'/config/parameters.yml';
         $this->filesystem = $filesystem ?: new Filesystem();
-        $parameters = [];
 
-        foreach (['app/config/parameters.yml.dist', 'app/config/parameters.yml'] as $file) {
-            if (file_exists($rootDir.'/'.$file)) {
-                $parameters[] = Yaml::parse(file_get_contents($rootDir.'/'.$file));
-            }
+        // Fallback to the legacy config file (see #566)
+        if (file_exists($rootDir.'/app/config/parameters.yml') && !file_exists($rootDir.'/config/parameters.yml')) {
+            $this->configFile = $rootDir.'/app/config/parameters.yml';
+        } elseif (!file_exists($this->configFile)) {
+            return;
         }
 
-        if (!empty($parameters)) {
-            $this->parameters = array_merge($this->parameters, ...$parameters);
+        $parameters = Yaml::parse(file_get_contents($this->configFile));
+
+        if (0 !== \count($parameters)) {
+            $this->parameters = array_merge($this->parameters, $parameters);
         }
     }
 
@@ -78,7 +80,7 @@ class ParameterDumper
         }
 
         $this->filesystem->dumpFile(
-            $this->rootDir.'/app/config/parameters.yml',
+            $this->configFile,
             "# This file has been auto-generated during installation\n".Yaml::dump($this->getEscapedValues())
         );
     }

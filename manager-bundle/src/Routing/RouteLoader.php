@@ -67,8 +67,8 @@ class RouteLoader
             new RouteCollection()
         );
 
-        // Load the app/config/routing.yml file if it exists
-        if (file_exists($configFile = $this->rootDir.'/app/config/routing.yml')) {
+        // Load the routing.yml file if it exists
+        if ($configFile = $this->getConfigFile('routing.yml')) {
             $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
 
             if ($routes instanceof RouteCollection) {
@@ -84,5 +84,21 @@ class RouteLoader
         }
 
         return $collection;
+    }
+
+    private function getConfigFile(string $file): ?string
+    {
+        if (file_exists($this->rootDir.'/config/'.$file)) {
+            return $this->rootDir.'/config/'.$file;
+        }
+
+        // Fallback to the legacy config file (see #566)
+        if (file_exists($this->rootDir.'/app/config/'.$file)) {
+            @trigger_error(sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file), E_USER_DEPRECATED);
+
+            return $this->rootDir.'/app/config/'.$file;
+        }
+
+        return null;
     }
 }

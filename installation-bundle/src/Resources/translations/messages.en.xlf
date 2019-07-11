@@ -316,7 +316,7 @@
       </trans-unit>
       <trans-unit id="79">
         <source>unsupported_collation_explain</source>
-        <target>The configured collation &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different character set and collation in the &lt;code&gt;app/config/config.yml&lt;/code&gt; file.</target>
+        <target>The configured collation &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</target>
       </trans-unit>
       <trans-unit id="80">
         <source>unsupported_engine</source>
@@ -324,7 +324,7 @@
       </trans-unit>
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
-        <target>The configured database engine &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different database engine in the &lt;code&gt;app/config/config.yml&lt;/code&gt; file.</target>
+        <target>The configured database engine &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different database engine in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</target>
       </trans-unit>
       <trans-unit id="82">
         <source>misconfigured_database_url_explain</source>

@@ -48,7 +48,7 @@ class ManagerConfigTest extends ContaoTestCase
 
         $this->filesystem = new Filesystem();
         $this->tempdir = $this->getTempDir();
-        $this->tempfile = $this->tempdir.'/app/config/contao-manager.yml';
+        $this->tempfile = $this->tempdir.'/config/contao-manager.yml';
         $this->config = new ManagerConfig($this->tempdir);
     }
 
