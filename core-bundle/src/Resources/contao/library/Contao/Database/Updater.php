@@ -21,7 +21,7 @@ use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\Finder\SplFileInfo;
 
-@trigger_error('Using the Contao\Database\Updater class has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+@trigger_error('Using the "Contao\Database\Updater" class has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 /**
  * Adjust the database if the system is updated.

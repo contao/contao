@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-@trigger_error('Using the Contao\GdImage class has been deprecated and will no longer work in Contao 5.0. Use the Imagine library instead.', E_USER_DEPRECATED);
+@trigger_error('Using the "Contao\GdImage" class has been deprecated and will no longer work in Contao 5.0. Use the Imagine library instead.', E_USER_DEPRECATED);
 
 /**
  * GD image class

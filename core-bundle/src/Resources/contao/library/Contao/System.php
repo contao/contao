@@ -455,7 +455,7 @@ abstract class System
 		// Local configuration file
 		if (file_exists($rootDir . '/system/config/langconfig.php'))
 		{
-			@trigger_error('Using the langconfig.php file has been deprecated and will no longer work in Contao 5.0. Create one or more language files in contao/languages instead.', E_USER_DEPRECATED);
+			@trigger_error('Using the "langconfig.php" file has been deprecated and will no longer work in Contao 5.0. Create custom language files in the "contao/languages" folder instead.', E_USER_DEPRECATED);
 			include $rootDir . '/system/config/langconfig.php';
 		}
 	}

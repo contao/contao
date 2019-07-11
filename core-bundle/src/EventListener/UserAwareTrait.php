@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-@trigger_error('Using the UserAwareTrait has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+@trigger_error('Using the "UserAwareTrait" has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
 /**
  * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0

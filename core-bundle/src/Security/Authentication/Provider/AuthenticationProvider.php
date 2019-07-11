@@ -116,7 +116,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
             return false;
         }
 
-        @trigger_error('Using the checkCredentials hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        @trigger_error('Using the "checkCredentials" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
         /** @var System $system */
         $system = $this->framework->getAdapter(System::class);

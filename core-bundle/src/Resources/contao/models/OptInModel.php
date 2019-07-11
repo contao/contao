@@ -104,7 +104,7 @@ class OptInModel extends Model
 	 */
 	public static function findOneByRelatedTableAndId($strTable, $intId, array $arrOptions=array())
 	{
-		@trigger_error('Using the Contao\OptInModel::findOneByRelatedTableAndIds() method has been deprecated and will no longer work in Contao 5.0. Use the Contao\OptInModel::findByRelatedTableAndIds() method instead.', E_USER_DEPRECATED);
+		@trigger_error('Using the "Contao\OptInModel::findOneByRelatedTableAndIds()" method has been deprecated and will no longer work in Contao 5.0. Use the "Contao\OptInModel::findByRelatedTableAndIds()" method instead.', E_USER_DEPRECATED);
 
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();

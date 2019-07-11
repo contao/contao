@@ -146,7 +146,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             return;
         }
 
-        @trigger_error('Using the addLogEntry hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        @trigger_error('Using the "addLogEntry" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
         /** @var System $system */
         $system = $framework->getAdapter(System::class);

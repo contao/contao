@@ -352,7 +352,7 @@ class Versions extends Controller
 		// Trigger the deprecated onrestore_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_callback']))
 		{
-			@trigger_error('Using the onrestore_callback has been deprecated and will no longer work in Contao 5.0. Use the onrestore_version_callback instead.', E_USER_DEPRECATED);
+			@trigger_error('Using the "onrestore_callback" has been deprecated and will no longer work in Contao 5.0. Use the "onrestore_version_callback" instead.', E_USER_DEPRECATED);
 
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_callback'] as $callback)
 			{
