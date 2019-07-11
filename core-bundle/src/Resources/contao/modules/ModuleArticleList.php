@@ -58,7 +58,7 @@ class ModuleArticleList extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		if (!\strlen($this->inColumn))
+		if (!$this->inColumn)
 		{
 			$this->inColumn = 'main';
 		}

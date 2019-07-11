@@ -142,7 +142,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('tl_class'=>'w50'),
-			'options_callback'        => function ()
+			'options_callback' => static function ()
 			{
 				return Contao\Controller::getTemplateGroup('mail_');
 			},
@@ -269,7 +269,7 @@ class tl_newsletter_channel extends Contao\Backend
 				break;
 
 			default:
-				if (\strlen(Contao\Input::get('act')))
+				if (Contao\Input::get('act'))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' newsletter channels.');
 				}

@@ -368,7 +368,7 @@ class InsertTags extends Controller
 						$strTitle = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
 						// No language files if the page is cached
-						if (!\strlen($strTitle))
+						if (!$strTitle)
 						{
 							$strTitle = 'Go back';
 						}

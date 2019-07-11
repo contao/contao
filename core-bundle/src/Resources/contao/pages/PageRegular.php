@@ -534,7 +534,7 @@ class PageRegular extends Frontend
 		}
 
 		// User style sheets
-		if (\is_array($arrStyleSheets) && \strlen($arrStyleSheets[0]))
+		if (\is_array($arrStyleSheets) && isset($arrStyleSheets[0]))
 		{
 			$objStylesheets = StyleSheetModel::findByIds($arrStyleSheets);
 
@@ -611,7 +611,7 @@ class PageRegular extends Frontend
 				if (!empty($tmp) && \is_array($tmp))
 				{
 					// Remove all values
-					$arrOrder = array_map(function () {}, array_flip($tmp));
+					$arrOrder = array_map(static function () {}, array_flip($tmp));
 
 					// Move the matching elements to their position in $arrOrder
 					foreach ($arrExternal as $k=>$v)
@@ -774,7 +774,7 @@ class PageRegular extends Frontend
 				if (!empty($tmp) && \is_array($tmp))
 				{
 					// Remove all values
-					$arrOrder = array_map(function () {}, array_flip($tmp));
+					$arrOrder = array_map(static function () {}, array_flip($tmp));
 
 					// Move the matching elements to their position in $arrOrder
 					foreach ($arrExternalJs as $k=>$v)

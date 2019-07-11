@@ -241,7 +241,7 @@ class ModulePassword extends Module
 		$objSession = System::getContainer()->get('session');
 
 		// Validate the field
-		if (\strlen(Input::post('FORM_SUBMIT')) && Input::post('FORM_SUBMIT') == $objSession->get('setPasswordToken'))
+		if (Input::post('FORM_SUBMIT') && Input::post('FORM_SUBMIT') == $objSession->get('setPasswordToken'))
 		{
 			$objWidget->validate();
 

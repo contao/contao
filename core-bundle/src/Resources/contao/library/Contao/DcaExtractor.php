@@ -301,7 +301,7 @@ class DcaExtractor extends Controller
 			}
 		}
 
-		$quote = function ($item) { return '`' . $item . '`'; };
+		$quote = static function ($item) { return '`' . $item . '`'; };
 
 		// Keys
 		foreach ($this->arrKeys as $k=>$v)

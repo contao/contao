@@ -491,7 +491,7 @@ class tl_form_field extends Contao\Backend
 				break;
 
 			default:
-				if (\strlen(Contao\Input::get('act')))
+				if (Contao\Input::get('act'))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
 				}
@@ -594,7 +594,7 @@ class tl_form_field extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Contao\Input::get('tid')))
+		if (Contao\Input::get('tid'))
 		{
 			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());

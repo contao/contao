@@ -582,7 +582,7 @@ class Environment
 	 */
 	protected static function encodeRequestString($strRequest)
 	{
-		return preg_replace_callback('/[^A-Za-z0-9\-_.~&=+,\/?%\[\]]+/', function ($matches) { return rawurlencode($matches[0]); }, $strRequest);
+		return preg_replace_callback('/[^A-Za-z0-9\-_.~&=+,\/?%\[\]]+/', static function ($matches) { return rawurlencode($matches[0]); }, $strRequest);
 	}
 
 	/**

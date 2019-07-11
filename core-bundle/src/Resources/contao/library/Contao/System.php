@@ -307,7 +307,7 @@ abstract class System
 		}
 
 		// Remove parameters helper
-		$cleanUrl = function ($url, $params=array('rt', 'ref'))
+		$cleanUrl = static function ($url, $params=array('rt', 'ref'))
 		{
 			if ($url == '' || strpos($url, '?') === false)
 			{

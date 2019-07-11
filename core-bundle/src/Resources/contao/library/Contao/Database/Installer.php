@@ -354,7 +354,7 @@ class Installer extends Controller
 		}
 
 		$return = array();
-		$quote = function ($item) { return '`' . $item . '`'; };
+		$quote = static function ($item) { return '`' . $item . '`'; };
 
 		foreach ($tables as $table)
 		{
@@ -414,8 +414,10 @@ class Installer extends Controller
 					// Quote the field names
 					$index_fields = implode(', ', array_map
 					(
-						function ($item) use ($quote) {
-							if (strpos($item, '(') === false) {
+						static function ($item) use ($quote)
+						{
+							if (strpos($item, '(') === false)
+							{
 								return $quote($item);
 							}
 

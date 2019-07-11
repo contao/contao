@@ -579,7 +579,7 @@ class tl_style extends Contao\Backend
 	public function checkCategory($varValue)
 	{
 		// Do not change the value if it has been set already
-		if (\strlen($varValue) || Contao\Input::post('FORM_SUBMIT') == 'tl_style')
+		if (isset($varValue) || Contao\Input::post('FORM_SUBMIT') == 'tl_style')
 		{
 			return $varValue;
 		}
@@ -591,12 +591,7 @@ class tl_style extends Contao\Backend
 		$filter = $objSessionBag->get('filter');
 
 		// Return the current category
-		if (\strlen($filter[$key]['category']))
-		{
-			return $filter[$key]['category'];
-		}
-
-		return '';
+		return $filter[$key]['category'] ?? '';
 	}
 
 	/**
@@ -685,7 +680,7 @@ class tl_style extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Contao\Input::get('tid')))
+		if (Contao\Input::get('tid'))
 		{
 			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());

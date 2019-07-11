@@ -77,10 +77,10 @@ class ContentElementControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
         $response = $controller(new Request(), new ContentModel(), 'main');
-        $template = json_decode($response->getContent());
+        $template = json_decode($response->getContent(), true);
 
-        $this->assertSame('', $template->cssID);
-        $this->assertSame('ce_test', $template->class);
+        $this->assertSame('', $template['cssID']);
+        $this->assertSame('ce_test', $template['class']);
     }
 
     public function testSetsTheHeadlineFromTheModel(): void
@@ -92,10 +92,10 @@ class ContentElementControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
         $response = $controller(new Request(), $model, 'main');
-        $template = json_decode($response->getContent());
+        $template = json_decode($response->getContent(), true);
 
-        $this->assertSame('foobar', $template->headline);
-        $this->assertSame('h6', $template->hl);
+        $this->assertSame('foobar', $template['headline']);
+        $this->assertSame('h6', $template['hl']);
     }
 
     public function testSetsTheCssIdAndClassFromTheModel(): void
@@ -107,10 +107,10 @@ class ContentElementControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
         $response = $controller(new Request(), $model, 'main');
-        $template = json_decode($response->getContent());
+        $template = json_decode($response->getContent(), true);
 
-        $this->assertSame(' id="foo"', $template->cssID);
-        $this->assertSame('ce_test bar', $template->class);
+        $this->assertSame(' id="foo"', $template['cssID']);
+        $this->assertSame('ce_test bar', $template['class']);
     }
 
     public function testSetsTheLayoutSection(): void
@@ -119,9 +119,9 @@ class ContentElementControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
         $response = $controller(new Request(), new ContentModel(), 'left');
-        $template = json_decode($response->getContent());
+        $template = json_decode($response->getContent(), true);
 
-        $this->assertSame('left', $template->inColumn);
+        $this->assertSame('left', $template['inColumn']);
     }
 
     public function testSetsTheClasses(): void
@@ -130,9 +130,9 @@ class ContentElementControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
         $response = $controller(new Request(), new ContentModel(), 'main', ['first', 'last']);
-        $template = json_decode($response->getContent());
+        $template = json_decode($response->getContent(), true);
 
-        $this->assertSame('ce_test first last', $template->class);
+        $this->assertSame('ce_test first last', $template['class']);
     }
 
     public function testAddsTheCacheTags(): void

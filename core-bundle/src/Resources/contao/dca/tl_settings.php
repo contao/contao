@@ -46,7 +46,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		'timeZone' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => function ()
+			'options_callback' => static function ()
 			{
 				return Contao\System::getTimeZones();
 			},

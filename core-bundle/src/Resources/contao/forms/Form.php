@@ -443,7 +443,7 @@ class Form extends Hybrid
 				}
 			}
 
-			$uploaded = \strlen(trim($uploaded)) ? "\n\n---\n" . $uploaded : '';
+			$uploaded = trim($uploaded) != '' ? "\n\n---\n" . $uploaded : '';
 			$email->text = StringUtil::decodeEntities(trim($message)) . $uploaded . "\n\n";
 
 			// Send the e-mail

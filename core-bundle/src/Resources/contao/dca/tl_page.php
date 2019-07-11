@@ -393,7 +393,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => function ()
+			'options_callback' => static function ()
 			{
 				return Contao\System::getContainer()->get('contao.slug.valid_characters')->getOptions();
 			},
@@ -1108,7 +1108,7 @@ class tl_page extends Contao\Backend
 			(
 				$dc->activeRecord->title,
 				$dc->activeRecord->id,
-				function ($alias) use ($objPage, $aliasExists)
+				static function ($alias) use ($objPage, $aliasExists)
 				{
 					return $aliasExists((Contao\Config::get('folderUrl') ? $objPage->folderUrl : '') . $alias);
 				}
@@ -1680,7 +1680,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Contao\Input::get('tid')))
+		if (Contao\Input::get('tid'))
 		{
 			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());

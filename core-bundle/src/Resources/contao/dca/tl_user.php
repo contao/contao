@@ -162,7 +162,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'eval'                    => array('rgxp'=>'locale', 'tl_class'=>'w50'),
-			'options_callback' => function ()
+			'options_callback' => static function ()
 			{
 				return Contao\System::getLanguages(true);
 			},
@@ -172,7 +172,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback' => function ()
+			'options_callback' => static function ()
 			{
 				return Contao\Backend::getThemes();
 			},
@@ -329,7 +329,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('multiple'=>true),
-			'options_callback' => function ()
+			'options_callback' => static function ()
 			{
 				return Contao\System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
 			},
@@ -858,7 +858,7 @@ class tl_user extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Contao\Input::get('tid')))
+		if (Contao\Input::get('tid'))
 		{
 			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());

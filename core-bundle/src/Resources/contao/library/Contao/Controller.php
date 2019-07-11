@@ -145,7 +145,8 @@ abstract class Controller extends System
 		// Show the template sources (see #6875)
 		foreach ($arrTemplates as $k=>$v)
 		{
-			$v = array_filter($v, function ($a) {
+			$v = array_filter($v, static function ($a)
+			{
 				return $a != 'root';
 			});
 
@@ -1856,7 +1857,7 @@ abstract class Controller extends System
 			if (!empty($tmp) && \is_array($tmp))
 			{
 				// Remove all values
-				$arrOrder = array_map(function () {}, array_flip($tmp));
+				$arrOrder = array_map(static function () {}, array_flip($tmp));
 
 				// Move the matching elements to their position in $arrOrder
 				foreach ($arrEnclosures as $k=>$v)
@@ -2445,7 +2446,7 @@ abstract class Controller extends System
 		;
 
 		// Match the actual regex and filter the files
-		$filesIterator = $filesIterator->filter(function (\SplFileInfo $info) use ($regex)
+		$filesIterator = $filesIterator->filter(static function (\SplFileInfo $info) use ($regex)
 		{
 			$path = $info->getPathname();
 

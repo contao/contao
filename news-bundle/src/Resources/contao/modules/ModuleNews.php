@@ -142,7 +142,7 @@ abstract class ModuleNews extends Module
 				return $strText;
 			};
 
-			$objTemplate->hasText = function () use ($objArticle)
+			$objTemplate->hasText = static function () use ($objArticle)
 			{
 				return ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
 			};

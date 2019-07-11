@@ -156,7 +156,6 @@ class ModulePersonalData extends Module
 
 			$arrData['eval']['required'] = false;
 
-			// Use strlen() here (see #3277)
 			if ($arrData['eval']['mandatory'])
 			{
 				if (\is_array($this->User->$field))
@@ -168,6 +167,7 @@ class ModulePersonalData extends Module
 				}
 				else
 				{
+					// Use strlen() here (see #3277)
 					if (!\strlen($this->User->$field))
 					{
 						$arrData['eval']['required'] = true;

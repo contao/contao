@@ -76,10 +76,10 @@ class FrontendModuleControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_test'));
 
         $response = $controller(new Request(), new ModuleModel(), 'main');
-        $template = json_decode($response->getContent());
+        $template = json_decode($response->getContent(), true);
 
-        $this->assertSame('', $template->cssID);
-        $this->assertSame('mod_test', $template->class);
+        $this->assertSame('', $template['cssID']);
+        $this->assertSame('mod_test', $template['class']);
     }
 
     public function testSetsTheHeadlineFromTheModel(): void
@@ -91,10 +91,10 @@ class FrontendModuleControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_test'));
 
         $response = $controller(new Request(), $model, 'main');
-        $template = json_decode($response->getContent());
+        $template = json_decode($response->getContent(), true);
 
-        $this->assertSame('foobar', $template->headline);
-        $this->assertSame('h6', $template->hl);
+        $this->assertSame('foobar', $template['headline']);
+        $this->assertSame('h6', $template['hl']);
     }
 
     public function testSetsTheCssIdAndClassFromTheModel(): void
@@ -106,10 +106,10 @@ class FrontendModuleControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_test'));
 
         $response = $controller(new Request(), $model, 'main');
-        $template = json_decode($response->getContent());
+        $template = json_decode($response->getContent(), true);
 
-        $this->assertSame(' id="foo"', $template->cssID);
-        $this->assertSame('mod_test bar', $template->class);
+        $this->assertSame(' id="foo"', $template['cssID']);
+        $this->assertSame('mod_test bar', $template['class']);
     }
 
     public function testSetsTheLayoutSection(): void
@@ -118,9 +118,9 @@ class FrontendModuleControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_test'));
 
         $response = $controller(new Request(), new ModuleModel(), 'left');
-        $template = json_decode($response->getContent());
+        $template = json_decode($response->getContent(), true);
 
-        $this->assertSame('left', $template->inColumn);
+        $this->assertSame('left', $template['inColumn']);
     }
 
     public function testAddsTheCacheTags(): void

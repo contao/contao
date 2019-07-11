@@ -2618,7 +2618,7 @@ var Backend =
 			getScale = function() {
 				return {
 					x: imageElement.getComputedSize().width,
-					y: imageElement.getComputedSize().height,
+					y: imageElement.getComputedSize().height
 				};
 			},
 			updateImage = function() {

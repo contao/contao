@@ -158,7 +158,7 @@ class RebuildIndex extends Backend implements \executable
 		// Default variables
 		$objTemplate->user = $arrUser;
 		$objTemplate->indexLabel = $GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][0];
-		$objTemplate->indexHelp = (Config::get('showHelp') && \strlen($GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1])) ? $GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1] : '';
+		$objTemplate->indexHelp = (Config::get('showHelp') && isset($GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1])) ? $GLOBALS['TL_LANG']['tl_maintenance']['frontendUser'][1] : '';
 		$objTemplate->indexSubmit = $GLOBALS['TL_LANG']['tl_maintenance']['indexSubmit'];
 
 		return $objTemplate->parse();

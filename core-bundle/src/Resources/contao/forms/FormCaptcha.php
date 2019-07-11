@@ -168,7 +168,7 @@ class FormCaptcha extends Widget
 		$time = (int) round(time() / 60 / 30);
 
 		return array_map(
-			function ($hashTime) use ($sum)
+			static function ($hashTime) use ($sum)
 			{
 				return hash_hmac('sha256', $sum . "\0" . $hashTime, System::getContainer()->getParameter('kernel.secret'));
 			},

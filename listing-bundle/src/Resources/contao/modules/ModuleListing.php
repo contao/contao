@@ -133,7 +133,7 @@ class ModuleListing extends Module
 
 			foreach ($arrSearchFields as $field)
 			{
-				$strOptions .= '  <option value="' . $field . '"' . (($field == $strSearch) ? ' selected="selected"' : '') . '>' . (\strlen($label = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['label'][0]) ? $label : $field) . '</option>' . "\n";
+				$strOptions .= '  <option value="' . $field . '"' . (($field == $strSearch) ? ' selected="selected"' : '') . '>' . ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['label'][0] ?? $field) . '</option>' . "\n";
 			}
 		}
 
@@ -366,7 +366,7 @@ class ModuleListing extends Module
 	protected function listSingleRecord($id)
 	{
 		// Fallback template
-		if (!\strlen($this->list_info_layout))
+		if (!$this->list_info_layout)
 		{
 			$this->list_info_layout = 'info_default';
 		}
@@ -407,7 +407,7 @@ class ModuleListing extends Module
 			$arrFields[$k] = array
 			(
 				'raw' => $v,
-				'label' => (\strlen($label = $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['label'][0]) ? $label : $k),
+				'label' => $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['label'][0] ?? $k,
 				'content' => $this->formatValue($k, $v, true),
 				'class' => $class
 			);

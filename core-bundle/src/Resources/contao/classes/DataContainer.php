@@ -293,7 +293,6 @@ abstract class DataContainer extends Backend
 
 		$arrData['eval']['required'] = false;
 
-		// Use strlen() here (see #3277)
 		if ($arrData['eval']['mandatory'])
 		{
 			if (\is_array($this->varValue))
@@ -305,6 +304,7 @@ abstract class DataContainer extends Backend
 			}
 			else
 			{
+				// Use strlen() here (see #3277)
 				if (!\strlen($this->varValue))
 				{
 					$arrData['eval']['required'] = true;
@@ -1079,7 +1079,7 @@ abstract class DataContainer extends Backend
 		$this->objPicker = $picker;
 		$this->strPickerFieldType = $attributes['fieldType'];
 
-		$this->objPickerCallback = function ($value) use ($picker, $provider)
+		$this->objPickerCallback = static function ($value) use ($picker, $provider)
 		{
 			return $provider->convertDcaValue($picker->getConfig(), $value);
 		};

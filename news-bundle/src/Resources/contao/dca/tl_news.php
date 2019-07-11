@@ -299,7 +299,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'options_callback' => function ()
+			'options_callback' => static function ()
 			{
 				return Contao\System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(Contao\BackendUser::getInstance());
 			},
@@ -527,7 +527,7 @@ class tl_news extends Contao\Backend
 				break;
 
 			case 'create':
-				if (!\strlen(Contao\Input::get('pid')) || !\in_array(Contao\Input::get('pid'), $root))
+				if (!Contao\Input::get('pid') || !\in_array(Contao\Input::get('pid'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create news items in news archive ID ' . Contao\Input::get('pid') . '.');
 				}
@@ -601,7 +601,7 @@ class tl_news extends Contao\Backend
 				break;
 
 			default:
-				if (\strlen(Contao\Input::get('act')))
+				if (Contao\Input::get('act'))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
 				}
@@ -862,7 +862,7 @@ class tl_news extends Contao\Backend
 	 */
 	public function iconFeatured($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Contao\Input::get('fid')))
+		if (Contao\Input::get('fid'))
 		{
 			$this->toggleFeatured(Contao\Input::get('fid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
@@ -948,7 +948,7 @@ class tl_news extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Contao\Input::get('tid')))
+		if (Contao\Input::get('tid'))
 		{
 			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());

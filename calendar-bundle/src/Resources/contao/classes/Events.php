@@ -359,7 +359,7 @@ abstract class Events extends Module
 				return $strDetails;
 			};
 
-			$arrEvent['hasDetails'] = function () use ($id)
+			$arrEvent['hasDetails'] = static function () use ($id)
 			{
 				return ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
 			};

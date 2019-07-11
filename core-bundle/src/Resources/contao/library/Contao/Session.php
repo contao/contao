@@ -58,7 +58,7 @@ class Session
 	 * Session keys that are not stored in the parameter bag
 	 * @var array
 	 */
-	private $mappedKeys = array('referer', 'popupReferer', 'CURRENT_ID');
+	private static $mappedKeys = array('referer', 'popupReferer', 'CURRENT_ID');
 
 	/**
 	 * Get the session data
@@ -107,7 +107,7 @@ class Session
 	public function get($strKey)
 	{
 		// Map the referer (see #281)
-		if (\in_array($strKey, $this->mappedKeys))
+		if (\in_array($strKey, self::$mappedKeys))
 		{
 			return $this->session->get($strKey);
 		}
@@ -124,7 +124,7 @@ class Session
 	public function set($strKey, $varValue)
 	{
 		// Map the referer (see #281)
-		if (\in_array($strKey, $this->mappedKeys))
+		if (\in_array($strKey, self::$mappedKeys))
 		{
 			$this->session->set($strKey, $varValue);
 		}
@@ -142,7 +142,7 @@ class Session
 	public function remove($strKey)
 	{
 		// Map the referer (see #281)
-		if (\in_array($strKey, $this->mappedKeys))
+		if (\in_array($strKey, self::$mappedKeys))
 		{
 			$this->session->remove($strKey);
 		}
@@ -162,7 +162,7 @@ class Session
 		$data = $this->sessionBag->all();
 
 		// Map the referer (see #281)
-		foreach ($this->mappedKeys as $strKey)
+		foreach (self::$mappedKeys as $strKey)
 		{
 			unset($data[$strKey]);
 
@@ -190,7 +190,7 @@ class Session
 		}
 
 		// Map the referer (see #281)
-		foreach ($this->mappedKeys as $strKey)
+		foreach (self::$mappedKeys as $strKey)
 		{
 			if (isset($arrData[$strKey]))
 			{
@@ -224,7 +224,7 @@ class Session
 		foreach ($varData as $k=>$v)
 		{
 			// Map the referer (see #281)
-			if (\in_array($k, $this->mappedKeys))
+			if (\in_array($k, self::$mappedKeys))
 			{
 				$this->session->set($k, $v);
 			}

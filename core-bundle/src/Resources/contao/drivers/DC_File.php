@@ -508,7 +508,7 @@ class DC_File extends DataContainer implements \editable
 						$sValues[] = $name;
 
 						// Look for a subpalette
-						if (\strlen($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name]))
+						if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name]))
 						{
 							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name];
 						}
@@ -519,7 +519,7 @@ class DC_File extends DataContainer implements \editable
 						$key = $name .'_'. $trigger;
 
 						// Look for a subpalette
-						if (\strlen($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
+						if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
 						{
 							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
 						}
@@ -544,7 +544,7 @@ class DC_File extends DataContainer implements \editable
 			// Get an existing palette
 			foreach ($names as $paletteName)
 			{
-				if (\strlen($GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName]))
+				if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName]))
 				{
 					$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName];
 					break;

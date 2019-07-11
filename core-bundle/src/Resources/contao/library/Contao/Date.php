@@ -224,7 +224,7 @@ class Date
 			throw new \Exception(sprintf('Invalid date format "%s"', $strFormat));
 		}
 
-		return preg_replace_callback('/[a-zA-Z]/', function ($matches)
+		return preg_replace_callback('/[a-zA-Z]/', static function ($matches)
 			{
 				// Thanks to Christian Labuda
 				$arrRegexp = array

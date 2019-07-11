@@ -151,7 +151,7 @@ class InputUnit extends Widget
 		return sprintf('<input type="text" name="%s[value]" id="ctrl_%s" class="tl_text_unit%s" value="%s"%s onfocus="Backend.getScrollOffset()"> <select name="%s[unit]" class="tl_select_unit" onfocus="Backend.getScrollOffset()"%s>%s</select>%s',
 						$this->strName,
 						$this->strId,
-						(\strlen($this->strClass) ? ' ' . $this->strClass : ''),
+						($this->strClass ? ' ' . $this->strClass : ''),
 						StringUtil::specialchars($this->varValue['value']),
 						$this->getAttributes(),
 						$this->strName,

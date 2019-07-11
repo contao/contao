@@ -439,7 +439,7 @@ abstract class Template extends Controller
 		$strType = null;
 
 		// Check for valid JavaScript types (see #7927)
-		$isJavaScript = function ($strChunk)
+		$isJavaScript = static function ($strChunk)
 		{
 			$typeMatch = array();
 

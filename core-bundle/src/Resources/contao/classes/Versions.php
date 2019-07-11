@@ -814,7 +814,7 @@ class Versions extends Controller
 		{
 			if ($binary)
 			{
-				$var = array_map(function ($v) { return $v ? StringUtil::binToUuid($v) : ''; }, $var);
+				$var = array_map(static function ($v) { return $v ? StringUtil::binToUuid($v) : ''; }, $var);
 			}
 
 			return implode(', ', $var);

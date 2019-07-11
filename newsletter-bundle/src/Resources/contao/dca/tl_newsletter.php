@@ -185,7 +185,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'options_callback'        => function ()
+			'options_callback' => static function ()
 			{
 				return Contao\Controller::getTemplateGroup('mail_');
 			},
@@ -305,7 +305,7 @@ class tl_newsletter extends Contao\Backend
 				break;
 
 			case 'create':
-				if (!\strlen(Contao\Input::get('pid')) || !\in_array(Contao\Input::get('pid'), $root))
+				if (!Contao\Input::get('pid') || !\in_array(Contao\Input::get('pid'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create newsletters in channel ID ' . Contao\Input::get('pid') . '.');
 				}
@@ -359,7 +359,7 @@ class tl_newsletter extends Contao\Backend
 				break;
 
 			default:
-				if (\strlen(Contao\Input::get('act')))
+				if (Contao\Input::get('act'))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
 				}

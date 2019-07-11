@@ -1366,7 +1366,7 @@ abstract class Backend extends Controller
 			}
 		}
 
-		if (\strlen($strFiles))
+		if ($strFiles)
 		{
 			return '<optgroup label="' . StringUtil::specialchars($strFolder) . '">' . $strFiles . $strFolders . '</optgroup>';
 		}

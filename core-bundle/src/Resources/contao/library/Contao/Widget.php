@@ -1295,7 +1295,7 @@ abstract class Widget extends Controller
 			}
 		}
 
-		$arrAttributes['allowHtml'] = ($arrData['eval']['allowHtml'] || \strlen($arrData['eval']['rte']) || $arrData['eval']['preserveTags']) ? true : false;
+		$arrAttributes['allowHtml'] = ($arrData['eval']['allowHtml'] || $arrData['eval']['rte'] || $arrData['eval']['preserveTags']);
 
 		// Decode entities if HTML is allowed
 		if ($arrAttributes['allowHtml'] || $arrData['inputType'] == 'fileTree')
