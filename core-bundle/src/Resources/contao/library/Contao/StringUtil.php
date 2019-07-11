@@ -630,11 +630,11 @@ class StringUtil
 			{
 				$varValue = null;
 			}
-			elseif (substr($strValue, 0, 1) === '"' && substr($strValue, -1) === '"')
+			elseif (0 === strncmp($strValue, '"', 1) && substr($strValue, -1) === '"')
 			{
 				$varValue = str_replace('\"', '"', substr($strValue, 1, -1));
 			}
-			elseif (substr($strValue, 0, 1) === "'" && substr($strValue, -1) === "'")
+			elseif (0 === strncmp($strValue, "'", 1) && substr($strValue, -1) === "'")
 			{
 				$varValue = str_replace("\\'", "'", substr($strValue, 1, -1));
 			}

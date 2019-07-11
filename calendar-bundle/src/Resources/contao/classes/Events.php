@@ -436,7 +436,7 @@ abstract class Events extends Module
 		{
 			// Link to an external page
 			case 'external':
-				if (substr($objEvent->url, 0, 7) == 'mailto:')
+				if (0 === strncmp($objEvent->url, 'mailto:', 7))
 				{
 					self::$arrUrlCache[$strCacheKey] = StringUtil::encodeEmail($objEvent->url);
 				}

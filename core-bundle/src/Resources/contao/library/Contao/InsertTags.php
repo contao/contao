@@ -611,7 +611,7 @@ class InsertTags extends Controller
 							{
 								$langs[$k] = substr($v, 0, -1);
 
-								if (\strlen($objPage->language) > 2 && substr($objPage->language, 0, 2) == $langs[$k])
+								if (\strlen($objPage->language) > 2 && 0 === strncmp($objPage->language, $langs[$k], 2))
 								{
 									$langs[] = $objPage->language;
 								}
@@ -645,7 +645,7 @@ class InsertTags extends Controller
 							{
 								$langs[$k] = substr($v, 0, -1);
 
-								if (\strlen($objPage->language) > 2 && substr($objPage->language, 0, 2) == $langs[$k])
+								if (\strlen($objPage->language) > 2 && 0 === strncmp($objPage->language, $langs[$k], 2))
 								{
 									$langs[] = $objPage->language;
 								}

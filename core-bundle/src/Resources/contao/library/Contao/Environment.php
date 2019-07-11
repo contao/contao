@@ -149,7 +149,7 @@ class Environment
 			return str_replace('//', '/', strtr(realpath($_SERVER['DOCUMENT_ROOT']), '\\', '/'));
 		}
 
-		if (substr($scriptFilename, 0, 1) == '/')
+		if (0 === strncmp($scriptFilename, '/', 1))
 		{
 			$strDocumentRoot = '/';
 		}

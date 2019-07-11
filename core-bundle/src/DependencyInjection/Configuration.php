@@ -299,13 +299,13 @@ class Configuration implements ConfigurationInterface
             }
 
             // Reduce multiple slashes to one
-            if ('/' === $chunks[$i][0]) {
+            if (0 === strncmp($chunks[$i], '/', 1)) {
                 $resolved[] = '/';
                 continue;
             }
 
             // Reduce multiple backslashes to one
-            if ('\\' === $chunks[$i][0]) {
+            if (0 === strncmp($chunks[$i], '\\', 1)) {
                 $resolved[] = '\\';
                 continue;
             }

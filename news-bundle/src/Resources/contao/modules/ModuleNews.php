@@ -368,7 +368,7 @@ abstract class ModuleNews extends Module
 		}
 
 		// Encode e-mail addresses
-		if (substr($objArticle->url, 0, 7) == 'mailto:')
+		if (0 === strncmp($objArticle->url, 'mailto:', 7))
 		{
 			$strArticleUrl = StringUtil::encodeEmail($objArticle->url);
 		}

@@ -322,13 +322,13 @@ class Validator
 		}
 
 		// Begins with ./
-		if (substr($strPath, 0, 2) == './')
+		if (0 === strncmp($strPath, './', 2))
 		{
 			return true;
 		}
 
 		// Begins with ../
-		if (substr($strPath, 0, 3) == '../')
+		if (0 === strncmp($strPath, '../', 3))
 		{
 			return true;
 		}

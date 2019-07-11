@@ -370,7 +370,7 @@ class News extends Frontend
 		{
 			// Link to an external page
 			case 'external':
-				if (substr($objItem->url, 0, 7) == 'mailto:')
+				if (0 === strncmp($objItem->url, 'mailto:', 7))
 				{
 					self::$arrUrlCache[$strCacheKey] = StringUtil::encodeEmail($objItem->url);
 				}

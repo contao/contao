@@ -454,7 +454,7 @@ class tl_templates extends Contao\Backend
 
 		foreach ($arrTemplates as $k => $v)
 		{
-			if (substr($k, 0, $intPrefixLength) === $strPrefix)
+			if (0 === strncmp($k, $strPrefix, $intPrefixLength))
 			{
 				$arrComparable[$k] = array
 				(

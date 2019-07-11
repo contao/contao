@@ -141,7 +141,7 @@ class Statement
 
 		foreach ($arrChunks as $k=>$v)
 		{
-			if (substr($v, 0, 1) == "'")
+			if (0 === strncmp($v, "'", 1))
 			{
 				continue;
 			}
