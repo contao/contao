@@ -172,15 +172,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $configDir = $this->getProjectDir().'/config';
-
-        if (!file_exists($configDir)) {
-            @trigger_error('Placing config files in /app/config is deprecated since Contao 4.8. Place them in the root /config folder instead.', E_USER_DEPRECATED);
-            $configDir = $this->getProjectDir().'/app/config';
-        }
-
-        if (file_exists($configDir.'/parameters.yml')) {
-            $loader->load($configDir.'/parameters.yml');
+        if ($configFile = $this->getConfigFile('parameters.yml')) {
+            $loader->load($configFile);
         }
 
         $config = $this->getManagerConfig()->all();
@@ -191,14 +184,15 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $plugin->registerContainerConfiguration($loader, $config);
         }
 
-        if (file_exists($configDir.'/parameters.yml')) {
-            $loader->load($configDir.'/parameters.yml');
+        // Reload the parameters.yml file
+        if ($configFile = $this->getConfigFile('parameters.yml')) {
+            $loader->load($configFile);
         }
 
-        if (file_exists($configDir.'/config_'.$this->getEnvironment().'.yml')) {
-            $loader->load($configDir.'/config_'.$this->getEnvironment().'.yml');
-        } elseif (file_exists($configDir.'/config.yml')) {
-            $loader->load($configDir.'/config.yml');
+        if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment().'.yml')) {
+            $loader->load($configFile);
+        } elseif ($configFile = $this->getConfigFile('config.yml')) {
+            $loader->load($configFile);
         }
     }
 
@@ -279,6 +273,24 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         // Set the plugin loader again so it is available at runtime (synthetic service)
         $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
+    }
+
+    private function getConfigFile(string $file): ?string
+    {
+        $rootDir = $this->getProjectDir();
+
+        if (file_exists($rootDir.'/config/'.$file)) {
+            return $rootDir.'/config/'.$file;
+        }
+
+        // Fallback to the legacy config file (see #566)
+        if (file_exists($rootDir.'/app/config/'.$file)) {
+            @trigger_error('Using the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Use the "config" folder instead.', E_USER_DEPRECATED);
+
+            return $rootDir.'/app/config/'.$file;
+        }
+
+        return null;
     }
 
     private function addBundlesFromPlugins(array &$bundles): void

@@ -34,20 +34,19 @@ class ParameterDumper
 
     public function __construct(string $rootDir, Filesystem $filesystem = null)
     {
+        $this->configFile = $rootDir.'/config/parameters.yml';
         $this->filesystem = $filesystem ?: new Filesystem();
-        $parameters = [];
 
-        if (file_exists($rootDir.'/config/parameters.yml') || !file_exists($rootDir.'/app/config/parameters.yml')) {
-            $this->configFile = $rootDir.'/config/parameters.yml';
-        } else {
+        // Fallback to the legacy config file (see #566)
+        if (file_exists($rootDir.'/app/config/parameters.yml') && !file_exists($rootDir.'/config/parameters.yml')) {
             $this->configFile = $rootDir.'/app/config/parameters.yml';
+        } elseif (!file_exists($this->configFile)) {
+            return;
         }
 
-        if (file_exists($this->configFile)) {
-            $parameters = Yaml::parse(file_get_contents($this->configFile));
-        }
+        $parameters = Yaml::parse(file_get_contents($this->configFile));
 
-        if (0 !== count($parameters)) {
+        if (0 !== \count($parameters)) {
             $this->parameters = array_merge($this->parameters, $parameters);
         }
     }
