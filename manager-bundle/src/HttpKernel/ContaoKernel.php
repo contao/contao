@@ -285,7 +285,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         // Fallback to the legacy config file (see #566)
         if (file_exists($rootDir.'/app/config/'.$file)) {
-            @trigger_error('Using the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Use the "config" folder instead.', E_USER_DEPRECATED);
+            @trigger_error(sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file), E_USER_DEPRECATED);
 
             return $rootDir.'/app/config/'.$file;
         }
