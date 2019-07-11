@@ -170,7 +170,7 @@ class AuthenticationProviderTest extends TestCase
      * @group legacy
      * @dataProvider getCheckCredentialsHookData
      *
-     * @expectedDeprecation Using the checkCredentials hook has been deprecated %s.
+     * @expectedDeprecation Using the "checkCredentials" hook has been deprecated %s.
      */
     public function testTriggersTheCheckCredentialsHook(bool $success): void
     {

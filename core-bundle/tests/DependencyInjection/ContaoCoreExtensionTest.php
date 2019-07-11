@@ -1854,7 +1854,7 @@ class ContaoCoreExtensionTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using the contao.image.target_path parameter has been deprecated %s.
+     * @expectedDeprecation Using the "contao.image.target_path" parameter has been deprecated %s.
      */
     public function testRegistersTheImageTargetPath(): void
     {

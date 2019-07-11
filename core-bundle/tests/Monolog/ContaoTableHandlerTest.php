@@ -36,7 +36,7 @@ class ContaoTableHandlerTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using the addLogEntry hook has been deprecated %s.
+     * @expectedDeprecation Using the "addLogEntry" hook has been deprecated %s.
      */
     public function testHandlesContaoRecords(): void
     {
