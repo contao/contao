@@ -710,6 +710,8 @@ class tl_user extends Backend
 					$this->Automator->purgePageCache();
 					Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['tempPurged']);
 				}
+
+				$this->reload();
 			}
 		}
 

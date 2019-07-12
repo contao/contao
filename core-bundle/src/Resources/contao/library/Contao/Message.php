@@ -136,11 +136,6 @@ class Message
 	 */
 	public static function generateUnwrapped($strScope=TL_MODE, $blnRaw=false)
 	{
-		if ($_POST)
-		{
-			return ''; // see #512
-		}
-
 		$session = \System::getContainer()->get('session');
 
 		if (!$session->isStarted())
