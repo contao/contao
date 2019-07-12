@@ -1154,7 +1154,7 @@ class tl_page extends Backend
 			}
 		}
 
-		if (Input::post('VERSION_NUMBER') > 0 && $varValue !== $dc->activeRecord->alias)
+		if ($varValue != $dc->activeRecord->alias)
 		{
 			$this->purgeSearchIndex($dc);
 		}
