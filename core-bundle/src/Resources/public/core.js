@@ -2506,7 +2506,7 @@ var Backend =
 	 * @author Kamil Kuzminski
 	 */
 	enableToggleSelect: function() {
-		var container = $('tl_select'),
+		var container = $('tl_listing'),
 			shiftToggle = function(el) {
 				thisIndex = checkboxes.indexOf(el);
 				startIndex = checkboxes.indexOf(start);
