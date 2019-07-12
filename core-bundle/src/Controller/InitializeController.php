@@ -13,7 +13,6 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
@@ -80,14 +79,10 @@ class InitializeController extends Controller
     }
 
     /**
-     * Handles an exception by trying to convert it to a Response.
+     * Handles an exception by trying to convert it to a Response object.
      *
-     * @param \Exception $e       An \Exception instance
-     * @param Request    $request A Request instance
-     * @param int        $type    The type of the request (one of HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST)
+     * @param int $type HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST
      *
-     * @return Response
-     * @throws \Exception
      * @see HttpKernel::handleException()
      */
     private function handleException(\Exception $e, Request $request, $type)
@@ -95,7 +90,7 @@ class InitializeController extends Controller
         $event = new GetResponseForExceptionEvent($this->get('http_kernel'), $request, $type, $e);
         $this->get('event_dispatcher')->dispatch(KernelEvents::EXCEPTION, $event);
 
-        // a listener might have replaced the exception
+        // A listener might have replaced the exception
         $e = $event->getException();
 
         if (!$event->hasResponse()) {
@@ -104,11 +99,16 @@ class InitializeController extends Controller
 
         $response = $event->getResponse();
 
-        // the developer asked for a specific status code
-        if (!$event->isAllowingCustomResponseCode() && !$response->isClientError() && !$response->isServerError() && !$response->isRedirect()) {
-            // ensure that we actually have an error response
+        // The developer asked for a specific status code
+        if (
+            !$event->isAllowingCustomResponseCode()
+            && !$response->isClientError()
+            && !$response->isServerError()
+            && !$response->isRedirect()
+        ) {
+            // Ensure that we actually have an error response
             if ($e instanceof HttpExceptionInterface) {
-                // keep the HTTP status code and headers
+                // Keep the HTTP status code and headers
                 $response->setStatusCode($e->getStatusCode());
                 $response->headers->add($e->getHeaders());
             } else {
