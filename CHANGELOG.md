@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Hide empty legends in the `member_grouped.html5` template (see #514).
+
 ## 4.4.40 (2019-05-21)
 
  * Ignore the query string when marking pages as "active" (see #480).
