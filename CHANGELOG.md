@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Use `scssphp/scssphp` instead of `leafo/scssphp` (see #506).
  * Hide empty legends in the `member_grouped.html5` template (see #514).
 
 ## 4.4.40 (2019-05-21)
