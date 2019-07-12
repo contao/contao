@@ -47,4 +47,15 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     {
         return parent::fetch($request, $catch);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function createStore(): Psr6Store
+    {
+        return new Psr6Store([
+            'cache_directory' => $this->cacheDir ?: $this->kernel->getCacheDir().'/http_cache',
+            'cache_tags_header' => TagHeaderFormatter::DEFAULT_HEADER_NAME,
+        ]);
+    }
 }

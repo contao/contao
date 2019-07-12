@@ -66,6 +66,7 @@
         "symfony/symfony": "^3.3.7",
         "tecnickcom/tcpdf": "^6.2.22",
         "terminal42/header-replay-bundle": "^1.4.2",
+        "toflar/psr6-symfony-http-cache-store": "^2.0",
         "true/punycode": "^2.1",
         "twig/twig": "^1.26",
         "webmozart/path-util": "^2.0"

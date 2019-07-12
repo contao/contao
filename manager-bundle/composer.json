@@ -22,7 +22,8 @@
         "symfony/monolog-bundle": "^2.8 || ^3.0",
         "symfony/swiftmailer-bundle": "^2.3",
         "symfony/symfony": "^3.3.7",
-        "terminal42/header-replay-bundle": "^1.4.2"
+        "terminal42/header-replay-bundle": "^1.4.2",
+        "toflar/psr6-symfony-http-cache-store": "^2.0"
     },
     "require-dev": {
         "composer/composer": "^1.0",
