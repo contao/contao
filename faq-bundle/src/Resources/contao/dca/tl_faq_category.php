@@ -229,7 +229,7 @@ class tl_faq_category extends Contao\Backend
 	}
 
 	/**
-	 * Check permissions to edit table tl_news_archive
+	 * Check permissions to edit table tl_faq_category
 	 *
 	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
 	 */
