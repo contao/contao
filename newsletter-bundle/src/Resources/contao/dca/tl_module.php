@@ -145,7 +145,7 @@ class tl_module_newsletter extends Backend
 		}
 
 		$arrChannels = array();
-		$objChannels = $this->Database->execute("SELECT id, title FROM tl_newsletter_channel ORDER BY title");
+		$objChannels = $this->Database->execute("SELECT id, title FROM tl_newsletter_channel WHERE jumpTo>0 ORDER BY title");
 
 		while ($objChannels->next())
 		{

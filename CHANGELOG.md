@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Show only newsletter channels with redirect page in the newsletter list module (see #494).
  * Use `scssphp/scssphp` instead of `leafo/scssphp` (see #506).
  * Hide empty legends in the `member_grouped.html5` template (see #514).
 

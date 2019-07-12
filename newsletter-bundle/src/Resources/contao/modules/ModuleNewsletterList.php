@@ -86,10 +86,10 @@ class ModuleNewsletterList extends \Module
 
 				$jumpTo = (int) $objTarget->jumpTo;
 
-				// A jumpTo page is not mandatory for newsletter channels (see #6521) but required for the list module
+				// Skip channels without a jumpTo page (see #6521 and #494)
 				if ($jumpTo < 1)
 				{
-					throw new \Exception("Newsletter channels without redirect page cannot be used in a newsletter list");
+					continue;
 				}
 
 				$strUrl = $strRequest;
