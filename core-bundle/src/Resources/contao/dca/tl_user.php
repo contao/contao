@@ -46,7 +46,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'sorting' => array
 		(
 			'mode'                    => 2,
-			'fields'                  => array('dateAdded DESC'),
+			'fields'                  => array('dateAdded'),
 			'flag'                    => 1,
 			'panelLayout'             => 'filter;sort,search,limit'
 		),

@@ -56,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'sorting' => array
 		(
 			'mode'                    => 4,
-			'fields'                  => array('date DESC'),
+			'fields'                  => array('date'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected', 'allowComments'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'child_record_callback'   => array('tl_news', 'listNewsArticles'),

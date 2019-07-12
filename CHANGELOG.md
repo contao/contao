@@ -2,6 +2,8 @@
 
 ## DEV
 
+ * Correctly apply the sorting flags in the list and parent view (see contao/core-bundle#1536).
+ * Purge the search index when a page alias changes (see #472).
  * Show only newsletter channels with redirect page in the newsletter list module (see #494).
  * Use `scssphp/scssphp` instead of `leafo/scssphp` (see #506).
  * Hide empty legends in the `member_grouped.html5` template (see #514).
