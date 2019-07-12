@@ -12,10 +12,12 @@ namespace Contao\ManagerBundle\HttpKernel;
 
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
+use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Terminal42\HeaderReplay\SymfonyCache\HeaderReplaySubscriber;
+use Toflar\Psr6HttpCacheStore\Psr6Store;
 
 /**
  * @author Andreas Schempp <https://github.com/aschempp>
@@ -51,7 +53,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     /**
      * {@inheritdoc}
      */
-    protected function createStore(): Psr6Store
+    protected function createStore()
     {
         return new Psr6Store([
             'cache_directory' => $this->cacheDir ?: $this->kernel->getCacheDir().'/http_cache',
