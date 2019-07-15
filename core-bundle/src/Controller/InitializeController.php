@@ -20,6 +20,8 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -71,7 +73,7 @@ class InitializeController extends AbstractController
         // it will pop the current request, resulting in the real request being active.
         $this->get('request_stack')->push($masterRequest);
 
-        set_exception_handler(function ($e) use ($realRequest) {
+        set_exception_handler(function ($e) use ($realRequest): void {
             // Do not catch PHP7 Throwables
             if (!$e instanceof \Exception) {
                 throw $e;
@@ -90,7 +92,7 @@ class InitializeController extends AbstractController
      *
      * @see HttpKernel::handleException()
      */
-    private function handleException(\Exception $e, Request $request, $type)
+    private function handleException(\Exception $e, Request $request, $type): void
     {
         $event = new GetResponseForExceptionEvent($this->get('http_kernel'), $request, $type, $e);
         $this->get('event_dispatcher')->dispatch(KernelEvents::EXCEPTION, $event);
@@ -98,11 +100,9 @@ class InitializeController extends AbstractController
         // A listener might have replaced the exception
         $e = $event->getException();
 
-        if (!$event->hasResponse()) {
+        if (!$response = $event->getResponse()) {
             throw $e;
         }
-
-        $response = $event->getResponse();
 
         // The developer asked for a specific status code
         if (
@@ -122,7 +122,11 @@ class InitializeController extends AbstractController
         }
 
         $response->send();
-        $this->get('kernel')->terminate($request, $response);
+
+        /** @var KernelInterface&TerminableInterface $kernel */
+        $kernel = $this->get('kernel');
+        $kernel->terminate($request, $response);
+
         exit;
     }
 }
