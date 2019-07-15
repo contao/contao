@@ -174,6 +174,9 @@ class BackendTemplate extends Template
 				. '},'
 				. 'script_url:"' . $container->get('contao.assets.assets_context')->getStaticUrl() . '",'
 				. 'path:"' . Environment::get('path') . '",'
+				. 'routes:{'
+					. 'backend_picker:"' . $container->get('router')->generate('contao_backend_picker') . '"'
+				. '},'
 				. 'request_token:"' . REQUEST_TOKEN . '",'
 				. 'referer_id:"' . $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id') . '"'
 			. '};';

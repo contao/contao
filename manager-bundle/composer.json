@@ -46,7 +46,7 @@
         "symfony/web-profiler-bundle": "3.4.* || 4.1.* || 4.2.*",
         "symfony/yaml": "3.4.* || 4.1.* || 4.2.*",
         "terminal42/header-replay-bundle": "^1.5.3",
-        "toflar/psr6-symfony-http-cache-store": "^1.0.2"
+        "toflar/psr6-symfony-http-cache-store": "^2.0"
     },
     "conflict": {
         "symfony/twig-bundle": "4.1.0"

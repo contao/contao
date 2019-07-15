@@ -18,7 +18,9 @@
       <?php foreach ($this->categories as $legend=>$category): ?>
         <?php if (!empty($category)): ?>
           <fieldset>
-            <legend><?= $legend ?></legend>
+            <?php if ($legend): ?>
+              <legend><?= $legend ?></legend>
+            <?php endif; ?>
             <?= implode('', $category) ?>
           </fieldset>
         <?php endif; ?>

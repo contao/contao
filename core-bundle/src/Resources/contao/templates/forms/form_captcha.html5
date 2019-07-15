@@ -23,8 +23,15 @@
       <input type="text" name="<?= $this->name ?>_name" id="ctrl_<?= $this->id ?>_hp" value="">
     </div>
     <script>
-      document.getElementById('ctrl_<?= $this->id ?>').parentNode.style.display = 'none';
-      document.getElementById('ctrl_<?= $this->id ?>').value = '<?= $this->getSum() ?>';
+      var e = document.getElementById('ctrl_<?= $this->id ?>'),
+          p = e.parentNode, f = p.parentNode;
+
+      if ('fieldset' === f.nodeName.toLowerCase() && 1 === f.children.length) {
+        p = f;
+      }
+
+      p.style.display = 'none';
+      e.value = '<?= $this->getSum() ?>';
     </script>
   <?php endif ?>
 

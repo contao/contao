@@ -984,7 +984,7 @@ var Backend =
 		Backend.openModalSelector({
 			'id': 'tl_listing',
 			'title': win.document.getElement('div.mce-title').get('text'),
-			'url': document.location.pathname + '/picker?context=' + (type == 'file' ? 'link' : 'file') + '&amp;extras[fieldType]=radio&amp;extras[filesOnly]=true&amp;extras[source]=' + source + '&amp;value=' + url + '&amp;popup=1',
+			'url': Contao.routes.backend_picker + '?context=' + (type == 'file' ? 'link' : 'file') + '&amp;extras[fieldType]=radio&amp;extras[filesOnly]=true&amp;extras[source]=' + source + '&amp;value=' + url + '&amp;popup=1',
 			'callback': function(table, value) {
 				win.document.getElementById(field_name).value = value.join(',');
 			}
