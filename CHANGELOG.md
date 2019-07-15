@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.8.0-RC1 (2019-07-15)
 
  * Track profiler messages in the Contao translator (see #544).
  * Add lightboxPicture in addition to imageHref (see #561).

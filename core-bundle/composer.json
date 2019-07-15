@@ -122,9 +122,6 @@
         "lexik/maintenance-bundle": "To put the application into maintenance mode"
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "4.8.x-dev"
-        },
         "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
     },
     "autoload": {

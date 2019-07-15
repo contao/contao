@@ -147,9 +147,6 @@
         "symfony/phpunit-bridge": "^3.4.5"
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "4.8.x-dev"
-        },
         "contao-manager-plugin": {
             "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
