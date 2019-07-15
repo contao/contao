@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\HttpKernel;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\HttpKernel\JwtManager;
+use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

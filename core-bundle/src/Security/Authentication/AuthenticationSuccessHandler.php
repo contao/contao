@@ -14,9 +14,9 @@ namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\HttpKernel\JwtManager;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
+use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
