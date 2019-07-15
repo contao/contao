@@ -4377,6 +4377,14 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// ORDER BY
 			if (!empty($orderBy) && \is_array($orderBy))
 			{
+				foreach ($orderBy as $k=>$v)
+				{
+					if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['flag']) && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['flag'] % 2) == 0)
+					{
+						$orderBy[$k] .= ' DESC';
+					}
+				}
+
 				$query .= " ORDER BY " . implode(', ', $orderBy);
 			}
 
@@ -4686,8 +4694,23 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				list($key, $direction) = explode(' ', $v, 2);
 
+				// If there is no direction, check the global flag in sorting mode 1 or the field flag in all other sorting modes
+				if (!$direction)
+				{
+					if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 1 && isset($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag']) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] % 2) == 0)
+					{
+						$direction = 'DESC';
+					}
+					elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['flag']) && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['flag'] % 2) == 0)
+					{
+						$direction = 'DESC';
+					}
+				}
+
 				if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['eval']['findInSet'])
 				{
+					$direction = null;
+
 					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['options_callback']))
 					{
 						$strClass = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['options_callback'][0];
@@ -4714,7 +4737,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['flag'], array(5, 6, 7, 8, 9, 10)))
 				{
-					$orderBy[$k] = "CAST($key AS SIGNED)" . ($direction ? " $direction" : ""); // see #5503
+					$orderBy[$k] = "CAST($key AS SIGNED)"; // see #5503
+				}
+
+				if ($direction)
+				{
+					$orderBy[$k] = $key . ' ' . $direction;
 				}
 			}
 
@@ -4739,11 +4767,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				$query .= " ORDER BY " . implode(', ', $orderBy);
 			}
-		}
-
-		if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 1 && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] % 2) == 0)
-		{
-			$query .= " DESC";
 		}
 
 		$objRowStmt = $this->Database->prepare($query);

@@ -257,7 +257,7 @@ class PageTree extends Widget
                 json.javascript && Browser.exec(json.javascript);
                 $("ctrl_' . $this->strId . '").fireEvent("change");
               }
-            }).post({"action":"reloadPagetree", "name":"' . $this->strId . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
+            }).post({"action":"reloadPagetree", "name":"' . $this->strName . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
           }
         });
       });

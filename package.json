@@ -1,22 +1,12 @@
 {
-    "name": "core-bundle",
-    "description": "Contao core bundle",
-    "license": "LGPL-3.0+",
-    "author": {
-        "name": "Leo Feyer",
-        "url": "https://github.com/leofeyer"
-    },
     "devDependencies": {
-        "gulp": "^4.0.0",
+        "gulp": "^4.0.2",
         "gulp-csso": "^3.0.1",
         "gulp-ignore": "^2.0.2",
         "gulp-rename": "^1.4.0",
-        "gulp-svgo": "^2.1.0",
-        "gulp-uglify": "^3.0.1",
+        "gulp-svgo": "^2.1.1",
+        "gulp-uglify": "^3.0.2",
         "pump": "^3.0"
     },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/contao/core-bundle.git"
-    }
+    "private": true
 }

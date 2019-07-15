@@ -47,8 +47,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		'sorting' => array
 		(
 			'mode'                    => 2,
-			'fields'                  => array('date DESC'),
-			'flag'                    => 8,
+			'fields'                  => array('date'),
 			'panelLayout'             => 'filter;sort,search,limit'
 		),
 		'label' => array

@@ -417,7 +417,7 @@ class FileTree extends Widget
                 json.javascript && Browser.exec(json.javascript);
                 $("ctrl_' . $this->strId . '").fireEvent("change");
               }
-            }).post({"action":"reloadFiletree", "name":"' . $this->strId . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
+            }).post({"action":"reloadFiletree", "name":"' . $this->strName . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . REQUEST_TOKEN . '"});
           }
         });
       });

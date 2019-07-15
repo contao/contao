@@ -45,7 +45,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'sorting' => array
 		(
 			'mode'                    => 6,
-			'fields'                  => array('published DESC', 'title', 'author'),
 			'paste_button_callback'   => array('tl_article', 'pasteArticle'),
 			'panelLayout'             => 'filter;search'
 		),

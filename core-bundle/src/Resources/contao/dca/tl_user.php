@@ -44,7 +44,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'sorting' => array
 		(
 			'mode'                    => 2,
-			'fields'                  => array('dateAdded DESC'),
+			'fields'                  => array('dateAdded'),
 			'flag'                    => 1,
 			'panelLayout'             => 'filter;sort,search,limit'
 		),
@@ -722,6 +722,8 @@ class tl_user extends Contao\Backend
 					$this->Automator->purgePageCache();
 					Contao\Message::addConfirmation($GLOBALS['TL_LANG']['tl_user']['tempPurged']);
 				}
+
+				$this->reload();
 			}
 		}
 

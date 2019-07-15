@@ -1125,6 +1125,11 @@ class tl_page extends Contao\Backend
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}
 
+		if ($varValue != $dc->activeRecord->alias)
+		{
+			$this->purgeSearchIndex($dc);
+		}
+
 		return $varValue;
 	}
 
