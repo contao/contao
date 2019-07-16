@@ -184,8 +184,14 @@ class ModuleEventlist extends Events
 						continue;
 					}
 
-					// Skip occurrences in the past but show running events (see #8497)
-					if (($this->cal_hideRunning || $event['repeatEnd']) && $event['end'] < $intStart)
+					// Hide running events
+					if ($this->cal_hideRunning && $event['begin'] < $intStart)
+					{
+						continue;
+					}
+
+					// Skip occurrences in the past
+					if ($event['repeatEnd'] && $event['end'] < $intStart)
 					{
 						continue;
 					}
