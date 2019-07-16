@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Add separate fields for the `min` and `max` attributes in the form generator (see #437).
+
 ## 4.8.0-RC1 (2019-07-15)
 
  * Track profiler messages in the Contao translator (see #544).
