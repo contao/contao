@@ -1114,6 +1114,23 @@ abstract class Backend extends Controller
 	}
 
 	/**
+	 * Return the decoded host name
+	 *
+	 * @return string
+	 */
+	public static function getDecodedHostname()
+	{
+		$host = Environment::get('host');
+
+		if (strncmp($host, 'xn--', 4) === 0)
+		{
+			$host = Idna::decode($host);
+		}
+
+		return $host;
+	}
+
+	/**
 	 * Add the custom layout section references
 	 */
 	public function addCustomLayoutSectionReferences()
