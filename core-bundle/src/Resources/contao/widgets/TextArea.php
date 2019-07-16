@@ -116,7 +116,7 @@ class TextArea extends Widget
 		return sprintf('<textarea name="%s" id="ctrl_%s" class="tl_textarea%s" rows="%s" cols="%s"%s onfocus="Backend.getScrollOffset()">%s</textarea>%s',
 						$this->strName,
 						$this->strId,
-						(($this->strClass != '') ? ' ' . $this->strClass : ''),
+						($this->strClass ? ' ' . $this->strClass : ''),
 						$this->intRows,
 						$this->intCols,
 						$this->getAttributes(),

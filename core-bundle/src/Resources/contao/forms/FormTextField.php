@@ -226,7 +226,7 @@ class FormTextField extends Widget
 						$this->strName,
 						$this->strId,
 						($this->hideInput ? ' password' : ''),
-						(($this->strClass != '') ? ' ' . $this->strClass : ''),
+						($this->strClass ? ' ' . $this->strClass : ''),
 						StringUtil::specialchars($this->value),
 						$this->getAttributes(),
 						$this->strTagEnding);

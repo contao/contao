@@ -308,7 +308,7 @@ abstract class Events extends Module
 		$arrEvent['target'] = '';
 		$arrEvent['title'] = StringUtil::specialchars($objEvents->title, true);
 		$arrEvent['href'] = $this->generateEventUrl($objEvents);
-		$arrEvent['class'] = ($objEvents->cssClass != '') ? ' ' . $objEvents->cssClass : '';
+		$arrEvent['class'] = $objEvents->cssClass ? ' ' . $objEvents->cssClass : '';
 		$arrEvent['recurring'] = $recurring;
 		$arrEvent['until'] = $until;
 		$arrEvent['begin'] = $intStart;

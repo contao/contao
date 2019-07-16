@@ -287,7 +287,7 @@ class FileSelector extends Widget
 		}
 
 		// Return the tree
-		return '<ul class="tl_listing tree_view picker_selector'.(($this->strClass != '') ? ' ' . $this->strClass : '').'" id="'.$this->strId.'" data-callback="reloadFiletree">
+		return '<ul class="tl_listing tree_view picker_selector'.($this->strClass ? ' ' . $this->strClass : '').'" id="'.$this->strId.'" data-callback="reloadFiletree">
     <li class="tl_folder_top"><div class="tl_left">'.Image::getHtml($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['icon'] ?: 'filemounts.svg').' '.$GLOBALS['TL_LANG']['MOD']['files'][0].'</div> <div class="tl_right">&nbsp;</div><div style="clear:both"></div></li><li class="parent" id="'.$this->strId.'_parent"><ul>'.$tree.$strReset.'
   </ul></li></ul>';
 	}

@@ -94,7 +94,7 @@ class RadioTable extends Widget
 		}
 
 		$rows = ceil(\count($this->arrOptions) / $this->intCols);
-		$return = '<table id="ctrl_'.$this->strName.'" class="tl_radio_table'.(($this->strClass != '') ? ' ' . $this->strClass : '').'">';
+		$return = '<table id="ctrl_'.$this->strName.'" class="tl_radio_table'.($this->strClass ? ' ' . $this->strClass : '').'">';
 
 		for ($i=0; $i<$rows; $i++)
 		{

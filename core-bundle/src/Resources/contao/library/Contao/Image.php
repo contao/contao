@@ -719,7 +719,7 @@ class Image
 
 		$context = (strncmp($src, 'assets/', 7) === 0) ? 'assets_context' : 'files_context';
 
-		return '<img src="' . Controller::addStaticUrlTo(System::urlEncode($src), $container->get('contao.assets.'.$context)) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . (($attributes != '') ? ' ' . $attributes : '') . '>';
+		return '<img src="' . Controller::addStaticUrlTo(System::urlEncode($src), $container->get('contao.assets.'.$context)) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . ($attributes ? ' ' . $attributes : '') . '>';
 	}
 
 	/**

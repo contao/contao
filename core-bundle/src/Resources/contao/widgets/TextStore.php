@@ -85,7 +85,7 @@ class TextStore extends Widget
 		return sprintf('<input type="password" name="%s" id="ctrl_%s" class="tl_text%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s',
 						$this->strName,
 						$this->strId,
-						(($this->strClass != '') ? ' ' . $this->strClass : ''),
+						($this->strClass ? ' ' . $this->strClass : ''),
 						(($this->varValue != '') ? '*****' : ''),
 						$this->getAttributes(),
 						$this->wizard);
