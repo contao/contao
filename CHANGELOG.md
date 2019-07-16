@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Check for a locale in the URL in the `getRootPageFromUrl()` method (see #456).
  * Correctly hide running events in the event list.
  * Correctly apply the sorting flags in the list and parent view (see contao/core-bundle#1536).
  * Purge the search index when a page alias changes (see #472).

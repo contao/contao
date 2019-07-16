@@ -308,6 +308,20 @@ abstract class Frontend extends Controller
 		$logger = System::getContainer()->get('monolog.logger.contao');
 		$accept_language = Environment::get('httpAcceptLanguage');
 
+		// Get the language from the URL if it is not set (see #456)
+		if (!isset($_GET['language']) && Config::get('addLanguageToUrl'))
+		{
+			$arrMatches = array();
+
+			// Get the request without the query string
+			list($strRequest) = explode('?', Environment::get('relativeRequest'), 2);
+
+			if (preg_match('@^([a-z]{2}(-[A-Z]{2})?)/@', $strRequest, $arrMatches))
+			{
+				Input::setGet('language', $arrMatches[1]);
+			}
+		}
+
 		// The language is set in the URL
 		if (!empty($_GET['language']) && Config::get('addLanguageToUrl'))
 		{
