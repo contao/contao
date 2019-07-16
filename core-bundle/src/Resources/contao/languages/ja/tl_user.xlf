@@ -343,7 +343,7 @@
       </trans-unit>
       <trans-unit id="tl_user.new.1">
         <source>Create a new user</source>
-        <target>新しくユーザーを作成</target>
+        <target>新しいユーザーを作成</target>
       </trans-unit>
       <trans-unit id="tl_user.show.0">
         <source>User details</source>

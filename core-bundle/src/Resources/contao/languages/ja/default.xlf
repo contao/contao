@@ -291,12 +291,15 @@
       </trans-unit>
       <trans-unit id="ERR.emptyTitleOrId">
         <source>Please enter both title and ID!</source>
+        <target>題名とIDの両方を入力してください!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>レイアウトセクションの題名: &quot;%s&quot;が重複しています!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>レイアウトセクションのID: &quot;%s&quot;が重複しています!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1568,7 +1571,7 @@
       </trans-unit>
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
-        <target>保存して新しく作成</target>
+        <target>保存して新規作成</target>
       </trans-unit>
       <trans-unit id="MSC.saveNduplicate">
         <source>Save and duplicate</source>
@@ -2312,9 +2315,11 @@
       </trans-unit>
       <trans-unit id="MSC.tokenConfirmed">
         <source>This token has already been confirmed</source>
+        <target>このトークンは既に確認済み</target>
       </trans-unit>
       <trans-unit id="MSC.tokenEmailMismatch">
         <source>The e-mail address of the token does not match</source>
+        <target>トークンの電子メールアドレスが不一致</target>
       </trans-unit>
       <trans-unit id="MSC.resendToken">
         <source>The token has been re-sent to %s.</source>

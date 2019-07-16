@@ -3,9 +3,11 @@
     <body>
       <trans-unit id="tl_opt_in_related.relTable">
         <source>Related table</source>
+        <target>Tabella correlata</target>
       </trans-unit>
       <trans-unit id="tl_opt_in_related.relId">
         <source>Related ID</source>
+        <target>ID correlato</target>
       </trans-unit>
     </body>
   </file>

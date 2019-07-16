@@ -568,6 +568,7 @@ The confirmation link is valid for 24 hours.
 
 If you did not request an account, please ignore this e-mail.
 </source>
+        <target>ایجاد یک ماژول جدید</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>

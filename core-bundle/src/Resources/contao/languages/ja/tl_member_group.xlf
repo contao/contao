@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.new.1">
         <source>Create a new group</source>
-        <target>新しくグループを作成</target>
+        <target>新しいグループを作成</target>
       </trans-unit>
       <trans-unit id="tl_member_group.show.0">
         <source>Group details</source>

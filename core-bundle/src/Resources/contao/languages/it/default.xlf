@@ -231,12 +231,15 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
+        <target>Nessuna delle pagine root del sito attive (che non ha una impostazione DNS esplicita) è impostata come lingua predefinita.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
+        <target>Nessuna delle pagine root del sito &lt;strong&gt;%s &lt;/strong&gt; ha impostata la lingua predefinita.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
+        <target>E' possibile definire soltanto una pagina root per domain con una lingua predifinita.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
@@ -252,6 +255,7 @@
       </trans-unit>
       <trans-unit id="ERR.formCookieWarning">
         <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+        <target>Non sarai in grado di inviare questo modulo perché hai disabilitato i cookie nel tuo browser.</target>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -279,18 +283,23 @@
       </trans-unit>
       <trans-unit id="ERR.largeImage">
         <source>Image exceeds the maximum dimensions of %sx%s.</source>
+        <target>L'immagine supera le dimensioni massime di %s x %s.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
+        <target>Codice di verifica non valido!</target>
       </trans-unit>
       <trans-unit id="ERR.emptyTitleOrId">
         <source>Please enter both title and ID!</source>
+        <target>Inserisci prego sia il titolo che l'ID!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>Duplicare il titolo della sezione layout &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>Duplicare l'ID &quot;%s&quot; della sezione del layout!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -582,9 +591,11 @@
       </trans-unit>
       <trans-unit id="PTY.error_401.0">
         <source>401 Not authenticated</source>
+        <target>401 Non autenticato</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
         <source>If a user requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>Se un utente richiede una pagina protetta senza essere autenticato, verrà caricata una pagina di errore 401.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -1752,6 +1763,7 @@
       </trans-unit>
       <trans-unit id="MSC.dashboard">
         <source>Dashboard</source>
+        <target>dashboard</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -1887,6 +1899,7 @@
       </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
+        <target>Funzioni di ricerca e filtro</target>
       </trans-unit>
       <trans-unit id="MSC.mandatory">
         <source>Mandatory field</source>
@@ -2150,6 +2163,7 @@
       </trans-unit>
       <trans-unit id="MSC.first">
         <source>First</source>
+        <target>Primo</target>
       </trans-unit>
       <trans-unit id="MSC.previous">
         <source>Previous</source>
@@ -2161,6 +2175,7 @@
       </trans-unit>
       <trans-unit id="MSC.last">
         <source>Last</source>
+        <target>Ultimo</target>
       </trans-unit>
       <trans-unit id="MSC.goToPage">
         <source>Go to page %s</source>
@@ -2300,12 +2315,15 @@
       </trans-unit>
       <trans-unit id="MSC.tokenConfirmed">
         <source>This token has already been confirmed</source>
+        <target>Questo token è già stato confermato</target>
       </trans-unit>
       <trans-unit id="MSC.tokenEmailMismatch">
         <source>The e-mail address of the token does not match</source>
+        <target>L'indirizzo e-mail del token non coincide</target>
       </trans-unit>
       <trans-unit id="MSC.resendToken">
         <source>The token has been re-sent to %s.</source>
+        <target>Il gettone è stato rispedito a %s.</target>
       </trans-unit>
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -2353,6 +2371,7 @@
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
         <source>Header navigation</source>
+        <target>Navigazione di intestazioni</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination menu</source>
@@ -2368,9 +2387,11 @@
       </trans-unit>
       <trans-unit id="MSC.validCharacters.asciiLowercase">
         <source>ASCII numbers and lowercase letters</source>
+        <target>Numeri ASCII e lettere minuscole</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.ascii">
         <source>ASCII numbers and letters</source>
+        <target>Numeri e lettere ASCII</target>
       </trans-unit>
       <trans-unit id="MSC.sortOrder">
         <source>Sort order</source>
@@ -2378,36 +2399,47 @@
       </trans-unit>
       <trans-unit id="MSC.security">
         <source>Security</source>
+        <target>Sicurezza</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorAuthentication">
         <source>Two-factor authentication</source>
+        <target>Autenticazione a due fattori</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerification">
         <source>Verification code</source>
+        <target>Codice di verifica</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerificationHelp">
         <source>Please enter the verification code generated by your 2FA/TOTP app.</source>
+        <target>Inserisci il codice di verifica generato dalla tua applicazione 2FA/TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorExplain">
         <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
+        <target>Qui è possibile abilitare l'autenticazione a due fattori, che aggiunge un ulteriore livello di sicurezza al proprio account. Oltre al nome utente e alla password, è necessario inserire un codice di verifica generato da un'applicazione a due fattori come 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator o qualsiasi altra applicazione TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
+        <target>Per favore, scansionare il codice QR con l'applicazione 2FA/TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
+        <target>L'autenticazione a due fattori è stata attivata.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
+        <target>Si prega di abilitare l'autenticazione a due fattori prima di continuare.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTextCode">
         <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>Se non è possibile eseguire la scansione del codice QR, immettere invece questa chiave:</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>C'è almeno un utente abituale con accesso all'editor di template. Poiché i template sono file PHP, questi utenti hanno implicitamente il pieno controllo del sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.groupTemplateEditor">
         <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>C'è almeno un gruppo di utenti che concede l'accesso all'editor di template. Poiché i template sono file PHP, gli utenti di questi gruppi hanno implicitamente il pieno controllo del sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>

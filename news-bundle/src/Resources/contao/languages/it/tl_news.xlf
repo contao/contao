@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_news.headline.0">
         <source>Title</source>
-        <target>Nome del modulo</target>
+        <target>Titolo</target>
       </trans-unit>
       <trans-unit id="tl_news.headline.1">
         <source>Please enter the news title.</source>
@@ -43,15 +43,19 @@
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.0">
         <source>Meta title</source>
+        <target>Meta titolo</target>
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Qui è possibile aggiungere un metatitolo personalizzato per sovrascrivere il titolo predefinito della pagina.</target>
       </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
+        <target>Meta descrizione</target>
       </trans-unit>
       <trans-unit id="tl_news.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Qui è possibile aggiungere una meta descrizione personalizzata per sovrascrivere la descrizione predefinita della pagina.</target>
       </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
@@ -135,9 +139,11 @@
       </trans-unit>
       <trans-unit id="tl_news.external.0">
         <source>Custom URL</source>
+        <target>URL personalizzato</target>
       </trans-unit>
       <trans-unit id="tl_news.external.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to a custom URL.</source>
+        <target>Facendo clic sul pulsante &quot;leggi ulteriormente....&quot;, i visitatori saranno reindirizzati a un URL personalizzato.</target>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>

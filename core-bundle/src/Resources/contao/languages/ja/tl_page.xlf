@@ -459,7 +459,7 @@
       </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>
-        <target>新しくページを作成</target>
+        <target>新しいページを作成</target>
       </trans-unit>
       <trans-unit id="tl_page.show.0">
         <source>Page details</source>

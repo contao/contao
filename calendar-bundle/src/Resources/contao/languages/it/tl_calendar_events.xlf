@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
         <source>Leave blank to create an open-ended event.</source>
+        <target>Lasciare vuoto per creare un evento a tempo indeterminato.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>
@@ -66,27 +67,35 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.pageTitle.0">
         <source>Meta title</source>
+        <target>Meta titolo</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Qui è possibile aggiungere un metatitolo personalizzato per sovrascrivere il titolo predefinito della pagina.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
+        <target>Meta descrizione</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Qui è possibile aggiungere una meta descrizione personalizzata per sovrascrivere la descrizione predefinita della pagina.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
+        <target>Nome della località</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.1">
         <source>Here you can enter the name of the event location.</source>
+        <target>Qui è possibile inserire il nome del luogo dell'evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.address.0">
         <source>Location address</source>
+        <target>Indirizzo</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.address.1">
         <source>Here you can enter the address of the event location.</source>
+        <target>Qui è possibile inserire l'indirizzo del luogo dell'evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.0">
         <source>Event teaser</source>
@@ -190,9 +199,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.0">
         <source>Custom URL</source>
+        <target>URL personalizzato</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.external.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
+        <target>Facendo clic sul pulsante &quot;leggi ulteriori ....&quot;, i visitatori saranno reindirizzati all'URL personalizzato.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>

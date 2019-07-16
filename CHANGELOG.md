@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.7.7 (2019-07-16)
 
  * Check for a locale in the URL in the `getRootPageFromUrl()` method (see #456).
  * Correctly hide running events in the event list.

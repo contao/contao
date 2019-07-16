@@ -291,12 +291,15 @@
       </trans-unit>
       <trans-unit id="ERR.emptyTitleOrId">
         <source>Please enter both title and ID!</source>
+        <target>Geef zowel een titel als ID op!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>Dupliceer lay-out sectie titel &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>Dupliceer lay-out sectie ID &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2312,9 +2315,11 @@
       </trans-unit>
       <trans-unit id="MSC.tokenConfirmed">
         <source>This token has already been confirmed</source>
+        <target>Dit token is al bevestigd</target>
       </trans-unit>
       <trans-unit id="MSC.tokenEmailMismatch">
         <source>The e-mail address of the token does not match</source>
+        <target>Het e-mail adres van het token komt niet overeen</target>
       </trans-unit>
       <trans-unit id="MSC.resendToken">
         <source>The token has been re-sent to %s.</source>

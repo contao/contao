@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.new.1">
         <source>Create a new category</source>
-        <target>新しくカテゴリを作成</target>
+        <target>新しいカテゴリを作成</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.show.0">
         <source>Category details</source>

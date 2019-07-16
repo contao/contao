@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_templates.new_tpl.1">
         <source>Create a new template</source>
-        <target>新しくテンプレートを作成</target>
+        <target>新しいテンプレートを作成</target>
       </trans-unit>
       <trans-unit id="tl_templates.new.0">
         <source>New folder</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_templates.new.1">
         <source>Create a new folder</source>
-        <target>新しくフォルダーを作成</target>
+        <target>新しいフォルダーを作成</target>
       </trans-unit>
       <trans-unit id="tl_templates.pasteinto.0">
         <source>Paste into</source>

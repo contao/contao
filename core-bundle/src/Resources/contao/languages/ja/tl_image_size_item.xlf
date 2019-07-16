@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Add new after media query ID %s</source>
-        <target>ID %sのメディアクエリの後に追加</target>
+        <target>ID %sのメディアクエリの後に新しく追加</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.0">
         <source>Toggle visibility</source>

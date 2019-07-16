@@ -475,7 +475,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.new.1">
         <source>Create a new field</source>
-        <target>新しく項目を作成</target>
+        <target>新しい項目を作成</target>
       </trans-unit>
       <trans-unit id="tl_form_field.show.0">
         <source>Field details</source>

@@ -335,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
-        <target>新しくイベントを作成</target>
+        <target>新しいイベントを作成</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.show.0">
         <source>Event details</source>

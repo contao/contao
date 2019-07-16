@@ -83,7 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.new.1">
         <source>Create a new user group</source>
-        <target>新しくユーザーグループを作成</target>
+        <target>新しいユーザーグループを作成</target>
       </trans-unit>
       <trans-unit id="tl_user_group.show.0">
         <source>Group details</source>

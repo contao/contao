@@ -243,7 +243,7 @@
       </trans-unit>
       <trans-unit id="tl_member.new.1">
         <source>Create a new member</source>
-        <target>新しくメンバーを作成</target>
+        <target>新しいメンバーを作成</target>
       </trans-unit>
       <trans-unit id="tl_member.show.0">
         <source>Member details</source>

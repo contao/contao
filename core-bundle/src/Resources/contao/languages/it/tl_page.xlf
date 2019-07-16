@@ -151,6 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.1">
         <source>Here you can select a custom character set for auto-generated aliases.</source>
+        <target>Qui è possibile selezionare un set di caratteri personalizzati per gli alias generati automaticamente.</target>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -174,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
         <source>Use HTTPS and automatically redirect HTTP requests.</source>
+        <target>Utilizzare HTTPS e reindirizzare automaticamente le richieste HTTP.</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>
@@ -293,6 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_page.requireItem.1">
         <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Attivare un errore 404 se l'URL della pagina non contiene un alias dell'elemento.</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
@@ -604,12 +607,15 @@
       </trans-unit>
       <trans-unit id="CACHE.7776000">
         <source>3 months</source>
+        <target>3 mesi</target>
       </trans-unit>
       <trans-unit id="CACHE.15552000">
         <source>6 months</source>
+        <target>6 mesi</target>
       </trans-unit>
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
+        <target>1 anno</target>
       </trans-unit>
     </body>
   </file>

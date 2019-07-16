@@ -568,6 +568,16 @@ The confirmation link is valid for 24 hours.
 
 If you did not request an account, please ignore this e-mail.
 </source>
+        <target>Grazie per la tua registrazione su ##domain##.
+
+Clicca qui per completare la registrazione e per attivare il tuo account:
+
+##link##
+
+Il link di conferma è valido 24 ore.
+
+Se non hai richiesto un account, ignora questa e-mail.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -582,6 +592,14 @@ Click here to set the new password:
 
 If you did not request this e-mail, please contact the website administrator.
 </source>
+        <target>Hai richiesto una nuova password per ##domain##.
+
+Clicca qui per impostare la nuova password:
+
+##link##
+
+Se non hai richiesto questa e-mail, contatta l'amministratore del sito web.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>

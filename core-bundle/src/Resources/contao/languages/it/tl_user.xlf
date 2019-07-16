@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_user.fullscreen.1">
         <source>Do not limit the width of the back end.</source>
+        <target>Non limitare la larghezza del back end.</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
@@ -334,6 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_user.useTwoFactor">
         <source>Use two-factor authentication</source>
+        <target>Utilizzare l'autenticazione a due fattori</target>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New user</source>

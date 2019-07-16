@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_files.syncExclude.0">
         <source>Do not synchronize</source>
+        <target>Non sincronizzare</target>
       </trans-unit>
       <trans-unit id="tl_files.syncExclude.1">
         <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>Non sincronizzare la cartella e le sue sottocartelle con il database.</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
@@ -93,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_files.editor.1">
         <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
+        <target>Qui è possibile modificare la sorgente del file (premere F11 per passare dalla modalità a schermo intero).</target>
       </trans-unit>
       <trans-unit id="tl_files.uploadNback">
         <source>Upload files and go back</source>
@@ -128,9 +131,11 @@
       </trans-unit>
       <trans-unit id="tl_files.dropzoneFileTooBig">
         <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>Il file è troppo grande  ({{filesize}} MiB). La dimensione massima del file è {{maxFilesize}} MiB.</target>
       </trans-unit>
       <trans-unit id="tl_files.dropzoneInvalidType">
         <source>Files of this type cannot be uploaded.</source>
+        <target>File di questo tipo non possono essere caricati.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>
