@@ -26,11 +26,17 @@ class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
      */
     private $scopeMatcher;
 
-    public function __construct(HttpUtils $httpUtils, ScopeMatcher $scopeMatcher)
+    /**
+     * @var JwtManager
+     */
+    private $jwtManager;
+
+    public function __construct(HttpUtils $httpUtils, ScopeMatcher $scopeMatcher, JwtManager $jwtManager = null)
     {
         parent::__construct($httpUtils);
 
         $this->scopeMatcher = $scopeMatcher;
+        $this->jwtManager = $jwtManager;
     }
 
     /**
@@ -50,22 +56,20 @@ class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
             return $this->createRedirectResponse($request, $targetUrl);
         }
 
-        return $this->clearJwtToken($request, parent::onLogoutSuccess($request));
+        return $this->clearJwtToken(parent::onLogoutSuccess($request));
     }
 
     private function createRedirectResponse(Request $request, string $targetUrl): Response
     {
         $response = $this->httpUtils->createRedirectResponse($request, $targetUrl);
 
-        return $this->clearJwtToken($request, $response);
+        return $this->clearJwtToken($response);
     }
 
-    private function clearJwtToken(Request $request, Response $response): Response
+    private function clearJwtToken(Response $response): Response
     {
-        $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
-
-        if ($jwtManager instanceof JwtManager) {
-            return $jwtManager->clearResponseCookie($response);
+        if (null !== $this->jwtManager) {
+            return $this->jwtManager->clearResponseCookie($response);
         }
 
         return $response;

@@ -50,6 +50,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     private $bundleLoader;
 
     /**
+     * @var JwtManager
+     */
+    private $jwtManager;
+
+    /**
      * @var ManagerConfig
      */
     private $managerConfig;
@@ -151,6 +156,20 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     public function setBundleLoader(BundleLoader $bundleLoader): void
     {
         $this->bundleLoader = $bundleLoader;
+    }
+
+    public function getJwtManager(): JwtManager
+    {
+        if (null === $this->jwtManager) {
+            $this->jwtManager = new JwtManager($this->getProjectDir());
+        }
+
+        return $this->jwtManager;
+    }
+
+    public function setJwtManager(JwtManager $jwtManager): void
+    {
+        $this->jwtManager = $jwtManager;
     }
 
     public function getManagerConfig(): ManagerConfig
@@ -273,6 +292,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         // Set the plugin loader again so it is available at runtime (synthetic service)
         $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
+
+        $container->set('contao_manager.jwt_manager', $this->getJwtManager());
     }
 
     private function getConfigFile(string $file): ?string

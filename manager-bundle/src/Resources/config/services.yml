@@ -1,4 +1,6 @@
 services:
+    Contao\ManagerBundle\HttpKernel\JwtManager: '@contao_manager.jwt_manager'
+
     contao_manager.cache.clear_bundle:
         class: Contao\ManagerBundle\Cache\BundleCacheClearer
         arguments:
@@ -7,6 +9,10 @@ services:
             - { name: kernel.cache_clearer }
 
     contao_manager.plugin_loader:
+        synthetic: true
+        public: true
+
+    contao_manager.jwt_manager:
         synthetic: true
         public: true
 

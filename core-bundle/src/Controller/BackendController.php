@@ -52,7 +52,7 @@ class BackendController extends AbstractController
     /**
      * @Route("/contao/login", name="contao_backend_login")
      */
-    public function loginAction(Request $request): Response
+    public function loginAction(Request $request, JwtManager $jwtManager = null): Response
     {
         $this->get('contao.framework')->initialize();
 
@@ -64,9 +64,8 @@ class BackendController extends AbstractController
             }
 
             $response = new RedirectResponse($this->get('router')->generate('contao_backend').$queryString);
-            $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
 
-            if ($jwtManager instanceof JwtManager) {
+            if (null !== $jwtManager) {
                 $jwtManager->addResponseCookie($response, ['debug' => false]);
             }
 

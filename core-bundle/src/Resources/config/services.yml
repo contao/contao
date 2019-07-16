@@ -486,6 +486,7 @@ services:
         arguments:
             - '@security.http_utils'
             - '@contao.framework'
+            - '@?contao_manager.jwt_manager'
             - '@logger'
 
     contao.security.backend_user_provider:
@@ -542,6 +543,7 @@ services:
         arguments:
             - '@security.http_utils'
             - '@contao.routing.scope_matcher'
+            - '@?contao_manager.jwt_manager'
 
     contao.security.logout_handler:
         class: Contao\CoreBundle\Security\Logout\LogoutHandler

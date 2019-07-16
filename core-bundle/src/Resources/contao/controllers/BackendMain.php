@@ -95,7 +95,9 @@ class BackendMain extends Backend
 				throw new \RuntimeException('The request stack did not contain a request');
 			}
 
-			$objJwtManager = $objRequest->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
+			// This will throw an exception if the JwtManager does not exist (not a Managed Edition).
+			// As we do not show the debug button in that case, this should never be reached.
+			$objJwtManager = System::getContainer()->get('contao_manager.jwt_manager');
 			$script = Input::get('enable') ? '/preview.php' : '';
 
 			if (!$objJwtManager instanceof JwtManager)

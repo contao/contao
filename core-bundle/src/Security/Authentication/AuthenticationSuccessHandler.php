@@ -41,6 +41,11 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     protected $framework;
 
     /**
+     * @var JwtManager
+     */
+    private $jwtManager;
+
+    /**
      * @var LoggerInterface|null
      */
     protected $logger;
@@ -50,11 +55,12 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     private $user;
 
-    public function __construct(HttpUtils $httpUtils, ContaoFramework $framework, LoggerInterface $logger = null)
+    public function __construct(HttpUtils $httpUtils, ContaoFramework $framework, JwtManager $jwtManager = null, LoggerInterface $logger = null)
     {
         parent::__construct($httpUtils);
 
         $this->framework = $framework;
+        $this->jwtManager = $jwtManager;
         $this->logger = $logger;
     }
 
@@ -87,12 +93,8 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 
         $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
 
-        if ($this->user instanceof BackendUser) {
-            $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
-
-            if ($jwtManager instanceof JwtManager) {
-                $jwtManager->addResponseCookie($response, ['debug' => false]);
-            }
+        if ($this->user instanceof BackendUser && null !== $this->jwtManager) {
+            $this->jwtManager->addResponseCookie($response, ['debug' => false]);
         }
 
         if (null !== $this->logger) {
