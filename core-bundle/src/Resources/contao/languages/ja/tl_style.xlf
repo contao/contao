@@ -563,7 +563,7 @@
       </trans-unit>
       <trans-unit id="tl_style.new.1">
         <source>Create a new format definition</source>
-        <target>新しく書式定義を作成</target>
+        <target>新しい書式定義を作成</target>
       </trans-unit>
       <trans-unit id="tl_style.show.0">
         <source>Format definition details</source>
@@ -627,7 +627,7 @@
       </trans-unit>
       <trans-unit id="tl_style.pastenew.1">
         <source>Add new after format definition ID %s</source>
-        <target>ID %sの書式定義の後に追加</target>
+        <target>ID %sの書式定義の後に新しく追加</target>
       </trans-unit>
       <trans-unit id="tl_style.toggle.0">
         <source>Toggle visibility</source>

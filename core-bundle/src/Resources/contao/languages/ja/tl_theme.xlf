@@ -139,7 +139,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.new.1">
         <source>Create a new theme</source>
-        <target>新しくテーマを作成</target>
+        <target>新しいテーマを作成</target>
       </trans-unit>
       <trans-unit id="tl_theme.show.0">
         <source>Theme details</source>

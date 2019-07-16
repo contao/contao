@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.new.1">
         <source>Add a new recipient</source>
-        <target>新しく宛先を追加</target>
+        <target>新しい宛先を追加</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.show.0">
         <source>Recipient details</source>

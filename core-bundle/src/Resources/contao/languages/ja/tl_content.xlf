@@ -704,7 +704,7 @@
       </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>
-        <target>新しくコンテント要素を追加</target>
+        <target>新しいコンテント要素を追加</target>
       </trans-unit>
       <trans-unit id="tl_content.show.0">
         <source>Element details</source>

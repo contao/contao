@@ -147,7 +147,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.new.1">
         <source>Create a new calendar</source>
-        <target>新しくカレンダーを作成</target>
+        <target>新しいカレンダーを作成</target>
       </trans-unit>
       <trans-unit id="tl_calendar.show.0">
         <source>Calendar details</source>

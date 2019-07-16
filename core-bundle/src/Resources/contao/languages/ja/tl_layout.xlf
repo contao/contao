@@ -519,7 +519,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new layout</source>
-        <target>新しくレイアウトを作成</target>
+        <target>新しいレイアウトを作成</target>
       </trans-unit>
       <trans-unit id="tl_layout.show.0">
         <source>Layout details</source>

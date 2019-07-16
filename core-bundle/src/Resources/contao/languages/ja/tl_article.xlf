@@ -203,7 +203,7 @@
       </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
-        <target>新しくアーティクルを作成</target>
+        <target>新しいアーティクルを作成</target>
       </trans-unit>
       <trans-unit id="tl_article.show.0">
         <source>Article details</source>

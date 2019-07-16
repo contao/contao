@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.41 (2019-07-16)
 
  * Correctly hide running events in the event list.
  * Correctly apply the sorting flags in the list and parent view (see contao/core-bundle#1536).

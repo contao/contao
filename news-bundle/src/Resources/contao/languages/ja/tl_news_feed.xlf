@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.new.1">
         <source>Create a new feed</source>
-        <target>新しくフィードを作成</target>
+        <target>新しいフィードを作成</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.show.0">
         <source>Feed details</source>

@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
-        <target>新しくフォームを作成</target>
+        <target>新しいフォームを作成</target>
       </trans-unit>
       <trans-unit id="tl_form.show.0">
         <source>Form details</source>

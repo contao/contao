@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
-        <target>新しくニュースレターを作成</target>
+        <target>新しいニュースレターを作成</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.show.0">
         <source>Newsletter details</source>

@@ -139,7 +139,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new archive</source>
-        <target>新しくアーカイブを作成</target>
+        <target>新しいアーカイブを作成</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.show.0">
         <source>Archive details</source>

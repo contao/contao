@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_files.new.1">
         <source>Create a new folder</source>
-        <target>新しくフォルダーを作成</target>
+        <target>新しいフォルダーを作成</target>
       </trans-unit>
       <trans-unit id="tl_files.cut.0">
         <source>Move file or folder</source>
