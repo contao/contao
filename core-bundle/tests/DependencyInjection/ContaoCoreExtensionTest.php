@@ -497,8 +497,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(20, $tags['kernel.event_listener'][0]['priority']);
-        $this->assertSame('kernel.exception', $tags['kernel.event_listener'][1]['event']);
-        $this->assertSame('onKernelException', $tags['kernel.event_listener'][1]['method']);
+        $this->assertSame('kernel.request', $tags['kernel.event_listener'][1]['event']);
+        $this->assertSame('setTranslatorLocale', $tags['kernel.event_listener'][1]['method']);
+        $this->assertSame(100, $tags['kernel.event_listener'][1]['priority']);
     }
 
     public function testRegistersTheMergeHttpHeadersListener(): void

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class LocaleListener
@@ -43,6 +42,14 @@ class LocaleListener
     }
 
     /**
+     * Sets the translator locale to the preferred browser language.
+     */
+    public function setTranslatorLocale(GetResponseEvent $event): void
+    {
+        $this->translator->setLocale($event->getRequest()->getPreferredLanguage($this->availableLocales));
+    }
+
+    /**
      * Adds the default locale as request attribute.
      */
     public function onKernelRequest(GetResponseEvent $event): void
@@ -53,19 +60,6 @@ class LocaleListener
 
         $request = $event->getRequest();
         $request->attributes->set('_locale', $this->getLocale($request));
-    }
-
-    /**
-     * Sets the locale of the request and translator so pretty error screens
-     * are translated into the preferred user language.
-     */
-    public function onKernelException(GetResponseForExceptionEvent $event): void
-    {
-        $request = $event->getRequest();
-        $locale = $request->attributes->get('_locale') ?? $this->getLocale($request);
-
-        $request->setLocale($locale);
-        $this->translator->setLocale($locale);
     }
 
     /**

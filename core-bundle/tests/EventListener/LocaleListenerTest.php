@@ -14,12 +14,10 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\LocaleListener;
-use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -142,16 +140,15 @@ class LocaleListenerTest extends TestCase
         $listener->onKernelRequest($event);
     }
 
-    public function testSetsTheDefaultLocaleInCaseOfAnException(): void
+    public function testSetsTheTranslatorLocale(): void
     {
         $request = Request::create('/');
         $request->headers->set('Accept-Language', 'de');
 
-        $event = new GetResponseForExceptionEvent(
+        $event = new GetResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MASTER_REQUEST,
-            new NoRootPageFoundException('No root page found')
+            HttpKernelInterface::MASTER_REQUEST
         );
 
         $translator = $this->createMock(TranslatorInterface::class);
@@ -162,8 +159,6 @@ class LocaleListenerTest extends TestCase
         ;
 
         $listener = new LocaleListener($translator, $this->mockScopeMatcher(), ['en', 'de']);
-        $listener->onKernelException($event);
-
-        $this->assertSame('de', $request->getLocale());
+        $listener->setTranslatorLocale($event);
     }
 }
