@@ -39,6 +39,7 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
         // Cloudflare
         '__cfduid',
+        'cf_clearance',
 
         // Facebook Pixel
         '_fbp',
