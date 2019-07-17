@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
+use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
+use Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -24,8 +26,7 @@ use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCode
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -41,6 +42,10 @@ class TwoFactorController extends AbstractFrontendModuleController
 
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $page = null): Response
     {
+        if (!$this->get('security.helper')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new InsufficientAuthenticationException('User is not fully authenticated');
+        }
+
         $this->page = $page;
 
         if (
@@ -64,21 +69,16 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
         $services['contao.security.two_factor.authenticator'] = Authenticator::class;
         $services['security.authentication_utils'] = AuthenticationUtils::class;
-        $services['security.token_storage'] = TokenStorageInterface::class;
         $services['translator'] = TranslatorInterface::class;
+        $services['contao.security.two_factor.backup_code_manager'] = BackupCodeManager::class;
+        $services['security.helper'] = Security::class;
 
         return $services;
     }
 
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
-        $token = $this->get('security.token_storage')->getToken();
-
-        if (!$token instanceof TokenInterface) {
-            return new Response('', Response::HTTP_NO_CONTENT);
-        }
-
-        $user = $token->getUser();
+        $user = $this->get('security.helper')->getUser();
 
         if (!$user instanceof FrontendUser) {
             return new Response('', Response::HTTP_NO_CONTENT);
@@ -117,13 +117,23 @@ class TwoFactorController extends AbstractFrontendModuleController
             }
         }
 
+        if ('tl_two_factor_show_backup_codes' === $request->request->get('FORM_SUBMIT')) {
+            if (!$user->backupCodes || !\count(json_decode($user->backupCodes, true))) {
+                $this->generateBackupCodes($user);
+            }
+
+            $template->showBackupCodes = true;
+        }
+
+        if ('tl_two_factor_generate_backup_codes' === $request->request->get('FORM_SUBMIT')) {
+            $this->generateBackupCodes($user);
+
+            $template->showBackupCodes = true;
+        }
+
         $template->isEnabled = (bool) $user->useTwoFactor;
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
-        $template->twoFactor = $translator->trans('MSC.twoFactorAuthentication', [], 'contao_default');
-        $template->explain = $translator->trans('MSC.twoFactorExplain', [], 'contao_default');
-        $template->active = $translator->trans('MSC.twoFactorActive', [], 'contao_default');
-        $template->enableButton = $translator->trans('MSC.enable', [], 'contao_default');
-        $template->disableButton = $translator->trans('MSC.disable', [], 'contao_default');
+        $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
 
         return new Response($template->parse());
     }
@@ -164,11 +174,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $template->enable = true;
         $template->secret = Base32::encodeUpperUnpadded($user->secret);
-        $template->textCode = $translator->trans('MSC.twoFactorTextCode', [], 'contao_default');
         $template->qrCode = base64_encode($authenticator->getQrCode($user, $request));
-        $template->scan = $translator->trans('MSC.twoFactorScan', [], 'contao_default');
-        $template->verify = $translator->trans('MSC.twoFactorVerification', [], 'contao_default');
-        $template->verifyHelp = $translator->trans('MSC.twoFactorVerificationHelp', [], 'contao_default');
 
         return null;
     }
@@ -182,8 +188,16 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $user->secret = null;
         $user->useTwoFactor = '';
+        $user->backupCodes = null;
         $user->save();
 
         return new RedirectResponse($this->page->getAbsoluteUrl());
+    }
+
+    private function generateBackupCodes(FrontendUser $user): void
+    {
+        /** @var BackupCodeManager $backupCodeManager */
+        $backupCodeManager = $this->get('contao.security.two_factor.backup_code_manager');
+        $backupCodeManager->generateBackupCodes($user);
     }
 }
