@@ -72,7 +72,7 @@ class Configuration implements ConfigurationInterface
                         ->ifTrue(
                             static function (string $v): int {
                                 return preg_match(
-                                    '@^(app|assets|bin|contao|plugins|share|system|templates|var|vendor|web)(/|$)@',
+                                    '@^(app|assets|bin|config|contao|plugins|share|system|templates|var|vendor|web)(/|$)@',
                                     $v
                                 );
                             }
