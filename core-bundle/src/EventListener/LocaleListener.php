@@ -15,9 +15,16 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class LocaleListener
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     /**
      * @var ScopeMatcher
      */
@@ -28,14 +35,15 @@ class LocaleListener
      */
     private $availableLocales;
 
-    public function __construct(ScopeMatcher $scopeMatcher, array $availableLocales)
+    public function __construct(TranslatorInterface $translator, ScopeMatcher $scopeMatcher, array $availableLocales)
     {
+        $this->translator = $translator;
         $this->scopeMatcher = $scopeMatcher;
         $this->availableLocales = $availableLocales;
     }
 
     /**
-     * Sets the default locale based on the request or session.
+     * Adds the default locale as request attribute.
      */
     public function onKernelRequest(GetResponseEvent $event): void
     {
@@ -48,7 +56,20 @@ class LocaleListener
     }
 
     /**
-     * Returns the locale from the request, the session or the HTTP header.
+     * Sets the locale of the request and translator so pretty error screens
+     * are translated into the preferred user language.
+     */
+    public function onKernelException(GetResponseForExceptionEvent $event): void
+    {
+        $request = $event->getRequest();
+        $locale = $request->attributes->get('_locale') ?? $this->getLocale($request);
+
+        $request->setLocale($locale);
+        $this->translator->setLocale($locale);
+    }
+
+    /**
+     * Returns the locale from the request or the HTTP header.
      */
     private function getLocale(Request $request): string
     {
@@ -59,9 +80,6 @@ class LocaleListener
         return $request->getPreferredLanguage($this->availableLocales);
     }
 
-    /**
-     * @throw \InvalidArgumentException
-     */
     private function formatLocaleId(string $locale): string
     {
         if (!preg_match('/^[a-z]{2}([_-][a-z]{2})?$/i', $locale)) {

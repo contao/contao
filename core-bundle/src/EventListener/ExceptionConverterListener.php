@@ -25,6 +25,7 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\ServiceUnavailableException as ContaoServiceUnavailableException;
+use Contao\Date;
 use Doctrine\DBAL\Connection;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -124,14 +125,23 @@ class ExceptionConverterListener
 
     private function hasRootPages(): bool
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('COUNT(*)')
-            ->from('tl_page')
-            ->where('type = :type')
-            ->setParameter('type', 'root')
-        ;
+        $time = Date::floorToMinute();
 
-        return $qb->execute()->fetchColumn() > 0;
+        // FIXME: we should also check the domain and language here
+        $statement = $this->connection->prepare("
+            SELECT
+                COUNT(*)
+            FROM
+                tl_page
+            WHERE
+                type = 'root'
+                AND (start = '' OR start <= :start)
+                AND (stop = '' OR stop > :stop)
+                AND published = '1'
+        ");
+
+        $statement->execute([':start' => $time, ':stop' => $time + 60]);
+
+        return $statement->fetchColumn() > 0;
     }
 }

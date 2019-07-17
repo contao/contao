@@ -487,8 +487,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(LocaleListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(0));
-        $this->assertSame('%contao.locales%', (string) $definition->getArgument(1));
+        $this->assertSame('translator', (string) $definition->getArgument(0));
+        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
+        $this->assertSame('%contao.locales%', (string) $definition->getArgument(2));
 
         $tags = $definition->getTags();
 
@@ -496,6 +497,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(20, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame('kernel.exception', $tags['kernel.event_listener'][1]['event']);
+        $this->assertSame('onKernelException', $tags['kernel.event_listener'][1]['method']);
     }
 
     public function testRegistersTheMergeHttpHeadersListener(): void
@@ -576,7 +579,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertArrayHasKey('kernel.event_listener', $tags);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(30, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(14, $tags['kernel.event_listener'][0]['priority']);
     }
 
     public function testRegistersTheResponseExceptionListener(): void

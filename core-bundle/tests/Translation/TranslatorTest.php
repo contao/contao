@@ -108,4 +108,31 @@ class TranslatorTest extends TestCase
             $GLOBALS['TL_LANG']['MSC']['foo\\']['bar\\baz.']
         );
     }
+
+    public function testUsesTheLocaleOfTheDecoratedTranslatorIfNoneIsGiven(): void
+    {
+        $originalTranslator = $this->createMock(TranslatorInterface::class);
+        $originalTranslator
+            ->expects($this->once())
+            ->method('getLocale')
+            ->willReturn('de')
+        ;
+
+        $adapter = $this->mockAdapter(['loadLanguageFile']);
+        $adapter
+            ->expects($this->atLeastOnce())
+            ->method('loadLanguageFile')
+            ->with('default', 'de')
+        ;
+
+        $framework = $this->mockContaoFramework([System::class => $adapter]);
+        $framework
+            ->expects($this->atLeastOnce())
+            ->method('initialize')
+        ;
+
+        $translator = new Translator($originalTranslator, $framework);
+
+        $this->assertSame('MSC.foo', $translator->trans('MSC.foo', [], 'contao_default'));
+    }
 }

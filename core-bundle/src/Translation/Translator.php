@@ -49,6 +49,10 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
             return $this->translator->trans($id, $parameters, $domain, $locale);
         }
 
+        if (null === $locale) {
+            $locale = $this->translator->getLocale();
+        }
+
         $this->framework->initialize();
         $this->loadLanguageFile(substr($domain, 7), $locale);
 
