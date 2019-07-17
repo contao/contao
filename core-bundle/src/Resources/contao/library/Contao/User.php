@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\EquatableInterface;
@@ -98,7 +99,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class User extends System implements UserInterface, EquatableInterface, \Serializable
+abstract class User extends System implements UserInterface, EquatableInterface, BackupCodeInterface, \Serializable
 {
 	/**
 	 * Object instance (Singleton)
@@ -628,6 +629,27 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		}
 
 		return true;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function isBackupCode(string $code): bool
+	{
+		return in_array($code, $this->arrData['backupCodes']);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function invalidateBackupCode(string $code): void
+	{
+		$key = array_search($code, $this->arrData['backupCodes']);
+
+		if ($key !== false)
+		{
+			unset($this->arrData['backupCodes'][$key]);
+		}
 	}
 
 	/**
