@@ -235,7 +235,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         self::$projectDir = realpath($projectDir) ?: $projectDir;
     }
 
-    public static function create(string $projectDir, bool $debug = false): self
+    public static function create(string $projectDir, Request $request): self
     {
         if (file_exists($projectDir.'/.env')) {
             (new Dotenv(false))->load($projectDir.'/.env');
@@ -257,11 +257,28 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         static::setProjectDir($projectDir);
 
+        $debug = (bool) ($_SERVER['APP_DEBUG'] ?? false);
+
+        if (!isset($_SERVER['APP_DEBUG'])) {
+            $jwtManager = new JwtManager($projectDir);
+            $jwt = $jwtManager->parseRequest($request);
+
+            if (\is_array($jwt) && $jwt['debug'] ?? false) {
+                $debug = true;
+            }
+        }
+
         if ($debug) {
             Debug::enable();
         }
 
-        return new static($debug ? 'dev' : 'prod', $debug);
+        $kernel = new static($debug ? 'dev' : 'prod', $debug);
+
+        if (!isset($_SERVER['APP_DEBUG'])) {
+            $kernel->setJwtManager($jwtManager);
+        }
+
+        return $kernel;
     }
 
     /**
@@ -293,7 +310,10 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         // Set the plugin loader again so it is available at runtime (synthetic service)
         $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
 
-        $container->set('contao_manager.jwt_manager', $this->getJwtManager());
+        // Set the JWT manager only if the debug mode has not been configured in env variables
+        if (!isset($_SERVER['APP_DEBUG'])) {
+            $container->set('contao_manager.jwt_manager', $this->getJwtManager());
+        }
     }
 
     private function getConfigFile(string $file): ?string
