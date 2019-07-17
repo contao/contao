@@ -22,7 +22,9 @@ services:
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
     Contao\CoreBundle\Security\TwoFactor\Authenticator: '@contao.security.two_factor.authenticator'
+    Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager: '@contao.security.two_factor.backup_code_manager'
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
+
 
     # Backwards compatibility
     Contao\CoreBundle\Framework\ContaoFrameworkInterface: '@contao.framework'
@@ -700,6 +702,10 @@ services:
 
     contao.security.two_factor.authenticator:
         class: Contao\CoreBundle\Security\TwoFactor\Authenticator
+        public: true
+
+    contao.security.two_factor.backup_code_manager:
+        class: Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager
         public: true
 
     contao.security.two_factor.provider:

@@ -10,10 +10,13 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
+use Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Back end module "two factor".
@@ -33,11 +36,16 @@ class ModuleTwoFactor extends BackendModule
 	 */
 	protected function compile()
 	{
-		$this->import(BackendUser::class, 'User');
-
 		$container = System::getContainer();
-		$ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
-		$return = $container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref));
+
+		/** @var Security $security */
+		$security = $container->get('security.helper');
+
+		if (!$security->isGranted('IS_AUTHENTICATED_FULLY'))
+		{
+			throw new AccessDeniedException('User is not fully authenticated');
+		}
+
 		$user = BackendUser::getInstance();
 
 		// Inform the user if 2FA is enforced
@@ -46,9 +54,10 @@ class ModuleTwoFactor extends BackendModule
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['twoFactorEnforced']);
 		}
 
+		$ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
+		$return = $container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref));
+
 		$this->Template->href = $this->getReferer(true);
-		$this->Template->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
-		$this->Template->button = $GLOBALS['TL_LANG']['MSC']['backBT'];
 		$this->Template->ref = $ref;
 		$this->Template->action = Environment::get('indexFreeRequest');
 		$this->Template->messages = Message::generateUnwrapped();
@@ -63,12 +72,25 @@ class ModuleTwoFactor extends BackendModule
 			$this->disableTwoFactor($user, $return);
 		}
 
-		$this->Template->isEnabled = (bool) $this->User->useTwoFactor;
-		$this->Template->twoFactor = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
-		$this->Template->explain = $GLOBALS['TL_LANG']['MSC']['twoFactorExplain'];
-		$this->Template->active = $GLOBALS['TL_LANG']['MSC']['twoFactorActive'];
-		$this->Template->enableButton = $GLOBALS['TL_LANG']['MSC']['enable'];
-		$this->Template->disableButton = $GLOBALS['TL_LANG']['MSC']['disable'];
+		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_show_backup_codes')
+		{
+			if (!$user->backupCodes || !\count(json_decode($user->backupCodes, true)))
+			{
+				$this->generateBackupCodes($user);
+			}
+
+			$this->Template->showBackupCodes = true;
+		}
+
+		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_generate_backup_codes')
+		{
+			$this->generateBackupCodes($user);
+
+			$this->Template->showBackupCodes = true;
+		}
+
+		$this->Template->isEnabled = (bool) $user->useTwoFactor;
+		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 	}
 
 	/**
@@ -119,10 +141,7 @@ class ModuleTwoFactor extends BackendModule
 
 		$this->Template->enable = true;
 		$this->Template->secret = Base32::encodeUpperUnpadded($user->secret);
-		$this->Template->textCode = $GLOBALS['TL_LANG']['MSC']['twoFactorTextCode'];
 		$this->Template->qrCode = base64_encode($authenticator->getQrCode($user, $request));
-		$this->Template->scan = $GLOBALS['TL_LANG']['MSC']['twoFactorScan'];
-		$this->Template->verify = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
 		$this->Template->verifyHelp = $verifyHelp;
 	}
 
@@ -142,8 +161,21 @@ class ModuleTwoFactor extends BackendModule
 
 		$user->secret = null;
 		$user->useTwoFactor = '';
+		$user->backupCodes = null;
 		$user->save();
 
 		throw new RedirectResponseException($return);
+	}
+
+	/**
+	 * Generate backup codes for two-factor authentication
+	 *
+	 * @param BackendUser $user
+	 */
+	private function generateBackupCodes(BackendUser $user)
+	{
+		/** @var BackupCodeManager $backupCodeManager */
+		$backupCodeManager = System::getContainer()->get('contao.security.two_factor.backup_code_manager');
+		$backupCodeManager->generateBackupCodes($user);
 	}
 }
