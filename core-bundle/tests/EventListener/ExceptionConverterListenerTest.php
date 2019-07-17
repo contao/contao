@@ -238,27 +238,22 @@ class ExceptionConverterListenerTest extends TestCase
      */
     private function mockConnection(int $rowCount = 1): Connection
     {
-        $statement = $this->createMock(Statement::class);
-        $statement
+        $row = $this->createMock(Statement::class);
+        $row
             ->method('fetchColumn')
             ->willReturn($rowCount)
         ;
 
-        $queryBuilder = $this->createMock(QueryBuilder::class);
-        $queryBuilder
-            ->method($this->logicalNot($this->equalTo('execute')))
-            ->willReturnSelf()
-        ;
-
-        $queryBuilder
+        $statement = $this->createMock(Statement::class);
+        $statement
             ->method('execute')
-            ->willReturn($statement)
+            ->willReturn($row)
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('createQueryBuilder')
-            ->willReturn($queryBuilder)
+            ->method('prepare')
+            ->willReturn($statement)
         ;
 
         return $connection;
