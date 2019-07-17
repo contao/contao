@@ -45,6 +45,7 @@ class RebuildIndex extends Backend implements \executable
 		$this->import(BackendUser::class, 'User');
 
 		$time = time();
+		$arrUsernames = [];
 		$arrUser = array(''=>'-');
 		$objUser = null;
 
@@ -73,6 +74,7 @@ class RebuildIndex extends Backend implements \executable
 		{
 			while ($objUser->next())
 			{
+				$arrUsernames[$objUser->id] = $objUser->username;
 				$arrUser[$objUser->id] = $objUser->username . ' (' . $objUser->id . ')';
 			}
 		}
@@ -117,12 +119,9 @@ class RebuildIndex extends Backend implements \executable
 			$strUser = Input::get('user');
 
 			// Log in the front end user
-			if (is_numeric($strUser) && $strUser > 0 && isset($arrUser[$strUser]))
+			if (is_numeric($strUser) && $strUser > 0 && isset($arrUsernames[$strUser]))
 			{
-				$objUser = $this->Database->prepare("SELECT username FROM tl_member WHERE id=?")
-										  ->execute($strUser);
-
-				if (!$objUser->numRows || !$objAuthenticator->authenticateFrontendUser($objUser->username, false))
+				if (!$objAuthenticator->authenticateFrontendUser($arrUsernames[$strUser], false))
 				{
 					$objAuthenticator->removeFrontendAuthentication();
 				}
