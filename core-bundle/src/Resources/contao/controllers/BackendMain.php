@@ -14,7 +14,6 @@ use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\HttpKernel\JwtManager;
 use Contao\CoreBundle\Util\PackageUtil;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -98,20 +97,9 @@ class BackendMain extends Backend
 			// This will throw an exception if the JwtManager does not exist (not a Managed Edition).
 			// As we do not show the debug button in that case, this should never be reached.
 			$objJwtManager = System::getContainer()->get('contao_manager.jwt_manager');
-			$script = Input::get('enable') ? '/preview.php' : '';
-
-			if (!$objJwtManager instanceof JwtManager)
-			{
-				if (($qs = $objRequest->getQueryString()) !== null)
-				{
-					$qs = '?' . $qs;
-				}
-
-				$this->redirect($script . $objRequest->getPathInfo() . $qs);
-			}
 
 			$strReferer = Input::get('referer') ? '?' . base64_decode(Input::get('referer', true)) : '';
-			$objResponse = new RedirectResponse($script . $objRequest->getPathInfo() . $strReferer);
+			$objResponse = new RedirectResponse($objRequest->getPathInfo() . $strReferer);
 
 			if (Input::get('enable') != $container->get('kernel')->isDebug())
 			{
@@ -296,7 +284,7 @@ class BackendMain extends Backend
 		$this->Template->preview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
 		$this->Template->previewTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreviewTitle']);
 		$this->Template->profile = $GLOBALS['TL_LANG']['MSC']['profile'];
-		$this->Template->canDebug = $this->User->isAdmin;
+		$this->Template->canDebug = $this->User->isAdmin && System::getContainer()->has('contao_manager.jwt_manager');
 		$this->Template->isDebug = $container->get('kernel')->isDebug();
 		$this->Template->debugMode = $GLOBALS['TL_LANG']['MSC']['debugMode'];
 		$this->Template->referer = $referer;
