@@ -7,6 +7,9 @@ imports:
 parameters:
     locale: en
 
+contao:
+    preview_script: '/preview.php'
+
 # Framework configuration
 framework:
     esi: { enabled: true }

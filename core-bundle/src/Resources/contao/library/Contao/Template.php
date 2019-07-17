@@ -351,7 +351,7 @@ abstract class Template extends Controller
 		$objContext = $objRouter->getContext();
 
 		$objPreviewContext = clone $objContext;
-		$objPreviewContext->setBaseUrl('/preview.php');
+		$objPreviewContext->setBaseUrl(System::getContainer()->getParameter('contao.preview_script'));
 
 		$objRouter->setContext($objPreviewContext);
 

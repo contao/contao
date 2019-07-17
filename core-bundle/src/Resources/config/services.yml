@@ -559,6 +559,7 @@ services:
             - '@security.token_storage'
             - '@session'
             - '@security.authentication.trust_resolver'
+            - '%contao.preview_script%'
         public: true
 
     contao.security.two_factor.authenticator:

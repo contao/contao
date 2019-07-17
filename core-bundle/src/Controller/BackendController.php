@@ -104,8 +104,10 @@ class BackendController extends AbstractController
      */
     public function previewAction(Request $request): Response
     {
-        if ('/preview.php' !== $request->getScriptName()) {
-            return $this->redirect('/preview.php'.$request->getRequestUri());
+        $previewScript = $this->getParameter('contao.preview_script');
+
+        if ($request->getScriptName() !== $previewScript) {
+            return $this->redirect($previewScript.$request->getRequestUri());
         }
 
         $this->get('contao.framework')->initialize();
