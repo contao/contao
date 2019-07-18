@@ -45,7 +45,7 @@ class RebuildIndex extends Backend implements \executable
 		$this->import(BackendUser::class, 'User');
 
 		$time = time();
-		$arrUsernames = [];
+		$arrUsernames = array();
 		$arrUser = array(''=>'-');
 		$objUser = null;
 
