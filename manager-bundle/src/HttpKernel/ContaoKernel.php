@@ -224,7 +224,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             (new Dotenv(false))->load($projectDir.'/.env');
         }
         
-        if (!$debug && $_SERVER['APP_DEBUG']) {
+        if ($_SERVER['APP_DEBUG']) {
             $debug = true;
         }
 
