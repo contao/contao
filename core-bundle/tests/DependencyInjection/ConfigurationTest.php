@@ -110,6 +110,7 @@ class ConfigurationTest extends TestCase
         yield ['app'];
         yield ['assets'];
         yield ['bin'];
+        yield ['config'];
         yield ['contao'];
         yield ['plugins'];
         yield ['share'];
