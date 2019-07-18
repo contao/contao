@@ -112,7 +112,7 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf(InternalServerErrorHttpException::class, $exception);
+        $this->assertInstanceOf(NotFoundHttpException::class, $exception);
         $this->assertInstanceOf(NoActivePageFoundException::class, $exception->getPrevious());
     }
 
@@ -138,7 +138,7 @@ class ExceptionConverterListenerTest extends TestCase
 
         $exception = $event->getException();
 
-        $this->assertInstanceOf(InternalServerErrorHttpException::class, $exception);
+        $this->assertInstanceOf(NotFoundHttpException::class, $exception);
         $this->assertInstanceOf(NoRootPageFoundException::class, $exception->getPrevious());
     }
 
