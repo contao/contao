@@ -1003,29 +1003,4 @@ class RoutingTest extends WebTestCase
             'root-without-fallback-language.local',
         ];
     }
-
-    public function testThrowsANotRootPageFoundExceptionsIfThereAreNoPages(): void
-    {
-        static::getConnection()->exec('TRUNCATE tl_page');
-
-        Config::set('addLanguageToUrl', true);
-
-        $_SERVER['REQUEST_URI'] = '/en/';
-        $_SERVER['HTTP_HOST'] = 'foobar.local';
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
-
-        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
-        System::setContainer($client->getContainer());
-
-        $crawler = $client->request('GET', '/en/');
-        $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
-        $response = $client->getResponse();
-
-        $this->assertSame(500, $response->getStatusCode());
-        $this->assertContains('No root page found', $title);
-
-        static::loadFileIntoDatabase(__DIR__.'/app/Resources/contao_test.sql');
-    }
 }

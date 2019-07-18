@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
-use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
@@ -58,7 +57,6 @@ class ExceptionConverterListener
         static $mapper = [
             AccessDeniedException::class => 'AccessDeniedHttpException',
             ForwardPageNotFoundException::class => 'InternalServerErrorHttpException',
-            IncompleteInstallationException::class => 'InternalServerErrorHttpException',
             InsecureInstallationException::class => 'InternalServerErrorHttpException',
             InsufficientAuthenticationException::class => 'UnauthorizedHttpException',
             InternalServerErrorException::class => 'InternalServerErrorHttpException',

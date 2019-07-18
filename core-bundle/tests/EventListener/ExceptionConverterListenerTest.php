@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
-use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
@@ -63,19 +62,6 @@ class ExceptionConverterListenerTest extends TestCase
 
         $this->assertInstanceOf(InternalServerErrorHttpException::class, $exception);
         $this->assertInstanceOf(ForwardPageNotFoundException::class, $exception->getPrevious());
-    }
-
-    public function testConvertsIncompleteInstallationExceptions(): void
-    {
-        $event = $this->getResponseEvent(new IncompleteInstallationException());
-
-        $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
-
-        $exception = $event->getException();
-
-        $this->assertInstanceOf(InternalServerErrorHttpException::class, $exception);
-        $this->assertInstanceOf(IncompleteInstallationException::class, $exception->getPrevious());
     }
 
     public function testConvertsInsecureInstallationExceptions(): void
