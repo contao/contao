@@ -776,7 +776,7 @@ class Versions extends Controller
 
 		$this->import(BackendUser::class, 'User');
 
-		return $this->User->username;
+		return $this->User->username ?: php_sapi_name();
 	}
 
 	/**
@@ -793,7 +793,7 @@ class Versions extends Controller
 
 		$this->import(BackendUser::class, 'User');
 
-		return $this->User->id;
+		return $this->User->id ?: 0;
 	}
 
 	/**
