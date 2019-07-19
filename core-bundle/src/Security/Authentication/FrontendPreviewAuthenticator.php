@@ -12,28 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\FrontendUser;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticator
 {
     /**
+     * @var Security
+     */
+    private $security;
+
+    /**
      * @var SessionInterface
      */
     private $session;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
 
     /**
      * @var UserProviderInterface
@@ -45,34 +44,27 @@ class FrontendPreviewAuthenticator
      */
     private $logger;
 
-    public function __construct(SessionInterface $session, TokenStorageInterface $tokenStorage, UserProviderInterface $userProvider, LoggerInterface $logger = null)
+    public function __construct(Security $security, SessionInterface $session, UserProviderInterface $userProvider, LoggerInterface $logger = null)
     {
+        $this->security = $security;
         $this->session = $session;
-        $this->tokenStorage = $tokenStorage;
         $this->userProvider = $userProvider;
         $this->logger = $logger;
     }
 
     public function authenticateFrontendUser(string $username, bool $showUnpublished): bool
     {
-        $backendUser = $this->loadBackendUser();
-
-        if (null === $backendUser) {
+        if (!$this->security->isGranted('ROLE_USER')) {
             return false;
         }
 
-        // The back end user does not have permission to log in front end users
-        if (!$backendUser->isAdmin && (empty($backendUser->amg) || !\is_array($backendUser->amg))) {
+        $user = $this->loadFrontendUser($username);
+
+        if (null === $user) {
             return false;
         }
 
-        $frontendUser = $this->loadFrontendUser($username, $backendUser);
-
-        if (null === $frontendUser) {
-            return false;
-        }
-
-        $token = new FrontendPreviewToken($frontendUser, $showUnpublished);
+        $token = new FrontendPreviewToken($user, $showUnpublished);
 
         $this->session->set('_security_contao_frontend', serialize($token));
 
@@ -81,9 +73,7 @@ class FrontendPreviewAuthenticator
 
     public function authenticateFrontendGuest(bool $showUnpublished): bool
     {
-        $backendUser = $this->loadBackendUser();
-
-        if (null === $backendUser) {
+        if (!$this->security->isGranted('ROLE_USER')) {
             return false;
         }
 
@@ -108,32 +98,10 @@ class FrontendPreviewAuthenticator
         return true;
     }
 
-    private function loadBackendUser(): ?BackendUser
-    {
-        if (!$this->session->isStarted()) {
-            return null;
-        }
-
-        $token = $this->tokenStorage->getToken();
-
-        // Check if a back end user is authenticated
-        if (null === $token || !$token->isAuthenticated()) {
-            return null;
-        }
-
-        $backendUser = $token->getUser();
-
-        if (!$backendUser instanceof BackendUser) {
-            return null;
-        }
-
-        return $backendUser;
-    }
-
     /**
      * Loads the front end user and checks its group access permissions.
      */
-    private function loadFrontendUser(string $username, BackendUser $backendUser): ?FrontendUser
+    private function loadFrontendUser(string $username): ?FrontendUser
     {
         try {
             $frontendUser = $this->userProvider->loadUserByUsername($username);
@@ -153,11 +121,10 @@ class FrontendPreviewAuthenticator
             return null;
         }
 
-        $allowedGroups = StringUtil::deserialize($backendUser->amg, true);
         $frontendGroups = StringUtil::deserialize($frontendUser->groups, true);
 
         // The front end user does not belong to a group that the back end user is allowed to log in
-        if (!$backendUser->isAdmin && !\count(array_intersect($frontendGroups, $allowedGroups))) {
+        if (!$this->security->isGranted('contao_user.amg', $frontendGroups)) {
             return null;
         }
 

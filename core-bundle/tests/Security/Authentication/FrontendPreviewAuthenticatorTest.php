@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Authentication;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\CoreBundle\Tests\TestCase;
@@ -20,165 +19,81 @@ use Contao\FrontendUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticatorTest extends TestCase
 {
-    public function testDoesNotAuthenticateIfTheSessionIsNotStarted(): void
-    {
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->expects($this->once())
-            ->method('isStarted')
-            ->willReturn(false)
-        ;
-
-        $authenticator = $this->getAuthenticator($session);
-
-        $this->assertFalse($authenticator->authenticateFrontendUser('foobar', false));
-    }
-
-    public function testDoesNotAuthenticateIfTheTokenStorageIsEmpty(): void
-    {
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn(null)
-        ;
-
-        $authenticator = $this->getAuthenticator(null, $tokenStorage);
-
-        $this->assertFalse($authenticator->authenticateFrontendUser('foobar', false));
-    }
-
-    public function testDoesNotAuthenticateIfTheTokenIsNotAuthenticated(): void
-    {
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('isAuthenticated')
-            ->willReturn(false)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $authenticator = $this->getAuthenticator(null, $tokenStorage);
-
-        $this->assertFalse($authenticator->authenticateFrontendUser('foobar', false));
-    }
-
-    public function testDoesNotAuthenticateIfTheTokenDoesNotContainABackendUser(): void
-    {
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('isAuthenticated')
-            ->willReturn(true)
-        ;
-
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class))
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $authenticator = $this->getAuthenticator(null, $tokenStorage);
-
-        $this->assertFalse($authenticator->authenticateFrontendUser('foobar', false));
-    }
-
     /**
-     * @dataProvider getAccessPermissions
+     * @dataProvider getShowUnpublishedData
      */
-    public function testChecksTheBackendUsersAccessPermissions(bool $isAdmin, $amg, bool $isValid): void
+    public function testAuthenticatesAFrontendUser(bool $showUnpublished): void
     {
-        /** @var BackendUser&MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class);
-        $user->isAdmin = $isAdmin;
-        $user->amg = $amg;
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('isAuthenticated')
-            ->willReturn(true)
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->exactly(2))
+            ->method('isGranted')
+            ->willReturnOnConsecutiveCalls(true, true)
         ;
 
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
+        $session = $this->mockSession();
 
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
+        /** @var FrontendUser&MockObject $user */
+        $user = $this->createPartialMock(FrontendUser::class, ['getRoles']);
+        $user
             ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token)
+            ->method('getRoles')
+            ->willReturn(['ROLE_MEMBER'])
         ;
 
         $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
-            ->expects($this->exactly((int) $isValid))
             ->method('loadUserByUsername')
-            ->willReturn($this->createMock(UserInterface::class))
+            ->willReturn($user)
         ;
 
-        $authenticator = $this->getAuthenticator(null, $tokenStorage, $userProvider);
+        $authenticator = $this->getAuthenticator($security, $session, $userProvider);
+
+        $this->assertTrue($authenticator->authenticateFrontendUser('foobar', $showUnpublished));
+        $this->assertTrue($session->has('_security_contao_frontend'));
+
+        $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
+
+        $this->assertInstanceOf(FrontendPreviewToken::class, $token);
+        $this->assertInstanceOf(FrontendUser::class, $token->getUser());
+        $this->assertSame($showUnpublished, $token->showUnpublished());
+    }
+
+    public function getShowUnpublishedData(): \Generator
+    {
+        yield [true];
+        yield [false];
+    }
+
+    public function testDoesNotAuthenticateAFrontendUserIfThereIsNoBackendUser(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(false)
+        ;
+
+        $authenticator = $this->getAuthenticator($security);
 
         $this->assertFalse($authenticator->authenticateFrontendUser('foobar', false));
     }
 
-    public function getAccessPermissions(): \Generator
+    public function testDoesNotAuthenticateAFrontendUserIfTheUsernameIsInvalid(): void
     {
-        yield [true, null, true];
-        yield [false, null, false];
-        yield [false, 'foobar', false];
-        yield [false, [], false];
-        yield [false, ['foobar'], true];
-    }
-
-    public function testDoesNotAuthenticateIfThereIsNotFrontendUser(): void
-    {
-        /** @var BackendUser&MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class);
-        $user->isAdmin = true;
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
+        $security = $this->createMock(Security::class);
+        $security
             ->expects($this->once())
-            ->method('isAuthenticated')
+            ->method('isGranted')
+            ->with('ROLE_USER')
             ->willReturn(true)
-        ;
-
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token)
         ;
 
         $userProvider = $this->createMock(UserProviderInterface::class);
@@ -195,269 +110,82 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->with('Could not find a front end user with the username "foobar"')
         ;
 
-        $authenticator = $this->getAuthenticator(null, $tokenStorage, $userProvider, $logger);
+        $authenticator = $this->getAuthenticator($security, null, $userProvider, $logger);
+
+        $this->assertFalse($authenticator->authenticateFrontendUser('foobar', false));
+    }
+
+    public function testDoesNotAuthenticateAFrontendUserIfThereIsNoAllowedMemberGroup(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->exactly(2))
+            ->method('isGranted')
+            ->willReturnOnConsecutiveCalls(true, false)
+        ;
+
+        /** @var FrontendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user
+            ->expects($this->never())
+            ->method('getRoles')
+            ->willReturn(['ROLE_MEMBER'])
+        ;
+
+        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider
+            ->method('loadUserByUsername')
+            ->willReturn($user)
+        ;
+
+        $authenticator = $this->getAuthenticator($security, null, $userProvider);
 
         $this->assertFalse($authenticator->authenticateFrontendUser('foobar', false));
     }
 
     /**
-     * @dataProvider getFrontendGroupAccessPermissions
+     * @dataProvider getShowUnpublishedData
      */
-    public function testChecksTheBackendUsersFrontendGroupAccess(bool $isAdmin, $amg, $groups, bool $isValid): void
+    public function testAuthenticatesAFrontendGuest(bool $showUnpublished): void
     {
-        /** @var BackendUser&MockObject $backendUser */
-        $backendUser = $this->mockClassWithProperties(BackendUser::class);
-        $backendUser->isAdmin = $isAdmin;
-        $backendUser->amg = $amg;
-
-        /** @var FrontendUser&MockObject $frontendUser */
-        $frontendUser = $this->mockClassWithProperties(FrontendUser::class);
-        $frontendUser->groups = $groups;
-
-        $frontendUser
-            ->method('getRoles')
-            ->willReturn([])
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
+        $security = $this->createMock(Security::class);
+        $security
             ->expects($this->once())
-            ->method('isAuthenticated')
+            ->method('isGranted')
             ->willReturn(true)
-        ;
-
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($backendUser)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $userProvider = $this->createMock(UserProviderInterface::class);
-        $userProvider
-            ->method('loadUserByUsername')
-            ->willReturn($frontendUser)
-        ;
-
-        $authenticator = $this->getAuthenticator(null, $tokenStorage, $userProvider);
-
-        $this->assertSame($isValid, $authenticator->authenticateFrontendUser('foobar', false));
-    }
-
-    public function getFrontendGroupAccessPermissions(): \Generator
-    {
-        yield [false, null, null, false];
-        yield [true, null, null, true];
-        yield [false, [], [], false];
-        yield [false, ['foo', 'bar'], [], false];
-        yield [false, [], ['foo', 'bar'], false];
-        yield [false, ['foo', 'bar'], ['foo', 'bar'], true];
-        yield [false, ['foo', 'bar'], ['foo'], true];
-    }
-
-    public function testAuthenticatesAFrontendUserWithUnpublishedElementsHidden(): void
-    {
-        /** @var BackendUser&MockObject $backendUser */
-        $backendUser = $this->mockClassWithProperties(BackendUser::class);
-        $backendUser->isAdmin = true;
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('isAuthenticated')
-            ->willReturn(true)
-        ;
-
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($backendUser)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token)
         ;
 
         $session = $this->mockSession();
-        $session->start();
+        $authenticator = $this->getAuthenticator($security, $session);
 
-        /** @var FrontendUser&MockObject $frontendUser */
-        $frontendUser = $this->createPartialMock(FrontendUser::class, ['getRoles']);
-        $frontendUser
-            ->method('getRoles')
-            ->willReturn([])
-        ;
-
-        $userProvider = $this->createMock(UserProviderInterface::class);
-        $userProvider
-            ->method('loadUserByUsername')
-            ->willReturn($frontendUser)
-        ;
-
-        $authenticator = $this->getAuthenticator($session, $tokenStorage, $userProvider);
-
-        $this->assertTrue($authenticator->authenticateFrontendUser('foobar', false));
+        $this->assertTrue($authenticator->authenticateFrontendGuest($showUnpublished));
         $this->assertTrue($session->has('_security_contao_frontend'));
 
         $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
 
         $this->assertInstanceOf(FrontendPreviewToken::class, $token);
-        $this->assertInstanceOf(FrontendUser::class, $token->getUser());
-        $this->assertFalse($token->showUnpublished());
+        $this->assertSame('anon.', $token->getUser());
+        $this->assertSame($showUnpublished, $token->showUnpublished());
     }
 
-    public function testAuthenticatesAFrontendUserWithUnpublishedElementsVisible(): void
+    public function testDoesNotAuthenticateAFrontendGuestIfThereIsNoBackendUser(): void
     {
-        /** @var BackendUser&MockObject $backendUser */
-        $backendUser = $this->mockClassWithProperties(BackendUser::class);
-        $backendUser->isAdmin = true;
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
+        $security = $this->createMock(Security::class);
+        $security
             ->expects($this->once())
-            ->method('isAuthenticated')
-            ->willReturn(true)
+            ->method('isGranted')
+            ->willReturn(false)
         ;
 
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($backendUser)
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->never())
+            ->method('set')
         ;
 
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $session = $this->mockSession();
-        $session->start();
-
-        /** @var FrontendUser&MockObject $frontendUser */
-        $frontendUser = $this->createPartialMock(FrontendUser::class, ['getRoles']);
-        $frontendUser
-            ->method('getRoles')
-            ->willReturn([])
-        ;
-
-        $userProvider = $this->createMock(UserProviderInterface::class);
-        $userProvider
-            ->method('loadUserByUsername')
-            ->willReturn($frontendUser)
-        ;
-
-        $authenticator = $this->getAuthenticator($session, $tokenStorage, $userProvider);
-
-        $this->assertTrue($authenticator->authenticateFrontendUser('foobar', true));
-        $this->assertTrue($session->has('_security_contao_frontend'));
-
-        $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
-
-        $this->assertInstanceOf(FrontendPreviewToken::class, $token);
-        $this->assertInstanceOf(FrontendUser::class, $token->getUser());
-        $this->assertTrue($token->showUnpublished());
-    }
-
-    public function testDoesNotAuthenticateGuestsIfThereIsNoBackendUser(): void
-    {
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn(null)
-        ;
-
-        $session = $this->mockSession();
-        $session->start();
-
-        $authenticator = $this->getAuthenticator($session, $tokenStorage);
+        $authenticator = $this->getAuthenticator($security, $session);
 
         $this->assertFalse($authenticator->authenticateFrontendGuest(false));
-    }
-
-    public function testAuthenticatesGuestsWithUnpublishedElementsHidden(): void
-    {
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('isAuthenticated')
-            ->willReturn(true)
-        ;
-
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($this->createMock(BackendUser::class))
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $session = $this->mockSession();
-        $session->start();
-
-        $authenticator = $this->getAuthenticator($session, $tokenStorage);
-
-        $this->assertTrue($authenticator->authenticateFrontendGuest(false));
-        $this->assertTrue($session->has('_security_contao_frontend'));
-
-        $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
-
-        $this->assertInstanceOf(FrontendPreviewToken::class, $token);
-        $this->assertSame('anon.', $token->getUser());
-        $this->assertFalse($token->showUnpublished());
-    }
-
-    public function testAuthenticatesGuestsWithUnpublishedElementsVisible(): void
-    {
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('isAuthenticated')
-            ->willReturn(true)
-        ;
-
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($this->createMock(BackendUser::class))
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->expects($this->once())
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $session = $this->mockSession();
-        $session->start();
-
-        $authenticator = $this->getAuthenticator($session, $tokenStorage);
-
-        $this->assertTrue($authenticator->authenticateFrontendGuest(true));
-        $this->assertTrue($session->has('_security_contao_frontend'));
-
-        $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
-
-        $this->assertInstanceOf(FrontendPreviewToken::class, $token);
-        $this->assertSame('anon.', $token->getUser());
-        $this->assertTrue($token->showUnpublished());
     }
 
     public function testRemovesTheAuthenticationFromTheSession(): void
@@ -482,7 +210,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->with('_security_contao_frontend')
         ;
 
-        $authenticator = $this->getAuthenticator($session);
+        $authenticator = $this->getAuthenticator(null, $session);
 
         $this->assertTrue($authenticator->removeFrontendAuthentication());
     }
@@ -496,7 +224,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(false)
         ;
 
-        $authenticator = $this->getAuthenticator($session);
+        $authenticator = $this->getAuthenticator(null, $session);
 
         $this->assertFalse($authenticator->removeFrontendAuthentication());
     }
@@ -517,29 +245,29 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(false)
         ;
 
-        $authenticator = $this->getAuthenticator($session);
+        $authenticator = $this->getAuthenticator(null, $session);
 
         $this->assertFalse($authenticator->removeFrontendAuthentication());
     }
 
     /**
+     * @param Security&MockObject              $security
      * @param SessionInterface&MockObject      $session
-     * @param TokenStorageInterface&MockObject $tokenStorage
      * @param UserProviderInterface&MockObject $userProvider
      * @param LoggerInterface&MockObject       $logger
      */
-    private function getAuthenticator(SessionInterface $session = null, TokenStorageInterface $tokenStorage = null, UserProviderInterface $userProvider = null, LoggerInterface $logger = null): FrontendPreviewAuthenticator
+    private function getAuthenticator(Security $security = null, SessionInterface $session = null, UserProviderInterface $userProvider = null, LoggerInterface $logger = null): FrontendPreviewAuthenticator
     {
+        if (null === $security) {
+            $security = $this->createMock(Security::class);
+        }
+
         if (null === $session) {
             $session = $this->createMock(SessionInterface::class);
             $session
                 ->method('isStarted')
                 ->willReturn(true)
             ;
-        }
-
-        if (null === $tokenStorage) {
-            $tokenStorage = $this->createMock(TokenStorageInterface::class);
         }
 
         if (null === $userProvider) {
@@ -550,6 +278,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             $logger = $this->createMock(LoggerInterface::class);
         }
 
-        return new FrontendPreviewAuthenticator($session, $tokenStorage, $userProvider, $logger);
+        return new FrontendPreviewAuthenticator($security, $session, $userProvider, $logger);
     }
 }

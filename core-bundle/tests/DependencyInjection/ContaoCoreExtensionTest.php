@@ -102,6 +102,7 @@ use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\Provider;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Security\User\UserChecker;
+use Contao\CoreBundle\Security\Voter\BackendAccessVoter;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\CoreBundle\Slug\ValidCharacters;
@@ -1598,6 +1599,20 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('logger', (string) $definition->getArgument(3));
     }
 
+    public function testRegistersTheSecurityBackendAccessVoter(): void
+    {
+        $this->assertTrue($this->container->has('contao.security.backend_access_voter'));
+
+        $definition = $this->container->getDefinition('contao.security.backend_access_voter');
+
+        $this->assertSame(BackendAccessVoter::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('security.voter', $tags);
+    }
+
     public function testRegistersTheSecurityEntryPoint(): void
     {
         $this->assertTrue($this->container->has('contao.security.entry_point'));
@@ -1639,8 +1654,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(FrontendPreviewAuthenticator::class, $definition->getClass());
         $this->assertFalse($definition->isPrivate());
-        $this->assertSame('session', (string) $definition->getArgument(0));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(1));
+        $this->assertSame('security.helper', (string) $definition->getArgument(0));
+        $this->assertSame('session', (string) $definition->getArgument(1));
         $this->assertSame('contao.security.frontend_user_provider', (string) $definition->getArgument(2));
         $this->assertSame('logger', (string) $definition->getArgument(3));
     }
