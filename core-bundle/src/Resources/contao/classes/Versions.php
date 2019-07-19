@@ -776,7 +776,7 @@ class Versions extends Controller
 
 		$this->import(BackendUser::class, 'User');
 
-		return $this->User->username ?: php_sapi_name();
+		return $this->User->username ?: '';
 	}
 
 	/**
