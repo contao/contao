@@ -79,6 +79,7 @@ use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Routing\FrontendLoader;
+use Contao\CoreBundle\Routing\ImagesLoader;
 use Contao\CoreBundle\Routing\LegacyRouteProvider;
 use Contao\CoreBundle\Routing\Matcher\DomainFilter;
 use Contao\CoreBundle\Routing\Matcher\LanguageFilter;
@@ -914,7 +915,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
     }
 
-    public function testRegistersTheForwardFragmentRenderer(): void
+    public function testRegistersTheFragmentRendererForward(): void
     {
         $this->assertTrue($this->container->has('contao.fragment.renderer.forward'));
 
@@ -1365,6 +1366,23 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(['_scope', 'frontend'], $methodCalls[0][1]);
     }
 
+    public function testRegistersTheRoutingImagesLoader(): void
+    {
+        $this->assertTrue($this->container->has('contao.routing.images_loader'));
+
+        $definition = $this->container->getDefinition('contao.routing.images_loader');
+
+        $this->assertSame(ImagesLoader::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(0));
+        $this->assertSame('%contao.image.target_dir%', (string) $definition->getArgument(1));
+        $this->assertSame('filesystem', (string) $definition->getArgument(2));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('routing.loader', $tags);
+    }
+
     public function testRegistersTheRoutingInputEnhancer(): void
     {
         $this->assertTrue($this->container->has('contao.routing.input_enhancer'));
@@ -1606,6 +1624,11 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertNull($definition->getArgument(3));
         $this->assertNull($definition->getArgument(4));
         $this->assertSame('logger', (string) $definition->getArgument(5));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('monolog.logger', $tags);
+        $this->assertSame('security', $tags['monolog.logger'][0]['channel']);
     }
 
     public function testRegistersTheSecurityFrontendPreviewAuthenticator(): void
@@ -1693,6 +1716,11 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(Provider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('contao.security.two_factor.authenticator', (string) $definition->getArgument(0));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('scheb_two_factor.provider', $tags);
+        $this->assertSame('contao', $tags['scheb_two_factor.provider'][0]['alias']);
     }
 
     public function testRegistersTheSecurityUserChecker(): void
