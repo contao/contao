@@ -499,6 +499,11 @@ services:
             - 'Contao\BackendUser'
             - '@logger'
 
+    contao.security.backend_access_voter:
+        class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
+        tags:
+            - { name: security.voter }
+
     contao.security.entry_point:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint
         arguments:
