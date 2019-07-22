@@ -151,7 +151,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,
-                'kernel.project_dir' => $this->getTempDir(),
+                'kernel.project_dir' => static::getTempDir(),
                 'kernel.default_locale' => 'en',
             ])
         );
@@ -1568,7 +1568,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
         $this->assertSame('contao.framework', (string) $definition->getArgument(1));
-        $this->assertSame('logger', (string) $definition->getArgument(2));
+        $this->assertSame('contao_manager.jwt_manager', (string) $definition->getArgument(2));
+        $this->assertSame('logger', (string) $definition->getArgument(3));
     }
 
     public function testRegistersTheSecurityBackendUserProvider(): void
@@ -1669,6 +1670,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(LogoutSuccessHandler::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
+        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
+        $this->assertSame('contao_manager.jwt_manager', (string) $definition->getArgument(2));
     }
 
     public function testRegistersTheSecurityLogoutHandler(): void
@@ -1696,6 +1699,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
         $this->assertSame('session', (string) $definition->getArgument(3));
         $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(4));
+        $this->assertSame('%contao.preview_script%', (string) $definition->getArgument(5));
     }
 
     public function testRegistersTheSecurityTwoFactorAuthenticator(): void
@@ -1894,7 +1898,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,
-                'kernel.project_dir' => $this->getTempDir(),
+                'kernel.project_dir' => static::getTempDir(),
                 'kernel.default_locale' => 'en',
             ])
         );
@@ -1902,7 +1906,7 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load([], $container);
 
-        $this->assertSame($this->getTempDir().'/assets/images', $container->getParameter('contao.image.target_dir'));
+        $this->assertSame(static::getTempDir().'/assets/images', $container->getParameter('contao.image.target_dir'));
 
         $params = [
             'contao' => [
@@ -1913,6 +1917,6 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load($params, $container);
 
-        $this->assertSame($this->getTempDir().'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
+        $this->assertSame(static::getTempDir().'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
     }
 }

@@ -68,7 +68,8 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext($firewallContext),
             $tokenStorage,
             $session,
-            $this->trustResolver
+            $this->trustResolver,
+            ''
         );
 
         if (FrontendUser::class === $class) {
@@ -97,7 +98,8 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext($firewallContext),
             $this->mockTokenStorage($class),
             $this->mockSessionWithToken($token),
-            $this->trustResolver
+            $this->trustResolver,
+            ''
         );
 
         if (FrontendUser::class === $class) {
@@ -123,7 +125,8 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(FrontendUser::class),
             $this->mockSessionWithToken($token),
-            $this->trustResolver
+            $this->trustResolver,
+            ''
         );
 
         $this->assertSame('foobar', $tokenChecker->getFrontendUsername());
@@ -139,7 +142,8 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_frontend'),
             $this->mockTokenStorage(BackendUser::class),
             $this->mockSessionWithToken($token),
-            $this->trustResolver
+            $this->trustResolver,
+            ''
         );
 
         $this->assertSame('foobar', $tokenChecker->getBackendUsername());
@@ -153,7 +157,7 @@ class TokenCheckerTest extends TestCase
         $request = new Request();
         $request->server->set('SCRIPT_NAME', $script);
 
-        if ('/preview.php' === $script) {
+        if ('' !== $script) {
             $session = $this->mockSessionWithToken($token);
         } else {
             $session = $this->createMock(SessionInterface::class);
@@ -168,7 +172,8 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(BackendUser::class),
             $session,
-            $this->trustResolver
+            $this->trustResolver,
+            '/preview.php'
         );
 
         $this->assertSame($expect, $tokenChecker->isPreviewMode());
@@ -201,7 +206,8 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(BackendUser::class),
             $session,
-            $this->trustResolver
+            $this->trustResolver,
+            ''
         );
 
         $this->assertFalse($tokenChecker->hasFrontendUser());
@@ -227,7 +233,8 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_frontend'),
             $this->mockTokenStorage(FrontendUser::class),
             $session,
-            $this->trustResolver
+            $this->trustResolver,
+            ''
         );
 
         $this->assertFalse($tokenChecker->hasBackendUser());
@@ -259,7 +266,8 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(BackendUser::class),
             $session,
-            $this->trustResolver
+            $this->trustResolver,
+            ''
         );
 
         $this->assertNull($tokenChecker->getFrontendUsername());
@@ -274,7 +282,8 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_frontend'),
             $this->mockTokenStorage(FrontendUser::class),
             $this->mockSessionWithToken($token),
-            $this->trustResolver
+            $this->trustResolver,
+            ''
         );
 
         $this->assertNull($tokenChecker->getBackendUsername());
@@ -289,7 +298,8 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(BackendUser::class),
             $this->mockSessionWithToken($token),
-            $this->trustResolver
+            $this->trustResolver,
+            ''
         );
 
         $this->assertNull($tokenChecker->getFrontendUsername());

@@ -41,14 +41,14 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     protected $framework;
 
     /**
-     * @var JwtManager
-     */
-    private $jwtManager;
-
-    /**
      * @var LoggerInterface|null
      */
     protected $logger;
+
+    /**
+     * @var JwtManager|null
+     */
+    private $jwtManager;
 
     /**
      * @var User|UserInterface

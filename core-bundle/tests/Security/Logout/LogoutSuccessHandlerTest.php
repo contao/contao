@@ -148,9 +148,6 @@ class LogoutSuccessHandlerTest extends TestCase
             ->with($response)
         ;
 
-        $request = new Request();
-        $request->attributes->set(JwtManager::REQUEST_ATTRIBUTE, $jwtManager);
-
         $httpUtils = $this->createMock(HttpUtils::class);
         $httpUtils
             ->expects($this->once())
@@ -165,8 +162,8 @@ class LogoutSuccessHandlerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
-        $handler->onLogoutSuccess($request);
+        $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher, $jwtManager);
+        $handler->onLogoutSuccess(new Request());
     }
 
     public function testClearsTheJwtCookieInTheBackend(): void
@@ -179,9 +176,6 @@ class LogoutSuccessHandlerTest extends TestCase
             ->method('clearResponseCookie')
             ->with($response)
         ;
-
-        $request = new Request();
-        $request->attributes->set(JwtManager::REQUEST_ATTRIBUTE, $jwtManager);
 
         $httpUtils = $this->createMock(HttpUtils::class);
         $httpUtils
@@ -197,7 +191,7 @@ class LogoutSuccessHandlerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
-        $handler->onLogoutSuccess($request);
+        $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher, $jwtManager);
+        $handler->onLogoutSuccess(new Request());
     }
 }
