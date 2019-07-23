@@ -14,13 +14,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
-use Contao\CoreBundle\Exception\IncompleteInstallationException;
-use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
-use Contao\CoreBundle\Exception\NoActivePageFoundException;
-use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
-use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageError404;
@@ -65,19 +59,6 @@ class PrettyErrorScreenListener
      * @var LoggerInterface
      */
     private $logger;
-
-    /**
-     * @var array
-     */
-    private static $mapper = [
-        ForwardPageNotFoundException::class => 'forward_page_not_found',
-        IncompleteInstallationException::class => 'incomplete_installation',
-        InsecureInstallationException::class => 'insecure_installation',
-        InvalidRequestTokenException::class => 'invalid_request_token',
-        NoActivePageFoundException::class => 'no_active_page_found',
-        NoLayoutSpecifiedException::class => 'no_layout_specified',
-        NoRootPageFoundException::class => 'no_root_page_found',
-    ];
 
     public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
     {
@@ -200,23 +181,12 @@ class PrettyErrorScreenListener
 
         // Look for a template
         do {
-            if ($exception instanceof \Exception) {
-                $template = $this->getTemplateForException($exception);
+            if ($exception instanceof InvalidRequestTokenException) {
+                $template = 'invalid_request_token';
             }
         } while (null === $template && null !== ($exception = $exception->getPrevious()));
 
         $this->renderTemplate($template ?: 'error', $statusCode, $event);
-    }
-
-    private function getTemplateForException(\Exception $exception): ?string
-    {
-        foreach (self::$mapper as $class => $template) {
-            if ($exception instanceof $class) {
-                return $template;
-            }
-        }
-
-        return null;
     }
 
     private function renderTemplate(string $template, int $statusCode, GetResponseForExceptionEvent $event): void
@@ -267,11 +237,7 @@ class PrettyErrorScreenListener
     private function isLoggable(\Exception $exception): bool
     {
         do {
-            if ($exception instanceof ForwardPageNotFoundException) {
-                return true;
-            }
-
-            if (isset(self::$mapper[\get_class($exception)])) {
+            if ($exception instanceof InvalidRequestTokenException) {
                 return false;
             }
         } while (null !== ($exception = $exception->getPrevious()));

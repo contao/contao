@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
-use Contao\CoreBundle\Exception\IncompleteInstallationException;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
@@ -25,8 +24,6 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\ServiceUnavailableException as ContaoServiceUnavailableException;
-use Contao\Date;
-use Doctrine\DBAL\Connection;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -35,31 +32,15 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class ExceptionConverterListener
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    public function __construct(Connection $connection)
-    {
-        $this->connection = $connection;
-    }
-
     /**
      * Maps known exceptions to HTTP exceptions.
      */
     public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         $exception = $event->getException();
-
-        if ($exception->getPrevious() instanceof ResourceNotFoundException && !$this->hasRootPages()) {
-            $exception = new NoRootPageFoundException('No root page found', 0, $exception);
-        }
-
         $class = $this->getTargetClass($exception);
 
         if (null === $class) {
@@ -76,14 +57,13 @@ class ExceptionConverterListener
         static $mapper = [
             AccessDeniedException::class => 'AccessDeniedHttpException',
             ForwardPageNotFoundException::class => 'InternalServerErrorHttpException',
-            IncompleteInstallationException::class => 'InternalServerErrorHttpException',
             InsecureInstallationException::class => 'InternalServerErrorHttpException',
             InsufficientAuthenticationException::class => 'UnauthorizedHttpException',
             InternalServerErrorException::class => 'InternalServerErrorHttpException',
             InvalidRequestTokenException::class => 'BadRequestHttpException',
-            NoActivePageFoundException::class => 'InternalServerErrorHttpException',
+            NoActivePageFoundException::class => 'NotFoundHttpException',
             NoLayoutSpecifiedException::class => 'InternalServerErrorHttpException',
-            NoRootPageFoundException::class => 'InternalServerErrorHttpException',
+            NoRootPageFoundException::class => 'NotFoundHttpException',
             PageNotFoundException::class => 'NotFoundHttpException',
             ServiceUnavailableException::class => 'ServiceUnavailableHttpException',
             ContaoServiceUnavailableException::class => 'ServiceUnavailableHttpException',
@@ -121,27 +101,5 @@ class ExceptionConverterListener
         }
 
         return null;
-    }
-
-    private function hasRootPages(): bool
-    {
-        $time = Date::floorToMinute();
-
-        // FIXME: we should also check the domain and language here
-        $statement = $this->connection->prepare("
-            SELECT
-                COUNT(*)
-            FROM
-                tl_page
-            WHERE
-                type = 'root'
-                AND (start = '' OR start <= :start)
-                AND (stop = '' OR stop > :stop)
-                AND published = '1'
-        ");
-
-        $statement->execute([':start' => $time, ':stop' => $time + 60]);
-
-        return $statement->fetchColumn() > 0;
     }
 }
