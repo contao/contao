@@ -365,7 +365,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
     }
 
-    private static function loadEnv(string $projectDir)
+    private static function loadEnv(string $projectDir): void
     {
         $varName = isset($_SERVER['SYMFONY_ENV']) ? 'SYMFONY_ENV' : 'APP_ENV';
 
@@ -382,6 +382,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         if (method_exists($dotEnv, 'loadEnv')) {
             $dotEnv->loadEnv($projectDir.'/.env', $varName, 'prod', []);
+
             return;
         }
 
