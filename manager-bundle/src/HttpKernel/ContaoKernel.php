@@ -235,16 +235,20 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         self::$projectDir = realpath($projectDir) ?: $projectDir;
     }
 
-    public static function create(string $projectDir, Request $request): self
+    public static function create(string $projectDir, string $env = null): self
     {
-        if (file_exists($projectDir.'/.env')) {
-            (new Dotenv(false))->load($projectDir.'/.env');
+        self::loadEnv($projectDir);
+
+        if (null === $env) {
+            $env = (string) ($_SERVER['APP_ENV'] ?? $_SERVER['SYMFONY_ENV'] ?? 'prod');
         }
 
-        // TODO: use manager config to load settings
+        if ('dev' !== $env && 'prod' !== $env) {
+            die('The Contao Managed Edition only supports "dev" and "prod" environment.');
+        }
 
-        // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/3.3/public/index.php#L27
-        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
+        // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
+        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? false) {
             Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST);
         }
 
@@ -257,24 +261,32 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         static::setProjectDir($projectDir);
 
-        $debug = (bool) ($_SERVER['APP_DEBUG'] ?? false);
+        if ('dev' === $env) {
+            Debug::enable();
+        }
 
-        if (!isset($_SERVER['APP_DEBUG'])) {
+        return new static($env, 'dev' === $env);
+    }
+
+    public static function createFromRequest(string $projectDir, Request $request): self
+    {
+        self::loadEnv($projectDir);
+
+        $env = null;
+        $parseJwt = !isset($_SERVER['APP_ENV']) && !isset($_SERVER['SYMFONY_ENV']);
+
+        if ($parseJwt) {
             $jwtManager = new JwtManager($projectDir);
             $jwt = $jwtManager->parseRequest($request);
 
             if (\is_array($jwt) && $jwt['debug'] ?? false) {
-                $debug = true;
+                $env = 'dev';
             }
         }
 
-        if ($debug) {
-            Debug::enable();
-        }
+        $kernel = static::create($projectDir, $env);
 
-        $kernel = new static($debug ? 'dev' : 'prod', $debug);
-
-        if (!isset($_SERVER['APP_DEBUG'])) {
+        if ($parseJwt) {
             $kernel->setJwtManager($jwtManager);
         }
 
@@ -311,7 +323,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
 
         // Set the JWT manager only if the debug mode has not been configured in env variables
-        if (!isset($_SERVER['APP_DEBUG'])) {
+        if (!isset($_SERVER['APP_ENV']) && !isset($_SERVER['SYMFONY_ENV'])) {
             $container->set('contao_manager.jwt_manager', $this->getJwtManager());
         }
     }
@@ -350,6 +362,28 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         if (!isset($bundles[$appBundle]) && class_exists($appBundle)) {
             $bundles[$appBundle] = new $appBundle();
+        }
+    }
+
+    private static function loadEnv(string $projectDir)
+    {
+        $varName = isset($_SERVER['SYMFONY_ENV']) ? 'SYMFONY_ENV' : 'APP_ENV';
+
+        // Do not load .env files if they are already loaded or actual env variables are used.
+        if (isset($_SERVER[$varName])) {
+            return;
+        }
+
+        $dotEnv = new Dotenv(false);
+
+        if (method_exists($dotEnv, 'loadEnv')) {
+            $dotEnv->loadEnv($projectDir.'/.env', $varName, 'prod', []);
+            return;
+        }
+
+        // BC for Symfony <= 4.1 where Dotenv::loadEnv does not exist
+        if (file_exists($projectDir.'/.env')) {
+            $dotEnv->load($projectDir.'/.env');
         }
     }
 }
