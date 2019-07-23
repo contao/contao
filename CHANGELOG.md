@@ -2,6 +2,9 @@
 
 ## DEV
 
+ * Use Symfony security to check access in the front end preview (see #595).
+ * Also make the response private if an Authorization header is present (see #594).
+ * Set the request and translator locale in case of an exception (see #453).
  * Add separate fields for the `min` and `max` attributes in the form generator (see #437).
 
 ## 4.8.0-RC1 (2019-07-15)
