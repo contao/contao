@@ -448,7 +448,8 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$return = $this->panel() . Message::generate() . '
 <div id="tl_buttons">'.((Input::get('act') == 'select') ? '
 <a href="'.$this->getReferer(true).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ' : '') . ((Input::get('act') != 'select' && !$blnClipboard && !$GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] && !$GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable']) ? '
-<a href="'.$this->addToUrl($hrfNew).'" class="'.$clsNew.'" title="'.StringUtil::specialchars($ttlNew).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$lblNew.'</a> ' : '') . ($blnClipboard ? '
+<a href="'.$this->addToUrl($hrfNew).'" class="'.$clsNew.'" title="'.StringUtil::specialchars($ttlNew).'" accesskey="n" onclick="Backend.getScrollOffset()">'.$lblNew.'</a>
+<a href="'.$this->addToUrl('&amp;act=paste&amp;mode=move').'" class="header_new" title="'.StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]).'" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG'][$this->strTable]['move'][0].'</a>  ' : '') . ($blnClipboard ? '
 <a href="'.$this->addToUrl('clipboard=1').'" class="header_clipboard" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ' : $this->generateGlobalButtons()) . '
 </div>' . ((Input::get('act') == 'select') ? '
 <form action="'.ampersand(Environment::get('request')).'" id="tl_select" class="tl_form tl_edit_form'.((Input::get('act') == 'select') ? ' unselectable' : '').'" method="post" novalidate>
