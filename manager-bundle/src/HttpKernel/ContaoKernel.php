@@ -374,6 +374,10 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             return;
         }
 
+        if (!file_exists($projectDir.'/.env')) {
+            return;
+        }
+
         $dotEnv = new Dotenv(false);
 
         if (method_exists($dotEnv, 'loadEnv')) {
