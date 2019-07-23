@@ -23,6 +23,8 @@ use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\BackendPreview;
 use Contao\BackendSwitch;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -52,21 +54,21 @@ class BackendController extends AbstractController
     /**
      * @Route("/contao/login", name="contao_backend_login")
      */
-    public function loginAction(Request $request, JwtManager $jwtManager = null): Response
+    public function loginAction(Request $request): Response
     {
         $this->get('contao.framework')->initialize();
 
-        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             $queryString = '';
 
             if ($request->query->has('referer')) {
                 $queryString = '?'.base64_decode($request->query->get('referer'), true);
             }
 
-            $response = new RedirectResponse($this->get('router')->generate('contao_backend').$queryString);
+            $response = new RedirectResponse($this->generateUrl('contao_backend').$queryString);
 
-            if (null !== $jwtManager) {
-                $jwtManager->addResponseCookie($response, ['debug' => false]);
+            if ($this->has('contao_manager.jwt_manager')) {
+                $this->get('contao_manager.jwt_manager')->addResponseCookie($response, ['debug' => false]);
             }
 
             return $response;
@@ -241,5 +243,19 @@ class BackendController extends AbstractController
     public function twoFactorAuthenticationAction(): Response
     {
         return $this->redirectToRoute('contao_backend');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedServices()
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['contao.framework'] = ContaoFramework::class;
+        $services['contao.picker.builder'] = PickerBuilderInterface::class;
+        $services['contao_manager.jwt_manager'] = '?'.JwtManager::class;
+
+        return $services;
     }
 }
