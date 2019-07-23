@@ -19,11 +19,9 @@ use Contao\Model;
 use Contao\StringUtil;
 use Contao\Template;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Container;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
-abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface, ServiceAnnotationInterface
+abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface
 {
     /**
      * @var array
@@ -40,12 +38,12 @@ abstract class AbstractFragmentController extends AbstractController implements 
      */
     public static function getSubscribedServices(): array
     {
-        $services = parent::getSubscribedServices();
-
-        $services['contao.framework'] = ContaoFramework::class;
-        $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
-
-        return $services;
+        return array_merge(
+            parent::getSubscribedServices(),
+            [
+                'fos_http_cache.http.symfony_response_tagger' => '?'.SymfonyResponseTagger::class,
+            ]
+        );
     }
 
     /**
