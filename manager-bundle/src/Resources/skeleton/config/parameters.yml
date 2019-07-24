@@ -1,5 +1,7 @@
 # Default parameters
 parameters:
+    env(APP_SECRET): '%secret%'
+    env(DATABASE_URL): 'mysql://%database_user%:%database_password%@%database_host%:%database_port%/%database_name%'
     database_host: localhost
     database_port: 3306
     database_user: ~
