@@ -13,10 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Util\PackageUtil;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -82,31 +80,6 @@ class BackendMain extends Backend
 		if (Input::get('do') == 'feRedirect')
 		{
 			$this->redirectToFrontendPage(Input::get('page'), Input::get('article'));
-		}
-
-		// Debug redirect
-		if ($this->User->isAdmin && Input::get('do') == 'debug')
-		{
-			$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-			if ($objRequest === null)
-			{
-				throw new \RuntimeException('The request stack did not contain a request');
-			}
-
-			// This will throw an exception if the JwtManager does not exist (not a Managed Edition).
-			// As we do not show the debug button in that case, this should never be reached.
-			$objJwtManager = System::getContainer()->get('contao_manager.jwt_manager');
-
-			$strReferer = Input::get('referer') ? '?' . base64_decode(Input::get('referer', true)) : '';
-			$objResponse = new RedirectResponse($objRequest->getPathInfo() . $strReferer);
-
-			if (Input::get('enable') != $container->get('kernel')->isDebug())
-			{
-				$objJwtManager->addResponseCookie($objResponse, array('debug' => (bool) Input::get('enable')));
-			}
-
-			throw new ResponseException($objResponse);
 		}
 
 		// Backend user profile redirect
