@@ -12,12 +12,29 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\ContaoManager;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerBundle\ContaoManager\Plugin;
+use Contao\ManagerBundle\ContaoManagerBundle;
+use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
+use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use Contao\User;
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
+use FOS\HttpCacheBundle\FOSHttpCacheBundle;
+use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
+use Nelmio\CorsBundle\NelmioCorsBundle;
+use Nelmio\SecurityBundle\NelmioSecurityBundle;
+use Symfony\Bundle\DebugBundle\DebugBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
+use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -31,7 +48,75 @@ use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
 
 class PluginTest extends ContaoTestCase
 {
-    public function testGetBundles(): void
+    public function testReturnsTheBundles(): void
+    {
+        $plugin = new Plugin();
+
+        /** @var BundleConfig[]|array $bundles */
+        $bundles = $plugin->getBundles(new DelegatingParser());
+
+        $this->assertCount(14, $bundles);
+
+        $this->assertSame(FrameworkBundle::class, $bundles[0]->getName());
+        $this->assertSame([], $bundles[0]->getReplace());
+        $this->assertSame([], $bundles[0]->getLoadAfter());
+
+        $this->assertSame(SecurityBundle::class, $bundles[1]->getName());
+        $this->assertSame([], $bundles[1]->getReplace());
+        $this->assertSame([], $bundles[1]->getLoadAfter());
+
+        $this->assertSame(TwigBundle::class, $bundles[2]->getName());
+        $this->assertSame([], $bundles[2]->getReplace());
+        $this->assertSame([], $bundles[2]->getLoadAfter());
+
+        $this->assertSame(MonologBundle::class, $bundles[3]->getName());
+        $this->assertSame([], $bundles[3]->getReplace());
+        $this->assertSame([], $bundles[3]->getLoadAfter());
+
+        $this->assertSame(SwiftmailerBundle::class, $bundles[4]->getName());
+        $this->assertSame([], $bundles[4]->getReplace());
+        $this->assertSame([], $bundles[4]->getLoadAfter());
+
+        $this->assertSame(DoctrineBundle::class, $bundles[5]->getName());
+        $this->assertSame([], $bundles[5]->getReplace());
+        $this->assertSame([], $bundles[5]->getLoadAfter());
+
+        $this->assertSame(DoctrineCacheBundle::class, $bundles[6]->getName());
+        $this->assertSame([], $bundles[6]->getReplace());
+        $this->assertSame([], $bundles[6]->getLoadAfter());
+
+        $this->assertSame(LexikMaintenanceBundle::class, $bundles[7]->getName());
+        $this->assertSame([], $bundles[7]->getReplace());
+        $this->assertSame([], $bundles[7]->getLoadAfter());
+
+        $this->assertSame(NelmioCorsBundle::class, $bundles[8]->getName());
+        $this->assertSame([], $bundles[8]->getReplace());
+        $this->assertSame([], $bundles[8]->getLoadAfter());
+
+        $this->assertSame(NelmioSecurityBundle::class, $bundles[9]->getName());
+        $this->assertSame([], $bundles[9]->getReplace());
+        $this->assertSame([], $bundles[9]->getLoadAfter());
+
+        $this->assertSame(FOSHttpCacheBundle::class, $bundles[10]->getName());
+        $this->assertSame([], $bundles[10]->getReplace());
+        $this->assertSame([], $bundles[10]->getLoadAfter());
+
+        $this->assertSame(ContaoManagerBundle::class, $bundles[11]->getName());
+        $this->assertSame([], $bundles[11]->getReplace());
+        $this->assertSame([ContaoCoreBundle::class], $bundles[11]->getLoadAfter());
+
+        $this->assertSame(DebugBundle::class, $bundles[12]->getName());
+        $this->assertSame([], $bundles[12]->getReplace());
+        $this->assertSame([], $bundles[12]->getLoadAfter());
+        $this->assertFalse($bundles[12]->loadInProduction());
+
+        $this->assertSame(WebProfilerBundle::class, $bundles[13]->getName());
+        $this->assertSame([], $bundles[13]->getReplace());
+        $this->assertSame([], $bundles[13]->getLoadAfter());
+        $this->assertFalse($bundles[13]->loadInProduction());
+    }
+
+    public function testRegistersModuleBundles(): void
     {
         $fs = new Filesystem();
         $fs->mkdir([$this->getTempDir().'/foo1', $this->getTempDir().'/foo2', $this->getTempDir().'/foo3']);

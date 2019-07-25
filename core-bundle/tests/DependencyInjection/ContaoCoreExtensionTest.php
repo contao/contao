@@ -1568,8 +1568,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
         $this->assertSame('contao.framework', (string) $definition->getArgument(1));
-        $this->assertSame('contao_manager.jwt_manager', (string) $definition->getArgument(2));
-        $this->assertSame('logger', (string) $definition->getArgument(3));
+        $this->assertSame('logger', (string) $definition->getArgument(2));
     }
 
     public function testRegistersTheSecurityBackendUserProvider(): void
@@ -1671,7 +1670,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
         $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
-        $this->assertSame('contao_manager.jwt_manager', (string) $definition->getArgument(2));
     }
 
     public function testRegistersTheSecurityLogoutHandler(): void

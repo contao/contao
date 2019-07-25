@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoManager\Plugin;
-use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
@@ -87,7 +86,6 @@ class PluginTest extends TestCase
                 NelmioSecurityBundle::class,
                 SchebTwoFactorBundle::class,
                 CmfRoutingBundle::class,
-                ContaoManagerBundle::class,
             ],
             $bundles[5]->getLoadAfter()
         );

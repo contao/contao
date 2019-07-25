@@ -64,8 +64,8 @@ class DebugListener
             throw new \RuntimeException('Request stack is empty.');
         }
 
-        $referer = $request->query->has('referer') ? '?' . base64_decode($request->query->get('referer')) : '';
-        $response = new RedirectResponse($request->getPathInfo() . $referer);
+        $referer = $request->query->has('referer') ? '?'.base64_decode($request->query->get('referer'), true) : '';
+        $response = new RedirectResponse($request->getPathInfo().$referer);
 
         $this->jwtManager->addResponseCookie($response, ['debug' => $debug]);
 
