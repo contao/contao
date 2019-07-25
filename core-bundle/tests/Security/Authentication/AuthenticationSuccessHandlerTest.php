@@ -18,7 +18,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
-use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -96,47 +95,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
-    }
-
-    public function testAddsTheJwtCookieForTheBackendUser(): void
-    {
-        $jwtManager = $this->createMock(JwtManager::class);
-        $jwtManager
-            ->expects($this->once())
-            ->method('addResponseCookie')
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($this->createMock(BackendUser::class))
-        ;
-
-        $handler = $this->getHandler(null, null, $jwtManager);
-        $handler->onAuthenticationSuccess(new Request(), $token);
-    }
-
-    public function testDoesNotAddTheJwtCookieForTheFrontendUser(): void
-    {
-        $jwtManager = $this->createMock(JwtManager::class);
-        $jwtManager
-            ->expects($this->never())
-            ->method('addResponseCookie')
-        ;
-
-        $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
-        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($this->createMock(FrontendUser::class))
-        ;
-
-        $handler = $this->getHandler($framework, null, $jwtManager);
-        $handler->onAuthenticationSuccess(new Request(), $token);
     }
 
     /**
@@ -341,7 +299,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
      * @param ContaoFramework&MockObject $framework
      * @param LoggerInterface&MockObject $logger
      */
-    private function getHandler(ContaoFramework $framework = null, LoggerInterface $logger = null, JwtManager $jwtManager = null): AuthenticationSuccessHandler
+    private function getHandler(ContaoFramework $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $urlGenerator
@@ -359,6 +317,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
             $logger = $this->createMock(LoggerInterface::class);
         }
 
-        return new AuthenticationSuccessHandler($utils, $framework, $jwtManager, $logger);
+        return new AuthenticationSuccessHandler($utils, $framework, $logger);
     }
 }

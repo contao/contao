@@ -26,7 +26,6 @@ use Contao\BackendSwitch;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
-use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,13 +64,7 @@ class BackendController extends AbstractController
                 $queryString = '?'.base64_decode($request->query->get('referer'), true);
             }
 
-            $response = new RedirectResponse($this->generateUrl('contao_backend').$queryString);
-
-            if ($this->has('contao_manager.jwt_manager')) {
-                $this->get('contao_manager.jwt_manager')->addResponseCookie($response, ['debug' => false]);
-            }
-
-            return $response;
+            return new RedirectResponse($this->generateUrl('contao_backend').$queryString);
         }
 
         $controller = new BackendIndex();
@@ -254,7 +247,6 @@ class BackendController extends AbstractController
 
         $services['contao.framework'] = ContaoFramework::class;
         $services['contao.picker.builder'] = PickerBuilderInterface::class;
-        $services['contao_manager.jwt_manager'] = '?'.JwtManager::class;
 
         return $services;
     }
