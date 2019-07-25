@@ -24,3 +24,8 @@ services:
             - '@kernel'
             - '%kernel.project_dir%'
         public: true
+
+    contao_manager.security.logout_handler:
+        class: Contao\ManagerBundle\Security\Logout\LogoutHandler
+        arguments:
+            - '@?contao_manager.jwt_manager'
