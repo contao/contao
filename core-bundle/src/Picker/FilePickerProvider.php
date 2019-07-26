@@ -19,6 +19,7 @@ use Contao\StringUtil;
 use Contao\Validator;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
@@ -26,14 +27,20 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     use FrameworkAwareTrait;
 
     /**
+     * @var Security
+     */
+    private $security;
+
+    /**
      * @var string
      */
     private $uploadPath;
 
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator, string $uploadPath)
+    public function __construct(Security $security, string $uploadPath, FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator = null)
     {
         parent::__construct($menuFactory, $router, $translator);
 
+        $this->security = $security;
         $this->uploadPath = $uploadPath;
     }
 
@@ -50,7 +57,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     public function supportsContext($context): bool
     {
-        return \in_array($context, ['file', 'link'], true) && $this->getUser()->hasAccess('files', 'modules');
+        return \in_array($context, ['file', 'link'], true) && $this->security->isGranted('contao_user.modules', 'files');
     }
 
     /**

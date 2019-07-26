@@ -22,8 +22,7 @@ use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Security;
 
 class UserSessionListener
 {
@@ -33,14 +32,9 @@ class UserSessionListener
     private $connection;
 
     /**
-     * @var TokenStorageInterface
+     * @var Security
      */
-    private $tokenStorage;
-
-    /**
-     * @var AuthenticationTrustResolverInterface
-     */
-    private $authenticationTrustResolver;
+    private $security;
 
     /**
      * @var ScopeMatcher
@@ -52,11 +46,10 @@ class UserSessionListener
      */
     private $eventDispatcher;
 
-    public function __construct(Connection $connection, TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher, EventDispatcherInterface $eventDispatcher)
+    public function __construct(Connection $connection, Security $security, ScopeMatcher $scopeMatcher, EventDispatcherInterface $eventDispatcher)
     {
         $this->connection = $connection;
-        $this->tokenStorage = $tokenStorage;
-        $this->authenticationTrustResolver = $authenticationTrustResolver;
+        $this->security = $security;
         $this->scopeMatcher = $scopeMatcher;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -70,13 +63,7 @@ class UserSessionListener
             return;
         }
 
-        $token = $this->tokenStorage->getToken();
-
-        if (null === $token || $this->authenticationTrustResolver->isAnonymous($token)) {
-            return;
-        }
-
-        $user = $token->getUser();
+        $user = $this->security->getUser();
 
         if (!$user instanceof User) {
             return;
@@ -103,13 +90,7 @@ class UserSessionListener
             return;
         }
 
-        $token = $this->tokenStorage->getToken();
-
-        if (null === $token || $this->authenticationTrustResolver->isAnonymous($token)) {
-            return;
-        }
-
-        $user = $token->getUser();
+        $user = $this->security->getUser();
 
         if (!$user instanceof User) {
             return;

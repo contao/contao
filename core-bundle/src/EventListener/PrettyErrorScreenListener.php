@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Exception\ResponseException;
@@ -29,7 +28,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
+use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 use Twig\Error\Error;
 
@@ -51,21 +51,21 @@ class PrettyErrorScreenListener
     private $framework;
 
     /**
-     * @var TokenStorageInterface
+     * @var Security
      */
-    private $tokenStorage;
+    private $security;
 
     /**
      * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
+    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security, LoggerInterface $logger = null)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;
-        $this->tokenStorage = $tokenStorage;
+        $this->security = $security;
         $this->logger = $logger;
     }
 
@@ -95,8 +95,14 @@ class PrettyErrorScreenListener
     {
         $exception = $event->getException();
 
+        try {
+            $isBackendUser = $this->security->isGranted('ROLE_USER');
+        } catch (AuthenticationCredentialsNotFoundException $e) {
+            $isBackendUser = false;
+        }
+
         switch (true) {
-            case $this->isBackendUser():
+            case $isBackendUser:
                 $this->renderBackendException($event);
                 break;
 
@@ -243,23 +249,6 @@ class PrettyErrorScreenListener
         } while (null !== ($exception = $exception->getPrevious()));
 
         return true;
-    }
-
-    private function isBackendUser(): bool
-    {
-        $token = $this->tokenStorage->getToken();
-
-        if (null === $token) {
-            return false;
-        }
-
-        $user = $token->getUser();
-
-        if (null === $user) {
-            return false;
-        }
-
-        return $user instanceof BackendUser;
     }
 
     private function getStatusCodeForException(\Exception $exception): int

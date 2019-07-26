@@ -12,25 +12,24 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\EventListener;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Security;
 
 final class BackendMenuListener
 {
     /**
-     * @var TokenStorageInterface
+     * @var Security
      */
-    private $tokenStorage;
+    private $security;
 
     /**
      * @var string
      */
     private $managerPath;
 
-    public function __construct(TokenStorageInterface $tokenStorage, ?string $managerPath)
+    public function __construct(Security $security, ?string $managerPath)
     {
-        $this->tokenStorage = $tokenStorage;
+        $this->security = $security;
         $this->managerPath = $managerPath;
     }
 
@@ -39,7 +38,7 @@ final class BackendMenuListener
      */
     public function onBuild(MenuEvent $event): void
     {
-        if (null === $this->managerPath || !$this->isAdminUser()) {
+        if (null === $this->managerPath || !$this->security->isGranted('ROLE_ADMIN')) {
             return;
         }
 
@@ -62,22 +61,5 @@ final class BackendMenuListener
         );
 
         $categoryNode->addChild($item);
-    }
-
-    private function isAdminUser(): bool
-    {
-        $token = $this->tokenStorage->getToken();
-
-        if (null === $token) {
-            return false;
-        }
-
-        $user = $token->getUser();
-
-        if (!$user instanceof BackendUser) {
-            return false;
-        }
-
-        return $user->isAdmin;
     }
 }

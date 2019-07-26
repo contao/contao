@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Picker;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Picker\ArticlePickerProvider;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\TestCase\ContaoTestCase;
@@ -20,16 +19,10 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Security;
 
 class ArticlePickerProviderTest extends ContaoTestCase
 {
-    /**
-     * @var ArticlePickerProvider
-     */
-    private $provider;
-
     /**
      * {@inheritdoc}
      */
@@ -51,11 +44,126 @@ class ArticlePickerProviderTest extends ContaoTestCase
     }
 
     /**
-     * {@inheritdoc}
+     * @group legacy
+     *
+     * @expectedDeprecation Using a picker provider without injecting the translator service has been deprecated %s.
      */
-    protected function setUp(): void
+    public function testCreatesTheMenuItem(): void
     {
-        parent::setUp();
+        $config = json_encode([
+            'context' => 'link',
+            'extras' => [],
+            'current' => 'articlePicker',
+            'value' => '',
+        ]);
+
+        if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {
+            $config = $encoded;
+        }
+
+        $picker = $this->getPicker();
+        $item = $picker->createMenuItem(new PickerConfig('link', [], '', 'articlePicker'));
+        $uri = 'contao_backend?do=article&popup=1&picker='.strtr(base64_encode($config), '+/=', '-_,');
+
+        $this->assertSame('Article picker', $item->getLabel());
+        $this->assertSame(['class' => 'articlePicker'], $item->getLinkAttributes());
+        $this->assertTrue($item->isCurrent());
+        $this->assertSame($uri, $item->getUri());
+    }
+
+    public function testChecksIfAMenuItemIsCurrent(): void
+    {
+        $picker = $this->getPicker();
+
+        $this->assertTrue($picker->isCurrent(new PickerConfig('link', [], '', 'articlePicker')));
+        $this->assertFalse($picker->isCurrent(new PickerConfig('link', [], '', 'filePicker')));
+    }
+
+    public function testReturnsTheCorrectName(): void
+    {
+        $picker = $this->getPicker();
+
+        $this->assertSame('articlePicker', $picker->getName());
+    }
+
+    public function testChecksIfAContextIsSupported(): void
+    {
+        $picker = $this->getPicker(true);
+
+        $this->assertTrue($picker->supportsContext('link'));
+        $this->assertFalse($picker->supportsContext('file'));
+    }
+
+    public function testChecksIfModuleAccessIsGranted(): void
+    {
+        $picker = $this->getPicker(false);
+
+        $this->assertFalse($picker->supportsContext('link'));
+    }
+
+    public function testChecksIfAValueIsSupported(): void
+    {
+        $picker = $this->getPicker();
+
+        $this->assertTrue($picker->supportsValue(new PickerConfig('link', [], '{{article_url::5}}')));
+        $this->assertFalse($picker->supportsValue(new PickerConfig('link', [], '{{link_url::5}}')));
+    }
+
+    public function testReturnsTheDcaTable(): void
+    {
+        $picker = $this->getPicker();
+
+        $this->assertSame('tl_article', $picker->getDcaTable());
+    }
+
+    public function testReturnsTheDcaAttributes(): void
+    {
+        $picker = $this->getPicker();
+        $extra = ['source' => 'tl_article.2'];
+
+        $this->assertSame(
+            [
+                'fieldType' => 'radio',
+                'preserveRecord' => 'tl_article.2',
+                'value' => '5',
+            ],
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{article_url::5}}'))
+        );
+
+        $this->assertSame(
+            [
+                'fieldType' => 'radio',
+                'preserveRecord' => 'tl_article.2',
+            ],
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
+        );
+    }
+
+    public function testConvertsTheDcaValue(): void
+    {
+        $picker = $this->getPicker();
+
+        $this->assertSame('{{article_url::5}}', $picker->convertDcaValue(new PickerConfig('link'), 5));
+    }
+
+    public function testConvertsTheDcaValueWithACustomInsertTag(): void
+    {
+        $picker = $this->getPicker();
+
+        $this->assertSame(
+            '{{article_title::5}}',
+            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{article_title::%s}}']), 5)
+        );
+    }
+
+    private function getPicker(bool $accessGranted = null): ArticlePickerProvider
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects(null === $accessGranted ? $this->never() : $this->once())
+            ->method('isGranted')
+            ->willReturn($accessGranted)
+        ;
 
         $menuFactory = $this->createMock(FactoryInterface::class);
         $menuFactory
@@ -83,144 +191,6 @@ class ArticlePickerProviderTest extends ContaoTestCase
             )
         ;
 
-        $this->provider = new ArticlePickerProvider($menuFactory, $router);
-    }
-
-    /**
-     * @group legacy
-     *
-     * @expectedDeprecation Using a picker provider without injecting the translator service has been deprecated %s.
-     */
-    public function testCreatesTheMenuItem(): void
-    {
-        $picker = json_encode([
-            'context' => 'link',
-            'extras' => [],
-            'current' => 'articlePicker',
-            'value' => '',
-        ]);
-
-        if (\function_exists('gzencode') && false !== ($encoded = @gzencode($picker))) {
-            $picker = $encoded;
-        }
-
-        $item = $this->provider->createMenuItem(new PickerConfig('link', [], '', 'articlePicker'));
-        $uri = 'contao_backend?do=article&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,');
-
-        $this->assertSame('Article picker', $item->getLabel());
-        $this->assertSame(['class' => 'articlePicker'], $item->getLinkAttributes());
-        $this->assertTrue($item->isCurrent());
-        $this->assertSame($uri, $item->getUri());
-    }
-
-    public function testChecksIfAMenuItemIsCurrent(): void
-    {
-        $this->assertTrue($this->provider->isCurrent(new PickerConfig('link', [], '', 'articlePicker')));
-        $this->assertFalse($this->provider->isCurrent(new PickerConfig('link', [], '', 'filePicker')));
-    }
-
-    public function testReturnsTheCorrectName(): void
-    {
-        $this->assertSame('articlePicker', $this->provider->getName());
-    }
-
-    public function testChecksIfAContextIsSupported(): void
-    {
-        $this->provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
-
-        $this->assertTrue($this->provider->supportsContext('link'));
-        $this->assertFalse($this->provider->supportsContext('file'));
-    }
-
-    public function testFailsToCheckTheContextIfThereIsNoTokenStorage(): void
-    {
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('No token storage provided');
-
-        $this->provider->supportsContext('link');
-    }
-
-    public function testFailsToCheckTheContextIfThereIsNoToken(): void
-    {
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn(null)
-        ;
-
-        $this->provider->setTokenStorage($tokenStorage);
-
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('No token provided');
-
-        $this->provider->supportsContext('link');
-    }
-
-    public function testFailsToCheckTheContextIfThereIsNoUser(): void
-    {
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->method('getUser')
-            ->willReturn(null)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $this->provider->setTokenStorage($tokenStorage);
-
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('The token does not contain a back end user object');
-
-        $this->provider->supportsContext('link');
-    }
-
-    public function testChecksIfAValueIsSupported(): void
-    {
-        $this->assertTrue($this->provider->supportsValue(new PickerConfig('link', [], '{{article_url::5}}')));
-        $this->assertFalse($this->provider->supportsValue(new PickerConfig('link', [], '{{link_url::5}}')));
-    }
-
-    public function testReturnsTheDcaTable(): void
-    {
-        $this->assertSame('tl_article', $this->provider->getDcaTable());
-    }
-
-    public function testReturnsTheDcaAttributes(): void
-    {
-        $extra = ['source' => 'tl_article.2'];
-
-        $this->assertSame(
-            [
-                'fieldType' => 'radio',
-                'preserveRecord' => 'tl_article.2',
-                'value' => '5',
-            ],
-            $this->provider->getDcaAttributes(new PickerConfig('link', $extra, '{{article_url::5}}'))
-        );
-
-        $this->assertSame(
-            [
-                'fieldType' => 'radio',
-                'preserveRecord' => 'tl_article.2',
-            ],
-            $this->provider->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
-        );
-    }
-
-    public function testConvertsTheDcaValue(): void
-    {
-        $this->assertSame('{{article_url::5}}', $this->provider->convertDcaValue(new PickerConfig('link'), 5));
-    }
-
-    public function testConvertsTheDcaValueWithACustomInsertTag(): void
-    {
-        $this->assertSame(
-            '{{article_title::5}}',
-            $this->provider->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{article_title::%s}}']), 5)
-        );
+        return new ArticlePickerProvider($security, $menuFactory, $router);
     }
 }

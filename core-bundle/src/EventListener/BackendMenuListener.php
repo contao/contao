@@ -16,18 +16,18 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Security;
 
 class BackendMenuListener
 {
     /**
-     * @var TokenStorageInterface
+     * @var Security
      */
-    private $tokenStorage;
+    private $security;
 
-    public function __construct(TokenStorageInterface $tokenStorage)
+    public function __construct(Security $security)
     {
-        $this->tokenStorage = $tokenStorage;
+        $this->security = $security;
     }
 
     /**
@@ -35,13 +35,7 @@ class BackendMenuListener
      */
     public function onBuild(MenuEvent $event): void
     {
-        $token = $this->tokenStorage->getToken();
-
-        if (null === $token) {
-            return;
-        }
-
-        $user = $token->getUser();
+        $user = $this->security->getUser();
 
         if (!$user instanceof BackendUser) {
             return;

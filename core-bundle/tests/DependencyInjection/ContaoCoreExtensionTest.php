@@ -272,7 +272,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(BackendLocaleListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(0));
+        $this->assertSame('security.helper', (string) $definition->getArgument(0));
         $this->assertSame('translator', (string) $definition->getArgument(1));
 
         $tags = $definition->getTags();
@@ -291,7 +291,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(BackendMenuListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(0));
+        $this->assertSame('security.helper', (string) $definition->getArgument(0));
 
         $tags = $definition->getTags();
 
@@ -533,7 +533,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('%contao.pretty_error_screens%', (string) $definition->getArgument(0));
         $this->assertSame('twig', (string) $definition->getArgument(1));
         $this->assertSame('contao.framework', (string) $definition->getArgument(2));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(3));
+        $this->assertSame('security.helper', (string) $definition->getArgument(3));
         $this->assertSame('logger', (string) $definition->getArgument(4));
 
         $tags = $definition->getTags();
@@ -610,9 +610,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(StoreRefererListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(0));
-        $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(1));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(2));
+        $this->assertSame('security.helper', (string) $definition->getArgument(0));
+        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
 
         $tags = $definition->getTags();
 
@@ -668,10 +667,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(EventUserSessionListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('database_connection', (string) $definition->getArgument(0));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(1));
-        $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(2));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(3));
-        $this->assertSame('event_dispatcher', (string) $definition->getArgument(4));
+        $this->assertSame('security.helper', (string) $definition->getArgument(1));
+        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(2));
+        $this->assertSame('event_dispatcher', (string) $definition->getArgument(3));
 
         $tags = $definition->getTags();
 
@@ -1206,14 +1204,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(PagePickerProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('router', (string) $definition->getArgument(1));
-        $this->assertSame('translator', (string) $definition->getArgument(2));
-
-        $calls = $definition->getMethodCalls();
-
-        $this->assertSame('setTokenStorage', $calls[0][0]);
-        $this->assertSame('security.token_storage', (string) $calls[0][1][0]);
+        $this->assertSame('security.helper', (string) $definition->getArgument(0));
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(1));
+        $this->assertSame('router', (string) $definition->getArgument(2));
+        $this->assertSame('translator', (string) $definition->getArgument(3));
 
         $tags = $definition->getTags();
 
@@ -1229,15 +1223,11 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(FilePickerProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('router', (string) $definition->getArgument(1));
-        $this->assertSame('translator', (string) $definition->getArgument(2));
-        $this->assertSame('%contao.upload_path%', (string) $definition->getArgument(3));
-
-        $calls = $definition->getMethodCalls();
-
-        $this->assertSame('setTokenStorage', $calls[0][0]);
-        $this->assertSame('security.token_storage', (string) $calls[0][1][0]);
+        $this->assertSame('security.helper', (string) $definition->getArgument(0));
+        $this->assertSame('%contao.upload_path%', (string) $definition->getArgument(1));
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(2));
+        $this->assertSame('router', (string) $definition->getArgument(3));
+        $this->assertSame('translator', (string) $definition->getArgument(4));
 
         $tags = $definition->getTags();
 
@@ -1253,14 +1243,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ArticlePickerProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('router', (string) $definition->getArgument(1));
-        $this->assertSame('translator', (string) $definition->getArgument(2));
-
-        $calls = $definition->getMethodCalls();
-
-        $this->assertSame('setTokenStorage', $calls[0][0]);
-        $this->assertSame('security.token_storage', (string) $calls[0][1][0]);
+        $this->assertSame('security.helper', (string) $definition->getArgument(0));
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(1));
+        $this->assertSame('router', (string) $definition->getArgument(2));
+        $this->assertSame('translator', (string) $definition->getArgument(3));
 
         $tags = $definition->getTags();
 

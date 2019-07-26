@@ -298,34 +298,31 @@ services:
     contao.picker.page_provider:
         class: Contao\CoreBundle\Picker\PagePickerProvider
         arguments:
+            - '@security.helper'
             - '@knp_menu.factory'
             - '@router'
             - '@translator'
-        calls:
-            - [setTokenStorage, ['@security.token_storage']]
         tags:
             - { name: contao.picker_provider, priority: 192 }
 
     contao.picker.file_provider:
         class: Contao\CoreBundle\Picker\FilePickerProvider
         arguments:
+            - '@security.helper'
+            - '%contao.upload_path%'
             - '@knp_menu.factory'
             - '@router'
             - '@translator'
-            - '%contao.upload_path%'
-        calls:
-            - [setTokenStorage, ['@security.token_storage']]
         tags:
             - { name: contao.picker_provider, priority: 160 }
 
     contao.picker.article_provider:
         class: Contao\CoreBundle\Picker\ArticlePickerProvider
         arguments:
+            - '@security.helper'
             - '@knp_menu.factory'
             - '@router'
             - '@translator'
-        calls:
-            - [setTokenStorage, ['@security.token_storage']]
         tags:
             - { name: contao.picker_provider }
 
