@@ -12,8 +12,25 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
+use Knp\Menu\FactoryInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Translation\TranslatorInterface;
+
 class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
+    /**
+     * @var Security
+     */
+    private $security;
+
+    public function __construct(Security $security, FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator = null)
+    {
+        parent::__construct($menuFactory, $router, $translator);
+
+        $this->security = $security;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -27,7 +44,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     public function supportsContext($context): bool
     {
-        return \in_array($context, ['page', 'link'], true) && $this->getUser()->hasAccess('page', 'modules');
+        return \in_array($context, ['page', 'link'], true) && $this->security->isGranted('contao_user.modules', 'page');
     }
 
     /**

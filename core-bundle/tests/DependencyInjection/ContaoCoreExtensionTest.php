@@ -1204,14 +1204,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(PagePickerProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('router', (string) $definition->getArgument(1));
-        $this->assertSame('translator', (string) $definition->getArgument(2));
-
-        $calls = $definition->getMethodCalls();
-
-        $this->assertSame('setTokenStorage', $calls[0][0]);
-        $this->assertSame('security.token_storage', (string) $calls[0][1][0]);
+        $this->assertSame('security.helper', (string) $definition->getArgument(0));
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(1));
+        $this->assertSame('router', (string) $definition->getArgument(2));
+        $this->assertSame('translator', (string) $definition->getArgument(3));
 
         $tags = $definition->getTags();
 
@@ -1227,15 +1223,11 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(FilePickerProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('router', (string) $definition->getArgument(1));
-        $this->assertSame('translator', (string) $definition->getArgument(2));
-        $this->assertSame('%contao.upload_path%', (string) $definition->getArgument(3));
-
-        $calls = $definition->getMethodCalls();
-
-        $this->assertSame('setTokenStorage', $calls[0][0]);
-        $this->assertSame('security.token_storage', (string) $calls[0][1][0]);
+        $this->assertSame('security.helper', (string) $definition->getArgument(0));
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(1));
+        $this->assertSame('router', (string) $definition->getArgument(2));
+        $this->assertSame('translator', (string) $definition->getArgument(3));
+        $this->assertSame('%contao.upload_path%', (string) $definition->getArgument(4));
 
         $tags = $definition->getTags();
 
@@ -1251,14 +1243,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ArticlePickerProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('router', (string) $definition->getArgument(1));
-        $this->assertSame('translator', (string) $definition->getArgument(2));
-
-        $calls = $definition->getMethodCalls();
-
-        $this->assertSame('setTokenStorage', $calls[0][0]);
-        $this->assertSame('security.token_storage', (string) $calls[0][1][0]);
+        $this->assertSame('security.helper', (string) $definition->getArgument(0));
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(1));
+        $this->assertSame('router', (string) $definition->getArgument(2));
+        $this->assertSame('translator', (string) $definition->getArgument(3));
 
         $tags = $definition->getTags();
 

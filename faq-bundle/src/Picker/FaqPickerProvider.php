@@ -19,10 +19,26 @@ use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
+use Knp\Menu\FactoryInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
+
+    /**
+     * @var Security
+     */
+    private $security;
+
+    public function __construct(Security $security, FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator = null)
+    {
+        parent::__construct($menuFactory, $router, $translator);
+
+        $this->security = $security;
+    }
 
     /**
      * {@inheritdoc}
@@ -37,7 +53,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
      */
     public function supportsContext($context): bool
     {
-        return 'link' === $context && $this->getUser()->hasAccess('faq', 'modules');
+        return 'link' === $context && $this->security->isGranted('contao_user.modules', 'faq');
     }
 
     /**

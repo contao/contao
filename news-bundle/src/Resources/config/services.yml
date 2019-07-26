@@ -7,10 +7,9 @@ services:
     contao_news.picker.news_provider:
         class: Contao\NewsBundle\Picker\NewsPickerProvider
         arguments:
+            - '@security.helper'
             - '@knp_menu.factory'
             - '@router'
             - '@translator'
-        calls:
-            - [setTokenStorage, ['@security.token_storage']]
         tags:
             - { name: contao.picker_provider, priority: 128 }

@@ -80,8 +80,13 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         );
     }
 
+    /**
+     * @deprecated Deprecated since Contao 4.8. Use Symfony\Component\Security\Core\Security instead.
+     */
     public function setTokenStorage(TokenStorageInterface $tokenStorage): void
     {
+        @trigger_error('Using '.__METHOD__.' is deprecated since Contao 4.8. Use Symfony\Component\Security\Core\Security instead.', E_USER_DEPRECATED);
+
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -97,9 +102,13 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      * Returns the back end user object.
      *
      * @throws \RuntimeException
+     *
+     * @deprecated Deprecated since Contao 4.8. Use Symfony\Component\Security\Core\Security instead.
      */
     protected function getUser(): BackendUser
     {
+        @trigger_error('Using '.__METHOD__.' is deprecated since Contao 4.8. Use Symfony\Component\Security\Core\Security instead.', E_USER_DEPRECATED);
+
         if (null === $this->tokenStorage) {
             throw new \RuntimeException('No token storage provided');
         }
