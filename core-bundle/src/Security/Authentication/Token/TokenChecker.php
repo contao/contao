@@ -58,7 +58,7 @@ class TokenChecker
      */
     private $previewScript;
 
-    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, string $previewScript)
+    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, string $previewScript = '')
     {
         $this->requestStack = $requestStack;
         $this->firewallMap = $firewallMap;

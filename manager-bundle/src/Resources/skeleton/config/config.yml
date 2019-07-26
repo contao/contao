@@ -7,9 +7,6 @@ imports:
 parameters:
     locale: en
 
-contao:
-    preview_script: '/preview.php'
-
 # Framework configuration
 framework:
     esi: { enabled: true }
@@ -25,6 +22,10 @@ framework:
     session:
         handler_id: ~
     fragments: { path: /_fragment }
+
+# Contao configuration
+contao:
+    preview_script: '/preview.php'
 
 # Twig configuration
 twig:

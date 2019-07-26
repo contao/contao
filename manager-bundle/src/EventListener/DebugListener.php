@@ -61,10 +61,15 @@ class DebugListener
         $request = $this->requestStack->getCurrentRequest();
 
         if (null === $request) {
-            throw new \RuntimeException('The request stack is empty.');
+            throw new \RuntimeException('The request stack did not contain a request');
         }
 
-        $referer = $request->query->has('referer') ? '?'.base64_decode($request->query->get('referer'), true) : '';
+        $referer = '';
+
+        if ($request->query->has('referer')) {
+            $referer = '?'.base64_decode($request->query->get('referer'), true);
+        }
+
         $response = new RedirectResponse($request->getSchemeAndHttpHost().$request->getPathInfo().$referer);
 
         $this->jwtManager->addResponseCookie($response, ['debug' => $debug]);

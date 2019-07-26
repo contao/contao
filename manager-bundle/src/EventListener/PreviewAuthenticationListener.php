@@ -56,14 +56,11 @@ class PreviewAuthenticationListener
             '' === $this->previewScript
             || $request->getScriptName() !== $this->previewScript
             || !$this->scopeMatcher->isFrontendRequest($request)
+            || $this->tokenChecker->hasBackendUser()
         ) {
             return;
         }
 
-        if (!$this->tokenChecker->hasBackendUser()) {
-            $event->setResponse(
-                new RedirectResponse($this->router->generate('contao_backend_login'))
-            );
-        }
+        $event->setResponse(new RedirectResponse($this->router->generate('contao_backend_login')));
     }
 }

@@ -32,9 +32,9 @@ class JwtManagerTest extends ContaoTestCase
 
     public function testTokenCanBeSetWithoutPayload(): void
     {
-        $jwtManager = new JwtManager(static::getTempDir());
-
         $response = new Response();
+
+        $jwtManager = new JwtManager(static::getTempDir());
         $jwtManager->addResponseCookie($response);
 
         $request = Request::create('/');
@@ -48,9 +48,9 @@ class JwtManagerTest extends ContaoTestCase
 
     public function testTokenCanBeSetWithPayload(): void
     {
-        $jwtManager = new JwtManager(static::getTempDir());
-
         $response = new Response();
+
+        $jwtManager = new JwtManager(static::getTempDir());
         $jwtManager->addResponseCookie($response, ['foo' => 'bar']);
 
         $request = Request::create('/');
@@ -69,7 +69,6 @@ class JwtManagerTest extends ContaoTestCase
         $jwtManager = new JwtManager(static::getTempDir());
 
         $headerBag = $this->createMock(ResponseHeaderBag::class);
-
         $headerBag
             ->expects($this->once())
             ->method('getCookies')
@@ -89,10 +88,10 @@ class JwtManagerTest extends ContaoTestCase
 
     public function testReturnsNullWithoutCookie(): void
     {
-        $jwtManager = new JwtManager(static::getTempDir());
         $request = Request::create('/');
         $request->cookies->set(JwtManager::COOKIE_NAME, 'foobar');
 
+        $jwtManager = new JwtManager(static::getTempDir());
         $result = $jwtManager->parseRequest($request);
 
         $this->assertNull($result);
@@ -100,9 +99,8 @@ class JwtManagerTest extends ContaoTestCase
 
     public function testIgnoresInvalidCookieData(): void
     {
-        $jwtManager = new JwtManager(static::getTempDir());
         $request = Request::create('/');
-
+        $jwtManager = new JwtManager(static::getTempDir());
         $result = $jwtManager->parseRequest($request);
 
         $this->assertNull($result);
@@ -111,7 +109,6 @@ class JwtManagerTest extends ContaoTestCase
     public function testClearTheResponseCookie(): void
     {
         $headerBag = $this->createMock(ResponseHeaderBag::class);
-
         $headerBag
             ->expects($this->once())
             ->method('clearCookie')
@@ -134,7 +131,6 @@ class JwtManagerTest extends ContaoTestCase
     public function testDoesNotClearTheResponseCookieIfThereIsAJwtCookie(): void
     {
         $headerBag = $this->createMock(ResponseHeaderBag::class);
-
         $headerBag
             ->expects($this->never())
             ->method('clearCookie')

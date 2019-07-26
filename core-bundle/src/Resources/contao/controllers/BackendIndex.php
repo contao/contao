@@ -119,7 +119,7 @@ class BackendIndex extends Backend
 	}
 
 	/**
-	 * Generate the front end URL without the preview entry point
+	 * Generate the front end URL without the preview script
 	 */
 	private function getFrontendUrl(RouterInterface $router)
 	{

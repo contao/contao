@@ -248,7 +248,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
-        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? false) {
+        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
             Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST);
         }
 
@@ -274,6 +274,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         $env = null;
         $parseJwt = !isset($_SERVER['APP_ENV']) && !isset($_SERVER['SYMFONY_ENV']);
+        $jwtManager = null;
 
         if ($parseJwt) {
             $jwtManager = new JwtManager($projectDir);
@@ -369,7 +370,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         $varName = isset($_SERVER['SYMFONY_ENV']) ? 'SYMFONY_ENV' : 'APP_ENV';
 
-        // Do not load .env files if they are already loaded or actual env variables are used.
+        // Do not load .env files if they are already loaded or actual env variables are used
         if (isset($_SERVER[$varName])) {
             return;
         }
@@ -379,16 +380,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         $dotEnv = new Dotenv(false);
-
-        if (method_exists($dotEnv, 'loadEnv')) {
-            $dotEnv->loadEnv($projectDir.'/.env', $varName, 'prod', []);
-
-            return;
-        }
-
-        // BC for Symfony <= 4.1 where Dotenv::loadEnv does not exist
-        if (file_exists($projectDir.'/.env')) {
-            $dotEnv->load($projectDir.'/.env');
-        }
+        $dotEnv->loadEnv($projectDir.'/.env', $varName, 'prod', []);
     }
 }

@@ -28,7 +28,6 @@ $loader = require __DIR__.'/../vendor/autoload.php';
 
 $request = Request::createFromGlobals();
 $kernel = ContaoKernel::createFromRequest(\dirname(__DIR__), $request);
-
 $response = $kernel->handle($request);
 
 // Force no-cache on all responses in the preview front controller
@@ -36,7 +35,6 @@ $response->headers->set('Cache-Control', 'no-store');
 
 // Strip all tag headers from the response
 $response->headers->remove(TagHeaderFormatter::DEFAULT_HEADER_NAME);
-
 $response->send();
 
 if ($kernel instanceof TerminableInterface) {
