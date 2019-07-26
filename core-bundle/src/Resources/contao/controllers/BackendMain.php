@@ -257,9 +257,6 @@ class BackendMain extends Backend
 		$this->Template->preview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
 		$this->Template->previewTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreviewTitle']);
 		$this->Template->profile = $GLOBALS['TL_LANG']['MSC']['profile'];
-		$this->Template->canDebug = $this->User->isAdmin && System::getContainer()->has('contao_manager.jwt_manager');
-		$this->Template->isDebug = $container->get('kernel')->isDebug();
-		$this->Template->debugMode = $GLOBALS['TL_LANG']['MSC']['debugMode'];
 		$this->Template->referer = $referer;
 		$this->Template->profileTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['profileTitle']);
 		$this->Template->security = $GLOBALS['TL_LANG']['MSC']['security'];
@@ -284,6 +281,11 @@ class BackendMain extends Backend
 		$this->Template->ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 		$this->Template->menu = $container->get('contao.menu.backend_menu_renderer')->render($container->get('contao.menu.backend_menu_builder')->create());
 		$this->Template->headerNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['headerNavigation']);
+
+		// TODO: This should be moved the the manager-bundle in Contao 4.9
+		$this->Template->canDebug = $this->User->isAdmin && System::getContainer()->has('contao_manager.jwt_manager');
+		$this->Template->isDebug = $container->get('kernel')->isDebug();
+		$this->Template->debugMode = $GLOBALS['TL_LANG']['MSC']['debugMode'];
 
 		$strSystemMessages = Backend::getSystemMessages();
 		$this->Template->systemMessagesCount = substr_count($strSystemMessages, 'class="tl_');
