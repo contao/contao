@@ -90,7 +90,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
-        $listener = $this->getListener(false);
+        $listener = $this->getListener();
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
@@ -113,7 +113,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new AccessDeniedHttpException('', new AccessDeniedException());
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
-        $listener = $this->getListener(false);
+        $listener = $this->getListener();
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
@@ -128,7 +128,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new AccessDeniedHttpException('', new AccessDeniedException());
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
-        $listener = $this->getListener(false);
+        $listener = $this->getListener();
         $listener->onKernelException($event);
 
         $this->assertFalse($event->hasResponse());
@@ -141,7 +141,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new ServiceUnavailableHttpException(null, null, new ServiceUnavailableException());
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
-        $listener = $this->getListener(false);
+        $listener = $this->getListener();
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
@@ -274,7 +274,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new AccessDeniedHttpException('', new AccessDeniedException());
         $event = $this->getResponseEvent($exception);
 
-        $listener = $this->getListener(false);
+        $listener = $this->getListener();
         $listener->onKernelException($event);
 
         $this->assertFalse($event->hasResponse());
@@ -285,7 +285,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new InternalServerErrorHttpException('', new InsecureInstallationException());
         $event = $this->getResponseEvent($exception);
 
-        $listener = $this->getListener(false);
+        $listener = $this->getListener();
         $listener->onKernelException($event);
 
         $this->assertTrue($event->hasResponse());
@@ -295,7 +295,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     /**
      * @param Environment&MockObject $twig
      */
-    private function getListener(bool $isBackendUser, bool $expectLogging = false, Environment $twig = null): PrettyErrorScreenListener
+    private function getListener(bool $isBackendUser = false, bool $expectLogging = false, Environment $twig = null): PrettyErrorScreenListener
     {
         if (null === $twig) {
             $twig = $this->createMock(Environment::class);
