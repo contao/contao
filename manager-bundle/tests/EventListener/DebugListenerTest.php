@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Security;
 
 class DebugListenerTest extends ContaoTestCase
 {
-    public function testReturnsRedirectResponseWithDebugEnabledCookie()
+    public function testReturnsRedirectResponseWithDebugEnabledCookie(): void
     {
         $listener = new DebugListener(
             $this->mockSecurityHelper(),
@@ -37,7 +37,7 @@ class DebugListenerTest extends ContaoTestCase
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
-    public function testReturnsRedirectResponseWithDebugDisabledCookie()
+    public function testReturnsRedirectResponseWithDebugDisabledCookie(): void
     {
         $listener = new DebugListener(
             $this->mockSecurityHelper(),
@@ -50,7 +50,7 @@ class DebugListenerTest extends ContaoTestCase
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
-    public function testResponseContainsReferer()
+    public function testResponseContainsReferer(): void
     {
         $listener = new DebugListener(
             $this->mockSecurityHelper(),
@@ -63,7 +63,7 @@ class DebugListenerTest extends ContaoTestCase
         $this->assertSame('https://example.com/foo/bar.html?foo=bar', $response->getTargetUrl());
     }
 
-    public function testThrowsAccessDeniedExceptionIfUserIsNotAdmin()
+    public function testThrowsAccessDeniedExceptionIfUserIsNotAdmin(): void
     {
         $this->expectException(AccessDeniedException::class);
 
@@ -71,7 +71,7 @@ class DebugListenerTest extends ContaoTestCase
         $listener->onEnable();
     }
 
-    public function testThrowsExceptionIfRequestStackIsEmpty()
+    public function testThrowsExceptionIfRequestStackIsEmpty(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The request stack is empty.');

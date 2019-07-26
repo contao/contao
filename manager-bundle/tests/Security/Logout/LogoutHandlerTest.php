@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class LogoutHandlerTest extends ContaoTestCase
 {
-    public function testClearsCookieOnResponse()
+    public function testClearsCookieOnResponse(): void
     {
         $response = $this->createMock(Response::class);
 
@@ -41,7 +41,7 @@ class LogoutHandlerTest extends ContaoTestCase
         );
     }
 
-    public function testDoesNothingIfJwtManagerIsNotSet()
+    public function testDoesNothingIfJwtManagerIsNotSet(): void
     {
         $handler = new LogoutHandler();
 
