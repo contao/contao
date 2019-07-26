@@ -29,8 +29,6 @@ class FilePickerProviderTest extends ContaoTestCase
 {
     public function testCreatesTheMenuItem(): void
     {
-        $picker = $this->getPicker();
-
         $config = json_encode([
             'context' => 'link',
             'extras' => [],
@@ -42,6 +40,7 @@ class FilePickerProviderTest extends ContaoTestCase
             $config = $encoded;
         }
 
+        $picker = $this->getPicker();
         $item = $picker->createMenuItem(new PickerConfig('link', [], '', 'filePicker'));
         $uri = 'contao_backend?do=files&popup=1&picker='.strtr(base64_encode($config), '+/=', '-_,');
 
@@ -87,7 +86,6 @@ class FilePickerProviderTest extends ContaoTestCase
     public function testChecksIfAValueIsSupported(): void
     {
         $picker = $this->getPicker();
-
         $uuid = '82243f46-a4c3-11e3-8e29-000c29e44aea';
 
         $this->assertTrue($picker->supportsValue(new PickerConfig('file', [], $uuid)));
@@ -277,7 +275,7 @@ class FilePickerProviderTest extends ContaoTestCase
             ->willReturn('File picker')
         ;
 
-        $picker = new FilePickerProvider($security, $menuFactory, $router, $translator, __DIR__);
+        $picker = new FilePickerProvider($security, __DIR__, $menuFactory, $router, $translator);
         $picker->setFramework($framwork);
 
         return $picker;

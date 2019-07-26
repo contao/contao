@@ -26,8 +26,6 @@ class PagePickerProviderTest extends ContaoTestCase
 {
     public function testCreatesTheMenuItem(): void
     {
-        $picker = $this->getPicker();
-
         $config = json_encode([
             'context' => 'link',
             'extras' => [],
@@ -39,6 +37,7 @@ class PagePickerProviderTest extends ContaoTestCase
             $config = $encoded;
         }
 
+        $picker = $this->getPicker();
         $item = $picker->createMenuItem(new PickerConfig('link', [], '', 'pagePicker'));
         $uri = 'contao_backend?do=page&popup=1&picker='.strtr(base64_encode($config), '+/=', '-_,');
 

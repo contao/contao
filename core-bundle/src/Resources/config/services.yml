@@ -309,10 +309,10 @@ services:
         class: Contao\CoreBundle\Picker\FilePickerProvider
         arguments:
             - '@security.helper'
+            - '%contao.upload_path%'
             - '@knp_menu.factory'
             - '@router'
             - '@translator'
-            - '%contao.upload_path%'
         tags:
             - { name: contao.picker_provider, priority: 160 }
 

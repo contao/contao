@@ -55,7 +55,7 @@ class PickerBuilderTest extends ContaoTestCase
 
         $this->builder->addProvider($pageProvider);
 
-        $fileProvider = new FilePickerProvider($this->getSecurityHelper(), $factory, $router, $translator, __DIR__);
+        $fileProvider = new FilePickerProvider($this->getSecurityHelper(), __DIR__, $factory, $router, $translator);
 
         $this->builder->addProvider($fileProvider);
 
@@ -136,7 +136,6 @@ class PickerBuilderTest extends ContaoTestCase
     private function getSecurityHelper(): Security
     {
         $security = $this->createMock(Security::class);
-
         $security
             ->method('isGranted')
             ->willReturn(true)

@@ -1224,10 +1224,10 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(FilePickerProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('security.helper', (string) $definition->getArgument(0));
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(1));
-        $this->assertSame('router', (string) $definition->getArgument(2));
-        $this->assertSame('translator', (string) $definition->getArgument(3));
-        $this->assertSame('%contao.upload_path%', (string) $definition->getArgument(4));
+        $this->assertSame('%contao.upload_path%', (string) $definition->getArgument(1));
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(2));
+        $this->assertSame('router', (string) $definition->getArgument(3));
+        $this->assertSame('translator', (string) $definition->getArgument(4));
 
         $tags = $definition->getTags();
 

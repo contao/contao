@@ -36,7 +36,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private $uploadPath;
 
-    public function __construct(Security $security, FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator, string $uploadPath)
+    public function __construct(Security $security, string $uploadPath, FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator = null)
     {
         parent::__construct($menuFactory, $router, $translator);
 

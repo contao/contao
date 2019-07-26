@@ -29,8 +29,6 @@ class NewsPickerProviderTest extends ContaoTestCase
 {
     public function testCreatesTheMenuItem(): void
     {
-        $picker = $this->getPicker();
-
         $config = json_encode([
             'context' => 'link',
             'extras' => [],
@@ -42,6 +40,7 @@ class NewsPickerProviderTest extends ContaoTestCase
             $config = $encoded;
         }
 
+        $picker = $this->getPicker();
         $item = $picker->createMenuItem(new PickerConfig('link', [], '', 'newsPicker'));
         $uri = 'contao_backend?do=news&popup=1&picker='.strtr(base64_encode($config), '+/=', '-_,');
 

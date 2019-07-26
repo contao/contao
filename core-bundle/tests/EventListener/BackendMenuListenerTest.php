@@ -26,7 +26,6 @@ class BackendMenuListenerTest extends TestCase
     public function testCreatesANodeListFromTheBackendUserMenuArray(): void
     {
         $user = $this->createPartialMock(BackendUser::class, ['hasAccess', 'navigation']);
-
         $user
             ->method('navigation')
             ->willReturn([

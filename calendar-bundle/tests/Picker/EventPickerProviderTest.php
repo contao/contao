@@ -29,8 +29,6 @@ class EventPickerProviderTest extends ContaoTestCase
 {
     public function testCreatesTheMenuItem(): void
     {
-        $picker = $this->getPicker();
-
         $config = json_encode([
             'context' => 'link',
             'extras' => [],
@@ -42,6 +40,7 @@ class EventPickerProviderTest extends ContaoTestCase
             $config = $encoded;
         }
 
+        $picker = $this->getPicker();
         $item = $picker->createMenuItem(new PickerConfig('link', [], '', 'eventPicker'));
         $uri = 'contao_backend?do=calendar&popup=1&picker='.strtr(base64_encode($config), '+/=', '-_,');
 
@@ -99,7 +98,6 @@ class EventPickerProviderTest extends ContaoTestCase
     public function testReturnsTheDcaAttributes(): void
     {
         $picker = $this->getPicker();
-
         $extra = ['source' => 'tl_calendar_events.2'];
 
         $this->assertSame(

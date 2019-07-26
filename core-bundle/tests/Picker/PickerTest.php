@@ -121,7 +121,6 @@ class PickerTest extends TestCase
     private function getSecurityHelper(): Security
     {
         $security = $this->createMock(Security::class);
-
         $security
             ->method('isGranted')
             ->willReturn(true)

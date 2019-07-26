@@ -339,6 +339,7 @@ class UserSessionListenerTest extends TestCase
      * Mocks a session listener.
      *
      * @param Connection&MockObject               $connection
+     * @param Security&MockObject                 $security
      * @param EventDispatcherInterface&MockObject $eventDispatcher
      */
     private function getListener(Connection $connection = null, Security $security = null, EventDispatcherInterface $eventDispatcher = null): UserSessionListener
