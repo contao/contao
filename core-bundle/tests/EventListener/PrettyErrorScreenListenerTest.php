@@ -35,6 +35,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 use Twig\Error\Error;
@@ -63,6 +64,33 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->method('isGranted')
             ->with('ROLE_USER')
             ->willReturn(false)
+        ;
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects(Kernel::VERSION_ID >= 40100 ? $this->never() : $this->once())
+            ->method('critical')
+        ;
+
+        $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
+        $event = $this->getResponseEvent($exception);
+
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $logger);
+        $listener->onKernelException($event);
+
+        $this->assertTrue($event->hasResponse());
+        $this->assertSame(500, $event->getResponse()->getStatusCode());
+    }
+
+    public function testCatchesAuthenticationCredentialsNotFoundExceptionWhenRenderingBackEndExceptions(): void
+    {
+        $twig = $this->createMock(Environment::class);
+        $framework = $this->mockContaoFramework();
+
+        $security = $this->createMock(Security::class);
+        $security
+            ->method('isGranted')
+            ->willThrowException(new AuthenticationCredentialsNotFoundException())
         ;
 
         $logger = $this->createMock(LoggerInterface::class);

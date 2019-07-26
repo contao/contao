@@ -28,6 +28,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 use Twig\Error\Error;
@@ -94,8 +95,14 @@ class PrettyErrorScreenListener
     {
         $exception = $event->getException();
 
+        try {
+            $isBackendUser = $this->security->isGranted('ROLE_USER');
+        } catch (AuthenticationCredentialsNotFoundException $e) {
+            $isBackendUser = false;
+        }
+
         switch (true) {
-            case $this->security->isGranted('ROLE_USER'):
+            case $isBackendUser:
                 $this->renderBackendException($event);
                 break;
 
