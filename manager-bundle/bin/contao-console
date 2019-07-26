@@ -11,8 +11,8 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use Contao\ManagerBundle\Console\ContaoApplication;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 
 set_time_limit(0);
@@ -34,5 +34,5 @@ $input = new ArgvInput();
 $env = $input->getParameterOption(['--env', '-e'], null);
 
 $kernel = ContaoKernel::create($projectDir, $env);
-$application = new Application($kernel);
+$application = new ContaoApplication($kernel);
 $application->run($input);
