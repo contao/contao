@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\HttpKernel;
 
 use Contao\CoreBundle\EventListener\HttpCache\StripCookiesSubscriber;
+use Doctrine\DBAL\DriverManager;
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
 use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\EventDispatchingHttpCache;
@@ -20,6 +21,10 @@ use FOS\HttpCache\SymfonyCache\PurgeListener;
 use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
 use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Adapter\PdoAdapter;
+use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
+use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
@@ -72,9 +77,27 @@ class ContaoCache extends HttpCache implements CacheInvalidation
      */
     protected function createStore(): Psr6Store
     {
+        $cacheDir = $this->cacheDir ?: $this->kernel->getCacheDir().'/http_cache';
+
+        if (PhpFilesAdapter::isSupported()) {
+            $itemsCache = new PhpFilesAdapter('', 0, $cacheDir);
+        } else {
+            $itemsCache = new FilesystemAdapter('', 0, $cacheDir);
+        }
+
+        $tagsCache = $itemsCache;
+
+        if (class_exists('SQLite3', false)) {
+            $tagsCache = new PdoAdapter(
+                DriverManager::getConnection(['url' => 'sqlite:///'.$cacheDir.'/tag_versions.sqlite'])
+            );
+        }
+
         return new Psr6Store([
-            'cache_directory' => $this->cacheDir ?: $this->kernel->getCacheDir().'/http_cache',
+            'cache_directory' => $cacheDir,
+            'cache' => new TagAwareAdapter($itemsCache, $tagsCache),
             'cache_tags_header' => TagHeaderFormatter::DEFAULT_HEADER_NAME,
+            'prune_threshold' => 5000,
         ]);
     }
 }
