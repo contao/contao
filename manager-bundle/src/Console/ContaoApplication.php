@@ -2,7 +2,7 @@
 
 namespace Contao\ManagerBundle\Console;
 
-use PackageVersions\Versions;
+use Contao\CoreBundle\Util\PackageUtil;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -13,13 +13,19 @@ class ContaoApplication extends Application
         parent::__construct($kernel);
 
         $this->setName('Contao Managed Edition');
-        $this->setVersion(Versions::VERSIONS['contao/contao'] ?? Versions::getVersion('contao/core-bundle'));
+
+        try {
+            $this->setVersion(PackageUtil::getVersion('contao/core-bundle'));
+        } catch (\OutOfBoundsException $e) {
+            $this->setVersion(PackageUtil::getVersion('contao/contao'));
+        }
 
         $inputDefinition = $this->getDefinition();
         $options = $inputDefinition->getOptions();
 
         foreach ($options as $k => $option) {
             if ('no-debug' === $option->getName()) {
+                // We do not support the no-debug option, so unset it
                 unset($options[$k]);
                 break;
             }
