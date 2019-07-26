@@ -87,7 +87,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
 
         $tagsCache = $itemsCache;
 
-        if (class_exists(\SQLite3::class)) {
+        if (class_exists('SQLite3', false)) {
             $tagsCache =  new PdoAdapter(
                 DriverManager::getConnection(['url' => 'sqlite:///'.$cacheDir.'/tag_versions.sqlite'])
             );
