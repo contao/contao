@@ -42,13 +42,6 @@
             <option value="-"></option>
           </datalist>
         <?php endif; ?>
-        <?php if ($this->canDebug): ?>
-          <label for="ctrl_debug"><?= $this->debugMode ?>:</label>
-          <select name="debug" id="ctrl_debug" class="tl_select">
-            <option value="0"><?= $this->lblDisabled ?></option>
-            <option value="1"<?php if ($this->debug): ?> selected<?php endif; ?>><?= $this->lblEnabled ?></option>
-          </select>
-        <?php endif; ?>
         <label for="ctrl_unpublished"><?= $this->hiddenElements ?>:</label>
         <select name="unpublished" id="ctrl_unpublished" class="tl_select">
           <option value="hide"><?= $this->lblHide ?></option>
