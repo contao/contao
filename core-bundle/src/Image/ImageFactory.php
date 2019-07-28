@@ -18,11 +18,8 @@ use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Image;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
-use Contao\Image\ImportantPartInterface;
 use Contao\Image\ResizeConfiguration;
-use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
-use Contao\Image\ResizeOptionsInterface;
 use Contao\Image\ResizerInterface;
 use Contao\ImageSizeModel;
 use Imagine\Image\ImagineInterface;
@@ -106,9 +103,9 @@ class ImageFactory implements ImageFactoryInterface
      */
     public function create($path, $size = null, $options = null): ImageInterface
     {
-        if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptionsInterface) {
+        if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptions) {
             throw new \InvalidArgumentException(
-                'Options must be of type null, string or '.ResizeOptionsInterface::class
+                'Options must be of type null, string or '.ResizeOptions::class
             );
         }
 
@@ -141,10 +138,10 @@ class ImageFactory implements ImageFactoryInterface
             }
         }
 
-        $targetPath = $options instanceof ResizeOptionsInterface ? $options->getTargetPath() : $options;
+        $targetPath = $options instanceof ResizeOptions ? $options->getTargetPath() : $options;
 
-        if ($size instanceof ResizeConfigurationInterface) {
-            /** @var ResizeConfigurationInterface $resizeConfig */
+        if ($size instanceof ResizeConfiguration) {
+            /** @var ResizeConfiguration $resizeConfig */
             $resizeConfig = $size;
             $importantPart = null;
         } else {
@@ -163,7 +160,7 @@ class ImageFactory implements ImageFactoryInterface
             return $image;
         }
 
-        if (!$options instanceof ResizeOptionsInterface) {
+        if (!$options instanceof ResizeOptions) {
             $options = new ResizeOptions();
         }
 
@@ -183,7 +180,7 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getImportantPartFromLegacyMode(ImageInterface $image, $mode): ImportantPartInterface
+    public function getImportantPartFromLegacyMode(ImageInterface $image, $mode): ImportantPart
     {
         if (1 !== substr_count($mode, '_')) {
             throw new \InvalidArgumentException(sprintf('"%s" is not a legacy resize mode', $mode));
@@ -214,7 +211,7 @@ class ImageFactory implements ImageFactoryInterface
      *
      * @param int|array|null $size An image size or an array with width, height and resize mode
      *
-     * @return (ResizeConfiguration|ImportantPartInterface|ResizeOptions|null)[]
+     * @return (ResizeConfiguration|ImportantPart|ResizeOptions|null)[]
      */
     private function createConfig($size, ImageInterface $image): array
     {
@@ -264,7 +261,7 @@ class ImageFactory implements ImageFactoryInterface
             return [$config, null, null];
         }
 
-        $config->setMode(ResizeConfigurationInterface::MODE_CROP);
+        $config->setMode(ResizeConfiguration::MODE_CROP);
 
         return [$config, $this->getImportantPartFromLegacyMode($image, $size[2]), null];
     }
@@ -272,7 +269,7 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * Enhances the resize configuration with the image size settings.
      */
-    private function enhanceResizeConfig(ResizeConfigurationInterface $config, array $imageSize): void
+    private function enhanceResizeConfig(ResizeConfiguration $config, array $imageSize): void
     {
         if (isset($imageSize['width'])) {
             $config->setWidth((int) $imageSize['width']);

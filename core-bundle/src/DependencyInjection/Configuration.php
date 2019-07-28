@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
-use Contao\Image\ResizeConfigurationInterface;
+use Contao\Image\ResizeConfiguration;
 use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -160,9 +160,9 @@ class Configuration implements ConfigurationInterface
                                 ->always(
                                     static function (array $value): array {
                                         static $reservedImageSizeNames = [
-                                            ResizeConfigurationInterface::MODE_BOX,
-                                            ResizeConfigurationInterface::MODE_PROPORTIONAL,
-                                            ResizeConfigurationInterface::MODE_CROP,
+                                            ResizeConfiguration::MODE_BOX,
+                                            ResizeConfiguration::MODE_PROPORTIONAL,
+                                            ResizeConfiguration::MODE_CROP,
                                             'left_top',
                                             'center_top',
                                             'right_top',
@@ -207,9 +207,9 @@ class Configuration implements ConfigurationInterface
                                     ->end()
                                     ->enumNode('resizeMode')
                                         ->values([
-                                            ResizeConfigurationInterface::MODE_CROP,
-                                            ResizeConfigurationInterface::MODE_BOX,
-                                            ResizeConfigurationInterface::MODE_PROPORTIONAL,
+                                            ResizeConfiguration::MODE_CROP,
+                                            ResizeConfiguration::MODE_BOX,
+                                            ResizeConfiguration::MODE_PROPORTIONAL,
                                         ])
                                     ->end()
                                     ->integerNode('zoom')
@@ -240,9 +240,9 @@ class Configuration implements ConfigurationInterface
                                                 ->end()
                                                 ->enumNode('resizeMode')
                                                     ->values([
-                                                        ResizeConfigurationInterface::MODE_CROP,
-                                                        ResizeConfigurationInterface::MODE_BOX,
-                                                        ResizeConfigurationInterface::MODE_PROPORTIONAL,
+                                                        ResizeConfiguration::MODE_CROP,
+                                                        ResizeConfiguration::MODE_BOX,
+                                                        ResizeConfiguration::MODE_PROPORTIONAL,
                                                     ])
                                                 ->end()
                                                 ->integerNode('zoom')

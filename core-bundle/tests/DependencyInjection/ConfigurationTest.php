@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Image\ResizeConfigurationInterface;
+use Contao\Image\ResizeConfiguration;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 
@@ -162,9 +162,9 @@ class ConfigurationTest extends TestCase
 
     public function getReservedImageSizeNames(): \Generator
     {
-        yield [ResizeConfigurationInterface::MODE_BOX];
-        yield [ResizeConfigurationInterface::MODE_PROPORTIONAL];
-        yield [ResizeConfigurationInterface::MODE_CROP];
+        yield [ResizeConfiguration::MODE_BOX];
+        yield [ResizeConfiguration::MODE_PROPORTIONAL];
+        yield [ResizeConfiguration::MODE_CROP];
         yield ['left_top'];
         yield ['center_top'];
         yield ['right_top'];

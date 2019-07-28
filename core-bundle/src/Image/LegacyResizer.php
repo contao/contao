@@ -19,9 +19,9 @@ use Contao\File;
 use Contao\Image as LegacyImage;
 use Contao\Image\DeferredResizer as ImageResizer;
 use Contao\Image\ImageInterface;
-use Contao\Image\ResizeConfigurationInterface;
-use Contao\Image\ResizeCoordinatesInterface;
-use Contao\Image\ResizeOptionsInterface;
+use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeCoordinates;
+use Contao\Image\ResizeOptions;
 use Contao\System;
 use Imagine\Gd\Imagine as GdImagine;
 
@@ -40,7 +40,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     /**
      * {@inheritdoc}
      */
-    public function resize(ImageInterface $image, ResizeConfigurationInterface $config, ResizeOptionsInterface $options): ImageInterface
+    public function resize(ImageInterface $image, ResizeConfiguration $config, ResizeOptions $options): ImageInterface
     {
         $this->framework->initialize(true);
 
@@ -95,7 +95,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     /**
      * {@inheritdoc}
      */
-    protected function executeResize(ImageInterface $image, ResizeCoordinatesInterface $coordinates, string $path, ResizeOptionsInterface $options): ImageInterface
+    protected function executeResize(ImageInterface $image, ResizeCoordinates $coordinates, string $path, ResizeOptions $options): ImageInterface
     {
         if ($this->legacyImage && $this->hasGetImageHook()) {
             $rootDir = System::getContainer()->getParameter('kernel.project_dir');
