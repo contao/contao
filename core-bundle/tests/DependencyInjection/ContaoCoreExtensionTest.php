@@ -151,7 +151,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,
-                'kernel.project_dir' => static::getTempDir(),
+                'kernel.project_dir' => $this->getTempDir(),
                 'kernel.default_locale' => 'en',
             ])
         );
@@ -1896,7 +1896,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,
-                'kernel.project_dir' => static::getTempDir(),
+                'kernel.project_dir' => $this->getTempDir(),
                 'kernel.default_locale' => 'en',
             ])
         );
@@ -1904,7 +1904,7 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load([], $container);
 
-        $this->assertSame(static::getTempDir().'/assets/images', $container->getParameter('contao.image.target_dir'));
+        $this->assertSame($this->getTempDir().'/assets/images', $container->getParameter('contao.image.target_dir'));
 
         $params = [
             'contao' => [
@@ -1915,6 +1915,6 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load($params, $container);
 
-        $this->assertSame(static::getTempDir().'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
+        $this->assertSame($this->getTempDir().'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
     }
 }

@@ -68,8 +68,7 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext($firewallContext),
             $tokenStorage,
             $session,
-            $this->trustResolver,
-            ''
+            $this->trustResolver
         );
 
         if (FrontendUser::class === $class) {

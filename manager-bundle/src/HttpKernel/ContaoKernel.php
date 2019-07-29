@@ -244,7 +244,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         if ('dev' !== $env && 'prod' !== $env) {
-            die('The Contao Managed Edition only supports "dev" and "prod" environment.');
+            die('The Contao Managed Edition only supports the "dev" and "prod" environments');
         }
 
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
@@ -273,7 +273,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         self::loadEnv($projectDir);
 
         $env = null;
-        $parseJwt = !isset($_SERVER['APP_ENV']) && !isset($_SERVER['SYMFONY_ENV']);
+        $parseJwt = !isset($_SERVER['APP_DEBUG']) && !isset($_SERVER['SYMFONY_DEBUG']);
         $jwtManager = null;
 
         if ($parseJwt) {
@@ -324,7 +324,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
 
         // Set the JWT manager only if the debug mode has not been configured in env variables
-        if (!isset($_SERVER['APP_ENV']) && !isset($_SERVER['SYMFONY_ENV'])) {
+        if (!isset($_SERVER['APP_DEBUG']) && !isset($_SERVER['SYMFONY_DEBUG'])) {
             $container->set('contao_manager.jwt_manager', $this->getJwtManager());
         }
     }
