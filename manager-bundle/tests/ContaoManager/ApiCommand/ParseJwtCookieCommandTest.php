@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\ContaoManager\ApiCommand;
 
-use Contao\CoreBundle\HttpKernel\JwtManager;
 use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\ParseJwtCookieCommand;
+use Contao\ManagerBundle\HttpKernel\JwtManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;

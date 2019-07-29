@@ -50,6 +50,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     private $bundleLoader;
 
     /**
+     * @var JwtManager
+     */
+    private $jwtManager;
+
+    /**
      * @var ManagerConfig
      */
     private $managerConfig;
@@ -153,6 +158,20 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $this->bundleLoader = $bundleLoader;
     }
 
+    public function getJwtManager(): JwtManager
+    {
+        if (null === $this->jwtManager) {
+            $this->jwtManager = new JwtManager($this->getProjectDir());
+        }
+
+        return $this->jwtManager;
+    }
+
+    public function setJwtManager(JwtManager $jwtManager): void
+    {
+        $this->jwtManager = $jwtManager;
+    }
+
     public function getManagerConfig(): ManagerConfig
     {
         if (null === $this->managerConfig) {
@@ -216,15 +235,19 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         self::$projectDir = realpath($projectDir) ?: $projectDir;
     }
 
-    public static function create(string $projectDir, bool $debug = false): self
+    public static function create(string $projectDir, string $env = null): self
     {
-        if (file_exists($projectDir.'/.env')) {
-            (new Dotenv(false))->load($projectDir.'/.env');
+        self::loadEnv($projectDir);
+
+        if (null === $env) {
+            $env = (string) ($_SERVER['APP_ENV'] ?? $_SERVER['SYMFONY_ENV'] ?? 'prod');
         }
 
-        // TODO: use manager config to load settings
+        if ('dev' !== $env && 'prod' !== $env) {
+            die('The Contao Managed Edition only supports the "dev" and "prod" environments');
+        }
 
-        // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/3.3/public/index.php#L27
+        // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
         if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
             Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST);
         }
@@ -238,11 +261,37 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         static::setProjectDir($projectDir);
 
-        if ($debug) {
+        if ('dev' === $env) {
             Debug::enable();
         }
 
-        return new static($debug ? 'dev' : 'prod', $debug);
+        return new static($env, 'dev' === $env);
+    }
+
+    public static function createFromRequest(string $projectDir, Request $request): self
+    {
+        self::loadEnv($projectDir);
+
+        $env = null;
+        $parseJwt = !isset($_SERVER['APP_DEBUG']) && !isset($_SERVER['SYMFONY_DEBUG']);
+        $jwtManager = null;
+
+        if ($parseJwt) {
+            $jwtManager = new JwtManager($projectDir);
+            $jwt = $jwtManager->parseRequest($request);
+
+            if (\is_array($jwt) && $jwt['debug'] ?? false) {
+                $env = 'dev';
+            }
+        }
+
+        $kernel = static::create($projectDir, $env);
+
+        if ($parseJwt) {
+            $kernel->setJwtManager($jwtManager);
+        }
+
+        return $kernel;
     }
 
     /**
@@ -273,6 +322,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         // Set the plugin loader again so it is available at runtime (synthetic service)
         $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
+
+        // Set the JWT manager only if the debug mode has not been configured in env variables
+        if (!isset($_SERVER['APP_DEBUG']) && !isset($_SERVER['SYMFONY_DEBUG'])) {
+            $container->set('contao_manager.jwt_manager', $this->getJwtManager());
+        }
     }
 
     private function getConfigFile(string $file): ?string
@@ -310,5 +364,22 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         if (!isset($bundles[$appBundle]) && class_exists($appBundle)) {
             $bundles[$appBundle] = new $appBundle();
         }
+    }
+
+    private static function loadEnv(string $projectDir): void
+    {
+        $varName = isset($_SERVER['SYMFONY_ENV']) ? 'SYMFONY_ENV' : 'APP_ENV';
+
+        // Do not load .env files if they are already loaded or actual env variables are used
+        if (isset($_SERVER[$varName])) {
+            return;
+        }
+
+        if (!file_exists($projectDir.'/.env')) {
+            return;
+        }
+
+        $dotEnv = new Dotenv(false);
+        $dotEnv->loadEnv($projectDir.'/.env', $varName, 'prod', []);
     }
 }

@@ -31,12 +31,8 @@ if (file_exists(__DIR__.'/../autoload.php')) {
 $loader = require $projectDir.'/vendor/autoload.php';
 
 $input = new ArgvInput();
-$env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'prod');
+$env = $input->getParameterOption(['--env', '-e'], null);
 
-if ('dev' !== $env && 'prod' !== $env) {
-    die('The Contao Managed Edition only supports "dev" and "prod" environment.');
-}
-
-$kernel = ContaoKernel::create($projectDir, 'prod' !== $env);
+$kernel = ContaoKernel::create($projectDir, $env);
 $application = new ContaoApplication($kernel);
 $application->run($input);

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\ContaoManager;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GenerateJwtCookieCommand;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GetConfigCommand;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GetDotEnvCommand;
@@ -95,7 +96,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),
             BundleConfig::create(FOSHttpCacheBundle::class),
-            BundleConfig::create(ContaoManagerBundle::class),
+            BundleConfig::create(ContaoManagerBundle::class)->setLoadAfter([ContaoCoreBundle::class]),
             BundleConfig::create(DebugBundle::class)->setLoadInProduction(false),
             BundleConfig::create(WebProfilerBundle::class)->setLoadInProduction(false),
         ];

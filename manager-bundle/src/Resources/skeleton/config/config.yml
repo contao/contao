@@ -23,6 +23,10 @@ framework:
         handler_id: ~
     fragments: { path: /_fragment }
 
+# Contao configuration
+contao:
+    preview_script: '/preview.php'
+
 # Twig configuration
 twig:
     debug: '%kernel.debug%'

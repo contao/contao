@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\ContaoManager\ApiCommand;
 
-use Contao\CoreBundle\HttpKernel\JwtManager;
 use Contao\ManagerBundle\Api\Application;
+use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

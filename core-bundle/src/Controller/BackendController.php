@@ -23,7 +23,8 @@ use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\BackendPreview;
 use Contao\BackendSwitch;
-use Contao\CoreBundle\HttpKernel\JwtManager;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -56,21 +57,14 @@ class BackendController extends AbstractController
     {
         $this->get('contao.framework')->initialize();
 
-        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             $queryString = '';
 
             if ($request->query->has('referer')) {
                 $queryString = '?'.base64_decode($request->query->get('referer'), true);
             }
 
-            $response = new RedirectResponse($this->get('router')->generate('contao_backend').$queryString);
-            $jwtManager = $request->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
-
-            if ($jwtManager instanceof JwtManager) {
-                $jwtManager->addResponseCookie($response, ['debug' => false]);
-            }
-
-            return $response;
+            return new RedirectResponse($this->generateUrl('contao_backend').$queryString);
         }
 
         $controller = new BackendIndex();
@@ -105,8 +99,10 @@ class BackendController extends AbstractController
      */
     public function previewAction(Request $request): Response
     {
-        if ('/preview.php' !== $request->getScriptName()) {
-            return $this->redirect('/preview.php'.$request->getRequestUri());
+        $previewScript = $this->getParameter('contao.preview_script');
+
+        if ($request->getScriptName() !== $previewScript) {
+            return $this->redirect($previewScript.$request->getRequestUri());
         }
 
         $this->get('contao.framework')->initialize();
@@ -240,5 +236,18 @@ class BackendController extends AbstractController
     public function twoFactorAuthenticationAction(): Response
     {
         return $this->redirectToRoute('contao_backend');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedServices()
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['contao.framework'] = ContaoFramework::class;
+        $services['contao.picker.builder'] = PickerBuilderInterface::class;
+
+        return $services;
     }
 }

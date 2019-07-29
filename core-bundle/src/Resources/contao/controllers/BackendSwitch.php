@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\HttpKernel\JwtManager;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -58,18 +57,10 @@ class BackendSwitch extends Backend
 			$this->getDatalistOptions();
 		}
 
-		$objJwtManager = null;
-
-		if ($objRequest = System::getContainer()->get('request_stack')->getCurrentRequest())
-		{
-			$objJwtManager = $objRequest->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
-		}
-
 		$blnCanSwitchUser = ($this->User->isAdmin || (!empty($this->User->amg) && \is_array($this->User->amg)));
 		$objTokenChecker = System::getContainer()->get('contao.security.token_checker');
 		$strUser = $objTokenChecker->getFrontendUsername();
 		$blnShowUnpublished = $objTokenChecker->isPreviewMode();
-		$blnDebug = System::getContainer()->get('kernel')->isDebug();
 		$blnUpdate = false;
 
 		// Switch
@@ -78,7 +69,6 @@ class BackendSwitch extends Backend
 			$blnUpdate = true;
 			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 			$blnShowUnpublished = Input::post('unpublished') != 'hide';
-			$blnDebug = (bool) Input::post('debug');
 
 			// Switch user accounts
 			if ($blnCanSwitchUser && isset($_POST['user']))
@@ -101,7 +91,6 @@ class BackendSwitch extends Backend
 		$objTemplate->show = $blnShowUnpublished;
 		$objTemplate->update = $blnUpdate;
 		$objTemplate->canSwitchUser = $blnCanSwitchUser;
-		$objTemplate->canDebug = $this->User->isAdmin && $objJwtManager instanceof JwtManager;
 		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
@@ -114,20 +103,9 @@ class BackendSwitch extends Backend
 		$objTemplate->lblShow = $GLOBALS['TL_LANG']['MSC']['hiddenShow'];
 		$objTemplate->fePreview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
 		$objTemplate->hiddenElements = $GLOBALS['TL_LANG']['MSC']['hiddenElements'];
-		$objTemplate->debug = $blnDebug;
-		$objTemplate->debugMode = $GLOBALS['TL_LANG']['MSC']['debugMode'];
-		$objTemplate->lblEnabled = $GLOBALS['TL_LANG']['MSC']['debugEnabled'];
-		$objTemplate->lblDisabled = $GLOBALS['TL_LANG']['MSC']['debugDisabled'];
 		$objTemplate->action = ampersand(Environment::get('request'));
 
-		$objResponse = $objTemplate->getResponse();
-
-		if ($blnUpdate && $objJwtManager instanceof JwtManager)
-		{
-			$objJwtManager->addResponseCookie($objResponse, array('debug' => $blnDebug));
-		}
-
-		return $objResponse;
+		return $objTemplate->getResponse();
 	}
 
 	/**

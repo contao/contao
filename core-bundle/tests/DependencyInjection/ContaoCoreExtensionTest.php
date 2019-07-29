@@ -1669,6 +1669,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(LogoutSuccessHandler::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
+        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
     }
 
     public function testRegistersTheSecurityLogoutHandler(): void
@@ -1696,6 +1697,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
         $this->assertSame('session', (string) $definition->getArgument(3));
         $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(4));
+        $this->assertSame('%contao.preview_script%', (string) $definition->getArgument(5));
     }
 
     public function testRegistersTheSecurityTwoFactorAuthenticator(): void

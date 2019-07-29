@@ -80,6 +80,17 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('%s')
                     ->end()
                 ->end()
+                ->scalarNode('preview_script')
+                    ->cannotBeEmpty()
+                    ->defaultValue('')
+                    ->validate()
+                        ->always(
+                            function (string $value): string {
+                                return $this->canonicalize($value);
+                            }
+                        )
+                    ->end()
+                ->end()
                 ->scalarNode('csrf_cookie_prefix')
                     ->cannotBeEmpty()
                     ->defaultValue('csrf_')

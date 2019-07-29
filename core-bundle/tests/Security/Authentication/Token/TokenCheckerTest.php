@@ -153,7 +153,7 @@ class TokenCheckerTest extends TestCase
         $request = new Request();
         $request->server->set('SCRIPT_NAME', $script);
 
-        if ('/preview.php' === $script) {
+        if ('' !== $script) {
             $session = $this->mockSessionWithToken($token);
         } else {
             $session = $this->createMock(SessionInterface::class);
@@ -168,7 +168,8 @@ class TokenCheckerTest extends TestCase
             $this->mockFirewallMapWithConfigContext('contao_backend'),
             $this->mockTokenStorage(BackendUser::class),
             $session,
-            $this->trustResolver
+            $this->trustResolver,
+            '/preview.php'
         );
 
         $this->assertSame($expect, $tokenChecker->isPreviewMode());

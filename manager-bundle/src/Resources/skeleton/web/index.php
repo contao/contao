@@ -25,9 +25,9 @@ if (\in_array('phar', stream_get_wrappers(), true)) {
 /** @var Composer\Autoload\ClassLoader */
 $loader = require __DIR__.'/../vendor/autoload.php';
 
-$kernel = ContaoKernel::create(\dirname(__DIR__));
-$cache = $kernel->getHttpCache();
 $request = Request::createFromGlobals();
+$kernel = ContaoKernel::createFromRequest(\dirname(__DIR__), $request);
+$cache = $kernel->getHttpCache();
 
 // Enable the Symfony reverse proxy if request has no surrogate capability
 if (null !== $cache->getSurrogate() && !$cache->getSurrogate()->hasSurrogateCapability($request)) {

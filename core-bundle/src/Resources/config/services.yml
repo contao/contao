@@ -11,6 +11,7 @@ services:
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.image_factory'
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
+    Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
     Contao\CoreBundle\Security\TwoFactor\Authenticator: '@contao.security.two_factor.authenticator'
@@ -18,6 +19,14 @@ services:
 
     # Backwards compatibility
     Contao\CoreBundle\Framework\ContaoFrameworkInterface: '@contao.framework'
+
+    # Controllers
+    Contao\CoreBundle\Controller\BackendController:
+        calls:
+            - ['setContainer', ['@Psr\Container\ContainerInterface']]
+        tags:
+            - { name: container.service_subscriber }
+        public: true
 
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
@@ -557,6 +566,7 @@ services:
             - '@security.token_storage'
             - '@session'
             - '@security.authentication.trust_resolver'
+            - '%contao.preview_script%'
         public: true
 
     contao.security.two_factor.authenticator:

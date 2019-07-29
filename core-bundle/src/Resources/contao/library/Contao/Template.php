@@ -338,32 +338,6 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Return the preview route
-	 *
-	 * @param string $strName   The route name
-	 * @param array  $arrParams The route parameters
-	 *
-	 * @return string The route
-	 */
-	public function previewRoute($strName, $arrParams=array())
-	{
-		$objRouter = System::getContainer()->get('router');
-		$objContext = $objRouter->getContext();
-
-		$objPreviewContext = clone $objContext;
-		$objPreviewContext->setBaseUrl('/preview.php');
-
-		$objRouter->setContext($objPreviewContext);
-
-		$strUrl = $objRouter->generate($strName, $arrParams);
-		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
-
-		$objRouter->setContext($objContext);
-
-		return ampersand($strUrl);
-	}
-
-	/**
 	 * Returns a translated message
 	 *
 	 * @param string $strId

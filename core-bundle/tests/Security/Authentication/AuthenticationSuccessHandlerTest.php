@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\HttpKernel\JwtManager;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
@@ -96,53 +95,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $response = $handler->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
-    }
-
-    public function testAddsTheJwtCookieForTheBackendUser(): void
-    {
-        $jwtManager = $this->createMock(JwtManager::class);
-        $jwtManager
-            ->expects($this->once())
-            ->method('addResponseCookie')
-        ;
-
-        $request = new Request();
-        $request->attributes->set(JwtManager::REQUEST_ATTRIBUTE, $jwtManager);
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($this->createMock(BackendUser::class))
-        ;
-
-        $handler = $this->getHandler();
-        $handler->onAuthenticationSuccess($request, $token);
-    }
-
-    public function testDoesNotAddTheJwtCookieForTheFrontendUser(): void
-    {
-        $jwtManager = $this->createMock(JwtManager::class);
-        $jwtManager
-            ->expects($this->never())
-            ->method('addResponseCookie')
-        ;
-
-        $request = new Request();
-        $request->attributes->set(JwtManager::REQUEST_ATTRIBUTE, $jwtManager);
-
-        $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
-        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($this->createMock(FrontendUser::class))
-        ;
-
-        $handler = $this->getHandler($framework);
-        $handler->onAuthenticationSuccess($request, $token);
     }
 
     /**

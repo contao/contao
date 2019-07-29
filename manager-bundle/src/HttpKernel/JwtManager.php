@@ -10,9 +10,8 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\HttpKernel;
+namespace Contao\ManagerBundle\HttpKernel;
 
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer;
@@ -24,7 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class JwtManager
 {
-    public const REQUEST_ATTRIBUTE = '_jwtManager';
     public const COOKIE_NAME = '_contao_preview';
 
     /**
@@ -71,8 +69,6 @@ class JwtManager
 
     public function parseRequest(Request $request): ?array
     {
-        $request->attributes->set(self::REQUEST_ATTRIBUTE, $this);
-
         if ($request->cookies->has(self::COOKIE_NAME)) {
             try {
                 return $this->parseCookie((string) $request->cookies->get(self::COOKIE_NAME));
@@ -81,17 +77,7 @@ class JwtManager
             }
         }
 
-        if (0 === strncmp($request->getPathInfo(), '/contao/', 8)) {
-            return null;
-        }
-
-        $query = '';
-
-        if (null !== ($qs = $request->getQueryString())) {
-            $query = '?referer='.base64_encode($qs);
-        }
-
-        throw new RedirectResponseException('/preview.php/contao/login'.$query);
+        return null;
     }
 
     /**
@@ -111,6 +97,10 @@ class JwtManager
      */
     public function clearResponseCookie(Response $response): Response
     {
+        if ($this->hasCookie($response)) {
+            return $response;
+        }
+
         $response->headers->clearCookie(self::COOKIE_NAME);
 
         return $response;
