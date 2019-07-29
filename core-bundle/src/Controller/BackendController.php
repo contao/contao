@@ -241,7 +241,7 @@ class BackendController extends AbstractController
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
 
