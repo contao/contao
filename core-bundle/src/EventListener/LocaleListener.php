@@ -80,7 +80,7 @@ class LocaleListener
             throw new \InvalidArgumentException(sprintf('"%s" is not a supported locale.', $locale));
         }
 
-        $values = preg_split('/-|_/', $locale);
+        $values = preg_split('/[_-]/', $locale);
         $locale = strtolower($values[0]);
 
         if (isset($values[1])) {

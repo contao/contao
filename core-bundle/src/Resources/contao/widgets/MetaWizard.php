@@ -40,28 +40,26 @@ class MetaWizard extends Widget
 	 */
 	public function __set($strKey, $varValue)
 	{
-		switch ($strKey)
+		if ($strKey == 'metaFields')
 		{
-			case 'metaFields':
-				if (!array_is_assoc($varValue))
+			if (!array_is_assoc($varValue))
+			{
+				$varValue = array_combine($varValue, array_fill(0, \count($varValue), ''));
+			}
+
+			foreach ($varValue as $strArrKey => $varArrValue)
+			{
+				if (!\is_array($varArrValue))
 				{
-					$varValue = array_combine($varValue, array_fill(0, \count($varValue), ''));
+					$varValue[$strArrKey] = array('attributes' => $varArrValue);
 				}
+			}
 
-				foreach($varValue as $strArrKey=>$varArrValue)
-				{
-					if (!\is_array($varArrValue))
-					{
-						$varValue[$strArrKey] = array('attributes'=>$varArrValue);
-					}
-				}
-
-				$this->arrConfiguration['metaFields'] = $varValue;
-				break;
-
-			default:
-				parent::__set($strKey, $varValue);
-				break;
+			$this->arrConfiguration['metaFields'] = $varValue;
+		}
+		else
+		{
+			parent::__set($strKey, $varValue);
 		}
 	}
 

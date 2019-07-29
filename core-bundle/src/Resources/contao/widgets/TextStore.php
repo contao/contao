@@ -41,18 +41,16 @@ class TextStore extends Widget
 	 */
 	public function __set($strKey, $varValue)
 	{
-		switch ($strKey)
+		if ($strKey == 'maxlength')
 		{
-			case 'maxlength':
-				if ($varValue > 0)
-				{
-					$this->arrAttributes['maxlength'] = $varValue;
-				}
-				break;
-
-			default:
-				parent::__set($strKey, $varValue);
-				break;
+			if ($varValue > 0)
+			{
+				$this->arrAttributes['maxlength'] = $varValue;
+			}
+		}
+		else
+		{
+			parent::__set($strKey, $varValue);
 		}
 	}
 

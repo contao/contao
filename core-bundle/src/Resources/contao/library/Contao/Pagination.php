@@ -167,7 +167,7 @@ class Pagination
 	 */
 	public function hasFirst()
 	{
-		return ($this->blnShowFirstLast && $this->intPage > 2) ? true : false;
+		return $this->blnShowFirstLast && $this->intPage > 2;
 	}
 
 	/**
@@ -177,7 +177,7 @@ class Pagination
 	 */
 	public function hasPrevious()
 	{
-		return ($this->intPage > 1) ? true : false;
+		return $this->intPage > 1;
 	}
 
 	/**
@@ -187,7 +187,7 @@ class Pagination
 	 */
 	public function hasNext()
 	{
-		return ($this->intPage < $this->intTotalPages) ? true : false;
+		return $this->intPage < $this->intTotalPages;
 	}
 
 	/**
@@ -197,7 +197,7 @@ class Pagination
 	 */
 	public function hasLast()
 	{
-		return ($this->blnShowFirstLast && $this->intPage < ($this->intTotalPages - 1)) ? true : false;
+		return $this->blnShowFirstLast && $this->intPage < ($this->intTotalPages - 1);
 	}
 
 	/**
@@ -398,10 +398,8 @@ class Pagination
 		{
 			return ampersand($this->strUrl);
 		}
-		else
-		{
-			return ampersand($this->strUrl) . $this->strVarConnector . $this->strParameter . '=' . $intPage;
-		}
+
+		return ampersand($this->strUrl) . $this->strVarConnector . $this->strParameter . '=' . $intPage;
 	}
 }
 

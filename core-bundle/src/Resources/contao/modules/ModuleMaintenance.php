@@ -54,10 +54,8 @@ class ModuleMaintenance extends BackendModule
 				$this->Template->content = $buffer;
 				break;
 			}
-			else
-			{
-				$this->Template->content .= $buffer;
-			}
+
+			$this->Template->content .= $buffer;
 		}
 	}
 }

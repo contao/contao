@@ -644,25 +644,23 @@ class Image
 
 			return 'assets/contao/images/' . $src;
 		}
-		else
+
+		$theme = Backend::getTheme();
+
+		if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
 		{
-			$theme = Backend::getTheme();
-
-			if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
-			{
-				return 'system/themes/' . $theme . '/icons/' . $src;
-			}
-
-			$filename = pathinfo($src, PATHINFO_FILENAME);
-
-			// Prefer SVG icons
-			if (file_exists($rootDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
-			{
-				return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
-			}
-
-			return 'system/themes/' . $theme . '/images/' . $src;
+			return 'system/themes/' . $theme . '/icons/' . $src;
 		}
+
+		$filename = pathinfo($src, PATHINFO_FILENAME);
+
+		// Prefer SVG icons
+		if (file_exists($rootDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
+		{
+			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
+		}
+
+		return 'system/themes/' . $theme . '/images/' . $src;
 	}
 
 	/**
@@ -879,6 +877,7 @@ class Image
 				return (int) round($value);
 				break;
 
+			case 'pc':
 			case 'em':
 				return (int) round($value * 16);
 				break;
@@ -889,10 +888,6 @@ class Image
 
 			case 'pt':
 				return (int) round($value * 16 / 12);
-				break;
-
-			case 'pc':
-				return (int) round($value * 16);
 				break;
 
 			case 'in':

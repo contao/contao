@@ -62,13 +62,8 @@ class Upload extends Widget implements \uploadable
 	 */
 	protected function validator($varInput)
 	{
-		$strUploadTo = 'system/tmp';
-
 		// Specify the target folder in the DCA (eval)
-		if (isset($this->arrConfiguration['uploadFolder']))
-		{
-			$strUploadTo = $this->arrConfiguration['uploadFolder'];
-		}
+		$strUploadTo = $this->arrConfiguration['uploadFolder'] ?? 'system/tmp';
 
 		return $this->objUploader->uploadTo($strUploadTo);
 	}

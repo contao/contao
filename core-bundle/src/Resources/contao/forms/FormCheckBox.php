@@ -265,16 +265,14 @@ class FormCheckBox extends Widget
 							$this->strTagEnding,
 							$strOptions);
 		}
-		else
-		{
-			return sprintf('<fieldset id="ctrl_%s" class="checkbox_container%s">%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
-							$this->strId,
-							($this->strClass ? ' ' . $this->strClass : ''),
-							$this->strError,
-							$this->strName,
-							$this->strTagEnding,
-							$strOptions);
-		}
+
+		return sprintf('<fieldset id="ctrl_%s" class="checkbox_container%s">%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
+						$this->strId,
+						($this->strClass ? ' ' . $this->strClass : ''),
+						$this->strError,
+						$this->strName,
+						$this->strTagEnding,
+						$strOptions);
 	}
 }
 

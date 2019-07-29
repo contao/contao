@@ -405,23 +405,21 @@ class Combiner extends System
 
 			return $this->fixPaths($objCompiler->compile($content), $arrFile);
 		}
-		else
-		{
-			$strPath = \dirname($arrFile['name']);
 
-			$arrOptions = array
-			(
-				'strictMath' => true,
-				'compress' => !Config::get('debugMode'),
-				'import_dirs' => array($this->strRootDir . '/' . $strPath => $strPath)
-			);
+		$strPath = \dirname($arrFile['name']);
 
-			$objParser = new \Less_Parser();
-			$objParser->SetOptions($arrOptions);
-			$objParser->parse($content);
+		$arrOptions = array
+		(
+			'strictMath' => true,
+			'compress' => !Config::get('debugMode'),
+			'import_dirs' => array($this->strRootDir . '/' . $strPath => $strPath)
+		);
 
-			return $this->fixPaths($objParser->getCss(), $arrFile);
-		}
+		$objParser = new \Less_Parser();
+		$objParser->SetOptions($arrOptions);
+		$objParser->parse($content);
+
+		return $this->fixPaths($objParser->getCss(), $arrFile);
 	}
 
 	/**

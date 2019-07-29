@@ -346,7 +346,7 @@ class Date
 				case 'a':
 				case 'A':
 					$blnCorrectHour = true;
-					$blnMeridiem = (strtolower(substr($this->strDate, $intCount, 2)) == 'pm') ? true : false;
+					$blnMeridiem = strtolower(substr($this->strDate, $intCount, 2)) == 'pm';
 					$intCount += 2;
 					break;
 

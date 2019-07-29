@@ -199,7 +199,7 @@ class ModuleNewsMenu extends ModuleNews
 		}
 
 		$this->Template->items = $arrItems;
-		$this->Template->showQuantity = ($this->news_showQuantity != '') ? true : false;
+		$this->Template->showQuantity = (bool) $this->news_showQuantity;
 		$this->Template->url = $this->strUrl . '?';
 		$this->Template->activeYear = Input::get('year');
 	}
@@ -271,7 +271,7 @@ class ModuleNewsMenu extends ModuleNews
 		$this->Template->daily = true;
 		$this->Template->days = $this->compileDays();
 		$this->Template->weeks = $this->compileWeeks($arrData);
-		$this->Template->showQuantity = ($this->news_showQuantity != '') ? true : false;
+		$this->Template->showQuantity = (bool) $this->news_showQuantity;
 	}
 
 	/**

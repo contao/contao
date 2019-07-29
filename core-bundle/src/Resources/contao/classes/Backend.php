@@ -172,10 +172,6 @@ abstract class Backend extends Controller
 				return 'python';
 				break;
 
-			case 'txt':
-				return 'text';
-				break;
-
 			case 'c': case 'cc': case 'cpp': case 'c++':
 			case 'h': case 'hh': case 'hpp': case 'h++':
 				return 'c_cpp';
@@ -986,7 +982,7 @@ abstract class Backend extends Controller
 			}
 
 			$objSession->set($strKey, Input::get('fn', true));
-			Controller::redirect(preg_replace('/(&|\?)fn=[^&]*/', '', Environment::get('request')));
+			Controller::redirect(preg_replace('/[?&]fn=[^&]*/', '', Environment::get('request')));
 		}
 
 		$strNode = $objSession->get($strKey);

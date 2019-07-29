@@ -94,12 +94,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 			$this->first();
 		}
 
-		if (isset($this->arrModels[$this->intIndex]->$strKey))
-		{
-			return $this->arrModels[$this->intIndex]->$strKey;
-		}
-
-		return null;
+		return $this->arrModels[$this->intIndex]->$strKey ?? null;
 	}
 
 	/**

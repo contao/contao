@@ -832,16 +832,14 @@ abstract class Widget extends Controller
 			{
 				return '';
 			}
+
+			if ($this->strLabel == '')
+			{
+				$this->addError($GLOBALS['TL_LANG']['ERR']['mdtryNoLabel']);
+			}
 			else
 			{
-				if ($this->strLabel == '')
-				{
-					$this->addError($GLOBALS['TL_LANG']['ERR']['mdtryNoLabel']);
-				}
-				else
-				{
-					$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
-				}
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
 			}
 		}
 
@@ -1443,7 +1441,7 @@ abstract class Widget extends Controller
 	/**
 	 * Return the empty value based on the SQL string
 	 *
-	 * @param string $sql The SQL string
+	 * @param string|array $sql The SQL string
 	 *
 	 * @return string|integer|null The empty value
 	 */
@@ -1486,7 +1484,7 @@ abstract class Widget extends Controller
 			return null;
 		}
 
-		$type = strtolower(preg_replace('/^([A-Za-z]+)(\(| ).*$/', '$1', $sql));
+		$type = strtolower(preg_replace('/^([A-Za-z]+)[( ].*$/', '$1', $sql));
 
 		if (\in_array($type, array('int', 'integer', 'tinyint', 'smallint', 'mediumint', 'bigint', 'float', 'double', 'dec', 'decimal')))
 		{

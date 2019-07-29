@@ -279,61 +279,58 @@ abstract class Controller extends System
 		}
 
 		// Other modules
+		if (\is_object($intId))
+		{
+			$objRow = $intId;
+		}
 		else
 		{
-			if (\is_object($intId))
-			{
-				$objRow = $intId;
-			}
-			else
-			{
-				$objRow = ModuleModel::findByPk($intId);
+			$objRow = ModuleModel::findByPk($intId);
 
-				if ($objRow === null)
-				{
-					return '';
-				}
-			}
-
-			// Check the visibility (see #6311)
-			if (!static::isVisibleElement($objRow))
+			if ($objRow === null)
 			{
 				return '';
 			}
-
-			$strClass = Module::findClass($objRow->type);
-
-			// Return if the class does not exist
-			if (!class_exists($strClass))
-			{
-				static::log('Module class "'.$strClass.'" (module "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
-
-				return '';
-			}
-
-			$objRow->typePrefix = 'mod_';
-
-			/** @var Module $objModule */
-			$objModule = new $strClass($objRow, $strColumn);
-			$strBuffer = $objModule->generate();
-
-			// HOOK: add custom logic
-			if (isset($GLOBALS['TL_HOOKS']['getFrontendModule']) && \is_array($GLOBALS['TL_HOOKS']['getFrontendModule']))
-			{
-				foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback)
-				{
-					$strBuffer = static::importStatic($callback[0])->{$callback[1]}($objRow, $strBuffer, $objModule);
-				}
-			}
-
-			// Disable indexing if protected
-			if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
-			{
-				$strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
-			}
-
-			return $strBuffer;
 		}
+
+		// Check the visibility (see #6311)
+		if (!static::isVisibleElement($objRow))
+		{
+			return '';
+		}
+
+		$strClass = Module::findClass($objRow->type);
+
+		// Return if the class does not exist
+		if (!class_exists($strClass))
+		{
+			static::log('Module class "'.$strClass.'" (module "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
+
+			return '';
+		}
+
+		$objRow->typePrefix = 'mod_';
+
+		/** @var Module $objModule */
+		$objModule = new $strClass($objRow, $strColumn);
+		$strBuffer = $objModule->generate();
+
+		// HOOK: add custom logic
+		if (isset($GLOBALS['TL_HOOKS']['getFrontendModule']) && \is_array($GLOBALS['TL_HOOKS']['getFrontendModule']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback)
+			{
+				$strBuffer = static::importStatic($callback[0])->{$callback[1]}($objRow, $strBuffer, $objModule);
+			}
+		}
+
+		// Disable indexing if protected
+		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
+		{
+			$strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
+		}
+
+		return $strBuffer;
 	}
 
 	/**

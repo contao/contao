@@ -366,12 +366,7 @@ class Config
 	 */
 	public static function get($strKey)
 	{
-		if (isset($GLOBALS['TL_CONFIG'][$strKey]))
-		{
-			return $GLOBALS['TL_CONFIG'][$strKey];
-		}
-
-		return null;
+		return $GLOBALS['TL_CONFIG'][$strKey] ?? null;
 	}
 
 	/**

@@ -120,10 +120,8 @@ class FormModel extends Model
 		{
 			return $objResult->maxlength;
 		}
-		else
-		{
-			return Config::get('maxFileSize');
-		}
+
+		return Config::get('maxFileSize');
 	}
 }
 

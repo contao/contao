@@ -255,10 +255,8 @@ class File extends System
 				{
 					return 'data:' . $this->mime . ';base64,' . base64_encode(gzdecode($this->getContent()));
 				}
-				else
-				{
-					return 'data:' . $this->mime . ';base64,' . base64_encode($this->getContent());
-				}
+
+				return 'data:' . $this->mime . ';base64,' . base64_encode($this->getContent());
 				break;
 
 			case 'imageSize':
@@ -859,12 +857,7 @@ class File extends System
 	 */
 	protected function getMimeInfo()
 	{
-		if (isset($GLOBALS['TL_MIME'][$this->extension]))
-		{
-			return $GLOBALS['TL_MIME'][$this->extension];
-		}
-
-		return array('application/octet-stream', 'iconPLAIN.svg');
+		return $GLOBALS['TL_MIME'][$this->extension] ?? array('application/octet-stream', 'iconPLAIN.svg');
 	}
 
 	/**
@@ -903,10 +896,8 @@ class File extends System
 		{
 			return '';
 		}
-		else
-		{
-			return md5_file($this->strRootDir . '/' . $this->strFile);
-		}
+
+		return md5_file($this->strRootDir . '/' . $this->strFile);
 	}
 
 	/**
@@ -921,7 +912,7 @@ class File extends System
 		$matches = array();
 		$return = array('dirname'=>'', 'basename'=>'', 'extension'=>'', 'filename'=>'');
 
-		preg_match('%^(.*?)[\\\\/]*(([^/\\\\]*?)(\.([^\.\\\\/]+?)|))[\\\\/\.]*$%m', $this->strFile, $matches);
+		preg_match('%^(.*?)[\\\\/]*(([^/\\\\]*?)(\.([^.\\\\/]+?)|))[\\\\/.]*$%m', $this->strFile, $matches);
 
 		if (isset($matches[1]))
 		{

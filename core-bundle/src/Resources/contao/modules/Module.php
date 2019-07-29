@@ -172,12 +172,7 @@ abstract class Module extends Frontend
 	 */
 	public function __get($strKey)
 	{
-		if (isset($this->arrData[$strKey]))
-		{
-			return $this->arrData[$strKey];
-		}
-
-		return parent::__get($strKey);
+		return $this->arrData[$strKey] ?? parent::__get($strKey);
 	}
 
 	/**

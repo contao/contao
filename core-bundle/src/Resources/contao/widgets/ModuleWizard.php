@@ -120,12 +120,7 @@ class ModuleWizard extends Widget
 
 			foreach ($this->varValue as $v)
 			{
-				$key = $v['col'];
-
-				if (isset($positions[$v['col']]))
-				{
-					$key = $positions[$v['col']];
-				}
+				$key = $positions[$v['col']] ?? $v['col'];
 
 				$arrCols[$key][] = $v;
 			}

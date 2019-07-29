@@ -322,7 +322,7 @@ class Search
 
 		// Split keywords
 		$arrChunks = array();
-		preg_match_all('/"[^"]+"|[\+\-]?[^ ]+\*?/', $strKeywords, $arrChunks);
+		preg_match_all('/"[^"]+"|[+-]?[^ ]+\*?/', $strKeywords, $arrChunks);
 
 		$arrPhrases = array();
 		$arrKeywords = array();

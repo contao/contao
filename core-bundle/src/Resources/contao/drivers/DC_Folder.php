@@ -2885,7 +2885,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$this->values[] = $session['search'][$this->strTable]['value'];
 		}
 
-		$active = ($session['search'][$this->strTable]['value'] != '') ? true : false;
+		$active = isset($session['search'][$this->strTable]['value']);
 
 		return '
     <div class="tl_search tl_subpanel">

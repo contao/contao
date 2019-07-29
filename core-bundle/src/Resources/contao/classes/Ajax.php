@@ -375,7 +375,7 @@ class Ajax extends Backend
 
 					if (method_exists($dca, 'toggleFeatured'))
 					{
-						$dca->toggleFeatured(Input::post('id'), ((Input::post('state') == 1) ? true : false));
+						$dca->toggleFeatured(Input::post('id'), Input::post('state') == 1);
 					}
 				}
 
@@ -416,7 +416,7 @@ class Ajax extends Backend
 				}
 				elseif ($dc instanceof DC_File)
 				{
-					$val = ((Input::post('state') == 1) ? true : false);
+					$val = (Input::post('state') == 1);
 					Config::persist(Input::post('field'), $val);
 
 					if (Input::post('load'))

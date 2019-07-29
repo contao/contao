@@ -542,16 +542,8 @@ class Dbafs
 				}
 			}
 
-			// Get the model
-			if (isset($arrModels[$strRelpath]))
-			{
-				/** @var Model $objModel */
-				$objModel = $arrModels[$strRelpath];
-			}
-			else
-			{
-				$objModel = FilesModel::findByPath($strRelpath);
-			}
+			/** @var Model $objModel */
+			$objModel = $arrModels[$strRelpath] ?? FilesModel::findByPath($strRelpath);
 
 			if ($objModel === null)
 			{

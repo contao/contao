@@ -200,7 +200,7 @@ class PaletteManipulator
             $hide = false;
             $fields = StringUtil::trimsplit(',', $group);
 
-            if (preg_match('#\{(.+?)(:hide)?\}#', $fields[0], $matches)) {
+            if (preg_match('#{(.+?)(:hide)?}#', $fields[0], $matches)) {
                 $legend = $matches[1];
                 $hide = \count($matches) > 2 && ':hide' === $matches[2];
                 array_shift($fields);

@@ -116,15 +116,13 @@ class FrontendUser extends User
 	 */
 	public function __set($strKey, $varValue)
 	{
-		switch ($strKey)
+		if ($strKey == 'allGroups')
 		{
-			case 'allGroups':
-				$this->arrGroups = $varValue;
-				break;
-
-			default:
-				parent::__set($strKey, $varValue);
-				break;
+			$this->arrGroups = $varValue;
+		}
+		else
+		{
+			parent::__set($strKey, $varValue);
 		}
 	}
 

@@ -199,7 +199,7 @@ class Validator
 	 */
 	public static function isPhone($varValue)
 	{
-		return preg_match('/^(\+|\()?(\d+[ \+\(\)\/-]*)+$/', $varValue);
+		return preg_match('/^[+(]?(\d+[ +()\/-]*)+$/', $varValue);
 	}
 
 	/**

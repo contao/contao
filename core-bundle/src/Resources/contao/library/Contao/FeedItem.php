@@ -80,12 +80,7 @@ class FeedItem
 	 */
 	public function __get($strKey)
 	{
-		if (isset($this->arrData[$strKey]))
-		{
-			return $this->arrData[$strKey];
-		}
-
-		return null;
+		return $this->arrData[$strKey] ?? null;
 	}
 
 	/**

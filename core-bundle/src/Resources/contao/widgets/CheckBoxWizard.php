@@ -42,15 +42,13 @@ class CheckBoxWizard extends Widget
 	 */
 	public function __set($strKey, $varValue)
 	{
-		switch ($strKey)
+		if ($strKey == 'options')
 		{
-			case 'options':
-				$this->arrOptions = StringUtil::deserialize($varValue);
-				break;
-
-			default:
-				parent::__set($strKey, $varValue);
-				break;
+			$this->arrOptions = StringUtil::deserialize($varValue);
+		}
+		else
+		{
+			parent::__set($strKey, $varValue);
 		}
 	}
 
