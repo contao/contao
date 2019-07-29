@@ -85,17 +85,9 @@ class ContaoCache extends HttpCache implements CacheInvalidation
             $itemsCache = new FilesystemAdapter('', 0, $cacheDir);
         }
 
-        $tagsCache = $itemsCache;
-
-        if (class_exists('SQLite3', false)) {
-            $tagsCache = new PdoAdapter(
-                DriverManager::getConnection(['url' => 'sqlite:///'.$cacheDir.'/tag_versions.sqlite'])
-            );
-        }
-
         return new Psr6Store([
             'cache_directory' => $cacheDir,
-            'cache' => new TagAwareAdapter($itemsCache, $tagsCache),
+            'cache' => new TagAwareAdapter($itemsCache),
             'cache_tags_header' => TagHeaderFormatter::DEFAULT_HEADER_NAME,
             'prune_threshold' => 5000,
         ]);
