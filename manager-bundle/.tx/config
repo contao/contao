@@ -2,7 +2,7 @@
 host = https://www.transifex.com
 type = XLIFF
 
-[contao-manager-bundle.v4_8-contao_manager]
+[manager-bundle.v4_8-contao_manager]
 source_file = src/Resources/translations/contao_manager.en.xlf
 source_lang = en
 file_filter = src/Resources/translations/contao_manager.<lang>.xlf
