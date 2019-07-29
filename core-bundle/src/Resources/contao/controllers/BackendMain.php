@@ -285,7 +285,6 @@ class BackendMain extends Backend
 		// TODO: This should be moved the the manager-bundle in Contao 4.9
 		$this->Template->canDebug = $this->User->isAdmin && System::getContainer()->has('contao_manager.jwt_manager');
 		$this->Template->isDebug = $container->get('kernel')->isDebug();
-		$this->Template->debugMode = $GLOBALS['TL_LANG']['MSC']['debugMode'];
 
 		$strSystemMessages = Backend::getSystemMessages();
 		$this->Template->systemMessagesCount = substr_count($strSystemMessages, 'class="tl_');
