@@ -21,6 +21,13 @@ use Contao\StringUtil;
 
 class InsertTagsListener
 {
+    private const SUPPORTED_TAGS = [
+        'faq',
+        'faq_open',
+        'faq_url',
+        'faq_title',
+    ];
+
     /**
      * @var ContaoFramework
      */
@@ -38,17 +45,10 @@ class InsertTagsListener
      */
     public function onReplaceInsertTags(string $tag, bool $useCache, $cacheValue, array $flags)
     {
-        static $supportedTags = [
-            'faq',
-            'faq_open',
-            'faq_url',
-            'faq_title',
-        ];
-
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
 
-        if (!\in_array($key, $supportedTags, true)) {
+        if (!\in_array($key, self::SUPPORTED_TAGS, true)) {
             return false;
         }
 

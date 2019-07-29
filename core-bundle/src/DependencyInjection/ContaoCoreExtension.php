@@ -59,15 +59,9 @@ class ContaoCoreExtension extends Extension
             new FileLocator(__DIR__.'/../Resources/config')
         );
 
-        static $files = [
-            'commands.yml',
-            'listener.yml',
-            'services.yml',
-        ];
-
-        foreach ($files as $file) {
-            $loader->load($file);
-        }
+        $loader->load('commands.yml');
+        $loader->load('listener.yml');
+        $loader->load('services.yml');
 
         $container->setParameter('contao.web_dir', $config['web_dir']);
         $container->setParameter('contao.prepend_locale', $config['prepend_locale']);

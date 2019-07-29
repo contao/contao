@@ -35,6 +35,21 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class ExceptionConverterListener
 {
+    private const MAPPER = [
+        AccessDeniedException::class => 'AccessDeniedHttpException',
+        ForwardPageNotFoundException::class => 'InternalServerErrorHttpException',
+        InsecureInstallationException::class => 'InternalServerErrorHttpException',
+        InsufficientAuthenticationException::class => 'UnauthorizedHttpException',
+        InternalServerErrorException::class => 'InternalServerErrorHttpException',
+        InvalidRequestTokenException::class => 'BadRequestHttpException',
+        NoActivePageFoundException::class => 'NotFoundHttpException',
+        NoLayoutSpecifiedException::class => 'InternalServerErrorHttpException',
+        NoRootPageFoundException::class => 'NotFoundHttpException',
+        PageNotFoundException::class => 'NotFoundHttpException',
+        ServiceUnavailableException::class => 'ServiceUnavailableHttpException',
+        ContaoServiceUnavailableException::class => 'ServiceUnavailableHttpException',
+    ];
+
     /**
      * Maps known exceptions to HTTP exceptions.
      */
@@ -54,22 +69,7 @@ class ExceptionConverterListener
 
     private function getTargetClass(\Exception $exception): ?string
     {
-        static $mapper = [
-            AccessDeniedException::class => 'AccessDeniedHttpException',
-            ForwardPageNotFoundException::class => 'InternalServerErrorHttpException',
-            InsecureInstallationException::class => 'InternalServerErrorHttpException',
-            InsufficientAuthenticationException::class => 'UnauthorizedHttpException',
-            InternalServerErrorException::class => 'InternalServerErrorHttpException',
-            InvalidRequestTokenException::class => 'BadRequestHttpException',
-            NoActivePageFoundException::class => 'NotFoundHttpException',
-            NoLayoutSpecifiedException::class => 'InternalServerErrorHttpException',
-            NoRootPageFoundException::class => 'NotFoundHttpException',
-            PageNotFoundException::class => 'NotFoundHttpException',
-            ServiceUnavailableException::class => 'ServiceUnavailableHttpException',
-            ContaoServiceUnavailableException::class => 'ServiceUnavailableHttpException',
-        ];
-
-        foreach ($mapper as $source => $target) {
+        foreach (self::MAPPER as $source => $target) {
             if ($exception instanceof $source) {
                 return $target;
             }

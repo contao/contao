@@ -2,6 +2,8 @@
 
 ## DEV
 
+ * Use the security helper instead of the token storage (see #609).
+ * Do not show pretty error screens for admin exceptions (see #596).
  * Use Symfony security to check access in the front end preview (see #595).
  * Also make the response private if an Authorization header is present (see #594).
  * Set the request and translator locale in case of an exception (see #453).
@@ -33,6 +35,7 @@
  * Add a command to debug a DCA (see #490).
  * Support clearing any proxy cache in the maintenance module (see #173).
  * Remove the Google+ syndication links (see #484).
+ * Remove outdated Contao components, which are no longer required (see #332).
  * Add a splash image to the Vimeo and YouTube elements (see #300).
  * Make the notification bell counter more visible (see #289).
  * Replace the `BE_PAGE_OFFSET` cookie with a sessionStorage entry (see #467).

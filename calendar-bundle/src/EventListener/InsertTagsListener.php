@@ -20,6 +20,14 @@ use Contao\StringUtil;
 
 class InsertTagsListener
 {
+    private const SUPPORTED_TAGS = [
+        'event',
+        'event_open',
+        'event_url',
+        'event_title',
+        'event_teaser',
+    ];
+
     /**
      * @var ContaoFramework
      */
@@ -42,15 +50,7 @@ class InsertTagsListener
             return $this->replaceCalendarFeedInsertTag($elements[1]);
         }
 
-        static $supportedTags = [
-            'event',
-            'event_open',
-            'event_url',
-            'event_title',
-            'event_teaser',
-        ];
-
-        if (\in_array($key, $supportedTags, true)) {
+        if (\in_array($key, self::SUPPORTED_TAGS, true)) {
             return $this->replaceEventInsertTag($key, $elements[1], $flags);
         }
 

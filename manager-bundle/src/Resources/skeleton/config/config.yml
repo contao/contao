@@ -50,6 +50,8 @@ doctrine:
                     charset: utf8mb4
                     collate: utf8mb4_unicode_ci
                     engine: InnoDB
+                options:
+                    !php/const PDO::MYSQL_ATTR_MULTI_STATEMENTS: false
         types:
             binary_string:
                 class: 'Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType'
