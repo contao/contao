@@ -266,7 +266,7 @@ abstract class Widget extends Controller
 				{
 					$varValue = $varValue ? 'on' : 'off';
 				}
-				// Do not add a break; statement here
+				// no break
 
 			case 'alt':
 			case 'style':
@@ -298,7 +298,7 @@ abstract class Widget extends Controller
 			case 'disabled':
 			case 'readonly':
 				$this->blnSubmitInput = $varValue ? false : true;
-				// Do not add a break; statement here
+				// no break
 
 			case 'autofocus':
 				if ($varValue)
@@ -316,7 +316,7 @@ abstract class Widget extends Controller
 				{
 					$this->strClass = trim($this->strClass . ' mandatory');
 				}
-				// Do not add a break; statement here
+				// no break
 
 			case 'mandatory':
 			case 'nospace':
@@ -379,7 +379,8 @@ abstract class Widget extends Controller
 				{
 					return Encryption::encrypt($this->varValue);
 				}
-				elseif ($this->varValue === '')
+
+				if ($this->varValue === '')
 				{
 					return $this->getEmptyStringOrNull();
 				}
@@ -424,7 +425,8 @@ abstract class Widget extends Controller
 				{
 					return $this->arrAttributes[$strKey];
 				}
-				elseif (isset($this->arrConfiguration[$strKey]))
+
+				if (isset($this->arrConfiguration[$strKey]))
 				{
 					return $this->arrConfiguration[$strKey];
 				}
@@ -716,7 +718,8 @@ abstract class Widget extends Controller
 		{
 			return ' ' . $strKey;
 		}
-		elseif ($varValue != '')
+
+		if ($varValue != '')
 		{
 			return ' ' . $strKey . '="' . StringUtil::specialchars($varValue) . '"';
 		}
@@ -875,7 +878,7 @@ abstract class Widget extends Controller
 					{
 						break;
 					}
-					// DO NOT ADD A break; STATEMENT HERE
+					// no break
 
 				// Numeric characters (including full stop [.] and minus [-])
 				case 'digit':
@@ -973,7 +976,7 @@ abstract class Widget extends Controller
 				// Check whether the current value is a valid friendly name e-mail address
 				case 'friendly':
 					list ($strName, $varInput) = StringUtil::splitFriendlyEmail($varInput);
-					// no break;
+					// no break
 
 				// Check whether the current value is a valid e-mail address
 				case 'email':

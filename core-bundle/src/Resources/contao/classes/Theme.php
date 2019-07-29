@@ -489,7 +489,7 @@ class Theme extends Backend
 						}
 
 						// Increment the ID
-						elseif ($name == 'id')
+						if ($name == 'id')
 						{
 							$value = $arrMapper[$table][$value];
 						}

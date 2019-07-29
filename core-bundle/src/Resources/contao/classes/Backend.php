@@ -432,7 +432,8 @@ abstract class Backend extends Controller
 			{
 				throw new ResponseException($response);
 			}
-			elseif ($response instanceof Response)
+
+			if ($response instanceof Response)
 			{
 				$response = $response->getContent();
 			}

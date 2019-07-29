@@ -1,16 +1,11 @@
 <?php
 
-/**
- * To use this script, please fill in your Piwik site ID and Piwik URL below
- */
+// To use this script, please fill in your Piwik site ID and Piwik URL below
 $PiwikSite = 0;
 $PiwikPath = '//www.example.com/piwik/';
 
-
-/**
- * DO NOT EDIT ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING!
- */
-if ($PiwikSite > 0 && $PiwikPath != '//www.example.com/piwik/' && !BE_USER_LOGGED_IN && !$this->hasAuthenticatedBackendUser()): ?>
+// DO NOT EDIT ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING!
+if ($PiwikSite > 0 && '//www.example.com/piwik/' != $PiwikPath && !BE_USER_LOGGED_IN && !$this->hasAuthenticatedBackendUser()): ?>
 
 <script>
   var _paq = _paq || [];

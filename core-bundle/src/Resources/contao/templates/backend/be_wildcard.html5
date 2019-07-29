@@ -8,7 +8,7 @@
     <?= $this->wildcard ?>
     <?php if ($this->link): ?>
       <br>
-      <?= $this->link ?> (<a href="<?= $this->href . '&amp;rt=' . REQUEST_TOKEN ?>" class="tl_gray">ID: <?= $this->id ?></a>)
+      <?= $this->link ?> (<a href="<?= $this->href.'&amp;rt='.REQUEST_TOKEN ?>" class="tl_gray">ID: <?= $this->id ?></a>)
     <?php endif; ?>
   </div>
 <?php endif; ?>

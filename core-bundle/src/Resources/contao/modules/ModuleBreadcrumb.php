@@ -128,7 +128,7 @@ class ModuleBreadcrumb extends Module
 						$href = $objNext->getFrontendUrl();
 						break;
 					}
-					// DO NOT ADD A break; STATEMENT
+					// no break
 
 				default:
 					$href = $pages[$i]->getFrontendUrl();

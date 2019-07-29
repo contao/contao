@@ -1,6 +1,6 @@
 
 <ul class="cols_<?= $this->perRow ?>" itemscope itemtype="http://schema.org/ImageGallery">
-  <?php foreach ($this->body as $class=>$row): ?>
+  <?php foreach ($this->body as $class => $row): ?>
     <?php foreach ($row as $col): ?>
       <?php if ($col->addImage): ?>
         <li class="<?= $class ?> <?= $col->class ?>">

@@ -23,15 +23,15 @@
 
   <select name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="<?= $this->class ?>"<?= $this->getAttributes() ?>>
     <?php foreach ($this->getOptions() as $option): ?>
-      <?php if ($option['type'] == 'group_start'): ?>
+      <?php if ('group_start' == $option['type']): ?>
         <optgroup label="<?= $option['label'] ?>">
       <?php endif; ?>
 
-      <?php if ($option['type'] == 'option'): ?>
+      <?php if ('option' == $option['type']): ?>
         <option value="<?= $option['value'] ?>"<?= $option['selected'] ?>><?= $option['label'] ?></option>
       <?php endif; ?>
 
-      <?php if ($option['type'] == 'group_end'): ?>
+      <?php if ('group_end' == $option['type']): ?>
         </optgroup>
       <?php endif; ?>
     <?php endforeach; ?>

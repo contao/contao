@@ -155,7 +155,7 @@ class FormTextField extends Widget
 						{
 							$this->addAttribute('step', 'any');
 						}
-						// NO break; here
+						// no break
 
 					case 'natural':
 						return 'number';

@@ -42,7 +42,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -55,7 +55,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
 

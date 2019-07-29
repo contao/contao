@@ -11,9 +11,9 @@
 
   <link rel="stylesheet" href="<?php
     $objCombiner = new Contao\Combiner();
-    $objCombiner->add('system/themes/'. $this->theme .'/fonts.min.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/basic.min.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/diff.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/fonts.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/basic.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/diff.min.css');
     echo $objCombiner->getCombinedFile();
   ?>">
   <?= $this->stylesheets ?>
@@ -34,7 +34,7 @@
             <span class="static-version"><?= $this->staticFrom ?></span>
           <?php else: ?>
             <select name="from" id="ctrl_from" class="tl_select">
-              <?php foreach ($this->versions as $k=>$v): ?>
+              <?php foreach ($this->versions as $k => $v): ?>
                 <option value="<?= $k ?>"<?php if ($v['version'] == $this->from): ?> selected<?php endif; ?>><?= $v['info'] ?></option>
               <?php endforeach; ?>
             </select>
@@ -44,7 +44,7 @@
             <span class="static-version"><?= $this->staticTo ?></span>
           <?php else: ?>
             <select name="to" id="ctrl_to" class="tl_select">
-              <?php foreach ($this->versions as $k=>$v): ?>
+              <?php foreach ($this->versions as $k => $v): ?>
                 <option value="<?= $k ?>"<?php if ($v['version'] == $this->to): ?> selected<?php endif; ?>><?= $v['info'] ?></option>
               <?php endforeach; ?>
             </select>

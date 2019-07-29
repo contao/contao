@@ -987,14 +987,13 @@ class StyleSheets extends Backend
 		{
 			return '#' . $this->shortenHexColor($color);
 		}
-		elseif (!isset($color[1]) || empty($color[1]))
+
+		if (!isset($color[1]) || empty($color[1]))
 		{
 			return '#' . $this->shortenHexColor($color[0]);
 		}
-		else
-		{
-			return 'rgba(' . implode(',', $this->convertHexColor($color[0], $blnWriteToFile, $vars)) . ','. ($color[1] / 100) .')';
-		}
+
+		return 'rgba(' . implode(',', $this->convertHexColor($color[0], $blnWriteToFile, $vars)) . ','. ($color[1] / 100) .')';
 	}
 
 	/**

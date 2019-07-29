@@ -946,18 +946,18 @@ abstract class Controller extends System
 			{
 				return $strType . ':' . $top . $arrValues['unit'] . ';';
 			}
-			elseif ($top == $bottom && $right == $left)
+
+			if ($top == $bottom && $right == $left)
 			{
 				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
 			}
-			elseif ($top != $bottom && $right == $left)
+
+			if ($top != $bottom && $right == $left)
 			{
 				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ';';
 			}
-			else
-			{
-				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
-			}
+
+			return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
 		}
 
 		$return = array();
@@ -2014,14 +2014,16 @@ abstract class Controller extends System
 		{
 			return $intId->loadDetails();
 		}
-		elseif ($intId instanceof Collection)
+
+		if ($intId instanceof Collection)
 		{
 			/** @var PageModel $objPage */
 			$objPage = $intId->current();
 
 			return $objPage->loadDetails();
 		}
-		elseif (\is_object($intId))
+
+		if (\is_object($intId))
 		{
 			$strKey = __METHOD__ . '-' . $intId->id;
 
@@ -2040,28 +2042,26 @@ abstract class Controller extends System
 
 			return $objPage;
 		}
-		else
+
+		// Invalid ID
+		if (!\strlen($intId) || $intId < 1)
 		{
-			// Invalid ID
-			if (!\strlen($intId) || $intId < 1)
-			{
-				return null;
-			}
-
-			$strKey = __METHOD__ . '-' . $intId;
-
-			// Try to load from cache
-			if (Cache::has($strKey))
-			{
-				return Cache::get($strKey);
-			}
-
-			$objPage = PageModel::findWithDetails($intId);
-
-			Cache::set($strKey, $objPage);
-
-			return $objPage;
+			return null;
 		}
+
+		$strKey = __METHOD__ . '-' . $intId;
+
+		// Try to load from cache
+		if (Cache::has($strKey))
+		{
+			return Cache::get($strKey);
+		}
+
+		$objPage = PageModel::findWithDetails($intId);
+
+		Cache::set($strKey, $objPage);
+
+		return $objPage;
 	}
 
 	/**

@@ -8,7 +8,7 @@
 
   <form<?php if ($this->action): ?> action="<?= $this->action ?>"<?php endif; ?> method="<?= $this->method ?>" enctype="<?= $this->enctype ?>"<?= $this->attributes ?><?= $this->novalidate ?>>
     <div class="formbody">
-      <?php if ($this->method != 'get'): ?>
+      <?php if ('get' != $this->method): ?>
         <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formSubmit ?>">
         <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
         <?php if ($this->maxFileSize): ?>

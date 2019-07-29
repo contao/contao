@@ -386,7 +386,8 @@ class tl_files extends Contao\Backend
 						{
 							throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete folder "' . $strFile . '" recursively.');
 						}
-						elseif (!$canDeleteOne)
+
+						if (!$canDeleteOne)
 						{
 							throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete folder "' . $strFile . '".');
 						}

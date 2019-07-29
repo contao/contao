@@ -11,9 +11,9 @@
 
   <link rel="stylesheet" href="<?php
     $objCombiner = new Contao\Combiner();
-    $objCombiner->add('system/themes/'. $this->theme .'/fonts.min.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/basic.min.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/help.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/fonts.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/basic.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/help.min.css');
     echo $objCombiner->getCombinedFile();
   ?>">
   <?= $this->stylesheets ?>
@@ -39,9 +39,9 @@
         <table class="tl_help_table">
           <?php foreach ($this->rows as $row): ?>
             <tr>
-              <?php if ($row[0] == 'colspan'): ?>
+              <?php if ('colspan' == $row[0]): ?>
                 <td colspan="2"><?= $row[1] ?></td>
-              <?php elseif ($row[0] == 'headspan'): ?>
+              <?php elseif ('headspan' == $row[0]): ?>
                 <td colspan="2" class="headline"><?= $row[1] ?></td>
               <?php else: ?>
                 <td class="tl_label"><?= $row[0] ?></td>

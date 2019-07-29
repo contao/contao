@@ -1934,7 +1934,8 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		{
 			throw new InternalServerErrorException('Folder "' . $this->intId . '" cannot be edited.');
 		}
-		elseif (!file_exists($this->strRootDir .'/'. $this->intId))
+
+		if (!file_exists($this->strRootDir .'/'. $this->intId))
 		{
 			throw new InternalServerErrorException('File "' . $this->intId . '" does not exist.');
 		}
@@ -2949,7 +2950,8 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		{
 			throw new AccessDeniedException('Invalid file name "' . $strFile . '" (hacking attempt).');
 		}
-		elseif (Validator::isInsecurePath($strFolder))
+
+		if (Validator::isInsecurePath($strFolder))
 		{
 			throw new AccessDeniedException('Invalid folder name "' . $strFolder . '" (hacking attempt).');
 		}

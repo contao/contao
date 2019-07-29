@@ -415,14 +415,13 @@ class StringUtil
 		{
 			return array_map('trim', explode(' <', str_replace('>', '', $strEmail)));
 		}
-		elseif (strpos($strEmail, '[') !== false)
+
+		if (strpos($strEmail, '[') !== false)
 		{
 			return array_map('trim', explode(' [', str_replace(']', '', $strEmail)));
 		}
-		else
-		{
-			return array('', $strEmail);
-		}
+
+		return array('', $strEmail);
 	}
 
 	/**

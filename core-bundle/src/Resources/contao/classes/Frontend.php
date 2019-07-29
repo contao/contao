@@ -599,14 +599,13 @@ abstract class Frontend extends Controller
 		{
 			return 60;
 		}
-		elseif (!empty($GLOBALS['TL_CRON']['hourly']))
+
+		if (!empty($GLOBALS['TL_CRON']['hourly']))
 		{
 			return 3600;
 		}
-		else
-		{
-			return 86400; // daily
-		}
+
+		return 86400; // daily
 	}
 
 	/**

@@ -250,7 +250,8 @@ class BackendUser extends User
 		{
 			return true;
 		}
-		elseif ($array == 'filemounts')
+
+		if ($array == 'filemounts')
 		{
 			// Check the subfolders (filemounts)
 			foreach ($this->filemounts as $folder)

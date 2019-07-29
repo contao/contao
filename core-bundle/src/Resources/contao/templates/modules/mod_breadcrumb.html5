@@ -3,7 +3,7 @@
 <?php $this->block('content'); ?>
 
   <ul itemprop="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
-    <?php foreach ($this->items as $position=>$item): ?>
+    <?php foreach ($this->items as $position => $item): ?>
       <?php if ($item['isActive']): ?>
         <li class="active<?php if ($item['class']): ?> <?= $item['class'] ?><?php endif; ?> last"><?= $item['link'] ?></li>
       <?php else: ?>

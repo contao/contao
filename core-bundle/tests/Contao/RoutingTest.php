@@ -32,7 +32,7 @@ class RoutingTest extends ContaoTestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

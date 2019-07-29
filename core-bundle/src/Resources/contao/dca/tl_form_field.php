@@ -462,7 +462,7 @@ class tl_form_field extends Contao\Backend
 				{
 					break;
 				}
-				// NO BREAK STATEMENT HERE
+				// no break
 
 			case 'edit':
 			case 'show':
@@ -509,7 +509,8 @@ class tl_form_field extends Contao\Backend
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
 				}
-				elseif (!\in_array($id, $root))
+
+				if (!\in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
 				}
