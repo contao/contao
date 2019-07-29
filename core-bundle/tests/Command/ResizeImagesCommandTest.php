@@ -90,6 +90,9 @@ class ResizeImagesCommandTest extends TestCase
         $this->assertRegExp('/All images resized/', $display);
     }
 
+    /**
+     * @group time-sensitive
+     */
     public function testTimeLimit(): void
     {
         $fs = new Filesystem();
