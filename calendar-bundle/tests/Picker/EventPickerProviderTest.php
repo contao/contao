@@ -256,6 +256,6 @@ class EventPickerProviderTest extends ContaoTestCase
             ->willReturn('Event picker')
         ;
 
-        return new EventPickerProvider($security, $menuFactory, $router, $translator);
+        return new EventPickerProvider($menuFactory, $router, $translator, $security);
     }
 }

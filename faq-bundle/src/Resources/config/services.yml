@@ -7,9 +7,9 @@ services:
     contao_faq.picker.faq_provider:
         class: Contao\FaqBundle\Picker\FaqPickerProvider
         arguments:
-            - '@security.helper'
             - '@knp_menu.factory'
             - '@router'
-            - '@translator'
+            - '@?translator'
+            - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 64 }

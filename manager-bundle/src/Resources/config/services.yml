@@ -2,7 +2,7 @@ services:
     contao_manager.cache.clear_bundle:
         class: Contao\ManagerBundle\Cache\BundleCacheClearer
         arguments:
-            - '@filesystem'
+            - '@?filesystem'
         tags:
             - { name: kernel.cache_clearer }
 

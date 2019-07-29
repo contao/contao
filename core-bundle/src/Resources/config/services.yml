@@ -78,7 +78,7 @@ services:
             - '@contao.image.image_factory'
             - '@contao.image.resizer'
             - '%contao.image.target_dir%'
-            - '@filesystem'
+            - '@?filesystem'
         public: true
 
     contao.controller.insert_tags:
@@ -167,7 +167,7 @@ services:
         class: Contao\Image\DeferredImageStorageFilesystem
         arguments:
             - '%contao.image.target_dir%'
-            - '@filesystem'
+            - '@?filesystem'
 
     contao.image.imagine.gd:
         class: Imagine\Gd\Imagine
@@ -221,7 +221,7 @@ services:
         class: Contao\Image\PictureGenerator
         arguments:
             - '@contao.image.resizer'
-            - '@contao.image.resize_calculator'
+            - '@?contao.image.resize_calculator'
         public: true
 
     contao.image.picture_factory:
@@ -298,31 +298,31 @@ services:
     contao.picker.page_provider:
         class: Contao\CoreBundle\Picker\PagePickerProvider
         arguments:
-            - '@security.helper'
             - '@knp_menu.factory'
             - '@router'
-            - '@translator'
+            - '@?translator'
+            - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 192 }
 
     contao.picker.file_provider:
         class: Contao\CoreBundle\Picker\FilePickerProvider
         arguments:
-            - '@security.helper'
-            - '%contao.upload_path%'
             - '@knp_menu.factory'
             - '@router'
             - '@translator'
+            - '@security.helper'
+            - '%contao.upload_path%'
         tags:
             - { name: contao.picker_provider, priority: 160 }
 
     contao.picker.article_provider:
         class: Contao\CoreBundle\Picker\ArticlePickerProvider
         arguments:
-            - '@security.helper'
             - '@knp_menu.factory'
             - '@router'
-            - '@translator'
+            - '@?translator'
+            - '@security.helper'
         tags:
             - { name: contao.picker_provider }
 
@@ -438,7 +438,7 @@ services:
         class: Symfony\Cmf\Component\Routing\ProviderBasedGenerator
         arguments:
             - '@contao.routing.route_provider'
-            - '@logger'
+            - '@?logger'
 
     contao.routing.route_provider:
         class: Contao\CoreBundle\Routing\RouteProvider
@@ -469,7 +469,7 @@ services:
             - '@http_kernel'
             - '@security.http_utils'
             - []
-            - '@logger'
+            - '@?logger'
 
     contao.security.authentication_provider:
         class: Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider
@@ -486,7 +486,7 @@ services:
         arguments:
             - '@security.http_utils'
             - '@contao.framework'
-            - '@logger'
+            - '@?logger'
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
@@ -494,7 +494,7 @@ services:
             - '@contao.framework'
             - '@session'
             - 'Contao\BackendUser'
-            - '@logger'
+            - '@?logger'
 
     contao.security.backend_access_voter:
         class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
@@ -516,7 +516,7 @@ services:
             - ~ # shared Token Key
             - ~ # shared Provider Key
             - ~ # options
-            - '@logger'
+            - '@?logger'
         tags:
             - { name: monolog.logger, channel: security }
 
@@ -526,7 +526,7 @@ services:
             - '@security.helper'
             - '@session'
             - '@contao.security.frontend_user_provider'
-            - '@logger'
+            - '@?logger'
         public: true
 
     contao.security.frontend_user_provider:
@@ -535,7 +535,7 @@ services:
             - '@contao.framework'
             - '@session'
             - 'Contao\FrontendUser'
-            - '@logger'
+            - '@?logger'
 
     contao.security.logout_success_handler:
         class: Contao\CoreBundle\Security\Logout\LogoutSuccessHandler
@@ -547,7 +547,7 @@ services:
         class: Contao\CoreBundle\Security\Logout\LogoutHandler
         arguments:
             - '@contao.framework'
-            - '@logger'
+            - '@?logger'
 
     contao.security.token_checker:
         class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker
@@ -574,7 +574,6 @@ services:
         class: Contao\CoreBundle\Security\User\UserChecker
         arguments:
             - '@contao.framework'
-            - '@logger'
 
     contao.session.contao_backend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag

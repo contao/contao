@@ -7,9 +7,9 @@ services:
     contao_calendar.picker.event_provider:
         class: Contao\CalendarBundle\Picker\EventPickerProvider
         arguments:
-            - '@security.helper'
             - '@knp_menu.factory'
             - '@router'
-            - '@translator'
+            - '@?translator'
+            - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 96 }

@@ -191,6 +191,6 @@ class ArticlePickerProviderTest extends ContaoTestCase
             )
         ;
 
-        return new ArticlePickerProvider($security, $menuFactory, $router);
+        return new ArticlePickerProvider($menuFactory, $router, null, $security);
     }
 }

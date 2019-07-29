@@ -275,7 +275,7 @@ class FilePickerProviderTest extends ContaoTestCase
             ->willReturn('File picker')
         ;
 
-        $picker = new FilePickerProvider($security, __DIR__, $menuFactory, $router, $translator);
+        $picker = new FilePickerProvider($menuFactory, $router, $translator, $security, __DIR__);
         $picker->setFramework($framwork);
 
         return $picker;

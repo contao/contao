@@ -256,6 +256,6 @@ class FaqPickerProviderTest extends ContaoTestCase
             ->willReturn('Faq picker')
         ;
 
-        return new FaqPickerProvider($security, $menuFactory, $router, $translator);
+        return new FaqPickerProvider($menuFactory, $router, $translator, $security);
     }
 }

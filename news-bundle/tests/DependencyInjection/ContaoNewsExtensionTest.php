@@ -106,10 +106,10 @@ class ContaoNewsExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao_news.picker.news_provider');
 
         $this->assertSame(NewsPickerProvider::class, $definition->getClass());
-        $this->assertSame('security.helper', (string) $definition->getArgument(0));
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(1));
-        $this->assertSame('router', (string) $definition->getArgument(2));
-        $this->assertSame('translator', (string) $definition->getArgument(3));
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
+        $this->assertSame('router', (string) $definition->getArgument(1));
+        $this->assertSame('translator', (string) $definition->getArgument(2));
+        $this->assertSame('security.helper', (string) $definition->getArgument(3));
 
         $conditionals = $definition->getInstanceofConditionals();
 

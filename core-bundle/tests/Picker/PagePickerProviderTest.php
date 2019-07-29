@@ -219,6 +219,6 @@ class PagePickerProviderTest extends ContaoTestCase
             ->willReturn('Page picker')
         ;
 
-        return new PagePickerProvider($security, $menuFactory, $router, $translator);
+        return new PagePickerProvider($menuFactory, $router, $translator, $security);
     }
 }

@@ -256,6 +256,6 @@ class NewsPickerProviderTest extends ContaoTestCase
             ->willReturn('News picker')
         ;
 
-        return new NewsPickerProvider($security, $menuFactory, $router, $translator);
+        return new NewsPickerProvider($menuFactory, $router, $translator, $security);
     }
 }
