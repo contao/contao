@@ -23,13 +23,11 @@ use Contao\Image as ContaoImage;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizer;
 use Contao\Image\Image;
-use Contao\Image\ImageDimensionsInterface;
+use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Contao\Image\ImportantPart;
-use Contao\Image\ImportantPartInterface;
 use Contao\Image\ResizeCalculator;
 use Contao\Image\ResizeConfiguration;
-use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
 use Contao\Image\ResizerInterface;
 use Contao\ImageSizeModel;
@@ -227,7 +225,7 @@ class ImageFactoryTest extends TestCase
         $resizer
             ->method('resize')
             ->willReturnCallback(
-                function (ImageInterface $image, ResizeConfigurationInterface $config) {
+                function (ImageInterface $image, ResizeConfiguration $config) {
                     $this->assertTrue($config->isEmpty());
 
                     return $image;
@@ -268,7 +266,7 @@ class ImageFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (ResizeConfigurationInterface $config) use ($predefinedSizes): bool {
+                    function (ResizeConfiguration $config) use ($predefinedSizes): bool {
                         $this->assertSame($predefinedSizes['foobar']['width'], $config->getWidth());
                         $this->assertSame($predefinedSizes['foobar']['height'], $config->getHeight());
                         $this->assertSame($predefinedSizes['foobar']['resizeMode'], $config->getMode());
@@ -328,7 +326,7 @@ class ImageFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (ResizeConfigurationInterface $config) use ($resizeConfig): bool {
+                    function (ResizeConfiguration $config) use ($resizeConfig): bool {
                         $this->assertSame($resizeConfig->isEmpty(), $config->isEmpty());
                         $this->assertSame($resizeConfig->getWidth(), $config->getWidth());
                         $this->assertSame($resizeConfig->getHeight(), $config->getHeight());
@@ -460,7 +458,7 @@ class ImageFactoryTest extends TestCase
      */
     public function testReturnsTheImportantPartFromALegacyMode(string $mode, array $expected): void
     {
-        $dimensionsMock = $this->createMock(ImageDimensionsInterface::class);
+        $dimensionsMock = $this->createMock(ImageDimensions::class);
         $dimensionsMock
             ->method('getSize')
             ->willReturn(new Box(100, 100))
@@ -799,7 +797,7 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($imageA->getUrl($this->getFixturesDir()), $imageB->getUrl($this->getFixturesDir()));
     }
 
-    private function assertSameImportantPart(ImportantPartInterface $partA, ImportantPartInterface $partB): void
+    private function assertSameImportantPart(ImportantPart $partA, ImportantPart $partB): void
     {
         $this->assertSame($partA->getX(), $partB->getX());
         $this->assertSame($partA->getY(), $partB->getY());
@@ -807,7 +805,7 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($partA->getWidth(), $partB->getWidth());
     }
 
-    private function assertSameDimensions(ImageDimensionsInterface $dimensionsA, ImageDimensionsInterface $dimensionsB): void
+    private function assertSameDimensions(ImageDimensions $dimensionsA, ImageDimensions $dimensionsB): void
     {
         $this->assertSame($dimensionsA->getSize()->getHeight(), $dimensionsB->getSize()->getHeight());
         $this->assertSame($dimensionsA->getSize()->getWidth(), $dimensionsB->getSize()->getWidth());

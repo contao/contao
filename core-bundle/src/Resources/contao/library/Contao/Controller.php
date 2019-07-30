@@ -16,7 +16,7 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\Database\Result;
-use Contao\Image\PictureConfigurationInterface;
+use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
 use League\Uri\Components\Query;
 use Symfony\Component\Finder\Finder;
@@ -1478,7 +1478,7 @@ abstract class Controller extends System
 		{
 			$size = array(0, 0, (int) $size);
 		}
-		elseif (!$size instanceof PictureConfigurationInterface)
+		elseif (!$size instanceof PictureConfiguration)
 		{
 			if (!\is_array($size))
 			{

@@ -16,14 +16,11 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Image\ImageInterface;
 use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
-use Contao\Image\PictureConfigurationInterface;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
-use Contao\Image\ResizeConfigurationInterface;
 use Contao\Image\ResizeOptions;
-use Contao\Image\ResizeOptionsInterface;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\StringUtil;
@@ -95,7 +92,7 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function create($path, $size = null, ResizeOptionsInterface $options = null): PictureInterface
+    public function create($path, $size = null, ResizeOptions $options = null): PictureInterface
     {
         $attributes = [];
 
@@ -113,10 +110,10 @@ class PictureFactory implements PictureFactoryInterface
             && 1 === substr_count($size[2], '_')
         ) {
             $image->setImportantPart($this->imageFactory->getImportantPartFromLegacyMode($image, $size[2]));
-            $size[2] = ResizeConfigurationInterface::MODE_CROP;
+            $size[2] = ResizeConfiguration::MODE_CROP;
         }
 
-        if ($size instanceof PictureConfigurationInterface) {
+        if ($size instanceof PictureConfiguration) {
             $config = $size;
         } else {
             [$config, $attributes, $options] = $this->createConfig($size);
@@ -142,7 +139,7 @@ class PictureFactory implements PictureFactoryInterface
      *
      * @param int|array|null $size
      *
-     * @return (PictureConfiguration|array<string,string>|ResizeOptionsInterface|null)[]
+     * @return (PictureConfiguration|array<string,string>|ResizeOptions|null)[]
      */
     private function createConfig($size): array
     {
