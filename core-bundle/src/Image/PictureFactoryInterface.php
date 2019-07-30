@@ -30,7 +30,7 @@ interface PictureFactoryInterface
     /**
      * Creates a Picture object.
      *
-     * @param string|ImageInterface                        $path
+     * @param string|ImageInterface               $path
      * @param int|array|PictureConfiguration|null $size
      *
      * @return PictureInterface
