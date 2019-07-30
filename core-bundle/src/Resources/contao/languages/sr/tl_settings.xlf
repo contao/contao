@@ -1,14 +1,6 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_settings.php" source-language="en" target-language="sr">
     <body>
-      <trans-unit id="tl_settings.websiteTitle.0">
-        <source>Website title</source>
-        <target>Назив сајта</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websiteTitle.1">
-        <source>Please enter the title of the website.</source>
-        <target>Унесите назив сајта</target>
-      </trans-unit>
       <trans-unit id="tl_settings.adminEmail.0">
         <source>E-mail address of the system administrator</source>
         <target>Имејл адреса администратора система</target>
@@ -49,14 +41,6 @@
         <source>Please select the server time zone.</source>
         <target>Изаберите временску зону сервера.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.characterSet.0">
-        <source>Character set</source>
-        <target>Character set</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.characterSet.1">
-        <source>It is recommended to use UTF-8, so special characters are displayed correctly.</source>
-        <target>Препорука је да користите UTF-8, како би били сигурни да ће посебни знакови бити приказани исправно.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.disableCron.0">
         <source>Disable the command scheduler</source>
         <target>Онемогући командни распоред</target>
@@ -64,22 +48,6 @@
       <trans-unit id="tl_settings.disableCron.1">
         <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
         <target>Онемогући периодично извршавање команди и иницирај &lt;em&gt;_contao/cron&lt;/em&gt; руту правим cron job-ом (који морате поставити ручно).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.minifyMarkup.0">
-        <source>Minify the markup</source>
-        <target>Минимизуј означавање</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.minifyMarkup.1">
-        <source>Minify the HTML markup before it is sent to the browser.</source>
-        <target>Минимизуј HTML ознаке прије него што буду послате у интернет прегледач.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gzipScripts.0">
-        <source>Compress scripts</source>
-        <target>Компресуј скрипте</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gzipScripts.1">
-        <source>Create a compressed version of the combined CSS and JavaScript files. Requires adjustments of the .htaccess file.</source>
-        <target>Креирај компресовану верзију комбинације CSS и JavaScript фајлова. Ово захтева прилагођење .htaccess фајла.</target>
       </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>
@@ -97,14 +65,6 @@
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
         <target>Овај лимит постаје битан ако корисник изабере опцију &quot;прикажи све записе&quot;.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.fileSyncExclude.0">
-        <source>Exclude folders from synchronization</source>
-        <target>Искључи фолдере из синхронизације</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.fileSyncExclude.1">
-        <source>Here you can enter a comma separated list of folders which will be exempt from the files synchronization (e.g. &lt;em&gt;attachments,music_academy&lt;/em&gt;). Note that excluded resources cannot be used in e.g. image or download elements!</source>
-        <target>Овде можете унети, раздвојено запетом, листу фолдера који ће бити изузети из синхронизације фајлова (нпр. &lt;em&gt;attachments,music_academy&lt;/em&gt;). Имајте при томе на уму да изузети ресурси не могу бити кориштени у елементима као што су нпр. слике или преузимања!</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotCollapse.0">
         <source>Do not collapse elements</source>
         <target>Не сажимај елементе</target>
@@ -113,14 +73,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>Не сажимај елементе у прегледу БекЕнда.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.sslProxyDomain.0">
-        <source>SSL proxy domain</source>
-        <target>SSL proxy домен</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sslProxyDomain.1">
-        <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
-        <target>Ако је ваш сајт доступан преко SSL proxy сервера, унесите његов домен овде (нпр. &lt;em&gt;sslsites.de&lt;/em&gt;).</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
         <target>Не преусмеравај празне URL</target>
@@ -128,14 +80,6 @@
       <trans-unit id="tl_settings.doNotRedirectEmpty.1">
         <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
         <target>Ако је URL празан, прикажи сајт уместо преусмеравања на почетну страницу за изабрани језик (није препоручљиво).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.useAutoItem.0">
-        <source>Enable auto_item</source>
-        <target>Омогући auto_item</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.useAutoItem.1">
-        <source>Skip the &lt;em&gt;items/&lt;/em&gt; or &lt;em&gt;events/&lt;/em&gt; fragment in the URL and automatically discover the item based on the &lt;em&gt;auto_item&lt;/em&gt; parameter.</source>
-        <target>Изостави &lt;em&gt;items/&lt;/em&gt; или &lt;em&gt;events/&lt;/em&gt; фрагменте унутар URL и аутоматски препознај ставку базирану на параметру &lt;em&gt;auto_item&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_settings.folderUrl.0">
         <source>Enable folder URLs</source>
@@ -168,22 +112,6 @@
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>Овде можете унети, запетом раздвојене, врсте фајлова који ће моћи да се преузму са сајта.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.editableFiles.0">
-        <source>Editable file types</source>
-        <target>Фајлови које је могуће уређивати</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.editableFiles.1">
-        <source>Here you can enter a comma separated list of file types that can be edited in the source editor.</source>
-        <target>Овде можете унети, запетом раздвојене, врсте фајлова који ће моћи да се уређују у изворном едитору.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.templateFiles.0">
-        <source>Template file types</source>
-        <target>Врсте шаблонских фајлова</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.templateFiles.1">
-        <source>Here you can enter a comma separated list of supported template file types.</source>
-        <target>Овде можете унети, запетом раздвојене, врсте шаблонских фајлова.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -249,38 +177,6 @@
         <source>Use this option carefully and always exclude personalized pages from being indexed!</source>
         <target>Користите ову опцију пажљиво и увек искључите странице са приватним детаљима из индексирања!</target>
       </trans-unit>
-      <trans-unit id="tl_settings.undoPeriod.0">
-        <source>Storage time for undo steps</source>
-        <target>Време чувања измена</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.undoPeriod.1">
-        <source>Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).</source>
-        <target>Овде можете унети време чувања измена, а које је могуће накнадно опозвати  (24 часа = 86400 секунди).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.versionPeriod.0">
-        <source>Storage time for versions</source>
-        <target>Време чувања верзија</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.versionPeriod.1">
-        <source>Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).</source>
-        <target>Овде можете унети време чувања различитих верзија записа  (90 дана = 7776000 секунди).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.logPeriod.0">
-        <source>Storage time for log entries</source>
-        <target>Време чувања записа дневника</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.logPeriod.1">
-        <source>Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).</source>
-        <target>Овде можете унети време чувања записа дневника (14 дана = 1209600 секунди).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sessionTimeout.0">
-        <source>Session timeout</source>
-        <target>Трајање сесије</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sessionTimeout.1">
-        <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
-        <target>Овде можете унети максимално време трајања сесије (60 минута = 3600 секунди).</target>
-      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>Подразумевани власник странице</target>
@@ -305,10 +201,6 @@
         <source>Please assign the default access rights for pages and articles.</source>
         <target>Доделите подразумевана права приступа страницама и чланцима.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.title_legend">
-        <source>Website title</source>
-        <target>Назив сајта</target>
-      </trans-unit>
       <trans-unit id="tl_settings.date_legend">
         <source>Date and time</source>
         <target>Датум и време</target>
@@ -325,10 +217,6 @@
         <source>Front end configuration</source>
         <target>Конфигурација ФронтЕнда</target>
       </trans-unit>
-      <trans-unit id="tl_settings.proxy_legend">
-        <source>Proxy configuration</source>
-        <target>Конфигурација проксија</target>
-      </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>
         <target>Подешавања сигурности</target>
@@ -341,21 +229,17 @@
         <source>Upload settings</source>
         <target>Подешавања фајлова који се копирају на сервер</target>
       </trans-unit>
+      <trans-unit id="tl_settings.cron_legend">
+        <source>Cron job settings</source>
+        <target>Подешавања Cron задатка</target>
+      </trans-unit>
       <trans-unit id="tl_settings.search_legend">
         <source>Search engine settings</source>
         <target>Подешавања претраживача</target>
       </trans-unit>
-      <trans-unit id="tl_settings.timeout_legend">
-        <source>Timeout values</source>
-        <target>Вредности тајмаута</target>
-      </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>Подразумевана права приступа</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.edit">
-        <source>Edit the local configuration</source>
-        <target>Уреди локалну конфигурацију</target>
       </trans-unit>
     </body>
   </file>

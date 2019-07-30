@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_order.1">
         <source>Please choose the sort order.</source>
-        <target>Zgjedhoni radhitjen.</target>
+        <target>Zgjedh radhitjen.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_perPage.0">
         <source>Items per page</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
         <source>Disable the security question</source>
-        <target>ç'aktivizo pyetjen e sigurisë</target>
+        <target>Ç'aktivizo pyetjen e sigurisë</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
         <source>Here you can disable the security question (not recommended).</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
         <source>Here you can select the comments template.</source>
-        <target>Zgjedhoni strukturën e komenteve. Mund ta caktoni një strukturë të përshtatur në dosjen &lt;em&gt;templates&lt;/em&gt;. Skedarët e shabllonëve të komenteve fillojnë me &lt;em&gt;com_&lt;/em&gt; dhe kërkojnë prapashtesën &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <target>Zgjedh strukturën e komenteve. Mund ta caktoni një strukturë të përshtatur në dosjen &lt;em&gt;templates&lt;/em&gt;. Skedarët e shabllonëve të komenteve fillojnë me &lt;em&gt;com_&lt;/em&gt; dhe kërkojnë prapashtesën &lt;em&gt;.tpl&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

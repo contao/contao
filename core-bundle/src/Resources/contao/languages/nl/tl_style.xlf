@@ -557,85 +557,12 @@
         <source>none</source>
         <target>geen</target>
       </trans-unit>
-      <trans-unit id="tl_style.new.0">
-        <source>New format definition</source>
-        <target>Nieuwe lay-out definitie</target>
-      </trans-unit>
-      <trans-unit id="tl_style.new.1">
-        <source>Create a new format definition</source>
-        <target>Maak een nieuwe lay-out definitie.</target>
-      </trans-unit>
-      <trans-unit id="tl_style.show.0">
-        <source>Format definition details</source>
-        <target>Lay-out definitie details</target>
-      </trans-unit>
-      <trans-unit id="tl_style.show.1">
-        <source>Show the details of format definition ID %s</source>
-        <target>Toon details van lay-out definitie ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.edit.0">
-        <source>Edit format definition</source>
-        <target>Bewerk lay-out definitie</target>
-      </trans-unit>
-      <trans-unit id="tl_style.edit.1">
-        <source>Edit format definition ID %s</source>
-        <target>Bewerk lay-out definitie ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.cut.0">
-        <source>Move format definition</source>
-        <target>Verplaats lay-out definitie</target>
-      </trans-unit>
-      <trans-unit id="tl_style.cut.1">
-        <source>Move format definition ID %s</source>
-        <target>Verplaats lay-out definitie ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.copy.0">
-        <source>Duplicate format definition</source>
-        <target>Kopieer lay-out definitie</target>
-      </trans-unit>
-      <trans-unit id="tl_style.copy.1">
-        <source>Duplicate format definition ID %s</source>
-        <target>Kopieer lay-out definitie ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.delete.0">
-        <source>Delete format definition</source>
-        <target>Verwijder lay-out definitie</target>
-      </trans-unit>
-      <trans-unit id="tl_style.delete.1">
-        <source>Delete format definition ID %s</source>
-        <target>Verwijder lay-out definitie ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.editheader.0">
-        <source>Edit style sheet</source>
-        <target>Bewerk style sheet</target>
-      </trans-unit>
-      <trans-unit id="tl_style.editheader.1">
+      <trans-unit id="tl_style.editheader">
         <source>Edit the style sheet settings</source>
         <target>Bewerk style sheet instellingen</target>
       </trans-unit>
-      <trans-unit id="tl_style.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Bovenaan plakken</target>
-      </trans-unit>
-      <trans-unit id="tl_style.pasteafter.1">
-        <source>Paste after format definition ID %s</source>
-        <target>Plak na lay-out definitie ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.pastenew.0">
-        <source>Add new at the top</source>
-        <target>Maak nieuw aan het begin</target>
-      </trans-unit>
-      <trans-unit id="tl_style.pastenew.1">
-        <source>Add new after format definition ID %s</source>
-        <target>Maak een nieuwe lay-out definitie na lay-out definitie ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.toggle.0">
-        <source>Toggle visibility</source>
-        <target>Zichtbaar maken</target>
-      </trans-unit>
-      <trans-unit id="tl_style.toggle.1">
-        <source>Toggle the visibility of format definition ID %s</source>
-        <target>Zichtbaar maken van format definitie ID %s</target>
+      <trans-unit id="tl_style.toggle">
+        <source>Activate/deactivate element ID %s</source>
       </trans-unit>
     </body>
   </file>

@@ -193,6 +193,10 @@
         <source>Automatically deactivate the account on this day.</source>
         <target>Désactiver automatiquement le compte à partir de ce jour.</target>
       </trans-unit>
+      <trans-unit id="tl_member.useTwoFactor">
+        <source>Use two-factor authentication</source>
+        <target>Utiliser la vérification en deux étapes</target>
+      </trans-unit>
       <trans-unit id="tl_member.personal_legend">
         <source>Personal data</source>
         <target>Données personnelles</target>
@@ -238,58 +242,33 @@
         <target>Connexion</target>
       </trans-unit>
       <trans-unit id="tl_member.new.0">
-        <source>New member</source>
-        <target>Nouveau membre</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_member.new.1">
         <source>Create a new member</source>
         <target>Créer un nouveau membre</target>
       </trans-unit>
-      <trans-unit id="tl_member.show.0">
-        <source>Member details</source>
-        <target>Détails du membre</target>
-      </trans-unit>
-      <trans-unit id="tl_member.show.1">
+      <trans-unit id="tl_member.show">
         <source>Show the details of member ID %s</source>
         <target>Afficher les détails du membre ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.edit.0">
-        <source>Edit member</source>
-        <target>Éditer le membre</target>
-      </trans-unit>
-      <trans-unit id="tl_member.edit.1">
+      <trans-unit id="tl_member.edit">
         <source>Edit member ID %s</source>
         <target>Éditer le membre ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.copy.0">
-        <source>Duplicate member</source>
-        <target>Dupliquer le membre</target>
-      </trans-unit>
-      <trans-unit id="tl_member.copy.1">
+      <trans-unit id="tl_member.copy">
         <source>Duplicate member ID %s</source>
         <target>Dupliquer le membre ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.delete.0">
-        <source>Delete member</source>
-        <target>Supprimer le membre</target>
-      </trans-unit>
-      <trans-unit id="tl_member.delete.1">
+      <trans-unit id="tl_member.delete">
         <source>Delete member ID %s</source>
         <target>Supprimer le membre ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.toggle.0">
-        <source>Activate/deactivate member</source>
-        <target>Activer/désactiver le membre</target>
-      </trans-unit>
-      <trans-unit id="tl_member.toggle.1">
+      <trans-unit id="tl_member.toggle">
         <source>Activate/deactivate member ID %s</source>
         <target>Activer/désactiver le membre ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.su.0">
-        <source>Preview</source>
-        <target>Aperçu</target>
-      </trans-unit>
-      <trans-unit id="tl_member.su.1">
+      <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>
         <target>Aperçu du front office en tant que membre ID %s</target>
       </trans-unit>

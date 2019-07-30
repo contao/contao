@@ -85,6 +85,14 @@
         <source>Manage user groups (back end user groups)</source>
         <target>Управљање корисничким групама (БекЕнд корисничке групе)</target>
       </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+        <target>Двоструки opt-in</target>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage the double opt-in tokens</source>
+        <target>Управљај двоструким opt-in токенима</target>
+      </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
         <target>Систем</target>
@@ -123,9 +131,11 @@
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
+        <target>Безбедност</target>
       </trans-unit>
       <trans-unit id="MOD.security.1">
         <source>Secure your account</source>
+        <target>Обезбеди свој налог</target>
       </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
@@ -382,6 +392,13 @@
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
         <target>Додавање RSS читача на страницу</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.0">
+        <source>Two-factor authentication</source>
+        <target>Двостепена аутентификација</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication</source>
       </trans-unit>
     </body>
   </file>

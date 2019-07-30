@@ -33,6 +33,12 @@
         <source>Make the folder and its sub-folders accessible via HTTP.</source>
         <target>可以通过HTTP来访问该文件夹以及子级文件夹</target>
       </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+      </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
         <target>重要部分 x 坐标</target>
@@ -105,6 +111,10 @@
         <source>Edit file &quot;%s&quot;</source>
         <target>编辑源码文件&quot;%s&quot;</target>
       </trans-unit>
+      <trans-unit id="tl_files.edit_preview_help">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>使用鼠标标记图片的重要部分</target>
+      </trans-unit>
       <trans-unit id="tl_files.browseFiles">
         <source>Browse files</source>
         <target>浏览文件</target>
@@ -171,93 +181,13 @@
         <source>Create a new folder</source>
         <target>创建一个新的模板</target>
       </trans-unit>
-      <trans-unit id="tl_files.cut.0">
-        <source>Move file or folder</source>
-        <target>移动文件或目录</target>
-      </trans-unit>
-      <trans-unit id="tl_files.cut.1">
-        <source>Move file or folder &quot;%s&quot;</source>
-        <target>移动文件或目录&quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.copy.0">
-        <source>Duplicate file or folder</source>
-        <target>复制文件或目录</target>
-      </trans-unit>
-      <trans-unit id="tl_files.copy.1">
-        <source>Duplicate file or folder &quot;%s&quot;</source>
-        <target>复制文件或目录&quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.edit.0">
-        <source>Edit file or folder</source>
-        <target>编辑文件或目录</target>
-      </trans-unit>
-      <trans-unit id="tl_files.edit.1">
-        <source>Edit file or folder &quot;%s&quot;</source>
-        <target>编辑文件或目录 &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.delete.0">
-        <source>Delete file or folder</source>
-        <target>删除文件或目录</target>
-      </trans-unit>
-      <trans-unit id="tl_files.delete.1">
-        <source>Delete file or folder &quot;%s&quot;</source>
-        <target>删除文件或目录&quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.show.0">
-        <source>File or folder details</source>
-        <target>文件或文件夹细节</target>
-      </trans-unit>
-      <trans-unit id="tl_files.show.1">
-        <source>Show the details of file or folder &quot;%s&quot;</source>
-        <target>显示文件或文件夹&quot;%s&quot;的细节</target>
-      </trans-unit>
-      <trans-unit id="tl_files.source.0">
-        <source>Edit file</source>
-        <target>编辑源码</target>
-      </trans-unit>
-      <trans-unit id="tl_files.source.1">
-        <source>Edit file &quot;%s&quot;</source>
-        <target>编辑源码文件&quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.upload.0">
+      <trans-unit id="tl_files.move.0">
         <source>Upload files</source>
         <target>上传文件</target>
-      </trans-unit>
-      <trans-unit id="tl_files.upload.1">
-        <source>Upload files to folder &quot;%s&quot;</source>
-        <target>上传文件至目录&quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.protect.0">
-        <source>Protect folder</source>
-        <target>保护目录</target>
-      </trans-unit>
-      <trans-unit id="tl_files.protect.1">
-        <source>Protect folder &quot;%s&quot;</source>
-        <target>保护目录&quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.unlock.0">
-        <source>Remove protection</source>
-        <target>去除保护</target>
-      </trans-unit>
-      <trans-unit id="tl_files.unlock.1">
-        <source>Unprotect folder &quot;%s&quot;</source>
-        <target>去除&quot;%s&quot;的保护</target>
-      </trans-unit>
-      <trans-unit id="tl_files.move.0">
-        <source>File upload</source>
-        <target>文件上传</target>
       </trans-unit>
       <trans-unit id="tl_files.move.1">
         <source>Upload files to the server</source>
         <target>将文件上传至服务器</target>
-      </trans-unit>
-      <trans-unit id="tl_files.pasteinto.0">
-        <source>Paste into</source>
-        <target>粘贴进</target>
-      </trans-unit>
-      <trans-unit id="tl_files.pasteinto.1">
-        <source>Paste into this folder</source>
-        <target>粘贴到这个目录</target>
       </trans-unit>
       <trans-unit id="tl_files.sync.0">
         <source>Synchronize</source>
@@ -267,9 +197,47 @@
         <source>Synchronize the file system and the database</source>
         <target>同步文件系统和数据库</target>
       </trans-unit>
-      <trans-unit id="tl_files.edit_preview_help">
-        <source>Mark the important part of the image with your mouse cursor.</source>
-        <target>使用鼠标标记图片的重要部分</target>
+      <trans-unit id="tl_files.show">
+        <source>Show the details of file or folder &quot;%s&quot;</source>
+        <target>显示文件或文件夹&quot;%s&quot;的细节</target>
+      </trans-unit>
+      <trans-unit id="tl_files.cut">
+        <source>Move file or folder &quot;%s&quot;</source>
+        <target>移动文件或目录&quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.copy">
+        <source>Duplicate file or folder &quot;%s&quot;</source>
+        <target>复制文件或目录&quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit">
+        <source>Edit file or folder &quot;%s&quot;</source>
+        <target>编辑文件或目录 &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.delete.1">
+        <source>Delete file or folder &quot;%s&quot;</source>
+        <target>删除文件或目录&quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.source">
+        <source>Edit file &quot;%s&quot;</source>
+        <target>编辑源码文件&quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>上传文件至目录&quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protect">
+        <source>Protect folder &quot;%s&quot;</source>
+        <target>保护目录&quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.unlock">
+        <source>Unprotect folder &quot;%s&quot;</source>
+        <target>去除&quot;%s&quot;的保护</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.0">
+        <source>Paste into the root folder</source>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.1">
+        <source>Paste into folder &quot;%s&quot;</source>
       </trans-unit>
     </body>
   </file>

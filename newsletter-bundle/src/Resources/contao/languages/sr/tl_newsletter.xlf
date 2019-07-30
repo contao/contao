@@ -110,8 +110,8 @@
         <target>Офсет</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
-        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent in the &lt;em&gt;newsletter_%s.log&lt;/em&gt; file. E.g., if 120 mails have been sent, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>У случају да дође до прекида процеса слања, можете унети нумерички офсет тако да слање наставите од тачно одређеног примаоца. Пре тога, можете проверити колико је мејлова послато у фајлу  &lt;em&gt;newsletter_%s.log&lt;/em&gt;. Нпр., ако је послато 120 мејлова, унесите &quot;120&quot; да наставите слање од 121. примаоца (бројач креће од 0).</target>
+        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
+        <target>У случају када је процедура слања прекинута, овде можете унети нумеричку вредност офсета како бисте наставили од одређеног примаоца. Колико је мејлова већ послато можете проверити избором категорије You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; у системским логовима. Ако је уписано 120 уноса, унесите &quot;120&quot; да бисте наставили од 121 примаоца (бројач креће од 0).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
@@ -194,76 +194,39 @@
         <target>Да ли заиста желите послати билтен?</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
-        <source>New newsletter</source>
-        <target>Нови билтен</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
         <target>Креирај нови билтен</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.show.0">
-        <source>Newsletter details</source>
-        <target>Детаљи билтена</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.show.1">
+      <trans-unit id="tl_newsletter.show">
         <source>Show the details of newsletter ID %s</source>
         <target>Прикажи детаље билтена  ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.edit.0">
-        <source>Edit newsletter</source>
-        <target>Уреди билтен</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.edit.1">
+      <trans-unit id="tl_newsletter.edit">
         <source>Edit newsletter ID %s</source>
         <target>Уреди билтен  ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.copy.0">
-        <source>Duplicate newsletter</source>
-        <target>Копирај билтен</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.copy.1">
+      <trans-unit id="tl_newsletter.copy">
         <source>Duplicate newsletter ID %s</source>
         <target>Копирај билтен ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.cut.0">
-        <source>Move newsletter</source>
-        <target>Помери билтен</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.cut.1">
+      <trans-unit id="tl_newsletter.cut">
         <source>Move newsletter ID %s</source>
         <target>Помери билтен ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.delete.0">
-        <source>Delete newsletter</source>
-        <target>Обриши билтен</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.delete.1">
+      <trans-unit id="tl_newsletter.delete">
         <source>Delete newsletter ID %s</source>
         <target>Обриши билтен ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.0">
-        <source>Edit channel</source>
-        <target>Уреди канал</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.1">
-        <source>Edit the channel settings</source>
-        <target>Уреди подешавања канала</target>
+      <trans-unit id="tl_newsletter.send">
+        <source>Send newsletter ID %s</source>
+        <target>Пошаљи билтен ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>
         <target>Налепи у овај канал</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.pasteafter.1">
-        <source>Paste after newsletter ID %s</source>
-        <target>Налепи након билтена ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.send.0">
-        <source>Send newsletter</source>
-        <target>Пошаљи билтен</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.send.1">
-        <source>Send newsletter ID %s</source>
-        <target>Пошаљи билтен ID %s</target>
       </trans-unit>
     </body>
   </file>

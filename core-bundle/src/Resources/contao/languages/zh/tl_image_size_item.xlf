@@ -29,69 +29,46 @@
         <source>Image size settings</source>
         <target>图片尺寸设置</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.expert_legend">
-        <source>Expert settings</source>
-        <target>专家设定</target>
+      <trans-unit id="tl_image_size_item.source_legend">
+        <source>Image source settings</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.visibility_legend">
         <source>Visibility</source>
         <target>可见性</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.0">
-        <source>New media query</source>
-        <target>新建媒体查询</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new media query</source>
         <target>创建一个新的媒体查询</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.show.0">
-        <source>Media query details</source>
-        <target>媒体查询详情</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.show.1">
+      <trans-unit id="tl_image_size_item.show">
         <source>Show the details of media query ID %s</source>
         <target>显示ID为%s的媒体查询详情</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.edit.0">
-        <source>Edit media query</source>
-        <target>编辑媒体查询</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.edit.1">
+      <trans-unit id="tl_image_size_item.edit">
         <source>Edit media query ID %s</source>
         <target>编辑ID为 %s的媒体查询</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.cut.0">
-        <source>Move media query</source>
-        <target>移动媒体查询</target>
+      <trans-unit id="tl_image_size_item.editheader">
+        <source>Edit the image size settings</source>
+        <target>编辑图片尺寸设置</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.cut.1">
+      <trans-unit id="tl_image_size_item.cut">
         <source>Move media query ID %s</source>
         <target>移动ID为%s的媒体查询</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.copy.0">
-        <source>Duplicate media query</source>
-        <target>复制媒体查询</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.copy.1">
+      <trans-unit id="tl_image_size_item.copy">
         <source>Duplicate media query ID %s</source>
         <target>复制ID为 %s 的媒体查询</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.delete.0">
-        <source>Delete media query</source>
-        <target>删除媒体查询</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.delete.1">
+      <trans-unit id="tl_image_size_item.delete">
         <source>Delete media query ID %s</source>
         <target>删除ID为 %s 的媒体查询</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.editheader.0">
-        <source>Edit image size</source>
-        <target>编辑图片尺寸</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.editheader.1">
-        <source>Edit the image size settings</source>
-        <target>编辑图片尺寸设置</target>
+      <trans-unit id="tl_image_size_item.toggle">
+        <source>Activate/deactivate media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>
@@ -102,20 +79,10 @@
         <target>粘贴ID为 %s 的媒体查询</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
-        <source>Add new at the top</source>
-        <target>新建在头部</target>
+        <source>Create a new media query at the top</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
-        <source>Add new after media query ID %s</source>
-        <target>在ID为 %s 的媒体查询后添加新的媒体查询</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.toggle.0">
-        <source>Toggle visibility</source>
-        <target>切换可见性</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.toggle.1">
-        <source>Toggle the visibility of media query ID %s</source>
-        <target>切换ID为 %s 媒体查询的可见性</target>
+        <source>Create a new media query after media query ID %s</source>
       </trans-unit>
     </body>
   </file>

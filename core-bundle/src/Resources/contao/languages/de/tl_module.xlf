@@ -226,20 +226,20 @@
         <target>Enthält ein Eingabefeld und ein Radio-Button-Menü zur Auswahl des Abfragetyps.</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
-        <source>Context range</source>
-        <target>Kontext-Spannweite</target>
+        <source>Context length</source>
+        <target>Kontextlänge</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
-        <source>The number of characters on the left and right side of each keyword that are used as context.</source>
-        <target>Die Anzahl an Buchstaben, die links und rechts des Suchbegriffs als Kontext verwendet werden.</target>
+        <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
+        <target>Das erste Feld definiert die Anzahl der Zeichen links und rechts jedes Suchbegriffs und das zweite die gesamte Kontextlänge pro Ergebnis.</target>
       </trans-unit>
-      <trans-unit id="tl_module.totalLength.0">
-        <source>Maximum context length</source>
-        <target>Gesamte Kontextlänge</target>
+      <trans-unit id="tl_module.minKeywordLength.0">
+        <source>Minimum keyword length</source>
+        <target>Mindestlänge für Suchbegriffe</target>
       </trans-unit>
-      <trans-unit id="tl_module.totalLength.1">
-        <source>Here you can limit the overall context length per result.</source>
-        <target>Hier können Sie die Gesamtlänge der Kontexts pro Ergebnis beschränken.</target>
+      <trans-unit id="tl_module.minKeywordLength.1">
+        <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
+        <target>Suchbegriffe, die die Mindestlänge unterschreiten, werden bei der Suche nicht berücksichtigt. Geben Sie 0 ein, um die Funktion zu deaktivieren.</target>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>
@@ -519,7 +519,7 @@
       </trans-unit>
       <trans-unit id="tl_module.image_legend">
         <source>Image settings</source>
-        <target>Bild-Einstellungen</target>
+        <target>Bildeinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_module.config_legend">
         <source>Module configuration</source>
@@ -543,7 +543,7 @@
       </trans-unit>
       <trans-unit id="tl_module.expert_legend">
         <source>Expert settings</source>
-        <target>Experten-Einstellungen</target>
+        <target>Experteneinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_module.email_legend">
         <source>E-mail settings</source>
@@ -551,7 +551,7 @@
       </trans-unit>
       <trans-unit id="tl_module.account_legend">
         <source>Account settings</source>
-        <target>Konto-Einstellungen</target>
+        <target>Kontoeinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_module.emailText.0">
         <source>Your registration on %s</source>
@@ -618,68 +618,32 @@ Wenn Sie diese E-Mail nicht angefordert haben, kontaktieren Sie bitte den Admini
         <target>Konto unwiderruflich löschen</target>
       </trans-unit>
       <trans-unit id="tl_module.new.0">
-        <source>Add module</source>
-        <target>Neues Modul</target>
+        <source>New</source>
+        <target>Neu</target>
       </trans-unit>
       <trans-unit id="tl_module.new.1">
-        <source>Add a module</source>
-        <target>Ein neues Modul anlegen</target>
+        <source>Create a new module</source>
+        <target>Ein neues Modul erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_module.show.0">
-        <source>Module details</source>
-        <target>Moduldetails</target>
-      </trans-unit>
-      <trans-unit id="tl_module.show.1">
+      <trans-unit id="tl_module.show">
         <source>Show the details of module ID %s</source>
         <target>Details des Moduls ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_module.edit.0">
-        <source>Edit module</source>
-        <target>Modul bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_module.edit.1">
+      <trans-unit id="tl_module.edit">
         <source>Edit module ID %s</source>
         <target>Modul ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_module.cut.0">
-        <source>Move module</source>
-        <target>Modul verschieben </target>
-      </trans-unit>
-      <trans-unit id="tl_module.cut.1">
-        <source>Move module ID %s</source>
-        <target>Modul ID %s verschieben</target>
-      </trans-unit>
-      <trans-unit id="tl_module.copy.0">
-        <source>Duplicate module</source>
-        <target>Modul duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_module.copy.1">
+      <trans-unit id="tl_module.copy">
         <source>Duplicate module ID %s</source>
         <target>Modul ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete.0">
-        <source>Delete module</source>
-        <target>Modul löschen</target>
+      <trans-unit id="tl_module.cut">
+        <source>Move module ID %s</source>
+        <target>Modul ID %s verschieben</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete.1">
+      <trans-unit id="tl_module.delete">
         <source>Delete module ID %s</source>
         <target>Modul ID %s löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_module.editheader.0">
-        <source>Edit theme</source>
-        <target>Theme bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_module.editheader.1">
-        <source>Edit the theme settings</source>
-        <target>Die Theme-Einstellungen bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_module.pasteafter.0">
-        <source>Paste here</source>
-        <target>Hier einfügen</target>
-      </trans-unit>
-      <trans-unit id="tl_module.pasteafter.1">
-        <source>Paste after module ID %s</source>
-        <target>Nach dem Modul ID %s einfügen</target>
       </trans-unit>
     </body>
   </file>

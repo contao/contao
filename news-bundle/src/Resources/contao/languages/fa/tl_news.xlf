@@ -41,6 +41,22 @@
         <source>Please enter the time according to the global time format.</source>
         <target>لطفا زمان خبر را وارد نمایید.</target>
       </trans-unit>
+      <trans-unit id="tl_news.pageTitle.0">
+        <source>Meta title</source>
+        <target>عنوان متا</target>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>اینجا می‌توانید عنوان متا دلخواه را برای جایگزینی عنوان پیش‌فرض برگه اضافه کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.0">
+        <source>Meta description</source>
+        <target>توضیحات متا</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>اینجا می‌توانید توضیحات متا دلخواه را برای جایگزینی توضیحات پیش‌فرض برگه اضافه کنید.</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>زیرعنوان</target>
@@ -139,7 +155,7 @@
       </trans-unit>
       <trans-unit id="tl_news.articleId.0">
         <source>Article</source>
-        <target>مقاله</target>
+        <target>نوشته</target>
       </trans-unit>
       <trans-unit id="tl_news.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the news item.</source>
@@ -147,7 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_news.cssClass.0">
         <source>CSS class</source>
-        <target>کلاس سی‌اس‌اس</target>
+        <target>کلاس CSS</target>
       </trans-unit>
       <trans-unit id="tl_news.cssClass.1">
         <source>Here you can enter one or more classes.</source>
@@ -209,6 +225,10 @@
         <source>Date and time</source>
         <target>تاریخ و ساعت</target>
       </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>اطلاعات متا</target>
+      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>زیرعنوان و تیزر</target>
@@ -238,92 +258,48 @@
         <target>تنظیمات انتشار</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
-        <source>New item</source>
-        <target>آیتم جدید</target>
+        <source>New</source>
+        <target>جدید</target>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
         <target>ایجاد یک آیتم خبر جدید</target>
       </trans-unit>
-      <trans-unit id="tl_news.show.0">
-        <source>Item details</source>
-        <target>جزئیات آیتم</target>
-      </trans-unit>
-      <trans-unit id="tl_news.show.1">
+      <trans-unit id="tl_news.show">
         <source>Show the details of news item ID %s</source>
         <target>نمایش جزئیات آیتم خبر شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.edit.0">
-        <source>Edit item</source>
-        <target>ویرایش آیتم</target>
-      </trans-unit>
-      <trans-unit id="tl_news.edit.1">
+      <trans-unit id="tl_news.edit">
         <source>Edit news item ID %s</source>
         <target>ویرایش آیتم خبر شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.copy.0">
-        <source>Duplicate item</source>
-        <target>تکثیر آیتم</target>
-      </trans-unit>
-      <trans-unit id="tl_news.copy.1">
+      <trans-unit id="tl_news.copy">
         <source>Duplicate news item ID %s</source>
         <target>تکثیر آیتم خبر شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.cut.0">
-        <source>Move item</source>
-        <target>جابجایی آیتم</target>
-      </trans-unit>
-      <trans-unit id="tl_news.cut.1">
+      <trans-unit id="tl_news.cut">
         <source>Move news item ID %s</source>
         <target>جابجایی آیتم خبری شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.delete.0">
-        <source>Delete item</source>
-        <target>حذف آیتم</target>
-      </trans-unit>
-      <trans-unit id="tl_news.delete.1">
+      <trans-unit id="tl_news.delete">
         <source>Delete news item ID %s</source>
         <target>حذف آیتم خبری شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.toggle.0">
-        <source>Publish/unpublish item</source>
-        <target>انتشار/عدم‌انتشار آیتم</target>
-      </trans-unit>
-      <trans-unit id="tl_news.toggle.1">
+      <trans-unit id="tl_news.toggle">
         <source>Publish/unpublish news item ID %s</source>
         <target>انتشار/عدم‌انتشار آیتم شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.feature.0">
-        <source>Feature/unfeature item</source>
-        <target>ویژه/غیرویژه کردن آیتم</target>
-      </trans-unit>
-      <trans-unit id="tl_news.feature.1">
+      <trans-unit id="tl_news.feature">
         <source>Feature/unfeature news item ID %s</source>
         <target>ویژه/غیرویژه کردن آیتم شناسه‌ی %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.editheader.0">
-        <source>Edit archive</source>
-        <target>ویرایش بایگانی</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editheader.1">
-        <source>Edit the news archive settings</source>
-        <target>ویرایش تنظیمات بایگانی اخبار</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta.0">
-        <source>Edit item settings</source>
-        <target>ویرایش تنظیمات آیتم</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta.1">
-        <source>Edit the news item settings</source>
-        <target>ویرایش تنظیمات آیتم خبر</target>
+      <trans-unit id="tl_news.editheader">
+        <source>Edit the settings of news item ID %s</source>
+        <target>ویرایش تنظیمات آیتم خبری شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>جاگذاری در این بایگانی اخبار</target>
-      </trans-unit>
-      <trans-unit id="tl_news.pasteafter.1">
-        <source>Paste after news item ID %s</source>
-        <target>جاگذاری بعد از آیتم خبری شناسه‌ی %s</target>
       </trans-unit>
     </body>
   </file>

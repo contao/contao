@@ -62,52 +62,25 @@
         <target>Nastavení účtu</target>
       </trans-unit>
       <trans-unit id="tl_member_group.new.0">
-        <source>New group</source>
-        <target>Nová skupina</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_member_group.new.1">
-        <source>Create a new group</source>
-        <target>Vytvořit novou skupinu</target>
+        <source>Create a new member group</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.show.0">
-        <source>Group details</source>
-        <target>Zobrazit podrobnosti</target>
+      <trans-unit id="tl_member_group.show">
+        <source>Show the details of member group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.show.1">
-        <source>Show the details of group ID %s</source>
-        <target>Zobrazit podrobnosti ke skupině ID %s</target>
+      <trans-unit id="tl_member_group.edit">
+        <source>Edit member group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.edit.0">
-        <source>Edit group</source>
-        <target>Upravit skupinu</target>
+      <trans-unit id="tl_member_group.copy">
+        <source>Duplicate member group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.edit.1">
-        <source>Edit group ID %s</source>
-        <target>Upravit skupinu ID %s</target>
+      <trans-unit id="tl_member_group.delete">
+        <source>Delete member group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.copy.0">
-        <source>Duplicate group</source>
-        <target>Duplikovat skupinu</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.copy.1">
-        <source>Duplicate group ID %s</source>
-        <target>Duplikovat skupinu ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.delete.0">
-        <source>Delete group</source>
-        <target>Smazat skupinu</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.delete.1">
-        <source>Delete group ID %s</source>
-        <target>Smazat skupinu ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.toggle.0">
-        <source>Activate/deactivate group</source>
-        <target>Aktivovat / deaktivovat</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.toggle.1">
-        <source>Activate/deactivate group ID %s</source>
-        <target>Aktivovat / deaktivovat skupinu ID %s</target>
+      <trans-unit id="tl_member_group.toggle">
+        <source>Activate/deactivate member group ID %s</source>
       </trans-unit>
     </body>
   </file>

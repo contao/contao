@@ -94,42 +94,25 @@
         <target>全部情节</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.0">
-        <source>New feed</source>
-        <target>新的源</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.1">
         <source>Create a new feed</source>
         <target>创建新的源</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.show.0">
-        <source>Feed details</source>
-        <target>源详情</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.show.1">
+      <trans-unit id="tl_news_feed.show">
         <source>Show the details of feed ID %s</source>
         <target>显示ID为%s的源详情</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.edit.0">
-        <source>Edit feed</source>
-        <target>编辑源</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.edit.1">
+      <trans-unit id="tl_news_feed.edit">
         <source>Edit feed ID %s</source>
         <target>编辑ID为%s的源</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.copy.0">
-        <source>Duplicate feed</source>
-        <target>复制源</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.copy.1">
+      <trans-unit id="tl_news_feed.copy">
         <source>Duplicate feed ID %s</source>
         <target>复制ID为%s的源</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.delete.0">
-        <source>Delete feed</source>
-        <target>删除源</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.delete.1">
+      <trans-unit id="tl_news_feed.delete">
         <source>Delete feed ID %s</source>
         <target>删除ID为%s的源</target>
       </trans-unit>

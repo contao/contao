@@ -281,6 +281,22 @@
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
         <target>Hier können Sie die maximale Anzahl an Zeichen (Text) bzw. Bytes (Datei-Uploads) festlegen.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.minval.0">
+        <source>Minimum value</source>
+        <target>Minimalwert</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.minval.1">
+        <source>Here you can set the minimum value for numeric fields.</source>
+        <target>Hier können Sie einen Minimalwert für numerische Eingaben festlegen.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxval.0">
+        <source>Maximum value</source>
+        <target>Maximalwert</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxval.1">
+        <source>Here you can set the maximum value for numeric fields.</source>
+        <target>Hier können Sie einen Maximalwert für numerische Eingaben festlegen.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>
         <target>Reihen und Spalten</target>
@@ -447,7 +463,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.expert_legend">
         <source>Expert settings</source>
-        <target>Experten-Einstellungen</target>
+        <target>Experteneinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_form_field.size_legend">
         <source>Rows and columns</source>
@@ -470,84 +486,56 @@
         <target>Sichtbarkeit</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.0">
-        <source>New field</source>
-        <target>Neues Feld</target>
+        <source>New</source>
+        <target>Neu</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.1">
-        <source>Create a new field</source>
-        <target>Ein neues Feld anlegen</target>
+        <source>Create a new form field</source>
+        <target>Ein neues Formularfeld erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.show.0">
-        <source>Field details</source>
-        <target>Felddetails</target>
+      <trans-unit id="tl_form_field.show">
+        <source>Show the details of form field ID %s</source>
+        <target>Details des Formularfeldes ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.show.1">
-        <source>Show the details of field ID %s</source>
-        <target>Details des Feldes ID %s anzeigen</target>
+      <trans-unit id="tl_form_field.edit">
+        <source>Edit form field ID %s</source>
+        <target>Formularfeld ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit.0">
-        <source>Edit field</source>
-        <target>Feld bearbeiten</target>
+      <trans-unit id="tl_form_field.cut">
+        <source>Move form field ID %s</source>
+        <target>Formularfeld ID %s verschieben</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit.1">
-        <source>Edit field ID %s</source>
-        <target>Das Feld ID %s bearbeiten</target>
+      <trans-unit id="tl_form_field.copy">
+        <source>Duplicate form field ID %s</source>
+        <target>Formularfeld ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut.0">
-        <source>Move field</source>
-        <target>Feld verschieben</target>
+      <trans-unit id="tl_form_field.delete">
+        <source>Delete form field ID %s</source>
+        <target>Formularfeld ID %s löschen</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut.1">
-        <source>Move field ID %s</source>
-        <target>Das Feld ID %s verschieben</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.copy.0">
-        <source>Duplicate field</source>
-        <target>Feld duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.copy.1">
-        <source>Duplicate field ID %s</source>
-        <target>Das Feld ID %s duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.delete.0">
-        <source>Delete field</source>
-        <target>Feld löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.delete.1">
-        <source>Delete field ID %s</source>
-        <target>Das Feld ID %s löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.editheader.0">
-        <source>Edit form</source>
-        <target>Formular bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.editheader.1">
+      <trans-unit id="tl_form_field.editheader">
         <source>Edit the form settings</source>
-        <target>Die Formular-Einstellungen bearbeiten</target>
+        <target>Formulareinstellungen bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle">
+        <source>Hide/unhide form field ID %s</source>
+        <target>Formularfeld ID %s verstecken/anzeigen</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>
         <target>Oben einfügen</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
-        <source>Paste after field ID %s</source>
-        <target>Nach dem Feld ID %s einfügen</target>
+        <source>Paste after form field ID %s</source>
+        <target>Nach dem Formularfeld ID %s einfügen</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
-        <source>Add new at the top</source>
-        <target>Neues Inhaltselement oben erstellen</target>
+        <source>Create a new form field at the top</source>
+        <target>Neues Formularfeld oben erstellen</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
-        <source>Add new after field ID %s</source>
-        <target>Neues Feld nach ID %s erstellen</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.toggle.0">
-        <source>Toggle visibility</source>
-        <target>Sichtbarkeit ändern</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.toggle.1">
-        <source>Toggle the visibility of field ID %s</source>
-        <target>Die Sichtbarkeit des Feldes ID %s ändern</target>
+        <source>Create a new form field after form field ID %s</source>
+        <target>Neues Formularfeld nach dem Formularfeld ID %s erstellen</target>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>

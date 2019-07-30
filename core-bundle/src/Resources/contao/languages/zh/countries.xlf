@@ -158,16 +158,14 @@
         <target>科科斯（基林）群岛</target>
       </trans-unit>
       <trans-unit id="CNT.cd">
-        <source>Congo - Kinshasa</source>
-        <target>刚果 - 金沙萨</target>
+        <source>Democratic Republic of the Congo</source>
       </trans-unit>
       <trans-unit id="CNT.cf">
         <source>Central African Republic</source>
         <target>中非共和国</target>
       </trans-unit>
       <trans-unit id="CNT.cg">
-        <source>Congo - Brazzaville</source>
-        <target>刚果 - 布拉柴维尔</target>
+        <source>Republic of the Congo</source>
       </trans-unit>
       <trans-unit id="CNT.ch">
         <source>Switzerland</source>
@@ -196,10 +194,6 @@
       <trans-unit id="CNT.co">
         <source>Colombia</source>
         <target>哥伦比亚</target>
-      </trans-unit>
-      <trans-unit id="CNT.cp">
-        <source>Clipperton Island</source>
-        <target>克利珀顿岛</target>
       </trans-unit>
       <trans-unit id="CNT.cr">
         <source>Costa Rica</source>
@@ -232,10 +226,6 @@
       <trans-unit id="CNT.de">
         <source>Germany</source>
         <target>德国</target>
-      </trans-unit>
-      <trans-unit id="CNT.dg">
-        <source>Diego Garcia</source>
-        <target>迪戈加西亚</target>
       </trans-unit>
       <trans-unit id="CNT.dj">
         <source>Djibouti</source>

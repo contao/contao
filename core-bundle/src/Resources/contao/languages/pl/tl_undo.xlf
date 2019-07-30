@@ -41,21 +41,8 @@
         <source>Raw data of the undo step</source>
         <target>Dane skasowanych rekordów</target>
       </trans-unit>
-      <trans-unit id="tl_undo.show.0">
-        <source>Show details</source>
-        <target>Pokaż szczegóły</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.show.1">
-        <source>Show the details of entry ID %s</source>
-        <target>Pokaż szczegóły pozycji ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.undo.0">
-        <source>Restore</source>
-        <target>Odtwórz</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.undo.1">
-        <source>Restore entry ID %s</source>
-        <target>Cofnij operację ID %s</target>
+      <trans-unit id="tl_undo.undo">
+        <source>Restore element ID %s</source>
       </trans-unit>
     </body>
   </file>

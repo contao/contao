@@ -241,6 +241,22 @@
         <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
         <target>Hier können Sie Google-Webfonts zu Ihrer Webseite hinzfügen. Geben Sie die Schriftarten ohne die Basis-URL an (z.B. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
       </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.0">
+        <source>Lightbox image size</source>
+        <target>Lightbox-Bildgröße</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.1">
+        <source>Here you can select an image size for the images shown in the lightbox.</source>
+        <target>Hier können Sie eine Bildgröße für die Bilder auswählen, die in der Lightbox angezeigt werden.</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.defaultImageDensities.0">
+        <source>Default image pixel densities</source>
+        <target>Standard-Bildgrößen</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.defaultImageDensities.1">
+        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
+        <target>Hier können Sie die Standard-Pixeldichten definieren, z.B. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
+      </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included modules</source>
         <target>Eingebundene Module</target>
@@ -257,13 +273,13 @@
         <source>Here you can select the page template.</source>
         <target>Hier können Sie das Seitentemplate auswählen.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.0">
-        <source>Output format</source>
-        <target>Ausgabeformat</target>
+      <trans-unit id="tl_layout.minifyMarkup.0">
+        <source>Minify the markup</source>
+        <target>Markup komprimieren</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.1">
-        <source>Here you can set the output format.</source>
-        <target>Hier legen Sie das Ausgabeformat fest.</target>
+      <trans-unit id="tl_layout.minifyMarkup.1">
+        <source>Minify the HTML markup before it is sent to the browser.</source>
+        <target>Das HTML-Markup vor dem Senden an den Browser komprimieren.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.0">
         <source>Body class</source>
@@ -353,14 +369,6 @@
         <source>Here you can select one or more MooTools templates.</source>
         <target>Hier können Sie eines oder mehrere MooTools-Templates auswählen.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.picturefill.0">
-        <source>Load the image polyfill</source>
-        <target>Das Image-Polyfill laden</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.picturefill.1">
-        <source>Include the image polyfill (&lt;em&gt;respimage.js&lt;/em&gt;) in the layout.</source>
-        <target>Dem Layout das Image-Polyfill (&lt;em&gt;respimage.js&lt;/em&gt;) hinzufügen.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.scripts.0">
         <source>JavaScript templates</source>
         <target>JavaScript-Templates</target>
@@ -437,13 +445,13 @@
         <source>Web fonts</source>
         <target>Webfonts</target>
       </trans-unit>
+      <trans-unit id="tl_layout.image_legend">
+        <source>Image sizes</source>
+        <target>Bildgrößen</target>
+      </trans-unit>
       <trans-unit id="tl_layout.style_legend">
         <source>Style sheets</source>
         <target>Stylesheets</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.picturefill_legend">
-        <source>Responsive images</source>
-        <target>Responsive Bilder</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>
@@ -451,7 +459,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.expert_legend">
         <source>Expert settings</source>
-        <target>Experten-Einstellungen</target>
+        <target>Experteneinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_layout.script_legend">
         <source>JavaScript</source>
@@ -514,60 +522,32 @@
         <target>Piwik</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
-        <source>New layout</source>
-        <target>Neues Layout</target>
+        <source>New</source>
+        <target>Neu</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
-        <source>Create a new layout</source>
-        <target>Ein neues Layout anlegen</target>
+        <source>Create a new page layout</source>
+        <target>Ein neues Seitenlayout erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_layout.show.0">
-        <source>Layout details</source>
-        <target>Layoutdetails</target>
+      <trans-unit id="tl_layout.show">
+        <source>Show the details of page layout ID %s</source>
+        <target>Details des Seitenlayouts ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_layout.show.1">
-        <source>Show the details of layout ID %s</source>
-        <target>Details des Layouts ID %s anzeigen</target>
+      <trans-unit id="tl_layout.edit">
+        <source>Edit page layout ID %s</source>
+        <target>Seitenlayout ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_layout.edit.0">
-        <source>Edit layout</source>
-        <target>Layout bearbeiten</target>
+      <trans-unit id="tl_layout.copy">
+        <source>Duplicate page layout ID %s</source>
+        <target>Seitenlayout ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_layout.edit.1">
-        <source>Edit layout ID %s</source>
-        <target>Layout ID %s bearbeiten</target>
+      <trans-unit id="tl_layout.cut">
+        <source>Move page layout ID %s</source>
+        <target>Seitenlayout ID %s verschieben</target>
       </trans-unit>
-      <trans-unit id="tl_layout.cut.0">
-        <source>Move layout</source>
-        <target>Layout verschieben </target>
-      </trans-unit>
-      <trans-unit id="tl_layout.cut.1">
-        <source>Move layout ID %s</source>
-        <target>Layout ID %s verschieben</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.copy.0">
-        <source>Duplicate layout</source>
-        <target>Layout duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.copy.1">
-        <source>Duplicate layout ID %s</source>
-        <target>Layout ID %s duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.delete.0">
-        <source>Delete layout</source>
-        <target>Layout löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.delete.1">
-        <source>Delete layout ID %s</source>
-        <target>Layout ID %s löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.editheader.0">
-        <source>Edit theme</source>
-        <target>Theme bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.editheader.1">
-        <source>Edit the theme settings</source>
-        <target>Die Theme-Einstellungen bearbeiten</target>
+      <trans-unit id="tl_layout.delete">
+        <source>Delete page layout ID %s</source>
+        <target>Seitenlayout ID %s löschen</target>
       </trans-unit>
     </body>
   </file>

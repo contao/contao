@@ -41,6 +41,22 @@
         <source>Please enter the time according to the global time format.</source>
         <target>Bitte geben Sie die Uhrzeit gemäß des globalen Zeitformats ein.</target>
       </trans-unit>
+      <trans-unit id="tl_news.pageTitle.0">
+        <source>Meta title</source>
+        <target>Meta-Titel</target>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Hier können Sie einen individuellen Meta-Titel eingeben, um den Standard-Seitentitel zu überschreiben.</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.0">
+        <source>Meta description</source>
+        <target>Meta-Beschreibung</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Hier können Sie eine individuelle Meta-Beschreibung eingeben, um die Standard-Seitenbeschreibung zu überschreiben.</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>Unterüberschrift</target>
@@ -209,6 +225,10 @@
         <source>Date and time</source>
         <target>Datum und Zeit</target>
       </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Metadaten</target>
+      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Unterüberschrift und Teaser</target>
@@ -219,7 +239,7 @@
       </trans-unit>
       <trans-unit id="tl_news.image_legend">
         <source>Image settings</source>
-        <target>Bild-Einstellungen</target>
+        <target>Bildeinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_news.enclosure_legend">
         <source>Enclosures</source>
@@ -231,99 +251,55 @@
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
-        <target>Experten-Einstellungen</target>
+        <target>Experteneinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_news.publish_legend">
         <source>Publish settings</source>
         <target>Veröffentlichung</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
-        <source>New item</source>
-        <target>Neuer Beitrag</target>
+        <source>New</source>
+        <target>Neu</target>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
         <target>Einen neuen Beitrag erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_news.show.0">
-        <source>Item details</source>
-        <target>Beitragsdetails</target>
-      </trans-unit>
-      <trans-unit id="tl_news.show.1">
+      <trans-unit id="tl_news.show">
         <source>Show the details of news item ID %s</source>
-        <target>Die Details des Beitrags ID %s anzeigen</target>
+        <target>Details des Beitrags ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_news.edit.0">
-        <source>Edit item</source>
-        <target>Beitrag bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_news.edit.1">
+      <trans-unit id="tl_news.edit">
         <source>Edit news item ID %s</source>
         <target>Beitrag ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_news.copy.0">
-        <source>Duplicate item</source>
-        <target>Beitrag duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_news.copy.1">
+      <trans-unit id="tl_news.copy">
         <source>Duplicate news item ID %s</source>
         <target>Beitrag ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_news.cut.0">
-        <source>Move item</source>
-        <target>Beitrag verschieben</target>
-      </trans-unit>
-      <trans-unit id="tl_news.cut.1">
+      <trans-unit id="tl_news.cut">
         <source>Move news item ID %s</source>
         <target>Beitrag ID %s verschieben</target>
       </trans-unit>
-      <trans-unit id="tl_news.delete.0">
-        <source>Delete item</source>
-        <target>Beitrag löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_news.delete.1">
+      <trans-unit id="tl_news.delete">
         <source>Delete news item ID %s</source>
         <target>Beitrag ID %s löschen</target>
       </trans-unit>
-      <trans-unit id="tl_news.toggle.0">
-        <source>Publish/unpublish item</source>
-        <target>Beitrag veröffentlichen/unveröffentlichen</target>
-      </trans-unit>
-      <trans-unit id="tl_news.toggle.1">
+      <trans-unit id="tl_news.toggle">
         <source>Publish/unpublish news item ID %s</source>
         <target>Beitrag ID %s veröffentlichen/unveröffentlichen</target>
       </trans-unit>
-      <trans-unit id="tl_news.feature.0">
-        <source>Feature/unfeature item</source>
-        <target>Beitrag hervorheben/zurücksetzen</target>
-      </trans-unit>
-      <trans-unit id="tl_news.feature.1">
+      <trans-unit id="tl_news.feature">
         <source>Feature/unfeature news item ID %s</source>
         <target>Beitrag ID %s hervorheben/zurücksetzen</target>
       </trans-unit>
-      <trans-unit id="tl_news.editheader.0">
-        <source>Edit archive</source>
-        <target>Archiv bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editheader.1">
-        <source>Edit the news archive settings</source>
-        <target>Nachrichtenarchiv-Einstellungen bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta.0">
-        <source>Edit item settings</source>
-        <target>Beitragseinstellungen bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta.1">
-        <source>Edit the news item settings</source>
-        <target>Die Beitragseinstellungen bearbeiten</target>
+      <trans-unit id="tl_news.editheader">
+        <source>Edit the settings of news item ID %s</source>
+        <target>Einstellungen des Beitrags ID %s bearbeiten</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>In dieses Nachrichtenarchiv einfügen</target>
-      </trans-unit>
-      <trans-unit id="tl_news.pasteafter.1">
-        <source>Paste after news item ID %s</source>
-        <target>Nach dem Beitrag ID %s einfügen</target>
       </trans-unit>
     </body>
   </file>

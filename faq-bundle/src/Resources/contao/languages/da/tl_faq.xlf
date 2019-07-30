@@ -98,68 +98,35 @@
         <target>Publiceringsindstillinger</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.0">
-        <source>New question</source>
-        <target>Nyt spørgsmål</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
         <target>Opret et nyt spørgsmål</target>
       </trans-unit>
-      <trans-unit id="tl_faq.show.0">
-        <source>Show question details</source>
-        <target>Vis spørgsmål</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.show.1">
+      <trans-unit id="tl_faq.show">
         <source>Show the details of question ID %s</source>
         <target>Vis detaljer for spørgsmål ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.edit.0">
-        <source>Edit question</source>
-        <target>Rediger spørgsmål</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.edit.1">
+      <trans-unit id="tl_faq.edit">
         <source>Edit question ID %s</source>
         <target>Rediger spørgsmål ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.copy.0">
-        <source>Duplicate question</source>
-        <target>Dupliker spørgsmål</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.copy.1">
+      <trans-unit id="tl_faq.copy">
         <source>Duplicate question ID %s</source>
         <target>Dupliker spørgsmål ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.cut.0">
-        <source>Move question</source>
-        <target>Flyt spørgsmål</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.cut.1">
+      <trans-unit id="tl_faq.cut">
         <source>Move question ID %s</source>
         <target>Flyt spørgsmål ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.delete.0">
-        <source>Delete question</source>
-        <target>Slet spørgsmål</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.delete.1">
+      <trans-unit id="tl_faq.delete">
         <source>Delete question ID %s</source>
         <target>Slet spørgsmål ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.toggle.0">
-        <source>Publish/unpublish question</source>
-        <target>Udgiv/skjul spørgsmål</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.toggle.1">
+      <trans-unit id="tl_faq.toggle">
         <source>Publish/unpublish question ID %s</source>
         <target>Udgiv/skjul spørgsmål ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.editheader.0">
-        <source>Edit category</source>
-        <target>Rediger kategori</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.editheader.1">
-        <source>Edit the category settings</source>
-        <target>Rediger denne kategori</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>
@@ -170,12 +137,10 @@
         <target>Indsæt efter spørgsmål ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
-        <source>Add new at the top</source>
-        <target>Opret ny formatdefinition i begyndelsen</target>
+        <source>Create a new question at the top</source>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
-        <source>Add new after question ID %s</source>
-        <target>Opret et nyt spørgsmål efter spørgsmål ID %s</target>
+        <source>Create a new question after question ID %s</source>
       </trans-unit>
     </body>
   </file>

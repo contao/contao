@@ -53,74 +53,6 @@
         <source>For more information, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
         <target>Více informací najdete na &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; nebo navštivte &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;stránku podporoy Contaa&lt;/a&gt;.</target>
       </trans-unit>
-      <trans-unit id="XPT.incomplete">
-        <source>Incomplete installation</source>
-        <target>Nekompletní instalace</target>
-      </trans-unit>
-      <trans-unit id="XPT.incompleteInstallation">
-        <source>The installation has not been completed, therefore Contao cannot work properly.</source>
-        <target>Instalace nebyla dokončena, proto nebude moct Contao fungovat správně.</target>
-      </trans-unit>
-      <trans-unit id="XPT.incompleteFix">
-        <source>Please open the Contao install tool (&lt;code&gt;/contao/install&lt;/code&gt;) in your browser.</source>
-        <target>Otevřete prosím instalační nástroj Contaa (&lt;code&gt;/contao/install&lt;/code&gt;) ve Vašem prohlížeči.</target>
-      </trans-unit>
-      <trans-unit id="XPT.incompleteExplain">
-        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Více informací najdete v &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;manuálu Contaa&lt;/a&gt;.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noForward">
-        <source>Forward page not found</source>
-        <target>Nebyla nalezena žádná stránka přesměrování</target>
-      </trans-unit>
-      <trans-unit id="XPT.noForwardPage">
-        <source>The application has been configured to forward the request to another page, however, the target page does not exist or has not been published.</source>
-        <target>Stránka odkazuje na externí stránku, která buď neexistuje nebo ještě nebyly zveřejněná. </target>
-      </trans-unit>
-      <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
-        <target>Zdá se, že správce stránky musí něco opravit. Jste-li návštěvník stránky, můžete kontaktovat &lt;a href=&quot;%s&quot;&gt;správce webu&lt;/a&gt; a sdělit mu, že není něco v pořádku.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noRoot">
-        <source>No root page found</source>
-        <target>Nebyla nalezena žádný kořenová stránka webu</target>
-      </trans-unit>
-      <trans-unit id="XPT.noRootPage">
-        <source>There is no website root page which matches the requested language and/or domain name.</source>
-        <target>Neexistuje žádná kořenová stránka, která by určoval požadovaný jazyk a/nebo název domény.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
-        <target>Pokud jste na konci domény zadali zkratku pro jazyk, zkuste se &lt;a href=&quot;%s&quot;&gt;vrátit o úroveň výš&lt;/a&gt; a počkejte, na jakou stránku budete přesměrováni. Případně &lt;a href=&quot;%s&quot;&gt;kontaktujte správce stránky&lt;/a&gt; a dejte mu vědět, že není něco v pořádku.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayout">
-        <source>No layout specified</source>
-        <target>Není určený žádný vzhled</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayoutSpecified">
-        <source>The page you have requested has not yet been associated with a page layout.</source>
-        <target>Stránku, kterou chcete zobrazit, nemá přiřazený žádný vzhled.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayoutFix">
-        <source>Make sure that you have assigned a page layout to each website root page in the site structure.</source>
-        <target>Ujistěte se, že jste ve struktuře stránky přiřadili ke kořenové stránce jistý vzhled.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayoutExplain">
-        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Více informací najdete v &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;manuálu Contaa&lt;/a&gt;.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noActive">
-        <source>No active pages found</source>
-        <target>Nebyla nalezena žádná aktivní stránka</target>
-      </trans-unit>
-      <trans-unit id="XPT.noActivePages">
-        <source>Your request has been mapped to a website which does not yet contain any published pages.</source>
-        <target>Nacházíte se na stránce, která momentálně nemá žádnou zveřejněnou stránku.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
-        <target>Nejspíš se stránka nachází ve vývojové fázi a bude zveřejněná za několik dní. Pokud se nadále domníváte, že je něco špatně, &lt;a href=&quot;%s&quot;&gt;kontaktujte správce webu&lt;/a&gt; a sdělte mu to.</target>
-      </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>
         <target>Servis je nedostupný</target>
@@ -128,22 +60,6 @@
       <trans-unit id="XPT.maintenance">
         <source>The website is currently not available. Please come back later.</source>
         <target>Webová stránka je momentálně nedostupná. Vraťte se sem později. </target>
-      </trans-unit>
-      <trans-unit id="XPT.insecure">
-        <source>Insecure document root</source>
-        <target>Nezabezpečený dokumentový kořen</target>
-      </trans-unit>
-      <trans-unit id="XPT.insecureRoot">
-        <source>Your installation is not secure, because non-public resources are publicy available via HTTP.</source>
-        <target>Vaše instalace není bezpečná, protože jsou pomocí HTTP dostupné neveřejné části.</target>
-      </trans-unit>
-      <trans-unit id="XPT.insecureFix">
-        <source>Please set the document root to the &lt;code&gt;web/&lt;/code&gt; subfolder. This is usually done in the domain routing section of your server administration panel or in the vhosts file of your web server.</source>
-        <target>Nastavte prosím kořenový soubor nebo složku na &lt;code&gt;web/&lt;/code&gt; podsložku. To lze běžně provést v nastavení domény ve správě serveru nebo v souboru vhosts Vašeho webového serveru. </target>
-      </trans-unit>
-      <trans-unit id="XPT.insecureExplain">
-        <source>Contao 4 no longer relies on &lt;code&gt;.htaccess&lt;/code&gt; files to protect folders and instead uses a public subfolder as document root. Anything above the document root must not be accessible via HTTP, otherwise anyone could download non-public resources including sensitive data such as configuration files.</source>
-        <target>Contao 4 již nepotřebuje soubory &lt;code&gt;.htaccess&lt;/code&gt;, aby ochránil složky, a místo toho používá veřejné podsložky jako dokumentový kořen. Vše v dané složce nesmí být přístupné přes http, jinak by každý mohl stáhnout neveřejné zdroje včetně choulostivých dat jako nastavení. </target>
       </trans-unit>
     </body>
   </file>

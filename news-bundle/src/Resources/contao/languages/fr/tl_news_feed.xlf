@@ -94,42 +94,25 @@
         <target>Articles complets</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.0">
-        <source>New feed</source>
-        <target>Nouveau flux</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.1">
         <source>Create a new feed</source>
         <target>Créer un nouveau flux</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.show.0">
-        <source>Feed details</source>
-        <target>Détails du flux</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.show.1">
+      <trans-unit id="tl_news_feed.show">
         <source>Show the details of feed ID %s</source>
         <target>Afficher les détails du flux ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.edit.0">
-        <source>Edit feed</source>
-        <target>Éditer le flux</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.edit.1">
+      <trans-unit id="tl_news_feed.edit">
         <source>Edit feed ID %s</source>
         <target>Éditer le flux ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.copy.0">
-        <source>Duplicate feed</source>
-        <target>Dupliquer le flux</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.copy.1">
+      <trans-unit id="tl_news_feed.copy">
         <source>Duplicate feed ID %s</source>
         <target>Dupliquer le flux ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.delete.0">
-        <source>Delete feed</source>
-        <target>Supprimer le flux</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.delete.1">
+      <trans-unit id="tl_news_feed.delete">
         <source>Delete feed ID %s</source>
         <target>Supprimer le flux ID %s</target>
       </trans-unit>

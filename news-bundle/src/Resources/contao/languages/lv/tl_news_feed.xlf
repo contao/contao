@@ -94,42 +94,25 @@
         <target>Pilni stāsti</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.0">
-        <source>New feed</source>
-        <target>Jauna barotne</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.1">
         <source>Create a new feed</source>
         <target>Izveidot junu barotni</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.show.0">
-        <source>Feed details</source>
-        <target>Barotnes detaļas</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.show.1">
+      <trans-unit id="tl_news_feed.show">
         <source>Show the details of feed ID %s</source>
         <target>Rādīt barotnes ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.edit.0">
-        <source>Edit feed</source>
-        <target>Rediģēt barotni</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.edit.1">
+      <trans-unit id="tl_news_feed.edit">
         <source>Edit feed ID %s</source>
         <target>Rediģēt barotni ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.copy.0">
-        <source>Duplicate feed</source>
-        <target>Dublēt barotni</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.copy.1">
+      <trans-unit id="tl_news_feed.copy">
         <source>Duplicate feed ID %s</source>
         <target>Dublēt barotni ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.delete.0">
-        <source>Delete feed</source>
-        <target>Dzēst barotni</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.delete.1">
+      <trans-unit id="tl_news_feed.delete">
         <source>Delete feed ID %s</source>
         <target>Dzēst barotni ID %s</target>
       </trans-unit>

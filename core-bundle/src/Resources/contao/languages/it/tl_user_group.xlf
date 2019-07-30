@@ -78,52 +78,26 @@
         <target>Impostazioni utente</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
-        <source>New user group</source>
-        <target>Nuovo gruppo utente</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_user_group.new.1">
         <source>Create a new user group</source>
         <target>Crea un nuovo gruppo di utenti</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.show.0">
-        <source>Group details</source>
-        <target>Dettaglio gruppo</target>
+      <trans-unit id="tl_user_group.show">
+        <source>Show the details of user group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.show.1">
-        <source>Show the details of group ID %s</source>
-        <target>Visualizza i dettagli del gruppo con ID %s</target>
+      <trans-unit id="tl_user_group.edit">
+        <source>Edit user group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.edit.0">
-        <source>Edit group</source>
-        <target>Modifica gruppo</target>
+      <trans-unit id="tl_user_group.copy">
+        <source>Duplicate user group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.edit.1">
-        <source>Edit group ID %s</source>
-        <target>Modifica il gruppo con ID %s</target>
+      <trans-unit id="tl_user_group.delete">
+        <source>Delete user group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.copy.0">
-        <source>Duplicate group</source>
-        <target>Duplica gruppo</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.copy.1">
-        <source>Duplicate group ID %s</source>
-        <target>Duplica il gruppo con ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.delete.0">
-        <source>Delete group</source>
-        <target>Elimina gruppo</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.delete.1">
-        <source>Delete group ID %s</source>
-        <target>Elimina il gruppo con ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.toggle.0">
-        <source>Activate/deactivate group</source>
-        <target>Attiva/disattiva gruppo</target>
-      </trans-unit>
-      <trans-unit id="tl_user_group.toggle.1">
-        <source>Activate/deactivate group ID %s</source>
-        <target>Attiva/disattiva gruppo ID %s</target>
+      <trans-unit id="tl_user_group.toggle">
+        <source>Activate/deactivate user group ID %s</source>
       </trans-unit>
     </body>
   </file>

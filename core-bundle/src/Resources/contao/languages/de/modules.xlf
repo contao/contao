@@ -85,6 +85,14 @@
         <source>Manage user groups (back end user groups)</source>
         <target>Benutzergruppen verwalten (Backend-Benutzergruppen)</target>
       </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+        <target>Double Opt-In</target>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage the double opt-in tokens</source>
+        <target>Double Opt-In-Token verwalten</target>
+      </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
         <target>System</target>
@@ -384,6 +392,14 @@
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
         <target>Fügt der Seite einen RSS-Feed hinzu</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.0">
+        <source>Two-factor authentication</source>
+        <target>Zwei-Faktor-Authentifizierung</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication</source>
+        <target>Erzeugt ein Formular zur Einrichtung der Zwei-Faktor-Authentifizierung.</target>
       </trans-unit>
     </body>
   </file>

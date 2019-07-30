@@ -85,6 +85,14 @@
         <source>Manage user groups (back end user groups)</source>
         <target>Gestisci i gruppi utente</target>
       </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+        <target>Doppio opt-in</target>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage the double opt-in tokens</source>
+        <target>Gestire i token doppio opt-in</target>
+      </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
         <target>Sistema</target>
@@ -123,9 +131,11 @@
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
+        <target>Sicurezza</target>
       </trans-unit>
       <trans-unit id="MOD.security.1">
         <source>Secure your account</source>
+        <target>Proteggi il tuo account</target>
       </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
@@ -382,6 +392,13 @@
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
         <target>Questo modulo permette di importare Feed RSS.</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.0">
+        <source>Two-factor authentication</source>
+        <target>Autenticazione a due fattori</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication</source>
       </trans-unit>
     </body>
   </file>

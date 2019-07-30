@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_form.expert_legend">
         <source>Expert settings</source>
-        <target>Experten-Einstellungen</target>
+        <target>Experteneinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_form.config_legend">
         <source>Form configuration</source>
@@ -194,52 +194,32 @@
         <target>Template-Einstellungen</target>
       </trans-unit>
       <trans-unit id="tl_form.new.0">
-        <source>New form</source>
-        <target>Neues Formular</target>
+        <source>New</source>
+        <target>Neu</target>
       </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
         <target>Ein neues Formular anlegen</target>
       </trans-unit>
-      <trans-unit id="tl_form.show.0">
-        <source>Form details</source>
-        <target>Formulardetails</target>
-      </trans-unit>
-      <trans-unit id="tl_form.show.1">
+      <trans-unit id="tl_form.show">
         <source>Show the details of form ID %s</source>
         <target>Details des Formulars ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_form.edit.0">
-        <source>Edit form</source>
-        <target>Formular bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_form.edit.1">
+      <trans-unit id="tl_form.edit">
         <source>Edit form ID %s</source>
-        <target>Das Formular ID %s bearbeiten</target>
+        <target>Formular ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.0">
-        <source>Edit form</source>
-        <target>Formular bearbeiten</target>
+      <trans-unit id="tl_form.editheader">
+        <source>Edit the settings of form ID %s</source>
+        <target>Einstellungen des Formulars ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.1">
-        <source>Edit the form settings</source>
-        <target>Die Formular-Einstellungen bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.0">
-        <source>Duplicate form</source>
-        <target>Formular duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.1">
+      <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>
-        <target>Das Formular ID %s duplizieren</target>
+        <target>Formular ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_form.delete.0">
-        <source>Delete form</source>
-        <target>Formular löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_form.delete.1">
+      <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
-        <target>Das Formular ID %s löschen</target>
+        <target>Formular ID %s löschen</target>
       </trans-unit>
     </body>
   </file>

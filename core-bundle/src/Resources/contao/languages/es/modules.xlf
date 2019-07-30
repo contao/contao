@@ -85,6 +85,12 @@
         <source>Manage user groups (back end user groups)</source>
         <target>Los usuarios del back end pueden ser asignados a cualquier número de grupos para poder compartir configuraciones concretas. Este módulo te permite la configuración de estos grupos.</target>
       </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage the double opt-in tokens</source>
+      </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
         <target>Sistema</target>
@@ -382,6 +388,12 @@
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
         <target>Este módulo permite importar datos de RSS feeds.</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.0">
+        <source>Two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication</source>
       </trans-unit>
     </body>
   </file>

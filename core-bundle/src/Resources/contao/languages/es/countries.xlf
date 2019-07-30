@@ -158,16 +158,14 @@
         <target>Isla cocos</target>
       </trans-unit>
       <trans-unit id="CNT.cd">
-        <source>Congo - Kinshasa</source>
-        <target>Congo - Kinshasa</target>
+        <source>Democratic Republic of the Congo</source>
       </trans-unit>
       <trans-unit id="CNT.cf">
         <source>Central African Republic</source>
         <target>República Africana Central</target>
       </trans-unit>
       <trans-unit id="CNT.cg">
-        <source>Congo - Brazzaville</source>
-        <target>Congo - Brazzaville</target>
+        <source>Republic of the Congo</source>
       </trans-unit>
       <trans-unit id="CNT.ch">
         <source>Switzerland</source>
@@ -196,10 +194,6 @@
       <trans-unit id="CNT.co">
         <source>Colombia</source>
         <target>Colombia</target>
-      </trans-unit>
-      <trans-unit id="CNT.cp">
-        <source>Clipperton Island</source>
-        <target>Islas de Clipperton</target>
       </trans-unit>
       <trans-unit id="CNT.cr">
         <source>Costa Rica</source>
@@ -232,10 +226,6 @@
       <trans-unit id="CNT.de">
         <source>Germany</source>
         <target>Alemania</target>
-      </trans-unit>
-      <trans-unit id="CNT.dg">
-        <source>Diego Garcia</source>
-        <target>Diego Garcia</target>
       </trans-unit>
       <trans-unit id="CNT.dj">
         <source>Djibouti</source>

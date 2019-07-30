@@ -239,6 +239,19 @@
         <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
         <target>اینجا می‌توانید قلم‌های وب گوگل را به وب‌سایت خود اضافه نمایید. خانواده‌های قلم را بدون نشانی وب مشخص نمایید (برای نمونه &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
       </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.0">
+        <source>Lightbox image size</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.lightboxSize.1">
+        <source>Here you can select an image size for the images shown in the lightbox.</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.defaultImageDensities.0">
+        <source>Default image pixel densities</source>
+        <target>چگالی پیکسلی پیش‌فرض تصویر</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.defaultImageDensities.1">
+        <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
+      </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included modules</source>
         <target>ماژول‌های گنجانده شده</target>
@@ -255,13 +268,13 @@
         <source>Here you can select the page template.</source>
         <target>اینجا می‌توانید قالب برگه را انتخاب نمایید.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.0">
-        <source>Output format</source>
-        <target>قالب خروجی</target>
+      <trans-unit id="tl_layout.minifyMarkup.0">
+        <source>Minify the markup</source>
+        <target>کوچک کردن نشانه‌گذاری</target>
       </trans-unit>
-      <trans-unit id="tl_layout.doctype.1">
-        <source>Here you can set the output format.</source>
-        <target>اینجا می‌توانید قالب خروجی را تنظیم نمایید.</target>
+      <trans-unit id="tl_layout.minifyMarkup.1">
+        <source>Minify the HTML markup before it is sent to the browser.</source>
+        <target>نشانه‌گذاری اچ‌تی‌ام‌ال را قبل از ارسال به مرورگر کوچک می‌کند.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.0">
         <source>Body class</source>
@@ -349,14 +362,6 @@
         <source>Here you can select one or more MooTools templates.</source>
         <target>اینجا می‌توانید یک یا چند قالب موتولز را انتخاب کنید.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.picturefill.0">
-        <source>Load the image polyfill</source>
-        <target>بارگیری polyfill تصویر</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.picturefill.1">
-        <source>Include the image polyfill (&lt;em&gt;respimage.js&lt;/em&gt;) in the layout.</source>
-        <target>polyfill تصویر (&lt;em&gt;respimage.js&lt;/em&gt;) در چیدمان می‌گنجاند.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.scripts.0">
         <source>JavaScript templates</source>
         <target>قالب‌های جاوا اسکریپت</target>
@@ -432,13 +437,13 @@
         <source>Web fonts</source>
         <target>قلم‌های وبی</target>
       </trans-unit>
+      <trans-unit id="tl_layout.image_legend">
+        <source>Image sizes</source>
+        <target>اندازه‌های تصویر</target>
+      </trans-unit>
       <trans-unit id="tl_layout.style_legend">
         <source>Style sheets</source>
         <target>شیوه‌نامه‌ها</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.picturefill_legend">
-        <source>Responsive images</source>
-        <target>تصویرهای واکنش‌گرا</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>
@@ -509,60 +514,26 @@
         <target>پی‌ویک</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
-        <source>New layout</source>
-        <target>چیدمان جدید</target>
+        <source>New</source>
+        <target>جدید</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
-        <source>Create a new layout</source>
-        <target>ساخت یک چیدمان جدید</target>
+        <source>Create a new page layout</source>
       </trans-unit>
-      <trans-unit id="tl_layout.show.0">
-        <source>Layout details</source>
-        <target>جزئیات چیدمان</target>
+      <trans-unit id="tl_layout.show">
+        <source>Show the details of page layout ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_layout.show.1">
-        <source>Show the details of layout ID %s</source>
-        <target>نمایش جزئیات چیدمان شناسه‌ی %s</target>
+      <trans-unit id="tl_layout.edit">
+        <source>Edit page layout ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_layout.edit.0">
-        <source>Edit layout</source>
-        <target>ویرایش چیدمان</target>
+      <trans-unit id="tl_layout.copy">
+        <source>Duplicate page layout ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_layout.edit.1">
-        <source>Edit layout ID %s</source>
-        <target>ویرایش چیدمان شناسه‌ی %s</target>
+      <trans-unit id="tl_layout.cut">
+        <source>Move page layout ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_layout.cut.0">
-        <source>Move layout</source>
-        <target>جابجایی چیدمان</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.cut.1">
-        <source>Move layout ID %s</source>
-        <target>جابجایی چیدمان شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.copy.0">
-        <source>Duplicate layout</source>
-        <target>تکثیر چیدمان</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.copy.1">
-        <source>Duplicate layout ID %s</source>
-        <target>تکثیر چیدمان شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.delete.0">
-        <source>Delete layout</source>
-        <target>حذف چیدمان</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.delete.1">
-        <source>Delete layout ID %s</source>
-        <target>حذف چیدمان شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.editheader.0">
-        <source>Edit theme</source>
-        <target>ویرایش پوسته</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.editheader.1">
-        <source>Edit the theme settings</source>
-        <target>ویرایش تنظیمات پوسته</target>
+      <trans-unit id="tl_layout.delete">
+        <source>Delete page layout ID %s</source>
       </trans-unit>
     </body>
   </file>

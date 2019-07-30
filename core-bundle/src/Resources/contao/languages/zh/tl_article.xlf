@@ -193,85 +193,44 @@
         <source>Share on Twitter</source>
         <target>在Twitter上共享</target>
       </trans-unit>
-      <trans-unit id="tl_article.gplus">
-        <source>Share on Google+</source>
-        <target>在Google+上共享</target>
-      </trans-unit>
       <trans-unit id="tl_article.new.0">
-        <source>New article</source>
-        <target>新文章</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
         <target>创建一篇新文章</target>
       </trans-unit>
-      <trans-unit id="tl_article.show.0">
-        <source>Article details</source>
-        <target>文章详细信息</target>
-      </trans-unit>
-      <trans-unit id="tl_article.show.1">
+      <trans-unit id="tl_article.show">
         <source>Show the details of article ID %s</source>
         <target>显示ID为%s的文章的详细信息</target>
       </trans-unit>
-      <trans-unit id="tl_article.edit.0">
-        <source>Edit article</source>
-        <target>编辑文章</target>
-      </trans-unit>
-      <trans-unit id="tl_article.edit.1">
+      <trans-unit id="tl_article.edit">
         <source>Edit article ID %s</source>
         <target>编辑文章ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.editheader.0">
-        <source>Edit article</source>
-        <target>编辑文章</target>
+      <trans-unit id="tl_article.editheader">
+        <source>Edit the settings of article ID %s</source>
+        <target>编辑ID为 %s 的文章设定</target>
       </trans-unit>
-      <trans-unit id="tl_article.editheader.1">
-        <source>Edit the article settings</source>
-        <target>编辑文章设置</target>
-      </trans-unit>
-      <trans-unit id="tl_article.copy.0">
-        <source>Duplicate article</source>
-        <target>复制文章</target>
-      </trans-unit>
-      <trans-unit id="tl_article.copy.1">
+      <trans-unit id="tl_article.copy">
         <source>Duplicate article ID %s</source>
         <target>复制ID为%s的文章</target>
       </trans-unit>
-      <trans-unit id="tl_article.cut.0">
-        <source>Move article</source>
-        <target>移动文章</target>
-      </trans-unit>
-      <trans-unit id="tl_article.cut.1">
+      <trans-unit id="tl_article.cut">
         <source>Move article ID %s</source>
         <target>移动ID为%s的文章</target>
       </trans-unit>
-      <trans-unit id="tl_article.delete.0">
-        <source>Delete article</source>
-        <target>删除文章</target>
-      </trans-unit>
-      <trans-unit id="tl_article.delete.1">
+      <trans-unit id="tl_article.delete">
         <source>Delete article ID %s</source>
         <target>删除ID为%s的文章</target>
       </trans-unit>
-      <trans-unit id="tl_article.toggle.0">
-        <source>Publish/unpublish article</source>
-        <target>发布/取消文章</target>
-      </trans-unit>
-      <trans-unit id="tl_article.toggle.1">
+      <trans-unit id="tl_article.toggle">
         <source>Publish/unpublish article ID %s</source>
         <target> 发布/取消ID为%s的文章</target>
-      </trans-unit>
-      <trans-unit id="tl_article.pasteafter.0">
-        <source>Paste after</source>
-        <target>在之后粘贴</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
         <target>在ID为 %s 的文章之后粘贴</target>
-      </trans-unit>
-      <trans-unit id="tl_article.pasteinto.0">
-        <source>Paste into</source>
-        <target>粘贴进</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>

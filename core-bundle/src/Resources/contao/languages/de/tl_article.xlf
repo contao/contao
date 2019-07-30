@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_article.expert_legend">
         <source>Expert settings</source>
-        <target>Experten-Einstellungen</target>
+        <target>Experteneinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_article.publish_legend">
         <source>Publish settings</source>
@@ -193,85 +193,45 @@
         <source>Share on Twitter</source>
         <target>Auf Twitter teilen</target>
       </trans-unit>
-      <trans-unit id="tl_article.gplus">
-        <source>Share on Google+</source>
-        <target>Auf Google+ teilen</target>
-      </trans-unit>
       <trans-unit id="tl_article.new.0">
-        <source>New article</source>
-        <target>Neuer Artikel</target>
+        <source>New</source>
+        <target>Neu</target>
       </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
-        <target>Einen neuen Artikel anlegen</target>
+        <target>Einen neuen Artikel erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_article.show.0">
-        <source>Article details</source>
-        <target>Artikeldetails</target>
-      </trans-unit>
-      <trans-unit id="tl_article.show.1">
+      <trans-unit id="tl_article.show">
         <source>Show the details of article ID %s</source>
         <target>Details des Artikels ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_article.edit.0">
-        <source>Edit article</source>
-        <target>Artikel bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_article.edit.1">
+      <trans-unit id="tl_article.edit">
         <source>Edit article ID %s</source>
         <target>Artikel ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_article.editheader.0">
-        <source>Edit article</source>
-        <target>Artikel bearbeiten</target>
+      <trans-unit id="tl_article.editheader">
+        <source>Edit the settings of article ID %s</source>
+        <target>Einstellungen des Artikels ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_article.editheader.1">
-        <source>Edit the article settings</source>
-        <target>Die Artikeleinstellungen bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_article.copy.0">
-        <source>Duplicate article</source>
-        <target>Artikel duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_article.copy.1">
+      <trans-unit id="tl_article.copy">
         <source>Duplicate article ID %s</source>
         <target>Artikel ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_article.cut.0">
-        <source>Move article</source>
-        <target>Artikel verschieben</target>
-      </trans-unit>
-      <trans-unit id="tl_article.cut.1">
+      <trans-unit id="tl_article.cut">
         <source>Move article ID %s</source>
         <target>Artikel ID %s verschieben</target>
       </trans-unit>
-      <trans-unit id="tl_article.delete.0">
-        <source>Delete article</source>
-        <target>Artikel löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_article.delete.1">
+      <trans-unit id="tl_article.delete">
         <source>Delete article ID %s</source>
         <target>Artikel ID %s löschen</target>
       </trans-unit>
-      <trans-unit id="tl_article.toggle.0">
-        <source>Publish/unpublish article</source>
-        <target>Artikel veröffentlichen/unveröffentlichen</target>
-      </trans-unit>
-      <trans-unit id="tl_article.toggle.1">
+      <trans-unit id="tl_article.toggle">
         <source>Publish/unpublish article ID %s</source>
         <target>Artikel ID %s veröffentlichen/unveröffentlichen</target>
-      </trans-unit>
-      <trans-unit id="tl_article.pasteafter.0">
-        <source>Paste after</source>
-        <target>Einfügen nach</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
         <target>Nach dem Artikel ID %s einfügen</target>
-      </trans-unit>
-      <trans-unit id="tl_article.pasteinto.0">
-        <source>Paste into</source>
-        <target>Einfügen in</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>

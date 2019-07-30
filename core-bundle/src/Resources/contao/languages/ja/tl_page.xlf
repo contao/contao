@@ -97,6 +97,22 @@
         <source>Here you can restrict the access to the website to a certain domain name.</source>
         <target>ウェブサイトのアクセスを特定のドメイン名に限定します。</target>
       </trans-unit>
+      <trans-unit id="tl_page.staticFiles.0">
+        <source>Files URL</source>
+        <target>filesのURL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticFiles.1">
+        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
+        <target>filesのURLは&lt;em&gt;files&lt;/em&gt;のディレクトリとすべての画像のサムネイルに適用します。(Page Speed最適化)</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.0">
+        <source>Assets URL</source>
+        <target>assetsのURL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.staticPlugins.1">
+        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
+        <target>asstesのURLは&lt;em&gt;assets&lt;/em&gt;のディレクトリに適用します。(Page Speed最適化)</target>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>ウェブサイトの管理者の電子メールアドレス</target>
@@ -201,14 +217,6 @@
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
         <target>ページレイアウトは「テーマ」のモジュールで管理できます。</target>
       </trans-unit>
-      <trans-unit id="tl_page.mobileLayout.0">
-        <source>Mobile page layout</source>
-        <target>携帯端末用のページレイアウト</target>
-      </trans-unit>
-      <trans-unit id="tl_page.mobileLayout.1">
-        <source>This layout will be used if the visitor uses a mobile device.</source>
-        <target>このレイアウトは携帯端末のユーザーに使用します。</target>
-      </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
         <target>キャッシュの有効期間を設定</target>
@@ -218,20 +226,28 @@
         <target>ページと下位のページのキャッシュの有効期間を設定します。</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
-        <source>Server cache timeout</source>
-        <target>サーバー側のキャッシュの有効期間</target>
+        <source>Shared cache timeout</source>
+        <target>共有キャッシュの有効期間</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
-        <source>The number of seconds after which the page should no longer be considered fresh by shared caches.</source>
+        <source>The number of seconds after which the page should no longer be considered fresh by a shared cache.</source>
         <target>共有キャッシュがページが最新でないと判断する秒数です。</target>
       </trans-unit>
+      <trans-unit id="tl_page.alwaysLoadFromCache.0">
+        <source>Always load from shared cache</source>
+        <target>常に共有キャッシュから読み込み</target>
+      </trans-unit>
+      <trans-unit id="tl_page.alwaysLoadFromCache.1">
+        <source>Always load this page from the shared cache, even if a member is logged in. Note that you can no longer personalize the page for logged in members in this case!</source>
+        <target>メンバーがログインしている場合であっても、このページを常に共有キャッシュから読み込みます。この場合、ログインしたメンバー向けにページをカスタマイズはできなくなります。</target>
+      </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
-        <source>Client cache timeout</source>
-        <target>クライアント側のキャッシュの有効期間</target>
+        <source>Private cache timeout</source>
+        <target>プライベートなキャッシュの有効期間</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.1">
-        <source>The number of seconds after which the page should no longer be considered fresh by the browser.</source>
-        <target>ブラウザーがページが最新でないと判断する秒数です。</target>
+        <source>The number of seconds after which the page should no longer be considered fresh by a private cache.</source>
+        <target>プライベートなキャッシュでページが最新でないと判断する秒数です。</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>
@@ -353,6 +369,22 @@
         <source>Do not show the page on the website on and after this day.</source>
         <target>この日から後はページをウェブサイトに表示しません。</target>
       </trans-unit>
+      <trans-unit id="tl_page.enforceTwoFactor.0">
+        <source>Enforce two-factor authentication</source>
+        <target>2ファクター認証を強制</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enforceTwoFactor.1">
+        <source>Enforce two-factor authentication for all members.</source>
+        <target>すべてのメンバーに2ファクター認証を強制します。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.twoFactorJumpTo.0">
+        <source>Two-factor redirect page</source>
+        <target>2ファクター認証のリダイレクトページ</target>
+      </trans-unit>
+      <trans-unit id="tl_page.twoFactorJumpTo.1">
+        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
+        <target>2ファクター認証を設定した時に移動するページを選択してください。</target>
+      </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
         <target>名前と種類</target>
@@ -417,6 +449,10 @@
         <source>Publish settings</source>
         <target>公開の設定</target>
       </trans-unit>
+      <trans-unit id="tl_page.twoFactor_legend">
+        <source>Two-factor authentication</source>
+        <target>2ファクター認証</target>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>301 永続的なリダイレクト</target>
@@ -438,90 +474,54 @@
         <target>決して表示しない</target>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
-        <source>New page</source>
-        <target>新しいページ</target>
+        <source>New</source>
+        <target>新規作成</target>
       </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>
-        <target>新しくページを作成</target>
+        <target>新しいページを作成</target>
       </trans-unit>
-      <trans-unit id="tl_page.show.0">
-        <source>Page details</source>
-        <target>ページの詳細</target>
-      </trans-unit>
-      <trans-unit id="tl_page.show.1">
+      <trans-unit id="tl_page.show">
         <source>Show the details of page ID %s</source>
         <target>ID %sのページの詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_page.edit.0">
-        <source>Edit page</source>
-        <target>ページを編集</target>
-      </trans-unit>
-      <trans-unit id="tl_page.edit.1">
+      <trans-unit id="tl_page.edit">
         <source>Edit page ID %s</source>
         <target>ID %sのページを編集</target>
       </trans-unit>
-      <trans-unit id="tl_page.cut.0">
-        <source>Move page</source>
-        <target>ページを移動</target>
-      </trans-unit>
-      <trans-unit id="tl_page.cut.1">
+      <trans-unit id="tl_page.cut">
         <source>Move page ID %s</source>
         <target>ID %sのページを移動</target>
       </trans-unit>
-      <trans-unit id="tl_page.copy.0">
-        <source>Duplicate page</source>
-        <target>ページを複製</target>
-      </trans-unit>
-      <trans-unit id="tl_page.copy.1">
+      <trans-unit id="tl_page.copy">
         <source>Duplicate page ID %s</source>
         <target>ID %sのページを複製</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds.0">
-        <source>Duplicate with subpages</source>
-        <target>下位のページを含めて複製</target>
-      </trans-unit>
-      <trans-unit id="tl_page.copyChilds.1">
+      <trans-unit id="tl_page.copyChilds">
         <source>Duplicate page ID %s with its subpages</source>
         <target>下位のページを含めてID %sのページを複製</target>
       </trans-unit>
-      <trans-unit id="tl_page.delete.0">
-        <source>Delete page</source>
-        <target>ページを削除</target>
-      </trans-unit>
-      <trans-unit id="tl_page.delete.1">
+      <trans-unit id="tl_page.delete">
         <source>Delete page ID %s</source>
         <target>ID %sのページを削除</target>
       </trans-unit>
-      <trans-unit id="tl_page.toggle.0">
-        <source>Publish/unpublish page</source>
-        <target>ページの公開と非公開を切り替え</target>
-      </trans-unit>
-      <trans-unit id="tl_page.toggle.1">
+      <trans-unit id="tl_page.toggle">
         <source>Publish/unpublish page ID %s</source>
         <target>ID %sのページの公開と非公開を切り替え</target>
       </trans-unit>
-      <trans-unit id="tl_page.pasteafter.0">
-        <source>Paste after</source>
-        <target>この後に貼り付け</target>
-      </trans-unit>
-      <trans-unit id="tl_page.pasteafter.1">
-        <source>Paste after page ID %s</source>
-        <target>ID %sのページの後に貼り付け</target>
-      </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
-        <source>Paste into</source>
-        <target>この中に貼り付け</target>
+        <source>Paste at the top</source>
+        <target>先頭に貼り付け</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.1">
         <source>Paste into page ID %s</source>
         <target>ID %sのページの中に貼り付け</target>
       </trans-unit>
-      <trans-unit id="tl_page.articles.0">
-        <source>Edit articles</source>
-        <target>アーティクルを編集</target>
+      <trans-unit id="tl_page.pasteafter.1">
+        <source>Paste after page ID %s</source>
+        <target>ID %sのページの後に貼り付け</target>
       </trans-unit>
-      <trans-unit id="tl_page.articles.1">
+      <trans-unit id="tl_page.articles">
         <source>Edit the articles of page ID %s</source>
         <target>ID %sのページのアーティクルを編集</target>
       </trans-unit>

@@ -59,55 +59,35 @@
       </trans-unit>
       <trans-unit id="tl_member_group.disable_legend">
         <source>Account settings</source>
-        <target>Konto-Einstellungen</target>
+        <target>Kontoeinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_member_group.new.0">
-        <source>New group</source>
-        <target>Neue Gruppe</target>
+        <source>New</source>
+        <target>Neu</target>
       </trans-unit>
       <trans-unit id="tl_member_group.new.1">
-        <source>Create a new group</source>
-        <target>Eine neue Gruppe anlegen</target>
+        <source>Create a new member group</source>
+        <target>Eine neue Mitgliedergruppe erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.show.0">
-        <source>Group details</source>
-        <target>Gruppendetails</target>
+      <trans-unit id="tl_member_group.show">
+        <source>Show the details of member group ID %s</source>
+        <target>Details der Mitgliedergruppe ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.show.1">
-        <source>Show the details of group ID %s</source>
-        <target>Details der Gruppe ID %s anzeigen</target>
+      <trans-unit id="tl_member_group.edit">
+        <source>Edit member group ID %s</source>
+        <target>Mitgliedergruppe ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.edit.0">
-        <source>Edit group</source>
-        <target>Gruppe bearbeiten</target>
+      <trans-unit id="tl_member_group.copy">
+        <source>Duplicate member group ID %s</source>
+        <target>Mitgliedergruppe ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.edit.1">
-        <source>Edit group ID %s</source>
-        <target>Gruppe ID %s bearbeiten</target>
+      <trans-unit id="tl_member_group.delete">
+        <source>Delete member group ID %s</source>
+        <target>Mitgliedergruppe ID %s löschen</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.copy.0">
-        <source>Duplicate group</source>
-        <target>Gruppe duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.copy.1">
-        <source>Duplicate group ID %s</source>
-        <target>Gruppe ID %s duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.delete.0">
-        <source>Delete group</source>
-        <target>Gruppe löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.delete.1">
-        <source>Delete group ID %s</source>
-        <target>Gruppe ID %s löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.toggle.0">
-        <source>Activate/deactivate group</source>
-        <target>Gruppe aktivieren/deaktivieren</target>
-      </trans-unit>
-      <trans-unit id="tl_member_group.toggle.1">
-        <source>Activate/deactivate group ID %s</source>
-        <target>Gruppe ID %s aktivieren/deaktivieren</target>
+      <trans-unit id="tl_member_group.toggle">
+        <source>Activate/deactivate member group ID %s</source>
+        <target>Mitgliedergruppe ID %s aktivieren/deaktivieren</target>
       </trans-unit>
     </body>
   </file>

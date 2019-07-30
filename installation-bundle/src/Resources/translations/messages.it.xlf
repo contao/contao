@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Per ragioni di sicurezza lo strumento di installazione è stato bloccato dopo aver sbagliato la password tre volte. Per sbloccare lo strumento di installazione esegui &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; da linea di comando.</target>
+        <target>Per motivi di sicurezza, il install tool è stato bloccato dopo che una password errata è stata inserita più di tre volte di seguito. Per sbloccarlo, eseguire &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; sulla riga di comando.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -383,6 +383,7 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
+        <target>Contao richiede almeno MySQL 5.1.1.0 ma tu hai la versione %s. Si prega di aggiornare la versione del database.</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -392,7 +393,6 @@
       </trans-unit>
       <trans-unit id="79">
         <source>unsupported_collation_explain</source>
-        <target>La configurazione del set dei caratteri &lt;code&gt;%s&lt;/code&gt; non è disponibilenel tuo server. Devi installarlo oppure configurare un diverso set di caratteri nel file &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="80">
@@ -402,11 +402,11 @@
       </trans-unit>
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
-        <target>La configurazione del database &lt;code&gt;%s&lt;/code&gt; non è disponibile nel tuo server. Devi installarlo oppure configurare diversamente il database nel file&lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="82">
         <source>misconfigured_database_url_explain</source>
+        <target>Impossibile connettersi al database utilizzando l'URL di connessione presente nella variabile d'ambiente &lt;code&gt;DATABASE_URL&lt;/code&gt;.</target>
         
       </trans-unit>
     </body>

@@ -110,8 +110,7 @@
         <target>Začetek cikla</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
-        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent in the &lt;em&gt;newsletter_%s.log&lt;/em&gt; file. E.g., if 120 mails have been sent, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>V primeru, da se proces pošiljanja prekine, lahko vnesete numerično vrednost zamika, da bi nadaljevali pri določenem prejemniku. Koliko sporočil je bilo poslanih, lahko preverite v &lt;em&gt;newsletter_%s.log&lt;/em&gt; datoteki. Primer, če je bilo 120 poslanih sporočil, vnesete 120 za nadaljevanje z 121. prejemnikom (štetje začne pri 0).</target>
+        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
@@ -194,76 +193,39 @@
         <target>Res želite odposlati e-novico?</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
-        <source>New newsletter</source>
-        <target>Nov časopis</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
         <target>Ustvari novo e-novico</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.show.0">
-        <source>Newsletter details</source>
-        <target>Podrobnosti e-novice</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.show.1">
+      <trans-unit id="tl_newsletter.show">
         <source>Show the details of newsletter ID %s</source>
         <target>Prikaži podrobnosti e-novice ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.edit.0">
-        <source>Edit newsletter</source>
-        <target>Uredi e-novico</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.edit.1">
+      <trans-unit id="tl_newsletter.edit">
         <source>Edit newsletter ID %s</source>
         <target>Uredi e-novico ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.copy.0">
-        <source>Duplicate newsletter</source>
-        <target>Kopiraj e-novico</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.copy.1">
+      <trans-unit id="tl_newsletter.copy">
         <source>Duplicate newsletter ID %s</source>
         <target>Kopiraj e-novico ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.cut.0">
-        <source>Move newsletter</source>
-        <target>Premakni e-novico</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.cut.1">
+      <trans-unit id="tl_newsletter.cut">
         <source>Move newsletter ID %s</source>
         <target>Premakni e-novico ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.delete.0">
-        <source>Delete newsletter</source>
-        <target>Izbriši e-novico</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.delete.1">
+      <trans-unit id="tl_newsletter.delete">
         <source>Delete newsletter ID %s</source>
         <target>Izbriši e-novico ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.0">
-        <source>Edit channel</source>
-        <target>Uredi vrsto e-novice</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.1">
-        <source>Edit the channel settings</source>
-        <target>Uredi nastavitve za vrsto e-novice</target>
+      <trans-unit id="tl_newsletter.send">
+        <source>Send newsletter ID %s</source>
+        <target>Pošlji e-novico ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>
         <target>Prilepi v ta kanal</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.pasteafter.1">
-        <source>Paste after newsletter ID %s</source>
-        <target>Prilepi za e-novico ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.send.0">
-        <source>Send newsletter</source>
-        <target>Pošlji e-novico</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.send.1">
-        <source>Send newsletter ID %s</source>
-        <target>Pošlji e-novico ID %s</target>
       </trans-unit>
     </body>
   </file>

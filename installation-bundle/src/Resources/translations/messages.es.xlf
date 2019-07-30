@@ -18,7 +18,6 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>Por razones de seguridad, la herramienta de instalación se ha bloqueado después de haber ingresado una contraseña incorrecta más de tres veces seguidas. Para desbloquearlo, ejecuta &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt;en la línea de comando.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -392,7 +391,6 @@
       </trans-unit>
       <trans-unit id="79">
         <source>unsupported_collation_explain</source>
-        <target>La intercalación configurada &lt;code&gt;%s&lt;/code&gt;no está disponible en su servidor. La intercalación configurada no está disponible en su servidor. Instálelo (recomendado) o configure un conjunto de caracteres y una intercalación diferentes en el archivo &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="80">
@@ -402,7 +400,6 @@
       </trans-unit>
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
-        <target>El motor de base de datos configurado &lt;code&gt;%s&lt;/code&gt;no está disponible en su servidor. Instálelo (recomendado) o configure un motor de base de datos diferente en el archivo &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
         
       </trans-unit>
       <trans-unit id="82">

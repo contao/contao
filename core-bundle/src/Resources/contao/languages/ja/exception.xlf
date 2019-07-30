@@ -53,75 +53,6 @@
         <source>For more information, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
         <target>さらに詳しい情報は、&lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;ContaoのFAQ&lt;/a&gt;を調べるか、&lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contaoのサポートのページ&lt;/a&gt;にアクセスしてください。</target>
       </trans-unit>
-      <trans-unit id="XPT.incomplete">
-        <source>Incomplete installation</source>
-        <target>不完全なインストール</target>
-      </trans-unit>
-      <trans-unit id="XPT.incompleteInstallation">
-        <source>The installation has not been completed, therefore Contao cannot work properly.</source>
-        <target>インストールは完了していません、このためContaoは適切に動作しません。</target>
-      </trans-unit>
-      <trans-unit id="XPT.incompleteFix">
-        <source>Please open the Contao install tool (&lt;code&gt;/contao/install&lt;/code&gt;) in your browser.</source>
-        <target>ブラウザーでContaoのインストールツール(&lt;code&gt;/contao/install&lt;/code&gt;)を開いてください。</target>
-      </trans-unit>
-      <trans-unit id="XPT.incompleteExplain">
-        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>さらに詳しい情報は、&lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contaoマニュアル&lt;/a&gt;を参照してください。
-        </target>
-      </trans-unit>
-      <trans-unit id="XPT.noForward">
-        <source>Forward page not found</source>
-        <target>移動先のページがありません</target>
-      </trans-unit>
-      <trans-unit id="XPT.noForwardPage">
-        <source>The application has been configured to forward the request to another page, however, the target page does not exist or has not been published.</source>
-        <target>アプリケーションは要求を他のページに移動するように構成してありますが、その先のページが存在しないか、公開されていません。</target>
-      </trans-unit>
-      <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
-        <target>これはウェブサイトの管理者が何か修正をしなければなりません。ウェブサイトの訪問者の場合は&lt;a href=&quot;%s&quot;&gt;ウェブマスターに連絡&lt;/a&gt;して、何か問題があると知らせる以外にありません。</target>
-      </trans-unit>
-      <trans-unit id="XPT.noRoot">
-        <source>No root page found</source>
-        <target>ルートのページがありません</target>
-      </trans-unit>
-      <trans-unit id="XPT.noRootPage">
-        <source>There is no website root page which matches the requested language and/or domain name.</source>
-        <target>要求した言語とドメインの両方、またはどちらかに一致するウェブサイトのルートのページがありません。</target>
-      </trans-unit>
-      <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
-        <target>明示的に言語を背呈している場合は、&lt;a href=&quot;%s&quot;&gt;最上位に移動&lt;/a&gt;して、リダイレクトされるかどうか確かめてください。もしくは&lt;a href=&quot;%s&quot;&gt;ウェブマスターに連絡&lt;/a&gt;して、何か問題があると知らせてください。</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayout">
-        <source>No layout specified</source>
-        <target>レイアウトが指定されていません</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayoutSpecified">
-        <source>The page you have requested has not yet been associated with a page layout.</source>
-        <target>リクエストしたページには、まだページレイアウトが設定されていません。</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayoutFix">
-        <source>Make sure that you have assigned a page layout to each website root page in the site structure.</source>
-        <target>サイト構造でウェブサイトのルートのページに、ページレイアウトを設定しているかどうか確認してください。</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayoutExplain">
-        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>さらに詳しい情報は、&lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Contaoマニュアル&lt;/a&gt;を参照してください。</target>
-      </trans-unit>
-      <trans-unit id="XPT.noActive">
-        <source>No active pages found</source>
-        <target>アクティブなページが見つかりません</target>
-      </trans-unit>
-      <trans-unit id="XPT.noActivePages">
-        <source>Your request has been mapped to a website which does not yet contain any published pages.</source>
-        <target>アクセスの要求は、まだ公開したページがないウェブサイトに対応付けられました。</target>
-      </trans-unit>
-      <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
-        <target>たぶん、まだウェブサイトは開発途中で、数日の間にオンラインになるでしょう。それでも何か問題があると思う場合は、&lt;a href=&quot;%s&quot;&gt;ウェブマスターに連絡&lt;/a&gt;して問題を知らせてください。</target>
-      </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>
         <target>サービスを利用できません</target>
@@ -129,22 +60,6 @@
       <trans-unit id="XPT.maintenance">
         <source>The website is currently not available. Please come back later.</source>
         <target>現在、このウェブサイトは利用できません。後ほどお出でください。</target>
-      </trans-unit>
-      <trans-unit id="XPT.insecure">
-        <source>Insecure document root</source>
-        <target>安全でないドキュメントルート</target>
-      </trans-unit>
-      <trans-unit id="XPT.insecureRoot">
-        <source>Your installation is not secure, because non-public resources are publicy available via HTTP.</source>
-        <target>インストールの状態が安全ではありません、なぜなら、非公開のリソースがHTTP経由でアクセス可能な状態なためです。</target>
-      </trans-unit>
-      <trans-unit id="XPT.insecureFix">
-        <source>Please set the document root to the &lt;code&gt;web/&lt;/code&gt; subfolder. This is usually done in the domain routing section of your server administration panel or in the vhosts file of your web server.</source>
-        <target>ドキュメントルートをサブフォルダーの&lt;code&gt;web/&lt;/code&gt;に設定してください。通常、これはサーバー管理パネルのドメインルーティングの部分か、サーバーの仮想ホストのファイルで設定します。</target>
-      </trans-unit>
-      <trans-unit id="XPT.insecureExplain">
-        <source>Contao 4 no longer relies on &lt;code&gt;.htaccess&lt;/code&gt; files to protect folders and instead uses a public subfolder as document root. Anything above the document root must not be accessible via HTTP, otherwise anyone could download non-public resources including sensitive data such as configuration files.</source>
-        <target>Contao 4はフォルダーの保護を、もう&lt;code&gt;.htaccess&lt;/code&gt;には依存していません。代わりに公開用の下位フォルダーをドキュメントルートに使用します。HTTPでドキュメントルートよりも上の階層にはアクセスできてはなりません。そうしないと構成ファイルのような機密なデータを含む、非公開のリソースを誰でもダウンロードできてしまいます。</target>
       </trans-unit>
     </body>
   </file>

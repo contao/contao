@@ -19,9 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_text.0">
         <source>Custom text</source>
+        <target>Vlastní text</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
         <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
+        <target>Zde můžete uvést např. text o ochraně osobních údajů, abyste svolili s odběrem zpravodaje podle platných mezinárodních práv (GDPR). </target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
@@ -57,6 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>
+        <target>Vlastní text</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
@@ -75,6 +78,18 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 If you did not subscribe yourself, please ignore this e-mail.
 </source>
+        <target>Přihlásili jste se k odběru kanálu z ##domain##:
+
+##channels##
+
+Aktivujte odběr kliknutím na níže uvedený odkaz
+
+##link##
+
+Potvrzovací odkaz je platný 24 hodin. Tento odběr můžete kdykoliv zrušit 
+
+Pokud jste se k odběru nepřihlásili, ignorujte prosím tento mail.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>

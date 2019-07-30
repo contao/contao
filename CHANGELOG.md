@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.8.0-RC2 (2019-07-30)
 
  * Use the security helper instead of the token storage (see #609).
  * Do not show pretty error screens for admin exceptions (see #596).

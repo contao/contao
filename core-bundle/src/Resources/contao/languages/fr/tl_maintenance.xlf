@@ -102,20 +102,17 @@
         <target>Purger le cache des images</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.1">
-        <source>Removes the automatically generated images and then purges the page cache, so there are no links to deleted resources.</source>
-        <target>Supprime les images générées automatiquement et de ce fait purge le cache des pages, ainsi il n'y a plus de liens vers les ressources supprimées.</target>
+        <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
         <target>Purger le cache des scripts</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
-        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the page cache.</source>
-        <target>Supprime les fichiers &lt;code&gt;.css&lt;/code&gt; et &lt;code&gt;.js&lt;/code&gt; générés automatiquement, recrée les feuilles de style internes et purge le cache de la page.</target>
+        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
-        <source>Purge the page cache</source>
-        <target>Purger le cache des pages</target>
+        <source>Purge the shared cache</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.1">
         <source>Removes the cached versions of the front end pages.</source>
@@ -142,8 +139,7 @@
         <target>Recréer les fichiers XML</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files (sitemaps and feeds) and then purges the page cache, so there are no links to deleted resources.</source>
-        <target>Recrée les fichiers XML (cartes du site et flux RSS) puis purge le cache des pages afin de ne plus avoir de liens vers les ressources supprimées.</target>
+        <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>

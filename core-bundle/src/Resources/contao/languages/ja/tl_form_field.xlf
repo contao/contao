@@ -281,6 +281,22 @@
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
         <target>入力できる(テキストの)文字数や(ファイルアップロードの)バイト数といった数値の上限を指定します。</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.minval.0">
+        <source>Minimum value</source>
+        <target>最小値</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.minval.1">
+        <source>Here you can set the minimum value for numeric fields.</source>
+        <target>数値の入力欄の最小値を指定できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxval.0">
+        <source>Maximum value</source>
+        <target>最大値</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxval.1">
+        <source>Here you can set the maximum value for numeric fields.</source>
+        <target>数値の入力欄の最大値を指定できます。</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>
         <target>行と列</target>
@@ -470,84 +486,56 @@
         <target>可視性</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.0">
-        <source>New field</source>
-        <target>新しい項目</target>
+        <source>New</source>
+        <target>新規作成</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.1">
-        <source>Create a new field</source>
-        <target>新しく項目を作成</target>
+        <source>Create a new form field</source>
+        <target>新しいフォームの項目を作成</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.show.0">
-        <source>Field details</source>
-        <target>項目の詳細</target>
+      <trans-unit id="tl_form_field.show">
+        <source>Show the details of form field ID %s</source>
+        <target>ID %sのフォームの項目の詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.show.1">
-        <source>Show the details of field ID %s</source>
-        <target>ID %sの項目の詳細を表示</target>
+      <trans-unit id="tl_form_field.edit">
+        <source>Edit form field ID %s</source>
+        <target>ID %sのフォームの項目を編集</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit.0">
-        <source>Edit field</source>
-        <target>項目を編集</target>
+      <trans-unit id="tl_form_field.cut">
+        <source>Move form field ID %s</source>
+        <target>ID %sのフォームの項目を移動</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit.1">
-        <source>Edit field ID %s</source>
-        <target>ID %sの項目を編集</target>
+      <trans-unit id="tl_form_field.copy">
+        <source>Duplicate form field ID %s</source>
+        <target>ID %sのフォームの項目を複製</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut.0">
-        <source>Move field</source>
-        <target>項目を移動</target>
+      <trans-unit id="tl_form_field.delete">
+        <source>Delete form field ID %s</source>
+        <target>ID %sのフォームの項目を削除</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut.1">
-        <source>Move field ID %s</source>
-        <target>ID %sの項目を移動</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.copy.0">
-        <source>Duplicate field</source>
-        <target>項目を複製</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.copy.1">
-        <source>Duplicate field ID %s</source>
-        <target>ID %sの項目を複製</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.delete.0">
-        <source>Delete field</source>
-        <target>項目を削除</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.delete.1">
-        <source>Delete field ID %s</source>
-        <target>ID %sの項目を削除</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.editheader.0">
-        <source>Edit form</source>
-        <target>フォームを編集</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.editheader.1">
+      <trans-unit id="tl_form_field.editheader">
         <source>Edit the form settings</source>
         <target>このフォームの設定を変更</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle">
+        <source>Hide/unhide form field ID %s</source>
+        <target>ID %sのフォームの項目を隠す/表示</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>
         <target>先頭に貼り付け</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
-        <source>Paste after field ID %s</source>
-        <target>ID %sの項目の後に貼り付け</target>
+        <source>Paste after form field ID %s</source>
+        <target>ID %sのフォームの項目の後に貼り付け</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
-        <source>Add new at the top</source>
-        <target>先頭に新しく追加</target>
+        <source>Create a new form field at the top</source>
+        <target>先頭に新しいフォームの項目を作成</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
-        <source>Add new after field ID %s</source>
-        <target>ID %sの項目の後に新しく追加</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.toggle.0">
-        <source>Toggle visibility</source>
-        <target>表示と非表示を切り替え</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.toggle.1">
-        <source>Toggle the visibility of field ID %s</source>
-        <target>ID %sの項目の表示と非表示を切り替え</target>
+        <source>Create a new form field after form field ID %s</source>
+        <target>ID %sのフォームの項目の後に新しいフォームの項目を作成</target>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>

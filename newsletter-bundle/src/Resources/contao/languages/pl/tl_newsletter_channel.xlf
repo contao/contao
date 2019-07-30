@@ -62,58 +62,37 @@
         <target>Ustawienia nadawcy</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
-        <source>New channel</source>
-        <target>Nowy kanał</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.1">
         <source>Create a new channel</source>
         <target>Utwórz nowy kanał</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.show.0">
-        <source>Channel details</source>
-        <target>Szczegóły kanału</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.show.1">
+      <trans-unit id="tl_newsletter_channel.show">
         <source>Show the details of channel ID %s</source>
         <target>Pokaż szczegóły kanału ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.edit.0">
-        <source>Edit channel</source>
-        <target>Edytuj kanał</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.edit.1">
+      <trans-unit id="tl_newsletter_channel.edit">
         <source>Edit channel ID %s</source>
         <target>Edytuj kanał ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.editheader.0">
-        <source>Edit channel</source>
-        <target>Edytuj kanał</target>
+      <trans-unit id="tl_newsletter_channel.editheader">
+        <source>Edit the settings of channel ID %s</source>
+        <target>Edytuj ustawienia kanału ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.editheader.1">
+      <trans-unit id="tl_newsletter_channel.editmeta">
         <source>Edit the channel settings</source>
         <target>Edytuj kanał</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.copy.0">
-        <source>Duplicate channel</source>
-        <target>Kopiuj kanał</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.copy.1">
+      <trans-unit id="tl_newsletter_channel.copy">
         <source>Duplicate channel ID %s</source>
         <target>Kopiuj kanał ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.delete.0">
-        <source>Delete channel</source>
-        <target>Skasuj kanał</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.delete.1">
+      <trans-unit id="tl_newsletter_channel.delete">
         <source>Delete channel ID %s</source>
         <target>Skasuj kanał ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.recipients.0">
-        <source>Edit recipients</source>
-        <target>Edytuj odbiorców</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.recipients.1">
+      <trans-unit id="tl_newsletter_channel.recipients">
         <source>Edit the recipients of channel ID %s</source>
         <target>Edytuj odbiorców kanału ID %s</target>
       </trans-unit>

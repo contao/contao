@@ -53,74 +53,6 @@
         <source>For more information, search the &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt;Contao support page&lt;/a&gt;.</source>
         <target>Per ulteriori informazioni, consultare le &lt;a href=&quot;https://contao.org/faq.html&quot; target=&quot;_blank&quot;&gt; FAQ di Contao&lt;/a&gt; o visitare la &lt;a href=&quot;https://contao.org/support.html&quot; target=&quot;_blank&quot;&gt; pagina di supporto Contao&lt;/a&gt;.</target>
       </trans-unit>
-      <trans-unit id="XPT.incomplete">
-        <source>Incomplete installation</source>
-        <target>Installazione incompleta</target>
-      </trans-unit>
-      <trans-unit id="XPT.incompleteInstallation">
-        <source>The installation has not been completed, therefore Contao cannot work properly.</source>
-        <target>Installazione non completata. Contao non è in grado di funzionare in modo corretto.</target>
-      </trans-unit>
-      <trans-unit id="XPT.incompleteFix">
-        <source>Please open the Contao install tool (&lt;code&gt;/contao/install&lt;/code&gt;) in your browser.</source>
-        <target>Apri lo strumento di installazione Contao (&lt;code&gt;/contao/install&lt;/code&gt;) sul tuo browser.</target>
-      </trans-unit>
-      <trans-unit id="XPT.incompleteExplain">
-        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Per maggiori informazioni fare riferimento al &lt;a href=&quot;https://contao.org/manual/installation.html&quot; target=&quot;_blank&quot;&gt;manuale di installazione Contao&lt;/a&gt;.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noForward">
-        <source>Forward page not found</source>
-        <target>pagina di destinazione non trovata</target>
-      </trans-unit>
-      <trans-unit id="XPT.noForwardPage">
-        <source>The application has been configured to forward the request to another page, however, the target page does not exist or has not been published.</source>
-        <target>L'applicazione è stata configurata per inoltrare la richiesta a un'altra pagina, ma la pagina di destinazione non esiste o non è stata pubblicata.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noForwardFix">
-        <source>This is something that needs to be fixed by the administrator of the website. If you are a visitor, there is nothing you can do except to &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; to let them know that there is something wrong.</source>
-        <target>Questo problema deve essere risolto da parte dell'amministratore del sito. Se sei un visitatore, segnala il problema all'&lt;a href=&quot;%s&quot;&gt;amministratore del sito&lt;/a&gt;per comunicargli che c'è qualcosa che non funziona.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noRoot">
-        <source>No root page found</source>
-        <target>Non è stata trovata nessuna pagina root</target>
-      </trans-unit>
-      <trans-unit id="XPT.noRootPage">
-        <source>There is no website root page which matches the requested language and/or domain name.</source>
-        <target>Non esiste una pagina root del sito che corrisponda alla lingua richiesta e/o al nome del dominio.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noRootFix">
-        <source>If you have explicitly set a language, try to &lt;a href=&quot;%s&quot;&gt;go to the top level&lt;/a&gt; and see whether you are being redirected. Otherwise &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know that there is something wrong.</source>
-        <target>Se è stata impostata in modo esplicito una lingua, provare a &lt;a href=&quot;%s&quot;&gt;passare al livello superiore&lt;/a&gt;. In caso contrario è possibile &lt;a href=&quot;%s&quot;&gt;contattare l'amministratore del sito&lt;/a&gt; e comunicargli il problema.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayout">
-        <source>No layout specified</source>
-        <target>Nessun layout specificato</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayoutSpecified">
-        <source>The page you have requested has not yet been associated with a page layout.</source>
-        <target>La pagina richiesta non è stata associata a nessun layout.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayoutFix">
-        <source>Make sure that you have assigned a page layout to each website root page in the site structure.</source>
-        <target>Assicurarsi di aver assegnato un layout di pagina di ogni pagina root nella struttura del sito.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noLayoutExplain">
-        <source>For more information, please refer to the &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Per maggiori informazioni fare riferimento al &lt;a href=&quot;https://contao.org/manual/managing-pages.html&quot; target=&quot;_blank&quot;&gt;manuale di Contao&lt;/a&gt;.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noActive">
-        <source>No active pages found</source>
-        <target>Non sono state trovate pagine attive</target>
-      </trans-unit>
-      <trans-unit id="XPT.noActivePages">
-        <source>Your request has been mapped to a website which does not yet contain any published pages.</source>
-        <target>La richiesta è stata indirizzata ad un sito che non contiene ancora nessuna pagina pubblicata.</target>
-      </trans-unit>
-      <trans-unit id="XPT.noActiveFix">
-        <source>Most likely, the website is still under development and will be online in a few days. If you still think that there is something wrong, &lt;a href=&quot;%s&quot;&gt;contact the webmaster&lt;/a&gt; and let them know.</source>
-        <target>Molto probabilmente il sito è ancora in fase di sviluppo e sarà online tra pochi giorni. Se si vuole comunicare il problema, è possibile &lt;a href=&quot;%s&quot;&gt;contattare l'amministratore del sito&lt;/a&gt; e segnalare l'anomalia.</target>
-      </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>
         <target>Servizio non disponibile</target>
@@ -128,23 +60,6 @@
       <trans-unit id="XPT.maintenance">
         <source>The website is currently not available. Please come back later.</source>
         <target>Il sito web non è al momento disponibile. </target>
-      </trans-unit>
-      <trans-unit id="XPT.insecure">
-        <source>Insecure document root</source>
-        <target>Document root non sicura</target>
-      </trans-unit>
-      <trans-unit id="XPT.insecureRoot">
-        <source>Your installation is not secure, because non-public resources are publicy available via HTTP.</source>
-        <target>Questa installazione non è sicura, perché le risorse che dovrebbero essere non pubbliche, sono in realtà accessibili via HTTP.</target>
-      </trans-unit>
-      <trans-unit id="XPT.insecureFix">
-        <source>Please set the document root to the &lt;code&gt;web/&lt;/code&gt; subfolder. This is usually done in the domain routing section of your server administration panel or in the vhosts file of your web server.</source>
-        <target>Si prega di impostare la document root a &lt;code&gt;web/&lt;/code&gt;.
-Questo è solitamente è posibile impostarlo dal pannello di controllo del web server o configurando opportunamente il file vhosts del server web.</target>
-      </trans-unit>
-      <trans-unit id="XPT.insecureExplain">
-        <source>Contao 4 no longer relies on &lt;code&gt;.htaccess&lt;/code&gt; files to protect folders and instead uses a public subfolder as document root. Anything above the document root must not be accessible via HTTP, otherwise anyone could download non-public resources including sensitive data such as configuration files.</source>
-        <target>Contao 4 non si basa più sul file &lt;code&gt; .htaccess &lt;/ code&gt; per proteggere le cartelle. Utilizza invece una sottocartella pubblica come document root. Tutto ciò al di sopra della document root non deve essere accessibile via HTTP, altrimenti chiunque potrebbe scaricare risorse non pubbliche, compresi dati sensibili, come i file di configurazione.</target>
       </trans-unit>
     </body>
   </file>

@@ -62,8 +62,28 @@
         <target>CSS-Klassen</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.1">
-        <source>The CSS classes will be applied to the image tag.</source>
+        <source>The CSS classes will be added to the image tag.</source>
         <target>Die CSS-Klassen werden dem Image-Tag zugewiesen.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formats.0">
+        <source>Convert image formats</source>
+        <target>Bildformate konvertieren</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formats.1">
+        <source>Here you can select which image formats shall be converted.</source>
+        <target>Hier können Sie auswählen, welche Bildformate konvertiert werden sollen.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formatsWebpNotSupported">
+        <source>WEBP is not supported on your server.</source>
+        <target>WEBP wird auf Ihrem Server nicht unterstützt.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
+        <source>Use original image if dimensions match</source>
+        <target>Originalbild bei passenden Abmessungen verwenden</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
+        <source>Note that no optimizations such as meta data stripping or JPEG compression will be applied in this case.</source>
+        <target>Beachten Sie, dass in diesem Fall keine Optimierung der Metadaten oder der JPEG-Komprimierung erfolgt.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
@@ -75,11 +95,15 @@
       </trans-unit>
       <trans-unit id="tl_image_size.title_legend">
         <source>Image size settings</source>
-        <target>Bildgrößen-Einstellungen</target>
+        <target>Bildgrößeneinstellungen</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.source_legend">
+        <source>Image source settings</source>
+        <target>Bildquellen-Einstellung</target>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>
-        <target>Experten-Einstellungen</target>
+        <target>Experteneinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_image_size.proportional.0">
         <source>Proportional</source>
@@ -105,65 +129,49 @@
         <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
         <target>Das Bild wird an die vorgegebene Größe angepasst und gegebenenfalls beschnitten.</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.png:webp,png">
+        <source>PNG to WEBP</source>
+        <target>PNG zu WEBP</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.jpg:webp,jpg;jpeg:webp,jpeg">
+        <source>JPEG to WEBP</source>
+        <target>JPEG zu WEBP</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.gif:webp,gif">
+        <source>GIF to WEBP</source>
+        <target>GIF zu WEBP</target>
+      </trans-unit>
       <trans-unit id="tl_image_size.new.0">
-        <source>New image size</source>
-        <target>Neue Bildgröße</target>
+        <source>New</source>
+        <target>Neu</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.1">
         <source>Create a new image size</source>
-        <target>Eine neue Bildgröße anlegen</target>
+        <target>Eine neue Bildgröße erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.show.0">
-        <source>Image size details</source>
-        <target>Bildgrößendetails</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.show.1">
+      <trans-unit id="tl_image_size.show">
         <source>Show the details of image size ID %s</source>
         <target>Details der Bildgröße ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.edit.0">
-        <source>Edit image size</source>
-        <target>Bildgröße bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.edit.1">
+      <trans-unit id="tl_image_size.edit">
         <source>Edit image size ID %s</source>
-        <target>Die Bildgröße ID %s bearbeiten</target>
+        <target>Bildgröße ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.editheader.0">
-        <source>Edit image size</source>
-        <target>Bildgröße bearbeiten</target>
+      <trans-unit id="tl_image_size.editheader">
+        <source>Edit the settings of image size ID %s</source>
+        <target>Einstellungen der Bildgröße ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.editheader.1">
-        <source>Edit the image size settings</source>
-        <target>Bildgrößen-Einstellungen bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.cut.0">
-        <source>Move image size</source>
-        <target>Bildgröße verschieben</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.cut.1">
+      <trans-unit id="tl_image_size.cut">
         <source>Move image size ID %s</source>
-        <target>Die Bildgröße ID %s verschieben</target>
+        <target>Bildgröße ID %s verschieben</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.copy.0">
-        <source>Duplicate image size</source>
-        <target>Bildgröße duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.copy.1">
+      <trans-unit id="tl_image_size.copy">
         <source>Duplicate image size ID %s</source>
-        <target>Die Bildgröße ID %s duplizieren</target>
+        <target>Bildgröße ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.delete.0">
-        <source>Delete image size</source>
-        <target>Bildgröße löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.delete.1">
+      <trans-unit id="tl_image_size.delete">
         <source>Delete image size ID %s</source>
-        <target>Die Bildgröße ID %s löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.picturefill">
-        <source>The &lt;em&gt;%s&lt;/em&gt; option needs to be enabled in the page layout.</source>
-        <target>Die Option &lt;em&gt;%s&lt;/em&gt; muss im Seitenlayout aktiviert sein.</target>
+        <target>Bildgröße ID %s löschen</target>
       </trans-unit>
     </body>
   </file>

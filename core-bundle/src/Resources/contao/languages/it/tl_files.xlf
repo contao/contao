@@ -33,6 +33,14 @@
         <source>Make the folder and its sub-folders accessible via HTTP.</source>
         <target>Rendi la cartella e le sottocartelle accessibili tramite HTTP.</target>
       </trans-unit>
+      <trans-unit id="tl_files.syncExclude.0">
+        <source>Do not synchronize</source>
+        <target>Non sincronizzare</target>
+      </trans-unit>
+      <trans-unit id="tl_files.syncExclude.1">
+        <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>Non sincronizzare la cartella e le sue sottocartelle con il database.</target>
+      </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
         <target>Coordinate X della parte importante</target>
@@ -87,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_files.editor.1">
         <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
+        <target>Qui è possibile modificare la sorgente del file (premere F11 per passare dalla modalità a schermo intero).</target>
       </trans-unit>
       <trans-unit id="tl_files.uploadNback">
         <source>Upload files and go back</source>
@@ -103,6 +112,10 @@
       <trans-unit id="tl_files.editFile">
         <source>Edit file &quot;%s&quot;</source>
         <target>Modifica il codice sorgente del file &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit_preview_help">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>Contrassegna come importante una parte dell'immagine con il cursore del mouse.</target>
       </trans-unit>
       <trans-unit id="tl_files.browseFiles">
         <source>Browse files</source>
@@ -122,9 +135,11 @@
       </trans-unit>
       <trans-unit id="tl_files.dropzoneFileTooBig">
         <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>Il file è troppo grande  ({{filesize}} MiB). La dimensione massima del file è {{maxFilesize}} MiB.</target>
       </trans-unit>
       <trans-unit id="tl_files.dropzoneInvalidType">
         <source>Files of this type cannot be uploaded.</source>
+        <target>File di questo tipo non possono essere caricati.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>
@@ -170,93 +185,13 @@
         <source>Create a new folder</source>
         <target>Crea una nuova cartella</target>
       </trans-unit>
-      <trans-unit id="tl_files.cut.0">
-        <source>Move file or folder</source>
-        <target>Sposta file o cartella</target>
-      </trans-unit>
-      <trans-unit id="tl_files.cut.1">
-        <source>Move file or folder &quot;%s&quot;</source>
-        <target>Sposta file o cartella &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.copy.0">
-        <source>Duplicate file or folder</source>
-        <target>Copia file o cartella</target>
-      </trans-unit>
-      <trans-unit id="tl_files.copy.1">
-        <source>Duplicate file or folder &quot;%s&quot;</source>
-        <target>Copia file o cartella &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.edit.0">
-        <source>Edit file or folder</source>
-        <target>Modifica un file o una cartella</target>
-      </trans-unit>
-      <trans-unit id="tl_files.edit.1">
-        <source>Edit file or folder &quot;%s&quot;</source>
-        <target>Modifica il file o la cartella &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.delete.0">
-        <source>Delete file or folder</source>
-        <target>Elimina file o cartella</target>
-      </trans-unit>
-      <trans-unit id="tl_files.delete.1">
-        <source>Delete file or folder &quot;%s&quot;</source>
-        <target>Elimina il file o la cartella &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.show.0">
-        <source>File or folder details</source>
-        <target>Dettagli del file o della cartella</target>
-      </trans-unit>
-      <trans-unit id="tl_files.show.1">
-        <source>Show the details of file or folder &quot;%s&quot;</source>
-        <target>Mostra i dettagli del file o della cartella &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.source.0">
-        <source>Edit file</source>
-        <target>Edita sorgente</target>
-      </trans-unit>
-      <trans-unit id="tl_files.source.1">
-        <source>Edit file &quot;%s&quot;</source>
-        <target>Modifica il codice sorgente del file &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.upload.0">
+      <trans-unit id="tl_files.move.0">
         <source>Upload files</source>
         <target>Carica file</target>
-      </trans-unit>
-      <trans-unit id="tl_files.upload.1">
-        <source>Upload files to folder &quot;%s&quot;</source>
-        <target>Carica un file nella cartella &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.protect.0">
-        <source>Protect folder</source>
-        <target>Proteggi cartella</target>
-      </trans-unit>
-      <trans-unit id="tl_files.protect.1">
-        <source>Protect folder &quot;%s&quot;</source>
-        <target>Proteggi la cartella &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.unlock.0">
-        <source>Remove protection</source>
-        <target>Rimuovi protezione</target>
-      </trans-unit>
-      <trans-unit id="tl_files.unlock.1">
-        <source>Unprotect folder &quot;%s&quot;</source>
-        <target>Rimuovi protezione da &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.move.0">
-        <source>File upload</source>
-        <target>Upload file</target>
       </trans-unit>
       <trans-unit id="tl_files.move.1">
         <source>Upload files to the server</source>
         <target>Carica i files sul server</target>
-      </trans-unit>
-      <trans-unit id="tl_files.pasteinto.0">
-        <source>Paste into</source>
-        <target>Incolla all'interno</target>
-      </trans-unit>
-      <trans-unit id="tl_files.pasteinto.1">
-        <source>Paste into this folder</source>
-        <target>Incolla all'interno della cartella</target>
       </trans-unit>
       <trans-unit id="tl_files.sync.0">
         <source>Synchronize</source>
@@ -266,9 +201,47 @@
         <source>Synchronize the file system and the database</source>
         <target>Sincronizza il file system ed il database</target>
       </trans-unit>
-      <trans-unit id="tl_files.edit_preview_help">
-        <source>Mark the important part of the image with your mouse cursor.</source>
-        <target>Contrassegna come importante una parte dell'immagine con il cursore del mouse.</target>
+      <trans-unit id="tl_files.show">
+        <source>Show the details of file or folder &quot;%s&quot;</source>
+        <target>Mostra i dettagli del file o della cartella &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.cut">
+        <source>Move file or folder &quot;%s&quot;</source>
+        <target>Sposta file o cartella &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.copy">
+        <source>Duplicate file or folder &quot;%s&quot;</source>
+        <target>Copia file o cartella &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.edit">
+        <source>Edit file or folder &quot;%s&quot;</source>
+        <target>Modifica il file o la cartella &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.delete.1">
+        <source>Delete file or folder &quot;%s&quot;</source>
+        <target>Elimina il file o la cartella &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.source">
+        <source>Edit file &quot;%s&quot;</source>
+        <target>Modifica il codice sorgente del file &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload">
+        <source>Upload files to folder &quot;%s&quot;</source>
+        <target>Carica un file nella cartella &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.protect">
+        <source>Protect folder &quot;%s&quot;</source>
+        <target>Proteggi la cartella &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.unlock">
+        <source>Unprotect folder &quot;%s&quot;</source>
+        <target>Rimuovi protezione da &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.0">
+        <source>Paste into the root folder</source>
+      </trans-unit>
+      <trans-unit id="tl_files.pasteinto.1">
+        <source>Paste into folder &quot;%s&quot;</source>
       </trans-unit>
     </body>
   </file>

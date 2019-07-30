@@ -62,58 +62,37 @@
         <target>Instellingen afzender</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
-        <source>New channel</source>
-        <target>Nieuw kanaal</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.1">
         <source>Create a new channel</source>
         <target>Maak een nieuw kanaal</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.show.0">
-        <source>Channel details</source>
-        <target>Details kanaal</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.show.1">
+      <trans-unit id="tl_newsletter_channel.show">
         <source>Show the details of channel ID %s</source>
         <target>Toon details van kanaal ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.edit.0">
-        <source>Edit channel</source>
-        <target>Bewerk kanaal</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.edit.1">
+      <trans-unit id="tl_newsletter_channel.edit">
         <source>Edit channel ID %s</source>
         <target>Bewerk kanaal ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.editheader.0">
-        <source>Edit channel</source>
-        <target>Bewerk kanaal</target>
+      <trans-unit id="tl_newsletter_channel.editheader">
+        <source>Edit the settings of channel ID %s</source>
+        <target>Bewerk instellingen van kanaal ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.editheader.1">
+      <trans-unit id="tl_newsletter_channel.editmeta">
         <source>Edit the channel settings</source>
         <target>Bewerk de instellingen van dit kanaal</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.copy.0">
-        <source>Duplicate channel</source>
-        <target>Dupliceer kanaal</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.copy.1">
+      <trans-unit id="tl_newsletter_channel.copy">
         <source>Duplicate channel ID %s</source>
         <target>Dupliceer kanaal ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.delete.0">
-        <source>Delete channel</source>
-        <target>Verwijder kanaal</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.delete.1">
+      <trans-unit id="tl_newsletter_channel.delete">
         <source>Delete channel ID %s</source>
         <target>Verwijder kanaal ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.recipients.0">
-        <source>Edit recipients</source>
-        <target>Bewerk ontvangers</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter_channel.recipients.1">
+      <trans-unit id="tl_newsletter_channel.recipients">
         <source>Edit the recipients of channel ID %s</source>
         <target>Bewerk ontvangers van kanaal ID %s</target>
       </trans-unit>

@@ -41,21 +41,8 @@
         <source>Raw data of the undo step</source>
         <target>Datos de los registros eliminados</target>
       </trans-unit>
-      <trans-unit id="tl_undo.show.0">
-        <source>Show details</source>
-        <target>Mostrar detalles</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.show.1">
-        <source>Show the details of entry ID %s</source>
-        <target>Mostrar detalles de la entrada con ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.undo.0">
-        <source>Restore</source>
-        <target>Restaurar</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.undo.1">
-        <source>Restore entry ID %s</source>
-        <target>Deshacer la acción con ID %s</target>
+      <trans-unit id="tl_undo.undo">
+        <source>Restore element ID %s</source>
       </trans-unit>
     </body>
   </file>

@@ -62,8 +62,28 @@
         <target>CSS классы</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.1">
-        <source>The CSS classes will be applied to the image tag.</source>
-        <target>CSS классы будут применены к тэгу изображения.</target>
+        <source>The CSS classes will be added to the image tag.</source>
+        <target>CSS классы будут добавлены в тег изображения.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formats.0">
+        <source>Convert image formats</source>
+        <target>Конвертировать форматы изображений</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formats.1">
+        <source>Here you can select which image formats shall be converted.</source>
+        <target>Вы можете выбрать, какие форматы изображений будут конвертированы.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formatsWebpNotSupported">
+        <source>WEBP is not supported on your server.</source>
+        <target>WEBP не поддерживается на сервере.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
+        <source>Use original image if dimensions match</source>
+        <target>Использовать оригинальное изображение, если размеры совпадают</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
+        <source>Note that no optimizations such as meta data stripping or JPEG compression will be applied in this case.</source>
+        <target>Обратите внимание, что в этом случае, не будет применена оптимизация, такая как удаление метаданных или сжатие JPEG.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
@@ -76,6 +96,10 @@
       <trans-unit id="tl_image_size.title_legend">
         <source>Image size settings</source>
         <target>Настройки размера изображения</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.source_legend">
+        <source>Image source settings</source>
+        <target>Настройки источника изображения</target>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>
@@ -105,65 +129,49 @@
         <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
         <target>Изображение будет преобразовано до данного размера. При необходимости оно будет обрезано.</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.png:webp,png">
+        <source>PNG to WEBP</source>
+        <target>PNG в WEBP</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.jpg:webp,jpg;jpeg:webp,jpeg">
+        <source>JPEG to WEBP</source>
+        <target>JPEG в WEBP</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.gif:webp,gif">
+        <source>GIF to WEBP</source>
+        <target>GIF в WEBP</target>
+      </trans-unit>
       <trans-unit id="tl_image_size.new.0">
-        <source>New image size</source>
-        <target>Новый размер изображения</target>
+        <source>New</source>
+        <target>Новый</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.1">
         <source>Create a new image size</source>
         <target>Создать новый размер изображения</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.show.0">
-        <source>Image size details</source>
-        <target>Детали размера изображения</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.show.1">
+      <trans-unit id="tl_image_size.show">
         <source>Show the details of image size ID %s</source>
         <target>Показать детали размера изображения ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.edit.0">
-        <source>Edit image size</source>
-        <target>Редактировать размер изображения</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.edit.1">
+      <trans-unit id="tl_image_size.edit">
         <source>Edit image size ID %s</source>
         <target>Редактировать размер изображения ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.editheader.0">
-        <source>Edit image size</source>
-        <target>Редактировать размер изображения</target>
+      <trans-unit id="tl_image_size.editheader">
+        <source>Edit the settings of image size ID %s</source>
+        <target>Редактировать настройки размера изображения ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.editheader.1">
-        <source>Edit the image size settings</source>
-        <target>Редактировать настройки размера изображения</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.cut.0">
-        <source>Move image size</source>
-        <target>Переместить размер изображения</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.cut.1">
+      <trans-unit id="tl_image_size.cut">
         <source>Move image size ID %s</source>
         <target>Переместить размер изображения ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.copy.0">
-        <source>Duplicate image size</source>
-        <target>Дублировать размер изображения</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.copy.1">
+      <trans-unit id="tl_image_size.copy">
         <source>Duplicate image size ID %s</source>
         <target>Дублировать размер изображения ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.delete.0">
-        <source>Delete image size</source>
-        <target>Удалить размер изображения</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.delete.1">
+      <trans-unit id="tl_image_size.delete">
         <source>Delete image size ID %s</source>
         <target>Удалить размер изображения ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size.picturefill">
-        <source>The &lt;em&gt;%s&lt;/em&gt; option needs to be enabled in the page layout.</source>
-        <target>Опция &lt;em&gt;%s&lt;/em&gt; должна быть включена в макет страницы.</target>
       </trans-unit>
     </body>
   </file>

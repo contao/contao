@@ -557,85 +557,12 @@
         <source>none</source>
         <target>هیچ‌کدام</target>
       </trans-unit>
-      <trans-unit id="tl_style.new.0">
-        <source>New format definition</source>
-        <target>تعریف ساختار جدید</target>
-      </trans-unit>
-      <trans-unit id="tl_style.new.1">
-        <source>Create a new format definition</source>
-        <target>ایجاد تعریف ساختار جدید</target>
-      </trans-unit>
-      <trans-unit id="tl_style.show.0">
-        <source>Format definition details</source>
-        <target>جزئیات تعریف ساختار</target>
-      </trans-unit>
-      <trans-unit id="tl_style.show.1">
-        <source>Show the details of format definition ID %s</source>
-        <target>نمایش جزئیات تعریف ساختار شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.edit.0">
-        <source>Edit format definition</source>
-        <target>ویرایش تعریف ساختار</target>
-      </trans-unit>
-      <trans-unit id="tl_style.edit.1">
-        <source>Edit format definition ID %s</source>
-        <target>نمایش جزئیات تعریف ساختار شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.cut.0">
-        <source>Move format definition</source>
-        <target>جابجایی تعریف ساختار</target>
-      </trans-unit>
-      <trans-unit id="tl_style.cut.1">
-        <source>Move format definition ID %s</source>
-        <target>جابجایی تعریف ساختار شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.copy.0">
-        <source>Duplicate format definition</source>
-        <target>تکثیر تعریف ساختار</target>
-      </trans-unit>
-      <trans-unit id="tl_style.copy.1">
-        <source>Duplicate format definition ID %s</source>
-        <target>تکثیر تعریف ساختار شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.delete.0">
-        <source>Delete format definition</source>
-        <target>حذف تعریف ساختار</target>
-      </trans-unit>
-      <trans-unit id="tl_style.delete.1">
-        <source>Delete format definition ID %s</source>
-        <target>حذف تعریف ساختار شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.editheader.0">
-        <source>Edit style sheet</source>
-        <target>ویرایش شیوه‌نامه</target>
-      </trans-unit>
-      <trans-unit id="tl_style.editheader.1">
+      <trans-unit id="tl_style.editheader">
         <source>Edit the style sheet settings</source>
         <target>ویرایش تنظیمات شیوه‌نامه</target>
       </trans-unit>
-      <trans-unit id="tl_style.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>جاگذاری در بالا</target>
-      </trans-unit>
-      <trans-unit id="tl_style.pasteafter.1">
-        <source>Paste after format definition ID %s</source>
-        <target>جاگذاری بعد از تعریف ساختار شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.pastenew.0">
-        <source>Add new at the top</source>
-        <target>افزودن در بالا</target>
-      </trans-unit>
-      <trans-unit id="tl_style.pastenew.1">
-        <source>Add new after format definition ID %s</source>
-        <target>افزودن بعد از تعریف ساختار شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_style.toggle.0">
-        <source>Toggle visibility</source>
-        <target>تغییر وضعیت دید</target>
-      </trans-unit>
-      <trans-unit id="tl_style.toggle.1">
-        <source>Toggle the visibility of format definition ID %s</source>
-        <target>تغییر وضعیت دید تعریف ساختار شناسه‌ی %s</target>
+      <trans-unit id="tl_style.toggle">
+        <source>Activate/deactivate element ID %s</source>
       </trans-unit>
     </body>
   </file>

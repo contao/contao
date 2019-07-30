@@ -277,6 +277,18 @@
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
         <target>Jeśli wprowadzisz numeryczną wartość, wprowadzana długość tekstu będzie ograniczone do podanej wartości. Jeśli jest to pole do wysyłania plików, możesz tu wprowadzić, w bajtach, maksymalny rozmiar pliku jaki będzie mógł być przesłany (np. 1 MB = 1024 KB = 1024000 bajtów).</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.minval.0">
+        <source>Minimum value</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.minval.1">
+        <source>Here you can set the minimum value for numeric fields.</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxval.0">
+        <source>Maximum value</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxval.1">
+        <source>Here you can set the maximum value for numeric fields.</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>
         <target>Wiersze i kolumny</target>
@@ -465,84 +477,45 @@
         <target>Widoczność</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.0">
-        <source>New field</source>
-        <target>Nowe pole</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_form_field.new.1">
-        <source>Create a new field</source>
-        <target>Stwórz nowe pole</target>
+        <source>Create a new form field</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.show.0">
-        <source>Field details</source>
-        <target>Szczegóły pola</target>
+      <trans-unit id="tl_form_field.show">
+        <source>Show the details of form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.show.1">
-        <source>Show the details of field ID %s</source>
-        <target>Pokaż szczegóły pola ID %s</target>
+      <trans-unit id="tl_form_field.edit">
+        <source>Edit form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit.0">
-        <source>Edit field</source>
-        <target>Edytuj pole</target>
+      <trans-unit id="tl_form_field.cut">
+        <source>Move form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit.1">
-        <source>Edit field ID %s</source>
-        <target>Edytuj pole ID %s</target>
+      <trans-unit id="tl_form_field.copy">
+        <source>Duplicate form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut.0">
-        <source>Move field</source>
-        <target>Przenieś pole</target>
+      <trans-unit id="tl_form_field.delete">
+        <source>Delete form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut.1">
-        <source>Move field ID %s</source>
-        <target>Przenieś pole ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.copy.0">
-        <source>Duplicate field</source>
-        <target>Duplikuj pole</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.copy.1">
-        <source>Duplicate field ID %s</source>
-        <target>Duplikuj pole ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.delete.0">
-        <source>Delete field</source>
-        <target>Skasuj pole</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.delete.1">
-        <source>Delete field ID %s</source>
-        <target>Skasuj pole ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.editheader.0">
-        <source>Edit form</source>
-        <target>Edytuj nagłówek formularza</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.editheader.1">
+      <trans-unit id="tl_form_field.editheader">
         <source>Edit the form settings</source>
         <target>Edytuj nagłówek tego formularza</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle">
+        <source>Hide/unhide form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>
         <target>Wstaw na początku</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
-        <source>Paste after field ID %s</source>
-        <target>Wklej po polu ID %s</target>
+        <source>Paste after form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
-        <source>Add new at the top</source>
-        <target>Utwórz nowy element arkusza na początku</target>
+        <source>Create a new form field at the top</source>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
-        <source>Add new after field ID %s</source>
-        <target>Utwórz nowe pole po polu ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.toggle.0">
-        <source>Toggle visibility</source>
-        <target>Włącz lub wyłącz widoczność elementu</target>
-      </trans-unit>
-      <trans-unit id="tl_form_field.toggle.1">
-        <source>Toggle the visibility of field ID %s</source>
-        <target>Włącz widoczność pola ID %s</target>
+        <source>Create a new form field after form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>

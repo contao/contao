@@ -193,6 +193,9 @@
         <source>Automatically deactivate the account on this day.</source>
         <target>此账号到此时自动停用</target>
       </trans-unit>
+      <trans-unit id="tl_member.useTwoFactor">
+        <source>Use two-factor authentication</source>
+      </trans-unit>
       <trans-unit id="tl_member.personal_legend">
         <source>Personal data</source>
         <target>个人信息</target>
@@ -238,58 +241,33 @@
         <target>登录细节</target>
       </trans-unit>
       <trans-unit id="tl_member.new.0">
-        <source>New member</source>
-        <target>新用户</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_member.new.1">
         <source>Create a new member</source>
         <target>创建一位新用户</target>
       </trans-unit>
-      <trans-unit id="tl_member.show.0">
-        <source>Member details</source>
-        <target>用户信息</target>
-      </trans-unit>
-      <trans-unit id="tl_member.show.1">
+      <trans-unit id="tl_member.show">
         <source>Show the details of member ID %s</source>
         <target>显示ID为%s的用户详情</target>
       </trans-unit>
-      <trans-unit id="tl_member.edit.0">
-        <source>Edit member</source>
-        <target>编辑用户</target>
-      </trans-unit>
-      <trans-unit id="tl_member.edit.1">
+      <trans-unit id="tl_member.edit">
         <source>Edit member ID %s</source>
         <target>编辑ID为%s的用户</target>
       </trans-unit>
-      <trans-unit id="tl_member.copy.0">
-        <source>Duplicate member</source>
-        <target>复制用户</target>
-      </trans-unit>
-      <trans-unit id="tl_member.copy.1">
+      <trans-unit id="tl_member.copy">
         <source>Duplicate member ID %s</source>
         <target>复制ID为%s的用户</target>
       </trans-unit>
-      <trans-unit id="tl_member.delete.0">
-        <source>Delete member</source>
-        <target>删除用户</target>
-      </trans-unit>
-      <trans-unit id="tl_member.delete.1">
+      <trans-unit id="tl_member.delete">
         <source>Delete member ID %s</source>
         <target>删除ID为%s的用户</target>
       </trans-unit>
-      <trans-unit id="tl_member.toggle.0">
-        <source>Activate/deactivate member</source>
-        <target>激活/停用用户</target>
-      </trans-unit>
-      <trans-unit id="tl_member.toggle.1">
+      <trans-unit id="tl_member.toggle">
         <source>Activate/deactivate member ID %s</source>
         <target>激活/停用ID为%s的用户</target>
       </trans-unit>
-      <trans-unit id="tl_member.su.0">
-        <source>Preview</source>
-        <target>预览</target>
-      </trans-unit>
-      <trans-unit id="tl_member.su.1">
+      <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>
         <target>以会员ID%s预览网站前台</target>
       </trans-unit>

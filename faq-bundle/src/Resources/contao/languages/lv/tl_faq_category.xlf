@@ -122,50 +122,33 @@
         <target>Izdzēšot kategoriju ID %s tiks izdzēsti arī visi tās BUJi! Turpināt?</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
-        <source>New category</source>
-        <target>Jauna kategorija</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.1">
         <source>Create a new category</source>
         <target>Izveidot jaunu kategoriju</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.show.0">
-        <source>Category details</source>
-        <target>Kategorijas detaļas</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.show.1">
+      <trans-unit id="tl_faq_category.show">
         <source>Show the details of category ID %s</source>
         <target>Rādīt kategorijas ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.edit.0">
-        <source>Edit category</source>
-        <target>Rediģēt kategoriju</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.edit.1">
+      <trans-unit id="tl_faq_category.edit">
         <source>Edit category ID %s</source>
         <target>Rediģēt kategoriju ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.editheader.0">
-        <source>Edit category</source>
-        <target>Rediģēt kategoriju</target>
+      <trans-unit id="tl_faq_category.editheader">
+        <source>Edit the settings of category ID %s</source>
+        <target>Rediģēt kategorijas ID %s iestatījumus</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.editheader.1">
+      <trans-unit id="tl_faq_category.editmeta">
         <source>Edit the category settings</source>
         <target>Rediģēt kategorijas iestatījumus</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.copy.0">
-        <source>Duplicate category</source>
-        <target>Dublicēt kategoriju</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.copy.1">
+      <trans-unit id="tl_faq_category.copy">
         <source>Duplicate category ID %s</source>
         <target>Dublicēt kategoriju ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.delete.0">
-        <source>Delete category</source>
-        <target>Dzēst kategoriju</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.delete.1">
+      <trans-unit id="tl_faq_category.delete">
         <source>Delete category ID %s</source>
         <target>Dzēst kategoriju ID %s</target>
       </trans-unit>

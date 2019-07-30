@@ -33,13 +33,13 @@
         <source>Invalid source or target directory &quot;%s&quot;!</source>
         <target>¡Origen o directorio de destino inválido &quot;%s&quot;!</target>
       </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.0">
-        <source>New template</source>
-        <target>Nueva plantilla</target>
+      <trans-unit id="tl_templates.overridesAnotherTpl">
+        <source>This template overrides &quot;%s&quot;.</source>
+        <target>Esta plantilla anula &quot;%s&quot;.</target>
       </trans-unit>
-      <trans-unit id="tl_templates.new_tpl.1">
-        <source>Create a new template</source>
-        <target>Crear una nueva plantilla</target>
+      <trans-unit id="tl_templates.pleaseSelect">
+        <source>Please select a template from the list above and click &quot;Show differences&quot;.</source>
+        <target>Seleccione una plantilla de la lista y haga click en &quot;Mostar diferencias&quot;</target>
       </trans-unit>
       <trans-unit id="tl_templates.new.0">
         <source>New folder</source>
@@ -49,29 +49,23 @@
         <source>Create a new folder</source>
         <target>Crear una plantilla nueva</target>
       </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.0">
+        <source>New template</source>
+        <target>Nueva plantilla</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.new_tpl.1">
+        <source>Create a new template</source>
+        <target>Crear una nueva plantilla</target>
+      </trans-unit>
       <trans-unit id="tl_templates.pasteinto.0">
-        <source>Paste into</source>
-        <target>Copiar en</target>
+        <source>Paste into the root folder</source>
       </trans-unit>
       <trans-unit id="tl_templates.pasteinto.1">
-        <source>Paste into this folder</source>
-        <target>Copiar en este directorio</target>
+        <source>Paste into folder &quot;%s&quot;</source>
       </trans-unit>
-      <trans-unit id="tl_templates.compare.0">
-        <source>Compare template</source>
-        <target>Comparar plantilla</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.compare.1">
+      <trans-unit id="tl_templates.compare">
         <source>Compare &quot;%s&quot; with another template</source>
         <target>Comparar &quot;%s&quot; con otra plantilla</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.overridesAnotherTpl">
-        <source>This template overrides &quot;%s&quot;.</source>
-        <target>Esta plantilla anula &quot;%s&quot;.</target>
-      </trans-unit>
-      <trans-unit id="tl_templates.pleaseSelect">
-        <source>Please select a template from the list above and click &quot;Show differences&quot;.</source>
-        <target>Seleccione una plantilla de la lista y haga click en &quot;Mostar diferencias&quot;</target>
       </trans-unit>
     </body>
   </file>

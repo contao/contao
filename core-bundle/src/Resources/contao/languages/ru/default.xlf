@@ -249,13 +249,13 @@
         <source>There are top-level pages in the site structure which are not website root pages.</source>
         <target>В структуре сайта имеются страницы верхнего уровня, которые не являются корневыми страницами веб-сайта.</target>
       </trans-unit>
-      <trans-unit id="ERR.invalidTokenUrl">
-        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
-        <target>Ссылка, которую вы пытались открыть не может быть проверена. Если вы нажали на ссылку самостоятельно или получили её от доверенного лица, можете подтвердить процесс ниже.</target>
-      </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
         <target>Форма не может быть отправлена</target>
+      </trans-unit>
+      <trans-unit id="ERR.formCookieWarning">
+        <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+        <target>Вы не сможете отправить эту форму, потому что cookie отключены в вашем браузере.</target>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -288,6 +288,18 @@
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
         <target>Неверный код подтверждения!</target>
+      </trans-unit>
+      <trans-unit id="ERR.emptyTitleOrId">
+        <source>Please enter both title and ID!</source>
+        <target>Введите название и ID!</target>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionTitle">
+        <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>Дублировать название секции макета &quot;%s&quot;!</target>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>Дублировать секции макета ID &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1278,16 +1290,16 @@
         <target>Редактировать все</target>
       </trans-unit>
       <trans-unit id="MSC.all.1">
-        <source>Edit multiple records at once</source>
-        <target>Редактировать несколько записей одновременно</target>
+        <source>Edit multiple elements at once</source>
+        <target>Редактировать несколько элементов одновременно</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
         <target>Переопределить несколько</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
-        <source>Override multiple records at once</source>
-        <target>Переопределить несколько записей сразу</target>
+        <source>Override multiple elements at once</source>
+        <target>Переопределить несколько элементов одновременно</target>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
@@ -1368,22 +1380,6 @@
       <trans-unit id="MSC.move_down.1">
         <source>Move the item one position down</source>
         <target>Переместить на одну позицию вниз</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.0">
-        <source>Files URL</source>
-        <target>URL файлов</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticFiles.1">
-        <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-        <target>URL файлов применяется к каталогу &lt;em&gt;files&lt;/em&gt; и всем эскизам изображений (оптимизация скорости страниц).</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.0">
-        <source>Assets URL</source>
-        <target>URL ресурсов</target>
-      </trans-unit>
-      <trans-unit id="MSC.staticPlugins.1">
-        <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-        <target>URL ресурсов применяется к каталогу &lt;em&gt;assets&lt;/em&gt; и всем ресурсам внутри (оптимизация скорости страниц).</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
@@ -1469,10 +1465,6 @@
         <source>User</source>
         <target>Пользователь</target>
       </trans-unit>
-      <trans-unit id="MSC.loginTo">
-        <source>Log into %s</source>
-        <target>Панель управления: %s</target>
-      </trans-unit>
       <trans-unit id="MSC.loginBT">
         <source>Login</source>
         <target>Вход</target>
@@ -1502,8 +1494,8 @@
         <target>Отмена</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
-        <source>Do you really want to delete entry ID %s?</source>
-        <target>Вы действительно хотите удалить запись ID %s?</target>
+        <source>Do you really want to delete element ID %s?</source>
+        <target>Вы действительно хотите удалить элемент ID %s?</target>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
@@ -1709,10 +1701,6 @@
         <source>justified</source>
         <target>по ширине</target>
       </trans-unit>
-      <trans-unit id="MSC.filetree">
-        <source>File system</source>
-        <target>Файловая система</target>
-      </trans-unit>
       <trans-unit id="MSC.male">
         <source>Male</source>
         <target>Мужчина</target>
@@ -1720,6 +1708,10 @@
       <trans-unit id="MSC.female">
         <source>Female</source>
         <target>Женщина</target>
+      </trans-unit>
+      <trans-unit id="MSC.other">
+        <source>Other</source>
+        <target>Другое</target>
       </trans-unit>
       <trans-unit id="MSC.fileSize">
         <source>File size</source>
@@ -1773,9 +1765,9 @@
         <source>Back end modules</source>
         <target>Модули панели управления</target>
       </trans-unit>
-      <trans-unit id="MSC.welcomeTo">
-        <source>%s back end</source>
-        <target>Панель управления: %s</target>
+      <trans-unit id="MSC.dashboard">
+        <source>Dashboard</source>
+        <target>Панель инструментов</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -1882,8 +1874,8 @@
         <target>Очистить буфер обмена</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenElements">
-        <source>Unpublished elements</source>
-        <target>Неопубликованные элементы</target>
+        <source>Unpublished</source>
+        <target>Не опубликовано</target>
       </trans-unit>
       <trans-unit id="MSC.hiddenHide">
         <source>hide</source>
@@ -2165,6 +2157,10 @@
         <source>Your search for &lt;strong&gt;%s&lt;/strong&gt; returned no results.</source>
         <target>Ваш поиск &lt;strong&gt;%s&lt;/strong&gt; не принес результатов.</target>
       </trans-unit>
+      <trans-unit id="MSC.sKeywordHint">
+        <source>Note that keywords shorter than %s characters and without a modifier have been ignored.</source>
+        <target>Обратите внимание, ключевые слова короче %s символов и без модификатора были проигнорированы.</target>
+      </trans-unit>
       <trans-unit id="MSC.seconds">
         <source>seconds</source>
         <target>секунды</target>
@@ -2257,10 +2253,6 @@
         <source>Share on Twitter</source>
         <target>Добавить в Twitter</target>
       </trans-unit>
-      <trans-unit id="MSC.gplusShare">
-        <source>Share on Google+</source>
-        <target>Поделиться в Google+</target>
-      </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
         <target>Пожалуйста, подождите</target>
@@ -2321,9 +2313,25 @@
         <source>%s relevance</source>
         <target>Релевантность %s</target>
       </trans-unit>
-      <trans-unit id="MSC.invalidTokenUrl">
+      <trans-unit id="MSC.invalidToken">
         <source>Invalid token</source>
         <target>Неверный токен</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenConfirmed">
+        <source>This token has already been confirmed</source>
+        <target>Этот токен уже подтвержден</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenEmailMismatch">
+        <source>The e-mail address of the token does not match</source>
+        <target>E-mail токена не совпадает</target>
+      </trans-unit>
+      <trans-unit id="MSC.resendToken">
+        <source>The token has been re-sent to %s.</source>
+        <target>Токен был повторно отправлен %s.</target>
+      </trans-unit>
+      <trans-unit id="MSC.invalidTokenUrl">
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
+        <target>Ссылка, которую вы пытались открыть не может быть проверена. Если вы нажали на ссылку самостоятельно или получили её от доверенного лица, можете подтвердить процесс ниже.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2425,6 +2433,18 @@
         <source>Please enable up two-factor authentication before you continue.</source>
         <target>Перед продолжением включите двухфакторную авторизацию.</target>
       </trans-unit>
+      <trans-unit id="MSC.twoFactorTextCode">
+        <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>Если вы не можете отсканировать QR-код, введите этот ключ:</target>
+      </trans-unit>
+      <trans-unit id="MSC.userTemplateEditor">
+        <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>Существует как минимум один обычный пользователь с правами доступа к редактору шаблонов. Поскольку шаблоны являются файлами PHP, эти пользователи неявно имеют полный контроль над системой!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupTemplateEditor">
+        <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>Существует как минимум одна группа пользователей, предоставляющая доступ к редактору шаблонов. Поскольку шаблоны являются файлами PHP, пользователи этих групп неявно имеют полный контроль над системой!</target>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
         <target>Включить</target>
@@ -2432,6 +2452,10 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Отключить</target>
+      </trans-unit>
+      <trans-unit id="MSC.internalCssEditor">
+        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>Внутренний редактор CSS устарел и будет удален в одной из следующих версий Contao! Рассмотрите возможность экспорта существующих таблиц стилей и повторного их добавления в макет страницы в качестве внешних таблиц стилей.</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2552,6 +2576,86 @@
       <trans-unit id="SECTIONS.manual">
         <source>Manual output</source>
         <target>Ручной вывод</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.0">
+        <source>Edit multiple</source>
+        <target>Редактировать все</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.1">
+        <source>Edit multiple elements at once</source>
+        <target>Редактировать несколько элементов одновременно</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.0">
+        <source>Toggle all</source>
+        <target>Переключить все</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.1">
+        <source>Expand or collapse all nodes</source>
+        <target>Развернуть или свернуть все узлы</target>
+      </trans-unit>
+      <trans-unit id="DCA.new.0">
+        <source>New</source>
+        <target>Новый</target>
+      </trans-unit>
+      <trans-unit id="DCA.new.1">
+        <source>Create a new element</source>
+        <target>Создать новый элемент</target>
+      </trans-unit>
+      <trans-unit id="DCA.show">
+        <source>Show the details of element ID %s</source>
+        <target>Показать детали элемента ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.edit">
+        <source>Edit element ID %s</source>
+        <target>Редактировать элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.cut">
+        <source>Move element ID %s</source>
+        <target>Переместить элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.copy">
+        <source>Duplicate element ID %s</source>
+        <target>Дублировать элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete">
+        <source>Delete element ID %s</source>
+        <target>Удалить элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.0">
+        <source>Edit the element settings</source>
+        <target>Редактировать настройки элемента</target>
+      </trans-unit>
+      <trans-unit id="DCA.editheader.1">
+        <source>Edit the settings of element ID %s</source>
+        <target>Редактировать настройки элемента ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle">
+        <source>Publish/unpublish element ID %s</source>
+        <target>Опубликовать/изъять элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste at the top</source>
+        <target>Вставить после</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.1">
+        <source>Paste into element ID %s</source>
+        <target>Вставить в элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Вставить после</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.1">
+        <source>Paste after element ID %s</source>
+        <target>Вставить после элемента ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.0">
+        <source>Create a new element at the top</source>
+        <target>Создать новый элемент вверху</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenew.1">
+        <source>Create a new element after element ID %s</source>
+        <target>Создать новый элемент после элемента ID %s</target>
       </trans-unit>
     </body>
   </file>

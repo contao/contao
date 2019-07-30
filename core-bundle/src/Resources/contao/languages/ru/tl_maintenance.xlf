@@ -102,20 +102,20 @@
         <target>Очистить кеш изображений</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.1">
-        <source>Removes the automatically generated images and then purges the page cache, so there are no links to deleted resources.</source>
-        <target>Удаляет автоматически созданные изображения, а затем очищает кеш страниц, при этом очищаются ссылки на удаленные ресурсы.</target>
+        <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Удаляет автоматически созданные изображения, а затем очищает общий кеш, чтобы не было ссылок на удаленные ресурсы.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
         <target>Очистить кеш скриптов</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
-        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the page cache.</source>
-        <target>Удаляет автоматически созданные &lt;code&gt;.css&lt;/code&gt; и &lt;code&gt;.js&lt;/code&gt; файлы, создает заново внутренние таблицы стилей, а затем очищает кеш страниц.</target>
+        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
+        <target>Удаляет автоматически созданные &lt;code&gt;.css&lt;/code&gt; и &lt;code&gt;.js&lt;/code&gt; файлы, создает заново внутренние таблицы стилей, а затем очищает общий кеш.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
-        <source>Purge the page cache</source>
-        <target>Очистить кеш страниц</target>
+        <source>Purge the shared cache</source>
+        <target>Очистить общий кеш</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.1">
         <source>Removes the cached versions of the front end pages.</source>
@@ -142,8 +142,8 @@
         <target>Создать заново XML файлы</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files (sitemaps and feeds) and then purges the page cache, so there are no links to deleted resources.</source>
-        <target>Создает заново XML-файлы (карты веб-сайта и каналы), а затем очищает кеш страниц, при этом очищаются ссылки на удаленные ресурсы.</target>
+        <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Создает заново XML-файлы (карты веб-сайта и каналы), а затем удаляет общий кеш, чтобы не было ссылок на удаленные ресурсы.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>

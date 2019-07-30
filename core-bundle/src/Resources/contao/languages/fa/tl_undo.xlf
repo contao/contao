@@ -41,21 +41,8 @@
         <source>Raw data of the undo step</source>
         <target>داده‌های خام مرحله خنثی کردن</target>
       </trans-unit>
-      <trans-unit id="tl_undo.show.0">
-        <source>Show details</source>
-        <target>نمایش جزئیات</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.show.1">
-        <source>Show the details of entry ID %s</source>
-        <target>نمایش جزئیات ورودی شناسه‌ی %s</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.undo.0">
-        <source>Restore</source>
-        <target>بازگردانی</target>
-      </trans-unit>
-      <trans-unit id="tl_undo.undo.1">
-        <source>Restore entry ID %s</source>
-        <target>بازیابی ورودی شناسه‌ی %s</target>
+      <trans-unit id="tl_undo.undo">
+        <source>Restore element ID %s</source>
       </trans-unit>
     </body>
   </file>

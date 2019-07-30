@@ -103,20 +103,20 @@
         <target>画像キャッシュの消去</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.1">
-        <source>Removes the automatically generated images and then purges the page cache, so there are no links to deleted resources.</source>
-        <target>自動的に生成した画像とページのキャッシュを削除し、削除したリソースへのリンクはなくなります。</target>
+        <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>自動的に生成した画像を削除し、次に共有キャッシュを消去します。これで削除したリソースへのリンクはなくなります。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
         <target>スクリプトのキャッシュを消去</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
-        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the page cache.</source>
-        <target>自動的に生成した拡張子が&lt;code&gt;.css&lt;/code&gt;と&lt;code&gt;.js&lt;/code&gt;のファイルを削除し、内部のスタイルシートを再作成して、ページキャッシュを消去します。</target>
+        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
+        <target>自動的に生成した拡張子が&lt;code&gt;.css&lt;/code&gt;と&lt;code&gt;.js&lt;/code&gt;のファイルを削除し、内部のスタイルシートを再作成して、そして共有キャッシュを消去します。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
-        <source>Purge the page cache</source>
-        <target>ページキャッシュを消去</target>
+        <source>Purge the shared cache</source>
+        <target>共有キャッシュを消去</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.1">
         <source>Removes the cached versions of the front end pages.</source>
@@ -143,8 +143,8 @@
         <target>XMLファイルを再作成</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files (sitemaps and feeds) and then purges the page cache, so there are no links to deleted resources.</source>
-        <target>XMLファイル(サイトマップとフィード)を再作成してページキャッシュを消去し、削除したリソースへのリンクはなくなります。</target>
+        <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>XMLファイル(サイトマップとフィード)を再作成してページキャッシュを消去します。これで削除したリソースへのリンクはなくなります。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>

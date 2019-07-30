@@ -85,6 +85,14 @@
         <source>Manage user groups (back end user groups)</source>
         <target>Управление группами пользователей (групп пользователей панели управления).</target>
       </trans-unit>
+      <trans-unit id="MOD.opt_in.0">
+        <source>Double opt-in</source>
+        <target>Двойное подтверждение</target>
+      </trans-unit>
+      <trans-unit id="MOD.opt_in.1">
+        <source>Manage the double opt-in tokens</source>
+        <target>Управление токенами двойного подтверждения</target>
+      </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
         <target>Система</target>
@@ -384,6 +392,14 @@
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
         <target>Добавляет RSS-канал на страницу</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.0">
+        <source>Two-factor authentication</source>
+        <target>Двухфакторная авторизация</target>
+      </trans-unit>
+      <trans-unit id="FMD.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication</source>
+        <target>Создает форму для настройки или изменения двухфакторной авторизации</target>
       </trans-unit>
     </body>
   </file>

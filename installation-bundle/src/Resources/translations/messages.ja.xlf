@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
-        <target>セキュリティ上の理由により、連続して3回以上誤ったパスワードを入力した後のインストールツールはロックされています。ロックを解除するにはコマンド行で&lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt;と実行してください。</target>
+        <target>セキュリティ上の理由により、連続して3回以上誤ったパスワードを入力した後のインストールツールはロックされています。Contao Manager、またはコマンド行で&lt;code&gt;contao:install:unlock&lt;/code&gt;を実行してロックを解除できます。</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -383,6 +383,7 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
+        <target>Contaoには少なくともMySQL 5.1.0が必要ですが、 バージョン%sをインストルしてあります。データベースのバージョンを更新してください。</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -392,7 +393,7 @@
       </trans-unit>
       <trans-unit id="79">
         <source>unsupported_collation_explain</source>
-        <target>構成した照合順序&lt;code&gt;%s&lt;/code&gt;をサーバーで利用できません。インストールする(ことをお勧めします)か、&lt;code&gt;app/config/config.yml&lt;/code&gt;ファイルに異なる文字セットと照合順序を設定してください。</target>
+        <target>構成した照合順序&lt;code&gt;%sをサーバーで利用できません。指定した照合順序のインストールする(のを推奨)か、異なる文字セットと照合順序を&lt;code&gt;config/config.yml&lt;/code&gt;ファイルで構成してください。</target>
         
       </trans-unit>
       <trans-unit id="80">
@@ -402,11 +403,12 @@
       </trans-unit>
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
-        <target>構成したデータベースエンジン&lt;code&gt;%s&lt;/code&gt; をサーバーで利用できません。インストールする(ことをお勧めします)か、&lt;code&gt;app/config/config.yml&lt;/code&gt;ファイルに異なるデータベースエンジンを設定してください。</target>
+        <target>構成したデータベースエンジン&lt;code&gt;%s&lt;/code&gt;をサーバーで利用できません。データベースエンジンをインストールする(のを推奨)か、異なるデータベースエンジンを&lt;code&gt;config/config.yml&lt;/code&gt;ファイルで構成してください。</target>
         
       </trans-unit>
       <trans-unit id="82">
         <source>misconfigured_database_url_explain</source>
+        <target>環境変数&lt;code&gt;DATABASE_URL&lt;/code&gt;による接続のURLを使用してデータベースに接続できませんでした。</target>
         
       </trans-unit>
     </body>

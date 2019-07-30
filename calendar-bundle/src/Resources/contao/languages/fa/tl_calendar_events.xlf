@@ -66,15 +66,19 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.pageTitle.0">
         <source>Meta title</source>
+        <target>عنوان متا</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>اینجا می‌توانید عنوان متا دلخواه را برای جایگزینی عنوان برگه‌ی پیش‌فرض اضافه کنید.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
+        <target>توضیحات متا</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>اینجا می‌توانید توضیحات متا دلخواه را برای جایگزینی توضیحات پیش‌فرض برگه اضافه کنید.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>

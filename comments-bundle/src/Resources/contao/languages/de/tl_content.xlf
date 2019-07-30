@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>
-        <target>Kommentar-Einstellungen</target>
+        <target>Kommentareinstellungen</target>
       </trans-unit>
     </body>
   </file>

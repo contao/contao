@@ -193,85 +193,44 @@
         <source>Share on Twitter</source>
         <target>Подели на Twitter</target>
       </trans-unit>
-      <trans-unit id="tl_article.gplus">
-        <source>Share on Google+</source>
-        <target>Подели на Google+</target>
-      </trans-unit>
       <trans-unit id="tl_article.new.0">
-        <source>New article</source>
-        <target>Нови чланак</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
         <target>Креирај нови чланак</target>
       </trans-unit>
-      <trans-unit id="tl_article.show.0">
-        <source>Article details</source>
-        <target>Детаљи чланка</target>
-      </trans-unit>
-      <trans-unit id="tl_article.show.1">
+      <trans-unit id="tl_article.show">
         <source>Show the details of article ID %s</source>
         <target>Прикажи детаље чланка ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.edit.0">
-        <source>Edit article</source>
-        <target>Уреди чланак</target>
-      </trans-unit>
-      <trans-unit id="tl_article.edit.1">
+      <trans-unit id="tl_article.edit">
         <source>Edit article ID %s</source>
         <target>Уреди чланак ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.editheader.0">
-        <source>Edit article</source>
-        <target>Уреди чланак</target>
+      <trans-unit id="tl_article.editheader">
+        <source>Edit the settings of article ID %s</source>
+        <target>Уреди подешавања чланка ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.editheader.1">
-        <source>Edit the article settings</source>
-        <target>Уреди подешавања чланка</target>
-      </trans-unit>
-      <trans-unit id="tl_article.copy.0">
-        <source>Duplicate article</source>
-        <target>Копирај чланак</target>
-      </trans-unit>
-      <trans-unit id="tl_article.copy.1">
+      <trans-unit id="tl_article.copy">
         <source>Duplicate article ID %s</source>
         <target>Копирај чланак ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.cut.0">
-        <source>Move article</source>
-        <target>Помери чланак</target>
-      </trans-unit>
-      <trans-unit id="tl_article.cut.1">
+      <trans-unit id="tl_article.cut">
         <source>Move article ID %s</source>
         <target>Помери чланак ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.delete.0">
-        <source>Delete article</source>
-        <target>Обриши чланак</target>
-      </trans-unit>
-      <trans-unit id="tl_article.delete.1">
+      <trans-unit id="tl_article.delete">
         <source>Delete article ID %s</source>
         <target>Обриши чланак ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.toggle.0">
-        <source>Publish/unpublish article</source>
-        <target>Објави/сакриј чланак</target>
-      </trans-unit>
-      <trans-unit id="tl_article.toggle.1">
+      <trans-unit id="tl_article.toggle">
         <source>Publish/unpublish article ID %s</source>
         <target>Објави/сакриј чланак ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_article.pasteafter.0">
-        <source>Paste after</source>
-        <target>Налепи после</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
         <target>Налепи после чланка ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_article.pasteinto.0">
-        <source>Paste into</source>
-        <target>Налепи у</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>

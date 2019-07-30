@@ -41,6 +41,22 @@
         <source>Please enter the time according to the global time format.</source>
         <target>Zadejte prosím čas podle globálně platných formátů.</target>
       </trans-unit>
+      <trans-unit id="tl_news.pageTitle.0">
+        <source>Meta title</source>
+        <target>Název pro meta údaj</target>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Zde můžete přidat vlastní název události a tím přepsat výše uvedený. </target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.0">
+        <source>Meta description</source>
+        <target>Popis pro meta údaj</target>
+      </trans-unit>
+      <trans-unit id="tl_news.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Zde můžete přidat vlastní popis události a tím přepsat výchozí popis, který se běžně vytváří z úvodníku události. Zobrazí se jen jako informace ve zdrojovém kódu dané stránky.</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>Podnadpis</target>
@@ -209,6 +225,10 @@
         <source>Date and time</source>
         <target>Datum a čas</target>
       </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta informace</target>
+      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Podnadpis a ukázka</target>
@@ -238,92 +258,46 @@
         <target>Zveřejnění</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
-        <source>New item</source>
-        <target>Nový příspěvek</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
         <target>Vytvořit nový příspěvek</target>
       </trans-unit>
-      <trans-unit id="tl_news.show.0">
-        <source>Item details</source>
-        <target>Podrobnosti k danému příspěvku</target>
-      </trans-unit>
-      <trans-unit id="tl_news.show.1">
+      <trans-unit id="tl_news.show">
         <source>Show the details of news item ID %s</source>
         <target>Zobrazit podrobnosti k příspěvku ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.edit.0">
-        <source>Edit item</source>
-        <target>Upravit</target>
-      </trans-unit>
-      <trans-unit id="tl_news.edit.1">
+      <trans-unit id="tl_news.edit">
         <source>Edit news item ID %s</source>
         <target>Upravit příspěvek ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.copy.0">
-        <source>Duplicate item</source>
-        <target>Duplikovat příspěvek</target>
-      </trans-unit>
-      <trans-unit id="tl_news.copy.1">
+      <trans-unit id="tl_news.copy">
         <source>Duplicate news item ID %s</source>
         <target>Duplikovat příspěvek ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.cut.0">
-        <source>Move item</source>
-        <target>Přesunout</target>
-      </trans-unit>
-      <trans-unit id="tl_news.cut.1">
+      <trans-unit id="tl_news.cut">
         <source>Move news item ID %s</source>
         <target>Přesunout příspěvek ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.delete.0">
-        <source>Delete item</source>
-        <target>Smazat</target>
-      </trans-unit>
-      <trans-unit id="tl_news.delete.1">
+      <trans-unit id="tl_news.delete">
         <source>Delete news item ID %s</source>
         <target>Smazat příspěvek ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.toggle.0">
-        <source>Publish/unpublish item</source>
-        <target>Publikovat/nepublikovat</target>
-      </trans-unit>
-      <trans-unit id="tl_news.toggle.1">
+      <trans-unit id="tl_news.toggle">
         <source>Publish/unpublish news item ID %s</source>
         <target>Publikovat/nepublikovat příspěvek ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.feature.0">
-        <source>Feature/unfeature item</source>
-        <target>Zvýraznit/zrušit zvýraznění příspěvku</target>
-      </trans-unit>
-      <trans-unit id="tl_news.feature.1">
+      <trans-unit id="tl_news.feature">
         <source>Feature/unfeature news item ID %s</source>
         <target>Zvýraznit/zrušit zvýraznění příspěvku ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.editheader.0">
-        <source>Edit archive</source>
-        <target>Upravit archiv</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editheader.1">
-        <source>Edit the news archive settings</source>
-        <target>Upravit nastavení archivu novinek</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta.0">
-        <source>Edit item settings</source>
-        <target>Upravit nastavení příspěvku</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta.1">
-        <source>Edit the news item settings</source>
-        <target>Upravit nastavení příspěvku novinek</target>
+      <trans-unit id="tl_news.editheader">
+        <source>Edit the settings of news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Vložit do tohto archivu</target>
-      </trans-unit>
-      <trans-unit id="tl_news.pasteafter.1">
-        <source>Paste after news item ID %s</source>
-        <target>Vložit za příspěvek novinky ID %s</target>
       </trans-unit>
     </body>
   </file>

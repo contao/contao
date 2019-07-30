@@ -1,14 +1,6 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_settings.php" source-language="en" target-language="it">
     <body>
-      <trans-unit id="tl_settings.websiteTitle.0">
-        <source>Website title</source>
-        <target>Titolo sito web</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.websiteTitle.1">
-        <source>Please enter the title of the website.</source>
-        <target>Inserisci il titolo del sito.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.adminEmail.0">
         <source>E-mail address of the system administrator</source>
         <target>Indirizzo e-mail dell'amministratore di sistema</target>
@@ -49,14 +41,6 @@
         <source>Please select the server time zone.</source>
         <target>Seleziona il tuo fuso orario.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.characterSet.0">
-        <source>Character set</source>
-        <target>Charset</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.characterSet.1">
-        <source>It is recommended to use UTF-8, so special characters are displayed correctly.</source>
-        <target>Inserisci il charset. Si raccomanda di utilizzare UTF-8 per assicurarsi che i caratteri particolari siano visualizzati correttamente. Non modificare il charset a meno che non riscontri errori di visualizzazione.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.disableCron.0">
         <source>Disable the command scheduler</source>
         <target>Disabilita il comando di scheduler</target>
@@ -64,22 +48,6 @@
       <trans-unit id="tl_settings.disableCron.1">
         <source>Disable the periodic command scheduler and trigger the &lt;em&gt;_contao/cron&lt;/em&gt; route by a real cron job (which you have to set up manually).</source>
         <target>Disabilita il comando scheduler periodico  ed esegui lo script  &lt;em&gt;_contao/cron&lt;/em&gt; tramite un un reale cron job (occorre impostare manualmente il job).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.minifyMarkup.0">
-        <source>Minify the markup</source>
-        <target>Minimizza il codice html</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.minifyMarkup.1">
-        <source>Minify the HTML markup before it is sent to the browser.</source>
-        <target>Minimizza il codice HTML prima che la pagina venga inviata al browser.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gzipScripts.0">
-        <source>Compress scripts</source>
-        <target>Compressione degli script</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.gzipScripts.1">
-        <source>Create a compressed version of the combined CSS and JavaScript files. Requires adjustments of the .htaccess file.</source>
-        <target>Crea una versione compressa dei file CSS e JavaScript. Occorre adeguare il file .htaccess</target>
       </trans-unit>
       <trans-unit id="tl_settings.resultsPerPage.0">
         <source>Items per page</source>
@@ -97,14 +65,6 @@
         <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
         <target>Questo limite viene utilizzato quando l'utente sceglie l'opzione &quot;mostra tutti i record&quot;</target>
       </trans-unit>
-      <trans-unit id="tl_settings.fileSyncExclude.0">
-        <source>Exclude folders from synchronization</source>
-        <target>Escludi cartelle dalla sincronizzazione</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.fileSyncExclude.1">
-        <source>Here you can enter a comma separated list of folders which will be exempt from the files synchronization (e.g. &lt;em&gt;attachments,music_academy&lt;/em&gt;). Note that excluded resources cannot be used in e.g. image or download elements!</source>
-        <target>Qui puoi inserire un elenco separato da virgole di cartelle che saranno escluse dalla sincronizzazione dei file (ad esempio &lt;em&gt;allegati, music_academy&lt;/em&gt;). Le risorse che verranno escluse non potranno essere utilizzate ad esempio negli elementi immagine o negli elementi download!</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotCollapse.0">
         <source>Do not collapse elements</source>
         <target>Non chiudere gli elementi</target>
@@ -113,14 +73,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>Non chiudere gli elementi e le altre risorse una volta visti in anteprima nel backend.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.sslProxyDomain.0">
-        <source>SSL proxy domain</source>
-        <target>Dominio SSL proxy</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sslProxyDomain.1">
-        <source>If your website is available via an SSL proxy server, please enter its domain here (e.g. &lt;em&gt;sslsites.de&lt;/em&gt;).</source>
-        <target>Se il tuo sito è disponibile attraverso un server proxy SSL, puoi indicare il dominio qui, es. &lt;em&gt;sslsites.it&lt;/em&gt;.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
         <target>Non reindirizzare gli URL vuoti</target>
@@ -128,14 +80,6 @@
       <trans-unit id="tl_settings.doNotRedirectEmpty.1">
         <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
         <target>In caso un URL sia vuoto mostra il sito invece di effettuare il reindirizzamento alla pagina root della lingua (non raccomandato)</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.useAutoItem.0">
-        <source>Enable auto_item</source>
-        <target>Utilizza il parametro auto_item</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.useAutoItem.1">
-        <source>Skip the &lt;em&gt;items/&lt;/em&gt; or &lt;em&gt;events/&lt;/em&gt; fragment in the URL and automatically discover the item based on the &lt;em&gt;auto_item&lt;/em&gt; parameter.</source>
-        <target>Non inserire &lt;em&gt;items/&lt;/em&gt; o &lt;em&gt;events/&lt;/em&gt; negli URL e rileva automaticamente il tipo di elemento basandosi sul parametro &lt;em&gt;auto_item&lt;/em&gt;</target>
       </trans-unit>
       <trans-unit id="tl_settings.folderUrl.0">
         <source>Enable folder URLs</source>
@@ -168,22 +112,6 @@
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
         <target>Inserisci una lista separata da virgole delle estensioni dei file che è possibile scaricare. Per motivi di sicurezza lo scaricamento dei file è limitato alla cartella dei files e alle sottocartelle.</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.editableFiles.0">
-        <source>Editable file types</source>
-        <target>Tipi di file modificabili</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.editableFiles.1">
-        <source>Here you can enter a comma separated list of file types that can be edited in the source editor.</source>
-        <target>Inserire una lista separata da virgole delle estensioni dei tipi di file che possono essere modificati tramite l'editor interno di Contao</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.templateFiles.0">
-        <source>Template file types</source>
-        <target>Tipo file per i template</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.templateFiles.1">
-        <source>Here you can enter a comma separated list of supported template file types.</source>
-        <target>Qui è possibile inserire la lista delle estensioni, separati da virgola, utilizzati per i file template.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -249,38 +177,6 @@
         <source>Use this option carefully and always exclude personalized pages from being indexed!</source>
         <target>Utilizza questa opzione con attenzione. Comunque si suggerisce di escludere sempre le pagine personali dall'indicizzazione</target>
       </trans-unit>
-      <trans-unit id="tl_settings.undoPeriod.0">
-        <source>Storage time for undo steps</source>
-        <target>Arco di tempo in cui vengono memorizzati i livelli di annullamento</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.undoPeriod.1">
-        <source>Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).</source>
-        <target>Inserisci l'arco di tempo in cui vengono memorizzati i livelli di annullamento in secondi (default: 24 ore = 86400 secondi).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.versionPeriod.0">
-        <source>Storage time for versions</source>
-        <target>Arco di tempo in cui vengono memorizzate le diverse versioni</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.versionPeriod.1">
-        <source>Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).</source>
-        <target>Inserisci l'arco di tempo in cui vengono memorizzate le diverse versioni in secondi (default: 90 giorni = 7776000 secondi).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.logPeriod.0">
-        <source>Storage time for log entries</source>
-        <target>Arco di tempo in cui vengono memorizzati i logs</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.logPeriod.1">
-        <source>Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).</source>
-        <target>Inserisci Arco di tempo in cui vengono memorizzati i dati di log in secondi (default: 14 giorni = 1209600 secondi).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sessionTimeout.0">
-        <source>Session timeout</source>
-        <target>Durata sessione</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.sessionTimeout.1">
-        <source>Here you can enter the maximum lifetime of a session in seconds (60 minutes = 3600 seconds).</source>
-        <target>Inserisci la durata massima di una sessione in secondi (default: 60 minuti = 3600 secondi). Se non c'è alcun input dall'utente per più secondi di quelli indicati la sessione attuale verrà cancellata e l'utente dovrà rifare il login.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
         <target>Utente di default</target>
@@ -305,10 +201,6 @@
         <source>Please assign the default access rights for pages and articles.</source>
         <target>Una pagina utilizza gli stessi permessi della pagina genitore. Tuttavia se non è stato definito alcun permesso verranno utilizzati questi permessi di default.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.title_legend">
-        <source>Website title</source>
-        <target>Titolo sito web</target>
-      </trans-unit>
       <trans-unit id="tl_settings.date_legend">
         <source>Date and time</source>
         <target>Data e tempo</target>
@@ -325,10 +217,6 @@
         <source>Front end configuration</source>
         <target>Configurazione frontend</target>
       </trans-unit>
-      <trans-unit id="tl_settings.proxy_legend">
-        <source>Proxy configuration</source>
-        <target>Configurazione proxy</target>
-      </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>
         <target>Configurazione di sicurezza</target>
@@ -341,21 +229,17 @@
         <source>Upload settings</source>
         <target>Impostazioni upload</target>
       </trans-unit>
+      <trans-unit id="tl_settings.cron_legend">
+        <source>Cron job settings</source>
+        <target>Impostazioni del job Cron</target>
+      </trans-unit>
       <trans-unit id="tl_settings.search_legend">
         <source>Search engine settings</source>
         <target>Impostazione motore di ricerca interno</target>
       </trans-unit>
-      <trans-unit id="tl_settings.timeout_legend">
-        <source>Timeout values</source>
-        <target>Valori di timeout</target>
-      </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>Diritti di accesso predefiniti</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.edit">
-        <source>Edit the local configuration</source>
-        <target>Modifica la configurazione locale</target>
       </trans-unit>
     </body>
   </file>

@@ -41,6 +41,18 @@
         <source>Please enter the time according to the global time format.</source>
         <target>请根据全球时间格式输入时间。</target>
       </trans-unit>
+      <trans-unit id="tl_news.pageTitle.0">
+        <source>Meta title</source>
+      </trans-unit>
+      <trans-unit id="tl_news.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+      </trans-unit>
+      <trans-unit id="tl_news.description.0">
+        <source>Meta description</source>
+      </trans-unit>
+      <trans-unit id="tl_news.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>副标题</target>
@@ -209,6 +221,10 @@
         <source>Date and time</source>
         <target>日期与时间</target>
       </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta数据</target>
+      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>子标题和预告内容</target>
@@ -238,92 +254,46 @@
         <target>发布设置</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
-        <source>New item</source>
-        <target>新记录</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
         <target>创建一条新的新闻记录</target>
       </trans-unit>
-      <trans-unit id="tl_news.show.0">
-        <source>Item details</source>
-        <target>记录详情</target>
-      </trans-unit>
-      <trans-unit id="tl_news.show.1">
+      <trans-unit id="tl_news.show">
         <source>Show the details of news item ID %s</source>
         <target>显示ID为%s的新闻详情</target>
       </trans-unit>
-      <trans-unit id="tl_news.edit.0">
-        <source>Edit item</source>
-        <target>编辑记录</target>
-      </trans-unit>
-      <trans-unit id="tl_news.edit.1">
+      <trans-unit id="tl_news.edit">
         <source>Edit news item ID %s</source>
         <target>编辑ID为%s的新闻记录</target>
       </trans-unit>
-      <trans-unit id="tl_news.copy.0">
-        <source>Duplicate item</source>
-        <target>复制记录</target>
-      </trans-unit>
-      <trans-unit id="tl_news.copy.1">
+      <trans-unit id="tl_news.copy">
         <source>Duplicate news item ID %s</source>
         <target>复制ID为%s的新闻记录</target>
       </trans-unit>
-      <trans-unit id="tl_news.cut.0">
-        <source>Move item</source>
-        <target>移动记录</target>
-      </trans-unit>
-      <trans-unit id="tl_news.cut.1">
+      <trans-unit id="tl_news.cut">
         <source>Move news item ID %s</source>
         <target>移动ID为%s的新闻记录</target>
       </trans-unit>
-      <trans-unit id="tl_news.delete.0">
-        <source>Delete item</source>
-        <target>删除记录</target>
-      </trans-unit>
-      <trans-unit id="tl_news.delete.1">
+      <trans-unit id="tl_news.delete">
         <source>Delete news item ID %s</source>
         <target>删除ID为%s的新闻记录</target>
       </trans-unit>
-      <trans-unit id="tl_news.toggle.0">
-        <source>Publish/unpublish item</source>
-        <target>发布/取消记录</target>
-      </trans-unit>
-      <trans-unit id="tl_news.toggle.1">
+      <trans-unit id="tl_news.toggle">
         <source>Publish/unpublish news item ID %s</source>
         <target>发布/取消ID为%s的新闻记录</target>
       </trans-unit>
-      <trans-unit id="tl_news.feature.0">
-        <source>Feature/unfeature item</source>
-        <target>精选/取消精选记录</target>
-      </trans-unit>
-      <trans-unit id="tl_news.feature.1">
+      <trans-unit id="tl_news.feature">
         <source>Feature/unfeature news item ID %s</source>
         <target>精选/取消精选ID为%s的新闻记录</target>
       </trans-unit>
-      <trans-unit id="tl_news.editheader.0">
-        <source>Edit archive</source>
-        <target>编辑存档</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editheader.1">
-        <source>Edit the news archive settings</source>
-        <target>编辑新闻存档设置</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta.0">
-        <source>Edit item settings</source>
-        <target>编辑记录设置</target>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta.1">
-        <source>Edit the news item settings</source>
-        <target>编辑新闻记录设置</target>
+      <trans-unit id="tl_news.editheader">
+        <source>Edit the settings of news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>粘贴到这个新闻存档</target>
-      </trans-unit>
-      <trans-unit id="tl_news.pasteafter.1">
-        <source>Paste after news item ID %s</source>
-        <target>粘贴到ID为%s的新闻记录之后</target>
       </trans-unit>
     </body>
   </file>

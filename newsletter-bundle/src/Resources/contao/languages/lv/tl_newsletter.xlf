@@ -110,8 +110,8 @@
         <target>Kompensācija (Offset)</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
-        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent in the &lt;em&gt;newsletter_%s.log&lt;/em&gt; file. E.g., if 120 mails have been sent, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
-        <target>Gadījumā, ja nosūtīšanas process ir pārtraukts, jūs varat šeit ievadīt skaitlisku kompensāciju, lai turpinātu ar konkrētu adresātu. Jūs varat pārbaudīt, cik daudzas vēstules ir nosūtītas  &lt;em&gt;newsletter_%s.log&lt;/em&gt; failā. Piem. ja nosūtīti 120 e-pasti, ievadiet &quot;120&quot;, lai turpinātu ar 121. adresātu (skaitīšana sākas ar 0).</target>
+        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
+        <target>Ja nosūtīšanas process tiek pārtraukts, šeit varat ievadīt skaitlisku nobīdi, lai turpinātu ar konkrētu adresātu. Jūs varat pārbaudīt, cik sūtījumu ir nosūtīts, izvēloties kategoriju &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; sistēmas žurnālā. Ja ir 120 ieraksti, ievadiet &quot;120&quot;, lai turpinātu ar 121. adresātu (skaitīšana sākas ar 0).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendPreviewTo.0">
         <source>Send preview to</source>
@@ -194,76 +194,39 @@
         <target>Vai tiešām vēlaties nosūtīt apkārtrakstu?</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
-        <source>New newsletter</source>
-        <target>Jauns apkārtraksts</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
         <target>Izveidot jaunu apkārtrakstu</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.show.0">
-        <source>Newsletter details</source>
-        <target>Apkārtraksta detaļas</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.show.1">
+      <trans-unit id="tl_newsletter.show">
         <source>Show the details of newsletter ID %s</source>
         <target>Parādīt apkārtraksta ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.edit.0">
-        <source>Edit newsletter</source>
-        <target>Rediģēt apkārtrakstu</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.edit.1">
+      <trans-unit id="tl_newsletter.edit">
         <source>Edit newsletter ID %s</source>
         <target>Rediģēt apkārtrakstu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.copy.0">
-        <source>Duplicate newsletter</source>
-        <target>Dublēt apkārtrakstu</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.copy.1">
+      <trans-unit id="tl_newsletter.copy">
         <source>Duplicate newsletter ID %s</source>
         <target>Dublēt apkārtrakstu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.cut.0">
-        <source>Move newsletter</source>
-        <target>Pārvietot apkārtrakstu</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.cut.1">
+      <trans-unit id="tl_newsletter.cut">
         <source>Move newsletter ID %s</source>
         <target>Pārvietot apkārtrakstu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.delete.0">
-        <source>Delete newsletter</source>
-        <target>Dzēst apkārtrakstu</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.delete.1">
+      <trans-unit id="tl_newsletter.delete">
         <source>Delete newsletter ID %s</source>
         <target>Dzēst apkārtrakstu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.0">
-        <source>Edit channel</source>
-        <target>Rediģēt kanālu</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.editheader.1">
-        <source>Edit the channel settings</source>
-        <target>Rediģēt kanāla uzstādījumus</target>
+      <trans-unit id="tl_newsletter.send">
+        <source>Send newsletter ID %s</source>
+        <target>Sūtīt apkārtrakstu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>
         <target>Ielīmēt šajā kanāla</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.pasteafter.1">
-        <source>Paste after newsletter ID %s</source>
-        <target>Ielīmēt aiz apkārtraksta ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.send.0">
-        <source>Send newsletter</source>
-        <target>Sūtīt apkārtrakstu</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.send.1">
-        <source>Send newsletter ID %s</source>
-        <target>Sūtīt apkārtrakstu ID %s</target>
       </trans-unit>
     </body>
   </file>

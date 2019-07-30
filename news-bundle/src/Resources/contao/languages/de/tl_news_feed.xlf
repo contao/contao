@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.source.0">
         <source>Export settings</source>
-        <target>Export-Einstellungen</target>
+        <target>Exporteinstellungen</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.source.1">
         <source>Here you can choose what will be exported.</source>
@@ -94,42 +94,26 @@
         <target>Ganze Beiträge</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.0">
-        <source>New feed</source>
-        <target>Neuer Feed</target>
+        <source>New</source>
+        <target>Neu</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.1">
         <source>Create a new feed</source>
         <target>Einen neuen Feed erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.show.0">
-        <source>Feed details</source>
-        <target>Feeddetails</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.show.1">
+      <trans-unit id="tl_news_feed.show">
         <source>Show the details of feed ID %s</source>
-        <target>Die Details des Feeds ID %s anzeigen</target>
+        <target>Details des Feeds ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.edit.0">
-        <source>Edit feed</source>
-        <target>Feed bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.edit.1">
+      <trans-unit id="tl_news_feed.edit">
         <source>Edit feed ID %s</source>
         <target>Feed ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.copy.0">
-        <source>Duplicate feed</source>
-        <target>Feed duplizieren</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.copy.1">
+      <trans-unit id="tl_news_feed.copy">
         <source>Duplicate feed ID %s</source>
         <target>Feed ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_news_feed.delete.0">
-        <source>Delete feed</source>
-        <target>Feed löschen</target>
-      </trans-unit>
-      <trans-unit id="tl_news_feed.delete.1">
+      <trans-unit id="tl_news_feed.delete">
         <source>Delete feed ID %s</source>
         <target>Feed ID %s löschen</target>
       </trans-unit>

@@ -194,50 +194,29 @@
         <target>Předloha komentáře</target>
       </trans-unit>
       <trans-unit id="tl_form.new.0">
-        <source>New form</source>
-        <target>Nový formulář</target>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
         <target>Vytvořit nový formulář</target>
       </trans-unit>
-      <trans-unit id="tl_form.show.0">
-        <source>Form details</source>
-        <target>Zobrazit podrobnosti</target>
-      </trans-unit>
-      <trans-unit id="tl_form.show.1">
+      <trans-unit id="tl_form.show">
         <source>Show the details of form ID %s</source>
         <target>Zobrazit podrobnosti k formůláři ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.edit.0">
-        <source>Edit form</source>
-        <target>Upravit formulář</target>
-      </trans-unit>
-      <trans-unit id="tl_form.edit.1">
+      <trans-unit id="tl_form.edit">
         <source>Edit form ID %s</source>
         <target>Editovat formulář ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.0">
-        <source>Edit form</source>
-        <target>Upravit formulář</target>
+      <trans-unit id="tl_form.editheader">
+        <source>Edit the settings of form ID %s</source>
+        <target>Upravit nastavení formuláře ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.editheader.1">
-        <source>Edit the form settings</source>
-        <target>Nastavit formulář</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.0">
-        <source>Duplicate form</source>
-        <target>Duplikovat formulář</target>
-      </trans-unit>
-      <trans-unit id="tl_form.copy.1">
+      <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>
         <target>Duplikovat formulář ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.delete.0">
-        <source>Delete form</source>
-        <target>Smazat formulář</target>
-      </trans-unit>
-      <trans-unit id="tl_form.delete.1">
+      <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
         <target>Smazat formulář ID %s</target>
       </trans-unit>
