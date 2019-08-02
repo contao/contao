@@ -178,6 +178,13 @@ class RouteProviderTest extends TestCase
         $this->assertEmpty($this->getRouteProvider()->getRouteCollectionForRequest($request));
     }
 
+    public function testReturnsAnEmptyCollectionIfThePathContainsPercentageCharacter(): void
+    {
+        $request = $this->mockRequestWithPath('/drachenlochmuseum-v%25c3%25a4ttis.html');
+
+        $this->assertEmpty($this->getRouteProvider()->getRouteCollectionForRequest($request));
+    }
+
     public function testReturnsAnEmptyCollectionIfTheUrlSuffixDoesNotMatch(): void
     {
         $request = $this->mockRequestWithPath('/foo.php');
