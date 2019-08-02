@@ -66,7 +66,7 @@ class RouteProvider implements RouteProviderInterface
 
         $pathInfo = rawurldecode($request->getPathInfo());
 
-        // The request string must not contain "auto_item" (see #4012) or a percentage character
+        // The request string must not contain "auto_item" (see #4012) or a percentage character (which means it was double encoded (see #619))
         if (false !== strpos($pathInfo, '/auto_item/') || false !== strpos($pathInfo, '%')) {
             return new RouteCollection();
         }

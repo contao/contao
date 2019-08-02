@@ -182,7 +182,7 @@ class RouteProviderTest extends TestCase
     {
         $request = $this->mockRequestWithPath('/drachenlochmuseum-v%25c3%25a4ttis.html');
 
-        $this->assertEmpty($this->getRouteProvider()->getRouteCollectionForRequest($request));
+        $this->assertEmpty($this->mockRouteProvider()->getRouteCollectionForRequest($request));
     }
 
     public function testReturnsAnEmptyCollectionIfTheUrlSuffixDoesNotMatch(): void
