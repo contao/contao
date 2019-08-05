@@ -77,15 +77,9 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     {
         $cacheDir = $this->cacheDir ?: $this->kernel->getCacheDir().'/http_cache';
 
-        if (PhpFilesAdapter::isSupported()) {
-            $itemsCache = new PhpFilesAdapter('', 0, $cacheDir);
-        } else {
-            $itemsCache = new FilesystemAdapter('', 0, $cacheDir);
-        }
-
         return new Psr6Store([
             'cache_directory' => $cacheDir,
-            'cache' => new TagAwareAdapter($itemsCache),
+            'cache' => new TagAwareAdapter(new FilesystemAdapter('', 0, $cacheDir)),
             'cache_tags_header' => TagHeaderFormatter::DEFAULT_HEADER_NAME,
             'prune_threshold' => 5000,
         ]);
