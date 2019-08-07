@@ -37,7 +37,13 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         $this->addSectionToTemplate($template, $section);
         $this->tagResponse(['contao.db.tl_module.'.$model->id]);
 
-        return $this->getResponse($template, $model, $request);
+        $response = $this->getResponse($template, $model, $request);
+
+        if (null === $response) {
+            $response = new Response($template->parse());
+        }
+
+        return $response;
     }
 
     /**
@@ -69,8 +75,8 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         $template->link = $module->name;
         $template->href = $href;
 
-        return $template->getResponse();
+        return new Response($template->parse());
     }
 
-    abstract protected function getResponse(Template $template, ModuleModel $model, Request $request): Response;
+    abstract protected function getResponse(Template $template, ModuleModel $model, Request $request): ?Response;
 }
