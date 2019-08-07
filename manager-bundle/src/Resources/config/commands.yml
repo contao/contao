@@ -6,3 +6,10 @@ services:
         class: Contao\ManagerBundle\Command\InstallWebDirCommand
         arguments:
             - '%kernel.project_dir%'
+
+    contao.command.debug-plugins:
+        class: Contao\ManagerBundle\Command\DebugPluginsCommand
+        arguments:
+            - '@contao_manager.plugin_loader'
+            - '@kernel'
+            - '%kernel.project_dir%'
