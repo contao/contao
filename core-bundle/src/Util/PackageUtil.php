@@ -51,4 +51,16 @@ class PackageUtil
     {
         return ltrim(strstr($version, '@', true), 'v');
     }
+
+    /**
+     * Returns the contao/core-bundle or contao/contao version.
+     */
+    public static function getContaoVersion(): string
+    {
+        try {
+            return static::getVersion('contao/core-bundle');
+        } catch (\OutOfBoundsException $e) {
+            return static::getVersion('contao/contao');
+        }
+    }
 }

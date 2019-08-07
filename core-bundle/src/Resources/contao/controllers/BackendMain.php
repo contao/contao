@@ -108,14 +108,7 @@ class BackendMain extends Backend
 	 */
 	public function run()
 	{
-		try
-		{
-			$version = PackageUtil::getVersion('contao/core-bundle');
-		}
-		catch (\OutOfBoundsException $e)
-		{
-			$version = PackageUtil::getVersion('contao/contao');
-		}
+		$version = PackageUtil::getContaoVersion();
 
 		$this->Template = new BackendTemplate('be_main');
 		$this->Template->version = $version;
