@@ -63,7 +63,8 @@ class Encryption
 
 			return $varValue;
 		}
-		elseif ($varValue == '')
+
+		if ($varValue == '')
 		{
 			return '';
 		}
@@ -108,7 +109,8 @@ class Encryption
 
 			return $varValue;
 		}
-		elseif ($varValue == '')
+
+		if ($varValue == '')
 		{
 			return '';
 		}
@@ -186,15 +188,18 @@ class Encryption
 		{
 			return true;
 		}
-		elseif (strncmp($strHash, '$2a$', 4) === 0)
+
+		if (strncmp($strHash, '$2a$', 4) === 0)
 		{
 			return true;
 		}
-		elseif (strncmp($strHash, '$6$', 3) === 0)
+
+		if (strncmp($strHash, '$6$', 3) === 0)
 		{
 			return true;
 		}
-		elseif (strncmp($strHash, '$5$', 3) === 0)
+
+		if (strncmp($strHash, '$5$', 3) === 0)
 		{
 			return true;
 		}

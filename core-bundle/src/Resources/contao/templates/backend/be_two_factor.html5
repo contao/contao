@@ -46,7 +46,7 @@
   <?php else: ?>
     <p><?= $this->explain ?></p>
     <div class="tl_submit_container">
-      <a href="<?= $this->route('contao_backend', ['do'=>'security', 'act'=>'enable', 'ref'=>$this->ref]) ?>" class="tl_submit"><?= $this->enableButton ?></a>
+      <a href="<?= $this->route('contao_backend', ['do' => 'security', 'act' => 'enable', 'ref' => $this->ref]) ?>" class="tl_submit"><?= $this->enableButton ?></a>
     </div>
   <?php endif; ?>
 

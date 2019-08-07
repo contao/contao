@@ -1850,13 +1850,13 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 				foreach ($boxes[$k] as $kk=>$vv)
 				{
-					if (preg_match('/^\[.*\]$/', $vv))
+					if (preg_match('/^\[.*]$/', $vv))
 					{
 						++$eCount;
 						continue;
 					}
 
-					if (preg_match('/^\{.*\}$/', $vv))
+					if (preg_match('/^{.*}$/', $vv))
 					{
 						$legends[$k] = substr($vv, 1, -1);
 						unset($boxes[$k][$kk]);
@@ -1934,7 +1934,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						continue;
 					}
 
-					if (preg_match('/^\[.*\]$/', $vv))
+					if (preg_match('/^\[.*]$/', $vv))
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$arrAjax[$thisId] = '';
@@ -2421,10 +2421,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 						continue;
 					}
 
-					if (preg_match('/^\[.*\]$/', $v))
+					if (preg_match('/^\[.*]$/', $v))
 					{
 						$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
-						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : false;
+						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
 						$return .= "\n  " . '<div id="'.$thisId.'" class="subpal cf">';
 
 						continue;
@@ -3889,7 +3889,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Check whether the page is protected
 		if ($table == 'tl_page')
 		{
-			$blnProtected = ($objRow->protected || $protectedPage) ? true : false;
+			$blnProtected = ($objRow->protected || $protectedPage);
 		}
 
 		$session[$node][$id] = (\is_int($session[$node][$id])) ? $session[$node][$id] : 0;
@@ -3959,7 +3959,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$label = trim(StringUtil::substrHtml($label, $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'])) . ' …';
 		}
 
-		$label = preg_replace('/\(\) ?|\[\] ?|\{\} ?|<> ?/', '', $label);
+		$label = preg_replace('/\(\) ?|\[] ?|{} ?|<> ?/', '', $label);
 
 		// Call the label_callback ($row, $label, $this)
 		if (\is_array($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback']))
@@ -4083,7 +4083,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				for ($k=0, $c=\count($childs); $k<$c; $k++)
 				{
-					$return .= $this->generateTree($table, $childs[$k], array('p'=>$childs[($k-1)], 'n'=>$childs[($k+1)]), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $childs[$k] == $arrClipboard['id']) || $blnCircularReference) ? true : false), ($blnProtected || $protectedPage), $blnNoRecursion, $arrFound);
+					$return .= $this->generateTree($table, $childs[$k], array('p'=>$childs[($k-1)], 'n'=>$childs[($k+1)]), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $childs[$k] == $arrClipboard['id']) || $blnCircularReference), ($blnProtected || $protectedPage), $blnNoRecursion, $arrFound);
 				}
 			}
 
@@ -4136,12 +4136,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
 		$labelPasteNew = $GLOBALS['TL_LANG'][$this->strTable]['pastenew'] ?? $GLOBALS['TL_LANG']['DCA']['pastenew'];
 		$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
-		$labelEditHeader = $GLOBALS['TL_LANG'][$this->strTable]['editheader'] ?? $GLOBALS['TL_LANG']['DCA']['editheader'];
-
-		if (isset($GLOBALS['TL_LANG'][$this->ptable]['editmeta']))
-		{
-			$labelEditHeader = $GLOBALS['TL_LANG'][$this->ptable]['editmeta'];
-		}
+		$labelEditHeader = $GLOBALS['TL_LANG'][$this->ptable]['editmeta'] ?? $GLOBALS['TL_LANG'][$this->strTable]['editheader'] ?? $GLOBALS['TL_LANG']['DCA']['editheader'];
 
 		$return = Message::generate() . '
 <div id="tl_buttons">' . (Input::get('nb') ? '&nbsp;' : ($this->ptable ? '
@@ -4474,7 +4469,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 
 					$return .= '
-<div class="tl_content'.($blnWrapperStart ? ' wrapper_start' : '').($blnWrapperSeparator ? ' wrapper_separator' : '').($blnWrapperStop ? ' wrapper_stop' : '').($blnIndent ? ' indent indent_'.$intWrapLevel : '').($blnIndentFirst ? ' indent_first' : '').($blnIndentLast ? ' indent_last' : '').(($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] != '') ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '').(($i%2 == 0) ? ' even' : ' odd').' click2edit toggle_select hover-div">
+<div class="tl_content'.($blnWrapperStart ? ' wrapper_start' : '').($blnWrapperSeparator ? ' wrapper_separator' : '').($blnWrapperStop ? ' wrapper_stop' : '').($blnIndent ? ' indent indent_'.$intWrapLevel : '').($blnIndentFirst ? ' indent_first' : '').($blnIndentLast ? ' indent_last' : '').(!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '').(($i%2 == 0) ? ' even' : ' odd').' click2edit toggle_select hover-div">
 <div class="tl_content_right">';
 
 					// Opening wrappers
@@ -4947,7 +4942,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				// Remove empty brackets (), [], {}, <> and empty tags from the label
-				$label = preg_replace('/\( *\) ?|\[ *\] ?|\{ *\} ?|< *> ?/', '', $label);
+				$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
 				$label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
 
 				// Build the sorting groups
@@ -5218,7 +5213,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		// Sort by option values
 		$options_sorter = natcaseksort($options_sorter);
-		$active = ($session['search'][$this->strTable]['value'] != '') ? true : false;
+		$active = isset($session['search'][$this->strTable]['value']);
 
 		return '
 <div class="tl_search tl_subpanel">

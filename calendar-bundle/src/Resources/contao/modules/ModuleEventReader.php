@@ -200,7 +200,7 @@ class ModuleEventReader extends Events
 		$objTemplate->datetime = $objEvent->addTime ? date('Y-m-d\TH:i:sP', $intStartTime) : date('Y-m-d', $intStartTime);
 		$objTemplate->begin = $intStartTime;
 		$objTemplate->end = $intEndTime;
-		$objTemplate->class = ($objEvent->cssClass != '') ? ' ' . trim($objEvent->cssClass) : '';
+		$objTemplate->class = $objEvent->cssClass ? ' ' . trim($objEvent->cssClass) : '';
 		$objTemplate->recurring = $recurring;
 		$objTemplate->until = $until;
 		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];

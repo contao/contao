@@ -363,24 +363,22 @@ class PageModel extends Model
 
 			return static::findOneBy($arrColumns, $strHost, $arrOptions);
 		}
-		else
+
+		$arrColumns = array("$t.type='root' AND ($t.dns=? OR $t.dns='') AND ($t.language=? OR $t.fallback='1')");
+		$arrValues = array($strHost, $varLanguage);
+
+		if (!isset($arrOptions['order']))
 		{
-			$arrColumns = array("$t.type='root' AND ($t.dns=? OR $t.dns='') AND ($t.language=? OR $t.fallback='1')");
-			$arrValues = array($strHost, $varLanguage);
-
-			if (!isset($arrOptions['order']))
-			{
-				$arrOptions['order'] = "$t.dns DESC, $t.fallback";
-			}
-
-			if (!static::isPreviewMode($arrOptions))
-			{
-				$time = Date::floorToMinute();
-				$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
-			}
-
-			return static::findOneBy($arrColumns, $arrValues, $arrOptions);
+			$arrOptions['order'] = "$t.dns DESC, $t.fallback";
 		}
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = Date::floorToMinute();
+			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+		}
+
+		return static::findOneBy($arrColumns, $arrValues, $arrOptions);
 	}
 
 	/**
@@ -762,7 +760,7 @@ class PageModel extends Model
 	/**
 	 * Find the first active page by its member groups
 	 *
-	 * @param string $arrIds An array of member group IDs
+	 * @param array $arrIds An array of member group IDs
 	 *
 	 * @return PageModel|null The model or null if there is no matching member group
 	 */

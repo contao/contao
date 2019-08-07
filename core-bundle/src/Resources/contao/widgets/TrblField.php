@@ -140,7 +140,7 @@ class TrblField extends Widget
 									$strKey,
 									$this->strId.'_'.$strKey,
 									$strKey,
-									(($this->strClass != '') ? ' ' . $this->strClass : ''),
+									($this->strClass ? ' ' . $this->strClass : ''),
 									StringUtil::specialchars(@$this->varValue[$strKey]), // see #4979
 									$this->getAttributes());
 		}

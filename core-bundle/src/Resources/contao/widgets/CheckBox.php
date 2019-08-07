@@ -43,15 +43,13 @@ class CheckBox extends Widget
 	 */
 	public function __set($strKey, $varValue)
 	{
-		switch ($strKey)
+		if ($strKey == 'options')
 		{
-			case 'options':
-				$this->arrOptions = StringUtil::deserialize($varValue);
-				break;
-
-			default:
-				parent::__set($strKey, $varValue);
-				break;
+			$this->arrOptions = StringUtil::deserialize($varValue);
+		}
+		else
+		{
+			parent::__set($strKey, $varValue);
 		}
 	}
 
@@ -150,7 +148,7 @@ class CheckBox extends Widget
 		{
 			return sprintf('<fieldset id="ctrl_%s" class="tl_checkbox_container%s"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s%s</fieldset>%s',
 							$this->strId,
-							(($this->strClass != '') ? ' ' . $this->strClass : ''),
+							($this->strClass ? ' ' . $this->strClass : ''),
 							($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].' </span>' : ''),
 							$this->strLabel,
 							($this->mandatory ? '<span class="mandatory">*</span>' : ''),
@@ -160,15 +158,13 @@ class CheckBox extends Widget
 							str_replace('<br></fieldset><br>', '</fieldset>', implode('<br>', $arrOptions)),
 							$this->wizard);
 		}
-		else
-		{
-			return sprintf('<div id="ctrl_%s" class="tl_checkbox_single_container%s"><input type="hidden" name="%s" value="">%s</div>%s',
-							$this->strId,
-							(($this->strClass != '') ? ' ' . $this->strClass : ''),
-							$this->strName,
-							str_replace('<br></div><br>', '</div>', implode('<br>', $arrOptions)),
-							$this->wizard);
-		}
+
+		return sprintf('<div id="ctrl_%s" class="tl_checkbox_single_container%s"><input type="hidden" name="%s" value="">%s</div>%s',
+						$this->strId,
+						($this->strClass ? ' ' . $this->strClass : ''),
+						$this->strName,
+						str_replace('<br></div><br>', '</div>', implode('<br>', $arrOptions)),
+						$this->wizard);
 	}
 
 	/**

@@ -37,6 +37,7 @@ function php-cs-fixer() {
 
   vendor/bin/php-cs-fixer fix -v "$@"
   vendor/bin/php-cs-fixer fix -v --config .php_cs.legacy "$@"
+  vendor/bin/php-cs-fixer fix -v --config .php_cs.template "$@"
 }
 
 function phpstan() {

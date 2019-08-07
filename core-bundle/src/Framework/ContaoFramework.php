@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Framework;
 
 use Contao\ClassLoader;
 use Contao\Config;
-use Contao\CoreBundle\Exception\IncompleteInstallationException;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\LazySessionAccess;
@@ -331,7 +331,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     }
 
     /**
-     * @throws IncompleteInstallationException
+     * Redirects to the install tool if the installation is incomplete.
      */
     private function validateInstallation(): void
     {
@@ -351,11 +351,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         /** @var Config $config */
         $config = $this->getAdapter(Config::class);
 
-        // Show the "incomplete installation" message
         if (!$config->isComplete()) {
-            throw new IncompleteInstallationException(
-                'The installation has not been completed. Open the Contao install tool to continue.'
-            );
+            throw new RedirectResponseException('/contao/install');
         }
     }
 

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Tests\Picker;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\NewsArchiveModel;
 use Contao\NewsBundle\Picker\NewsPickerProvider;
@@ -23,23 +22,207 @@ use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class NewsPickerProviderTest extends ContaoTestCase
 {
-    /**
-     * @var NewsPickerProvider
-     */
-    private $provider;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
+    public function testCreatesTheMenuItem(): void
     {
-        parent::setUp();
+        $config = json_encode([
+            'context' => 'link',
+            'extras' => [],
+            'current' => 'newsPicker',
+            'value' => '',
+        ]);
+
+        if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {
+            $config = $encoded;
+        }
+
+        $picker = $this->getPicker();
+        $item = $picker->createMenuItem(new PickerConfig('link', [], '', 'newsPicker'));
+        $uri = 'contao_backend?do=news&popup=1&picker='.strtr(base64_encode($config), '+/=', '-_,');
+
+        $this->assertSame('News picker', $item->getLabel());
+        $this->assertSame(['class' => 'newsPicker'], $item->getLinkAttributes());
+        $this->assertTrue($item->isCurrent());
+        $this->assertSame($uri, $item->getUri());
+    }
+
+    public function testChecksIfAMenuItemIsCurrent(): void
+    {
+        $picker = $this->getPicker();
+
+        $this->assertTrue($picker->isCurrent(new PickerConfig('link', [], '', 'newsPicker')));
+        $this->assertFalse($picker->isCurrent(new PickerConfig('link', [], '', 'filePicker')));
+    }
+
+    public function testReturnsTheCorrectName(): void
+    {
+        $picker = $this->getPicker();
+
+        $this->assertSame('newsPicker', $picker->getName());
+    }
+
+    public function testChecksIfAContextIsSupported(): void
+    {
+        $picker = $this->getPicker(true);
+
+        $this->assertTrue($picker->supportsContext('link'));
+        $this->assertFalse($picker->supportsContext('file'));
+    }
+
+    public function testChecksIfModuleAccessIsGranted(): void
+    {
+        $picker = $this->getPicker(false);
+
+        $this->assertFalse($picker->supportsContext('link'));
+    }
+
+    public function testChecksIfAValueIsSupported(): void
+    {
+        $picker = $this->getPicker();
+
+        $this->assertTrue($picker->supportsValue(new PickerConfig('link', [], '{{news_url::5}}')));
+        $this->assertFalse($picker->supportsValue(new PickerConfig('link', [], '{{link_url::5}}')));
+    }
+
+    public function testReturnsTheDcaTable(): void
+    {
+        $picker = $this->getPicker();
+
+        $this->assertSame('tl_news', $picker->getDcaTable());
+    }
+
+    public function testReturnsTheDcaAttributes(): void
+    {
+        $picker = $this->getPicker();
+        $extra = ['source' => 'tl_news.2'];
+
+        $this->assertSame(
+            [
+                'fieldType' => 'radio',
+                'preserveRecord' => 'tl_news.2',
+                'value' => '5',
+            ],
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{news_url::5}}'))
+        );
+
+        $this->assertSame(
+            [
+                'fieldType' => 'radio',
+                'preserveRecord' => 'tl_news.2',
+            ],
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
+        );
+    }
+
+    public function testConvertsTheDcaValue(): void
+    {
+        $picker = $this->getPicker();
+
+        $this->assertSame('{{news_url::5}}', $picker->convertDcaValue(new PickerConfig('link'), 5));
+    }
+
+    public function testConvertsTheDcaValueWithACustomInsertTag(): void
+    {
+        $picker = $this->getPicker();
+
+        $this->assertSame(
+            '{{news_title::5}}',
+            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{news_title::%s}}']), 5)
+        );
+    }
+
+    public function testAddsTableAndIdIfThereIsAValue(): void
+    {
+        /** @var NewsArchiveModel&MockObject $model */
+        $model = $this->mockClassWithProperties(NewsArchiveModel::class);
+        $model->id = 1;
+
+        $news = $this->createMock(NewsModel::class);
+        $news
+            ->expects($this->once())
+            ->method('getRelated')
+            ->with('pid')
+            ->willReturn($model)
+        ;
+
+        $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
+
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $news]),
+        ];
+
+        $picker = $this->getPicker();
+        $picker->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($picker, [$config]);
+
+        $this->assertSame('news', $params['do']);
+        $this->assertSame('tl_news', $params['table']);
+        $this->assertSame(1, $params['id']);
+    }
+
+    public function testDoesNotAddTableAndIdIfThereIsNoEventsModel(): void
+    {
+        $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
+
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+        ];
+
+        $picker = $this->getPicker();
+        $picker->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($picker, [$config]);
+
+        $this->assertSame('news', $params['do']);
+        $this->assertArrayNotHasKey('tl_news', $params);
+        $this->assertArrayNotHasKey('id', $params);
+    }
+
+    public function testDoesNotAddTableAndIdIfThereIsNoModel(): void
+    {
+        $news = $this->createMock(NewsModel::class);
+        $news
+            ->expects($this->once())
+            ->method('getRelated')
+            ->with('pid')
+            ->willReturn(null)
+        ;
+
+        $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
+
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $news]),
+        ];
+
+        $picker = $this->getPicker();
+        $picker->setFramework($this->mockContaoFramework($adapters));
+
+        $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
+        $method->setAccessible(true);
+        $params = $method->invokeArgs($picker, [$config]);
+
+        $this->assertSame('news', $params['do']);
+        $this->assertArrayNotHasKey('tl_news', $params);
+        $this->assertArrayNotHasKey('id', $params);
+    }
+
+    private function getPicker(bool $accessGranted = null): NewsPickerProvider
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects(null === $accessGranted ? $this->never() : $this->once())
+            ->method('isGranted')
+            ->willReturn($accessGranted)
+        ;
 
         $menuFactory = $this->createMock(FactoryInterface::class);
         $menuFactory
@@ -73,216 +256,6 @@ class NewsPickerProviderTest extends ContaoTestCase
             ->willReturn('News picker')
         ;
 
-        $this->provider = new NewsPickerProvider($menuFactory, $router, $translator);
-    }
-
-    public function testCreatesTheMenuItem(): void
-    {
-        $picker = json_encode([
-            'context' => 'link',
-            'extras' => [],
-            'current' => 'newsPicker',
-            'value' => '',
-        ]);
-
-        if (\function_exists('gzencode') && false !== ($encoded = @gzencode($picker))) {
-            $picker = $encoded;
-        }
-
-        $item = $this->provider->createMenuItem(new PickerConfig('link', [], '', 'newsPicker'));
-        $uri = 'contao_backend?do=news&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,');
-
-        $this->assertSame('News picker', $item->getLabel());
-        $this->assertSame(['class' => 'newsPicker'], $item->getLinkAttributes());
-        $this->assertTrue($item->isCurrent());
-        $this->assertSame($uri, $item->getUri());
-    }
-
-    public function testChecksIfAMenuItemIsCurrent(): void
-    {
-        $this->assertTrue($this->provider->isCurrent(new PickerConfig('link', [], '', 'newsPicker')));
-        $this->assertFalse($this->provider->isCurrent(new PickerConfig('link', [], '', 'filePicker')));
-    }
-
-    public function testReturnsTheCorrectName(): void
-    {
-        $this->assertSame('newsPicker', $this->provider->getName());
-    }
-
-    public function testChecksIfAContextIsSupported(): void
-    {
-        $this->provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
-
-        $this->assertTrue($this->provider->supportsContext('link'));
-        $this->assertFalse($this->provider->supportsContext('file'));
-    }
-
-    public function testFailsToCheckTheContextIfThereIsNoTokenStorage(): void
-    {
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('No token storage provided');
-
-        $this->provider->supportsContext('link');
-    }
-
-    public function testFailsToCheckTheContextIfThereIsNoToken(): void
-    {
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn(null)
-        ;
-
-        $this->provider->setTokenStorage($tokenStorage);
-
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('No token provided');
-
-        $this->provider->supportsContext('link');
-    }
-
-    public function testFailsToCheckTheContextIfThereIsNoUser(): void
-    {
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->method('getUser')
-            ->willReturn(null)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $this->provider->setTokenStorage($tokenStorage);
-
-        $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('The token does not contain a back end user object');
-
-        $this->provider->supportsContext('link');
-    }
-
-    public function testChecksIfAValueIsSupported(): void
-    {
-        $this->assertTrue($this->provider->supportsValue(new PickerConfig('link', [], '{{news_url::5}}')));
-        $this->assertFalse($this->provider->supportsValue(new PickerConfig('link', [], '{{link_url::5}}')));
-    }
-
-    public function testReturnsTheDcaTable(): void
-    {
-        $this->assertSame('tl_news', $this->provider->getDcaTable());
-    }
-
-    public function testReturnsTheDcaAttributes(): void
-    {
-        $extra = ['source' => 'tl_news.2'];
-
-        $this->assertSame(
-            [
-                'fieldType' => 'radio',
-                'preserveRecord' => 'tl_news.2',
-                'value' => '5',
-            ],
-            $this->provider->getDcaAttributes(new PickerConfig('link', $extra, '{{news_url::5}}'))
-        );
-
-        $this->assertSame(
-            [
-                'fieldType' => 'radio',
-                'preserveRecord' => 'tl_news.2',
-            ],
-            $this->provider->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
-        );
-    }
-
-    public function testConvertsTheDcaValue(): void
-    {
-        $this->assertSame('{{news_url::5}}', $this->provider->convertDcaValue(new PickerConfig('link'), 5));
-    }
-
-    public function testConvertsTheDcaValueWithACustomInsertTag(): void
-    {
-        $this->assertSame(
-            '{{news_title::5}}',
-            $this->provider->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{news_title::%s}}']), 5)
-        );
-    }
-
-    public function testAddsTableAndIdIfThereIsAValue(): void
-    {
-        /** @var NewsArchiveModel&MockObject $model */
-        $model = $this->mockClassWithProperties(NewsArchiveModel::class);
-        $model->id = 1;
-
-        $news = $this->createMock(NewsModel::class);
-        $news
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn($model)
-        ;
-
-        $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
-
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $news]),
-        ];
-
-        $this->provider->setFramework($this->mockContaoFramework($adapters));
-
-        $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
-        $params = $method->invokeArgs($this->provider, [$config]);
-
-        $this->assertSame('news', $params['do']);
-        $this->assertSame('tl_news', $params['table']);
-        $this->assertSame(1, $params['id']);
-    }
-
-    public function testDoesNotAddTableAndIdIfThereIsNoEventsModel(): void
-    {
-        $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
-
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
-        ];
-
-        $this->provider->setFramework($this->mockContaoFramework($adapters));
-
-        $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
-        $params = $method->invokeArgs($this->provider, [$config]);
-
-        $this->assertSame('news', $params['do']);
-        $this->assertArrayNotHasKey('tl_news', $params);
-        $this->assertArrayNotHasKey('id', $params);
-    }
-
-    public function testDoesNotAddTableAndIdIfThereIsNoCalendarModel(): void
-    {
-        $news = $this->createMock(NewsModel::class);
-        $news
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn(null)
-        ;
-
-        $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
-
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $news]),
-        ];
-
-        $this->provider->setFramework($this->mockContaoFramework($adapters));
-
-        $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
-        $params = $method->invokeArgs($this->provider, [$config]);
-
-        $this->assertSame('news', $params['do']);
-        $this->assertArrayNotHasKey('tl_news', $params);
-        $this->assertArrayNotHasKey('id', $params);
+        return new NewsPickerProvider($menuFactory, $router, $translator, $security);
     }
 }

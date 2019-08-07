@@ -53,13 +53,19 @@ class TokenChecker
      */
     private $trustResolver;
 
-    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver)
+    /**
+     * @var string
+     */
+    private $previewScript;
+
+    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, string $previewScript = '')
     {
         $this->requestStack = $requestStack;
         $this->firewallMap = $firewallMap;
         $this->tokenStorage = $tokenStorage;
         $this->session = $session;
         $this->trustResolver = $trustResolver;
+        $this->previewScript = $previewScript;
     }
 
     /**
@@ -117,7 +123,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getMasterRequest();
 
-        if (null === $request || '/preview.php' !== $request->getScriptName()) {
+        if (null === $request || $request->getScriptName() !== $this->previewScript) {
             return false;
         }
 

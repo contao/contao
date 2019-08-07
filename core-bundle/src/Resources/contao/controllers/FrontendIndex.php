@@ -118,14 +118,7 @@ class FrontendIndex extends Frontend
 			$strHost = Environment::get('host');
 
 			// Look for a root page whose domain name matches the host name
-			if (isset($arrPages[$strHost]))
-			{
-				$arrLangs = $arrPages[$strHost];
-			}
-			else
-			{
-				$arrLangs = $arrPages['*'] ?: array(); // empty domain
-			}
+			$arrLangs = $arrPages[$strHost] ?? ($arrPages['*'] ?: array());
 
 			// Throw an exception if there are no matches (see #1522)
 			if (empty($arrLangs))

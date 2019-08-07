@@ -28,7 +28,7 @@ class ResizeImagesCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -90,6 +90,9 @@ class ResizeImagesCommandTest extends TestCase
         $this->assertRegExp('/All images resized/', $display);
     }
 
+    /**
+     * @group time-sensitive
+     */
     public function testTimeLimit(): void
     {
         $fs = new Filesystem();

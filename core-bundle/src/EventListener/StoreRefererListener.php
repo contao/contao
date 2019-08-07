@@ -13,32 +13,26 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Security;
 
 class StoreRefererListener
 {
     /**
-     * @var TokenStorageInterface
+     * @var Security
      */
-    private $tokenStorage;
-
-    /**
-     * @var AuthenticationTrustResolverInterface
-     */
-    private $authenticationTrustResolver;
+    private $security;
 
     /**
      * @var ScopeMatcher
      */
     private $scopeMatcher;
 
-    public function __construct(TokenStorageInterface $tokenStorage, AuthenticationTrustResolverInterface $authenticationTrustResolver, ScopeMatcher $scopeMatcher)
+    public function __construct(Security $security, ScopeMatcher $scopeMatcher)
     {
-        $this->tokenStorage = $tokenStorage;
-        $this->authenticationTrustResolver = $authenticationTrustResolver;
+        $this->security = $security;
         $this->scopeMatcher = $scopeMatcher;
     }
 
@@ -63,9 +57,9 @@ class StoreRefererListener
             return;
         }
 
-        $token = $this->tokenStorage->getToken();
+        $user = $this->security->getUser();
 
-        if (null === $token || $this->authenticationTrustResolver->isAnonymous($token)) {
+        if (!$user instanceof User) {
             return;
         }
 

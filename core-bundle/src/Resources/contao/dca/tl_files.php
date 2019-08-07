@@ -386,7 +386,8 @@ class tl_files extends Contao\Backend
 						{
 							throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete folder "' . $strFile . '" recursively.');
 						}
-						elseif (!$canDeleteOne)
+
+						if (!$canDeleteOne)
 						{
 							throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete folder "' . $strFile . '".');
 						}
@@ -695,10 +696,8 @@ class tl_files extends Contao\Backend
 		{
 			return '';
 		}
-		else
-		{
-			return '<a href="contao/popup.php?src=' . base64_encode($row['id']) . '" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.' onclick="Backend.openModalIframe({\'title\':\''.str_replace("'", "\\'", Contao\StringUtil::specialchars($row['fileNameEncoded'])).'\',\'url\':this.href});return false">'.Contao\Image::getHtml($icon, $label).'</a> ';
-		}
+
+		return '<a href="contao/popup.php?src=' . base64_encode($row['id']) . '" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.' onclick="Backend.openModalIframe({\'title\':\''.str_replace("'", "\\'", Contao\StringUtil::specialchars($row['fileNameEncoded'])).'\',\'url\':this.href});return false">'.Contao\Image::getHtml($icon, $label).'</a> ';
 	}
 
 	/**

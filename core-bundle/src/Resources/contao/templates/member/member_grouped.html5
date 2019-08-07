@@ -15,7 +15,7 @@
       <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
       <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
 
-      <?php foreach ($this->categories as $legend=>$category): ?>
+      <?php foreach ($this->categories as $legend => $category): ?>
         <?php if (!empty($category)): ?>
           <fieldset>
             <?php if ($legend): ?>

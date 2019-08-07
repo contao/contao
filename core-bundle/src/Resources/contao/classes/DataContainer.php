@@ -277,7 +277,8 @@ abstract class DataContainer extends Backend
 
 			return $this->{$arrData['input_field_callback'][0]}->{$arrData['input_field_callback'][1]}($this, $xlabel);
 		}
-		elseif (\is_callable($arrData['input_field_callback']))
+
+		if (\is_callable($arrData['input_field_callback']))
 		{
 			return $arrData['input_field_callback']($this, $xlabel);
 		}
@@ -805,7 +806,8 @@ abstract class DataContainer extends Backend
 				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
 				continue;
 			}
-			elseif (\is_callable($v['button_callback']))
+
+			if (\is_callable($v['button_callback']))
 			{
 				$return .= $v['button_callback']($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
 				continue;
@@ -893,7 +895,7 @@ abstract class DataContainer extends Backend
 			$v = \is_array($v) ? $v : array($v);
 			$label = \is_array($v['label']) ? $v['label'][0] : $v['label'];
 			$title = \is_array($v['label']) ? $v['label'][1] : $v['label'];
-			$attributes = ($v['attributes'] != '') ? ' ' . ltrim($v['attributes']) : '';
+			$attributes = !empty($v['attributes']) ? ' ' . ltrim($v['attributes']) : '';
 
 			// Custom icon (see #5541)
 			if ($v['icon'])
@@ -925,7 +927,8 @@ abstract class DataContainer extends Backend
 				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'], $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
 				continue;
 			}
-			elseif (\is_callable($v['button_callback']))
+
+			if (\is_callable($v['button_callback']))
 			{
 				$return .= $v['button_callback']($v['href'], $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
 				continue;
@@ -1016,7 +1019,8 @@ abstract class DataContainer extends Backend
 				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strPtable, array(), null, false, null, null, $this);
 				continue;
 			}
-			elseif (\is_callable($v['button_callback']))
+
+			if (\is_callable($v['button_callback']))
 			{
 				$return .= $v['button_callback']($arrRow, $v['href'], $label, $title, $v['icon'], $attributes, $strPtable, array(), null, false, null, null, $this);
 				continue;

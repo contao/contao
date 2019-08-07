@@ -114,7 +114,7 @@ class FrontendController extends AbstractController
      */
     public function checkCookiesAction(): Response
     {
-        static $image = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+        static $image = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
         $response = new Response(base64_decode($image, true));
         $response->setPrivate();

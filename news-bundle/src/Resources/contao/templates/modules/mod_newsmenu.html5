@@ -7,7 +7,7 @@
   <?php else: ?>
     <?php if ($this->yearly): ?>
       <ul class="level_1">
-        <?php foreach ($this->items as $year=>$month): ?>
+        <?php foreach ($this->items as $year => $month): ?>
           <?php if ($month['isActive']): ?>
             <li class="active<?php if ($month['class']): ?> <?= $month['class'] ?><?php endif; ?>"><strong class="active"><?= $month['link'] ?><?php if ($this->showQuantity): ?> (<?= $month['quantity'] ?>)<?php endif; ?></strong></li>
           <?php else: ?>
@@ -30,7 +30,7 @@
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($this->weeks as $class=>$week): ?>
+        <?php foreach ($this->weeks as $class => $week): ?>
           <tr class="<?= $class ?>">
             <?php foreach ($week as $day): ?>
               <?php if ($day['href']): ?>
@@ -45,7 +45,7 @@
       </table>
     <?php else: ?>
       <ul class="level_1">
-        <?php foreach ($this->items as $year=>$months): ?>
+        <?php foreach ($this->items as $year => $months): ?>
           <li class="year submenu">
             <?php if ($year == $this->activeYear): ?>
               <strong class="active"><?= $year ?></strong>

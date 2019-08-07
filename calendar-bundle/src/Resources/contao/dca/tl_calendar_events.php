@@ -634,7 +634,8 @@ class tl_calendar_events extends Contao\Backend
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
 				}
-				elseif (!\in_array($id, $root))
+
+				if (!\in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}

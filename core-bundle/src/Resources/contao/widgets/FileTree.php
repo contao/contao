@@ -126,18 +126,17 @@ class FileTree extends Widget
 
 			return '';
 		}
-		elseif (strpos($varInput, ',') === false)
+
+		if (strpos($varInput, ',') === false)
 		{
 			$varInput = StringUtil::uuidToBin($varInput);
 
 			return $this->multiple ? array($varInput) : $varInput;
 		}
-		else
-		{
-			$arrValue = array_values(array_filter(explode(',', $varInput)));
 
-			return $this->multiple ? array_map('StringUtil::uuidToBin', $arrValue) : StringUtil::uuidToBin($arrValue[0]);
-		}
+		$arrValue = array_values(array_filter(explode(',', $varInput)));
+
+		return $this->multiple ? array_map('StringUtil::uuidToBin', $arrValue) : StringUtil::uuidToBin($arrValue[0]);
 	}
 
 	/**

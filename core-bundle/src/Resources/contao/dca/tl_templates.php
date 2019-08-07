@@ -165,7 +165,7 @@ class tl_templates extends Contao\Backend
 			}
 
 			$objSessionBag->set('tl_templates_node', Contao\Input::get('fn', true));
-			$this->redirect(preg_replace('/(&|\?)fn=[^&]*/', '', Contao\Environment::get('request')));
+			$this->redirect(preg_replace('/[?&]fn=[^&]*/', '', Contao\Environment::get('request')));
 		}
 
 		$strNode = $objSessionBag->get('tl_templates_node');

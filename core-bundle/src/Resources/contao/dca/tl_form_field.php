@@ -100,7 +100,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'fieldsetStart'               => '{type_legend},type;{fconfig_legend},label;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'fieldsetStop'                => '{type_legend},type;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'html'                        => '{type_legend},type;{text_legend},html;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'text'                        => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{expert_legend:hide},class,value,minlength,maxlength,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'text'                        => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{expert_legend:hide},class,value,minlength,maxlength,minval,maxval,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'password'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{expert_legend:hide},class,value,minlength,maxlength,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'textarea'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'select'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple;{options_legend},options;{expert_legend:hide},class,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
@@ -227,6 +227,20 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'maxlength' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
+		),
+		'minval' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
+		),
+		'maxval' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
@@ -448,7 +462,7 @@ class tl_form_field extends Contao\Backend
 				{
 					break;
 				}
-				// NO BREAK STATEMENT HERE
+				// no break
 
 			case 'edit':
 			case 'show':
@@ -495,7 +509,8 @@ class tl_form_field extends Contao\Backend
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
 				}
-				elseif (!\in_array($id, $root))
+
+				if (!\in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
 				}

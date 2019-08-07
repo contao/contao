@@ -42,15 +42,13 @@ class CheckBoxWizard extends Widget
 	 */
 	public function __set($strKey, $varValue)
 	{
-		switch ($strKey)
+		if ($strKey == 'options')
 		{
-			case 'options':
-				$this->arrOptions = StringUtil::deserialize($varValue);
-				break;
-
-			default:
-				parent::__set($strKey, $varValue);
-				break;
+			$this->arrOptions = StringUtil::deserialize($varValue);
+		}
+		else
+		{
+			parent::__set($strKey, $varValue);
 		}
 	}
 
@@ -119,7 +117,7 @@ class CheckBoxWizard extends Widget
 
 		return sprintf('<fieldset id="ctrl_%s" class="tl_checkbox_container tl_checkbox_wizard%s"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s<div class="sortable">%s</div></fieldset>%s<script>Backend.checkboxWizard("ctrl_%s")</script>',
 						$this->strId,
-						(($this->strClass != '') ? ' ' . $this->strClass : ''),
+						($this->strClass ? ' ' . $this->strClass : ''),
 						($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].' </span>' : ''),
 						$this->strLabel,
 						($this->mandatory ? '<span class="mandatory">*</span>' : ''),

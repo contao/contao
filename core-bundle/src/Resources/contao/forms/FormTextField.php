@@ -66,36 +66,10 @@ class FormTextField extends Widget
 	{
 		switch ($strKey)
 		{
-			// Treat minlength/minval as min for number type field (#1622)
-			case 'minlength':
-			case 'minval':
-				if ($this->type == 'number')
-				{
-					$this->min = $varValue;
-				}
-				else
-				{
-					$this->arrConfiguration[$strKey] = $varValue;
-				}
-				break;
-
-			// Treat maxlength/maxval as max for number type field (#1622)
 			case 'maxlength':
-			case 'maxval':
 				if ($varValue > 0)
 				{
-					if ($this->type == 'number')
-					{
-						$this->max = $varValue;
-					}
-					elseif ($strKey == 'maxlength')
-					{
-						$this->arrAttributes[$strKey] = $varValue;
-					}
-					else
-					{
-						$this->arrConfiguration[$strKey] = $varValue;
-					}
+					$this->arrAttributes['maxlength'] =  $varValue;
 				}
 				break;
 
@@ -112,10 +86,13 @@ class FormTextField extends Widget
 				break;
 
 			case 'min':
+			case 'minval':
+				$this->arrAttributes['min'] = $varValue;
+				break;
+
 			case 'max':
-				$this->arrAttributes[$strKey] = $varValue;
-				$this->arrConfiguration[$strKey . 'val'] = $varValue;
-				unset($this->arrAttributes[$strKey . 'length']);
+			case 'maxval':
+				$this->arrAttributes['max'] = $varValue;
 				break;
 
 			case 'step':
@@ -178,7 +155,7 @@ class FormTextField extends Widget
 						{
 							$this->addAttribute('step', 'any');
 						}
-						// NO break; here
+						// no break
 
 					case 'natural':
 						return 'number';
@@ -203,27 +180,6 @@ class FormTextField extends Widget
 			default:
 				return parent::__get($strKey);
 				break;
-		}
-	}
-
-	/**
-	 * Re-add some attributes if the field type is a number
-	 */
-	public function addAttributes($arrAttributes)
-	{
-		parent::addAttributes($arrAttributes);
-
-		if ($this->type != 'number')
-		{
-			return;
-		}
-
-		foreach (array('minlength', 'minval', 'maxlength', 'maxval') as $name)
-		{
-			if (isset($arrAttributes[$name]))
-			{
-				$this->$name = $arrAttributes[$name];
-			}
 		}
 	}
 
@@ -270,7 +226,7 @@ class FormTextField extends Widget
 						$this->strName,
 						$this->strId,
 						($this->hideInput ? ' password' : ''),
-						(($this->strClass != '') ? ' ' . $this->strClass : ''),
+						($this->strClass ? ' ' . $this->strClass : ''),
 						StringUtil::specialchars($this->value),
 						$this->getAttributes(),
 						$this->strTagEnding);

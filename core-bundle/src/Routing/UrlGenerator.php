@@ -126,7 +126,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $config = $this->framework->getAdapter(Config::class);
 
         $parameters['alias'] = preg_replace_callback(
-            '/\{([^\}]+)\}/',
+            '/{([^}]+)}/',
             static function (array $matches) use ($alias, &$parameters, $autoItems, &$hasAutoItem, $config): string {
                 $param = $matches[1];
 

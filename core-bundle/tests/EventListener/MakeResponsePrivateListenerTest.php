@@ -65,6 +65,28 @@ class MakeResponsePrivateListenerTest extends TestCase
         $this->assertSame('600', $response->headers->getCacheControlDirective('max-age'));
     }
 
+    public function testMakesResponsePrivateWhenAnAuthorizationHeaderIsPresent(): void
+    {
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge(600);
+
+        $request = new Request();
+        $request->headers->set('Authorization', 'secret-token');
+
+        $event = new FilterResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST,
+            $response
+        );
+
+        $listener = new MakeResponsePrivateListener();
+        $listener->onKernelResponse($event);
+
+        $this->assertTrue($response->headers->getCacheControlDirective('private'));
+    }
+
     public function testMakesResponsePrivateWhenTheSessionWasStarted(): void
     {
         $session = $this->createMock(SessionInterface::class);

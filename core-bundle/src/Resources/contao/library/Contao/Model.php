@@ -243,12 +243,7 @@ abstract class Model
 	 */
 	public function __get($strKey)
 	{
-		if (isset($this->arrData[$strKey]))
-		{
-			return $this->arrData[$strKey];
-		}
-
-		return null;
+		return $this->arrData[$strKey] ?? null;
 	}
 
 	/**
@@ -458,13 +453,8 @@ abstract class Model
 				return $this;
 			}
 
-			$intPk = $this->{static::$strPk};
-
 			// Track primary key changes
-			if (isset($this->arrModified[static::$strPk]))
-			{
-				$intPk = $this->arrModified[static::$strPk];
-			}
+			$intPk = $this->arrModified[static::$strPk] ?? $this->{static::$strPk};
 
 			if ($intPk === null)
 			{
@@ -553,13 +543,8 @@ abstract class Model
 	 */
 	public function delete()
 	{
-		$intPk = $this->{static::$strPk};
-
 		// Track primary key changes
-		if (isset($this->arrModified[static::$strPk]))
-		{
-			$intPk = $this->arrModified[static::$strPk];
-		}
+		$intPk = $this->arrModified[static::$strPk] ?? $this->{static::$strPk};
 
 		// Delete the row
 		$intAffected = Database::getInstance()->prepare("DELETE FROM " . static::$strTable . " WHERE " . Database::quoteIdentifier(static::$strPk) . "=?")
@@ -667,13 +652,8 @@ abstract class Model
 	 */
 	public function refresh()
 	{
-		$intPk = $this->{static::$strPk};
-
 		// Track primary key changes
-		if (isset($this->arrModified[static::$strPk]))
-		{
-			$intPk = $this->arrModified[static::$strPk];
-		}
+		$intPk = $this->arrModified[static::$strPk] ?? $this->{static::$strPk};
 
 		// Reload the database record
 		$res = Database::getInstance()->prepare("SELECT * FROM " . static::$strTable . " WHERE " . Database::quoteIdentifier(static::$strPk) . "=?")
@@ -1119,14 +1099,13 @@ abstract class Model
 
 			return static::createModelFromDbResult($objResult);
 		}
-		elseif ($arrOptions['return'] == 'Array')
+
+		if ($arrOptions['return'] == 'Array')
 		{
 			return static::createCollectionFromDbResult($objResult, static::$strTable)->getModels();
 		}
-		else
-		{
-			return static::createCollectionFromDbResult($objResult, static::$strTable);
-		}
+
+		return static::createCollectionFromDbResult($objResult, static::$strTable);
 	}
 
 	/**
@@ -1216,19 +1195,17 @@ abstract class Model
 
 			return static::$arrClassNames[$strTable];
 		}
-		else
+
+		$arrChunks = explode('_', $strTable);
+
+		if ($arrChunks[0] == 'tl')
 		{
-			$arrChunks = explode('_', $strTable);
-
-			if ($arrChunks[0] == 'tl')
-			{
-				array_shift($arrChunks);
-			}
-
-			static::$arrClassNames[$strTable] = implode('', array_map('ucfirst', $arrChunks)) . 'Model';
-
-			return static::$arrClassNames[$strTable];
+			array_shift($arrChunks);
 		}
+
+		static::$arrClassNames[$strTable] = implode('', array_map('ucfirst', $arrChunks)) . 'Model';
+
+		return static::$arrClassNames[$strTable];
 	}
 
 	/**

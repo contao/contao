@@ -11,11 +11,12 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use Contao\ManagerBundle\Console\ContaoApplication;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 
 set_time_limit(0);
+@ini_set('zlib.output_compression', '0');
 
 if (file_exists(__DIR__.'/../autoload.php')) {
     $projectDir = \dirname(__DIR__, 2);
@@ -31,12 +32,8 @@ if (file_exists(__DIR__.'/../autoload.php')) {
 $loader = require $projectDir.'/vendor/autoload.php';
 
 $input = new ArgvInput();
-$env = $input->getParameterOption(['--env', '-e'], getenv('SYMFONY_ENV') ?: 'prod');
+$env = $input->getParameterOption(['--env', '-e'], null);
 
-if ('dev' !== $env && 'prod' !== $env) {
-    die('The Contao Managed Edition only supports "dev" and "prod" environment.');
-}
-
-$kernel = ContaoKernel::create($projectDir, 'prod' !== $env);
-$application = new Application($kernel);
+$kernel = ContaoKernel::create($projectDir, $env);
+$application = new ContaoApplication($kernel);
 $application->run($input);

@@ -9,8 +9,7 @@ services:
         arguments:
             - '@knp_menu.factory'
             - '@router'
-            - '@translator'
-        calls:
-            - [setTokenStorage, ['@security.token_storage']]
+            - '@?translator'
+            - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 128 }

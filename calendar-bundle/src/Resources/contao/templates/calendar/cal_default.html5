@@ -7,13 +7,13 @@
     <th colspan="2" class="head next"><?php if ($this->nextHref): ?><a href="<?= $this->nextHref ?>" title="<?= $this->nextTitle ?>"><?= $this->nextLink ?></a><?php else: ?>&nbsp;<?php endif; ?></th>
   </tr>
   <tr>
-    <?php foreach ($this->days as $i=>$day): ?>
+    <?php foreach ($this->days as $i => $day): ?>
       <th class="label<?= $day['class'] ?>"><?= Patchwork\Utf8::substr($day['name'], 0, $this->substr) ?><span><?= Patchwork\Utf8::substr($day['name'], $this->substr) ?></span></th>
     <?php endforeach; ?>
   </tr>
 </thead>
 <tbody>
-  <?php foreach ($this->weeks as $class=>$week): ?>
+  <?php foreach ($this->weeks as $class => $week): ?>
     <tr class="<?= $class ?>">
       <?php foreach ($week as $day): ?>
         <td class="<?= $day['class'] ?>">

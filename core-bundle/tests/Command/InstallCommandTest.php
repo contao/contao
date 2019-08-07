@@ -22,7 +22,7 @@ class InstallCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
 

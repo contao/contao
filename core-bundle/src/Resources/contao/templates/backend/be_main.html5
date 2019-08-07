@@ -15,13 +15,13 @@
 
     <link rel="stylesheet" href="<?php
       $objCombiner = new Contao\Combiner();
-      $objCombiner->add('system/themes/'. $this->theme .'/fonts.min.css');
+      $objCombiner->add('system/themes/'.$this->theme.'/fonts.min.css');
       $objCombiner->add('assets/colorpicker/css/mooRainbow.min.css');
       $objCombiner->add('assets/chosen/css/chosen.min.css');
       $objCombiner->add('assets/simplemodal/css/simplemodal.min.css');
       $objCombiner->add('assets/datepicker/css/datepicker.min.css');
-      $objCombiner->add('system/themes/'. $this->theme .'/basic.min.css');
-      $objCombiner->add('system/themes/'. $this->theme .'/main.min.css');
+      $objCombiner->add('system/themes/'.$this->theme.'/basic.min.css');
+      $objCombiner->add('system/themes/'.$this->theme.'/main.min.css');
       echo $objCombiner->getCombinedFile();
     ?>">
     <?= $this->stylesheets ?>
@@ -36,7 +36,7 @@
       $objCombiner->add('assets/datepicker/js/datepicker.min.js');
       $objCombiner->add('bundles/contaocore/mootao.min.js');
       $objCombiner->add('bundles/contaocore/core.min.js');
-      $objCombiner->add('system/themes/'. $this->theme .'/hover.min.js');
+      $objCombiner->add('system/themes/'.$this->theme.'/hover.min.js');
       echo $objCombiner->getCombinedFile();
     ?>"></script>
     <script><?= $this->getDateString() ?></script>
@@ -55,15 +55,15 @@
             <ul id="tmenu">
               <li><a href="<?= $this->route('contao_backend_alerts') ?>" class="icon-alert" title="<?= Contao\StringUtil::specialchars($this->systemMessages) ?>" onclick="Backend.openModalIframe({'title':'<?= str_replace("'", "\\'", Contao\StringUtil::specialchars($this->systemMessages)) ?>','url':this.href});return false"><?= $this->systemMessages ?><?php if ($this->systemErrorMessagesCount > 0): ?> <sup><?= $this->systemErrorMessagesCount ?></sup><?php endif; ?></a></li>
               <?php if ($this->canDebug): ?>
-                <li><a href="<?= $this->previewRoute('contao_backend', ['do'=>'debug', 'enable'=>!$this->isDebug, 'referer'=>$this->referer, 'ref'=>$this->ref]) ?>" class="icon-debug<?php if ($this->isDebug): ?> hover<?php endif; ?>"><?= $this->debugMode ?></a></li>
+                <li><a href="<?= $this->route('contao_backend', ['do' => 'debug', 'key' => $this->isDebug ? 'disable' : 'enable', 'referer' => $this->referer, 'ref' => $this->ref]) ?>" class="icon-debug<?php if ($this->isDebug): ?> hover<?php endif; ?>"><?= $this->trans('debug_mode', [], 'contao_manager') ?></a></li>
               <?php endif; ?>
-              <li><a href="<?= $this->previewRoute('contao_backend_preview') . $this->frontendFile ?>" class="icon-preview" title="<?= $this->previewTitle ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
+              <li><a href="<?= $this->previewRoute('contao_backend_preview').$this->frontendFile ?>" class="icon-preview" title="<?= $this->previewTitle ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
               <li class="submenu">
                 <h2><?= $this->username ?></h2>
                 <ul class="level_2">
                   <li class="info"><strong><?= $this->user->name ?></strong> <?= $this->user->email ?></li>
-                  <li><a href="<?= $this->route('contao_backend', ['do'=>'login', 'ref'=>$this->ref]) ?>" class="icon-profile"><?= $this->profile ?></a></li>
-                  <li><a href="<?= $this->route('contao_backend', ['do'=>'security', 'ref'=>$this->ref]) ?>" class="icon-security"><?= $this->security ?></a></li>
+                  <li><a href="<?= $this->route('contao_backend', ['do' => 'login', 'ref' => $this->ref]) ?>" class="icon-profile"><?= $this->profile ?></a></li>
+                  <li><a href="<?= $this->route('contao_backend', ['do' => 'security', 'ref' => $this->ref]) ?>" class="icon-security"><?= $this->security ?></a></li>
                   <li><a href="<?= $this->logoutLink ?>" class="icon-logout" accesskey="q"><?= $this->logout ?></a></li>
                 </ul>
               </li>

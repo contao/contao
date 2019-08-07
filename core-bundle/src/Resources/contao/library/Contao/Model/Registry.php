@@ -100,12 +100,7 @@ class Registry implements \Countable
 		// Search by PK (most common case)
 		if ($strAlias === null || $strAlias == $strPk)
 		{
-			if (isset($this->arrRegistry[$strTable][$varKey]))
-			{
-				return $this->arrRegistry[$strTable][$varKey];
-			}
-
-			return null;
+			return $this->arrRegistry[$strTable][$varKey] ?? null;
 		}
 
 		// Try to find the model by one of its aliases

@@ -20,6 +20,14 @@ use Contao\StringUtil;
 
 class InsertTagsListener
 {
+    private const SUPPORTED_TAGS = [
+        'news',
+        'news_open',
+        'news_url',
+        'news_title',
+        'news_teaser',
+    ];
+
     /**
      * @var ContaoFramework
      */
@@ -42,15 +50,7 @@ class InsertTagsListener
             return $this->replaceNewsFeedInsertTag($elements[1]);
         }
 
-        static $supportedTags = [
-            'news',
-            'news_open',
-            'news_url',
-            'news_title',
-            'news_teaser',
-        ];
-
-        if (\in_array($key, $supportedTags, true)) {
+        if (\in_array($key, self::SUPPORTED_TAGS, true)) {
             return $this->replaceNewsInsertTags($key, $elements[1], $flags);
         }
 

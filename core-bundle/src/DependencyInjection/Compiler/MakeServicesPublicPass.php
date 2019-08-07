@@ -20,22 +20,28 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class MakeServicesPublicPass implements CompilerPassInterface
 {
+    private const SERVICES = [
+        'assets.packages',
+        'fragment.handler',
+        'lexik_maintenance.driver.factory',
+        'monolog.logger.contao',
+        'security.authentication.trust_resolver',
+        'security.firewall.map',
+        'security.logout_url_generator',
+    ];
+
+    private const ALIASES = [
+        'database_connection',
+        'swiftmailer.mailer',
+        'security.encoder_factory',
+    ];
+
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container): void
     {
-        static $services = [
-            'assets.packages',
-            'fragment.handler',
-            'lexik_maintenance.driver.factory',
-            'monolog.logger.contao',
-            'security.authentication.trust_resolver',
-            'security.firewall.map',
-            'security.logout_url_generator',
-        ];
-
-        foreach ($services as $service) {
+        foreach (self::SERVICES as $service) {
             if (!$container->hasDefinition($service)) {
                 continue;
             }
@@ -44,13 +50,7 @@ class MakeServicesPublicPass implements CompilerPassInterface
             $definition->setPublic(true);
         }
 
-        static $aliases = [
-            'database_connection',
-            'swiftmailer.mailer',
-            'security.encoder_factory',
-        ];
-
-        foreach ($aliases as $alias) {
+        foreach (self::ALIASES as $alias) {
             if (!$container->hasAlias($alias)) {
                 continue;
             }

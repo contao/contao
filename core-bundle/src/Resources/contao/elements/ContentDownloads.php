@@ -134,7 +134,8 @@ class ContentDownloads extends ContentElement
 					{
 						continue;
 					}
-					elseif ($objPage->rootFallbackLanguage !== null)
+
+					if ($objPage->rootFallbackLanguage !== null)
 					{
 						$arrMeta = $this->getMetaData($objFiles->meta, $objPage->rootFallbackLanguage);
 					}
@@ -215,7 +216,8 @@ class ContentDownloads extends ContentElement
 						{
 							continue;
 						}
-						elseif ($objPage->rootFallbackLanguage !== null)
+
+						if ($objPage->rootFallbackLanguage !== null)
 						{
 							$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->rootFallbackLanguage);
 						}

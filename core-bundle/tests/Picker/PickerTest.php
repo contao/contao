@@ -18,6 +18,7 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Knp\Menu\MenuFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class PickerTest extends TestCase
@@ -42,7 +43,7 @@ class PickerTest extends TestCase
 
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
-        $provider = new PagePickerProvider($factory, $router, $translator);
+        $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
         $config = new PickerConfig('page', [], 5, 'pagePicker');
 
         $this->picker = new Picker($factory, [$provider], $config);
@@ -81,7 +82,7 @@ class PickerTest extends TestCase
     {
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
-        $provider = new PagePickerProvider($factory, $router);
+        $provider = new PagePickerProvider($factory, $router, null, $this->getSecurityHelper());
         $config = new PickerConfig('page');
         $picker = new Picker($factory, [$provider], $config);
 
@@ -98,7 +99,7 @@ class PickerTest extends TestCase
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
         $translator = $this->createMock(TranslatorInterface::class);
-        $provider = new PagePickerProvider($factory, $router, $translator);
+        $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
         $config = new PickerConfig('page');
         $picker = new Picker($factory, [$provider], $config);
 
@@ -115,5 +116,16 @@ class PickerTest extends TestCase
         $this->expectExceptionMessage('No picker menu items found');
 
         $picker->getCurrentUrl();
+    }
+
+    private function getSecurityHelper(): Security
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->method('isGranted')
+            ->willReturn(true)
+        ;
+
+        return $security;
     }
 }

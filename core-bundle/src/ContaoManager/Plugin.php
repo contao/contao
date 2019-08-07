@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
@@ -68,7 +67,6 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
                         NelmioSecurityBundle::class,
                         SchebTwoFactorBundle::class,
                         CmfRoutingBundle::class,
-                        ContaoManagerBundle::class,
                     ]
                 ),
         ];

@@ -16,7 +16,7 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\Database\Result;
-use Contao\Image\PictureConfigurationInterface;
+use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
 use League\Uri\Components\Query;
 use Symfony\Component\Finder\Finder;
@@ -279,61 +279,58 @@ abstract class Controller extends System
 		}
 
 		// Other modules
+		if (\is_object($intId))
+		{
+			$objRow = $intId;
+		}
 		else
 		{
-			if (\is_object($intId))
-			{
-				$objRow = $intId;
-			}
-			else
-			{
-				$objRow = ModuleModel::findByPk($intId);
+			$objRow = ModuleModel::findByPk($intId);
 
-				if ($objRow === null)
-				{
-					return '';
-				}
-			}
-
-			// Check the visibility (see #6311)
-			if (!static::isVisibleElement($objRow))
+			if ($objRow === null)
 			{
 				return '';
 			}
-
-			$strClass = Module::findClass($objRow->type);
-
-			// Return if the class does not exist
-			if (!class_exists($strClass))
-			{
-				static::log('Module class "'.$strClass.'" (module "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
-
-				return '';
-			}
-
-			$objRow->typePrefix = 'mod_';
-
-			/** @var Module $objModule */
-			$objModule = new $strClass($objRow, $strColumn);
-			$strBuffer = $objModule->generate();
-
-			// HOOK: add custom logic
-			if (isset($GLOBALS['TL_HOOKS']['getFrontendModule']) && \is_array($GLOBALS['TL_HOOKS']['getFrontendModule']))
-			{
-				foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback)
-				{
-					$strBuffer = static::importStatic($callback[0])->{$callback[1]}($objRow, $strBuffer, $objModule);
-				}
-			}
-
-			// Disable indexing if protected
-			if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
-			{
-				$strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
-			}
-
-			return $strBuffer;
 		}
+
+		// Check the visibility (see #6311)
+		if (!static::isVisibleElement($objRow))
+		{
+			return '';
+		}
+
+		$strClass = Module::findClass($objRow->type);
+
+		// Return if the class does not exist
+		if (!class_exists($strClass))
+		{
+			static::log('Module class "'.$strClass.'" (module "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
+
+			return '';
+		}
+
+		$objRow->typePrefix = 'mod_';
+
+		/** @var Module $objModule */
+		$objModule = new $strClass($objRow, $strColumn);
+		$strBuffer = $objModule->generate();
+
+		// HOOK: add custom logic
+		if (isset($GLOBALS['TL_HOOKS']['getFrontendModule']) && \is_array($GLOBALS['TL_HOOKS']['getFrontendModule']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback)
+			{
+				$strBuffer = static::importStatic($callback[0])->{$callback[1]}($objRow, $strBuffer, $objModule);
+			}
+		}
+
+		// Disable indexing if protected
+		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
+		{
+			$strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
+		}
+
+		return $strBuffer;
 	}
 
 	/**
@@ -946,18 +943,18 @@ abstract class Controller extends System
 			{
 				return $strType . ':' . $top . $arrValues['unit'] . ';';
 			}
-			elseif ($top == $bottom && $right == $left)
+
+			if ($top == $bottom && $right == $left)
 			{
 				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
 			}
-			elseif ($top != $bottom && $right == $left)
+
+			if ($top != $bottom && $right == $left)
 			{
 				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ';';
 			}
-			else
-			{
-				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
-			}
+
+			return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
 		}
 
 		$return = array();
@@ -1055,15 +1052,16 @@ abstract class Controller extends System
 	protected static function replaceOldBePaths($strContext)
 	{
 		$router = System::getContainer()->get('router');
+		$previewScript = System::getContainer()->getParameter('contao.preview_script');
 
-		$generate = static function ($route) use ($router)
+		$generate = static function ($route) use ($router, $previewScript)
 		{
 			if ($route == 'contao_backend_preview')
 			{
 				$origContext = $router->getContext();
 
 				$context = clone $origContext;
-				$context->setBaseUrl('/preview.php');
+				$context->setBaseUrl($previewScript);
 
 				$router->setContext($context);
 				$url = $router->generate($route);
@@ -1480,7 +1478,7 @@ abstract class Controller extends System
 		{
 			$size = array(0, 0, (int) $size);
 		}
-		elseif (!$size instanceof PictureConfigurationInterface)
+		elseif (!$size instanceof PictureConfiguration)
 		{
 			if (!\is_array($size))
 			{
@@ -2013,14 +2011,16 @@ abstract class Controller extends System
 		{
 			return $intId->loadDetails();
 		}
-		elseif ($intId instanceof Collection)
+
+		if ($intId instanceof Collection)
 		{
 			/** @var PageModel $objPage */
 			$objPage = $intId->current();
 
 			return $objPage->loadDetails();
 		}
-		elseif (\is_object($intId))
+
+		if (\is_object($intId))
 		{
 			$strKey = __METHOD__ . '-' . $intId->id;
 
@@ -2039,28 +2039,26 @@ abstract class Controller extends System
 
 			return $objPage;
 		}
-		else
+
+		// Invalid ID
+		if (!\strlen($intId) || $intId < 1)
 		{
-			// Invalid ID
-			if (!\strlen($intId) || $intId < 1)
-			{
-				return null;
-			}
-
-			$strKey = __METHOD__ . '-' . $intId;
-
-			// Try to load from cache
-			if (Cache::has($strKey))
-			{
-				return Cache::get($strKey);
-			}
-
-			$objPage = PageModel::findWithDetails($intId);
-
-			Cache::set($strKey, $objPage);
-
-			return $objPage;
+			return null;
 		}
+
+		$strKey = __METHOD__ . '-' . $intId;
+
+		// Try to load from cache
+		if (Cache::has($strKey))
+		{
+			return Cache::get($strKey);
+		}
+
+		$objPage = PageModel::findWithDetails($intId);
+
+		Cache::set($strKey, $objPage);
+
+		return $objPage;
 	}
 
 	/**

@@ -439,7 +439,7 @@ class InsertTags extends Controller
 									$strUrl = \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
 									break;
 								}
-								// DO NOT ADD A break; STATEMENT
+								// no break
 
 							default:
 								$strUrl = \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();

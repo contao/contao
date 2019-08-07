@@ -19,7 +19,7 @@ services:
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
-            - '@security.token_storage'
+            - '@security.helper'
             - '@translator'
         tags:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
@@ -28,7 +28,7 @@ services:
     contao.listener.backend_menu_listener:
         class: Contao\CoreBundle\EventListener\BackendMenuListener
         arguments:
-            - '@security.token_storage'
+            - '@security.helper'
         tags:
             - { name: kernel.event_listener, event: contao.backend_menu_build, method: onBuild }
 
@@ -80,8 +80,6 @@ services:
 
     contao.listener.exception_converter:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
-        arguments:
-            - '@database_connection'
         tags:
             # The priority must be higher than the one of the response exception listener (defaults to 64)
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 96 }
@@ -108,12 +106,14 @@ services:
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleListener
         arguments:
+            - '@translator'
             - '@contao.routing.scope_matcher'
             - '%contao.locales%'
         tags:
             # The priority must be lower than the one of the Symfony route listener (defaults to 32)
             # and higher than the Symfony locale listener (defaults to 16)
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
+            - { name: kernel.event_listener, event: kernel.request, method: setTranslatorLocale, priority: 100 }
 
     contao.listener.make_response_private:
         class: Contao\CoreBundle\EventListener\MakeResponsePrivateListener
@@ -134,8 +134,8 @@ services:
             - '%contao.pretty_error_screens%'
             - '@twig'
             - '@contao.framework'
-            - '@security.token_storage'
-            - '@logger'
+            - '@security.helper'
+            - '@?logger'
         tags:
             # The priority must be higher than the one of the Twig exception listener (defaults to -128)
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: -96 }
@@ -159,7 +159,8 @@ services:
             - '%contao.csrf_cookie_prefix%'
         tags:
             # The priority must be lower than the one of the Symfony route listener (defaults to 32)
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 30 }
+            # and the Symfony locale aware listener (defaults to 15)
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 14 }
 
     contao.listener.response_exception:
         class: Contao\CoreBundle\EventListener\ResponseExceptionListener
@@ -169,8 +170,7 @@ services:
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
         arguments:
-            - '@security.token_storage'
-            - '@security.authentication.trust_resolver'
+            - '@security.helper'
             - '@contao.routing.scope_matcher'
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
@@ -197,8 +197,7 @@ services:
         class: Contao\CoreBundle\EventListener\UserSessionListener
         arguments:
             - '@database_connection'
-            - '@security.token_storage'
-            - '@security.authentication.trust_resolver'
+            - '@security.helper'
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
         tags:

@@ -933,7 +933,7 @@ class tl_content extends Contao\Backend
 			case 'copy':
 				// Check access to the parent element if a content element is moved
 				$this->checkAccessToElement(Contao\Input::get('pid'), $pagemounts, (Contao\Input::get('mode') == 2));
-				// NO BREAK STATEMENT HERE
+				// no break
 
 			default:
 				// Check access to the content element

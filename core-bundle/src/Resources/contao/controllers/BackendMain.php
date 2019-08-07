@@ -13,11 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\HttpKernel\JwtManager;
 use Contao\CoreBundle\Util\PackageUtil;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -83,40 +80,6 @@ class BackendMain extends Backend
 		if (Input::get('do') == 'feRedirect')
 		{
 			$this->redirectToFrontendPage(Input::get('page'), Input::get('article'));
-		}
-
-		// Debug redirect
-		if ($this->User->isAdmin && Input::get('do') == 'debug')
-		{
-			$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-			if ($objRequest === null)
-			{
-				throw new \RuntimeException('The request stack did not contain a request');
-			}
-
-			$objJwtManager = $objRequest->attributes->get(JwtManager::REQUEST_ATTRIBUTE);
-			$script = Input::get('enable') ? '/preview.php' : '';
-
-			if (!$objJwtManager instanceof JwtManager)
-			{
-				if (($qs = $objRequest->getQueryString()) !== null)
-				{
-					$qs = '?' . $qs;
-				}
-
-				$this->redirect($script . $objRequest->getPathInfo() . $qs);
-			}
-
-			$strReferer = Input::get('referer') ? '?' . base64_decode(Input::get('referer', true)) : '';
-			$objResponse = new RedirectResponse($script . $objRequest->getPathInfo() . $strReferer);
-
-			if (Input::get('enable') != $container->get('kernel')->isDebug())
-			{
-				$objJwtManager->addResponseCookie($objResponse, array('debug' => (bool) Input::get('enable')));
-			}
-
-			throw new ResponseException($objResponse);
 		}
 
 		// Backend user profile redirect
@@ -294,9 +257,6 @@ class BackendMain extends Backend
 		$this->Template->preview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
 		$this->Template->previewTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreviewTitle']);
 		$this->Template->profile = $GLOBALS['TL_LANG']['MSC']['profile'];
-		$this->Template->canDebug = $this->User->isAdmin;
-		$this->Template->isDebug = $container->get('kernel')->isDebug();
-		$this->Template->debugMode = $GLOBALS['TL_LANG']['MSC']['debugMode'];
 		$this->Template->referer = $referer;
 		$this->Template->profileTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['profileTitle']);
 		$this->Template->security = $GLOBALS['TL_LANG']['MSC']['security'];
@@ -321,6 +281,10 @@ class BackendMain extends Backend
 		$this->Template->ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 		$this->Template->menu = $container->get('contao.menu.backend_menu_renderer')->render($container->get('contao.menu.backend_menu_builder')->create());
 		$this->Template->headerNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['headerNavigation']);
+
+		// TODO: This should be moved the the manager-bundle in Contao 4.9
+		$this->Template->canDebug = $this->User->isAdmin && System::getContainer()->has('contao_manager.jwt_manager');
+		$this->Template->isDebug = $container->get('kernel')->isDebug();
 
 		$strSystemMessages = Backend::getSystemMessages();
 		$this->Template->systemMessagesCount = substr_count($strSystemMessages, 'class="tl_');

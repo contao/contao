@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Framework;
 
 use Contao\Config;
-use Contao\CoreBundle\Exception\IncompleteInstallationException;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Fixtures\Adapter\LegacyClass;
 use Contao\CoreBundle\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Framework\Adapter;
@@ -364,7 +364,7 @@ class ContaoFrameworkTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testFailsIfTheInstallationIsIncomplete(): void
+    public function testRedirectsToTheInstallToolIfTheInstallationIsIncomplete(): void
     {
         $request = Request::create('/contao/login');
         $request->attributes->set('_route', 'dummy');
@@ -392,7 +392,7 @@ class ContaoFrameworkTest extends TestCase
         $adapterCache->setAccessible(true);
         $adapterCache->setValue($framework, $adapters);
 
-        $this->expectException(IncompleteInstallationException::class);
+        $this->expectException(RedirectResponseException::class);
 
         $framework->initialize();
     }

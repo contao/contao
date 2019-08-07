@@ -327,9 +327,6 @@ class Statement
 					break;
 
 				case 'object':
-					$arrValues[$k] = $this->resConnection->quote(serialize($v));
-					break;
-
 				case 'array':
 					$arrValues[$k] = $this->resConnection->quote(serialize($v));
 					break;

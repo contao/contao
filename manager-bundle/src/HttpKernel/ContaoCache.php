@@ -20,6 +20,9 @@ use FOS\HttpCache\SymfonyCache\PurgeListener;
 use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
 use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
+use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
@@ -72,9 +75,13 @@ class ContaoCache extends HttpCache implements CacheInvalidation
      */
     protected function createStore(): Psr6Store
     {
+        $cacheDir = $this->cacheDir ?: $this->kernel->getCacheDir().'/http_cache';
+
         return new Psr6Store([
-            'cache_directory' => $this->cacheDir ?: $this->kernel->getCacheDir().'/http_cache',
+            'cache_directory' => $cacheDir,
+            'cache' => new TagAwareAdapter(new FilesystemAdapter('', 0, $cacheDir)),
             'cache_tags_header' => TagHeaderFormatter::DEFAULT_HEADER_NAME,
+            'prune_threshold' => 5000,
         ]);
     }
 }

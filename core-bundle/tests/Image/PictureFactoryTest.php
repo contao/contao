@@ -19,14 +19,11 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImageInterface;
 use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
-use Contao\Image\PictureConfigurationInterface;
 use Contao\Image\PictureConfigurationItem;
-use Contao\Image\PictureConfigurationItemInterface;
 use Contao\Image\PictureGeneratorInterface;
 use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
-use Contao\Image\ResizeConfigurationInterface;
-use Contao\Image\ResizeOptionsInterface;
+use Contao\Image\ResizeOptions;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Model\Collection;
@@ -73,7 +70,7 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame('1x, 2x', $size->getDensities());
                         $this->assertSame('100vw', $size->getSizes());
 
-                        /** @var PictureConfigurationItemInterface $sizeItem */
+                        /** @var PictureConfigurationItem $sizeItem */
                         $sizeItem = $pictureConfig->getSizeItems()[0];
 
                         $this->assertSame(50, $sizeItem->getResizeConfig()->getWidth());
@@ -103,7 +100,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (?ResizeConfigurationInterface $size): bool {
+                    function (?ResizeConfiguration $size): bool {
                         $this->assertNull($size);
 
                         return true;
@@ -211,7 +208,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (PictureConfigurationInterface $config) use ($predefinedSizes): bool {
+                    function (PictureConfiguration $config) use ($predefinedSizes): bool {
                         $this->assertSame($predefinedSizes['foobar']['formats']['jpg'], $config->getFormats()['jpg']);
 
                         $size = $config->getSize();
@@ -224,7 +221,7 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame($predefinedSizes['foobar']['sizes'], $size->getSizes());
                         $this->assertSame($predefinedSizes['foobar']['sizes'], $size->getSizes());
 
-                        /** @var PictureConfigurationItemInterface $sizeItem */
+                        /** @var PictureConfigurationItem $sizeItem */
                         $sizeItem = $config->getSizeItems()[0];
 
                         $this->assertSame($predefinedSizes['foobar']['items'][0]['width'], $sizeItem->getResizeConfig()->getWidth());
@@ -238,7 +235,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (ResizeOptionsInterface $options): bool {
+                    function (ResizeOptions $options): bool {
                         $this->assertTrue($options->getSkipIfDimensionsMatch());
 
                         return true;
@@ -260,7 +257,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (?ResizeConfigurationInterface $size): bool {
+                    function (?ResizeConfiguration $size): bool {
                         $this->assertNull($size);
 
                         return true;
@@ -321,7 +318,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (PictureConfigurationInterface $config) use ($pictureConfig): bool {
+                    function (PictureConfiguration $config) use ($pictureConfig): bool {
                         $this->assertSame($pictureConfig, $config);
 
                         return true;
@@ -352,10 +349,10 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (PictureConfigurationInterface $config): bool {
+                    function (PictureConfiguration $config): bool {
                         $this->assertSame($config->getSizeItems(), []);
                         $this->assertSame(
-                            ResizeConfigurationInterface::MODE_CROP,
+                            ResizeConfiguration::MODE_CROP,
                             $config->getSize()->getResizeConfig()->getMode()
                         );
                         $this->assertSame(100, $config->getSize()->getResizeConfig()->getWidth());
@@ -435,7 +432,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (PictureConfigurationInterface $pictureConfig) use (&$defaultDensities): bool {
+                    function (PictureConfiguration $pictureConfig) use (&$defaultDensities): bool {
                         $this->assertSame(100, $pictureConfig->getSize()->getResizeConfig()->getWidth());
                         $this->assertSame(200, $pictureConfig->getSize()->getResizeConfig()->getHeight());
 
@@ -467,7 +464,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (?ResizeConfigurationInterface $size): bool {
+                    function (?ResizeConfiguration $size): bool {
                         $this->assertNull($size);
 
                         return true;

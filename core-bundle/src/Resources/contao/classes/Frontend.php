@@ -169,19 +169,11 @@ abstract class Frontend extends Controller
 					}
 				}
 
+				$arrAliases = array();
 				$strHost = Environment::get('host');
 
 				// Look for a root page whose domain name matches the host name
-				if (isset($arrPages[$strHost]))
-				{
-					$arrLangs = $arrPages[$strHost];
-				}
-				else
-				{
-					$arrLangs = $arrPages['*'] ?? array(); // empty domain
-				}
-
-				$arrAliases = array();
+				$arrLangs = $arrPages[$strHost] ?? $arrPages['*'] ?? array();
 
 				// Use the first result (see #4872)
 				if (!Config::get('addLanguageToUrl'))
@@ -223,10 +215,8 @@ abstract class Frontend extends Controller
 			{
 				return false;
 			}
-			else
-			{
-				$arrFragments = explode('/', $strRequest);
-			}
+
+			$arrFragments = explode('/', $strRequest);
 		}
 
 		// Add the second fragment as auto_item if the number of fragments is even
@@ -599,14 +589,13 @@ abstract class Frontend extends Controller
 		{
 			return 60;
 		}
-		elseif (!empty($GLOBALS['TL_CRON']['hourly']))
+
+		if (!empty($GLOBALS['TL_CRON']['hourly']))
 		{
 			return 3600;
 		}
-		else
-		{
-			return 86400; // daily
-		}
+
+		return 86400; // daily
 	}
 
 	/**

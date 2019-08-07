@@ -119,16 +119,15 @@ class PageTree extends Widget
 
 			return '';
 		}
-		elseif (strpos($varInput, ',') === false)
+
+		if (strpos($varInput, ',') === false)
 		{
 			return $this->multiple ? array((int) $varInput) : (int) $varInput;
 		}
-		else
-		{
-			$arrValue = array_map('\intval', array_filter(explode(',', $varInput)));
 
-			return $this->multiple ? $arrValue : $arrValue[0];
-		}
+		$arrValue = array_map('\intval', array_filter(explode(',', $varInput)));
+
+		return $this->multiple ? $arrValue : $arrValue[0];
 	}
 
 	/**

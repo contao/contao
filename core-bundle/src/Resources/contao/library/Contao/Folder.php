@@ -537,7 +537,7 @@ class Folder extends System
 		$matches = array();
 		$return = array('dirname'=>'', 'basename'=>'', 'extension'=>'', 'filename'=>'');
 
-		preg_match('%^^(.*?)[\\\\/]*([^/\\\\]*?)[\\\\/\.]*$%m', $this->strFolder, $matches);
+		preg_match('%^(.*?)[\\\\/]*([^/\\\\]*?)[\\\\/.]*$%m', $this->strFolder, $matches);
 
 		if (isset($matches[1]))
 		{

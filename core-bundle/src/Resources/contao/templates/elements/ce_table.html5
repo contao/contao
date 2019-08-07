@@ -28,10 +28,10 @@
     <?php endif; ?>
 
     <tbody>
-      <?php foreach ($this->body as $class=>$row): ?>
+      <?php foreach ($this->body as $class => $row): ?>
         <tr class="<?= $class ?>">
-          <?php foreach ($row as $i=>$col): ?>
-            <?php if ($i == 0 && $this->useLeftTh): ?>
+          <?php foreach ($row as $i => $col): ?>
+            <?php if (0 == $i && $this->useLeftTh): ?>
               <th scope="row" class="<?= $col['class'] ?>"><?= $col['content'] ?></th>
             <?php else: ?>
               <td class="<?= $col['class'] ?>"><?= $col['content'] ?></td>

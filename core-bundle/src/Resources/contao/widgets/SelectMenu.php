@@ -155,7 +155,7 @@ class SelectMenu extends Widget
 						$this->strName,
 						$this->strId,
 						$strClass,
-						(($this->strClass != '') ? ' ' . $this->strClass : ''),
+						($this->strClass ? ' ' . $this->strClass : ''),
 						$this->getAttributes(),
 						implode('', $arrOptions),
 						$this->wizard);

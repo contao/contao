@@ -35,7 +35,7 @@ services:
             - '@contao.image.resizer'
             - '%contao.image.target_dir%'
             - '@contao.image.deferred_image_storage'
-            - '@filesystem'
+            - '@?filesystem'
 
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand

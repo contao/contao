@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class LocaleListenerTest extends TestCase
 {
@@ -35,7 +36,12 @@ class LocaleListenerTest extends TestCase
         $kernel = $this->createMock(KernelInterface::class);
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new LocaleListener($this->mockScopeMatcher(), ['en']);
+        $listener = new LocaleListener(
+            $this->createMock(TranslatorInterface::class),
+            $this->mockScopeMatcher(),
+            ['en']
+        );
+
         $listener->onKernelRequest($event);
 
         $this->assertSame($expected, $request->attributes->get('_locale'));
@@ -60,9 +66,18 @@ class LocaleListenerTest extends TestCase
         $request->headers->set('Accept-Language', $locale);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $event = new GetResponseEvent($this->createMock(KernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new GetResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST
+        );
 
-        $listener = new LocaleListener($this->mockScopeMatcher(), $available);
+        $listener = new LocaleListener(
+            $this->createMock(TranslatorInterface::class),
+            $this->mockScopeMatcher(),
+            $available
+        );
+
         $listener->onKernelRequest($event);
 
         $this->assertSame($expected, $request->attributes->get('_locale'));
@@ -87,10 +102,18 @@ class LocaleListenerTest extends TestCase
             ->method('set')
         ;
 
-        $request = Request::create('/', Request::METHOD_GET, [$attributes]);
-        $event = new GetResponseEvent($this->createMock(KernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new GetResponseEvent(
+            $this->createMock(KernelInterface::class),
+            Request::create('/', Request::METHOD_GET, [$attributes]),
+            HttpKernelInterface::MASTER_REQUEST
+        );
 
-        $listener = new LocaleListener($this->mockScopeMatcher(), ['en']);
+        $listener = new LocaleListener(
+            $this->createMock(TranslatorInterface::class),
+            $this->mockScopeMatcher(),
+            ['en']
+        );
+
         $listener->onKernelRequest($event);
     }
 
@@ -100,11 +123,42 @@ class LocaleListenerTest extends TestCase
         $request->attributes->set('_locale', 'invalid');
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $event = new GetResponseEvent($this->createMock(KernelInterface::class), $request, HttpKernelInterface::MASTER_REQUEST);
-        $listener = new LocaleListener($this->mockScopeMatcher(), ['en']);
+        $event = new GetResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST
+        );
+
+        $listener = new LocaleListener(
+            $this->createMock(TranslatorInterface::class),
+            $this->mockScopeMatcher(),
+            ['en']
+        );
 
         $this->expectException('InvalidArgumentException');
 
         $listener->onKernelRequest($event);
+    }
+
+    public function testSetsTheTranslatorLocale(): void
+    {
+        $request = Request::create('/');
+        $request->headers->set('Accept-Language', 'de');
+
+        $event = new GetResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST
+        );
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->once())
+            ->method('setLocale')
+            ->with('de')
+        ;
+
+        $listener = new LocaleListener($translator, $this->mockScopeMatcher(), ['en', 'de']);
+        $listener->setTranslatorLocale($event);
     }
 }

@@ -11,9 +11,9 @@
 
   <link rel="stylesheet" href="<?php
     $objCombiner = new Contao\Combiner();
-    $objCombiner->add('system/themes/'. $this->theme .'/fonts.min.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/basic.min.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/confirm.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/fonts.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/basic.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/confirm.min.css');
     echo $objCombiner->getCombinedFile();
   ?>">
   <?= $this->stylesheets ?>
@@ -41,7 +41,7 @@
           <h1><?= $this->h1 ?></h1>
           <p class="link"><?= $this->link ?></p>
           <table>
-            <?php foreach ($this->info as $key=>$info): ?>
+            <?php foreach ($this->info as $key => $info): ?>
               <tr>
                 <th scope="row"><?= $this->labels[$key] ?></th>
                 <td><?= $info ?></td>

@@ -146,6 +146,12 @@
       <trans-unit id="tl_newsletter.sendConfirm">
         <source>Do you really want to send the newsletter?</source>
       </trans-unit>
+      <trans-unit id="tl_newsletter.send.0">
+        <source>Send newsletter</source>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.send.1">
+        <source>Send newsletter ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
         <source>New</source>
       </trans-unit>
@@ -166,9 +172,6 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.delete">
         <source>Delete newsletter ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.send">
-        <source>Send newsletter ID %s</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>

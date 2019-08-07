@@ -37,7 +37,7 @@
         "contao-components/tablesort": "^4.0",
         "contao-components/tablesorter": "^2.1",
         "contao-components/tinymce4": "^4.7",
-        "contao/image": "^1.0.0-beta3@beta",
+        "contao/image": "^1.0.0-beta4@beta",
         "contao/imagine-svg": "^0.1.2 || ^0.2",
         "doctrine/dbal": "^2.6",
         "doctrine/doctrine-bundle": "^1.8",
@@ -100,6 +100,7 @@
         "knplabs/knp-time-bundle": "1.9.0",
         "lexik/maintenance-bundle": "2.1.4",
         "symfony/doctrine-bridge": "<3.4",
+        "symfony/security-core": "4.2.* <4.2.3",
         "symfony/swiftmailer-bundle": "2.6.* <2.6.2",
         "symfony/twig-bundle": "4.1.0"
     },
@@ -115,7 +116,7 @@
         "php-http/guzzle6-adapter": "^1.1",
         "phpunit/phpunit": "^7.5",
         "symfony/browser-kit": "4.2.* || 4.3.*",
-        "symfony/phpunit-bridge": "^3.4.5"
+        "symfony/phpunit-bridge": "^4.3"
     },
     "suggest": {
         "contao/tcpdf-bundle": "To export articles as PDF files",

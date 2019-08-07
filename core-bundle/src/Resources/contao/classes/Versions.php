@@ -810,7 +810,8 @@ class Versions extends Controller
 		{
 			return $binary ? StringUtil::binToUuid($var) : $var;
 		}
-		elseif (!\is_array(current($var)))
+
+		if (!\is_array(current($var)))
 		{
 			if ($binary)
 			{
@@ -819,17 +820,15 @@ class Versions extends Controller
 
 			return implode(', ', $var);
 		}
-		else
+
+		$buffer = '';
+
+		foreach ($var as $k=>$v)
 		{
-			$buffer = '';
-
-			foreach ($var as $k=>$v)
-			{
-				$buffer .= $k . ": " . $this->implodeRecursive($v) . "\n";
-			}
-
-			return trim($buffer);
+			$buffer .= $k . ": " . $this->implodeRecursive($v) . "\n";
 		}
+
+		return trim($buffer);
 	}
 }
 

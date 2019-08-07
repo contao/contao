@@ -12,13 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Logout;
 
-use Contao\CoreBundle\HttpKernel\JwtManager;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\HttpUtils;
 
 class LogoutSuccessHandlerTest extends TestCase
@@ -135,69 +133,5 @@ class LogoutSuccessHandlerTest extends TestCase
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('contao_backend_login', $response->getTargetUrl());
-    }
-
-    public function testClearsTheJwtCookieInTheFrontend(): void
-    {
-        $response = new Response();
-
-        $jwtManager = $this->createMock(JwtManager::class);
-        $jwtManager
-            ->expects($this->once())
-            ->method('clearResponseCookie')
-            ->with($response)
-        ;
-
-        $request = new Request();
-        $request->attributes->set(JwtManager::REQUEST_ATTRIBUTE, $jwtManager);
-
-        $httpUtils = $this->createMock(HttpUtils::class);
-        $httpUtils
-            ->expects($this->once())
-            ->method('createRedirectResponse')
-            ->willReturn($response)
-        ;
-
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $scopeMatcher
-            ->expects($this->once())
-            ->method('isBackendRequest')
-            ->willReturn(false)
-        ;
-
-        $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
-        $handler->onLogoutSuccess($request);
-    }
-
-    public function testClearsTheJwtCookieInTheBackend(): void
-    {
-        $response = new Response();
-
-        $jwtManager = $this->createMock(JwtManager::class);
-        $jwtManager
-            ->expects($this->once())
-            ->method('clearResponseCookie')
-            ->with($response)
-        ;
-
-        $request = new Request();
-        $request->attributes->set(JwtManager::REQUEST_ATTRIBUTE, $jwtManager);
-
-        $httpUtils = $this->createMock(HttpUtils::class);
-        $httpUtils
-            ->expects($this->once())
-            ->method('createRedirectResponse')
-            ->willReturn($response)
-        ;
-
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $scopeMatcher
-            ->expects($this->once())
-            ->method('isBackendRequest')
-            ->willReturn(true)
-        ;
-
-        $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
-        $handler->onLogoutSuccess($request);
     }
 }

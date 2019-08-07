@@ -306,14 +306,13 @@ class tl_style_sheet extends Contao\Backend
 		{
 			return '<div class="tl_content_left">'. $row['name'] .' <span style="color:#999;padding-left:3px">@media '. $row['mediaQuery'] . $cc .'</span>' . "</div>\n";
 		}
-		elseif (!empty($media) && \is_array($media))
+
+		if (!empty($media) && \is_array($media))
 		{
 			return '<div class="tl_content_left">'. $row['name'] .' <span style="color:#999;padding-left:3px">@media '. implode(', ', $media) . $cc .'</span>' . "</div>\n";
 		}
-		else
-		{
-			return '<div class="tl_content_left">'. $row['name'] . $cc ."</div>\n";
-		}
+
+		return '<div class="tl_content_left">'. $row['name'] . $cc ."</div>\n";
 	}
 
 	/**

@@ -93,8 +93,8 @@ class SwitchUserListenerTest extends TestCase
             $token = $this->createMock(TokenInterface::class);
             $token
                 ->expects($this->once())
-                ->method('getUser')
-                ->willReturn($this->mockBackendUser($username))
+                ->method('getUsername')
+                ->willReturn($username)
             ;
 
             $tokenStorage
@@ -105,24 +105,6 @@ class SwitchUserListenerTest extends TestCase
         }
 
         return $tokenStorage;
-    }
-
-    /**
-     * @return BackendUser&MockObject
-     */
-    private function mockBackendUser(string $username = null): BackendUser
-    {
-        $user = $this->createPartialMock(BackendUser::class, ['getUsername']);
-
-        if (null !== $username) {
-            $user
-                ->expects($this->once())
-                ->method('getUsername')
-                ->willReturn($username)
-            ;
-        }
-
-        return $user;
     }
 
     private function mockSwitchUserEvent(string $username = null): SwitchUserEvent

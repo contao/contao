@@ -29,7 +29,7 @@
         "contao/test-case": "^3.0",
         "php-http/guzzle6-adapter": "^1.1",
         "phpunit/phpunit": "^7.5",
-        "symfony/phpunit-bridge": "^3.4.5"
+        "symfony/phpunit-bridge": "^4.3"
     },
     "extra": {
         "branch-alias": {

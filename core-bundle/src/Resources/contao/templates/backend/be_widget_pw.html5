@@ -1,6 +1,6 @@
 
 <div class="w50 widget">
-  <h3><?= $this->generateLabel() . $this->xlabel ?></h3>
+  <h3><?= $this->generateLabel().$this->xlabel ?></h3>
   <?= $this->generateWithError(true) ?>
 </div>
 

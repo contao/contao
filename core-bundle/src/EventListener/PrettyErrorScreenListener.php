@@ -12,15 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
-use Contao\CoreBundle\Exception\IncompleteInstallationException;
-use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
-use Contao\CoreBundle\Exception\NoActivePageFoundException;
-use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
-use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageError404;
@@ -35,7 +28,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
+use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 use Twig\Error\Error;
 
@@ -57,34 +51,21 @@ class PrettyErrorScreenListener
     private $framework;
 
     /**
-     * @var TokenStorageInterface
+     * @var Security
      */
-    private $tokenStorage;
+    private $security;
 
     /**
      * @var LoggerInterface
      */
     private $logger;
 
-    /**
-     * @var array
-     */
-    private static $mapper = [
-        ForwardPageNotFoundException::class => 'forward_page_not_found',
-        IncompleteInstallationException::class => 'incomplete_installation',
-        InsecureInstallationException::class => 'insecure_installation',
-        InvalidRequestTokenException::class => 'invalid_request_token',
-        NoActivePageFoundException::class => 'no_active_page_found',
-        NoLayoutSpecifiedException::class => 'no_layout_specified',
-        NoRootPageFoundException::class => 'no_root_page_found',
-    ];
-
-    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, TokenStorageInterface $tokenStorage, LoggerInterface $logger = null)
+    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security, LoggerInterface $logger = null)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;
-        $this->tokenStorage = $tokenStorage;
+        $this->security = $security;
         $this->logger = $logger;
     }
 
@@ -114,8 +95,14 @@ class PrettyErrorScreenListener
     {
         $exception = $event->getException();
 
+        try {
+            $isBackendUser = $this->security->isGranted('ROLE_USER');
+        } catch (AuthenticationCredentialsNotFoundException $e) {
+            $isBackendUser = false;
+        }
+
         switch (true) {
-            case $this->isBackendUser():
+            case $isBackendUser:
                 $this->renderBackendException($event);
                 break;
 
@@ -200,23 +187,12 @@ class PrettyErrorScreenListener
 
         // Look for a template
         do {
-            if ($exception instanceof \Exception) {
-                $template = $this->getTemplateForException($exception);
+            if ($exception instanceof InvalidRequestTokenException) {
+                $template = 'invalid_request_token';
             }
         } while (null === $template && null !== ($exception = $exception->getPrevious()));
 
         $this->renderTemplate($template ?: 'error', $statusCode, $event);
-    }
-
-    private function getTemplateForException(\Exception $exception): ?string
-    {
-        foreach (self::$mapper as $class => $template) {
-            if ($exception instanceof $class) {
-                return $template;
-            }
-        }
-
-        return null;
     }
 
     private function renderTemplate(string $template, int $statusCode, GetResponseForExceptionEvent $event): void
@@ -267,33 +243,12 @@ class PrettyErrorScreenListener
     private function isLoggable(\Exception $exception): bool
     {
         do {
-            if ($exception instanceof ForwardPageNotFoundException) {
-                return true;
-            }
-
-            if (isset(self::$mapper[\get_class($exception)])) {
+            if ($exception instanceof InvalidRequestTokenException) {
                 return false;
             }
         } while (null !== ($exception = $exception->getPrevious()));
 
         return true;
-    }
-
-    private function isBackendUser(): bool
-    {
-        $token = $this->tokenStorage->getToken();
-
-        if (null === $token) {
-            return false;
-        }
-
-        $user = $token->getUser();
-
-        if (null === $user) {
-            return false;
-        }
-
-        return $user instanceof BackendUser;
     }
 
     private function getStatusCodeForException(\Exception $exception): int

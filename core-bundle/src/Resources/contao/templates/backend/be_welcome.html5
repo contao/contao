@@ -35,10 +35,10 @@
             <td><?= $version['shortTable'] ?></td>
             <td><?= $version['pid'] ?></td>
             <td><?= $version['description'] ?: '-' ?></td>
-            <td><?= $version['active'] ? '<strong>' . $version['version'] . '</strong>' : $version['version'] ?></td>
+            <td><?= $version['active'] ? '<strong>'.$version['version'].'</strong>' : $version['version'] ?></td>
             <td>
               <?php if ($version['deleted']): ?>
-                <a href="<?= $this->route('contao_backend', array('do'=>'undo')) ?>" title="<?= Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['restore']) ?>"><?= Contao\Image::getHtml('undo.svg', '', 'class="undo"') ?></a>
+                <a href="<?= $this->route('contao_backend', ['do' => 'undo']) ?>" title="<?= Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['restore']) ?>"><?= Contao\Image::getHtml('undo.svg', '', 'class="undo"') ?></a>
               <?php else: ?>
                 <?php if ($version['editUrl']): ?>
                   <a href="<?= $version['editUrl'] ?>" title="<?= $this->editElement ?>" class="edit"><?= Contao\Image::getHtml('edit.svg', '', 'style="padding:0 2px"') ?></a>

@@ -15,8 +15,8 @@
         <div class="widget widget-radio">
           <fieldset class="radio_container">
             <legend class="invisible"><?= $this->optionsLabel ?></legend>
-            <span><input type="radio" name="query_type" id="matchAll_<?= $this->uniqueId ?>" class="radio" value="and"<?php if ($this->queryType == 'and'): ?> checked<?php endif; ?>> <label for="matchAll_<?= $this->uniqueId ?>"><?= $this->matchAll ?></label></span>
-            <span><input type="radio" name="query_type" id="matchAny_<?= $this->uniqueId ?>" class="radio" value="or"<?php if ($this->queryType == 'or'): ?> checked<?php endif; ?>> <label for="matchAny_<?= $this->uniqueId ?>"><?= $this->matchAny ?></label></span>
+            <span><input type="radio" name="query_type" id="matchAll_<?= $this->uniqueId ?>" class="radio" value="and"<?php if ('and' == $this->queryType): ?> checked<?php endif; ?>> <label for="matchAll_<?= $this->uniqueId ?>"><?= $this->matchAll ?></label></span>
+            <span><input type="radio" name="query_type" id="matchAny_<?= $this->uniqueId ?>" class="radio" value="or"<?php if ('or' == $this->queryType): ?> checked<?php endif; ?>> <label for="matchAny_<?= $this->uniqueId ?>"><?= $this->matchAny ?></label></span>
           </fieldset>
         </div>
       <?php endif; ?>
@@ -30,6 +30,6 @@
     <?php endif; ?>
   <?php endif; ?>
 
-  <?= $this->results . $this->pagination ?>
+  <?= $this->results.$this->pagination ?>
 
 <?php $this->endblock(); ?>

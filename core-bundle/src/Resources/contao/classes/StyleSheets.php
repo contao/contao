@@ -987,14 +987,13 @@ class StyleSheets extends Backend
 		{
 			return '#' . $this->shortenHexColor($color);
 		}
-		elseif (!isset($color[1]) || empty($color[1]))
+
+		if (!isset($color[1]) || empty($color[1]))
 		{
 			return '#' . $this->shortenHexColor($color[0]);
 		}
-		else
-		{
-			return 'rgba(' . implode(',', $this->convertHexColor($color[0], $blnWriteToFile, $vars)) . ','. ($color[1] / 100) .')';
-		}
+
+		return 'rgba(' . implode(',', $this->convertHexColor($color[0], $blnWriteToFile, $vars)) . ','. ($color[1] / 100) .')';
 	}
 
 	/**
@@ -1034,10 +1033,8 @@ class StyleSheets extends Backend
 			{
 				return array($color);
 			}
-			else
-			{
-				$color = str_replace(array_keys($vars), $vars, $color);
-			}
+
+			$color = str_replace(array_keys($vars), $vars, $color);
 		}
 
 		$rgb = array();
@@ -1841,7 +1838,7 @@ class StyleSheets extends Backend
 						// Handle linear gradients (see #4640)
 						if (strncmp($url, 'linear-gradient', 15) === 0)
 						{
-							$colors = StringUtil::trimsplit(',', preg_replace('/linear-gradient ?\(([^\)]+)\)/', '$1', $url));
+							$colors = StringUtil::trimsplit(',', preg_replace('/linear-gradient ?\(([^)]+)\)/', '$1', $url));
 							$arrSet['gradientAngle'] = array_shift($colors);
 							$arrSet['gradientColors'] = serialize($colors);
 						}

@@ -142,9 +142,9 @@ abstract class System
 	/**
 	 * Import a library and make it accessible by its name or an optional key
 	 *
-	 * @param string  $strClass The class name
-	 * @param string  $strKey   An optional key to store the object under
-	 * @param boolean $blnForce If true, existing objects will be overridden
+	 * @param string|object $strClass The class name
+	 * @param string|object $strKey   An optional key to store the object under
+	 * @param boolean       $blnForce If true, existing objects will be overridden
 	 *
 	 * @throws ServiceNotFoundException
 	 */
@@ -187,9 +187,9 @@ abstract class System
 	/**
 	 * Import a library in non-object context
 	 *
-	 * @param string  $strClass The class name
-	 * @param string  $strKey   An optional key to store the object under
-	 * @param boolean $blnForce If true, existing objects will be overridden
+	 * @param string|object $strClass The class name
+	 * @param string|object $strKey   An optional key to store the object under
+	 * @param boolean       $blnForce If true, existing objects will be overridden
 	 *
 	 * @throws ServiceNotFoundException
 	 *
@@ -748,11 +748,9 @@ abstract class System
 		{
 			return substr_replace($strIp, ':0000', strrpos($strIp, ':'));
 		}
+
 		// IPv4
-		else
-		{
-			return substr_replace($strIp, '.0', strrpos($strIp, '.'));
-		}
+		return substr_replace($strIp, '.0', strrpos($strIp, '.'));
 	}
 
 	/**

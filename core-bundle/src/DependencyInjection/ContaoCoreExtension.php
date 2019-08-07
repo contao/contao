@@ -59,21 +59,16 @@ class ContaoCoreExtension extends Extension
             new FileLocator(__DIR__.'/../Resources/config')
         );
 
-        static $files = [
-            'commands.yml',
-            'listener.yml',
-            'services.yml',
-        ];
-
-        foreach ($files as $file) {
-            $loader->load($file);
-        }
+        $loader->load('commands.yml');
+        $loader->load('listener.yml');
+        $loader->load('services.yml');
 
         $container->setParameter('contao.web_dir', $config['web_dir']);
         $container->setParameter('contao.prepend_locale', $config['prepend_locale']);
         $container->setParameter('contao.encryption_key', $config['encryption_key']);
         $container->setParameter('contao.url_suffix', $config['url_suffix']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
+        $container->setParameter('contao.preview_script', $config['preview_script']);
         $container->setParameter('contao.csrf_cookie_prefix', $config['csrf_cookie_prefix']);
         $container->setParameter('contao.csrf_token_name', $config['csrf_token_name']);
         $container->setParameter('contao.pretty_error_screens', $config['pretty_error_screens']);

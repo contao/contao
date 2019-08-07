@@ -489,7 +489,7 @@ class Theme extends Backend
 						}
 
 						// Increment the ID
-						elseif ($name == 'id')
+						if ($name == 'id')
 						{
 							$value = $arrMapper[$table][$value];
 						}
@@ -560,7 +560,7 @@ class Theme extends Backend
 
 							if ($objCount->count > 0)
 							{
-								$value = preg_replace('/( |\-)[0-9]+$/', '', $value);
+								$value = preg_replace('/[ -][0-9]+$/', '', $value);
 								$value .= (($table == 'tl_style_sheet') ? '-' : ' ') . ${$table};
 							}
 						}

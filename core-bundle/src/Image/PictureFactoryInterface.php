@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image;
 
 use Contao\Image\ImageInterface;
-use Contao\Image\PictureConfigurationInterface;
+use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureInterface;
 
 interface PictureFactoryInterface
@@ -30,8 +30,8 @@ interface PictureFactoryInterface
     /**
      * Creates a Picture object.
      *
-     * @param string|ImageInterface                        $path
-     * @param int|array|PictureConfigurationInterface|null $size
+     * @param string|ImageInterface               $path
+     * @param int|array|PictureConfiguration|null $size
      *
      * @return PictureInterface
      */

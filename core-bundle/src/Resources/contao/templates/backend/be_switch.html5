@@ -11,9 +11,9 @@
 
   <link rel="stylesheet" href="<?php
     $objCombiner = new Contao\Combiner();
-    $objCombiner->add('system/themes/'. $this->theme .'/fonts.min.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/basic.min.css');
-    $objCombiner->add('system/themes/'. $this->theme .'/switch.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/fonts.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/basic.min.css');
+    $objCombiner->add('system/themes/'.$this->theme.'/switch.min.css');
     echo $objCombiner->getCombinedFile();
   ?>">
   <?= $this->stylesheets ?>
@@ -42,13 +42,6 @@
             <option value="-"></option>
           </datalist>
         <?php endif; ?>
-        <?php if ($this->canDebug): ?>
-          <label for="ctrl_debug"><?= $this->debugMode ?>:</label>
-          <select name="debug" id="ctrl_debug" class="tl_select">
-            <option value="0"><?= $this->lblDisabled ?></option>
-            <option value="1"<?php if ($this->debug): ?> selected<?php endif; ?>><?= $this->lblEnabled ?></option>
-          </select>
-        <?php endif; ?>
         <label for="ctrl_unpublished"><?= $this->hiddenElements ?>:</label>
         <select name="unpublished" id="ctrl_unpublished" class="tl_select">
           <option value="hide"><?= $this->lblHide ?></option>
@@ -56,7 +49,7 @@
         </select>
         <button type="submit" class="tl_submit"><?= $this->apply ?></button>
         <button type="button" class="tl_submit" onclick="parent.frames[1].location.reload()"><?= $this->reload ?></button>
-        <a href="javascript:parent.location.href=parent.frames[1].location.href.replace('/preview.php', '')" class="close">&times;</a>
+        <a href="javascript:parent.location.href=parent.frames[1].location.href" class="close">&times;</a>
       </div>
     </form>
   </div>

@@ -266,7 +266,7 @@ abstract class Widget extends Controller
 				{
 					$varValue = $varValue ? 'on' : 'off';
 				}
-				// Do not add a break; statement here
+				// no break
 
 			case 'alt':
 			case 'style':
@@ -298,7 +298,7 @@ abstract class Widget extends Controller
 			case 'disabled':
 			case 'readonly':
 				$this->blnSubmitInput = $varValue ? false : true;
-				// Do not add a break; statement here
+				// no break
 
 			case 'autofocus':
 				if ($varValue)
@@ -316,7 +316,7 @@ abstract class Widget extends Controller
 				{
 					$this->strClass = trim($this->strClass . ' mandatory');
 				}
-				// Do not add a break; statement here
+				// no break
 
 			case 'mandatory':
 			case 'nospace':
@@ -379,7 +379,8 @@ abstract class Widget extends Controller
 				{
 					return Encryption::encrypt($this->varValue);
 				}
-				elseif ($this->varValue === '')
+
+				if ($this->varValue === '')
 				{
 					return $this->getEmptyStringOrNull();
 				}
@@ -424,7 +425,8 @@ abstract class Widget extends Controller
 				{
 					return $this->arrAttributes[$strKey];
 				}
-				elseif (isset($this->arrConfiguration[$strKey]))
+
+				if (isset($this->arrConfiguration[$strKey]))
 				{
 					return $this->arrConfiguration[$strKey];
 				}
@@ -716,7 +718,8 @@ abstract class Widget extends Controller
 		{
 			return ' ' . $strKey;
 		}
-		elseif ($varValue != '')
+
+		if ($varValue != '')
 		{
 			return ' ' . $strKey . '="' . StringUtil::specialchars($varValue) . '"';
 		}
@@ -829,16 +832,14 @@ abstract class Widget extends Controller
 			{
 				return '';
 			}
+
+			if ($this->strLabel == '')
+			{
+				$this->addError($GLOBALS['TL_LANG']['ERR']['mdtryNoLabel']);
+			}
 			else
 			{
-				if ($this->strLabel == '')
-				{
-					$this->addError($GLOBALS['TL_LANG']['ERR']['mdtryNoLabel']);
-				}
-				else
-				{
-					$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
-				}
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
 			}
 		}
 
@@ -875,7 +876,7 @@ abstract class Widget extends Controller
 					{
 						break;
 					}
-					// DO NOT ADD A break; STATEMENT HERE
+					// no break
 
 				// Numeric characters (including full stop [.] and minus [-])
 				case 'digit':
@@ -973,7 +974,7 @@ abstract class Widget extends Controller
 				// Check whether the current value is a valid friendly name e-mail address
 				case 'friendly':
 					list ($strName, $varInput) = StringUtil::splitFriendlyEmail($varInput);
-					// no break;
+					// no break
 
 				// Check whether the current value is a valid e-mail address
 				case 'email':
@@ -1440,7 +1441,7 @@ abstract class Widget extends Controller
 	/**
 	 * Return the empty value based on the SQL string
 	 *
-	 * @param string $sql The SQL string
+	 * @param string|array $sql The SQL string
 	 *
 	 * @return string|integer|null The empty value
 	 */
@@ -1483,7 +1484,7 @@ abstract class Widget extends Controller
 			return null;
 		}
 
-		$type = strtolower(preg_replace('/^([A-Za-z]+)(\(| ).*$/', '$1', $sql));
+		$type = strtolower(preg_replace('/^([A-Za-z]+)[( ].*$/', '$1', $sql));
 
 		if (\in_array($type, array('int', 'integer', 'tinyint', 'smallint', 'mediumint', 'bigint', 'float', 'double', 'dec', 'decimal')))
 		{

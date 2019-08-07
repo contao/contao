@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Picker;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PagePickerProvider;
 use Contao\CoreBundle\Picker\PickerBuilder;
@@ -20,6 +19,7 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class PickerBuilderTest extends ContaoTestCase
@@ -51,12 +51,11 @@ class PickerBuilderTest extends ContaoTestCase
         $router = $this->createMock(RouterInterface::class);
         $translator = $this->createMock(TranslatorInterface::class);
 
-        $pageProvider = new PagePickerProvider($factory, $router);
-        $pageProvider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
+        $pageProvider = new PagePickerProvider($factory, $router, null, $this->getSecurityHelper());
 
         $this->builder->addProvider($pageProvider);
 
-        $fileProvider = new FilePickerProvider($factory, $router, $translator, __DIR__);
+        $fileProvider = new FilePickerProvider($factory, $router, $translator, $this->getSecurityHelper(), __DIR__);
 
         $this->builder->addProvider($fileProvider);
 
@@ -81,8 +80,7 @@ class PickerBuilderTest extends ContaoTestCase
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
 
-        $provider = new PagePickerProvider($factory, $router);
-        $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
+        $provider = new PagePickerProvider($factory, $router, null, $this->getSecurityHelper());
 
         $this->builder->addProvider($provider);
 
@@ -97,8 +95,7 @@ class PickerBuilderTest extends ContaoTestCase
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
 
-        $provider = new PagePickerProvider($factory, $router);
-        $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
+        $provider = new PagePickerProvider($factory, $router, null, $this->getSecurityHelper());
 
         $this->builder->addProvider($provider);
 
@@ -110,8 +107,7 @@ class PickerBuilderTest extends ContaoTestCase
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
 
-        $provider = new PagePickerProvider($factory, $router);
-        $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
+        $provider = new PagePickerProvider($factory, $router, null, $this->getSecurityHelper());
 
         $this->builder->addProvider($provider);
 
@@ -125,8 +121,7 @@ class PickerBuilderTest extends ContaoTestCase
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
 
-        $provider = new PagePickerProvider($factory, $router);
-        $provider->setTokenStorage($this->mockTokenStorage(BackendUser::class));
+        $provider = new PagePickerProvider($factory, $router, null, $this->getSecurityHelper());
 
         $this->builder->addProvider($provider);
 
@@ -136,5 +131,16 @@ class PickerBuilderTest extends ContaoTestCase
     public function testReturnsAnEmptyPickerUrlIfTheContextIsNotSupported(): void
     {
         $this->assertSame('', $this->builder->getUrl('foo'));
+    }
+
+    private function getSecurityHelper(): Security
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->method('isGranted')
+            ->willReturn(true)
+        ;
+
+        return $security;
     }
 }

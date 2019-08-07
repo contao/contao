@@ -41,13 +41,13 @@
           <div class="widget widget-select">
             <label for="ctrl_per_page" class="invisible"><?= $this->per_page_label ?></label>
             <select name="per_page" id="ctrl_per_page" class="select">
-              <option value="10"<?php if ($this->per_page == 10): ?> selected<?php endif; ?>>10</option>
-              <option value="20"<?php if ($this->per_page == 20): ?> selected<?php endif; ?>>20</option>
-              <option value="30"<?php if ($this->per_page == 30): ?> selected<?php endif; ?>>30</option>
-              <option value="50"<?php if ($this->per_page == 50): ?> selected<?php endif; ?>>50</option>
-              <option value="100"<?php if ($this->per_page == 100): ?> selected<?php endif; ?>>100</option>
-              <option value="250"<?php if ($this->per_page == 250): ?> selected<?php endif; ?>>250</option>
-              <option value="500"<?php if ($this->per_page == 500): ?> selected<?php endif; ?>>500</option>
+              <option value="10"<?php if (10 == $this->per_page): ?> selected<?php endif; ?>>10</option>
+              <option value="20"<?php if (20 == $this->per_page): ?> selected<?php endif; ?>>20</option>
+              <option value="30"<?php if (30 == $this->per_page): ?> selected<?php endif; ?>>30</option>
+              <option value="50"<?php if (50 == $this->per_page): ?> selected<?php endif; ?>>50</option>
+              <option value="100"<?php if (100 == $this->per_page): ?> selected<?php endif; ?>>100</option>
+              <option value="250"<?php if (250 == $this->per_page): ?> selected<?php endif; ?>>250</option>
+              <option value="500"<?php if (500 == $this->per_page): ?> selected<?php endif; ?>>500</option>
             </select>
           </div>
           <div class="widget widget-submit">
@@ -73,7 +73,7 @@
       </tr>
     </thead>
     <tbody>
-      <?php foreach ($this->tbody as $class=>$row): ?>
+      <?php foreach ($this->tbody as $class => $row): ?>
         <tr class="<?= $class ?>">
           <?php foreach ($row as $col): ?>
             <td class="body <?= $col['class'] ?>"><?= $col['content'] ?></td>

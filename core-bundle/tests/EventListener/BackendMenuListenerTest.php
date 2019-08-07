@@ -18,8 +18,7 @@ use Contao\CoreBundle\EventListener\BackendMenuListener;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuFactory;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class BackendMenuListenerTest extends TestCase
@@ -27,11 +26,6 @@ class BackendMenuListenerTest extends TestCase
     public function testCreatesANodeListFromTheBackendUserMenuArray(): void
     {
         $user = $this->createPartialMock(BackendUser::class, ['hasAccess', 'navigation']);
-        $user
-            ->method('hasAccess')
-            ->willReturn(true)
-        ;
-
         $user
             ->method('navigation')
             ->willReturn([
@@ -67,22 +61,16 @@ class BackendMenuListenerTest extends TestCase
             ])
         ;
 
-        $token = $this->createMock(TokenInterface::class);
-        $token
+        $security = $this->createMock(Security::class);
+        $security
             ->method('getUser')
             ->willReturn($user)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn($token)
         ;
 
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('root'));
 
-        $listener = new BackendMenuListener($tokenStorage);
+        $listener = new BackendMenuListener($security);
         $listener->onBuild($event);
 
         $tree = $event->getTree();
@@ -124,45 +112,20 @@ class BackendMenuListenerTest extends TestCase
         $this->assertSame('node2', $childNode->getAttribute('class'));
     }
 
-    public function testDoesNotModifyTheTreeIfNoTokenIsGiven(): void
-    {
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn(null)
-        ;
-
-        $nodeFactory = new MenuFactory();
-        $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('root'));
-
-        $listener = new BackendMenuListener($tokenStorage);
-        $listener->onBuild($event);
-
-        $tree = $event->getTree();
-
-        $this->assertCount(0, $tree->getChildren());
-    }
-
     public function testDoesNotModifyTheTreeIfNoBackendUserIsGiven(): void
     {
         $user = $this->createMock(UserInterface::class);
 
-        $token = $this->createMock(TokenInterface::class);
-        $token
+        $security = $this->createMock(Security::class);
+        $security
             ->method('getUser')
             ->willReturn($user)
-        ;
-
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $tokenStorage
-            ->method('getToken')
-            ->willReturn($token)
         ;
 
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('root'));
 
-        $listener = new BackendMenuListener($tokenStorage);
+        $listener = new BackendMenuListener($security);
         $listener->onBuild($event);
 
         $tree = $event->getTree();

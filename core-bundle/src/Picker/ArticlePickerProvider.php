@@ -12,8 +12,25 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
+use Knp\Menu\FactoryInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Translation\TranslatorInterface;
+
 class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
+    /**
+     * @var Security
+     */
+    private $security;
+
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
+    {
+        parent::__construct($menuFactory, $router, $translator);
+
+        $this->security = $security;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -27,7 +44,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
      */
     public function supportsContext($context): bool
     {
-        return 'link' === $context && $this->getUser()->hasAccess('article', 'modules');
+        return 'link' === $context && $this->security->isGranted('contao_user.modules', 'article');
     }
 
     /**

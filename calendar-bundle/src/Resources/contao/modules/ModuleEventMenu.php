@@ -120,7 +120,7 @@ class ModuleEventMenu extends ModuleCalendar
 
 		$this->Template->yearly = true;
 		$this->Template->items = $arrItems;
-		$this->Template->showQuantity = ($this->cal_showQuantity != '') ? true : false;
+		$this->Template->showQuantity = (bool) $this->cal_showQuantity;
 	}
 
 	/**
@@ -173,7 +173,7 @@ class ModuleEventMenu extends ModuleCalendar
 		}
 
 		$this->Template->items = $arrItems;
-		$this->Template->showQuantity = ($this->cal_showQuantity != '') ? true : false;
+		$this->Template->showQuantity = (bool) $this->cal_showQuantity;
 		$this->Template->url = $this->strLink . '?';
 		$this->Template->activeYear = Input::get('year');
 	}
