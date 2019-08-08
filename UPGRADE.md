@@ -1,5 +1,11 @@
 # API changes
 
+## Version 4.* to 4.8
+
+### Image library version 1.0
+
+`contao/image` got updated from version 0.3 to 1.0, see [contao/image/UPGRADE.md](https://github.com/contao/image/blob/master/UPGRADE.md#version-03-to-10) to get more information about what changed with the new version.
+
 ## Version 4.* to 4.6
 
 ### Anonymize Google Analytics
