@@ -245,7 +245,7 @@ class InstallTool
             ;
 
             // The variable no longer exists as of MySQL 8 and MariaDB 10.3
-            if (false === $row) {
+            if (false === $row || '' === $row->Value) {
                 return false;
             }
 
@@ -284,7 +284,7 @@ class InstallTool
             ;
 
             // The InnoDB file format is not Barracuda
-            if ('barracuda' !== strtolower((string) $row->Value)) {
+            if ('barracuda' !== strtolower((string) $row->Value) && '' !== $row->Value) {
                 $context['errorCode'] = 6;
 
                 return true;
