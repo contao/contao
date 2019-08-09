@@ -213,9 +213,7 @@ class Installer
                 $deleteIndexes = true;
                 $alterTables[md5($command)] = $command;
             } elseif ($innodb && $dynamic) {
-                $rowFormat = $table->getOption('row_format');
-
-                if ($rowFormat && strtolower($tableOptions->Row_format) !== strtolower($rowFormat)) {
+                if (false === stripos($tableOptions->Create_options, 'row_format=dynamic')) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
                     $alterTables[md5($command)] = $command;
                 }
