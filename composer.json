@@ -108,6 +108,9 @@
         "symfony/phpunit-bridge": "^3.3.11"
     },
     "extra": {
+        "symfony": {
+            "require": "^3.3"
+        },
         "contao-manager-plugin": {
             "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
