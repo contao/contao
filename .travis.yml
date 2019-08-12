@@ -131,8 +131,6 @@ before_install:
     run_split_tests () {
       php -r '
         $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
-        $data["minimum-stability"] = "beta";
-        $data["prefer-stable"] = true;
         if ("contao/core-bundle" !== $data["name"]) {
           $data["repositories"][0]["type"] = "path";
           $data["repositories"][0]["url"] = "../core-bundle";
