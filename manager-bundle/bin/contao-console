@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Debug\Debug;
 
 set_time_limit(0);
+@ini_set('zlib.output_compression', '0');
 
 if (file_exists(__DIR__.'/../autoload.php')) {
     // Composer bin directory
