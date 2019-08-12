@@ -436,7 +436,7 @@ class InstallerTest extends TestCase
                                 ->method('fetch')
                                 ->willReturn((object) [
                                     'Engine' => 'InnoDB',
-                                    'Row_format' => 'COMPATCT',
+                                    'Create_options' => 'row_format=COMPATCT',
                                     'Collation' => 'utf8mb4_unicode_ci',
                                 ])
                             ;

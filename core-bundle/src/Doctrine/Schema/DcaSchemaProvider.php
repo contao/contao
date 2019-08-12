@@ -458,7 +458,7 @@ class DcaSchemaProvider
         ;
 
         // The InnoDB file format is not Barracuda
-        if ('barracuda' !== strtolower((string) $fileFormat->Value) && '' !== $fileFormat->Value) {
+        if ('' !== $fileFormat->Value && 'barracuda' !== strtolower((string) $fileFormat->Value)) {
             return 767;
         }
 

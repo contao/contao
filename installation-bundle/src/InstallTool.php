@@ -284,7 +284,7 @@ class InstallTool
             ;
 
             // The InnoDB file format is not Barracuda
-            if ('barracuda' !== strtolower((string) $row->Value) && '' !== $row->Value) {
+            if ('' !== $row->Value && 'barracuda' !== strtolower((string) $row->Value)) {
                 $context['errorCode'] = 6;
 
                 return true;
