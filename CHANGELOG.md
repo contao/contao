@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Fix the shift key checkbox selection in the picker (see #578).
+
 ## 4.4.41 (2019-07-16)
 
  * Correctly hide running events in the event list.
