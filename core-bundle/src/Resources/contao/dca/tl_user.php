@@ -481,7 +481,7 @@ class tl_user extends Contao\Backend
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Attempt to delete own account ID ' . Contao\Input::get('id') . '.');
 				}
-				// no break;
+				// no break
 
 			case 'edit':
 			case 'copy':
