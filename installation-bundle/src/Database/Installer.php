@@ -280,7 +280,7 @@ class Installer
         ;
 
         // MySQL 8 and MariaDB 10.3 no longer have the "innodb_file_format" setting
-        if (false === $fileFormat) {
+        if (false === $fileFormat || '' === $fileFormat->Value) {
             return true;
         }
 
