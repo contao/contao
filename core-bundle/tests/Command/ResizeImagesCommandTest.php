@@ -20,6 +20,7 @@ use Contao\Image\DeferredImageStorageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ImageInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -95,6 +96,8 @@ class ResizeImagesCommandTest extends TestCase
      */
     public function testTimeLimit(): void
     {
+        ClockMock::register(ResizeImagesCommand::class);
+
         $fs = new Filesystem();
         $fs->mkdir($this->getFixturesDir().'/assets/images');
 
