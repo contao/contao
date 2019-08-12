@@ -30,7 +30,13 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
         $this->addSectionToTemplate($template, $section);
         $this->tagResponse(['contao.db.tl_content.'.$model->id]);
 
-        return $this->getResponse($template, $model, $request);
+        $response = $this->getResponse($template, $model, $request);
+
+        if (null === $response) {
+            $response = new Response($template->parse());
+        }
+
+        return $response;
     }
 
     protected function addSharedMaxAgeToResponse(Response $response, ContentModel $model): void
@@ -53,5 +59,5 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
         $response->setSharedMaxAge(min($min));
     }
 
-    abstract protected function getResponse(Template $template, ContentModel $model, Request $request): Response;
+    abstract protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response;
 }
