@@ -970,7 +970,7 @@ abstract class Backend extends \Controller
 			}
 
 			$objSession->set($strKey, \Input::get('fn', true));
-			\Controller::redirect(preg_replace('/(&|\?)fn=[^&]*/', '', \Environment::get('request')));
+			\Controller::redirect(preg_replace('/[?&]fn=[^&]*/', '', \Environment::get('request')));
 		}
 
 		$strNode = $objSession->get($strKey);

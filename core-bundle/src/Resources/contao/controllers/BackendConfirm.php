@@ -66,7 +66,7 @@ class BackendConfirm extends \Backend
 		$objTemplate = new \BackendTemplate('be_confirm');
 
 		// Prepare the URL
-		$url = preg_replace('/(\?|&)rt=[^&]*/', '', $objSession->get('INVALID_TOKEN_URL'));
+		$url = preg_replace('/[?&]rt=[^&]*/', '', $objSession->get('INVALID_TOKEN_URL'));
 		$objTemplate->href = ampersand($url . ((strpos($url, '?') !== false) ? '&rt=' : '?rt=') . REQUEST_TOKEN);
 
 		$vars = array();

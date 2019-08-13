@@ -545,7 +545,7 @@ class Theme extends \Backend
 
 							if ($objCount->count > 0)
 							{
-								$value = preg_replace('/( |\-)[0-9]+$/', '', $value);
+								$value = preg_replace('/[ -][0-9]+$/', '', $value);
 								$value .= (($table == 'tl_style_sheet') ? '-' : ' ') . ${$table};
 							}
 						}

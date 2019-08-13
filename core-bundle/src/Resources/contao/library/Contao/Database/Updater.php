@@ -61,9 +61,9 @@ class Updater extends \Controller
 		$strGroups = serialize($objGroups->fetchEach('id'));
 
 		// Update protected elements
-		$this->Database->prepare("UPDATE tl_page SET groups=? WHERE protected=1 AND groups=''")->execute($strGroups);
-		$this->Database->prepare("UPDATE tl_content SET groups=? WHERE protected=1 AND groups=''")->execute($strGroups);
-		$this->Database->prepare("UPDATE tl_module SET groups=? WHERE protected=1 AND groups=''")->execute($strGroups);
+		$this->Database->prepare("UPDATE tl_page SET `groups`=? WHERE protected=1 AND `groups`=''")->execute($strGroups);
+		$this->Database->prepare("UPDATE tl_content SET `groups`=? WHERE protected=1 AND `groups`=''")->execute($strGroups);
+		$this->Database->prepare("UPDATE tl_module SET `groups`=? WHERE protected=1 AND `groups`=''")->execute($strGroups);
 
 		// Update layouts
 		$objLayout = $this->Database->execute("SELECT id, mootools FROM tl_layout");

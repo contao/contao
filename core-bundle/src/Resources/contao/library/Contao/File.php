@@ -126,8 +126,6 @@ class File extends \System
 	 */
 	public function __construct($strFile)
 	{
-		// No parent::__construct() here
-
 		// Handle open_basedir restrictions
 		if ($strFile == '.')
 		{
@@ -880,7 +878,7 @@ class File extends \System
 		$matches = array();
 		$return = array('dirname'=>'', 'basename'=>'', 'extension'=>'', 'filename'=>'');
 
-		preg_match('%^(.*?)[\\\\/]*(([^/\\\\]*?)(\.([^\.\\\\/]+?)|))[\\\\/\.]*$%m', $this->strFile, $matches);
+		preg_match('%^(.*?)[\\\\/]*(([^/\\\\]*?)(\.([^.\\\\/]+?)|))[\\\\/.]*$%m', $this->strFile, $matches);
 
 		if (isset($matches[1]))
 		{

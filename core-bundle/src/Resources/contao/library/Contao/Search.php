@@ -250,7 +250,7 @@ class Search
 
 			$strWord = trim($strWord);
 
-			if (!\strlen($strWord) || preg_match('/^[\.:,\'_-]+$/', $strWord))
+			if (!\strlen($strWord) || preg_match('/^[.:,\'_-]+$/', $strWord))
 			{
 				continue;
 			}
@@ -326,7 +326,7 @@ class Search
 
 		// Split keywords
 		$arrChunks = array();
-		preg_match_all('/"[^"]+"|[\+\-]?[^ ]+\*?/', $strKeywords, $arrChunks);
+		preg_match_all('/"[^"]+"|[+-]?[^ ]+\*?/', $strKeywords, $arrChunks);
 
 		$arrPhrases = array();
 		$arrKeywords = array();

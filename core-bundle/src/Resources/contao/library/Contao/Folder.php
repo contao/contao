@@ -63,8 +63,6 @@ class Folder extends \System
 	 */
 	public function __construct($strFolder)
 	{
-		// No parent::__construct() here
-
 		// Handle open_basedir restrictions
 		if ($strFolder == '.')
 		{
@@ -442,7 +440,7 @@ class Folder extends \System
 		$matches = array();
 		$return = array('dirname'=>'', 'basename'=>'', 'extension'=>'', 'filename'=>'');
 
-		preg_match('%^^(.*?)[\\\\/]*([^/\\\\]*?)[\\\\/\.]*$%m', $this->strFolder, $matches);
+		preg_match('%^(.*?)[\\\\/]*([^/\\\\]*?)[\\\\/.]*$%m', $this->strFolder, $matches);
 
 		if (isset($matches[1]))
 		{

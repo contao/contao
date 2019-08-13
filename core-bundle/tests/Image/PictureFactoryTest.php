@@ -112,8 +112,8 @@ class PictureFactoryTest extends TestCase
 
         $imageSizeModel
             ->method('__get')
-            ->will(
-                $this->returnCallback(function ($key) {
+            ->willReturnCallback(
+                function ($key) {
                     return [
                         'width' => '100',
                         'height' => '200',
@@ -123,7 +123,7 @@ class PictureFactoryTest extends TestCase
                         'densities' => '1x, 2x',
                         'cssClass' => 'my-size',
                     ][$key];
-                })
+                }
             )
         ;
 
@@ -138,8 +138,8 @@ class PictureFactoryTest extends TestCase
 
         $imageSizeItemModel
             ->method('__get')
-            ->will(
-                $this->returnCallback(function ($key) {
+            ->willReturnCallback(
+                function ($key) {
                     return [
                         'width' => '50',
                         'height' => '50',
@@ -149,7 +149,7 @@ class PictureFactoryTest extends TestCase
                         'densities' => '0.5x, 2x',
                         'media' => '(max-width: 900px)',
                     ][$key];
-                })
+                }
             )
         ;
 
@@ -169,13 +169,13 @@ class PictureFactoryTest extends TestCase
 
         $framework
             ->method('getAdapter')
-            ->will(
-                $this->returnCallback(function ($key) use ($imageSizeAdapter, $imageSizeItemAdapter) {
+            ->willReturnCallback(
+                function ($key) use ($imageSizeAdapter, $imageSizeItemAdapter) {
                     return [
                         ImageSizeModel::class => $imageSizeAdapter,
                         ImageSizeItemModel::class => $imageSizeItemAdapter,
                     ][$key];
-                })
+                }
             )
         ;
 

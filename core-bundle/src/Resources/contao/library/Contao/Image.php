@@ -459,7 +459,7 @@ class Image
 	/**
 	 * Prepare image object.
 	 *
-	 * @return \Contao\Image\Image
+	 * @return NewImage
 	 */
 	protected function prepareImage()
 	{

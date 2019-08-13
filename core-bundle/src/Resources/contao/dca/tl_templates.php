@@ -160,7 +160,7 @@ class tl_templates extends Backend
 			}
 
 			$objSessionBag->set('tl_templates_node', Input::get('fn', true));
-			$this->redirect(preg_replace('/(&|\?)fn=[^&]*/', '', Environment::get('request')));
+			$this->redirect(preg_replace('/[?&]fn=[^&]*/', '', Environment::get('request')));
 		}
 
 		$strNode = $objSessionBag->get('tl_templates_node');

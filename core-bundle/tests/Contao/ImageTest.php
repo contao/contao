@@ -99,7 +99,7 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(false))
+            ->willReturn(false)
         ;
 
         $this->expectException('InvalidArgumentException');
@@ -120,12 +120,12 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function ($key) {
                     if ('extension' === $key) {
                         return 'foobar';
@@ -133,7 +133,7 @@ class ImageTest extends TestCase
 
                     return null;
                 }
-            ))
+            )
         ;
 
         $this->expectException('InvalidArgumentException');
@@ -158,12 +158,12 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function ($key) use ($arguments) {
                     switch ($key) {
                         case 'extension':
@@ -182,7 +182,7 @@ class ImageTest extends TestCase
                             return null;
                     }
                 }
-            ))
+            )
         ;
 
         $imageObj = new Image($fileMock);
@@ -614,12 +614,12 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function ($key) use ($arguments) {
                     switch ($key) {
                         case 'extension':
@@ -638,7 +638,7 @@ class ImageTest extends TestCase
                             return null;
                     }
                 }
-            ))
+            )
         ;
 
         $imageObj = new Image($fileMock);
@@ -807,12 +807,12 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function ($key) {
                     switch ($key) {
                         case 'extension':
@@ -833,7 +833,7 @@ class ImageTest extends TestCase
                             return null;
                     }
                 }
-            ))
+            )
         ;
 
         $imageObj = new Image($fileMock);
@@ -947,12 +947,12 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function ($key) use ($arguments) {
                     switch ($key) {
                         case 'extension':
@@ -979,7 +979,7 @@ class ImageTest extends TestCase
                             return null;
                     }
                 }
-            ))
+            )
         ;
 
         $imageObj = new Image($fileMock);
@@ -1057,12 +1057,12 @@ class ImageTest extends TestCase
 
         $fileMock
             ->method('exists')
-            ->will($this->returnValue(true))
+            ->willReturn(true)
         ;
 
         $fileMock
             ->method('__get')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function ($key) {
                     if ('extension' === $key) {
                         return 'jpg';
@@ -1070,7 +1070,7 @@ class ImageTest extends TestCase
 
                     return null;
                 }
-            ))
+            )
         ;
 
         $imageObj = new Image($fileMock);

@@ -1494,7 +1494,7 @@ abstract class Widget extends \Controller
 			return null;
 		}
 
-		$type = strtolower(preg_replace('/^([A-Za-z]+)(\(| ).*$/', '$1', $sql));
+		$type = strtolower(preg_replace('/^([A-Za-z]+)[( ].*$/', '$1', $sql));
 
 		if (\in_array($type, array('int', 'integer', 'tinyint', 'smallint', 'mediumint', 'bigint', 'float', 'double', 'dec', 'decimal')))
 		{

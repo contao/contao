@@ -1836,7 +1836,7 @@ class StyleSheets extends \Backend
 						// Handle linear gradients (see #4640)
 						if (strncmp($url, 'linear-gradient', 15) === 0)
 						{
-							$colors = \StringUtil::trimsplit(',', preg_replace('/linear-gradient ?\(([^\)]+)\)/', '$1', $url));
+							$colors = \StringUtil::trimsplit(',', preg_replace('/linear-gradient ?\(([^)]+)\)/', '$1', $url));
 							$arrSet['gradientAngle'] = array_shift($colors);
 							$arrSet['gradientColors'] = serialize($colors);
 						}

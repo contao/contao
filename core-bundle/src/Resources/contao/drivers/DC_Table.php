@@ -16,7 +16,7 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Provide methods to modify the database.
@@ -108,7 +108,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	{
 		parent::__construct();
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = \System::getContainer()->get('session');
 
 		// Check the request token (see #4007)
@@ -298,7 +298,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$return = '';
 		$this->limit = '';
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = \System::getContainer()->get('session');
 
 		// Clean up old tl_undo and tl_log entries
@@ -665,7 +665,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->set['ptable'] = $this->ptable;
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = \System::getContainer()->get('session');
 
 		// Empty the clipboard
@@ -753,7 +753,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$cr[] = $this->intId;
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = \System::getContainer()->get('session');
 
 		// Empty clipboard
@@ -829,7 +829,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = \System::getContainer()->get('session');
 
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -869,7 +869,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->redirect($this->getReferer());
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = \System::getContainer()->get('session');
 
 		/** @var AttributeBagInterface $objSessionBag */
@@ -1183,7 +1183,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = \System::getContainer()->get('session');
 
 		$arrClipboard = $objSession->get('CLIPBOARD');
@@ -1227,7 +1227,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				$newSorting = null;
 				$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4) ? $this->strTable.'_'.CURRENT_ID : $this->strTable;
 
-				/** @var SessionInterface $objSession */
+				/** @var Session $objSession */
 				$objSession = \System::getContainer()->get('session');
 				$session = $objSession->all();
 
@@ -1592,7 +1592,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = \System::getContainer()->get('session');
 
 		$session = $objSession->all();
@@ -1850,13 +1850,13 @@ class DC_Table extends \DataContainer implements \listable, \editable
 
 				foreach ($boxes[$k] as $kk=>$vv)
 				{
-					if (preg_match('/^\[.*\]$/', $vv))
+					if (preg_match('/^\[.*]$/', $vv))
 					{
 						++$eCount;
 						continue;
 					}
 
-					if (preg_match('/^\{.*\}$/', $vv))
+					if (preg_match('/^{.*}$/', $vv))
 					{
 						$legends[$k] = substr($vv, 1, -1);
 						unset($boxes[$k][$kk]);
@@ -1874,7 +1874,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 			}
 
-			/** @var SessionInterface $objSessionBag */
+			/** @var Session $objSessionBag */
 			$objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 
 			$class = 'tl_tbox';
@@ -1934,7 +1934,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						continue;
 					}
 
-					if (preg_match('/^\[.*\]$/', $vv))
+					if (preg_match('/^\[.*]$/', $vv))
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$arrAjax[$thisId] = '';
@@ -2308,7 +2308,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$return = '';
 		$this->import('BackendUser', 'User');
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = \System::getContainer()->get('session');
 
 		// Get current IDs from session
@@ -2419,7 +2419,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						continue;
 					}
 
-					if (preg_match('/^\[.*\]$/', $v))
+					if (preg_match('/^\[.*]$/', $v))
 					{
 						$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
 						$blnAjax = ($ajaxId == $thisId && \Environment::get('isAjaxRequest')) ? true : false;
@@ -2708,7 +2708,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 		$return = '';
 		$this->import('BackendUser', 'User');
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = \System::getContainer()->get('session');
 
 		// Get current IDs from session
@@ -3424,7 +3424,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$this->loadDataContainer($table);
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = \System::getContainer()->get('session');
 
 		/** @var AttributeBagInterface $objSessionBag */
@@ -3745,7 +3745,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$arrIds[] = $objRows->id;
 		}
 
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = \System::getContainer()->get('session');
 
 		$blnClipboard = false;
@@ -3912,7 +3912,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			$label = trim(\StringUtil::substrHtml($label, $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'])) . ' …';
 		}
 
-		$label = preg_replace('/\(\) ?|\[\] ?|\{\} ?|<> ?/', '', $label);
+		$label = preg_replace('/\(\) ?|\[] ?|{} ?|<> ?/', '', $label);
 
 		// Call the label_callback ($row, $label, $this)
 		if (\is_array($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback']))
@@ -4056,7 +4056,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 	 */
 	protected function parentView()
 	{
-		/** @var SessionInterface $objSession */
+		/** @var Session $objSession */
 		$objSession = \System::getContainer()->get('session');
 
 		$blnClipboard = false;
@@ -4878,7 +4878,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 				}
 
 				// Remove empty brackets (), [], {}, <> and empty tags from the label
-				$label = preg_replace('/\( *\) ?|\[ *\] ?|\{ *\} ?|< *> ?/', '', $label);
+				$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
 				$label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
 
 				// Build the sorting groups
