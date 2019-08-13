@@ -31,7 +31,7 @@ if (file_exists(__DIR__.'/../autoload.php')) {
 $loader = require $projectDir.'/vendor/autoload.php';
 
 $input = ContaoApplication::createConsoleInput();
-$kernel = ContaoKernel::createFromConsoleInput($projectDir, $input);
+$kernel = ContaoKernel::fromInput($projectDir, $input);
 
 $application = new ContaoApplication($kernel);
 $application->run($input);
