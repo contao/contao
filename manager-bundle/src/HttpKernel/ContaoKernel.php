@@ -240,6 +240,17 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         self::loadEnv($projectDir);
 
+        // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
+        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
+            Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST);
+        }
+
+        if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? null) {
+            Request::setTrustedHosts(explode(',', $trustedHosts));
+        }
+
+        Request::enableHttpMethodParameterOverride();
+
         $env = null;
         $parseJwt = !isset($_SERVER['APP_DEBUG']) && !isset($_SERVER['SYMFONY_DEBUG']);
         $jwtManager = null;
@@ -266,7 +277,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         self::loadEnv($projectDir);
 
-        return ContaoKernel::create($projectDir, $input->getParameterOption(['--env', '-e'], null));
+        return static::create($projectDir, $input->getParameterOption(['--env', '-e'], null));
     }
 
     /**
@@ -348,21 +359,10 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         if ('dev' !== $env && 'prod' !== $env) {
-            die('The Contao Managed Edition only supports the "dev" and "prod" environments');
+            throw new \RuntimeException('The Contao Managed Edition only supports the "dev" and "prod" environments');
         }
 
-        // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
-        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
-            Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST);
-        }
-
-        if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? null) {
-            Request::setTrustedHosts(explode(',', $trustedHosts));
-        }
-
-        Request::enableHttpMethodParameterOverride();
         Plugin::autoloadModules($projectDir.'/system/modules');
-
         static::setProjectDir($projectDir);
 
         if ('dev' === $env) {
