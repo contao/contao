@@ -111,6 +111,13 @@ class PurgeData extends Backend implements \executable
 				if (is_dir($rootDir . '/' . $folder))
 				{
 					$objFiles = Finder::create()->in($rootDir . '/' . $folder)->files();
+
+					// Do not count the deferred images JSON files
+					if ($key == 'images')
+					{
+						$objFiles->notPath('deferred');
+					}
+
 					$total = iterator_count($objFiles);
 				}
 
