@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 use Contao\ManagerBundle\Console\ContaoApplication;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
+use Symfony\Component\Console\Input\ArgvInput;
 
 set_time_limit(0);
 @ini_set('zlib.output_compression', '0');
@@ -30,7 +31,7 @@ if (file_exists(__DIR__.'/../autoload.php')) {
 /** @var Composer\Autoload\ClassLoader $loader */
 $loader = require $projectDir.'/vendor/autoload.php';
 
-$input = ContaoApplication::createConsoleInput();
+$input = new ArgvInput();
 $kernel = ContaoKernel::fromInput($projectDir, $input);
 
 $application = new ContaoApplication($kernel);

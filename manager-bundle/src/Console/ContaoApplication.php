@@ -13,13 +13,15 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Console;
 
 use Contao\CoreBundle\Util\PackageUtil;
+use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\HttpKernel\KernelInterface;
 
+/**
+ * @method ContaoKernel getKernel()
+ */
 class ContaoApplication extends Application
 {
-    public function __construct(KernelInterface $kernel)
+    public function __construct(ContaoKernel $kernel)
     {
         parent::__construct($kernel);
 
@@ -31,26 +33,12 @@ class ContaoApplication extends Application
 
         foreach ($options as $k => $option) {
             if ('no-debug' === $option->getName()) {
-                // We do not support the no-debug option, so unset it
+                // Contao does not support the no-debug option, so unset it
                 unset($options[$k]);
                 break;
             }
         }
 
         $inputDefinition->setOptions($options);
-    }
-
-    public static function createConsoleInput()
-    {
-        $argv = $_SERVER['argv'];
-
-        // Ignore the --no-debug option
-        foreach ($argv as $k => $v) {
-            if ($v === '--no-debug') {
-                unset($argv[$k]);
-            }
-        }
-
-        return new ArgvInput(array_values($argv));
     }
 }
