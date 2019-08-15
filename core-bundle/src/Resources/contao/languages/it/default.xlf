@@ -1360,8 +1360,8 @@
         <target>Bloccato</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop or the up and down keys</source>
-        <target>Sposta l'elemento trascinandolo in modalità drag &amp; drop oppure utilizza le frecce direzione in alto o in basso</target>
+        <source>Move the item via drag and drop</source>
+        <target>Sposta l'elemento trascinandolo in modalità drag &amp; drop</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -2607,6 +2607,9 @@
       </trans-unit>
       <trans-unit id="DCA.delete">
         <source>Delete element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.drag">
+        <source>Drag element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.editheader.0">
         <source>Edit the element settings</source>

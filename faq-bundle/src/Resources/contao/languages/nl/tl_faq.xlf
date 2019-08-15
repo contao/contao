@@ -99,6 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.new.0">
         <source>New</source>
+        <target>Nieuw</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
@@ -138,9 +139,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
         <source>Create a new question at the top</source>
+        <target>Maak een nieuwe vraag bovenaan</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
+        <target>Maak een nieuwe vraag na vraag ID %s</target>
       </trans-unit>
     </body>
   </file>

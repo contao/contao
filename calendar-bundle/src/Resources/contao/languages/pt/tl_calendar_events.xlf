@@ -332,6 +332,7 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.0">
         <source>New</source>
+        <target>Novo</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
@@ -363,6 +364,7 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>
+        <target>Editar as configurações do evento ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

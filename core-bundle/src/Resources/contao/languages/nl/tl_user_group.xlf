@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New</source>
+        <target>Nieuw</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.1">
         <source>Create a new user group</source>
@@ -86,18 +87,23 @@
       </trans-unit>
       <trans-unit id="tl_user_group.show">
         <source>Show the details of user group ID %s</source>
+        <target>Toon details van gebruikersgroep ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.edit">
         <source>Edit user group ID %s</source>
+        <target>Bewerk gebruikersgroep ID%s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.copy">
         <source>Duplicate user group ID %s</source>
+        <target>Kopieer gebruikersgroep ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.delete">
         <source>Delete user group ID %s</source>
+        <target>Verwijder gebruikersgroep ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.toggle">
         <source>Activate/deactivate user group ID %s</source>
+        <target>Activeer/deactiveer gebruikersgroep ID %s</target>
       </trans-unit>
     </body>
   </file>

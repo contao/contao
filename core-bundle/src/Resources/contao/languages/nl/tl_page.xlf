@@ -246,6 +246,7 @@
       </trans-unit>
       <trans-unit id="tl_page.clientCache.1">
         <source>The number of seconds after which the page should no longer be considered fresh by a private cache.</source>
+        <target>Het aantal seconden waarna de pagina niet meer als nieuw wordt beschouwd door besloten cache.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>
@@ -469,6 +470,7 @@
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
+        <target>Nieuw</target>
       </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>

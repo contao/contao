@@ -1362,8 +1362,8 @@
         <target>ロック状態</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop or the up and down keys</source>
-        <target>ドラッグアンドドロップ、または上下の矢印キーで項目を移動</target>
+        <source>Move the item via drag and drop</source>
+        <target>ドラッグアンドドロップで項目を移動</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -2620,6 +2620,9 @@
       <trans-unit id="DCA.delete">
         <source>Delete element ID %s</source>
         <target>ID %sの要素の詳細を削除</target>
+      </trans-unit>
+      <trans-unit id="DCA.drag">
+        <source>Drag element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.editheader.0">
         <source>Edit the element settings</source>

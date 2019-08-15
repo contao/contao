@@ -259,6 +259,7 @@
       </trans-unit>
       <trans-unit id="tl_news.new.0">
         <source>New</source>
+        <target>Nieuw</target>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>

@@ -399,6 +399,7 @@
       </trans-unit>
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
+        <target>Genereert een formulier om twee-traps authenticatie in te stellen of te wijzigen</target>
       </trans-unit>
     </body>
   </file>

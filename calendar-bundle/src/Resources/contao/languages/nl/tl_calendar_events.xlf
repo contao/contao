@@ -331,6 +331,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.0">
         <source>New</source>
+        <target>Nieuw</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
@@ -362,6 +363,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>
+        <target>Bewerk de instellingen van event ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

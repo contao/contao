@@ -1291,6 +1291,7 @@
       </trans-unit>
       <trans-unit id="MSC.all.1">
         <source>Edit multiple elements at once</source>
+        <target>Bewerk meerdere elementen tegelijkertijd</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
@@ -1298,6 +1299,7 @@
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
         <source>Override multiple elements at once</source>
+        <target>Overschrijf meerdere elementen tegelijk</target>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
@@ -1360,8 +1362,8 @@
         <target>Vergrendeld</target>
       </trans-unit>
       <trans-unit id="MSC.move">
-        <source>Move the item via drag and drop or the up and down keys</source>
-        <target>Het item verplaatsen met drag en drop of met omhoog en omlaag toetsen</target>
+        <source>Move the item via drag and drop</source>
+        <target>Het item verplaatsen met drag en drop</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1493,6 +1495,7 @@
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
+        <target>Wilt u echt element ID %s verwijderen?</target>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
@@ -2451,6 +2454,7 @@
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>De interne CSS-editor is verouderd en wordt verwijderd in een van de volgende Contao-versies! Overweeg om uw bestaande stijlbladen te exporteren en ze opnieuw aan de pagina-indeling toe te voegen als externe stijlbladen.</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2578,6 +2582,7 @@
       </trans-unit>
       <trans-unit id="DCA.all.1">
         <source>Edit multiple elements at once</source>
+        <target>Bewerk meerdere elementen tegelijkertijd</target>
       </trans-unit>
       <trans-unit id="DCA.toggleNodes.0">
         <source>Toggle all</source>
@@ -2589,33 +2594,45 @@
       </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
+        <target>Nieuw</target>
       </trans-unit>
       <trans-unit id="DCA.new.1">
         <source>Create a new element</source>
+        <target>Maak een nieuw element</target>
       </trans-unit>
       <trans-unit id="DCA.show">
         <source>Show the details of element ID %s</source>
+        <target>Toon details van element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.edit">
         <source>Edit element ID %s</source>
+        <target>Bewerk element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.cut">
         <source>Move element ID %s</source>
+        <target>Verplaats element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.copy">
         <source>Duplicate element ID %s</source>
+        <target>Kopieer element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.delete">
         <source>Delete element ID %s</source>
+        <target>Verwijder element ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.drag">
+        <source>Drag element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.editheader.0">
         <source>Edit the element settings</source>
+        <target>Bewerk de element instellingen</target>
       </trans-unit>
       <trans-unit id="DCA.editheader.1">
         <source>Edit the settings of element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
+        <target>Publiceer/depubliceer element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>
@@ -2623,6 +2640,7 @@
       </trans-unit>
       <trans-unit id="DCA.pasteinto.1">
         <source>Paste into element ID %s</source>
+        <target>Plakken in element-ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.0">
         <source>Paste at the top</source>
@@ -2630,12 +2648,15 @@
       </trans-unit>
       <trans-unit id="DCA.pasteafter.1">
         <source>Paste after element ID %s</source>
+        <target>Plak achter element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pastenew.0">
         <source>Create a new element at the top</source>
+        <target>Maak een nieuw element bovenaan</target>
       </trans-unit>
       <trans-unit id="DCA.pastenew.1">
         <source>Create a new element after element ID %s</source>
+        <target>Maak een nieuw element na element ID %s</target>
       </trans-unit>
     </body>
   </file>

@@ -1,5 +1,12 @@
 # Change log
 
+## 4.8.0 (2019-08-15)
+
+ * Ignore the --no-debug option when creating the console (see #626).
+ * Check for dynamic row format more consistently (see #628).
+ * Automatically generate response from template in fragment controllers (see #622).
+ * Update contao/image to version 1.0 (see #624).
+
 ## 4.8.0-RC2 (2019-07-30)
 
  * Use the security helper instead of the token storage (see #609).

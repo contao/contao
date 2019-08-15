@@ -143,18 +143,23 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>
+        <target>Nieuw</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new news archive</source>
+        <target>Maak een nieuw nieuwsarchief</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.show">
         <source>Show the details of news archive ID %s</source>
+        <target>Toon de details van nieuwsarchief ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
+        <target>Bewerk nieuwsarchief ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader">
         <source>Edit the settings of news archive ID %s</source>
+        <target>Bewerk de instellingen van nieuwsarchief ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editmeta">
         <source>Edit the news archive settings</source>
@@ -162,12 +167,15 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>
+        <target>Kopieer nieuwsarchief ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
+        <target>Verwijder nieuwsarchief ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>
+        <target>Toon reacties van nieuwsarchief ID %s</target>
       </trans-unit>
     </body>
   </file>

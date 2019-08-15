@@ -71,9 +71,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.new.0">
         <source>New</source>
+        <target>Novo</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.new.1">
         <source>Create a new recipient</source>
+        <target>Criar um novo destinatário</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.show">
         <source>Show the details of recipient ID %s</source>

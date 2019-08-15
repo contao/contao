@@ -217,9 +217,13 @@
         <source>Edit file or folder &quot;%s&quot;</source>
         <target>Datei oder Verzeichnis &quot;%s&quot; bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_files.delete.1">
+      <trans-unit id="tl_files.delete">
         <source>Delete file or folder &quot;%s&quot;</source>
         <target>Datei oder Verzeichnis &quot;%s&quot; löschen</target>
+      </trans-unit>
+      <trans-unit id="tl_files.drag">
+        <source>Drag file or folder &quot;%s&quot;</source>
+        <target>Datei oder Verzeichnis &quot;%s&quot; verschieben</target>
       </trans-unit>
       <trans-unit id="tl_files.source">
         <source>Edit file &quot;%s&quot;</source>

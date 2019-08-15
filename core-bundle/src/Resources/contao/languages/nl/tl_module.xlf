@@ -614,6 +614,7 @@ Indien u geen nieuw wachtwoord aanvroeg, gelieve dan met de administrator van de
       </trans-unit>
       <trans-unit id="tl_module.new.0">
         <source>New</source>
+        <target>Nieuw</target>
       </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>

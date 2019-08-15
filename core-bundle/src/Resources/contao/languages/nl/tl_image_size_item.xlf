@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.source_legend">
         <source>Image source settings</source>
+        <target>Broninstellingen afbeelding</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.visibility_legend">
         <source>Visibility</source>
@@ -38,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.0">
         <source>New</source>
+        <target>Nieuw</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new media query</source>
