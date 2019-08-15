@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
-        <target>新しく質問を作成</target>
+        <target>新しい質問を作成</target>
       </trans-unit>
       <trans-unit id="tl_faq.show.0">
         <source>Show question details</source>

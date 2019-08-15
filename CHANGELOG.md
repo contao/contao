@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.42 (2019-08-15)
 
  * Fix the shift key checkbox selection in the picker (see #578).
 
