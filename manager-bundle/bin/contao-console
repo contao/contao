@@ -11,9 +11,8 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-use Contao\CoreBundle\Util\PackageUtil;
+use Contao\ManagerBundle\Console\ContaoApplication;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 
 set_time_limit(0);
@@ -33,10 +32,7 @@ if (file_exists(__DIR__.'/../autoload.php')) {
 $loader = require $projectDir.'/vendor/autoload.php';
 
 $input = new ArgvInput();
-$env = $input->getParameterOption(['--env', '-e'], null);
-$kernel = ContaoKernel::create($projectDir, $env);
+$kernel = ContaoKernel::fromInput($projectDir, $input);
 
-$application = new Application($kernel);
-$application->setName('Contao Managed Edition');
-$application->setVersion(PackageUtil::getContaoVersion());
+$application = new ContaoApplication($kernel);
 $application->run($input);

@@ -27,7 +27,7 @@ if (\in_array('phar', stream_get_wrappers(), true)) {
 $loader = require __DIR__.'/../vendor/autoload.php';
 
 $request = Request::createFromGlobals();
-$kernel = ContaoKernel::createFromRequest(\dirname(__DIR__), $request);
+$kernel = ContaoKernel::fromRequest(\dirname(__DIR__), $request);
 $response = $kernel->handle($request);
 
 // Force no-cache on all responses in the preview front controller
