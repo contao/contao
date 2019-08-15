@@ -132,8 +132,6 @@ class File extends System
 	 */
 	public function __construct($strFile)
 	{
-		// No parent::__construct() here
-
 		// Handle open_basedir restrictions
 		if ($strFile == '.')
 		{
