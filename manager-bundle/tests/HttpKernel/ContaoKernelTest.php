@@ -35,21 +35,26 @@ class ContaoKernelTest extends ContaoTestCase
 
         // Reset the ContaoKernel static properties
         $reflection = new \ReflectionClass(ContaoKernel::class);
+
         $prop = $reflection->getProperty('projectDir');
         $prop->setAccessible(true);
         $prop->setValue(null);
 
         // Reset the Request static properties
         $reflection = new \ReflectionClass(Request::class);
+
         $prop = $reflection->getProperty('trustedProxies');
         $prop->setAccessible(true);
         $prop->setValue([]);
+
         $prop = $reflection->getProperty('trustedHostPatterns');
         $prop->setAccessible(true);
         $prop->setValue([]);
+
         $prop = $reflection->getProperty('trustedHeaderSet');
         $prop->setAccessible(true);
         $prop->setValue(-1);
+
         $prop = $reflection->getProperty('httpMethodParameterOverride');
         $prop->setAccessible(true);
         $prop->setValue(false);
@@ -95,7 +100,7 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testThrowsExceptionIfProjectDirIsNotSet(): void
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException('LogicException');
         $this->expectExceptionMessage('ContaoKernel::setProjectDir() must be called to initialize the Contao kernel');
 
         $kernel = new ContaoKernel('prod', false);
@@ -285,6 +290,10 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertFalse($kernel->isDebug());
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testCreatesDevKernelFromConsoleArgument(): void
     {
         $input = new ArgvInput(['help', '--env=dev']);
@@ -303,6 +312,10 @@ class ContaoKernelTest extends ContaoTestCase
         ContaoKernel::fromInput(sys_get_temp_dir(), $input);
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testCreatesDevKernelFromSymfonyEnvEnvVar(): void
     {
         unset($_SERVER['APP_ENV']);
@@ -312,9 +325,13 @@ class ContaoKernelTest extends ContaoTestCase
         $kernel = ContaoKernel::fromInput(sys_get_temp_dir(), $input);
 
         $this->assertSame('dev', $kernel->getEnvironment());
-        $this->asserttrue($kernel->isDebug());
+        $this->assertTrue($kernel->isDebug());
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testCreatesDevKernelFromAppEnvEnvVar(): void
     {
         unset($_SERVER['SYMFONY_ENV']);
@@ -324,11 +341,11 @@ class ContaoKernelTest extends ContaoTestCase
         $kernel = ContaoKernel::fromInput(sys_get_temp_dir(), $input);
 
         $this->assertSame('dev', $kernel->getEnvironment());
-        $this->asserttrue($kernel->isDebug());
+        $this->assertTrue($kernel->isDebug());
     }
 
     /**
-     * Mocks a kernel with the plugin loader.
+     * Returns a kernel with a plugin loader mock.
      *
      * @return ContaoKernel&MockObject
      */

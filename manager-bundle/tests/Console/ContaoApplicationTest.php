@@ -31,7 +31,6 @@ class ContaoApplicationTest extends ContaoTestCase
     public function testDoesNotHaveNoDebugOption(): void
     {
         $app = new ContaoApplication(ContaoKernel::fromRequest(sys_get_temp_dir(), Request::create('/')));
-
         $options = $app->getDefinition()->getOptions();
 
         $this->assertArrayNotHasKey('no-debug', $options);

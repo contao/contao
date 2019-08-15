@@ -31,6 +31,7 @@ class ContaoApplication extends Application
         $inputDefinition = $this->getDefinition();
         $options = $inputDefinition->getOptions();
 
+        // Contao does not support the no-debug option, so unset it
         unset($options['no-debug']);
 
         $inputDefinition->setOptions($options);
