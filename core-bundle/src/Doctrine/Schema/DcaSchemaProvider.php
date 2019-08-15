@@ -413,7 +413,7 @@ class DcaSchemaProvider
         ;
 
         // The variable no longer exists as of MySQL 8 and MariaDB 10.3
-        if (false === $largePrefix) {
+        if (false === $largePrefix || '' === $largePrefix->Value) {
             return 3072;
         }
 
@@ -458,7 +458,7 @@ class DcaSchemaProvider
         ;
 
         // The InnoDB file format is not Barracuda
-        if ('barracuda' !== strtolower((string) $fileFormat->Value)) {
+        if ('' !== $fileFormat->Value && 'barracuda' !== strtolower((string) $fileFormat->Value)) {
             return 767;
         }
 

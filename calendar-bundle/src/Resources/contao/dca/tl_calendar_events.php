@@ -587,7 +587,7 @@ class tl_calendar_events extends Contao\Backend
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' event ID ' . $id . ' to calendar ID ' . Contao\Input::get('pid') . '.');
 				}
-				// no break;
+				// no break
 
 			case 'edit':
 			case 'show':

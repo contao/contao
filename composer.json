@@ -37,7 +37,7 @@
         "contao-components/tablesort": "^4.0",
         "contao-components/tablesorter": "^2.1",
         "contao-components/tinymce4": "^4.7",
-        "contao/image": "^1.0.0-beta4@beta",
+        "contao/image": "^1.0",
         "contao/imagine-svg": "^0.1.2 || ^0.2",
         "contao/manager-plugin": "^2.6.2",
         "doctrine/dbal": "^2.6",
@@ -148,6 +148,9 @@
         "symfony/phpunit-bridge": "^4.3"
     },
     "extra": {
+        "symfony": {
+            "require": "^4.2"
+        },
         "branch-alias": {
             "dev-master": "4.9.x-dev"
         },

@@ -557,7 +557,7 @@ class tl_news extends Contao\Backend
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' news item ID ' . $id . ' to news archive ID ' . $pid . '.');
 				}
-				// no break;
+				// no break
 
 			case 'edit':
 			case 'show':

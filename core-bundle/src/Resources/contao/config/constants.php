@@ -11,7 +11,7 @@
 // Core version
 \define('VERSION', '4.9');
 \define('BUILD', '0-dev');
-\define('LONG_TERM_SUPPORT', false);
+\define('LONG_TERM_SUPPORT', true);
 
 // Link constants
 \define('LINK_BLUR', ' onclick="this.blur()"');

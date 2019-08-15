@@ -39,11 +39,7 @@ class VersionCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        try {
-            $output->writeln(PackageUtil::getVersion('contao/core-bundle'));
-        } catch (\OutOfBoundsException $e) {
-            $output->writeln(PackageUtil::getVersion('contao/contao'));
-        }
+        $output->writeln(PackageUtil::getContaoVersion());
 
         return 0;
     }

@@ -27,6 +27,7 @@ use FOS\HttpCache\SymfonyCache\HttpCacheProvider;
 use ProxyManager\Configuration;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
@@ -235,17 +236,9 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         self::$projectDir = realpath($projectDir) ?: $projectDir;
     }
 
-    public static function create(string $projectDir, string $env = null): self
+    public static function fromRequest(string $projectDir, Request $request): self
     {
         self::loadEnv($projectDir);
-
-        if (null === $env) {
-            $env = (string) ($_SERVER['APP_ENV'] ?? $_SERVER['SYMFONY_ENV'] ?? 'prod');
-        }
-
-        if ('dev' !== $env && 'prod' !== $env) {
-            die('The Contao Managed Edition only supports the "dev" and "prod" environments');
-        }
 
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
         if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
@@ -257,20 +250,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         Request::enableHttpMethodParameterOverride();
-        Plugin::autoloadModules($projectDir.'/system/modules');
-
-        static::setProjectDir($projectDir);
-
-        if ('dev' === $env) {
-            Debug::enable();
-        }
-
-        return new static($env, 'dev' === $env);
-    }
-
-    public static function createFromRequest(string $projectDir, Request $request): self
-    {
-        self::loadEnv($projectDir);
 
         $env = null;
         $parseJwt = !isset($_SERVER['APP_DEBUG']) && !isset($_SERVER['SYMFONY_DEBUG']);
@@ -292,6 +271,13 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         return $kernel;
+    }
+
+    public static function fromInput(string $projectDir, InputInterface $input)
+    {
+        self::loadEnv($projectDir);
+
+        return static::create($projectDir, $input->getParameterOption(['--env', '-e'], null));
     }
 
     /**
@@ -364,6 +350,26 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         if (!isset($bundles[$appBundle]) && class_exists($appBundle)) {
             $bundles[$appBundle] = new $appBundle();
         }
+    }
+
+    private static function create(string $projectDir, string $env = null): self
+    {
+        if (null === $env) {
+            $env = (string) ($_SERVER['APP_ENV'] ?? $_SERVER['SYMFONY_ENV'] ?? 'prod');
+        }
+
+        if ('dev' !== $env && 'prod' !== $env) {
+            throw new \RuntimeException('The Contao Managed Edition only supports the "dev" and "prod" environments');
+        }
+
+        Plugin::autoloadModules($projectDir.'/system/modules');
+        static::setProjectDir($projectDir);
+
+        if ('dev' === $env) {
+            Debug::enable();
+        }
+
+        return new static($env, 'dev' === $env);
     }
 
     private static function loadEnv(string $projectDir): void
