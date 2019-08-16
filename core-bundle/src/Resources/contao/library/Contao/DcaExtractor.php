@@ -496,6 +496,22 @@ class DcaExtractor extends Controller
 				}
 			}
 		}
+		
+		// Relations
+		if (!empty($arrRelations))
+		{
+			$this->arrRelations = array();
+
+			foreach ($arrRelations as $field=>$config)
+			{
+				$this->arrRelations[$field] = array();
+
+				foreach ($config as $k=>$v)
+				{
+					$this->arrRelations[$field][$k] = $v;
+				}
+			}
+		}
 
 		// Not a database table or no field information
 		if (empty($sql) || empty($fields))
@@ -565,22 +581,6 @@ class DcaExtractor extends Controller
 				if ($type == 'unique')
 				{
 					$this->arrUniqueFields[] = $field;
-				}
-			}
-		}
-
-		// Relations
-		if (!empty($arrRelations))
-		{
-			$this->arrRelations = array();
-
-			foreach ($arrRelations as $field=>$config)
-			{
-				$this->arrRelations[$field] = array();
-
-				foreach ($config as $k=>$v)
-				{
-					$this->arrRelations[$field][$k] = $v;
 				}
 			}
 		}
