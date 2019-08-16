@@ -204,6 +204,7 @@ class Configuration implements ConfigurationInterface
                                                     )
                                                 );
                                             }
+
                                             if (preg_match('/[^a-z0-9_]/', (string) $name)) {
                                                 throw new \InvalidArgumentException(
                                                     sprintf(
