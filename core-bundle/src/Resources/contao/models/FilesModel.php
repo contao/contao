@@ -96,6 +96,28 @@ class FilesModel extends Model
 	protected static $strTable = 'tl_files';
 
 	/**
+	 * @inheritDoc
+	 */
+	public function setRow(array $arrData)
+	{
+		if (
+			(float) $arrData['importantPartX'] > 1
+			|| (float) $arrData['importantPartY'] > 1
+			|| (float) $arrData['importantPartWidth'] > 1
+			|| (float) $arrData['importantPartHeight'] > 1
+		)
+		{
+			trigger_error('Important part X, Y, width and height must be a float between 0 and 1.', E_USER_WARNING);
+			$arrData['importantPartX'] = 0;
+			$arrData['importantPartY'] = 0;
+			$arrData['importantPartWidth'] = 0;
+			$arrData['importantPartHeight'] = 0;
+		}
+
+		return parent::setRow($arrData);
+	}
+
+	/**
 	 * Find a file by its primary key
 	 *
 	 * @param mixed $varValue   The value
