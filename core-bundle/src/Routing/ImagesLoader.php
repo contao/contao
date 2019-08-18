@@ -36,7 +36,10 @@ class ImagesLoader extends Loader
     {
         $route = new Route(
             '/'.$this->pathPrefix.'/{path}',
-            ['_controller' => 'contao.controller.images'],
+            [
+                '_controller' => 'contao.controller.images',
+                '_bypass_maintenance' => true,
+            ],
             ['path' => '.+']
         );
 
