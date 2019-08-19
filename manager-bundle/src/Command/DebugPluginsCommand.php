@@ -92,11 +92,7 @@ class DebugPluginsCommand extends Command
         $name = $input->getArgument('name');
 
         if ($name) {
-            if ($input->getOption('bundles')) {
-                return $this->listPluginBundles($name);
-            }
-
-            return $this->showPlugin($name);
+            return $this->showPlugin($name, $input);
         }
 
         if ($input->getOption('bundles')) {
@@ -110,7 +106,7 @@ class DebugPluginsCommand extends Command
     {
         $title = 'Contao Manager plugins with their package name';
         $headers = [
-            [new TableCell('Plugin class', ['rowspan' => 2]), new TableCell('Package name', ['rowspan' => 2]), new TableCell('Features / Plugin Interfaces', ['colspan' => 6])],
+            [new TableCell('Plugin class', ['rowspan' => 2]), new TableCell('Composer package', ['rowspan' => 2]), new TableCell('Features / Plugin Interfaces', ['colspan' => 6])],
             ['Bundle', 'Routing', 'Config', 'Extension', 'Dependent', 'API'],
         ];
         $rows = [];
@@ -168,14 +164,33 @@ class DebugPluginsCommand extends Command
         return 0;
     }
 
-    private function showPlugin(string $name): int
+    private function showPlugin(string $name, InputInterface $input): int
     {
-        $this->listPluginBundles($name, false);
+        if ($input->getOption('bundles')) {
+            return $this->showPluginBundles($name);
+        }
 
-        return 0;
+        $choices = [];
+        [, $plugin] = $this->findPlugin($name);
+
+        if ($plugin instanceof BundlePluginInterface) {
+            $choices['BundlePluginInterface'] = 'Symfony bundles loaded by this plugin.';
+        }
+
+        $result = $this->io->choice(
+            sprintf('Which features of the "%s" plugin do you want to debug?', $name),
+            $choices
+        );
+
+        switch ($result) {
+            case 'BundlePluginInterface':
+                return $this->showPluginBundles($name);
+        }
+
+        return -1;
     }
 
-    private function listPluginBundles(string $name, bool $showError = true): int
+    private function showPluginBundles(string $name): int
     {
         [, $plugin] = $this->findPlugin($name);
 
@@ -184,15 +199,13 @@ class DebugPluginsCommand extends Command
         }
 
         if (!$plugin instanceof BundlePluginInterface) {
-            if ($showError) {
-                $this->io->error(
-                    sprintf(
-                        "The plugin \"%s\" does not register bundles.\n(It does not implement the \"%s\" interface.)",
-                        get_class($plugin),
-                        BundlePluginInterface::class
-                    )
-                );
-            }
+            $this->io->error(
+                sprintf(
+                    "The plugin \"%s\" does not register bundles.\n(It does not implement the \"%s\" interface.)",
+                    get_class($plugin),
+                    BundlePluginInterface::class
+                )
+            );
 
             return -1;
         }
