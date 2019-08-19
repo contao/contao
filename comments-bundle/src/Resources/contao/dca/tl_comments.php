@@ -557,7 +557,7 @@ class tl_comments extends Contao\Backend
 		return '
 <div class="comment_wrap">
 <div class="cte_type ' . $key . '"><a href="mailto:' . Contao\Idna::decodeEmail($arrRow['email']) . '" title="' . Contao\StringUtil::specialchars(Contao\Idna::decodeEmail($arrRow['email'])) . '">' . $arrRow['name'] . '</a>' . (($arrRow['website'] != '') ? ' (<a href="' . $arrRow['website'] . '" title="' . Contao\StringUtil::specialchars($arrRow['website']) . '" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['MSC']['com_website'] . '</a>)' : '') . ' – ' . Contao\Date::parse(Contao\Config::get('datimFormat'), $arrRow['date']) . ' – IP ' . Contao\StringUtil::specialchars($arrRow['ip']) . '<br>' . $title . '</div>
-<div class="limit_height mark_links' . (!Contao\Config::get('doNotCollapse') ? ' h38' : '') . '">
+<div class="limit_height mark_links' . (!Contao\Config::get('doNotCollapse') ? ' h40' : '') . '">
 ' . $arrRow['comment'] . '
 </div>
 </div>' . "\n    ";

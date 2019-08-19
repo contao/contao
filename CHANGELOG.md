@@ -1,5 +1,10 @@
 # Change log
 
+## DEV
+
+ * Bypass maintenance mode for image requests (see #648).
+ * Validate allowed characters in image size names (see #634).
+
 ## 4.8.0 (2019-08-15)
 
  * Ignore the --no-debug option when creating the console (see #626).
