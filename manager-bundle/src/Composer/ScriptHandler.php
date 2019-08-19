@@ -26,8 +26,9 @@ class ScriptHandler
     {
         $webDir = self::getWebDir($event);
 
-        static::purgeCacheFolder();
-        static::addAppDirectory();
+        $filesystem = new Filesystem();
+        $filesystem->removeDirectory(getcwd().'/var/cache/prod');
+
         static::executeCommand('contao:install-web-dir', $event);
         static::executeCommand('cache:clear --no-warmup', $event);
         static::executeCommand('cache:warmup', $event);
@@ -36,21 +37,6 @@ class ScriptHandler
         static::executeCommand(sprintf('contao:symlinks %s', $webDir), $event);
 
         $event->getIO()->write('<info>Done! Please open the Contao install tool and make sure the database is up-to-date.</info>');
-    }
-
-    public static function purgeCacheFolder(): void
-    {
-        $filesystem = new Filesystem();
-        $filesystem->removeDirectory(getcwd().'/var/cache/prod');
-    }
-
-    /**
-     * Adds the app directory if it does not exist.
-     */
-    public static function addAppDirectory(): void
-    {
-        $filesystem = new Filesystem();
-        $filesystem->ensureDirectoryExists(getcwd().'/app');
     }
 
     /**
