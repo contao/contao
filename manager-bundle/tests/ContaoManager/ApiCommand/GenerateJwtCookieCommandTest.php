@@ -57,7 +57,7 @@ class GenerateJwtCookieCommandTest extends TestCase
 
     public function testGeneratesCookieWithDebugEnabled(): void
     {
-        $cookie = Cookie::create('_contao_preview', 'foobar');
+        $cookie = Cookie::create('contao_settings', 'foobar');
 
         $this->jwtManager
             ->expects($this->once())
@@ -75,7 +75,7 @@ class GenerateJwtCookieCommandTest extends TestCase
 
     public function testGeneratesCookieWithDebugDisabled(): void
     {
-        $cookie = Cookie::create('_contao_preview', 'foobar');
+        $cookie = Cookie::create('contao_settings', 'foobar');
 
         $this->jwtManager
             ->expects($this->once())
