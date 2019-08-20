@@ -459,16 +459,16 @@ class ImageFactoryTest extends TestCase
 
         /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
-        $filesModel->importantPartX = (string) $invalid[0];
-        $filesModel->importantPartY = (string) $invalid[1];
-        $filesModel->importantPartWidth = (string) $invalid[2];
-        $filesModel->importantPartHeight = (string) $invalid[3];
+        $filesModel->importantPartX = $invalid[0];
+        $filesModel->importantPartY = $invalid[1];
+        $filesModel->importantPartWidth = $invalid[2];
+        $filesModel->importantPartHeight = $invalid[3];
 
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
 
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory(null, null, null, null, $framework);
-        $image = @$imageFactory->create($path);
+        $image = $imageFactory->create($path);
 
         $this->assertSameImportantPart(
             new ImportantPart($expected[0], $expected[1], $expected[2], $expected[3]),
@@ -476,9 +476,6 @@ class ImageFactoryTest extends TestCase
         );
 
         $this->assertSame($path, $image->getPath());
-
-        $this->expectException(Warning::class);
-        $imageFactory->create($path);
     }
 
     public function getInvalidImportantParts(): \Generator

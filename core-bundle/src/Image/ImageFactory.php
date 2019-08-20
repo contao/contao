@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FilesModel;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Image;
@@ -23,6 +24,7 @@ use Contao\Image\ResizeOptions;
 use Contao\Image\ResizerInterface;
 use Contao\ImageSizeModel;
 use Imagine\Image\ImagineInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ImageFactory implements ImageFactoryInterface
@@ -77,7 +79,12 @@ class ImageFactory implements ImageFactoryInterface
      */
     private $predefinedSizes = [];
 
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir)
+    /**
+     * @var ?LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir, ?LoggerInterface $logger = null)
     {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
@@ -88,6 +95,7 @@ class ImageFactory implements ImageFactoryInterface
         $this->imagineOptions = $imagineOptions;
         $this->validExtensions = $validExtensions;
         $this->uploadDir = $uploadDir;
+        $this->logger = $logger;
     }
 
     /**
@@ -313,17 +321,19 @@ class ImageFactory implements ImageFactoryInterface
             (float) $file->importantPartX + (float) $file->importantPartWidth > 1
             || (float) $file->importantPartY + (float) $file->importantPartHeight > 1
         ) {
-            trigger_error(
-                sprintf(
-                    'Invalid important part x=%s, y=%s, width=%s, height=%s for image "%s".',
-                    $file->importantPartX,
-                    $file->importantPartY,
-                    $file->importantPartWidth,
-                    $file->importantPartHeight,
-                    $image->getPath()
-                ),
-                E_USER_WARNING
-            );
+            if ($this->logger) {
+                $this->logger->warning(
+                    sprintf(
+                        'Invalid important part x=%s, y=%s, width=%s, height=%s for image "%s".',
+                        $file->importantPartX,
+                        $file->importantPartY,
+                        $file->importantPartWidth,
+                        $file->importantPartHeight,
+                        $image->getPath()
+                    ),
+                    ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]
+                );
+            }
 
             try {
                 $size = $image->getDimensions()->getSize();
