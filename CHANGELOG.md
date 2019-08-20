@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Check if the theme preview image exists (see #636).
+
 ## 4.4.42 (2019-08-15)
 
  * Fix the shift key checkbox selection in the picker (see #578).

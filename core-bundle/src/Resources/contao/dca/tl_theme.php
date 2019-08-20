@@ -284,7 +284,7 @@ class tl_theme extends Backend
 		{
 			$objFile = FilesModel::findByUuid($row['screenshot']);
 
-			if ($objFile !== null)
+			if ($objFile !== null && file_exists(TL_ROOT . '/' . $objFile->path))
 			{
 				$label = Image::getHtml(\System::getContainer()->get('contao.image.image_factory')->create(TL_ROOT . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl(TL_ROOT), '', 'class="theme_preview"') . ' ' . $label;
 			}
