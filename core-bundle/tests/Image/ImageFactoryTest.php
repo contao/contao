@@ -36,7 +36,6 @@ use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
-use PHPUnit\Framework\Error\Warning;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
 
