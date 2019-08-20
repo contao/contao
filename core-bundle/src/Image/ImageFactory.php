@@ -309,6 +309,36 @@ class ImageFactory implements ImageFactoryInterface
             return null;
         }
 
+        if (
+            (float) $file->importantPartX + (float) $file->importantPartWidth > 1
+            || (float) $file->importantPartY + (float) $file->importantPartHeight > 1
+        ) {
+            trigger_error(
+                sprintf(
+                    'Invalid important part x=%s, y=%s, width=%s, height=%s for image "%s".',
+                    $file->importantPartX,
+                    $file->importantPartY,
+                    $file->importantPartWidth,
+                    $file->importantPartHeight,
+                    $image->getPath()
+                ),
+                E_USER_WARNING
+            );
+
+            try {
+                $size = $image->getDimensions()->getSize();
+
+                return new ImportantPart(
+                    (float) $file->importantPartX / $size->getWidth(),
+                    (float) $file->importantPartY / $size->getHeight(),
+                    (float) $file->importantPartWidth / $size->getWidth(),
+                    (float) $file->importantPartHeight / $size->getHeight()
+                );
+            } catch (\Throwable $exception) {
+                return new ImportantPart();
+            }
+        }
+
         return new ImportantPart(
             (float) $file->importantPartX,
             (float) $file->importantPartY,
