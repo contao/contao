@@ -464,7 +464,6 @@ class ImageFactoryTest extends TestCase
         $filesModel->importantPartHeight = $invalid[3];
 
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
-
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory(null, null, null, null, $framework);
         $image = $imageFactory->create($path);
