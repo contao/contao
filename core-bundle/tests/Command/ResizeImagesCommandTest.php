@@ -91,13 +91,8 @@ class ResizeImagesCommandTest extends TestCase
         $this->assertRegExp('/All images resized/', $display);
     }
 
-    /**
-     * @group time-sensitive
-     */
     public function testTimeLimit(): void
     {
-        ClockMock::register(ResizeImagesCommand::class);
-
         $fs = new Filesystem();
         $fs->mkdir($this->getFixturesDir().'/assets/images');
 
@@ -111,7 +106,7 @@ class ResizeImagesCommandTest extends TestCase
         $resizer
             ->method('resizeDeferredImage')
             ->willReturnCallback(function () {
-                usleep(1000);
+                sleep(1);
 
                 return $this->createMock(ImageInterface::class);
             })
@@ -123,14 +118,18 @@ class ResizeImagesCommandTest extends TestCase
             ->willReturn(['image1.jpg', 'image2.jpg'])
         ;
 
+        ClockMock::withClockMock(1142164800);
+
         $command = $this->getCommand($factory, $resizer, $storage);
         $tester = new CommandTester($command);
-        $code = $tester->execute(['--time-limit' => 0.0001]);
+        $code = $tester->execute(['--time-limit' => 0.5]);
         $display = $tester->getDisplay();
+
+        ClockMock::withClockMock(false);
 
         $this->assertSame(0, $code);
         $this->assertRegExp('/image1.jpg.+done/', $display);
-        $this->assertRegExp('/Time limit of 0.0001 seconds reached/', $display);
+        $this->assertRegExp('/Time limit of 0.5 seconds reached/', $display);
         $this->assertNotRegExp('/image2.jpg.+done/', $display);
         $this->assertNotRegExp('/All images resized/', $display);
     }
