@@ -93,7 +93,7 @@ abstract class Controller extends System
 		// Get the default templates
 		foreach (TemplateLoader::getPrefixedFiles($strPrefix) as $strTemplate)
 		{
-			if ($blnSeparateOthers)
+			if ($blnSeparateOthers && $strTemplate != $strPrefix)
 			{
 				$arrOthers[] = $strTemplate;
 			}
