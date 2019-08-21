@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Hide the minlength/maxlength fields for numeric fields (see #655).
  * Correctly re-add deleted languages to the meta wizard drop-down menu (see #620).
  * Bypass maintenance mode for image requests (see #648).
  * Validate allowed characters in image size names (see #634).
