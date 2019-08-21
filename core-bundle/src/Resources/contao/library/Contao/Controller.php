@@ -91,6 +91,11 @@ abstract class Controller extends System
 		// Get the default templates
 		foreach (TemplateLoader::getPrefixedFiles($strPrefix) as $strTemplate)
 		{
+			if ($strTemplate . '_' == $strPrefix)
+			{
+				continue;
+			}
+
 			$arrTemplates[$strTemplate][] = 'root';
 		}
 
