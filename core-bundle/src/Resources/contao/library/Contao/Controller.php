@@ -113,14 +113,15 @@ abstract class Controller extends System
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
 
-				// If the template name is in $arrOthers, it is a root template and not
-				// a customized template (e.g. mod_article and mod_article_list)
+				// If the template name is in $arrOthers, it is a root template and not a
+				// customized template, e.g. mod_article and mod_article_list
 				if (\in_array($strTemplate, $arrOthers))
 				{
 					continue;
 				}
 
-				// Also ignore customized root templates
+				// Also ignore customized templates belonging to different root templates,
+				// e.g. mod_article and mod_article_list_custom
 				foreach ($arrOthers as $strKey)
 				{
 					if (strpos($strTemplate, $strKey . '_') === 0)
