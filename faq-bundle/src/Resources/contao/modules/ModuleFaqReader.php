@@ -59,12 +59,6 @@ class ModuleFaqReader extends Module
 		// Do not index or cache the page if no FAQ has been specified
 		if (!Input::get('items'))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
 			return '';
 		}
 
@@ -73,12 +67,6 @@ class ModuleFaqReader extends Module
 		// Do not index or cache the page if there are no categories
 		if (empty($this->faq_categories) || !\is_array($this->faq_categories))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
 			return '';
 		}
 

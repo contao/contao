@@ -296,12 +296,6 @@ class Comments extends Frontend
 		// Do not index or cache the page with the confirmation message
 		if ($_SESSION['TL_COMMENT_ADDED'])
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_confirm'];
 			$_SESSION['TL_COMMENT_ADDED'] = false;
 		}

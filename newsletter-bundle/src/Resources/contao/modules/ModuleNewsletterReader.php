@@ -57,12 +57,6 @@ class ModuleNewsletterReader extends Module
 		// Do not index or cache the page if no news item has been specified
 		if (!Input::get('items'))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
 			return '';
 		}
 
@@ -71,12 +65,6 @@ class ModuleNewsletterReader extends Module
 		// Do not index or cache the page if there are no channels
 		if (empty($this->nl_channels) || !\is_array($this->nl_channels))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
 			return '';
 		}
 
