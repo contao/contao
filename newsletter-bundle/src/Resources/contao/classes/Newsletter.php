@@ -206,6 +206,8 @@ class Newsletter extends Backend
 
 						$this->log('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated', __METHOD__, TL_ERROR);
 					}
+
+					unset($_SESSION['REJECTED_RECIPIENTS']);
 				}
 
 				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));

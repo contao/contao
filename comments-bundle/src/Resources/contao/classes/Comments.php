@@ -297,7 +297,7 @@ class Comments extends Frontend
 		if ($_SESSION['TL_COMMENT_ADDED'])
 		{
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_confirm'];
-			$_SESSION['TL_COMMENT_ADDED'] = false;
+			unset($_SESSION['TL_COMMENT_ADDED']);
 		}
 
 		// Store the comment
