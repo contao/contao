@@ -41,7 +41,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
 
         $this->isDebug = $kernel->isDebug();
 
-        $this->addSubscriber(new StripCookiesSubscriber(array_filter(explode(',', getenv('COOKIE_WHITELIST') ?: ''))));
+        $this->addSubscriber(new StripCookiesSubscriber(array_filter(explode(',', $_SERVER['COOKIE_WHITELIST'] ?? ''))));
         $this->addSubscriber(new PurgeListener());
         $this->addSubscriber(new PurgeTagsListener());
         $this->addSubscriber(new CleanupCacheTagsListener());
