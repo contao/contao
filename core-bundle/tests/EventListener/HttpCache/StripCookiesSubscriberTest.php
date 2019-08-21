@@ -28,19 +28,6 @@ class StripCookiesSubscriberTest extends TestCase
         $this->assertSame([Events::PRE_HANDLE => 'preHandle'], $subscriber::getSubscribedEvents());
     }
 
-    public function testCookiesAreIgnoredIfMethodNotCacheable(): void
-    {
-        $cookies = ['csrf_cookie' => 'super-secret-token'];
-        $request = Request::create('/', 'POST', [], $cookies);
-        $event = new CacheEvent($this->createMock(CacheInvalidation::class), $request);
-
-        // Defined with a whitelist, meaning that it would get removed if it was a cacheable request
-        $subscriber = new StripCookiesSubscriber(['PHPSESSID']);
-        $subscriber->preHandle($event);
-
-        $this->assertSame($cookies, $request->cookies->all());
-    }
-
     /**
      * @dataProvider cookiesProvider
      */

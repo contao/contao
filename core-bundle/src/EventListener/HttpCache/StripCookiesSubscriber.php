@@ -69,11 +69,6 @@ class StripCookiesSubscriber implements EventSubscriberInterface
     {
         $request = $event->getRequest();
 
-        // Not a cacheable request anyway? Then we don't care.
-        if (!$request->isMethodCacheable()) {
-            return;
-        }
-
         if (!$request->cookies->count()) {
             return;
         }
