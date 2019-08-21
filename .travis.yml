@@ -6,7 +6,7 @@ services:
 
 cache:
   directories:
-    - $HOME/.composer/cache
+    - $HOME/.composer
     - $HOME/.monorepo-split-cache
 
 env:
@@ -30,7 +30,6 @@ jobs:
       name: 'Test installing the lowest dependencies'
       php: 7.3
       install:
-        - phpenv config-rm xdebug.ini || true
         - composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
       script:
         - run_tests
@@ -40,7 +39,6 @@ jobs:
     - stage: test
       php: 7.1
       install:
-        - phpenv config-rm xdebug.ini || true
         - composer update --no-interaction --no-suggest
       script:
         - run_tests
@@ -50,7 +48,6 @@ jobs:
     - stage: test
       php: 7.2
       install:
-        - phpenv config-rm xdebug.ini || true
         - composer update --no-interaction --no-suggest
       script:
         - run_tests
@@ -60,7 +57,6 @@ jobs:
     - stage: test
       php: 7.3
       install:
-        - phpenv config-rm xdebug.ini || true
         - composer update --no-interaction --no-suggest
       script:
         - phpdbg -qrr vendor/bin/phpunit -c calendar-bundle --coverage-clover=calendar-bundle.xml
@@ -78,7 +74,6 @@ jobs:
       if: 'type = cron'
       php: 7.4snapshot
       install:
-        - phpenv config-rm xdebug.ini || true
         - composer update --no-interaction --no-suggest
       script:
         - run_tests
@@ -90,7 +85,6 @@ jobs:
       if: 'type = cron'
       php: nightly
       install:
-        - phpenv config-rm xdebug.ini || true
         - composer update --ignore-platform-reqs --no-interaction --no-suggest
       script:
         - run_tests
@@ -102,11 +96,9 @@ jobs:
       name: 'Split the monorepo'
       if: 'type = push AND (branch =~ /^(master|\d+\.\d+)$/ OR tag IS present)'
       php: 7.3
-      before_install: true
       install:
-        - phpenv config-rm xdebug.ini || true
-        - rm composer.json
-        - composer require contao/monorepo-tools:dev-master --no-interaction --no-suggest
+        - update_composer_json
+        - composer update --no-interaction --no-suggest
       script:
         - php vendor/bin/monorepo-tools split $TRAVIS_BRANCH --cache-dir $HOME/.monorepo-split-cache
 
@@ -144,4 +136,12 @@ before_install:
       composer update --no-interaction --no-suggest
       php vendor/bin/phpunit --colors=always
     }
+    update_composer_json () {
+      php -r '
+        $data = ["require" => ["contao/monorepo-tools" => "dev-master"]];
+        file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
+      '
+    }
+  - phpenv config-rm xdebug.ini || true
+  - composer global require symfony/flex
   - mysql -e "CREATE database contao_test"

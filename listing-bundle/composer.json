@@ -24,7 +24,10 @@
         "php-http/guzzle6-adapter": "^1.1"
     },
     "extra": {
-        "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin"
+        "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin",
+        "symfony": {
+            "require": "^4.2"
+        }
     },
     "autoload": {
         "psr-4": {

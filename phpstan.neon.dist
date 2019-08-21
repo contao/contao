@@ -5,7 +5,7 @@ parameters:
         services_yml_path: %currentWorkingDirectory%/core-bundle/src/Resources/config/services.yml
 
     symfony:
-        container_xml_path: %currentWorkingDirectory%/core-bundle/tests/Functional/var/cache/test/appContao_PhpStan_AppKernelTestDebugContainer.xml
+        container_xml_path: %currentWorkingDirectory%/core-bundle/tests/Functional/var/cache/phpstan/appContao_CoreBundle_Tests_Functional_app_AppKernelPhpstanDebugContainer.xml
 
     excludes_analyse:
         - %currentWorkingDirectory%/core-bundle/src/Resources/*
