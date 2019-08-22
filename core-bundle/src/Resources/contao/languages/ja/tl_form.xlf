@@ -106,12 +106,10 @@
         <target>提出されたデータをデータベースに保存します。</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
-        <source>Form template</source>
-        <target>フォームのテンプレート</target>
+        <source>Custom form template</source>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
-        <source>Here you can select the form template.</source>
-        <target>フォームのテンプレートを選択します。</target>
+        <source>Here you can overwrite the default form template.</source>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>

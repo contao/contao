@@ -297,7 +297,6 @@
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_extnd</source>
-        <target>Из безбедоносних разлога овде не можете да користите карактере: #()/&lt;=&gt;</target>
         
       </trans-unit>
       <trans-unit id="61">

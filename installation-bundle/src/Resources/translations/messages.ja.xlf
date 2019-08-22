@@ -298,7 +298,6 @@
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_extnd</source>
-        <target>セキュリティ上の理由のため、ここでは以下の文字は使用できせん:: #()/&lt;=&gt;</target>
         
       </trans-unit>
       <trans-unit id="61">

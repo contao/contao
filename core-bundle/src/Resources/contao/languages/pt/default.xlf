@@ -58,8 +58,7 @@
         <target>Favor inserir um telefone válido!</target>
       </trans-unit>
       <trans-unit id="ERR.extnd">
-        <source>For security reasons you can not use the following characters here: =&lt;&gt;&amp;/()#</source>
-        <target>Por razões de segurança você não pode usar os caracteres: =&lt;&gt;&amp;/()# aqui!</target>
+        <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>

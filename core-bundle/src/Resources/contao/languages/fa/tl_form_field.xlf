@@ -202,8 +202,7 @@
         <target>نویسه‌های عددی و الفبائی تعمیم‌یافته</target>
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
-        <source>Allows everything except special characters which are usually encoded for security reasons (#/()&lt;=&gt;).</source>
-        <target>همه مجاز هستند به غیر از نویسه‌های ویژه که معمولاً برای مسائل امینتی کدگذاری شده‌اند (#/()&lt;=&gt;).</target>
+        <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>

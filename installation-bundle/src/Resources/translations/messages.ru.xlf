@@ -298,7 +298,7 @@
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_extnd</source>
-        <target>По соображениям безопасности, вы не должны использовать здесь следующие символы: #()/&lt;=&gt;</target>
+        <target>По соображениям безопасности, вы не должны использовать здесь следующие символы: #&lt;&gt;()\=</target>
         
       </trans-unit>
       <trans-unit id="61">

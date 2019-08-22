@@ -297,7 +297,6 @@
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_extnd</source>
-        <target>Por razões de segurança não pode utilizar os caracteres #()/&lt;=&gt; aqui</target>
         
       </trans-unit>
       <trans-unit id="61">

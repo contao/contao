@@ -206,8 +206,7 @@
         <target>扩展字母和数字字符</target>
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
-        <source>Allows everything except special characters which are usually encoded for security reasons (#/()&lt;=&gt;).</source>
-        <target>除了因为安全原因不允许的(#/())之外都可以输入</target>
+        <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>
