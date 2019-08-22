@@ -204,6 +204,15 @@ class Configuration implements ConfigurationInterface
                                                     )
                                                 );
                                             }
+
+                                            if (preg_match('/[^a-z0-9_]/', (string) $name)) {
+                                                throw new \InvalidArgumentException(
+                                                    sprintf(
+                                                        'The image size name "%s" must consist of lowercase letters, digits and underscores only',
+                                                        $name
+                                                    )
+                                                );
+                                            }
                                         }
 
                                         return $value;

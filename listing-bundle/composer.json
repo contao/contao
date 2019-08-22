@@ -27,7 +27,10 @@
         "branch-alias": {
             "dev-master": "4.9.x-dev"
         },
-        "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin"
+        "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin",
+        "symfony": {
+            "require": "^4.2"
+        }
     },
     "autoload": {
         "psr-4": {

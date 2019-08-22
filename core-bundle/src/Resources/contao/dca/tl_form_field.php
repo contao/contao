@@ -94,13 +94,14 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('type', 'multiple', 'storeFile', 'imageSubmit'),
+		'__selector__'                => array('type', 'multiple', 'storeFile', 'imageSubmit', 'rgxp'),
 		'default'                     => '{type_legend},type',
 		'explanation'                 => '{type_legend},type;{text_legend},text;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'fieldsetStart'               => '{type_legend},type;{fconfig_legend},label;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'fieldsetStop'                => '{type_legend},type;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'html'                        => '{type_legend},type;{text_legend},html;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'text'                        => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{expert_legend:hide},class,value,minlength,maxlength,minval,maxval,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'text'                        => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{expert_legend:hide},class,value,minlength,maxlength,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'textdigit'                   => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{expert_legend:hide},class,value,minval,maxval,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'password'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{expert_legend:hide},class,value,minlength,maxlength,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'textarea'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'select'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple;{options_legend},options;{expert_legend:hide},class,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
@@ -208,7 +209,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'inputType'               => 'select',
 			'options'                 => array('digit', 'alpha', 'alnum', 'extnd', 'date', 'time', 'datim', 'phone', 'email', 'url'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_form_field'],
-			'eval'                    => array('helpwizard'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('helpwizard'=>true, 'includeBlankOption'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'placeholder' => array
@@ -588,11 +589,13 @@ class tl_form_field extends Contao\Backend
 	/**
 	 * Return all form field templates as array
 	 *
+	 * @param Contao\DataContainer $dc
+	 *
 	 * @return array
 	 */
-	public function getFormFieldTemplates()
+	public function getFormFieldTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('form_');
+		return $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_');
 	}
 
 	/**

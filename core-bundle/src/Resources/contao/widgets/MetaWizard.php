@@ -161,7 +161,6 @@ class MetaWizard extends Widget
 				$return .= '
     </li>';
 
-				unset($languages[$lang]);
 				++$count;
 			}
 
@@ -174,7 +173,7 @@ class MetaWizard extends Widget
 		// Add the remaining languages
 		foreach ($languages as $k=>$v)
 		{
-			$options[] = '<option value="' . $k . '">' . $v . '</option>';
+			$options[] = '<option value="' . $k . '"'. (isset($this->varValue[$k]) ? ' disabled' : '') .'>' . $v . '</option>';
 		}
 
 		$return .= '

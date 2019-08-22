@@ -440,10 +440,6 @@ class ImageFactoryTest extends TestCase
 
         /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
-        $filesModel->importantPartX = 50;
-        $filesModel->importantPartY = 50;
-        $filesModel->importantPartWidth = 25;
-        $filesModel->importantPartHeight = 25;
 
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
@@ -451,6 +447,42 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [50, 50, $mode]);
 
         $this->assertSame($imageMock, $image);
+    }
+
+    /**
+     * @dataProvider getInvalidImportantParts
+     */
+    public function testCreatesAnImageObjectFromAnImagePathWithInvalidImportantPart($invalid, $expected): void
+    {
+        $path = $this->getFixturesDir().'/images/dummy.jpg';
+
+        /** @var FilesModel&MockObject $filesModel */
+        $filesModel = $this->mockClassWithProperties(FilesModel::class);
+        $filesModel->importantPartX = $invalid[0];
+        $filesModel->importantPartY = $invalid[1];
+        $filesModel->importantPartWidth = $invalid[2];
+        $filesModel->importantPartHeight = $invalid[3];
+
+        $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
+        $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
+        $imageFactory = $this->getImageFactory(null, null, null, null, $framework);
+        $image = $imageFactory->create($path);
+
+        $this->assertSameImportantPart(
+            new ImportantPart($expected[0], $expected[1], $expected[2], $expected[3]),
+            $image->getImportantPart()
+        );
+
+        $this->assertSame($path, $image->getPath());
+    }
+
+    public function getInvalidImportantParts(): \Generator
+    {
+        yield [[20, 20, 160, 160], [0.1, 0.1, 0.8, 0.8]];
+        yield [[0, 0, 100, 100], [0, 0, 0.5, 0.5]];
+        yield [[0, 0, 200, 200], [0, 0, 1, 1]];
+        yield [[1, 1, 1, 1], [0.005, 0.005, 0.005, 0.005]];
+        yield [[0, 0, 999, 100], [0, 0, 1, 1]];
     }
 
     /**

@@ -35,7 +35,10 @@
         "branch-alias": {
             "dev-master": "4.9.x-dev"
         },
-        "contao-manager-plugin": "Contao\\CalendarBundle\\ContaoManager\\Plugin"
+        "contao-manager-plugin": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
+        "symfony": {
+            "require": "^4.2"
+        }
     },
     "autoload": {
         "psr-4": {

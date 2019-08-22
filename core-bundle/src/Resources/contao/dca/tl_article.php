@@ -660,7 +660,7 @@ class tl_article extends Contao\Backend
 	 */
 	public function getArticleTemplates()
 	{
-		return $this->getTemplateGroup('mod_article');
+		return $this->getTemplateGroup('mod_article_');
 	}
 
 	/**

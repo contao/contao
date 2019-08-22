@@ -215,6 +215,7 @@ services:
             - '%contao.image.imagine_options%'
             - '%contao.image.valid_extensions%'
             - '%kernel.project_dir%/%contao.upload_path%'
+            - '@?logger'
         public: true
 
     contao.image.image_sizes:

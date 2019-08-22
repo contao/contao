@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class JwtManager
 {
-    public const COOKIE_NAME = '_contao_preview';
+    public const COOKIE_NAME = 'contao_settings';
 
     /**
      * @var Signer

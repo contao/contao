@@ -240,7 +240,7 @@
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_extnd</source>
-        <target>For security reasons you can not use the following characters here: #()/&lt;=&gt;</target>
+        <target>For security reasons you can not use the following characters here: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="61">
         <source>admin_error_no_space</source>

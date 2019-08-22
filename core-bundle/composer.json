@@ -70,8 +70,8 @@
         "symfony/config": "4.2.* || 4.3.*",
         "symfony/console": "4.2.* || 4.3.*",
         "symfony/dependency-injection": "4.2.* || 4.3.*",
-        "symfony/expression-language": "4.2.* || 4.3.*",
         "symfony/event-dispatcher": "4.2.* || 4.3.*",
+        "symfony/expression-language": "4.2.* || 4.3.*",
         "symfony/filesystem": "4.2.* || 4.3.*",
         "symfony/finder": "4.2.* || 4.3.*",
         "symfony/framework-bundle": "4.2.* || 4.3.*",
@@ -126,7 +126,10 @@
         "branch-alias": {
             "dev-master": "4.9.x-dev"
         },
-        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
+        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin",
+        "symfony": {
+            "require": "^4.2"
+        }
     },
     "autoload": {
         "psr-4": {

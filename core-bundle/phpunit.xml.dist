@@ -48,6 +48,17 @@
     </filter>
 
     <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
+        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
+            <arguments>
+                <array>
+                    <element key="time-sensitive">
+                        <array>
+                            <element key="0"><string>Contao\CoreBundle\Command</string></element>
+                            <element key="1"><string>Contao\CoreBundle\Tests\Command</string></element>
+                        </array>
+                    </element>
+                </array>
+            </arguments>
+        </listener>
     </listeners>
 </phpunit>

@@ -87,11 +87,20 @@ abstract class Controller extends System
 	public static function getTemplateGroup($strPrefix)
 	{
 		$arrTemplates = array();
+		$arrOthers = array();
+		$blnSeparateOthers = substr_count($strPrefix, '_') > 1;
 
 		// Get the default templates
 		foreach (TemplateLoader::getPrefixedFiles($strPrefix) as $strTemplate)
 		{
-			$arrTemplates[$strTemplate][] = 'root';
+			if ($blnSeparateOthers && $strTemplate != $strPrefix)
+			{
+				$arrOthers[] = $strTemplate;
+			}
+			else
+			{
+				$arrTemplates[$strTemplate][] = 'root';
+			}
 		}
 
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -103,6 +112,24 @@ abstract class Controller extends System
 			foreach ($arrCustomized as $strFile)
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
+
+				// If the template name is in $arrOthers, it is a root template and not a
+				// customized template, e.g. mod_article and mod_article_list
+				if (\in_array($strTemplate, $arrOthers))
+				{
+					continue;
+				}
+
+				// Also ignore customized templates belonging to different root templates,
+				// e.g. mod_article and mod_article_list_custom
+				foreach ($arrOthers as $strKey)
+				{
+					if (strpos($strTemplate, $strKey . '_') === 0)
+					{
+						continue 2;
+					}
+				}
+
 				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['global'];
 			}
 		}

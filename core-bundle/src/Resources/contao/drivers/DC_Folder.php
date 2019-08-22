@@ -1201,7 +1201,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		// Submit buttons
 		$arrButtons = array();
-		$arrButtons['upload'] = '<button type="submit" name="upload" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG'][$this->strTable]['upload'][0].'</button>';
+		$arrButtons['upload'] = '<button type="submit" name="upload" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG'][$this->strTable]['move'][0].'</button>';
 		$arrButtons['uploadNback'] = '<button type="submit" name="uploadNback" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG'][$this->strTable]['uploadNback'].'</button>';
 
 		// Call the buttons_callback (see #4691)

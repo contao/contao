@@ -45,7 +45,7 @@ class ContaoCacheTest extends ContaoTestCase
      */
     public function testCookieWhiteListEnvVariable(string $env, array $expectedList): void
     {
-        putenv('COOKIE_WHITELIST='.$env);
+        $_SERVER['COOKIE_WHITELIST'] = $env;
 
         $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
         $dispatcher = $cache->getEventDispatcher();
@@ -57,7 +57,7 @@ class ContaoCacheTest extends ContaoTestCase
         $this->assertSame($expectedList, $cookieSubscriber->getWhitelist());
 
         // Cleanup
-        putenv('COOKIE_WHITELIST=null');
+        unset($_SERVER['COOKIE_WHITELIST']);
     }
 
     public function testCreatesTheCacheStore(): void

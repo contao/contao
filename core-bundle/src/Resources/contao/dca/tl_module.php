@@ -763,7 +763,7 @@ class tl_module extends Contao\Backend
 	 */
 	public function getModuleTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('mod_' . $dc->activeRecord->type);
+		return $this->getTemplateGroup('mod_' . $dc->activeRecord->type . '_');
 	}
 
 	/**
