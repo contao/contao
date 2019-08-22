@@ -1080,6 +1080,7 @@ class InsertTags extends Controller
 							$arrCache[$strTag] = implode(', ', $result);
 							break;
 
+						case 'absolute':
 						case 'refresh':
 						case 'uncached':
 							// ignore
