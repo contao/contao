@@ -303,7 +303,7 @@ class Comments extends Frontend
 			$objPage->cache = 0;
 
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_confirm'];
-			$_SESSION['TL_COMMENT_ADDED'] = false;
+			unset($_SESSION['TL_COMMENT_ADDED']);
 		}
 
 		// Store the comment
