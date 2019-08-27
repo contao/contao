@@ -72,18 +72,33 @@ class TemplateLoader
 	/**
 	 * Return the files matching a prefix as array
 	 *
-	 * @param string $prefix The prefix (e.g. "moo_")
+	 * @param string  $prefix The prefix (e.g. "moo_")
+	 * @param boolean $assoc  Return an associative array with template names and paths
 	 *
 	 * @return array An array of matching files
 	 */
-	public static function getPrefixedFiles($prefix)
+	public static function getPrefixedFiles($prefix, $assoc=false)
 	{
-		if (substr($prefix, -1) == '_')
+		if (substr($prefix, -1) != '_')
 		{
-			return array_values(preg_grep('/^' . $prefix . '/', array_keys(self::$files)));
+			$prefix .= '($|_)';
 		}
 
-		return array_values(preg_grep('/^' . $prefix . '($|_)/', array_keys(self::$files)));
+		$files = array_values(preg_grep('/^' . $prefix . '/', array_keys(self::$files)));
+
+		if (!$assoc)
+		{
+			return $files;
+		}
+
+		$return = array();
+
+		foreach ($files as $key)
+		{
+			$return[$key] = self::$files[$key];
+		}
+
+		return $return;
 	}
 
 	/**

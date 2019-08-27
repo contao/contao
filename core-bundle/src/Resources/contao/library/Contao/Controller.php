@@ -91,9 +91,9 @@ abstract class Controller extends System
 		$blnSeparateOthers = substr_count($strPrefix, '_') > 1;
 
 		// Get the default templates
-		foreach (TemplateLoader::getPrefixedFiles($strPrefix) as $strTemplate)
+		foreach (TemplateLoader::getPrefixedFiles($strPrefix, true) as $strTemplate=>$strPath)
 		{
-			if ($blnSeparateOthers && $strTemplate != $strPrefix)
+			if ($blnSeparateOthers && $strTemplate != $strPrefix && $strPath != 'contao/templates')
 			{
 				$arrOthers[] = $strTemplate;
 			}
