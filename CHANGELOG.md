@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Correctly show the templates in the section wizard (see #677).
+
 ## 4.8.1 (2019-08-22)
 
  * Hide the minlength/maxlength fields for numeric fields (see #655).
