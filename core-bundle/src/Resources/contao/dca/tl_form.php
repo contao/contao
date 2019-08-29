@@ -140,7 +140,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			(
 				array('tl_form', 'generateAlias')
 			),
-			'sql'                     => "varchar(128) COLLATE utf8_bin NOT NULL default ''"
+			'sql'                     => "varchar(255) COLLATE utf8_bin NOT NULL default ''"
 		),
 		'jumpTo' => array
 		(

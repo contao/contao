@@ -179,7 +179,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				array('tl_calendar_events', 'generateAlias')
 			),
-			'sql'                     => "varchar(128) COLLATE utf8_bin NOT NULL default ''"
+			'sql'                     => "varchar(255) COLLATE utf8_bin NOT NULL default ''"
 		),
 		'author' => array
 		(

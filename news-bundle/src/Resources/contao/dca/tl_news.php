@@ -185,7 +185,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			(
 				array('tl_news', 'generateAlias')
 			),
-			'sql'                     => "varchar(128) COLLATE utf8_bin NOT NULL default ''"
+			'sql'                     => "varchar(255) COLLATE utf8_bin NOT NULL default ''"
 		),
 		'author' => array
 		(

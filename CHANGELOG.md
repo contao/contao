@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Increase the alias field lengths (see #678).
  * Check if the theme preview image exists (see #636).
 
 ## 4.4.42 (2019-08-15)
