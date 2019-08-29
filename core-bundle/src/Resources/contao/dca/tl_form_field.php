@@ -595,7 +595,7 @@ class tl_form_field extends Contao\Backend
 	 */
 	public function getFormFieldTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_');
+		return $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_', true);
 	}
 
 	/**

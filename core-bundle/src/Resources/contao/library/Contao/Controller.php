@@ -80,15 +80,25 @@ abstract class Controller extends System
 	/**
 	 * Return all template files of a particular group as array
 	 *
-	 * @param string $strPrefix The template name prefix (e.g. "ce_")
+	 * @param string  $strPrefix         The template name prefix (e.g. "ce_")
+	 * @param boolean $blnSeparateOthers Separate other root templates
 	 *
 	 * @return array An array of template names
 	 */
-	public static function getTemplateGroup($strPrefix)
+	public static function getTemplateGroup($strPrefix, $blnSeparateOthers=false)
 	{
+		if ($blnSeparateOthers)
+		{
+			$intCount = substr_count($strPrefix, '_');
+
+			if ($intCount < 1 || (substr($strPrefix, -1) == '_' && $intCount < 2))
+			{
+				throw new \InvalidArgumentException('Cannot separate templates if only a prefix is given');
+			}
+		}
+
 		$arrTemplates = array();
 		$arrOthers = array();
-		$blnSeparateOthers = substr_count($strPrefix, '_') > 1;
 
 		// Get the default templates
 		foreach (TemplateLoader::getPrefixedFiles($strPrefix, true) as $strTemplate=>$strPath)
