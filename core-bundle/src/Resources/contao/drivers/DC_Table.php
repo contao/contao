@@ -3559,9 +3559,16 @@ class DC_Table extends \DataContainer implements \listable, \editable
 			}
 		}
 
+		$breadcrumb = (isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb']) ? $GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] : '');
+
 		// Return if there are no records
 		if ($tree == '' && \Input::get('act') != 'paste')
 		{
+			if ($breadcrumb)
+			{
+				$return .= '<div class="tl_listing_container">' . $breadcrumb . '</div>';
+			}
+
 			return $return . '
 <p class="tl_empty">'.$GLOBALS['TL_LANG']['MSC']['noResult'].'</p>';
 		}
@@ -3574,7 +3581,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 <div id="paste_hint">
   <p>'.$GLOBALS['TL_LANG']['MSC']['selectNewPosition'].'</p>
 </div>' : '').'
-<div class="tl_listing_container tree_view" id="tl_listing">'.(isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb']) ? $GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] : '').((\Input::get('act') == 'select' || ($this->strPickerFieldType == 'checkbox')) ? '
+<div class="tl_listing_container tree_view" id="tl_listing">'.$breadcrumb.((\Input::get('act') == 'select' || ($this->strPickerFieldType == 'checkbox')) ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '').'
