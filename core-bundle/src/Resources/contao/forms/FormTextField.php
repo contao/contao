@@ -87,18 +87,12 @@ class FormTextField extends Widget
 
 			case 'min':
 			case 'minval':
-				if ($varValue > 0)
-				{
-					$this->arrAttributes['min'] = $varValue;
-				}
+				$this->arrAttributes['min'] = $varValue;
 				break;
 
 			case 'max':
 			case 'maxval':
-				if ($varValue > 0)
-				{
-					$this->arrAttributes['max'] = $varValue;
-				}
+				$this->arrAttributes['max'] = $varValue;
 				break;
 
 			case 'step':
