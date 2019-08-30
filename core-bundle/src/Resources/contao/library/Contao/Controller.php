@@ -87,7 +87,7 @@ abstract class Controller extends System
 	public static function getTemplateGroup($strPrefix)
 	{
 		$arrTemplates = array();
-		$arrOthers = array();
+		$arrBundleTemplates = array();
 
 		$arrMapper = array
 		(
@@ -109,7 +109,7 @@ abstract class Controller extends System
 					{
 						if (isset($arrMappings[$strKey]))
 						{
-							$arrOthers[] = $strTemplate;
+							$arrBundleTemplates[] = $strTemplate;
 							continue 2;
 						}
 					}
@@ -129,16 +129,15 @@ abstract class Controller extends System
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
 
-				// If the template name is in $arrOthers, it is a root template and not a
-				// customized template, e.g. mod_article and mod_article_list
-				if (\in_array($strTemplate, $arrOthers))
+				// Ignore bundle templates, e.g. mod_article and mod_article_list
+				if (\in_array($strTemplate, $arrBundleTemplates))
 				{
 					continue;
 				}
 
-				// Also ignore customized templates belonging to different root templates,
+				// Also ignore custom templates belonging to a different bundle template,
 				// e.g. mod_article and mod_article_list_custom
-				foreach ($arrOthers as $strKey)
+				foreach ($arrBundleTemplates as $strKey)
 				{
 					if (strpos($strTemplate, $strKey . '_') === 0)
 					{
