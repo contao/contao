@@ -407,7 +407,7 @@ class Email
 						$src = rawurldecode($src); // see #3713
 
 						// Embed the image if the URL is now relative
-						if (!preg_match('@^https?://@', $src) && ($objFile = new File(StringUtil::stripRootDir($this->strImageDir . $src))) && ($objFile->exists() || $objFile->generateIfDeferredImage()))
+						if (!preg_match('@^https?://@', $src) && ($objFile = new File(StringUtil::stripRootDir($this->strImageDir . $src))) && ($objFile->exists() || $objFile->createDeferredImage()))
 						{
 							if (!isset($arrCid[$src]))
 							{
