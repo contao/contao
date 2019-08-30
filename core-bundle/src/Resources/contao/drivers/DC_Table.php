@@ -2120,6 +2120,18 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 			}
 
+			// Set the current timestamp before adding a new version
+			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
+			{
+				$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
+							   ->execute($this->ptable, time(), $this->intId);
+			}
+			else
+			{
+				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
+							   ->execute(time(), $this->intId);
+			}
+
 			// Save the current version
 			if ($this->blnCreateNewVersion)
 			{
@@ -2143,18 +2155,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 				}
-			}
-
-			// Set the current timestamp (-> DO NOT CHANGE THE ORDER version - timestamp)
-			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
-			{
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
-							   ->execute($this->ptable, time(), $this->intId);
-			}
-			else
-			{
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-							   ->execute(time(), $this->intId);
 			}
 
 			// Show a warning if the record has been saved by another user (see #8412)
@@ -2511,6 +2511,18 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
+					// Set the current timestamp before adding a new version
+					if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
+					{
+						$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
+									   ->execute($this->ptable, time(), $this->intId);
+					}
+					else
+					{
+						$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
+									   ->execute(time(), $this->intId);
+					}
+
 					// Create a new version
 					if ($this->blnCreateNewVersion)
 					{
@@ -2534,18 +2546,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 								}
 							}
 						}
-					}
-
-					// Set the current timestamp (-> DO NOT CHANGE ORDER version - timestamp)
-					if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
-					{
-						$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
-									   ->execute($this->ptable, time(), $this->intId);
-					}
-					else
-					{
-						$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-									   ->execute(time(), $this->intId);
 					}
 				}
 			}
@@ -2804,6 +2804,18 @@ class DC_Table extends DataContainer implements \listable, \editable
 							}
 						}
 
+						// Set the current timestamp before adding a new version
+						if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
+						{
+							$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
+										   ->execute($this->ptable, time(), $this->intId);
+						}
+						else
+						{
+							$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
+										   ->execute(time(), $this->intId);
+						}
+
 						// Create a new version
 						if ($this->blnCreateNewVersion)
 						{
@@ -2827,18 +2839,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 									}
 								}
 							}
-						}
-
-						// Set the current timestamp (-> DO NOT CHANGE ORDER version - timestamp)
-						if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
-						{
-							$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
-										   ->execute($this->ptable, time(), $this->intId);
-						}
-						else
-						{
-							$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-										   ->execute(time(), $this->intId);
 						}
 					}
 				}
@@ -3607,9 +3607,16 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 		}
 
+		$breadcrumb = (isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb']) ? $GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] : '');
+
 		// Return if there are no records
 		if ($tree == '' && Input::get('act') != 'paste')
 		{
+			if ($breadcrumb)
+			{
+				$return .= '<div class="tl_listing_container">' . $breadcrumb . '</div>';
+			}
+
 			return $return . '
 <p class="tl_empty">'.$GLOBALS['TL_LANG']['MSC']['noResult'].'</p>';
 		}
@@ -3622,7 +3629,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div id="paste_hint" data-add-to-scroll-offset="20">
   <p>'.$GLOBALS['TL_LANG']['MSC']['selectNewPosition'].'</p>
 </div>' : '').'
-<div class="tl_listing_container tree_view" id="tl_listing">'.($GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] ?? '').((Input::get('act') == 'select' || ($this->strPickerFieldType == 'checkbox')) ? '
+<div class="tl_listing_container tree_view" id="tl_listing">'.$breadcrumb.((Input::get('act') == 'select' || ($this->strPickerFieldType == 'checkbox')) ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">'.$GLOBALS['TL_LANG']['MSC']['selectAll'].'</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '').'

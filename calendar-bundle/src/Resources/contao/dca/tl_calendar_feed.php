@@ -132,7 +132,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			(
 				array('tl_calendar_feed', 'checkFeedAlias')
 			),
-			'sql'                     => "varchar(128) BINARY NOT NULL default ''"
+			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
 		),
 		'language' => array
 		(

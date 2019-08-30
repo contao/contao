@@ -2,6 +2,14 @@
 
 ## DEV
 
+ * Handle renamed files in the version overview (see #671).
+ * Hide the username if the initial version is auto-generated (see #664).  
+ * Set the e-mail priority if it has been given (see #608).
+ * Also show the breadcrumb menu if there are no results (see #660).
+ * Correctly replace literal insert tags (see #670).
+ * Increase the alias field lengths (see #678).
+ * Retain origId in chained alias elements (see #635).
+ * Check if the theme preview image exists (see #636).
  * Correctly show the templates in the section wizard (see #677).
 
 ## 4.8.1 (2019-08-22)

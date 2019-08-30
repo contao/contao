@@ -1524,6 +1524,13 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 			}
 
+			// Set the current timestamp before creating a new version
+			if ($this->blnIsDbAssisted && $objModel !== null)
+			{
+				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
+							   ->execute(time(), $objModel->id);
+			}
+
 			// Save the current version
 			if ($this->blnCreateNewVersion && $objModel !== null)
 			{
@@ -1547,13 +1554,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						}
 					}
 				}
-			}
-
-			// Set the current timestamp (-> DO NOT CHANGE THE ORDER version - timestamp)
-			if ($this->blnIsDbAssisted && $objModel !== null)
-			{
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-							   ->execute(time(), $objModel->id);
 			}
 
 			// Redirect
@@ -1753,6 +1753,13 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						}
 					}
 
+					// Set the current timestamp before adding a new version
+					if ($this->blnIsDbAssisted && $objModel !== null)
+					{
+						$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
+									   ->execute(time(), $objModel->id);
+					}
+
 					// Create a new version
 					if ($this->blnCreateNewVersion && $objModel !== null)
 					{
@@ -1776,13 +1783,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 								}
 							}
 						}
-					}
-
-					// Set the current timestamp (-> DO NOT CHANGE ORDER version - timestamp)
-					if ($this->blnIsDbAssisted && $objModel !== null)
-					{
-						$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-									   ->execute(time(), $objModel->id);
 					}
 				}
 			}

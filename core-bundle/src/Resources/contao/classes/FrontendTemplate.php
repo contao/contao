@@ -146,6 +146,9 @@ class FrontendTemplate extends Template
 			$this->strBuffer = $this->minifyHtml($this->strBuffer);
 		}
 
+		// Replace literal insert tags (see #670)
+		$this->strBuffer = str_replace(array('[{]', '[}]'), array('{{', '}}'), $this->strBuffer);
+
 		parent::compile();
 	}
 
