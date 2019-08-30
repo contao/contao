@@ -66,6 +66,13 @@ class FormTextField extends Widget
 	{
 		switch ($strKey)
 		{
+			case 'minlength':
+				if ($varValue > 0)
+				{
+					$this->arrAttributes['minlength'] =  $varValue;
+				}
+				break;
+
 			case 'maxlength':
 				if ($varValue > 0)
 				{
