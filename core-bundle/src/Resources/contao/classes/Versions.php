@@ -688,8 +688,14 @@ class Versions extends \Controller
 			$arrRow['description'] = \StringUtil::substr($arrRow['description'], 32);
 			$arrRow['shortTable'] = \StringUtil::substr($arrRow['fromTable'], 18); // see #5769
 
-			if ($arrRow['editUrl'] != '')
+			if (isset($arrRow['editUrl']))
 			{
+				// Adjust the edit URL of files in case they have been renamed (see #671)
+				if ($arrRow['fromTable'] == 'tl_files' && ($filesModel = FilesModel::findByPk($arrRow['pid'])))
+				{
+					$arrRow['editUrl'] = preg_replace('/id=[^&]+/', 'id=' . $filesModel->path, $arrRow['editUrl']);
+				}
+
 				$arrRow['editUrl'] = preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . REQUEST_TOKEN), ampersand($arrRow['editUrl']));
 			}
 
