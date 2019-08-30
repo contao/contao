@@ -153,6 +153,9 @@ class FrontendTemplate extends \Template
 			throw new \UnusedArgumentsException();
 		}
 
+		// Replace literal insert tags (see #670)
+		$this->strBuffer = str_replace(array('[{]', '[}]'), array('{{', '}}'), $this->strBuffer);
+
 		parent::compile();
 	}
 
