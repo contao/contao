@@ -80,20 +80,25 @@ abstract class Controller extends System
 	/**
 	 * Return all template files of a particular group as array
 	 *
-	 * @param string $strPrefix The template name prefix (e.g. "ce_")
+	 * @param string $strPrefix           The template name prefix (e.g. "ce_")
+	 * @param array  $arrAdditionalMapper An additional mapper array
 	 *
 	 * @return array An array of template names
 	 */
-	public static function getTemplateGroup($strPrefix)
+	public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper=array())
 	{
 		$arrTemplates = array();
 		$arrBundleTemplates = array();
 
-		$arrMapper = array
+		$arrMapper = array_merge
 		(
-			'ce' => 'TL_CTE',
-			'form' => 'TL_FFL',
-			'mod' => 'FE_MOD',
+			$arrAdditionalMapper,
+			array
+			(
+				'ce' => array_keys(array_merge(...array_values($GLOBALS['TL_CTE']))),
+				'form' => array_keys($GLOBALS['TL_FFL']),
+				'mod' => array_keys(array_merge(...array_values($GLOBALS['FE_MOD']))),
+			)
 		);
 
 		// Get the default templates
@@ -103,16 +108,10 @@ abstract class Controller extends System
 			{
 				list($k, $strKey) = explode('_', $strTemplate, 2);
 
-				if (isset($arrMapper[$k]))
+				if (isset($arrMapper[$k]) && \in_array($strKey, $arrMapper[$k]))
 				{
-					foreach ($GLOBALS[$arrMapper[$k]] as $arrMappings)
-					{
-						if (isset($arrMappings[$strKey]))
-						{
-							$arrBundleTemplates[] = $strTemplate;
-							continue 2;
-						}
-					}
+					$arrBundleTemplates[] = $strTemplate;
+					continue;
 				}
 			}
 

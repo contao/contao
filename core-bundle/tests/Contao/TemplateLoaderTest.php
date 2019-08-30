@@ -12,8 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\ContentText;
 use Contao\Controller;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\FormTextField;
+use Contao\ModuleArticleList;
 use Contao\System;
 use Contao\TemplateLoader;
 use Symfony\Component\Filesystem\Filesystem;
@@ -30,8 +33,23 @@ class TemplateLoaderTest extends TestCase
         $fs = new Filesystem();
         $fs->mkdir($this->getFixturesDir().'/templates');
 
+        $GLOBALS['TL_CTE'] = [
+            'texts' => [
+                'text' => ContentText::class,
+            ],
+        ];
+
+        $GLOBALS['TL_FFL'] = [
+            'text' => FormTextField::class,
+        ];
+
+        $GLOBALS['FE_MOD'] = [
+            'miscellaneous' => [
+                'article_list' => ModuleArticleList::class,
+            ],
+        ];
+
         $GLOBALS['TL_LANG']['MSC']['global'] = 'global';
-        $GLOBALS['FE_MOD']['miscellaneous']['article_list'] = ['Contao\ModuleArticleList'];
 
         System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
     }
@@ -46,7 +64,7 @@ class TemplateLoaderTest extends TestCase
         $fs = new Filesystem();
         $fs->remove($this->getFixturesDir().'/templates');
 
-        unset($GLOBALS['TL_LANG'], $GLOBALS['FE_MOD']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_CTE'], $GLOBALS['TL_FFL'], $GLOBALS['FE_MOD']);
     }
 
     public function testReturnsACustomTemplateInTemplates(): void
@@ -196,5 +214,33 @@ class TemplateLoaderTest extends TestCase
         $fs->remove($this->getFixturesDir().'/templates/mod_article_list_custom.html5');
 
         TemplateLoader::reset();
+    }
+
+    public function testSupportsAdditionalMappers(): void
+    {
+        $GLOBALS['CTLG'] = [
+            'view' => 'Ctlg\View',
+            'view_details' => 'Ctlg\ViewDetails',
+        ];
+
+        TemplateLoader::addFile('ctlg_view', 'catalog-manager/src/Resources/contao/templates');
+        TemplateLoader::addFile('ctlg_view_details', 'catalog-manager/src/Resources/contao/templates');
+
+        $this->assertSame(
+            [
+                'ctlg_view' => 'ctlg_view',
+                'ctlg_view_details' => 'ctlg_view_details',
+            ],
+            Controller::getTemplateGroup('ctlg_view')
+        );
+
+        $this->assertSame(
+            [
+                'ctlg_view' => 'ctlg_view',
+            ],
+            Controller::getTemplateGroup('ctlg_view', ['ctlg' => array_keys($GLOBALS['CTLG'])])
+        );
+
+        unset($GLOBALS['CTLG']);
     }
 }
