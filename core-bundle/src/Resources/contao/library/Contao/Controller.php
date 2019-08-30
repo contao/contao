@@ -80,17 +80,41 @@ abstract class Controller extends System
 	/**
 	 * Return all template files of a particular group as array
 	 *
-	 * @param string $strPrefix The template name prefix (e.g. "ce_")
+	 * @param string $strPrefix           The template name prefix (e.g. "ce_")
+	 * @param array  $arrAdditionalMapper An additional mapper array
 	 *
 	 * @return array An array of template names
 	 */
-	public static function getTemplateGroup($strPrefix)
+	public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper=array())
 	{
 		$arrTemplates = array();
+		$arrBundleTemplates = array();
+
+		$arrMapper = array_merge
+		(
+			$arrAdditionalMapper,
+			array
+			(
+				'ce' => array_keys(array_merge(...array_values($GLOBALS['TL_CTE']))),
+				'form' => array_keys($GLOBALS['TL_FFL']),
+				'mod' => array_keys(array_merge(...array_values($GLOBALS['FE_MOD']))),
+			)
+		);
 
 		// Get the default templates
 		foreach (TemplateLoader::getPrefixedFiles($strPrefix) as $strTemplate)
 		{
+			if ($strTemplate != $strPrefix)
+			{
+				list($k, $strKey) = explode('_', $strTemplate, 2);
+
+				if (isset($arrMapper[$k]) && \in_array($strKey, $arrMapper[$k]))
+				{
+					$arrBundleTemplates[] = $strTemplate;
+					continue;
+				}
+			}
+
 			$arrTemplates[$strTemplate][] = 'root';
 		}
 
@@ -103,6 +127,23 @@ abstract class Controller extends System
 			foreach ($arrCustomized as $strFile)
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
+
+				// Ignore bundle templates, e.g. mod_article and mod_article_list
+				if (\in_array($strTemplate, $arrBundleTemplates))
+				{
+					continue;
+				}
+
+				// Also ignore custom templates belonging to a different bundle template,
+				// e.g. mod_article and mod_article_list_custom
+				foreach ($arrBundleTemplates as $strKey)
+				{
+					if (strpos($strTemplate, $strKey . '_') === 0)
+					{
+						continue 2;
+					}
+				}
+
 				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['global'];
 			}
 		}
