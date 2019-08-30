@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Hide the username if the initial version is auto-generated (see #664).  
  * Set the e-mail priority if it has been given (see #608).
  * Also show the breadcrumb menu if there are no results (see #660).
  * Correctly replace literal insert tags (see #670).
