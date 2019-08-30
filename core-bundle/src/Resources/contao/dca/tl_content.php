@@ -1442,7 +1442,7 @@ class tl_content extends Contao\Backend
 	 */
 	public function getElementTemplates(Contao\DataContainer $dc)
 	{
-		return $this->getTemplateGroup('ce_' . $dc->activeRecord->type . '_', true);
+		return $this->getTemplateGroup('ce_' . $dc->activeRecord->type . '_');
 	}
 
 	/**

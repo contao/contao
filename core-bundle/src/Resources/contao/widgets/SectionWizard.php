@@ -118,7 +118,7 @@ class SectionWizard extends Widget
 			$options = '';
 
 			// Add the template
-			foreach (Template::getTemplateGroup('block_section', true) as $k=>$v)
+			foreach (Template::getTemplateGroup('block_section') as $k=>$v)
 			{
 				$options .= '<option value="'.StringUtil::specialchars($k).'"'.static::optionSelected($k, $this->varValue[$i]['template']).'>'.$v.'</option>';
 			}

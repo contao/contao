@@ -29,19 +29,10 @@ class TemplateLoaderTest extends TestCase
 
         $fs = new Filesystem();
         $fs->mkdir($this->getFixturesDir().'/templates');
-        $fs->touch($this->getFixturesDir().'/templates/mod_article_custom.html5');
-        $fs->touch($this->getFixturesDir().'/templates/mod_article_list_custom.html5');
 
         $GLOBALS['TL_LANG']['MSC']['global'] = 'global';
 
         System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
-
-        TemplateLoader::addFile('ctlg_views', 'src/Resources/contao/templates');
-        TemplateLoader::addFile('ctlg_view_master', 'src/Resources/contao/templates');
-        TemplateLoader::addFile('ctlg_view_teaser', 'src/Resources/contao/templates');
-        TemplateLoader::addFile('mod_article', 'src/Resources/contao/templates/modules');
-        TemplateLoader::addFile('mod_article_list', 'src/Resources/contao/templates/modules');
-        TemplateLoader::addFile('mod_article_test', 'contao/templates');
     }
 
     /**
@@ -57,118 +48,101 @@ class TemplateLoaderTest extends TestCase
         unset($GLOBALS['TL_LANG']);
     }
 
-    /**
-     * @dataProvider getTemplates
-     */
-    public function testReturnsTheTemplatesOfAGroup(string $prefix, bool $separate, array $templates): void
+    public function testReturnsACustomTemplateInTemplates(): void
     {
-        $this->assertSame($templates, Controller::getTemplateGroup($prefix, $separate));
+        $fs = new Filesystem();
+        $fs->touch($this->getFixturesDir().'/templates/mod_article_custom.html5');
+
+        TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
+
+        $this->assertSame(
+            [
+                'mod_article' => 'mod_article',
+                'mod_article_custom' => 'mod_article_custom (global)',
+            ],
+            Controller::getTemplateGroup('mod_article')
+        );
+
+        $this->assertSame(
+            [
+                'mod_article_custom' => 'mod_article_custom (global)',
+            ],
+            Controller::getTemplateGroup('mod_article_')
+        );
+
+        $fs->remove($this->getFixturesDir().'/templates/mod_article_custom.html5');
+
+        TemplateLoader::reset();
     }
 
-    public function getTemplates(): \Generator
+    public function testReturnsACustomTemplateInContaoTemplates(): void
     {
-        yield [
-            'mod',
-            false,
+        TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
+        TemplateLoader::addFile('mod_article_custom', 'contao/templates');
+
+        $this->assertSame(
             [
                 'mod_article' => 'mod_article',
-                'mod_article_custom' => 'mod_article_custom (global)',
-                'mod_article_list' => 'mod_article_list',
-                'mod_article_list_custom' => 'mod_article_list_custom (global)',
-                'mod_article_test' => 'mod_article_test',
+                'mod_article_custom' => 'mod_article_custom',
             ],
-        ];
+            Controller::getTemplateGroup('mod_article')
+        );
 
-        yield [
-            'mod_',
-            false,
+        $this->assertSame(
+            [
+                'mod_article_custom' => 'mod_article_custom',
+            ],
+            Controller::getTemplateGroup('mod_article_')
+        );
+
+        TemplateLoader::reset();
+    }
+
+    public function testReturnsACustomTemplateInAnotherBundle(): void
+    {
+        TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
+        TemplateLoader::addFile('mod_article_custom', 'article-bundle/src/Resources/contao/templates/modules');
+
+        $this->assertSame(
             [
                 'mod_article' => 'mod_article',
-                'mod_article_custom' => 'mod_article_custom (global)',
-                'mod_article_list' => 'mod_article_list',
-                'mod_article_list_custom' => 'mod_article_list_custom (global)',
-                'mod_article_test' => 'mod_article_test',
+                'mod_article_custom' => 'mod_article_custom',
             ],
-        ];
+            Controller::getTemplateGroup('mod_article')
+        );
 
-        yield [
-            'mod_article',
-            false,
+        $this->assertSame(
             [
-                'mod_article' => 'mod_article',
-                'mod_article_custom' => 'mod_article_custom (global)',
-                'mod_article_list' => 'mod_article_list',
-                'mod_article_list_custom' => 'mod_article_list_custom (global)',
-                'mod_article_test' => 'mod_article_test',
+                'mod_article_custom' => 'mod_article_custom',
             ],
-        ];
+            Controller::getTemplateGroup('mod_article_')
+        );
 
-        yield [
-            'mod_article_',
-            false,
-            [
-                'mod_article_custom' => 'mod_article_custom (global)',
-                'mod_article_list' => 'mod_article_list',
-                'mod_article_list_custom' => 'mod_article_list_custom (global)',
-                'mod_article_test' => 'mod_article_test',
-            ],
-        ];
+        TemplateLoader::reset();
+    }
 
-        yield [
-            'mod_article',
-            true,
-            [
-                'mod_article' => 'mod_article',
-                'mod_article_custom' => 'mod_article_custom (global)',
-                'mod_article_test' => 'mod_article_test',
-            ],
-        ];
+    public function testReturnsMultipleRootTemplatesWithTheSamePrefix(): void
+    {
+        TemplateLoader::addFile('ctlg_views', 'catalog-manager/src/Resources/contao/templates');
+        TemplateLoader::addFile('ctlg_view_master', 'catalog-manager/src/Resources/contao/templates');
+        TemplateLoader::addFile('ctlg_view_teaser', 'catalog-manager/src/Resources/contao/templates');
 
-        yield [
-            'mod_article_',
-            true,
-            [
-                'mod_article_custom' => 'mod_article_custom (global)',
-                'mod_article_test' => 'mod_article_test',
-            ],
-        ];
-
-        yield [
-            'ctlg_view',
-            false,
+        $this->assertSame(
             [
                 'ctlg_view_master' => 'ctlg_view_master',
                 'ctlg_view_teaser' => 'ctlg_view_teaser',
             ],
-        ];
+            Controller::getTemplateGroup('ctlg_view')
+        );
 
-        yield [
-            'ctlg_view_',
-            false,
+        $this->assertSame(
             [
                 'ctlg_view_master' => 'ctlg_view_master',
                 'ctlg_view_teaser' => 'ctlg_view_teaser',
             ],
-        ];
+            Controller::getTemplateGroup('ctlg_view_')
+        );
 
-        yield ['ctlg_view', true, []];
-        yield ['ctlg_view_', true, []];
-    }
-
-    /**
-     * @dataProvider getInvalidArguments
-     */
-    public function testThrowsAnExceptionIfTheArgumentsAreInvalid(string $prefix, bool $separate): void
-    {
-        $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('Cannot separate templates if only a prefix is given');
-
-        Controller::getTemplateGroup($prefix, $separate);
-    }
-
-    public function getInvalidArguments(): \Generator
-    {
-        yield ['mod', true];
-        yield ['mod_', true];
+        TemplateLoader::reset();
     }
 }

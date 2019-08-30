@@ -509,7 +509,7 @@ class tl_form extends Contao\Backend
 	 */
 	public function getFormWrapperTemplates()
 	{
-		return $this->getTemplateGroup('form_wrapper_', true);
+		return $this->getTemplateGroup('form_wrapper_');
 	}
 
 	/**

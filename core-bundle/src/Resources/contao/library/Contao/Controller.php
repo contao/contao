@@ -80,37 +80,18 @@ abstract class Controller extends System
 	/**
 	 * Return all template files of a particular group as array
 	 *
-	 * @param string  $strPrefix         The template name prefix (e.g. "ce_")
-	 * @param boolean $blnSeparateOthers Separate other root templates
+	 * @param string $strPrefix The template name prefix (e.g. "ce_")
 	 *
 	 * @return array An array of template names
 	 */
-	public static function getTemplateGroup($strPrefix, $blnSeparateOthers=false)
+	public static function getTemplateGroup($strPrefix)
 	{
-		if ($blnSeparateOthers)
-		{
-			$intCount = substr_count($strPrefix, '_');
-
-			if ($intCount < 1 || (substr($strPrefix, -1) == '_' && $intCount < 2))
-			{
-				throw new \InvalidArgumentException('Cannot separate templates if only a prefix is given');
-			}
-		}
-
 		$arrTemplates = array();
-		$arrOthers = array();
 
 		// Get the default templates
-		foreach (TemplateLoader::getPrefixedFiles($strPrefix, true) as $strTemplate=>$strPath)
+		foreach (TemplateLoader::getPrefixedFiles($strPrefix) as $strTemplate)
 		{
-			if ($blnSeparateOthers && $strTemplate != $strPrefix && $strPath != 'contao/templates')
-			{
-				$arrOthers[] = $strTemplate;
-			}
-			else
-			{
-				$arrTemplates[$strTemplate][] = 'root';
-			}
+			$arrTemplates[$strTemplate][] = 'root';
 		}
 
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -122,24 +103,6 @@ abstract class Controller extends System
 			foreach ($arrCustomized as $strFile)
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
-
-				// If the template name is in $arrOthers, it is a root template and not a
-				// customized template, e.g. mod_article and mod_article_list
-				if (\in_array($strTemplate, $arrOthers))
-				{
-					continue;
-				}
-
-				// Also ignore customized templates belonging to different root templates,
-				// e.g. mod_article and mod_article_list_custom
-				foreach ($arrOthers as $strKey)
-				{
-					if (strpos($strTemplate, $strKey . '_') === 0)
-					{
-						continue 2;
-					}
-				}
-
 				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['global'];
 			}
 		}

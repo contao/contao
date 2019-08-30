@@ -72,33 +72,18 @@ class TemplateLoader
 	/**
 	 * Return the files matching a prefix as array
 	 *
-	 * @param string  $prefix The prefix (e.g. "moo_")
-	 * @param boolean $assoc  Return an associative array with template names and paths
+	 * @param string $prefix The prefix (e.g. "moo_")
 	 *
 	 * @return array An array of matching files
 	 */
-	public static function getPrefixedFiles($prefix, $assoc=false)
+	public static function getPrefixedFiles($prefix)
 	{
 		if (substr($prefix, -1) != '_')
 		{
 			$prefix .= '($|_)';
 		}
 
-		$files = array_values(preg_grep('/^' . $prefix . '/', array_keys(self::$files)));
-
-		if (!$assoc)
-		{
-			return $files;
-		}
-
-		$return = array();
-
-		foreach ($files as $key)
-		{
-			$return[$key] = self::$files[$key];
-		}
-
-		return $return;
+		return array_values(preg_grep('/^' . $prefix . '/', array_keys(self::$files)));
 	}
 
 	/**
@@ -201,6 +186,16 @@ class TemplateLoader
 			}
 			catch (\InvalidArgumentException $e) {}
 		}
+	}
+
+	/**
+	 * Reset the template list
+	 *
+	 * @internal Do not use this method in your code; it is meant for unit testing only
+	 */
+	public static function reset()
+	{
+		self::$files = array();
 	}
 }
 
