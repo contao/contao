@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Do not add the min/max attributes if they are zero (see #668).
  * Handle renamed files in the version overview (see #671).
  * Hide the username if the initial version is auto-generated (see #664).  
  * Set the e-mail priority if it has been given (see #608).
