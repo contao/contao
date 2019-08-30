@@ -141,13 +141,13 @@ class Versions extends Controller
 			return;
 		}
 
-		$this->create();
+		$this->create(true);
 	}
 
 	/**
 	 * Create a new version of a record
 	 */
-	public function create()
+	public function create($blnHideUser=false)
 	{
 		if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'])
 		{
@@ -238,7 +238,7 @@ class Versions extends Controller
 					   ->execute($this->intPid, $this->strTable);
 
 		$this->Database->prepare("INSERT INTO tl_version (pid, tstamp, version, fromTable, username, userid, description, editUrl, active, data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?)")
-					   ->execute($this->intPid, time(), $intVersion, $this->strTable, $this->getUsername(), $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($objRecord->row()));
+					   ->execute($this->intPid, time(), $intVersion, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($objRecord->row()));
 
 		// Trigger the oncreate_version_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_version_callback']))
@@ -683,8 +683,14 @@ class Versions extends Controller
 			$arrRow['description'] = StringUtil::substr($arrRow['description'], 32);
 			$arrRow['shortTable'] = StringUtil::substr($arrRow['fromTable'], 18); // see #5769
 
-			if ($arrRow['editUrl'] != '')
+			if (isset($arrRow['editUrl']))
 			{
+				// Adjust the edit URL of files in case they have been renamed (see #671)
+				if ($arrRow['fromTable'] == 'tl_files' && ($filesModel = FilesModel::findByPk($arrRow['pid'])))
+				{
+					$arrRow['editUrl'] = preg_replace('/id=[^&]+/', 'id=' . $filesModel->path, $arrRow['editUrl']);
+				}
+
 				$arrRow['editUrl'] = preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . REQUEST_TOKEN), ampersand($arrRow['editUrl']));
 			}
 

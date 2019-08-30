@@ -481,11 +481,10 @@ class PageRegular extends Frontend
 			$this->Template->positions = $arrPositions;
 		}
 
-		$this->Template->checkCookiesUrl = '';
-
 		// Add the check_cookies URL if the "alwaysLoadFromCache" option is enabled
-		if ($objPage->alwaysLoadFromCache) {
-			$this->Template->checkCookiesUrl = System::getContainer()->get('router')->generate('contao_frontend_check_cookies');
+		if ($objPage->alwaysLoadFromCache)
+		{
+			$GLOBALS['TL_BODY'][] = sprintf('<img src="%s" width="1" height="1" class="invisible" alt aria-hidden="true" onload="this.parentNode.removeChild(this)">', System::getContainer()->get('router')->generate('contao_frontend_check_cookies'));
 		}
 
 		// Default settings

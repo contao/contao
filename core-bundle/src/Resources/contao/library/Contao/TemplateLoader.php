@@ -78,12 +78,12 @@ class TemplateLoader
 	 */
 	public static function getPrefixedFiles($prefix)
 	{
-		if (substr($prefix, -1) == '_')
+		if (substr($prefix, -1) != '_')
 		{
-			return array_values(preg_grep('/^' . $prefix . '/', array_keys(self::$files)));
+			$prefix .= '($|_)';
 		}
 
-		return array_values(preg_grep('/^' . $prefix . '($|_)/', array_keys(self::$files)));
+		return array_values(preg_grep('/^' . $prefix . '/', array_keys(self::$files)));
 	}
 
 	/**
@@ -186,6 +186,16 @@ class TemplateLoader
 			}
 			catch (\InvalidArgumentException $e) {}
 		}
+	}
+
+	/**
+	 * Reset the template list
+	 *
+	 * @internal Do not use this method in your code; it is meant for unit testing only
+	 */
+	public static function reset()
+	{
+		self::$files = array();
 	}
 }
 

@@ -68,7 +68,7 @@ class Email
 	 * E-mail priority
 	 * @var integer
 	 */
-	protected $intPriority = 3;
+	protected $intPriority;
 
 	/**
 	 * E-mail subject
@@ -368,6 +368,12 @@ class Email
 
 		$this->objMessage->setTo($arrRecipients);
 		$this->objMessage->setCharset($this->strCharset);
+
+		// Add the priority if it has been set (see #608)
+		if ($this->intPriority !== null)
+		{
+			$this->objMessage->setPriority($this->intPriority);
+		}
 
 		// Default subject
 		if ($this->strSubject == '')

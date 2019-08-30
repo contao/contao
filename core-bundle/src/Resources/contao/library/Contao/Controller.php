@@ -80,27 +80,42 @@ abstract class Controller extends System
 	/**
 	 * Return all template files of a particular group as array
 	 *
-	 * @param string $strPrefix The template name prefix (e.g. "ce_")
+	 * @param string $strPrefix           The template name prefix (e.g. "ce_")
+	 * @param array  $arrAdditionalMapper An additional mapper array
 	 *
 	 * @return array An array of template names
 	 */
-	public static function getTemplateGroup($strPrefix)
+	public static function getTemplateGroup($strPrefix, array $arrAdditionalMapper=array())
 	{
 		$arrTemplates = array();
-		$arrOthers = array();
-		$blnSeparateOthers = substr_count($strPrefix, '_') > 1;
+		$arrBundleTemplates = array();
+
+		$arrMapper = array_merge
+		(
+			$arrAdditionalMapper,
+			array
+			(
+				'ce' => array_keys(array_merge(...array_values($GLOBALS['TL_CTE']))),
+				'form' => array_keys($GLOBALS['TL_FFL']),
+				'mod' => array_keys(array_merge(...array_values($GLOBALS['FE_MOD']))),
+			)
+		);
 
 		// Get the default templates
 		foreach (TemplateLoader::getPrefixedFiles($strPrefix) as $strTemplate)
 		{
-			if ($blnSeparateOthers && $strTemplate != $strPrefix)
+			if ($strTemplate != $strPrefix)
 			{
-				$arrOthers[] = $strTemplate;
+				list($k, $strKey) = explode('_', $strTemplate, 2);
+
+				if (isset($arrMapper[$k]) && \in_array($strKey, $arrMapper[$k]))
+				{
+					$arrBundleTemplates[] = $strTemplate;
+					continue;
+				}
 			}
-			else
-			{
-				$arrTemplates[$strTemplate][] = 'root';
-			}
+
+			$arrTemplates[$strTemplate][] = 'root';
 		}
 
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -113,16 +128,15 @@ abstract class Controller extends System
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
 
-				// If the template name is in $arrOthers, it is a root template and not a
-				// customized template, e.g. mod_article and mod_article_list
-				if (\in_array($strTemplate, $arrOthers))
+				// Ignore bundle templates, e.g. mod_article and mod_article_list
+				if (\in_array($strTemplate, $arrBundleTemplates))
 				{
 					continue;
 				}
 
-				// Also ignore customized templates belonging to different root templates,
+				// Also ignore custom templates belonging to a different bundle template,
 				// e.g. mod_article and mod_article_list_custom
-				foreach ($arrOthers as $strKey)
+				foreach ($arrBundleTemplates as $strKey)
 				{
 					if (strpos($strTemplate, $strKey . '_') === 0)
 					{

@@ -141,7 +141,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			(
 				array('tl_form', 'generateAlias')
 			),
-			'sql'                     => "varchar(128) BINARY NOT NULL default ''"
+			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
 		),
 		'jumpTo' => array
 		(
@@ -215,7 +215,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_form', 'getFormWrapperTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'method' => array

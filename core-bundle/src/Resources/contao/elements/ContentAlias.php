@@ -39,7 +39,7 @@ class ContentAlias extends ContentElement
 			return '';
 		}
 
-		$objElement->origId = $objElement->id;
+		$objElement->origId = $objElement->origId ?: $objElement->id;
 		$objElement->id = $this->id;
 		$objElement->typePrefix = 'ce_';
 

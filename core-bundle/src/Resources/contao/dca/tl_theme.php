@@ -259,7 +259,7 @@ class tl_theme extends Contao\Backend
 		{
 			$objFile = Contao\FilesModel::findByUuid($row['screenshot']);
 
-			if ($objFile !== null)
+			if ($objFile !== null && file_exists(TL_ROOT . '/' . $objFile->path))
 			{
 				$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
 				$label = Contao\Image::getHtml(Contao\System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl($rootDir), '', 'class="theme_preview"') . ' ' . $label;

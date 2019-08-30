@@ -215,7 +215,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			(
 				array('tl_page', 'generateAlias')
 			),
-			'sql'                     => "varchar(128) BINARY NOT NULL default ''"
+			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
 		),
 		'type' => array
 		(

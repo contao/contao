@@ -395,30 +395,35 @@ class Calendar extends Frontend
 			return;
 		}
 
-		/** @var PageModel $objPage */
-		global $objPage;
-
-		// Called in the back end (see #4026)
-		if ($objPage === null)
-		{
-			$objPage = new \stdClass();
-			$objPage->dateFormat = Config::get('dateFormat');
-			$objPage->datimFormat = Config::get('datimFormat');
-			$objPage->timeFormat = Config::get('timeFormat');
-		}
-
 		$intKey = date('Ymd', $intStart);
 		$span = self::calculateSpan($intStart, $intEnd);
 		$format = $objEvent->addTime ? 'datimFormat' : 'dateFormat';
 
-		// Add date
-		if ($span > 0)
+		/** @var PageModel $objPage */
+		global $objPage;
+
+		if ($objPage instanceof PageModel)
 		{
-			$title = Date::parse($objPage->$format, $intStart) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse($objPage->$format, $intEnd);
+			$date = $objPage->$format;
+			$dateFormat = $objPage->dateFormat;
+			$timeFormat = $objPage->timeFormat;
 		}
 		else
 		{
-			$title = Date::parse($objPage->dateFormat, $intStart) . ($objEvent->addTime ? ' (' . Date::parse($objPage->timeFormat, $intStart) . (($intStart < $intEnd) ? $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse($objPage->timeFormat, $intEnd) : '') . ')' : '');
+			// Called in the back end (see #4026)
+			$date = Config::get($format);
+			$dateFormat = Config::get('dateFormat');
+			$timeFormat = Config::get('timeFormat');
+		}
+
+		// Add date
+		if ($span > 0)
+		{
+			$title = Date::parse($date, $intStart) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse($date, $intEnd);
+		}
+		else
+		{
+			$title = Date::parse($dateFormat, $intStart) . ($objEvent->addTime ? ' (' . Date::parse($timeFormat, $intStart) . (($intStart < $intEnd) ? $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse($timeFormat, $intEnd) : '') . ')' : '');
 		}
 
 		// Add title and link

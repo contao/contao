@@ -182,7 +182,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			(
 				array('tl_article', 'generateAlias')
 			),
-			'sql'                     => "varchar(128) BINARY NOT NULL default ''"
+			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
 		),
 		'author' => array
 		(
