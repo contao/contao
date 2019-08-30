@@ -170,8 +170,6 @@ class FrontendTemplate extends Template
 
 		if ($template === null)
 		{
-			$template = 'block_section';
-
 			foreach ($this->positions as $position)
 			{
 				if (isset($position[$key]['template']))
@@ -179,6 +177,11 @@ class FrontendTemplate extends Template
 					$template = $position[$key]['template'];
 				}
 			}
+		}
+
+		if ($template === null)
+		{
+			$template = 'block_section';
 		}
 
 		include $this->getTemplate($template);
@@ -209,6 +212,11 @@ class FrontendTemplate extends Template
 		{
 			if (!empty($this->sections[$id]))
 			{
+				if (!isset($section['template']))
+				{
+					$section['template'] = 'block_section';
+				}
+
 				$section['content'] = $this->sections[$id];
 				$matches[$id] = $section;
 			}
