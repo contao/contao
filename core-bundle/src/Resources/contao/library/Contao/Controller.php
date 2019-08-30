@@ -87,10 +87,35 @@ abstract class Controller extends System
 	public static function getTemplateGroup($strPrefix)
 	{
 		$arrTemplates = array();
+		$arrOthers = array();
+
+		$arrMapper = array
+		(
+			'ce' => 'TL_CTE',
+			'form' => 'TL_FFL',
+			'mod' => 'FE_MOD',
+		);
 
 		// Get the default templates
 		foreach (TemplateLoader::getPrefixedFiles($strPrefix) as $strTemplate)
 		{
+			if ($strTemplate != $strPrefix)
+			{
+				list($k, $strKey) = explode('_', $strTemplate, 2);
+
+				if (isset($arrMapper[$k]))
+				{
+					foreach ($GLOBALS[$arrMapper[$k]] as $arrMappings)
+					{
+						if (isset($arrMappings[$strKey]))
+						{
+							$arrOthers[] = $strTemplate;
+							continue 2;
+						}
+					}
+				}
+			}
+
 			$arrTemplates[$strTemplate][] = 'root';
 		}
 
@@ -103,6 +128,24 @@ abstract class Controller extends System
 			foreach ($arrCustomized as $strFile)
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
+
+				// If the template name is in $arrOthers, it is a root template and not a
+				// customized template, e.g. mod_article and mod_article_list
+				if (\in_array($strTemplate, $arrOthers))
+				{
+					continue;
+				}
+
+				// Also ignore customized templates belonging to different root templates,
+				// e.g. mod_article and mod_article_list_custom
+				foreach ($arrOthers as $strKey)
+				{
+					if (strpos($strTemplate, $strKey . '_') === 0)
+					{
+						continue 2;
+					}
+				}
+
 				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['global'];
 			}
 		}
