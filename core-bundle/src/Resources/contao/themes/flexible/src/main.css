@@ -711,6 +711,9 @@ table.tl_listing {
 	margin:0;
 	padding:18px 0 0;
 }
+.tl_listing_container + .tl_empty {
+	margin-top:-32px;
+}
 .tl_noopt {
 	margin:0 0 -1px;
 }

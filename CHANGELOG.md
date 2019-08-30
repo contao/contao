@@ -2,7 +2,10 @@
 
 ## DEV
 
+ * Also show the breadcrumb menu if there are no results (see #660).
+ * Correctly replace literal insert tags (see #670).
  * Increase the alias field lengths (see #678).
+ * Retain origId in chained alias elements (see #635).
  * Check if the theme preview image exists (see #636).
 
 ## 4.4.42 (2019-08-15)
