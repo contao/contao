@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Set the e-mail priority if it has been given (see #608).
  * Also show the breadcrumb menu if there are no results (see #660).
  * Correctly replace literal insert tags (see #670).
  * Increase the alias field lengths (see #678).
