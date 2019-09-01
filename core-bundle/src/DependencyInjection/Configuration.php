@@ -238,6 +238,8 @@ class Configuration implements ConfigurationInterface
                                     ->end()
                                     ->scalarNode('cssClass')
                                     ->end()
+                                    ->booleanNode('lazyLoading')
+                                    ->end()
                                     ->scalarNode('densities')
                                     ->end()
                                     ->scalarNode('sizes')
