@@ -67,7 +67,7 @@ class LegacyMatcherTest extends TestCase
 
         $matcher = new LegacyMatcher(
             $this->mockFrameworkWithAdapters(),
-            $this->mockRequestMatcher($noRouteFound ? $this->never() : $this->once()),
+            $this->mockRequestMatcher($this->once()),
             '.html',
             $prependLocale
         );
@@ -105,7 +105,6 @@ class LegacyMatcherTest extends TestCase
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = $hooks;
 
         $config = [
-            'folderUrl' => false,
             'useAutoItem' => $useAutoItem,
         ];
 
@@ -113,7 +112,7 @@ class LegacyMatcherTest extends TestCase
 
         $matcher = new LegacyMatcher(
             $framework,
-            $this->mockRequestMatcher($this->once(), $resultPath),
+            $this->mockRequestMatcher($this->exactly(2), $resultPath),
             $urlSuffix,
             null !== $language
         );
@@ -236,7 +235,6 @@ class LegacyMatcherTest extends TestCase
     public function testMatchRequestFromPathIfFolderUrlIsNotFound(): void
     {
         $config = [
-            'folderUrl' => true,
             'useAutoItem' => false,
         ];
 
@@ -291,7 +289,6 @@ class LegacyMatcherTest extends TestCase
     public function testMatchRequestFromPathIfFolderUrlHasNoModel(): void
     {
         $config = [
-            'folderUrl' => true,
             'useAutoItem' => false,
         ];
 
@@ -347,7 +344,6 @@ class LegacyMatcherTest extends TestCase
     public function testUsesPageAliasFromFolderUrlRoute(): void
     {
         $config = [
-            'folderUrl' => true,
             'useAutoItem' => false,
         ];
 
@@ -406,7 +402,6 @@ class LegacyMatcherTest extends TestCase
     public function testMatchesFragmentsWithParametersFolderUrlRoute(): void
     {
         $config = [
-            'folderUrl' => true,
             'useAutoItem' => false,
         ];
 
@@ -468,7 +463,6 @@ class LegacyMatcherTest extends TestCase
     public function testAddsAutoItemToFragmentsOfFolderUrlRoute(): void
     {
         $config = [
-            'folderUrl' => true,
             'useAutoItem' => true,
         ];
 
@@ -530,7 +524,6 @@ class LegacyMatcherTest extends TestCase
     public function testThrowsExceptionIfUrlSuffixDoesNotMatch(): void
     {
         $config = [
-            'folderUrl' => false,
             'useAutoItem' => false,
         ];
 
@@ -545,7 +538,7 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
 
-        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()), '.html', false);
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->once()), '.html', false);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('URL suffix does not match');
@@ -571,7 +564,7 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
 
-        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()), '.html', true);
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->once()), '.html', true);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Locale does not match');
@@ -582,7 +575,6 @@ class LegacyMatcherTest extends TestCase
     public function testThrowsExceptionIfHookReturnsAnEmptyAlias(): void
     {
         $config = [
-            'folderUrl' => false,
             'useAutoItem' => false,
         ];
 
@@ -601,7 +593,7 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
-        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()), '.html', false);
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->once()), '.html', false);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Page alias is empty');

@@ -27,6 +27,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $type
  * @property string  $pageTitle
  * @property string  $language
+ * @property boolean $useFolderUrl
  * @property string  $robots
  * @property string  $description
  * @property string  $redirect
@@ -969,6 +970,7 @@ class PageModel extends Model
 			$this->adminEmail = $objParentPage->adminEmail;
 			$this->enforceTwoFactor = $objParentPage->enforceTwoFactor;
 			$this->twoFactorJumpTo = $objParentPage->twoFactorJumpTo;
+			$this->useFolderUrl = $objParentPage->useFolderUrl;
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = ($objParentPage->published && ($objParentPage->start == '' || $objParentPage->start <= $time) && ($objParentPage->stop == '' || $objParentPage->stop > ($time + 60)));

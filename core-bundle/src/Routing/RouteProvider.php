@@ -196,13 +196,6 @@ class RouteProvider implements RouteProviderInterface
             return [$pathInfo];
         }
 
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-
-        if (!$config->get('folderUrl')) {
-            return [substr($pathInfo, 0, $pos)];
-        }
-
         $candidates = [$pathInfo];
 
         while ('/' !== $pathInfo && false !== strpos($pathInfo, '/')) {
