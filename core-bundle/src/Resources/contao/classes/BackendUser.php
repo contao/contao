@@ -18,6 +18,8 @@ use Symfony\Component\Routing\RouterInterface;
  *
  * @property boolean $isAdmin
  * @property array   $groups
+ * @property array   $elements
+ * @property array   $fields
  * @property array   $pagemounts
  * @property array   $filemounts
  * @property array   $filemountIds

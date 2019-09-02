@@ -19,7 +19,8 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'markAsCopy'                  => 'label',
 		'onload_callback' => array
 		(
-			array('tl_form_field', 'checkPermission')
+			array('tl_form_field', 'checkPermission'),
+			array('tl_form_field', 'filterFormFields')
 		),
 		'sql' => array
 		(
@@ -576,6 +577,87 @@ class tl_form_field extends Contao\Backend
 				if (empty($session['CLIPBOARD']['tl_form_field']['id']))
 				{
 					unset($session['CLIPBOARD']['tl_form_field']);
+				}
+
+				$objSession->replace($session);
+			}
+		}
+	}
+
+	/**
+	 * Filter the form fields
+	 */
+	public function filterFormFields()
+	{
+		if ($this->User->isAdmin)
+		{
+			return;
+		}
+
+		if (empty($this->User->fields))
+		{
+			$GLOBALS['TL_DCA']['tl_form_field']['config']['closed'] = true;
+		}
+		elseif (!\in_array($GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'], $this->User->fields))
+		{
+			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $this->User->fields[0];
+		}
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = Contao\System::getContainer()->get('session');
+
+		// Prevent editing/copying form fields with not allowed types
+		if (Contao\Input::get('act') == 'edit' || (Contao\Input::get('act') == 'paste' && Contao\Input::get('mode') == 'copy'))
+		{
+			$objField = $this->Database->prepare("SELECT type FROM tl_form_field WHERE id=?")
+									   ->execute(Contao\Input::get('id'));
+
+			if ($objField->numRows && !\in_array($objField->type, $this->User->fields))
+			{
+				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify form fields of type "' . $objField->type . '".');
+			}
+		}
+
+		// Prevent editing content elements with not allowed types
+		if (Contao\Input::get('act') == 'editAll' || Contao\Input::get('act') == 'overrideAll')
+		{
+			$session = $objSession->all();
+
+			if (!empty($session['CURRENT']['IDS']) && \is_array($session['CURRENT']['IDS']))
+			{
+				if (empty($this->User->fields))
+				{
+					$session['CURRENT']['IDS'] = array();
+				}
+				else
+				{
+					$objFields = $this->Database->prepare("SELECT id FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, \count($this->User->fields), '?')). ")")
+												->execute(...$this->User->fields);
+
+					$session['CURRENT']['IDS'] = $objFields->fetchEach('id');
+				}
+
+				$objSession->replace($session);
+			}
+		}
+
+		// Prevent copying content elements with not allowed types
+		if (Contao\Input::get('act') == 'copyAll')
+		{
+			$session = $objSession->all();
+
+			if (!empty($session['CLIPBOARD']['tl_form_field']['id']) && \is_array($session['CLIPBOARD']['tl_form_field']['id']))
+			{
+				if (empty($this->User->fields))
+				{
+					$session['CLIPBOARD']['tl_form_field']['id'] = array();
+				}
+				else
+				{
+					$objFields = $this->Database->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, \count($this->User->fields), '?')). ")")
+												->execute(...$this->User->fields);
+
+					$session['CLIPBOARD']['tl_form_field']['id'] = $objFields->fetchEach('id');
 				}
 
 				$objSession->replace($session);
