@@ -83,6 +83,9 @@
       <trans-unit id="tl_image_size.source_legend">
         <source>Image source settings</source>
       </trans-unit>
+      <trans-unit id="tl_image_size.loading_legend">
+        <source>Loading options</source>
+      </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>
       </trans-unit>
