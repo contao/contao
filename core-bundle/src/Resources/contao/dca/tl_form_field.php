@@ -56,13 +56,15 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'edit' => array
 			(
 				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
+				'icon'                => 'edit.svg',
+				'button_callback'     => array('tl_form_field', 'checkAccess')
 			),
 			'copy' => array
 			(
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="Backend.getScrollOffset()"',
+				'button_callback'     => array('tl_form_field', 'checkAccess')
 			),
 			'cut' => array
 			(
@@ -413,6 +415,30 @@ class tl_form_field extends Contao\Backend
 			return;
 		}
 
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = Contao\System::getContainer()->get('session');
+
+		// Prevent editing not allowed content element types
+		if (Contao\Input::get('act') == 'editAll' || Contao\Input::get('act') == 'overrideAll')
+		{
+			$session = $objSession->all();
+
+			if (!empty($session['CURRENT']['IDS']))
+			{
+				$objFields = $this->Database->query("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ")");
+
+				while ($objFields->next())
+				{
+					if (!$this->User->hasAccess($objFields->type, 'fields') && ($key = array_search($objFields->id, $session['CURRENT']['IDS'])) !== false)
+					{
+						unset($session['CURRENT']['IDS'][$key]);
+					}
+				}
+
+				$objSession->replace($session);
+			}
+		}
+
 		// Set root IDs
 		if (empty($this->User->forms) || !is_array($this->User->forms))
 		{
@@ -500,9 +526,6 @@ class tl_form_field extends Contao\Backend
 				$objForm = $this->Database->prepare("SELECT id FROM tl_form_field WHERE pid=?")
 										  ->execute($id);
 
-				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = Contao\System::getContainer()->get('session');
-
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objForm->fetchEach('id'));
 				$objSession->replace($session);
@@ -519,6 +542,18 @@ class tl_form_field extends Contao\Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
 				}
 				break;
+		}
+
+		// Check if the form field type is allowed
+		if (Contao\Input::get('act') == 'edit' || (Contao\Input::get('act') == 'paste' && Contao\Input::get('mode') == 'copy'))
+		{
+			$objField = $this->Database->prepare("SELECT type FROM tl_form_field WHERE id=?")
+									   ->execute(Contao\Input::get('id'));
+
+			if ($objField->numRows && !$this->User->hasAccess($objField->type, 'fields'))
+			{
+				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify form fields of type "' . $objField->type . '".');
+			}
 		}
 	}
 
@@ -602,15 +637,17 @@ class tl_form_field extends Contao\Backend
 	 */
 	public function getFields()
 	{
-		$arrFields = $GLOBALS['TL_FFL'];
+		$fields = array();
 
-		// Add the translation
-		foreach (array_keys($arrFields) as $key)
+		foreach ($GLOBALS['TL_FFL'] as $k=>$v)
 		{
-			$arrFields[$key] = $GLOBALS['TL_LANG']['FFL'][$key][0];
+			if ($this->User->hasAccess($k, 'elements'))
+			{
+				$fields[] = $k;
+			}
 		}
 
-		return $arrFields;
+		return $fields;
 	}
 
 	/**
@@ -634,6 +671,23 @@ class tl_form_field extends Contao\Backend
 		}
 
 		return $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_');
+	}
+
+	/**
+	 * Return the button if the form field type is allowed
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function checkAccess($row, $href, $label, $title, $icon, $attributes)
+	{
+		return $this->User->hasAccess($row['type'], 'fields') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
 
 	/**
