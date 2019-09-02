@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\Config;
+use Contao\CoreBundle\Cron\ContaoCron;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\FrontendCron;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,11 +40,17 @@ class CommandSchedulerListener
      */
     private $fragmentPath;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, string $fragmentPath = '_fragment')
+    /**
+     * @var ContaoCron
+     */
+    private $cron;
+
+    public function __construct(ContaoFramework $framework, Connection $connection, string $fragmentPath = '_fragment', ContaoCron $cron)
     {
         $this->framework = $framework;
         $this->connection = $connection;
         $this->fragmentPath = $fragmentPath;
+        $this->cron = $cron;
     }
 
     /**
@@ -52,16 +58,12 @@ class CommandSchedulerListener
      */
     public function onKernelTerminate(TerminateEvent $event): void
     {
-        if (!$this->framework->isInitialized() || !$this->canRunController($event->getRequest())) {
-            return;
+        if ($this->framework->isInitialized() && $this->canRunCron($event->getRequest())) {
+            $this->cron->run();
         }
-
-        /** @var FrontendCron $controller */
-        $controller = $this->framework->createInstance(FrontendCron::class);
-        $controller->run();
     }
 
-    private function canRunController(Request $request): bool
+    private function canRunCron(Request $request): bool
     {
         $pathInfo = $request->getPathInfo();
 
