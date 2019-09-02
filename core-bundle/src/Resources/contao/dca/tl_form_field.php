@@ -77,7 +77,8 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+				'button_callback'     => array('tl_form_field', 'checkAccess')
 			),
 			'toggle' => array
 			(
@@ -606,8 +607,8 @@ class tl_form_field extends Contao\Backend
 		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
 		$objSession = Contao\System::getContainer()->get('session');
 
-		// Prevent editing/copying form fields with not allowed types
-		if (Contao\Input::get('act') == 'edit' || (Contao\Input::get('act') == 'paste' && Contao\Input::get('mode') == 'copy'))
+		// Prevent editing form fields with not allowed types
+		if (Contao\Input::get('act') == 'edit' || Contao\Input::get('act') == 'delete' || (Contao\Input::get('act') == 'paste' && Contao\Input::get('mode') == 'copy'))
 		{
 			$objField = $this->Database->prepare("SELECT type FROM tl_form_field WHERE id=?")
 									   ->execute(Contao\Input::get('id'));
@@ -619,7 +620,7 @@ class tl_form_field extends Contao\Backend
 		}
 
 		// Prevent editing content elements with not allowed types
-		if (Contao\Input::get('act') == 'editAll' || Contao\Input::get('act') == 'overrideAll')
+		if (Contao\Input::get('act') == 'editAll' || Contao\Input::get('act') == 'overrideAll' || Contao\Input::get('act') == 'deleteAll')
 		{
 			$session = $objSession->all();
 
@@ -812,6 +813,11 @@ class tl_form_field extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
+		if (!$this->User->hasAccess($row['type'], 'fields'))
+		{
+			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		}
+
 		if (Contao\Input::get('tid'))
 		{
 			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
