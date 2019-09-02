@@ -32,7 +32,7 @@ class TrustedDeviceRepository extends EntityRepository
     public function findForFrontendUser(FrontendUser $user)
     {
         return $this->createQueryBuilder('td')
-            ->andWhere('td.member :member')
+            ->andWhere('td.member = :member')
             ->setParameter('member', (int) $user->id)
 
             ->getQuery()

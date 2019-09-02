@@ -54,6 +54,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property string       $verifyHelp
  * @property boolean      $showBackupCodes
  * @property array        $backupCodes
+ * @property string       $trustDevice
  * @property string       $trustedDevicesLabel
  * @property string       $deviceLabel
  * @property string       $browserLabel

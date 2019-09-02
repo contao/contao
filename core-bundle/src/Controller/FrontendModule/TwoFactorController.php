@@ -12,14 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
+use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
+use Contao\System;
 use Contao\Template;
+use Doctrine\ORM\EntityManagerInterface;
 use ParagonIE\ConstantTime\Base32;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -72,6 +76,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['security.helper'] = Security::class;
         $services['translator'] = TranslatorInterface::class;
         $services[BackupCodeManager::class] = BackupCodeManager::class;
+        $services['doctrine.orm.entity_manager'] = EntityManagerInterface::class;
 
         return $services;
     }
@@ -131,9 +136,39 @@ class TwoFactorController extends AbstractFrontendModuleController
             $template->showBackupCodes = true;
         }
 
+        if ('tl_two_factor_clear_trusted_devices' === $request->request->get('FORM_SUBMIT')) {
+            $response = $this->clearTrustedDevices($user);
+
+            if (null !== $response) {
+                return $response;
+            }
+        }
+
         $template->isEnabled = (bool) $user->useTwoFactor;
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
         $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
+
+        /** @var TrustedDeviceRepository $trustedDeviceRepository */
+        $trustedDeviceRepository = $this->get('doctrine.orm.entity_manager')->getRepository(TrustedDevice::class);
+
+        $template->isEnabled = (bool) $user->useTwoFactor;
+        $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
+        $template->twoFactor = $translator->trans('MSC.twoFactorAuthentication', [], 'contao_default');
+        $template->explain = $translator->trans('MSC.twoFactorExplain', [], 'contao_default');
+        $template->active = $translator->trans('MSC.twoFactorActive', [], 'contao_default');
+        $template->enableButton = $translator->trans('MSC.enable', [], 'contao_default');
+        $template->disableButton = $translator->trans('MSC.disable', [], 'contao_default');
+        $template->trustDevice = $translator->trans('MSC.twoFactorTrustDevice', [], 'contao_default');
+        $template->trustedDevicesLabel = $translator->trans('MSC.trustedDevices', [], 'contao_default');
+        $template->deviceLabel = $translator->trans('MSC.device', [], 'contao_default');
+        $template->browserLabel = $translator->trans('MSC.browser', [], 'contao_default');
+        $template->operatingSystemLabel = $translator->trans('MSC.operatingSystem', [], 'contao_default');
+        $template->countryLabel = $translator->trans('MSC.country', [], 'contao_default');
+        $template->createdLabel = $translator->trans('MSC.createdOn', [], 'contao_default');
+        $template->clearTrustedDevicesButton = $translator->trans('MSC.clearTrustedDevices', [], 'contao_default');
+        $template->trustedDevices = $trustedDeviceRepository->findForFrontendUser($user);
+        $template->countries = System::getCountries();
+        $template->currentDevice = $request->cookies->get($this->getParameter('scheb_two_factor.trusted_device.cookie_name'));
 
         return new Response($template->parse());
     }
@@ -199,5 +234,26 @@ class TwoFactorController extends AbstractFrontendModuleController
         /** @var BackupCodeManager $backupCodeManager */
         $backupCodeManager = $this->get(BackupCodeManager::class);
         $backupCodeManager->generateBackupCodes($user);
+    }
+
+    private function clearTrustedDevices(FrontendUser $user): Response
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        /** @var TrustedDeviceRepository $trustedDeviceRepository */
+        $trustedDeviceRepository = $entityManager->getRepository(TrustedDevice::class);
+        $trustedDevices = $trustedDeviceRepository->findForFrontendUser($user);
+
+        foreach ($trustedDevices as $trustedDevice) {
+            $entityManager->remove($trustedDevice);
+        }
+
+        $entityManager->flush();
+
+        $user->trustedVersion++;
+        $user->save();
+
+        return new RedirectResponse($this->page->getAbsoluteUrl());
     }
 }
