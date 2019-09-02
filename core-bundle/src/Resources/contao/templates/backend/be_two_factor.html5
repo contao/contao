@@ -47,12 +47,12 @@
 
     <div class="tl_trusted_devices">
       <h2 class="sub_headline">Trusted Devices</h2>
-      <div class="tl_message">
+      <div class="tl_listing_container">
         <?php if (\count($this->trustedDevices)): ?>
-          <ul>
+          <ul class="tl_listing">
             <?php foreach($this->trustedDevices as $trustedDevice): ?>
             <?php /** @var Contao\CoreBundle\Entity\TrustedDevice $trustedDevice */ ?>
-              <li><?= $trustedDevice->getUaFamily() ?> on <?= $trustedDevice->getOsFamily() ?> (since <?= $trustedDevice->getCreated()->format(\Config::get('datimFormat')) ?>)</li>
+              <li class=""><?= $trustedDevice->getUserAgent() ?> (since <?= $trustedDevice->getCreated()->format(\Config::get('datimFormat')) ?>)</li>
             <?php endforeach; ?>
           </ul>
 

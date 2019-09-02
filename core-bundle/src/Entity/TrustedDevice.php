@@ -71,20 +71,6 @@ class TrustedDevice
      */
     protected $userAgent;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     */
-    protected $uaFamily;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     */
-    protected $osFamily;
-
     public function getId(): int
     {
         return $this->id;
@@ -165,30 +151,6 @@ class TrustedDevice
     public function setUserAgent(string $userAgent): self
     {
         $this->userAgent = $userAgent;
-
-        return $this;
-    }
-
-    public function getUaFamily(): string
-    {
-        return $this->uaFamily;
-    }
-
-    public function setUaFamily(string $uaFamily): self
-    {
-        $this->uaFamily = $uaFamily;
-
-        return $this;
-    }
-
-    public function getOsFamily(): string
-    {
-        return $this->osFamily;
-    }
-
-    public function setOsFamily(string $osFamily): self
-    {
-        $this->osFamily = $osFamily;
 
         return $this;
     }
