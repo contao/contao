@@ -7,6 +7,10 @@ services:
             calls:
                 - ['setFramework', ['@contao.framework']]
 
+    Contao\CoreBundle\Command\MigrateCommand:
+        arguments:
+            - '@Contao\CoreBundle\Migration\Migrations'
+
     contao.command.automator:
         class: Contao\CoreBundle\Command\AutomatorCommand
         arguments:

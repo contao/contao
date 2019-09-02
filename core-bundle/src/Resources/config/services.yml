@@ -28,6 +28,8 @@ services:
             - { name: container.service_subscriber }
         public: true
 
+    Contao\CoreBundle\Migration\Migrations:
+
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
