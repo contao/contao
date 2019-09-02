@@ -20,7 +20,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\System;
-use PHPUnit\Framework\MockObject\Matcher\Invocation;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -37,7 +36,7 @@ class LegacyMatcherTest extends TestCase
 
         $matcher = new LegacyMatcher(
             $this->mockContaoFramework(),
-            $this->mockRequestMatcher($this->once()),
+            $this->mockRequestMatcher(),
             '.html',
             false
         );
@@ -67,7 +66,7 @@ class LegacyMatcherTest extends TestCase
 
         $matcher = new LegacyMatcher(
             $this->mockFrameworkWithAdapters(),
-            $this->mockRequestMatcher($this->once()),
+            $this->mockRequestMatcher(),
             '.html',
             $prependLocale
         );
@@ -112,7 +111,7 @@ class LegacyMatcherTest extends TestCase
 
         $matcher = new LegacyMatcher(
             $framework,
-            $this->mockRequestMatcher($this->exactly(2), $resultPath),
+            $this->mockRequestMatcher($resultPath),
             $urlSuffix,
             null !== $language
         );
@@ -538,7 +537,7 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
 
-        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->once()), '.html', false);
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher(), '.html', false);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('URL suffix does not match');
@@ -564,7 +563,7 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
 
-        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->once()), '.html', true);
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher(), '.html', true);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Locale does not match');
@@ -593,7 +592,7 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
-        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->once()), '.html', false);
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher(), '.html', false);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Page alias is empty');
@@ -655,15 +654,23 @@ class LegacyMatcherTest extends TestCase
     /**
      * @return RequestMatcherInterface&MockObject
      */
-    private function mockRequestMatcher(Invocation $expects, string $pathInfo = null, array $match = []): RequestMatcherInterface
+    private function mockRequestMatcher(string $pathInfo = null, array $match = []): RequestMatcherInterface
     {
+        $expectCalls = null === $pathInfo ? 1 : 2;
+
         $matcher = $this->createMock(RequestMatcherInterface::class);
         $matcher
-            ->expects($expects)
+            ->expects($this->exactly($expectCalls))
             ->method('matchRequest')
             ->with($this->callback(
-                static function (Request $request) use ($pathInfo) {
-                    return null === $pathInfo || $request->getPathInfo() === $pathInfo;
+                static function (Request $request) use ($pathInfo, &$expectCalls) {
+                    if (1 === $expectCalls) {
+                        return null === $pathInfo || $request->getPathInfo() === $pathInfo;
+                    }
+
+                    --$expectCalls;
+
+                    return true;
                 }
             ))
             ->willReturn($match)
