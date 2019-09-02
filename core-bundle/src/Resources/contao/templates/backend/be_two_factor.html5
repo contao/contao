@@ -46,16 +46,28 @@
     </form>
 
     <div class="tl_trusted_devices">
-      <h2 class="sub_headline">Trusted Devices</h2>
-      <div class="tl_listing_container">
+      <h2 class="sub_headline"><?= $this->trustedDevicesLabel ?></h2>
+      <div class="tl_listing_container list_view">
         <?php if (\count($this->trustedDevices)): ?>
-          <ul class="tl_listing">
-            <?php foreach($this->trustedDevices as $trustedDevice): ?>
-            <?php /** @var Contao\CoreBundle\Entity\TrustedDevice $trustedDevice */ ?>
-              <li class=""><?= $trustedDevice->getUserAgent() ?> (since <?= $trustedDevice->getCreated()->format(\Config::get('datimFormat')) ?>)</li>
+          <table class="tl_listing showColumns">
+            <tr>
+              <th class="tl_folder_tlist"><?= $this->deviceLabel ?></th>
+              <th class="tl_folder_tlist"><?= $this->browserLabel ?></th>
+              <th class="tl_folder_tlist"><?= $this->operatingSystemLabel ?></th>
+              <th class="tl_folder_tlist"><?= $this->countryLabel ?></th>
+              <th class="tl_folder_tlist"><?= $this->createdLabel ?></th>
+            </tr>
+            <?php foreach($this->trustedDevices as $index => $trustedDevice): ?>
+              <?php /** @var Contao\CoreBundle\Entity\TrustedDevice $trustedDevice */ ?>
+              <tr class="<?php if ($index % 2): ?>odd<?php else: ?>even<?php endif; ?> hover-row">
+                <td colspan="1" class="tl_file_list"><?= $trustedDevice->getDeviceFamily() ?> <?php if ($this->currentDevice === $trustedDevice->getCookieValue()): ?>(This device) <?php endif; ?></td>
+                <td colspan="1" class="tl_file_list"><?= $trustedDevice->getUaFamily() ?></td>
+                <td colspan="1" class="tl_file_list"><?= $trustedDevice->getOsFamily() ?></td>
+                <td colspan="1" class="tl_file_list"><?php if ($trustedDevice->getCountry()): ?><?= $this->countries[strtolower($trustedDevice->getCountry())] ?><?php endif; ?></td>
+                <td colspan="1" class="tl_file_list"><?= $trustedDevice->getCreated()->format(\Config::get('datimFormat')) ?></td>
+              </tr>
             <?php endforeach; ?>
-          </ul>
-
+          </table>
         <?php else: ?>
           <p class="tl_info">No trusted devices found.</p>
         <?php endif; ?>

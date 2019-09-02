@@ -60,14 +60,27 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
         $userAgent = $this->requestStack->getMasterRequest()->headers->get('User-Agent');
         $parser = Parser::create();
+        $parsedUserAgent = $parser->parse($userAgent);
+
+        $geolocation = json_decode(file_get_contents('https://ipinfo.io/geo'), true);
+        $country = null;
+
+        if (\array_key_exists('country', $geolocation)) {
+            $country = $geolocation['country'];
+        }
 
         $this->trustedTokenStorage->addTrustedToken($username, $firewallName, $version);
 
         $trustedDevice = new TrustedDevice();
         $trustedDevice
+            ->setCreated(new \DateTime())
             ->setCookieValue($this->trustedTokenStorage->getCookieValue())
-            ->setUserAgent((string) $parser->parse($userAgent))
+            ->setUserAgent($userAgent)
+            ->setUaFamily($parsedUserAgent->ua->family)
+            ->setOsFamily($parsedUserAgent->os->family)
+            ->setDeviceFamily($parsedUserAgent->device->family)
             ->setVersion($version)
+            ->setCountry($country)
         ;
 
         if ($user instanceof BackendUser) {

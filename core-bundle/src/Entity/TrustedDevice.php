@@ -37,14 +37,14 @@ class TrustedDevice
     protected $created;
 
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $user;
 
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -65,11 +65,39 @@ class TrustedDevice
     protected $version;
 
     /**
-     * @var string
+     * @var string|null
      *
-     * @ORM\Column(type="text", name="user_agent")
+     * @ORM\Column(type="text", name="user_agent", nullable=true)
      */
     protected $userAgent;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", name="ua_family", nullable=true)
+     */
+    protected $uaFamily;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", name="os_family", nullable=true)
+     */
+    protected $osFamily;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", name="device_family", nullable=true)
+     */
+    protected $deviceFamily;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $country;
 
     public function getId(): int
     {
@@ -100,7 +128,7 @@ class TrustedDevice
         return $this->user;
     }
 
-    public function setUser(int $user): self
+    public function setUser(?int $user): self
     {
         $this->user = $user;
 
@@ -112,7 +140,7 @@ class TrustedDevice
         return $this->member;
     }
 
-    public function setMember(int $member): self
+    public function setMember(?int $member): self
     {
         $this->member = $member;
 
@@ -143,14 +171,62 @@ class TrustedDevice
         return $this;
     }
 
-    public function getUserAgent(): string
+    public function getUserAgent(): ?string
     {
         return $this->userAgent;
     }
 
-    public function setUserAgent(string $userAgent): self
+    public function setUserAgent(?string $userAgent): self
     {
         $this->userAgent = $userAgent;
+
+        return $this;
+    }
+
+    public function getUaFamily(): ?string
+    {
+        return $this->uaFamily;
+    }
+
+    public function setUaFamily(?string $uaFamily): self
+    {
+        $this->uaFamily = $uaFamily;
+
+        return $this;
+    }
+
+    public function getOsFamily(): ?string
+    {
+        return $this->osFamily;
+    }
+
+    public function setOsFamily(?string $osFamily): self
+    {
+        $this->osFamily = $osFamily;
+
+        return $this;
+    }
+
+    public function getDeviceFamily(): ?string
+    {
+        return $this->deviceFamily;
+    }
+
+    public function setDeviceFamily(?string $deviceFamily): self
+    {
+        $this->deviceFamily = $deviceFamily;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): self
+    {
+        $this->country = $country;
 
         return $this;
     }

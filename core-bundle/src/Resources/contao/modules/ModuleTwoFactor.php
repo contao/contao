@@ -49,6 +49,9 @@ class ModuleTwoFactor extends BackendModule
 			throw new AccessDeniedException('User is not fully authenticated');
 		}
 
+		/** @var Request $request */
+		$request = $container->get('request_stack')->getMasterRequest();
+
 		/** @var TrustedDeviceRepository $trustedDeviceRepository */
 		$trustedDeviceRepository = $container->get('doctrine.orm.entity_manager')->getRepository(TrustedDevice::class);
 		$ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
@@ -110,8 +113,16 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->active = $GLOBALS['TL_LANG']['MSC']['twoFactorActive'];
 		$this->Template->enableButton = $GLOBALS['TL_LANG']['MSC']['enable'];
 		$this->Template->disableButton = $GLOBALS['TL_LANG']['MSC']['disable'];
+		$this->Template->trustedDevicesLabel = $GLOBALS['TL_LANG']['MSC']['trustedDevices'];
+		$this->Template->deviceLabel = $GLOBALS['TL_LANG']['MSC']['device'];
+		$this->Template->browserLabel = $GLOBALS['TL_LANG']['MSC']['browser'];
+		$this->Template->operatingSystemLabel = $GLOBALS['TL_LANG']['MSC']['operatingSystem'];
+		$this->Template->countryLabel = $GLOBALS['TL_LANG']['MSC']['country'];
+		$this->Template->createdLabel = $GLOBALS['TL_LANG']['MSC']['createdOn'];
 		$this->Template->clearTrustedDevicesButton = $GLOBALS['TL_LANG']['MSC']['clearTrustedDevices'];
 		$this->Template->trustedDevices = $trustedDeviceRepository->findForBackendUser($user);
+		$this->Template->countries = System::getCountries();
+		$this->Template->currentDevice = $request->cookies->get($container->getParameter('scheb_two_factor.trusted_device.cookie_name'));
 	}
 
 	/**
@@ -185,7 +196,8 @@ class ModuleTwoFactor extends BackendModule
 		$user->backupCodes = null;
 		$user->save();
 
-		throw new RedirectResponseException($return);
+		// clear all trusted devices
+		$this->clearTrustedDevices($user, $return);
 	}
 
 	/**
@@ -215,7 +227,6 @@ class ModuleTwoFactor extends BackendModule
 
 		/** @var TrustedDeviceRepository $trustedDeviceRepository */
 		$trustedDeviceRepository = $entityManager->getRepository(TrustedDevice::class);
-
 		$trustedDevices = $trustedDeviceRepository->findForBackendUser($user);
 
 		foreach ($trustedDevices as $trustedDevice)

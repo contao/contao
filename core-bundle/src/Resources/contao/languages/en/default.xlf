@@ -1973,6 +1973,21 @@
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear all trusted devices</source>
       </trans-unit>
+      <trans-unit id="MSC.trustedDevices">
+        <source>Trusted Devices</source>
+      </trans-unit>
+      <trans-unit id="MSC.device">
+        <source>Device</source>
+      </trans-unit>
+      <trans-unit id="MSC.browser">
+        <source>Browser</source>
+      </trans-unit>
+      <trans-unit id="MSC.operatingSystem">
+        <source>Operating System</source>
+      </trans-unit>
+      <trans-unit id="MSC.country">
+        <source>Country of origin</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>

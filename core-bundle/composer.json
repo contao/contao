@@ -102,6 +102,7 @@
         "terminal42/service-annotation-bundle": "^1.0",
         "true/punycode": "^2.1",
         "twig/twig": "^2.7",
+        "ua-parser/uap-php": "^3.9",
         "webignition/robots-txt-file": "^3.0"
     },
     "conflict": {
