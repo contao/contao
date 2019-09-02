@@ -152,7 +152,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
 			'sql'                     => "varchar(64) NOT NULL default 'text'"
 		),
-		'label' => array // "label" needs to come before "name" so it gets the "(copy)" suffix (see #1062)
+		'label' => array
 		(
 			'exclude'                 => true,
 			'search'                  => true,

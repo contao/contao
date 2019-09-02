@@ -22,7 +22,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'onload_callback'             => array
 		(
 			array('tl_content', 'adjustDcaByType'),
-			array('tl_content', 'showJsLibraryHint')
+			array('tl_content', 'showJsLibraryHint'),
+			array('tl_content', 'preserveReferenced')
 		),
 		'sql' => array
 		(
@@ -839,7 +840,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 if (Contao\Input::get('do') == 'article' || Contao\Input::get('do') == 'page')
 {
 	$GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_article';
-	$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('tl_content', 'checkPermission');
+	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content', 'checkPermission'));
 }
 
 /**
@@ -864,20 +865,6 @@ class tl_content extends Contao\Backend
 	 */
 	public function checkPermission()
 	{
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = Contao\System::getContainer()->get('session');
-
-		// Prevent deleting referenced elements (see #4898)
-		if (Contao\Input::get('act') == 'deleteAll')
-		{
-			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND type='alias'")
-									 ->execute();
-
-			$session = $objSession->all();
-			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objCes->fetchEach('cteAlias'));
-			$objSession->replace($session);
-		}
-
 		if ($this->User->isAdmin)
 		{
 			return;
@@ -923,6 +910,9 @@ class tl_content extends Contao\Backend
 
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND pid=?")
 										 ->execute(CURRENT_ID);
+
+				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+				$objSession = Contao\System::getContainer()->get('session');
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCes->fetchEach('id'));
@@ -1051,6 +1041,36 @@ class tl_content extends Contao\Backend
 			case 'image':
 				$GLOBALS['TL_DCA']['tl_content']['fields']['imagemargin']['eval']['tl_class'] .= ' clr';
 				break;
+		}
+	}
+
+	/**
+	 * Prevent deleting referenced elements (see #4898)
+	 */
+	public function preserveReferenced()
+	{
+		if (Contao\Input::get('act') == 'delete')
+		{
+			$objCes = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND type='alias' AND cteAlias=?")
+									 ->execute(Contao\Input::get('id'));
+
+			if ($objCes->cnt > 0)
+			{
+				throw new Contao\CoreBundle\Exception\InternalServerErrorException('Content element ID ' . Contao\Input::get('id') . ' is used in an alias element and can therefore not be deleted.');
+			}
+		}
+
+		if (Contao\Input::get('act') == 'deleteAll')
+		{
+			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND type='alias'")
+									 ->execute();
+
+			/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+			$objSession = Contao\System::getContainer()->get('session');
+
+			$session = $objSession->all();
+			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objCes->fetchEach('cteAlias'));
+			$objSession->replace($session);
 		}
 	}
 
