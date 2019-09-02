@@ -44,7 +44,7 @@ services:
             - '@contao.framework'
             - '@database_connection'
             - '%fragment.path%'
-            - '@Contao\CoreBundle\Cron\ContaoCron'
+            - '@Contao\CoreBundle\Cron\Cron'
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 

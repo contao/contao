@@ -12,14 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\System;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-class ContaoCron
+class Cron
 {
     /**
      * @var string[]
@@ -30,11 +28,6 @@ class ContaoCron
      * @var Connection
      */
     protected $db;
-
-    /**
-     * @var ContaoFramework
-     */
-    protected $framework;
 
     /**
      * @var LoggerInterface
@@ -49,32 +42,27 @@ class ContaoCron
     /**
      * @var array
      */
-    protected $taggedCrons = [];
+    protected $crons = [];
 
-    /**
-     * @var array
-     */
-    protected $taggedCliCrons = [];
-
-
-    public function __construct(Connection $db, ContaoFramework $framework, LoggerInterface $logger, bool $debug)
+    public function __construct(Connection $db, LoggerInterface $logger, bool $debug)
     {
         $this->db = $db;
-        $this->framework = $framework;
         $this->logger = $logger;
         $this->debug = $debug;
     }
 
     /**
      * Add a cron service.
+     * 
+     * @param object $service
      */
-    public function addCronJob(string $serviceId, string $method, string $interval, int $priority = 0, bool $cli = false): void
+    public function addCronJob($service, string $method, string $interval, int $priority = 0, bool $cli = false): void
     {
         if (!\in_array($interval, self::INTERVALS, true)) {
             throw new \InvalidArgumentException(sprintf('Invalid interval "%s"', $interval));
         }
 
-        $this->taggedCrons[$interval][$priority][] = [$serviceId, $method, $cli];
+        $this->crons[$interval][$priority][] = [$service, $method, $cli];
     }
 
     /**
@@ -84,13 +72,8 @@ class ContaoCron
 	 */
     public function run(bool $cli = false): void
     {
-        $this->framework->initialize();
-
-        // Get all cron jobs
-        $crons = $this->getCronJobs($cli);
-
         // Do not run if the last execution was less than a minute ago
-        if ($this->hasToWait($this->getCronTimeout($crons))) {
+        if ($this->hasToWait()) {
             return;
         }
 
@@ -120,18 +103,12 @@ class ContaoCron
 			}
 		}
 
-        /** @var System $system */
-        $system = $this->framework->getAdapter(System::class);
-
-        // Load the default language file (see #8719)
-        $system->loadLanguageFile('default');
-
 		// Run the jobs
 		foreach (self::INTERVALS as $interval) {
 			$currentTimestamp = $currentTimestamps[$interval];
 
 			// Skip empty intervals and jobs that have been executed already
-			if (empty($crons[$interval]) || $currentRuns[$interval] === $currentTimestamp) {
+			if (empty($this->crons[$interval]) || $currentRuns[$interval] === $currentTimestamp) {
 				continue;
 			}
 
@@ -141,15 +118,20 @@ class ContaoCron
 			// Add a log entry if in debug mode (see #4729)
 			if ($this->debug) {
                 $this->logger->log(LogLevel::INFO, 'Running the ' . $interval . ' cron jobs', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
-			}
+            }
+            
+            // Sort the cron jobs by priority
+            $crons = $this->crons[$interval];
+            krsort($crons);
+            $crons = array_merge(...$crons);
 
-			foreach ($crons[$interval] as $callback) {
+			foreach ($crons as $cron) {
                 // Skip jobs that are only to be run on CLI, when not run via CLI
-                if (!$cli && isset($callback[2]) && true === $callback[2]) {
+                if (!$cli && isset($cron[2]) && true === $cron[2]) {
                     continue;
                 }
 
-                $system->importStatic($callback[0])->{$callback[1]}();
+                $cron[0]->{$cron[1]}();
 			}
 
 			// Add a log entry if in debug mode (see #4729)
@@ -192,44 +174,4 @@ class ContaoCron
 
 		return $return;
     }
-
-    /**
-     * Returns the collected cron jobs.
-     */
-    protected function getCronJobs(bool $cli = false): array
-    {
-        // Retrieve legacy cron jobs
-        $crons = $GLOBALS['TL_CRON'];
-
-        foreach ($this->taggedCrons as $interval => $priorities) {
-            if (isset($crons[$interval]) && \is_array($crons[$interval])) {
-                if (isset($priorities[0])) {
-                    $priorities[0] = array_merge($crons[$interval], $priorities[0]);
-                } else {
-                    $priorities[0] = $crons[$interval];
-                    krsort($priorities);
-                }
-            }
-
-            $crons[$interval] = array_merge(...$priorities);
-        }
-
-        return $crons;
-    }
-    
-	/**
-	 * Return the cron timeout in seconds.
-	 */
-	protected function getCronTimeout(array &$crons): int
-	{
-		if (!empty($crons['minutely'])) {
-			return 60;
-		}
-
-		if (!empty($crons['hourly'])) {
-			return 3600;
-		}
-
-		return 86400; // daily
-	}
 }

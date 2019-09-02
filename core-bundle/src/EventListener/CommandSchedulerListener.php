@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\Config;
-use Contao\CoreBundle\Cron\ContaoCron;
+use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
@@ -41,11 +41,11 @@ class CommandSchedulerListener
     private $fragmentPath;
 
     /**
-     * @var ContaoCron
+     * @var Cron
      */
     private $cron;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, string $fragmentPath = '_fragment', ContaoCron $cron)
+    public function __construct(ContaoFramework $framework, Connection $connection, string $fragmentPath = '_fragment', Cron $cron)
     {
         $this->framework = $framework;
         $this->connection = $connection;

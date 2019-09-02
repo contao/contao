@@ -12,10 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Cron\ContaoCron;
+use Contao\CoreBundle\Cron\Cron;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 class TaggedCronsPass implements CompilerPassInterface
 {
@@ -24,12 +25,12 @@ class TaggedCronsPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has(ContaoCron::class)) {
+        if (!$container->has(Cron::class)) {
             return;
         }
 
         $serviceIds = $container->findTaggedServiceIds('contao.cron');
-        $definition = $container->findDefinition(ContaoCron::class);
+        $definition = $container->findDefinition(Cron::class);
 
         foreach ($serviceIds as $serviceId => $tags) {
             if ($container->hasAlias($serviceId)) {
@@ -48,7 +49,7 @@ class TaggedCronsPass implements CompilerPassInterface
                 $priority = (int) ($attributes['priority'] ?? 0);
                 $cli = (bool) ($attributes['cli'] ?? false);
 
-                $definition->addMethodCall('addCronJob', [$serviceId, $method, $interval, $priority, $cli]);
+                $definition->addMethodCall('addCronJob', [new Reference($serviceId), $method, $interval, $priority, $cli]);
             }
 
             $container->findDefinition($serviceId)->setPublic(true);

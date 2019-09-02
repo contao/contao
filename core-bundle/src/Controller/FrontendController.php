@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Cron\ContaoCron;
+use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\FrontendIndex;
@@ -45,7 +45,7 @@ class FrontendController extends AbstractController
     /**
      * @Route("/_contao/cron", name="contao_frontend_cron")
      */
-    public function cronAction(Request $request, ContaoCron $cron): Response
+    public function cronAction(Request $request, Cron $cron): Response
     {
         if (!$request->isMethod('post')) {
             $cron->run();

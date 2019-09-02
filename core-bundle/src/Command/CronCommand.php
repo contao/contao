@@ -2,7 +2,7 @@
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Cron\ContaoCron;
+use Contao\CoreBundle\Cron\Cron;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,11 +10,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CronCommand extends Command
 {
     /**
-     * @var ContaoCron
+     * @var Cron
      */
     protected $cron;
 
-    public function __construct(ContaoCron $cron)
+    public function __construct(Cron $cron)
     {
         $this->cron = $cron;
 

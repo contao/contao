@@ -30,7 +30,7 @@ services:
     # Controllers
     Contao\CoreBundle\Controller\FrontendController:
         arguments:
-            - '@Contao\CoreBundle\Cron\ContaoCron'
+            - '@Contao\CoreBundle\Cron\Cron'
         tags:
             - { name: 'controller.service_arguments' }
 
@@ -143,12 +143,18 @@ services:
         tags:
             - nelmio_cors.options_provider
 
-    Contao\CoreBundle\Cron\ContaoCron:
+    Contao\CoreBundle\Cron\Cron:
         arguments:
             - '@database_connection'
-            - '@contao.framework'
             - '@logger'
             - '%kernel.debug%'
+        public: true
+
+    Contao\CoreBundle\Cron\LegacyCron:
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: 'terminal42_service_annotation' }
 
     contao.csrf.token_manager:
         class: Symfony\Component\Security\Csrf\CsrfTokenManager

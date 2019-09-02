@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Cron\Cron;
+use Contao\System;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -26,82 +28,15 @@ class FrontendCron extends Frontend
 	 */
 	public function run()
 	{
-		$objResponse = new Response('', 204);
+		@trigger_error('Using the "Contao\FrontendCron" class has been deprecated and will be removed in Contao 5.0. Use the Contao\CoreBundle\Cron\Cron service instead.', E_USER_DEPRECATED);
 
-		// Do not run if there is POST data or the last execution was less than a minute ago
-		if (!empty($_POST) || $this->hasToWait())
+		// Do not run if there is POST data
+		if (empty($_POST))
 		{
-			return $objResponse;
+			System::getContainer()->get(Cron::class)->run();
 		}
 
-		$arrLock = array();
-		$arrIntervals = array('monthly', 'weekly', 'daily', 'hourly', 'minutely');
-
-		// Store the current timestamps
-		$arrCurrent = array
-		(
-			'monthly'  => date('Ym'),
-			'weekly'   => date('YW'),
-			'daily'    => date('Ymd'),
-			'hourly'   => date('YmdH'),
-			'minutely' => date('YmdHi')
-		);
-
-		// Get the timestamps from tl_cron
-		$objLock = $this->Database->query("SELECT * FROM tl_cron WHERE name !='lastrun'");
-
-		while ($objLock->next())
-		{
-			$arrLock[$objLock->name] = $objLock->value;
-		}
-
-		// Create the database entries
-		foreach ($arrIntervals as $strInterval)
-		{
-			if (!isset($arrLock[$strInterval]))
-			{
-				$arrLock[$strInterval] = 0;
-				$this->Database->query("INSERT INTO tl_cron (name, value) VALUES ('$strInterval', 0)");
-			}
-		}
-
-		// Load the default language file (see #8719)
-		System::loadLanguageFile('default');
-
-		// Run the jobs
-		foreach ($arrIntervals as $strInterval)
-		{
-			$intCurrent = $arrCurrent[$strInterval];
-
-			// Skip empty intervals and jobs that have been executed already
-			if ($arrLock[$strInterval] == $intCurrent || empty($GLOBALS['TL_CRON'][$strInterval]))
-			{
-				continue;
-			}
-
-			// Update the database before the jobs are executed, in case one of them fails
-			$this->Database->query("UPDATE tl_cron SET value=$intCurrent WHERE name='$strInterval'");
-
-			// Add a log entry if in debug mode (see #4729)
-			if (Config::get('debugMode'))
-			{
-				$this->log('Running the ' . $strInterval . ' cron jobs', __METHOD__, TL_CRON);
-			}
-
-			foreach ($GLOBALS['TL_CRON'][$strInterval] as $callback)
-			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}();
-			}
-
-			// Add a log entry if in debug mode (see #4729)
-			if (Config::get('debugMode'))
-			{
-				$this->log(ucfirst($strInterval) . ' cron jobs complete', __METHOD__, TL_CRON);
-			}
-		}
-
-		return $objResponse;
+		return new Response('', 204);
 	}
 
 	/**

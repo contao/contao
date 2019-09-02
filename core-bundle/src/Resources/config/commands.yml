@@ -19,7 +19,7 @@ services:
 
     Contao\CoreBundle\Command\CronCommand:
         arguments:
-            - '@Contao\CoreBundle\Cron\ContaoCron'
+            - '@Contao\CoreBundle\Cron\Cron'
 
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand
