@@ -125,3 +125,10 @@ fos_http_cache:
         annotations:
             enabled: false
         max_header_value_length: 4096
+
+scheb_two_factor:
+    trusted_device:
+        enabled: true
+        lifetime: 5184000
+        cookie_name: contao_2fa_trusted_device
+        manager: contao.security.two_factor.trusted_device_manager
