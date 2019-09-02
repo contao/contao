@@ -63,7 +63,7 @@
                 <td colspan="1" class="tl_file_list"><?= $trustedDevice->getDeviceFamily() ?> <?php if ($this->currentDevice === $trustedDevice->getCookieValue()): ?>(This device) <?php endif; ?></td>
                 <td colspan="1" class="tl_file_list"><?= $trustedDevice->getUaFamily() ?></td>
                 <td colspan="1" class="tl_file_list"><?= $trustedDevice->getOsFamily() ?></td>
-                <td colspan="1" class="tl_file_list"><?php if ($trustedDevice->getCountry()): ?><?= $this->countries[strtolower($trustedDevice->getCountry())] ?><?php endif; ?></td>
+                <td colspan="1" class="tl_file_list"><?php if ($trustedDevice->getCountry()): ?><?= $this->countries[$trustedDevice->getCountry()] ?><?php endif; ?></td>
                 <td colspan="1" class="tl_file_list"><?= $trustedDevice->getCreated()->format(\Config::get('datimFormat')) ?></td>
               </tr>
             <?php endforeach; ?>

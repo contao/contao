@@ -80,7 +80,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->setOsFamily($parsedUserAgent->os->family)
             ->setDeviceFamily($parsedUserAgent->device->family)
             ->setVersion($version)
-            ->setCountry($country)
+            ->setCountry(strtoupper($country))
         ;
 
         if ($user instanceof BackendUser) {
