@@ -28,6 +28,13 @@ services:
             - { name: container.service_subscriber }
         public: true
 
+    Contao\CoreBundle\Controller\FrontendController:
+        arguments:
+            - '@contao.framework'
+            - '@contao.csrf.token_manager'
+            - '%contao.csrf_token_name%'
+        public: true
+
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:

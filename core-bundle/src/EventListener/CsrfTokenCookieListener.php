@@ -67,6 +67,7 @@ class CsrfTokenCookieListener
             $this->setCookies($request, $response);
         } else {
             $this->removeCookies($request, $response);
+            $this->replaceTokenOccurrences($response);
         }
     }
 
@@ -112,6 +113,17 @@ class CsrfTokenCookieListener
                 new Cookie($cookieKey, $value, $expires, $basePath, null, $isSecure, true, false, Cookie::SAMESITE_LAX)
             );
         }
+    }
+
+    private function replaceTokenOccurrences(Response $response): void
+    {
+        $content = $response->getContent();
+
+        foreach ($this->tokenStorage->getUsedTokens() as $value) {
+            $content = str_replace($value, '', $content);
+        }
+
+        $response->setContent($content);
     }
 
     private function removeCookies(Request $request, Response $response): void

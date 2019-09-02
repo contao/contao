@@ -197,7 +197,7 @@ class CsrfTokenCookieListenerTest extends TestCase
         $listener->onKernelResponse($responseEvent);
     }
 
-    public function testRemovesTheTokenCookiesIfNoOtherCookiesArePresent(): void
+    public function testRemovesTheTokenCookiesAndReplacesTokenOccurrencesIfNoOtherCookiesArePresent(): void
     {
         $bag = new ParameterBag();
         $bag->set('csrf_foo', 'bar');
@@ -210,7 +210,7 @@ class CsrfTokenCookieListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $response = $this->createMock(Response::class);
+        $response = new Response('<html><body><form><input name="REQUEST_TOKEN" value="tokenValue"></form></body></html>');
 
         $responseEvent = $this->createMock(FilterResponseEvent::class);
         $responseEvent
@@ -247,10 +247,17 @@ class CsrfTokenCookieListenerTest extends TestCase
 
         $response->headers = $responseHeaders;
 
-        $tokenStorage = $this->createMock(MemoryTokenStorage::class);
+        $tokenStorage = new MemoryTokenStorage();
+        $tokenStorage->initialize(['tokenName' => 'tokenValue']);
+        $tokenStorage->getToken('tokenName');
 
         $listener = new CsrfTokenCookieListener($tokenStorage);
         $listener->onKernelResponse($responseEvent);
+
+        $this->assertSame(
+            '<html><body><form><input name="REQUEST_TOKEN" value=""></form></body></html>',
+            $response->getContent()
+        );
     }
 
     public function testDoesNotAddTheTokenCookiesToTheResponseUponSubrequests(): void
