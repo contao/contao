@@ -27,6 +27,13 @@ services:
     # Backwards compatibility
     Contao\CoreBundle\Framework\ContaoFrameworkInterface: '@contao.framework'
 
+    # Controllers
+    Contao\CoreBundle\Controller\FrontendController:
+        arguments:
+            - '@Contao\CoreBundle\Cron\ContaoCron'
+        tags:
+            - { name: 'controller.service_arguments' }
+
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
@@ -135,6 +142,13 @@ services:
             - '@database_connection'
         tags:
             - nelmio_cors.options_provider
+
+    Contao\CoreBundle\Cron\ContaoCron:
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+            - '@logger'
+            - '%kernel.debug%'
 
     contao.csrf.token_manager:
         class: Symfony\Component\Security\Csrf\CsrfTokenManager
