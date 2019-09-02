@@ -34,15 +34,7 @@
     <div class="tl_message">
       <p class="tl_confirm"><?= $this->trans('MSC.twoFactorActive') ?></p>
     </div>
-    <form action="<?= $this->action ?>" class="tl_two_factor_form" method="post">
-      <div class="formbody">
-        <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_clear_trusted_devices">
-        <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
-        <div class="submit_container cf">
-          <button type="submit" class="tl_submit"><?= $this->clearTrustedDevicesButton ?></button>
-        </div>
-      </div>
-    </form>
+
     <form action="<?= $this->action ?>" class="tl_two_factor_form" method="post">
       <div class="formbody">
         <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_disable">
@@ -52,6 +44,35 @@
         </div>
       </div>
     </form>
+
+    <div class="tl_trusted_devices">
+      <h2 class="sub_headline">Trusted Devices</h2>
+      <div class="tl_message">
+        <?php if (\count($this->trustedDevices)): ?>
+          <ul>
+            <?php foreach($this->trustedDevices as $trustedDevice): ?>
+            <?php /** @var Contao\CoreBundle\Entity\TrustedDevice $trustedDevice */ ?>
+              <li><?= $trustedDevice->getUaFamily() ?> on <?= $trustedDevice->getOsFamily() ?> (since <?= $trustedDevice->getCreated()->format(\Config::get('datimFormat')) ?>)</li>
+            <?php endforeach; ?>
+          </ul>
+
+        <?php else: ?>
+          <p class="tl_info">No trusted devices found.</p>
+        <?php endif; ?>
+      </div>
+      <?php if (\count($this->trustedDevices)): ?>
+        <form action="<?= $this->action ?>" class="tl_two_factor_form" method="post">
+          <div class="formbody">
+            <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_clear_trusted_devices">
+            <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+            <div class="submit_container cf">
+              <button type="submit" class="tl_submit"><?= $this->clearTrustedDevicesButton ?></button>
+            </div>
+          </div>
+        </form>
+      <?php endif; ?>
+    </div>
+
     <div class="tl_recovery_codes">
       <h2 class="sub_headline"><?= $this->trans('MSC.twoFactorBackupCodesLabel') ?></h2>
       <p><?= $this->trans('MSC.twoFactorBackupCodesExplain') ?></p>

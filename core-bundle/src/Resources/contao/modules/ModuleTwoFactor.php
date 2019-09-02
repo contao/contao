@@ -11,9 +11,12 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
+use Doctrine\ORM\EntityManagerInterface;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -46,6 +49,10 @@ class ModuleTwoFactor extends BackendModule
 			throw new AccessDeniedException('User is not fully authenticated');
 		}
 
+		/** @var TrustedDeviceRepository $trustedDeviceRepository */
+		$trustedDeviceRepository = $container->get('doctrine.orm.entity_manager')->getRepository(TrustedDevice::class);
+		$ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
+		$return = $container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref));
 		$user = BackendUser::getInstance();
 
 		// Inform the user if 2FA is enforced
@@ -104,6 +111,7 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->enableButton = $GLOBALS['TL_LANG']['MSC']['enable'];
 		$this->Template->disableButton = $GLOBALS['TL_LANG']['MSC']['disable'];
 		$this->Template->clearTrustedDevicesButton = $GLOBALS['TL_LANG']['MSC']['clearTrustedDevices'];
+		$this->Template->trustedDevices = $trustedDeviceRepository->findForBackendUser($user);
 	}
 
 	/**
@@ -200,6 +208,23 @@ class ModuleTwoFactor extends BackendModule
 	 */
 	protected function clearTrustedDevices(BackendUser $user, $return)
 	{
+		$container = System::getContainer();
+
+		/** @var EntityManagerInterface $entityManager */
+		$entityManager = $container->get('doctrine.orm.entity_manager');
+
+		/** @var TrustedDeviceRepository $trustedDeviceRepository */
+		$trustedDeviceRepository = $entityManager->getRepository(TrustedDevice::class);
+
+		$trustedDevices = $trustedDeviceRepository->findForBackendUser($user);
+
+		foreach ($trustedDevices as $trustedDevice)
+		{
+			$entityManager->remove($trustedDevice);
+		}
+
+		$entityManager->flush();
+
 		$user->trustedVersion++;
 		$user->save();
 

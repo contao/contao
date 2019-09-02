@@ -712,6 +712,13 @@ services:
         tags:
             - { name: scheb_two_factor.provider, alias: contao }
 
+    contao.security.two_factor.trusted_device_manager:
+        class: Contao\CoreBundle\Security\TwoFactor\TrustedDevice\TrustedDeviceManager
+        arguments:
+            - "@request_stack"
+            - "@scheb_two_factor.trusted_token_storage"
+            - "@doctrine.orm.entity_manager"
+
     contao.security.user_checker:
         class: Contao\CoreBundle\Security\User\UserChecker
         arguments:
