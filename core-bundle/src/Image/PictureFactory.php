@@ -185,6 +185,7 @@ class PictureFactory implements PictureFactoryInterface
                     if ($imageSizes->cssClass) {
                         $attributes['class'] = $imageSizes->cssClass;
                     }
+
                     if ($imageSizes->lazyLoading) {
                         $attributes['loading'] = 'lazy';
                     }
