@@ -603,7 +603,7 @@ class File extends System
 	 *
 	 * @return bool True if a deferred image was resized otherwise false
 	 */
-	public function createDeferredImage()
+	public function createIfDeferred()
 	{
 		if (!$this->exists())
 		{
@@ -634,7 +634,7 @@ class File extends System
 	 */
 	public function getContent()
 	{
-		$this->createDeferredImage();
+		$this->createIfDeferred();
 
 		$strContent = file_get_contents($this->strRootDir . '/' . ($this->strTmp ?: $this->strFile));
 
