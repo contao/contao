@@ -33,10 +33,6 @@ class TaggedCronsPass implements CompilerPassInterface
         $definition = $container->findDefinition(Cron::class);
 
         foreach ($serviceIds as $serviceId => $tags) {
-            if ($container->hasAlias($serviceId)) {
-                $serviceId = (string) $container->getAlias($serviceId);
-            }
-
             foreach ($tags as $attributes) {
                 if (!isset($attributes['interval'])) {
                     throw new InvalidConfigurationException(
@@ -51,8 +47,6 @@ class TaggedCronsPass implements CompilerPassInterface
 
                 $definition->addMethodCall('addCronJob', [new Reference($serviceId), $method, $interval, $priority, $cli]);
             }
-
-            $container->findDefinition($serviceId)->setPublic(true);
         }
     }
 
