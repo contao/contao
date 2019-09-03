@@ -124,7 +124,7 @@ class AddCronJobsPassTest extends TestCase
         $this->assertSame(0, $crons[0][3]);      
     }
 
-    public function testSetsTheDefaultCliIfNoCliGiven(): void
+    public function testSetsTheDefaultCliOnlyIfNoCliGiven(): void
     {
         $definition = new Definition('Test\Cron');
         $definition->addTag('contao.cron', ['interval' => 'minutely']);
@@ -138,6 +138,22 @@ class AddCronJobsPassTest extends TestCase
         $crons = $this->getCronsFromDefinition($container);
 
         $this->assertSame(false, $crons[0][4]);
+    }
+
+    public function testSetsCliOnlyIfCliOnlyIsGiven():void
+    {
+        $definition = new Definition('Test\Cron');
+        $definition->addTag('contao.cron', ['interval' => 'minutely', 'cli_only' => true]);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('Test\Cron', $definition);
+
+        $pass = new AddCronJobsPass();
+        $pass->process($container);
+
+        $crons = $this->getCronsFromDefinition($container);
+
+        $this->assertSame(true, $crons[0][4]);
     }
 
     public function testHandlesMultipleTags(): void

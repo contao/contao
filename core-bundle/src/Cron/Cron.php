@@ -56,21 +56,21 @@ class Cron
      *
      * @param object $service
      */
-    public function addCronJob($service, string $method, string $interval, int $priority = 0, bool $cli = false): void
+    public function addCronJob($service, string $method, string $interval, int $priority = 0, bool $cliOnly = false): void
     {
         if (!\in_array($interval, self::INTERVALS, true)) {
             throw new \InvalidArgumentException(sprintf('Invalid interval "%s"', $interval));
         }
 
-        $this->crons[$interval][$priority][] = [$service, $method, $cli];
+        $this->crons[$interval][$priority][] = [$service, $method, $cliOnly];
     }
 
     /**
      * Run the registered Contao cron jobs.
      *
-     * @param bool $cli Whether the cli only crons should be run.
+     * @param bool $cliOnly Whether the cli only crons should be run.
      */
-    public function run(bool $cli = false): void
+    public function run(bool $cliOnly = false): void
     {
         // Do not run if the last execution was less than a minute ago
         if ($this->hasToWait()) {
@@ -127,7 +127,7 @@ class Cron
 
             foreach ($crons as $cron) {
                 // Skip jobs that are only to be run on CLI, when not run via CLI
-                if (!$cli && isset($cron[2]) && true === $cron[2]) {
+                if (!$cliOnly && isset($cron[2]) && true === $cron[2]) {
                     continue;
                 }
 

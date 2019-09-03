@@ -43,9 +43,9 @@ class AddCronJobsPass implements CompilerPassInterface
                 $method = $this->getMethod($attributes);
                 $interval = $attributes['interval'];
                 $priority = (int) ($attributes['priority'] ?? 0);
-                $cli = (bool) ($attributes['cli'] ?? false);
+                $cliOnly = (bool) ($attributes['cli_only'] ?? false);
 
-                $definition->addMethodCall('addCronJob', [new Reference($serviceId), $method, $interval, $priority, $cli]);
+                $definition->addMethodCall('addCronJob', [new Reference($serviceId), $method, $interval, $priority, $cliOnly]);
             }
         }
     }
