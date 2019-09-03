@@ -25,7 +25,7 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  * @Attributes({
  *     @Attribute("value", type="string", required=true),
  *     @Attribute("priority", type="int"),
- *     @Attribute("cli", type="bool"),
+ *     @Attribute("cli_only", type="bool"),
  * })
  */
 final class Cron implements ServiceTagInterface
@@ -43,7 +43,7 @@ final class Cron implements ServiceTagInterface
     /**
      * @var boolean
      */
-    public $cli;
+    public $cli_only;
 
     public function getName(): string
     {
@@ -58,8 +58,8 @@ final class Cron implements ServiceTagInterface
             $attributes['priority'] = $this->priority;
         }
 
-        if ($this->cli) {
-            $attributes['cli'] = $this->cli;
+        if ($this->cli_only) {
+            $attributes['cli_only'] = $this->cli_only;
         }
 
         return $attributes;
