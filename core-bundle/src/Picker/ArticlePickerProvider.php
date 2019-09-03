@@ -47,7 +47,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
      */
     public function supportsContext($context): bool
     {
-        return 'link' === $context && $this->security->isGranted('contao_user.modules', 'article');
+        return \in_array($context, ['article', 'link'], true) && $this->security->isGranted('contao_user.modules', 'article');
     }
 
     /**
@@ -55,6 +55,10 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
      */
     public function supportsValue(PickerConfig $config): bool
     {
+        if ('article' === $config->getContext()) {
+            return is_numeric($config->getValue());
+        }
+
         return $this->isMatchingInsertTag($config);
     }
 
@@ -73,6 +77,27 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
     {
         $attributes = ['fieldType' => 'radio'];
 
+        if ('article' === $config->getContext()) {
+            $value = $config->getValue();
+            if ($fieldType = $config->getExtra('fieldType')) {
+                $attributes['fieldType'] = $fieldType;
+            }
+
+            if ($source = $config->getExtra('source')) {
+                $attributes['preserveRecord'] = $source;
+            }
+
+            if ($value) {
+                $intval = static function ($val) {
+                    return (int) $val;
+                };
+
+                $attributes['value'] = array_map($intval, explode(',', $value));
+            }
+
+            return $attributes;
+        }
+
         if ($source = $config->getExtra('source')) {
             $attributes['preserveRecord'] = $source;
         }
@@ -87,8 +112,12 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
     /**
      * {@inheritdoc}
      */
-    public function convertDcaValue(PickerConfig $config, $value): string
+    public function convertDcaValue(PickerConfig $config, $value)
     {
+        if ('article' === $config->getContext()) {
+            return (int) $value;
+        }
+
         return sprintf($this->getInsertTag($config), $value);
     }
 
