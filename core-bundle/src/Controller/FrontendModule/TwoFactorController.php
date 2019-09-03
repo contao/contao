@@ -251,7 +251,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $entityManager->flush();
 
-        $user->trustedVersion++;
+        ++$user->trustedVersion;
         $user->save();
 
         return new RedirectResponse($this->page->getAbsoluteUrl());
