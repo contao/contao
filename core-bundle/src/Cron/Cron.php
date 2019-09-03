@@ -53,7 +53,7 @@ class Cron
 
     /**
      * Add a cron service.
-     * 
+     *
      * @param object $service
      */
     public function addCronJob($service, string $method, string $interval, int $priority = 0, bool $cli = false): void
@@ -66,10 +66,10 @@ class Cron
     }
 
     /**
-	 * Run the registered Contao cron jobs.
-     * 
+     * Run the registered Contao cron jobs.
+     *
      * @param bool $cli Whether the cli only crons should be run.
-	 */
+     */
     public function run(bool $cli = false): void
     {
         // Do not run if the last execution was less than a minute ago
@@ -77,15 +77,15 @@ class Cron
             return;
         }
 
-		$currentRuns = [];
+        $currentRuns = [];
 
-		// Store the current timestamps
-		$currentTimestamps = [
-			'monthly'  => date('Ym'),
-			'weekly'   => date('YW'),
-			'daily'    => date('Ymd'),
-			'hourly'   => date('YmdH'),
-			'minutely' => date('YmdHi')
+        // Store the current timestamps
+        $currentTimestamps = [
+            'monthly' => date('Ym'),
+            'weekly' => date('YW'),
+            'daily' => date('Ymd'),
+            'hourly' => date('YmdH'),
+            'minutely' => date('YmdHi'),
         ];
 
         // Get the timestamps from tl_cron
@@ -95,83 +95,82 @@ class Cron
             $currentRuns[$lastRun['name']] = $lastRun['value'];
         }
 
-		// Create the database entries
-		foreach (self::INTERVALS as $interval) {
-			if (!isset($currentRuns[$interval])) {
+        // Create the database entries
+        foreach (self::INTERVALS as $interval) {
+            if (!isset($currentRuns[$interval])) {
                 $currentRuns[$interval] = 0;
                 $this->db->insert('tl_cron', ['name' => $interval, 'value' => 0]);
-			}
-		}
+            }
+        }
 
-		// Run the jobs
-		foreach (self::INTERVALS as $interval) {
-			$currentTimestamp = $currentTimestamps[$interval];
+        // Run the jobs
+        foreach (self::INTERVALS as $interval) {
+            $currentTimestamp = $currentTimestamps[$interval];
 
-			// Skip empty intervals and jobs that have been executed already
-			if (empty($this->crons[$interval]) || $currentRuns[$interval] === $currentTimestamp) {
-				continue;
-			}
+            // Skip empty intervals and jobs that have been executed already
+            if (empty($this->crons[$interval]) || $currentRuns[$interval] === $currentTimestamp) {
+                continue;
+            }
 
             // Update the database before the jobs are executed, in case one of them fails
             $this->db->update('tl_cron', ['value' => $currentTimestamp], ['name' => $interval]);
 
-			// Add a log entry if in debug mode (see #4729)
-			if ($this->debug) {
-                $this->logger->log(LogLevel::INFO, 'Running the ' . $interval . ' cron jobs', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
+            // Add a log entry if in debug mode (see #4729)
+            if ($this->debug) {
+                $this->logger->log(LogLevel::INFO, 'Running the '.$interval.' cron jobs', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
             }
-            
+
             // Sort the cron jobs by priority
             $crons = $this->crons[$interval];
             krsort($crons);
             $crons = array_merge(...$crons);
 
-			foreach ($crons as $cron) {
+            foreach ($crons as $cron) {
                 // Skip jobs that are only to be run on CLI, when not run via CLI
                 if (!$cli && isset($cron[2]) && true === $cron[2]) {
                     continue;
                 }
 
                 $cron[0]->{$cron[1]}();
-			}
+            }
 
-			// Add a log entry if in debug mode (see #4729)
-			if ($this->debug) {
-                $this->logger->log(LogLevel::INFO, ucfirst($interval) . ' cron jobs complete', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
-			}
-		}
+            // Add a log entry if in debug mode (see #4729)
+            if ($this->debug) {
+                $this->logger->log(LogLevel::INFO, ucfirst($interval).' cron jobs complete', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
+            }
+        }
     }
 
-	/**
-	 * Check whether the last cron execution was less than a minute ago.
-	 */
-	protected function hasToWait(int $cronTimeout = 60): bool
-	{
-		$return = true;
+    /**
+     * Check whether the last cron execution was less than a minute ago.
+     */
+    protected function hasToWait(int $cronTimeout = 60): bool
+    {
+        $return = true;
 
-		// Get the timestamp without seconds (see #5775)
-		$time = strtotime(date('Y-m-d H:i'));
+        // Get the timestamp without seconds (see #5775)
+        $time = strtotime(date('Y-m-d H:i'));
 
         // Lock the table
         $this->db->exec('LOCK TABLES tl_cron WRITE');
 
         // Get the last execution date
         $cron = $this->db->executeQuery("SELECT * FROM tl_cron WHERE name = 'lastrun' LIMIT 1")->fetch();
-        
+
         // Add the cron entry
         if (false === $cron) {
             $this->db->insert('tl_cron', ['name' => 'lastrun', 'value' => $time]);
             $return = false;
         }
 
-		// Check the last execution time
-		elseif ((int) $cron['value'] <= ($time - $cronTimeout))
-		{
+        // Check the last execution time
+        elseif ((int) $cron['value'] <= ($time - $cronTimeout)) {
             $this->db->update('tl_cron', ['value' => $time], ['name' => 'lastrun']);
-			$return = false;
+            $return = false;
         }
 
         $this->db->exec('UNLOCK TABLES');
 
-		return $return;
+        return $return;
     }
 }
