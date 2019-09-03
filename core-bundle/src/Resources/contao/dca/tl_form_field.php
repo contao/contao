@@ -691,7 +691,7 @@ class tl_form_field extends Contao\Backend
 
 		foreach ($GLOBALS['TL_FFL'] as $k=>$v)
 		{
-			if ($this->User->hasAccess($k, 'elements'))
+			if ($this->User->hasAccess($k, 'fields'))
 			{
 				$fields[] = $k;
 			}
