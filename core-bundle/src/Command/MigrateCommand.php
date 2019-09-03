@@ -217,7 +217,7 @@ class MigrateCommand extends Command
 
             $this->io->listing($commandsByHash);
 
-            $options = ['yes', 'complete', 'no'];
+            $options = ['yes', 'yes, with delets', 'no'];
 
             if ($completeOption) {
                 array_shift($options);
@@ -235,7 +235,7 @@ class MigrateCommand extends Command
 
             $count = 0;
 
-            foreach ($this->getCommandHashes($commands, 'complete' === $answer) as $hash) {
+            foreach ($this->getCommandHashes($commands, 'yes, with delets' === $answer) as $hash) {
                 $this->io->writeln(' * '.$commandsByHash[$hash]);
                 $this->installer->execCommand($hash);
                 ++$count;
