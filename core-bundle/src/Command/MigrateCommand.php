@@ -18,6 +18,7 @@ use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
@@ -66,6 +67,7 @@ class MigrateCommand extends Command
     {
         $this
             ->setName('contao:migrate')
+            ->addOption('complete', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
             ->setDescription('Executes migrations and the database schema diff.')
         ;
     }
@@ -81,7 +83,7 @@ class MigrateCommand extends Command
             return 1;
         }
 
-        if (!$this->executeSchemaDiff()) {
+        if (!$this->executeSchemaDiff($input->getOption('complete'))) {
             return 1;
         }
 
@@ -163,7 +165,7 @@ class MigrateCommand extends Command
         (new Filesystem())->remove($this->projectDir.'/'.$file);
     }
 
-    private function executeSchemaDiff(): bool
+    private function executeSchemaDiff(bool $completeOption): bool
     {
         if (null === $this->installer) {
             $this->io->error('Service contao.installer of contao/installation-bundle not found.');
@@ -202,10 +204,16 @@ class MigrateCommand extends Command
 
             $this->io->listing($commandsByHash);
 
+            $options = ['yes', 'complete', 'no'];
+
+            if ($completeOption) {
+                array_shift($options);
+            }
+
             $answer = $this->io->choice(
                 'Execute the listed database updates?',
-                ['yes', 'complete', 'no'],
-                'yes'
+                $options,
+                $options[0]
             );
 
             if ('no' === $answer) {
@@ -240,6 +248,6 @@ class MigrateCommand extends Command
             }
         }
 
-        return array_keys(array_merge(...array_values($commands)));
+        return \count($commands) ? array_keys(array_merge(...array_values($commands))) : [];
     }
 }
