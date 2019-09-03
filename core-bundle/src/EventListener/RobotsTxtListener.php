@@ -16,6 +16,8 @@ use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use webignition\RobotsTxt\Directive\Directive;
+use webignition\RobotsTxt\Inspector\Inspector;
+use webignition\RobotsTxt\Record\Record;
 
 class RobotsTxtListener
 {
@@ -31,13 +33,23 @@ class RobotsTxtListener
 
     public function onRobotsTxt(RobotsTxtEvent $event): void
     {
-        $file = $event->getFile();
+        $this->contaoFramework->initialize();
 
+        $file = $event->getFile();
         $records = $file->getRecords();
 
-        // Disallow /contao for every directive
+        $inspector = new Inspector($file);
+        $directiveList = $inspector->getDirectives(); // get all directives for user-agent:*
+
+        // If no directive for user-agent: * exists we add the record
+        if (0 === $directiveList->getLength()) {
+            $record = new Record();
+            $this->addContaoDisallowDirectivesToRecord($record);
+            $file->addRecord($record);
+        }
+
         foreach ($records as $record) {
-            $record->getDirectiveList()->add(new Directive('Disallow', '/contao'));
+            $this->addContaoDisallowDirectivesToRecord($record);
         }
 
         // Find all matching root pages
@@ -58,5 +70,18 @@ class RobotsTxtListener
 
             $event->getFile()->getNonGroupDirectives()->add(new Directive('Sitemap', $sitemap));
         }
+    }
+
+    private function addContaoDisallowDirectivesToRecord(Record $record): void
+    {
+        $directiveList = $record->getDirectiveList();
+
+        $directive1 = new Directive('Disallow', '/contao$');
+        $directive2 = new Directive('Disallow', '/contao?');
+        $directive3 = new Directive('Disallow', '/contao/');
+
+        $directiveList->add($directive1);
+        $directiveList->add($directive2);
+        $directiveList->add($directive3);
     }
 }
