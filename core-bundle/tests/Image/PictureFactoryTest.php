@@ -118,6 +118,7 @@ class PictureFactoryTest extends TestCase
             'sizes' => '100vw',
             'densities' => '1x, 2x',
             'cssClass' => 'my-size',
+            'lazyLoading' => true,
         ];
 
         /** @var ImageSizeModel&MockObject $imageSizeModel */
@@ -161,6 +162,7 @@ class PictureFactoryTest extends TestCase
 
         $this->assertSame($imageMock, $picture->getImg()['src']);
         $this->assertSame('my-size', $picture->getImg()['class']);
+        $this->assertSame('lazy', $picture->getImg()['loading']);
     }
 
     public function testCreatesAPictureObjectFromAnImageObjectWithAPredefinedImageSize(): void
@@ -174,6 +176,7 @@ class PictureFactoryTest extends TestCase
                 'densities' => '1x, 2x',
                 'sizes' => '100vw',
                 'cssClass' => 'foobar-class',
+                'lazyLoading' => true,
                 'skipIfDimensionsMatch' => true,
                 'formats' => [
                     'jpg' => ['webp', 'jpg'],
@@ -274,6 +277,7 @@ class PictureFactoryTest extends TestCase
 
         $this->assertSame($imageMock, $picture->getImg()['src']);
         $this->assertSame($predefinedSizes['foobar']['cssClass'], $picture->getImg()['class']);
+        $this->assertSame('lazy', $picture->getImg()['loading']);
     }
 
     public function testCreatesAPictureObjectFromAnImageObjectWithAPictureConfiguration(): void

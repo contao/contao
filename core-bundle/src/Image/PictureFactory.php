@@ -181,8 +181,14 @@ class PictureFactory implements PictureFactoryInterface
                     ));
                 }
 
-                if ($imageSizes && $imageSizes->cssClass) {
-                    $attributes['class'] = $imageSizes->cssClass;
+                if ($imageSizes) {
+                    if ($imageSizes->cssClass) {
+                        $attributes['class'] = $imageSizes->cssClass;
+                    }
+
+                    if ($imageSizes->lazyLoading) {
+                        $attributes['loading'] = 'lazy';
+                    }
                 }
 
                 /** @var ImageSizeItemModel $imageSizeItemModel */
@@ -210,8 +216,12 @@ class PictureFactory implements PictureFactoryInterface
                 $config->setFormats($imageSizes['formats'] ?? []);
                 $options->setSkipIfDimensionsMatch($imageSizes['skipIfDimensionsMatch'] ?? false);
 
-                if ($imageSizes && isset($imageSizes['cssClass']) && $imageSizes['cssClass']) {
+                if (!empty($imageSizes['cssClass'])) {
                     $attributes['class'] = $imageSizes['cssClass'];
+                }
+
+                if (!empty($imageSizes['lazyLoading'])) {
+                    $attributes['loading'] = 'lazy';
                 }
 
                 if (\count($imageSizes['items']) > 0) {
