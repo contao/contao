@@ -38,7 +38,6 @@ class FaviconControllerTest extends TestCase
         ;
 
         $request = Request::create('/robots.txt');
-
         $controller = new FaviconController($framework, $this->createMock(ResponseTagger::class));
         $response = $controller($request);
 
@@ -48,8 +47,8 @@ class FaviconControllerTest extends TestCase
     public function testRobotsTxt(): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->favicon = 'favicon-uuid';
         $pageModel->id = 42;
+        $pageModel->favicon = 'favicon-uuid';
 
         $faviconModel = $this->mockClassWithProperties(FilesModel::class);
         $faviconModel->path = __DIR__.'/../Fixtures/images/favicon.ico';
@@ -73,6 +72,7 @@ class FaviconControllerTest extends TestCase
             PageModel::class => $pageModelAdapter,
             FilesModel::class => $filesModelAdapter,
         ]);
+
         $framework
             ->expects($this->once())
             ->method('initialize')
@@ -86,7 +86,6 @@ class FaviconControllerTest extends TestCase
         ;
 
         $request = Request::create('/favicon.ico');
-
         $controller = new FaviconController($framework, $responseTagger);
         $response = $controller($request);
 

@@ -51,6 +51,7 @@ class FaviconController
 
         /** @var PageModel $pageModel */
         $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
+
         /** @var PageModel|null $rootPage */
         $rootPage = $pageModel->findPublishedFallbackByHostname($request->server->get('HTTP_HOST'), [], true);
 
@@ -66,7 +67,7 @@ class FaviconController
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        // Cache forever (= 1 year) in public cache and tag it so it's invalidated when the settings are edited.
+        // Cache the response for 1 year and tag it so it is invalidated when the settings are edited
         $response = new BinaryFileResponse($faviconModel->path);
         $response->setSharedMaxAge(31556952);
 

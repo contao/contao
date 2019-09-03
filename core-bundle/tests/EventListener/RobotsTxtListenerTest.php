@@ -68,17 +68,51 @@ class RobotsTxtListenerTest extends TestCase
     {
         yield 'Empty robots.txt content in root page' => [
             '',
-            "user-agent:*\ndisallow:/contao$\ndisallow:/contao?\ndisallow:/contao/\n\nsitemap:https://www.foobar.com/share/sitemap-name.xml",
+            <<<'EOF'
+user-agent:*
+disallow:/contao$
+disallow:/contao?
+disallow:/contao/
+
+sitemap:https://www.foobar.com/share/sitemap-name.xml
+EOF,
         ];
 
         yield 'Tests merging with existing user-agent' => [
-            "user-agent:*\nallow:/",
-            "user-agent:*\nallow:/\ndisallow:/contao$\ndisallow:/contao?\ndisallow:/contao/\n\nsitemap:https://www.foobar.com/share/sitemap-name.xml",
+            <<<'EOF'
+user-agent:*
+allow:/
+EOF,
+            <<<'EOF'
+user-agent:*
+allow:/
+disallow:/contao$
+disallow:/contao?
+disallow:/contao/
+
+sitemap:https://www.foobar.com/share/sitemap-name.xml
+EOF,
         ];
 
         yield 'Tests works with specific user-agent' => [
-            "user-agent:googlebot\nallow:/",
-            "user-agent:googlebot\nallow:/\ndisallow:/contao$\ndisallow:/contao?\ndisallow:/contao/\n\nuser-agent:*\ndisallow:/contao$\ndisallow:/contao?\ndisallow:/contao/\n\nsitemap:https://www.foobar.com/share/sitemap-name.xml",
+            <<<'EOF'
+user-agent:googlebot
+allow:/
+EOF,
+            <<<'EOF'
+user-agent:googlebot
+allow:/
+disallow:/contao$
+disallow:/contao?
+disallow:/contao/
+
+user-agent:*
+disallow:/contao$
+disallow:/contao?
+disallow:/contao/
+
+sitemap:https://www.foobar.com/share/sitemap-name.xml
+EOF,
         ];
     }
 }

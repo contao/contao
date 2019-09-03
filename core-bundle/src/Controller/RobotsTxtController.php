@@ -52,6 +52,7 @@ class RobotsTxtController
 
         /** @var PageModel $pageModel */
         $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
+
         /** @var PageModel|null $rootPage */
         $rootPage = $pageModel->findPublishedFallbackByHostname($request->server->get('HTTP_HOST'), [], true);
 

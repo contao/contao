@@ -36,23 +36,24 @@ class RobotsTxtListener
         $this->contaoFramework->initialize();
 
         $file = $event->getFile();
-        $records = $file->getRecords();
-
         $inspector = new Inspector($file);
-        $directiveList = $inspector->getDirectives(); // get all directives for user-agent:*
 
-        // If no directive for user-agent: * exists we add the record
+        // Get all directives for user-agent: *
+        $directiveList = $inspector->getDirectives();
+
+        // If no directive for user-agent: * exists, we add the record
         if (0 === $directiveList->getLength()) {
             $record = new Record();
             $this->addContaoDisallowDirectivesToRecord($record);
             $file->addRecord($record);
         }
 
+        $records = $file->getRecords();
+
         foreach ($records as $record) {
             $this->addContaoDisallowDirectivesToRecord($record);
         }
 
-        // Find all matching root pages
         /** @var PageModel $pageModel */
         $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
         $rootPages = $pageModel->findPublishedByHostname($event->getRootPage()->dns);
@@ -63,8 +64,10 @@ class RobotsTxtListener
                 continue;
             }
 
-            $sitemap = sprintf('%s/share/%s.xml',
-                ($rootPage->useSSL ? 'https://' : 'http://').($rootPage->dns ?: $event->getRequest()->server->get('HTTP_HOST')),
+            $sitemap = sprintf(
+                '%s%s/share/%s.xml',
+                $rootPage->useSSL ? 'https://' : 'http://',
+                $rootPage->dns ?: $event->getRequest()->server->get('HTTP_HOST'),
                 $rootPage->sitemapName
             );
 
@@ -75,13 +78,8 @@ class RobotsTxtListener
     private function addContaoDisallowDirectivesToRecord(Record $record): void
     {
         $directiveList = $record->getDirectiveList();
-
-        $directive1 = new Directive('Disallow', '/contao$');
-        $directive2 = new Directive('Disallow', '/contao?');
-        $directive3 = new Directive('Disallow', '/contao/');
-
-        $directiveList->add($directive1);
-        $directiveList->add($directive2);
-        $directiveList->add($directive3);
+        $directiveList->add(new Directive('Disallow', '/contao$'));
+        $directiveList->add(new Directive('Disallow', '/contao?'));
+        $directiveList->add(new Directive('Disallow', '/contao/'));
     }
 }

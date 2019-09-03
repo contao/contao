@@ -43,7 +43,6 @@ class RobotsTxtControllerTest extends TestCase
         ;
 
         $request = Request::create('/robots.txt');
-
         $controller = new RobotsTxtController($framework, $eventDispatcher);
         $response = $controller($request);
 
@@ -74,7 +73,6 @@ class RobotsTxtControllerTest extends TestCase
         ;
 
         $request = Request::create('/robots.txt');
-
         $controller = new RobotsTxtController($framework, $eventDispatcher);
         $response = $controller($request);
 
