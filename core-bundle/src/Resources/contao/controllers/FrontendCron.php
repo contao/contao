@@ -14,10 +14,14 @@ use Contao\CoreBundle\Cron\Cron;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Response;
 
+@trigger_error('Using the "Contao\FrontendCron" class has been deprecated and will be removed in Contao 5.0. Use the Contao\CoreBundle\Cron\Cron service instead.', E_USER_DEPRECATED);
+
 /**
  * Command scheduler controller.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0; use the
+ *             Contao\CoreBundle\Cron\Cron service instead
  */
 class FrontendCron extends Frontend
 {
@@ -28,8 +32,6 @@ class FrontendCron extends Frontend
 	 */
 	public function run()
 	{
-		@trigger_error('Using the "Contao\FrontendCron" class has been deprecated and will be removed in Contao 5.0. Use the Contao\CoreBundle\Cron\Cron service instead.', E_USER_DEPRECATED);
-
 		// Do not run if there is POST data
 		if (empty($_POST))
 		{
