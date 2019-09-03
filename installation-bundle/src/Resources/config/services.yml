@@ -1,10 +1,26 @@
 services:
 
-    Contao\InstallationBundle\Database\:
-        autoconfigure: true
-        resource: '../../Database/Version*'
+    Contao\InstallationBundle\Database\Version447Update:
         arguments:
             - '@database_connection'
+            - '@translator'
+        tags:
+            - { name: contao.migration, priority: 99 }
+
+    Contao\InstallationBundle\Database\Version480Update:
+        arguments:
+            - '@database_connection'
+            - '%kernel.project_dir%'
+        tags:
+            - { name: contao.migration, priority: 99 }
+
+    Contao\InstallationBundle\Database\:
+        resource: '../../Database/Version*'
+        exclude: '../../Database/Version{480,447}Update.php'
+        arguments:
+            - '@database_connection'
+        tags:
+            - { name: contao.migration, priority: 99 }
 
     contao.install_tool:
         class: Contao\InstallationBundle\InstallTool

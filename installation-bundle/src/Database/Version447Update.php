@@ -15,6 +15,7 @@ namespace Contao\InstallationBundle\Database;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class Version447Update extends AbstractMigration
 {
@@ -23,9 +24,15 @@ class Version447Update extends AbstractMigration
      */
     protected $connection;
 
-    public function __construct(Connection $connection)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(Connection $connection, TranslatorInterface $translator)
     {
         $this->connection = $connection;
+        $this->translator = $translator;
     }
 
     public function getName(): string
@@ -89,6 +96,8 @@ class Version447Update extends AbstractMigration
                 pid
         ');
 
+        $messages = [];
+
         while (false !== ($duplicate = $duplicates->fetch(\PDO::FETCH_OBJ))) {
             $count = 0;
 
@@ -121,19 +130,22 @@ class Version447Update extends AbstractMigration
                 $delete->execute(['id' => $subscription->id]);
             }
 
-            $this->addMessage(sprintf('<li>%s</li>', $duplicate->email));
+            $messages[] = $duplicate->email;
         }
 
-        if ($this->hasMessage()) {
-            $translator = $this->container->get('translator');
+        $this->connection->query('
+            CREATE UNIQUE INDEX pid_email 
+            ON tl_newsletter_recipients 
+            (pid, email)
+        ');
 
-            $this->prependMessage(sprintf(
-                '<h3>%s</h3><p>%s</p><ul>',
-                $translator->trans('duplicate_subscriptions'),
-                $translator->trans('duplicate_subscriptions_begin')
-            ));
-
-            $this->addMessage(sprintf('</ul><p>%s</p>', $translator->trans('duplicate_subscriptions_end')));
+        if ($messages) {
+            return $this->createResult(
+                true,
+                $this->translator->trans('duplicate_subscriptions')
+                ."\n\n * ".implode("\n * ", $messages)."\n\n"
+                .$this->translator->trans('duplicates_purged')
+            );
         }
 
         return $this->createResult();

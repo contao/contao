@@ -25,9 +25,15 @@ class Version480Update extends AbstractMigration
      */
     protected $connection;
 
-    public function __construct(Connection $connection)
+    /**
+     * @var string
+     */
+    private $projectDir;
+
+    public function __construct(Connection $connection, string $projectDir)
     {
         $this->connection = $connection;
+        $this->projectDir = $projectDir;
     }
 
     public function getName(): string
@@ -148,11 +154,9 @@ class Version480Update extends AbstractMigration
                 importantPartWidth > 0 OR importantPartHeight > 0
         ');
 
-        $rootDir = $this->container->getParameter('kernel.project_dir');
-
         // Convert the important part to relative values as fractions
         while (false !== ($file = $statement->fetch(\PDO::FETCH_OBJ))) {
-            if (!file_exists($rootDir.'/'.$file->path) || is_dir($rootDir.'/'.$file->path)) {
+            if (!file_exists($this->projectDir.'/'.$file->path) || is_dir($this->projectDir.'/'.$file->path)) {
                 continue;
             }
 
@@ -251,7 +255,7 @@ class Version480Update extends AbstractMigration
         // Since rememberme is broken in Contao 4.7 and there are no valid
         // cookies out there, we can simply drop the old table here and let the
         // install tool create the new one
-        $this->connection->query('DROP TABLE tl_remember_me');
+        $this->connection->query('DROP TABLE IF EXISTS tl_remember_me');
 
         return $this->createResult();
     }
