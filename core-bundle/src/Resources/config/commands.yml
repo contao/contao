@@ -12,6 +12,7 @@ services:
             - '@Contao\CoreBundle\Migration\Migrations'
             - '@contao.resource_locator'
             - '%kernel.project_dir%'
+            - '@contao.framework'
             - '@?contao.installer'
 
     contao.command.automator:

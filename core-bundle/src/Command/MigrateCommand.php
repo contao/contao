@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\Migrations;
 use Contao\InstallationBundle\Database\Installer;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
@@ -41,6 +42,11 @@ class MigrateCommand extends Command
     private $projectDir;
 
     /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
+    /**
      * @var ?Installer
      */
     private $installer;
@@ -50,11 +56,12 @@ class MigrateCommand extends Command
      */
     private $io;
 
-    public function __construct(Migrations $migrations, FileLocator $fileLocator, string $projectDir, Installer $installer = null)
+    public function __construct(Migrations $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, Installer $installer = null)
     {
         $this->migrations = $migrations;
         $this->fileLocator = $fileLocator;
         $this->projectDir = $projectDir;
+        $this->framework = $framework;
         $this->installer = $installer;
 
         parent::__construct();
@@ -164,6 +171,8 @@ class MigrateCommand extends Command
 
     private function executeRunonceFile(string $file): void
     {
+        $this->framework->initialize();
+
         include $this->projectDir.'/'.$file;
 
         (new Filesystem())->remove($this->projectDir.'/'.$file);
