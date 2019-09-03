@@ -96,6 +96,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property object      $objLogout
  * @property string      $useTwoFactor
  * @property string|null $secret
+ * @property string|null $backupCodes
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -636,7 +637,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function isBackupCode(string $code): bool
 	{
-		return in_array($code, $this->arrData['backupCodes']);
+		return \in_array($code, json_decode($this->backupCodes, true));
 	}
 
 	/**
@@ -644,11 +645,14 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function invalidateBackupCode(string $code): void
 	{
-		$key = array_search($code, $this->arrData['backupCodes']);
+		$backupCodes = json_decode($this->backupCodes, true);
+
+		$key = array_search($code, $backupCodes);
 
 		if ($key !== false)
 		{
-			unset($this->arrData['backupCodes'][$key]);
+			unset($backupCodes[$key]);
+			$this->backupCodes = json_encode($backupCodes);
 		}
 	}
 

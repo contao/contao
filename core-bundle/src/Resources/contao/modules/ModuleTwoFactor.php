@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
+use Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -39,6 +40,7 @@ class ModuleTwoFactor extends BackendModule
 		$ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 		$return = $container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref));
 		$user = BackendUser::getInstance();
+		$showBackupCodes = false;
 
 		// Inform the user if 2FA is enforced
 		if (!$user->useTwoFactor && empty($_GET['act']) && $container->getParameter('contao.security.two_factor.enforce_backend'))
@@ -63,12 +65,34 @@ class ModuleTwoFactor extends BackendModule
 			$this->disableTwoFactor($user, $return);
 		}
 
+		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_show_backup_codes')
+		{
+			$showBackupCodes = true;
+		}
+
+		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_generate_backup_codes')
+		{
+			/** @var BackupCodeManager $backupCodeManager */
+			$backupCodeManager = $container->get('contao.security.two_factor.backup_code_manager');
+			$backupCodeManager->generateBackupCodes($user);
+			$showBackupCodes = true;
+		}
+
 		$this->Template->isEnabled = (bool) $this->User->useTwoFactor;
 		$this->Template->twoFactor = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 		$this->Template->explain = $GLOBALS['TL_LANG']['MSC']['twoFactorExplain'];
 		$this->Template->active = $GLOBALS['TL_LANG']['MSC']['twoFactorActive'];
 		$this->Template->enableButton = $GLOBALS['TL_LANG']['MSC']['enable'];
 		$this->Template->disableButton = $GLOBALS['TL_LANG']['MSC']['disable'];
+		$this->Template->showBackupCodes = $showBackupCodes;
+		$this->Template->backupCodesLabel = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesLabel'];
+		$this->Template->showBackupCodesLabel = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesLabel'];
+		$this->Template->backupCodesExplain = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesExplain'];
+		$this->Template->backupCodesTreat = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesTreat'];
+		$this->Template->backupCodesInfo = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesInfo'];
+		$this->Template->backupCodesGenerateLabel = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesGenerateLabel'];
+		$this->Template->backupCodesGenerateInfo = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesGenerateInfo'];
+		$this->Template->backupCodes = json_decode($user->backupCodes, true) ?? array();
 	}
 
 	/**
@@ -114,6 +138,13 @@ class ModuleTwoFactor extends BackendModule
 			$user->save();
 		}
 
+		if (!$user->backupCodes || !\count(json_decode($user->backupCodes, true)))
+		{
+			/** @var BackupCodeManager $backupCodeManager */
+			$backupCodeManager = $container->get('contao.security.two_factor.backup_code_manager');
+			$backupCodeManager->generateBackupCodes($user);
+		}
+
 		/** @var Request $request */
 		$request = $container->get('request_stack')->getCurrentRequest();
 
@@ -140,6 +171,7 @@ class ModuleTwoFactor extends BackendModule
 			return;
 		}
 
+		$user->backupCodes = null;
 		$user->secret = null;
 		$user->useTwoFactor = '';
 		$user->save();
