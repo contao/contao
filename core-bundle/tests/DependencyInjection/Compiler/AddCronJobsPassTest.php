@@ -3,14 +3,14 @@
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Cron\Cron;
-use Contao\CoreBundle\DependencyInjection\Compiler\TaggedCronsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class TaggedCronsPassTest extends TestCase
+class AddCronJobsPassTest extends TestCase
 {
     public function testDoesNothingIfThereIsNoCron(): void
     {
@@ -26,7 +26,7 @@ class TaggedCronsPassTest extends TestCase
             ->method('findTaggedServiceIds')
         ;
 
-        $pass = new TaggedCronsPass();
+        $pass = new AddCronJobsPass();
         $pass->process($container);
     }
 
@@ -34,7 +34,7 @@ class TaggedCronsPassTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $pass = new TaggedCronsPass();
+        $pass = new AddCronJobsPass();
         $pass->process($container);
 
         $definition = $container->getDefinition(Cron::class);
@@ -50,7 +50,7 @@ class TaggedCronsPassTest extends TestCase
         $container = $this->getContainerBuilder();
         $container->setDefinition('Test\Cron', $definition);
 
-        $pass = new TaggedCronsPass();
+        $pass = new AddCronJobsPass();
         $pass->process($container);
 
         $crons = $this->getCronsFromDefinition($container);
@@ -66,7 +66,7 @@ class TaggedCronsPassTest extends TestCase
         $container = $this->getContainerBuilder();
         $container->setDefinition('Test\Cron', $definition);
 
-        $pass = new TaggedCronsPass();
+        $pass = new AddCronJobsPass();
 
         $this->expectException(InvalidConfigurationException::class);
 
@@ -81,7 +81,7 @@ class TaggedCronsPassTest extends TestCase
         $container = $this->getContainerBuilder();
         $container->setDefinition('Test\Cron', $definition);
 
-        $pass = new TaggedCronsPass();
+        $pass = new AddCronJobsPass();
         $pass->process($container);
 
         $crons = $this->getCronsFromDefinition($container);
@@ -100,7 +100,7 @@ class TaggedCronsPassTest extends TestCase
         $container = $this->getContainerBuilder();
         $container->setDefinition('Test\Cron', $definition);
 
-        $pass = new TaggedCronsPass();
+        $pass = new AddCronJobsPass();
         $pass->process($container);
 
         $crons = $this->getCronsFromDefinition($container);
@@ -116,7 +116,7 @@ class TaggedCronsPassTest extends TestCase
         $container = $this->getContainerBuilder();
         $container->setDefinition('Test\Cron', $definition);
 
-        $pass = new TaggedCronsPass();
+        $pass = new AddCronJobsPass();
         $pass->process($container);
 
         $crons = $this->getCronsFromDefinition($container);
@@ -132,7 +132,7 @@ class TaggedCronsPassTest extends TestCase
         $container = $this->getContainerBuilder();
         $container->setDefinition('Test\Cron', $definition);
 
-        $pass = new TaggedCronsPass();
+        $pass = new AddCronJobsPass();
         $pass->process($container);
 
         $crons = $this->getCronsFromDefinition($container);
@@ -152,7 +152,7 @@ class TaggedCronsPassTest extends TestCase
         $container = $this->getContainerBuilder();
         $container->setDefinition('Test\Cron', $definition);
 
-        $pass = new TaggedCronsPass();
+        $pass = new AddCronJobsPass();
         $pass->process($container);
 
         $crons = $this->getCronsFromDefinition($container);

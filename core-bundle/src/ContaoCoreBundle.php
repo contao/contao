@@ -26,6 +26,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedCronsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
@@ -87,5 +88,6 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new SearchIndexerPass());
         $container->addCompilerPass(new EscargotSubscriberPass());
         $container->addCompilerPass(new TaggedCronsPass());
+        $container->addCompilerPass(new AddCronJobsPass());
     }
 }
