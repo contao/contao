@@ -92,7 +92,7 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->backupCodesInfo = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesInfo'];
 		$this->Template->backupCodesGenerateLabel = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesGenerateLabel'];
 		$this->Template->backupCodesGenerateInfo = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesGenerateInfo'];
-		$this->Template->backupCodes = json_decode($user->backupCodes, true) ?? array();
+		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 	}
 
 	/**

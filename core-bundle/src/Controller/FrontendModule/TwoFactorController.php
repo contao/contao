@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller\FrontendModule;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
+use Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -66,12 +67,14 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['security.authentication_utils'] = AuthenticationUtils::class;
         $services['security.token_storage'] = TokenStorageInterface::class;
         $services['translator'] = TranslatorInterface::class;
+        $services['contao.security.two_factor.backup_code_manager'] = BackupCodeManager::class;
 
         return $services;
     }
 
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
+        $showBackupCodes = false;
         $token = $this->get('security.token_storage')->getToken();
 
         if (!$token instanceof TokenInterface) {
@@ -117,6 +120,17 @@ class TwoFactorController extends AbstractFrontendModuleController
             }
         }
 
+        if ('tl_two_factor_show_backup_codes' === $request->request->get('FORM_SUBMIT')) {
+            $showBackupCodes = true;
+        }
+
+        if ('tl_two_factor_generate_backup_codes' === $request->request->get('FORM_SUBMIT')) {
+            /** @var BackupCodeManager $backupCodeManager */
+            $backupCodeManager = $this->get('contao.security.two_factor.backup_code_manager');
+            $backupCodeManager->generateBackupCodes($user);
+            $showBackupCodes = true;
+        }
+
         $template->isEnabled = (bool) $user->useTwoFactor;
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
         $template->twoFactor = $translator->trans('MSC.twoFactorAuthentication', [], 'contao_default');
@@ -124,6 +138,15 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->active = $translator->trans('MSC.twoFactorActive', [], 'contao_default');
         $template->enableButton = $translator->trans('MSC.enable', [], 'contao_default');
         $template->disableButton = $translator->trans('MSC.disable', [], 'contao_default');
+        $template->backupCodesLabel = $translator->trans('MSC.twoFactorBackupCodesLabel', [], 'contao_default');
+        $template->showBackupCodesLabel = $translator->trans('MSC.twoFactorShowBackupCodesLabel', [], 'contao_default');
+        $template->backupCodesExplain = $translator->trans('MSC.twoFactorShowBackupCodesExplain', [], 'contao_default');
+        $template->backupCodesTreat = $translator->trans('MSC.twoFactorShowBackupCodesTreat', [], 'contao_default');
+        $template->backupCodesInfo = $translator->trans('MSC.twoFactorShowBackupCodesInfo', [], 'contao_default');
+        $template->backupCodesGenerateLabel = $translator->trans('MSC.twoFactorShowBackupCodesGenerateLabel', [], 'contao_default');
+        $template->backupCodesGenerateInfo = $translator->trans('MSC.twoFactorShowBackupCodesGenerateInfo', [], 'contao_default');
+        $template->showBackupCodes = $showBackupCodes;
+        $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
 
         return new Response($template->parse());
     }
@@ -162,6 +185,12 @@ class TwoFactorController extends AbstractFrontendModuleController
             $user->save();
         }
 
+        if (!$user->backupCodes || !\count(json_decode($user->backupCodes, true))) {
+            /** @var BackupCodeManager $backupCodeManager */
+            $backupCodeManager = $this->get('contao.security.two_factor.backup_code_manager');
+            $backupCodeManager->generateBackupCodes($user);
+        }
+
         $template->enable = true;
         $template->secret = Base32::encodeUpperUnpadded($user->secret);
         $template->textCode = $translator->trans('MSC.twoFactorTextCode', [], 'contao_default');
@@ -180,6 +209,7 @@ class TwoFactorController extends AbstractFrontendModuleController
             return null;
         }
 
+        $user->backupCodes = null;
         $user->secret = null;
         $user->useTwoFactor = '';
         $user->save();

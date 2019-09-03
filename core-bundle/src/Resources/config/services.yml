@@ -23,6 +23,8 @@ services:
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
     Contao\CoreBundle\Security\TwoFactor\Authenticator: '@contao.security.two_factor.authenticator'
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
+    Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager: '@contao.security.two_factor.backup_code_manager'
+
 
     # Backwards compatibility
     Contao\CoreBundle\Framework\ContaoFrameworkInterface: '@contao.framework'
@@ -650,7 +652,6 @@ services:
     contao.security.two_factor.backup_code_manager:
         class: Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager
         public: true
-
 
     contao.security.user_checker:
         class: Contao\CoreBundle\Security\User\UserChecker
