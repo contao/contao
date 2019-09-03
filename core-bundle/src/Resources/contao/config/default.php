@@ -13,8 +13,6 @@ $GLOBALS['TL_CONFIG']['characterSet']   = 'utf-8';
 $GLOBALS['TL_CONFIG']['adminEmail']     = '';
 $GLOBALS['TL_CONFIG']['enableSearch']   = true;
 $GLOBALS['TL_CONFIG']['indexProtected'] = false;
-
-/** @deprecated Deprecated since Contao 4.9, check tl_page.useFolderUrl instead. */
 $GLOBALS['TL_CONFIG']['folderUrl'] = true;
 
 // Date and time
