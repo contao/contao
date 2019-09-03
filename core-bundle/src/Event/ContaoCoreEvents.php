@@ -69,6 +69,15 @@ final class ContaoCoreEvents
     public const PREVIEW_URL_CONVERT = 'contao.preview_url_convert';
 
     /**
+     * The contao.robots_txt event is triggered when the /robots.txt route is called.
+     *
+     * @var string
+     *
+     * @see RobotsTxtEvent
+     */
+    public const ROBOTS_TXT = 'contao.robots_txt';
+
+    /**
      * The contao.slug_valid_characters event is triggered when the valid slug characters options are generated.
      *
      * @var string

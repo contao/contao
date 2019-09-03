@@ -28,6 +28,22 @@ services:
             - { name: container.service_subscriber }
         public: true
 
+    Contao\CoreBundle\Controller\FaviconController:
+        arguments:
+            - '@contao.framework'
+            - '@?fos_http_cache.http.symfony_response_tagger'
+        tags:
+            - controller.service_arguments
+        public: true
+
+    Contao\CoreBundle\Controller\RobotsTxtController:
+        arguments:
+            - '@contao.framework'
+            - '@event_dispatcher'
+        tags:
+            - controller.service_arguments
+        public: true
+
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:

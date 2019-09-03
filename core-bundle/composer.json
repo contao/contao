@@ -87,7 +87,8 @@
         "symfony/yaml": "4.2.* || 4.3.*",
         "terminal42/service-annotation-bundle": "^1.0",
         "true/punycode": "^2.1",
-        "twig/twig": "^2.7"
+        "twig/twig": "^2.7",
+        "webignition/robots-txt-file": "^2.1"
     },
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",

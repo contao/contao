@@ -39,6 +39,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $staticFiles
  * @property string  $staticPlugins
  * @property string  $fallback
+ * @property string  $favicon
+ * @property string  $robotsTxt
  * @property string  $adminEmail
  * @property string  $dateFormat
  * @property string  $timeFormat
@@ -125,6 +127,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByStaticFiles($val, array $opt=array())
  * @method static PageModel|null findOneByStaticPlugins($val, array $opt=array())
  * @method static PageModel|null findOneByFallback($val, array $opt=array())
+ * @method static PageModel|null findOneByFavicon($val, array $opt=array())
+ * @method static PageModel|null findOneByRobotsTxt($val, array $opt=array())
  * @method static PageModel|null findOneByAdminEmail($val, array $opt=array())
  * @method static PageModel|null findOneByDateFormat($val, array $opt=array())
  * @method static PageModel|null findOneByTimeFormat($val, array $opt=array())
@@ -176,6 +180,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByStaticFiles($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByStaticPlugins($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByFallback($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByFavicon($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByRobotsTxt($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByAdminEmail($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDateFormat($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByTimeFormat($val, array $opt=array())
@@ -231,6 +237,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByStaticFiles($val, array $opt=array())
  * @method static integer countByStaticPlugins($val, array $opt=array())
  * @method static integer countByFallback($val, array $opt=array())
+ * @method static integer countByFavicon($val, array $opt=array())
+ * @method static integer countByRobotsTxt($val, array $opt=array())
  * @method static integer countByAdminEmail($val, array $opt=array())
  * @method static integer countByDateFormat($val, array $opt=array())
  * @method static integer countByTimeFormat($val, array $opt=array())
@@ -706,6 +714,11 @@ class PageModel extends Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.dns=? AND $t.fallback='1'");
 
+		if (isset($arrOptions['fallbackToEmpty']) && $arrOptions['fallbackToEmpty'] === true)
+		{
+			$arrColumns = array("($t.dns=? OR $t.dns='') AND $t.fallback='1'");
+		}
+
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
@@ -725,7 +738,12 @@ class PageModel extends Model
 	public static function findPublishedRootPages(array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = array("$t.type=?");
+		$arrColumns = array("$t.type='root'");
+
+		if (isset($arrOptions['dns']))
+		{
+			$arrColumns = array("$t.type='root' AND $t.dns=?");
+		}
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -733,7 +751,7 @@ class PageModel extends Model
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
-		return static::findBy($arrColumns, 'root', $arrOptions);
+		return static::findBy($arrColumns, $arrOptions['dns'] ?? null, $arrOptions);
 	}
 
 	/**

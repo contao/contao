@@ -110,10 +110,6 @@ class InstallWebDirCommand extends Command
         $finder = Finder::create()->files()->in(__DIR__.'/../Resources/skeleton/web');
 
         foreach ($finder as $file) {
-            if ($this->isExistingOptionalFile($file, $webDir)) {
-                continue;
-            }
-
             $this->fs->copy($file->getPathname(), $webDir.'/'.$file->getRelativePathname(), true);
             $this->io->writeln(sprintf('Added the <comment>web/%s</comment> file.', $file->getFilename()));
         }
@@ -133,15 +129,5 @@ class InstallWebDirCommand extends Command
             $this->fs->remove($webDir.'/install.php');
             $this->io->writeln('Deleted the <comment>web/install.php</comment> file.');
         }
-    }
-
-    /**
-     * Checks if an optional file exists.
-     */
-    private function isExistingOptionalFile(SplFileInfo $file, string $webDir): bool
-    {
-        $path = $file->getRelativePathname();
-
-        return 'robots.txt' === $path && $this->fs->exists($webDir.'/'.$path);
     }
 }
