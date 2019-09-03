@@ -50,9 +50,10 @@ class RobotsTxtController
     {
         $this->contaoFramework->initialize();
 
-        $rootPage = $this->contaoFramework->getAdapter(PageModel::class)
-            ->findPublishedFallbackByHostname($request->server->get('HTTP_HOST'), [], true)
-        ;
+        /** @var PageModel $pageModel */
+        $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
+        /** @var PageModel|null $rootPage */
+        $rootPage = $pageModel->findPublishedFallbackByHostname($request->server->get('HTTP_HOST'), [], true);
 
         if (null === $rootPage) {
             return new Response('', Response::HTTP_NOT_FOUND);
@@ -62,7 +63,7 @@ class RobotsTxtController
         $parser->setSource($rootPage->robotsTxt);
         $file = $parser->getFile();
 
-        $this->eventDispatcher->dispatch(new RobotsTxtEvent($file, $request, $rootPage), ContaoCoreEvents::ROBOTS_TXT);
+        $this->eventDispatcher->dispatch(ContaoCoreEvents::ROBOTS_TXT, new RobotsTxtEvent($file, $request, $rootPage));
 
         return new Response((string) $file, 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
     }

@@ -41,9 +41,9 @@ class RobotsTxtListener
         }
 
         // Find all matching root pages
-        $rootPages = $this->contaoFramework->getAdapter(PageModel::class)
-            ->findPublishedByHostname($event->getRootPage()->dns)
-        ;
+        /** @var PageModel $pageModel */
+        $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
+        $rootPages = $pageModel->findPublishedByHostname($event->getRootPage()->dns);
 
         // Generate the sitemaps
         foreach ($rootPages as $rootPage) {

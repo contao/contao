@@ -39,6 +39,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $staticFiles
  * @property string  $staticPlugins
  * @property string  $fallback
+ * @property string  $robotsTxt
+ * @property string  $favicon
  * @property string  $adminEmail
  * @property string  $dateFormat
  * @property string  $timeFormat

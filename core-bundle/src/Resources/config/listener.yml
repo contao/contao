@@ -16,8 +16,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
-    contao.listener.robots_txt:
-        class: Contao\CoreBundle\EventListener\RobotsTxtListener
+    Contao\CoreBundle\EventListener\RobotsTxtListener:
         arguments:
             - '@contao.framework'
         tags:

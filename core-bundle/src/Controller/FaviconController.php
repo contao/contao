@@ -49,15 +49,18 @@ class FaviconController
     {
         $this->contaoFramework->initialize();
 
-        $rootPage = $this->contaoFramework->getAdapter(PageModel::class)
-            ->findPublishedFallbackByHostname($request->server->get('HTTP_HOST'), [], true)
-        ;
+        /** @var PageModel $pageModel */
+        $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
+        /** @var PageModel|null $rootPage */
+        $rootPage = $pageModel->findPublishedFallbackByHostname($request->server->get('HTTP_HOST'), [], true);
 
         if (null === $rootPage || null === ($favicon = $rootPage->favicon)) {
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        $faviconModel = $this->contaoFramework->getAdapter(FilesModel::class)->findByUuid($favicon);
+        /** @var FilesModel $filesModel */
+        $filesModel = $this->contaoFramework->getAdapter(FilesModel::class);
+        $faviconModel = $filesModel->findByUuid($favicon);
 
         if (null === $faviconModel) {
             return new Response('', Response::HTTP_NOT_FOUND);
