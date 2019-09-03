@@ -146,8 +146,8 @@ services:
     Contao\CoreBundle\Cron\Cron:
         arguments:
             - '@database_connection'
-            - '@logger'
             - '%kernel.debug%'
+            - '@?logger'
         public: true
 
     Contao\CoreBundle\Cron\LegacyCron:

@@ -44,11 +44,11 @@ class Cron
      */
     protected $crons = [];
 
-    public function __construct(Connection $db, LoggerInterface $logger, bool $debug)
+    public function __construct(Connection $db, bool $debug, LoggerInterface $logger = null)
     {
         $this->db = $db;
-        $this->logger = $logger;
         $this->debug = $debug;
+        $this->logger = $logger;
     }
 
     /**
@@ -116,7 +116,7 @@ class Cron
             $this->db->update('tl_cron', ['value' => $currentTimestamp], ['name' => $interval]);
 
             // Add a log entry if in debug mode (see #4729)
-            if ($this->debug) {
+            if ($this->debug && null !== $this->logger) {
                 $this->logger->log(LogLevel::INFO, 'Running the '.$interval.' cron jobs', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
             }
 
@@ -135,7 +135,7 @@ class Cron
             }
 
             // Add a log entry if in debug mode (see #4729)
-            if ($this->debug) {
+            if ($this->debug && null !== $this->logger) {
                 $this->logger->log(LogLevel::INFO, ucfirst($interval).' cron jobs complete', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
             }
         }
@@ -144,7 +144,7 @@ class Cron
     /**
      * Check whether the last cron execution was less than a minute ago.
      */
-    protected function hasToWait(int $cronTimeout = 60): bool
+    private function hasToWait(int $cronTimeout = 60): bool
     {
         $return = true;
 
