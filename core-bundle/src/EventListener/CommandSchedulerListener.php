@@ -45,12 +45,12 @@ class CommandSchedulerListener
      */
     private $cron;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, string $fragmentPath = '_fragment', Cron $cron)
+    public function __construct(ContaoFramework $framework, Connection $connection, Cron $cron, string $fragmentPath = '_fragment')
     {
         $this->framework = $framework;
         $this->connection = $connection;
-        $this->fragmentPath = $fragmentPath;
         $this->cron = $cron;
+        $this->fragmentPath = $fragmentPath;
     }
 
     /**
