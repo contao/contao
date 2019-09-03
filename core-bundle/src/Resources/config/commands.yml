@@ -10,6 +10,9 @@ services:
     Contao\CoreBundle\Command\MigrateCommand:
         arguments:
             - '@Contao\CoreBundle\Migration\Migrations'
+            - '@contao.resource_locator'
+            - '%kernel.project_dir%'
+            - '@?contao.installer'
 
     contao.command.automator:
         class: Contao\CoreBundle\Command\AutomatorCommand
