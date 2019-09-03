@@ -23,9 +23,9 @@
           <label for="verify"><?= $this->authCode ?></label>
           <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="off" required>
         </div>
-        <?php if ($this->trustdevice): ?>
+        <?php if ($this->trustedDevice): ?>
           <div class="widget widget-checkbox">
-            <label for="trusted"><?= $this->trustDeviceLabel ?></label>
+            <label for="trusted"><?= $this->trustDevice ?></label>
             <input type="checkbox" name="trusted" id="trusted" class="tl_checkbox" value="1">
           </div>
         <?php endif; ?>
