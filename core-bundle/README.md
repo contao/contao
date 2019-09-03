@@ -145,6 +145,8 @@ security:
                 success_handler: contao.security.authentication_success_handler
                 failure_handler: contao.security.authentication_failure_handler
                 auth_code_parameter_name: verify
+                prepare_on_login: true
+                prepare_on_access_denied: true
 
             remember_me:
                 secret: '%secret%'
