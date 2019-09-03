@@ -35,6 +35,9 @@
       <trans-unit id="MSC.newsPicker">
         <source>News</source>
       </trans-unit>
+      <trans-unit id="MSC.newsContentPicker">
+        <source>News</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

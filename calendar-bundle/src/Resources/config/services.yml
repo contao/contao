@@ -13,3 +13,14 @@ services:
             - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 96 }
+
+    contao_calendar.picker.event_content_provider:
+        class: Contao\CalendarBundle\Picker\EventContentPickerProvider
+        arguments:
+            - '@knp_menu.factory'
+            - '@router'
+            - '@?translator'
+            - '@security.helper'
+            - '@database_connection'
+        tags:
+            - { name: contao.picker_provider, priority: 96 }

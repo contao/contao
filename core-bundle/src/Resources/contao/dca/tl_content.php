@@ -730,14 +730,15 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'cteAlias' => array
 		(
 			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getAlias'),
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
-			'wizard' => array
+			'inputType'               => 'picker',
+			'foreignKey'              => 'tl_content.type',
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr', 'context'=>'content', 'fieldType'=>'radio', 'table'=>'tl_article'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy'),
+			'save_callback' => array
 			(
-				array('tl_content', 'editAlias')
-			),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+				array('tl_content', 'saveAlias'),
+			)
 		),
 		'articleAlias' => array
 		(
@@ -1308,9 +1309,13 @@ class tl_content extends Contao\Backend
 	 * @param Contao\DataContainer $dc
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
 	 */
 	public function editAlias(Contao\DataContainer $dc)
 	{
+		@trigger_error('Using tl_content::editAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		if ($dc->value < 1)
 		{
 			return '';
@@ -1325,9 +1330,13 @@ class tl_content extends Contao\Backend
 	 * Get all content elements and return them as array (content element alias)
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
 	 */
 	public function getAlias()
 	{
+		@trigger_error('Using tl_content::getAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		$arrPids = array();
 		$arrAlias = array();
 
@@ -1387,6 +1396,24 @@ class tl_content extends Contao\Backend
 		}
 
 		return $arrAlias;
+	}
+
+	/**
+	 * Saves the article alias
+	 *
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
+	 *
+	 * @return mixed
+	 */
+	public function saveAlias($varValue, DataContainer $dc)
+	{
+		if ($dc->activeRecord && $dc->activeRecord->id == $varValue)
+		{
+			throw new \RuntimeException($GLOBALS['TL_LANG']['ERR']['circularPicker']);
+		}
+
+		return $varValue;
 	}
 
 	/**

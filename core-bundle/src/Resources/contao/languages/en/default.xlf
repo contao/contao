@@ -1391,6 +1391,9 @@
       <trans-unit id="MSC.articlePicker">
         <source>Articles</source>
       </trans-unit>
+      <trans-unit id="MSC.articleContentPicker">
+        <source>Articles</source>
+      </trans-unit>
       <trans-unit id="MSC.fileManager">
         <source>File manager</source>
       </trans-unit>

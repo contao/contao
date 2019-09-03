@@ -356,6 +356,17 @@ services:
         tags:
             - { name: contao.picker_provider, priority: 192 }
 
+    contao.picker.article_content_provider:
+        class: Contao\CoreBundle\Picker\ArticleContentPickerProvider
+        arguments:
+            - '@knp_menu.factory'
+            - '@router'
+            - '@?translator'
+            - '@security.helper'
+            - '@database_connection'
+        tags:
+            - { name: contao.picker_provider, priority: 192 }
+
     contao.repository.remember_me:
         class: Contao\CoreBundle\Repository\RememberMeRepository
         arguments:

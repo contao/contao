@@ -65,6 +65,9 @@
       <trans-unit id="MSC.eventPicker">
         <source>Events</source>
       </trans-unit>
+      <trans-unit id="MSC.eventContentPicker">
+        <source>Events</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
