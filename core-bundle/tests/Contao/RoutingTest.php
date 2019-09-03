@@ -643,7 +643,11 @@ class RoutingTest extends ContaoTestCase
     {
         if (null === $pageAdapter) {
             $pageAdapter = $this->mockAdapter(['findByAliases']);
-            $pageAdapter->expects($this->once())->method('findByAliases')->willReturn(null);
+            $pageAdapter
+                ->expects($this->once())
+                ->method('findByAliases')
+                ->willReturn(null)
+            ;
         }
 
         return $this->mockContaoFramework([PageModel::class => $pageAdapter]);
