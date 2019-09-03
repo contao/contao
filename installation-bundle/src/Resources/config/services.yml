@@ -1,4 +1,11 @@
 services:
+
+    Contao\InstallationBundle\Database\:
+        autoconfigure: true
+        resource: '../../Database/Version*'
+        arguments:
+            - '@database_connection'
+
     contao.install_tool:
         class: Contao\InstallationBundle\InstallTool
         arguments:

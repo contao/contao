@@ -12,15 +12,33 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\CoreBundle\Migration\AbstractMigration;
+use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Contao\StringUtil;
+use Doctrine\DBAL\Connection;
 
-class Version480Update extends AbstractVersionUpdate
+class Version480Update extends AbstractMigration
 {
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    public function getName(): string
+    {
+        return 'Contao 4.8.0 Update';
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function shouldBeRun(): bool
+    public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -36,7 +54,7 @@ class Version480Update extends AbstractVersionUpdate
     /**
      * {@inheritdoc}
      */
-    public function run(): void
+    public function run(): MigrationResult
     {
         $this->connection->query('
             ALTER TABLE
@@ -234,5 +252,7 @@ class Version480Update extends AbstractVersionUpdate
         // cookies out there, we can simply drop the old table here and let the
         // install tool create the new one
         $this->connection->query('DROP TABLE tl_remember_me');
+
+        return $this->createResult();
     }
 }

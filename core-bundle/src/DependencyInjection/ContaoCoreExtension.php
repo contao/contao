@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Picker\PickerProviderInterface;
+use Contao\CoreBundle\Migration\MigrationInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
@@ -92,6 +93,11 @@ class ContaoCoreExtension extends Extension
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
             ->addTag('contao.picker_provider')
+        ;
+
+        $container
+            ->registerForAutoconfiguration(MigrationInterface::class)
+            ->addTag('contao.migration')
         ;
     }
 

@@ -12,14 +12,32 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\CoreBundle\Migration\AbstractMigration;
+use Contao\CoreBundle\Migration\MigrationResult;
+use Doctrine\DBAL\Connection;
 use Contao\StringUtil;
 
-class Version460Update extends AbstractVersionUpdate
+class Version460Update  extends AbstractMigration
 {
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    public function getName(): string
+    {
+        return 'Contao 4.6.0 Update';
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function shouldBeRun(): bool
+    public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -35,7 +53,7 @@ class Version460Update extends AbstractVersionUpdate
     /**
      * {@inheritdoc}
      */
-    public function run(): void
+    public function run(): MigrationResult
     {
         // Convert 403 pages to 401 pages so the login redirect does not break
         $this->connection->query("
@@ -185,5 +203,7 @@ class Version460Update extends AbstractVersionUpdate
         ');
 
         $this->connection->query('UPDATE tl_content SET playerStop = youtubeStop');
+
+        $this->createResult();
     }
 }

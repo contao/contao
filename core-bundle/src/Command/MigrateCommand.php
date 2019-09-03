@@ -68,6 +68,7 @@ class MigrateCommand extends Command
         $this
             ->setName('contao:migrate')
             ->addOption('complete', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
+            ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Execute database schema migration only.')
             ->setDescription('Executes migrations and the database schema diff.')
         ;
     }
@@ -78,6 +79,10 @@ class MigrateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
+
+        if ($input->getOption('schema-only')) {
+            return $this->executeSchemaDiff($input->getOption('complete')) ? 0 : 1;
+        }
 
         if (!$this->executeMigrations()) {
             return 1;
@@ -124,11 +129,11 @@ class MigrateCommand extends Command
                 break;
             }
 
-            $this->io->section('Execute migrations');
-
             if (!$this->io->confirm('Execute the listed migrations?')) {
                 return false;
             }
+
+            $this->io->section('Execute migrations');
 
             foreach ($this->migrations->runMigrations() as $result) {
                 $this->io->writeln(' * '.$result->getMessage());

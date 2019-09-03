@@ -14,12 +14,31 @@ namespace Contao\InstallationBundle\Database;
 
 use Contao\StringUtil;
 
-class Version330Update extends AbstractVersionUpdate
+use Contao\CoreBundle\Migration\AbstractMigration;
+use Contao\CoreBundle\Migration\MigrationResult;
+use Doctrine\DBAL\Connection;
+
+class Version330Update extends AbstractMigration
 {
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    public function getName(): string
+    {
+        return 'Contao 3.3.0 Update';
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function shouldBeRun(): bool
+    public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -35,7 +54,7 @@ class Version330Update extends AbstractVersionUpdate
     /**
      * {@inheritdoc}
      */
-    public function run(): void
+    public function run(): MigrationResult
     {
         $statement = $this->connection->query("
             SELECT
@@ -77,5 +96,7 @@ class Version330Update extends AbstractVersionUpdate
             ADD
                 viewport varchar(255) NOT NULL default ''
         ");
+
+        return $this->createResult();
     }
 }
