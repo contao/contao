@@ -23,10 +23,12 @@
           <label for="verify"><?= $this->authCode ?></label>
           <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="off" required>
         </div>
-        <div class="widget widget-checkbox">
-          <label for="trusted"><?= $this->trustDevice ?></label>
-          <input type="checkbox" name="trusted" id="trusted" class="tl_checkbox" value="1">
-        </div>
+        <?php if ($this->trustdevice): ?>
+          <div class="widget widget-checkbox">
+            <label for="trusted"><?= $this->trustDeviceLabel ?></label>
+            <input type="checkbox" name="trusted" id="trusted" class="tl_checkbox" value="1">
+          </div>
+        <?php endif; ?>
       <?php else: ?>
         <div class="widget widget-text">
           <label for="username"><?= $this->username ?></label>

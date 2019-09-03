@@ -92,6 +92,12 @@
       <trans-unit id="tl_module.autologin.1">
         <source>Allow members to log into the front end automatically.</source>
       </trans-unit>
+      <trans-unit id="tl_module.trustdevice.0">
+        <source>Allow trust device</source>
+      </trans-unit>
+      <trans-unit id="tl_module.trustdevice.1">
+        <source>Allow members to trust devices for two factor authentication.</source>
+      </trans-unit>
       <trans-unit id="tl_module.jumpTo.0">
         <source>Redirect page</source>
       </trans-unit>
