@@ -1920,25 +1920,25 @@
         <source>If you cannot scan the QR code, enter this key instead:</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesLabel">
-        <source>Two-factor recovery codes</source>
+        <source>Two-factor backup codes</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorShowBackupCodesLabel">
-        <source>Show recovery codes</source>
+        <source>Show backup codes</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorShowBackupCodesExplain">
-        <source>Recovery codes can be used to access your account in the event you lose access to your device and cannot receive two-factor authentication codes.</source>
+        <source>Backup codes can be used to access your account in the event you lose access to your device and cannot receive two-factor authentication codes.</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorShowBackupCodesTreat">
-        <source>Treat your recovery codes with the same level of attention as you would your password! We recommend saving them with a password manager such as Lastpass, 1Password, or Keeper.</source>
+        <source>Treat your backup codes with the same level of attention as you would your password! We recommend saving them with a password manager such as Lastpass, 1Password, or Keeper.</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorShowBackupCodesInfo">
-        <source>Put these in a safe spot. If you lose your device and don’t have the recovery codes you will lose access to your account.</source>
+        <source>Put these in a safe spot. If you lose your device and don’t have the backup codes you will lose access to your account.</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorShowBackupCodesGenerateLabel">
-        <source>Generate new recovery codes</source>
+        <source>Generate new backup codes</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorShowBackupCodesGenerateInfo">
-        <source>When you generate new recovery codes, you must download or print the new codes. Your old codes won’t work anymore.</source>
+        <source>When you generate new backup codes, you must download or print the new codes. Your old codes won’t work anymore.</source>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
