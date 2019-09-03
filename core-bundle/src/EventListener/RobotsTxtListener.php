@@ -78,8 +78,6 @@ class RobotsTxtListener
     private function addContaoDisallowDirectivesToRecord(Record $record): void
     {
         $directiveList = $record->getDirectiveList();
-        $directiveList->add(new Directive('Disallow', '/contao$'));
-        $directiveList->add(new Directive('Disallow', '/contao?'));
         $directiveList->add(new Directive('Disallow', '/contao/'));
     }
 }
