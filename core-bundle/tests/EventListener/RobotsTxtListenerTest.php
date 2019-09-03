@@ -39,10 +39,10 @@ class RobotsTxtListenerTest extends TestCase
         $otherRootPage->sitemapName = 'sitemap-name';
         $otherRootPage->useSSL = '1';
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedByHostname']);
+        $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
         $pageModelAdapter
             ->expects($this->once())
-            ->method('findPublishedByHostname')
+            ->method('findPublishedRootPages')
             ->willReturn([$rootPage, $otherRootPage])
         ;
 

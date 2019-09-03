@@ -54,7 +54,7 @@ class RobotsTxtController
         $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
 
         /** @var PageModel|null $rootPage */
-        $rootPage = $pageModel->findPublishedFallbackByHostname($request->server->get('HTTP_HOST'), [], true);
+        $rootPage = $pageModel->findPublishedFallbackByHostname($request->server->get('HTTP_HOST'), ['fallbackToEmpty' => true]);
 
         if (null === $rootPage) {
             return new Response('', Response::HTTP_NOT_FOUND);

@@ -693,13 +693,12 @@ class PageModel extends Model
 	/**
 	 * Find the language fallback page by hostname
 	 *
-	 * @param string  $strHost            The hostname
-	 * @param array   $arrOptions         An optional options array
-	 * @param boolean $blnFallBackToEmpty If true, also allow empty dns
+	 * @param string $strHost    The hostname
+	 * @param array  $arrOptions An optional options array
 	 *
 	 * @return PageModel|Model|null The model or null if there is not fallback page
 	 */
-	public static function findPublishedFallbackByHostname($strHost, array $arrOptions=array(), $blnFallBackToEmpty = false)
+	public static function findPublishedFallbackByHostname($strHost, array $arrOptions=array())
 	{
 		// Try to load from the registry (see #8544)
 		if (empty($arrOptions))
@@ -713,7 +712,12 @@ class PageModel extends Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array($blnFallBackToEmpty ? "($t.dns=? OR $t.dns='') AND $t.fallback='1'" : "$t.dns=? AND $t.fallback='1'");
+		$arrColumns = array("$t.dns=? AND $t.fallback='1'");
+
+		if (isset($arrOptions['fallbackToEmpty']) && $arrOptions['fallbackToEmpty'] === true)
+		{
+			$arrColumns = array("($t.dns=? OR $t.dns='') AND $t.fallback='1'");
+		}
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -722,28 +726,6 @@ class PageModel extends Model
 		}
 
 		return static::findOneBy($arrColumns, $strHost, $arrOptions);
-	}
-
-	/**
-	 * Finds published root pages by hostname
-	 *
-	 * @param array $arrOptions An optional options array
-	 *
-	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
-	 */
-	public static function findPublishedRootPagesByHostname($strHost, array $arrOptions=array())
-	{
-		$t = static::$strTable;
-
-		$arrColumns = array("$t.type='root' AND $t.dns=?");
-
-		if (!static::isPreviewMode($arrOptions))
-		{
-			$time = Date::floorToMinute();
-			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
-		}
-
-		return static::findBy($arrColumns, $strHost, $arrOptions);
 	}
 
 	/**
@@ -756,7 +738,12 @@ class PageModel extends Model
 	public static function findPublishedRootPages(array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = array("$t.type=?");
+		$arrColumns = array("$t.type='root'");
+
+		if (isset($arrOptions['dns']))
+		{
+			$arrColumns = array("$t.type='root' AND $t.dns=?");
+		}
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -764,7 +751,7 @@ class PageModel extends Model
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
-		return static::findBy($arrColumns, 'root', $arrOptions);
+		return static::findBy($arrColumns, $arrOptions['dns'] ?? null, $arrOptions);
 	}
 
 	/**
