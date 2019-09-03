@@ -17,6 +17,9 @@ use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\FrontendUser;
 use Contao\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Http\Client\Exception;
+use Http\Client\HttpClient;
+use Http\Message\MessageFactory;
 use Scheb\TwoFactorBundle\Model\TrustedDeviceInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
@@ -42,11 +45,23 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
      */
     private $entityManager;
 
-    public function __construct(RequestStack $requestStack, TrustedDeviceTokenStorage $trustedTokenStorage, EntityManagerInterface $entityManager)
+    /**
+     * @var MessageFactory
+     */
+    private $messageFactory;
+
+    /**
+     * @var HttpClient
+     */
+    private $httpClient;
+
+    public function __construct(RequestStack $requestStack, TrustedDeviceTokenStorage $trustedTokenStorage, EntityManagerInterface $entityManager, MessageFactory $messageFactory, HttpClient $httpClient)
     {
         $this->requestStack = $requestStack;
         $this->trustedTokenStorage = $trustedTokenStorage;
         $this->entityManager = $entityManager;
+        $this->messageFactory = $messageFactory;
+        $this->httpClient = $httpClient;
     }
 
     public function addTrustedDevice($user, string $firewallName): void
@@ -62,7 +77,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $parser = Parser::create();
         $parsedUserAgent = $parser->parse($userAgent);
 
-        $geolocation = json_decode(file_get_contents('https://ipinfo.io/geo'), true);
+        $geolocation = $this->getGeoLocation();
         $country = null;
 
         if (\array_key_exists('country', $geolocation)) {
@@ -114,5 +129,26 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         }
 
         return self::DEFAULT_TOKEN_VERSION;
+    }
+
+    private function getGeoLocation(): array
+    {
+        $geolocation = [];
+
+        try {
+            $response = $this->httpClient->sendRequest(
+                $this->messageFactory->createRequest('GET', 'https://ipinfo.io/geo')
+            );
+        } catch (Exception $exception) {
+            return $geolocation;
+        } catch (\Exception $exception) {
+            return $geolocation;
+        }
+
+        if (200 === $response->getStatusCode()) {
+            $geolocation = json_decode($response->getBody()->getContents(), true);
+        }
+
+        return $geolocation;
     }
 }
