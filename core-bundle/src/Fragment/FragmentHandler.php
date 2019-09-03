@@ -19,6 +19,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler as BaseFragmentHandler;
+use Symfony\Component\HttpKernel\HttpCache\ResponseCacheStrategy;
 
 class FragmentHandler extends BaseFragmentHandler
 {
@@ -47,6 +48,17 @@ class FragmentHandler extends BaseFragmentHandler
      */
     private $initialized = [];
 
+    /**
+     * @var ResponseCacheStrategy[]
+     */
+    private $strategyStack = [];
+
+    /**
+     * @var ResponseCacheStrategy|null
+     */
+    private $currentStrategy;
+
+
     public function __construct(ContainerInterface $renderers, BaseFragmentHandler $fragmentHandler, RequestStack $requestStack, FragmentRegistryInterface $fragmentRegistry, ContainerInterface $preHandlers, bool $debug = false)
     {
         $this->renderers = $renderers;
@@ -55,6 +67,25 @@ class FragmentHandler extends BaseFragmentHandler
         $this->preHandlers = $preHandlers;
 
         parent::__construct($requestStack, [], $debug);
+    }
+
+    public function pushStrategy(ResponseCacheStrategy $strategy): void
+    {
+        if ($this->currentStrategy) {
+            $this->strategyStack[] = $this->currentStrategy;
+        }
+
+        $this->currentStrategy = $strategy;
+    }
+
+    public function popStrategy(): void
+    {
+        if (0 === \count($this->strategyStack)) {
+            $this->currentStrategy = null;
+            return;
+        }
+
+        $this->currentStrategy = array_pop($this->strategyStack);
     }
 
     /**
@@ -89,6 +120,10 @@ class FragmentHandler extends BaseFragmentHandler
      */
     protected function deliver(Response $response): ?string
     {
+        if ($this->currentStrategy && $response->headers->has('Cache-Control')) {
+            $this->currentStrategy->add($response);
+        }
+
         try {
             return parent::deliver($response);
         } catch (\RuntimeException $e) {

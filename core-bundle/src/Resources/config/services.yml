@@ -141,6 +141,7 @@ services:
             - '@contao.fragment.registry'
             - '@contao.fragment.pre_handlers'
             - '%kernel.debug%'
+        public: true
 
     contao.fragment.pre_handlers:
         class: Symfony\Component\DependencyInjection\ServiceLocator
@@ -161,7 +162,6 @@ services:
             - ['setFragmentPath', ['%fragment.path%']]
         tags:
             - { name: 'kernel.fragment_renderer', alias: 'forward' }
-        public: true
 
     contao.framework:
         class: Contao\CoreBundle\Framework\ContaoFramework

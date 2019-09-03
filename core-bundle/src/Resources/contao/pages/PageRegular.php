@@ -48,15 +48,15 @@ class PageRegular extends Frontend
 	public function getResponse($objPage, $blnCheckRequest=false)
 	{
 		$objResponseStrategy = new ResponseCacheStrategy();
-		$objFragmentRenderer = System::getContainer()->get('contao.fragment.renderer.forward');
-		$objFragmentRenderer->pushStrategy($objResponseStrategy);
+		$objFragmentHandler = System::getContainer()->get('contao.fragment.handler');
+		$objFragmentHandler->pushStrategy($objResponseStrategy);
 
 		$this->prepare($objPage);
 
 		$objResponse = $this->Template->getResponse($blnCheckRequest);
 
 		$objResponseStrategy->update($objResponse);
-		$objFragmentRenderer->popStrategy();
+		$objFragmentHandler->popStrategy();
 
 		return $objResponse;
 	}
