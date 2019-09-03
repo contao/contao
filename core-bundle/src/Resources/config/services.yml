@@ -38,7 +38,7 @@ services:
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
-            - '@fos_http_cache.http.symfony_response_tagger'
+            - '@?fos_http_cache.http.symfony_response_tagger'
         public: true
         tags: [ controller.service_arguments ]
 

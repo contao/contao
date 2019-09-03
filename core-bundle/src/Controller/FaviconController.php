@@ -32,11 +32,11 @@ class FaviconController
     private $contaoFramework;
 
     /**
-     * @var ResponseTagger
+     * @var ResponseTagger|null
      */
     private $responseTagger;
 
-    public function __construct(ContaoFramework $contaoFramework, ResponseTagger $responseTagger)
+    public function __construct(ContaoFramework $contaoFramework, ResponseTagger $responseTagger = null)
     {
         $this->contaoFramework = $contaoFramework;
         $this->responseTagger = $responseTagger;
@@ -67,7 +67,9 @@ class FaviconController
         $response = new BinaryFileResponse($faviconModel->path);
         $response->setSharedMaxAge(31556952);
 
-        $this->responseTagger->addTags(['contao.db.tl_page.'.$rootPage->id]);
+        if (null !== $this->responseTagger) {
+            $this->responseTagger->addTags(['contao.db.tl_page.'.$rootPage->id]);
+        }
 
         return $response;
     }
