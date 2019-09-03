@@ -16,6 +16,13 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
 
+    contao.listener.robots_txt:
+        class: Contao\CoreBundle\EventListener\RobotsTxtListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: kernel.event_listener, event: contao.robots_txt, method: onRobotsTxt }
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:

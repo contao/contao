@@ -100,7 +100,8 @@
         "terminal42/service-annotation-bundle": "^1.0",
         "toflar/psr6-symfony-http-cache-store": "^2.0",
         "true/punycode": "^2.1",
-        "twig/twig": "^2.7"
+        "twig/twig": "^2.7",
+        "webignition/robots-txt-file": "^2.1"
     },
     "replace": {
         "contao/calendar-bundle": "self.version",
