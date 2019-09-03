@@ -104,7 +104,6 @@ class MigrateCommand extends Command
     private function executeMigrations(): bool
     {
         while (true) {
-
             $first = true;
 
             foreach ($this->migrations->getPendingMigrations() as $migration) {
@@ -158,7 +157,7 @@ class MigrateCommand extends Command
             return [];
         }
 
-        return array_map(function($path) {
+        return array_map(function ($path) {
             return rtrim((new Filesystem())->makePathRelative($path, $this->projectDir), '/');
         }, $files);
     }
@@ -193,7 +192,7 @@ class MigrateCommand extends Command
                     array_keys(
                         array_merge(...array_values($commands))
                     ),
-                    function ($hash) use ($commandsByHash) {
+                    static function ($hash) use ($commandsByHash) {
                         return !isset($commandsByHash[$hash]);
                     }
                 )
@@ -227,10 +226,10 @@ class MigrateCommand extends Command
 
             $count = 0;
 
-            foreach ($this->getCommandHashes($commands, $answer === 'complete') as $hash) {
+            foreach ($this->getCommandHashes($commands, 'complete' === $answer) as $hash) {
                 $this->io->writeln(' * '.$commandsByHash[$hash]);
                 $this->installer->execCommand($hash);
-                $count++;
+                ++$count;
             }
 
             $this->io->success('Executed '.$count.' SQL queries.');
@@ -246,7 +245,7 @@ class MigrateCommand extends Command
 
             foreach ($commands as $category => $commandsByHash) {
                 foreach ($commandsByHash as $hash => $command) {
-                    if ($category === 'DROP' && strpos($command, 'DROP INDEX') === false) {
+                    if ('DROP' === $category && false === strpos($command, 'DROP INDEX')) {
                         unset($commands[$category][$hash]);
                     }
                 }

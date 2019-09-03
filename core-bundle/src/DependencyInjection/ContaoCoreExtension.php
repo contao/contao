@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
-use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Migration\MigrationInterface;
+use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;

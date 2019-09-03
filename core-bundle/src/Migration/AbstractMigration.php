@@ -22,7 +22,7 @@ abstract class AbstractMigration implements MigrationInterface
     public function createResult(bool $successful = true, string $message = null): MigrationResult
     {
         if (null === $message) {
-            $message = $this->getName() . ' ' . (
+            $message = $this->getName().' '.(
                 $successful
                     ? 'executed successfully'
                     : 'execution failed'

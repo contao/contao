@@ -12,10 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
-use Contao\StringUtil;
-
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 
 class Version330Update extends AbstractMigration

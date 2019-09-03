@@ -24,9 +24,6 @@ class MigrationResult
      */
     private $message;
 
-    /**
-     * @param MigrationInterface[] $migrations
-     */
     public function __construct(bool $successful = true, string $message = '')
     {
         $this->successful = $successful;

@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Migration;
 interface MigrationInterface
 {
     public function getName(): string;
+
     public function shouldRun(): bool;
+
     public function run(): MigrationResult;
 }

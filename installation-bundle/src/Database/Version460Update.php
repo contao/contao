@@ -14,10 +14,10 @@ namespace Contao\InstallationBundle\Database;
 
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
-use Doctrine\DBAL\Connection;
 use Contao\StringUtil;
+use Doctrine\DBAL\Connection;
 
-class Version460Update  extends AbstractMigration
+class Version460Update extends AbstractMigration
 {
     /**
      * @var Connection
