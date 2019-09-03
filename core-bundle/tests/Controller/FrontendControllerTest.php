@@ -117,6 +117,7 @@ class FrontendControllerTest extends TestCase
             $this->createMock(CsrfTokenManagerInterface::class),
             'csrf_token'
         );
+
         $response = $controller->checkCookiesAction();
 
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));
@@ -147,6 +148,7 @@ class FrontendControllerTest extends TestCase
             $tokenManager,
             'csrf_token'
         );
+
         $response = $controller->requestTokenScriptAction();
 
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));

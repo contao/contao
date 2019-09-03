@@ -20,7 +20,6 @@ use Contao\FrontendIndex;
 use Contao\FrontendShare;
 use Contao\PageError401;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,7 +34,7 @@ class FrontendController
     /**
      * @var ContaoFramework
      */
-    private $contaoFramework;
+    private $framework;
 
     /**
      * @var CsrfTokenManagerInterface
@@ -47,16 +46,16 @@ class FrontendController
      */
     private $tokenName;
 
-    public function __construct(ContaoFramework $contaoFramework, CsrfTokenManagerInterface $tokenManager, string $tokenName)
+    public function __construct(ContaoFramework $framework, CsrfTokenManagerInterface $tokenManager, string $tokenName)
     {
-        $this->contaoFramework = $contaoFramework;
+        $this->framework = $framework;
         $this->tokenManager = $tokenManager;
         $this->tokenName = $tokenName;
     }
 
     public function indexAction(): Response
     {
-        $this->contaoFramework->initialize();
+        $this->framework->initialize();
 
         $controller = new FrontendIndex();
 
@@ -68,7 +67,7 @@ class FrontendController
      */
     public function cronAction(): Response
     {
-        $this->contaoFramework->initialize();
+        $this->framework->initialize();
 
         $controller = new FrontendCron();
 
@@ -80,7 +79,7 @@ class FrontendController
      */
     public function shareAction(): RedirectResponse
     {
-        $this->contaoFramework->initialize();
+        $this->framework->initialize();
 
         $controller = new FrontendShare();
 
@@ -96,7 +95,7 @@ class FrontendController
      */
     public function loginAction(): Response
     {
-        $this->contaoFramework->initialize();
+        $this->framework->initialize();
 
         if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
             throw new UnauthorizedHttpException('', 'Not authorized');
@@ -150,8 +149,8 @@ class FrontendController
     }
 
     /**
-     * Returns a script that makes sure a valid request token is filled
-     * into all forms if the "alwaysLoadFromCache" option is enabled).
+     * Returns a script that makes sure a valid request token is filled into
+     * all forms if the "alwaysLoadFromCache" option is enabled.
      *
      * @Route("/_contao/request_token_script", name="contao_frontend_request_token_script")
      */
@@ -177,7 +176,7 @@ class FrontendController
      */
     public function twoFactorAuthenticationAction(): Response
     {
-        $this->contaoFramework->initialize();
+        $this->framework->initialize();
 
         if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
             throw new UnauthorizedHttpException('', 'Not authorized');

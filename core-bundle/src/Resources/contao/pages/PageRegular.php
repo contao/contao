@@ -482,7 +482,6 @@ class PageRegular extends Frontend
 		}
 
 		// Add the check_cookies image and the request token script if needed
-		// See respective controllers for more information
 		if ($objPage->alwaysLoadFromCache)
 		{
 			$GLOBALS['TL_BODY'][] = sprintf('<img src="%s" width="1" height="1" class="invisible" alt aria-hidden="true" onload="this.parentNode.removeChild(this)">', System::getContainer()->get('router')->generate('contao_frontend_check_cookies'));
