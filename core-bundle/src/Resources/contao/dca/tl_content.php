@@ -61,14 +61,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			(
 				'href'                => 'act=edit',
 				'icon'                => 'edit.svg',
-				'button_callback'     => array('tl_content', 'checkAccess')
+				'button_callback'     => array('tl_content', 'disableButton')
 			),
 			'copy' => array
 			(
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_content', 'checkAccess')
+				'button_callback'     => array('tl_content', 'disableButton')
 			),
 			'cut' => array
 			(
@@ -1786,7 +1786,7 @@ class tl_content extends Contao\Backend
 	}
 
 	/**
-	 * Return the button if the element type is allowed
+	 * Disable the button if the element type is not allowed
 	 *
 	 * @param array  $row
 	 * @param string $href
@@ -1797,7 +1797,7 @@ class tl_content extends Contao\Backend
 	 *
 	 * @return string
 	 */
-	public function checkAccess($row, $href, $label, $title, $icon, $attributes)
+	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
 		return $this->User->hasAccess($row['type'], 'elements') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
 	}
@@ -1816,6 +1816,7 @@ class tl_content extends Contao\Backend
 	 */
 	public function deleteElement($row, $href, $label, $title, $icon, $attributes)
 	{
+		// Disable the button if the element type is not allowed
 		if (!$this->User->hasAccess($row['type'], 'elements'))
 		{
 			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
@@ -1947,6 +1948,7 @@ class tl_content extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
+		// Disable the button if the element type is not allowed
 		if (!$this->User->hasAccess($row['type'], 'elements'))
 		{
 			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
