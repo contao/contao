@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{global_legend},adminEmail;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{backend_legend:hide},doNotCollapse,resultsPerPage,maxResultsPerPage;{frontend_legend},folderUrl,doNotRedirectEmpty;{security_legend:hide},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{cron_legend:hide},disableCron;{search_legend:hide},enableSearch,indexProtected;{chmod_legend},defaultUser,defaultGroup,defaultChmod'
+		'default'                     => '{global_legend},adminEmail;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{backend_legend:hide},doNotCollapse,resultsPerPage,maxResultsPerPage;{frontend_legend},doNotRedirectEmpty;{security_legend:hide},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{cron_legend:hide},disableCron;{search_legend:hide},enableSearch,indexProtected;{chmod_legend},defaultUser,defaultGroup,defaultChmod'
 	),
 
 	// Fields
@@ -78,11 +78,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'eval'                    => array('tl_class'=>'w50')
 		),
 		'doNotRedirectEmpty' => array
-		(
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50')
-		),
-		'folderUrl' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50')
