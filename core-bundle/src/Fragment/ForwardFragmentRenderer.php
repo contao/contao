@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Fragment;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
+use Symfony\Component\HttpKernel\HttpCache\ResponseCacheStrategy;
 
 /**
  * Implements the forward rendering strategy.
@@ -26,11 +27,52 @@ use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
 class ForwardFragmentRenderer extends InlineFragmentRenderer
 {
     /**
+     * @var ResponseCacheStrategy[]
+     */
+    private $stack = [];
+
+    /**
+     * @var ResponseCacheStrategy|null
+     */
+    private $current;
+
+    /**
      * {@inheritdoc}
      */
     public function getName(): string
     {
         return 'forward';
+    }
+
+    public function render($uri, Request $request, array $options = [])
+    {
+        $response = parent::render($uri, $request, $options);
+
+        if ($this->current && $response->headers->has('Cache-Control')) {
+            $this->current->add($response);
+        }
+
+        return $response;
+    }
+
+
+    public function pushStrategy(ResponseCacheStrategy $strategy)
+    {
+        if ($this->current) {
+            $this->stack[] = $this->current;
+        }
+
+        $this->current = $strategy;
+    }
+
+    public function popStrategy()
+    {
+        if (0 === \count($this->stack)) {
+            $this->current = null;
+            return;
+        }
+
+        $this->current = array_pop($this->stack);
     }
 
     /**

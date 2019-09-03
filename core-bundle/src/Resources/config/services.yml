@@ -161,6 +161,7 @@ services:
             - ['setFragmentPath', ['%fragment.path%']]
         tags:
             - { name: 'kernel.fragment_renderer', alias: 'forward' }
+        public: true
 
     contao.framework:
         class: Contao\CoreBundle\Framework\ContaoFramework
