@@ -75,14 +75,15 @@ disallow:/contao?
 disallow:/contao/
 
 sitemap:https://www.foobar.com/share/sitemap-name.xml
-EOF,
+EOF
         ];
 
         yield 'Tests merging with existing user-agent' => [
             <<<'EOF'
 user-agent:*
 allow:/
-EOF,
+EOF
+            ,
             <<<'EOF'
 user-agent:*
 allow:/
@@ -91,14 +92,15 @@ disallow:/contao?
 disallow:/contao/
 
 sitemap:https://www.foobar.com/share/sitemap-name.xml
-EOF,
+EOF
         ];
 
         yield 'Tests works with specific user-agent' => [
             <<<'EOF'
 user-agent:googlebot
 allow:/
-EOF,
+EOF
+            ,
             <<<'EOF'
 user-agent:googlebot
 allow:/
@@ -112,7 +114,7 @@ disallow:/contao?
 disallow:/contao/
 
 sitemap:https://www.foobar.com/share/sitemap-name.xml
-EOF,
+EOF
         ];
     }
 }
