@@ -13,6 +13,7 @@
         "php": "^7.1",
         "ext-dom": "*",
         "ext-gd": "*",
+        "ext-hash": "*",
         "ext-intl": "*",
         "ext-json": "*",
         "ext-pcre": "*",

@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^7.1",
+        "ext-filter": "*",
         "contao/core-bundle": "self.version",
         "doctrine/dbal": "^2.5",
         "patchwork/utf8": "^1.2",
