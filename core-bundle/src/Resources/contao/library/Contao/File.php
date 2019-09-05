@@ -599,11 +599,11 @@ class File extends System
 	}
 
 	/**
-	 * Return the file content as string
+	 * Generate the image if the current file is a deferred image and does not exist yet
 	 *
-	 * @return string The file content without BOM
+	 * @return bool True if a deferred image was resized otherwise false
 	 */
-	public function getContent()
+	public function createIfDeferred()
 	{
 		if (!$this->exists())
 		{
@@ -614,6 +614,8 @@ class File extends System
 				if ($image instanceof DeferredImageInterface)
 				{
 					System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($image);
+
+					return true;
 				}
 			}
 			catch (\Throwable $e)
@@ -621,6 +623,18 @@ class File extends System
 				// ignore
 			}
 		}
+
+		return false;
+	}
+
+	/**
+	 * Return the file content as string
+	 *
+	 * @return string The file content without BOM
+	 */
+	public function getContent()
+	{
+		$this->createIfDeferred();
 
 		$strContent = file_get_contents($this->strRootDir . '/' . ($this->strTmp ?: $this->strFile));
 

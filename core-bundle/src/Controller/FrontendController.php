@@ -14,25 +14,48 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FrontendCron;
 use Contao\FrontendIndex;
 use Contao\FrontendShare;
 use Contao\PageError401;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\LogoutException;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * @Route(defaults={"_scope" = "frontend", "_token_check" = true})
  */
-class FrontendController extends AbstractController
+class FrontendController
 {
+    /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
+    /**
+     * @var CsrfTokenManagerInterface
+     */
+    private $tokenManager;
+
+    /**
+     * @var string
+     */
+    private $tokenName;
+
+    public function __construct(ContaoFramework $framework, CsrfTokenManagerInterface $tokenManager, string $tokenName)
+    {
+        $this->framework = $framework;
+        $this->tokenManager = $tokenManager;
+        $this->tokenName = $tokenName;
+    }
+
     public function indexAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->framework->initialize();
 
         $controller = new FrontendIndex();
 
@@ -44,7 +67,7 @@ class FrontendController extends AbstractController
      */
     public function cronAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->framework->initialize();
 
         $controller = new FrontendCron();
 
@@ -56,7 +79,7 @@ class FrontendController extends AbstractController
      */
     public function shareAction(): RedirectResponse
     {
-        $this->get('contao.framework')->initialize();
+        $this->framework->initialize();
 
         $controller = new FrontendShare();
 
@@ -72,7 +95,7 @@ class FrontendController extends AbstractController
      */
     public function loginAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->framework->initialize();
 
         if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
             throw new UnauthorizedHttpException('', 'Not authorized');
@@ -126,6 +149,26 @@ class FrontendController extends AbstractController
     }
 
     /**
+     * Returns a script that makes sure a valid request token is filled into
+     * all forms if the "alwaysLoadFromCache" option is enabled.
+     *
+     * @Route("/_contao/request_token_script", name="contao_frontend_request_token_script")
+     */
+    public function requestTokenScriptAction(): Response
+    {
+        $token = $this->tokenManager->getToken($this->tokenName)->getValue();
+        $token = json_encode($token);
+
+        $response = new Response();
+        $response->setContent('document.querySelectorAll("input[name=REQUEST_TOKEN]").forEach(function(i){i.value='.$token.'})');
+        $response->headers->set('Content-Type', 'application/javascript; charset=UTF-8');
+        $response->headers->addCacheControlDirective('no-store');
+        $response->headers->addCacheControlDirective('must-revalidate');
+
+        return $response;
+    }
+
+    /**
      * Redirects the user to the Contao front end in case they manually call the
      * /_contao/two-factor route. Will be intercepted by the two factor bundle otherwise.
      *
@@ -133,7 +176,7 @@ class FrontendController extends AbstractController
      */
     public function twoFactorAuthenticationAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->framework->initialize();
 
         if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
             throw new UnauthorizedHttpException('', 'Not authorized');

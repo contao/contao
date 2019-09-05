@@ -9,6 +9,7 @@
 /* Body */
 body {
 	background:#cfcfd3;
+	overflow-y:scroll;
 }
 body.popup {
 	background:#fff;

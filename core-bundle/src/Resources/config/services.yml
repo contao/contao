@@ -36,6 +36,13 @@ services:
             - controller.service_arguments
         public: true
 
+    Contao\CoreBundle\Controller\FrontendController:
+        arguments:
+            - '@contao.framework'
+            - '@contao.csrf.token_manager'
+            - '%contao.csrf_token_name%'
+        public: true
+
     Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:
             - '@contao.framework'
