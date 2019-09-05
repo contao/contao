@@ -9,6 +9,7 @@
 /* Body */
 body {
 	background:#132330 radial-gradient(#234058, #0f1c26);
+	overflow-y:scroll;
 }
 body.popup {
 	background:#fff;
