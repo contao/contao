@@ -293,8 +293,11 @@ class Comments extends Frontend
 		$objTemplate->formId = $strFormId;
 		$objTemplate->hasError = $doNotSubmit;
 
+		$session = System::getContainer()->get('session');
+		$flashBag = $session->getFlashBag();
+
 		// Do not index or cache the page with the confirmation message
-		if ($_SESSION['TL_COMMENT_ADDED'])
+		if ($session->isStarted() && $flashBag->has('comment_added'))
 		{
 			/** @var PageModel $objPage */
 			global $objPage;
@@ -302,8 +305,7 @@ class Comments extends Frontend
 			$objPage->noSearch = 1;
 			$objPage->cache = 0;
 
-			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_confirm'];
-			unset($_SESSION['TL_COMMENT_ADDED']);
+			$objTemplate->confirm = $flashBag->get('comment_added')[0];
 		}
 
 		// Store the comment
@@ -415,7 +417,7 @@ class Comments extends Frontend
 			// Pending for approval
 			if ($objConfig->moderate)
 			{
-				$_SESSION['TL_COMMENT_ADDED'] = true;
+				$flashBag->set('comment_added', $GLOBALS['TL_LANG']['MSC']['com_confirm']);
 			}
 			else
 			{
