@@ -563,6 +563,7 @@
       </trans-unit>
       <trans-unit id="tl_style.toggle">
         <source>Activate/deactivate element ID %s</source>
+        <target>激活/未激活 元素 ID %s</target>
       </trans-unit>
     </body>
   </file>

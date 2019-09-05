@@ -43,6 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.undo">
         <source>Restore element ID %s</source>
+        <target>Herstel element ID %s</target>
       </trans-unit>
     </body>
   </file>

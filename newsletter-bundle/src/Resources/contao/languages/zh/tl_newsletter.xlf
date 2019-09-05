@@ -192,8 +192,17 @@
         <source>Do you really want to send the newsletter?</source>
         <target>您确实要发送新闻通讯吗？</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.send.0">
+        <source>Send newsletter</source>
+        <target>发送新闻通讯</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.send.1">
+        <source>Send newsletter ID %s</source>
+        <target>发送ID为%s的新闻通讯</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
         <source>New</source>
+        <target>新建</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
@@ -218,10 +227,6 @@
       <trans-unit id="tl_newsletter.delete">
         <source>Delete newsletter ID %s</source>
         <target>删除ID为%s的新闻通讯</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.send">
-        <source>Send newsletter ID %s</source>
-        <target>发送ID为%s的新闻通讯</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>

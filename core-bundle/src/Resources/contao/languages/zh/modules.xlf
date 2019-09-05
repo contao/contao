@@ -87,9 +87,11 @@
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
+        <target>双重选择</target>
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
         <source>Manage the double opt-in tokens</source>
+        <target>管理双重选择令牌</target>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
@@ -129,9 +131,11 @@
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
+        <target>安全</target>
       </trans-unit>
       <trans-unit id="MOD.security.1">
         <source>Secure your account</source>
+        <target>保护您的账号</target>
       </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
@@ -391,9 +395,11 @@
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>
+        <target>双重认证</target>
       </trans-unit>
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
+        <target>创建一个表单用来设置或者更改双重认证</target>
       </trans-unit>
     </body>
   </file>

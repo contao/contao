@@ -123,6 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.importTheme.0">
         <source>Import</source>
+        <target>Importeer</target>
       </trans-unit>
       <trans-unit id="tl_theme.importTheme.1">
         <source>Import a theme</source>

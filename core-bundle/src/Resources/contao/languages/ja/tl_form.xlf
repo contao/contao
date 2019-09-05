@@ -107,9 +107,11 @@
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
         <source>Custom form template</source>
+        <target>独自のフォームのテンプレート</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
         <source>Here you can overwrite the default form template.</source>
+        <target>フォームのテンプレートの初期値を上書きできます。</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>

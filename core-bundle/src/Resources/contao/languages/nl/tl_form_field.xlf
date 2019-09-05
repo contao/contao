@@ -207,6 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
         <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
+        <target>Staat alle karakters toe behalve speciale tekens die meestal worden gecodeerd om veiligheidsredenen: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>
@@ -286,12 +287,15 @@
       </trans-unit>
       <trans-unit id="tl_form_field.minval.1">
         <source>Here you can set the minimum value for numeric fields.</source>
+        <target>Minimumwaarde voor numerieke velden instellen.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.0">
         <source>Maximum value</source>
+        <target>Maximale waarde</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.1">
         <source>Here you can set the maximum value for numeric fields.</source>
+        <target>Maximumwaarde voor numerieke velden instellen.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>
@@ -491,18 +495,23 @@
       </trans-unit>
       <trans-unit id="tl_form_field.show">
         <source>Show the details of form field ID %s</source>
+        <target>Toon details van formulierveld ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.edit">
         <source>Edit form field ID %s</source>
+        <target>Wijzig formulierveld ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.cut">
         <source>Move form field ID %s</source>
+        <target>Verplaats formulierveld ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.copy">
         <source>Duplicate form field ID %s</source>
+        <target>Dupliceer formulierveld ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.delete">
         <source>Delete form field ID %s</source>
+        <target>Verwijder formulierveld ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.editheader">
         <source>Edit the form settings</source>
@@ -518,12 +527,15 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>
+        <target>Plakken na formulierveld ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
         <source>Create a new form field at the top</source>
+        <target>Maak een nieuw formulierveld bovenaan</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
         <source>Create a new form field after form field ID %s</source>
+        <target>Maak een nieuw formulierveld na formulierveld ID%s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>

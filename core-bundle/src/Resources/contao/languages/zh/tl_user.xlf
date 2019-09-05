@@ -315,6 +315,7 @@
       </trans-unit>
       <trans-unit id="tl_user.tempLabel">
         <source>Shared cache</source>
+        <target>共享缓存</target>
       </trans-unit>
       <trans-unit id="tl_user.sessionPurged">
         <source>The session data has been purged</source>
@@ -326,6 +327,7 @@
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The shared cache has been purged</source>
+        <target>共享缓存已清除</target>
       </trans-unit>
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>
@@ -333,9 +335,11 @@
       </trans-unit>
       <trans-unit id="tl_user.useTwoFactor">
         <source>Use two-factor authentication</source>
+        <target>使用双重认证</target>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New</source>
+        <target>新建</target>
       </trans-unit>
       <trans-unit id="tl_user.new.1">
         <source>Create a new user</source>

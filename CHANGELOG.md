@@ -1,7 +1,8 @@
 # Change log
 
-## DEV
+## 4.8.2 (2019-09-05)
 
+ * Always render deferred images in HTML emails (see #693).
  * Do not add the min/max attributes if they are zero (see #668).
  * Handle renamed files in the version overview (see #671).
  * Hide the username if the initial version is auto-generated (see #664).  

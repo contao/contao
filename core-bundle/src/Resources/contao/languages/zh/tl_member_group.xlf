@@ -63,24 +63,31 @@
       </trans-unit>
       <trans-unit id="tl_member_group.new.0">
         <source>New</source>
+        <target>新建</target>
       </trans-unit>
       <trans-unit id="tl_member_group.new.1">
         <source>Create a new member group</source>
+        <target>创建新用户组</target>
       </trans-unit>
       <trans-unit id="tl_member_group.show">
         <source>Show the details of member group ID %s</source>
+        <target>显示 用户组ID %s 详情</target>
       </trans-unit>
       <trans-unit id="tl_member_group.edit">
         <source>Edit member group ID %s</source>
+        <target>编辑 用户组ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.copy">
         <source>Duplicate member group ID %s</source>
+        <target>复制 用户组ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.delete">
         <source>Delete member group ID %s</source>
+        <target>删除 用户组ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.toggle">
         <source>Activate/deactivate member group ID %s</source>
+        <target>激活/未激活 用户组ID %s</target>
       </trans-unit>
     </body>
   </file>

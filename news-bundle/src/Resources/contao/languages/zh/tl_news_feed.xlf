@@ -95,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.new.0">
         <source>New</source>
+        <target>新建</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.new.1">
         <source>Create a new feed</source>

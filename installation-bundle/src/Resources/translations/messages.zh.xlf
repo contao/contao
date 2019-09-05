@@ -18,6 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
+        <target>由于安全原因，连续输入超过3次错误密码安装工具会被锁定，请在命令行中运行 &lt;code&gt;vendor/bin/contao-console contao:install:unlock&lt;/code&gt; 来接触锁定。</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -297,7 +298,7 @@
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_extnd</source>
-        <target>由于安全原因，在这里您不能使用这些字符：#()/&lt;=&gt;</target>
+        <target>安全原因不能使用一下字符: #&lt;&gt;()\=</target>
         
       </trans-unit>
       <trans-unit id="61">
@@ -382,6 +383,7 @@
       </trans-unit>
       <trans-unit id="77">
         <source>unsupported_version_explain</source>
+        <target>Contao至少需要MySQL 5.1.0 但是当前版本为 %s. 请更新数据库版本。</target>
         
       </trans-unit>
       <trans-unit id="78">
@@ -391,6 +393,7 @@
       </trans-unit>
       <trans-unit id="79">
         <source>unsupported_collation_explain</source>
+        <target>当前服务器中配置的collation &lt;code&gt;%s&lt;/code&gt; 无效。 请在文件 &lt;code&gt;config/config.yml&lt;/code&gt; 中安装 (推荐) 或 配置其他的字符集和collation。</target>
         
       </trans-unit>
       <trans-unit id="80">
@@ -400,10 +403,12 @@
       </trans-unit>
       <trans-unit id="81">
         <source>unsupported_engine_explain</source>
+        <target>当前服务器中配置的数据库引擎 &lt;code&gt;%s&lt;/code&gt; 无效。请在文件 &lt;code&gt;config/config.yml&lt;/code&gt; 中安装 (推荐) 或配置其他的的数据库引擎。</target>
         
       </trans-unit>
       <trans-unit id="82">
         <source>misconfigured_database_url_explain</source>
+        <target>使用 &lt;code&gt;DATABASE_URL&lt;/code&gt; 环境变量中配置的连接URL，无法连接数据库。</target>
         
       </trans-unit>
     </body>

@@ -227,15 +227,19 @@
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
         <source>Context length</source>
+        <target>上下文长度</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
         <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
+        <target>第一个字段定义每个关键字左侧和右侧的字符数，第二个字段定义每个结果的总上下文长度。</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.0">
         <source>Minimum keyword length</source>
+        <target>最小关键词长度</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.1">
         <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
+        <target>在搜索结果会忽略超过最小长度的关键字。设置为0可以禁用该功能</target>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>
@@ -564,6 +568,16 @@ The confirmation link is valid for 24 hours.
 
 If you did not request an account, please ignore this e-mail.
 </source>
+        <target>感谢您在##domain##注册.
+
+点击这里完成注册并激活您的账号:
+
+##link##
+
+确认链接24小时内有效.
+
+如果您没有发起注册请求, 请忽略这封e-mail.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -578,6 +592,14 @@ Click here to set the new password:
 
 If you did not request this e-mail, please contact the website administrator.
 </source>
+        <target>您已经请求 ##domain## 的新密码.
+
+点击这里设置新密码:
+
+##link##
+
+您如果没有请求重设密码而收到这封邮件，请联系网站管理员.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>
@@ -597,9 +619,11 @@ If you did not request this e-mail, please contact the website administrator.
       </trans-unit>
       <trans-unit id="tl_module.new.0">
         <source>New</source>
+        <target>新建</target>
       </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
+        <target>创建新模块</target>
       </trans-unit>
       <trans-unit id="tl_module.show">
         <source>Show the details of module ID %s</source>

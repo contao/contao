@@ -243,9 +243,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
+        <target>Lightbox beeldformaat</target>
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.1">
         <source>Here you can select an image size for the images shown in the lightbox.</source>
+        <target>Hier kunt u een afbeeldingsgrootte selecteren voor de afbeeldingen die in de lightbox worden weergegeven.</target>
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.0">
         <source>Default image pixel densities</source>

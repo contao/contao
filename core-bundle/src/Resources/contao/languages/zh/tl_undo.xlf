@@ -43,6 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.undo">
         <source>Restore element ID %s</source>
+        <target>恢复 元素 ID %s</target>
       </trans-unit>
     </body>
   </file>

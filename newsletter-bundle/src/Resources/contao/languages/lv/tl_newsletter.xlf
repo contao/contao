@@ -193,6 +193,14 @@
         <source>Do you really want to send the newsletter?</source>
         <target>Vai tiešām vēlaties nosūtīt apkārtrakstu?</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.send.0">
+        <source>Send newsletter</source>
+        <target>Sūtīt apkārtrakstu</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.send.1">
+        <source>Send newsletter ID %s</source>
+        <target>Sūtīt apkārtrakstu ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
         <source>New</source>
       </trans-unit>
@@ -219,10 +227,6 @@
       <trans-unit id="tl_newsletter.delete">
         <source>Delete newsletter ID %s</source>
         <target>Dzēst apkārtrakstu ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.send">
-        <source>Send newsletter ID %s</source>
-        <target>Sūtīt apkārtrakstu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>

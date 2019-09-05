@@ -193,6 +193,14 @@
         <source>Do you really want to send the newsletter?</source>
         <target>Wilt u de nieuwsbrief werkelijk versturen?</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.send.0">
+        <source>Send newsletter</source>
+        <target>Verstuur nieuwsbrief</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.send.1">
+        <source>Send newsletter ID %s</source>
+        <target>Verstuur nieuwsbrief ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
         <source>New</source>
         <target>Nieuw</target>
@@ -220,10 +228,6 @@
       <trans-unit id="tl_newsletter.delete">
         <source>Delete newsletter ID %s</source>
         <target>Verwijder nieuwsbrief ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_newsletter.send">
-        <source>Send newsletter ID %s</source>
-        <target>Verstuur nieuwsbrief ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>

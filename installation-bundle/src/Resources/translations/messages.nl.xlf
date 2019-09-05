@@ -298,6 +298,7 @@
       </trans-unit>
       <trans-unit id="60">
         <source>admin_error_extnd</source>
+        <target>Om veiligheidsredenen kunt u de volgende karakters hier niet gebruiken: #&lt;&gt;()\=</target>
         
       </trans-unit>
       <trans-unit id="61">

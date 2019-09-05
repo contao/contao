@@ -91,12 +91,15 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.import.0">
         <source>Import</source>
+        <target>导入</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.import.1">
         <source>Import a style sheet</source>
+        <target>导入样式表</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.new.0">
         <source>New</source>
+        <target>新建</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.new.1">
         <source>Create a new style sheet</source>

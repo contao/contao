@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New</source>
+        <target>新建</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.1">
         <source>Create a new user group</source>
@@ -86,18 +87,23 @@
       </trans-unit>
       <trans-unit id="tl_user_group.show">
         <source>Show the details of user group ID %s</source>
+        <target>显示用户组 ID %s 详情</target>
       </trans-unit>
       <trans-unit id="tl_user_group.edit">
         <source>Edit user group ID %s</source>
+        <target>编辑用户组 ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.copy">
         <source>Duplicate user group ID %s</source>
+        <target>复制用户组 ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.delete">
         <source>Delete user group ID %s</source>
+        <target>删除用户组 ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.toggle">
         <source>Activate/deactivate user group ID %s</source>
+        <target>激活/未激活 用户组 ID %s</target>
       </trans-unit>
     </body>
   </file>
