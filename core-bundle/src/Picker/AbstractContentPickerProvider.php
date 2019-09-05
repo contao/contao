@@ -133,7 +133,13 @@ abstract class AbstractContentPickerProvider extends AbstractPickerProvider impl
         return $params;
     }
 
+    /**
+     * Returns the back end module name where this picker should be pointed to (query parameter do=?)
+     */
     abstract protected function getBackendModule(): string;
 
+    /**
+     * Returns the parent table for content elements so we know which picker is currently active.
+     */
     abstract protected function getParentTable(): string;
 }

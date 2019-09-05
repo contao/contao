@@ -181,7 +181,8 @@ class Picker extends Widget
 		$arrRelations = DcaExtractor::getInstance($this->strTable)->getRelations();
 		$strRelatedTable = $arrRelations[$this->strField]['table'] ?? null;
 
-		if (!$strRelatedTable) {
+		if (!$strRelatedTable)
+		{
 			return (array) $this->varValue;
 		}
 
