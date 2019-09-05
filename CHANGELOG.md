@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.43 (2019-09-05)
 
  * Handle renamed files in the version overview (see #671).
  * Hide the username if the initial version is auto-generated (see #664).  

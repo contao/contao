@@ -164,7 +164,7 @@ class ModuleListing extends \Module
 		}
 
 		// Get the selected records
-		$strQuery = "SELECT " . \Database::quoteIdentifier($this->strPk) . ", " . implode(', ', array_map('Database::quoteIdentifier', trimsplit(',', $this->list_fields)));
+		$strQuery = "SELECT " . \Database::quoteIdentifier($this->strPk) . ", " . implode(', ', array_map('Database::quoteIdentifier', $arrFields));
 
 		if ($this->list_info_where)
 		{

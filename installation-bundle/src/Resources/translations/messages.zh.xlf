@@ -18,6 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
+        <target>由于安全原因，连续输入超过3次错误密码安装工具会被锁定。可以在Contao管理器中或在命令行中运行 &lt;code&gt;contao:install:unlock&lt;/code&gt; 来解锁。</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -362,6 +363,7 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
+        <target>重复订阅</target>
         
       </trans-unit>
       <trans-unit id="74">

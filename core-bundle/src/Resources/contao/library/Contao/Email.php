@@ -68,7 +68,7 @@ class Email
 	 * E-mail priority
 	 * @var integer
 	 */
-	protected $intPriority = null;
+	protected $intPriority;
 
 	/**
 	 * E-mail subject

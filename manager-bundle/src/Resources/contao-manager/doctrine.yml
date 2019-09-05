@@ -18,6 +18,8 @@ doctrine:
                 password: "%database_password%"
                 dbname: "%database_name%"
                 charset: UTF8
+                options:
+                    !php/const:PDO::MYSQL_ATTR_MULTI_STATEMENTS: false
         types:
             binary_string:
                 class: "Contao\\CoreBundle\\Doctrine\\DBAL\\Types\\BinaryStringType"

@@ -505,6 +505,9 @@ class tl_user extends Backend
 			return;
 		}
 
+		// Unset the "admin" checkbox for regular users
+		unset($GLOBALS['TL_DCA']['tl_user']['fields']['admin']);
+
 		// Check current action
 		switch (Input::get('act'))
 		{
