@@ -117,6 +117,11 @@ class CsrfTokenCookieListener
 
     private function replaceTokenOccurrences(Response $response): void
     {
+        // Return if the response is not a HTML document
+        if (false === stripos((string) $response->headers->get('Content-Type'), 'text/html')) {
+            return;
+        }
+
         $content = $response->getContent();
 
         foreach ($this->tokenStorage->getUsedTokens() as $value) {

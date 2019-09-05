@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -210,24 +211,6 @@ class CsrfTokenCookieListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $response = new Response('<html><body><form><input name="REQUEST_TOKEN" value="tokenValue"></form></body></html>');
-
-        $responseEvent = $this->createMock(FilterResponseEvent::class);
-        $responseEvent
-            ->method('isMasterRequest')
-            ->willReturn(true)
-        ;
-
-        $responseEvent
-            ->method('getRequest')
-            ->willReturn($request)
-        ;
-
-        $responseEvent
-            ->method('getResponse')
-            ->willReturn($response)
-        ;
-
         $responseHeaders = $this->createMock(ResponseHeaderBag::class);
         $responseHeaders
             ->expects($this->never())
@@ -245,7 +228,31 @@ class CsrfTokenCookieListenerTest extends TestCase
             ->with('csrf_foo')
         ;
 
+        $responseHeaders
+            ->expects($this->once())
+            ->method('get')
+            ->with('Content-Type')
+            ->willReturn('text/html')
+        ;
+
+        $response = new Response('<html><body><form><input name="REQUEST_TOKEN" value="tokenValue"></form></body></html>');
         $response->headers = $responseHeaders;
+
+        $responseEvent = $this->createMock(FilterResponseEvent::class);
+        $responseEvent
+            ->method('isMasterRequest')
+            ->willReturn(true)
+        ;
+
+        $responseEvent
+            ->method('getRequest')
+            ->willReturn($request)
+        ;
+
+        $responseEvent
+            ->method('getResponse')
+            ->willReturn($response)
+        ;
 
         $tokenStorage = new MemoryTokenStorage();
         $tokenStorage->initialize(['tokenName' => 'tokenValue']);
@@ -271,6 +278,53 @@ class CsrfTokenCookieListenerTest extends TestCase
         $responseEvent
             ->expects($this->never())
             ->method('getRequest')
+        ;
+
+        $tokenStorage = $this->createMock(MemoryTokenStorage::class);
+        $tokenStorage
+            ->expects($this->never())
+            ->method('getUsedTokens')
+        ;
+
+        $listener = new CsrfTokenCookieListener($tokenStorage);
+        $listener->onKernelResponse($responseEvent);
+    }
+
+    public function testDoesNotReplaceTheTokenOccurrencesIfNotAHtmlDocument(): void
+    {
+        $request = $this->createMock(Request::class);
+        $request->cookies = new ParameterBag();
+
+        $responseHeaders = $this->createMock(ResponseHeaderBag::class);
+        $responseHeaders
+            ->method('getCookies')
+            ->willReturn([])
+        ;
+
+        $responseHeaders
+            ->expects($this->once())
+            ->method('get')
+            ->with('Content-Type')
+            ->willReturn('application/octet-stream')
+        ;
+
+        $response = $this->createMock(BinaryFileResponse::class);
+        $response->headers = $responseHeaders;
+
+        $responseEvent = $this->createMock(FilterResponseEvent::class);
+        $responseEvent
+            ->method('isMasterRequest')
+            ->willReturn(true)
+        ;
+
+        $responseEvent
+            ->method('getRequest')
+            ->willReturn($request)
+        ;
+
+        $responseEvent
+            ->method('getResponse')
+            ->willReturn($response)
         ;
 
         $tokenStorage = $this->createMock(MemoryTokenStorage::class);
