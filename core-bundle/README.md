@@ -112,13 +112,13 @@ security:
                 check_path: contao_backend_two_factor
                 default_target_path: contao_backend
                 success_handler: contao.security.authentication_success_handler
-                failure_handler: contao.security.authentication_failure_handler
                 auth_code_parameter_name: verify
 
             logout:
                 path: contao_backend_logout
                 handlers:
                     - contao.security.logout_handler
+                    - contao_manager.security.logout_handler
                 success_handler: contao.security.logout_success_handler
 
         contao_frontend:
@@ -143,7 +143,6 @@ security:
                 check_path: contao_frontend_two_factor
                 default_target_path: contao_root
                 success_handler: contao.security.authentication_success_handler
-                failure_handler: contao.security.authentication_failure_handler
                 auth_code_parameter_name: verify
 
             remember_me:
