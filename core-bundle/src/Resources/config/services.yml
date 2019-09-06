@@ -85,6 +85,16 @@ services:
     Contao\CoreBundle\Controller\FrontendController: ~
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
+
+    Contao\CoreBundle\Controller\EscargotSubscriberController:
+        arguments:
+            - '@contao.search.escargot_factory'
+        public: true
+
+    contao.controller.frontend_module.two_factor:
+        class: Contao\CoreBundle\Controller\FrontendModule\TwoFactorController
+        calls:
+            - ['setContainer', ['@Psr\Container\ContainerInterface']]
         tags:
             - { name: contao.frontend_module, category: user }
 
@@ -507,6 +517,28 @@ services:
     contao.search.indexer:
         alias: 'contao.search.indexer.delegating'
         public: true
+
+    contao.search.escargot_factory:
+        class: Contao\CoreBundle\Search\EscargotFactory
+        arguments:
+            - '@database_connection'
+            - '@contao.routing.url_generator'
+        public: true;
+
+    contao.search.escargot_subscriber.broken_link_checker:
+        class: Contao\CoreBundle\Search\EventListener\BrokenLinkCheckerListener
+        arguments:
+            - '@router'
+        tags:
+            - { name: 'contao.escargot_subscriber' }
+
+    contao.search.escargot_subscriber.search_index:
+        class: Contao\CoreBundle\Search\EventListener\SearchIndexListener
+        arguments:
+            - '@contao.search.indexer'
+            - '@router'
+        tags:
+            - { name: 'contao.escargot_subscriber' }
 
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler

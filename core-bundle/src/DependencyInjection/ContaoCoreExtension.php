@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Contao\CoreBundle\Search\EventListener\EscargotEventSubscriber;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
@@ -94,6 +95,11 @@ class ContaoCoreExtension extends Extension
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
             ->addTag('contao.picker_provider')
+        ;
+
+        $container
+            ->registerForAutoconfiguration(EscargotEventSubscriber::class)
+            ->addTag('contao.escargot_subscriber')
         ;
     }
 
