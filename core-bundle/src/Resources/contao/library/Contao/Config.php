@@ -494,6 +494,16 @@ class Config
 		{
 			$GLOBALS['TL_CONFIG']['jpgQuality'] = $container->getParameter('contao.image.imagine_options')['jpeg_quality'];
 		}
+
+		if ($container->hasParameter('contao.search.default_indexer.enable'))
+		{
+			$GLOBALS['TL_CONFIG']['enableSearch'] = $container->getParameter('contao.search.default_indexer.enable');
+		}
+
+		if ($container->hasParameter('contao.search.default_indexer.enableIndexProtected'))
+		{
+			$GLOBALS['TL_CONFIG']['indexProtected'] = $container->getParameter('contao.search.default_indexer.enableIndexProtected');
+		}
 	}
 
 	/**

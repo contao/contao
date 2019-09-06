@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Picker\PickerProviderInterface;
+use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
@@ -85,6 +86,7 @@ class ContaoCoreExtension extends Extension
             $container->setParameter('contao.localconfig', $config['localconfig']);
         }
 
+        $this->handleSearchIndexer($config, $container);
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
@@ -93,6 +95,28 @@ class ContaoCoreExtension extends Extension
             ->registerForAutoconfiguration(PickerProviderInterface::class)
             ->addTag('contao.picker_provider')
         ;
+    }
+
+    private function handleSearchIndexer(array $config, ContainerBuilder $container): void
+    {
+        $container
+            ->registerForAutoconfiguration(IndexerInterface::class)
+            ->addTag('contao.search_indexer')
+        ;
+
+        // Set the two parameters so they can be used in our legacy Config class for maximum BC
+        $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
+        $container->setParameter('contao.search.default_indexer.enableIndexProtected', $config['search']['default_indexer']['enableIndexProtected']);
+
+        $defaultIndexer = $container->getDefinition('contao.search.indexer.default');
+
+        // Configure whether to index protected pages on the default indexer
+        $defaultIndexer->setArgument(1, $config['search']['default_indexer']['enableIndexProtected']);
+
+        // Remove the default indexer completely if it was disabled
+        if (!$config['search']['default_indexer']['enable']) {
+            $container->removeDefinition('contao.search.indexer.default');
+        }
     }
 
     /**

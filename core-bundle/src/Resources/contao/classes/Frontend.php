@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Search\Document;
+use Nyholm\Psr7\Uri;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -601,51 +603,51 @@ abstract class Frontend extends Controller
 	/**
 	 * Index a page if applicable
 	 *
-	 * @param Response $objResponse
+	 * @param Response $response
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
+	 *             Use the "contao.search.indexer" service instead.
 	 */
-	public static function indexPageIfApplicable(Response $objResponse)
+	public static function indexPageIfApplicable(Response $response)
 	{
-		global $objPage;
+		@trigger_error('Using Frontend::indexPageIfApplicable() has been deprecated and will no longer work in Contao 5.0. Use the "contao.search.indexer" service instead.', E_USER_DEPRECATED);
 
-		if ($objPage === null)
+		if (!$response->headers->has('Contao-Search'))
 		{
-			return;
-		}
+			/** @var PageModel $objPage */
+			global $objPage;
 
-		// Index page if searching is allowed and there is no back end user
-		if (Config::get('enableSearch') && $objResponse->getStatusCode() == 200 && !BE_USER_LOGGED_IN && !$objPage->noSearch)
-		{
-			// Index protected pages if enabled
-			if (Config::get('indexProtected') || (!FE_USER_LOGGED_IN && !$objPage->protected))
+			$memberId = null;
+			$token = System::getContainer()->get('security.token_storage')->getToken();
+
+			// Load the user from the security storage
+			if ($token !== null && $token->getUser() instanceof FrontendUser)
 			{
-				$blnIndex = true;
-
-				// Do not index the page if certain parameters are set
-				foreach (array_keys($_GET) as $key)
-				{
-					if (\in_array($key, $GLOBALS['TL_NOINDEX_KEYS']) || strncmp($key, 'page_', 5) === 0)
-					{
-						$blnIndex = false;
-						break;
-					}
-				}
-
-				if ($blnIndex)
-				{
-					$arrData = array(
-						'url'       => Environment::get('base') . Environment::get('relativeRequest'),
-						'content'   => $objResponse->getContent(),
-						'title'     => $objPage->pageTitle ?: $objPage->title,
-						'protected' => ($objPage->protected ? '1' : ''),
-						'groups'    => $objPage->groups,
-						'pid'       => $objPage->id,
-						'language'  => $objPage->language
-					);
-
-					Search::indexPage($arrData);
-				}
+				$memberId = $token->id;
 			}
+
+			$meta = array
+			(
+				'id' => $objPage->id,
+				'noSearch' => $objPage->noSearch,
+				'protected' => $objPage->protected,
+				'groups' => $objPage->groups,
+				'memberId' => $memberId,
+			);
+
+			$response->headers->set('Contao-Search', base64_encode(json_encode($meta)));
 		}
+
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		$document = new Document(
+			new Uri($request->getUri()),
+			$response->getStatusCode(),
+			$response->headers->all(),
+			$response->getContent()
+		);
+
+		System::getContainer()->get('contao.search.indexer')->index($document);
 	}
 
 	/**

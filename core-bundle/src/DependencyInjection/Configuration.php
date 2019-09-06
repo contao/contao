@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\Image\ResizeConfiguration;
 use Imagine\Image\ImageInterface;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Finder\Finder;
@@ -303,7 +304,35 @@ class Configuration implements ConfigurationInterface
             ->end()
         ;
 
+        $this->addSearchSection($rootNode);
+
         return $treeBuilder;
+    }
+
+    private function addSearchSection(ArrayNodeDefinition $rootNode): void
+    {
+        $rootNode
+            ->children()
+                ->arrayNode('search')
+                ->info('Search configuration')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->arrayNode('default_indexer')
+                    ->info('Settings regarding the default search indexer which indexes pages in the database.')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('enable')
+                            ->info('Enables the default search indexer')
+                            ->defaultTrue()
+                        ->end()
+                        ->scalarNode('enableIndexProtected')
+                            ->info('Enables indexing of protected pages')
+                            ->defaultFalse()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 
     /**

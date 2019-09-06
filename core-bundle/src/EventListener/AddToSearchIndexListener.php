@@ -12,52 +12,62 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Frontend;
+use Contao\CoreBundle\Search\Document;
+use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Nyholm\Psr7\Uri;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
 class AddToSearchIndexListener
 {
     /**
-     * @var ContaoFramework
+     * @var IndexerInterface
      */
-    private $framework;
+    private $indexer;
 
     /**
      * @var string
      */
     private $fragmentPath;
 
-    public function __construct(ContaoFramework $framework, string $fragmentPath = '_fragment')
+    public function __construct(IndexerInterface $indexer, string $fragmentPath = '_fragment')
     {
-        $this->framework = $framework;
+        $this->indexer = $indexer;
         $this->fragmentPath = $fragmentPath;
     }
 
     /**
      * Checks if the request can be indexed and forwards it accordingly.
      */
-    public function onKernelTerminate(PostResponseEvent $event): void
+    public function onKernelTerminate(TerminateEvent $event): void
     {
-        if (!$this->framework->isInitialized()) {
-            return;
-        }
-
         $request = $event->getRequest();
 
         // Only index GET requests (see #1194)
         if (!$request->isMethod(Request::METHOD_GET)) {
             return;
         }
-
         // Do not index fragments
         if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $request->getPathInfo())) {
             return;
         }
 
-        /** @var Frontend $frontend */
-        $frontend = $this->framework->getAdapter(Frontend::class);
-        $frontend->indexPageIfApplicable($event->getResponse());
+        $response = $event->getResponse();
+
+        $document = new Document(
+            new Uri($request->getUri()),
+            $response->getStatusCode(),
+            $response->headers->all(),
+            $response->getContent()
+        );
+
+        // If there are no json ld scripts at all, nothing will be indexed.
+        $lds = $document->extractJsonLdScripts();
+
+        if (0 === \count($lds)) {
+            return;
+        }
+
+        $this->indexer->index($document);
     }
 }
