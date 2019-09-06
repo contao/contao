@@ -73,8 +73,10 @@ class DefaultIndexer implements IndexerInterface
         }
 
         $this->framework->initialize();
-        $this->framework->getAdapter(Search::class)
-            ->indexPage([
+
+        /** @var Search $search */
+        $search = $this->framework->getAdapter(Search::class);
+        $search->indexPage([
                 'url' => (string) $document->getUri(),
                 'content' => $document->getBody(),
                 'protected' => ($meta['protected']) ? '1' : '',
@@ -92,9 +94,10 @@ class DefaultIndexer implements IndexerInterface
     public function clear(): void
     {
         $this->framework->initialize();
-        $this->framework->getAdapter(Automator::class)
-            ->purgeSearchTables()
-        ;
+
+        /** @var Automator $automator */
+        $automator = $this->framework->getAdapter(Automator::class);
+        $automator->purgeSearchTables();
     }
 
     private function extendMetaFromJsonLdScripts(Document $document, array &$meta): void
