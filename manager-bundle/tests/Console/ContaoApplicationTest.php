@@ -16,13 +16,14 @@ use Contao\CoreBundle\Util\PackageUtil;
 use Contao\ManagerBundle\Console\ContaoApplication;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\HttpFoundation\Request;
 
 class ContaoApplicationTest extends ContaoTestCase
 {
     public function testApplicationNameAndVersion(): void
     {
-        $app = new ContaoApplication(ContaoKernel::fromRequest(sys_get_temp_dir(), Request::create('/')));
+        $app = new ContaoApplication(ContaoKernel::fromInput(sys_get_temp_dir(), new ArgvInput()));
 
         $this->assertSame('Contao Managed Edition', $app->getName());
         $this->assertSame(PackageUtil::getContaoVersion(), $app->getVersion());
@@ -30,7 +31,7 @@ class ContaoApplicationTest extends ContaoTestCase
 
     public function testDoesNotHaveNoDebugOption(): void
     {
-        $app = new ContaoApplication(ContaoKernel::fromRequest(sys_get_temp_dir(), Request::create('/')));
+        $app = new ContaoApplication(ContaoKernel::fromInput(sys_get_temp_dir(), new ArgvInput()));
         $options = $app->getDefinition()->getOptions();
 
         $this->assertArrayNotHasKey('no-debug', $options);

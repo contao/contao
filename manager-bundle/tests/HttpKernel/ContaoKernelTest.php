@@ -234,8 +234,10 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testSetsProjectDirFromRequest(): void
     {
+        $_SERVER['APP_ENV'] = 'dev';
         $tempDir = realpath($this->getTempDir());
         $kernel = ContaoKernel::fromRequest($tempDir, Request::create('/'));
+        unset($_SERVER['APP_ENV']);
 
         $this->assertSame($tempDir, $kernel->getProjectDir());
     }
