@@ -118,8 +118,16 @@ abstract class Controller extends System
 			$arrTemplates[$strTemplate][] = 'root';
 		}
 
+		$strGlobPrefix = $strPrefix;
+
+		// Backwards compatibility (see #725)
+		if (substr($strGlobPrefix, -1) == '_')
+		{
+			$strGlobPrefix = substr($strGlobPrefix, 0, -1) . '[_-]';
+		}
+
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strPrefix . '*.html5');
+		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strGlobPrefix . '*.html5');
 
 		// Add the customized templates
 		if (\is_array($arrCustomized))
@@ -127,6 +135,11 @@ abstract class Controller extends System
 			foreach ($arrCustomized as $strFile)
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
+
+				if (strpos($strTemplate, '-') !== false)
+				{
+					@trigger_error('Using hyphens in the template name "' . $strTemplate . '.html5" has been deprecated and will no longer work in Contao 5.0. Use snake_case instead.', E_USER_DEPRECATED);
+				}
 
 				// Ignore bundle templates, e.g. mod_article and mod_article_list
 				if (\in_array($strTemplate, $arrBundleTemplates))
@@ -168,7 +181,7 @@ abstract class Controller extends System
 				{
 					if ($objTheme->templates != '')
 					{
-						$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strPrefix . '*.html5');
+						$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
 
 						if (\is_array($arrThemeTemplates))
 						{
