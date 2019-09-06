@@ -252,7 +252,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         Request::enableHttpMethodParameterOverride();
 
         $env = null;
-        $parseJwt = !isset($_SERVER['APP_DEBUG']) && !isset($_SERVER['SYMFONY_DEBUG']);
+        $parseJwt = !isset($_SERVER['APP_ENV']) && !isset($_SERVER['SYMFONY_ENV']);
         $jwtManager = null;
 
         if ($parseJwt) {
@@ -310,7 +310,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
 
         // Set the JWT manager only if the debug mode has not been configured in env variables
-        if (!isset($_SERVER['APP_DEBUG']) && !isset($_SERVER['SYMFONY_DEBUG'])) {
+        if (!isset($_SERVER['APP_ENV']) && !isset($_SERVER['SYMFONY_ENV'])) {
             $container->set('contao_manager.jwt_manager', $this->getJwtManager());
         }
     }
