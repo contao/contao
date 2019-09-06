@@ -232,16 +232,6 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertSame($cache, $kernel->getHttpCache());
     }
 
-    public function testSetsProjectDirFromRequest(): void
-    {
-        $_SERVER['APP_ENV'] = 'dev';
-        $tempDir = realpath($this->getTempDir());
-        $kernel = ContaoKernel::fromRequest($tempDir, Request::create('/'));
-        unset($_SERVER['APP_ENV']);
-
-        $this->assertSame($tempDir, $kernel->getProjectDir());
-    }
-
     public function testSetsRequestTrustedProxiesFromEnvVars(): void
     {
         $this->assertSame([], Request::getTrustedProxies());
@@ -312,6 +302,51 @@ class ContaoKernelTest extends ContaoTestCase
 
         $input = new ArgvInput(['list', '--env=foo']);
         ContaoKernel::fromInput(sys_get_temp_dir(), $input);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testGetActualKernel(): void
+    {
+        unset($_SERVER['APP_ENV']);
+        $_SERVER['SYMFONY_ENV'] = 'dev';
+
+        $tempDir = realpath($this->getTempDir());
+        $kernel = ContaoKernel::fromRequest($tempDir, Request::create('/'));
+        
+        $this->assertInstanceOf(ContaoKernel::class, $kernel);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testGetCacheKernel(): void
+    {
+        unset($_SERVER['APP_ENV']);
+        $_SERVER['SYMFONY_ENV'] = 'prod';
+
+        $tempDir = realpath($this->getTempDir());
+        $kernel = ContaoKernel::fromRequest($tempDir, Request::create('/'));
+
+        $this->assertInstanceOf(ContaoCache::class, $kernel);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testSetsProjectDirFromRequest(): void
+    {
+        unset($_SERVER['APP_ENV']);
+        $_SERVER['SYMFONY_ENV'] = 'dev';
+
+        $tempDir = realpath($this->getTempDir());
+        $kernel = ContaoKernel::fromRequest($tempDir, Request::create('/'));
+
+        $this->assertSame($tempDir, $kernel->getProjectDir());
     }
 
     /**
