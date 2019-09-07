@@ -44,7 +44,7 @@ class RobotsTxtController
     }
 
     /**
-     * @Route("/robots.txt", name="contao_robots_txt")
+     * @Route("/robots.txt")
      */
     public function __invoke(Request $request): Response
     {
