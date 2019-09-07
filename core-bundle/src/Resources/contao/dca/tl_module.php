@@ -225,7 +225,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_module', 'getNavigationTemplates'),
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default 'nav_default'"
+			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'customTpl' => array
 		(
@@ -302,7 +302,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_module', 'getMemberTemplates'),
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default 'member_default'"
+			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'form' => array
 		(
@@ -366,7 +366,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_module', 'getSearchTemplates'),
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default 'search_default'"
+			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'inColumn' => array
 		(

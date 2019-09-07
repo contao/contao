@@ -316,7 +316,15 @@ class ContentGallery extends ContentElement
 			++$rowcount;
 		}
 
-		$objTemplate = new FrontendTemplate($this->galleryTpl);
+		$strTemplate = 'gallery_default';
+
+		// Use a custom template
+		if (TL_MODE == 'FE' && $this->galleryTpl != '')
+		{
+			$strTemplate = $this->galleryTpl;
+		}
+
+		$objTemplate = new FrontendTemplate($strTemplate);
 		$objTemplate->setData($this->arrData);
 		$objTemplate->body = $body;
 		$objTemplate->headline = $this->headline; // see #1603

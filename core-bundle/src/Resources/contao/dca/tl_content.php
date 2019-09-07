@@ -553,7 +553,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_content', 'getGalleryTemplates'),
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default 'gallery_default'"
+			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'customTpl' => array
 		(
