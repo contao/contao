@@ -106,7 +106,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},title,jumpTo;{template_legend},template;{sender_legend},sender,senderName'
+		'default'                     => '{title_legend},title,jumpTo;{template_legend:hide},template;{sender_legend},sender,senderName'
 	),
 
 	// Fields
@@ -141,12 +141,12 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
 				return Contao\Controller::getTemplateGroup('mail_');
 			},
-			'sql'                     => "varchar(32) NOT NULL default 'mail_default'"
+			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'sender' => array
 		(

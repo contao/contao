@@ -41,6 +41,8 @@ class Newsletter extends Backend
 			return '';
 		}
 
+		System::loadLanguageFile('tl_newsletter_channel');
+
 		// Set the template
 		if ($objNewsletter->template == '')
 		{
@@ -256,8 +258,8 @@ class Newsletter extends Backend
     <td class="col_1">' . $objNewsletter->subject . '</td>
   </tr>
   <tr class="row_2">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['template'][0] . '</td>
-    <td class="col_1">' . $objNewsletter->template . '</td>
+    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter_channel']['template'][0] . '</td>
+    <td class="col_1">' . ($objNewsletter->template ?: 'mail_default') . '</td>
   </tr>' . ((!empty($arrAttachments) && \is_array($arrAttachments)) ? '
   <tr class="row_3">
     <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['attachments'] . '</td>
@@ -366,13 +368,7 @@ class Newsletter extends Backend
 
 		if (!$objNewsletter->sendText)
 		{
-			// Default template
-			if ($objNewsletter->template == '')
-			{
-				$objNewsletter->template = 'mail_default';
-			}
-
-			$objTemplate = new BackendTemplate($objNewsletter->template);
+			$objTemplate = new BackendTemplate($objNewsletter->template ?: 'mail_default');
 			$objTemplate->setData($objNewsletter->row());
 			$objTemplate->title = $objNewsletter->subject;
 			$objTemplate->body = StringUtil::parseSimpleTokens($html, $arrRecipient);

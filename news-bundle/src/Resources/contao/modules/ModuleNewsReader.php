@@ -166,7 +166,7 @@ class ModuleNewsReader extends ModuleNews
 
 		$objConfig->perPage = $objArchive->perPage;
 		$objConfig->order = $objArchive->sortOrder;
-		$objConfig->template = $this->com_template;
+		$objConfig->template = $this->com_template ?: 'com_default';
 		$objConfig->requireLogin = $objArchive->requireLogin;
 		$objConfig->disableCaptcha = $objArchive->disableCaptcha;
 		$objConfig->bbcode = $objArchive->bbcode;

@@ -260,8 +260,11 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'sorting'                 => true,
 			'flag'                    => 11,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_layout', 'getPageTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('fe_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'minifyMarkup' => array
@@ -524,16 +527,6 @@ class tl_layout extends Contao\Backend
 		}
 
 		return $return;
-	}
-
-	/**
-	 * Return all page templates as array
-	 *
-	 * @return array
-	 */
-	public function getPageTemplates()
-	{
-		return $this->getTemplateGroup('fe_');
 	}
 
 	/**

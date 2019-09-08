@@ -274,7 +274,7 @@ class ModuleEventlist extends Events
 				$blnIsLastEvent = true;
 			}
 
-			$objTemplate = new FrontendTemplate($this->cal_template);
+			$objTemplate = new FrontendTemplate($this->cal_template ?: 'event_list');
 			$objTemplate->setData($event);
 
 			// Month header

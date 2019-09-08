@@ -72,9 +72,12 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_template'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options_callback'        => array('tl_module_news', 'getNewsTemplates'),
-	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default 'news_latest'"
+	'options_callback' => static function ()
+	{
+		return Contao\Controller::getTemplateGroup('news_');
+	},
+	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+	'sql'                     => "varchar(64) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_format'] = array
@@ -181,16 +184,6 @@ class tl_module_news extends Contao\Backend
 		}
 
 		return $arrModules;
-	}
-
-	/**
-	 * Return all news templates as array
-	 *
-	 * @return array
-	 */
-	public function getNewsTemplates()
-	{
-		return $this->getTemplateGroup('news_');
 	}
 
 	/**

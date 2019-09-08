@@ -184,7 +184,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
 				return Contao\Controller::getTemplateGroup('mail_');

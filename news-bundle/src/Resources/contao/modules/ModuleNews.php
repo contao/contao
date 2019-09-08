@@ -80,7 +80,7 @@ abstract class ModuleNews extends Module
 	 */
 	protected function parseArticle($objArticle, $blnAddArchive=false, $strClass='', $intCount=0)
 	{
-		$objTemplate = new FrontendTemplate($this->news_template);
+		$objTemplate = new FrontendTemplate($this->news_template ?: 'news_latest');
 		$objTemplate->setData($objArticle->row());
 
 		if ($objArticle->cssClass != '')

@@ -73,18 +73,24 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_layout'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options_callback'        => array('tl_module_listing', 'getListTemplates'),
-	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default 'list_default'"
+	'options_callback' => static function ()
+	{
+		return Contao\Controller::getTemplateGroup('list_');
+	},
+	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+	'sql'                     => "varchar(64) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_layout'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options_callback'        => array('tl_module_listing', 'getInfoTemplates'),
-	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default 'info_default'"
+	'options_callback' => static function ()
+	{
+		return Contao\Controller::getTemplateGroup('info_');
+	},
+	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+	'sql'                     => "varchar(64) NOT NULL default ''"
 );
 
 /**
@@ -103,25 +109,5 @@ class tl_module_listing extends Contao\Backend
 	public function getAllTables()
 	{
 		return $this->Database->listTables();
-	}
-
-	/**
-	 * Return all list templates as array
-	 *
-	 * @return array
-	 */
-	public function getListTemplates()
-	{
-		return $this->getTemplateGroup('list_');
-	}
-
-	/**
-	 * Return all info templates as array
-	 *
-	 * @return array
-	 */
-	public function getInfoTemplates()
-	{
-		return $this->getTemplateGroup('info_');
 	}
 }

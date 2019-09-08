@@ -277,13 +277,7 @@ abstract class Module extends Frontend
 			$groups = $this->User->groups;
 		}
 
-		// Layout template fallback
-		if ($this->navigationTpl == '')
-		{
-			$this->navigationTpl = 'nav_default';
-		}
-
-		$objTemplate = new FrontendTemplate($this->navigationTpl);
+		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
 		$objTemplate->pid = $pid;
 		$objTemplate->type = \get_class($this);
 		$objTemplate->cssID = $this->cssID; // see #4897

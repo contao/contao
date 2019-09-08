@@ -551,8 +551,11 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getGalleryTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('gallery_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'customTpl' => array
@@ -1441,16 +1444,6 @@ class tl_content extends Contao\Backend
 		}
 
 		return $arrModules;
-	}
-
-	/**
-	 * Return all gallery templates as array
-	 *
-	 * @return array
-	 */
-	public function getGalleryTemplates()
-	{
-		return $this->getTemplateGroup('gallery_');
 	}
 
 	/**

@@ -201,7 +201,7 @@ class ModuleFaqReader extends Module
 
 		$objConfig->perPage = $objCategory->perPage;
 		$objConfig->order = $objCategory->sortOrder;
-		$objConfig->template = $this->com_template;
+		$objConfig->template = $this->com_template ?: 'com_default';
 		$objConfig->requireLogin = $objCategory->requireLogin;
 		$objConfig->disableCaptcha = $objCategory->disableCaptcha;
 		$objConfig->bbcode = $objCategory->bbcode;

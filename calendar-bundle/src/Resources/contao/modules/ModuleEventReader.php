@@ -193,7 +193,7 @@ class ModuleEventReader extends Events
 			}
 		}
 
-		$objTemplate = new FrontendTemplate($this->cal_template);
+		$objTemplate = new FrontendTemplate($this->cal_template ?: 'event_full');
 		$objTemplate->setData($objEvent->row());
 		$objTemplate->date = $strDate;
 		$objTemplate->time = $strTime;
@@ -421,7 +421,7 @@ class ModuleEventReader extends Events
 
 		$objConfig->perPage = $objCalendar->perPage;
 		$objConfig->order = $objCalendar->sortOrder;
-		$objConfig->template = $this->com_template;
+		$objConfig->template = $this->com_template ?: 'com_default';
 		$objConfig->requireLogin = $objCalendar->requireLogin;
 		$objConfig->disableCaptcha = $objCalendar->disableCaptcha;
 		$objConfig->bbcode = $objCalendar->bbcode;

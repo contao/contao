@@ -104,18 +104,24 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_template'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options_callback'        => array('tl_module_calendar', 'getEventTemplates'),
-	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default 'event_full'"
+	'options_callback' => static function ()
+	{
+		return Contao\Controller::getTemplateGroup('event_');
+	},
+	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+	'sql'                     => "varchar(64) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ctemplate'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options_callback'        => array('tl_module_calendar', 'getCalendarTemplates'),
-	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default 'cal_default'"
+	'options_callback' => static function ()
+	{
+		return Contao\Controller::getTemplateGroup('cal_');
+	},
+	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+	'sql'                     => "varchar(64) NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_showQuantity'] = array
@@ -215,25 +221,5 @@ class tl_module_calendar extends Contao\Backend
 			'cal_upcoming' => array('next_7', 'next_14', 'next_30', 'next_90', 'next_180', 'next_365', 'next_two', 'next_cur_month', 'next_cur_year', 'next_next_month', 'next_next_year', 'next_all'),
 			'cal_past'     => array('past_7', 'past_14', 'past_30', 'past_90', 'past_180', 'past_365', 'past_two', 'past_cur_month', 'past_cur_year', 'past_prev_month', 'past_prev_year', 'past_all')
 		);
-	}
-
-	/**
-	 * Return all event templates as array
-	 *
-	 * @return array
-	 */
-	public function getEventTemplates()
-	{
-		return $this->getTemplateGroup('event_');
-	}
-
-	/**
-	 * Return all calendar templates as array
-	 *
-	 * @return array
-	 */
-	public function getCalendarTemplates()
-	{
-		return $this->getTemplateGroup('cal_');
 	}
 }

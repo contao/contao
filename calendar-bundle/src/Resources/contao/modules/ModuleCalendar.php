@@ -113,7 +113,7 @@ class ModuleCalendar extends Events
 		// Find the boundaries
 		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(". implode(',', array_map('\intval', $this->cal_calendar)) .")" . (!BE_USER_LOGGED_IN ? " AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'" : ""));
 
-		$objTemplate = new FrontendTemplate($this->cal_ctemplate);
+		$objTemplate = new FrontendTemplate($this->cal_ctemplate ?: 'cal_default');
 
 		// Store year and month
 		$intYear = date('Y', $this->Date->tstamp);

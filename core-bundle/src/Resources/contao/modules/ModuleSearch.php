@@ -266,7 +266,7 @@ class ModuleSearch extends Module
 			// Get the results
 			for ($i=($from-1); $i<$to && $i<$count; $i++)
 			{
-				$objTemplate = new FrontendTemplate($this->searchTpl);
+				$objTemplate = new FrontendTemplate($this->searchTpl ?: 'search_default');
 				$objTemplate->setData($arrResult[$i]);
 				$objTemplate->href = $arrResult[$i]['url'];
 				$objTemplate->link = $arrResult[$i]['title'];
