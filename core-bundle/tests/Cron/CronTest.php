@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Cron;
 
-use Psr\Log\LoggerInterface;
-use Doctrine\DBAL\Connection;
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\ResultStatement;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
 
 class CronTest extends TestCase
 {
@@ -29,7 +29,7 @@ class CronTest extends TestCase
             ->expects($this->exactly(6))
             ->method('insert')
             ->withConsecutive(
-                ['tl_cron', ['name' => 'lastrun', 'value' => $this->getTimestamp()]], 
+                ['tl_cron', ['name' => 'lastrun', 'value' => $this->getTimestamp()]],
                 ['tl_cron', ['name' => 'monthly', 'value' => 0]],
                 ['tl_cron', ['name' => 'weekly', 'value' => 0]],
                 ['tl_cron', ['name' => 'daily', 'value' => 0]],
@@ -62,7 +62,7 @@ class CronTest extends TestCase
             ->expects($this->exactly(2))
             ->method('executeQuery')
             ->withConsecutive(
-                ["SELECT * FROM tl_cron WHERE name = 'lastrun' LIMIT 1"], 
+                ["SELECT * FROM tl_cron WHERE name = 'lastrun' LIMIT 1"],
                 ["SELECT * FROM tl_cron WHERE name != 'lastrun'"]
             )
             ->willReturnOnConsecutiveCalls($result1, $result2)
@@ -231,7 +231,7 @@ class CronTest extends TestCase
 
     public function testLoggerWhenDebugIsEnabled(): void
     {
-        define('TL_CRON', 'CRON');
+        \define('TL_CRON', 'CRON');
 
         $connection = $this->getEmptyDatabaseConnection();
 
@@ -284,7 +284,7 @@ class CronTest extends TestCase
             ->expects($this->exactly(2))
             ->method('executeQuery')
             ->withConsecutive(
-                ["SELECT * FROM tl_cron WHERE name = 'lastrun' LIMIT 1"], 
+                ["SELECT * FROM tl_cron WHERE name = 'lastrun' LIMIT 1"],
                 ["SELECT * FROM tl_cron WHERE name != 'lastrun'"]
             )
             ->willReturnOnConsecutiveCalls($result1, $result2)
@@ -298,7 +298,7 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron($connection);
-        
+
         $cron->addCronJob($cronjob, 'test', 'monthly');
         $cron->addCronJob($cronjob, 'test', 'weekly');
         $cron->addCronJob($cronjob, 'test', 'daily');
@@ -318,7 +318,7 @@ class CronTest extends TestCase
 
     /**
      * Creates a database Connection mock where tl_cron is empty.
-     * 
+     *
      * @return Connection&MockObject
      */
     private function getEmptyDatabaseConnection(): Connection
@@ -341,7 +341,7 @@ class CronTest extends TestCase
             ->expects($this->exactly(2))
             ->method('executeQuery')
             ->withConsecutive(
-                ["SELECT * FROM tl_cron WHERE name = 'lastrun' LIMIT 1"], 
+                ["SELECT * FROM tl_cron WHERE name = 'lastrun' LIMIT 1"],
                 ["SELECT * FROM tl_cron WHERE name != 'lastrun'"]
             )
             ->willReturnOnConsecutiveCalls($result1, $result2)
