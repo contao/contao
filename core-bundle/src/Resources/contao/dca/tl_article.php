@@ -249,7 +249,10 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_article', 'getArticleTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('mod_article_');
+			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -651,16 +654,6 @@ class tl_article extends Contao\Backend
 		}
 
 		return Contao\Backend::convertLayoutSectionIdsToAssociativeArray($arrSections);
-	}
-
-	/**
-	 * Return all module templates as array
-	 *
-	 * @return array
-	 */
-	public function getArticleTemplates()
-	{
-		return $this->getTemplateGroup('mod_article_');
 	}
 
 	/**

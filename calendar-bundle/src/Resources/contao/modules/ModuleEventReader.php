@@ -421,7 +421,7 @@ class ModuleEventReader extends Events
 
 		$objConfig->perPage = $objCalendar->perPage;
 		$objConfig->order = $objCalendar->sortOrder;
-		$objConfig->template = $this->com_template ?: 'com_default';
+		$objConfig->template = $this->com_template;
 		$objConfig->requireLogin = $objCalendar->requireLogin;
 		$objConfig->disableCaptcha = $objCalendar->disableCaptcha;
 		$objConfig->bbcode = $objCalendar->bbcode;

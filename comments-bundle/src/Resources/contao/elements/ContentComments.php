@@ -57,7 +57,7 @@ class ContentComments extends ContentElement
 
 		$objConfig->perPage = $this->com_perPage;
 		$objConfig->order = $this->com_order;
-		$objConfig->template = $this->com_template ?: 'com_default';
+		$objConfig->template = $this->com_template;
 		$objConfig->requireLogin = $this->com_requireLogin;
 		$objConfig->disableCaptcha = $this->com_disableCaptcha;
 		$objConfig->bbcode = $this->com_bbcode;

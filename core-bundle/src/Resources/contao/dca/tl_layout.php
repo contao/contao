@@ -364,7 +364,10 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_layout', 'getJqueryTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('j_');
+			},
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
 		),
@@ -390,7 +393,10 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_layout', 'getMooToolsTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('moo_');
+			},
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
 		),
@@ -399,7 +405,10 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_layout', 'getAnalyticsTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('analytics_');
+			},
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
@@ -421,7 +430,10 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_layout', 'getScriptTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('js_');
+			},
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
 		),
@@ -527,46 +539,6 @@ class tl_layout extends Contao\Backend
 		}
 
 		return $return;
-	}
-
-	/**
-	 * Return all MooTools templates as array
-	 *
-	 * @return array
-	 */
-	public function getMooToolsTemplates()
-	{
-		return $this->getTemplateGroup('moo_');
-	}
-
-	/**
-	 * Return all jQuery templates as array
-	 *
-	 * @return array
-	 */
-	public function getJqueryTemplates()
-	{
-		return $this->getTemplateGroup('j_');
-	}
-
-	/**
-	 * Return all script templates as array
-	 *
-	 * @return array
-	 */
-	public function getScriptTemplates()
-	{
-		return $this->getTemplateGroup('js_');
-	}
-
-	/**
-	 * Return all analytics templates as array
-	 *
-	 * @return array
-	 */
-	public function getAnalyticsTemplates()
-	{
-		return $this->getTemplateGroup('analytics_');
 	}
 
 	/**

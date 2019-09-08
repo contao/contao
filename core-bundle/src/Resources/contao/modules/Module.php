@@ -141,7 +141,7 @@ abstract class Module extends Frontend
 		$this->arrData = $objModule->row();
 		$this->cssID = StringUtil::deserialize($objModule->cssID, true);
 
-		if ($this->customTpl != '' && TL_MODE == 'FE')
+		if ($this->customTpl && TL_MODE == 'FE')
 		{
 			$this->strTemplate = $this->customTpl;
 		}

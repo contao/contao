@@ -96,6 +96,12 @@ class ModuleNewsReader extends ModuleNews
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
+		// Set the default template
+		if (!$this->news_template)
+		{
+			$this->news_template = 'news_full';
+		}
+
 		$arrArticle = $this->parseArticle($objArticle);
 		$this->Template->articles = $arrArticle;
 
@@ -166,7 +172,7 @@ class ModuleNewsReader extends ModuleNews
 
 		$objConfig->perPage = $objArchive->perPage;
 		$objConfig->order = $objArchive->sortOrder;
-		$objConfig->template = $this->com_template ?: 'com_default';
+		$objConfig->template = $this->com_template;
 		$objConfig->requireLogin = $objArchive->requireLogin;
 		$objConfig->disableCaptcha = $objArchive->disableCaptcha;
 		$objConfig->bbcode = $objArchive->bbcode;

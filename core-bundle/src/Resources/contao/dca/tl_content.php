@@ -562,7 +562,10 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getElementTemplates'),
+			'options_callback' => static function (Contao\DataContainer $dc)
+			{
+				return Contao\Controller::getTemplateGroup('ce_' . $dc->activeRecord->type . '_');
+			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -1444,18 +1447,6 @@ class tl_content extends Contao\Backend
 		}
 
 		return $arrModules;
-	}
-
-	/**
-	 * Return all content element templates as array
-	 *
-	 * @param Contao\DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function getElementTemplates(Contao\DataContainer $dc)
-	{
-		return $this->getTemplateGroup('ce_' . $dc->activeRecord->type . '_');
 	}
 
 	/**

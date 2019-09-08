@@ -214,7 +214,10 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_form', 'getFormWrapperTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('form_wrapper_');
+			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -500,16 +503,6 @@ class tl_form extends Contao\Backend
 		}
 
 		return array_values($arrTables);
-	}
-
-	/**
-	 * Return all form wrapper templates as array
-	 *
-	 * @return array
-	 */
-	public function getFormWrapperTemplates()
-	{
-		return $this->getTemplateGroup('form_wrapper_');
 	}
 
 	/**
