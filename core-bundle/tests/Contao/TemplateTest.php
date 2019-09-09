@@ -235,17 +235,14 @@ EOF
         $template = new FrontendTemplate();
         $template->test = 1;
 
-        // Manually set the VarDumper handler so we can fetch the output buffer
-        VarDumper::setHandler(static function ($var): void {
-            $cloner = new VarCloner();
-            $dumper = new CliDumper('php://output');
-            $dumper->dump($cloner->cloneVar($var));
+        $dump = null;
+
+        VarDumper::setHandler(static function ($var) use (&$dump): void {
+            $dump = $var;
         });
-
-        ob_start();
-
+        
         $template->dumpTemplateVars();
-
-        $this->assertSame("array:1 [\n  \"test\" => 1\n]\n", ob_get_clean());
+        
+        $this->assertSame(['test' => 1], $dump);
     }
 }
