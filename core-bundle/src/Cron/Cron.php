@@ -131,7 +131,11 @@ class Cron
                     continue;
                 }
 
-                $cron[0]->{$cron[1]}();
+                if (method_exists($cron[0], $cron[1])) {
+                    $cron[0]->{$cron[1]}();
+                } elseif (null !== $this->logger) {
+                    $this->logger->critical('Cron job method "'.\get_class($cron[0]).'::'.$cron[1].'" does not exist!');
+                }
             }
 
             // Add a log entry if in debug mode (see #4729)

@@ -308,6 +308,24 @@ class CronTest extends TestCase
         $cron->run();
     }
 
+    public function testLogsCriticalIfMethodDoesNotExist(): void
+    {
+        $connection = $this->getEmptyDatabaseConnection();
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('critical')
+            ->with('Cron job method "stdClass::test" does not exist!')
+        ;
+
+        $cron = new Cron($connection, false, $logger);
+
+        $cron->addCronJob(new \stdClass(), 'test', 'minutely');
+
+        $cron->run();
+    }
+
     /**
      * Returns a timestamp without seconds.
      */
