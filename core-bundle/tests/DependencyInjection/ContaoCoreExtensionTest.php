@@ -1907,10 +1907,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey(IndexerInterface::class, $this->container->getAutoconfiguredInstanceof());
 
-        $this->assertTrue($this->container->hasDefinition('contao.search.indexer.default'));
+        $this->assertTrue($this->container->hasDefinition('Contao\CoreBundle\Search\Indexer\DefaultIndexer'));
 
-        $definition = $this->container->getDefinition('contao.search.indexer.default');
-        $this->assertTrue($definition->getArgument(1));
+        $definition = $this->container->getDefinition('Contao\CoreBundle\Search\Indexer\DefaultIndexer');
+        $this->assertTrue($definition->getArgument(2));
     }
 
     public function testDoesNotRegisterTheDefaultSearchIndexerIfDisabled(): void

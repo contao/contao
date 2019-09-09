@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search\Indexer;
 
-use Contao\Automator;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Document;
 use Contao\Search;
+use Doctrine\DBAL\Driver\Connection;
 
 class DefaultIndexer implements IndexerInterface
 {
@@ -25,13 +25,19 @@ class DefaultIndexer implements IndexerInterface
     private $framework;
 
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
      * @var bool
      */
     private $indexProtected = false;
 
-    public function __construct(ContaoFramework $framework, bool $indexProtected = false)
+    public function __construct(ContaoFramework $framework, Connection $connection, bool $indexProtected = false)
     {
         $this->framework = $framework;
+        $this->connection = $connection;
         $this->indexProtected = $indexProtected;
     }
 
@@ -77,14 +83,14 @@ class DefaultIndexer implements IndexerInterface
         /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
         $search->indexPage([
-                'url' => (string) $document->getUri(),
-                'content' => $document->getBody(),
-                'protected' => ($meta['protected']) ? '1' : '',
-                'groups' => $meta['groups'],
-                'pid' => $meta['pageId'],
-                'title' => $meta['title'],
-                'language' => $meta['language'],
-            ])
+            'url' => (string) $document->getUri(),
+            'content' => $document->getBody(),
+            'protected' => ($meta['protected']) ? '1' : '',
+            'groups' => $meta['groups'],
+            'pid' => $meta['pageId'],
+            'title' => $meta['title'],
+            'language' => $meta['language'],
+        ])
         ;
     }
 
@@ -93,11 +99,8 @@ class DefaultIndexer implements IndexerInterface
      */
     public function clear(): void
     {
-        $this->framework->initialize();
-
-        /** @var Automator $automator */
-        $automator = $this->framework->getAdapter(Automator::class);
-        $automator->purgeSearchTables();
+        $this->connection->exec('TRUNCATE TABLE tl_search');
+        $this->connection->exec('TRUNCATE TABLE tl_search_index');
     }
 
     private function extendMetaFromJsonLdScripts(Document $document, array &$meta): void

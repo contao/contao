@@ -37,8 +37,11 @@ class Automator extends System
 	public function purgeSearchTables()
 	{
 		$objDatabase = Database::getInstance();
+		$container = System::getContainer();
 
-		// Truncate the tables
+		// Clear index
+		$container->get('contao.search.indexer')->clear();
+
 		$objDatabase->execute("TRUNCATE TABLE tl_search");
 		$objDatabase->execute("TRUNCATE TABLE tl_search_index");
 

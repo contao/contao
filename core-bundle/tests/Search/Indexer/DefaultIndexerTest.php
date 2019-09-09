@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Search\Indexer;
 
-use Contao\Automator;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\DefaultIndexer;
 use Contao\Search;
 use Contao\TestCase\ContaoTestCase;
+use Doctrine\DBAL\Driver\Connection;
 use Nyholm\Psr7\Uri;
 
 class DefaultIndexerTest extends ContaoTestCase
@@ -50,7 +50,7 @@ class DefaultIndexerTest extends ContaoTestCase
             ;
         }
 
-        $indexer = new DefaultIndexer($framework, $indexProtected);
+        $indexer = new DefaultIndexer($framework, $this->createMock(Connection::class), $indexProtected);
         $indexer->index($document);
     }
 
@@ -106,19 +106,19 @@ class DefaultIndexerTest extends ContaoTestCase
 
     public function testClear(): void
     {
-        $automatorAdapter = $this->mockAdapter(['purgeSearchTables']);
-        $automatorAdapter
-            ->expects($this->once())
-            ->method('purgeSearchTables')
+        $framework = $this->mockContaoFramework();
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->exactly(2))
+            ->method('exec')
+            ->withConsecutive(
+                ['TRUNCATE TABLE tl_search'],
+                ['TRUNCATE TABLE tl_search_index']
+            )
         ;
 
-        $framework = $this->mockContaoFramework([Automator::class => $automatorAdapter]);
-        $framework
-            ->expects($this->once())
-            ->method('initialize')
-        ;
-
-        $indexer = new DefaultIndexer($framework);
+        $indexer = new DefaultIndexer($framework, $connection);
         $indexer->clear();
     }
 }
