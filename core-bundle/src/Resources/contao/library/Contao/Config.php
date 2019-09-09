@@ -475,6 +475,8 @@ class Config
 			'urlSuffix'        => 'contao.url_suffix',
 			'uploadPath'       => 'contao.upload_path',
 			'debugMode'        => 'kernel.debug',
+			'enableSearch'     => 'contao.search.default_indexer.enable',
+			'indexProtected'   => 'contao.search.default_indexer.enableIndexProtected',
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)
@@ -493,16 +495,6 @@ class Config
 		if ($container->hasParameter('contao.image.imagine_options'))
 		{
 			$GLOBALS['TL_CONFIG']['jpgQuality'] = $container->getParameter('contao.image.imagine_options')['jpeg_quality'];
-		}
-
-		if ($container->hasParameter('contao.search.default_indexer.enable'))
-		{
-			$GLOBALS['TL_CONFIG']['enableSearch'] = $container->getParameter('contao.search.default_indexer.enable');
-		}
-
-		if ($container->hasParameter('contao.search.default_indexer.enableIndexProtected'))
-		{
-			$GLOBALS['TL_CONFIG']['indexProtected'] = $container->getParameter('contao.search.default_indexer.enableIndexProtected');
 		}
 	}
 
