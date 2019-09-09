@@ -68,12 +68,12 @@ class Cron
     /**
      * Run the registered Contao cron jobs.
      *
-     * @param bool $cliOnly Whether the cli only crons should be run.
+     * @param bool $cliOnly whether the cli only crons should be run
      */
     public function run(bool $cliOnly = false): void
     {
         // Do not run if the last execution was less than a minute ago
-        if ($this->hasToWait()) {
+        if ($this->hasToWait($this->getCronTimeout())) {
             return;
         }
 
@@ -146,7 +146,7 @@ class Cron
     }
 
     /**
-     * Check whether the last cron execution was less than a minute ago.
+     * Check whether the last cron execution was less than the given timeout.
      */
     private function hasToWait(int $cronTimeout = 60): bool
     {
@@ -176,5 +176,21 @@ class Cron
         $this->db->exec('UNLOCK TABLES');
 
         return $return;
+    }
+
+    /**
+     * Returns the minimum timeout necessary for the cron according to the registered cron jobs.
+     */
+    private function getCronTimeout(): int
+    {
+        if (!empty($this->crons['minutely'])) {
+            return 60;
+        }
+
+        if (!empty($this->crons['hourly'])) {
+            return 3600;
+        }
+
+        return 86400;
     }
 }

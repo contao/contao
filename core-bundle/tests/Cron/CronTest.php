@@ -42,12 +42,12 @@ class CronTest extends TestCase
         $cron->run();
     }
 
-    public function testUpdatesLastRunTimestampIfLastRunWasMoreThanSixtySecondsAgo(): void
+    public function testUpdatesLastRunTimestampIfLastRunWasMoreThanOneDayAgo(): void
     {
         $result1 = $this->createMock(ResultStatement::class);
         $result1
             ->method('fetch')
-            ->willReturn(['value' => (string) $this->getTimestamp(time() - 60)])
+            ->willReturn(['value' => (string) $this->getTimestamp(time() - 86400)])
         ;
 
         $result2 = $this->createMock(ResultStatement::class);
