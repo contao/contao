@@ -818,6 +818,22 @@ class PageRegular extends Frontend
 		// Add search index meta data
 		if ($objPage !== null)
 		{
+			$noSearch = (bool) $objPage->noSearch;
+
+			// BC, do not use $GLOBALS['TL_NOINDEX_KEYS'] anymore but make sure your page type delivers the correct
+			// <meta name="robots" content="noindex"> tag.
+			foreach (array_keys($_GET) as $key)
+			{
+				foreach ($GLOBALS['TL_NOINDEX_KEYS'] as $noIndexKey)
+				{
+					if (preg_match('/^' . $noIndexKey . '$/', $key))
+					{
+						$noSearch = true;
+						break 2;
+					}
+				}
+			}
+
 			$meta = array
 			(
 				'@context' => 'https://contao.org/',
@@ -825,7 +841,7 @@ class PageRegular extends Frontend
 				'pageId' => (int) $objPage->id,
 				'language' => $objPage->language,
 				'title' => $objPage->pageTitle ?: $objPage->title,
-				'noSearch' => (bool) $objPage->noSearch,
+				'noSearch' => $noSearch,
 				'protected' => (bool) $objPage->protected,
 				'groups' => array_map('intval', array_filter((array) $objPage->groups)),
 				'fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
