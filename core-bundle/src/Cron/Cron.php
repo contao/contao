@@ -27,22 +27,22 @@ class Cron
     /**
      * @var Connection
      */
-    protected $db;
+    private $db;
 
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    private $logger;
 
     /**
      * @var bool
      */
-    protected $debug;
+    private $debug;
 
     /**
      * @var array
      */
-    protected $crons = [];
+    private $crons = [];
 
     public function __construct(Connection $db, bool $debug = false, LoggerInterface $logger = null)
     {

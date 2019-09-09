@@ -34,7 +34,7 @@ class LegacyCron implements ServiceAnnotationInterface
     /**
      * @var ContaoFramework
      */
-    protected $framework;
+    private $framework;
 
     public function __construct(ContaoFramework $framework)
     {
