@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Tests\Search;
 use Contao\CoreBundle\Search\Document;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DocumentTest extends TestCase
 {
@@ -34,6 +36,20 @@ class DocumentTest extends TestCase
         $this->assertSame(200, $document->getStatusCode());
         $this->assertSame(['content-type' => ['text/html']], $document->getHeaders());
         $this->assertSame($expectedJsonLds, $document->extractJsonLdScripts());
+    }
+
+    public function testFactory(): void
+    {
+        $request = Request::create('https://example.com/foo?bar=baz', 'GET');
+        $response = new Response('body', 200, ['content-type' => ['text/html']]);
+
+        $document = Document::createFromRequestResponse($request, $response);
+
+        $this->assertSame('https://example.com/foo?bar=baz', (string) $document->getUri());
+        $this->assertSame(200, $document->getStatusCode());
+        $headers = $document->getHeaders();
+        unset($headers['date']);
+        $this->assertSame(['content-type' => ['text/html'], 'cache-control' => ['no-cache, private']], $headers);
     }
 
     public function testContextAndTypeFiltersCorrectly(): void

@@ -90,8 +90,7 @@ class DefaultIndexer implements IndexerInterface
             'pid' => $meta['pageId'],
             'title' => $meta['title'],
             'language' => $meta['language'],
-        ])
-        ;
+        ]);
     }
 
     /**

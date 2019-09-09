@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
-use Nyholm\Psr7\Uri;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
@@ -52,14 +51,7 @@ class AddToSearchIndexListener
             return;
         }
 
-        $response = $event->getResponse();
-
-        $document = new Document(
-            new Uri($request->getUri()),
-            $response->getStatusCode(),
-            $response->headers->all(),
-            $response->getContent()
-        );
+        $document = Document::createFromRequestResponse($request, $event->getResponse());
 
         // If there are no json ld scripts at all, nothing will be indexed.
         $lds = $document->extractJsonLdScripts();

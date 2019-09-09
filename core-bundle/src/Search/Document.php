@@ -12,8 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search;
 
+use Nyholm\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class Document
 {
@@ -106,6 +109,16 @@ class Document
         $this->jsonLds = array_filter($this->jsonLds);
 
         return $this->filterJsonLd($this->jsonLds, $context, $type);
+    }
+
+    public static function createFromRequestResponse(Request $request, Response $response): self
+    {
+        return new self(
+            new Uri($request->getUri()),
+            $response->getStatusCode(),
+            $response->headers->all(),
+            $response->getContent()
+        );
     }
 
     private function filterJsonLd(array $jsonLds, $context = '', $type = ''): array
