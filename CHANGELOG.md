@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Support hyphens in custom template names (see #731).
  * Add the `preview.php` fragment to all links in the site structure (see #723).
 
 ## 4.8.2 (2019-09-05)
