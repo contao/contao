@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Search\Document;
-use Nyholm\Psr7\Uri;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -640,12 +639,7 @@ abstract class Frontend extends Controller
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		$document = new Document(
-			new Uri($request->getUri()),
-			$response->getStatusCode(),
-			$response->headers->all(),
-			$response->getContent()
-		);
+		$document = Document::createFromRequestResponse($request, $response);
 
 		System::getContainer()->get('contao.search.indexer')->index($document);
 	}
