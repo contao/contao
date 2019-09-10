@@ -1093,27 +1093,10 @@ abstract class Controller extends System
 	protected static function replaceOldBePaths($strContext)
 	{
 		$router = System::getContainer()->get('router');
-		$previewScript = System::getContainer()->getParameter('contao.preview_script');
 
-		$generate = static function ($route) use ($router, $previewScript)
+		$generate = static function ($route) use ($router)
 		{
-			if ($route == 'contao_backend_preview')
-			{
-				$origContext = $router->getContext();
-
-				$context = clone $origContext;
-				$context->setBaseUrl($previewScript);
-
-				$router->setContext($context);
-				$url = $router->generate($route);
-				$router->setContext($origContext);
-			}
-			else
-			{
-				$url = $router->generate($route);
-			}
-
-			return substr($url, \strlen(Environment::get('path')) + 1);
+			return substr($router->generate($route), \strlen(Environment::get('path')) + 1);
 		};
 
 		$arrMapper = array
