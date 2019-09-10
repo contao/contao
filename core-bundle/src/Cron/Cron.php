@@ -12,10 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 
 class Cron
 {
@@ -35,19 +33,13 @@ class Cron
     private $logger;
 
     /**
-     * @var bool
-     */
-    private $debug;
-
-    /**
      * @var array
      */
     private $crons = [];
 
-    public function __construct(Connection $db, bool $debug = false, LoggerInterface $logger = null)
+    public function __construct(Connection $db, LoggerInterface $logger = null)
     {
         $this->db = $db;
-        $this->debug = $debug;
         $this->logger = $logger;
     }
 
@@ -116,8 +108,8 @@ class Cron
             $this->db->update('tl_cron', ['value' => $currentTimestamp], ['name' => $interval]);
 
             // Add a log entry if in debug mode (see #4729)
-            if ($this->debug && null !== $this->logger) {
-                $this->logger->log(LogLevel::INFO, 'Running the '.$interval.' cron jobs', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
+            if (null !== $this->logger) {
+                $this->logger->debug('Running the '.$interval.' cron jobs');
             }
 
             // Sort the cron jobs by priority
@@ -128,6 +120,7 @@ class Cron
             foreach ($crons as $cron) {
                 // Skip jobs that are only to be run on CLI, when not run via CLI
                 if (!$cliOnly && isset($cron[2]) && true === $cron[2]) {
+                    $this->logger->debug('Skipping command line only '.$interval.' cron job "'.\get_class($cron[0]).'::'.$cron[1].'"');
                     continue;
                 }
 
@@ -139,8 +132,8 @@ class Cron
             }
 
             // Add a log entry if in debug mode (see #4729)
-            if ($this->debug && null !== $this->logger) {
-                $this->logger->log(LogLevel::INFO, ucfirst($interval).' cron jobs complete', ['contao' => new ContaoContext(__METHOD__, TL_CRON)]);
+            if (null !== $this->logger) {
+                $this->logger->debug(ucfirst($interval).' cron jobs complete');
             }
         }
     }

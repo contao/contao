@@ -181,11 +181,15 @@ class CronTest extends TestCase
         $cron->run();
     }
 
-    public function testCliCronJobsAreNotExecutedCliOnlyIsFalse(): void
+    public function testCliCronJobsAreNotExecutedIfCliOnlyIsFalse(): void
     {
         $connection = $this->getEmptyDatabaseConnection();
 
-        $cronjob = $this->getMockBuilder(\stdClass::class)->setMethods(['web', 'cli'])->getMock();
+        $cronjob = $this->getMockBuilder(\stdClass::class)
+            ->setMockClassName('TestCronJob')
+            ->setMethods(['web', 'cli'])
+            ->getMock()
+        ;
 
         $cronjob
             ->expects($this->once())
@@ -197,7 +201,18 @@ class CronTest extends TestCase
             ->method('cli')
         ;
 
-        $cron = new Cron($connection);
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->exactly(3))
+            ->method('debug')
+            ->withConsecutive(
+                ['Running the minutely cron jobs'],
+                ['Skipping command line only minutely cron job "TestCronJob::cli"'],
+                ['Minutely cron jobs complete']
+            )
+        ;
+
+        $cron = new Cron($connection, $logger);
 
         $cron->addCronJob($cronjob, 'web', 'minutely');
         $cron->addCronJob($cronjob, 'cli', 'minutely', 0, true);
@@ -227,27 +242,6 @@ class CronTest extends TestCase
         $cron->addCronJob($cronjob, 'cli', 'minutely', 0, true);
 
         $cron->run(true);
-    }
-
-    public function testLoggerWhenDebugIsEnabled(): void
-    {
-        \define('TL_CRON', 'CRON');
-
-        $connection = $this->getEmptyDatabaseConnection();
-
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger
-            ->expects($this->exactly(2))
-            ->method('log')
-        ;
-
-        $cronjob = $this->getMockBuilder(\stdClass::class)->setMethods(['onMinutely'])->getMock();
-
-        $cron = new Cron($connection, true, $logger);
-
-        $cron->addCronJob($cronjob, 'onMinutely', 'minutely');
-
-        $cron->run();
     }
 
     public function testCronJobsAreNotRunWhenLastRunIsCurrent(): void
@@ -319,9 +313,44 @@ class CronTest extends TestCase
             ->with('Cron job method "stdClass::test" does not exist!')
         ;
 
-        $cron = new Cron($connection, false, $logger);
+        $cron = new Cron($connection, $logger);
 
         $cron->addCronJob(new \stdClass(), 'test', 'minutely');
+
+        $cron->run();
+    }
+
+    public function testLogsDebugInfoWhenRun(): void
+    {
+        $connection = $this->getEmptyDatabaseConnection();
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->exactly(10))
+            ->method('debug')
+            ->withConsecutive(
+                ['Running the monthly cron jobs'],
+                ['Monthly cron jobs complete'],
+                ['Running the weekly cron jobs'],
+                ['Weekly cron jobs complete'],
+                ['Running the daily cron jobs'],
+                ['Daily cron jobs complete'],
+                ['Running the hourly cron jobs'],
+                ['Hourly cron jobs complete'],
+                ['Running the minutely cron jobs'],
+                ['Minutely cron jobs complete']
+            )
+        ;
+
+        $cronjob = $this->getMockBuilder(\stdClass::class)->setMethods(['test'])->getMock();
+
+        $cron = new Cron($connection, $logger);
+
+        $cron->addCronJob($cronjob, 'test', 'minutely');
+        $cron->addCronJob($cronjob, 'test', 'hourly');
+        $cron->addCronJob($cronjob, 'test', 'daily');
+        $cron->addCronJob($cronjob, 'test', 'weekly');
+        $cron->addCronJob($cronjob, 'test', 'monthly');
 
         $cron->run();
     }
