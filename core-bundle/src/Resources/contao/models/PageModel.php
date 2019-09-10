@@ -1111,6 +1111,48 @@ class PageModel extends Model
 	}
 
 	/**
+	 * Generate the front end preview URL
+	 *
+	 * @param string $strParams An optional string of URL parameters
+	 *
+	 * @return string The front end preview URL
+	 */
+	public function getPreviewUrl($strParams=null)
+	{
+		$container = System::getContainer();
+
+		if (!$previewScript = $container->getParameter('contao.preview_script'))
+		{
+			return $this->getAbsoluteUrl($strParams);
+		}
+
+		$router = $container->get('router');
+
+		$context = $router->getContext();
+		$context->setBaseUrl($previewScript);
+
+		$objUrlGenerator = $container->get('contao.routing.url_generator');
+
+		$strUrl = $objUrlGenerator->generate
+		(
+			($this->alias ?: $this->id) . $strParams,
+			array
+			(
+				'_locale' => $this->rootLanguage,
+				'_domain' => $this->domain,
+				'_ssl' => (bool) $this->rootUseSSL,
+			),
+			UrlGeneratorInterface::ABSOLUTE_URL
+		);
+
+		$context->setBaseUrl('');
+
+		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
+
+		return $strUrl;
+	}
+
+	/**
 	 * Return the slug options
 	 *
 	 * @return array The slug options

@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Add the `preview.php` fragment to all links in the site structure (see #723).
+
 ## 4.8.2 (2019-09-05)
 
  * Always render deferred images in HTML emails (see #693).

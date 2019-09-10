@@ -1349,13 +1349,7 @@ abstract class Controller extends System
 			$strParams = '/articles/' . (($objArticle->inColumn != 'main') ? $objArticle->inColumn . ':' : '') . $strArticle;
 		}
 
-		$strUrl = $objPage->getFrontendUrl($strParams);
-
-		// Make sure the URL is absolute (see #4332)
-		if (strncmp($strUrl, 'http://', 7) !== 0 && strncmp($strUrl, 'https://', 8) !== 0)
-		{
-			$strUrl = Environment::get('base') . $strUrl;
-		}
+		$strUrl = $objPage->getPreviewUrl($strParams);
 
 		if (!$blnReturn)
 		{
