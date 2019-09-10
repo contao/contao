@@ -348,7 +348,7 @@ class ModuleRegistration extends Module
 			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key]] = $v;
 		}
 
-		$this->Template->categories = $arrGroups;
+		$this->Template->categories = array_filter($arrGroups);
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['register']);
 		$this->Template->action = Environment::get('indexFreeRequest');
