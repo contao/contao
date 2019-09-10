@@ -443,6 +443,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'overwriteLink' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['overwriteMeta'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
@@ -537,7 +538,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'options'                 => array('custom', 'name_asc', 'name_desc', 'date_asc', 'date_desc', 'random'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'metaIgnore' => array
@@ -673,6 +674,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'youtubeOptions' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['playerOptions'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array('youtube_autoplay', 'youtube_controls', 'youtube_cc_load_policy', 'youtube_fs', 'youtube_hl', 'youtube_iv_load_policy', 'youtube_modestbranding', 'youtube_rel', 'youtube_showinfo', 'youtube_nocookie'),
@@ -682,6 +684,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'vimeoOptions' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['playerOptions'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array('vimeo_autoplay', 'vimeo_loop', 'vimeo_portrait', 'vimeo_title', 'vimeo_byline'),
