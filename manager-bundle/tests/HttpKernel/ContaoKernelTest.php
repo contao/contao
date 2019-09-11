@@ -308,14 +308,14 @@ class ContaoKernelTest extends ContaoTestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testGetActualKernel(): void
+    public function testReturnsTheContaoKernelInDevMode(): void
     {
         unset($_SERVER['APP_ENV']);
         $_SERVER['SYMFONY_ENV'] = 'dev';
 
         $tempDir = realpath($this->getTempDir());
         $kernel = ContaoKernel::fromRequest($tempDir, Request::create('/'));
-        
+
         $this->assertInstanceOf(ContaoKernel::class, $kernel);
     }
 
@@ -323,7 +323,7 @@ class ContaoKernelTest extends ContaoTestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testGetCacheKernel(): void
+    public function testReturnsTheContaoCacheInProdMode(): void
     {
         unset($_SERVER['APP_ENV']);
         $_SERVER['SYMFONY_ENV'] = 'prod';
