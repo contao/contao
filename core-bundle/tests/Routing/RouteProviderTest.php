@@ -192,21 +192,16 @@ class RouteProviderTest extends TestCase
      */
     public function testFindsPagesByAliasCandidates(string $path, string $urlSuffix, bool $prependLocale, bool $folderUrl, array $aliases, array $ids = []): void
     {
-        $conditions = [];
-
-        if (!empty($ids)) {
-            $conditions[] = 'tl_page.id IN ('.implode(',', $ids).')';
-        }
-
-        if (!empty($aliases)) {
-            $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
-        }
-
-        $pageAdapter = $this->mockAdapter(['findBy']);
+        $pageAdapter = $this->mockAdapter(['findByPk', 'findByAlias']);
         $pageAdapter
-            ->expects($this->once())
-            ->method('findBy')
-            ->with([implode(' OR ', $conditions)], [])
+            ->expects($this->exactly(\count($ids)))
+            ->method('findByPk')
+            ->willReturn(null)
+        ;
+
+        $pageAdapter
+            ->expects($this->exactly(\count($aliases)))
+            ->method('findByAlias')
             ->willReturn(null)
         ;
 
@@ -317,10 +312,10 @@ class RouteProviderTest extends TestCase
      */
     public function testSortsTheRoutes(array $pages, array $languages): void
     {
-        $pageAdapter = $this->mockAdapter(['findBy']);
+        $pageAdapter = $this->mockAdapter(['findByAlias']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findBy')
+            ->method('findByAlias')
             ->willReturn(new Collection(array_values($pages), 'tl_page'))
         ;
 
@@ -469,10 +464,10 @@ class RouteProviderTest extends TestCase
     {
         $page = $this->createPage($language, $alias, true, $domain, $scheme);
 
-        $pageAdapter = $this->mockAdapter(['findBy']);
+        $pageAdapter = $this->mockAdapter(['findByAlias']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findBy')
+            ->method('findByAlias')
             ->willReturn(new Collection([$page], 'tl_page'))
         ;
 

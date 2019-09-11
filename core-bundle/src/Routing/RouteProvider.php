@@ -463,42 +463,30 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
+     * Finds the page models keeping the candidates order.
+     *
      * @return Model[]
      */
     private function findPages(array $candidates): array
     {
-        $ids = [];
-        $aliases = [];
-
-        foreach ($candidates as $candidate) {
-            if (is_numeric($candidate)) {
-                $ids[] = (int) $candidate;
-            } else {
-                $aliases[] = $this->database->quote($candidate);
-            }
-        }
-
-        $options = [];
-        $conditions = [];
-
-        if (!empty($ids)) {
-            $conditions[] = 'tl_page.id IN ('.implode(',', $ids).')';
-        }
-
-        if (!empty($aliases)) {
-            $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
-            $options['order'] = sprintf('FIELD(alias, %s)', implode(',', $aliases));
-        }
+        $models = [];
 
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageModel->findBy([implode(' OR ', $conditions)], [], $options);
 
-        if ($pages instanceof Collection) {
-            return $pages->getModels();
+        foreach ($candidates as $candidate) {
+            if (is_numeric($candidate)) {
+                if ($page = $pageModel->findByPk($candidate)) {
+                    $models[] = $page;
+                }
+            } elseif ($pages = $pageModel->findByAlias($candidate)) {
+                foreach ($pages as $page) {
+                    $models[] = $page;
+                }
+            }
         }
 
-        return [];
+        return $models;
     }
 
     /**
