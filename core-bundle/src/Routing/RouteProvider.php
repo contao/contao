@@ -469,17 +469,16 @@ class RouteProvider implements RouteProviderInterface
     {
         $ids = [];
         $aliases = [];
-        $set = [];
 
         foreach ($candidates as $candidate) {
             if (is_numeric($candidate)) {
                 $ids[] = (int) $candidate;
             } else {
-                $set[] = $candidate;
                 $aliases[] = $this->database->quote($candidate);
             }
         }
 
+        $options = [];
         $conditions = [];
 
         if (!empty($ids)) {
@@ -488,12 +487,7 @@ class RouteProvider implements RouteProviderInterface
 
         if (!empty($aliases)) {
             $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
-        }
-
-        $options = [];
-
-        if (!empty($set)) {
-            $options['order'] = sprintf('FIND_IN_SET(alias, %s)', $this->database->quote(implode(',', $set)));
+            $options['order'] = sprintf('FIELD(alias, %s)', implode(',', $aliases));
         }
 
         /** @var PageModel $pageModel */
