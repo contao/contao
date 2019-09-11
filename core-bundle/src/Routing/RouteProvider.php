@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Routing;
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\Database;
 use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
@@ -469,11 +470,13 @@ class RouteProvider implements RouteProviderInterface
     {
         $ids = [];
         $aliases = [];
+        $set = [];
 
         foreach ($candidates as $candidate) {
             if (is_numeric($candidate)) {
                 $ids[] = (int) $candidate;
             } else {
+                $set[] = $candidate;
                 $aliases[] = $this->database->quote($candidate);
             }
         }
@@ -488,9 +491,15 @@ class RouteProvider implements RouteProviderInterface
             $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
         }
 
+        $options = [];
+
+        if (!empty($set)) {
+            $options['order'] = Database::getInstance()->findInSet('alias', $set);
+        }
+
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageModel->findBy([implode(' OR ', $conditions)], []);
+        $pages = $pageModel->findBy([implode(' OR ', $conditions)], [], $options);
 
         if ($pages instanceof Collection) {
             return $pages->getModels();
