@@ -494,7 +494,7 @@ class RouteProvider implements RouteProviderInterface
         $options = [];
 
         if (!empty($set)) {
-            $options['order'] = Database::getInstance()->findInSet('alias', $set);
+            $options['order'] = sprintf('FIND_IN_SET(alias, %s)', $this->database->quote(implode(',', $set)));
         }
 
         /** @var PageModel $pageModel */
