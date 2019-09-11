@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Routing;
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Database;
 use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
