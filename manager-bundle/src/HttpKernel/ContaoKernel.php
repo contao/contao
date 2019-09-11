@@ -31,6 +31,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 class ContaoKernel extends Kernel implements HttpCacheProvider
@@ -219,7 +220,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     /**
      * {@inheritdoc}
      */
-    public function getHttpCache()
+    public function getHttpCache(): ContaoCache
     {
         if (null !== $this->httpCache) {
             return $this->httpCache;
@@ -236,7 +237,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         self::$projectDir = realpath($projectDir) ?: $projectDir;
     }
 
-    public static function fromRequest(string $projectDir, Request $request): self
+    public static function fromRequest(string $projectDir, Request $request): HttpKernelInterface
     {
         self::loadEnv($projectDir);
 
@@ -270,10 +271,19 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $kernel->setJwtManager($jwtManager);
         }
 
+        if (!$kernel->isDebug()) {
+            $cache = $kernel->getHttpCache();
+
+            // Enable the Symfony reverse proxy if request has no surrogate capability
+            if (null !== $cache->getSurrogate() && !$cache->getSurrogate()->hasSurrogateCapability($request)) {
+                return $cache;
+            }
+        }
+
         return $kernel;
     }
 
-    public static function fromInput(string $projectDir, InputInterface $input)
+    public static function fromInput(string $projectDir, InputInterface $input): self
     {
         self::loadEnv($projectDir);
 
