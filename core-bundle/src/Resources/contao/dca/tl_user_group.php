@@ -314,20 +314,20 @@ class tl_user_group extends Contao\Backend
 
 		foreach ($GLOBALS['BE_MOD'] as $k=>$v)
 		{
-			if (!empty($v))
+			if (empty($v))
 			{
-				if ($k == 'accounts')
-				{
-					unset($v['login']);
-				}
-
-				if ($k == 'system')
-				{
-					unset($v['undo']);
-				}
-
-				$arrModules[$k] = array_keys($v);
+				continue;
 			}
+
+			foreach ($v as $kk=>$vv)
+			{
+				if (isset($vv['disablePermissionChecks']) && $vv['disablePermissionChecks'] === true)
+				{
+					unset($v[$kk]);
+				}
+			}
+
+			$arrModules[$k] = array_keys($v);
 		}
 
 		return $arrModules;

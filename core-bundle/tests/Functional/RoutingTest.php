@@ -50,6 +50,8 @@ class RoutingTest extends WebTestCase
         InsertTags::reset();
 
         Config::set('debugMode', false);
+        Config::set('useAutoItem', true);
+        Config::set('addLanguageToUrl', false);
     }
 
     /**
@@ -58,8 +60,6 @@ class RoutingTest extends WebTestCase
     public function testResolvesAliases(string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
         Config::set('useAutoItem', $autoItem);
-        Config::set('urlSuffix', '.html');
-        Config::set('addLanguageToUrl', false);
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
@@ -294,7 +294,6 @@ class RoutingTest extends WebTestCase
     public function testResolvesAliasesWithLocale(string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
         Config::set('useAutoItem', $autoItem);
-        Config::set('urlSuffix', '.html');
         Config::set('addLanguageToUrl', true);
 
         $_SERVER['REQUEST_URI'] = $request;
@@ -521,8 +520,6 @@ class RoutingTest extends WebTestCase
     public function testResolvesAliasesWithoutUrlSuffix(string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
     {
         Config::set('useAutoItem', $autoItem);
-        Config::set('urlSuffix', '');
-        Config::set('addLanguageToUrl', false);
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
@@ -720,8 +717,6 @@ class RoutingTest extends WebTestCase
      */
     public function testResolvesTheRootPage(string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {
-        Config::set('addLanguageToUrl', false);
-
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
@@ -935,5 +930,26 @@ class RoutingTest extends WebTestCase
             'de,fr',
             'root-without-fallback-language.local',
         ];
+    }
+
+    public function testOrdersThePageModelsByCandidates(): void
+    {
+        Config::set('folderUrl', true);
+
+        $_SERVER['REQUEST_URI'] = '/main/sub-zh.html';
+        $_SERVER['HTTP_HOST'] = 'root-zh.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $crawler = $client->request('GET', '/main/sub-zh.html');
+        $title = trim($crawler->filterXPath('//head/title')->text());
+
+        /** @var Response $response */
+        $response = $client->getResponse();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertContains('', $title);
     }
 }

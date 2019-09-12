@@ -7,6 +7,10 @@
         {
             "name": "Leo Feyer",
             "homepage": "https://github.com/leofeyer"
+        },
+        {
+            "name": "Contao Community",
+            "homepage": "https://contao.org/contributors"
         }
     ],
     "require": {

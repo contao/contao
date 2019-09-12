@@ -347,18 +347,22 @@ abstract class Template extends Controller
 	 */
 	public function previewRoute($strName, $arrParams=array())
 	{
-		$objRouter = System::getContainer()->get('router');
-		$objContext = $objRouter->getContext();
+		$container = System::getContainer();
 
-		$objPreviewContext = clone $objContext;
-		$objPreviewContext->setBaseUrl('/preview.php');
+		if (!$previewScript = $container->getParameter('contao.preview_script'))
+		{
+			return $this->route($strName, $arrParams);
+		}
 
-		$objRouter->setContext($objPreviewContext);
+		$router = $container->get('router');
 
-		$strUrl = $objRouter->generate($strName, $arrParams);
+		$context = $router->getContext();
+		$context->setBaseUrl($previewScript);
+
+		$strUrl = $router->generate($strName, $arrParams);
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
-		$objRouter->setContext($objContext);
+		$context->setBaseUrl('');
 
 		return ampersand($strUrl);
 	}

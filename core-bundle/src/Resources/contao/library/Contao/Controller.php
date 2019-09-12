@@ -118,8 +118,16 @@ abstract class Controller extends System
 			$arrTemplates[$strTemplate][] = 'root';
 		}
 
+		$strGlobPrefix = $strPrefix;
+
+		// Backwards compatibility (see #725)
+		if (substr($strGlobPrefix, -1) == '_')
+		{
+			$strGlobPrefix = substr($strGlobPrefix, 0, -1) . '[_-]';
+		}
+
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strPrefix . '*.html5');
+		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strGlobPrefix . '*.html5');
 
 		// Add the customized templates
 		if (\is_array($arrCustomized))
@@ -127,6 +135,11 @@ abstract class Controller extends System
 			foreach ($arrCustomized as $strFile)
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
+
+				if (strpos($strTemplate, '-') !== false)
+				{
+					@trigger_error('Using hyphens in the template name "' . $strTemplate . '.html5" has been deprecated and will no longer work in Contao 5.0. Use snake_case instead.', E_USER_DEPRECATED);
+				}
 
 				// Ignore bundle templates, e.g. mod_article and mod_article_list
 				if (\in_array($strTemplate, $arrBundleTemplates))
@@ -168,7 +181,7 @@ abstract class Controller extends System
 				{
 					if ($objTheme->templates != '')
 					{
-						$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strPrefix . '*.html5');
+						$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
 
 						if (\is_array($arrThemeTemplates))
 						{
@@ -1093,27 +1106,10 @@ abstract class Controller extends System
 	protected static function replaceOldBePaths($strContext)
 	{
 		$router = System::getContainer()->get('router');
-		$previewScript = System::getContainer()->getParameter('contao.preview_script');
 
-		$generate = static function ($route) use ($router, $previewScript)
+		$generate = static function ($route) use ($router)
 		{
-			if ($route == 'contao_backend_preview')
-			{
-				$origContext = $router->getContext();
-
-				$context = clone $origContext;
-				$context->setBaseUrl($previewScript);
-
-				$router->setContext($context);
-				$url = $router->generate($route);
-				$router->setContext($origContext);
-			}
-			else
-			{
-				$url = $router->generate($route);
-			}
-
-			return substr($url, \strlen(Environment::get('path')) + 1);
+			return substr($router->generate($route), \strlen(Environment::get('path')) + 1);
 		};
 
 		$arrMapper = array
@@ -1366,13 +1362,7 @@ abstract class Controller extends System
 			$strParams = '/articles/' . (($objArticle->inColumn != 'main') ? $objArticle->inColumn . ':' : '') . $strArticle;
 		}
 
-		$strUrl = $objPage->getFrontendUrl($strParams);
-
-		// Make sure the URL is absolute (see #4332)
-		if (strncmp($strUrl, 'http://', 7) !== 0 && strncmp($strUrl, 'https://', 8) !== 0)
-		{
-			$strUrl = Environment::get('base') . $strUrl;
-		}
+		$strUrl = $objPage->getPreviewUrl($strParams);
 
 		if (!$blnReturn)
 		{

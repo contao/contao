@@ -169,9 +169,16 @@ class tl_undo extends Contao\Backend
 
 				foreach ($arrRow as $i=>$v)
 				{
-					if (\is_array(Contao\StringUtil::deserialize($v)))
+					if (\is_array($array = Contao\StringUtil::deserialize($v)))
 					{
-						continue;
+						if (\count($array) == 2 && isset($array['value']) && isset($array['unit']))
+						{
+							$v = trim($array['value'] . ', ' . $array['unit']);
+						}
+						else
+						{
+							$v = implode(', ', $array);
+						}
 					}
 
 					// Get the field label
@@ -186,8 +193,10 @@ class tl_undo extends Contao\Backend
 
 					if (!$label)
 					{
-						$label = $i;
+						$label = '-';
 					}
+
+					$label .= ' <small>' . $i . '</small>';
 
 					$arrBuffer[$label] = $v;
 				}
