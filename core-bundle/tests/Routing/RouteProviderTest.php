@@ -324,9 +324,9 @@ class RouteProviderTest extends TestCase
             ->willReturn(new Collection(array_values($pages), 'tl_page'))
         ;
 
-        $configAdapter = $this->mockConfigAdapter(['folderUrl' => false]);
+        $configAdapter = $this->mockConfigAdapter(['folderUrl' => true]);
         $framework = $this->mockFramework($pageAdapter, $configAdapter);
-        $request = $this->mockRequestWithPath('/foo.html', $languages);
+        $request = $this->mockRequestWithPath('/foo/bar/baz.html', $languages);
 
         $provider = $this->getRouteProvider($framework);
         $collection = $provider->getRouteCollectionForRequest($request);
@@ -350,7 +350,7 @@ class RouteProviderTest extends TestCase
     {
         yield 'Sorts host first (1)' => [
             [
-                1 => $this->createPage('en', 'bar'),
+                1 => $this->createPage('en', 'foo'),
                 0 => $this->createPage('en', 'foo', true, 'example.com'),
             ],
             ['en'],
@@ -359,7 +359,7 @@ class RouteProviderTest extends TestCase
         yield 'Sorts host first (2)' => [
             [
                 0 => $this->createPage('fr', 'foo', true, 'example.com'),
-                1 => $this->createPage('it', 'bar'),
+                1 => $this->createPage('it', 'foo'),
             ],
             ['en'],
         ];
@@ -367,7 +367,7 @@ class RouteProviderTest extends TestCase
         yield 'Sorts by language priority (1)' => [
             [
                 1 => $this->createPage('en', 'foo'),
-                0 => $this->createPage('de', 'bar'),
+                0 => $this->createPage('de', 'foo'),
             ],
             ['de', 'en'],
         ];
@@ -375,14 +375,14 @@ class RouteProviderTest extends TestCase
         yield 'Sorts by language priority (2)' => [
             [
                 1 => $this->createPage('fr', 'foo'),
-                0 => $this->createPage('de', 'bar'),
+                0 => $this->createPage('de', 'foo'),
             ],
             ['en', 'de', 'fr'],
         ];
 
         yield 'Sorts by language match (1)' => [
             [
-                1 => $this->createPage('de', 'bar'),
+                1 => $this->createPage('de', 'foo'),
                 0 => $this->createPage('fr', 'foo'),
             ],
             ['fr'],
@@ -391,14 +391,14 @@ class RouteProviderTest extends TestCase
         yield 'Sorts by language match (2)' => [
             [
                 0 => $this->createPage('it', 'foo'),
-                1 => $this->createPage('de', 'bar'),
+                1 => $this->createPage('de', 'foo'),
             ],
             ['it'],
         ];
 
         yield 'Sorts by fallback without language' => [
             [
-                1 => $this->createPage('de', 'bar', false),
+                1 => $this->createPage('de', 'foo', false),
                 0 => $this->createPage('fr', 'foo'),
             ],
             ['en', 'it'],
@@ -437,26 +437,26 @@ class RouteProviderTest extends TestCase
 
         yield 'Sorts by "de" if "de_CH" is accepted' => [
             [
-                1 => $this->createPage('en', 'bar'),
-                0 => $this->createPage('de', 'bar', false),
+                1 => $this->createPage('en', 'foo'),
+                0 => $this->createPage('de', 'foo', false),
             ],
             ['de_CH'],
         ];
 
         yield 'Converts "de_CH" to "de-CH"' => [
             [
-                1 => $this->createPage('en', 'bar'),
-                0 => $this->createPage('de-CH', 'bar', false),
+                1 => $this->createPage('en', 'foo'),
+                0 => $this->createPage('de-CH', 'foo', false),
             ],
             ['de_CH'],
         ];
 
         yield 'Appends "de" in case "de_CH" is accepted and "de" is not' => [
             [
-                1 => $this->createPage('de', 'bar', false),
-                3 => $this->createPage('fr', 'bar', false),
-                0 => $this->createPage('en', 'bar', false),
-                2 => $this->createPage('it', 'bar'),
+                1 => $this->createPage('de', 'foo', false),
+                3 => $this->createPage('fr', 'foo', false),
+                0 => $this->createPage('en', 'foo', false),
+                2 => $this->createPage('it', 'foo'),
             ],
             ['de_CH', 'en'],
         ];
@@ -476,9 +476,9 @@ class RouteProviderTest extends TestCase
             ->willReturn(new Collection([$page], 'tl_page'))
         ;
 
-        $configAdapter = $this->mockConfigAdapter(['folderUrl' => false]);
+        $configAdapter = $this->mockConfigAdapter(['folderUrl' => true]);
         $framework = $this->mockFramework($pageAdapter, $configAdapter);
-        $request = $this->mockRequestWithPath(($prependLocale ? '/'.$language : '').'/foo'.$urlSuffix);
+        $request = $this->mockRequestWithPath(($prependLocale ? '/'.$language : '').'/foo/bar'.$urlSuffix);
 
         $provider = $this->getRouteProvider($framework, $urlSuffix, $prependLocale);
         $collection = $provider->getRouteCollectionForRequest($request);

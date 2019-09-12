@@ -463,18 +463,23 @@ class RouteProvider implements RouteProviderInterface
     }
 
     /**
+     * Finds the page models keeping the candidates order.
+     *
      * @return Model[]
      */
     private function findPages(array $candidates): array
     {
         $ids = [];
         $aliases = [];
+        $models = [];
 
         foreach ($candidates as $candidate) {
             if (is_numeric($candidate)) {
                 $ids[] = (int) $candidate;
+                $models['id|'.$candidate] = false;
             } else {
                 $aliases[] = $this->database->quote($candidate);
+                $models['alias|'.$candidate] = [];
             }
         }
 
@@ -492,11 +497,24 @@ class RouteProvider implements RouteProviderInterface
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $pages = $pageModel->findBy([implode(' OR ', $conditions)], []);
 
-        if ($pages instanceof Collection) {
-            return $pages->getModels();
+        if (!$pages instanceof Collection) {
+            return [];
         }
 
-        return [];
+        foreach ($pages as $page) {
+            if (isset($models['id|'.$page->id])) {
+                $models['id|'.$page->id] = $page;
+            } elseif (isset($models['alias|'.$page->alias])) {
+                $models['alias|'.$page->alias][] = $page;
+            }
+        }
+
+        $return = [];
+        $models = array_filter($models);
+
+        array_walk_recursive($models, static function ($i) use (&$return): void { $return[] = $i; });
+
+        return $return;
     }
 
     /**
