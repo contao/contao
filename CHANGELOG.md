@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Consider the "disablePermissionChecks" attribute in the user modules (see #751).
  * Support hyphens in custom template names (see #731).
  * Add the `preview.php` fragment to all links in the site structure (see #723).
 
