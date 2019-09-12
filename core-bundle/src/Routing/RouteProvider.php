@@ -469,24 +469,52 @@ class RouteProvider implements RouteProviderInterface
      */
     private function findPages(array $candidates): array
     {
+        $ids = [];
+        $aliases = [];
         $models = [];
-
-        /** @var PageModel $pageModel */
-        $pageModel = $this->framework->getAdapter(PageModel::class);
 
         foreach ($candidates as $candidate) {
             if (is_numeric($candidate)) {
-                if ($page = $pageModel->findByPk($candidate)) {
-                    $models[] = $page;
-                }
-            } elseif ($pages = $pageModel->findByAlias($candidate)) {
-                foreach ($pages as $page) {
-                    $models[] = $page;
-                }
+                $ids[] = (int) $candidate;
+                $models['id|'.$candidate] = false;
+            } else {
+                $aliases[] = $this->database->quote($candidate);
+                $models['alias|'.$candidate] = [];
             }
         }
 
-        return $models;
+        $conditions = [];
+
+        if (!empty($ids)) {
+            $conditions[] = 'tl_page.id IN ('.implode(',', $ids).')';
+        }
+
+        if (!empty($aliases)) {
+            $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
+        }
+
+        /** @var PageModel $pageModel */
+        $pageModel = $this->framework->getAdapter(PageModel::class);
+        $pages = $pageModel->findBy([implode(' OR ', $conditions)], []);
+
+        if (!$pages instanceof Collection) {
+            return [];
+        }
+
+        foreach ($pages as $page) {
+            if (isset($models['id|'.$page->id])) {
+                $models['id|'.$page->id] = $page;
+            } elseif (isset($models['alias|'.$page->alias])) {
+                $models['alias|'.$page->alias][] = $page;
+            }
+        }
+
+        $return = [];
+        $models = array_filter($models);
+
+        array_walk_recursive($models, static function($i) use (&$return) { $return[] = $i; });
+
+        return $return;
     }
 
     /**
