@@ -228,10 +228,6 @@ class RouteProvider implements RouteProviderInterface
      */
     private function addRoutesForRootPages(array $pages, array &$routes): void
     {
-        if (null === $pages) {
-            return;
-        }
-
         foreach ($pages as $page) {
             $this->addRoutesForRootPage($page, $routes);
         }

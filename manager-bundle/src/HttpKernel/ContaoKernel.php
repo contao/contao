@@ -237,6 +237,9 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         self::$projectDir = realpath($projectDir) ?: $projectDir;
     }
 
+    /**
+     * @return ContaoKernel|ContaoCache
+     */
     public static function fromRequest(string $projectDir, Request $request): HttpKernelInterface
     {
         self::loadEnv($projectDir);

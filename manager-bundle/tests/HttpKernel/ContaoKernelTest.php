@@ -239,7 +239,7 @@ class ContaoKernelTest extends ContaoTestCase
 
         $_SERVER['TRUSTED_PROXIES'] = '1.1.1.1,2.2.2.2';
 
-        ContaoKernel::fromRequest(sys_get_temp_dir(), Request::create('/'));
+        ContaoKernel::fromRequest($this->getTempDir(), Request::create('/'));
 
         $this->assertSame(['1.1.1.1', '2.2.2.2'], Request::getTrustedProxies());
         $this->assertSame(Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST, Request::getTrustedHeaderSet());
@@ -251,7 +251,7 @@ class ContaoKernelTest extends ContaoTestCase
 
         $_SERVER['TRUSTED_HOSTS'] = '1.1.1.1,2.2.2.2';
 
-        ContaoKernel::fromRequest(sys_get_temp_dir(), Request::create('/'));
+        ContaoKernel::fromRequest($this->getTempDir(), Request::create('/'));
 
         $this->assertSame(['{1.1.1.1}i', '{2.2.2.2}i'], Request::getTrustedHosts());
     }
@@ -260,7 +260,7 @@ class ContaoKernelTest extends ContaoTestCase
     {
         $this->assertFalse(Request::getHttpMethodParameterOverride());
 
-        ContaoKernel::fromRequest(sys_get_temp_dir(), Request::create('/'));
+        ContaoKernel::fromRequest($this->getTempDir(), Request::create('/'));
 
         $this->assertTrue(Request::getHttpMethodParameterOverride());
     }
@@ -276,7 +276,7 @@ class ContaoKernelTest extends ContaoTestCase
     public function testCreatesProdKernelWithoutConsoleArgument(): void
     {
         $input = new ArgvInput(['help']);
-        $kernel = ContaoKernel::fromInput(sys_get_temp_dir(), $input);
+        $kernel = ContaoKernel::fromInput($this->getTempDir(), $input);
 
         $this->assertSame('prod', $kernel->getEnvironment());
         $this->assertFalse($kernel->isDebug());
@@ -289,7 +289,7 @@ class ContaoKernelTest extends ContaoTestCase
     public function testCreatesDevKernelFromConsoleArgument(): void
     {
         $input = new ArgvInput(['help', '--env=dev']);
-        $kernel = ContaoKernel::fromInput(sys_get_temp_dir(), $input);
+        $kernel = ContaoKernel::fromInput($this->getTempDir(), $input);
 
         $this->assertSame('dev', $kernel->getEnvironment());
         $this->assertTrue($kernel->isDebug());
@@ -301,7 +301,7 @@ class ContaoKernelTest extends ContaoTestCase
         $this->expectExceptionMessage('The Contao Managed Edition only supports the "dev" and "prod" environments');
 
         $input = new ArgvInput(['list', '--env=foo']);
-        ContaoKernel::fromInput(sys_get_temp_dir(), $input);
+        ContaoKernel::fromInput($this->getTempDir(), $input);
     }
 
     /**
@@ -338,28 +338,13 @@ class ContaoKernelTest extends ContaoTestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testSetsProjectDirFromRequest(): void
+    public function testCreatesDevKernelFromAppEnvVar(): void
     {
-        unset($_SERVER['APP_ENV']);
-        $_SERVER['SYMFONY_ENV'] = 'dev';
-
-        $tempDir = realpath($this->getTempDir());
-        $kernel = ContaoKernel::fromRequest($tempDir, Request::create('/'));
-
-        $this->assertSame($tempDir, $kernel->getProjectDir());
-    }
-
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function testCreatesDevKernelFromSymfonyEnvEnvVar(): void
-    {
-        unset($_SERVER['APP_ENV']);
-        $_SERVER['SYMFONY_ENV'] = 'dev';
+        unset($_SERVER['SYMFONY_ENV']);
+        $_SERVER['APP_ENV'] = 'dev';
 
         $input = new ArgvInput(['help']);
-        $kernel = ContaoKernel::fromInput(sys_get_temp_dir(), $input);
+        $kernel = ContaoKernel::fromInput($this->getTempDir(), $input);
 
         $this->assertSame('dev', $kernel->getEnvironment());
         $this->assertTrue($kernel->isDebug());
@@ -369,13 +354,13 @@ class ContaoKernelTest extends ContaoTestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testCreatesDevKernelFromAppEnvEnvVar(): void
+    public function testCreatesDevKernelFromSymfonyEnvVar(): void
     {
-        unset($_SERVER['SYMFONY_ENV']);
-        $_SERVER['APP_ENV'] = 'dev';
+        unset($_SERVER['APP_ENV']);
+        $_SERVER['SYMFONY_ENV'] = 'dev';
 
         $input = new ArgvInput(['help']);
-        $kernel = ContaoKernel::fromInput(sys_get_temp_dir(), $input);
+        $kernel = ContaoKernel::fromInput($this->getTempDir(), $input);
 
         $this->assertSame('dev', $kernel->getEnvironment());
         $this->assertTrue($kernel->isDebug());
