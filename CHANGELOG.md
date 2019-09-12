@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.8.3 (2019-09-12)
 
  * Consider the "disablePermissionChecks" attribute in the user modules (see #751).
  * Support hyphens in custom template names (see #731).

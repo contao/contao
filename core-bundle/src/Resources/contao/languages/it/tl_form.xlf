@@ -81,6 +81,13 @@
         <source>The form data will be attached to the e-mail as a CSV file.</source>
         <target>I dati del form verranno inviati come file CSV. (una virgola separa i valori)</target>
       </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.0">
+        <source>Skip empty fields</source>
+        <target>Salta campi vuoti</target>
+      </trans-unit>
+      <trans-unit id="tl_form.skipEmpty.1">
+        <source>Do not include empty fields in the form data.</source>
+      </trans-unit>
       <trans-unit id="tl_form.email.0">
         <source>E-mail</source>
         <target>Formato e-mail</target>
