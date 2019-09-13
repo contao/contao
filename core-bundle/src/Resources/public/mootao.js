@@ -37,7 +37,7 @@ Request.Contao = new Class(
 	initialize: function(options) {
 		if (options && !options.url) {
 			// Try to replace the URL with the form action
-			try	{
+			try {
 				this.options.url = options.field.getParent('form').getAttribute('action');
 			} catch(e) {}
 		}
@@ -54,7 +54,7 @@ Request.Contao = new Class(
 		}
 
 		// Support both plain text and JSON responses
-		try	{
+		try {
 			json = this.response.json = JSON.decode(text, this.options.secure);
 		} catch(e) {
 			json = {'content':text};
@@ -324,9 +324,9 @@ authors:
  - Leo Feyer
 
 requires:
-  - Core/Element
-  - Core/Request
-  - Class.Binds
+	- Core/Element
+	- Core/Request
+	- Class.Binds
 
 provides: [Request.Queue]
 
@@ -366,5 +366,124 @@ Class.refactor(Request.Queue,
 		this.error = true;
 		if (!this.options.stopOnFailure && this.options.autoAdvance) this.resume();
 		this.fireEvent('exception', arguments);
+	}
+});
+
+/*
+---
+
+name: Contao.SerpPreview
+
+description: Generates a SERP preview
+
+license: LGPLv3
+
+authors:
+ - Leo Feyer
+
+requires: [Request, JSON]
+
+provides: Contao.SerpPreview
+
+...
+*/
+
+Contao.SerpPreview = new Class(
+{
+	options: {
+		id: 0,
+		baseUrl: null,
+		urlSuffix: null,
+		indexEmpty: 0,
+		titleField: null,
+		titleFallbackField: null,
+		aliasField: null,
+		descriptionField: null,
+		descriptionFallbackField: null
+	},
+
+	shorten: function(str, max) {
+		if (str.length <= max) {
+			return str;
+		}
+		return str.substr(0, str.lastIndexOf(' ', max)) + ' …';
+	},
+
+	html2string: function(html) {
+		return new DOMParser().parseFromString(html, 'text/html').body.textContent;
+	},
+
+	getTinymce: function() {
+		if (!window.tinyMCE || !this.options.descriptionFallbackField) {
+			return;
+		}
+
+		for (var i = 0; i < window.tinyMCE.editors.length; i++) {
+			if (window.tinyMCE.editors[i].id == this.options.descriptionFallbackField) {
+				return window.tinyMCE.editors[i];
+			}
+		}
+	},
+
+	initialize: function() {
+		this.options = Object.merge.apply(null, [{}, this.options].append(arguments));
+
+		var serpTitle = $('serp_title_' + this.options.id),
+			serpUrl = $('serp_url_' + this.options.id),
+			serpDescription = $('serp_description_' + this.options.id),
+			titleField = $(this.options.titleField),
+			titleFallbackField = $(this.options.titleFallbackField),
+			aliasField = $(this.options.aliasField),
+			descriptionField = $(this.options.descriptionField),
+			descriptionFallbackField = $(this.options.descriptionFallbackField);
+
+		titleField && titleField.addEvent('input', function() {
+			if (titleField.value) {
+				serpTitle.set('text', this.shorten(titleField.value, 64));
+			} else if (titleFallbackField && titleFallbackField.value) {
+				serpTitle.set('text', this.shorten(this.html2string(titleFallbackField.value), 64));
+			} else {
+				serpTitle.set('text', '');
+			}
+		}.bind(this));
+
+		titleFallbackField && titleFallbackField.addEvent('input', function() {
+			if (titleField && titleField.value) return;
+			serpTitle.set('text', this.shorten(this.html2string(titleFallbackField.value), 64));
+		}.bind(this));
+
+		aliasField && aliasField.addEvent('input', function() {
+			if (this.options.indexEmpty && aliasField.value == 'index') {
+				serpUrl.set('text', this.options.baseUrl);
+			} else {
+				serpUrl.set('text', this.options.baseUrl + (aliasField.value || this.options.id) + this.options.urlSuffix);
+			}
+		}.bind(this));
+
+		descriptionField && descriptionField.addEvent('input', function() {
+			var editor = this.getTinymce();
+			if (descriptionField.value) {
+				serpDescription.set('text', this.shorten(descriptionField.value, 160));
+			} else if (editor) {
+				serpDescription.set('text', this.shorten(this.html2string(editor.getContent()), 160));
+			} else if (descriptionFallbackField && descriptionFallbackField.value) {
+				serpDescription.set('text', this.shorten(this.html2string(descriptionFallbackField.value), 160));
+			} else {
+				serpDescription.set('text', '');
+			}
+		}.bind(this));
+
+		descriptionFallbackField && descriptionFallbackField.addEvent('input', function() {
+			if (descriptionField && descriptionField.value) return;
+			serpDescription.set('text', this.shorten(this.html2string(descriptionFallbackField.value), 160));
+		}.bind(this));
+
+		setTimeout(function() {
+			var editor = this.getTinymce();
+			editor && editor.on('keyup', function() {
+				if (descriptionField && descriptionField.value) return;
+				serpDescription.set('text', this.shorten(this.html2string(window.tinyMCE.activeEditor.getContent()), 160));
+			}.bind(this));
+		}.bind(this), 4);
 	}
 });

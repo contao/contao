@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'addEnclosure', 'source', 'overwriteMeta'),
-		'default'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{meta_legend},pageTitle,description;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{source_legend:hide},source;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop'
+		'default'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{meta_legend},pageTitle,description,serp_preview;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{source_legend:hide},source;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
@@ -234,6 +234,12 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
+		),
+		'serp_preview' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serp_preview'],
+			'exclude'                 => true,
+			'input_field_callback'    => array('tl_news', 'showSerpPreview')
 		),
 		'subheadline' => array
 		(
@@ -729,6 +735,36 @@ class tl_news extends Contao\Backend
 		}
 
 		return $arrAlias;
+	}
+
+	/**
+	 * Show the SERP preview
+	 *
+	 * @param Contao\DataContainer $dc
+	 *
+	 * @return string
+	 */
+	public function showSerpPreview(Contao\DataContainer $dc)
+	{
+		$news = Contao\NewsModel::findByPk($dc->activeRecord->id);
+		$url = Contao\News::generateNewsUrl($news, false, true);
+		$suffix = substr($dc->inputName, strlen($dc->field));
+
+		list($baseUrl) = explode($news->alias ?: $news->id, $url);
+
+		$template = new Contao\FrontendTemplate('be_serp');
+		$template->id = $news->id;
+		$template->title = $news->pageTitle ?: $news->headline;
+		$template->url = $url;
+		$template->description = $news->description ?: strip_tags($news->teaser);
+		$template->baseUrl = $baseUrl;
+		$template->titleField = 'ctrl_pageTitle'.$suffix;
+		$template->titleFallbackField = 'ctrl_headline'.$suffix;
+		$template->aliasField = 'ctrl_alias'.$suffix;
+		$template->descriptionField = 'ctrl_description'.$suffix;
+		$template->descriptionFallbackField = 'ctrl_teaser'.$suffix;
+
+		return $template->parse();
 	}
 
 	/**

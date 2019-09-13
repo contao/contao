@@ -118,7 +118,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addTime', 'addImage', 'recurring', 'addEnclosure', 'source', 'overwriteMeta'),
-		'default'                     => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{meta_legend},pageTitle,description;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{source_legend:hide},source;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
+		'default'                     => '{title_legend},title,alias,author;{date_legend},addTime,startDate,endDate;{meta_legend},pageTitle,description,serp_preview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{source_legend:hide},source;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
@@ -254,6 +254,12 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
+		),
+		'serp_preview' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serp_preview'],
+			'exclude'                 => true,
+			'input_field_callback'    => array('tl_calendar_events', 'showSerpPreview')
 		),
 		'location' => array
 		(
@@ -806,6 +812,36 @@ class tl_calendar_events extends Contao\Backend
 		}
 
 		return $arrAlias;
+	}
+
+	/**
+	 * Show the SERP preview
+	 *
+	 * @param Contao\DataContainer $dc
+	 *
+	 * @return string
+	 */
+	public function showSerpPreview(Contao\DataContainer $dc)
+	{
+		$event = Contao\CalendarEventsModel::findByPk($dc->activeRecord->id);
+		$url = Contao\Events::generateEventUrl($event, true);
+		$suffix = substr($dc->inputName, strlen($dc->field));
+
+		list($baseUrl) = explode($event->alias ?: $event->id, $url);
+
+		$template = new Contao\FrontendTemplate('be_serp');
+		$template->id = $event->id;
+		$template->title = $event->pageTitle ?: $event->title;
+		$template->url = $url;
+		$template->description = $event->description ?: strip_tags($event->teaser);
+		$template->baseUrl = $baseUrl;
+		$template->titleField = 'ctrl_pageTitle'.$suffix;
+		$template->titleFallbackField = 'ctrl_title'.$suffix;
+		$template->aliasField = 'ctrl_alias'.$suffix;
+		$template->descriptionField = 'ctrl_description'.$suffix;
+		$template->descriptionFallbackField = 'ctrl_teaser'.$suffix;
+
+		return $template->parse();
 	}
 
 	/**

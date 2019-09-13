@@ -398,6 +398,18 @@ abstract class Template extends Controller
 	}
 
 	/**
+	 * Returns a container parameter
+	 *
+	 * @param string $strKey
+	 *
+	 * @return mixed
+	 */
+	public function param($strKey)
+	{
+		return System::getContainer()->getParameter($strKey);
+	}
+
+	/**
 	 * Compile the template
 	 *
 	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.

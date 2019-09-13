@@ -1504,6 +1504,35 @@ ul.sgallery li {
 	left:320px;
 }
 
+/* SERP preview */
+.serp {
+	margin-top:1px;
+}
+.serp-preview {
+	max-width:600px;
+	margin:1px 0 2px;
+	padding:4px 6px;
+	font-family:Arial,sans-serif;
+	font-weight:400;
+	border:1px dotted #aaa;
+	border-radius:2px;
+}
+.serp-preview p {
+	margin-bottom:0;
+	line-height:1.3;
+}
+.serp-preview .title {
+	font-size:18px;
+	color:#1a0dab;
+}
+.serp-preview .url {
+	color:#006621;
+}
+.serp-preview .description {
+	margin-top:2px;
+	color:#545454;
+}
+
 /* Ajax box */
 #tl_ajaxBox {
 	width:20%;

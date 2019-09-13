@@ -1,0 +1,28 @@
+
+<div class="widget serp">
+  <h3><?= $this->trans('MSC.serp_preview.0') ?></h3>
+  <div class="serp-preview">
+    <p id="serp_title_<?= $this->id ?>" class="title"><?= Contao\StringUtil::substr($this->title, 64) ?></p>
+    <p id="serp_url_<?= $this->id ?>" class="url"><?= $this->url ?></p>
+    <p id="serp_description_<?= $this->id ?>" class="description"><?= Contao\StringUtil::substr($this->description, 160) ?></p>
+  </div>
+  <?php if (Contao\Config::get('showHelp')): ?>
+    <p class="tl_help tl_tip"><?= $this->trans('MSC.serp_preview.1') ?></p>
+  <?php endif; ?>
+</div>
+
+<script>
+  window.addEvent('domready', function() {
+    new Contao.SerpPreview({
+      id: <?= (int) $this->id ?>,
+      baseUrl: '<?= $this->baseUrl ?>',
+      urlSuffix: '<?= $this->param('contao.url_suffix') ?>',
+      indexEmpty: <?= (int) $this->indexEmpty ?>,
+      titleField: '<?= $this->titleField ?>',
+      titleFallbackField: '<?= $this->titleFallbackField ?>',
+      aliasField: '<?= $this->aliasField ?>',
+      descriptionField: '<?= $this->descriptionField ?>',
+      descriptionFallbackField: '<?= $this->descriptionFallbackField ?>'
+    });
+  });
+</script>
