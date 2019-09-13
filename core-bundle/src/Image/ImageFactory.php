@@ -170,6 +170,10 @@ class ImageFactory implements ImageFactoryInterface
 
         if (!$options instanceof ResizeOptions) {
             $options = new ResizeOptions();
+
+            if (!$size instanceof ResizeConfiguration && $resizeConfig->isEmpty()) {
+                $options->setSkipIfDimensionsMatch(true);
+            }
         }
 
         if (null !== $targetPath) {
