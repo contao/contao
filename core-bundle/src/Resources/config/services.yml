@@ -51,6 +51,10 @@ services:
             - controller.service_arguments
         public: true
 
+    Contao\CoreBundle\Filesystem\Storage:
+        arguments:
+            - '@default.storage'
+
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:

@@ -58,6 +58,7 @@
         "lcobucci/jwt": "^3.2",
         "league/uri": "^5.0",
         "league/flysystem-bundle": "^1.2.0",
+        "league/flysystem-memory": "^1.0.2",
         "lexik/maintenance-bundle": "^2.1.3",
         "matthiasmullie/minify": "^1.3",
         "michelf/php-markdown": "^1.4",
