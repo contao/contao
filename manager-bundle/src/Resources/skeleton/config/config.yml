@@ -135,3 +135,11 @@ fos_http_cache:
         annotations:
             enabled: false
         max_header_value_length: 4096
+
+# Flysystem configuration
+flysystem:
+    storages:
+        default.storage:
+            adapter: 'local'
+            options:
+                directory: '%kernel.project_dir%/%contao.upload_path%'
