@@ -394,7 +394,6 @@ Contao.SerpPreview = new Class(
 		id: 0,
 		baseUrl: null,
 		urlSuffix: null,
-		indexEmpty: 0,
 		titleField: null,
 		titleFallbackField: null,
 		aliasField: null,
@@ -414,14 +413,8 @@ Contao.SerpPreview = new Class(
 	},
 
 	getTinymce: function() {
-		if (!window.tinyMCE || !this.options.descriptionFallbackField) {
-			return;
-		}
-
-		for (var i = 0; i < window.tinyMCE.editors.length; i++) {
-			if (window.tinyMCE.editors[i].id == this.options.descriptionFallbackField) {
-				return window.tinyMCE.editors[i];
-			}
+		if (window.tinyMCE && this.options.descriptionFallbackField) {
+			return window.tinyMCE.get(this.options.descriptionFallbackField);
 		}
 	},
 
@@ -435,7 +428,9 @@ Contao.SerpPreview = new Class(
 			titleFallbackField = $(this.options.titleFallbackField),
 			aliasField = $(this.options.aliasField),
 			descriptionField = $(this.options.descriptionField),
-			descriptionFallbackField = $(this.options.descriptionFallbackField);
+			descriptionFallbackField = $(this.options.descriptionFallbackField),
+			a = new Element('a', { 'href': this.options.baseUrl }),
+			indexEmpty = (a.pathname == '/' || a.pathname.match(/^\/[a-z]{2}(-[A-Z]{2})?\/$/));
 
 		titleField && titleField.addEvent('input', function() {
 			if (titleField.value) {
@@ -453,7 +448,7 @@ Contao.SerpPreview = new Class(
 		}.bind(this));
 
 		aliasField && aliasField.addEvent('input', function() {
-			if (this.options.indexEmpty && aliasField.value == 'index') {
+			if (aliasField.value == 'index' && indexEmpty) {
 				serpUrl.set('text', this.options.baseUrl);
 			} else {
 				serpUrl.set('text', this.options.baseUrl + (aliasField.value || this.options.id) + this.options.urlSuffix);
@@ -461,10 +456,12 @@ Contao.SerpPreview = new Class(
 		}.bind(this));
 
 		descriptionField && descriptionField.addEvent('input', function() {
-			var editor = this.getTinymce();
 			if (descriptionField.value) {
 				serpDescription.set('text', this.shorten(descriptionField.value, 160));
-			} else if (editor) {
+				return;
+			}
+			var editor = this.getTinymce();
+			if (editor) {
 				serpDescription.set('text', this.shorten(this.html2string(editor.getContent()), 160));
 			} else if (descriptionFallbackField && descriptionFallbackField.value) {
 				serpDescription.set('text', this.shorten(this.html2string(descriptionFallbackField.value), 160));

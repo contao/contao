@@ -1311,7 +1311,6 @@ class tl_page extends Contao\Backend
 		$template->url = $url;
 		$template->description = $page->description;
 		$template->baseUrl = $baseUrl;
-		$template->indexEmpty = true;
 		$template->titleField = 'ctrl_pageTitle'.$suffix;
 		$template->titleFallbackField = 'ctrl_title'.$suffix;
 		$template->aliasField = 'ctrl_alias'.$suffix;

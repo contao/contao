@@ -17,7 +17,6 @@
       id: <?= (int) $this->id ?>,
       baseUrl: '<?= $this->baseUrl ?>',
       urlSuffix: '<?= $this->param('contao.url_suffix') ?>',
-      indexEmpty: <?= (int) $this->indexEmpty ?>,
       titleField: '<?= $this->titleField ?>',
       titleFallbackField: '<?= $this->titleFallbackField ?>',
       aliasField: '<?= $this->aliasField ?>',
