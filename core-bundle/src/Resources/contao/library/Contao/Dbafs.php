@@ -494,17 +494,10 @@ class Dbafs
 		}
 
 		$objDatabase = Database::getInstance();
-		$objDatabaseEngine = $objDatabase
-			->prepare("SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_NAME = 'tl_files' AND TABLE_SCHEMA = ?")
-			->execute(Config::get('dbDatabase'));
-		$blnDatabaseSupportsTransaction = 1 === $objDatabaseEngine->numRows && 'InnoDB' === $objDatabaseEngine->fetchRow()[0];
 
 		// Begin atomic database access
-		if($blnDatabaseSupportsTransaction) {
-			$objDatabase->beginTransaction();
-		} else {
-			$objDatabase->lockTables(array('tl_files'=>'WRITE'));
-		}
+		$objDatabase->lockTables(array('tl_files'=>'WRITE'));
+		$objDatabase->beginTransaction();
 
 		// Reset the "found" flag
 		$objDatabase->query("UPDATE tl_files SET found=''");
@@ -757,11 +750,8 @@ class Dbafs
 		$objDatabase->query("UPDATE tl_files SET found=1 WHERE found=2");
 
 		// Finalize database access
-		if($blnDatabaseSupportsTransaction) {
-			$objDatabase->commitTransaction();
-		} else {
-			$objDatabase->unlockTables();
-		}
+		$objDatabase->commitTransaction();
+		$objDatabase->unlockTables();
 
 		// Return the path to the log file
 		return $strLog;
