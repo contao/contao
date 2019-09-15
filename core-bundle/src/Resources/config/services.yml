@@ -59,6 +59,11 @@ services:
         arguments:
             - '@default.storage'
 
+    # todo: just to demo functionality; remove again
+    Contao\CoreBundle\Filesystem\Dbafs\ParallelFileHashProvider:
+        arguments:
+            - '%kernel.project_dir%/%contao.upload_path%'
+
     Contao\CoreBundle\Filesystem\Dbafs\Dbafs:
         arguments:
             - '@Contao\CoreBundle\Filesystem\Storage'
