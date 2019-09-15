@@ -59,6 +59,13 @@ services:
         arguments:
             - '@default.storage'
 
+    Contao\CoreBundle\Filesystem\Dbafs\Dbafs:
+        arguments:
+            - '@Contao\CoreBundle\Filesystem\Storage'
+            - '@Contao\CoreBundle\Filesystem\Dbafs\DefaultFileHashProvider'
+            - '@database_connection'
+            - '%contao.upload_path%'
+
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:

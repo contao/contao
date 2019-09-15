@@ -12,19 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Framework\FrameworkAwareInterface;
-use Contao\CoreBundle\Framework\FrameworkAwareTrait;
-use Contao\Dbafs;
+use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Synchronizes the file system with the database.
  */
-class FilesyncCommand extends Command implements FrameworkAwareInterface
+class FilesyncCommand extends Command
 {
-    use FrameworkAwareTrait;
+    /** @var Dbafs */
+    private $dbafs;
+
+    public function __construct(Dbafs $dbafs)
+    {
+        parent::__construct();
+
+        $this->dbafs = $dbafs;
+    }
 
     /**
      * {@inheritdoc}
@@ -34,6 +42,7 @@ class FilesyncCommand extends Command implements FrameworkAwareInterface
         $this
             ->setName('contao:filesync')
             ->setDescription('Synchronizes the file system with the database.')
+            ->addOption('dry', 'd', InputOption::VALUE_NONE, 'Run dry, do not apply changes.')
         ;
     }
 
@@ -42,10 +51,17 @@ class FilesyncCommand extends Command implements FrameworkAwareInterface
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->framework->initialize();
+        $dryRun = $input->getOption('dry');
 
-        $strLog = Dbafs::syncFiles();
-        $output->writeln(sprintf('Synchronization complete (see <info>%s</info>).', $strLog));
+        $output->writeln('Synchronizing...'.($dryRun ? ' [dry run]' : ''));
+
+        $time = microtime(true);
+        $changeSet = $this->dbafs->sync($dryRun);
+        $timeTotal = round(microtime(true) - $time, 2);
+
+        $changeSet->renderStats($output);
+        $io = new SymfonyStyle($input, $output);
+        $io->success("Synchronization complete in {$timeTotal}s.");
 
         return 0;
     }

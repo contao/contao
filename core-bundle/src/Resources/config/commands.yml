@@ -19,6 +19,8 @@ services:
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
+        arguments:
+            - '@Contao\CoreBundle\Filesystem\Dbafs\Dbafs'
 
     contao.command.install:
         class: Contao\CoreBundle\Command\InstallCommand
