@@ -37,14 +37,24 @@ class Storage implements DbafsStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function listSynchronizablePaths(): \Traversable
+    public function listSynchronizablePaths(string $subDirectory = ''): \Traversable
     {
+        $subDirectory = rtrim($subDirectory, '/');
+
         // Performance note:
         //   The Flysystem currently lacks an iterator - should this ever be a
         //   bottleneck, a plugin might be used to add that functionality.
         //   (e.g. see  https://github.com/jhofm/flysystem-iterator)
+        $paths = $this->getPathsRecursively($subDirectory);
 
-        return new \ArrayIterator($this->getPathsRecursively());
+        if ('' !== $subDirectory) {
+            // add parent paths
+            do {
+                $paths[] = $subDirectory.'/';
+            } while ('.' !== ($subDirectory = \dirname($subDirectory)));
+        }
+
+        return new \ArrayIterator($paths);
     }
 
     /**

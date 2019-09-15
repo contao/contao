@@ -13,14 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
-use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
-use Contao\CoreBundle\Filesystem\Dbafs\DefaultFileHashProvider;
-use Contao\CoreBundle\Filesystem\Storage;
 use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
-use League\Flysystem\Filesystem;
-use League\Flysystem\Memory\MemoryAdapter;
 
 class ChangeSetTest extends TestCase
 {
@@ -41,8 +34,8 @@ class ChangeSetTest extends TestCase
         $c = ['c'];
         $changeSet = new ChangeSet($a, $b, $c);
 
-        $this->assertEquals($a, $changeSet->getItemsToCreate());
-        $this->assertEquals($b, $changeSet->getItemsToUpdate());
-        $this->assertEquals($c, $changeSet->getItemsToDelete());
+        $this->assertSame($a, $changeSet->getItemsToCreate());
+        $this->assertSame($b, $changeSet->getItemsToUpdate());
+        $this->assertSame($c, $changeSet->getItemsToDelete());
     }
 }

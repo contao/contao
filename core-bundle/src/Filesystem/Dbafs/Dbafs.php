@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem\Dbafs;
 
-use Contao\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Webmozart\PathUtil\Path;
@@ -30,6 +29,9 @@ class Dbafs
 
     /** @var string */
     private $uploadPath;
+
+    /** @var int */
+    private $databaseBulkInsertSize = 100;
 
     public function __construct(DbafsStorageInterface $storage, FileHashProviderInterface $fileHashProvider, Connection $connection, string $uploadPath)
     {
@@ -50,10 +52,12 @@ class Dbafs
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
-    public function sync(bool $dryRun = false): ChangeSet
+    public function sync(string $scope = '', bool $dryRun = false): ChangeSet
     {
+        // todo: throw/handle invalid scope
+
         // Gather all data needed for diffing
-        $fsPaths = iterator_to_array($this->storage->listSynchronizablePaths());
+        $fsPaths = iterator_to_array($this->storage->listSynchronizablePaths($scope));
         $fsHashLookup = $this->fileHashProvider->getHashes($fsPaths);
 
         if (!$dryRun) {
@@ -61,10 +65,10 @@ class Dbafs
             $this->connection->beginTransaction();
         }
 
-        [$dbHashLookup, $uuidLookup] = $this->getDatabaseEntries();
+        [$dbPaths, $dbHashLookup, $uuidLookup] = $this->getDatabaseEntries($scope);
 
         // Compute and apply change set
-        $changeSet = $this->computeChangeSet($fsPaths, $fsHashLookup, $dbHashLookup);
+        $changeSet = $this->computeChangeSet($fsPaths, $fsHashLookup, $dbPaths, $dbHashLookup, $scope);
 
         if (!$dryRun) {
             $this->applyDatabaseChanges($changeSet, $uuidLookup);
@@ -74,6 +78,16 @@ class Dbafs
         }
 
         return $changeSet;
+    }
+
+    public function getDatabaseBulkInsertSize(): int
+    {
+        return $this->databaseBulkInsertSize;
+    }
+
+    public function setDatabaseBulkInsertSize(int $databaseBulkInsertSize): void
+    {
+        $this->databaseBulkInsertSize = $databaseBulkInsertSize;
     }
 
     /**
@@ -88,29 +102,41 @@ class Dbafs
      * in the order from least specific to most specific paths (to allow
      * efficient updating of parent-child references).
      */
-    private function computeChangeSet(array &$fsPaths, array &$fsHashLookup, array &$dbHashLookup): ChangeSet
+    private function computeChangeSet(array &$fsPaths, array &$fsHashLookup, array &$dbPaths, array &$dbHashLookup, string $scope): ChangeSet
     {
+        $isPartialSync = \count($dbPaths) !== \count($dbHashLookup);
+        if ($isPartialSync && '' === rtrim($scope, '/')) {
+            throw new \InvalidArgumentException('Scope cannot be empty in partial sync.');
+        }
+
         $itemsToCreate = [];
         $itemsToUpdate = [];
 
         // Mark all items to be deleted fist and successively remove them once found.
-        $itemsToDelete = $dbHashLookup;
+        $itemsToDelete = array_flip($dbPaths);
 
         // Lookup data structure [directory path → [child hash + name, ...]] that
-        // contains all parts to compute a directory's hash. Because we're iterating
-        // over children first, folder hashes can be computed on the fly.
+        // contains the traversed child hashes + names to compute a directory's hash.
         $dirHashesParts = [];
 
         foreach ($fsPaths as $path) {
-            $parentDir = \dirname($path) . '/';
-
-            if (!isset($dirHashesParts[$parentDir])) {
-                $dirHashesParts[$parentDir] = [];
-            }
-
             // Obtain hash for comparison
             if ($this->isDirectory($path)) {
                 $childHashes = $dirHashesParts[$path] ?? [];
+
+                if ($isPartialSync && !Path::isBasePath($scope, $path)) {
+                    // In partial sync we need to manually add other child hashes as we did not traverse them.
+                    $pattern = "@^{$path}[^/]+[.]*[/]?\$@";
+                    $missingChildren = array_filter($dbHashLookup, function ($path) use ($pattern, &$childHashes) {
+                        return preg_match($pattern, $path) && !isset($childHashes[$this->getFilename($path)]);
+                    }, ARRAY_FILTER_USE_KEY);
+
+                    foreach ($missingChildren as $childPath => $childHash) {
+                        $childName = $this->getFilename($childPath);
+                        $childHashes[$childName] = $childHash.$childName;
+                    }
+                }
+
                 ksort($childHashes);
                 unset($dirHashesParts[$path]);
 
@@ -120,8 +146,14 @@ class Dbafs
                 $hash = $fsHashLookup[$path];
             }
 
+            // Store hash + name for parent directory hash
+            $parentDir = \dirname($path).'/';
             $name = $this->getFilename($path);
-            $dirHashesParts[$parentDir][$name] = $hash . $name;
+
+            if (!isset($dirHashesParts[$parentDir])) {
+                $dirHashesParts[$parentDir] = [];
+            }
+            $dirHashesParts[$parentDir][$name] = $hash.$name;
 
             // Determine changes
             if (!isset($dbHashLookup[$path])) {
@@ -138,8 +170,12 @@ class Dbafs
 
         // Detect moves: Check if items that should get created can be found in
         // the current list of orphans and - if so - only update their path.
+        $hasMoves = false;
         foreach ($itemsToCreate as $path => $dataToInsert) {
-            $candidates = array_keys($itemsToDelete, $dataToInsert[ChangeSet::ATTRIBUTE_HASH], true);
+            $candidates = array_intersect(
+                array_flip($itemsToDelete),
+                array_keys($dbHashLookup, $dataToInsert[ChangeSet::ATTRIBUTE_HASH], true)
+            );
 
             if (\count($candidates) > 1) {
                 // If two or more files with the same hash were moved, try
@@ -160,11 +196,18 @@ class Dbafs
             // Found move, transfer to update list
             $itemsToUpdate[$oldPath] = [ChangeSet::ATTRIBUTE_PATH => $path];
             unset($itemsToCreate[$path], $itemsToDelete[$oldPath]);
+
+            $hasMoves = true;
         }
 
         // Sort and clean item lists
-        $itemsToCreate = array_values(array_reverse($itemsToCreate));
-        $itemsToUpdate = array_reverse($itemsToUpdate);
+        if ($hasMoves) {
+            ksort($itemsToUpdate, SORT_DESC);
+        } else {
+            $itemsToUpdate = array_reverse($itemsToUpdate);
+        }
+
+        $itemsToCreate = array_reverse(array_values($itemsToCreate));
         $itemsToDelete = array_keys($itemsToDelete);
 
         return new ChangeSet($itemsToCreate, $itemsToUpdate, $itemsToDelete);
@@ -172,35 +215,53 @@ class Dbafs
 
     /**
      * Return full hash lookup [path → hash] and UUID lookup [path → UUID]
-     * of the currently stored file tree.
+     * of the currently stored file tree. If a directory is specified, the
+     * returned list will contain paths in this directory as well as all
+     * parent directories.
      *
      * @throws \Doctrine\DBAL\DBALException
      */
-    private function getDatabaseEntries(): array
+    private function getDatabaseEntries(string $subDirectory): array
     {
-        // todo: check what we would need for partial sync (all references?) or remove
-        $basePath = $this->uploadPath;
+        $searchPath = $this->uploadPath;
+
         $parentDirectories = [];
+        $subDirectory = rtrim($subDirectory, '/');
+
+        if ('' !== $subDirectory) {
+            $searchPath .= '/'.$subDirectory;
+
+            // add parent paths
+            do {
+                $parentDirectories[] = $this->uploadPath.'/'.$subDirectory;
+            } while ('.' !== ($subDirectory = \dirname($subDirectory)));
+        }
 
         $items = $this->connection
             ->executeQuery(
-                "SELECT path, uuid, hash, IF(type='folder', 1, 0) FROM tl_files WHERE path LIKE ? OR path IN (?)",
-                [$basePath . '/%', $parentDirectories],
+                "SELECT path, uuid, hash, IF(type='folder', 1, 0) AS is_folder, IF(path LIKE ? OR (path IN (?) AND type='folder'), 1, 0) AS is_included FROM tl_files",
+                [$searchPath.'/%', $parentDirectories],
                 [\PDO::PARAM_STR, Connection::PARAM_STR_ARRAY]
             )
-            ->fetchAll(FetchMode::NUMERIC);
+            ->fetchAll(FetchMode::NUMERIC)
+        ;
 
+        $dbPaths = [];
         $hashLookup = [];
         $uuidLookup = [];
 
-        foreach ($items as [$path, $uuid, $hash, $isDir]) {
-            $path = $this->convertToNormalizedPath($path, $basePath, (bool)$isDir);
+        foreach ($items as [$path, $uuid, $hash, $isDir, $isIncluded]) {
+            $path = $this->convertToNormalizedPath($path, $this->uploadPath, (bool) $isDir);
 
             $hashLookup[$path] = $hash;
             $uuidLookup[$path] = $uuid;
+
+            if ((bool) $isIncluded) {
+                $dbPaths[] = $path;
+            }
         }
 
-        return [$hashLookup, $uuidLookup];
+        return [$dbPaths, $hashLookup, $uuidLookup];
     }
 
     /**
@@ -215,6 +276,8 @@ class Dbafs
     {
         $currentTime = time();
 
+        // INSERT
+        $inserts = [];
         foreach ($changeSet->getItemsToCreate() as $newValues) {
             $newUuid = $this->generateUuid();
             $newPath = $newValues[ChangeSet::ATTRIBUTE_PATH];
@@ -236,12 +299,22 @@ class Dbafs
                 'tstamp' => $currentTime,
             ];
 
-            $this->connection->insert(
-                'tl_files',
-                $dataToInsert
-            );
+            // todo: test needed for inserting with size=0 vs. size>0
+            if (0 === $this->databaseBulkInsertSize) {
+                $this->connection->insert('tl_files', $dataToInsert);
+            } else {
+                $inserts[] = array_values($dataToInsert);
+            }
+        }
+        if (!empty($inserts)) {
+            foreach (array_chunk($inserts, $this->databaseBulkInsertSize) as $chunk) {
+                $placeholders = implode(', ', array_fill(0, \count($chunk), '(?, ?, ?, ?, ?, ?, ?, ?)'));
+                $data = array_merge(...$chunk);
+                $this->connection->executeQuery('INSERT INTO tl_files (`uuid`, `pid`, `path`, `hash`, `name`, `extension`, `type`, `tstamp`) VALUES '.$placeholders, $data);
+            }
         }
 
+        // UPDATE
         foreach ($changeSet->getItemsToUpdate() as $pathIdentifier => $changedValues) {
             $dataToUpdate = [
                 'tstamp' => $currentTime,
@@ -263,6 +336,7 @@ class Dbafs
             );
         }
 
+        // DELETE
         foreach ($changeSet->getItemsToDelete() as $pathToDelete) {
             $this->connection->delete(
                 'tl_files',
@@ -285,7 +359,7 @@ class Dbafs
     {
         $path = Path::makeRelative($path, $basePathToRemove);
 
-        return $path . ($isDir ? '/' : '');
+        return $path.($isDir ? '/' : '');
     }
 
     private function convertToDatabasePath(string $path): string
@@ -295,13 +369,23 @@ class Dbafs
 
     private function generateUuid(): string
     {
-        // todo: replace (we should not need the database here?)
-        return Database::getInstance()->getUuid();
+        // todo: merge/replace with Database::getInstance()->getUuid()
+        //       Do we really need the database for UUID generation? - maybe use `ramsey/uuid`
+        static $uuids = [];
+
+        if (empty($uuids)) {
+            $uuids = $this->connection
+                ->executeQuery(implode(' UNION ALL ', array_fill(0, 100, "SELECT UNHEX(REPLACE(UUID(), '-', '')) AS uuid")))
+                ->fetchAll(FetchMode::COLUMN)
+            ;
+        }
+
+        return array_pop($uuids);
     }
 
     private function getParentUuid($path, &$uuidLookup): ?string
     {
-        $parentPath = \dirname($path) . '/';
+        $parentPath = \dirname($path).'/';
         if ('./' === $parentPath) {
             return null;
         }

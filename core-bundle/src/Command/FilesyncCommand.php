@@ -42,6 +42,7 @@ class FilesyncCommand extends Command
         $this
             ->setName('contao:filesync')
             ->setDescription('Synchronizes the file system with the database.')
+            ->addOption('partial', 'p', InputOption::VALUE_REQUIRED, 'Only synchronize a subdirectory.')
             ->addOption('dry', 'd', InputOption::VALUE_NONE, 'Run dry, do not apply changes.')
         ;
     }
@@ -52,11 +53,12 @@ class FilesyncCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $dryRun = $input->getOption('dry');
+        $subdirectory = $input->getOption('partial') ?? '';
 
         $output->writeln('Synchronizing...'.($dryRun ? ' [dry run]' : ''));
 
         $time = microtime(true);
-        $changeSet = $this->dbafs->sync($dryRun);
+        $changeSet = $this->dbafs->sync($subdirectory, $dryRun);
         $timeTotal = round(microtime(true) - $time, 2);
 
         $changeSet->renderStats($output);

@@ -17,12 +17,14 @@ use League\Flysystem\FileNotFoundException;
 interface DbafsStorageInterface
 {
     /**
-     * Returns paths to all non-excluded files/directories in the upload path
-     * in the order of their specificity (most specific first).
+     * Returns paths to all non-excluded files/directories in the  order of
+     * their specificity (most specific first). If a directory is specified,
+     * the returned list will contain paths in this directory as well as all
+     * parent directories.
      *
      * @return string[]
      */
-    public function listSynchronizablePaths(): \Traversable;
+    public function listSynchronizablePaths(string $subDirectory = ''): \Traversable;
 
     /**
      * @throws FileNotFoundException     if given resource wasn't found
