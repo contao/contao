@@ -36,12 +36,12 @@ final class Cron implements ServiceTagInterface
     public $value;
 
     /**
-     * @var integer
+     * @var int
      */
     public $priority;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $cli_only;
 
