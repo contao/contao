@@ -43,9 +43,9 @@ if (\defined('TL_MODE') && TL_MODE == 'BE')
 // Register hooks
 $GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array('Contao\News', 'purgeOldFeeds');
 $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('Contao\News', 'getSearchablePages');
-$GLOBALS['TL_HOOKS']['generatePage'][] = array('contao_news.listener.generate_page', 'onGeneratePage');
+$GLOBALS['TL_HOOKS']['generatePage'][] = array('Contao\NewsBundle\EventListener\GeneratePageListener', 'onGeneratePage');
 $GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array('Contao\News', 'generateFeeds');
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('contao_news.listener.insert_tags', 'onReplaceInsertTags');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('Contao\NewsBundle\EventListener\InsertTagsListener', 'onReplaceInsertTags');
 
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'news';

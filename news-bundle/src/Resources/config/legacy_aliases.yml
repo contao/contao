@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    contao_news.listener.generate_page: '@Contao\NewsBundle\EventListener\GeneratePageListener'
+    contao_news.listener.insert_tags: '@Contao\NewsBundle\EventListener\InsertTagsListener'

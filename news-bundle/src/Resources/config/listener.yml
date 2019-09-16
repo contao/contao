@@ -1,26 +1,22 @@
 services:
-    contao_news.listener.generate_page:
-        class: Contao\NewsBundle\EventListener\GeneratePageListener
+    Contao\NewsBundle\EventListener\GeneratePageListener:
         arguments:
             - '@Contao\CoreBundle\Framework\ContaoFramework'
         public: true
 
-    contao_news.listener.insert_tags:
-        class: Contao\NewsBundle\EventListener\InsertTagsListener
+    Contao\NewsBundle\EventListener\InsertTagsListener:
         arguments:
             - '@Contao\CoreBundle\Framework\ContaoFramework'
         public: true
 
-    contao_news.listener.preview_url_create:
-        class: Contao\NewsBundle\EventListener\PreviewUrlCreateListener
+    Contao\NewsBundle\EventListener\PreviewUrlCreateListener:
         arguments:
             - '@request_stack'
             - '@Contao\CoreBundle\Framework\ContaoFramework'
         tags:
             - { name: kernel.event_listener, event: contao.preview_url_create, method: onPreviewUrlCreate }
 
-    contao_news.listener.preview_url_convert:
-        class: Contao\NewsBundle\EventListener\PreviewUrlConvertListener
+    Contao\NewsBundle\EventListener\PreviewUrlConvertListener:
         arguments:
             - '@request_stack'
             - '@Contao\CoreBundle\Framework\ContaoFramework'

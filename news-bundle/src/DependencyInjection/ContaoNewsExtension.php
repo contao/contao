@@ -31,5 +31,8 @@ class ContaoNewsExtension extends Extension
 
         $loader->load('listener.yml');
         $loader->load('services.yml');
+
+        // Backwards compatibility
+        $loader->load('legacy_aliases.yml');
     }
 }
