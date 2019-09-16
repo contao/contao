@@ -35,6 +35,7 @@ class CommandSchedulerListenerTest extends TestCase
         $cron
             ->expects($this->once())
             ->method('run')
+            ->with([Cron::SCOPE_WEB])
         ;
 
         $framework = $this->mockContaoFramework();

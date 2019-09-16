@@ -14,6 +14,7 @@ class AddCronJobsPassTest extends TestCase
 {
     public function testDoesNothingIfThereIsNoCron(): void
     {
+        /** @var ContainerBuilder $container */
         $container = $this->createMock(ContainerBuilder::class);
         $container
             ->method('hasDefinition')
@@ -124,7 +125,7 @@ class AddCronJobsPassTest extends TestCase
         $this->assertSame(0, $crons[0][3]);      
     }
 
-    public function testSetsTheDefaultCliOnlyIfNoCliGiven(): void
+    public function testSetsTheDefaultScopeIfNoScopeGiven(): void
     {
         $definition = new Definition('Test\Cron');
         $definition->addTag('contao.cron', ['interval' => 'minutely']);
@@ -137,13 +138,13 @@ class AddCronJobsPassTest extends TestCase
 
         $crons = $this->getCronsFromDefinition($container);
 
-        $this->assertSame(false, $crons[0][4]);
+        $this->assertSame(null, $crons[0][4]);
     }
 
-    public function testSetsCliOnlyIfCliOnlyIsGiven():void
+    public function testSetsScopeIfScopeIsDefined():void
     {
         $definition = new Definition('Test\Cron');
-        $definition->addTag('contao.cron', ['interval' => 'minutely', 'cli_only' => true]);
+        $definition->addTag('contao.cron', ['interval' => 'minutely', 'scope' => 'cli']);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('Test\Cron', $definition);
@@ -153,7 +154,7 @@ class AddCronJobsPassTest extends TestCase
 
         $crons = $this->getCronsFromDefinition($container);
 
-        $this->assertSame(true, $crons[0][4]);
+        $this->assertSame('cli', $crons[0][4]);
     }
 
     public function testHandlesMultipleTags(): void
@@ -213,7 +214,9 @@ class AddCronJobsPassTest extends TestCase
             $this->assertIsString($methodCall[1][1]);
             $this->assertIsString($methodCall[1][2]);
             $this->assertIsInt($methodCall[1][3]);
-            $this->assertIsBool($methodCall[1][4]);
+            if (null !== $methodCall[1][4]) {
+                $this->assertIsString($methodCall[1][4]);
+            }
             $crons[] = $methodCall[1];
         }
 

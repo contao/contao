@@ -59,7 +59,7 @@ class CommandSchedulerListener
     public function onKernelTerminate(TerminateEvent $event): void
     {
         if ($this->framework->isInitialized() && $this->canRunCron($event->getRequest())) {
-            $this->cron->run();
+            $this->cron->run([Cron::SCOPE_WEB]);
         }
     }
 

@@ -23,6 +23,16 @@ class Cron
     public const INTERVALS = ['monthly', 'weekly', 'daily', 'hourly', 'minutely'];
 
     /**
+     * @var string
+     */
+    public const SCOPE_WEB = 'web';
+
+    /**
+     * @var string
+     */
+    public const SCOPE_CLI = 'cli';
+
+    /**
      * @var Connection
      */
     private $db;
@@ -48,21 +58,21 @@ class Cron
      *
      * @param object $service
      */
-    public function addCronJob($service, string $method, string $interval, int $priority = 0, bool $cliOnly = false): void
+    public function addCronJob($service, string $method, string $interval, int $priority = 0, string $scope = null): void
     {
         if (!\in_array($interval, self::INTERVALS, true)) {
             throw new \InvalidArgumentException(sprintf('Invalid interval "%s"', $interval));
         }
 
-        $this->crons[$interval][$priority][] = [$service, $method, $cliOnly];
+        $this->crons[$interval][$priority][] = [$service, $method, $scope];
     }
 
     /**
      * Run the registered Contao cron jobs.
      *
-     * @param bool $cliOnly whether the cli only crons should be run
+     * @param array $scopes Scopes of cron jobs to be run.
      */
-    public function run(bool $cliOnly = false): void
+    public function run(array $scopes = []): void
     {
         // Do not run if the last execution was less than a minute ago
         if ($this->hasToWait($this->getCronTimeout())) {
@@ -107,7 +117,6 @@ class Cron
             // Update the database before the jobs are executed, in case one of them fails
             $this->db->update('tl_cron', ['value' => $currentTimestamp], ['name' => $interval]);
 
-            // Add a log entry if in debug mode (see #4729)
             if (null !== $this->logger) {
                 $this->logger->debug('Running the '.$interval.' cron jobs');
             }
@@ -118,9 +127,11 @@ class Cron
             $crons = array_merge(...$crons);
 
             foreach ($crons as $cron) {
-                // Skip jobs that are only to be run on CLI, when not run via CLI
-                if (!$cliOnly && isset($cron[2]) && true === $cron[2]) {
-                    $this->logger->debug('Skipping command line only '.$interval.' cron job "'.\get_class($cron[0]).'::'.$cron[1].'"');
+                // Skip jobs that are not to be run in the current scopes
+                if (!empty($scopes) && null !== $cron[2] && !\in_array($cron[2], $scopes, true)) {
+                    if (null !== $this->logger) {
+                        $this->logger->debug('Skipping '.$interval.' cron job "'.\get_class($cron[0]).'::'.$cron[1].'" for scope ['.implode(',', $scopes).']');
+                    }
                     continue;
                 }
 
@@ -131,7 +142,6 @@ class Cron
                 }
             }
 
-            // Add a log entry if in debug mode (see #4729)
             if (null !== $this->logger) {
                 $this->logger->debug(ucfirst($interval).' cron jobs complete');
             }
@@ -152,7 +162,7 @@ class Cron
         $this->db->exec('LOCK TABLES tl_cron WRITE');
 
         // Get the last execution date
-        $cron = $this->db->executeQuery("SELECT * FROM tl_cron WHERE name = 'lastrun' LIMIT 1")->fetch();
+        $cron = $this->db->executeQuery("SELECT * FROM tl_cron WHERE name = 'lastrun'")->fetch();
 
         // Add the cron entry
         if (false === $cron) {

@@ -47,6 +47,6 @@ class CronCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $this->cron->run(true);
+        $this->cron->run([Cron::SCOPE_CLI]);
     }
 }

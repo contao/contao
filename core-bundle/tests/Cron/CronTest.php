@@ -62,7 +62,7 @@ class CronTest extends TestCase
             ->expects($this->exactly(2))
             ->method('executeQuery')
             ->withConsecutive(
-                ["SELECT * FROM tl_cron WHERE name = 'lastrun' LIMIT 1"],
+                ["SELECT * FROM tl_cron WHERE name = 'lastrun'"],
                 ["SELECT * FROM tl_cron WHERE name != 'lastrun'"]
             )
             ->willReturnOnConsecutiveCalls($result1, $result2)
@@ -91,7 +91,7 @@ class CronTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('executeQuery')
-            ->with("SELECT * FROM tl_cron WHERE name = 'lastrun' LIMIT 1")
+            ->with("SELECT * FROM tl_cron WHERE name = 'lastrun'")
             ->willReturn($result)
         ;
 
@@ -181,7 +181,7 @@ class CronTest extends TestCase
         $cron->run();
     }
 
-    public function testCliCronJobsAreNotExecutedIfCliOnlyIsFalse(): void
+    public function testCliCronJobsAreNotExecutedIfScopeIsWeb(): void
     {
         $connection = $this->getEmptyDatabaseConnection();
 
@@ -207,7 +207,7 @@ class CronTest extends TestCase
             ->method('debug')
             ->withConsecutive(
                 ['Running the minutely cron jobs'],
-                ['Skipping command line only minutely cron job "TestCronJob::cli"'],
+                ['Skipping minutely cron job "TestCronJob::cli" for scope ['.Cron::SCOPE_WEB.']'],
                 ['Minutely cron jobs complete']
             )
         ;
@@ -215,12 +215,12 @@ class CronTest extends TestCase
         $cron = new Cron($connection, $logger);
 
         $cron->addCronJob($cronjob, 'web', 'minutely');
-        $cron->addCronJob($cronjob, 'cli', 'minutely', 0, true);
+        $cron->addCronJob($cronjob, 'cli', 'minutely', 0, Cron::SCOPE_CLI);
 
-        $cron->run();
+        $cron->run([Cron::SCOPE_WEB]);
     }
 
-    public function testCliCronJobsAreExecutedWhenCliOnlyIsTrue(): void
+    public function testCliCronJobsAreExecutedWhenScopeIsCli(): void
     {
         $connection = $this->getEmptyDatabaseConnection();
 
@@ -239,9 +239,9 @@ class CronTest extends TestCase
         $cron = new Cron($connection);
 
         $cron->addCronJob($cronjob, 'web', 'minutely');
-        $cron->addCronJob($cronjob, 'cli', 'minutely', 0, true);
+        $cron->addCronJob($cronjob, 'cli', 'minutely', 0, Cron::SCOPE_CLI);
 
-        $cron->run(true);
+        $cron->run([Cron::SCOPE_CLI]);
     }
 
     public function testCronJobsAreNotRunWhenLastRunIsCurrent(): void
@@ -278,7 +278,7 @@ class CronTest extends TestCase
             ->expects($this->exactly(2))
             ->method('executeQuery')
             ->withConsecutive(
-                ["SELECT * FROM tl_cron WHERE name = 'lastrun' LIMIT 1"],
+                ["SELECT * FROM tl_cron WHERE name = 'lastrun'"],
                 ["SELECT * FROM tl_cron WHERE name != 'lastrun'"]
             )
             ->willReturnOnConsecutiveCalls($result1, $result2)
@@ -388,7 +388,7 @@ class CronTest extends TestCase
             ->expects($this->exactly(2))
             ->method('executeQuery')
             ->withConsecutive(
-                ["SELECT * FROM tl_cron WHERE name = 'lastrun' LIMIT 1"],
+                ["SELECT * FROM tl_cron WHERE name = 'lastrun'"],
                 ["SELECT * FROM tl_cron WHERE name != 'lastrun'"]
             )
             ->willReturnOnConsecutiveCalls($result1, $result2)

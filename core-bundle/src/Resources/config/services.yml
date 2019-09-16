@@ -146,7 +146,6 @@ services:
     Contao\CoreBundle\Cron\Cron:
         arguments:
             - '@database_connection'
-            - '%kernel.debug%'
             - '@?logger'
         public: true
 

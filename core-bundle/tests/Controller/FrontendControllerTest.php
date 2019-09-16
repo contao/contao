@@ -249,6 +249,7 @@ class FrontendControllerTest extends TestCase
         $cron
             ->expects($this->once())
             ->method('run')
+            ->with([Cron::SCOPE_WEB])
         ;
 
         $request = $this->createMock(Request::class);
