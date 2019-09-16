@@ -20,6 +20,7 @@ use Contao\FaqBundle\Picker\FaqPickerProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\Security\Core\Security;
 
 class ContaoFaqExtensionTest extends TestCase
 {
@@ -43,26 +44,24 @@ class ContaoFaqExtensionTest extends TestCase
 
     public function testRegistersTheInsertTagsListener(): void
     {
-        $this->assertTrue($this->container->has('contao_faq.listener.insert_tags'));
+        $this->assertTrue($this->container->has(InsertTagsListener::class));
 
-        $definition = $this->container->getDefinition('contao_faq.listener.insert_tags');
+        $definition = $this->container->getDefinition(InsertTagsListener::class);
 
-        $this->assertSame(InsertTagsListener::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame(ContaoFramework::class, (string) $definition->getArgument(0));
     }
 
     public function testRegistersTheEventPickerProvider(): void
     {
-        $this->assertTrue($this->container->has('contao_faq.picker.faq_provider'));
+        $this->assertTrue($this->container->has(FaqPickerProvider::class));
 
-        $definition = $this->container->getDefinition('contao_faq.picker.faq_provider');
+        $definition = $this->container->getDefinition(FaqPickerProvider::class);
 
-        $this->assertSame(FaqPickerProvider::class, $definition->getClass());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
         $this->assertSame('router', (string) $definition->getArgument(1));
         $this->assertSame('translator', (string) $definition->getArgument(2));
-        $this->assertSame('security.helper', (string) $definition->getArgument(3));
+        $this->assertSame(Security::class, (string) $definition->getArgument(3));
 
         $conditionals = $definition->getInstanceofConditionals();
 

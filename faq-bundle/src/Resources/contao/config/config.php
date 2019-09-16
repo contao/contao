@@ -36,7 +36,7 @@ if (\defined('TL_MODE') && TL_MODE == 'BE')
 
 // Register hooks
 $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('Contao\ModuleFaq', 'getSearchablePages');
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('contao_faq.listener.insert_tags', 'onReplaceInsertTags');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('Contao\FaqBundle\EventListener\InsertTagsListener', 'onReplaceInsertTags');
 
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'faqs';
