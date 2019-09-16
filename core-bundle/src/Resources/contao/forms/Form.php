@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
 use Patchwork\Utf8;
 
 /**
@@ -61,6 +62,20 @@ class Form extends Hybrid
 	 */
 	protected $strTemplate = 'form_wrapper';
 
+	public function __construct($objElement, $strColumn='main')
+	{
+		$arrData = System::getContainer()->get('contao.form.config')->getFormData($objElement->{$this->strKey});
+		if ($arrData !== null)
+		{
+			$strModelClass = Model::getClassFromTable($this->strTable);
+			$objModel = new $strModelClass();
+			$objModel->setRow($arrData);
+			$this->objModel = $objModel;
+		}
+
+		parent::__construct($objElement, $strColumn);
+	}
+
 	/**
 	 * Remove name attributes in the back end so the form is not validated
 	 *
@@ -109,7 +124,22 @@ class Form extends Hybrid
 
 		// Get all form fields
 		$arrFields = array();
-		$objFields = FormFieldModel::findPublishedByPid($this->id);
+		$arrFieldRows = System::getContainer()->get('contao.form.config')->getFormFieldRows($this->id);
+		if ($arrFieldRows !== null)
+		{
+			$arrFieldModels = array();
+			foreach ($arrFieldRows as $arrFieldData)
+			{
+				$objField = new FormFieldModel();
+				$objField->setRow($arrFieldData);
+				$arrFieldModels[] = $objField;
+			}
+			$objFields = new Collection($arrFieldModels, FormFieldModel::getTable());
+		}
+		else
+		{
+			$objFields = FormFieldModel::findPublishedByPid($this->id);
+		}
 
 		if ($objFields !== null)
 		{

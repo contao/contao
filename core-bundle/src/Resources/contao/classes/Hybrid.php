@@ -107,8 +107,13 @@ abstract class Hybrid extends Frontend
 		/** @var Model $strModelClass */
 		$strModelClass = Model::getClassFromTable($this->strTable);
 
+		if ($this->objModel)
+		{
+			$objHybrid = $this->objModel;
+		}
+
 		// Load the model
-		if (class_exists($strModelClass))
+		elseif (class_exists($strModelClass))
 		{
 			$objHybrid = $strModelClass::findByPk($objElement->{$this->strKey});
 

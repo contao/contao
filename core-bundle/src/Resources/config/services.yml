@@ -154,6 +154,14 @@ services:
             - '@contao.framework'
             - '@doctrine'
 
+    contao.form.config:
+        class: Contao\CoreBundle\Form\Config
+        arguments:
+            - "@=service('contao.framework').getAdapter('Contao\\\\FormModel')"
+            - "@=service('contao.framework').getAdapter('Contao\\\\FormFieldModel')"
+            - "%contao.form%"
+        public: true
+
     contao.fragment.handler:
         class: Contao\CoreBundle\Fragment\FragmentHandler
         decorates: fragment.handler

@@ -320,7 +320,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'foreignKey'              => 'tl_form.title',
 			'options_callback'        => array('tl_module', 'getForms'),
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => "varchar(64) NOT NULL default '0'",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'queryType' => array
@@ -723,8 +723,9 @@ class tl_module extends Contao\Backend
 				$arrForms[$objForms->id] = $objForms->title;
 			}
 		}
+		$arrConfigForms = Contao\System::getContainer()->get('contao.form.config')->getList();
 
-		return $arrForms;
+		return $arrForms + $arrConfigForms;
 	}
 
 	/**

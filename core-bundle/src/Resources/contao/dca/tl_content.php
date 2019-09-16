@@ -774,7 +774,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			(
 				array('tl_content', 'editForm')
 			),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => "varchar(64) NOT NULL default '0'"
 		),
 		'module' => array
 		(
@@ -1411,8 +1411,9 @@ class tl_content extends Contao\Backend
 				$arrForms[$objForms->id] = $objForms->title . ' (ID ' . $objForms->id . ')';
 			}
 		}
+		$arrConfigForms = Contao\System::getContainer()->get('contao.form.config')->getList();
 
-		return $arrForms;
+		return $arrForms + $arrConfigForms;
 	}
 
 	/**
