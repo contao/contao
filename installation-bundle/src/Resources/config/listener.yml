@@ -1,6 +1,5 @@
 services:
-    contao.listener.initialize_application:
-        class: Contao\InstallationBundle\EventListener\InitializeApplicationListener
+    Contao\InstallationBundle\EventListener\InitializeApplicationListener:
         calls:
             - ['setContainer', ['@service_container']]
         tags:

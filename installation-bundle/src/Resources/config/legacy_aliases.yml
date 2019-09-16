@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        public: true
+
+    contao.install_tool: '@Contao\InstallationBundle\InstallTool'
+    contao.install_tool_user: '@Contao\InstallationBundle\InstallToolUser'
+    contao.installer: '@Contao\InstallationBundle\Database\Installer'
