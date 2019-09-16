@@ -9,6 +9,6 @@ services:
             - '@knp_menu.factory'
             - '@router'
             - '@?translator'
-            - '@Symfony\Component\Security\Core\Security'
+            - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 96 }

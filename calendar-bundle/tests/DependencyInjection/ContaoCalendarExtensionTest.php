@@ -23,7 +23,6 @@ use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\Security\Core\Security;
 
 class ContaoCalendarExtensionTest extends TestCase
 {
@@ -106,7 +105,7 @@ class ContaoCalendarExtensionTest extends TestCase
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
         $this->assertSame('router', (string) $definition->getArgument(1));
         $this->assertSame('translator', (string) $definition->getArgument(2));
-        $this->assertSame(Security::class, (string) $definition->getArgument(3));
+        $this->assertSame('security.helper', (string) $definition->getArgument(3));
 
         $conditionals = $definition->getInstanceofConditionals();
 

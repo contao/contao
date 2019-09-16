@@ -1,14 +1,14 @@
 services:
     Contao\ManagerBundle\EventListener\BackendMenuListener:
         arguments:
-            - '@Symfony\Component\Security\Core\Security'
+            - '@security.helper'
             - '%contao_manager.manager_path%'
         tags:
             - { name: kernel.event_listener, event: contao.backend_menu_build, method: onBuild, priority: -10 }
 
     Contao\ManagerBundle\EventListener\DebugListener:
         arguments:
-            - '@Symfony\Component\Security\Core\Security'
+            - '@security.helper'
             - '@request_stack'
             - '@contao_manager.jwt_manager'
         public: true

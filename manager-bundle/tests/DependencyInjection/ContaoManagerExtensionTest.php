@@ -24,7 +24,6 @@ use Contao\ManagerBundle\EventListener\PreviewAuthenticationListener;
 use Contao\ManagerBundle\Routing\RouteLoader;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Security\Core\Security;
 
 class ContaoManagerExtensionTest extends TestCase
 {
@@ -52,7 +51,7 @@ class ContaoManagerExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition(BackendMenuListener::class);
 
-        $this->assertSame(Security::class, (string) $definition->getArgument(0));
+        $this->assertSame('security.helper', (string) $definition->getArgument(0));
         $this->assertSame('%contao_manager.manager_path%', (string) $definition->getArgument(1));
 
         $tags = $definition->getTags();
@@ -70,7 +69,7 @@ class ContaoManagerExtensionTest extends TestCase
         $definition = $this->container->getDefinition(DebugListener::class);
 
         $this->assertTrue($definition->isPublic());
-        $this->assertSame(Security::class, (string) $definition->getArgument(0));
+        $this->assertSame('security.helper', (string) $definition->getArgument(0));
         $this->assertSame('request_stack', (string) $definition->getArgument(1));
         $this->assertSame('contao_manager.jwt_manager', (string) $definition->getArgument(2));
     }
