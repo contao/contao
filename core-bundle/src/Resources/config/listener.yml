@@ -2,7 +2,7 @@ services:
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
-                - ['setFramework', ['@contao.framework']]
+                - ['setFramework', ['@Contao\CoreBundle\Framework\ContaoFramework']]
 
         Symfony\Component\DependencyInjection\ContainerAwareInterface:
             calls:
@@ -10,14 +10,14 @@ services:
 
     Contao\CoreBundle\EventListener\RobotsTxtListener:
         arguments:
-            - '@contao.framework'
+            - '@Contao\CoreBundle\Framework\ContaoFramework'
         tags:
             - { name: kernel.event_listener, event: contao.robots_txt, method: onRobotsTxt }
 
     contao.listener.add_to_search_index:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         arguments:
-            - '@contao.framework'
+            - '@Contao\CoreBundle\Framework\ContaoFramework'
             - '%fragment.path%'
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
@@ -55,7 +55,7 @@ services:
     contao.listener.command_scheduler:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:
-            - '@contao.framework'
+            - '@Contao\CoreBundle\Framework\ContaoFramework'
             - '@database_connection'
             - '%fragment.path%'
         tags:
@@ -130,7 +130,7 @@ services:
     contao.listener.merge_http_headers:
         class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
         arguments:
-            - '@contao.framework'
+            - '@Contao\CoreBundle\Framework\ContaoFramework'
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 256 }
 
@@ -139,7 +139,7 @@ services:
         arguments:
             - '%contao.pretty_error_screens%'
             - '@twig'
-            - '@contao.framework'
+            - '@Contao\CoreBundle\Framework\ContaoFramework'
             - '@security.helper'
             - '@?logger'
         tags:
@@ -158,7 +158,7 @@ services:
     contao.listener.request_token:
         class: Contao\CoreBundle\EventListener\RequestTokenListener
         arguments:
-            - '@contao.framework'
+            - '@Contao\CoreBundle\Framework\ContaoFramework'
             - '@Contao\CoreBundle\Routing\ScopeMatcher'
             - '@contao.csrf.token_manager'
             - '%contao.csrf_token_name%'
@@ -192,7 +192,7 @@ services:
     contao.listener.two_factor.frontend:
         class: Contao\CoreBundle\EventListener\TwoFactorFrontendListener
         arguments:
-            - '@contao.framework'
+            - '@Contao\CoreBundle\Framework\ContaoFramework'
             - '@Contao\CoreBundle\Routing\ScopeMatcher'
             - '@security.token_storage'
             - '%scheb_two_factor.security_tokens%'

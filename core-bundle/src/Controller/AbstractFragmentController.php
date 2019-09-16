@@ -42,10 +42,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
     {
         return array_merge(
             parent::getSubscribedServices(),
-            [
-                'contao.framework' => ContaoFramework::class,
-                'fos_http_cache.http.symfony_response_tagger' => '?'.SymfonyResponseTagger::class,
-            ]
+            ['fos_http_cache.http.symfony_response_tagger' => '?'.SymfonyResponseTagger::class]
         );
     }
 
@@ -62,7 +59,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
             $templateName = $model->customTpl;
         }
 
-        $template = $this->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);
+        $template = $this->get(ContaoFramework::class)->createInstance(FrontendTemplate::class, [$templateName]);
         $template->setData($model->row());
 
         return $template;

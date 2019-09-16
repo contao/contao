@@ -54,9 +54,6 @@ class TwoFactorController extends AbstractFrontendModuleController
     {
         $services = parent::getSubscribedServices();
 
-        $services['contao.framework'] = ContaoFramework::class;
-        $services[ScopeMatcher::class] = ScopeMatcher::class;
-        $services[Authenticator::class] = Authenticator::class;
         $services['security.authentication_utils'] = AuthenticationUtils::class;
         $services['security.token_storage'] = TokenStorageInterface::class;
         $services['translator'] = TranslatorInterface::class;
@@ -79,7 +76,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         /** @var PageModel $adapter */
-        $adapter = $this->get('contao.framework')->getAdapter(PageModel::class);
+        $adapter = $this->get(ContaoFramework::class)->getAdapter(PageModel::class);
 
         $redirectPage = $model->jumpTo > 0 ? $adapter->findByPk($model->jumpTo) : null;
         $return = $redirectPage instanceof PageModel ? $redirectPage->getAbsoluteUrl() : $this->page->getAbsoluteUrl();

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Psr\Log\LogLevel;
@@ -144,7 +145,7 @@ abstract class Frontend extends Controller
 			}
 
 			/** @var PageModel $objPageModel */
-			$objPageModel = System::getContainer()->get('contao.framework')->getAdapter(PageModel::class);
+			$objPageModel = System::getContainer()->get(ContaoFramework::class)->getAdapter(PageModel::class);
 
 			// Check if there are pages with a matching alias
 			$objPages = $objPageModel->findByAliases($arrOptions);

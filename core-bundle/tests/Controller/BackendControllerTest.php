@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\BackendController;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Tests\TestCase;
@@ -43,7 +44,7 @@ class BackendControllerTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set(ContaoFramework::class, $this->mockContaoFramework());
         $container->set('security.authorization_checker', $authorizationChecker);
         $container->set('router', $router);
 
@@ -68,7 +69,7 @@ class BackendControllerTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set(ContaoFramework::class, $this->mockContaoFramework());
         $container->set('router', $router);
 
         $controller = new BackendController();

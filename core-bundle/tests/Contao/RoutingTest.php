@@ -177,7 +177,7 @@ class RoutingTest extends ContaoTestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $this->mockFrameworkWithPageAdapter());
+        $container->set(ContaoFramework::class, $this->mockFrameworkWithPageAdapter());
 
         System::setContainer($container);
 
@@ -208,7 +208,7 @@ class RoutingTest extends ContaoTestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $this->mockFrameworkWithPageAdapter());
+        $container->set(ContaoFramework::class, $this->mockFrameworkWithPageAdapter());
 
         System::setContainer($container);
         Config::set('useAutoItem', true);
@@ -240,7 +240,7 @@ class RoutingTest extends ContaoTestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $this->mockFrameworkWithPageAdapter());
+        $container->set(ContaoFramework::class, $this->mockFrameworkWithPageAdapter());
 
         System::setContainer($container);
 
@@ -308,7 +308,7 @@ class RoutingTest extends ContaoTestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $this->mockFrameworkWithPageAdapter());
+        $container->set(ContaoFramework::class, $this->mockFrameworkWithPageAdapter());
 
         System::setContainer($container);
         Config::set('useAutoItem', true);
@@ -402,7 +402,7 @@ class RoutingTest extends ContaoTestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $this->mockFrameworkWithPageAdapter());
+        $container->set(ContaoFramework::class, $this->mockFrameworkWithPageAdapter());
 
         System::setContainer($container);
         Config::set('addLanguageToUrl', true);
@@ -441,7 +441,7 @@ class RoutingTest extends ContaoTestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $this->mockFrameworkWithPageAdapter($pageModel));
+        $container->set(ContaoFramework::class, $this->mockFrameworkWithPageAdapter($pageModel));
 
         System::setContainer($container);
 
@@ -500,7 +500,7 @@ class RoutingTest extends ContaoTestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $framework);
+        $container->set(ContaoFramework::class, $framework);
 
         System::setContainer($container);
 
@@ -568,7 +568,7 @@ class RoutingTest extends ContaoTestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $framework);
+        $container->set(ContaoFramework::class, $framework);
 
         System::setContainer($container);
         Config::set('addLanguageToUrl', true);
@@ -628,7 +628,7 @@ class RoutingTest extends ContaoTestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', $requestStack);
-        $container->set('contao.framework', $framework);
+        $container->set(ContaoFramework::class, $framework);
 
         System::setContainer($container);
 

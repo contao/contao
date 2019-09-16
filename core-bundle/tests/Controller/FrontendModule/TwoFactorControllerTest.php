@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Tests\TestCase;
@@ -333,9 +334,6 @@ class TwoFactorControllerTest extends TestCase
     {
         $services = TwoFactorController::getSubscribedServices();
 
-        $this->assertArrayHasKey('contao.framework', $services);
-        $this->assertArrayHasKey(ScopeMatcher::class, $services);
-        $this->assertArrayHasKey(Authenticator::class, $services);
         $this->assertArrayHasKey('security.authentication_utils', $services);
         $this->assertArrayHasKey('security.token_storage', $services);
         $this->assertArrayHasKey('translator', $services);
@@ -462,7 +460,7 @@ class TwoFactorControllerTest extends TestCase
         $translator = $this->createMock(Translator::class);
 
         $container = new ContainerBuilder();
-        $container->set('contao.framework', $framework);
+        $container->set(ContaoFramework::class, $framework);
         $container->set(ScopeMatcher::class, $scopeMatcher);
         $container->set('translator', $translator);
         $container->set('security.token_storage', $tokenStorage);

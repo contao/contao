@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\Tests\DependencyInjection;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\FaqBundle\DependencyInjection\ContaoFaqExtension;
 use Contao\FaqBundle\EventListener\InsertTagsListener;
@@ -48,7 +49,7 @@ class ContaoFaqExtensionTest extends TestCase
 
         $this->assertSame(InsertTagsListener::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame(ContaoFramework::class, (string) $definition->getArgument(0));
     }
 
     public function testRegistersTheEventPickerProvider(): void

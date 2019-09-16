@@ -490,7 +490,7 @@ class DataContainerCallbackPassTest extends TestCase
     }
 
     /**
-     * Returns the container builder with a dummy contao.framework definition.
+     * Returns the container builder with a dummy Contao framework definition.
      */
     private function getContainerBuilder(): ContainerBuilder
     {

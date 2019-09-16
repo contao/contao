@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Monolog;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -136,11 +137,11 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
      */
     private function executeHook(string $message, ContaoContext $context): void
     {
-        if (null === $this->container || !$this->container->has('contao.framework')) {
+        if (null === $this->container || !$this->container->has(ContaoFramework::class)) {
             return;
         }
 
-        $framework = $this->container->get('contao.framework');
+        $framework = $this->container->get(ContaoFramework::class);
 
         if (!$this->hasAddLogEntryHook() || !$framework->isInitialized()) {
             return;

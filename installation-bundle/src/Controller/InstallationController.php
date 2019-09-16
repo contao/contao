@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Controller;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\AbstractVersionUpdate;
@@ -54,8 +55,8 @@ class InstallationController implements ContainerAwareInterface
             return $response;
         }
 
-        if ($this->container->has('contao.framework')) {
-            $this->container->get('contao.framework')->initialize();
+        if ($this->container->has(ContaoFramework::class)) {
+            $this->container->get(ContaoFramework::class)->initialize();
         }
 
         $installTool = $this->container->get('contao.install_tool');
@@ -688,7 +689,7 @@ class InstallationController implements ContainerAwareInterface
 
     private function getUserAgentString(): string
     {
-        if (!$this->container->has('contao.framework') || !$this->container->get('contao.framework')->isInitialized()) {
+        if (!$this->container->has(ContaoFramework::class) || !$this->container->get(ContaoFramework::class)->isInitialized()) {
             return '';
         }
 

@@ -18,6 +18,7 @@ use Contao\CalendarBundle\EventListener\InsertTagsListener;
 use Contao\CalendarBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CalendarBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CalendarBundle\Picker\EventPickerProvider;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -51,7 +52,7 @@ class ContaoCalendarExtensionTest extends TestCase
 
         $this->assertSame(GeneratePageListener::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame(ContaoFramework::class, (string) $definition->getArgument(0));
     }
 
     public function testRegistersTheInsertTagsListener(): void
@@ -62,7 +63,7 @@ class ContaoCalendarExtensionTest extends TestCase
 
         $this->assertSame(InsertTagsListener::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame(ContaoFramework::class, (string) $definition->getArgument(0));
     }
 
     public function testRegistersThePreviewUrlCreateListener(): void
@@ -73,7 +74,7 @@ class ContaoCalendarExtensionTest extends TestCase
 
         $this->assertSame(PreviewUrlCreateListener::class, $definition->getClass());
         $this->assertSame('request_stack', (string) $definition->getArgument(0));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
+        $this->assertSame(ContaoFramework::class, (string) $definition->getArgument(1));
 
         $tags = $definition->getTags();
 
@@ -90,7 +91,7 @@ class ContaoCalendarExtensionTest extends TestCase
 
         $this->assertSame(PreviewUrlConvertListener::class, $definition->getClass());
         $this->assertSame('request_stack', (string) $definition->getArgument(0));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
+        $this->assertSame(ContaoFramework::class, (string) $definition->getArgument(1));
 
         $tags = $definition->getTags();
 

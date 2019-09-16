@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,7 +68,7 @@ class InitializeController extends AbstractController
 
         // Initialize the framework with the real request
         $this->get('request_stack')->push($realRequest);
-        $this->get('contao.framework')->initialize();
+        $this->get(ContaoFramework::class)->initialize();
 
         // Add the master request again. When Kernel::handle() is finished,
         // it will pop the current request, resulting in the real request being active.

@@ -29,7 +29,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * @internal Do not instantiate this class in your code; use the "contao.framework" service instead
+ * @internal Do not instantiate this class in your code;
+ *           use the "Contao\CoreBundle\Framework\ContaoFramework" service instead
  */
 class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterface
 {

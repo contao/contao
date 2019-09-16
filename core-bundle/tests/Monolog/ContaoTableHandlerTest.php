@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Monolog;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Tests\TestCase;
@@ -63,7 +64,7 @@ class ContaoTableHandlerTest extends TestCase
         $system = $this->mockConfiguredAdapter(['importStatic' => $this]);
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework([System::class => $system]));
+        $container->set(ContaoFramework::class, $this->mockContaoFramework([System::class => $system]));
         $container->set('doctrine.dbal.default_connection', $connection);
 
         $GLOBALS['TL_HOOKS']['addLogEntry'][] = [\get_class($this), 'addLogEntry'];

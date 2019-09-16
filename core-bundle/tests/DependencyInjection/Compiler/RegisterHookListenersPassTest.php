@@ -254,7 +254,7 @@ class RegisterHookListenersPassTest extends TestCase
         $container = $this->createMock(ContainerBuilder::class);
         $container
             ->method('hasDefinition')
-            ->with('contao.framework')
+            ->with(ContaoFramework::class)
             ->willReturn(false)
         ;
 
@@ -274,7 +274,7 @@ class RegisterHookListenersPassTest extends TestCase
         $pass = new RegisterHookListenersPass();
         $pass->process($container);
 
-        $definition = $container->getDefinition('contao.framework');
+        $definition = $container->getDefinition(ContaoFramework::class);
 
         $this->assertEmpty($definition->getMethodCalls());
     }
@@ -299,9 +299,9 @@ class RegisterHookListenersPassTest extends TestCase
      */
     private function getHookListenersFromDefinition(ContainerBuilder $container): array
     {
-        $this->assertTrue($container->hasDefinition('contao.framework'));
+        $this->assertTrue($container->hasDefinition(ContaoFramework::class));
 
-        $definition = $container->getDefinition('contao.framework');
+        $definition = $container->getDefinition(ContaoFramework::class);
         $methodCalls = $definition->getMethodCalls();
 
         $this->assertIsArray($methodCalls);
@@ -312,12 +312,12 @@ class RegisterHookListenersPassTest extends TestCase
     }
 
     /**
-     * Returns the container builder with a dummy contao.framework definition.
+     * Returns the container builder with a dummy Contao framework definition.
      */
     private function getContainerBuilder(): ContainerBuilder
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('contao.framework', new Definition(ContaoFramework::class, []));
+        $container->setDefinition(ContaoFramework::class, new Definition(ContaoFramework::class, []));
 
         return $container;
     }

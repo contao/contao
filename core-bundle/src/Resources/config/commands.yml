@@ -5,17 +5,17 @@ services:
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
-                - ['setFramework', ['@contao.framework']]
+                - ['setFramework', ['@Contao\CoreBundle\Framework\ContaoFramework']]
 
     contao.command.automator:
         class: Contao\CoreBundle\Command\AutomatorCommand
         arguments:
-            - '@contao.framework'
+            - '@Contao\CoreBundle\Framework\ContaoFramework'
 
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand
         arguments:
-            - '@contao.framework'
+            - '@Contao\CoreBundle\Framework\ContaoFramework'
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
@@ -50,7 +50,7 @@ services:
     contao.command.user_password_command:
         class: Contao\CoreBundle\Command\UserPasswordCommand
         arguments:
-            - '@contao.framework'
+            - '@Contao\CoreBundle\Framework\ContaoFramework'
             - '@database_connection'
             - '@security.encoder_factory'
 

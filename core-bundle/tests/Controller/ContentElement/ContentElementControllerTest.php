@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestController;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestSharedMaxAgeController;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
@@ -217,7 +218,7 @@ class ContentElementControllerTest extends TestCase
         ;
 
         $container = new ContainerBuilder();
-        $container->set('contao.framework', $framework);
+        $container->set(ContaoFramework::class, $framework);
 
         return $container;
     }

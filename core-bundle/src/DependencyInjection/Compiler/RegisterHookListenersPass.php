@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,7 +24,7 @@ class RegisterHookListenersPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition('contao.framework')) {
+        if (!$container->hasDefinition(ContaoFramework::class)) {
             return;
         }
 
@@ -38,7 +39,7 @@ class RegisterHookListenersPass implements CompilerPassInterface
             krsort($hooks[$hook]);
         }
 
-        $definition = $container->getDefinition('contao.framework');
+        $definition = $container->getDefinition(ContaoFramework::class);
         $definition->addMethodCall('setHookListeners', [$hooks]);
     }
 
