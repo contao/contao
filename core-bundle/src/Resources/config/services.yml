@@ -1,6 +1,3 @@
-imports:
-    - { resource: legacy_aliases.yml }
-
 services:
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:

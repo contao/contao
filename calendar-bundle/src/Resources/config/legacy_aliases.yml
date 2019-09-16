@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    contao_calendar.listener.generate_page: '@Contao\CalendarBundle\EventListener\GeneratePageListener'
+    contao_calendar.listener.insert_tags: '@Contao\CalendarBundle\EventListener\InsertTagsListener'

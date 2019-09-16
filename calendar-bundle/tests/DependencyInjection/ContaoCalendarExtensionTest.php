@@ -23,6 +23,7 @@ use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\Security\Core\Security;
 
 class ContaoCalendarExtensionTest extends TestCase
 {
@@ -46,33 +47,30 @@ class ContaoCalendarExtensionTest extends TestCase
 
     public function testRegistersTheGeneratePageListener(): void
     {
-        $this->assertTrue($this->container->has('contao_calendar.listener.generate_page'));
+        $this->assertTrue($this->container->has(GeneratePageListener::class));
 
-        $definition = $this->container->getDefinition('contao_calendar.listener.generate_page');
+        $definition = $this->container->getDefinition(GeneratePageListener::class);
 
-        $this->assertSame(GeneratePageListener::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame(ContaoFramework::class, (string) $definition->getArgument(0));
     }
 
     public function testRegistersTheInsertTagsListener(): void
     {
-        $this->assertTrue($this->container->has('contao_calendar.listener.insert_tags'));
+        $this->assertTrue($this->container->has(InsertTagsListener::class));
 
-        $definition = $this->container->getDefinition('contao_calendar.listener.insert_tags');
+        $definition = $this->container->getDefinition(InsertTagsListener::class);
 
-        $this->assertSame(InsertTagsListener::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame(ContaoFramework::class, (string) $definition->getArgument(0));
     }
 
     public function testRegistersThePreviewUrlCreateListener(): void
     {
-        $this->assertTrue($this->container->has('contao_calendar.listener.preview_url_create'));
+        $this->assertTrue($this->container->has(PreviewUrlCreateListener::class));
 
-        $definition = $this->container->getDefinition('contao_calendar.listener.preview_url_create');
+        $definition = $this->container->getDefinition(PreviewUrlCreateListener::class);
 
-        $this->assertSame(PreviewUrlCreateListener::class, $definition->getClass());
         $this->assertSame('request_stack', (string) $definition->getArgument(0));
         $this->assertSame(ContaoFramework::class, (string) $definition->getArgument(1));
 
@@ -85,11 +83,10 @@ class ContaoCalendarExtensionTest extends TestCase
 
     public function testRegistersThePreviewUrlConvertListener(): void
     {
-        $this->assertTrue($this->container->has('contao_calendar.listener.preview_url_convert'));
+        $this->assertTrue($this->container->has(PreviewUrlConvertListener::class));
 
-        $definition = $this->container->getDefinition('contao_calendar.listener.preview_url_convert');
+        $definition = $this->container->getDefinition(PreviewUrlConvertListener::class);
 
-        $this->assertSame(PreviewUrlConvertListener::class, $definition->getClass());
         $this->assertSame('request_stack', (string) $definition->getArgument(0));
         $this->assertSame(ContaoFramework::class, (string) $definition->getArgument(1));
 
@@ -102,15 +99,14 @@ class ContaoCalendarExtensionTest extends TestCase
 
     public function testRegistersTheEventPickerProvider(): void
     {
-        $this->assertTrue($this->container->has('contao_calendar.picker.event_provider'));
+        $this->assertTrue($this->container->has(EventPickerProvider::class));
 
-        $definition = $this->container->getDefinition('contao_calendar.picker.event_provider');
+        $definition = $this->container->getDefinition(EventPickerProvider::class);
 
-        $this->assertSame(EventPickerProvider::class, $definition->getClass());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
         $this->assertSame('router', (string) $definition->getArgument(1));
         $this->assertSame('translator', (string) $definition->getArgument(2));
-        $this->assertSame('security.helper', (string) $definition->getArgument(3));
+        $this->assertSame(Security::class, (string) $definition->getArgument(3));
 
         $conditionals = $definition->getInstanceofConditionals();
 

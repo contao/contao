@@ -66,6 +66,9 @@ class ContaoCoreExtension extends Extension
         $loader->load('listener.yml');
         $loader->load('services.yml');
 
+        // Backwards compatibility
+        $loader->load('legacy_aliases.yml');
+
         $container->setParameter('contao.web_dir', $config['web_dir']);
         $container->setParameter('contao.prepend_locale', $config['prepend_locale']);
         $container->setParameter('contao.encryption_key', $config['encryption_key']);

@@ -4,12 +4,11 @@ services:
             calls:
                 - ['setFramework', ['@Contao\CoreBundle\Framework\ContaoFramework']]
 
-    contao_calendar.picker.event_provider:
-        class: Contao\CalendarBundle\Picker\EventPickerProvider
+    Contao\CalendarBundle\Picker\EventPickerProvider:
         arguments:
             - '@knp_menu.factory'
             - '@router'
             - '@?translator'
-            - '@security.helper'
+            - '@Symfony\Component\Security\Core\Security'
         tags:
             - { name: contao.picker_provider, priority: 96 }
