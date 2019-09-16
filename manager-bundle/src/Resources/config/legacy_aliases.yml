@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    contao_manager.routing_loader: '@Contao\ManagerBundle\Routing\RouteLoader'
+    contao_manager.listener.debug: '@Contao\ManagerBundle\EventListener\DebugListener'

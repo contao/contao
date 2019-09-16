@@ -1,36 +1,31 @@
 services:
-    contao_manager.listener.backend_menu_listener:
-        class: Contao\ManagerBundle\EventListener\BackendMenuListener
+    Contao\ManagerBundle\EventListener\BackendMenuListener:
         arguments:
-            - '@security.helper'
+            - '@Symfony\Component\Security\Core\Security'
             - '%contao_manager.manager_path%'
         tags:
             - { name: kernel.event_listener, event: contao.backend_menu_build, method: onBuild, priority: -10 }
 
-    contao_manager.listener.debug:
-        class: Contao\ManagerBundle\EventListener\DebugListener
+    Contao\ManagerBundle\EventListener\DebugListener:
         arguments:
-            - '@security.helper'
+            - '@Symfony\Component\Security\Core\Security'
             - '@request_stack'
             - '@contao_manager.jwt_manager'
         public: true
 
-    contao_manager.listener.initialize_application:
-        class: Contao\ManagerBundle\EventListener\InitializeApplicationListener
+    Contao\ManagerBundle\EventListener\InitializeApplicationListener:
         arguments:
             - '%kernel.project_dir%'
         tags:
             - { name: kernel.event_listener, event: contao_installation.initialize_application, method: onInitializeApplication, priority: -128 }
 
-    contao_manager.listener.install_command:
-        class: Contao\ManagerBundle\EventListener\InstallCommandListener
+    Contao\ManagerBundle\EventListener\InstallCommandListener:
         arguments:
             - '%kernel.project_dir%'
         tags:
             - { name: kernel.event_listener, event: console.terminate }
 
-    contao_manager.listener.preview_authentication:
-        class: Contao\ManagerBundle\EventListener\PreviewAuthenticationListener
+    Contao\ManagerBundle\EventListener\PreviewAuthenticationListener:
         arguments:
             - '@Contao\CoreBundle\Routing\ScopeMatcher'
             - '@Contao\CoreBundle\Security\Authentication\Token\TokenChecker'

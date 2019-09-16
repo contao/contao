@@ -35,6 +35,9 @@ class ContaoManagerExtension extends Extension
         $loader->load('listener.yml');
         $loader->load('services.yml');
 
+        // Backwards compatibility
+        $loader->load('legacy_aliases.yml');
+
         $container->setParameter('contao_manager.manager_path', $config['manager_path']);
     }
 }

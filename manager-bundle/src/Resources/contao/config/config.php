@@ -11,8 +11,8 @@
 // Back end modules
 $GLOBALS['BE_MOD']['accounts']['debug'] = array
 (
-	'enable'                  => ['contao_manager.listener.debug', 'onEnable'],
-	'disable'                 => ['contao_manager.listener.debug', 'onDisable'],
+	'enable'                  => ['Contao\ManagerBundle\EventListener\DebugListener', 'onEnable'],
+	'disable'                 => ['Contao\ManagerBundle\EventListener\DebugListener', 'onDisable'],
 	'hideInNavigation'        => true,
 	'disablePermissionChecks' => true
 );
