@@ -334,8 +334,8 @@ class TwoFactorControllerTest extends TestCase
         $services = TwoFactorController::getSubscribedServices();
 
         $this->assertArrayHasKey('contao.framework', $services);
-        $this->assertArrayHasKey('contao.routing.scope_matcher', $services);
-        $this->assertArrayHasKey('contao.security.two_factor.authenticator', $services);
+        $this->assertArrayHasKey(ScopeMatcher::class, $services);
+        $this->assertArrayHasKey(Authenticator::class, $services);
         $this->assertArrayHasKey('security.authentication_utils', $services);
         $this->assertArrayHasKey('security.token_storage', $services);
         $this->assertArrayHasKey('translator', $services);
@@ -463,10 +463,10 @@ class TwoFactorControllerTest extends TestCase
 
         $container = new ContainerBuilder();
         $container->set('contao.framework', $framework);
-        $container->set('contao.routing.scope_matcher', $scopeMatcher);
+        $container->set(ScopeMatcher::class, $scopeMatcher);
         $container->set('translator', $translator);
         $container->set('security.token_storage', $tokenStorage);
-        $container->set('contao.security.two_factor.authenticator', $authenticator);
+        $container->set(Authenticator::class, $authenticator);
         $container->set('security.authentication_utils', $authenticationUtils);
 
         return $container;

@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -58,7 +60,7 @@ class BackendSwitch extends Backend
 		}
 
 		$blnCanSwitchUser = ($this->User->isAdmin || (!empty($this->User->amg) && \is_array($this->User->amg)));
-		$objTokenChecker = System::getContainer()->get('contao.security.token_checker');
+		$objTokenChecker = System::getContainer()->get(TokenChecker::class);
 		$strUser = $objTokenChecker->getFrontendUsername();
 		$blnShowUnpublished = $objTokenChecker->isPreviewMode();
 		$blnUpdate = false;
@@ -67,7 +69,7 @@ class BackendSwitch extends Backend
 		if (Input::post('FORM_SUBMIT') == 'tl_switch')
 		{
 			$blnUpdate = true;
-			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
+			$objAuthenticator = System::getContainer()->get(FrontendPreviewAuthenticator::class);
 			$blnShowUnpublished = Input::post('unpublished') != 'hide';
 
 			// Switch user accounts

@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\ImageDimensions;
 use Patchwork\Utf8;
@@ -270,7 +272,7 @@ class File extends System
 					{
 						try
 						{
-							$dimensions = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile)->getDimensions();
+							$dimensions = System::getContainer()->get(ImageFactory::class)->create($this->strRootDir . '/' . $this->strFile)->getDimensions();
 
 							if (!$dimensions->isRelative() && !$dimensions->isUndefined())
 							{
@@ -609,11 +611,11 @@ class File extends System
 		{
 			try
 			{
-				$image = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile);
+				$image = System::getContainer()->get(ImageFactory::class)->create($this->strRootDir . '/' . $this->strFile);
 
 				if ($image instanceof DeferredImageInterface)
 				{
-					System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($image);
+					System::getContainer()->get(LegacyResizer::class)->resizeDeferredImage($image);
 
 					return true;
 				}
@@ -779,7 +781,7 @@ class File extends System
 		}
 
 		$return = System::getContainer()
-			->get('contao.image.image_factory')
+			->get(ImageFactory::class)
 			->create($this->strRootDir . '/' . $this->strFile, array($width, $height, $mode), $this->strRootDir . '/' . $this->strFile)
 			->getUrl($this->strRootDir)
 		;

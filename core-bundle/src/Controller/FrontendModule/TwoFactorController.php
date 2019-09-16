@@ -42,7 +42,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         if (
             $this->page instanceof PageModel
-            && $this->get('contao.routing.scope_matcher')->isFrontendRequest($request)
+            && $this->get(ScopeMatcher::class)->isFrontendRequest($request)
         ) {
             $this->page->loadDetails();
         }
@@ -55,8 +55,8 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services = parent::getSubscribedServices();
 
         $services['contao.framework'] = ContaoFramework::class;
-        $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
-        $services['contao.security.two_factor.authenticator'] = Authenticator::class;
+        $services[ScopeMatcher::class] = ScopeMatcher::class;
+        $services[Authenticator::class] = Authenticator::class;
         $services['security.authentication_utils'] = AuthenticationUtils::class;
         $services['security.token_storage'] = TokenStorageInterface::class;
         $services['translator'] = TranslatorInterface::class;
@@ -130,7 +130,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         $translator = $this->get('translator');
-        $authenticator = $this->get('contao.security.two_factor.authenticator');
+        $authenticator = $this->get(Authenticator::class);
         $exception = $this->get('security.authentication_utils')->getLastAuthenticationError();
 
         if ($exception instanceof InvalidTwoFactorCodeException) {

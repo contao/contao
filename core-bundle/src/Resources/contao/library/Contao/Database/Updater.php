@@ -12,6 +12,7 @@ namespace Contao\Database;
 
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\Database;
 use Contao\Dbafs;
 use Contao\File;
@@ -739,7 +740,7 @@ class Updater extends Controller
 		$arrFields = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
+		$files = System::getContainer()->get(ResourceFinder::class)->findIn('dca')->depth(0)->files()->name('*.php');
 
 		foreach ($files as $file)
 		{

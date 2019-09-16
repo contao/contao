@@ -42,7 +42,7 @@ $container = System::getContainer();
 $rootDir = $container->getParameter('kernel.project_dir');
 
 $image = $container
-    ->get('contao.image.image_factory')
+    ->get('Contao\CoreBundle\Image\ImageFactory')
     ->create($rootDir.'/'.$objSubfiles->path, [80, 60, 'center_center'])
     ->getUrl($rootDir)
 ;
@@ -62,7 +62,7 @@ $container = System::getContainer();
 $rootDir = $container->getParameter('kernel.project_dir');
 
 $image = $container
-    ->get('contao.image.image_factory')
+    ->get('Contao\CoreBundle\Image\ImageFactory')
     ->create(
         $rootDir.'/'.$path,
         (new ResizeConfiguration())
@@ -85,7 +85,7 @@ $container = System::getContainer();
 $rootDir = $container->getParameter('kernel.project_dir');
 
 $picture = $container
-    ->get('contao.image.picture_factory')
+    ->get('Contao\CoreBundle\Image\PictureFactory')
     ->create($rootDir.'/'.$path, $imageSize)
 ;
 

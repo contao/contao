@@ -13,6 +13,9 @@ namespace Contao;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Menu\BackendMenuBuilder;
+use Contao\CoreBundle\Menu\BackendMenuRenderer;
+use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Util\PackageUtil;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
@@ -148,7 +151,7 @@ class BackendMain extends Backend
 
 			if (isset($_GET['picker']))
 			{
-				$picker = System::getContainer()->get('contao.picker.builder')->createFromData(Input::get('picker', true));
+				$picker = System::getContainer()->get(PickerBuilder::class)->createFromData(Input::get('picker', true));
 
 				if ($picker !== null)
 				{
@@ -272,7 +275,7 @@ class BackendMain extends Backend
 		$this->Template->burger = $GLOBALS['TL_LANG']['MSC']['burgerTitle'];
 		$this->Template->learnMore = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
 		$this->Template->ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
-		$this->Template->menu = $container->get('contao.menu.backend_menu_renderer')->render($container->get('contao.menu.backend_menu_builder')->create());
+		$this->Template->menu = $container->get(BackendMenuRenderer::class)->render($container->get(BackendMenuBuilder::class)->create());
 		$this->Template->headerNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['headerNavigation']);
 
 		// TODO: This should be moved the the manager-bundle in Contao 4.9

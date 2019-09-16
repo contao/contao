@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Image\ImageSizes;
+use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
@@ -110,10 +113,12 @@ class ContaoCoreExtension extends Extension
             $imageSizes['_'.$name] = $value;
         }
 
-        $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
+        $services = [ImageSizes::class, ImageFactory::class, PictureFactory::class];
 
         foreach ($services as $service) {
-            if (method_exists($container->getDefinition($service)->getClass(), 'setPredefinedSizes')) {
+            $class = $container->getDefinition($service)->getClass() ?: $service;
+
+            if (method_exists($class, 'setPredefinedSizes')) {
                 $container->getDefinition($service)->addMethodCall('setPredefinedSizes', [$imageSizes]);
             }
         }

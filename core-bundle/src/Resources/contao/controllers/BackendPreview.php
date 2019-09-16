@@ -13,6 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -59,7 +61,7 @@ class BackendPreview extends Backend
 		// Switch to a particular member (see #6546)
 		if ($strUser = Input::get('user'))
 		{
-			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
+			$objAuthenticator = System::getContainer()->get(FrontendPreviewAuthenticator::class);
 
 			if (!$objAuthenticator->authenticateFrontendUser($strUser, false))
 			{
@@ -89,7 +91,7 @@ class BackendPreview extends Backend
 		$objTemplate->charset = Config::get('characterSet');
 		$objTemplate->site = Input::get('site', true);
 		$objTemplate->switchHref = $objRouter->generate('contao_backend_switch');
-		$objTemplate->user = System::getContainer()->get('contao.security.token_checker')->getFrontendUsername();
+		$objTemplate->user = System::getContainer()->get(TokenChecker::class)->getFrontendUsername();
 
 		$strUrl = null;
 

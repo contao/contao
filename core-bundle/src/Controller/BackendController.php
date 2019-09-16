@@ -24,6 +24,7 @@ use Contao\BackendPopup;
 use Contao\BackendPreview;
 use Contao\BackendSwitch;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -218,7 +219,7 @@ class BackendController extends AbstractController
         }
 
         $config = new PickerConfig($request->query->get('context'), $extras, $request->query->get('value'));
-        $picker = $this->get('contao.picker.builder')->create($config);
+        $picker = $this->get(PickerBuilder::class)->create($config);
 
         if (null === $picker) {
             throw new BadRequestHttpException('Unsupported picker context');
@@ -246,7 +247,7 @@ class BackendController extends AbstractController
         $services = parent::getSubscribedServices();
 
         $services['contao.framework'] = ContaoFramework::class;
-        $services['contao.picker.builder'] = PickerBuilderInterface::class;
+        $services[PickerBuilder::class] = PickerBuilderInterface::class;
 
         return $services;
     }

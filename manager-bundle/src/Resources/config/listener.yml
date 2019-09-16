@@ -32,8 +32,8 @@ services:
     contao_manager.listener.preview_authentication:
         class: Contao\ManagerBundle\EventListener\PreviewAuthenticationListener
         arguments:
-            - '@contao.routing.scope_matcher'
-            - '@contao.security.token_checker'
+            - '@Contao\CoreBundle\Routing\ScopeMatcher'
+            - '@Contao\CoreBundle\Security\Authentication\Token\TokenChecker'
             - '@router'
             - '%contao.preview_script%'
         tags:

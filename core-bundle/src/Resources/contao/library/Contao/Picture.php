@@ -10,14 +10,16 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\ImageFactory;
 use Contao\Image\ImportantPart;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
+use Contao\Image\PictureGenerator;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\Model\Collection;
 
-@trigger_error('Using the "Contao\Picture" class has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.picture_factory" service instead.', E_USER_DEPRECATED);
+@trigger_error('Using the "Contao\Picture" class has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\Image\PictureFactory" service instead.', E_USER_DEPRECATED);
 
 /**
  * Resizes images and creates picture data
@@ -43,7 +45,7 @@ use Contao\Model\Collection;
  * @author Yanick Witschi <https://github.com/Toflar>
  *
  * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
- *             Use the contao.image.picture_factory service instead.
+ *             Use the Contao\CoreBundle\Image\PictureFactory service instead.
  */
 class Picture
 {
@@ -205,7 +207,7 @@ class Picture
 	public function getTemplateData()
 	{
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $this->image->getOriginalPath());
+		$image = System::getContainer()->get(ImageFactory::class)->create($rootDir . '/' . $this->image->getOriginalPath());
 
 		$config = new PictureConfiguration();
 		$config->setSize($this->getConfigurationItem($this->imageSize));
@@ -235,7 +237,7 @@ class Picture
 		$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
 
 		$picture = $container
-			->get('contao.image.picture_generator')
+			->get(PictureGenerator::class)
 			->generate(
 				$image,
 				$config,

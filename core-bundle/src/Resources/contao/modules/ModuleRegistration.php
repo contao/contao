@@ -465,7 +465,7 @@ class ModuleRegistration extends Module
 	protected function sendActivationMail($arrData)
 	{
 		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get(OptIn::class);
 		$optInToken = $optIn->create('reg', $arrData['email'], array('tl_member'=>array($arrData['id'])));
 
 		// Prepare the simple token data
@@ -520,7 +520,7 @@ class ModuleRegistration extends Module
 		$this->Template = new FrontendTemplate($this->strTemplate);
 
 		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get(OptIn::class);
 
 		// Find an unconfirmed token with only one related record
 		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
@@ -593,7 +593,7 @@ class ModuleRegistration extends Module
 		$this->Template = new FrontendTemplate($this->strTemplate);
 
 		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get(OptIn::class);
 		$optInToken = null;
 		$models = OptInModel::findByRelatedTableAndIds('tl_member', array($objMember->id));
 

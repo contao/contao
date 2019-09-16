@@ -13,14 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Framework;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 
-@trigger_error('Using the "Contao\CoreBundle\Framework\ScopeAwareTrait" trait has been deprecated and will no longer work in Contao 5.0. Use the "contao.routing.scope_matcher" service instead.', E_USER_DEPRECATED);
+@trigger_error('Using the "Contao\CoreBundle\Framework\ScopeAwareTrait" trait has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\Routing\ScopeMatcher" service instead.', E_USER_DEPRECATED);
 
 /**
  * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5.0; use
- *             the contao.routing.scope_matcher service instead
+ *             the Contao\CoreBundle\Routing\ScopeMatcher service instead
  */
 trait ScopeAwareTrait
 {
@@ -68,7 +69,7 @@ trait ScopeAwareTrait
             return false;
         }
 
-        $matcher = $this->container->get('contao.routing.scope_matcher');
+        $matcher = $this->container->get(ScopeMatcher::class);
 
         if (ContaoCoreBundle::SCOPE_BACKEND === $scope) {
             return $matcher->isBackendRequest($request);

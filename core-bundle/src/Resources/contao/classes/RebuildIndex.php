@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -115,7 +116,7 @@ class RebuildIndex extends Backend implements \executable
 			$this->import(Automator::class, 'Automator');
 			$this->Automator->purgeSearchTables();
 
-			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
+			$objAuthenticator = System::getContainer()->get(FrontendPreviewAuthenticator::class);
 			$strUser = Input::get('user');
 
 			// Log in the front end user

@@ -31,8 +31,8 @@ services:
     contao.command.resize_images:
         class: Contao\CoreBundle\Command\ResizeImagesCommand
         arguments:
-            - '@contao.image.image_factory'
-            - '@contao.image.resizer'
+            - '@Contao\CoreBundle\Image\ImageFactory'
+            - '@Contao\CoreBundle\Image\LegacyResizer'
             - '%contao.image.target_dir%'
             - '@contao.image.deferred_image_storage'
             - '@?filesystem'
@@ -43,7 +43,7 @@ services:
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%kernel.logs_dir%'
-            - '@contao.resource_finder'
+            - '@Contao\CoreBundle\Config\ResourceFinder'
             - '@event_dispatcher'
         public: true
 

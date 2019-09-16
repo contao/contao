@@ -163,7 +163,7 @@ class ContaoContextTest extends TestCase
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.resource_finder', $finder);
+        $container->set(ResourceFinder::class, $finder);
 
         System::setContainer($container);
 

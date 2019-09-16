@@ -12,7 +12,9 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
+use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\Image\ResizeConfiguration;
 use FOS\HttpCacheBundle\CacheManager;
@@ -581,7 +583,7 @@ abstract class DataContainer extends Backend
 			list ($file, $type) = explode('|', $arrData['eval']['rte'], 2);
 
 			$fileBrowserTypes = array();
-			$pickerBuilder = System::getContainer()->get('contao.picker.builder');
+			$pickerBuilder = System::getContainer()->get(PickerBuilder::class);
 
 			foreach (array('file' => 'image', 'link' => 'file') as $context => $fileBrowserType)
 			{
@@ -642,7 +644,7 @@ abstract class DataContainer extends Backend
 				{
 					$container = System::getContainer();
 					$rootDir = $container->getParameter('kernel.project_dir');
-					$image = rawurldecode($container->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($rootDir));
+					$image = rawurldecode($container->get(ImageFactory::class)->create($rootDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($rootDir));
 				}
 
 				$objImage = new File($image);

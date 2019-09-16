@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Config\ResourceFinder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -144,7 +145,7 @@ class TemplateLoader
 		try
 		{
 			// Search for the template if it is not in the lookup array (last match wins)
-			foreach ($container->get('contao.resource_finder')->findIn('templates')->name($file) as $file)
+			foreach ($container->get(ResourceFinder::class)->findIn('templates')->name($file) as $file)
 			{
 				/** @var SplFileInfo $file */
 				$strPath = $file->getPathname();
@@ -178,7 +179,7 @@ class TemplateLoader
 		{
 			try
 			{
-				foreach (System::getContainer()->get('contao.resource_finder')->findIn('templates')->name('*.html5') as $file)
+				foreach (System::getContainer()->get(ResourceFinder::class)->findIn('templates')->name('*.html5') as $file)
 				{
 					/** @var SplFileInfo $file */
 					self::addFile($file->getBasename('.html5'), rtrim($objFilesystem->makePathRelative($file->getPath(), $container->getParameter('kernel.project_dir')), '/'));

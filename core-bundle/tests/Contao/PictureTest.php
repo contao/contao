@@ -342,8 +342,8 @@ class PictureTest extends TestCase
 
         $pictureGenerator = new PictureGenerator($resizer);
 
-        $container->set('contao.image.image_factory', $imageFactory);
-        $container->set('contao.image.picture_generator', $pictureGenerator);
+        $container->set(ImageFactory::class, $imageFactory);
+        $container->set(PictureGenerator::class, $pictureGenerator);
 
         return $container;
     }

@@ -242,7 +242,7 @@ class Automator extends System
 	public function purgeOptInTokens()
 	{
 		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get(OptIn::class);
 		$optIn->purgeTokens();
 
 		// Add a log entry

@@ -43,7 +43,7 @@ class BackendCsvImportControllerTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('session', new Session(new MockArraySessionStorage()));
-        $container->set('contao.resource_finder', $finder);
+        $container->set(ResourceFinder::class, $finder);
 
         System::setContainer($container);
     }

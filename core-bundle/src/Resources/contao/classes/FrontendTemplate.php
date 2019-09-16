@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -259,7 +260,7 @@ class FrontendTemplate extends Template
 	 */
 	public function hasAuthenticatedBackendUser()
 	{
-		return System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+		return System::getContainer()->get(TokenChecker::class)->hasBackendUser();
 	}
 
 	/**

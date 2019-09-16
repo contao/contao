@@ -335,7 +335,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return Contao\System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(Contao\BackendUser::getInstance());
+				return Contao\System::getContainer()->get('Contao\CoreBundle\Image\ImageSizes')->getOptionsForUser(Contao\BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -669,7 +669,7 @@ class tl_calendar_events extends Contao\Backend
 		// Generate the alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, Contao\CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+			$varValue = Contao\System::getContainer()->get('Contao\CoreBundle\Slug\Slug')->generate($dc->activeRecord->title, Contao\CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif ($aliasExists($varValue))
 		{
@@ -825,7 +825,7 @@ class tl_calendar_events extends Contao\Backend
 	{
 		$event = Contao\CalendarEventsModel::findByPk($dc->activeRecord->id);
 		$url = Contao\Events::generateEventUrl($event, true);
-		$suffix = substr($dc->inputName, strlen($dc->field));
+		$suffix = substr($dc->inputName, \strlen($dc->field));
 
 		list($baseUrl) = explode($event->alias ?: $event->id, $url);
 

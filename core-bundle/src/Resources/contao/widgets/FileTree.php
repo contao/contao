@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\Image\ResizeConfiguration;
 
 /**
@@ -370,7 +372,7 @@ class FileTree extends Widget
 
 		$return .= '</ul>';
 
-		if (!System::getContainer()->get('contao.picker.builder')->supportsContext('file'))
+		if (!System::getContainer()->get(PickerBuilder::class)->supportsContext('file'))
 		{
 			$return .= '
 	<p><button class="tl_submit" disabled>'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</button></p>';
@@ -400,7 +402,7 @@ class FileTree extends Widget
 			}
 
 			$return .= '
-    <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl('file', $extras)) . '" class="tl_submit" id="ft_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+    <p><a href="' . ampersand(System::getContainer()->get(PickerBuilder::class)->getUrl('file', $extras)) . '" class="tl_submit" id="ft_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
     <script>
       $("ft_' . $this->strName . '").addEvent("click", function(e) {
         e.preventDefault();
@@ -450,7 +452,7 @@ class FileTree extends Widget
 			else
 			{
 				$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-				$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $objFile->path, array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($rootDir);
+				$image = System::getContainer()->get(ImageFactory::class)->create($rootDir . '/' . $objFile->path, array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($rootDir);
 			}
 		}
 		else

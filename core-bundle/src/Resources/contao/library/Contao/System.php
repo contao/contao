@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database\Installer;
 use Contao\Database\Updater;
@@ -413,7 +415,7 @@ abstract class System
 			else
 			{
 				// Find the given filename either as .php or .xlf file
-				$finder = static::getContainer()->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
+				$finder = static::getContainer()->get(ResourceFinder::class)->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
 
 				/** @var SplFileInfo $file */
 				foreach ($finder as $file)
@@ -484,7 +486,7 @@ abstract class System
 			else
 			{
 				/** @var SplFileInfo[] $files */
-				$files = static::getContainer()->get('contao.resource_finder')->findIn('languages')->depth(0)->directories()->name($strLanguage);
+				$files = static::getContainer()->get(ResourceFinder::class)->findIn('languages')->depth(0)->directories()->name($strLanguage);
 				static::$arrLanguages[$strLanguage] = \count($files) > 0;
 			}
 		}
@@ -612,13 +614,13 @@ abstract class System
 	 * @return array The available image sizes
 	 *
 	 * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
-	 *             Use the contao.image.image_sizes service instead.
+	 *             Use the Contao\CoreBundle\Image\ImageSizes service instead.
 	 */
 	public static function getImageSizes()
 	{
-		@trigger_error('Using System::getImageSizes() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_sizes service instead.', E_USER_DEPRECATED);
+		@trigger_error('Using System::getImageSizes() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Image\ImageSizes service instead.', E_USER_DEPRECATED);
 
-		return static::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+		return static::getContainer()->get(ImageSizes::class)->getAllOptions();
 	}
 
 	/**

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Routing\UrlGenerator;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -1079,7 +1080,7 @@ class PageModel extends Model
 
 		$this->loadDetails();
 
-		$objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
+		$objUrlGenerator = System::getContainer()->get(UrlGenerator::class);
 
 		$strUrl = $objUrlGenerator->generate
 		(
@@ -1114,7 +1115,7 @@ class PageModel extends Model
 	{
 		$this->loadDetails();
 
-		$objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
+		$objUrlGenerator = System::getContainer()->get(UrlGenerator::class);
 
 		$strUrl = $objUrlGenerator->generate
 		(
@@ -1154,7 +1155,7 @@ class PageModel extends Model
 		$context = $router->getContext();
 		$context->setBaseUrl($previewScript);
 
-		$objUrlGenerator = $container->get('contao.routing.url_generator');
+		$objUrlGenerator = $container->get(UrlGenerator::class);
 
 		$strUrl = $objUrlGenerator->generate
 		(

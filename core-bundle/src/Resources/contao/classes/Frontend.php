@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -512,7 +513,7 @@ abstract class Frontend extends Controller
 	{
 		@trigger_error('Using Frontend::getLoginStatus() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		$objTokenChecker = System::getContainer()->get('contao.security.token_checker');
+		$objTokenChecker = System::getContainer()->get(TokenChecker::class);
 
 		if ($strCookie == 'BE_USER_AUTH' && $objTokenChecker->hasBackendUser())
 		{

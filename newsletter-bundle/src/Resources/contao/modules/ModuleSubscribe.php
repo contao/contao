@@ -166,7 +166,7 @@ class ModuleSubscribe extends Module
 		$this->Template = new FrontendTemplate('mod_newsletter');
 
 		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get(OptIn::class);
 
 		// Find an unconfirmed token
 		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) < 1 || key($arrRelated) != 'tl_newsletter_recipients' || \count($arrIds = current($arrRelated)) < 1)
@@ -359,7 +359,7 @@ class ModuleSubscribe extends Module
 		}
 
 		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get(OptIn::class);
 		$optInToken = $optIn->create('nl', $strEmail, $arrRelated);
 
 		// Get the channels

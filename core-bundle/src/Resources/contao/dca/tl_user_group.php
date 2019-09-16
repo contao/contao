@@ -181,7 +181,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'eval'                    => array('multiple'=>true),
 			'options_callback' => static function ()
 			{
-				return Contao\System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+				return Contao\System::getContainer()->get('Contao\CoreBundle\Image\ImageSizes')->getAllOptions();
 			},
 			'sql'                     => "blob NULL"
 		),
@@ -343,7 +343,7 @@ class tl_user_group extends Contao\Backend
 		$processed = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = Contao\System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
+		$files = Contao\System::getContainer()->get('Contao\CoreBundle\Config\ResourceFinder')->findIn('dca')->depth(0)->files()->name('*.php');
 
 		foreach ($files as $file)
 		{

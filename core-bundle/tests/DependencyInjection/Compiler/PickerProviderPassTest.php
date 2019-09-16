@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
+use Contao\CoreBundle\Picker\PickerBuilder;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -23,7 +24,7 @@ class PickerProviderPassTest extends TestCase
     public function testAddsTheProvidersToThePickerBuilder(): void
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('contao.picker.builder', new Definition());
+        $container->setDefinition(PickerBuilder::class, new Definition());
 
         $definition = new Definition();
         $definition->addTag('contao.picker_provider');
@@ -33,7 +34,7 @@ class PickerProviderPassTest extends TestCase
         $pass = new PickerProviderPass();
         $pass->process($container);
 
-        $methodCalls = $container->findDefinition('contao.picker.builder')->getMethodCalls();
+        $methodCalls = $container->findDefinition(PickerBuilder::class)->getMethodCalls();
 
         $this->assertCount(1, $methodCalls);
         $this->assertSame('addProvider', $methodCalls[0][0]);

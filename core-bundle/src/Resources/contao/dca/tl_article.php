@@ -576,7 +576,7 @@ class tl_article extends Contao\Backend
 		// Generate an alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, $dc->activeRecord->pid, $aliasExists);
+			$varValue = Contao\System::getContainer()->get('Contao\CoreBundle\Slug\Slug')->generate($dc->activeRecord->title, $dc->activeRecord->pid, $aliasExists);
 		}
 		elseif ($aliasExists($varValue))
 		{
@@ -815,7 +815,7 @@ class tl_article extends Contao\Backend
 					continue;
 				}
 
-				$strAlias = Contao\System::getContainer()->get('contao.slug')->generate($objArticle->title, $objArticle->pid);
+				$strAlias = Contao\System::getContainer()->get('Contao\CoreBundle\Slug\Slug')->generate($objArticle->title, $objArticle->pid);
 
 				// The alias has not changed
 				if ($strAlias == $objArticle->alias)

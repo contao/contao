@@ -1,0 +1,26 @@
+services:
+    _defaults:
+        public: true
+
+    contao.controller.backend_csv_import: '@Contao\CoreBundle\Controller\BackendCsvImportController'
+    contao.controller.images: '@Contao\CoreBundle\Controller\ImagesController'
+    contao.controller.insert_tags: '@Contao\CoreBundle\Controller\InsertTagsController'
+    contao.framework: '@Contao\CoreBundle\Framework\ContaoFramework'
+    contao.image.resizer: '@Contao\CoreBundle\Image\LegacyResizer'
+    contao.image.image_factory: '@Contao\CoreBundle\Image\ImageFactory'
+    contao.image.image_sizes: '@Contao\CoreBundle\Image\ImageSizes'
+    contao.image.picture_generator: '@Contao\Image\PictureGenerator'
+    contao.image.picture_factory: '@Contao\CoreBundle\Image\PictureFactory'
+    contao.menu.backend_menu_builder: '@Contao\CoreBundle\Menu\BackendMenuBuilder'
+    contao.menu.backend_menu_renderer: '@Contao\CoreBundle\Menu\BackendMenuRenderer'
+    contao.model_argument_resolver: '@Contao\CoreBundle\HttpKernel\ModelArgumentResolver'
+    contao.opt-in: '@Contao\CoreBundle\OptIn\OptIn'
+    contao.picker.builder: '@Contao\CoreBundle\Picker\PickerBuilder'
+    contao.resource_finder: '@Contao\CoreBundle\Config\ResourceFinder'
+    contao.routing.scope_matcher: '@Contao\CoreBundle\Routing\ScopeMatcher'
+    contao.routing.url_generator: '@Contao\CoreBundle\Routing\UrlGenerator'
+    contao.security.frontend_preview_authenticator: '@Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator'
+    contao.security.token_checker: '@Contao\CoreBundle\Security\Authentication\Token\TokenChecker'
+    contao.security.two_factor.authenticator: '@Contao\CoreBundle\Security\TwoFactor\Authenticator'
+    contao.slug: '@Contao\CoreBundle\Slug\Slug'
+    contao.slug.valid_characters: '@Contao\CoreBundle\Slug\ValidCharacters'

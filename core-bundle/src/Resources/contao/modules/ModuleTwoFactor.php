@@ -90,7 +90,7 @@ class ModuleTwoFactor extends BackendModule
 		$verifyHelp = $GLOBALS['TL_LANG']['MSC']['twoFactorVerificationHelp'];
 
 		/** @var Authenticator $authenticator */
-		$authenticator = $container->get('contao.security.two_factor.authenticator');
+		$authenticator = $container->get(Authenticator::class);
 
 		// Validate the verification code
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor')

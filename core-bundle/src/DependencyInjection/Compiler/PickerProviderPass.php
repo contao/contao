@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Contao\CoreBundle\Picker\PickerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -25,11 +26,11 @@ class PickerProviderPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has('contao.picker.builder')) {
+        if (!$container->has(PickerBuilder::class)) {
             return;
         }
 
-        $definition = $container->findDefinition('contao.picker.builder');
+        $definition = $container->findDefinition(PickerBuilder::class);
         $references = $this->findAndSortTaggedServices('contao.picker_provider', $container);
 
         foreach ($references as $reference) {

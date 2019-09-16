@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\ModuleModel;
@@ -156,7 +157,7 @@ class FrontendModuleControllerTest extends TestCase
 
         $container = new ContainerBuilder();
         $container->set('contao.framework', $framework);
-        $container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
+        $container->set(ScopeMatcher::class, $this->mockScopeMatcher());
 
         return $container;
     }

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\ImageSizes;
+
 /**
  * Provide methods to handle image size fields.
  *
@@ -108,7 +110,7 @@ class ImageSize extends Widget
 
 		$this->import(BackendUser::class, 'User');
 
-		$imageSizes = System::getContainer()->get('contao.image.image_sizes');
+		$imageSizes = System::getContainer()->get(ImageSizes::class);
 		$this->arrAvailableOptions = $this->User->isAdmin ? $imageSizes->getAllOptions() : $imageSizes->getOptionsForUser($this->User);
 
 		if (!$this->isValidOption($varInput[2]))

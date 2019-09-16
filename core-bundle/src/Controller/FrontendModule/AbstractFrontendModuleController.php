@@ -25,7 +25,7 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
 {
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
     {
-        if ($this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
+        if ($this->get(ScopeMatcher::class)->isBackendRequest($request)) {
             return $this->getBackendWildcard($model);
         }
 
@@ -55,7 +55,7 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
             parent::getSubscribedServices(),
             [
                 'translator' => TranslatorInterface::class,
-                'contao.routing.scope_matcher' => ScopeMatcher::class,
+                ScopeMatcher::class => ScopeMatcher::class,
             ]
         );
     }

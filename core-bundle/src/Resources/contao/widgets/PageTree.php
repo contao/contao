@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Picker\PickerBuilder;
+
 /**
  * Provide methods to handle input field "page tree".
  *
@@ -221,7 +223,7 @@ class PageTree extends Widget
 
 		$return .= '</ul>';
 
-		if (!System::getContainer()->get('contao.picker.builder')->supportsContext('page'))
+		if (!System::getContainer()->get(PickerBuilder::class)->supportsContext('page'))
 		{
 			$return .= '
 	<p><button class="tl_submit" disabled>'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</button></p>';
@@ -240,7 +242,7 @@ class PageTree extends Widget
 			}
 
 			$return .= '
-    <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl('page', $extras)) . '" class="tl_submit" id="pt_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+    <p><a href="' . ampersand(System::getContainer()->get(PickerBuilder::class)->getUrl('page', $extras)) . '" class="tl_submit" id="pt_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
     <script>
       $("pt_' . $this->strName . '").addEvent("click", function(e) {
         e.preventDefault();

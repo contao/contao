@@ -180,7 +180,7 @@ class tl_opt_in extends Contao\Backend
 	{
 		$model = Contao\OptInModel::findByPk($dc->id);
 
-		Contao\System::getContainer()->get('contao.opt-in')->find($model->token)->send();
+		Contao\System::getContainer()->get('Contao\CoreBundle\OptIn\OptIn')->find($model->token)->send();
 		Contao\Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['MSC']['resendToken'], $model->email));
 		Contao\Controller::redirect($this->getReferer());
 	}

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\Image as NewImage;
 use Contao\Image\ImageDimensions;
@@ -117,11 +119,11 @@ class Image
 	 * @throws \InvalidArgumentException If the file does not exists or cannot be processed
 	 *
 	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
-	 *             Use the contao.image.image_factory service instead.
+	 *             Use the Contao\CoreBundle\Image\ImageFactory service instead.
 	 */
 	public function __construct(File $file)
 	{
-		@trigger_error('Using new Contao\Image() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
+		@trigger_error('Using new Contao\Image() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Image\ImageFactory service instead.', E_USER_DEPRECATED);
 
 		// Check whether the file exists
 		if (!$file->exists())
@@ -448,7 +450,7 @@ class Image
 		}
 
 		$image = System::getContainer()
-			->get('contao.image.resizer')
+			->get(LegacyResizer::class)
 			->resize(
 				$image,
 				$resizeConfig,
@@ -689,7 +691,7 @@ class Image
 		{
 			try
 			{
-				$deferredImage = $container->get('contao.image.image_factory')->create($rootDir . '/' . $src);
+				$deferredImage = $container->get(ImageFactory::class)->create($rootDir . '/' . $src);
 			}
 			catch (\Exception $e)
 			{
@@ -731,11 +733,11 @@ class Image
 	 * @return boolean True if the image could be resized successfully
 	 *
 	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
-	 *             Use the contao.image.image_factory service instead.
+	 *             Use the Contao\CoreBundle\Image\ImageFactory service instead.
 	 */
 	public static function resize($image, $width, $height, $mode='')
 	{
-		@trigger_error('Using Image::resize() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Image::resize() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Image\ImageFactory service instead.', E_USER_DEPRECATED);
 
 		return static::get($image, $width, $height, $mode, $image, true) ? true : false;
 	}
@@ -749,11 +751,11 @@ class Image
 	 * @return static The created image instance
 	 *
 	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
-	 *             Use the contao.image.image_factory service instead.
+	 *             Use the Contao\CoreBundle\Image\ImageFactory service instead.
 	 */
 	public static function create($image, $size=null)
 	{
-		@trigger_error('Using Image::create() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Image::create() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Image\ImageFactory service instead.', E_USER_DEPRECATED);
 
 		if (\is_string($image))
 		{
@@ -822,11 +824,11 @@ class Image
 	 * @return string|null The path of the resized image or null
 	 *
 	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
-	 *             Use the contao.image.image_factory service instead.
+	 *             Use the Contao\CoreBundle\Image\ImageFactory service instead.
 	 */
 	public static function get($image, $width, $height, $mode='', $target=null, $force=false)
 	{
-		@trigger_error('Using Image::get() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Image::get() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Image\ImageFactory service instead.', E_USER_DEPRECATED);
 
 		if ($image == '')
 		{
@@ -860,7 +862,7 @@ class Image
 	 * @return integer The pixel value
 	 *
 	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
-	 *             Use the contao.image.image_factory service instead.
+	 *             Use the Contao\CoreBundle\Image\ImageFactory service instead.
 	 */
 	public static function getPixelValue($size)
 	{

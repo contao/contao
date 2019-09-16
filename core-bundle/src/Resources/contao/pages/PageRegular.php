@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
+use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Util\PackageUtil;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -81,7 +82,7 @@ class PageRegular extends Frontend
 		$objTheme = $objLayout->getRelated('pid');
 
 		// Set the default image densities
-		$container->get('contao.image.picture_factory')->setDefaultDensities($objLayout->defaultImageDensities);
+		$container->get(PictureFactory::class)->setDefaultDensities($objLayout->defaultImageDensities);
 
 		// Store the layout ID
 		$objPage->layoutId = $objLayout->id;

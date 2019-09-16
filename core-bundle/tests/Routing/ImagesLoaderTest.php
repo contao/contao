@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing;
 
+use Contao\CoreBundle\Controller\ImagesController;
 use Contao\CoreBundle\Routing\ImagesLoader;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
@@ -41,7 +42,7 @@ class ImagesLoaderTest extends TestCase
 
         $this->assertNotNull($route);
         $this->assertSame('/path/to/images/{path}', $route->getPath());
-        $this->assertSame('contao.controller.images', $route->getDefault('_controller'));
+        $this->assertSame(ImagesController::class, $route->getDefault('_controller'));
         $this->assertSame('.+', $route->getRequirement('path'));
     }
 }

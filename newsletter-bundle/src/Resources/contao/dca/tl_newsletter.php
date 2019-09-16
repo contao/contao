@@ -449,7 +449,7 @@ class tl_newsletter extends Contao\Backend
 		// Generate alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->subject, Contao\NewsletterChannelModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+			$varValue = Contao\System::getContainer()->get('Contao\CoreBundle\Slug\Slug')->generate($dc->activeRecord->subject, Contao\NewsletterChannelModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif ($aliasExists($varValue))
 		{

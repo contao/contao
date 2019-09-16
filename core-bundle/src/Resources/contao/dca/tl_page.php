@@ -416,7 +416,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
-				return Contao\System::getContainer()->get('contao.slug.valid_characters')->getOptions();
+				return Contao\System::getContainer()->get('Contao\CoreBundle\Slug\ValidCharacters')->getOptions();
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -1132,7 +1132,7 @@ class tl_page extends Contao\Backend
 		// Generate an alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = Contao\System::getContainer()->get('contao.slug')->generate
+			$varValue = Contao\System::getContainer()->get('Contao\CoreBundle\Slug\Slug')->generate
 			(
 				$dc->activeRecord->title,
 				$dc->activeRecord->id,
@@ -1301,7 +1301,7 @@ class tl_page extends Contao\Backend
 	{
 		$page = Contao\PageModel::findByPk($dc->activeRecord->id);
 		$url = $page->getAbsoluteUrl();
-		$suffix = substr($dc->inputName, strlen($dc->field));
+		$suffix = substr($dc->inputName, \strlen($dc->field));
 
 		list($baseUrl) = explode($page->alias ?: $page->id, $url);
 

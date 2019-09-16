@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\OptIn\OptIn;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use FOS\HttpCache\ResponseTagger;
 
 /**
@@ -331,7 +332,7 @@ class Comments extends Frontend
 
 			$intMember = 0;
 
-			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+			if (System::getContainer()->get(TokenChecker::class)->hasFrontendUser())
 			{
 				$intMember = FrontendUser::getInstance()->id;
 			}
@@ -579,7 +580,7 @@ class Comments extends Frontend
 		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
 
 		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get(OptIn::class);
 		$optInToken = $optIn->create('com', $objComment->email, array('tl_comments_notify'=>array($objNotify->id)));
 
 		// Send the token
@@ -596,7 +597,7 @@ class Comments extends Frontend
 		if (strncmp(Input::get('token'), 'com-', 4) === 0)
 		{
 			/** @var OptIn $optIn */
-			$optIn = System::getContainer()->get('contao.opt-in');
+			$optIn = System::getContainer()->get(OptIn::class);
 
 			// Find an unconfirmed token with only one related record
 			if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || \count($arrIds = current($arrRelated)) != 1 || (!$objNotify = CommentsNotifyModel::findByPk($arrIds[0])))

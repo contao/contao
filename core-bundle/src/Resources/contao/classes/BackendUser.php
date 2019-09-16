@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -141,7 +142,7 @@ class BackendUser extends User
 		}
 
 		// Check for an authenticated user in the session
-		$strUser = System::getContainer()->get('contao.security.token_checker')->getBackendUsername();
+		$strUser = System::getContainer()->get(TokenChecker::class)->getBackendUsername();
 
 		if ($strUser !== null)
 		{
@@ -208,7 +209,7 @@ class BackendUser extends User
 	{
 		@trigger_error('Using BackendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+		return System::getContainer()->get(TokenChecker::class)->hasBackendUser();
 	}
 
 	/**
@@ -223,7 +224,7 @@ class BackendUser extends User
 	{
 		@trigger_error('Using BackendUser::login() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+		return System::getContainer()->get(TokenChecker::class)->hasBackendUser();
 	}
 
 	/**

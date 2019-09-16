@@ -15,6 +15,9 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Image\PictureFactory;
+use Contao\CoreBundle\Routing\UrlGenerator;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
@@ -805,7 +808,7 @@ abstract class Controller extends System
 		}
 
 		// FE preview support
-		if (System::getContainer()->get('contao.security.token_checker')->hasBackendUser())
+		if (System::getContainer()->get(TokenChecker::class)->hasBackendUser())
 		{
 			$strScripts .= "
 <script>
@@ -1140,11 +1143,11 @@ abstract class Controller extends System
 	 * @return string An URL that can be used in the front end
 	 *
 	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
-	 *             Use the contao.routing.url_generator service or PageModel::getFrontendUrl() instead.
+	 *             Use the Contao\CoreBundle\Routing\UrlGenerator service or PageModel::getFrontendUrl() instead.
 	 */
 	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
 	{
-		@trigger_error('Using Controller::generateFrontendUrl() has been deprecated and will no longer work in Contao 5.0. Use the contao.routing.url_generator service or PageModel::getFrontendUrl() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Controller::generateFrontendUrl() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Routing\UrlGenerator service or PageModel::getFrontendUrl() instead.', E_USER_DEPRECATED);
 
 		if (!isset($arrRow['rootId']))
 		{
@@ -1191,7 +1194,7 @@ abstract class Controller extends System
 			$arrParams['_ssl'] = (bool) $arrRow['rootUseSSL'];
 		}
 
-		$objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
+		$objUrlGenerator = System::getContainer()->get(UrlGenerator::class);
 		$strUrl = $objUrlGenerator->generate(($arrRow['alias'] ?: $arrRow['id']) . $strParams, $arrParams);
 
 		// Remove path from absolute URLs
@@ -1568,7 +1571,7 @@ abstract class Controller extends System
 		{
 			$rootDir = $container->getParameter('kernel.project_dir');
 			$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-			$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['singleSRC'], $size);
+			$picture = $container->get(PictureFactory::class)->create($rootDir . '/' . $arrItem['singleSRC'], $size);
 
 			$picture = array
 			(
@@ -1709,7 +1712,7 @@ abstract class Controller extends System
 						{
 							$rootDir = $container->getParameter('kernel.project_dir');
 							$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-							$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['imageUrl'], $lightboxSize);
+							$picture = $container->get(PictureFactory::class)->create($rootDir . '/' . $arrItem['imageUrl'], $lightboxSize);
 
 							$objTemplate->lightboxPicture = array
 							(
@@ -1742,7 +1745,7 @@ abstract class Controller extends System
 			{
 				$rootDir = $container->getParameter('kernel.project_dir');
 				$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-				$picture = $container->get('contao.image.picture_factory')->create($rootDir . '/' . $arrItem['singleSRC'], $lightboxSize);
+				$picture = $container->get(PictureFactory::class)->create($rootDir . '/' . $arrItem['singleSRC'], $lightboxSize);
 
 				$objTemplate->lightboxPicture = array
 				(

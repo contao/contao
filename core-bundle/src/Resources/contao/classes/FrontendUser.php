@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+
 /**
  * Provide methods to manage front end users.
  *
@@ -96,7 +98,7 @@ class FrontendUser extends User
 		}
 
 		// Check for an authenticated user in the session
-		$strUser = System::getContainer()->get('contao.security.token_checker')->getFrontendUsername();
+		$strUser = System::getContainer()->get(TokenChecker::class)->getFrontendUsername();
 
 		if ($strUser !== null)
 		{
@@ -161,7 +163,7 @@ class FrontendUser extends User
 	{
 		@trigger_error('Using FrontendUser::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+		return System::getContainer()->get(TokenChecker::class)->hasFrontendUser();
 	}
 
 	/**
@@ -176,7 +178,7 @@ class FrontendUser extends User
 	{
 		@trigger_error('Using FrontendUser::login() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
 
-		return System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+		return System::getContainer()->get(TokenChecker::class)->hasFrontendUser();
 	}
 
 	/**

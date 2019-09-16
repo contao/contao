@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Picker\PickerBuilder;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\Database\Result;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -1101,7 +1102,7 @@ abstract class Backend extends Controller
 			unset($extras['context']);
 		}
 
-		$factory = System::getContainer()->get('contao.picker.builder');
+		$factory = System::getContainer()->get(PickerBuilder::class);
 
 		if (!$factory->supportsContext($context, $providers))
 		{

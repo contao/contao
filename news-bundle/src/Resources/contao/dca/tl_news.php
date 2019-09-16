@@ -307,7 +307,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return Contao\System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(Contao\BackendUser::getInstance());
+				return Contao\System::getContainer()->get('Contao\CoreBundle\Image\ImageSizes')->getOptionsForUser(Contao\BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -640,7 +640,7 @@ class tl_news extends Contao\Backend
 		// Generate alias if there is none
 		if ($varValue == '')
 		{
-			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->headline, Contao\NewsArchiveModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+			$varValue = Contao\System::getContainer()->get('Contao\CoreBundle\Slug\Slug')->generate($dc->activeRecord->headline, Contao\NewsArchiveModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif ($aliasExists($varValue))
 		{
@@ -748,7 +748,7 @@ class tl_news extends Contao\Backend
 	{
 		$news = Contao\NewsModel::findByPk($dc->activeRecord->id);
 		$url = Contao\News::generateNewsUrl($news, false, true);
-		$suffix = substr($dc->inputName, strlen($dc->field));
+		$suffix = substr($dc->inputName, \strlen($dc->field));
 
 		list($baseUrl) = explode($news->alias ?: $news->id, $url);
 

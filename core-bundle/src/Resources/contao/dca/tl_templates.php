@@ -237,7 +237,7 @@ class tl_templates extends Contao\Backend
 		$arrAllTemplates = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = Contao\System::getContainer()->get('contao.resource_finder')->findIn('templates')->files()->name('/\.html5$/');
+		$files = Contao\System::getContainer()->get('Contao\CoreBundle\Config\ResourceFinder')->findIn('templates')->files()->name('/\.html5$/');
 
 		foreach ($files as $file)
 		{

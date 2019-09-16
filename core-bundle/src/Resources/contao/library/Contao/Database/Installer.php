@@ -12,6 +12,7 @@ namespace Contao\Database;
 
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\Database;
 use Contao\DcaExtractor;
 use Contao\SqlFileParser;
@@ -271,7 +272,7 @@ class Installer extends Controller
 		$processed = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
+		$files = System::getContainer()->get(ResourceFinder::class)->findIn('dca')->depth(0)->files()->name('*.php');
 
 		foreach ($files as $file)
 		{
@@ -316,7 +317,7 @@ class Installer extends Controller
 		$return = array();
 
 		/** @var SplFileInfo[] $files */
-		$files = System::getContainer()->get('contao.resource_finder')->findIn('config')->depth(0)->files()->name('database.sql');
+		$files = System::getContainer()->get(ResourceFinder::class)->findIn('config')->depth(0)->files()->name('database.sql');
 
 		foreach ($files as $file)
 		{

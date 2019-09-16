@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\InsertTagsController;
+use Contao\CoreBundle\Image\ImageFactory;
+use Contao\CoreBundle\Image\PictureFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -144,7 +147,7 @@ class InsertTags extends Controller
 
 					$strBuffer .= $fragmentHandler->render(
 						new ControllerReference(
-							'contao.controller.insert_tags:renderAction',
+							InsertTagsController::class.':renderAction',
 							$attributes,
 							array('clientCache' => (int) $objPage->clientCache, 'pageId' => $objPage->id, 'request' => Environment::get('request'))
 						),
@@ -886,7 +889,7 @@ class InsertTags extends Controller
 						if (strtolower($elements[0]) == 'image')
 						{
 							$dimensions = '';
-							$src = $container->get('contao.image.image_factory')->create($container->getParameter('kernel.project_dir') . '/' . rawurldecode($strFile), array($width, $height, $mode))->getUrl($container->getParameter('kernel.project_dir'));
+							$src = $container->get(ImageFactory::class)->create($container->getParameter('kernel.project_dir') . '/' . rawurldecode($strFile), array($width, $height, $mode))->getUrl($container->getParameter('kernel.project_dir'));
 							$objFile = new File(rawurldecode($src));
 
 							// Add the image dimensions
@@ -902,7 +905,7 @@ class InsertTags extends Controller
 						else
 						{
 							$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-							$picture = $container->get('contao.image.picture_factory')->create($container->getParameter('kernel.project_dir') . '/' . $strFile, $size);
+							$picture = $container->get(PictureFactory::class)->create($container->getParameter('kernel.project_dir') . '/' . $strFile, $size);
 
 							$picture = array
 							(
