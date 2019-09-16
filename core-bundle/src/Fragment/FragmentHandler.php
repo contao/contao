@@ -80,11 +80,6 @@ class FragmentHandler extends BaseFragmentHandler
 
     public function popStrategy(): void
     {
-        if (0 === \count($this->strategyStack)) {
-            $this->currentStrategy = null;
-            return;
-        }
-
         $this->currentStrategy = array_pop($this->strategyStack);
     }
 
