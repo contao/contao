@@ -152,6 +152,31 @@ class ContaoKernelTest extends ContaoTestCase
     }
 
     /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using a parameters.yml file has been deprecated %s.
+     */
+    public function testLoadsTheParametersYamlFile(): void
+    {
+        $files = [];
+
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->method('load')
+            ->willReturnCallback(
+                static function ($resource) use (&$files): void {
+                    $files[] = basename($resource);
+                }
+            )
+        ;
+
+        $kernel = $this->getKernel(__DIR__.'/../Fixtures/HttpKernel/WithParametersYml');
+        $kernel->registerContainerConfiguration($loader);
+
+        $this->assertSame(['parameters.yml', 'parameters.yml'], $files);
+    }
+
+    /**
      * @dataProvider containerConfigurationProvider
      */
     public function testRegisterContainerConfiguration(string $projectDir, string $env, array $expectedResult): void
@@ -176,12 +201,6 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function containerConfigurationProvider(): \Generator
     {
-        yield [
-            __DIR__.'/../Fixtures/HttpKernel/WithParametersYml',
-            'prod',
-            ['parameters.yml', 'parameters.yml'],
-        ];
-
         yield [
             __DIR__.'/../Fixtures/HttpKernel/WithConfigDevYml',
             'dev',
@@ -228,7 +247,6 @@ class ContaoKernelTest extends ContaoTestCase
         $kernel = $this->getKernel($this->getTempDir());
         $cache = $kernel->getHttpCache();
 
-        $this->assertInstanceOf(ContaoCache::class, $cache);
         $this->assertSame($cache, $kernel->getHttpCache());
     }
 

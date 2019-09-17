@@ -1,5 +1,4 @@
 imports:
-    - { resource: parameters.yml }
     - { resource: security.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed

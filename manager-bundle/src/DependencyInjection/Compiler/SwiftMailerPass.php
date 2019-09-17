@@ -22,6 +22,10 @@ class SwiftMailerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
+        if (!$container->hasParameter('mailer_transport')) {
+            return;
+        }
+
         // The "mail" transport has been removed in SwiftMailer 6, so use "sendmail" instead
         if ('mail' === $container->getParameter('mailer_transport')) {
             $container->setParameter('mailer_transport', 'sendmail');

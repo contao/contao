@@ -193,8 +193,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        if ($configFile = $this->getConfigFile('parameters.yml')) {
-            $loader->load($configFile);
+        if ($parametersFile = $this->getConfigFile('parameters.yml')) {
+            $loader->load($parametersFile);
         }
 
         $config = $this->getManagerConfig()->all();
@@ -206,8 +206,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         // Reload the parameters.yml file
-        if ($configFile = $this->getConfigFile('parameters.yml')) {
-            $loader->load($configFile);
+        if ($parametersFile) {
+            $loader->load($parametersFile);
         }
 
         if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment().'.yml')) {
@@ -333,6 +333,10 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $rootDir = $this->getProjectDir();
 
         if (file_exists($rootDir.'/config/'.$file)) {
+            if ('parameters.yml' === $file) {
+                @trigger_error('Using a parameters.yml file has been deprecated and will no longer work in Contao 5.0. Use an .env file instead.', E_USER_DEPRECATED);
+            }
+
             return $rootDir.'/config/'.$file;
         }
 

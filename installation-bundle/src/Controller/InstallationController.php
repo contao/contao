@@ -352,7 +352,7 @@ class InstallationController implements ContainerAwareInterface
     }
 
     /**
-     * Stores the database URL in the .env file
+     * Stores the database URL in the .env file.
      */
     private function storeDatabaseUrl(array $parameters): void
     {
