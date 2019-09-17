@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\EventListener;
+namespace Contao\ManagerBundle\Controller;
 
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 
-class DebugListener
+class DebugController
 {
     /**
      * @var RequestStack
@@ -42,12 +42,12 @@ class DebugListener
         $this->jwtManager = $jwtManager;
     }
 
-    public function onEnable(): RedirectResponse
+    public function enableAction(): RedirectResponse
     {
         return $this->updateJwtCookie(true);
     }
 
-    public function onDisable(): RedirectResponse
+    public function disableAction(): RedirectResponse
     {
         return $this->updateJwtCookie(false);
     }

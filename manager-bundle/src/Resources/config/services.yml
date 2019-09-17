@@ -8,13 +8,21 @@ services:
         tags:
             - kernel.cache_clearer
 
-    contao_manager.jwt_manager:
-        synthetic: true
+    contao_manager.controller.debug:
+        class: Contao\ManagerBundle\Controller\DebugController
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '@contao_manager.jwt_manager'
         public: true
 
-    contao_manager.plugin_loader:
-        synthetic: true
+    contao_manager.jwt_manager:
         public: true
+        synthetic: true
+
+    contao_manager.plugin_loader:
+        public: true
+        synthetic: true
 
     contao_manager.routing_loader:
         class: Contao\ManagerBundle\Routing\RouteLoader
