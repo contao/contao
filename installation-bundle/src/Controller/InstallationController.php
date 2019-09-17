@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\InstallationBundle\Controller;
 
 use Contao\Environment;
-use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
@@ -316,18 +315,8 @@ class InstallationController implements ContainerAwareInterface
             return $this->render('misconfigured_database_url.html.twig');
         }
 
-        $parameters = [
-            'parameters' => [
-                'database_host' => $this->getContainerParameter('database_host'),
-                'database_port' => $this->getContainerParameter('database_port'),
-                'database_user' => $this->getContainerParameter('database_user'),
-                'database_password' => $this->getContainerParameter('database_password'),
-                'database_name' => $this->getContainerParameter('database_name'),
-            ],
-        ];
-
         if ('tl_database_login' !== $request->request->get('FORM_SUBMIT')) {
-            return $this->render('database.html.twig', $parameters);
+            return $this->render('database.html.twig');
         }
 
         $parameters = [
@@ -335,14 +324,10 @@ class InstallationController implements ContainerAwareInterface
                 'database_host' => $request->request->get('dbHost'),
                 'database_port' => $request->request->get('dbPort'),
                 'database_user' => $request->request->get('dbUser'),
-                'database_password' => $this->getContainerParameter('database_password'),
+                'database_password' => $request->request->get('dbPassword'),
                 'database_name' => $request->request->get('dbName'),
             ],
         ];
-
-        if ('*****' !== $request->request->get('dbPassword')) {
-            $parameters['parameters']['database_password'] = $request->request->get('dbPassword');
-        }
 
         if (false !== strpos($parameters['parameters']['database_name'], '.')) {
             return $this->render('database.html.twig', array_merge(
@@ -361,13 +346,46 @@ class InstallationController implements ContainerAwareInterface
             ));
         }
 
-        $dumper = new ParameterDumper($this->getContainerParameter('kernel.project_dir'));
-        $dumper->setParameters($parameters);
-        $dumper->dump();
-
-        $this->purgeSymfonyCache();
+        $this->storeDatabaseUrl($parameters);
 
         return $this->getRedirectResponse();
+    }
+
+    /**
+     * Stores the database URL in the .env file
+     */
+    private function storeDatabaseUrl(array $parameters): void
+    {
+        $fs = new Filesystem();
+        $path = $this->getContainerParameter('kernel.project_dir').'/.env';
+        $content = '';
+
+        if ($fs->exists($path)) {
+            $lines = file($path, FILE_IGNORE_NEW_LINES);
+
+            if (false === $lines) {
+                throw new \RuntimeException(sprintf('Could not read "%s" file.', $path));
+            }
+
+            foreach ($lines as $line) {
+                if (0 === strpos($line, 'DATABASE_URL=')) {
+                    continue;
+                }
+
+                $content .= $line."\n";
+            }
+        }
+
+        $url = sprintf(
+            'mysql://%s:%s@%s:%s/%s',
+            rawurlencode($parameters['parameters']['database_user']),
+            rawurlencode($parameters['parameters']['database_password']),
+            rawurlencode($parameters['parameters']['database_host']),
+            rawurlencode($parameters['parameters']['database_port']),
+            rawurlencode($parameters['parameters']['database_name'])
+        );
+
+        $fs->dumpFile($path, $content."DATABASE_URL='".str_replace("'", "'\\''", $url)."'\n");
     }
 
     private function runDatabaseUpdates(): void
