@@ -10,6 +10,7 @@
         <ini name="error_reporting" value="-1" />
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0" />
         <env name="KERNEL_CLASS" value="Contao\CoreBundle\Tests\Functional\app\AppKernel" />
+        <env name="APP_SECRET" value="foobar" />
         <env name="DB_HOST" value="localhost" />
         <env name="DB_USER" value="root" />
         <env name="DB_PASS" value="" />
