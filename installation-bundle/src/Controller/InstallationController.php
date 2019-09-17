@@ -381,7 +381,7 @@ class InstallationController implements ContainerAwareInterface
             rawurlencode($parameters['parameters']['database_user']),
             rawurlencode($parameters['parameters']['database_password']),
             rawurlencode($parameters['parameters']['database_host']),
-            rawurlencode($parameters['parameters']['database_port']),
+            (int) $parameters['parameters']['database_port'],
             rawurlencode($parameters['parameters']['database_name'])
         );
 

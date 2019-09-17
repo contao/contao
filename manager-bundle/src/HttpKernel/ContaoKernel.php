@@ -29,6 +29,7 @@ use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Debug\Debug;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -195,6 +196,47 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         if ($parametersFile = $this->getConfigFile('parameters.yml')) {
             $loader->load($parametersFile);
+
+            // Set the .env variables from the parameters.yml file (backwards compatibility)
+            $loader->load(
+                static function (ContainerBuilder $container): void {
+                    if ($container->hasParameter('secret')) {
+                        $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
+                    }
+
+                    if ($container->hasParameter('database_host')) {
+                        $container->setParameter(
+                            'env(DATABASE_URL)',
+                            sprintf(
+                                'mysql://%s:%s@%s:%s/%s',
+                                rawurlencode($container->getParameter('database_user')),
+                                rawurlencode($container->getParameter('database_password')),
+                                rawurlencode($container->getParameter('database_host')),
+                                (int) $container->getParameter('database_port'),
+                                rawurlencode($container->getParameter('database_name'))
+                            )
+                        );
+                    }
+
+                    if ($container->hasParameter('mailer_transport')) {
+                        if ('sendmail' === $container->getParameter('mailer_transport')) {
+                            $container->setParameter('env(MAILER_URL)', 'sendmail://localhost');
+                        } elseif ('smtp' === $container->getParameter('mailer_transport')) {
+                            $container->setParameter(
+                                'env(MAILER_URL)',
+                                sprintf(
+                                    'smtp://%s:%s?username=%s&password=%s&encryption=%s',
+                                    rawurlencode($container->getParameter('mailer_host')),
+                                    (int) $container->getParameter('mailer_port'),
+                                    rawurlencode($container->getParameter('mailer_user')),
+                                    rawurlencode($container->getParameter('mailer_password')),
+                                    rawurlencode($container->getParameter('mailer_encryption'))
+                                )
+                            );
+                        }
+                    }
+                }
+            );
         }
 
         $config = $this->getManagerConfig()->all();

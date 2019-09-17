@@ -3,14 +3,12 @@ imports:
 
 parameters:
     locale: en
-    mailer_transport: sendmail
-    secret: f3854d3b1e3560b1b2db8125fa343f853fefab4d
 
 framework:
     test: ~
     esi: { enabled: true }
     translator: { fallbacks: ['%locale%'] }
-    secret: '%secret%'
+    secret: f3854d3b1e3560b1b2db8125fa343f853fefab4d
     router:
         resource: '%kernel.project_dir%/../../src/Resources/config/routing.yml'
         strict_requirements: '%kernel.debug%'

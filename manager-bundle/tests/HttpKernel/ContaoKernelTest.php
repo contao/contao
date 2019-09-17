@@ -158,22 +158,14 @@ class ContaoKernelTest extends ContaoTestCase
      */
     public function testLoadsTheParametersYamlFile(): void
     {
-        $files = [];
-
         $loader = $this->createMock(LoaderInterface::class);
         $loader
+            ->expects($this->exactly(3))
             ->method('load')
-            ->willReturnCallback(
-                static function ($resource) use (&$files): void {
-                    $files[] = basename($resource);
-                }
-            )
         ;
 
         $kernel = $this->getKernel(__DIR__.'/../Fixtures/HttpKernel/WithParametersYml');
         $kernel->registerContainerConfiguration($loader);
-
-        $this->assertSame(['parameters.yml', 'parameters.yml'], $files);
     }
 
     /**
