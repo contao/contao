@@ -1,7 +1,7 @@
 
 <div id="tl_maintenance_cache" class="maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
 
-  <h2 class="sub_headline sub_headline_purge"><?= $this->headline ?></h2>
+  <h2 class="sub_headline sub_headline_purge"><?= $this->trans('tl_maintenance.clearCache') ?></h2>
 
   <?php if ($this->message): ?>
     <div class="tl_message">
@@ -19,8 +19,8 @@
           <thead>
             <tr>
               <th><input type="checkbox" id="check_all" class="tl_checkbox" onclick="Backend.toggleCheckboxes(this, 'purge')"></th>
-              <th><?= $this->job ?></th>
-              <th><?= $this->description ?></th>
+              <th><?= $this->trans('tl_maintenance.job') ?></th>
+              <th><?= $this->trans('tl_maintenance.description') ?></th>
             </tr>
           </thead>
           <tbody>
@@ -34,13 +34,13 @@
           </tbody>
           </table>
         </fieldset>
-        <?php if ($this->help): ?>
-          <p class="tl_help tl_tip"><?= $this->help ?></p>
+        <?php if (Contao\Config::get('showHelp')): ?>
+          <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.cacheTables.1') ?></p>
         <?php endif; ?>
       </div>
     </div>
     <div class="tl_submit_container">
-      <button type="submit" name="clear" class="tl_submit"><?= $this->submit ?></button>
+      <button type="submit" name="clear" class="tl_submit"><?= $this->trans('tl_maintenance.clearCache') ?></button>
     </div>
   </form>
 

@@ -3,9 +3,9 @@
   </div>
 
   <nav class="slider-control">
-    <a href="#" class="slider-prev"><?= $this->previous ?></a>
+    <a href="#" class="slider-prev"><?= $this->trans('MSC.previous') ?></a>
     <span class="slider-menu"></span>
-    <a href="#" class="slider-next"><?= $this->next ?></a>
+    <a href="#" class="slider-next"><?= $this->trans('MSC.next') ?></a>
   </nav>
 
 </div>

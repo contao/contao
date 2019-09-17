@@ -17,26 +17,26 @@
       <?php if ($this->logout): ?>
         <p class="login_info"><?= $this->loggedInAs ?><br><?= $this->lastLogin ?></p>
       <?php elseif ($this->twoFactorEnabled): ?>
-        <h3><?= $this->twoFactorAuthentication ?></h3>
+        <h3><?= $this->trans('MSC.twoFactorAuthentication') ?></h3>
         <div class="widget widget-text">
-          <label for="verify"><?= $this->authCode ?></label>
+          <label for="verify"><?= $this->trans('MSC.twoFactorVerification') ?></label>
           <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="off" required>
         </div>
       <?php else: ?>
         <input type="hidden" name="_failure_path" value="<?= $this->failurePath ?>">
         <input type="hidden" name="_always_use_target_path" value="<?= $this->forceTargetPath ?>">
         <div class="widget widget-text">
-          <label for="username"><?= $this->username ?></label>
+          <label for="username"><?= $this->trans('MSC.username') ?></label>
           <input type="text" name="username" id="username" class="text" value="<?= $this->value ?>" required>
         </div>
         <div class="widget widget-password">
-          <label for="password"><?= $this->password ?></label>
+          <label for="password"><?= $this->trans('MSC.password.0') ?></label>
           <input type="password" name="password" id="password" class="text password" value="" required>
         </div>
         <?php if ($this->autologin): ?>
           <div class="widget widget-checkbox">
             <fieldset class="checkbox_container">
-              <span><input type="checkbox" name="autologin" id="autologin" value="1" class="checkbox"> <label for="autologin"><?= $this->autoLabel ?></label></span>
+              <span><input type="checkbox" name="autologin" id="autologin" value="1" class="checkbox"> <label for="autologin"><?= $this->trans('MSC.autologin') ?></label></span>
             </fieldset>
           </div>
         <?php endif; ?>
@@ -44,7 +44,7 @@
       <div class="widget widget-submit">
         <button type="submit" class="submit"><?= $this->slabel ?></button>
         <?php if ($this->twoFactorEnabled): ?>
-          <a href="<?= $this->route('contao_frontend_logout') ?>"><?= $this->cancel ?> ›</a>
+          <a href="<?= $this->route('contao_frontend_logout') ?>"><?= $this->trans('MSC.cancelBT') ?> ›</a>
         <?php endif; ?>
       </div>
     </div>

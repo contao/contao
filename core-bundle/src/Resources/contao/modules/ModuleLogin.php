@@ -96,10 +96,7 @@ class ModuleLogin extends Module
 			$this->Template->action = $router->generate('contao_frontend_two_factor');
 			$this->Template->targetPath = $redirectPage instanceof PageModel ? $redirectPage->getAbsoluteUrl() : $objPage->getAbsoluteUrl();
 			$this->Template->twoFactorEnabled = $user->useTwoFactor;
-			$this->Template->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
 			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
-			$this->Template->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
-			$this->Template->twoFactorAuthentication = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 
 			if ($exception instanceof InvalidTwoFactorCodeException)
 			{
@@ -171,14 +168,11 @@ class ModuleLogin extends Module
 			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 
-		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
-		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->action = $router->generate('contao_frontend_login');
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
 		$this->Template->value = StringUtil::specialchars($container->get('security.authentication_utils')->getLastUsername());
 		$this->Template->formId = 'tl_login_' . $this->id;
 		$this->Template->autologin = $this->autologin;
-		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 		$this->Template->forceTargetPath = (int) $blnRedirectBack;
 		$this->Template->targetPath = StringUtil::specialchars($strRedirect);
 		$this->Template->failurePath = StringUtil::specialchars(Environment::get('base').Environment::get('request'));
