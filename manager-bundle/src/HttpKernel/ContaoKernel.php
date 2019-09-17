@@ -200,11 +200,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             // Set the .env variables from the parameters.yml file (backwards compatibility)
             $loader->load(
                 static function (ContainerBuilder $container): void {
-                    if ($container->hasParameter('secret')) {
+                    if (!isset($_SERVER['APP_SECRET']) && $container->hasParameter('secret')) {
                         $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
                     }
 
-                    if ($container->hasParameter('database_host')) {
+                    if (!isset($_SERVER['DATABASE_URL']) && $container->hasParameter('database_host')) {
                         $container->setParameter(
                             'env(DATABASE_URL)',
                             sprintf(
@@ -218,7 +218,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
                         );
                     }
 
-                    if ($container->hasParameter('mailer_transport')) {
+                    if (!isset($_SERVER['MAILER_URL']) && $container->hasParameter('mailer_transport')) {
                         if ('sendmail' === $container->getParameter('mailer_transport')) {
                             $container->setParameter('env(MAILER_URL)', 'sendmail://localhost');
                         } elseif ('smtp' === $container->getParameter('mailer_transport')) {
