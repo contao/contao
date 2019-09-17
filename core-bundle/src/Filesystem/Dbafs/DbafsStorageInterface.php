@@ -18,13 +18,13 @@ interface DbafsStorageInterface
 {
     /**
      * Returns paths to all non-excluded files/directories in the  order of
-     * their specificity (most specific first). If a directory is specified,
-     * the returned list will contain paths in this directory as well as all
-     * parent directories.
+     * their specificity (most specific first). If a directory scope is
+     * specified, the returned list will contain paths in this directory as
+     * well as all parent directories.
      *
      * @return string[]
      */
-    public function listSynchronizablePaths(string $subDirectory = ''): \Traversable;
+    public function listSynchronizablePaths(string $scope = ''): \Traversable;
 
     /**
      * @throws FileNotFoundException     if given resource wasn't found
