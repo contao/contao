@@ -64,12 +64,16 @@ services:
         arguments:
             - '%kernel.project_dir%/%contao.upload_path%'
 
+    Contao\CoreBundle\Filesystem\Dbafs\DbafsDatabase:
+        arguments:
+            - '@database_connection'
+            - '%contao.upload_path%'
+
     Contao\CoreBundle\Filesystem\Dbafs\Dbafs:
         arguments:
             - '@Contao\CoreBundle\Filesystem\Storage'
             - '@Contao\CoreBundle\Filesystem\Dbafs\DefaultFileHashProvider'
-            - '@database_connection'
-            - '%contao.upload_path%'
+            - '@Contao\CoreBundle\Filesystem\Dbafs\DbafsDatabase'
 
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext

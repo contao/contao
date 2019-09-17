@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsDatabase;
 use Contao\CoreBundle\Filesystem\Dbafs\DefaultFileHashProvider;
 use Contao\CoreBundle\Filesystem\Storage;
 use Contao\CoreBundle\Tests\TestCase;
@@ -333,6 +334,8 @@ class DbafsTest extends TestCase
 
     public function testSyncAppliesChangesIfNotDryRunning(): void
     {
+        // todo: move to database tests
+
         $filesystem = $this->getTestFilesystem();
         $filesystem->write('baz.txt', 'baz');
 
@@ -352,10 +355,19 @@ class DbafsTest extends TestCase
                     $this->assertSame('file', $data['type']);
                     $this->assertGreaterThanOrEqual(time(), $data['tstamp']);
                 }
-            );
+            )
+        ;
 
-        $dbafs = $this->getDbafs($filesystem, $connection);
-        $dbafs->setDatabaseBulkInsertSize(0);
+
+        $database = new DbafsDatabase($connection, 'files');
+        $database->setDatabaseBulkInsertSize(0);
+
+        $dbafs = new Dbafs(
+            new Storage($filesystem),
+            new DefaultFileHashProvider($filesystem),
+            $database
+        );
+
 
         // dry run - should not apply changes
         $changeSet = $dbafs->sync('', true);
@@ -403,6 +415,8 @@ class DbafsTest extends TestCase
 
     private function getTestDatabaseItemsForPartialSync(): array
     {
+        // todo: rewrite as direct result for getDatabaseItems() instead of mocking connection
+
         return [
             // path, uuid, hash, isFolder, isIncluded
             ['files/foo/bar/baz1.txt', 'uuid1', '900150983cd24fb0d6963f7d28e17f72', 0, 1],
@@ -458,8 +472,7 @@ class DbafsTest extends TestCase
         return new Dbafs(
             new Storage($filesystem),
             new DefaultFileHashProvider($filesystem),
-            $connection,
-            'files'
+            new DbafsDatabase($connection, 'files')
         );
     }
 }
