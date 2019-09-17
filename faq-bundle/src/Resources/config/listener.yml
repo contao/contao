@@ -3,4 +3,6 @@ services:
         class: Contao\FaqBundle\EventListener\InsertTagsListener
         arguments:
             - '@contao.framework'
+        tags:
+            - { name: contao.hook, hook: replaceInsertTags }
         public: true

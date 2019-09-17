@@ -6,13 +6,13 @@ services:
         arguments:
             - '@?filesystem'
         tags:
-            - { name: kernel.cache_clearer }
+            - kernel.cache_clearer
 
-    contao_manager.plugin_loader:
+    contao_manager.jwt_manager:
         synthetic: true
         public: true
 
-    contao_manager.jwt_manager:
+    contao_manager.plugin_loader:
         synthetic: true
         public: true
 

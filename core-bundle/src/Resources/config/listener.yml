@@ -8,12 +8,6 @@ services:
             calls:
                 - ['setContainer', ['@service_container']]
 
-    Contao\CoreBundle\EventListener\RobotsTxtListener:
-        arguments:
-            - '@contao.framework'
-        tags:
-            - { name: kernel.event_listener, event: contao.robots_txt, method: onRobotsTxt }
-
     contao.listener.add_to_search_index:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         arguments:
@@ -172,6 +166,13 @@ services:
         class: Contao\CoreBundle\EventListener\ResponseExceptionListener
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 64 }
+
+    contao.listener.robots_txt:
+        class: Contao\CoreBundle\EventListener\RobotsTxtListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: kernel.event_listener, event: contao.robots_txt, method: onRobotsTxt }
 
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener

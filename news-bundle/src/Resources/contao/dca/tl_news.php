@@ -748,7 +748,7 @@ class tl_news extends Contao\Backend
 	{
 		$news = Contao\NewsModel::findByPk($dc->activeRecord->id);
 		$url = Contao\News::generateNewsUrl($news, false, true);
-		$suffix = substr($dc->inputName, strlen($dc->field));
+		$suffix = substr($dc->inputName, \strlen($dc->field));
 
 		list($baseUrl) = explode($news->alias ?: $news->id, $url);
 

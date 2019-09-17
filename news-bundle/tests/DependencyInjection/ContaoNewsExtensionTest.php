@@ -52,6 +52,11 @@ class ContaoNewsExtensionTest extends TestCase
         $this->assertSame(GeneratePageListener::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('contao.hook', $tags);
+        $this->assertSame('generatePage', $tags['contao.hook'][0]['hook']);
     }
 
     public function testRegistersTheInsertTagsListener(): void
@@ -63,6 +68,11 @@ class ContaoNewsExtensionTest extends TestCase
         $this->assertSame(InsertTagsListener::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('contao.hook', $tags);
+        $this->assertSame('replaceInsertTags', $tags['contao.hook'][0]['hook']);
     }
 
     public function testRegistersThePreviewUrlCreateListener(): void
@@ -72,6 +82,7 @@ class ContaoNewsExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao_news.listener.preview_url_create');
 
         $this->assertSame(PreviewUrlCreateListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
         $this->assertSame('request_stack', (string) $definition->getArgument(0));
         $this->assertSame('contao.framework', (string) $definition->getArgument(1));
 
@@ -89,6 +100,7 @@ class ContaoNewsExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao_news.listener.preview_url_convert');
 
         $this->assertSame(PreviewUrlConvertListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
         $this->assertSame('request_stack', (string) $definition->getArgument(0));
         $this->assertSame('contao.framework', (string) $definition->getArgument(1));
 
@@ -106,6 +118,7 @@ class ContaoNewsExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao_news.picker.news_provider');
 
         $this->assertSame(NewsPickerProvider::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
         $this->assertSame('router', (string) $definition->getArgument(1));
         $this->assertSame('translator', (string) $definition->getArgument(2));

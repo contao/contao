@@ -1301,7 +1301,7 @@ class tl_page extends Contao\Backend
 	{
 		$page = Contao\PageModel::findByPk($dc->activeRecord->id);
 		$url = $page->getAbsoluteUrl();
-		$suffix = substr($dc->inputName, strlen($dc->field));
+		$suffix = substr($dc->inputName, \strlen($dc->field));
 
 		list($baseUrl) = explode($page->alias ?: $page->id, $url);
 

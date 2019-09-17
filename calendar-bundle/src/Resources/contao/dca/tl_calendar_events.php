@@ -825,7 +825,7 @@ class tl_calendar_events extends Contao\Backend
 	{
 		$event = Contao\CalendarEventsModel::findByPk($dc->activeRecord->id);
 		$url = Contao\Events::generateEventUrl($event, true);
-		$suffix = substr($dc->inputName, strlen($dc->field));
+		$suffix = substr($dc->inputName, \strlen($dc->field));
 
 		list($baseUrl) = explode($event->alias ?: $event->id, $url);
 
