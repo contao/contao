@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -42,8 +43,8 @@ class FilesyncCommand extends Command
         $this
             ->setName('contao:filesync')
             ->setDescription('Synchronizes the file system with the database.')
-            ->addOption('partial', 'p', InputOption::VALUE_REQUIRED, 'Only synchronize a subdirectory.')
-            ->addOption('dry', 'd', InputOption::VALUE_NONE, 'Run dry, do not apply changes.')
+            ->addArgument('scope', InputArgument::OPTIONAL, 'Optional a scope to only synchronize a subdirectory.', '')
+            ->addOption('dry-run', 'd', InputOption::VALUE_NONE, 'Run dry, do not apply changes.')
         ;
     }
 
@@ -52,13 +53,12 @@ class FilesyncCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $dryRun = $input->getOption('dry');
-        $subdirectory = $input->getOption('partial') ?? '';
+        $dryRun = $input->getOption('dry-run');
 
         $output->writeln('Synchronizing...'.($dryRun ? ' [dry run]' : ''));
 
         $time = microtime(true);
-        $changeSet = $this->dbafs->sync($subdirectory, $dryRun);
+        $changeSet = $this->dbafs->sync($input->getArgument('scope'), $dryRun);
         $timeTotal = round(microtime(true) - $time, 2);
 
         $changeSet->renderStats($output);
