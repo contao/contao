@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\InstallationBundle\Controller;
 
 use Contao\Environment;
+use Contao\InstallationBundle\Config\DotenvDumper;
 use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
@@ -21,7 +22,6 @@ use Doctrine\DBAL\DBALException;
 use Patchwork\Utf8;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -324,26 +324,6 @@ class InstallationController implements ContainerAwareInterface
      */
     private function storeDatabaseUrl(array $parameters): void
     {
-        $fs = new Filesystem();
-        $path = $this->getContainerParameter('kernel.project_dir').'/.env';
-        $content = '';
-
-        if ($fs->exists($path)) {
-            $lines = file($path, FILE_IGNORE_NEW_LINES);
-
-            if (false === $lines) {
-                throw new \RuntimeException(sprintf('Could not read "%s" file.', $path));
-            }
-
-            foreach ($lines as $line) {
-                if (0 === strpos($line, 'DATABASE_URL=')) {
-                    continue;
-                }
-
-                $content .= $line."\n";
-            }
-        }
-
         $url = sprintf(
             'mysql://%s:%s@%s:%s/%s',
             rawurlencode($parameters['parameters']['database_user']),
@@ -353,7 +333,9 @@ class InstallationController implements ContainerAwareInterface
             rawurlencode($parameters['parameters']['database_name'])
         );
 
-        $fs->dumpFile($path, $content."DATABASE_URL='".str_replace("'", "'\\''", $url)."'\n");
+        $dotenv = new DotenvDumper($this->getContainerParameter('kernel.project_dir').'/.env');
+        $dotenv->setParameter('DATABASE_URL', $url);
+        $dotenv->dump();
     }
 
     private function runDatabaseUpdates(): void
