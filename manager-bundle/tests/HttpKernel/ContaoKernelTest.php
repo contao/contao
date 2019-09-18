@@ -23,8 +23,14 @@ use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpFoundation\Request;
 
 class ContaoKernelTest extends ContaoTestCase
@@ -158,14 +164,22 @@ class ContaoKernelTest extends ContaoTestCase
      */
     public function testLoadsTheParametersYamlFile(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
-        $loader
-            ->expects($this->exactly(3))
-            ->method('load')
-        ;
+        $container = new ContainerBuilder();
+        $locator = new FileLocator(__DIR__.'/../Fixtures/HttpKernel/WithParametersYml');
+
+        $resolver = new LoaderResolver([
+            new ClosureLoader($container),
+            new YamlFileLoader($container, $locator),
+        ]);
 
         $kernel = $this->getKernel(__DIR__.'/../Fixtures/HttpKernel/WithParametersYml');
-        $kernel->registerContainerConfiguration($loader);
+        $kernel->registerContainerConfiguration(new DelegatingLoader($resolver));
+
+        $parameters = $container->getParameterBag()->all();
+
+        $this->assertSame('ThisTokenIsNotSoSecretChangeIt', $parameters['env(APP_SECRET)']);
+        $this->assertSame('mysql://foo:bar@localhost:3306/foobar', $parameters['env(DATABASE_URL)']);
+        $this->assertSame('smtp://127.0.0.1:25?username=foo%40bar.com', $parameters['env(MAILER_URL)']);
     }
 
     /**

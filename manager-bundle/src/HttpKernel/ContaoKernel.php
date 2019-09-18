@@ -204,7 +204,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
                         $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
                     }
 
-                    if (!isset($_SERVER['DATABASE_URL']) && $container->hasParameter('database_host')) {
+                    if (!isset($_SERVER['DATABASE_URL']) && $container->hasParameter('database_name')) {
                         $container->setParameter(
                             'env(DATABASE_URL)',
                             sprintf(
