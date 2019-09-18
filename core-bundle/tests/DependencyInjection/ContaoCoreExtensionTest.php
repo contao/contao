@@ -782,11 +782,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersTheBackendController(): void
     {
-        $this->assertTrue($this->container->has('contao.controller.backend'));
+        $this->assertTrue($this->container->has(BackendController::class));
 
-        $definition = $this->container->getDefinition('contao.controller.backend');
+        $definition = $this->container->getDefinition(BackendController::class);
 
-        $this->assertSame(BackendController::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
 
         $calls = $definition->getMethodCalls();
@@ -801,11 +800,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersTheBackendCsvImportController(): void
     {
-        $this->assertTrue($this->container->has('contao.controller.backend_csv_import'));
+        $this->assertTrue($this->container->has(BackendCsvImportController::class));
 
-        $definition = $this->container->getDefinition('contao.controller.backend_csv_import');
+        $definition = $this->container->getDefinition(BackendCsvImportController::class);
 
-        $this->assertSame(BackendCsvImportController::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
         $this->assertSame('database_connection', (string) $definition->getArgument(1));
@@ -816,11 +814,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersTheFaviconController(): void
     {
-        $this->assertTrue($this->container->has('contao.controller.favicon'));
+        $this->assertTrue($this->container->has(FaviconController::class));
 
-        $definition = $this->container->getDefinition('contao.controller.favicon');
+        $definition = $this->container->getDefinition(FaviconController::class);
 
-        $this->assertSame(FaviconController::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
         $this->assertSame('fos_http_cache.http.symfony_response_tagger', (string) $definition->getArgument(1));
@@ -832,11 +829,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersTheFrontendController(): void
     {
-        $this->assertTrue($this->container->has('contao.controller.frontend'));
+        $this->assertTrue($this->container->has(FrontendController::class));
 
-        $definition = $this->container->getDefinition('contao.controller.frontend');
+        $definition = $this->container->getDefinition(FrontendController::class);
 
-        $this->assertSame(FrontendController::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
         $this->assertSame('contao.csrf.token_manager', (string) $definition->getArgument(1));
@@ -845,11 +841,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersTheFrontendModuleTwoFactorController(): void
     {
-        $this->assertTrue($this->container->has('contao.controller.frontend_module.two_factor'));
+        $this->assertTrue($this->container->has(TwoFactorController::class));
 
-        $definition = $this->container->getDefinition('contao.controller.frontend_module.two_factor');
+        $definition = $this->container->getDefinition(TwoFactorController::class);
 
-        $this->assertSame(TwoFactorController::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
 
         $calls = $definition->getMethodCalls();
@@ -866,11 +861,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function tesRegistersTheImagesController(): void
     {
-        $this->assertTrue($this->container->has('contao.controller.images'));
+        $this->assertTrue($this->container->has(ImagesController::class));
 
-        $definition = $this->container->getDefinition('contao.controller.images');
+        $definition = $this->container->getDefinition(ImagesController::class);
 
-        $this->assertSame(ImagesController::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.image.image_factory', (string) $definition->getArgument(0));
         $this->assertSame('contao.image.resizer', (string) $definition->getArgument(1));
@@ -880,22 +874,20 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function tesRegistersTheInsertTagsController(): void
     {
-        $this->assertTrue($this->container->has('contao.controller.insert_tags'));
+        $this->assertTrue($this->container->has(InsertTagsController::class));
 
-        $definition = $this->container->getDefinition('contao.controller.insert_tags');
+        $definition = $this->container->getDefinition(InsertTagsController::class);
 
-        $this->assertSame(InsertTagsController::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
     }
 
     public function testRegistersTheRobotsTxtController(): void
     {
-        $this->assertTrue($this->container->has('contao.controller.robots_txt'));
+        $this->assertTrue($this->container->has(RobotsTxtController::class));
 
-        $definition = $this->container->getDefinition('contao.controller.robots_txt');
+        $definition = $this->container->getDefinition(RobotsTxtController::class);
 
-        $this->assertSame(RobotsTxtController::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
         $this->assertSame('event_dispatcher', (string) $definition->getArgument(1));

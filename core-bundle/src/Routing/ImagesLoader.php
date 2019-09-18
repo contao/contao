@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
+use Contao\CoreBundle\Controller\ImagesController;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Route;
@@ -37,7 +38,7 @@ class ImagesLoader extends Loader
         $route = new Route(
             '/'.$this->pathPrefix.'/{path}',
             [
-                '_controller' => 'contao.controller.images',
+                '_controller' => ImagesController::class,
                 '_bypass_maintenance' => true,
             ],
             ['path' => '.+']

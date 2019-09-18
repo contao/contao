@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -117,11 +118,11 @@ class ListWizard extends Widget
 	 * @throws ResponseException
 	 *
 	 * @deprecated Deprecated since Contao 4.3 to be removed in 5.0.
-	 *             Use the contao.controller.backend_csv_import service instead.
+	 *             Use the Contao\CoreBundle\Controller\BackendCsvImportController service instead.
 	 */
 	public function importList(DataContainer $dc)
 	{
-		$response = System::getContainer()->get('contao.controller.backend_csv_import')->importListWizardAction($dc);
+		$response = System::getContainer()->get(BackendCsvImportController::class)->importListWizardAction($dc);
 
 		if ($response instanceof RedirectResponse)
 		{

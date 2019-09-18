@@ -64,7 +64,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
             $definition->clearTag($tag);
 
             foreach ($tags as $attributes) {
-                $attributes['type'] = $this->getFragmentType($definition, $attributes);
+                $attributes['type'] = $this->getFragmentType($definition, $attributes, $reference);
 
                 $identifier = sprintf('%s.%s', $tag, $attributes['type']);
                 $config = $this->getFragmentConfig($container, $reference, $attributes);
@@ -130,13 +130,26 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $definition->setArgument(0, array_merge($definition->getArgument(0), $handlers));
     }
 
-    protected function getFragmentType(Definition $definition, array $attributes): string
+    protected function getFragmentType(Definition $definition, array $attributes, Reference $reference = null): string
     {
+        if (null === $reference) {
+            @trigger_error('Calling RegisterFragmentsPass::getFragmentType() without passing the reference as third argument has been deprecated an will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        }
+
         if (isset($attributes['type'])) {
             return (string) $attributes['type'];
         }
 
         $className = $definition->getClass();
+
+        if (!$className) {
+            if (null === $reference) {
+                throw new \RuntimeException('The definition does not contain a class name and no reference has been given');
+            }
+
+            $className = (string) $reference;
+        }
+
         $className = ltrim(strrchr($className, '\\'), '\\');
 
         if ('Controller' === substr($className, -10)) {

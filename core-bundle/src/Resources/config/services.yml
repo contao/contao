@@ -55,16 +55,14 @@ services:
         tags:
             - kernel.cache_warmer
 
-    contao.controller.backend:
-        class: Contao\CoreBundle\Controller\BackendController
+    Contao\CoreBundle\Controller\BackendController:
         calls:
             - ['setContainer', ['@Psr\Container\ContainerInterface']]
         tags:
             - container.service_subscriber
         public: true
 
-    contao.controller.backend_csv_import:
-        class: Contao\CoreBundle\Controller\BackendCsvImportController
+    Contao\CoreBundle\Controller\BackendCsvImportController:
         arguments:
             - '@contao.framework'
             - '@database_connection'
@@ -73,8 +71,13 @@ services:
             - '%kernel.project_dir%'
         public: true
 
-    contao.controller.favicon:
-        class: Contao\CoreBundle\Controller\FaviconController
+    # Backwards compatibility
+    contao.controller.backend_csv_import:
+        alias: Contao\CoreBundle\Controller\BackendCsvImportController
+        deprecated: 'Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.'
+        public: true
+
+    Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
             - '@?fos_http_cache.http.symfony_response_tagger'
@@ -82,24 +85,21 @@ services:
             - controller.service_arguments
         public: true
 
-    contao.controller.frontend:
-        class: Contao\CoreBundle\Controller\FrontendController
+    Contao\CoreBundle\Controller\FrontendController:
         arguments:
             - '@contao.framework'
             - '@contao.csrf.token_manager'
             - '%contao.csrf_token_name%'
         public: true
 
-    contao.controller.frontend_module.two_factor:
-        class: Contao\CoreBundle\Controller\FrontendModule\TwoFactorController
+    Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         calls:
             - ['setContainer', ['@Psr\Container\ContainerInterface']]
         tags:
             - container.service_subscriber
             - { name: contao.frontend_module, category: user }
 
-    contao.controller.images:
-        class:  Contao\CoreBundle\Controller\ImagesController
+    Contao\CoreBundle\Controller\ImagesController:
         arguments:
             - '@contao.image.image_factory'
             - '@contao.image.resizer'
@@ -107,14 +107,24 @@ services:
             - '@?filesystem'
         public: true
 
-    contao.controller.insert_tags:
-        class: Contao\CoreBundle\Controller\InsertTagsController
+    # Backwards compatibility
+    contao.controller.images:
+        alias: Contao\CoreBundle\Controller\ImagesController
+        deprecated: 'Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\ImagesController" instead.'
+        public: true
+
+    Contao\CoreBundle\Controller\InsertTagsController:
         arguments:
             - '@contao.framework'
         public: true
 
-    contao.controller.robots_txt:
-        class: Contao\CoreBundle\Controller\RobotsTxtController
+    # Backwards compatibility
+    contao.controller.insert_tags:
+        alias: Contao\CoreBundle\Controller\InsertTagsController
+        deprecated: 'Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\InsertTagsController" instead.'
+        public: true
+
+    Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:
             - '@contao.framework'
             - '@event_dispatcher'

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\InsertTagsController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -144,7 +145,7 @@ class InsertTags extends Controller
 
 					$strBuffer .= $fragmentHandler->render(
 						new ControllerReference(
-							'contao.controller.insert_tags:renderAction',
+							InsertTagsController::class.'::renderAction',
 							$attributes,
 							array('clientCache' => (int) $objPage->clientCache, 'pageId' => $objPage->id, 'request' => Environment::get('request'))
 						),
