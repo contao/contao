@@ -51,13 +51,12 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
      */
     public static function getSubscribedServices(): array
     {
-        return array_merge(
-            parent::getSubscribedServices(),
-            [
-                'translator' => TranslatorInterface::class,
-                'contao.routing.scope_matcher' => ScopeMatcher::class,
-            ]
-        );
+        $services = parent::getSubscribedServices();
+
+        $services['translator'] = TranslatorInterface::class;
+        $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
+
+        return $services;
     }
 
     protected function getBackendWildcard(ModuleModel $module): Response

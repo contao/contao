@@ -135,11 +135,10 @@ class ContaoManagerExtensionTest extends TestCase
 
     public function testRegistersTheDebugController(): void
     {
-        $this->assertTrue($this->container->has('contao_manager.controller.debug'));
+        $this->assertTrue($this->container->has(DebugController::class));
 
-        $definition = $this->container->getDefinition('contao_manager.controller.debug');
+        $definition = $this->container->getDefinition(DebugController::class);
 
-        $this->assertSame(DebugController::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame('security.helper', (string) $definition->getArgument(0));
         $this->assertSame('request_stack', (string) $definition->getArgument(1));

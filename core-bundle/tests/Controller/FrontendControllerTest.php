@@ -16,6 +16,7 @@ use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Fixtures\Controller\PageError401Controller;
 use Contao\CoreBundle\Fixtures\Exception\PageError401Exception;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Exception\LogoutException;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -31,11 +32,11 @@ class FrontendControllerTest extends TestCase
             ->method('initialize')
         ;
 
-        $controller = new FrontendController(
-            $framework,
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'csrf_token'
-        );
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $framework);
+
+        $controller = new FrontendController();
+        $controller->setContainer($container);
 
         $this->expectException(UnauthorizedHttpException::class);
 
@@ -54,11 +55,11 @@ class FrontendControllerTest extends TestCase
             ->method('initialize')
         ;
 
-        $controller = new FrontendController(
-            $framework,
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'csrf_token'
-        );
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $framework);
+
+        $controller = new FrontendController();
+        $controller->setContainer($container);
 
         $GLOBALS['TL_PTY']['error_401'] = PageError401Controller::class;
 
@@ -81,11 +82,11 @@ class FrontendControllerTest extends TestCase
             ->method('initialize')
         ;
 
-        $controller = new FrontendController(
-            $framework,
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'csrf_token'
-        );
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $framework);
+
+        $controller = new FrontendController();
+        $controller->setContainer($container);
 
         $GLOBALS['TL_PTY']['error_401'] = PageError401Exception::class;
 
@@ -98,11 +99,7 @@ class FrontendControllerTest extends TestCase
 
     public function testThrowsALogoutExceptionUponLogout(): void
     {
-        $controller = new FrontendController(
-            $this->mockContaoFramework(),
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'csrf_token'
-        );
+        $controller = new FrontendController();
 
         $this->expectException(LogoutException::class);
         $this->expectExceptionMessage('The user was not logged out correctly.');
@@ -112,11 +109,7 @@ class FrontendControllerTest extends TestCase
 
     public function testCheckCookiesAction(): void
     {
-        $controller = new FrontendController(
-            $this->mockContaoFramework(),
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'csrf_token'
-        );
+        $controller = new FrontendController();
 
         $response = $controller->checkCookiesAction();
 
@@ -128,6 +121,9 @@ class FrontendControllerTest extends TestCase
 
     public function testRequestTokenScriptAction(): void
     {
+        $bag = new ParameterBag();
+        $bag->set('contao.csrf_token_name', 'csrf_token');
+
         $token = $this->createMock(CsrfToken::class);
         $token
             ->expects($this->once())
@@ -143,11 +139,12 @@ class FrontendControllerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $controller = new FrontendController(
-            $this->mockContaoFramework(),
-            $tokenManager,
-            'csrf_token'
-        );
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('parameter_bag', $bag);
+        $container->set('contao.csrf.token_manager', $tokenManager);
+
+        $controller = new FrontendController();
+        $controller->setContainer($container);
 
         $response = $controller->requestTokenScriptAction();
 
@@ -170,11 +167,11 @@ class FrontendControllerTest extends TestCase
             ->method('initialize')
         ;
 
-        $controller = new FrontendController(
-            $framework,
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'csrf_token'
-        );
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $framework);
+
+        $controller = new FrontendController();
+        $controller->setContainer($container);
 
         $GLOBALS['TL_PTY']['error_401'] = PageError401Controller::class;
 
@@ -197,11 +194,11 @@ class FrontendControllerTest extends TestCase
             ->method('initialize')
         ;
 
-        $controller = new FrontendController(
-            $framework,
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'csrf_token'
-        );
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $framework);
+
+        $controller = new FrontendController();
+        $controller->setContainer($container);
 
         $this->expectException(UnauthorizedHttpException::class);
         $this->expectExceptionMessage('Not authorized');
@@ -221,11 +218,11 @@ class FrontendControllerTest extends TestCase
             ->method('initialize')
         ;
 
-        $controller = new FrontendController(
-            $framework,
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'csrf_token'
-        );
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $framework);
+
+        $controller = new FrontendController();
+        $controller->setContainer($container);
 
         $GLOBALS['TL_PTY']['error_401'] = PageError401Exception::class;
 

@@ -68,7 +68,6 @@ use Contao\CoreBundle\Fragment\ForwardFragmentRenderer;
 use Contao\CoreBundle\Fragment\FragmentHandler;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\HttpKernel\ControllerResolver;
 use Contao\CoreBundle\HttpKernel\ModelArgumentResolver;
 use Contao\CoreBundle\Image\ImageFactory;
@@ -124,12 +123,10 @@ use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
-use Psr\Container\ContainerInterface;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\ServiceLocator;
@@ -233,15 +230,6 @@ class ContaoCoreExtensionTest extends TestCase
         } else {
             $this->assertTrue($definition->isPrivate());
         }
-
-        $conditionals = $definition->getInstanceofConditionals();
-
-        $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
-
-        $childDefinition = $conditionals[FrameworkAwareInterface::class];
-        $methodCalls = $childDefinition->getMethodCalls();
-
-        $this->assertSame('setFramework', $methodCalls[0][0]);
     }
 
     public function getCommandTestData(): \Generator
@@ -786,12 +774,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition(BackendController::class);
 
-        $this->assertTrue($definition->isPublic());
-
-        $calls = $definition->getMethodCalls();
-
-        $this->assertSame('setContainer', $calls[0][0]);
-        $this->assertSame(ContainerInterface::class, (string) $calls[0][1][0]);
+        $this->assertTrue($definition->isPrivate());
 
         $tags = $definition->getTags();
 
@@ -818,7 +801,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition(FaviconController::class);
 
-        $this->assertTrue($definition->isPublic());
+        $this->assertTrue($definition->isPrivate());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
         $this->assertSame('fos_http_cache.http.symfony_response_tagger', (string) $definition->getArgument(1));
 
@@ -833,10 +816,11 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition(FrontendController::class);
 
-        $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('contao.csrf.token_manager', (string) $definition->getArgument(1));
-        $this->assertSame('%contao.csrf_token_name%', (string) $definition->getArgument(2));
+        $this->assertTrue($definition->isPrivate());
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('container.service_subscriber', $tags);
     }
 
     public function testRegistersTheFrontendModuleTwoFactorController(): void
@@ -845,18 +829,11 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition(TwoFactorController::class);
 
-        $this->assertTrue($definition->isPublic());
-
-        $calls = $definition->getMethodCalls();
-
-        $this->assertSame('setContainer', $calls[0][0]);
-        $this->assertSame(ContainerInterface::class, (string) $calls[0][1][0]);
+        $this->assertTrue($definition->isPrivate());
 
         $tags = $definition->getTags();
 
         $this->assertArrayHasKey('container.service_subscriber', $tags);
-        $this->assertArrayHasKey('contao.frontend_module', $tags);
-        $this->assertSame('user', $tags['contao.frontend_module'][0]['category']);
     }
 
     public function tesRegistersTheImagesController(): void
@@ -888,7 +865,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition(RobotsTxtController::class);
 
-        $this->assertTrue($definition->isPublic());
+        $this->assertTrue($definition->isPrivate());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
         $this->assertSame('event_dispatcher', (string) $definition->getArgument(1));
 
@@ -954,15 +931,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoDataCollector::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-
-        $conditionals = $definition->getInstanceofConditionals();
-
-        $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
-
-        $childDefinition = $conditionals[FrameworkAwareInterface::class];
-        $methodCalls = $childDefinition->getMethodCalls();
-
-        $this->assertSame('setFramework', $methodCalls[0][0]);
 
         $tags = $definition->getTags();
 
@@ -1060,15 +1028,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.security.token_checker', (string) $definition->getArgument(2));
         $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));
         $this->assertSame('%contao.error_level%', (string) $definition->getArgument(4));
-
-        $conditionals = $definition->getInstanceofConditionals();
-
-        $this->assertArrayHasKey(ContainerAwareInterface::class, $conditionals);
-
-        $childDefinition = $conditionals[ContainerAwareInterface::class];
-        $methodCalls = $childDefinition->getMethodCalls();
-
-        $this->assertSame('setContainer', $methodCalls[0][0]);
     }
 
     public function testRegistersTheDeferredImageStorage(): void
@@ -1123,15 +1082,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.image.resize_calculator', (string) $definition->getArgument(1));
         $this->assertSame('filesystem', (string) $definition->getArgument(2));
         $this->assertSame('contao.image.deferred_image_storage', (string) $definition->getArgument(3));
-
-        $conditionals = $definition->getInstanceofConditionals();
-
-        $this->assertArrayHasKey(FrameworkAwareInterface::class, $conditionals);
-
-        $childDefinition = $conditionals[FrameworkAwareInterface::class];
-        $methodCalls = $childDefinition->getMethodCalls();
-
-        $this->assertSame('setFramework', $methodCalls[0][0]);
     }
 
     public function testRegistersTheImageFactory(): void
@@ -1266,15 +1216,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('debug', (string) $definition->getArgument(0));
         $this->assertFalse($definition->getArgument(1));
-
-        $conditionals = $definition->getInstanceofConditionals();
-
-        $this->assertArrayHasKey(ContainerAwareInterface::class, $conditionals);
-
-        $childDefinition = $conditionals[ContainerAwareInterface::class];
-        $methodCalls = $childDefinition->getMethodCalls();
-
-        $this->assertSame('setContainer', $methodCalls[0][0]);
 
         $tags = $definition->getTags();
 

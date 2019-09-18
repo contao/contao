@@ -40,13 +40,12 @@ abstract class AbstractFragmentController extends AbstractController implements 
      */
     public static function getSubscribedServices(): array
     {
-        return array_merge(
-            parent::getSubscribedServices(),
-            [
-                'contao.framework' => ContaoFramework::class,
-                'fos_http_cache.http.symfony_response_tagger' => '?'.SymfonyResponseTagger::class,
-            ]
-        );
+        $services = parent::getSubscribedServices();
+
+        $services['contao.framework'] = ContaoFramework::class;
+        $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
+
+        return $services;
     }
 
     /**

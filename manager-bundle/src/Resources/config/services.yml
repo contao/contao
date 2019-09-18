@@ -8,12 +8,17 @@ services:
         tags:
             - kernel.cache_clearer
 
-    contao_manager.controller.debug:
-        class: Contao\ManagerBundle\Controller\DebugController
+    Contao\ManagerBundle\Controller\DebugController:
         arguments:
             - '@security.helper'
             - '@request_stack'
             - '@contao_manager.jwt_manager'
+        public: true
+
+    # Backwards compatibility
+    contao_manager.controller.debug:
+        alias: Contao\ManagerBundle\Controller\DebugController
+        deprecated: 'Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\ManagerBundle\Controller\DebugController" instead.'
         public: true
 
     contao_manager.jwt_manager:

@@ -4,6 +4,10 @@ services:
             calls:
                 - ['setFramework', ['@contao.framework']]
 
+        Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
+            calls:
+                - ['setContainer', ['@Psr\Container\ContainerInterface']]
+
         Symfony\Component\DependencyInjection\ContainerAwareInterface:
             calls:
                 - ['setContainer', ['@service_container']]
@@ -56,11 +60,8 @@ services:
             - kernel.cache_warmer
 
     Contao\CoreBundle\Controller\BackendController:
-        calls:
-            - ['setContainer', ['@Psr\Container\ContainerInterface']]
         tags:
             - container.service_subscriber
-        public: true
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
         arguments:
@@ -83,21 +84,14 @@ services:
             - '@?fos_http_cache.http.symfony_response_tagger'
         tags:
             - controller.service_arguments
-        public: true
 
     Contao\CoreBundle\Controller\FrontendController:
-        arguments:
-            - '@contao.framework'
-            - '@contao.csrf.token_manager'
-            - '%contao.csrf_token_name%'
-        public: true
-
-    Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
-        calls:
-            - ['setContainer', ['@Psr\Container\ContainerInterface']]
         tags:
             - container.service_subscriber
-            - { name: contao.frontend_module, category: user }
+
+    Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
+        tags:
+            - container.service_subscriber
 
     Contao\CoreBundle\Controller\ImagesController:
         arguments:
@@ -105,7 +99,8 @@ services:
             - '@contao.image.resizer'
             - '%contao.image.target_dir%'
             - '@?filesystem'
-        public: true
+        tags:
+            - controller.service_arguments
 
     # Backwards compatibility
     contao.controller.images:
@@ -116,7 +111,8 @@ services:
     Contao\CoreBundle\Controller\InsertTagsController:
         arguments:
             - '@contao.framework'
-        public: true
+        tags:
+            - controller.service_arguments
 
     # Backwards compatibility
     contao.controller.insert_tags:
@@ -130,7 +126,6 @@ services:
             - '@event_dispatcher'
         tags:
             - controller.service_arguments
-        public: true
 
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver

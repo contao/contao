@@ -11,8 +11,8 @@
 // Back end modules
 $GLOBALS['BE_MOD']['accounts']['debug'] = array
 (
-	'enable'                  => ['contao_manager.controller.debug', 'enableAction'],
-	'disable'                 => ['contao_manager.controller.debug', 'disableAction'],
+	'enable'                  => ['Contao\ManagerBundle\Controller\DebugController', 'enableAction'],
+	'disable'                 => ['Contao\ManagerBundle\Controller\DebugController', 'disableAction'],
 	'hideInNavigation'        => true,
 	'disablePermissionChecks' => true
 );
