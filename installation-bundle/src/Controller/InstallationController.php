@@ -235,38 +235,6 @@ class InstallationController implements ContainerAwareInterface
     }
 
     /**
-     * The method preserves the container directory inside the cache folder,
-     * because Symfony will throw a "compile error" exception if it is deleted
-     * in the middle of a request.
-     */
-    private function purgeSymfonyCache(): void
-    {
-        $filesystem = new Filesystem();
-        $cacheDir = $this->getContainerParameter('kernel.cache_dir');
-        $ref = new \ReflectionObject($this->container);
-        $containerDir = basename(\dirname($ref->getFileName()));
-
-        /** @var SplFileInfo[] $finder */
-        $finder = Finder::create()
-            ->depth(0)
-            ->exclude($containerDir)
-            ->in($cacheDir)
-        ;
-
-        foreach ($finder as $file) {
-            $filesystem->remove($file->getPathname());
-        }
-
-        if (\function_exists('opcache_reset')) {
-            opcache_reset();
-        }
-
-        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
-            apc_clear_cache();
-        }
-    }
-
-    /**
      * The method runs the optional cache warmers, because the cache will only
      * have the non-optional stuff at this time.
      */
