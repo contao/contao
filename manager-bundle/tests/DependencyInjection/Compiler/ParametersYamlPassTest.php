@@ -49,13 +49,14 @@ class ParametersYamlPassTest extends TestCase
         $container = $this->getContainer();
         $container->setParameter('database_user', $user);
         $container->setParameter('database_password', $password);
+        $container->setParameter('database_name', $name);
 
         $pass = new ParametersYamlPass();
         $pass->process($container);
 
         $bag = $container->getParameterBag()->all();
 
-        $this->assertSame('ThisTokenIsNotSoSecretChangeIt', $bag['env(APP_SECRET)']);
+        $this->assertSame($expected, $bag['env(DATABASE_URL)']);
     }
 
     public function getDatabaseParameters(): \Generator
