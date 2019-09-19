@@ -239,7 +239,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     public static function fromRequest(string $projectDir, Request $request): HttpKernelInterface
     {
         self::loadEnv($projectDir, 'jwt');
-        $varName = isset($_SERVER['APP_ENV']) ? 'APP_ENV' : 'SYMFONY_ENV';
 
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
         if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
@@ -252,9 +251,10 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         Request::enableHttpMethodParameterOverride();
 
-        $env = null;
-        $parseJwt = $_SERVER[$varName] === 'jwt';
         $jwtManager = null;
+        $env = null;
+        $varName = isset($_SERVER['APP_ENV']) ? 'APP_ENV' : 'SYMFONY_ENV';
+        $parseJwt = isset($_SERVER[$varName]) && 'jwt' === $_SERVER[$varName];
 
         if ($parseJwt) {
             $env = 'prod';
