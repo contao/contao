@@ -394,11 +394,15 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             return;
         }
 
-        if (!file_exists($projectDir.'/.env')) {
-            return;
+        // Load cached env vars if the .env.local.php file exists
+        // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/config/bootstrap.php
+        if (\is_array($env = @include $projectDir.'/.env.local.php')) {
+            foreach ($env as $k => $v) {
+                $_ENV[$k] = $_ENV[$k] ?? (isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v);
+            }
+        } elseif (file_exists($projectDir.'/.env')) {
+            $dotEnv = new Dotenv(false);
+            $dotEnv->loadEnv($projectDir.'/.env', $varName, 'prod', []);
         }
-
-        $dotEnv = new Dotenv(false);
-        $dotEnv->loadEnv($projectDir.'/.env', $varName, 'prod', []);
     }
 }
