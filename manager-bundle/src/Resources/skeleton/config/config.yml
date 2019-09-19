@@ -18,7 +18,7 @@ framework:
         strict_requirements: '%kernel.debug%'
     csrf_protection: ~
     lock: ~
-    default_locale:  '%locale%'
+    default_locale: '%locale%'
     session:
         handler_id: ~
     fragments: { path: /_fragment }

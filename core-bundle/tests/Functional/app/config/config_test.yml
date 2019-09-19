@@ -15,7 +15,7 @@ framework:
         resource: '%kernel.project_dir%/../../src/Resources/config/routing.yml'
         strict_requirements: '%kernel.debug%'
     csrf_protection: ~
-    default_locale:  '%locale%'
+    default_locale: '%locale%'
     session:
         storage_id: session.storage.mock_file
     fragments: { path: /_fragment }
