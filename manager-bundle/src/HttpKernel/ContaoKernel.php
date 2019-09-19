@@ -29,7 +29,6 @@ use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Debug\Debug;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -196,65 +195,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         if ($parametersFile = $this->getConfigFile('parameters.yml')) {
             $loader->load($parametersFile);
-
-            // Set the .env variables from the parameters.yml file (backwards compatibility)
-            $loader->load(
-                static function (ContainerBuilder $container): void {
-                    if (!isset($_SERVER['APP_SECRET']) && $container->hasParameter('secret')) {
-                        $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
-                    }
-
-                    if (!isset($_SERVER['DATABASE_URL']) && $container->hasParameter('database_name')) {
-                        $container->setParameter(
-                            'env(DATABASE_URL)',
-                            sprintf(
-                                'mysql://%s:%s@%s:%s/%s',
-                                rawurlencode($container->getParameter('database_user')),
-                                rawurlencode($container->getParameter('database_password')),
-                                rawurlencode($container->getParameter('database_host')),
-                                (int) $container->getParameter('database_port'),
-                                rawurlencode($container->getParameter('database_name'))
-                            )
-                        );
-                    }
-
-                    if (!isset($_SERVER['MAILER_URL']) && $container->hasParameter('mailer_transport')) {
-                        if ('sendmail' === $container->getParameter('mailer_transport')) {
-                            $container->setParameter('env(MAILER_URL)', 'sendmail://localhost');
-                        } elseif ('smtp' === $container->getParameter('mailer_transport')) {
-                            $parameters = [];
-
-                            if ($username = $container->getParameter('mailer_user')) {
-                                $parameters[] = 'username='.rawurlencode($container->getParameter('mailer_user'));
-                            }
-
-                            if ($username = $container->getParameter('mailer_password')) {
-                                $parameters[] = 'password='.rawurlencode($container->getParameter('mailer_password'));
-                            }
-
-                            if ($username = $container->getParameter('mailer_encryption')) {
-                                $parameters[] = 'encryption='.rawurlencode($container->getParameter('mailer_encryption'));
-                            }
-
-                            $append = '';
-
-                            if (!empty($parameters)) {
-                                $append = '?'.implode('&', $parameters);
-                            }
-
-                            $container->setParameter(
-                                'env(MAILER_URL)',
-                                sprintf(
-                                    'smtp://%s:%s%s',
-                                    rawurlencode($container->getParameter('mailer_host')),
-                                    (int) $container->getParameter('mailer_port'),
-                                    $append
-                                )
-                            );
-                        }
-                    }
-                }
-            );
         }
 
         $config = $this->getManagerConfig()->all();
@@ -393,10 +333,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $rootDir = $this->getProjectDir();
 
         if (file_exists($rootDir.'/config/'.$file)) {
-            if ('parameters.yml' === $file) {
-                @trigger_error('Using a parameters.yml file has been deprecated and will no longer work in Contao 5.0. Use an .env file instead.', E_USER_DEPRECATED);
-            }
-
             return $rootDir.'/config/'.$file;
         }
 

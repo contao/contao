@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\ContaoManager\ApiCommand;
 
-use Contao\InstallationBundle\Config\DotenvDumper;
 use Contao\ManagerBundle\Api\Application;
+use Contao\ManagerBundle\Dotenv\DotenvDumper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

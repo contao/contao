@@ -30,5 +30,42 @@ class SwiftMailerPass implements CompilerPassInterface
         if ('mail' === $container->getParameter('mailer_transport')) {
             $container->setParameter('mailer_transport', 'sendmail');
         }
+
+        // Build the mailer URL from the parameters.yml configuration
+        if (!isset($_SERVER['MAILER_URL'])) {
+            if ('sendmail' === $container->getParameter('mailer_transport')) {
+                $container->setParameter('env(MAILER_URL)', 'sendmail://localhost');
+            } elseif ('smtp' === $container->getParameter('mailer_transport')) {
+                $parameters = [];
+
+                if ($username = $container->getParameter('mailer_user')) {
+                    $parameters[] = 'username='.rawurlencode($container->getParameter('mailer_user'));
+                }
+
+                if ($username = $container->getParameter('mailer_password')) {
+                    $parameters[] = 'password='.rawurlencode($container->getParameter('mailer_password'));
+                }
+
+                if ($username = $container->getParameter('mailer_encryption')) {
+                    $parameters[] = 'encryption='.rawurlencode($container->getParameter('mailer_encryption'));
+                }
+
+                $append = '';
+
+                if (!empty($parameters)) {
+                    $append = '?'.implode('&', $parameters);
+                }
+
+                $container->setParameter(
+                    'env(MAILER_URL)',
+                    sprintf(
+                        'smtp://%s:%s%s',
+                        rawurlencode($container->getParameter('mailer_host')),
+                        (int) $container->getParameter('mailer_port'),
+                        $append
+                    )
+                );
+            }
+        }
     }
 }

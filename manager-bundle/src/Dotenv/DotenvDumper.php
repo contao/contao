@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\InstallationBundle\Config;
+namespace Contao\ManagerBundle\Dotenv;
 
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Filesystem;
@@ -65,9 +65,6 @@ class DotenvDumper
         unset($this->parameters[$name]);
     }
 
-    /**
-     * Dumps the parameters into the .env file.
-     */
     public function dump(): void
     {
         // Remove the .env file if there are no parameters

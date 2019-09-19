@@ -15,11 +15,6 @@ namespace Contao\InstallationBundle\Config;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
-@trigger_error('Using the "ParameterDumper" class has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-
-/**
- * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
- */
 class ParameterDumper
 {
     /**

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\InstallationBundle\Controller;
 
 use Contao\Environment;
-use Contao\InstallationBundle\Config\DotenvDumper;
+use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
@@ -22,6 +22,7 @@ use Doctrine\DBAL\DBALException;
 use Patchwork\Utf8;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -235,6 +236,38 @@ class InstallationController implements ContainerAwareInterface
     }
 
     /**
+     * The method preserves the container directory inside the cache folder,
+     * because Symfony will throw a "compile error" exception if it is deleted
+     * in the middle of a request.
+     */
+    private function purgeSymfonyCache(): void
+    {
+        $filesystem = new Filesystem();
+        $cacheDir = $this->getContainerParameter('kernel.cache_dir');
+        $ref = new \ReflectionObject($this->container);
+        $containerDir = basename(\dirname($ref->getFileName()));
+
+        /** @var SplFileInfo[] $finder */
+        $finder = Finder::create()
+            ->depth(0)
+            ->exclude($containerDir)
+            ->in($cacheDir)
+        ;
+
+        foreach ($finder as $file) {
+            $filesystem->remove($file->getPathname());
+        }
+
+        if (\function_exists('opcache_reset')) {
+            opcache_reset();
+        }
+
+        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+            apc_clear_cache();
+        }
+    }
+
+    /**
      * The method runs the optional cache warmers, because the cache will only
      * have the non-optional stuff at this time.
      */
@@ -314,28 +347,13 @@ class InstallationController implements ContainerAwareInterface
             ));
         }
 
-        $this->storeDatabaseUrl($parameters);
+        $dumper = new ParameterDumper($this->getContainerParameter('kernel.project_dir'));
+        $dumper->setParameters($parameters);
+        $dumper->dump();
+
+        $this->purgeSymfonyCache();
 
         return $this->getRedirectResponse();
-    }
-
-    /**
-     * Stores the database URL in the .env file.
-     */
-    private function storeDatabaseUrl(array $parameters): void
-    {
-        $url = sprintf(
-            'mysql://%s:%s@%s:%s/%s',
-            rawurlencode($parameters['parameters']['database_user']),
-            rawurlencode($parameters['parameters']['database_password']),
-            rawurlencode($parameters['parameters']['database_host']),
-            (int) $parameters['parameters']['database_port'],
-            rawurlencode($parameters['parameters']['database_name'])
-        );
-
-        $dotenv = new DotenvDumper($this->getContainerParameter('kernel.project_dir').'/.env');
-        $dotenv->setParameter('DATABASE_URL', $url);
-        $dotenv->dump();
     }
 
     private function runDatabaseUpdates(): void

@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\InstallationBundle\Tests\Config;
+namespace Contao\ManagerBundle\Tests\Dotenv;
 
-use Contao\InstallationBundle\Config\DotenvDumper;
+use Contao\ManagerBundle\Dotenv\DotenvDumper;
 use Contao\TestCase\ContaoTestCase;
 
 class DotenvDumperTest extends ContaoTestCase
