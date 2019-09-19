@@ -92,6 +92,7 @@ services:
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         tags:
             - container.service_subscriber
+            - { name: contao.frontend_module, category: user }
 
     Contao\CoreBundle\Controller\ImagesController:
         arguments:
