@@ -160,12 +160,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $this->bundleLoader = $bundleLoader;
     }
 
-    public function getJwtManager(): JwtManager
+    public function getJwtManager(): ?JwtManager
     {
-        if (null === $this->jwtManager) {
-            $this->jwtManager = new JwtManager($this->getProjectDir());
-        }
-
         return $this->jwtManager;
     }
 
@@ -330,8 +326,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
 
         // Set the JWT manager only if the debug mode has not been configured in env variables
-        if (!isset($_SERVER['APP_ENV']) && !isset($_SERVER['SYMFONY_ENV'])) {
-            $container->set('contao_manager.jwt_manager', $this->getJwtManager());
+        if ($jwtManager = $this->getJwtManager()) {
+            $container->set('contao_manager.jwt_manager', $jwtManager);
         }
     }
 
