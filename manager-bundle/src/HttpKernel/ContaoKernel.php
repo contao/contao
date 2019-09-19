@@ -242,7 +242,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      */
     public static function fromRequest(string $projectDir, Request $request): HttpKernelInterface
     {
-        self::loadEnv($projectDir);
+        self::loadEnv($projectDir, 'jwt');
+        $varName = isset($_SERVER['SYMFONY_ENV']) ? 'SYMFONY_ENV' : 'APP_ENV';
 
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
         if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
@@ -256,16 +257,20 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         Request::enableHttpMethodParameterOverride();
 
         $env = null;
-        $parseJwt = !isset($_SERVER['APP_ENV']) && !isset($_SERVER['SYMFONY_ENV']);
+        $parseJwt = $_SERVER[$varName] === 'jwt';
         $jwtManager = null;
 
         if ($parseJwt) {
+            $env = 'prod';
+
             $jwtManager = new JwtManager($projectDir);
             $jwt = $jwtManager->parseRequest($request);
 
             if (\is_array($jwt) && $jwt['debug'] ?? false) {
                 $env = 'dev';
             }
+
+            $_SERVER[$varName] = $env;
         }
 
         $kernel = static::create($projectDir, $env);
@@ -288,9 +293,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public static function fromInput(string $projectDir, InputInterface $input): self
     {
-        self::loadEnv($projectDir);
+        $env = $input->getParameterOption(['--env', '-e'], null);
 
-        return static::create($projectDir, $input->getParameterOption(['--env', '-e'], null));
+        self::loadEnv($projectDir, $env ?: 'prod');
+
+        return static::create($projectDir, $env);
     }
 
     /**
@@ -385,7 +392,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return new static($env, 'dev' === $env);
     }
 
-    private static function loadEnv(string $projectDir): void
+    private static function loadEnv(string $projectDir, string $defaultEnv = 'prod'): void
     {
         $varName = isset($_SERVER['SYMFONY_ENV']) ? 'SYMFONY_ENV' : 'APP_ENV';
 
@@ -399,6 +406,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         $dotEnv = new Dotenv(false);
-        $dotEnv->loadEnv($projectDir.'/.env', $varName, 'prod', []);
+        $dotEnv->loadEnv($projectDir.'/.env', $varName, $defaultEnv, []);
     }
 }
