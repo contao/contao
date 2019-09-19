@@ -16,7 +16,7 @@ function phpunit() {
   )
 
   for bundle in ${bundles[*]}; do
-    vendor/bin/phpunit -c ${bundle} "$@"
+    vendor/bin/phpunit -c "$bundle" "$@"
   done
 }
 
@@ -75,7 +75,7 @@ case "$1" in
     exit 0
   ;;
   functional)
-    functional
+    functional "${@:2}"
     exit 0
   ;;
   php-cs-fixer)
@@ -92,7 +92,7 @@ case "$1" in
   ;;
   all)
     phpunit "${@:2}"
-    functional
+    functional "${@:2}"
     php-cs-fixer "${@:2}"
     phpstan
     composer

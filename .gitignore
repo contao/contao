@@ -10,3 +10,6 @@
 
 # PhpUnit
 /phpunit.xml
+
+# CS fixer
+/.php_cs.cache
