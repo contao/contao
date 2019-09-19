@@ -88,10 +88,22 @@ class DotenvDumper
 
     private function escape($value)
     {
-        if (\is_string($value)) {
-            return escapeshellarg($value);
+        if (!\is_string($value) || !preg_match('/[$ "\']/', $value)) {
+            return $value;
         }
 
-        return $value;
+        $quotes = "'";
+
+        if (false !== strpos($value, "'")) {
+            $quotes = '"';
+        }
+
+        $mapper = [$quotes => '\\'.$quotes];
+
+        if ('"' === $quotes && false !== strpos($value, '$')) {
+            $mapper['$'] = '\$';
+        }
+
+        return $quotes.str_replace(array_keys($mapper), array_values($mapper), $value).$quotes;
     }
 }
