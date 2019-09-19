@@ -3,6 +3,9 @@
 ## 4.8.3 (2019-09-12)
 
  * Consider the "disablePermissionChecks" attribute in the user modules (see #751).
+ * Update the country list to CLDR35.1 (see #734).
+ * Do not load the cache kernel in dev environment (see #712).
+ * Fix missing labels and fields with identical labels in the show view (see #742).
  * Support hyphens in custom template names (see #731).
  * Add the `preview.php` fragment to all links in the site structure (see #723).
 
