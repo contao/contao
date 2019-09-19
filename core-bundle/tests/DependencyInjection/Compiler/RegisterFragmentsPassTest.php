@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\DependencyInjection\Compiler\ResolveClassPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
@@ -31,6 +32,8 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->setDefinition('app.fragments.content_controller', $contentController);
         $container->setDefinition('app.fragments.module_controller', $moduleController);
+
+        (new ResolveClassPass())->process($container);
 
         $pass = new RegisterFragmentsPass();
         $pass->process($container);
@@ -74,6 +77,8 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
+        (new ResolveClassPass())->process($container);
+
         $pass = new RegisterFragmentsPass();
         $pass->process($container);
 
@@ -98,6 +103,8 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
+        (new ResolveClassPass())->process($container);
+
         $this->assertFalse($container->findDefinition('app.fragments.content_controller')->isPublic());
 
         $pass = new RegisterFragmentsPass();
@@ -113,6 +120,8 @@ class RegisterFragmentsPassTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->setDefinition('app.fragments.content_controller', $contentController);
+
+        (new ResolveClassPass())->process($container);
 
         $pass = new RegisterFragmentsPass();
         $pass->process($container);
@@ -135,6 +144,8 @@ class RegisterFragmentsPassTest extends TestCase
         $container = new ContainerBuilder();
         $container->setDefinition('contao.fragment.registry', new Definition());
         $container->setDefinition('app.fragments.content_controller', $contentController);
+
+        (new ResolveClassPass())->process($container);
 
         $pass = new RegisterFragmentsPass();
 
