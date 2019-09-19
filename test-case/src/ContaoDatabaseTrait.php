@@ -12,9 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\TestCase;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
+
 trait ContaoDatabaseTrait
 {
-    private static $pdo;
+    private static $connection;
 
     protected static function loadFileIntoDatabase(string $sqlFile): void
     {
@@ -22,21 +25,32 @@ trait ContaoDatabaseTrait
             throw new \InvalidArgumentException(sprintf('File "%s" does not exist', $sqlFile));
         }
 
-        $pdo = static::getConnection();
-        $pdo->exec(file_get_contents($sqlFile));
+        $conn = static::getConnection();
+        $conn->exec(file_get_contents($sqlFile));
     }
 
-    protected static function getConnection(): \PDO
+    protected static function getConnection(): Connection
     {
-        if (null === self::$pdo) {
-            self::$pdo = new \PDO(
-                sprintf('mysql:host=%s;port=%s;dbname=%s;', getenv('DB_HOST'), getenv('DB_PORT'), getenv('DB_NAME')),
-                getenv('DB_USER'),
-                getenv('DB_PASS'),
-                [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
-            );
+        if (null === self::$connection) {
+            if (false !== getenv('DATABASE_URL')) {
+                $params = [
+                    'driver' => 'pdo_mysql',
+                    'url' => getenv('DATABASE_URL'),
+                ];
+            } else {
+                $params = [
+                    'driver' => 'pdo_mysql',
+                    'host' => getenv('DB_HOST'),
+                    'port' => getenv('DB_PORT'),
+                    'user' => getenv('DB_USER'),
+                    'password' => getenv('DB_PASS'),
+                    'dbname' => getenv('DB_NAME'),
+                ];
+            }
+
+            self::$connection = DriverManager::getConnection($params);
         }
 
-        return self::$pdo;
+        return self::$connection;
     }
 }
