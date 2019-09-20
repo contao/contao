@@ -54,6 +54,7 @@ class ContaoCoreBundleTest extends TestCase
             AddResourcesPathsPass::class,
             PickerProviderPass::class,
             RegisterFragmentsPass::class,
+            RegisterFragmentsPass::class,
             FragmentRendererPass::class,
             RemembermeServicesPass::class,
             MapFragmentsToGlobalsPass::class,
