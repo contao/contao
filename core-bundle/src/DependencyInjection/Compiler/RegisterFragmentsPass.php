@@ -39,7 +39,10 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
     public function __construct(string $tag = null)
     {
-        // Value is optional for BC reasons (see Contao < 4.9)
+        if (null === $tag) {
+            @trigger_error('Using "new RegisterFragmentsPass()" without passing the tag name has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        }
+
         $this->tag = $tag;
     }
 
