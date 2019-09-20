@@ -16,9 +16,8 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Util\PackageUtil;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Role\SwitchUserRole;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
 
 /**
@@ -320,23 +319,14 @@ class BackendMain extends Backend
 	{
 		$token = System::getContainer()->get('security.token_storage')->getToken();
 
-		if (!$token instanceof TokenInterface)
+		if (!$token instanceof SwitchUserToken)
 		{
 			return;
 		}
 
-		$impersonatorUser = null;
+		$impersonator = $token->getOriginalToken()->getUsername();
 
-		foreach ($token->getRoles() as $role)
-		{
-			if ($role instanceof SwitchUserRole)
-			{
-				$impersonatorUser = $role->getSource()->getUsername();
-				break;
-			}
-		}
-
-		if (!$impersonatorUser)
+		if (!$impersonator)
 		{
 			return;
 		}
@@ -359,7 +349,7 @@ class BackendMain extends Backend
 		// Take the use back to the "users" module
 		$arrParams = array('do' => 'user', urlencode($switchUserConfig['parameter']) => SwitchUserListener::EXIT_VALUE);
 
-		$this->Template->logout = sprintf($GLOBALS['TL_LANG']['MSC']['switchBT'], $impersonatorUser);
+		$this->Template->logout = sprintf($GLOBALS['TL_LANG']['MSC']['switchBT'], $impersonator);
 		$this->Template->logoutLink = System::getContainer()->get('router')->generate('contao_backend', $arrParams);
 	}
 }
