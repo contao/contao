@@ -1,12 +1,13 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     Contao\ManagerBundle\HttpKernel\JwtManager: '@contao_manager.jwt_manager'
 
     contao_manager.cache.clear_bundle:
         class: Contao\ManagerBundle\Cache\BundleCacheClearer
         arguments:
             - '@?filesystem'
-        tags:
-            - kernel.cache_clearer
 
     Contao\ManagerBundle\Controller\DebugController:
         arguments:

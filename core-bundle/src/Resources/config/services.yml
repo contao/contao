@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
@@ -44,8 +47,6 @@ services:
         class: Contao\CoreBundle\Cache\ContaoCacheClearer
         arguments:
             - '@filesystem'
-        tags:
-            - kernel.cache_clearer
 
     contao.cache.warm_internal:
         class: Contao\CoreBundle\Cache\ContaoCacheWarmer
@@ -56,12 +57,8 @@ services:
             - '%kernel.project_dir%'
             - '@database_connection'
             - '@contao.framework'
-        tags:
-            - kernel.cache_warmer
 
-    Contao\CoreBundle\Controller\BackendController:
-        tags:
-            - container.service_subscriber
+    Contao\CoreBundle\Controller\BackendController: ~
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
         arguments:
@@ -85,13 +82,10 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\FrontendController:
-        tags:
-            - container.service_subscriber
+    Contao\CoreBundle\Controller\FrontendController: ~
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         tags:
-            - container.service_subscriber
             - { name: contao.frontend_module, category: user }
 
     Contao\CoreBundle\Controller\ImagesController:
@@ -178,8 +172,6 @@ services:
         class: Symfony\Component\DependencyInjection\ServiceLocator
         arguments:
             - []
-        tags:
-            - container.service_locator
 
     contao.fragment.registry:
         class: Contao\CoreBundle\Fragment\FragmentRegistry
@@ -321,8 +313,6 @@ services:
             - '@request_stack'
             - '@security.token_storage'
             - '@contao.routing.scope_matcher'
-        tags:
-            - monolog.processor
 
     contao.opt-in:
         class: Contao\CoreBundle\OptIn\OptIn
@@ -337,8 +327,6 @@ services:
             - '@router'
             - '@?translator'
             - '@security.helper'
-        tags:
-            - contao.picker_provider
 
     contao.picker.builder:
         class: Contao\CoreBundle\Picker\PickerBuilder
@@ -532,8 +520,6 @@ services:
 
     contao.security.backend_access_voter:
         class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
-        tags:
-            - security.voter
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
@@ -668,6 +654,7 @@ services:
         class: Contao\CoreBundle\Translation\DataCollectorTranslator
         arguments:
             - '@contao.translation.translator.data_collector.inner'
+        autoconfigure: false
 
     contao.twig.template_extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension
@@ -675,5 +662,3 @@ services:
             - '@request_stack'
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
-        tags:
-            - twig.extension

@@ -127,10 +127,6 @@ class ContaoManagerExtensionTest extends TestCase
         $this->assertSame(BundleCacheClearer::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('filesystem', (string) $definition->getArgument(0));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.cache_clearer', $tags);
     }
 
     public function testRegistersTheDebugController(): void

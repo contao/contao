@@ -14,11 +14,12 @@ namespace Contao\CoreBundle\Monolog;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Monolog\Logger;
+use Monolog\Processor\ProcessorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ContaoTableProcessor
+class ContaoTableProcessor implements ProcessorInterface
 {
     /**
      * @var RequestStack
