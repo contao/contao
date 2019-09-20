@@ -18,7 +18,7 @@ use Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -236,7 +236,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertSame('no-cache, private', $response->headers->get('Cache-Control'));
     }
 
-    private function getResponseEvent(Response $response = null): FilterResponseEvent
+    private function getResponseEvent(Response $response = null): ResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -244,6 +244,6 @@ class MergeHttpHeadersListenerTest extends TestCase
             $response = new Response();
         }
 
-        return new FilterResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST, $response);
+        return new ResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST, $response);
     }
 }

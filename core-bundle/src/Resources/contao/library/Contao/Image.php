@@ -69,7 +69,7 @@ class Image
 	protected $targetHeight = 0;
 
 	/**
-	 * The resize mode (defaults to crop for BC)
+	 * The resize mode (defaults to crop for backwards compatibility)
 	 *
 	 * @var string
 	 */

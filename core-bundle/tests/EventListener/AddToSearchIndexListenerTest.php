@@ -19,7 +19,7 @@ use Contao\Frontend;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class AddToSearchIndexListenerTest extends TestCase
@@ -43,7 +43,7 @@ class AddToSearchIndexListenerTest extends TestCase
 
     public function testIndexesTheResponse(): void
     {
-        $event = $this->mockPostResponseEvent();
+        $event = $this->mockTerminateEvent();
         $event
             ->expects($this->once())
             ->method('getResponse')
@@ -62,7 +62,7 @@ class AddToSearchIndexListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $event = $this->mockPostResponseEvent();
+        $event = $this->mockTerminateEvent();
         $event
             ->expects($this->never())
             ->method('getResponse')
@@ -74,7 +74,7 @@ class AddToSearchIndexListenerTest extends TestCase
 
     public function testDoesNotIndexTheResponseIfTheRequestMethodIsNotGet(): void
     {
-        $event = $this->mockPostResponseEvent(null, Request::METHOD_POST);
+        $event = $this->mockTerminateEvent(null, Request::METHOD_POST);
         $event
             ->expects($this->never())
             ->method('getResponse')
@@ -86,7 +86,7 @@ class AddToSearchIndexListenerTest extends TestCase
 
     public function testDoesNotIndexTheResponseUponFragmentRequests(): void
     {
-        $event = $this->mockPostResponseEvent('_fragment/foo/bar');
+        $event = $this->mockTerminateEvent('_fragment/foo/bar');
         $event
             ->expects($this->never())
             ->method('getResponse')
@@ -97,16 +97,16 @@ class AddToSearchIndexListenerTest extends TestCase
     }
 
     /**
-     * @return PostResponseEvent&MockObject
+     * @return TerminateEvent&MockObject
      */
-    private function mockPostResponseEvent(string $requestUri = null, string $requestMethod = Request::METHOD_GET): PostResponseEvent
+    private function mockTerminateEvent(string $requestUri = null, string $requestMethod = Request::METHOD_GET): TerminateEvent
     {
         $request = new Request();
         $request->setMethod($requestMethod);
         $request->server->set('REQUEST_URI', $requestUri);
 
         return $this
-            ->getMockBuilder(PostResponseEvent::class)
+            ->getMockBuilder(TerminateEvent::class)
             ->setConstructorArgs([$this->createMock(KernelInterface::class), $request, new Response()])
             ->setMethods(['getResponse'])
             ->getMock()

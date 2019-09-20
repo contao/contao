@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\User;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Security\Core\Security;
 
 class StoreRefererListener
@@ -39,7 +39,7 @@ class StoreRefererListener
     /**
      * Stores the referer in the session.
      */
-    public function onKernelResponse(FilterResponseEvent $event): void
+    public function onKernelResponse(ResponseEvent $event): void
     {
         if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
             return;

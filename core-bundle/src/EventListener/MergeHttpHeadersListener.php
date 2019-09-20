@@ -17,7 +17,7 @@ use Contao\CoreBundle\HttpKernel\Header\HeaderStorageInterface;
 use Contao\CoreBundle\HttpKernel\Header\NativeHeaderStorage;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class MergeHttpHeadersListener
 {
@@ -85,7 +85,7 @@ class MergeHttpHeadersListener
     /**
      * Adds the Contao headers to the Symfony response.
      */
-    public function onKernelResponse(FilterResponseEvent $event): void
+    public function onKernelResponse(ResponseEvent $event): void
     {
         if (!$this->framework->isInitialized()) {
             return;

@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -94,8 +94,8 @@ class InitializeController extends AbstractController
      */
     private function handleException(\Exception $e, Request $request, $type): void
     {
-        $event = new GetResponseForExceptionEvent($this->get('http_kernel'), $request, $type, $e);
-        $this->get('event_dispatcher')->dispatch(KernelEvents::EXCEPTION, $event);
+        $event = new ExceptionEvent($this->get('http_kernel'), $request, $type, $e);
+        $this->get('event_dispatcher')->dispatch($event, KernelEvents::EXCEPTION);
 
         // A listener might have replaced the exception
         $e = $event->getException();

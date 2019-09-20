@@ -115,7 +115,7 @@ class InstallationController implements ContainerAwareInterface
     {
         $event = new InitializeApplicationEvent();
 
-        $this->container->get('event_dispatcher')->dispatch(ContaoInstallationEvents::INITIALIZE_APPLICATION, $event);
+        $this->container->get('event_dispatcher')->dispatch($event, ContaoInstallationEvents::INITIALIZE_APPLICATION);
 
         if ($event->hasOutput()) {
             return $this->render('initialize.html.twig', [

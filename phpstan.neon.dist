@@ -22,7 +22,6 @@ parameters:
 
         # Ignore backwards compatibility layers when preferring lowest dependencies
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
-        - '#Class Symfony\\Component\\Config\\Definition\\Builder\\TreeBuilder does not have a constructor and must be instantiated without any parameters\.#'
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
 
     reportUnmatchedIgnoredErrors: false

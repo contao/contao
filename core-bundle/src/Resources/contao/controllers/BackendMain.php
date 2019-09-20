@@ -299,7 +299,7 @@ class BackendMain extends Backend
 			elseif (Input::get('do') != '')
 			{
 				$event = new PreviewUrlCreateEvent(Input::get('do'), CURRENT_ID);
-				$container->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CREATE, $event);
+				$container->get('event_dispatcher')->dispatch($event, ContaoCoreEvents::PREVIEW_URL_CREATE);
 
 				if (($strQuery = $event->getQuery()) !== null)
 				{

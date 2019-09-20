@@ -14,21 +14,19 @@ namespace Contao\CoreBundle\Translation;
 
 use Symfony\Component\Translation\DataCollectorTranslator as SymfonyDataCollectorTranslator;
 use Symfony\Component\Translation\MessageCatalogueInterface;
-use Symfony\Component\Translation\TranslatorBagInterface;
-use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\Translator;
 
 class DataCollectorTranslator extends SymfonyDataCollectorTranslator
 {
     /**
-     * @var TranslatorInterface|TranslatorBagInterface|LegacyTranslatorInterface
+     * @var Translator
      */
     private $translator;
 
     private $messages = [];
 
     /**
-     * @param TranslatorInterface|TranslatorBagInterface|LegacyTranslatorInterface $translator
+     * @param Translator $translator
      */
     public function __construct($translator)
     {
@@ -68,9 +66,9 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator
     /**
      * {@inheritdoc}
      */
-    public function setLocale($locale): ?string
+    public function setLocale($locale): void
     {
-        return $this->translator->setLocale($locale);
+        $this->translator->setLocale($locale);
     }
 
     /**

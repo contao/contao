@@ -19,7 +19,7 @@ use Contao\FrontendUser;
 use Contao\PageModel;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
@@ -56,7 +56,7 @@ class TwoFactorFrontendListener
         $this->supportedTokens = $supportedTokens;
     }
 
-    public function onKernelRequest(GetResponseEvent $event): void
+    public function onKernelRequest(RequestEvent $event): void
     {
         if (!$this->scopeMatcher->isFrontendMasterRequest($event)) {
             return;

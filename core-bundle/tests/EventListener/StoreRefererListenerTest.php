@@ -19,7 +19,7 @@ use Contao\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Security;
@@ -143,7 +143,7 @@ class StoreRefererListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
         $request->setMethod(Request::METHOD_POST);
 
-        $responseEvent = new FilterResponseEvent(
+        $responseEvent = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
@@ -159,7 +159,7 @@ class StoreRefererListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $responseEvent = new FilterResponseEvent(
+        $responseEvent = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
@@ -223,7 +223,7 @@ class StoreRefererListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, new Response());
+        $event = new ResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, new Response());
 
         $listener = $this->getListener();
         $listener->onKernelResponse($event);
@@ -280,7 +280,7 @@ class StoreRefererListenerTest extends TestCase
         return new StoreRefererListener($security, $this->mockScopeMatcher());
     }
 
-    private function getResponseEvent(Request $request = null): FilterResponseEvent
+    private function getResponseEvent(Request $request = null): ResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -288,6 +288,6 @@ class StoreRefererListenerTest extends TestCase
             $request = new Request();
         }
 
-        return new FilterResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, new Response());
+        return new ResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, new Response());
     }
 }

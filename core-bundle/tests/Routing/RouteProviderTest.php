@@ -537,24 +537,6 @@ class RouteProviderTest extends TestCase
     }
 
     /**
-     * @return Adapter&MockObject
-     */
-    private function mockConfigAdapter(array $config): Adapter
-    {
-        $configAdapter = $this->mockAdapter(['get']);
-        $configAdapter
-            ->method('get')
-            ->willReturnCallback(
-                static function ($param) use ($config) {
-                    return $config[$param] ?? null;
-                }
-            )
-        ;
-
-        return $configAdapter;
-    }
-
-    /**
      * @return PageModel&MockObject
      */
     private function createPage(string $language, string $alias, bool $fallback = true, string $domain = '', string $scheme = null): PageModel

@@ -188,14 +188,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $events = BaseLocaleListener::getSubscribedEvents();
 
-        if ('setDefaultLocale' === $events['kernel.request'][0][0]) {
-            $this->assertSame('onKernelRequest', $events['kernel.request'][1][0]);
-            $this->assertSame(16, $events['kernel.request'][1][1]);
-        } else {
-            // Backwards compatibility with symfony/http-kernel <4.3
-            $this->assertSame('onKernelRequest', $events['kernel.request'][0][0]);
-            $this->assertSame(16, $events['kernel.request'][0][1]);
-        }
+        $this->assertSame('onKernelRequest', $events['kernel.request'][1][0]);
+        $this->assertSame(16, $events['kernel.request'][1][1]);
 
         $events = ExceptionListener::getSubscribedEvents();
 

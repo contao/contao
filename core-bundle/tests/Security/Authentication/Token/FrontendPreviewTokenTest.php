@@ -32,11 +32,7 @@ class FrontendPreviewTokenTest extends TestCase
         $this->assertTrue($token->isAuthenticated());
         $this->assertSame($user, $token->getUser());
 
-        $roles = $token->getRoles();
-
-        $this->assertIsArray($roles);
-        $this->assertCount(1, $roles);
-        $this->assertSame('ROLE_MEMBER', $roles[0]->getRole());
+        $this->assertSame(['ROLE_MEMBER'], $token->getRoleNames());
     }
 
     public function testAuthenticatesGuests(): void

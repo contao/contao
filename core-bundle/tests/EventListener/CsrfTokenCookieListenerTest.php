@@ -19,8 +19,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 
 class CsrfTokenCookieListenerTest extends TestCase
@@ -50,12 +50,12 @@ class CsrfTokenCookieListenerTest extends TestCase
         ;
 
         $listener = new CsrfTokenCookieListener($tokenStorage);
-        $listener->onKernelRequest($this->getResponseEvent($request));
+        $listener->onKernelRequest($this->getRequestEvent($request));
     }
 
     public function testDoesNotInitializeTheStorageUponSubrequests(): void
     {
-        $requestEvent = $this->createMock(GetResponseEvent::class);
+        $requestEvent = $this->createMock(RequestEvent::class);
         $requestEvent
             ->method('isMasterRequest')
             ->willReturn(false)
@@ -90,7 +90,7 @@ class CsrfTokenCookieListenerTest extends TestCase
         $response = new Response();
 
         $listener = new CsrfTokenCookieListener($tokenStorage);
-        $listener->onKernelResponse($this->getFilterResponseEvent($request, $response));
+        $listener->onKernelResponse($this->getResponseEvent($request, $response));
 
         $cookies = $response->headers->getCookies();
 
@@ -127,7 +127,7 @@ class CsrfTokenCookieListenerTest extends TestCase
         $response = new Response();
 
         $listener = new CsrfTokenCookieListener($tokenStorage);
-        $listener->onKernelResponse($this->getFilterResponseEvent($request, $response));
+        $listener->onKernelResponse($this->getResponseEvent($request, $response));
 
         $this->assertCount(0, $response->headers->getCookies());
     }
@@ -152,7 +152,7 @@ class CsrfTokenCookieListenerTest extends TestCase
         );
 
         $listener = new CsrfTokenCookieListener($tokenStorage);
-        $listener->onKernelResponse($this->getFilterResponseEvent($request, $response));
+        $listener->onKernelResponse($this->getResponseEvent($request, $response));
 
         $this->assertSame(
             '<html><body><form><input name="REQUEST_TOKEN" value=""></form></body></html>',
@@ -176,7 +176,7 @@ class CsrfTokenCookieListenerTest extends TestCase
 
     public function testDoesNotAddTheTokenCookiesToTheResponseUponSubrequests(): void
     {
-        $responseEvent = $this->createMock(FilterResponseEvent::class);
+        $responseEvent = $this->createMock(ResponseEvent::class);
         $responseEvent
             ->method('isMasterRequest')
             ->willReturn(false)
@@ -212,17 +212,17 @@ class CsrfTokenCookieListenerTest extends TestCase
         );
 
         $listener = new CsrfTokenCookieListener($tokenStorage);
-        $listener->onKernelResponse($this->getFilterResponseEvent($request, $response));
+        $listener->onKernelResponse($this->getResponseEvent($request, $response));
 
         $this->assertSame('value="tokenValue"', $response->getContent());
     }
 
     /**
-     * @return GetResponseEvent&MockObject
+     * @return RequestEvent&MockObject
      */
-    public function getResponseEvent(Request $request = null): GetResponseEvent
+    public function getRequestEvent(Request $request = null): RequestEvent
     {
-        $event = $this->createMock(GetResponseEvent::class);
+        $event = $this->createMock(RequestEvent::class);
         $event
             ->method('isMasterRequest')
             ->willReturn(true)
@@ -237,11 +237,11 @@ class CsrfTokenCookieListenerTest extends TestCase
     }
 
     /**
-     * @return FilterResponseEvent&MockObject
+     * @return ResponseEvent&MockObject
      */
-    public function getFilterResponseEvent(Request $request = null, Response $response = null): FilterResponseEvent
+    public function getResponseEvent(Request $request = null, Response $response = null): ResponseEvent
     {
-        $event = $this->createMock(FilterResponseEvent::class);
+        $event = $this->createMock(ResponseEvent::class);
         $event
             ->method('isMasterRequest')
             ->willReturn(true)

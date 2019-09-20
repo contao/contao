@@ -26,7 +26,7 @@ use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -361,7 +361,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         return $request;
     }
 
-    private function getResponseEvent(\Exception $exception, Request $request = null, bool $isSubRequest = false): GetResponseForExceptionEvent
+    private function getResponseEvent(\Exception $exception, Request $request = null, bool $isSubRequest = false): ExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -371,6 +371,6 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $type = $isSubRequest ? HttpKernelInterface::SUB_REQUEST : HttpKernelInterface::MASTER_REQUEST;
 
-        return new GetResponseForExceptionEvent($kernel, $request, $type, $exception);
+        return new ExceptionEvent($kernel, $request, $type, $exception);
     }
 }

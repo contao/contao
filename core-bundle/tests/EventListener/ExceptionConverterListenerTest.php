@@ -27,7 +27,7 @@ use Contao\CoreBundle\Fixtures\Exception\DerivedPageNotFoundException;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -193,11 +193,11 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf(PageNotFoundException::class, $exception->getPrevious());
     }
 
-    private function getResponseEvent(\Exception $exception): GetResponseForExceptionEvent
+    private function getResponseEvent(\Exception $exception): ExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
         $request = new Request();
 
-        return new GetResponseForExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
+        return new ExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
     }
 }

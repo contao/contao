@@ -17,7 +17,6 @@ use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Translation\Translator;
 use Contao\FrontendTemplate;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
@@ -34,6 +33,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TwoFactorControllerTest extends TestCase
 {
@@ -459,7 +459,7 @@ class TwoFactorControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createMock(TranslatorInterface::class);
 
         $container = new ContainerBuilder();
         $container->set('contao.framework', $framework);

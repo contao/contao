@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class MakeResponsePrivateListener
 {
@@ -28,7 +28,7 @@ class MakeResponsePrivateListener
      * Some of this logic is also already implemented in the HttpCache (1, 2 and 3), but we
      * want to make sure it works for any reverse proxy without having to configure too much.
      */
-    public function onKernelResponse(FilterResponseEvent $event): void
+    public function onKernelResponse(ResponseEvent $event): void
     {
         if (!$event->isMasterRequest()) {
             return;

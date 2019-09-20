@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Translation;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\Translator;
 use Contao\System;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Translation\Translator as BaseTranslator;
 
 class TranslatorTest extends TestCase
 {
@@ -24,19 +24,12 @@ class TranslatorTest extends TestCase
      */
     public function testForwardsTheMethodCallsToTheDecoratedTranslator(string $domain): void
     {
-        $originalTranslator = $this->createMock(TranslatorInterface::class);
+        $originalTranslator = $this->createMock(BaseTranslator::class);
         $originalTranslator
             ->expects($this->once())
             ->method('trans')
             ->with('id', ['param' => 'value'], $domain, 'en')
             ->willReturn('trans')
-        ;
-
-        $originalTranslator
-            ->expects($this->once())
-            ->method('transChoice')
-            ->with('id', 3, ['param' => 'value'], $domain, 'en')
-            ->willReturn('transChoice')
         ;
 
         $originalTranslator
@@ -60,7 +53,6 @@ class TranslatorTest extends TestCase
         $translator = new Translator($originalTranslator, $framework);
 
         $this->assertSame('trans', $translator->trans('id', ['param' => 'value'], $domain, 'en'));
-        $this->assertSame('transChoice', $translator->transChoice('id', 3, ['param' => 'value'], $domain, 'en'));
 
         $translator->setLocale('en');
 
@@ -80,6 +72,26 @@ class TranslatorTest extends TestCase
         yield ['contao_newsletter'];
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation The Symfony\Component\Translation\Translator::transChoice method is deprecated %s.
+     */
+    public function testForwardsTheLegacyMethodCallsToTheDecoratedTranslator(): void
+    {
+        $originalTranslator = $this->createMock(BaseTranslator::class);
+        $originalTranslator
+            ->expects($this->once())
+            ->method('transChoice')
+            ->with('id', 3, ['param' => 'value'], 'domain', 'en')
+            ->willReturn('transChoice')
+        ;
+
+        $translator = new Translator($originalTranslator, $this->mockContaoFramework());
+
+        $this->assertSame('transChoice', $translator->transChoice('id', 3, ['param' => 'value'], 'domain', 'en'));
+    }
+
     public function testReadsFromTheGlobalLanguageArray(): void
     {
         $adapter = $this->mockAdapter(['loadLanguageFile']);
@@ -95,7 +107,7 @@ class TranslatorTest extends TestCase
             ->method('initialize')
         ;
 
-        $translator = new Translator($this->createMock(TranslatorInterface::class), $framework);
+        $translator = new Translator($this->createMock(BaseTranslator::class), $framework);
 
         $this->assertSame('MSC.foo', $translator->trans('MSC.foo', [], 'contao_default'));
 
@@ -127,7 +139,7 @@ class TranslatorTest extends TestCase
 
     public function testUsesTheLocaleOfTheDecoratedTranslatorIfNoneIsGiven(): void
     {
-        $originalTranslator = $this->createMock(TranslatorInterface::class);
+        $originalTranslator = $this->createMock(BaseTranslator::class);
         $originalTranslator
             ->expects($this->once())
             ->method('getLocale')

@@ -18,11 +18,11 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 class BackendLocaleListenerTest extends TestCase
 {
@@ -46,7 +46,7 @@ class BackendLocaleListenerTest extends TestCase
             ->with('de')
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createMock(LocaleAwareInterface::class);
         $translator
             ->expects($this->once())
             ->method('setLocale')
@@ -54,7 +54,7 @@ class BackendLocaleListenerTest extends TestCase
         ;
 
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
 
@@ -82,8 +82,8 @@ class BackendLocaleListenerTest extends TestCase
         ;
 
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new GetResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
-        $translator = $this->createMock(TranslatorInterface::class);
+        $event = new RequestEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST);
+        $translator = $this->createMock(LocaleAwareInterface::class);
 
         $listener = new BackendLocaleListener($security, $translator);
         $listener->onKernelRequest($event);
@@ -105,8 +105,8 @@ class BackendLocaleListenerTest extends TestCase
         ;
 
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
-        $translator = $this->createMock(TranslatorInterface::class);
+        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $translator = $this->createMock(LocaleAwareInterface::class);
 
         $listener = new BackendLocaleListener($security, $translator);
         $listener->onKernelRequest($event);

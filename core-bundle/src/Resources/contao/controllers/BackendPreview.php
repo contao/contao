@@ -104,7 +104,7 @@ class BackendPreview extends Backend
 		else
 		{
 			$event = new PreviewUrlConvertEvent();
-			System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CONVERT, $event);
+			System::getContainer()->get('event_dispatcher')->dispatch($event, ContaoCoreEvents::PREVIEW_URL_CONVERT);
 			$strUrl = $event->getUrl();
 		}
 

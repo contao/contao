@@ -41,7 +41,7 @@
         },
         "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin",
         "symfony": {
-            "require": "^4.2"
+            "require": "^4.3"
         }
     },
     "autoload": {

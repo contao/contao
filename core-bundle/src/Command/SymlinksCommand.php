@@ -196,7 +196,7 @@ class SymlinksCommand extends Command
     {
         $event = new GenerateSymlinksEvent();
 
-        $this->eventDispatcher->dispatch(ContaoCoreEvents::GENERATE_SYMLINKS, $event);
+        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::GENERATE_SYMLINKS);
 
         foreach ($event->getSymlinks() as $target => $link) {
             $this->symlink($target, $link);

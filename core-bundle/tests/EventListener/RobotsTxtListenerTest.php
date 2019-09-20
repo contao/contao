@@ -26,11 +26,13 @@ class RobotsTxtListenerTest extends TestCase
      */
     public function testRobotsTxt(string $providedRobotsTxt, string $expectedRobotsTxt): void
     {
+        /** @var PageModel $rootPage */
         $rootPage = $this->mockClassWithProperties(PageModel::class);
         $rootPage->id = 42;
         $rootPage->fallback = '1';
         $rootPage->dns = 'www.foobar.com';
 
+        /** @var PageModel $otherRootPage */
         $otherRootPage = $this->mockClassWithProperties(PageModel::class);
         $otherRootPage->id = 99;
         $otherRootPage->fallback = '';

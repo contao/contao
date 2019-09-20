@@ -17,7 +17,7 @@ use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Contao\CoreBundle\Slug\ValidCharacters;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ValidCharactersTest extends TestCase
 {
@@ -28,7 +28,6 @@ class ValidCharactersTest extends TestCase
             ->expects($this->once())
             ->method('dispatch')
             ->with(
-                ContaoCoreEvents::SLUG_VALID_CHARACTERS,
                 $this->callback(
                     function (SlugValidCharactersEvent $event): bool {
                         $this->assertArrayHasKey('\pN\p{Ll}', $event->getOptions());
@@ -38,7 +37,8 @@ class ValidCharactersTest extends TestCase
 
                         return true;
                     }
-                )
+                ),
+                ContaoCoreEvents::SLUG_VALID_CHARACTERS
             )
         ;
 

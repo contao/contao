@@ -15,10 +15,13 @@ namespace Contao\CoreBundle\Translation;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
 use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Translation\Translator as BaseTranslator;
 use Symfony\Component\Translation\TranslatorBagInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class Translator implements TranslatorInterface, TranslatorBagInterface
+class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface, LegacyTranslatorInterface
 {
     // Reserved translation domains for the Contao bundles
     private const CONTAO_BUNDLES = [
@@ -33,7 +36,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     ];
 
     /**
-     * @var TranslatorInterface|TranslatorBagInterface
+     * @var BaseTranslator
      */
     private $translator;
 
@@ -42,7 +45,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
      */
     private $framework;
 
-    public function __construct(TranslatorInterface $translator, ContaoFramework $framework)
+    public function __construct(BaseTranslator $translator, ContaoFramework $framework)
     {
         $this->translator = $translator;
         $this->framework = $framework;
@@ -92,9 +95,9 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     /**
      * {@inheritdoc}
      */
-    public function setLocale($locale): ?string
+    public function setLocale($locale): void
     {
-        return $this->translator->setLocale($locale);
+        $this->translator->setLocale($locale);
     }
 
     /**

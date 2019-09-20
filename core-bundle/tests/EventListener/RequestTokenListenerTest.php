@@ -20,7 +20,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class RequestTokenListenerTest extends TestCase
@@ -103,7 +103,7 @@ class RequestTokenListenerTest extends TestCase
         $request->setMethod('POST');
         $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
 
-        $event = $this->createMock(GetResponseEvent::class);
+        $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
@@ -132,7 +132,7 @@ class RequestTokenListenerTest extends TestCase
         $request->attributes->set('_token_check', true);
         $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
 
-        $event = $this->createMock(GetResponseEvent::class);
+        $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
@@ -162,7 +162,7 @@ class RequestTokenListenerTest extends TestCase
         $request->attributes->set('_token_check', true);
         $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
 
-        $event = $this->createMock(GetResponseEvent::class);
+        $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
@@ -190,7 +190,7 @@ class RequestTokenListenerTest extends TestCase
         $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
         $request->headers->set('X-Requested-With', 'XMLHttpRequest');
 
-        $event = $this->createMock(GetResponseEvent::class);
+        $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
@@ -217,7 +217,7 @@ class RequestTokenListenerTest extends TestCase
         $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
         $request->attributes->set('_token_check', false);
 
-        $event = $this->createMock(GetResponseEvent::class);
+        $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
@@ -249,7 +249,7 @@ class RequestTokenListenerTest extends TestCase
         $request->setMethod('POST');
         $request->cookies = new ParameterBag(['unrelated-cookie' => 'to-activate-csrf']);
 
-        $event = $this->createMock(GetResponseEvent::class);
+        $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
@@ -273,7 +273,7 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $event = $this->createMock(GetResponseEvent::class);
+        $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')

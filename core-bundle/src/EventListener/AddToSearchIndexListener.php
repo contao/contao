@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Frontend;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
 class AddToSearchIndexListener
 {
@@ -38,7 +38,7 @@ class AddToSearchIndexListener
     /**
      * Checks if the request can be indexed and forwards it accordingly.
      */
-    public function onKernelTerminate(PostResponseEvent $event): void
+    public function onKernelTerminate(TerminateEvent $event): void
     {
         if (!$this->framework->isInitialized()) {
             return;

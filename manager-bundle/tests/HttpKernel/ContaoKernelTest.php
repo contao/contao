@@ -228,7 +228,6 @@ class ContaoKernelTest extends ContaoTestCase
         $kernel = $this->getKernel($this->getTempDir());
         $cache = $kernel->getHttpCache();
 
-        $this->assertInstanceOf(ContaoCache::class, $cache);
         $this->assertSame($cache, $kernel->getHttpCache());
     }
 

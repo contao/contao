@@ -28,6 +28,24 @@ class LockedException extends BaseLockedException
         $this->lockedSeconds = $lockedSeconds;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function __serialize(): array
+    {
+        return [$this->lockedSeconds, parent::__serialize()];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __unserialize(array $data): void
+    {
+        [$this->lockedSeconds, $parentData] = $data;
+
+        parent::__unserialize($parentData);
+    }
+
     public function getLockedSeconds(): int
     {
         return $this->lockedSeconds;
@@ -36,23 +54,5 @@ class LockedException extends BaseLockedException
     public function getLockedMinutes(): int
     {
         return (int) ceil($this->lockedSeconds / 60);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize()
-    {
-        return serialize([$this->lockedSeconds, parent::serialize()]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($str): void
-    {
-        [$this->lockedSeconds, $parentData] = unserialize($str, ['allowed_classes' => true]);
-
-        parent::unserialize($parentData);
     }
 }
