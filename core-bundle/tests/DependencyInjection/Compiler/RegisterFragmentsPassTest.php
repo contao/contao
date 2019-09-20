@@ -12,8 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
+use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
+use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\Compiler\ResolveClassPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -35,7 +38,10 @@ class RegisterFragmentsPassTest extends TestCase
 
         (new ResolveClassPass())->process($container);
 
-        $pass = new RegisterFragmentsPass();
+        $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
+        $pass->process($container);
+
+        $pass = new RegisterFragmentsPass(FrontendModuleReference::TAG_NAME);
         $pass->process($container);
 
         $methodCalls = $container->getDefinition('contao.fragment.registry')->getMethodCalls();
@@ -44,11 +50,6 @@ class RegisterFragmentsPassTest extends TestCase
         $this->assertSame('contao.content_element.text', $methodCalls[0][1][0]);
         $this->assertRegExp('/^contao.fragment._config_/', (string) $methodCalls[0][1][1]);
 
-        $arguments = $container->getDefinition((string) $methodCalls[0][1][1])->getArguments();
-
-        $this->assertSame('app.fragments.content_controller', $arguments[0]);
-        $this->assertSame('forward', $arguments[1]);
-
         $this->assertSame('add', $methodCalls[1][0]);
         $this->assertSame('contao.frontend_module.two_factor', $methodCalls[1][1][0]);
         $this->assertRegExp('/^contao.fragment._config_/', (string) $methodCalls[1][1][1]);
@@ -56,6 +57,11 @@ class RegisterFragmentsPassTest extends TestCase
         $this->assertSame('add', $methodCalls[2][0]);
         $this->assertSame('contao.frontend_module.login', $methodCalls[2][1][0]);
         $this->assertRegExp('/^contao.fragment._config_/', (string) $methodCalls[2][1][1]);
+
+        $arguments = $container->getDefinition((string) $methodCalls[1][1][1])->getArguments();
+
+        $this->assertSame(TwoFactorController::class, $arguments[0]);
+        $this->assertSame('forward', $arguments[1]);
 
         $arguments = $container->getDefinition((string) $methodCalls[2][1][1])->getArguments();
 
@@ -78,8 +84,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
         (new ResolveClassPass())->process($container);
-
-        $pass = new RegisterFragmentsPass();
+        $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
 
         $methodCalls = $container->getDefinition('contao.fragment.registry')->getMethodCalls();
@@ -107,7 +112,7 @@ class RegisterFragmentsPassTest extends TestCase
 
         $this->assertFalse($container->findDefinition('app.fragments.content_controller')->isPublic());
 
-        $pass = new RegisterFragmentsPass();
+        $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
 
         $this->assertTrue($container->findDefinition('app.fragments.content_controller')->isPublic());
@@ -123,7 +128,7 @@ class RegisterFragmentsPassTest extends TestCase
 
         (new ResolveClassPass())->process($container);
 
-        $pass = new RegisterFragmentsPass();
+        $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
 
         $arguments = $container->getDefinition('contao.fragment.pre_handlers')->getArguments();
@@ -147,7 +152,7 @@ class RegisterFragmentsPassTest extends TestCase
 
         (new ResolveClassPass())->process($container);
 
-        $pass = new RegisterFragmentsPass();
+        $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
 
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('Missing service definition for "contao.fragment.pre_handlers"');
@@ -163,7 +168,7 @@ class RegisterFragmentsPassTest extends TestCase
             ->method('findDefinition')
         ;
 
-        $pass = new RegisterFragmentsPass();
+        $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
     }
 }
