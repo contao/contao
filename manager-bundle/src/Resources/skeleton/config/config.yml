@@ -11,7 +11,7 @@ parameters:
 framework:
     esi: { enabled: true }
     translator: { fallbacks: ['%locale%'] }
-    secret: '%secret%'
+    secret: '%env(APP_SECRET)%'
     router:
         resource: 'contao_manager.routing_loader::loadFromPlugins'
         type: service
@@ -40,11 +40,7 @@ doctrine:
         connections:
             default:
                 driver: pdo_mysql
-                host: '%database_host%'
-                port: '%database_port%'
-                user: '%database_user%'
-                password: '%database_password%'
-                dbname: '%database_name%'
+                url: '%env(DATABASE_URL)%'
                 charset: utf8mb4
                 default_table_options:
                     charset: utf8mb4
@@ -90,12 +86,7 @@ swiftmailer:
     default_mailer: default
     mailers:
         default:
-            transport: '%mailer_transport%'
-            host: '%mailer_host%'
-            username: '%mailer_user%'
-            password: '%mailer_password%'
-            port: '%mailer_port%'
-            encryption: '%mailer_encryption%'
+            url: '%env(MAILER_URL)%'
 
 # Lexik configuration
 lexik_maintenance:

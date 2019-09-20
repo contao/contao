@@ -3,14 +3,12 @@ imports:
 
 parameters:
     locale: en
-    mailer_transport: sendmail
-    secret: f3854d3b1e3560b1b2db8125fa343f853fefab4d
 
 framework:
     test: ~
     esi: { enabled: true }
     translator: { fallbacks: ['%locale%'] }
-    secret: '%secret%'
+    secret: '%env(APP_SECRET)%'
     router:
         resource: '%kernel.project_dir%/../../src/Resources/config/routing.yml'
         strict_requirements: '%kernel.debug%'
@@ -30,10 +28,7 @@ doctrine:
         connections:
             default:
                 driver: pdo_mysql
-                host: '%env(DB_HOST)%'
-                user: '%env(DB_USER)%'
-                password: '%env(DB_PASS)%'
-                dbname: '%env(DB_NAME)%'
+                url: '%env(DATABASE_URL)%'
                 charset: utf8mb4
                 default_table_options:
                     charset: utf8mb4

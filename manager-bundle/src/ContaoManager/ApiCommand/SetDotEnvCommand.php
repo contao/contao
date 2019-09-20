@@ -13,11 +13,11 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\ContaoManager\ApiCommand;
 
 use Contao\ManagerBundle\Api\Application;
+use Contao\ManagerBundle\Dotenv\DotenvDumper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 class SetDotEnvCommand extends Command
 {
@@ -53,29 +53,8 @@ class SetDotEnvCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $fs = new Filesystem();
-        $path = $this->projectDir.'/.env';
-        $content = '';
-
-        $key = $input->getArgument('key');
-        $value = $input->getArgument('value');
-
-        if ($fs->exists($path)) {
-            $lines = file($path, FILE_IGNORE_NEW_LINES);
-
-            if (false === $lines) {
-                throw new \RuntimeException(sprintf('Could not read "%s" file.', $path));
-            }
-
-            foreach ($lines as $line) {
-                if (0 === strpos($line, $key.'=')) {
-                    continue;
-                }
-
-                $content .= $line."\n";
-            }
-        }
-
-        $fs->dumpFile($path, $content.$key."='".str_replace("'", "'\\''", $value)."'\n");
+        $dotenv = new DotenvDumper($this->projectDir.'/.env');
+        $dotenv->setParameter($input->getArgument('key'), $input->getArgument('value'));
+        $dotenv->dump();
     }
 }
