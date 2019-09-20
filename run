@@ -16,7 +16,11 @@ function phpunit() {
   )
 
   for bundle in ${bundles[*]}; do
-    vendor/bin/phpunit -c "$bundle" "$@"
+    if [[ $DEPRECATIONS ]]; then
+      vendor/bin/phpunit -c "$bundle" "$@"
+    else
+      SYMFONY_DEPRECATIONS_HELPER='max[self]=0&verbose=0' vendor/bin/phpunit -c "$bundle" "$@"
+    fi
   done
 }
 
@@ -60,7 +64,7 @@ function composer() {
 
 function usage() {
   cat <<HEREDOC
-Usage: ./run [task]
+Usage: ./run [task] [--show-deprecations]
   phpunit       Run the unit tests
   functional    Run the functional tests
   php-cs-fixer  Run the PHP coding style fixer
@@ -69,17 +73,28 @@ Usage: ./run [task]
 HEREDOC
 }
 
+ARGS=()
+DEPRECATIONS=''
+
+for var in "${@:2}"; do
+  if [[ $var = '--show-deprecations' ]]; then
+    DEPRECATIONS=1
+  else
+    ARGS=("$var" "${ARGS[@]}")
+  fi
+done
+
 case "$1" in
   phpunit)
-    phpunit "${@:2}"
+    phpunit "${ARGS[@]}"
     exit 0
   ;;
   functional)
-    functional "${@:2}"
+    functional "${ARGS[@]}"
     exit 0
   ;;
   php-cs-fixer)
-    php-cs-fixer "${@:2}"
+    php-cs-fixer "${ARGS[@]}"
     exit 0
   ;;
   phpstan)
@@ -91,9 +106,9 @@ case "$1" in
     exit 0
   ;;
   all)
-    phpunit "${@:2}"
-    functional "${@:2}"
-    php-cs-fixer "${@:2}"
+    phpunit "${ARGS[@]}"
+    functional "${ARGS[@]}"
+    php-cs-fixer "${ARGS[@]}"
     phpstan
     composer
     exit 0
