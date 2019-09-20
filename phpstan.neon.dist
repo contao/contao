@@ -21,8 +21,11 @@ parameters:
         - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter::missingMethod\(\)\.#'
 
         # Ignore backwards compatibility layers when preferring lowest dependencies
-        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
+
+        # Ignore configuration tree errors
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::addDefaultsIfNotSet\(\)\.#'
 
     reportUnmatchedIgnoredErrors: false
     inferPrivatePropertyTypeFromConstructor: true

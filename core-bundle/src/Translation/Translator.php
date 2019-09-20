@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Translation;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
 use Symfony\Component\Translation\MessageCatalogueInterface;
-use Symfony\Component\Translation\Translator as BaseTranslator;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
@@ -36,7 +35,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     ];
 
     /**
-     * @var BaseTranslator
+     * @var TranslatorInterface|TranslatorBagInterface|LegacyTranslatorInterface
      */
     private $translator;
 
@@ -45,7 +44,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
      */
     private $framework;
 
-    public function __construct(BaseTranslator $translator, ContaoFramework $framework)
+    public function __construct(TranslatorInterface $translator, ContaoFramework $framework)
     {
         $this->translator = $translator;
         $this->framework = $framework;
