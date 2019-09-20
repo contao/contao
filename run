@@ -30,7 +30,11 @@ function functional() {
     exit 1
   fi
 
-  vendor/bin/phpunit -c core-bundle --testsuite=functional  "$@"
+  if [[ $DEPRECATIONS ]]; then
+    vendor/bin/phpunit -c core-bundle --testsuite=functional  "$@"
+  else
+    SYMFONY_DEPRECATIONS_HELPER='max[self]=0&verbose=0' vendor/bin/phpunit -c core-bundle --testsuite=functional  "$@"
+  fi
 }
 
 function php-cs-fixer() {
