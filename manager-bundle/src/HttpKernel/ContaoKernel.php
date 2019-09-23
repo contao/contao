@@ -400,9 +400,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             foreach ($env as $k => $v) {
                 $_ENV[$k] = $_ENV[$k] ?? (isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v);
             }
-        } elseif (file_exists($projectDir.'/.env')) {
-            $dotEnv = new Dotenv(false);
-            $dotEnv->loadEnv($projectDir.'/.env', $varName, 'prod', []);
+        } else {
+            (new Dotenv(false))->loadEnv($projectDir.'/.env', $varName, 'prod', []);
         }
+
+        $_SERVER += $_ENV;
+        $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null) ?: 'prod';
     }
 }
