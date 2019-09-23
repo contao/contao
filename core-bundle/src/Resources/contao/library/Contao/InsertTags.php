@@ -771,7 +771,6 @@ class InsertTags extends Controller
 					$strFile = $elements[1];
 					$mode = '';
 					$size = null;
-					$config = null;
 					$strTemplate = 'picture_default';
 
 					// Take arguments
@@ -813,11 +812,7 @@ class InsertTags extends Controller
 									break;
 
 								case 'size':
-									$size = (int) $value;
-									break;
-
-								case 'config':
-									$config = $value;
+									$size = is_numeric($value) ? (int) $value : $value;
 									break;
 
 								case 'template':
@@ -907,7 +902,7 @@ class InsertTags extends Controller
 						else
 						{
 							$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-							$picture = $container->get('contao.image.picture_factory')->create($container->getParameter('kernel.project_dir') . '/' . $strFile, $size ?? $config);
+							$picture = $container->get('contao.image.picture_factory')->create($container->getParameter('kernel.project_dir') . '/' . $strFile, $size);
 
 							$picture = array
 							(
