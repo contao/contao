@@ -83,6 +83,9 @@ class DotenvDumper
         $this->filesystem->dumpFile($this->dotenvFile, implode("\n", $parameters)."\n");
     }
 
+    /**
+     * @return string|int|bool
+     */
     private function escape($value)
     {
         if (!\is_string($value) || !preg_match('/[$ "\']/', $value)) {

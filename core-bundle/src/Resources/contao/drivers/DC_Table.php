@@ -602,7 +602,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				$separate = true;
-				$index = 1;
 
 				// Add the table name
 				$return .= '
