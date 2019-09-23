@@ -144,7 +144,7 @@
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/event-manager": "^1.0",
         "friendsofphp/php-cs-fixer": "^2.14",
-        "monolog/monolog": "^1.22",
+        "monolog/monolog": "^1.24",
         "php-coveralls/php-coveralls": "^2.1",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.11",
