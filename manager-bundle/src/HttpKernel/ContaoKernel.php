@@ -405,6 +405,5 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         $_SERVER += $_ENV;
-        $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null) ?: 'prod';
     }
 }
