@@ -399,7 +399,6 @@ abstract class System
 
 		// Prepare the XLIFF loader
 		$xlfLoader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), true);
-
 		$strCacheDir = static::getContainer()->getParameter('kernel.cache_dir');
 
 		// Load the language(s)

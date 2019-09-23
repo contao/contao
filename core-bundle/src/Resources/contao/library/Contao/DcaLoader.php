@@ -122,6 +122,11 @@ class DcaLoader extends Controller
 	 */
 	private function addDefaultLabels()
 	{
+		if (!isset($GLOBALS['TL_LANG'][$this->strTable]))
+		{
+			System::loadLanguageFile($this->strTable);
+		}
+
 		// Operations
 		foreach (array('global_operations', 'operations') as $key)
 		{
