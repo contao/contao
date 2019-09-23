@@ -148,7 +148,7 @@ security:
                 prepare_on_access_denied: true
 
             remember_me:
-                secret: '%env(APP_SECRET)%'
+                secret: '%kernel.secret%'
                 remember_me_parameter: autologin
 
             logout:

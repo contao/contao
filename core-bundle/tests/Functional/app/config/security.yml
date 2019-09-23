@@ -73,7 +73,7 @@ security:
                 auth_code_parameter_name: verify
 
             remember_me:
-                secret: '%env(APP_SECRET)%'
+                secret: '%kernel.secret%'
                 remember_me_parameter: autologin
 
             logout:
