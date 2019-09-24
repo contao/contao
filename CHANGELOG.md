@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Fix the pagination menu in the versions overview (see #752).
  * Reset unique fields when restoring a version (see #698).
 
 ## 4.4.43 (2019-09-05)

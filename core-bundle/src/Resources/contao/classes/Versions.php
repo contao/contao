@@ -666,7 +666,7 @@ class Versions extends \Controller
 		$objDatabase = \Database::getInstance();
 
 		// Get the total number of versions
-		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE version>1" . (!$objUser->isAdmin ? " AND userid=?" : ""))
+		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version" . (!$objUser->isAdmin ? " WHERE userid=?" : ""))
 								->execute($objUser->id);
 
 		$intLast   = ceil($objTotal->count / 30);
