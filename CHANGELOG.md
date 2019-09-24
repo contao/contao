@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Show only the active columns in the module wizard (see #765).
  * Fix the pagination menu in the versions overview (see #752).
  * Reset unique fields when restoring a version (see #698).
 

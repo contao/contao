@@ -31,6 +31,24 @@ class ModuleWizard extends \Widget
 	protected $strTemplate = 'be_widget';
 
 	/**
+	 * Check if there is a module without a column
+	 */
+	public function validate()
+	{
+		$varValue = $this->getPost($this->strName);
+
+		foreach ($varValue as $v)
+		{
+			if (empty($v['col']))
+			{
+				$this->addError($GLOBALS['TL_LANG']['ERR']['moduleWithoutColumn']);
+			}
+		}
+
+		parent::validate();
+	}
+
+	/**
 	 * Generate the widget and return it as string
 	 *
 	 * @return string
@@ -66,8 +84,27 @@ class ModuleWizard extends \Widget
 								 ->limit(1)
 								 ->execute($this->currentRecord);
 
-		// Show all columns and filter in PageRegular (see #3273)
-		$cols = array('header', 'left', 'right', 'main', 'footer');
+		$cols = array('main');
+
+		if (\in_array($objRow->rows, array('2rwh', '3rw')))
+		{
+			$cols[] = 'header';
+		}
+
+		if (\in_array($objRow->cols, array('2cll', '3cl')))
+		{
+			$cols[] = 'left';
+		}
+
+		if (\in_array($objRow->cols, array('2clr', '3cl')))
+		{
+			$cols[] = 'right';
+		}
+
+		if (\in_array($objRow->rows, array('2rwf', '3rw')))
+		{
+			$cols[] = 'footer';
+		}
 
 		// Add custom layout sections
 		if ($objRow->sections != '')
@@ -104,7 +141,7 @@ class ModuleWizard extends \Widget
 			$arrCols = array();
 
 			// Initialize the sorting order
-			foreach ($cols as $col)
+			foreach (array_keys($cols) as $col)
 			{
 				$arrCols[$col] = array();
 			}
@@ -148,7 +185,7 @@ class ModuleWizard extends \Widget
   <tr>
     <td><select name="'.$this->strId.'['.$i.'][mod]" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()" onchange="Backend.updateModuleLink(this)">'.$options.'</select></td>';
 
-			$options = '';
+			$options = '<option value="">-</option>';
 
 			// Add columns
 			foreach ($cols as $k=>$v)
