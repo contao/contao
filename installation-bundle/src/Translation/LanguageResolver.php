@@ -82,7 +82,7 @@ class LanguageResolver
             if (isset($chunks[1])) {
                 $locale = $chunks[0].'-'.strtoupper($chunks[1]);
 
-                if (preg_match('/^[a-z]{2}(\-[A-Z]{2})?$/', $locale)) {
+                if (preg_match('/^[a-z]{2}(-[A-Z]{2})?$/', $locale)) {
                     $locales[] = $locale;
                 }
             }

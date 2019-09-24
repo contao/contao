@@ -147,7 +147,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $config = $this->framework->getAdapter(Config::class);
 
         $parameters['alias'] = preg_replace_callback(
-            '/\{([^\}]+)\}/',
+            '/{([^}]+)}/',
             function ($matches) use ($alias, &$parameters, $autoItems, &$hasAutoItem, $config) {
                 $param = $matches[1];
 

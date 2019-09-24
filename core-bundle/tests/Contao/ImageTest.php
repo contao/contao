@@ -823,8 +823,6 @@ class ImageTest extends TestCase
 
                         case 'width':
                         case 'viewWidth':
-                            return 100;
-
                         case 'height':
                         case 'viewHeight':
                             return 100;
@@ -959,8 +957,6 @@ class ImageTest extends TestCase
                             return 'jpg';
 
                         case 'path':
-                            return $arguments[2];
-
                         case 'filename':
                             return $arguments[2];
 
@@ -969,8 +965,6 @@ class ImageTest extends TestCase
 
                         case 'width':
                         case 'viewWidth':
-                            return 200;
-
                         case 'height':
                         case 'viewHeight':
                             return 200;
