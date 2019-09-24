@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Hide the "generate aliases" button if the alias field has not been enabled (see #771).
  * Show only the active columns in the module wizard (see #765).
  * Fix the pagination menu in the versions overview (see #752).
  * Reset unique fields when restoring a version (see #698).

@@ -1639,6 +1639,11 @@ class tl_page extends Backend
 	 */
 	public function addAliasButton($arrButtons, DataContainer $dc)
 	{
+		if (!$this->User->hasAccess('tl_page::alias', 'alexf'))
+		{
+			return $arrButtons;
+		}
+
 		// Generate the aliases
 		if (Input::post('FORM_SUBMIT') == 'tl_select' && isset($_POST['alias']))
 		{
