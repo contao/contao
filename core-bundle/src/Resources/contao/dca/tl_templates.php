@@ -456,6 +456,8 @@ class tl_templates extends Backend
 			}
 		}
 
+		ksort($arrComparable);
+
 		/** @var BackendTemplate|object $objTemplate */
 		$objTemplate = new BackendTemplate('be_diff');
 
