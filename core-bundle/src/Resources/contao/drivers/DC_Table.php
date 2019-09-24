@@ -468,7 +468,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						}
 					}
 
-					$row[$i] = implode('<br>', $value);
+					$row[$i] = implode(', ', $value);
 				}
 				else
 				{
@@ -499,7 +499,7 @@ class DC_Table extends \DataContainer implements \listable, \editable
 						}
 					}
 
-					$row[$i] = implode('<br>', $value);
+					$row[$i] = implode(', ', $value);
 				}
 			}
 			elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] == 'date')
