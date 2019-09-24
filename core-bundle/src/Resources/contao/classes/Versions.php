@@ -331,10 +331,10 @@ class Versions extends \Controller
 				continue;
 			}
 
-			$objResult = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($k) . "=?")
-										->execute($v);
+			$objResult = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($k) . "=? AND id!=?")
+										->execute($v, $this->intPid);
 
-			if ($objResult->cnt > 1)
+			if ($objResult->cnt > 0)
 			{
 				$data[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql']);
 			}
