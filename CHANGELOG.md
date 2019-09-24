@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Reset unique fields when restoring a version (see #698).
+
 ## 4.4.43 (2019-09-05)
 
  * Handle renamed files in the version overview (see #671).
