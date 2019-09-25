@@ -812,7 +812,7 @@ class InsertTags extends Controller
 									break;
 
 								case 'size':
-									$size = (int) $value;
+									$size = is_numeric($value) ? (int) $value : $value;
 									break;
 
 								case 'template':
