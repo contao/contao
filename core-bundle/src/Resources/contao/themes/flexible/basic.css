@@ -275,6 +275,9 @@ fieldset.checkbox_container,fieldset.radio_container {
 .tl_text_2:last-child,.tl_text_3:last-child,.tl_text_4:last-child,.tl_text_trbl:last-child {
 	margin-right:0;
 }
+.tl_text_field .tl_text_2 {
+	width:49.5%;
+}
 .tl_imageSize_0 {
 	margin-left:1%;
 }
