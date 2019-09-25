@@ -67,14 +67,14 @@ class FormTextField extends Widget
 		switch ($strKey)
 		{
 			case 'minlength':
-				if ($varValue > 0)
+				if ($varValue > 0 && $this->rgxp != 'digit')
 				{
 					$this->arrAttributes['minlength'] =  $varValue;
 				}
 				break;
 
 			case 'maxlength':
-				if ($varValue > 0)
+				if ($varValue > 0 && $this->rgxp != 'digit')
 				{
 					$this->arrAttributes['maxlength'] =  $varValue;
 				}
@@ -94,12 +94,18 @@ class FormTextField extends Widget
 
 			case 'min':
 			case 'minval':
-				$this->arrAttributes['min'] = $varValue;
+				if ($this->rgxp == 'digit')
+				{
+					$this->arrAttributes['min'] = $varValue;
+				}
 				break;
 
 			case 'max':
 			case 'maxval':
-				$this->arrAttributes['max'] = $varValue;
+				if ($this->rgxp == 'digit')
+				{
+					$this->arrAttributes['max'] = $varValue;
+				}
 				break;
 
 			case 'step':
