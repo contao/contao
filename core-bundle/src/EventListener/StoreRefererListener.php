@@ -158,7 +158,7 @@ class StoreRefererListener
 
     private function canModifyFrontendSession(Request $request, array $referer = null): bool
     {
-        return (null !== $referer)
+        return null !== $referer
             && !$request->query->has('pdf')
             && !$request->query->has('file')
             && !$request->query->has('id')

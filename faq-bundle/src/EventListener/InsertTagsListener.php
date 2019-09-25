@@ -74,7 +74,7 @@ class InsertTagsListener
         /** @var PageModel $jumpTo */
         if (
             !($category = $faq->getRelated('pid')) instanceof FaqCategoryModel
-            || !(($jumpTo = $category->getRelated('jumpTo')) instanceof PageModel)
+            || !($jumpTo = $category->getRelated('jumpTo')) instanceof PageModel
         ) {
             return false;
         }

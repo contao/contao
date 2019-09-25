@@ -50,7 +50,7 @@ class ContaoTableProcessor implements ProcessorInterface
      */
     public function __invoke(array $record): array
     {
-        if (!isset($record['context']['contao']) || !($record['context']['contao'] instanceof ContaoContext)) {
+        if (!isset($record['context']['contao']) || !$record['context']['contao'] instanceof ContaoContext) {
             return $record;
         }
 

@@ -341,7 +341,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects(
-                ($expectLogging && Kernel::VERSION_ID < 40100)
+                $expectLogging && Kernel::VERSION_ID < 40100
                     ? $this->once()
                     : $this->never()
             )

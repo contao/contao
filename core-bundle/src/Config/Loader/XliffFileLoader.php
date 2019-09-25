@@ -40,7 +40,7 @@ class XliffFileLoader extends Loader
      */
     public function load($file, $type = null): string
     {
-        return $this->convertXlfToPhp((string) $file, ($type ?: 'en'));
+        return $this->convertXlfToPhp((string) $file, $type ?: 'en');
     }
 
     /**
