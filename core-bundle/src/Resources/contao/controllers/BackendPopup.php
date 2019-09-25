@@ -103,12 +103,9 @@ class BackendPopup extends Backend
 		$objTemplate = new BackendTemplate('be_popup');
 
 		// Add the resource (see #6880)
-		if (($objModel = FilesModel::findByPath($this->strFile)) === null)
+		if (($objModel = FilesModel::findByPath($this->strFile)) === null && Dbafs::shouldBeSynchronized($this->strFile))
 		{
-			if (Dbafs::shouldBeSynchronized($this->strFile))
-			{
-				$objModel = Dbafs::addResource($this->strFile);
-			}
+			$objModel = Dbafs::addResource($this->strFile);
 		}
 
 		if ($objModel !== null)

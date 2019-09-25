@@ -64,7 +64,7 @@ class DcaLoader extends Controller
 	public function load($blnNoCache=false)
 	{
 		// Return if the data has been loaded already
-		if (isset($GLOBALS['loadDataContainer'][$this->strTable]) && !$blnNoCache)
+		if (!$blnNoCache && isset($GLOBALS['loadDataContainer'][$this->strTable]))
 		{
 			return;
 		}

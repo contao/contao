@@ -161,12 +161,9 @@ class PageSelector extends Widget
 		$strNode = $objSessionBag->get('tl_page_picker');
 
 		// Unset the node if it is not within the predefined node set (see #5899)
-		if ($strNode > 0 && \is_array($this->rootNodes))
+		if ($strNode > 0 && \is_array($this->rootNodes) && !\in_array($strNode, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))
 		{
-			if (!\in_array($strNode, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))
-			{
-				$objSessionBag->remove('tl_page_picker');
-			}
+			$objSessionBag->remove('tl_page_picker');
 		}
 
 		// Add the breadcrumb menu

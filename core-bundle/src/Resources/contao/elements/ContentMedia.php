@@ -95,12 +95,9 @@ class ContentMedia extends ContentElement
 		$this->Template->poster = false;
 
 		// Optional poster
-		if ($this->posterSRC != '')
+		if ($this->posterSRC != '' && ($objFile = FilesModel::findByUuid($this->posterSRC)) !== null)
 		{
-			if (($objFile = FilesModel::findByUuid($this->posterSRC)) !== null)
-			{
-				$this->Template->poster = $objFile->path;
-			}
+			$this->Template->poster = $objFile->path;
 		}
 
 		$objFiles = $this->objFiles;

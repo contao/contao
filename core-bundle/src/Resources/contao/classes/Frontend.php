@@ -613,17 +613,17 @@ abstract class Frontend extends Controller
 		}
 
 		// Index page if searching is allowed and there is no back end user
-		if (Config::get('enableSearch') && $objResponse->getStatusCode() == 200 && !BE_USER_LOGGED_IN && !$objPage->noSearch)
+		if (!BE_USER_LOGGED_IN && !$objPage->noSearch && Config::get('enableSearch') && $objResponse->getStatusCode() == 200)
 		{
 			// Index protected pages if enabled
-			if (Config::get('indexProtected') || (!FE_USER_LOGGED_IN && !$objPage->protected))
+			if ((!FE_USER_LOGGED_IN && !$objPage->protected) || Config::get('indexProtected'))
 			{
 				$blnIndex = true;
 
 				// Do not index the page if certain parameters are set
 				foreach (array_keys($_GET) as $key)
 				{
-					if (\in_array($key, $GLOBALS['TL_NOINDEX_KEYS']) || strncmp($key, 'page_', 5) === 0)
+					if (strncmp($key, 'page_', 5) === 0 || \in_array($key, $GLOBALS['TL_NOINDEX_KEYS']))
 					{
 						$blnIndex = false;
 						break;

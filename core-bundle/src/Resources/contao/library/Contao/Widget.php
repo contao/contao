@@ -1305,7 +1305,7 @@ abstract class Widget extends Controller
 		}
 
 		// Add Ajax event
-		if ($arrData['inputType'] == 'checkbox' && \is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && \array_key_exists($strField, $GLOBALS['TL_DCA'][$strTable]['subpalettes']) && $arrData['eval']['submitOnChange'])
+		if ($arrData['inputType'] == 'checkbox' && $arrData['eval']['submitOnChange'] && \is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && \array_key_exists($strField, $GLOBALS['TL_DCA'][$strTable]['subpalettes']))
 		{
 			$arrAttributes['onclick'] = "AjaxRequest.toggleSubpalette(this, 'sub_".$strName."', '".$strField."')";
 		}
@@ -1379,12 +1379,12 @@ abstract class Widget extends Controller
 
 		if (\is_array($arrAttributes['sql']) && !isset($arrAttributes['sql']['columnDefinition']))
 		{
-			if (isset($arrAttributes['sql']['length']) && !isset($arrAttributes['maxlength']))
+			if (!isset($arrAttributes['maxlength']) && isset($arrAttributes['sql']['length']))
 			{
 				$arrAttributes['maxlength'] = $arrAttributes['sql']['length'];
 			}
 
-			if (isset($arrAttributes['sql']['customSchemaOptions']['unique']) && !isset($arrAttributes['unique']))
+			if (!isset($arrAttributes['unique']) && isset($arrAttributes['sql']['customSchemaOptions']['unique']))
 			{
 				$arrAttributes['unique'] = $arrAttributes['sql']['customSchemaOptions']['unique'];
 			}

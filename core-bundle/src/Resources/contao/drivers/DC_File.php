@@ -137,7 +137,7 @@ class DC_File extends DataContainer implements \editable
 						$legends[$k] = substr($vv, 1, -1);
 						unset($boxes[$k][$kk]);
 					}
-					elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['exclude'] || !\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]))
+					elseif (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]) || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['exclude'])
 					{
 						unset($boxes[$k][$kk]);
 					}
@@ -311,7 +311,7 @@ class DC_File extends DataContainer implements \editable
 <input type="hidden" name="FORM_FIELDS[]" value="'.StringUtil::specialchars($this->strPalette).'">' . $return;
 
 		// Reload the page to prevent _POST variables from being sent twice
-		if (Input::post('FORM_SUBMIT') == $this->strTable && !$this->noReload)
+		if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
 		{
 			// Call onsubmit_callback
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback']))
@@ -444,7 +444,7 @@ class DC_File extends DataContainer implements \editable
 		}
 
 		// Save the value if there was no error
-		if ((\strlen($varValue) || !$arrData['eval']['doNotSaveEmpty']) && $strCurrent != $varValue)
+		if ($strCurrent != $varValue && (\strlen($varValue) || !$arrData['eval']['doNotSaveEmpty']))
 		{
 			Config::persist($this->strField, $varValue);
 
@@ -452,7 +452,7 @@ class DC_File extends DataContainer implements \editable
 			$prior = \is_bool(Config::get($this->strField)) ? (Config::get($this->strField) ? 'true' : 'false') : Config::get($this->strField);
 
 			// Add a log entry
-			if (!\is_array(StringUtil::deserialize($prior)) && !\is_array($deserialize))
+			if (!\is_array($deserialize) && !\is_array(StringUtil::deserialize($prior)))
 			{
 				if ($arrData['inputType'] == 'password' || $arrData['inputType'] == 'textStore')
 				{

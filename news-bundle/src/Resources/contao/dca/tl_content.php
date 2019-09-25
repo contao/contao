@@ -73,7 +73,7 @@ class tl_content_news extends Contao\Backend
 			case 'cutAll':
 			case 'copyAll':
 				// Check access to the parent element if a content element is moved
-				if (Contao\Input::get('act') == 'cutAll' || Contao\Input::get('act') == 'copyAll')
+				if (\in_array(Contao\Input::get('act'), array('cutAll', 'copyAll')))
 				{
 					$this->checkAccessToElement(Contao\Input::get('pid'), $root, (Contao\Input::get('mode') == 2));
 				}

@@ -109,20 +109,17 @@ class BackendHelp extends Backend
 						$rows[] = $arrData['reference'][$opt];
 					}
 				}
+				elseif (isset($arrData['reference'][$key]))
+				{
+					$rows[] = $arrData['reference'][$key];
+				}
+				elseif (\is_array($arrData['reference'][$option]))
+				{
+					$rows[] = $arrData['reference'][$option];
+				}
 				else
 				{
-					if (isset($arrData['reference'][$key]))
-					{
-						$rows[] = $arrData['reference'][$key];
-					}
-					elseif (\is_array($arrData['reference'][$option]))
-					{
-						$rows[] = $arrData['reference'][$option];
-					}
-					else
-					{
-						$rows[] = array('headspan', $arrData['reference'][$option]);
-					}
+					$rows[] = array('headspan', $arrData['reference'][$option]);
 				}
 			}
 

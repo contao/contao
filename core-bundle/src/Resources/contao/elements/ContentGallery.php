@@ -291,7 +291,7 @@ class ContentGallery extends ContentElement
 				$key = 'row_' . $rowcount . $class_tr . $class_eo;
 
 				// Empty cell
-				if (!\is_array($images[($i+$j)]) || ($j+$i) >= $limit)
+				if (($j+$i) >= $limit || !\is_array($images[($i+$j)]))
 				{
 					$objCell->colWidth = $colwidth . '%';
 					$objCell->class = 'col_'.$j . $class_td;

@@ -188,7 +188,7 @@ class Image
 	{
 		if ($importantPart !== null)
 		{
-			if (!isset($importantPart['x']) || !isset($importantPart['y']) || !isset($importantPart['width']) || !isset($importantPart['height']))
+			if (!isset($importantPart['x'], $importantPart['y'], $importantPart['width'], $importantPart['height']))
 			{
 				throw new \InvalidArgumentException('Malformed array for setting the important part!');
 			}
@@ -420,9 +420,10 @@ class Image
 		$image = $this->prepareImage();
 		$resizeConfig = $this->prepareResizeConfig();
 
-		if (!System::getContainer()->getParameter('contao.image.bypass_cache')
-			&& $this->getTargetPath()
+		if (
+			$this->getTargetPath()
 			&& !$this->getForceOverride()
+			&& !System::getContainer()->getParameter('contao.image.bypass_cache')
 			&& file_exists($this->strRootDir . '/' . $this->getTargetPath())
 			&& $this->fileObj->mtime <= filemtime($this->strRootDir . '/' . $this->getTargetPath())
 		) {

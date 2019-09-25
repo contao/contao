@@ -146,7 +146,7 @@ class ModuleCalendar extends Events
 		$intNextYm = $nextYear . str_pad($nextMonth, 2, 0, STR_PAD_LEFT);
 
 		// Only generate a link if there are events (see #4160)
-		if (($objMinMax->dateTo !== null && $intNextYm <= date('Ym', max($objMinMax->dateTo, $objMinMax->repeatUntil))) || $intNextYm <= date('Ym'))
+		if ($intNextYm <= date('Ym') || ($objMinMax->dateTo !== null && $intNextYm <= date('Ym', max($objMinMax->dateTo, $objMinMax->repeatUntil))))
 		{
 			$objTemplate->nextHref = $this->strUrl . '?month=' . $intNextYm;
 			$objTemplate->nextTitle = StringUtil::specialchars($lblNext);

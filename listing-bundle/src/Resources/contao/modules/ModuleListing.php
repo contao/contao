@@ -69,7 +69,7 @@ class ModuleListing extends Module
 		}
 
 		// Disable the details page
-		if (Input::get('show') && $this->list_info == '')
+		if ($this->list_info == '' && Input::get('show'))
 		{
 			return '';
 		}

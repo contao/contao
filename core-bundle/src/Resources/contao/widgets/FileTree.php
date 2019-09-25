@@ -260,9 +260,7 @@ class FileTree extends Widget
 					}
 
 					// Show a sortable list of files only
-					else
-					{
-						if ($objFiles->type == 'folder')
+					elseif ($objFiles->type == 'folder')
 						{
 							$objSubfiles = FilesModel::findByPid($objFiles->uuid, array('order' => 'name'));
 
@@ -274,53 +272,46 @@ class FileTree extends Widget
 							while ($objSubfiles->next())
 							{
 								// Skip subfolders
-								if ($objSubfiles->type == 'folder')
-								{
-									continue;
-								}
-
-								$objFile = new File($objSubfiles->path);
-								$strInfo = '<span class="dirname">' . \dirname($objSubfiles->path) . '/</span>' . $objFile->basename . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
-
-								if ($this->isGallery)
-								{
-									// Only show images
-									if ($objFile->isImage)
-									{
-										$arrValues[$objSubfiles->uuid] = $this->getPreviewImage($objFile, $strInfo);
-									}
-								}
-								else
-								{
-									// Only show allowed download types
-									if (\in_array($objFile->extension, $allowedDownload) && !preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
-									{
-										$arrValues[$objSubfiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
-									}
-								}
+							if ($objSubfiles->type == 'folder')
+							{
+								continue;
 							}
-						}
-						else
-						{
-							$objFile = new File($objFiles->path);
-							$strInfo = '<span class="dirname">' . \dirname($objFiles->path) . '/</span>' . $objFile->basename . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
+
+							$objFile = new File($objSubfiles->path);
+							$strInfo = '<span class="dirname">' . \dirname($objSubfiles->path) . '/</span>' . $objFile->basename . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
 
 							if ($this->isGallery)
 							{
 								// Only show images
 								if ($objFile->isImage)
 								{
-									$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $strInfo, 'gimage removable');
+									$arrValues[$objSubfiles->uuid] = $this->getPreviewImage($objFile, $strInfo);
 								}
 							}
-							else
+							// Only show allowed download types
+							elseif (\in_array($objFile->extension, $allowedDownload) && !preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
 							{
-								// Only show allowed download types
-								if (\in_array($objFile->extension, $allowedDownload) && !preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
-								{
-									$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
-								}
+								$arrValues[$objSubfiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
 							}
+						}
+					}
+					else
+					{
+						$objFile = new File($objFiles->path);
+						$strInfo = '<span class="dirname">' . \dirname($objFiles->path) . '/</span>' . $objFile->basename . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
+
+						if ($this->isGallery)
+						{
+							// Only show images
+							if ($objFile->isImage)
+							{
+								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $strInfo, 'gimage removable');
+							}
+						}
+						// Only show allowed download types
+						elseif (\in_array($objFile->extension, $allowedDownload) && !preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
+						{
+							$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
 						}
 					}
 				}
@@ -440,7 +431,7 @@ class FileTree extends Widget
 	 */
 	protected function getPreviewImage(File $objFile, $strInfo, $strClass='gimage')
 	{
-		if (($objFile->isSvgImage || ($objFile->height <= Config::get('gdMaxImgHeight') && $objFile->width <= Config::get('gdMaxImgWidth'))) && $objFile->viewWidth && $objFile->viewHeight)
+		if ($objFile->viewWidth && $objFile->viewHeight && ($objFile->isSvgImage || ($objFile->height <= Config::get('gdMaxImgHeight') && $objFile->width <= Config::get('gdMaxImgWidth'))))
 		{
 			// Inline the image if no preview image will be generated (see #636)
 			if ($objFile->height !== null && $objFile->height <= 75 && $objFile->width !== null && $objFile->width <= 100)

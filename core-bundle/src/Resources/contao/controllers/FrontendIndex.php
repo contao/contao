@@ -244,20 +244,16 @@ class FrontendIndex extends Frontend
 		}
 
 		// Check wether the language matches the root page language
-		if (Config::get('addLanguageToUrl') && isset($_GET['language']) && Input::get('language') != $objPage->rootLanguage)
+		if (isset($_GET['language']) && Config::get('addLanguageToUrl') && Input::get('language') != $objPage->rootLanguage)
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Check whether there are domain name restrictions
-		if ($objPage->domain != '')
+		if ($objPage->domain != '' && $objPage->domain != Environment::get('host'))
 		{
-			// Load an error 404 page object
-			if ($objPage->domain != Environment::get('host'))
-			{
-				$this->log('Page ID "' . $objPage->id . '" was requested via "' . Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . Environment::get('base') . Environment::get('request') . ')', __METHOD__, TL_ERROR);
-				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-			}
+			$this->log('Page ID "' . $objPage->id . '" was requested via "' . Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . Environment::get('base') . Environment::get('request') . ')', __METHOD__, TL_ERROR);
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Authenticate the user if the page is protected

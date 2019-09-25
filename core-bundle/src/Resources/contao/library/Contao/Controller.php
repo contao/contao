@@ -490,7 +490,7 @@ abstract class Controller extends System
 		}
 		else
 		{
-			if (!\strlen($intId) || $intId < 1)
+			if ($intId < 1 || !\strlen($intId))
 			{
 				return '';
 			}
@@ -1657,7 +1657,7 @@ abstract class Controller extends System
 		$picture['alt'] = StringUtil::specialchars($arrItem['alt']);
 
 		// Move the title to the link tag so it is shown in the lightbox
-		if (($arrItem['fullsize'] || $arrItem['imageUrl']) && $arrItem['imageTitle'] && !$arrItem['linkTitle'])
+		if ($arrItem['imageTitle'] && !$arrItem['linkTitle'] && ($arrItem['fullsize'] || $arrItem['imageUrl']))
 		{
 			$arrItem['linkTitle'] = $arrItem['imageTitle'];
 			unset($arrItem['imageTitle']);
@@ -1692,7 +1692,7 @@ abstract class Controller extends System
 		}
 
 		// Image link
-		if ($arrItem['imageUrl'] && TL_MODE == 'FE')
+		if (TL_MODE == 'FE' && $arrItem['imageUrl'])
 		{
 			$objTemplate->$strHrefKey = $arrItem['imageUrl'];
 			$objTemplate->attributes = '';
@@ -1736,7 +1736,7 @@ abstract class Controller extends System
 		}
 
 		// Fullsize view
-		elseif ($arrItem['fullsize'] && TL_MODE == 'FE')
+		elseif (TL_MODE == 'FE' && $arrItem['fullsize'])
 		{
 			try
 			{
@@ -2072,7 +2072,7 @@ abstract class Controller extends System
 		}
 
 		// Invalid ID
-		if (!\strlen($intId) || $intId < 1)
+		if ($intId < 1 || !\strlen($intId))
 		{
 			return null;
 		}

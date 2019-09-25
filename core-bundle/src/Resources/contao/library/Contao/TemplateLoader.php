@@ -107,12 +107,9 @@ class TemplateLoader
 		}
 
 		// Then check the global templates directory (see #5547)
-		if ($custom != 'templates')
+		if ($custom != 'templates' && file_exists($rootDir . '/templates/' . $file))
 		{
-			if (file_exists($rootDir . '/templates/' . $file))
-			{
-				return $rootDir . '/templates/' . $file;
-			}
+			return $rootDir . '/templates/' . $file;
 		}
 
 		return static::getDefaultPath($template, $format);

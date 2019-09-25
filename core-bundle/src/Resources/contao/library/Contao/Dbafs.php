@@ -605,26 +605,23 @@ class Dbafs
 					$arrFoldersToHash[] = $strRelpath;
 				}
 			}
+			elseif ($objFile->isDir())
+			{
+				$arrFoldersToCompare[] = $objModel;
+			}
 			else
 			{
-				if ($objFile->isDir())
-				{
-					$arrFoldersToCompare[] = $objModel;
-				}
-				else
-				{
-					// Check whether the MD5 hash has changed
-					$strHash = (new File($strRelpath))->hash;
-					$strType = ($objModel->hash != $strHash) ? 'Changed' : 'Unchanged';
+				// Check whether the MD5 hash has changed
+				$strHash = (new File($strRelpath))->hash;
+				$strType = ($objModel->hash != $strHash) ? 'Changed' : 'Unchanged';
 
-					// Add a log entry
-					$objLog->append("[$strType] $strRelpath");
+				// Add a log entry
+				$objLog->append("[$strType] $strRelpath");
 
-					// Update the record
-					$objModel->found = 1;
-					$objModel->hash  = $strHash;
-					$objModel->save();
-				}
+				// Update the record
+				$objModel->found = 1;
+				$objModel->hash  = $strHash;
+				$objModel->save();
 			}
 		}
 

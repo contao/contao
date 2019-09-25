@@ -105,9 +105,10 @@ class Newsletter extends Backend
 
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
+		$token = Input::get('token');
 
 		// Send newsletter
-		if (Input::get('token') != '' && Input::get('token') == $objSession->get('tl_newsletter_send'))
+		if ($token != '' && $token == $objSession->get('tl_newsletter_send'))
 		{
 			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', Environment::get('request'));
 

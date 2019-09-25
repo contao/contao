@@ -135,10 +135,7 @@ class BackendConfirm extends Backend
 			$arrInfo['act'] = $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']][0];
 		}
 
-		unset($arrInfo['pid']);
-		unset($arrInfo['clipboard']);
-		unset($arrInfo['ref']);
-		unset($arrInfo['mode']);
+		unset($arrInfo['pid'], $arrInfo['clipboard'], $arrInfo['ref'], $arrInfo['mode']);
 
 		// Template variables
 		$objTemplate->confirm = true;

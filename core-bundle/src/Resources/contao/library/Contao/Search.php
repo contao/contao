@@ -185,7 +185,7 @@ class Search
 		// Update the URL if the new URL is shorter or the current URL is not canonical
 		if ($objIndex->numRows && $objIndex->url != $arrSet['url'])
 		{
-			if (strpos($arrSet['url'], '?') === false && strpos($objIndex->url, '?') !== false)
+			if (strpos($objIndex->url, '?') !== false && strpos($arrSet['url'], '?') === false)
 			{
 				// The new URL is more canonical (no query string)
 				$objDatabase->prepare("DELETE FROM tl_search WHERE id=?")

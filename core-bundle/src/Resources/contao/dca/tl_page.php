@@ -878,7 +878,7 @@ class tl_page extends Contao\Backend
 				$pagemounts = array_unique($pagemounts);
 
 				// Do not allow to paste after pages on the root level (pagemounts)
-				if ((Contao\Input::get('act') == 'cut' || Contao\Input::get('act') == 'cutAll') && Contao\Input::get('mode') == 1 && \in_array(Contao\Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
+				if (Contao\Input::get('mode') == 1 && (Contao\Input::get('act') == 'cut' || Contao\Input::get('act') == 'cutAll') && \in_array(Contao\Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to paste page ID ' . Contao\Input::get('id') . ' after mounted page ID ' . Contao\Input::get('pid') . ' (root level).');
 				}
@@ -1116,7 +1116,7 @@ class tl_page extends Contao\Backend
 					continue;
 				}
 
-				if (Contao\Config::get('addLanguageToUrl') && $objAliasPage->rootLanguage != $strCurrentLanguage)
+				if ($objAliasPage->rootLanguage != $strCurrentLanguage && Contao\Config::get('addLanguageToUrl'))
 				{
 					continue;
 				}
@@ -1551,7 +1551,7 @@ class tl_page extends Contao\Backend
 		}
 
 		// Prevent adding non-root pages on top-level
-		if (Contao\Input::get('mode') != 'create' && $row['pid'] == 0)
+		if ($row['pid'] == 0 && Contao\Input::get('mode') != 'create')
 		{
 			$objPage = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
 									  ->limit(1)
@@ -1664,7 +1664,7 @@ class tl_page extends Contao\Backend
 	public function addAliasButton($arrButtons, Contao\DataContainer $dc)
 	{
 		// Generate the aliases
-		if (Contao\Input::post('FORM_SUBMIT') == 'tl_select' && isset($_POST['alias']))
+		if (isset($_POST['alias']) && Contao\Input::post('FORM_SUBMIT') == 'tl_select')
 		{
 			/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
 			$objSession = Contao\System::getContainer()->get('session');

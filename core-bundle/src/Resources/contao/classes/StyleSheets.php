@@ -148,26 +148,20 @@ class StyleSheets extends Backend
 								   ->limit(1)
 								   ->execute($row['pid']);
 
-		if ($objTheme->vars != '')
+		if ($objTheme->vars != '' && \is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
 		{
-			if (\is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
+			foreach ($tmp as $v)
 			{
-				foreach ($tmp as $v)
-				{
-					$vars[$v['key']] = $v['value'];
-				}
+				$vars[$v['key']] = $v['value'];
 			}
 		}
 
 		// Merge the global style sheet variables
-		if ($row['vars'] != '')
+		if ($row['vars'] != '' && \is_array($tmp = StringUtil::deserialize($row['vars'])))
 		{
-			if (\is_array($tmp = StringUtil::deserialize($row['vars'])))
+			foreach ($tmp as $v)
 			{
-				foreach ($tmp as $v)
-				{
-					$vars[$v['key']] = $v['value'];
-				}
+				$vars[$v['key']] = $v['value'];
 			}
 		}
 
@@ -963,7 +957,7 @@ class StyleSheets extends Backend
 		}
 
 		// Replace global variables
-		if (strpos($return, '$') !== false && !empty($vars))
+		if (!empty($vars) && strpos($return, '$') !== false)
 		{
 			$return = str_replace(array_keys($vars), $vars, $return);
 		}
@@ -1360,26 +1354,20 @@ class StyleSheets extends Backend
 								   ->limit(1)
 								   ->execute($objStyleSheet->pid);
 
-		if ($objTheme->vars != '')
+		if ($objTheme->vars != '' && \is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
 		{
-			if (\is_array(($tmp = StringUtil::deserialize($objTheme->vars))))
+			foreach ($tmp as $v)
 			{
-				foreach ($tmp as $v)
-				{
-					$vars[$v['key']] = $v['value'];
-				}
+				$vars[$v['key']] = $v['value'];
 			}
 		}
 
 		// Merge the global style sheet variables
-		if ($objStyleSheet->vars != '')
+		if ($objStyleSheet->vars != '' && \is_array(($tmp = StringUtil::deserialize($objStyleSheet->vars))))
 		{
-			if (\is_array(($tmp = StringUtil::deserialize($objStyleSheet->vars))))
+			foreach ($tmp as $v)
 			{
-				foreach ($tmp as $v)
-				{
-					$vars[$v['key']] = $v['value'];
-				}
+				$vars[$v['key']] = $v['value'];
 			}
 		}
 

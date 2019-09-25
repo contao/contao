@@ -367,16 +367,14 @@ class Installer extends Controller
 
 				if ($field['type'] != 'index')
 				{
-					unset($field['index']);
-					unset($field['origtype']);
+					unset($field['index'], $field['origtype']);
 
 					// Field type
 					if ($field['length'] != '')
 					{
 						$field['type'] .= '(' . $field['length'] . (($field['precision'] != '') ? ',' . $field['precision'] : '') . ')';
 
-						unset($field['length']);
-						unset($field['precision']);
+						unset($field['length'], $field['precision']);
 					}
 
 					// Variant collation
@@ -390,7 +388,7 @@ class Installer extends Controller
 					}
 
 					// Default values
-					if (\in_array(strtolower($field['type']), array('text', 'tinytext', 'mediumtext', 'longtext', 'blob', 'tinyblob', 'mediumblob', 'longblob')) || stripos($field['extra'], 'auto_increment') !== false || $field['default'] === null || strtolower($field['null']) == 'null')
+					if ($field['default'] === null || stripos($field['extra'], 'auto_increment') !== false || strtolower($field['null']) == 'null' || \in_array(strtolower($field['type']), array('text', 'tinytext', 'mediumtext', 'longtext', 'blob', 'tinyblob', 'mediumblob', 'longblob')))
 					{
 						unset($field['default']);
 					}
@@ -450,8 +448,7 @@ class Installer extends Controller
 							break;
 					}
 
-					unset($field['index_fields']);
-					unset($field['index']);
+					unset($field['index_fields'], $field['index']);
 				}
 			}
 		}

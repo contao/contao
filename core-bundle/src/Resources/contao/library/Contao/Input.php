@@ -305,8 +305,7 @@ class Input
 
 		$strKey = static::cleanKey($strKey);
 
-		unset(static::$arrCache['getEncoded'][$strKey]);
-		unset(static::$arrCache['getDecoded'][$strKey]);
+		unset(static::$arrCache['getEncoded'][$strKey], static::$arrCache['getDecoded'][$strKey]);
 
 		if ($varValue === null)
 		{
@@ -333,12 +332,14 @@ class Input
 	{
 		$strKey = static::cleanKey($strKey);
 
-		unset(static::$arrCache['postEncoded'][$strKey]);
-		unset(static::$arrCache['postDecoded'][$strKey]);
-		unset(static::$arrCache['postHtmlEncoded'][$strKey]);
-		unset(static::$arrCache['postHtmlDecoded'][$strKey]);
-		unset(static::$arrCache['postRaw'][$strKey]);
-		unset(static::$arrCache['postUnsafeRaw'][$strKey]);
+		unset(
+			static::$arrCache['postEncoded'][$strKey],
+			static::$arrCache['postDecoded'][$strKey],
+			static::$arrCache['postHtmlEncoded'][$strKey],
+			static::$arrCache['postHtmlDecoded'][$strKey],
+			static::$arrCache['postRaw'][$strKey],
+			static::$arrCache['postUnsafeRaw'][$strKey]
+		);
 
 		if ($varValue === null)
 		{
@@ -360,8 +361,7 @@ class Input
 	{
 		$strKey = static::cleanKey($strKey);
 
-		unset(static::$arrCache['cookieEncoded'][$strKey]);
-		unset(static::$arrCache['cookieDecoded'][$strKey]);
+		unset(static::$arrCache['cookieEncoded'][$strKey], static::$arrCache['cookieDecoded'][$strKey]);
 
 		if ($varValue === null)
 		{

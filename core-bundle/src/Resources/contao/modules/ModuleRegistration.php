@@ -245,13 +245,13 @@ class ModuleRegistration extends Module
 				}
 
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if ($arrData['eval']['unique'] && $varValue != '' && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
+				if ($varValue != '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
 				{
 					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
 				}
 
 				// Save callback
-				if ($objWidget->submitInput() && !$objWidget->hasErrors() && \is_array($arrData['save_callback']))
+				if (\is_array($arrData['save_callback']) && $objWidget->submitInput() && !$objWidget->hasErrors())
 				{
 					foreach ($arrData['save_callback'] as $callback)
 					{
@@ -327,7 +327,7 @@ class ModuleRegistration extends Module
 		$this->Template->hasError = $doNotSubmit;
 
 		// Create new user if there are no errors
-		if (Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
+		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId)
 		{
 			$this->createNewUser($arrUser);
 		}

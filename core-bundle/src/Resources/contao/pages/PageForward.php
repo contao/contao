@@ -92,7 +92,7 @@ class PageForward extends Frontend
 		{
 			foreach (array_keys($_GET) as $key)
 			{
-				if (Config::get('addLanguageToUrl') && $key == 'language')
+				if ($key == 'language' && Config::get('addLanguageToUrl'))
 				{
 					continue;
 				}

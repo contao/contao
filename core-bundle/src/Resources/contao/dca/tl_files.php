@@ -329,12 +329,9 @@ class tl_files extends Contao\Backend
 							$delete_all[] = $id;
 						}
 					}
-					else
+					elseif (($canDeleteOne || $canDeleteRecursive) && !\in_array(\dirname($id), $folders))
 					{
-						if (($canDeleteOne || $canDeleteRecursive) && !\in_array(\dirname($id), $folders))
-						{
-							$delete_all[] = $id;
-						}
+						$delete_all[] = $id;
 					}
 				}
 
@@ -343,7 +340,7 @@ class tl_files extends Contao\Backend
 		}
 
 		// Set allowed clipboard IDs
-		if (isset($session['CLIPBOARD']['tl_files']) && !$canEdit)
+		if (!$canEdit && isset($session['CLIPBOARD']['tl_files']))
 		{
 			$session['CLIPBOARD']['tl_files'] = array();
 		}
@@ -382,7 +379,7 @@ class tl_files extends Contao\Backend
 					{
 						$finder = Symfony\Component\Finder\Finder::create()->in($rootDir . '/' . $strFile);
 
-						if ($finder->count() > 0 && !$canDeleteRecursive)
+						if (!$canDeleteRecursive && $finder->count() > 0)
 						{
 							throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete folder "' . $strFile . '" recursively.');
 						}
@@ -601,7 +598,7 @@ class tl_files extends Contao\Backend
 	 */
 	public function uploadFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (!$GLOBALS['TL_DCA']['tl_files']['config']['closed'] && !$GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] && Contao\Input::get('act') != 'select' && isset($row['type']) && $row['type'] == 'folder')
+		if (isset($row['type']) && $row['type'] == 'folder' && !$GLOBALS['TL_DCA']['tl_files']['config']['closed'] && !$GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] && Contao\Input::get('act') != 'select')
 		{
 			return '<a href="'.$this->addToUrl($href.'&amp;pid='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'" '.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ';
 		}
@@ -725,7 +722,7 @@ class tl_files extends Contao\Backend
 			$count = 0;
 			$strName = basename($strPath);
 
-			if (($strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count)) && $count > 0 && is_dir($rootDir . '/' . $strNewPath))
+			if ($count > 0 && ($strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count)) && is_dir($rootDir . '/' . $strNewPath))
 			{
 				$strPath = $strNewPath;
 			}
@@ -759,22 +756,19 @@ class tl_files extends Contao\Backend
 					$this->Automator->generateSymlinks();
 				}
 			}
-			else
+			elseif ($blnUnprotected)
 			{
-				if ($blnUnprotected)
-				{
-					$blnUnprotected = false;
-					$objFolder->protect();
+				$blnUnprotected = false;
+				$objFolder->protect();
 
-					$this->import('Contao\Automator', 'Automator');
-					$this->Automator->generateSymlinks();
-				}
+				$this->import('Contao\Automator', 'Automator');
+				$this->Automator->generateSymlinks();
 			}
 		}
 
 		$class = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx';
 
-		if (Contao\Input::get('act') == 'editAll' || Contao\Input::get('act') == 'overrideAll')
+		if (\in_array(Contao\Input::get('act'), array('editAll', 'overrideAll')))
 		{
 			$class = str_replace(array('w50', 'clr', 'wizard', 'long', 'm12', 'cbx'), '', $class);
 		}
@@ -815,7 +809,7 @@ class tl_files extends Contao\Backend
 			$count = 0;
 			$strName = basename($strPath);
 
-			if (($strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count)) && $count > 0 && is_dir($rootDir . '/' . $strNewPath))
+			if ($count > 0 && ($strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count)) && is_dir($rootDir . '/' . $strNewPath))
 			{
 				$strPath = $strNewPath;
 			}
@@ -846,19 +840,16 @@ class tl_files extends Contao\Backend
 					$objFolder->unsynchronize();
 				}
 			}
-			else
+			elseif ($blnUnsynchronized)
 			{
-				if ($blnUnsynchronized)
-				{
-					$blnUnsynchronized = false;
-					$objFolder->synchronize();
-				}
+				$blnUnsynchronized = false;
+				$objFolder->synchronize();
 			}
 		}
 
 		$class = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx';
 
-		if (Contao\Input::get('act') == 'editAll' || Contao\Input::get('act') == 'overrideAll')
+		if (\in_array(Contao\Input::get('act'), array('editAll', 'overrideAll')))
 		{
 			$class = str_replace(array('w50', 'clr', 'wizard', 'long', 'm12', 'cbx'), '', $class);
 		}

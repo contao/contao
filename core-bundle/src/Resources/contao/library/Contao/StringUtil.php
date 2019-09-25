@@ -161,7 +161,7 @@ class StringUtil
 					// Store opening tags in the open_tags array
 					if (strncmp($strTagName, '/', 1) !== 0)
 					{
-						if (!empty($arrChunks[$i]) || $i<$c)
+						if ($i<$c || !empty($arrChunks[$i]))
 						{
 							$arrOpenTags[] = $strTagName;
 						}
@@ -170,7 +170,7 @@ class StringUtil
 					}
 
 					// Closing tags will be removed from the "open tags" array
-					if (!empty($arrChunks[$i]) || $i<$c)
+					if ($i<$c || !empty($arrChunks[$i]))
 					{
 						$arrOpenTags = array_values($arrOpenTags);
 
@@ -186,7 +186,7 @@ class StringUtil
 				}
 
 				// If the current chunk contains text, add tags and text to the return string
-				if (\strlen($arrChunks[$i]) || $i<$c)
+				if ($i<$c || \strlen($arrChunks[$i]))
 				{
 					$strReturn .= implode('', $arrTagBuffer) . $arrChunks[$i];
 				}

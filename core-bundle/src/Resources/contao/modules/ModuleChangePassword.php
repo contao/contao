@@ -168,7 +168,7 @@ class ModuleChangePassword extends Module
 		$this->Template->hasError = $doNotSubmit;
 
 		// Store the new password
-		if (Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
+		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId)
 		{
 			$objMember->tstamp = time();
 			$objMember->password = $objNewPassword->value;

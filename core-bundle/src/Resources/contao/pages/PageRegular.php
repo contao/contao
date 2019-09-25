@@ -131,7 +131,7 @@ class PageRegular extends Frontend
 			foreach ($arrModules as $arrModule)
 			{
 				// Disabled module
-				if (!$arrModule['enable'] && !BE_USER_LOGGED_IN)
+				if (!BE_USER_LOGGED_IN && !$arrModule['enable'])
 				{
 					continue;
 				}
@@ -146,19 +146,19 @@ class PageRegular extends Frontend
 				if (\in_array($arrModule['col'], $arrSections))
 				{
 					// Filter active sections (see #3273)
-					if ($arrModule['col'] == 'header' && $objLayout->rows != '2rwh' && $objLayout->rows != '3rw')
+					if ($objLayout->rows != '2rwh' && $objLayout->rows != '3rw' && $arrModule['col'] == 'header')
 					{
 						continue;
 					}
-					if ($arrModule['col'] == 'left' && $objLayout->cols != '2cll' && $objLayout->cols != '3cl')
+					if ($objLayout->cols != '2cll' && $objLayout->cols != '3cl' && $arrModule['col'] == 'left')
 					{
 						continue;
 					}
-					if ($arrModule['col'] == 'right' && $objLayout->cols != '2clr' && $objLayout->cols != '3cl')
+					if ($objLayout->cols != '2clr' && $objLayout->cols != '3cl' && $arrModule['col'] == 'right')
 					{
 						continue;
 					}
-					if ($arrModule['col'] == 'footer' && $objLayout->rows != '2rwf' && $objLayout->rows != '3rw')
+					if ($objLayout->rows != '2rwf' && $objLayout->rows != '3rw' && $arrModule['col'] == 'footer')
 					{
 						continue;
 					}
@@ -577,22 +577,18 @@ class PageRegular extends Frontend
 
 						$strCcStyleSheets .= $strStyleSheet . "\n";
 					}
+					elseif ($objStylesheets->type == 'external')
+					{
+						$objFile = FilesModel::findByPk($objStylesheets->singleSRC);
+
+						if ($objFile !== null)
+						{
+							$GLOBALS['TL_USER_CSS'][] = $objFile->path . '|' . $media . '|static';
+						}
+					}
 					else
 					{
-						// External style sheet
-						if ($objStylesheets->type == 'external')
-						{
-							$objFile = FilesModel::findByPk($objStylesheets->singleSRC);
-
-							if ($objFile !== null)
-							{
-								$GLOBALS['TL_USER_CSS'][] = $objFile->path . '|' . $media . '|static';
-							}
-						}
-						else
-						{
-							$GLOBALS['TL_USER_CSS'][] = 'assets/css/' . $objStylesheets->name . '.css|' . $media . '|static|' . max($objStylesheets->tstamp, $objStylesheets->tstamp2, $objStylesheets->tstamp3);
-						}
+						$GLOBALS['TL_USER_CSS'][] = 'assets/css/' . $objStylesheets->name . '.css|' . $media . '|static|' . max($objStylesheets->tstamp, $objStylesheets->tstamp2, $objStylesheets->tstamp3);
 					}
 				}
 			}
@@ -763,39 +759,35 @@ class PageRegular extends Frontend
 		// Add the external JavaScripts
 		$arrExternalJs = StringUtil::deserialize($objLayout->externalJs);
 
-		// External JavaScripts
-		if (!empty($arrExternalJs) && \is_array($arrExternalJs))
+		// Consider the sorting order (see #5038)
+		if (!empty($arrExternalJs) && \is_array($arrExternalJs) && $objLayout->orderExtJs != '')
 		{
-			// Consider the sorting order (see #5038)
-			if ($objLayout->orderExtJs != '')
+			$tmp = StringUtil::deserialize($objLayout->orderExtJs);
+
+			if (!empty($tmp) && \is_array($tmp))
 			{
-				$tmp = StringUtil::deserialize($objLayout->orderExtJs);
+				// Remove all values
+				$arrOrder = array_map(static function () {}, array_flip($tmp));
 
-				if (!empty($tmp) && \is_array($tmp))
+				// Move the matching elements to their position in $arrOrder
+				foreach ($arrExternalJs as $k=>$v)
 				{
-					// Remove all values
-					$arrOrder = array_map(static function () {}, array_flip($tmp));
-
-					// Move the matching elements to their position in $arrOrder
-					foreach ($arrExternalJs as $k=>$v)
+					if (\array_key_exists($v, $arrOrder))
 					{
-						if (\array_key_exists($v, $arrOrder))
-						{
-							$arrOrder[$v] = $v;
-							unset($arrExternalJs[$k]);
-						}
+						$arrOrder[$v] = $v;
+						unset($arrExternalJs[$k]);
 					}
-
-					// Append the left-over JavaScripts at the end
-					if (!empty($arrExternalJs))
-					{
-						$arrOrder = array_merge($arrOrder, array_values($arrExternalJs));
-					}
-
-					// Remove empty (unreplaced) entries
-					$arrExternalJs = array_values(array_filter($arrOrder));
-					unset($arrOrder);
 				}
+
+				// Append the left-over JavaScripts at the end
+				if (!empty($arrExternalJs))
+				{
+					$arrOrder = array_merge($arrOrder, array_values($arrExternalJs));
+				}
+
+				// Remove empty (unreplaced) entries
+				$arrExternalJs = array_values(array_filter($arrOrder));
+				unset($arrOrder);
 			}
 		}
 

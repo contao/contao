@@ -543,7 +543,7 @@ class tl_article extends Contao\Backend
 
 		$unpublished = ($row['start'] != '' && $row['start'] > $time) || ($row['stop'] != '' && $row['stop'] < $time);
 
-		if (!$row['published'] || $unpublished)
+		if ($unpublished || !$row['published'])
 		{
 			$image .= '_';
 		}
@@ -798,7 +798,7 @@ class tl_article extends Contao\Backend
 	public function addAliasButton($arrButtons)
 	{
 		// Generate the aliases
-		if (Contao\Input::post('FORM_SUBMIT') == 'tl_select' && isset($_POST['alias']))
+		if (isset($_POST['alias']) && Contao\Input::post('FORM_SUBMIT') == 'tl_select')
 		{
 			/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
 			$objSession = Contao\System::getContainer()->get('session');

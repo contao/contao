@@ -176,24 +176,21 @@ class FileSelector extends Widget
 							$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
 						}
 					}
-					else
+					elseif (\is_array($this->User->filemounts))
 					{
-						if (\is_array($this->User->filemounts))
+						while ($objRoot->next())
 						{
-							while ($objRoot->next())
+							// Show only mounted folders to regular users
+							foreach ($this->User->filemounts as $path)
 							{
-								// Show only mounted folders to regular users
-								foreach ($this->User->filemounts as $path)
+								if (strncmp($path . '/', $objRoot->path . '/', \strlen($path) + 1) === 0)
 								{
-									if (strncmp($path . '/', $objRoot->path . '/', \strlen($path) + 1) === 0)
+									if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
 									{
-										if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
-										{
-											$arrFound[] = $objRoot->path;
-										}
-
-										$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
+										$arrFound[] = $objRoot->path;
 									}
+
+									$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
 								}
 							}
 						}
@@ -208,12 +205,9 @@ class FileSelector extends Widget
 		$strNode = $objSessionBag->get('tl_files_picker');
 
 		// Unset the node if it is not within the path (see #5899)
-		if ($strNode != '' && $this->path != '')
+		if ($strNode != '' && $this->path != '' && strncmp($strNode . '/', $this->path . '/', \strlen($this->path) + 1) !== 0)
 		{
-			if (strncmp($strNode . '/', $this->path . '/', \strlen($this->path) + 1) !== 0)
-			{
-				$objSessionBag->remove('tl_files_picker');
-			}
+			$objSessionBag->remove('tl_files_picker');
 		}
 
 		// Add the breadcrumb menu

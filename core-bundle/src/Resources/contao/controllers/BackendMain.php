@@ -149,12 +149,9 @@ class BackendMain extends Backend
 			{
 				$picker = System::getContainer()->get('contao.picker.builder')->createFromData(Input::get('picker', true));
 
-				if ($picker !== null)
+				if ($picker !== null && ($menu = $picker->getMenu()) && $menu->count() > 1)
 				{
-					if (($menu = $picker->getMenu()) && $menu->count() > 1)
-					{
-						$this->Template->pickerMenu = System::getContainer()->get('contao.menu.renderer')->render($menu);
-					}
+					$this->Template->pickerMenu = System::getContainer()->get('contao.menu.renderer')->render($menu);
 				}
 			}
 
@@ -226,7 +223,7 @@ class BackendMain extends Backend
 		$objSession = $container->get('session');
 
 		// File picker reference (backwards compatibility)
-		if (Input::get('popup') && Input::get('act') != 'show' && ((Input::get('do') == 'page' && $this->User->hasAccess('page', 'modules')) || (Input::get('do') == 'files' && $this->User->hasAccess('files', 'modules'))) && $objSession->get('filePickerRef'))
+		if (Input::get('popup') && Input::get('act') != 'show' && $objSession->get('filePickerRef') && ((Input::get('do') == 'page' && $this->User->hasAccess('page', 'modules')) || (Input::get('do') == 'files' && $this->User->hasAccess('files', 'modules'))))
 		{
 			$this->Template->managerHref = ampersand($objSession->get('filePickerRef'));
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];

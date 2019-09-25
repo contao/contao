@@ -303,13 +303,10 @@ abstract class DataContainer extends Backend
 					$arrData['eval']['required'] = true;
 				}
 			}
-			else
+			// Use strlen() here (see #3277)
+			elseif (!\strlen($this->varValue))
 			{
-				// Use strlen() here (see #3277)
-				if (!\strlen($this->varValue))
-				{
-					$arrData['eval']['required'] = true;
-				}
+				$arrData['eval']['required'] = true;
 			}
 		}
 
@@ -354,14 +351,10 @@ abstract class DataContainer extends Backend
 				// Use the given palette ($strPalette is an array in editAll mode)
 				$newPaletteFields = \is_array($strPalette) ? $strPalette : StringUtil::trimsplit('[,;]', $strPalette);
 
-				// Re-check the palette if the current field is a selector field
-				if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']) && \in_array($this->strField, $GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
+				// Recompile the palette if the current field is a selector field and the value has changed
+				if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']) && $this->varValue != Input::post($this->strInputName) && \in_array($this->strField, $GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
 				{
-					// If the field value has changed, recompile the palette
-					if ($this->varValue != Input::post($this->strInputName))
-					{
-						$newPaletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
-					}
+					$newPaletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
 				}
 			}
 
@@ -396,7 +389,7 @@ abstract class DataContainer extends Backend
 				if ($objWidget->hasErrors())
 				{
 					// Skip mandatory fields on auto-submit (see #4077)
-					if (Input::post('SUBMIT_TYPE') != 'auto' || !$objWidget->mandatory || $objWidget->value != '')
+					if (!$objWidget->mandatory || $objWidget->value != '' || Input::post('SUBMIT_TYPE') != 'auto')
 					{
 						$this->noReload = true;
 					}
@@ -606,7 +599,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Handle multi-select fields in "override all" mode
-		elseif (Input::get('act') == 'overrideAll' && ($arrData['inputType'] == 'checkbox' || $arrData['inputType'] == 'checkboxWizard') && $arrData['eval']['multiple'])
+		elseif (($arrData['inputType'] == 'checkbox' || $arrData['inputType'] == 'checkboxWizard') && $arrData['eval']['multiple'] && Input::get('act') == 'overrideAll')
 		{
 			$updateMode = '
 </div>
@@ -684,7 +677,7 @@ abstract class DataContainer extends Backend
 	{
 		$return = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1];
 
-		if (!Config::get('showHelp') || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password' || $return == '')
+		if ($return == '' || !Config::get('showHelp') || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password')
 		{
 			return '';
 		}
@@ -887,7 +880,7 @@ abstract class DataContainer extends Backend
 
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations'] as $k=>$v)
 		{
-			if (Input::get('act') == 'select' && !$v['showOnSelect'])
+			if (!$v['showOnSelect'] && Input::get('act') == 'select')
 			{
 				continue;
 			}
@@ -1140,10 +1133,12 @@ abstract class DataContainer extends Backend
 
 			$data = $objSessionBag->all();
 
-			unset($data['filter'][$this->strTable]);
-			unset($data['filter'][$this->strTable.'_'.CURRENT_ID]);
-			unset($data['sorting'][$this->strTable]);
-			unset($data['search'][$this->strTable]);
+			unset(
+				$data['filter'][$this->strTable],
+				$data['filter'][$this->strTable . '_' . CURRENT_ID],
+				$data['sorting'][$this->strTable],
+				$data['search'][$this->strTable]
+			);
 
 			$objSessionBag->replace($data);
 

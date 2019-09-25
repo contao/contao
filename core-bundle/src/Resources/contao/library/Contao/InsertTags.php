@@ -128,7 +128,7 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || strncmp($elements[0], 'cache_', 6) === 0 || \in_array('uncached', $flags))
+				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || $elements[1] == 'back' || $elements[1] == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -717,15 +717,15 @@ class InsertTags extends Controller
 
 				// Page
 				case 'page':
-					if ($elements[1] == 'pageTitle' && $objPage->pageTitle == '')
+					if ($objPage->pageTitle == '' && $elements[1] == 'pageTitle')
 					{
 						$elements[1] = 'title';
 					}
-					elseif ($elements[1] == 'parentPageTitle' && $objPage->parentPageTitle == '')
+					elseif ($objPage->parentPageTitle == '' && $elements[1] == 'parentPageTitle')
 					{
 						$elements[1] = 'parentTitle';
 					}
-					elseif ($elements[1] == 'mainPageTitle' && $objPage->mainPageTitle == '')
+					elseif ($objPage->mainPageTitle == '' && $elements[1] == 'mainPageTitle')
 					{
 						$elements[1] = 'mainTitle';
 					}
@@ -851,21 +851,19 @@ class InsertTags extends Controller
 
 						$strFile = $objFile->path;
 					}
-					else
+					elseif (Validator::isInsecurePath($strFile))
 					{
-						// Check the path
-						if (Validator::isInsecurePath($strFile))
-						{
-							throw new \RuntimeException('Invalid path ' . $strFile);
-						}
+						throw new \RuntimeException('Invalid path ' . $strFile);
 					}
 
+					$maxImageWidth = Config::get('maxImageWidth');
+
 					// Check the maximum image width
-					if (Config::get('maxImageWidth') > 0 && $width > Config::get('maxImageWidth'))
+					if ($maxImageWidth > 0 && $width > $maxImageWidth)
 					{
 						@trigger_error('Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.', E_USER_DEPRECATED);
 
-						$width = Config::get('maxImageWidth');
+						$width = $maxImageWidth;
 						$height = null;
 					}
 

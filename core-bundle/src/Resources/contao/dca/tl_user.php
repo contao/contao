@@ -527,7 +527,7 @@ class tl_user extends Contao\Backend
 		}
 
 		// Should not happen because of the redirect but better safe than sorry
-		if (Contao\BackendUser::getInstance()->id != Contao\Input::get('id') || Contao\Input::get('act') != 'edit')
+		if (Contao\Input::get('act') != 'edit' || Contao\BackendUser::getInstance()->id != Contao\Input::get('id'))
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not allowed to edit this page.');
 		}
@@ -589,7 +589,7 @@ class tl_user extends Contao\Backend
 			$image .= '_two_factor';
 		}
 
-		if ($row['disable'] || $disabled)
+		if ($disabled || $row['disable'])
 		{
 			$image .= '_';
 		}

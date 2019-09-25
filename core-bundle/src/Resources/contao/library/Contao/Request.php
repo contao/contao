@@ -347,7 +347,7 @@ class Request
 		{
 			list($header, $value) = explode(':', $line, 2);
 
-			if (isset($this->arrResponseHeaders[$header]) && $header == 'Set-Cookie')
+			if ($header == 'Set-Cookie' && isset($this->arrResponseHeaders[$header]))
 			{
 				$this->arrResponseHeaders[$header] .= ',' . trim($value);
 			}

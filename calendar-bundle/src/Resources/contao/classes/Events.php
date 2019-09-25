@@ -133,7 +133,7 @@ abstract class Events extends Module
 				{
 					$arrRepeat = StringUtil::deserialize($objEvents->repeatEach);
 
-					if (!\is_array($arrRepeat) || !isset($arrRepeat['unit']) || !isset($arrRepeat['value']) || $arrRepeat['value'] < 1)
+					if (!isset($arrRepeat['unit'], $arrRepeat['value']) || $arrRepeat['value'] < 1)
 					{
 						continue;
 					}
@@ -253,7 +253,7 @@ abstract class Events extends Module
 		{
 			$arrRange = StringUtil::deserialize($objEvents->repeatEach);
 
-			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
+			if (isset($arrRange['unit'], $arrRange['value']))
 			{
 				if ($arrRange['value'] == 1)
 				{

@@ -629,12 +629,9 @@ class Theme extends Backend
 						{
 							$imageSizes = StringUtil::deserialize($value, true);
 
-							if (!empty($imageSizes))
+							if (!empty($imageSizes) && is_numeric($imageSizes[2]))
 							{
-								if (is_numeric($imageSizes[2]))
-								{
-									$imageSizes[2] = $arrMapper['tl_image_size'][$imageSizes[2]];
-								}
+								$imageSizes[2] = $arrMapper['tl_image_size'][$imageSizes[2]];
 							}
 
 							$value = serialize($imageSizes);

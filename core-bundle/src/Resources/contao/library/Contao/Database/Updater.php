@@ -107,8 +107,7 @@ class Updater extends Controller
 
 			$arrSet['source'] = 'tl_news';
 			$arrSet['parent'] = $arrSet['pid'];
-			unset($arrSet['id']);
-			unset($arrSet['pid']);
+			unset($arrSet['id'], $arrSet['pid']);
 
 			$this->Database->prepare("INSERT INTO tl_comments %s")->set($arrSet)->execute();
 		}
@@ -600,16 +599,13 @@ class Updater extends Controller
 			{
 				$jquery = StringUtil::deserialize($objLayout->jquery);
 
-				if (!empty($jquery) && \is_array($jquery))
+				if (!empty($jquery) && \is_array($jquery) && ($key = array_search('j_slider', $jquery)) !== false)
 				{
-					if (($key = array_search('j_slider', $jquery)) !== false)
-					{
-						$arrScripts[] = 'js_slider';
-						unset($jquery[$key]);
+					$arrScripts[] = 'js_slider';
+					unset($jquery[$key]);
 
-						$this->Database->prepare("UPDATE tl_layout SET jquery=? WHERE id=?")
-									   ->execute(serialize(array_values($jquery)), $objLayout->id);
-					}
+					$this->Database->prepare("UPDATE tl_layout SET jquery=? WHERE id=?")
+								   ->execute(serialize(array_values($jquery)), $objLayout->id);
 				}
 			}
 
@@ -618,16 +614,13 @@ class Updater extends Controller
 			{
 				$mootools = StringUtil::deserialize($objLayout->mootools);
 
-				if (!empty($mootools) && \is_array($mootools))
+				if (!empty($mootools) && \is_array($mootools) && ($key = array_search('moo_slider', $mootools)) !== false)
 				{
-					if (($key = array_search('moo_slider', $mootools)) !== false)
-					{
-						$arrScripts[] = 'js_slider';
-						unset($mootools[$key]);
+					$arrScripts[] = 'js_slider';
+					unset($mootools[$key]);
 
-						$this->Database->prepare("UPDATE tl_layout SET mootools=? WHERE id=?")
-									   ->execute(serialize(array_values($mootools)), $objLayout->id);
-					}
+					$this->Database->prepare("UPDATE tl_layout SET mootools=? WHERE id=?")
+								   ->execute(serialize(array_values($mootools)), $objLayout->id);
 				}
 			}
 
@@ -791,12 +784,9 @@ class Updater extends Controller
 						}
 
 						// Convert the order fields as well
-						if (isset($arrField['eval']['orderField']) && isset($GLOBALS['TL_DCA'][$strTable]['fields'][$arrField['eval']['orderField']]))
+						if (isset($arrField['eval']['orderField'], $GLOBALS['TL_DCA'][$strTable]['fields'][$arrField['eval']['orderField']]) && $this->Database->fieldExists($arrField['eval']['orderField'], $strTable, true))
 						{
-							if ($this->Database->fieldExists($arrField['eval']['orderField'], $strTable, true))
-							{
-								$arrFields['order'][] = $strTable . '.' . $arrField['eval']['orderField'];
-							}
+							$arrFields['order'][] = $strTable . '.' . $arrField['eval']['orderField'];
 						}
 					}
 				}

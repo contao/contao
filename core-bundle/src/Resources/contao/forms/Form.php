@@ -176,12 +176,9 @@ class Form extends Hybrid
 				}
 
 				// Unset the default value depending on the field type (see #4722)
-				if (!empty($arrData['value']))
+				if (!empty($arrData['value']) && !\in_array('value', StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type])))
 				{
-					if (!\in_array('value', StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type])))
-					{
-						$arrData['value'] = '';
-					}
+					$arrData['value'] = '';
 				}
 
 				/** @var Widget $objWidget */
@@ -250,7 +247,7 @@ class Form extends Hybrid
 		}
 
 		// Process the form data
-		if (Input::post('FORM_SUBMIT') == $formId && !$doNotSubmit)
+		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $formId)
 		{
 			$this->processFormData($arrSubmitted, $arrLabels, $arrFields);
 		}

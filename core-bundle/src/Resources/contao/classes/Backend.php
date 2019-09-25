@@ -367,17 +367,14 @@ abstract class Backend extends Controller
 			{
 				foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $k=>$v)
 				{
-					if ($v['exclude'])
+					if ($v['exclude'] && $this->User->hasAccess($strTable . '::' . $k, 'alexf'))
 					{
-						if ($this->User->hasAccess($strTable.'::'.$k, 'alexf'))
+						if ($strTable == 'tl_user_group')
 						{
-							if ($strTable == 'tl_user_group')
-							{
-								$GLOBALS['TL_DCA'][$strTable]['fields'][$k]['orig_exclude'] = $GLOBALS['TL_DCA'][$strTable]['fields'][$k]['exclude'];
-							}
-
-							$GLOBALS['TL_DCA'][$strTable]['fields'][$k]['exclude'] = false;
+							$GLOBALS['TL_DCA'][$strTable]['fields'][$k]['orig_exclude'] = $GLOBALS['TL_DCA'][$strTable]['fields'][$k]['exclude'];
 						}
+
+						$GLOBALS['TL_DCA'][$strTable]['fields'][$k]['exclude'] = false;
 					}
 				}
 			}
@@ -502,7 +499,7 @@ abstract class Backend extends Controller
 
 				$pid = $dc->id;
 				$table = $strTable;
-				$ptable = (Input::get('act') != 'edit') ? $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] : $strTable;
+				$ptable = ($act != 'edit') ? $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] : $strTable;
 
 				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'], array(5, 6)))
 				{
@@ -556,72 +553,71 @@ abstract class Backend extends Controller
 				}
 			}
 
+			$do = Input::get('do');
+
 			// Add the current action
-			if (Input::get('act') == 'editAll')
+			if ($act == 'editAll')
 			{
 				if (isset($GLOBALS['TL_LANG']['MSC']['all'][0]))
 				{
 					$this->Template->headline .= ' › <span>' . $GLOBALS['TL_LANG']['MSC']['all'][0] . '</span>';
 				}
 			}
-			elseif (Input::get('act') == 'overrideAll')
+			elseif ($act == 'overrideAll')
 			{
 				if (isset($GLOBALS['TL_LANG']['MSC']['all_override'][0]))
 				{
 					$this->Template->headline .= ' › <span>' . $GLOBALS['TL_LANG']['MSC']['all_override'][0] . '</span>';
 				}
 			}
-			else
+			elseif (Input::get('id'))
 			{
-				if (Input::get('id'))
+				if ($do == 'files' || $do == 'tpl_editor')
 				{
-					if (Input::get('do') == 'files' || Input::get('do') == 'tpl_editor')
+					// Handle new folders (see #7980)
+					if (strpos(Input::get('id'), '__new__') !== false)
 					{
-						// Handle new folders (see #7980)
-						if (strpos(Input::get('id'), '__new__') !== false)
-						{
-							$this->Template->headline .= ' › <span>' . \dirname(Input::get('id')) . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
-						}
-						else
-						{
-							$this->Template->headline .= ' › <span>' . Input::get('id') . '</span>';
-						}
+						$this->Template->headline .= ' › <span>' . \dirname(Input::get('id')) . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
 					}
-					elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
+					else
 					{
-						if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
-						{
-							$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
-						}
-						else
-						{
-							$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
-						}
+						$this->Template->headline .= ' › <span>' . Input::get('id') . '</span>';
 					}
 				}
-				elseif (Input::get('pid'))
+				elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
 				{
-					if (Input::get('do') == 'files' || Input::get('do') == 'tpl_editor')
+					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
 					{
-						if (Input::get('act') == 'move')
-						{
-							$this->Template->headline .= ' › <span>' . Input::get('pid') . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['move'][1] . '</span>';
-						}
-						else
-						{
-							$this->Template->headline .= ' › <span>' . Input::get('pid') . '</span>';
-						}
+						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
 					}
-					elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
+					else
 					{
-						if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
-						{
-							$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
-						}
-						else
-						{
-							$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
-						}
+						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
+					}
+				}
+			}
+			elseif (Input::get('pid'))
+			{
+				if ($do == 'files' || $do == 'tpl_editor')
+				{
+					if ($act == 'move')
+					{
+						$this->Template->headline .= ' › <span>' . Input::get('pid') . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['move'][1] . '</span>';
+					}
+					else
+					{
+						$this->Template->headline .= ' › <span>' . Input::get('pid') . '</span>';
+					}
+				}
+				elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
+				{
+					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
+					{
+						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
+					}
+					else
+					{
+						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
 					}
 				}
 			}
@@ -655,20 +651,17 @@ abstract class Backend extends Controller
 		// Recursively walk through all subpages
 		foreach ($objPages as $objPage)
 		{
-			if ($objPage->type == 'regular')
+			// Searchable and not protected
+			if ($objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsSitemap) && (!$blnIsSitemap || $objPage->sitemap != 'map_never') && (!$objPage->protected || (Config::get('indexProtected') && (!$blnIsSitemap || $objPage->sitemap == 'map_always'))))
 			{
-				// Searchable and not protected
-				if ((!$objPage->noSearch || $blnIsSitemap) && (!$objPage->protected || (Config::get('indexProtected') && (!$blnIsSitemap || $objPage->sitemap == 'map_always'))) && (!$blnIsSitemap || $objPage->sitemap != 'map_never') && !$objPage->requireItem)
-				{
-					$arrPages[] = $objPage->getAbsoluteUrl();
+				$arrPages[] = $objPage->getAbsoluteUrl();
 
-					// Get articles with teaser
-					if (($objArticles = ArticleModel::findPublishedWithTeaserByPid($objPage->id, array('ignoreFePreview'=>true))) !== null)
+				// Get articles with teaser
+				if (($objArticles = ArticleModel::findPublishedWithTeaserByPid($objPage->id, array('ignoreFePreview'=>true))) !== null)
+				{
+					foreach ($objArticles as $objArticle)
 					{
-						foreach ($objArticles as $objArticle)
-						{
-							$arrPages[] = $objPage->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
-						}
+						$arrPages[] = $objPage->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
 					}
 				}
 			}
@@ -716,28 +709,25 @@ abstract class Backend extends Controller
 		{
 			$objPage = PageModel::findOneBy(array('tl_page.id=(SELECT pid FROM tl_article WHERE id=?)'), $intPid);
 		}
-		else
+		elseif (isset($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']) && \is_array($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']))
 		{
 			// HOOK: support custom modules
-			if (isset($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']) && \is_array($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']))
+			foreach ($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'] as $callback)
 			{
-				foreach ($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'] as $callback)
+				if (($val = System::importStatic($callback[0])->{$callback[1]}($strPtable, $intPid)) !== false)
 				{
-					if (($val = System::importStatic($callback[0])->{$callback[1]}($strPtable, $intPid)) !== false)
-					{
-						$objPage = $val;
-					}
+					$objPage = $val;
 				}
+			}
 
-				if ($objPage instanceof Result && $objPage->numRows < 1)
-				{
-					return;
-				}
+			if ($objPage instanceof Result && $objPage->numRows < 1)
+			{
+				return;
+			}
 
-				if (\is_object($objPage) && !($objPage instanceof PageModel))
-				{
-					$objPage = PageModel::findByPk($objPage->id);
-				}
+			if (\is_object($objPage) && !($objPage instanceof PageModel))
+			{
+				$objPage = PageModel::findByPk($objPage->id);
 			}
 		}
 

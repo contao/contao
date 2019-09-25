@@ -496,11 +496,11 @@ class Versions extends Controller
 							else
 							{
 								// Convert serialized arrays into strings
-								if (\is_array(($tmp = StringUtil::deserialize($to[$k]))) && !\is_array($to[$k]))
+								if (!\is_array($to[$k]) && \is_array(($tmp = StringUtil::deserialize($to[$k]))))
 								{
 									$to[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
-								if (\is_array(($tmp = StringUtil::deserialize($from[$k]))) && !\is_array($from[$k]))
+								if (!\is_array($from[$k]) && \is_array(($tmp = StringUtil::deserialize($from[$k]))))
 								{
 									$from[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
@@ -533,7 +533,7 @@ class Versions extends Controller
 							$to[$k] = Date::parse(Config::get('timeFormat'), $to[$k] ?: '');
 							$from[$k] = Date::parse(Config::get('timeFormat'), $from[$k] ?: '');
 						}
-						elseif ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['rgxp'] == 'datim' || $k == 'tstamp')
+						elseif ($k == 'tstamp' || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['rgxp'] == 'datim')
 						{
 							$to[$k] = Date::parse(Config::get('datimFormat'), $to[$k] ?: '');
 							$from[$k] = Date::parse(Config::get('datimFormat'), $from[$k] ?: '');

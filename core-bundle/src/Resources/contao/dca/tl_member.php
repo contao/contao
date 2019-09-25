@@ -455,7 +455,7 @@ class tl_member extends Contao\Backend
 			$image .= '_two_factor';
 		}
 
-		if ($row['disable'] || $disabled)
+		if ($disabled || $row['disable'])
 		{
 			$image .= '_';
 		}
@@ -514,15 +514,12 @@ class tl_member extends Contao\Backend
 								  ->execute($user->id);
 
 		// HOOK: set new password callback
-		if ($objUser->numRows)
+		if ($objUser->numRows && isset($GLOBALS['TL_HOOKS']['setNewPassword']) && \is_array($GLOBALS['TL_HOOKS']['setNewPassword']))
 		{
-			if (isset($GLOBALS['TL_HOOKS']['setNewPassword']) && \is_array($GLOBALS['TL_HOOKS']['setNewPassword']))
+			foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 			{
-				foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($objUser, $strPassword);
-				}
+				$this->import($callback[0]);
+				$this->{$callback[0]}->{$callback[1]}($objUser, $strPassword);
 			}
 		}
 

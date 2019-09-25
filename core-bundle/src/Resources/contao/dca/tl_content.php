@@ -846,7 +846,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 );
 
 // Dynamically add the permission check and parent table (see #5241)
-if (Contao\Input::get('do') == 'article' || Contao\Input::get('do') == 'page')
+if (\in_array(Contao\Input::get('do'), array('article', 'page')))
 {
 	$GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_article';
 	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content', 'checkPermission'));
@@ -912,7 +912,7 @@ class tl_content extends Contao\Backend
 			case 'cutAll':
 			case 'copyAll':
 				// Check access to the parent element if a content element is moved
-				if (Contao\Input::get('act') == 'cutAll' || Contao\Input::get('act') == 'copyAll')
+				if (\in_array(Contao\Input::get('act'), array('cutAll', 'copyAll')))
 				{
 					$this->checkAccessToElement(Contao\Input::get('pid'), $pagemounts, (Contao\Input::get('mode') == 2));
 				}
@@ -1188,12 +1188,9 @@ class tl_content extends Contao\Backend
 		}
 
 		// Add the headline level (see #5858)
-		if ($arrRow['type'] == 'headline')
+		if ($arrRow['type'] == 'headline' && \is_array($headline = Contao\StringUtil::deserialize($arrRow['headline'])))
 		{
-			if (\is_array($headline = Contao\StringUtil::deserialize($arrRow['headline'])))
-			{
-				$type .= ' (' . $headline['unit'] . ')';
-			}
+			$type .= ' (' . $headline['unit'] . ')';
 		}
 
 		// Limit the element's height

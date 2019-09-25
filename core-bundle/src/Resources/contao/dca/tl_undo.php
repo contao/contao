@@ -171,7 +171,7 @@ class tl_undo extends Contao\Backend
 				{
 					if (\is_array($array = Contao\StringUtil::deserialize($v)))
 					{
-						if (\count($array) == 2 && isset($array['value']) && isset($array['unit']))
+						if (isset($array['value'], $array['unit']))
 						{
 							$v = trim($array['value'] . ', ' . $array['unit']);
 						}
