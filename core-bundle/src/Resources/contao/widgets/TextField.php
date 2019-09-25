@@ -178,16 +178,18 @@ class TextField extends Widget
 		}
 
 		$arrFields = array();
+		$blnPlaceholderArray = isset($this->arrAttributes['placeholder']) && \is_array($this->arrAttributes['placeholder']);
 
 		for ($i=0; $i<$this->size; $i++)
 		{
-			$arrFields[] = sprintf('<input type="%s" name="%s[]" id="ctrl_%s" class="tl_text_%s" value="%s"%s onfocus="Backend.getScrollOffset()">',
+			$arrFields[] = sprintf('<input type="%s" name="%s[]" id="ctrl_%s" class="tl_text_%s" value="%s"%s%s onfocus="Backend.getScrollOffset()">',
 									$strType,
 									$this->strName,
 									$this->strId.'_'.$i,
 									$this->size,
 									StringUtil::specialchars(@$this->varValue[$i]), // see #4979
-									$this->getAttributes());
+									$blnPlaceholderArray && isset($this->arrAttributes['placeholder'][$i]) ? ' placeholder="' . $this->arrAttributes['placeholder'][$i] . '"' : '',
+									$this->getAttributes($blnPlaceholderArray ? array('placeholder') : array()));
 		}
 
 		return sprintf('<div id="ctrl_%s" class="tl_text_field%s">%s</div>%s',
