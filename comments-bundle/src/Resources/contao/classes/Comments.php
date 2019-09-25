@@ -674,6 +674,13 @@ class Comments extends Frontend
 					continue;
 				}
 
+				// Update the notification URL if it has changed (see #373)
+				if (TL_MODE == 'FE' && $objNotify->url != Environment::get('request'))
+				{
+					$objNotify->url = Environment::get('request');
+					$objNotify->save();
+				}
+
 				// Prepare the URL
 				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
 

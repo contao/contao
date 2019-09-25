@@ -18,6 +18,7 @@ use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
+use Contao\Validator;
 use Doctrine\DBAL\DBALException;
 use Patchwork\Utf8;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -530,6 +531,8 @@ class InstallationController implements ContainerAwareInterface
         $this->context['admin_username_value'] = $username;
         $this->context['admin_name_value'] = $name;
         $this->context['admin_email_value'] = $email;
+        $this->context['admin_password_value'] = $password;
+        $this->context['admin_confirmation_value'] = $confirmation;
 
         // All fields are mandatory
         if ('' === $username || '' === $name || '' === $email || '' === $password) {
@@ -539,7 +542,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         // Do not allow special characters in usernames
-        if (preg_match('/[#()\/<=>]/', $username)) {
+        if (!Validator::isExtendedAlphanumeric($username)) {
             $this->context['admin_username_error'] = $this->trans('admin_error_extnd');
 
             return null;
@@ -553,7 +556,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         // Validate the e-mail address (see #6003)
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) !== $email) {
+        if (!Validator::isEmail($email)) {
             $this->context['admin_email_error'] = $this->trans('admin_error_email');
 
             return null;

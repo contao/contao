@@ -2793,8 +2793,8 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 			$strFileNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), Config::get('characterSet'));
 
-			// No popup links for templates and in the popup file manager
-			if ($this->strTable == 'tl_templates' || Input::get('popup'))
+			// No popup links for protected files, templates and in the popup file manager
+			if ($blnProtected || $this->strTable == 'tl_templates' || Input::get('popup'))
 			{
 				$return .= Image::getHtml($objFile->icon).' '.$strFileNameEncoded.$thumbnail.'</div> <div class="tl_right">';
 			}

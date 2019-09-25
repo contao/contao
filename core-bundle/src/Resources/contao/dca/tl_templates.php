@@ -464,6 +464,8 @@ class tl_templates extends Contao\Backend
 			}
 		}
 
+		ksort($arrComparable);
+
 		$objTemplate = new Contao\BackendTemplate('be_diff');
 		$objTemplate->staticTo = $dc->id;
 		$objTemplate->versions = $arrComparable;

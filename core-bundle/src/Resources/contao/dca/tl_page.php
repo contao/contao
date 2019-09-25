@@ -1607,6 +1607,11 @@ class tl_page extends Contao\Backend
 	 */
 	public function addAliasButton($arrButtons, Contao\DataContainer $dc)
 	{
+		if (!$this->User->hasAccess('tl_page::alias', 'alexf'))
+		{
+			return $arrButtons;
+		}
+
 		// Generate the aliases
 		if (Contao\Input::post('FORM_SUBMIT') == 'tl_select' && isset($_POST['alias']))
 		{

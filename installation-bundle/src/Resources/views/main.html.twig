@@ -65,7 +65,7 @@
           <input type="hidden" name="FORM_SUBMIT" value="tl_template_import">
           <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
           <h4><label for="template">{{ 'templates'|trans }}</label></h4>
-          <select name="template" id="template" class="tl_select">
+          <select name="template" id="template" class="tl_select" required>
             <option value="">-</option>
             {% for template in templates %}
               <option value="{{ template }}">{{ template }}</option>
@@ -103,21 +103,21 @@
               {% if admin_username_error is defined %}
                 <p class="tl_error">{{ admin_username_error }}</p>
               {% endif %}
-              <input type="text" name="username" id="username" class="tl_text" value="{{ admin_username_value|default }}">
+              <input type="text" name="username" id="username" class="tl_text" value="{{ admin_username_value|default }}" required>
               <h4><label for="name">{{ 'admin_name'|trans }}</label></h4>
-              <input type="text" name="name" id="name" class="tl_text" value="{{ admin_name_value|default }}">
+              <input type="text" name="name" id="name" class="tl_text" value="{{ admin_name_value|default }}" required>
               <h4><label for="email">{{ 'admin_email'|trans }}</label></h4>
               {% if admin_email_error is defined %}
                 <p class="tl_error">{{ admin_email_error }}</p>
               {% endif %}
-              <input type="email" name="email" id="email" class="tl_text" value="{{ admin_email_value|default }}">
+              <input type="email" name="email" id="email" class="tl_text" value="{{ admin_email_value|default }}" required>
               <h4><label for="password">{{ 'password'|trans }}</label></h4>
               {% if admin_password_error is defined %}
                 <p class="tl_error">{{ admin_password_error }}</p>
               {% endif %}
-              <input type="password" name="password" id="password" class="tl_text" value="">
+              <input type="password" name="password" id="password" class="tl_text" value="{{ admin_password_value|default }}" required>
               <h4><label for="confirmation">{{ 'confirmation'|trans }}</label></h4>
-              <input type="password" name="confirmation" id="confirmation" class="tl_text" value="">
+              <input type="password" name="confirmation" id="confirmation" class="tl_text" value="{{ admin_confirmation_value|default }}" required>
             </div>
             <div class="tl_formbody_submit">
               <div class="tl_submit_container">
