@@ -3404,10 +3404,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				if ($v != '')
 				{
 					// Load the DCA configuration so we can check for "dynamicPtable"
-					if (!isset($GLOBALS['loadDataContainer'][$v]))
-					{
-						$this->loadDataContainer($v);
-					}
+					$this->loadDataContainer($v);
 
 					if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'])
 					{
