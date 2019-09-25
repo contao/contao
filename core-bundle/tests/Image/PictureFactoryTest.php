@@ -514,7 +514,6 @@ class PictureFactoryTest extends TestCase
                 $this->callback(
                     function (PictureConfiguration $pictureConfig) use (&$defaultDensities): bool {
                         $this->assertTrue($pictureConfig->getSize()->getResizeConfig()->isEmpty());
-
                         $this->assertSame(0, $pictureConfig->getSize()->getResizeConfig()->getZoomLevel());
                         $this->assertSame($defaultDensities, $pictureConfig->getSize()->getDensities());
                         $this->assertSame('', $pictureConfig->getSize()->getSizes());

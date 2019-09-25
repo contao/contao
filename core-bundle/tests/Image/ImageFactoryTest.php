@@ -160,7 +160,6 @@ class ImageFactoryTest extends TestCase
 
         /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
-
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, null, null, null, $framework);
