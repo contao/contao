@@ -1,5 +1,14 @@
 # Change log
 
+## DEV
+
+ * Only add the min/max attributes to numeric text fields (see #774).
+ * Update the comments notification URL if it has changed (see #373).
+ * Hide the "generate aliases" button if the alias field has not been enabled (see #771).
+ * Show only the active columns in the module wizard (see #765).
+ * Fix the pagination menu in the versions overview (see #752).
+ * Reset unique fields when restoring a version (see #698).
+
 ## 4.8.3 (2019-09-12)
 
  * Consider the "disablePermissionChecks" attribute in the user modules (see #751).
