@@ -265,7 +265,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
                 $env = 'dev';
             }
 
-            $_SERVER['APP_ENV'] = $env;
+            $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $env;
         }
 
         $kernel = static::create($projectDir, $env);

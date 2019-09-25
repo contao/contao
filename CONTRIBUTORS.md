@@ -65,6 +65,7 @@
  * Mathias Arzberger (MDevster)
  * Defcon0
  * Cédric Morin (Cerdic) 
+ * Simon Reitinger (simonreitinger)
  * Dominik Tomasi (dtomasi)
  * Daniel Jahnsmüller
  * Christian Eggeling
