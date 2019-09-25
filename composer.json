@@ -95,6 +95,7 @@
         "symfony/swiftmailer-bundle": "^2.6 || ^3.1.5",
         "symfony/translation": "4.2.* || 4.3.*",
         "symfony/twig-bundle": "4.2.* || 4.3.*",
+        "symfony/var-dumper": "4.2.* || 4.3.*",
         "symfony/web-profiler-bundle": "4.2.* || 4.3.*",
         "symfony/yaml": "4.2.* || 4.3.*",
         "terminal42/service-annotation-bundle": "^1.0",
@@ -149,9 +150,9 @@
     },
     "extra": {
         "contao-manager-plugin": {
-            "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
             "contao/comments-bundle": "Contao\\CommentsBundle\\ContaoManager\\Plugin",
+            "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
             "contao/faq-bundle": "Contao\\FaqBundle\\ContaoManager\\Plugin",
             "contao/installation-bundle": "Contao\\InstallationBundle\\ContaoManager\\Plugin",
             "contao/listing-bundle": "Contao\\ListingBundle\\ContaoManager\\Plugin",
