@@ -231,16 +231,16 @@ EOF
     public function testCanDumpTemplateVars(): void
     {
         $template = new FrontendTemplate();
-        $template->test = 1;
+        $template->setData(['test' => 1]);
 
         $dump = null;
 
         VarDumper::setHandler(static function ($var) use (&$dump): void {
             $dump = $var;
         });
-        
+
         $template->dumpTemplateVars();
-        
+
         $this->assertSame(['test' => 1], $dump);
     }
 }
