@@ -334,8 +334,8 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'tl_class'=>'w50', 'mandatory'=>true),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'mandatory'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(64) NOT NULL default 'a:2:{i:0;i:48;i:1;i:1000;}'"
 		),
 		'minKeywordLength' => array
 		(
