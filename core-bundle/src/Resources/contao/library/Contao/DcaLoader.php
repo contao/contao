@@ -63,6 +63,8 @@ class DcaLoader extends Controller
 	 */
 	public function load($blnNoCache=false)
 	{
+		$this->addDefaultLabels($blnNoCache);
+
 		// Return if the data has been loaded already
 		if (!$blnNoCache && isset($GLOBALS['loadDataContainer'][$this->strTable]))
 		{
@@ -95,8 +97,6 @@ class DcaLoader extends Controller
 			}
 		}
 
-		$this->addDefaultLabels();
-
 		// HOOK: allow to load custom settings
 		if (isset($GLOBALS['TL_HOOKS']['loadDataContainer']) && \is_array($GLOBALS['TL_HOOKS']['loadDataContainer']))
 		{
@@ -120,8 +120,22 @@ class DcaLoader extends Controller
 	/**
 	 * Adds the default labels (see #509)
 	 */
-	private function addDefaultLabels()
+	private function addDefaultLabels($blnNoCache=false)
 	{
+		// Return if there are no labels
+		if (!isset($GLOBALS['TL_LANG'][$this->strTable]))
+		{
+			return;
+		}
+
+		// Return if the labels have been added already
+		if (isset($GLOBALS['loadDataContainerLabels'][$this->strTable]) && !$blnNoCache)
+		{
+			return;
+		}
+
+		$GLOBALS['loadDataContainerLabels'][$this->strTable] = true;
+
 		// Operations
 		foreach (array('global_operations', 'operations') as $key)
 		{

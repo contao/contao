@@ -797,6 +797,11 @@ class tl_article extends Contao\Backend
 	 */
 	public function addAliasButton($arrButtons)
 	{
+		if (!$this->User->hasAccess('tl_article::alias', 'alexf'))
+		{
+			return $arrButtons;
+		}
+
 		// Generate the aliases
 		if (isset($_POST['alias']) && Contao\Input::post('FORM_SUBMIT') == 'tl_select')
 		{

@@ -385,6 +385,9 @@ class tl_user_group extends Contao\Backend
 
 		ksort($arrReturn);
 
+		// Unset the tl_user.admin field, because it will not be shown to regular users anyway
+		unset($arrReturn['tl_user']['tl_user::admin']);
+
 		return $arrReturn;
 	}
 

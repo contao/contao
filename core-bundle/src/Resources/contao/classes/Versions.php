@@ -322,6 +322,23 @@ class Versions extends Controller
 			$data[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql']);
 		}
 
+		// Reset unique fields if the restored value already exists (see #698)
+		foreach ($data as $k=>$v)
+		{
+			if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['unique']) || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['unique'] !== true)
+			{
+				continue;
+			}
+
+			$objResult = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($k) . "=? AND id!=?")
+										->execute($v, $this->intPid);
+
+			if ($objResult->cnt > 0)
+			{
+				$data[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql']);
+			}
+		}
+
 		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
 					   ->set($data)
 					   ->execute($this->intPid);
@@ -644,7 +661,7 @@ class Versions extends Controller
 		$objDatabase = Database::getInstance();
 
 		// Get the total number of versions
-		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE version>1 AND editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : ""))
+		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : ""))
 								->execute($objUser->id);
 
 		$intLast   = ceil($objTotal->count / 30);
