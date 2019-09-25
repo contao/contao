@@ -88,6 +88,13 @@ class ImageFactoryTest extends TestCase
 
                         return true;
                     }
+                ),
+                $this->callback(
+                    function (ResizeOptions $options): bool {
+                        $this->assertFalse($options->getSkipIfDimensionsMatch());
+
+                        return true;
+                    }
                 )
             )
             ->willReturn($imageMock)
@@ -112,6 +119,55 @@ class ImageFactoryTest extends TestCase
         file_put_contents($path, '');
 
         $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
+
+        $this->assertSameImage($imageMock, $image);
+    }
+
+    public function testCreatesAnImageObjectFromAnImagePathWithEmptySize(): void
+    {
+        $path = $this->getFixturesDir().'/images/dummy.jpg';
+        $imageMock = $this->createMock(ImageInterface::class);
+
+        $resizer = $this->createMock(ResizerInterface::class);
+        $resizer
+            ->expects($this->exactly(2))
+            ->method('resize')
+            ->with(
+                $this->callback(
+                    function (Image $image) use (&$path): bool {
+                        $this->assertSame($path, $image->getPath());
+
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (ResizeConfiguration $config): bool {
+                        $this->assertTrue($config->isEmpty());
+
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (ResizeOptions $options): bool {
+                        $this->assertTrue($options->getSkipIfDimensionsMatch());
+
+                        return true;
+                    }
+                )
+            )
+            ->willReturn($imageMock)
+        ;
+
+        /** @var FilesModel&MockObject $filesModel */
+        $filesModel = $this->mockClassWithProperties(FilesModel::class);
+        $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
+        $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
+        $imageFactory = $this->getImageFactory($resizer, null, null, null, $framework);
+        $image = $imageFactory->create($path, ['', '', '']);
+
+        $this->assertSameImage($imageMock, $image);
+
+        $image = $imageFactory->create($path, [0, 0, 'box']);
 
         $this->assertSameImage($imageMock, $image);
     }

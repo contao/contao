@@ -242,6 +242,10 @@ class PictureFactory implements PictureFactoryInterface
             $resizeConfig->setMode($size[2]);
         }
 
+        if ($resizeConfig->isEmpty()) {
+            $options->setSkipIfDimensionsMatch(true);
+        }
+
         $configItem = new PictureConfigurationItem();
         $configItem->setResizeConfig($resizeConfig);
 
