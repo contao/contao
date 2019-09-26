@@ -249,7 +249,7 @@
         <source>Invalid combination of database engine and collation!</source>
       </trans-unit>
       <trans-unit id="83" resname="engine_mismatch_explain">
-        <source>The configured database engine &lt;code&gt;%s&lt;/code&gt; does not work with the configured collation &lt;code&gt;%s&lt;/code&gt;. Please use InnoDB instead (recommended) or configure a different collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
+        <source>The configured database engine &lt;code&gt;%s&lt;/code&gt; does not support utf8mb4. Please use InnoDB instead (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
       </trans-unit>
       <trans-unit id="84" resname="innodb_large_prefix">
         <source>The innodb_large_prefix option is not enabled!</source>

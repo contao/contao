@@ -235,7 +235,6 @@ class InstallTool
             if ('innodb' !== strtolower($options['engine'])) {
                 $context['errorCode'] = 4;
                 $context['engine'] = $options['engine'];
-                $context['collation'] = $options['collate'];
 
                 return true;
             }
