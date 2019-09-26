@@ -1,4 +1,5 @@
 {% extends "@ContaoInstallation/layout.html.twig" %}
+{% trans_default_domain 'ContaoInstallationBundle' %}
 
 {% block main %}
   <fieldset class="tl_tbox nolegend">
@@ -17,11 +18,11 @@
           <h4><label for="dbPort">{{ 'database_port'|trans }}</label></h4>
           <input type="text" name="dbPort" id="dbPort" class="tl_text" value="{{ parameters.database_port|default(3306) }}">
           <h4><label for="dbUser">{{ 'database_user'|trans }}</label></h4>
-          <input type="text" name="dbUser" id="dbUser" class="tl_text" value="{{ parameters.database_user }}">
+          <input type="text" name="dbUser" id="dbUser" class="tl_text" value="{{ parameters.database_user|default('') }}">
           <h4><label for="dbPassword">{{ 'database_password'|trans }}</label></h4>
-          <input type="password" name="dbPassword" id="dbPassword" class="tl_text" value="{{ parameters.database_password }}">
+          <input type="password" name="dbPassword" id="dbPassword" class="tl_text" value="{{ parameters.database_password|default('') }}">
           <h4><label for="dbName">{{ 'database_name'|trans }}</label></h4>
-          <input type="text" name="dbName" id="dbName" class="tl_text" value="{{ parameters.database_name }}">
+          <input type="text" name="dbName" id="dbName" class="tl_text" value="{{ parameters.database_name|default('') }}">
         </div>
         <div class="tl_formbody_submit">
           <div class="tl_submit_container">
