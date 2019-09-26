@@ -47,7 +47,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
         // Forward to the default translator
-        if (null === $domain || 0 !== strncmp($domain, 'contao_', 7) || 'Bundle' === substr($domain, -6)) {
+        if (null === $domain || 0 !== strncmp($domain, 'contao_', 7)) {
             return $this->translator->trans($id, $parameters, $domain, $locale);
         }
 
