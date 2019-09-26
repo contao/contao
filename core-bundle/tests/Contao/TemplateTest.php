@@ -19,6 +19,7 @@ use Contao\FrontendTemplate;
 use Contao\System;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\VarDumper\VarDumper;
 
 class TemplateTest extends TestCase
 {
@@ -225,5 +226,21 @@ EOF
 
         $template = new FrontendTemplate();
         $template->asset('/path/to/asset', 'package_name');
+    }
+
+    public function testCanDumpTemplateVars(): void
+    {
+        $template = new FrontendTemplate();
+        $template->setData(['test' => 1]);
+
+        $dump = null;
+
+        VarDumper::setHandler(static function ($var) use (&$dump): void {
+            $dump = $var;
+        });
+
+        $template->dumpTemplateVars();
+
+        $this->assertSame(['test' => 1], $dump);
     }
 }
