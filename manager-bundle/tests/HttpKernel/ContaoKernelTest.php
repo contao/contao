@@ -324,7 +324,7 @@ class ContaoKernelTest extends ContaoTestCase
      */
     public function testReturnsTheContaoCacheInProdMode(): void
     {
-        $_SERVER['APP_ENV'] = 'prod';
+        unset($_SERVER['APP_ENV']);
 
         $tempDir = realpath($this->getTempDir());
         $kernel = ContaoKernel::fromRequest($tempDir, Request::create('/'));
