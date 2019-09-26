@@ -451,6 +451,13 @@ class PictureFactoryTest extends TestCase
 
                         return true;
                     }
+                ),
+                $this->callback(
+                    function (ResizeOptions $options): bool {
+                        $this->assertFalse($options->getSkipIfDimensionsMatch());
+
+                        return true;
+                    }
                 )
             )
             ->willReturn($pictureMock)
@@ -486,6 +493,79 @@ class PictureFactoryTest extends TestCase
         $defaultDensities = '1x, 2x';
         $pictureFactory->setDefaultDensities($defaultDensities);
         $picture = $pictureFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
+
+        $this->assertSame($pictureMock, $picture);
+    }
+
+    public function testCreatesAPictureObjectWithEmptyConfig(): void
+    {
+        $defaultDensities = '';
+        $path = $this->getTempDir().'/images/dummy.jpg';
+        $imageMock = $this->createMock(ImageInterface::class);
+        $pictureMock = $this->createMock(PictureInterface::class);
+
+        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
+        $pictureGenerator
+            ->method('generate')
+            ->with(
+                $this->callback(
+                    function (ImageInterface $image) use ($imageMock): bool {
+                        $this->assertSame($imageMock, $image);
+
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (PictureConfiguration $pictureConfig) use (&$defaultDensities): bool {
+                        $this->assertTrue($pictureConfig->getSize()->getResizeConfig()->isEmpty());
+                        $this->assertSame(0, $pictureConfig->getSize()->getResizeConfig()->getZoomLevel());
+                        $this->assertSame($defaultDensities, $pictureConfig->getSize()->getDensities());
+                        $this->assertSame('', $pictureConfig->getSize()->getSizes());
+
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (ResizeOptions $options): bool {
+                        $this->assertTrue($options->getSkipIfDimensionsMatch());
+
+                        return true;
+                    }
+                )
+            )
+            ->willReturn($pictureMock)
+        ;
+
+        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory
+            ->method('create')
+            ->with(
+                $this->callback(
+                    function (string $imagePath) use ($path): bool {
+                        $this->assertSame($path, $imagePath);
+
+                        return true;
+                    }
+                ),
+                $this->callback(
+                    function (?ResizeConfiguration $size): bool {
+                        $this->assertNull($size);
+
+                        return true;
+                    }
+                )
+            )
+            ->willReturn($imageMock)
+        ;
+
+        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
+        $picture = $pictureFactory->create($path, ['', '', '']);
+
+        $this->assertSame($pictureMock, $picture);
+
+        $defaultDensities = '1x, 2x';
+        $pictureFactory->setDefaultDensities($defaultDensities);
+        $picture = $pictureFactory->create($path, [0, 0, ResizeConfiguration::MODE_BOX]);
 
         $this->assertSame($pictureMock, $picture);
     }

@@ -309,8 +309,7 @@ class ContaoKernelTest extends ContaoTestCase
      */
     public function testReturnsTheContaoKernelInDevMode(): void
     {
-        unset($_SERVER['APP_ENV']);
-        $_SERVER['SYMFONY_ENV'] = 'dev';
+        $_SERVER['APP_ENV'] = 'dev';
 
         $tempDir = realpath($this->getTempDir());
         $kernel = ContaoKernel::fromRequest($tempDir, Request::create('/'));
@@ -325,7 +324,6 @@ class ContaoKernelTest extends ContaoTestCase
     public function testReturnsTheContaoCacheInProdMode(): void
     {
         unset($_SERVER['APP_ENV']);
-        $_SERVER['SYMFONY_ENV'] = 'prod';
 
         $tempDir = realpath($this->getTempDir());
         $kernel = ContaoKernel::fromRequest($tempDir, Request::create('/'));
@@ -339,7 +337,6 @@ class ContaoKernelTest extends ContaoTestCase
      */
     public function testCreatesDevKernelFromAppEnvVar(): void
     {
-        unset($_SERVER['SYMFONY_ENV']);
         $_SERVER['APP_ENV'] = 'dev';
 
         $input = new ArgvInput(['help']);
@@ -353,16 +350,15 @@ class ContaoKernelTest extends ContaoTestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testCreatesDevKernelFromSymfonyEnvVar(): void
+    public function testCreatesProdKernelFromAppEnvVar(): void
     {
-        unset($_SERVER['APP_ENV']);
-        $_SERVER['SYMFONY_ENV'] = 'dev';
+        $_SERVER['APP_ENV'] = 'prod';
 
         $input = new ArgvInput(['help']);
         $kernel = ContaoKernel::fromInput($this->getTempDir(), $input);
 
-        $this->assertSame('dev', $kernel->getEnvironment());
-        $this->assertTrue($kernel->isDebug());
+        $this->assertSame('prod', $kernel->getEnvironment());
+        $this->assertFalse($kernel->isDebug());
     }
 
     /**

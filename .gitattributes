@@ -6,6 +6,6 @@
 /*/src/Resources/contao/languages/*/*.xlf merge=ours
 /*/src/Resources/contao/languages/en/*.xlf merge=text
 
-# Do not the minified theme files
+# Do not merge the minified theme files
 /*/src/Resources/contao/themes/flexible/*.min.css merge=ours
 /*/src/Resources/contao/themes/flexible/*.min.js merge=ours

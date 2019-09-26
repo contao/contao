@@ -253,8 +253,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         $jwtManager = null;
         $env = null;
-        $varName = isset($_SERVER['APP_ENV']) ? 'APP_ENV' : 'SYMFONY_ENV';
-        $parseJwt = isset($_SERVER[$varName]) && 'jwt' === $_SERVER[$varName];
+        $parseJwt = 'jwt' === $_SERVER['APP_ENV'];
 
         if ($parseJwt) {
             $env = 'prod';
@@ -266,7 +265,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
                 $env = 'dev';
             }
 
-            $_SERVER[$varName] = $env;
+            $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $env;
         }
 
         $kernel = static::create($projectDir, $env);
@@ -371,7 +370,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     private static function create(string $projectDir, string $env = null): self
     {
         if (null === $env) {
-            $env = (string) ($_SERVER['APP_ENV'] ?? $_SERVER['SYMFONY_ENV'] ?? 'prod');
+            $env = (string) ($_SERVER['APP_ENV'] ?? 'prod');
         }
 
         if ('dev' !== $env && 'prod' !== $env) {
@@ -390,10 +389,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     private static function loadEnv(string $projectDir, string $defaultEnv = 'prod'): void
     {
-        $varName = isset($_SERVER['APP_ENV']) ? 'APP_ENV' : 'SYMFONY_ENV';
-
         // Do not load .env files if they are already loaded or actual env variables are used
-        if (isset($_SERVER[$varName])) {
+        if (isset($_SERVER['APP_ENV'])) {
             return;
         }
 
@@ -401,12 +398,12 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/config/bootstrap.php
         if (\is_array($env = @include $projectDir.'/.env.local.php')) {
             foreach ($env as $k => $v) {
-                $_ENV[$k] = $_ENV[$k] ?? (isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v);
+                $_SERVER[$k] = $_ENV[$k] = $_ENV[$k] ?? (isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v);
             }
         } elseif (file_exists($projectDir.'/.env')) {
-            (new Dotenv(false))->loadEnv($projectDir.'/.env', $varName, 'prod', []);
+            (new Dotenv(false))->loadEnv($projectDir.'/.env', 'APP_ENV', $defaultEnv, []);
         }
 
-        $_SERVER += $_ENV;
+        $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null) ?: $defaultEnv;
     }
 }

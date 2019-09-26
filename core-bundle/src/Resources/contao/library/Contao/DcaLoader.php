@@ -27,6 +27,11 @@ class DcaLoader extends Controller
 {
 
 	/**
+	 * @var array
+	 */
+	protected static $arrLoaded = array();
+
+	/**
 	 * Table name
 	 * @var string
 	 */
@@ -63,15 +68,24 @@ class DcaLoader extends Controller
 	 */
 	public function load($blnNoCache=false)
 	{
+		$this->loadDcaFiles($blnNoCache);
 		$this->addDefaultLabels($blnNoCache);
+	}
 
+	/**
+	 * Load the DCA files
+	 *
+	 * @param boolean $blnNoCache
+	 */
+	private function loadDcaFiles($blnNoCache)
+	{
 		// Return if the data has been loaded already
-		if (!$blnNoCache && isset($GLOBALS['loadDataContainer'][$this->strTable]))
+		if (!$blnNoCache && isset(static::$arrLoaded['dcaFiles'][$this->strTable]))
 		{
 			return;
 		}
 
-		$GLOBALS['loadDataContainer'][$this->strTable] = true; // see #6145
+		static::$arrLoaded['dcaFiles'][$this->strTable] = true; // see #6145
 
 		$strCacheDir = System::getContainer()->getParameter('kernel.cache_dir');
 
@@ -118,9 +132,11 @@ class DcaLoader extends Controller
 	}
 
 	/**
-	 * Adds the default labels (see #509)
+	 * Add the default labels (see #509)
+	 *
+	 * @param boolean $blnNoCache
 	 */
-	private function addDefaultLabels($blnNoCache=false)
+	private function addDefaultLabels($blnNoCache)
 	{
 		// Return if there are no labels
 		if (!isset($GLOBALS['TL_LANG'][$this->strTable]))
@@ -129,12 +145,12 @@ class DcaLoader extends Controller
 		}
 
 		// Return if the labels have been added already
-		if (isset($GLOBALS['loadDataContainerLabels'][$this->strTable]) && !$blnNoCache)
+		if (!$blnNoCache && isset(static::$arrLoaded['languageFiles'][$this->strTable]))
 		{
 			return;
 		}
 
-		$GLOBALS['loadDataContainerLabels'][$this->strTable] = true;
+		static::$arrLoaded['languageFiles'][$this->strTable] = true;
 
 		// Operations
 		foreach (array('global_operations', 'operations') as $key)

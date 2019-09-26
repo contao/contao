@@ -261,7 +261,20 @@ class ModuleSearch extends Module
 				$this->Template->page = $page;
 			}
 
-			list($contextLength, $totalLength) = StringUtil::deserialize($this->contextLength);
+			$contextLength = 48;
+			$totalLength = 360;
+
+			$lengths = StringUtil::deserialize($this->contextLength);
+
+			if ($lengths[0] > 0)
+			{
+				$contextLength = $lengths[0];
+			}
+
+			if ($lengths[1] > 0)
+			{
+				$totalLength = $lengths[1];
+			}
 
 			// Get the results
 			for ($i=($from-1); $i<$to && $i<$count; $i++)

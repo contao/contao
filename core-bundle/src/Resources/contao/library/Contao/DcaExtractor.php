@@ -368,10 +368,7 @@ class DcaExtractor extends Controller
 		}
 
 		// Load the data container
-		if (!isset($GLOBALS['loadDataContainer'][$this->strTable]))
-		{
-			$this->loadDataContainer($this->strTable);
-		}
+		$this->loadDataContainer($this->strTable);
 
 		// Return if the table is not defined
 		if (!isset($GLOBALS['TL_DCA'][$this->strTable]))
