@@ -59,13 +59,13 @@ class ModuleLogin extends Module
 			return $objTemplate->parse();
 		}
 
-		if (!$_POST && $this->redirectBack && ($strReferer = $this->getReferer()) != Environment::get('request'))
-		{
-			$this->targetPath = $strReferer;
-		}
-		else
+		if ($_POST)
 		{
 			$this->targetPath = (string) Input::post('_target_path');
+		}
+		elseif ($this->redirectBack && ($referer = Input::get('referer', true)))
+		{
+			$this->targetPath = Environment::get('base') . base64_decode($referer, true);
 		}
 
 		return parent::generate();

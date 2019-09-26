@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Correctly redirect to the last page visited in the login module (see #569).
  * Only add the min/max attributes to numeric text fields (see #774).
  * Update the comments notification URL if it has changed (see #373).
  * Hide the "generate aliases" button if the alias field has not been enabled (see #771).

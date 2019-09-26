@@ -233,13 +233,6 @@ class BackendMain extends Backend
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
 		}
 
-		$referer = null;
-
-		if ($request = $container->get('request_stack')->getCurrentRequest())
-		{
-			$referer = base64_encode($request->getQueryString());
-		}
-
 		$this->Template->theme = Backend::getTheme();
 		$this->Template->base = Environment::get('base');
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
@@ -250,7 +243,7 @@ class BackendMain extends Backend
 		$this->Template->preview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
 		$this->Template->previewTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreviewTitle']);
 		$this->Template->profile = $GLOBALS['TL_LANG']['MSC']['profile'];
-		$this->Template->referer = $referer;
+		$this->Template->referer = base64_encode(Environment::get('queryString'));
 		$this->Template->profileTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['profileTitle']);
 		$this->Template->security = $GLOBALS['TL_LANG']['MSC']['security'];
 		$this->Template->logout = $GLOBALS['TL_LANG']['MSC']['logoutBT'];
