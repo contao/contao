@@ -398,12 +398,13 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/config/bootstrap.php
         if (\is_array($env = @include $projectDir.'/.env.local.php')) {
             foreach ($env as $k => $v) {
-                $_SERVER[$k] = $_ENV[$k] = $_ENV[$k] ?? (isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v);
+                $_ENV[$k] = $_ENV[$k] ?? (isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v);
             }
         } elseif (file_exists($projectDir.'/.env')) {
             (new Dotenv(false))->loadEnv($projectDir.'/.env', 'APP_ENV', $defaultEnv, []);
         }
 
+        $_SERVER += $_ENV;
         $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null) ?: $defaultEnv;
     }
 }
