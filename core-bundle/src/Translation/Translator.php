@@ -22,18 +22,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface, LegacyTranslatorInterface
 {
-    // Reserved translation domains for the Contao bundles
-    private const CONTAO_BUNDLES = [
-        'contao_calendar',
-        'contao_comments',
-        'contao_faq',
-        'contao_installation',
-        'contao_listing',
-        'contao_manager',
-        'contao_news',
-        'contao_newsletter',
-    ];
-
     /**
      * @var TranslatorInterface|TranslatorBagInterface|LegacyTranslatorInterface
      */
@@ -59,7 +47,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
         // Forward to the default translator
-        if (null === $domain || 0 !== strncmp($domain, 'contao_', 7) || \in_array($domain, self::CONTAO_BUNDLES, true)) {
+        if (null === $domain || 0 !== strncmp($domain, 'contao_', 7) || 'Bundle' === substr($domain, -6)) {
             return $this->translator->trans($id, $parameters, $domain, $locale);
         }
 

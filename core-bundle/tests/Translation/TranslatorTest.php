@@ -62,14 +62,7 @@ class TranslatorTest extends TestCase
     public function decoratedTranslatorDomainProvider(): \Generator
     {
         yield ['domain'];
-        yield ['contao_calendar'];
-        yield ['contao_comments'];
-        yield ['contao_faq'];
-        yield ['contao_installation'];
-        yield ['contao_listing'];
-        yield ['contao_manager'];
-        yield ['contao_news'];
-        yield ['contao_newsletter'];
+        yield ['ContaoCoreBundle'];
     }
 
     /**
