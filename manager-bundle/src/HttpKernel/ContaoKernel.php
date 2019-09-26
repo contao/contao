@@ -189,8 +189,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        if ($configFile = $this->getConfigFile('parameters.yml')) {
-            $loader->load($configFile);
+        if ($parametersFile = $this->getConfigFile('parameters.yml')) {
+            $loader->load($parametersFile);
         }
 
         $config = $this->getManagerConfig()->all();
@@ -202,8 +202,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         // Reload the parameters.yml file
-        if ($configFile = $this->getConfigFile('parameters.yml')) {
-            $loader->load($configFile);
+        if ($parametersFile) {
+            $loader->load($parametersFile);
         }
 
         if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment().'.yml')) {
