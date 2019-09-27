@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  */
 class PageSelector extends Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -155,7 +154,9 @@ class PageSelector extends Widget
 					$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array_unique($arrIds);
 				}
 			}
-			catch (\Exception $e) {}
+			catch (\Exception $e)
+			{
+			}
 		}
 
 		$strNode = $objSessionBag->get('tl_page_picker');
@@ -245,8 +246,8 @@ class PageSelector extends Widget
 		}
 
 		// Return the tree
-		return '<ul class="tl_listing tree_view picker_selector'.($this->strClass ? ' ' . $this->strClass : '').'" id="'.$this->strId.'" data-callback="reloadPagetree" data-inserttag="link_url">
-    <li class="tl_folder_top"><div class="tl_left">'.Image::getHtml($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['icon'] ?: 'pagemounts.svg').' '.$GLOBALS['TL_LANG']['MOD']['page'][0].'</div> <div class="tl_right">&nbsp;</div><div style="clear:both"></div></li><li class="parent" id="'.$this->strId.'_parent"><ul>'.$tree.$strReset.'
+		return '<ul class="tl_listing tree_view picker_selector' . ($this->strClass ? ' ' . $this->strClass : '') . '" id="' . $this->strId . '" data-callback="reloadPagetree" data-inserttag="link_url">
+    <li class="tl_folder_top"><div class="tl_left">' . Image::getHtml($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['icon'] ?: 'pagemounts.svg') . ' ' . $GLOBALS['TL_LANG']['MOD']['page'][0] . '</div> <div class="tl_right">&nbsp;</div><div style="clear:both"></div></li><li class="parent" id="' . $this->strId . '_parent"><ul>' . $tree . $strReset . '
   </ul></li></ul>';
 	}
 
@@ -336,11 +337,11 @@ class PageSelector extends Widget
 		$xtnode = 'tree_' . $this->strTable . '_' . $this->strName;
 
 		// Get the session data and toggle the nodes
-		if (Input::get($flag.'tg'))
+		if (Input::get($flag . 'tg'))
 		{
-			$session[$node][Input::get($flag.'tg')] = (isset($session[$node][Input::get($flag.'tg')]) && $session[$node][Input::get($flag.'tg')] == 1) ? 0 : 1;
+			$session[$node][Input::get($flag . 'tg')] = (isset($session[$node][Input::get($flag . 'tg')]) && $session[$node][Input::get($flag . 'tg')] == 1) ? 0 : 1;
 			$objSessionBag->replace($session);
-			$this->redirect(preg_replace('/(&(amp;)?|\?)'.$flag.'tg=[^& ]*/i', '', Environment::get('request')));
+			$this->redirect(preg_replace('/(&(amp;)?|\?)' . $flag . 'tg=[^& ]*/i', '', Environment::get('request')));
 		}
 
 		$objPage = $this->Database->prepare("SELECT id, alias, type, protected, published, start, stop, hide, title FROM tl_page WHERE id=?")
@@ -369,7 +370,7 @@ class PageSelector extends Widget
 			}
 		}
 
-		$return .= "\n    " . '<li class="'.(($objPage->type == 'root') ? 'tl_folder' : 'tl_file').' toggle_select hover-div"><div class="tl_left" style="padding-left:'.($intMargin + $intSpacing).'px">';
+		$return .= "\n    " . '<li class="' . (($objPage->type == 'root') ? 'tl_folder' : 'tl_file') . ' toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
 
 		$folderAttribute = 'style="margin-left:20px"';
 		$session[$node][$id] = is_numeric($session[$node][$id]) ? $session[$node][$id] : 0;
@@ -381,7 +382,7 @@ class PageSelector extends Widget
 			$folderAttribute = '';
 			$img = $blnIsOpen ? 'folMinus.svg' : 'folPlus.svg';
 			$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-			$return .= '<a href="'.Backend::addToUrl($flag.'tg='.$id).'" title="'.StringUtil::specialchars($alt).'" onclick="return AjaxRequest.togglePagetree(this,\''.$xtnode.'_'.$id.'\',\''.$this->strField.'\',\''.$this->strName.'\','.$level.')">'.Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
+			$return .= '<a href="' . Backend::addToUrl($flag . 'tg=' . $id) . '" title="' . StringUtil::specialchars($alt) . '" onclick="return AjaxRequest.togglePagetree(this,\'' . $xtnode . '_' . $id . '\',\'' . $this->strField . '\',\'' . $this->strName . '\',' . $level . ')">' . Image::getHtml($img, '', 'style="margin-right:2px"') . '</a>';
 		}
 
 		// Set the protection status
@@ -390,23 +391,23 @@ class PageSelector extends Widget
 		// Add the current page
 		if (!empty($childs))
 		{
-			$return .= Image::getHtml($this->getPageStatusIcon($objPage), '', $folderAttribute).' <a href="' . Backend::addToUrl('pn='.$objPage->id) . '" title="'.StringUtil::specialchars($objPage->title . ' (' . $objPage->alias . Config::get('urlSuffix') . ')').'">'.(($objPage->type == 'root') ? '<strong>' : '').$objPage->title.(($objPage->type == 'root') ? '</strong>' : '').'</a></div> <div class="tl_right">';
+			$return .= Image::getHtml($this->getPageStatusIcon($objPage), '', $folderAttribute) . ' <a href="' . Backend::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($objPage->title . ' (' . $objPage->alias . Config::get('urlSuffix') . ')') . '">' . (($objPage->type == 'root') ? '<strong>' : '') . $objPage->title . (($objPage->type == 'root') ? '</strong>' : '') . '</a></div> <div class="tl_right">';
 		}
 		else
 		{
-			$return .= Image::getHtml($this->getPageStatusIcon($objPage), '', $folderAttribute).' '.(($objPage->type == 'root') ? '<strong>' : '').$objPage->title.(($objPage->type == 'root') ? '</strong>' : '').'</div> <div class="tl_right">';
+			$return .= Image::getHtml($this->getPageStatusIcon($objPage), '', $folderAttribute) . ' ' . (($objPage->type == 'root') ? '<strong>' : '') . $objPage->title . (($objPage->type == 'root') ? '</strong>' : '') . '</div> <div class="tl_right">';
 		}
 
 		// Add checkbox or radio button
 		switch ($this->fieldType)
 		{
 			case 'checkbox':
-				$return .= '<input type="checkbox" name="'.$this->strName.'[]" id="'.$this->strName.'_'.$id.'" class="tl_tree_checkbox" value="'.StringUtil::specialchars($id).'" onfocus="Backend.getScrollOffset()"'.static::optionChecked($id, $this->varValue).'>';
+				$return .= '<input type="checkbox" name="' . $this->strName . '[]" id="' . $this->strName . '_' . $id . '" class="tl_tree_checkbox" value="' . StringUtil::specialchars($id) . '" onfocus="Backend.getScrollOffset()"' . static::optionChecked($id, $this->varValue) . '>';
 				break;
 
 			default:
 			case 'radio':
-				$return .= '<input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.$id.'" class="tl_tree_radio" value="'.StringUtil::specialchars($id).'" onfocus="Backend.getScrollOffset()"'.static::optionChecked($id, $this->varValue).'>';
+				$return .= '<input type="radio" name="' . $this->strName . '" id="' . $this->strName . '_' . $id . '" class="tl_tree_radio" value="' . StringUtil::specialchars($id) . '" onfocus="Backend.getScrollOffset()"' . static::optionChecked($id, $this->varValue) . '>';
 				break;
 		}
 
@@ -415,7 +416,7 @@ class PageSelector extends Widget
 		// Begin a new submenu
 		if ($blnIsOpen || (!empty($childs) && $objSessionBag->get('page_selector_search') != ''))
 		{
-			$return .= '<li class="parent" id="'.$node.'_'.$id.'"><ul class="level_'.$level.'">';
+			$return .= '<li class="parent" id="' . $node . '_' . $id . '"><ul class="level_' . $level . '">';
 
 			for ($k=0, $c=\count($childs); $k<$c; $k++)
 			{

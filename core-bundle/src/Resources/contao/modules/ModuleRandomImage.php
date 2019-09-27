@@ -19,7 +19,6 @@ use Contao\Model\Collection;
  */
 class ModuleRandomImage extends Module
 {
-
 	/**
 	 * Files object
 	 * @var Collection|FilesModel

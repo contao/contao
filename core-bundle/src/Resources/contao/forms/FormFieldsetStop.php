@@ -17,7 +17,6 @@ namespace Contao;
  */
 class FormFieldsetStop extends Widget
 {
-
 	/**
 	 * Template
 	 *

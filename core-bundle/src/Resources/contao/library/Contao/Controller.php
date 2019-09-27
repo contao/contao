@@ -43,7 +43,6 @@ use Symfony\Component\Finder\Glob;
  */
 abstract class Controller extends System
 {
-
 	/**
 	 * Find a particular template file and return its path
 	 *
@@ -358,7 +357,7 @@ abstract class Controller extends System
 		// Return if the class does not exist
 		if (!class_exists($strClass))
 		{
-			static::log('Module class "'.$strClass.'" (module "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
+			static::log('Module class "' . $strClass . '" (module "' . $objRow->type . '") does not exist', __METHOD__, TL_ERROR);
 
 			return '';
 		}
@@ -381,7 +380,7 @@ abstract class Controller extends System
 		// Disable indexing if protected
 		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
+			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
 		return $strBuffer;
@@ -468,7 +467,7 @@ abstract class Controller extends System
 		// Disable indexing if protected
 		if ($objArticle->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
+			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
 		return $strBuffer;
@@ -514,7 +513,7 @@ abstract class Controller extends System
 		// Return if the class does not exist
 		if (!class_exists($strClass))
 		{
-			static::log('Content element class "'.$strClass.'" (content element "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
+			static::log('Content element class "' . $strClass . '" (content element "' . $objRow->type . '") does not exist', __METHOD__, TL_ERROR);
 
 			return '';
 		}
@@ -537,7 +536,7 @@ abstract class Controller extends System
 		// Disable indexing if protected
 		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
+			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
 		return $strBuffer;
@@ -577,7 +576,7 @@ abstract class Controller extends System
 
 		if (!class_exists($strClass))
 		{
-			static::log('Form class "'.$strClass.'" does not exist', __METHOD__, TL_ERROR);
+			static::log('Form class "' . $strClass . '" does not exist', __METHOD__, TL_ERROR);
 
 			return '';
 		}
@@ -637,7 +636,7 @@ abstract class Controller extends System
 	public static function getPageStatusIcon($objPage)
 	{
 		$sub = 0;
-		$image = $objPage->type.'.svg';
+		$image = $objPage->type . '.svg';
 
 		// Page not published or not active
 		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop < time()))
@@ -660,7 +659,7 @@ abstract class Controller extends System
 		// Get the image name
 		if ($sub > 0)
 		{
-			$image = $objPage->type.'_'.$sub.'.svg';
+			$image = $objPage->type . '_' . $sub . '.svg';
 		}
 
 		// HOOK: add custom logic
@@ -1022,7 +1021,7 @@ abstract class Controller extends System
 			}
 		}
 
-		return implode($return);
+		return implode('', $return);
 	}
 
 	/**
@@ -1241,7 +1240,7 @@ abstract class Controller extends System
 		}
 
 		$search = $blnHrefOnly ? 'href' : 'href|src';
-		$arrUrls = preg_split('/(('.$search.')="([^"]+)")/i', $strContent, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$arrUrls = preg_split('/((' . $search . ')="([^"]+)")/i', $strContent, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$strContent = '';
 
 		for ($i=0, $c=\count($arrUrls); $i<$c; $i+=4)
@@ -1408,12 +1407,11 @@ abstract class Controller extends System
 			$intId = $objParent->pid;
 
 			// Add the log entry
-			$arrParent[] = $strTable .'.id=' . $intId;
+			$arrParent[] = $strTable . '.id=' . $intId;
 
 			// Load the data container of the parent table
 			$this->loadDataContainer($strTable);
-		}
-		while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		} while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
@@ -1700,7 +1698,7 @@ abstract class Controller extends System
 			if ($arrItem['fullsize'])
 			{
 				// Open images in the lightbox
-				if (preg_match('/\.(' . strtr(preg_quote(Config::get('validImageTypes'), '/'), ',', '|'). ')$/i', $arrItem['imageUrl']))
+				if (preg_match('/\.(' . strtr(preg_quote(Config::get('validImageTypes'), '/'), ',', '|') . ')$/i', $arrItem['imageUrl']))
 				{
 					// Do not add the TL_FILES_URL to external URLs (see #4923)
 					if (strncmp($arrItem['imageUrl'], 'http://', 7) !== 0 && strncmp($arrItem['imageUrl'], 'https://', 8) !== 0)

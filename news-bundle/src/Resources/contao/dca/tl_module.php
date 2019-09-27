@@ -132,7 +132,6 @@ if (isset($bundles['ContaoCommentsBundle']))
  */
 class tl_module_news extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -149,7 +148,7 @@ class tl_module_news extends Contao\Backend
 	 */
 	public function getNewsArchives()
 	{
-		if (!$this->User->isAdmin && !\is_array($this->User->news))
+		if (!$this->User->isAdmin && !is_array($this->User->news))
 		{
 			return array();
 		}

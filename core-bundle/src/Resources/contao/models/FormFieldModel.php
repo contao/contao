@@ -167,7 +167,6 @@ use Contao\Model\Collection;
  */
 class FormFieldModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

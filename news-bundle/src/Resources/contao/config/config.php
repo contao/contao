@@ -35,7 +35,7 @@ array_insert($GLOBALS['FE_MOD'], 2, array
 $GLOBALS['TL_CRON']['daily']['generateNewsFeeds'] = array('Contao\News', 'generateFeeds');
 
 // Style sheet
-if (\defined('TL_MODE') && TL_MODE == 'BE')
+if (defined('TL_MODE') && TL_MODE == 'BE')
 {
 	$GLOBALS['TL_CSS'][] = 'bundles/contaonews/news.min.css|static';
 }

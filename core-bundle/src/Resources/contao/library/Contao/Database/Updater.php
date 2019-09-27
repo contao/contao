@@ -32,7 +32,6 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class Updater extends Controller
 {
-
 	/**
 	 * Import the Database object
 	 */
@@ -329,14 +328,14 @@ class Updater extends Controller
 				{
 					switch ($objStyle->gradientAngle)
 					{
-						case 'top':          $angle = 'to bottom';       break;
-						case 'right':        $angle = 'to left';         break;
-						case 'bottom':       $angle = 'to top';          break;
-						case 'left':         $angle = 'to right';        break;
-						case 'top left':     $angle = 'to bottom right'; break;
-						case 'top right':    $angle = 'to bottom left';  break;
-						case 'bottom left':  $angle = 'to top right';    break;
-						case 'bottom right': $angle = 'to top left';     break;
+						case 'top': $angle = 'to bottom'; break;
+						case 'right': $angle = 'to left'; break;
+						case 'bottom': $angle = 'to top'; break;
+						case 'left': $angle = 'to right'; break;
+						case 'top left': $angle = 'to bottom right'; break;
+						case 'top right': $angle = 'to bottom left'; break;
+						case 'bottom left': $angle = 'to top right'; break;
+						case 'bottom right': $angle = 'to top left'; break;
 					}
 				}
 
@@ -765,6 +764,7 @@ class Updater extends Controller
 			{
 				continue;
 			}
+
 			if ($arrConfig['dataContainer'] == 'Folder' && !$arrConfig['databaseAssisted'])
 			{
 				continue;

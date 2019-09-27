@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class BackendConfirm extends Backend
 {
-
 	/**
 	 * Initialize the controller
 	 *

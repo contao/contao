@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class FileUpload extends Backend
 {
-
 	/**
 	 * Error indicator
 	 * @var boolean
@@ -145,7 +144,6 @@ class FileUpload extends Backend
 				Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
 				$this->blnHasError = true;
 			}
-
 			else
 			{
 				$strExtension = strtolower(substr($file['name'], strrpos($file['name'], '.') + 1));

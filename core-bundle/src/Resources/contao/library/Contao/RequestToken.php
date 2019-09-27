@@ -36,7 +36,6 @@ use Symfony\Component\Security\Csrf\CsrfToken;
  */
 class RequestToken
 {
-
 	/**
 	 * Read the token from the session or generate a new one
 	 */

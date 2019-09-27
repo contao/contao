@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PageError404 extends Frontend
 {
-
 	/**
 	 * Generate an error 404 page
 	 */

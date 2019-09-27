@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class PageForward extends Frontend
 {
-
 	/**
 	 * Redirect to an internal page
 	 *

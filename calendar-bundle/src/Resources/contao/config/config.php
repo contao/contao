@@ -35,7 +35,7 @@ array_insert($GLOBALS['FE_MOD'], 2, array
 $GLOBALS['TL_CRON']['daily']['generateCalendarFeeds'] = array('Contao\Calendar', 'generateFeeds');
 
 // Style sheet
-if (\defined('TL_MODE') && TL_MODE == 'BE')
+if (defined('TL_MODE') && TL_MODE == 'BE')
 {
 	$GLOBALS['TL_CSS'][] = 'bundles/contaocalendar/calendar.min.css|static';
 }

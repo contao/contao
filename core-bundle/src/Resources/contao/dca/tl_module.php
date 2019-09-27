@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_module'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -630,7 +629,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
  */
 class tl_module extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -708,7 +706,7 @@ class tl_module extends Contao\Backend
 	 */
 	public function getForms()
 	{
-		if (!$this->User->isAdmin && !\is_array($this->User->forms))
+		if (!$this->User->isAdmin && !is_array($this->User->forms))
 		{
 			return array();
 		}
@@ -744,7 +742,7 @@ class tl_module extends Contao\Backend
 			$arrCustom = Contao\StringUtil::deserialize($objLayout->sections);
 
 			// Add the custom layout sections
-			if (!empty($arrCustom) && \is_array($arrCustom))
+			if (!empty($arrCustom) && is_array($arrCustom))
 			{
 				foreach ($arrCustom as $v)
 				{
@@ -790,7 +788,7 @@ class tl_module extends Contao\Backend
 	{
 		if (!trim($varValue))
 		{
-			$varValue = (\is_array($GLOBALS['TL_LANG']['tl_module']['emailText']) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : $GLOBALS['TL_LANG']['tl_module']['emailText']);
+			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['emailText']) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : $GLOBALS['TL_LANG']['tl_module']['emailText']);
 		}
 
 		return $varValue;
@@ -807,7 +805,7 @@ class tl_module extends Contao\Backend
 	{
 		if (!trim($varValue))
 		{
-			$varValue = (\is_array($GLOBALS['TL_LANG']['tl_module']['passwordText']) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : $GLOBALS['TL_LANG']['tl_module']['passwordText']);
+			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['passwordText']) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : $GLOBALS['TL_LANG']['tl_module']['passwordText']);
 		}
 
 		return $varValue;
@@ -822,7 +820,7 @@ class tl_module extends Contao\Backend
 	 */
 	public function listModule($row)
 	{
-		return '<div class="tl_content_left">'. $row['name'] .' <span style="color:#999;padding-left:3px">['. ($GLOBALS['TL_LANG']['FMD'][$row['type']][0] ?? $row['type']) .']</span></div>';
+		return '<div class="tl_content_left">' . $row['name'] . ' <span style="color:#999;padding-left:3px">[' . ($GLOBALS['TL_LANG']['FMD'][$row['type']][0] ?? $row['type']) . ']</span></div>';
 	}
 
 	/**

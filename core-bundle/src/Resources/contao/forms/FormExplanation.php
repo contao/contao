@@ -19,7 +19,6 @@ namespace Contao;
  */
 class FormExplanation extends Widget
 {
-
 	/**
 	 * Template
 	 *
@@ -37,7 +36,9 @@ class FormExplanation extends Widget
 	/**
 	 * Do not validate
 	 */
-	public function validate() {}
+	public function validate()
+	{
+	}
 
 	/**
 	 * Generate the widget and return it as string

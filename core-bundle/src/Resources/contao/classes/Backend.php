@@ -28,7 +28,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 abstract class Backend extends Controller
 {
-
 	/**
 	 * Load the database object
 	 */
@@ -261,7 +260,9 @@ abstract class Backend extends Controller
 			{
 				include $file;
 			}
-			catch (\Exception $e) {}
+			catch (\Exception $e)
+			{
+			}
 
 			$strRelpath = StringUtil::stripRootDir($file);
 
@@ -513,7 +514,7 @@ abstract class Backend extends Controller
 						// Add table name
 						if (isset($GLOBALS['TL_LANG']['MOD'][$table]))
 						{
-							$trail[] = ' › <span>'. $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
+							$trail[] = ' › <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
 						}
 
 						// Add object title or name
@@ -543,7 +544,7 @@ abstract class Backend extends Controller
 				// Add the last parent table
 				if (isset($GLOBALS['TL_LANG']['MOD'][$table]))
 				{
-					$trail[] = ' › <span>'. $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
+					$trail[] = ' › <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
 				}
 
 				// Add the breadcrumb trail in reverse order
@@ -837,7 +838,7 @@ abstract class Backend extends Controller
 				}
 				else
 				{
-					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn='.$objPage->id) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $objPage->title . '</a>';
+					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $objPage->title . '</a>';
 				}
 
 				// Do not show the mounted pages
@@ -847,8 +848,7 @@ abstract class Backend extends Controller
 				}
 
 				$intId = $objPage->pid;
-			}
-			while ($intId > 0 && $objPage->type != 'root');
+			} while ($intId > 0 && $objPage->type != 'root');
 		}
 
 		// Check whether the node is mounted
@@ -862,7 +862,7 @@ abstract class Backend extends Controller
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
 
 		// Add root link
-		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
@@ -910,10 +910,10 @@ abstract class Backend extends Controller
 		}
 
 		// Add the breadcrumb link
-		$label = '<a href="' . self::addToUrl('pn='.$row['id']) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $label . '</a>';
+		$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
 
 		// Return the image
-		return '<a href="contao/main.php?do=feRedirect&amp;page='.$row['id'].'" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']).'" target="_blank">'.Image::getHtml($image, '', $imageAttribute).'</a> '.$label;
+		return '<a href="contao/main.php?do=feRedirect&amp;page=' . $row['id'] . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
 	}
 
 	/**
@@ -1004,7 +1004,7 @@ abstract class Backend extends Controller
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . self::addToUrl('fn=') . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Image::getHtml('filemounts.svg') . ' <a href="' . self::addToUrl('fn=') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -1024,7 +1024,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . self::addToUrl('fn='.$strPath) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . self::addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolder . '</a>';
 			}
 		}
 

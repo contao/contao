@@ -116,7 +116,6 @@ use Contao\Model\Collection;
  */
 class ArticleModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

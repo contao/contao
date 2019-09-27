@@ -17,7 +17,6 @@ namespace Contao;
  */
 class DropZone extends FileUpload
 {
-
 	/**
 	 * Generate the markup for the DropZone uploader
 	 *

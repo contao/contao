@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleChangePassword extends Module
 {
-
 	/**
 	 * Template
 	 * @var string

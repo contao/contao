@@ -42,7 +42,6 @@ namespace Contao;
  */
 class Date
 {
-
 	/**
 	 * Date string
 	 * @var int
@@ -224,7 +223,9 @@ class Date
 			throw new \Exception(sprintf('Invalid date format "%s"', $strFormat));
 		}
 
-		return preg_replace_callback('/[a-zA-Z]/', static function ($matches)
+		return preg_replace_callback(
+			'/[a-zA-Z]/',
+			static function ($matches)
 			{
 				// Thanks to Christian Labuda
 				$arrRegexp = array
@@ -246,7 +247,9 @@ class Date
 				);
 
 				return $arrRegexp[$matches[0]] ?? $matches[0];
-			}, preg_quote($strFormat));
+			},
+			preg_quote($strFormat)
+		);
 	}
 
 	/**

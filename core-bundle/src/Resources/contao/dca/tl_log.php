@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_log'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -129,7 +128,6 @@ $GLOBALS['TL_DCA']['tl_log'] = array
  */
 class tl_log extends Contao\Backend
 {
-
 	/**
 	 * Colorize the log entries depending on their category
 	 *
@@ -156,7 +154,7 @@ class tl_log extends Contao\Backend
 				break;
 
 			default:
-				if (isset($GLOBALS['TL_HOOKS']['colorizeLogEntries']) && \is_array($GLOBALS['TL_HOOKS']['colorizeLogEntries']))
+				if (isset($GLOBALS['TL_HOOKS']['colorizeLogEntries']) && is_array($GLOBALS['TL_HOOKS']['colorizeLogEntries']))
 				{
 					foreach ($GLOBALS['TL_HOOKS']['colorizeLogEntries'] as $callback)
 					{

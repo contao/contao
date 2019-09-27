@@ -274,7 +274,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class PageModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string
@@ -355,7 +354,7 @@ class PageModel extends Model
 
 			if (!empty($varLanguage))
 			{
-				$arrColumns[] = "($t.language IN('". implode("','", $varLanguage) ."') OR $t.fallback='1')";
+				$arrColumns[] = "($t.language IN('" . implode("','", $varLanguage) . "') OR $t.fallback='1')";
 			}
 			else
 			{
@@ -1017,7 +1016,7 @@ class PageModel extends Model
 		// No root page found
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
-			System::log('Page ID "'. $this->id .'" does not belong to a root page', __METHOD__, TL_ERROR);
+			System::log('Page ID "' . $this->id . '" does not belong to a root page', __METHOD__, TL_ERROR);
 			throw new NoRootPageFoundException('No root page found');
 		}
 
@@ -1028,10 +1027,12 @@ class PageModel extends Model
 		{
 			$this->dateFormat = Config::get('dateFormat');
 		}
+
 		if ($this->timeFormat == '')
 		{
 			$this->timeFormat = Config::get('timeFormat');
 		}
+
 		if ($this->datimFormat == '')
 		{
 			$this->datimFormat = Config::get('datimFormat');
@@ -1098,9 +1099,7 @@ class PageModel extends Model
 			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 		}
 
-		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
-
-		return $strUrl;
+		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
 
 	/**
@@ -1128,9 +1127,7 @@ class PageModel extends Model
 			UrlGeneratorInterface::ABSOLUTE_URL
 		);
 
-		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
-
-		return $strUrl;
+		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
 
 	/**
@@ -1170,9 +1167,7 @@ class PageModel extends Model
 
 		$context->setBaseUrl('');
 
-		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
-
-		return $strUrl;
+		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
 
 	/**

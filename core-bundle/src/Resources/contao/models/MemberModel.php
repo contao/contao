@@ -168,7 +168,6 @@ use Contao\Model\Registry;
  */
 class MemberModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

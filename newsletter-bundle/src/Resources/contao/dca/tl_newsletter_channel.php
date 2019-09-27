@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -177,7 +176,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
  */
 class tl_newsletter_channel extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -200,7 +198,7 @@ class tl_newsletter_channel extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->newsletters) || !\is_array($this->User->newsletters))
+		if (empty($this->User->newsletters) || !is_array($this->User->newsletters))
 		{
 			$root = array(0);
 		}
@@ -246,7 +244,7 @@ class tl_newsletter_channel extends Contao\Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!\in_array(Contao\Input::get('id'), $root) || (Contao\Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newsletterp')))
+				if (!in_array(Contao\Input::get('id'), $root) || (Contao\Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newsletterp')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' newsletter channel ID ' . Contao\Input::get('id') . '.');
 				}
@@ -257,6 +255,7 @@ class tl_newsletter_channel extends Contao\Backend
 			case 'overrideAll':
 			case 'copyAll':
 				$session = $objSession->all();
+
 				if (Contao\Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newsletterp'))
 				{
 					$session['CURRENT']['IDS'] = array();
@@ -285,7 +284,7 @@ class tl_newsletter_channel extends Contao\Backend
 	public function adjustPermissions($insertId)
 	{
 		// The oncreate_callback passes $insertId as second argument
-		if (\func_num_args() == 4)
+		if (func_num_args() == 4)
 		{
 			$insertId = func_get_arg(1);
 		}
@@ -296,7 +295,7 @@ class tl_newsletter_channel extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->newsletters) || !\is_array($this->User->newsletters))
+		if (empty($this->User->newsletters) || !is_array($this->User->newsletters))
 		{
 			$root = array(0);
 		}
@@ -306,7 +305,7 @@ class tl_newsletter_channel extends Contao\Backend
 		}
 
 		// The channel is enabled already
-		if (\in_array($insertId, $root))
+		if (in_array($insertId, $root))
 		{
 			return;
 		}
@@ -316,7 +315,7 @@ class tl_newsletter_channel extends Contao\Backend
 
 		$arrNew = $objSessionBag->get('new_records');
 
-		if (\is_array($arrNew['tl_newsletter_channel']) && \in_array($insertId, $arrNew['tl_newsletter_channel']))
+		if (is_array($arrNew['tl_newsletter_channel']) && in_array($insertId, $arrNew['tl_newsletter_channel']))
 		{
 			// Add the permissions on group level
 			if ($this->User->inherit != 'custom')
@@ -327,7 +326,7 @@ class tl_newsletter_channel extends Contao\Backend
 				{
 					$arrNewsletterp = Contao\StringUtil::deserialize($objGroup->newsletterp);
 
-					if (\is_array($arrNewsletterp) && \in_array('create', $arrNewsletterp))
+					if (is_array($arrNewsletterp) && in_array('create', $arrNewsletterp))
 					{
 						$arrNewsletters = Contao\StringUtil::deserialize($objGroup->newsletters, true);
 						$arrNewsletters[] = $insertId;
@@ -347,7 +346,7 @@ class tl_newsletter_channel extends Contao\Backend
 
 				$arrNewsletterp = Contao\StringUtil::deserialize($objUser->newsletterp);
 
-				if (\is_array($arrNewsletterp) && \in_array('create', $arrNewsletterp))
+				if (is_array($arrNewsletterp) && in_array('create', $arrNewsletterp))
 				{
 					$arrNewsletters = Contao\StringUtil::deserialize($objUser->newsletters, true);
 					$arrNewsletters[] = $insertId;
@@ -377,7 +376,7 @@ class tl_newsletter_channel extends Contao\Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_newsletter_channel') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_newsletter_channel') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -394,7 +393,7 @@ class tl_newsletter_channel extends Contao\Backend
 	 */
 	public function copyChannel($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'newsletterp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('create', 'newsletterp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -411,6 +410,6 @@ class tl_newsletter_channel extends Contao\Backend
 	 */
 	public function deleteChannel($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'newsletterp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('delete', 'newsletterp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

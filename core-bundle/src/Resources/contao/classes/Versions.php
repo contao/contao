@@ -19,7 +19,6 @@ use Contao\CoreBundle\Exception\ResponseException;
  */
 class Versions extends Controller
 {
-
 	/**
 	 * Table
 	 * @var string
@@ -65,7 +64,8 @@ class Versions extends Controller
 
 		$this->loadDataContainer($strTable);
 
-		if (!isset($GLOBALS['TL_DCA'][$strTable])) {
+		if (!isset($GLOBALS['TL_DCA'][$strTable]))
+		{
 			throw new \InvalidArgumentException(sprintf('"%s" is not a valid table', StringUtil::specialchars($strTable)));
 		}
 
@@ -146,6 +146,8 @@ class Versions extends Controller
 
 	/**
 	 * Create a new version of a record
+	 *
+	 * @param boolean $blnHideUser
 	 */
 	public function create($blnHideUser=false)
 	{
@@ -257,7 +259,7 @@ class Versions extends Controller
 			}
 		}
 
-		$this->log('Version '.$intVersion.' of record "'.$this->strTable.'.id='.$this->intPid.'" has been created'.$this->getParentEntries($this->strTable, $this->intPid), __METHOD__, TL_GENERAL);
+		$this->log('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been created' . $this->getParentEntries($this->strTable, $this->intPid), __METHOD__, TL_GENERAL);
 	}
 
 	/**
@@ -385,7 +387,7 @@ class Versions extends Controller
 			}
 		}
 
-		$this->log('Version '.$intVersion.' of record "'.$this->strTable.'.id='.$this->intPid.'" has been restored'.$this->getParentEntries($this->strTable, $this->intPid), __METHOD__, TL_GENERAL);
+		$this->log('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been restored' . $this->getParentEntries($this->strTable, $this->intPid), __METHOD__, TL_GENERAL);
 	}
 
 	/**
@@ -425,7 +427,7 @@ class Versions extends Controller
 				}
 
 				$arrVersions[$objVersions->version] = $objVersions->row();
-				$arrVersions[$objVersions->version]['info'] = $GLOBALS['TL_LANG']['MSC']['version'].' '.$objVersions->version.' ('.Date::parse(Config::get('datimFormat'), $objVersions->tstamp).') '.$objVersions->username;
+				$arrVersions[$objVersions->version]['info'] = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . $objVersions->version . ' (' . Date::parse(Config::get('datimFormat'), $objVersions->tstamp) . ') ' . $objVersions->username;
 			}
 
 			// To
@@ -505,6 +507,7 @@ class Versions extends Controller
 								{
 									$to[$k] = preg_replace('/' . preg_quote($delimiter, ' ?/') . '/', $delimiter . ' ', $to[$k]);
 								}
+
 								if (isset($from[$k]))
 								{
 									$from[$k] = preg_replace('/' . preg_quote($delimiter, ' ?/') . '/', $delimiter . ' ', $from[$k]);
@@ -517,6 +520,7 @@ class Versions extends Controller
 								{
 									$to[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
 								}
+
 								if (!\is_array($from[$k]) && \is_array(($tmp = StringUtil::deserialize($from[$k]))))
 								{
 									$from[$k] = $this->implodeRecursive($tmp, $blnIsBinary);
@@ -533,6 +537,7 @@ class Versions extends Controller
 							{
 								$to[$k] = StringUtil::binToUuid($to[$k]);
 							}
+
 							if (Validator::isBinaryUuid($from[$k]))
 							{
 								$to[$k] = StringUtil::binToUuid($from[$k]);
@@ -568,6 +573,7 @@ class Versions extends Controller
 						{
 							$to[$k] = explode("\n", $to[$k]);
 						}
+
 						if (!\is_array($from[$k]))
 						{
 							$from[$k] = explode("\n", $from[$k]);
@@ -583,7 +589,7 @@ class Versions extends Controller
 		// Identical versions
 		if ($strBuffer == '')
 		{
-			$strBuffer = '<p>'.$GLOBALS['TL_LANG']['MSC']['identicalVersions'].'</p>';
+			$strBuffer = '<p>' . $GLOBALS['TL_LANG']['MSC']['identicalVersions'] . '</p>';
 		}
 
 		if ($blnReturnBuffer)
@@ -615,7 +621,7 @@ class Versions extends Controller
 	public function renderDropdown()
 	{
 		$objVersion = $this->Database->prepare("SELECT tstamp, version, username, active FROM tl_version WHERE fromTable=? AND pid=? ORDER BY version DESC")
-								     ->execute($this->strTable, $this->intPid);
+									 ->execute($this->strTable, $this->intPid);
 
 		if ($objVersion->numRows < 2)
 		{
@@ -627,20 +633,20 @@ class Versions extends Controller
 		while ($objVersion->next())
 		{
 			$versions .= '
-  <option value="'.$objVersion->version.'"'.($objVersion->active ? ' selected="selected"' : '').'>'.$GLOBALS['TL_LANG']['MSC']['version'].' '.$objVersion->version.' ('.Date::parse(Config::get('datimFormat'), $objVersion->tstamp).') '.$objVersion->username.'</option>';
+  <option value="' . $objVersion->version . '"' . ($objVersion->active ? ' selected="selected"' : '') . '>' . $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . $objVersion->version . ' (' . Date::parse(Config::get('datimFormat'), $objVersion->tstamp) . ') ' . $objVersion->username . '</option>';
 		}
 
 		return '
 <div class="tl_version_panel">
 
-<form action="'.ampersand(Environment::get('request')).'" id="tl_version" class="tl_form" method="post" aria-label="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versioning']).'">
+<form action="' . ampersand(Environment::get('request')) . '" id="tl_version" class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versioning']) . '">
 <div class="tl_formbody">
 <input type="hidden" name="FORM_SUBMIT" value="tl_version">
-<input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-<select name="version" class="tl_select">'.$versions.'
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<select name="version" class="tl_select">' . $versions . '
 </select>
-<button type="submit" name="showVersion" id="showVersion" class="tl_submit">'.$GLOBALS['TL_LANG']['MSC']['restore'].'</button>
-<a href="'.Backend::addToUrl('versions=1&amp;popup=1').'" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']).'" onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))).'\',\'url\':this.href});return false">'.Image::getHtml('diff.svg').'</a>
+<button type="submit" name="showVersion" id="showVersion" class="tl_submit">' . $GLOBALS['TL_LANG']['MSC']['restore'] . '</button>
+<a href="' . Backend::addToUrl('versions=1&amp;popup=1') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))) . '\',\'url\':this.href});return false">' . Image::getHtml('diff.svg') . '</a>
 </div>
 </form>
 
@@ -768,7 +774,8 @@ class Versions extends Controller
 			$strUrl = preg_replace
 			(
 				array('/&(amp;)?id=[^&]+/', '/(&(amp;)?)t(id=[^&]+)/', '/(&(amp;)?)state=[^&]*/'),
-				array('', '$1$3', '$1act=edit'), $strUrl
+				array('', '$1$3', '$1act=edit'),
+				$strUrl
 			);
 		}
 

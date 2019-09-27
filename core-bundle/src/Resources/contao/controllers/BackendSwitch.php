@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class BackendSwitch extends Backend
 {
-
 	/**
 	 * Initialize the controller
 	 *

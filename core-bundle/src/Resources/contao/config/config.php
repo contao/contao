@@ -239,20 +239,20 @@ $GLOBALS['BE_FFL'] = array
 // Front end form fields
 $GLOBALS['TL_FFL'] = array
 (
-    'explanation'   => 'Contao\FormExplanation',
-    'html'          => 'Contao\FormHtml',
-    'fieldsetStart' => 'Contao\FormFieldsetStart',
-    'fieldsetStop'  => 'Contao\FormFieldsetStop',
-    'text'          => 'Contao\FormTextField',
-    'password'      => 'Contao\FormPassword',
-    'textarea'      => 'Contao\FormTextArea',
-    'select'        => 'Contao\FormSelectMenu',
-    'radio'         => 'Contao\FormRadioButton',
-    'checkbox'      => 'Contao\FormCheckBox',
-    'upload'        => 'Contao\FormFileUpload',
-    'hidden'        => 'Contao\FormHidden',
-    'captcha'       => 'Contao\FormCaptcha',
-    'submit'        => 'Contao\FormSubmit',
+	'explanation'   => 'Contao\FormExplanation',
+	'html'          => 'Contao\FormHtml',
+	'fieldsetStart' => 'Contao\FormFieldsetStart',
+	'fieldsetStop'  => 'Contao\FormFieldsetStop',
+	'text'          => 'Contao\FormTextField',
+	'password'      => 'Contao\FormPassword',
+	'textarea'      => 'Contao\FormTextArea',
+	'select'        => 'Contao\FormSelectMenu',
+	'radio'         => 'Contao\FormRadioButton',
+	'checkbox'      => 'Contao\FormCheckBox',
+	'upload'        => 'Contao\FormFileUpload',
+	'hidden'        => 'Contao\FormHidden',
+	'captcha'       => 'Contao\FormCaptcha',
+	'submit'        => 'Contao\FormSubmit',
 );
 
 // Page types

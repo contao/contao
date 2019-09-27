@@ -117,7 +117,6 @@ use FOS\HttpCache\ResponseTagger;
  */
 abstract class ContentElement extends Frontend
 {
-
 	/**
 	 * Template
 	 * @var string

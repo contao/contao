@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentAccordion extends ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string

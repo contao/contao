@@ -114,7 +114,7 @@ class ModuleLogin extends Module
 		{
 			$this->import(FrontendUser::class, 'User');
 
-			$strRedirect = Environment::get('base').Environment::get('request');
+			$strRedirect = Environment::get('base') . Environment::get('request');
 
 			// Redirect to last page visited
 			if ($this->redirectBack && $this->targetPath)
@@ -155,7 +155,7 @@ class ModuleLogin extends Module
 		}
 
 		$blnRedirectBack = false;
-		$strRedirect = Environment::get('base').Environment::get('request');
+		$strRedirect = Environment::get('base') . Environment::get('request');
 
 		// Redirect to the last page visited
 		if ($this->redirectBack && $this->targetPath)
@@ -181,7 +181,7 @@ class ModuleLogin extends Module
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 		$this->Template->forceTargetPath = (int) $blnRedirectBack;
 		$this->Template->targetPath = StringUtil::specialchars($strRedirect);
-		$this->Template->failurePath = StringUtil::specialchars(Environment::get('base').Environment::get('request'));
+		$this->Template->failurePath = StringUtil::specialchars(Environment::get('base') . Environment::get('request'));
 	}
 }
 

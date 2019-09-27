@@ -19,7 +19,6 @@ namespace Contao;
  */
 abstract class BackendModule extends Backend
 {
-
 	/**
 	 * Template
 	 * @var string

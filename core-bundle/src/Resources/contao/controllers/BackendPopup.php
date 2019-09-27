@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class BackendPopup extends Backend
 {
-
 	/**
 	 * File
 	 * @var string

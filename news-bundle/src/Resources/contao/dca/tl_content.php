@@ -26,7 +26,6 @@ if (Contao\Input::get('do') == 'news')
  */
 class tl_content_news extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -47,7 +46,7 @@ class tl_content_news extends Contao\Backend
 		}
 
 		// Set the root IDs
-		if (empty($this->User->news) || !\is_array($this->User->news))
+		if (empty($this->User->news) || !is_array($this->User->news))
 		{
 			$root = array(0);
 		}
@@ -73,7 +72,7 @@ class tl_content_news extends Contao\Backend
 			case 'cutAll':
 			case 'copyAll':
 				// Check access to the parent element if a content element is moved
-				if (\in_array(Contao\Input::get('act'), array('cutAll', 'copyAll')))
+				if (in_array(Contao\Input::get('act'), array('cutAll', 'copyAll')))
 				{
 					$this->checkAccessToElement(Contao\Input::get('pid'), $root, (Contao\Input::get('mode') == 2));
 				}
@@ -133,7 +132,7 @@ class tl_content_news extends Contao\Backend
 		}
 
 		// The news archive is not mounted
-		if (!\in_array($objArchive->id, $root))
+		if (!in_array($objArchive->id, $root))
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify article ID ' . $objArchive->nid . ' in news archive ID ' . $objArchive->id . '.');
 		}
@@ -149,7 +148,7 @@ class tl_content_news extends Contao\Backend
 
 		$session = $objSession->get('news_feed_updater');
 
-		if (empty($session) || !\is_array($session))
+		if (empty($session) || !is_array($session))
 		{
 			return;
 		}
@@ -193,14 +192,14 @@ class tl_content_news extends Contao\Backend
 			return '';
 		}
 
-		$href .= '&amp;id='.Contao\Input::get('id').'&amp;cid='.$row['id'].'&amp;state='.$row['invisible'];
+		$href .= '&amp;id=' . Contao\Input::get('id') . '&amp;cid=' . $row['id'] . '&amp;state=' . $row['invisible'];
 
 		if ($row['invisible'])
 		{
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'" data-tid="cid"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '" data-tid="cid"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 
 	/**
@@ -222,16 +221,16 @@ class tl_content_news extends Contao\Backend
 		}
 
 		// Trigger the onload_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -264,16 +263,16 @@ class tl_content_news extends Contao\Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -293,16 +292,16 @@ class tl_content_news extends Contao\Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}

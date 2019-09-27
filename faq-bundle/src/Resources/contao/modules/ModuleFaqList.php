@@ -22,7 +22,6 @@ use Patchwork\Utf8;
  */
 class ModuleFaqList extends Module
 {
-
 	/**
 	 * Template
 	 * @var string

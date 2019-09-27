@@ -24,7 +24,6 @@ use Patchwork\Utf8;
  */
 class FormCaptcha extends Widget
 {
-
 	/**
 	 * Template
 	 *
@@ -125,7 +124,7 @@ class FormCaptcha extends Widget
 	 */
 	public function validate()
 	{
-		if (!isset($_POST[$this->strCaptchaKey]) || (isset($_POST[$this->strCaptchaKey.'_name']) && Input::post($this->strCaptchaKey.'_name')) || !\in_array(Input::post($this->strCaptchaKey.'_hash'), $this->generateHashes((int) Input::post($this->strCaptchaKey)), true))
+		if (!isset($_POST[$this->strCaptchaKey]) || (isset($_POST[$this->strCaptchaKey . '_name']) && Input::post($this->strCaptchaKey . '_name')) || !\in_array(Input::post($this->strCaptchaKey . '_hash'), $this->generateHashes((int) Input::post($this->strCaptchaKey)), true))
 		{
 			$this->class = 'error';
 			$this->addError($GLOBALS['TL_LANG']['ERR']['captcha']);
@@ -235,12 +234,14 @@ class FormCaptcha extends Widget
 			return '';
 		}
 
-		return sprintf('<label for="ctrl_%s" class="mandatory%s"><span class="invisible">%s </span>%s<span class="mandatory">*</span><span class="invisible"> %s</span></label>',
-						$this->strId,
-						($this->strClass ? ' ' . $this->strClass : ''),
-						$GLOBALS['TL_LANG']['MSC']['mandatory'],
-						$this->strLabel,
-						$this->getQuestion());
+		return sprintf(
+			'<label for="ctrl_%s" class="mandatory%s"><span class="invisible">%s </span>%s<span class="mandatory">*</span><span class="invisible"> %s</span></label>',
+			$this->strId,
+			($this->strClass ? ' ' . $this->strClass : ''),
+			$GLOBALS['TL_LANG']['MSC']['mandatory'],
+			$this->strLabel,
+			$this->getQuestion()
+		);
 	}
 
 	/**
@@ -250,13 +251,15 @@ class FormCaptcha extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf('<input type="text" name="%s" id="ctrl_%s" class="captcha mandatory%s" value="" aria-describedby="captcha_text_%s"%s%s',
-						$this->strCaptchaKey,
-						$this->strId,
-						($this->strClass ? ' ' . $this->strClass : ''),
-						$this->strId,
-						$this->getAttributes(),
-						$this->strTagEnding);
+		return sprintf(
+			'<input type="text" name="%s" id="ctrl_%s" class="captcha mandatory%s" value="" aria-describedby="captcha_text_%s"%s%s',
+			$this->strCaptchaKey,
+			$this->strId,
+			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strId,
+			$this->getAttributes(),
+			$this->strTagEnding
+		);
 	}
 
 	/**
@@ -266,10 +269,12 @@ class FormCaptcha extends Widget
 	 */
 	public function generateQuestion()
 	{
-		return sprintf('<span id="captcha_text_%s" class="captcha_text%s">%s</span>',
-						$this->strId,
-						($this->strClass ? ' ' . $this->strClass : ''),
-						$this->getQuestion());
+		return sprintf(
+			'<span id="captcha_text_%s" class="captcha_text%s">%s</span>',
+			$this->strId,
+			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->getQuestion()
+		);
 	}
 }
 

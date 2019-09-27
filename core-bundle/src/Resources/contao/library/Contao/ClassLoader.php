@@ -29,7 +29,6 @@ namespace Contao;
  */
 class ClassLoader
 {
-
 	/**
 	 * Known namespaces
 	 * @var array

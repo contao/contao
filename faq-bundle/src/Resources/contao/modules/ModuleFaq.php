@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ModuleFaq extends Frontend
 {
-
 	/**
 	 * Add FAQs to the indexer
 	 *

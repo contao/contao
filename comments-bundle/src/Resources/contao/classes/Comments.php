@@ -21,7 +21,6 @@ use FOS\HttpCache\ResponseTagger;
  */
 class Comments extends Frontend
 {
-
 	/**
 	 * Add comments to a template
 	 *
@@ -241,7 +240,7 @@ class Comments extends Frontend
 
 		$doNotSubmit = false;
 		$arrWidgets = array();
-		$strFormId = 'com_'. $strSource .'_'. $intParent;
+		$strFormId = 'com_' . $strSource . '_' . $intParent;
 
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
@@ -383,11 +382,13 @@ class Comments extends Frontend
 			$strComment = str_replace(array('[&]', '[lt]', '[gt]'), array('&', '<', '>'), $strComment);
 
 			// Add the comment details
-			$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_message'],
-									  $arrSet['name'] . ' (' . $arrSet['email'] . ')',
-									  $strComment,
-									  Idna::decode(Environment::get('base')) . Environment::get('request'),
-									  Idna::decode(Environment::get('base')) . 'contao?do=comments&act=edit&id=' . $objComment->id);
+			$objEmail->text = sprintf(
+				$GLOBALS['TL_LANG']['MSC']['com_message'],
+				$arrSet['name'] . ' (' . $arrSet['email'] . ')',
+				$strComment,
+				Idna::decode(Environment::get('base')) . Environment::get('request'),
+				Idna::decode(Environment::get('base')) . 'contao?do=comments&act=edit&id=' . $objComment->id
+			);
 
 			// Add a moderation hint to the e-mail (see #7478)
 			if ($objConfig->moderate)
@@ -465,10 +466,10 @@ class Comments extends Frontend
 			'<strong>$1</strong>',
 			'<em>$1</em>',
 			'<span style="text-decoration:underline">$1</span>',
-			"\n\n" . '<div class="code"><p>'. $GLOBALS['TL_LANG']['MSC']['com_code'] .'</p><pre>$1</pre></div>' . "\n\n",
+			"\n\n" . '<div class="code"><p>' . $GLOBALS['TL_LANG']['MSC']['com_code'] . '</p><pre>$1</pre></div>' . "\n\n",
 			'<span style="color:$1">$2</span>',
 			"\n\n" . '<blockquote>$1</blockquote>' . "\n\n",
-			"\n\n" . '<blockquote><p>'. sprintf($GLOBALS['TL_LANG']['MSC']['com_quote'], '$1') .'</p>$2</blockquote>' . "\n\n",
+			"\n\n" . '<blockquote><p>' . sprintf($GLOBALS['TL_LANG']['MSC']['com_quote'], '$1') . '</p>$2</blockquote>' . "\n\n",
 			'<img src="$1" alt="" />',
 			'<a href="$1">$1</a>',
 			'<a href="$1">$2</a>',
@@ -502,7 +503,7 @@ class Comments extends Frontend
 		// Use paragraphs to generate new lines
 		if (strncmp('<p>', $strComment, 3) !== 0)
 		{
-			$strComment = '<p>'. $strComment .'</p>';
+			$strComment = '<p>' . $strComment . '</p>';
 		}
 
 		$arrReplace = array
@@ -565,7 +566,7 @@ class Comments extends Frontend
 			'url'          => Environment::get('request'),
 			'addedOn'      => $time,
 			'active'       => '',
-			'tokenRemove'  => 'cor-'.bin2hex(random_bytes(10))
+			'tokenRemove'  => 'cor-' . bin2hex(random_bytes(10))
 		);
 
 		// Store the subscription

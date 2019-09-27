@@ -12,7 +12,6 @@ Contao\System::loadLanguageFile('tl_content');
 
 $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -526,7 +525,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
  */
 class tl_calendar_events extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -558,7 +556,7 @@ class tl_calendar_events extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->calendars) || !\is_array($this->User->calendars))
+		if (empty($this->User->calendars) || !is_array($this->User->calendars))
 		{
 			$root = array(0);
 		}
@@ -567,21 +565,22 @@ class tl_calendar_events extends Contao\Backend
 			$root = $this->User->calendars;
 		}
 
-		$id = \strlen(Contao\Input::get('id')) ? Contao\Input::get('id') : CURRENT_ID;
+		$id = strlen(Contao\Input::get('id')) ? Contao\Input::get('id') : CURRENT_ID;
 
 		// Check current action
 		switch (Contao\Input::get('act'))
 		{
 			case 'paste':
 			case 'select':
-				if (!\in_array(CURRENT_ID, $root)) // check CURRENT_ID here (see #247)
+				// Check CURRENT_ID here (see #247)
+				if (!in_array(CURRENT_ID, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}
 				break;
 
 			case 'create':
-				if (!Contao\Input::get('pid') || !\in_array(Contao\Input::get('pid'), $root))
+				if (!Contao\Input::get('pid') || !in_array(Contao\Input::get('pid'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create events in calendar ID ' . Contao\Input::get('pid') . '.');
 				}
@@ -589,7 +588,7 @@ class tl_calendar_events extends Contao\Backend
 
 			case 'cut':
 			case 'copy':
-				if (!\in_array(Contao\Input::get('pid'), $root))
+				if (!in_array(Contao\Input::get('pid'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' event ID ' . $id . ' to calendar ID ' . Contao\Input::get('pid') . '.');
 				}
@@ -608,7 +607,7 @@ class tl_calendar_events extends Contao\Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid event ID ' . $id . '.');
 				}
 
-				if (!\in_array($objCalendar->pid, $root))
+				if (!in_array($objCalendar->pid, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' event ID ' . $id . ' of calendar ID ' . $objCalendar->pid . '.');
 				}
@@ -619,7 +618,7 @@ class tl_calendar_events extends Contao\Backend
 			case 'overrideAll':
 			case 'cutAll':
 			case 'copyAll':
-				if (!\in_array($id, $root))
+				if (!in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}
@@ -641,7 +640,7 @@ class tl_calendar_events extends Contao\Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
 				}
 
-				if (!\in_array($id, $root))
+				if (!in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}
@@ -792,7 +791,7 @@ class tl_calendar_events extends Contao\Backend
 				return $arrAlias;
 			}
 
-			$objAlias = $this->Database->prepare("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(". implode(',', array_map('\intval', array_unique($arrPids))) .") ORDER BY parent, a.sorting")
+			$objAlias = $this->Database->prepare("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting")
 									   ->execute($dc->id);
 		}
 		else
@@ -825,7 +824,7 @@ class tl_calendar_events extends Contao\Backend
 	{
 		$event = Contao\CalendarEventsModel::findByPk($dc->activeRecord->id);
 		$url = Contao\Events::generateEventUrl($event, true);
-		$suffix = substr($dc->inputName, \strlen($dc->field));
+		$suffix = substr($dc->inputName, strlen($dc->field));
 
 		list($baseUrl) = explode($event->alias ?: $event->id, $url);
 
@@ -835,11 +834,11 @@ class tl_calendar_events extends Contao\Backend
 		$template->url = $url;
 		$template->description = $event->description ?: strip_tags($event->teaser);
 		$template->baseUrl = $baseUrl;
-		$template->titleField = 'ctrl_pageTitle'.$suffix;
-		$template->titleFallbackField = 'ctrl_title'.$suffix;
-		$template->aliasField = 'ctrl_alias'.$suffix;
-		$template->descriptionField = 'ctrl_description'.$suffix;
-		$template->descriptionFallbackField = 'ctrl_teaser'.$suffix;
+		$template->titleField = 'ctrl_pageTitle' . $suffix;
+		$template->titleFallbackField = 'ctrl_title' . $suffix;
+		$template->aliasField = 'ctrl_alias' . $suffix;
+		$template->descriptionField = 'ctrl_description' . $suffix;
+		$template->descriptionFallbackField = 'ctrl_teaser' . $suffix;
 
 		return $template->parse();
 	}
@@ -970,7 +969,7 @@ class tl_calendar_events extends Contao\Backend
 
 		$session = $objSession->get('calendar_feed_updater');
 
-		if (empty($session) || !\is_array($session))
+		if (empty($session) || !is_array($session))
 		{
 			return;
 		}
@@ -1041,14 +1040,14 @@ class tl_calendar_events extends Contao\Backend
 			return '';
 		}
 
-		$href .= '&amp;tid='.$row['id'].'&amp;state='.($row['published'] ? '' : 1);
+		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
 
 		if (!$row['published'])
 		{
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**
@@ -1072,16 +1071,16 @@ class tl_calendar_events extends Contao\Backend
 		}
 
 		// Trigger the onload_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onload_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -1111,16 +1110,16 @@ class tl_calendar_events extends Contao\Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_calendar_events']['fields']['published']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['fields']['published']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['fields']['published']['save_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -1140,16 +1139,16 @@ class tl_calendar_events extends Contao\Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['config']['onsubmit_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}

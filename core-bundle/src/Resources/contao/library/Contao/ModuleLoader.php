@@ -28,7 +28,6 @@ namespace Contao;
  */
 class ModuleLoader
 {
-
 	/**
 	 * Old module names
 	 * @var array

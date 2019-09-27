@@ -20,7 +20,6 @@ use Contao\Model\Collection;
  */
 class ContentGallery extends ContentElement
 {
-
 	/**
 	 * Files object
 	 * @var Collection|FilesModel
@@ -294,7 +293,7 @@ class ContentGallery extends ContentElement
 				if (($j+$i) >= $limit || !\is_array($images[($i+$j)]))
 				{
 					$objCell->colWidth = $colwidth . '%';
-					$objCell->class = 'col_'.$j . $class_td;
+					$objCell->class = 'col_' . $j . $class_td;
 				}
 				else
 				{
@@ -307,7 +306,7 @@ class ContentGallery extends ContentElement
 
 					// Add column width and class
 					$objCell->colWidth = $colwidth . '%';
-					$objCell->class = 'col_'.$j . $class_td;
+					$objCell->class = 'col_' . $j . $class_td;
 				}
 
 				$body[$key][$j] = $objCell;

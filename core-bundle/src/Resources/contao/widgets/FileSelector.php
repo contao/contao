@@ -27,7 +27,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  */
 class FileSelector extends Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -199,7 +198,9 @@ class FileSelector extends Widget
 					$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array_unique($arrPaths);
 				}
 			}
-			catch (\Exception $e) {}
+			catch (\Exception $e)
+			{
+			}
 		}
 
 		$strNode = $objSessionBag->get('tl_files_picker');
@@ -281,8 +282,8 @@ class FileSelector extends Widget
 		}
 
 		// Return the tree
-		return '<ul class="tl_listing tree_view picker_selector'.($this->strClass ? ' ' . $this->strClass : '').'" id="'.$this->strId.'" data-callback="reloadFiletree">
-    <li class="tl_folder_top"><div class="tl_left">'.Image::getHtml($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['icon'] ?: 'filemounts.svg').' '.$GLOBALS['TL_LANG']['MOD']['files'][0].'</div> <div class="tl_right">&nbsp;</div><div style="clear:both"></div></li><li class="parent" id="'.$this->strId.'_parent"><ul>'.$tree.$strReset.'
+		return '<ul class="tl_listing tree_view picker_selector' . ($this->strClass ? ' ' . $this->strClass : '') . '" id="' . $this->strId . '" data-callback="reloadFiletree">
+    <li class="tl_folder_top"><div class="tl_left">' . Image::getHtml($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['icon'] ?: 'filemounts.svg') . ' ' . $GLOBALS['TL_LANG']['MOD']['files'][0] . '</div> <div class="tl_right">&nbsp;</div><div style="clear:both"></div></li><li class="parent" id="' . $this->strId . '_parent"><ul>' . $tree . $strReset . '
   </ul></li></ul>';
 	}
 
@@ -380,11 +381,11 @@ class FileSelector extends Widget
 		$xtnode = 'tree_' . $this->strTable . '_' . $this->strName;
 
 		// Get session data and toggle nodes
-		if (Input::get($flag.'tg'))
+		if (Input::get($flag . 'tg'))
 		{
-			$session[$node][Input::get($flag.'tg')] = (isset($session[$node][Input::get($flag.'tg')]) && $session[$node][Input::get($flag.'tg')] == 1) ? 0 : 1;
+			$session[$node][Input::get($flag . 'tg')] = (isset($session[$node][Input::get($flag . 'tg')]) && $session[$node][Input::get($flag . 'tg')] == 1) ? 0 : 1;
 			$objSessionBag->replace($session);
-			$this->redirect(preg_replace('/(&(amp;)?|\?)'.$flag.'tg=[^& ]*/i', '', Environment::get('request')));
+			$this->redirect(preg_replace('/(&(amp;)?|\?)' . $flag . 'tg=[^& ]*/i', '', Environment::get('request')));
 		}
 
 		$return = '';
@@ -469,7 +470,7 @@ class FileSelector extends Widget
 			$session[$node][$tid] = is_numeric($session[$node][$tid]) ? $session[$node][$tid] : 0;
 			$currentFolder = StringUtil::stripRootDir($folders[$f]);
 			$blnIsOpen = (!empty($arrFound) || $session[$node][$tid] == 1 || \count(preg_grep('/^' . preg_quote($currentFolder, '/') . '\//', $this->varValue)) > 0);
-			$return .= "\n    " . '<li class="'.$folderClass.' toggle_select hover-div"><div class="tl_left" style="padding-left:'.$intMargin.'px">';
+			$return .= "\n    " . '<li class="' . $folderClass . ' toggle_select hover-div"><div class="tl_left" style="padding-left:' . $intMargin . 'px">';
 
 			// Add a toggle button if there are childs
 			if ($countFiles > 0)
@@ -477,7 +478,7 @@ class FileSelector extends Widget
 				$folderAttribute = '';
 				$img = $blnIsOpen ? 'folMinus.svg' : 'folPlus.svg';
 				$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-				$return .= '<a href="'.Backend::addToUrl($flag.'tg='.$tid).'" title="'.StringUtil::specialchars($alt).'" onclick="return AjaxRequest.toggleFiletree(this,\''.$xtnode.'_'.$tid.'\',\''.$currentFolder.'\',\''.$this->strField.'\',\''.$this->strName.'\','.$level.')">'.Image::getHtml($img, '', 'style="margin-right:2px"').'</a>';
+				$return .= '<a href="' . Backend::addToUrl($flag . 'tg=' . $tid) . '" title="' . StringUtil::specialchars($alt) . '" onclick="return AjaxRequest.toggleFiletree(this,\'' . $xtnode . '_' . $tid . '\',\'' . $currentFolder . '\',\'' . $this->strField . '\',\'' . $this->strName . '\',' . $level . ')">' . Image::getHtml($img, '', 'style="margin-right:2px"') . '</a>';
 			}
 
 			$protected = $blnProtected;
@@ -489,10 +490,10 @@ class FileSelector extends Widget
 			}
 
 			$folderImg = $protected ? 'folderCP.svg' : 'folderC.svg';
-			$folderLabel = ($this->files || $this->filesOnly) ? '<strong>'.StringUtil::specialchars(basename($currentFolder)).'</strong>' : StringUtil::specialchars(basename($currentFolder));
+			$folderLabel = ($this->files || $this->filesOnly) ? '<strong>' . StringUtil::specialchars(basename($currentFolder)) . '</strong>' : StringUtil::specialchars(basename($currentFolder));
 
 			// Add the current folder
-			$return .= Image::getHtml($folderImg, '', $folderAttribute).' <a href="' . Backend::addToUrl('fn='.$this->urlEncode($currentFolder)) . '" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">'.$folderLabel.'</a></div> <div class="tl_right">';
+			$return .= Image::getHtml($folderImg, '', $folderAttribute) . ' <a href="' . Backend::addToUrl('fn=' . $this->urlEncode($currentFolder)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $folderLabel . '</a></div> <div class="tl_right">';
 
 			// Add a checkbox or radio button
 			if (!$this->filesOnly)
@@ -500,12 +501,12 @@ class FileSelector extends Widget
 				switch ($this->fieldType)
 				{
 					case 'checkbox':
-						$return .= '<input type="checkbox" name="'.$this->strName.'[]" id="'.$this->strName.'_'.md5($currentFolder).'" class="tl_tree_checkbox" value="'.StringUtil::specialchars($currentFolder).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFolder, $this->varValue).'>';
+						$return .= '<input type="checkbox" name="' . $this->strName . '[]" id="' . $this->strName . '_' . md5($currentFolder) . '" class="tl_tree_checkbox" value="' . StringUtil::specialchars($currentFolder) . '" onfocus="Backend.getScrollOffset()"' . $this->optionChecked($currentFolder, $this->varValue) . '>';
 						break;
 
 					default:
 					case 'radio':
-						$return .= '<input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.md5($currentFolder).'" class="tl_tree_radio" value="'.StringUtil::specialchars($currentFolder).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFolder, $this->varValue).'>';
+						$return .= '<input type="radio" name="' . $this->strName . '" id="' . $this->strName . '_' . md5($currentFolder) . '" class="tl_tree_radio" value="' . StringUtil::specialchars($currentFolder) . '" onfocus="Backend.getScrollOffset()"' . $this->optionChecked($currentFolder, $this->varValue) . '>';
 						break;
 				}
 			}
@@ -515,7 +516,7 @@ class FileSelector extends Widget
 			// Call the next node
 			if ($blnIsOpen)
 			{
-				$return .= '<li class="parent" id="'.$xtnode.'_'.$tid.'"><ul class="level_'.$level.'">';
+				$return .= '<li class="parent" id="' . $xtnode . '_' . $tid . '"><ul class="level_' . $level . '">';
 				$return .= $this->renderFiletree($folders[$f], ($intMargin + $intSpacing), false, $protected, $arrFound);
 				$return .= '</ul></li>';
 			}
@@ -543,12 +544,12 @@ class FileSelector extends Widget
 					continue;
 				}
 
-				$return .= "\n    " . '<li class="tl_file toggle_select hover-div"><div class="tl_left" style="padding-left:'.($intMargin + $intSpacing).'px">';
-				$thumbnail .= ' <span class="tl_gray">('.$this->getReadableSize($objFile->filesize);
+				$return .= "\n    " . '<li class="tl_file toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
+				$thumbnail .= ' <span class="tl_gray">(' . $this->getReadableSize($objFile->filesize);
 
 				if ($objFile->width && $objFile->height)
 				{
-					$thumbnail .= ', '.$objFile->width.'x'.$objFile->height.' px';
+					$thumbnail .= ', ' . $objFile->width . 'x' . $objFile->height . ' px';
 				}
 
 				$thumbnail .= ')</span>';
@@ -566,18 +567,18 @@ class FileSelector extends Widget
 					}
 				}
 
-				$return .= Image::getHtml($objFile->icon, $objFile->mime).' '.StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), Config::get('characterSet')).$thumbnail.'</div> <div class="tl_right">';
+				$return .= Image::getHtml($objFile->icon, $objFile->mime) . ' ' . StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), Config::get('characterSet')) . $thumbnail . '</div> <div class="tl_right">';
 
 				// Add checkbox or radio button
 				switch ($this->fieldType)
 				{
 					case 'checkbox':
-						$return .= '<input type="checkbox" name="'.$this->strName.'[]" id="'.$this->strName.'_'.md5($currentFile).'" class="tl_tree_checkbox" value="'.StringUtil::specialchars($currentFile).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFile, $this->varValue).'>';
+						$return .= '<input type="checkbox" name="' . $this->strName . '[]" id="' . $this->strName . '_' . md5($currentFile) . '" class="tl_tree_checkbox" value="' . StringUtil::specialchars($currentFile) . '" onfocus="Backend.getScrollOffset()"' . $this->optionChecked($currentFile, $this->varValue) . '>';
 						break;
 
 					default:
 					case 'radio':
-						$return .= '<input type="radio" name="'.$this->strName.'" id="'.$this->strName.'_'.md5($currentFile).'" class="tl_tree_radio" value="'.StringUtil::specialchars($currentFile).'" onfocus="Backend.getScrollOffset()"'.$this->optionChecked($currentFile, $this->varValue).'>';
+						$return .= '<input type="radio" name="' . $this->strName . '" id="' . $this->strName . '_' . md5($currentFile) . '" class="tl_tree_radio" value="' . StringUtil::specialchars($currentFile) . '" onfocus="Backend.getScrollOffset()"' . $this->optionChecked($currentFile, $this->varValue) . '>';
 						break;
 				}
 
@@ -657,8 +658,7 @@ class FileSelector extends Widget
 			}
 
 			$path = \dirname($path);
-		}
-		while ($path != '.');
+		} while ($path != '.');
 
 		return true;
 	}

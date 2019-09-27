@@ -24,7 +24,6 @@ use Patchwork\Utf8;
  */
 class ModuleFaqReader extends Module
 {
-
 	/**
 	 * Template
 	 * @var string

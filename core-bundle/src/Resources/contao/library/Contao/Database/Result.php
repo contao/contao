@@ -35,7 +35,6 @@ use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
  */
 class Result
 {
-
 	/**
 	 * Database result
 	 * @var DoctrineStatement
@@ -168,6 +167,7 @@ class Result
 				{
 					$this->next();
 				}
+
 				if (isset($this->arrCache[$strKey]))
 				{
 					return $this->arrCache[$strKey];

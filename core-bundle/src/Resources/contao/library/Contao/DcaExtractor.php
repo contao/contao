@@ -30,7 +30,6 @@ namespace Contao;
  */
 class DcaExtractor extends Controller
 {
-
 	/**
 	 * Instances
 	 * @var DcaExtractor[]
@@ -125,7 +124,9 @@ class DcaExtractor extends Controller
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Get one object instance per table
@@ -465,6 +466,7 @@ class DcaExtractor extends Controller
 			{
 				$sql['engine'] = str_replace('ENGINE=', '', $engine);
 			}
+
 			if ($charset != '')
 			{
 				$sql['charset'] = str_replace('CHARSET=', '', $charset);
@@ -507,10 +509,12 @@ class DcaExtractor extends Controller
 		{
 			$sql['engine'] = $params['defaultTableOptions']['engine'] ?? 'InnoDB';
 		}
+
 		if (empty($sql['charset']))
 		{
 			$sql['charset'] = $params['defaultTableOptions']['charset'] ?? 'utf8mb4';
 		}
+
 		if (empty($sql['collate']))
 		{
 			$sql['collate'] = $params['defaultTableOptions']['collate'] ?? 'utf8mb4_unicode_ci';

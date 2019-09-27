@@ -27,7 +27,6 @@ use Patchwork\Utf8;
  */
 class ModuleEventReader extends Events
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -166,11 +165,11 @@ class ModuleEventReader extends Events
 			{
 				if ($arrRange['value'] == 1)
 				{
-					$repeat = $GLOBALS['TL_LANG']['MSC']['cal_single_'.$arrRange['unit']];
+					$repeat = $GLOBALS['TL_LANG']['MSC']['cal_single_' . $arrRange['unit']];
 				}
 				else
 				{
-					$repeat = sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_'.$arrRange['unit']], $arrRange['value']);
+					$repeat = sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_' . $arrRange['unit']], $arrRange['value']);
 				}
 
 				if ($objEvent->recurrences > 0)

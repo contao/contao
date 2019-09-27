@@ -36,7 +36,6 @@ use Patchwork\Utf8;
  */
 class Form extends Hybrid
 {
-
 	/**
 	 * Model
 	 * @var FormModel
@@ -97,7 +96,7 @@ class Form extends Hybrid
 		$arrSubmitted = array();
 
 		$this->loadDataContainer('tl_form_field');
-		$formId = $this->formID ? 'auto_'.$this->formID : 'auto_form_'.$this->id;
+		$formId = $this->formID ? 'auto_' . $this->formID : 'auto_form_' . $this->id;
 
 		$this->Template->fields = '';
 		$this->Template->hidden = '';
@@ -158,7 +157,7 @@ class Form extends Hybrid
 
 				$arrData['decodeEntities'] = true;
 				$arrData['allowHtml'] = $this->allowTags;
-				$arrData['rowClass'] = 'row_'.$row . (($row == 0) ? ' row_first' : (($row == ($max_row - 1)) ? ' row_last' : '')) . ((($row % 2) == 0) ? ' even' : ' odd');
+				$arrData['rowClass'] = 'row_' . $row . (($row == 0) ? ' row_first' : (($row == ($max_row - 1)) ? ' row_last' : '')) . ((($row % 2) == 0) ? ' even' : ' odd');
 
 				// Increase the row count if its a password field
 				if ($objField->type == 'password')
@@ -166,7 +165,7 @@ class Form extends Hybrid
 					++$row;
 					++$max_row;
 
-					$arrData['rowClassConfirm'] = 'row_'.$row . (($row == ($max_row - 1)) ? ' row_last' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
+					$arrData['rowClassConfirm'] = 'row_' . $row . (($row == ($max_row - 1)) ? ' row_last' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
 				}
 
 				// Submit buttons do not use the name attribute

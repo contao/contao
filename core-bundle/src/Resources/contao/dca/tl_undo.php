@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_undo'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -112,7 +111,6 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
  */
 class tl_undo extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -142,7 +140,7 @@ class tl_undo extends Contao\Backend
 		$GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root'] = $objSteps->numRows ? $objSteps->fetchEach('id') : array(0);
 
 		// Redirect if there is an error
-		if (Contao\Input::get('act') && !\in_array(Contao\Input::get('id'), $GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root']))
+		if (Contao\Input::get('act') && !in_array(Contao\Input::get('id'), $GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root']))
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' undo step ID ' . Contao\Input::get('id') . '.');
 		}
@@ -152,7 +150,7 @@ class tl_undo extends Contao\Backend
 	 * Show the deleted records
 	 *
 	 * @param array $data
-	 * @param array $arrRow
+	 * @param mixed $row
 	 */
 	public function showDeletedRecords($data, $row)
 	{
@@ -169,7 +167,7 @@ class tl_undo extends Contao\Backend
 
 				foreach ($arrRow as $i=>$v)
 				{
-					if (\is_array($array = Contao\StringUtil::deserialize($v)))
+					if (is_array($array = Contao\StringUtil::deserialize($v)))
 					{
 						if (isset($array['value'], $array['unit']))
 						{
@@ -184,11 +182,11 @@ class tl_undo extends Contao\Backend
 					// Get the field label
 					if (isset($GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label']))
 					{
-						$label = \is_array($GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label']) ? $GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label'][0] : $GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label'];
+						$label = is_array($GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label']) ? $GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label'][0] : $GLOBALS['TL_DCA'][$strTable]['fields'][$i]['label'];
 					}
 					else
 					{
-						$label = \is_array($GLOBALS['TL_LANG']['MSC'][$i]) ? $GLOBALS['TL_LANG']['MSC'][$i][0] : $GLOBALS['TL_LANG']['MSC'][$i];
+						$label = is_array($GLOBALS['TL_LANG']['MSC'][$i]) ? $GLOBALS['TL_LANG']['MSC'][$i][0] : $GLOBALS['TL_LANG']['MSC'][$i];
 					}
 
 					if (!$label)

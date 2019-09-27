@@ -21,7 +21,6 @@ use Patchwork\Utf8;
  */
 class ModuleNewsletterList extends Module
 {
-
 	/**
 	 * Template
 	 * @var string

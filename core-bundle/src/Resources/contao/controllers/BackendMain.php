@@ -27,7 +27,6 @@ use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
  */
 class BackendMain extends Backend
 {
-
 	/**
 	 * Current Ajax object
 	 * @var Ajax

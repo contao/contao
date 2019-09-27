@@ -46,7 +46,6 @@ use Contao\Model\Registry;
  */
 abstract class Model
 {
-
 	/**
 	 * Insert flag
 	 * @var integer
@@ -771,7 +770,6 @@ abstract class Model
 				'value'  => $varValue,
 				'return' => 'Model'
 			),
-
 			$arrOptions
 		);
 
@@ -812,7 +810,6 @@ abstract class Model
 				'value'  => $varId,
 				'return' => 'Model'
 			),
-
 			$arrOptions
 		);
 
@@ -865,7 +862,6 @@ abstract class Model
 					'order'  => Database::getInstance()->findInSet("$t.id", $arrIds),
 					'return' => 'Collection'
 				),
-
 				$arrOptions
 			);
 
@@ -911,7 +907,6 @@ abstract class Model
 				'value'  => $varValue,
 				'return' => 'Model'
 			),
-
 			$arrOptions
 		);
 
@@ -945,7 +940,6 @@ abstract class Model
 				'value'  => $varValue,
 				'return' => $blnModel ? 'Model' : 'Collection'
 			),
-
 			$arrOptions
 		);
 
@@ -967,7 +961,6 @@ abstract class Model
 			(
 				'return' => 'Collection'
 			),
-
 			$arrOptions
 		);
 
@@ -1066,6 +1059,7 @@ abstract class Model
 		{
 			$arrOptions['limit'] = 0;
 		}
+
 		if (!isset($arrOptions['offset']))
 		{
 			$arrOptions['offset'] = 0;
@@ -1156,7 +1150,6 @@ abstract class Model
 				'column' => $strColumn,
 				'value'  => $varValue
 			),
-
 			$arrOptions
 		);
 

@@ -19,7 +19,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  */
 class ContentDownload extends ContentElement
 {
-
 	/**
 	 * @var FilesModel
 	 */

@@ -10,9 +10,9 @@
 
 // Extend the default palette
 Contao\CoreBundle\DataContainer\PaletteManipulator::create()
-    ->addLegend('news_legend', 'amg_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
-    ->addField(array('news', 'newp', 'newsfeeds', 'newsfeedp'), 'news_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
-    ->applyToPalette('default', 'tl_user_group')
+	->addLegend('news_legend', 'amg_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
+	->addField(array('news', 'newp', 'newsfeeds', 'newsfeedp'), 'news_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
+	->applyToPalette('default', 'tl_user_group')
 ;
 
 // Add fields to tl_user_group
