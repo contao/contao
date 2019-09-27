@@ -70,7 +70,6 @@ namespace Contao;
  */
 class CommentsNotifyModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

@@ -40,7 +40,6 @@ namespace Contao;
  */
 class FeedItem
 {
-
 	/**
 	 * Data
 	 * @var array

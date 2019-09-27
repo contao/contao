@@ -57,7 +57,6 @@ namespace Contao;
  */
 class SessionModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

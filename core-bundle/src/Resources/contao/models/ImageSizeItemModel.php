@@ -74,7 +74,6 @@ namespace Contao;
  */
 class ImageSizeItemModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

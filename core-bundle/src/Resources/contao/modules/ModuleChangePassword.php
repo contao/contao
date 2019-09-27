@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleChangePassword extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -166,7 +165,7 @@ class ModuleChangePassword extends \Module
 
 		// Store the new password
 		if (\Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
-        {
+		{
 			$objMember->tstamp = time();
 			$objMember->password = $objNewPassword->value;
 			$objMember->save();

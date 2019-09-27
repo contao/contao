@@ -17,7 +17,6 @@ namespace Contao;
  */
 class SortedIterator extends \SplHeap
 {
-
 	/**
 	 * Insert the elements
 	 *

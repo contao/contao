@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleBooknav extends \Module
 {
-
 	/**
 	 * Pages array
 	 * @var PageModel[]

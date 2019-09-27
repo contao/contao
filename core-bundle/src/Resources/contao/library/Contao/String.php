@@ -10,7 +10,8 @@
 
 namespace Contao;
 
-if (PHP_VERSION_ID >= 70000) {
+if (\PHP_VERSION_ID >= 70000)
+{
 	throw new \RuntimeException('The String class cannot be used in PHP ' . PHP_VERSION . '. Use the StringUtil class instead.');
 }
 
@@ -26,7 +27,6 @@ if (PHP_VERSION_ID >= 70000) {
  */
 class String extends \StringUtil
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var StringUtil
@@ -39,7 +39,9 @@ class String extends \StringUtil
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The String class is now static.
 	 */
-	protected function __construct() {}
+	protected function __construct()
+	{
+	}
 
 	/**
 	 * Prevent cloning of the object (Singleton)
@@ -47,7 +49,9 @@ class String extends \StringUtil
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The String class is now static.
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Return the object instance (Singleton)

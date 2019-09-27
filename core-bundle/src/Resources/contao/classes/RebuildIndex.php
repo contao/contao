@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class RebuildIndex extends \Backend implements \executable
 {
-
 	/**
 	 * Return true if the module is active
 	 *

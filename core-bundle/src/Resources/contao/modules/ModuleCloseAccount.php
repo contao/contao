@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleCloseAccount extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string

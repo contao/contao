@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class ModulePassword extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string

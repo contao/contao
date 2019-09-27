@@ -30,7 +30,6 @@ namespace Contao;
  */
 class DcaExtractor extends \Controller
 {
-
 	/**
 	 * Instances
 	 * @var DcaExtractor[]
@@ -125,7 +124,9 @@ class DcaExtractor extends \Controller
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Get one object instance per table
@@ -471,6 +472,7 @@ class DcaExtractor extends \Controller
 			{
 				$sql['engine'] = str_replace('ENGINE=', '', $engine);
 			}
+
 			if ($charset != '')
 			{
 				$sql['charset'] = str_replace('CHARSET=', '', $charset);
@@ -511,6 +513,7 @@ class DcaExtractor extends \Controller
 		{
 			$sql['engine'] = 'MyISAM';
 		}
+
 		if (empty($sql['charset']))
 		{
 			$sql['charset'] = \Config::get('dbCharset');

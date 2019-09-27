@@ -17,7 +17,6 @@ namespace Contao;
  */
 class FileUpload extends \Backend
 {
-
 	/**
 	 * Error indicator
 	 * @var boolean

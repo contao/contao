@@ -62,11 +62,9 @@ namespace Contao;
  */
 class ThemeModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_theme';
-
 }

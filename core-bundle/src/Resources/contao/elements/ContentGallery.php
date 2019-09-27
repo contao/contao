@@ -19,7 +19,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  */
 class ContentGallery extends \ContentElement
 {
-
 	/**
 	 * Files object
 	 * @var Model\Collection|FilesModel
@@ -177,7 +176,7 @@ class ContentGallery extends \ContentElement
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
 			case 'meta':
 				@trigger_error('The "meta" key in ContentGallery::compile() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-				// no break;
+				// no break
 
 			case 'custom':
 				if ($this->orderSRC != '')
@@ -296,7 +295,7 @@ class ContentGallery extends \ContentElement
 				if (!\is_array($images[($i+$j)]) || ($j+$i) >= $limit)
 				{
 					$objCell->colWidth = $colwidth . '%';
-					$objCell->class = 'col_'.$j . $class_td;
+					$objCell->class = 'col_' . $j . $class_td;
 				}
 				else
 				{
@@ -309,7 +308,7 @@ class ContentGallery extends \ContentElement
 
 					// Add column width and class
 					$objCell->colWidth = $colwidth . '%';
-					$objCell->class = 'col_'.$j . $class_td;
+					$objCell->class = 'col_' . $j . $class_td;
 				}
 
 				$body[$key][$j] = $objCell;

@@ -17,7 +17,6 @@ namespace Contao;
  */
 class Pagination
 {
-
 	/**
 	 * Current page number
 	 * @var integer
@@ -393,9 +392,7 @@ class Pagination
 		{
 			return ampersand($this->strUrl);
 		}
-		else
-		{
-			return ampersand($this->strUrl) . $this->strVarConnector . $this->strParameter . '=' . $intPage;
-		}
+
+		return ampersand($this->strUrl) . $this->strVarConnector . $this->strParameter . '=' . $intPage;
 	}
 }

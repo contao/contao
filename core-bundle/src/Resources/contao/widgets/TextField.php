@@ -24,7 +24,6 @@ namespace Contao;
  */
 class TextField extends \Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -120,7 +119,9 @@ class TextField extends \Widget
 				{
 					$varInput = \Idna::encodeUrl($varInput);
 				}
-				catch (\InvalidArgumentException $e) {}
+				catch (\InvalidArgumentException $e)
+				{
+				}
 			}
 			elseif ($this->rgxp == 'email' || $this->rgxp == 'friendly')
 			{
@@ -149,21 +150,25 @@ class TextField extends \Widget
 				{
 					$this->varValue = \Idna::decodeUrl($this->varValue);
 				}
-				catch (\InvalidArgumentException $e) {}
+				catch (\InvalidArgumentException $e)
+				{
+				}
 			}
 			elseif ($this->rgxp == 'email' || $this->rgxp == 'friendly')
 			{
 				$this->varValue = \Idna::decodeEmail($this->varValue);
 			}
 
-			return sprintf('<input type="%s" name="%s" id="ctrl_%s" class="tl_text%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s',
-							$strType,
-							$this->strName,
-							$this->strId,
-							(($this->strClass != '') ? ' ' . $this->strClass : ''),
-							\StringUtil::specialchars($this->varValue),
-							$this->getAttributes(),
-							$this->wizard);
+			return sprintf(
+				'<input type="%s" name="%s" id="ctrl_%s" class="tl_text%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s',
+				$strType,
+				$this->strName,
+				$this->strId,
+				(($this->strClass != '') ? ' ' . $this->strClass : ''),
+				\StringUtil::specialchars($this->varValue),
+				$this->getAttributes(),
+				$this->wizard
+			);
 		}
 
 		// Return if field size is missing
@@ -181,19 +186,23 @@ class TextField extends \Widget
 
 		for ($i=0; $i<$this->size; $i++)
 		{
-			$arrFields[] = sprintf('<input type="%s" name="%s[]" id="ctrl_%s" class="tl_text_%s" value="%s"%s onfocus="Backend.getScrollOffset()">',
-									$strType,
-									$this->strName,
-									$this->strId.'_'.$i,
-									$this->size,
-									\StringUtil::specialchars(@$this->varValue[$i]), // see #4979
-									$this->getAttributes());
+			$arrFields[] = sprintf(
+				'<input type="%s" name="%s[]" id="ctrl_%s" class="tl_text_%s" value="%s"%s onfocus="Backend.getScrollOffset()">',
+				$strType,
+				$this->strName,
+				$this->strId . '_' . $i,
+				$this->size,
+				\StringUtil::specialchars(@$this->varValue[$i]), // see #4979
+				$this->getAttributes()
+			);
 		}
 
-		return sprintf('<div id="ctrl_%s" class="tl_text_field%s">%s</div>%s',
-						$this->strId,
-						(($this->strClass != '') ? ' ' . $this->strClass : ''),
-						implode(' ', $arrFields),
-						$this->wizard);
+		return sprintf(
+			'<div id="ctrl_%s" class="tl_text_field%s">%s</div>%s',
+			$this->strId,
+			(($this->strClass != '') ? ' ' . $this->strClass : ''),
+			implode(' ', $arrFields),
+			$this->wizard
+		);
 	}
 }

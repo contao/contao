@@ -20,7 +20,6 @@ namespace Contao;
  */
 class Config
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var Config
@@ -72,7 +71,9 @@ class Config
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 */
-	protected function __construct() {}
+	protected function __construct()
+	{
+	}
 
 	/**
 	 * Automatically save the local configuration
@@ -88,7 +89,9 @@ class Config
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Return the current object instance (Singleton)
@@ -172,7 +175,7 @@ class Config
 		if (static::$blnHasLcf)
 		{
 			$strMode = 'top';
-			$resFile = fopen(TL_ROOT . '/system/config/localconfig.php', 'rb');
+			$resFile = fopen(TL_ROOT . '/system/config/localconfig.php', 'r');
 
 			while (!feof($resFile))
 			{
@@ -244,7 +247,7 @@ class Config
 		$strTemp = md5(uniqid(mt_rand(), true));
 
 		// Write to a temp file first
-		$objFile = fopen(TL_ROOT . '/system/tmp/' . $strTemp, 'wb');
+		$objFile = fopen(TL_ROOT . '/system/tmp/' . $strTemp, 'w');
 		fwrite($objFile, $strFile);
 		fclose($objFile);
 

@@ -114,7 +114,6 @@ namespace Contao;
  */
 class ArticleModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

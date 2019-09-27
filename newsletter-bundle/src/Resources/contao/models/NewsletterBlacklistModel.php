@@ -37,7 +37,6 @@ namespace Contao;
  */
 class NewsletterBlacklistModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

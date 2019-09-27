@@ -93,7 +93,8 @@ class EventPickerProviderTest extends TestCase
                 'linkAttributes' => ['class' => 'eventPicker'],
                 'current' => true,
                 'uri' => 'contao_backend?do=calendar&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
-            ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'eventPicker'))
+            ],
+            $this->provider->createMenuItem(new PickerConfig('link', [], '', 'eventPicker'))
         );
     }
 

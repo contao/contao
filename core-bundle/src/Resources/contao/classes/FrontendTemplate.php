@@ -27,7 +27,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrontendTemplate extends \Template
 {
-
 	/**
 	 * Unsued $_GET check
 	 * @var boolean
@@ -91,7 +90,7 @@ class FrontendTemplate extends \Template
 	{
 		$this->blnCheckRequest = $blnCheckRequest;
 
-		/** @var $objPage \PageModel */
+		/** @var \PageModel $objPage */
 		global $objPage;
 
 		// Vary on the page layout
@@ -366,7 +365,7 @@ class FrontendTemplate extends \Template
 	 */
 	private function setCacheHeaders(Response $response)
 	{
-		/** @var $objPage \PageModel */
+		/** @var \PageModel $objPage */
 		global $objPage;
 
 		if (($objPage->cache === false || $objPage->cache < 1) && ($objPage->clientCache === false || $objPage->clientCache < 1))

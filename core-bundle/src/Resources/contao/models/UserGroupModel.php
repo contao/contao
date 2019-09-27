@@ -90,11 +90,9 @@ namespace Contao;
  */
 class UserGroupModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_user_group';
-
 }

@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_style'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -601,7 +600,6 @@ $GLOBALS['TL_DCA']['tl_style'] = array
  */
 class tl_style extends Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -639,7 +637,7 @@ class tl_style extends Backend
 	public function checkCategory($varValue)
 	{
 		// Do not change the value if it has been set already
-		if (\strlen($varValue) || Input::post('FORM_SUBMIT') == 'tl_style')
+		if (strlen($varValue) || Input::post('FORM_SUBMIT') == 'tl_style')
 		{
 			return $varValue;
 		}
@@ -651,7 +649,7 @@ class tl_style extends Backend
 		$filter = $objSessionBag->get('filter');
 
 		// Return the current category
-		if (\strlen($filter[$key]['category']))
+		if (strlen($filter[$key]['category']))
 		{
 			return $filter[$key]['category'];
 		}
@@ -669,7 +667,7 @@ class tl_style extends Backend
 
 		$session = $objSession->get('style_sheet_updater');
 
-		if (empty($session) || !\is_array($session))
+		if (empty($session) || !is_array($session))
 		{
 			return;
 		}
@@ -745,20 +743,20 @@ class tl_style extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Input::get('tid')))
+		if (strlen(Input::get('tid')))
 		{
 			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
-		$href .= '&amp;tid='.$row['id'].'&amp;state='.$row['invisible'];
+		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . $row['invisible'];
 
 		if ($row['invisible'])
 		{
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 
 	/**
@@ -780,16 +778,16 @@ class tl_style extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -816,16 +814,16 @@ class tl_style extends Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_style']['fields']['invisible']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_style']['fields']['invisible']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_style']['fields']['invisible']['save_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -845,16 +843,16 @@ class tl_style extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}

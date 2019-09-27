@@ -17,7 +17,6 @@ namespace Contao\Filter;
  */
 class SqlFiles extends \RecursiveFilterIterator
 {
-
 	/**
 	 * Check whether the current element of the iterator is acceptable
 	 *

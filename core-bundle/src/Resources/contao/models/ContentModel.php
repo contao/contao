@@ -352,7 +352,6 @@ namespace Contao;
  */
 class ContentModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

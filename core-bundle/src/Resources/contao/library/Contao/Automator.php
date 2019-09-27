@@ -20,7 +20,6 @@ use Symfony\Component\Console\Output\NullOutput;
  */
 class Automator extends \System
 {
-
 	/**
 	 * Make the constuctor public
 	 */
@@ -281,8 +280,7 @@ class Automator extends \System
 				}
 
 				$intId = $objRoot->pid;
-			}
-			while ($objRoot->type != 'root' && $intId > 0);
+			} while ($objRoot->type != 'root' && $intId > 0);
 
 			// Make sure the page is published
 			if (!$objRoot->published || ($objRoot->start != '' && $objRoot->start > $time) || ($objRoot->stop != '' && $objRoot->stop <= ($time + 60)))

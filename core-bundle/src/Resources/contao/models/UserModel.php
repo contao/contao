@@ -165,11 +165,9 @@ namespace Contao;
  */
 class UserModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_user';
-
 }

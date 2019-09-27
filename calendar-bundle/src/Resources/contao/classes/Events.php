@@ -19,7 +19,6 @@ namespace Contao;
  */
 abstract class Events extends \Module
 {
-
 	/**
 	 * Current URL
 	 * @var string
@@ -340,6 +339,7 @@ abstract class Events extends \Module
 		{
 			$this->intTodayBegin = strtotime('00:00:00');
 		}
+
 		if ($this->intTodayEnd === null)
 		{
 			$this->intTodayEnd = strtotime('23:59:59');

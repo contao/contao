@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class BackendIndex extends \Backend
 {
-
 	/**
 	 * Initialize the controller
 	 *

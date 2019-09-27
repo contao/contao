@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentImage extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string

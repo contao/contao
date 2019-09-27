@@ -17,7 +17,6 @@ namespace Contao;
  */
 class DiffRenderer extends \Diff_Renderer_Html_Array
 {
-
 	/**
 	 * Render the diff and return the generated markup
 	 *
@@ -58,7 +57,6 @@ class DiffRenderer extends \Diff_Renderer_Html_Array
 					{
 						$html .= "\n  " . '<dt class="' . $change['tag'] . ' left">' . ($line ?: '&nbsp;') . '</dt>';
 					}
-
 				}
 
 				// Show added lines only on the right side

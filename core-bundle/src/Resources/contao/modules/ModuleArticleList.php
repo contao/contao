@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleArticleList extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string

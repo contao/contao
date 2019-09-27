@@ -224,6 +224,7 @@ class ImageFactory implements ImageFactoryInterface
         if (!empty($size[0])) {
             $config->setWidth($size[0]);
         }
+
         if (!empty($size[1])) {
             $config->setHeight($size[1]);
         }

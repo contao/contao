@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_faq_category'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -228,7 +227,6 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
  */
 class tl_faq_category extends Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -259,7 +257,7 @@ class tl_faq_category extends Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->faqs) || !\is_array($this->User->faqs))
+		if (empty($this->User->faqs) || !is_array($this->User->faqs))
 		{
 			$root = array(0);
 		}
@@ -289,14 +287,14 @@ class tl_faq_category extends Backend
 
 			case 'edit':
 				// Dynamically add the record to the user profile
-				if (!\in_array(Input::get('id'), $root))
+				if (!in_array(Input::get('id'), $root))
 				{
 					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
 					$objSessionBag = $objSession->getBag('contao_backend');
 
 					$arrNew = $objSessionBag->get('new_records');
 
-					if (\is_array($arrNew['tl_faq_category']) && \in_array(Input::get('id'), $arrNew['tl_faq_category']))
+					if (is_array($arrNew['tl_faq_category']) && in_array(Input::get('id'), $arrNew['tl_faq_category']))
 					{
 						// Add the permissions on group level
 						if ($this->User->inherit != 'custom')
@@ -307,7 +305,7 @@ class tl_faq_category extends Backend
 							{
 								$arrFaqp = StringUtil::deserialize($objGroup->faqp);
 
-								if (\is_array($arrFaqp) && \in_array('create', $arrFaqp))
+								if (is_array($arrFaqp) && in_array('create', $arrFaqp))
 								{
 									$arrFaqs = StringUtil::deserialize($objGroup->faqs, true);
 									$arrFaqs[] = Input::get('id');
@@ -327,7 +325,7 @@ class tl_faq_category extends Backend
 
 							$arrFaqp = StringUtil::deserialize($objUser->faqp);
 
-							if (\is_array($arrFaqp) && \in_array('create', $arrFaqp))
+							if (is_array($arrFaqp) && in_array('create', $arrFaqp))
 							{
 								$arrFaqs = StringUtil::deserialize($objUser->faqs, true);
 								$arrFaqs[] = Input::get('id');
@@ -342,12 +340,12 @@ class tl_faq_category extends Backend
 						$this->User->faqs = $root;
 					}
 				}
-				// No break;
+				// no break
 
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!\in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'faqp')))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'faqp')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ category ID ' . Input::get('id') . '.');
 				}
@@ -357,6 +355,7 @@ class tl_faq_category extends Backend
 			case 'deleteAll':
 			case 'overrideAll':
 				$session = $objSession->all();
+
 				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'faqp'))
 				{
 					$session['CURRENT']['IDS'] = array();
@@ -369,7 +368,7 @@ class tl_faq_category extends Backend
 				break;
 
 			default:
-				if (\strlen(Input::get('act')))
+				if (strlen(Input::get('act')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ categories.');
 				}
@@ -391,7 +390,7 @@ class tl_faq_category extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_faq_category') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_faq_category') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -408,7 +407,7 @@ class tl_faq_category extends Backend
 	 */
 	public function copyCategory($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'faqp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('create', 'faqp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -425,6 +424,6 @@ class tl_faq_category extends Backend
 	 */
 	public function deleteCategory($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'faqp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('delete', 'faqp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

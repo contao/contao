@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrontendCron extends \Frontend
 {
-
 	/**
 	 * Initialize the object (do not remove)
 	 */

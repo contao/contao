@@ -17,7 +17,6 @@ namespace Contao;
  */
 class Calendar extends \Frontend
 {
-
 	/**
 	 * Current events
 	 * @var array
@@ -382,9 +381,9 @@ class Calendar extends \Frontend
 	 */
 	protected function addEvent($objEvent, $intStart, $intEnd, $strUrl, $strBase='')
 	{
-		if ($intEnd < time()) // see #3917
+		if ($intEnd < time())
 		{
-			return;
+			return; // see #3917
 		}
 
 		/** @var PageModel $objPage */

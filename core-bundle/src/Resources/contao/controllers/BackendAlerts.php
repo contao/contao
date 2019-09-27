@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class BackendAlerts extends \Backend
 {
-
 	/**
 	 * Initialize the controller
 	 *

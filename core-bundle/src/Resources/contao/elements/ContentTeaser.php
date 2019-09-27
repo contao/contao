@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentTeaser extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string

@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleQuicknav extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string

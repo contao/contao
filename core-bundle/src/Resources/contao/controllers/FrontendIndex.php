@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrontendIndex extends \Frontend
 {
-
 	/**
 	 * Initialize the object
 	 */

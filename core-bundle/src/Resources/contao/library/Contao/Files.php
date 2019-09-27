@@ -31,7 +31,6 @@ namespace Contao;
  */
 class Files
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var Files
@@ -41,12 +40,16 @@ class Files
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 */
-	protected function __construct() {}
+	protected function __construct()
+	{
+	}
 
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Instantiate the object (Factory)
@@ -98,7 +101,7 @@ class Files
 			return true;
 		}
 
-		return rmdir(TL_ROOT. '/' . $strDirectory);
+		return rmdir(TL_ROOT . '/' . $strDirectory);
 	}
 
 	/**
@@ -314,11 +317,12 @@ class Files
 	{
 		foreach (\func_get_args() as $strPath)
 		{
-			if ($strPath == '') // see #5795
+			if ($strPath == '')
 			{
 				throw new \RuntimeException('No file or folder name given');
 			}
-			elseif (\Validator::isInsecurePath($strPath))
+
+			if (\Validator::isInsecurePath($strPath))
 			{
 				throw new \RuntimeException('Invalid file or folder name ' . $strPath);
 			}

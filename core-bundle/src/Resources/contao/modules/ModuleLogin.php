@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleLogin extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string

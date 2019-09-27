@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PageError403 extends \Frontend
 {
-
 	/**
 	 * Generate an error 403 page
 	 *

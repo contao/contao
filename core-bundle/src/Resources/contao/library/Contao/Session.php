@@ -36,7 +36,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  */
 class Session
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var Session
@@ -66,7 +65,7 @@ class Session
 	 */
 	protected function __construct()
 	{
-		if (PHP_SAPI == 'cli')
+		if (\PHP_SAPI == 'cli')
 		{
 			$this->session = new SymfonySession(new MockArraySessionStorage());
 		}
@@ -81,7 +80,9 @@ class Session
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Return the object instance (Singleton)

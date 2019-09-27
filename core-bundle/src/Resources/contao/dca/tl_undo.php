@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_undo'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -115,7 +114,6 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
  */
 class tl_undo extends Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -145,7 +143,7 @@ class tl_undo extends Backend
 		$GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root'] = $objSteps->numRows ? $objSteps->fetchEach('id') : array(0);
 
 		// Redirect if there is an error
-		if (Input::get('act') && !\in_array(Input::get('id'), $GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root']))
+		if (Input::get('act') && !in_array(Input::get('id'), $GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root']))
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' undo step ID ' . Input::get('id') . '.');
 		}

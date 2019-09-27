@@ -43,7 +43,7 @@ class ImageSizesTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $framework = $this->mockContaoFramework();
         $framework->initialize();

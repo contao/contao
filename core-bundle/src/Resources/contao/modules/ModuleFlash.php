@@ -19,7 +19,6 @@ namespace Contao;
  */
 class ModuleFlash extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string

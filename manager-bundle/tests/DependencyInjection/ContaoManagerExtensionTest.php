@@ -29,7 +29,7 @@ class ContaoManagerExtensionTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

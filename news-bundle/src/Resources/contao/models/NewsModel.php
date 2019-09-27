@@ -154,7 +154,6 @@ namespace Contao;
  */
 class NewsModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

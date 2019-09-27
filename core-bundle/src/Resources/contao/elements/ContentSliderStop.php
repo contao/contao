@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentSliderStop extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string

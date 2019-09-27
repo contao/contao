@@ -46,7 +46,7 @@ class ImageFactoryTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    protected function tearDown()
     {
         if (file_exists($this->getRootDir().'/assets/images')) {
             (new Filesystem())->remove($this->getRootDir().'/assets/images');

@@ -19,7 +19,6 @@ namespace Contao;
  */
 class KeyValueWizard extends \Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -116,11 +115,11 @@ class KeyValueWizard extends \Widget
 		}
 
 		// Begin the table
-		$return = '<table id="ctrl_'.$this->strId.'" class="tl_key_value_wizard">
+		$return = '<table id="ctrl_' . $this->strId . '" class="tl_key_value_wizard">
   <thead>
     <tr>
-      <th>'.$GLOBALS['TL_LANG']['MSC']['ow_key'].'</th>
-      <th>'.$GLOBALS['TL_LANG']['MSC']['ow_value'].'</th>
+      <th>' . $GLOBALS['TL_LANG']['MSC']['ow_key'] . '</th>
+      <th>' . $GLOBALS['TL_LANG']['MSC']['ow_value'] . '</th>
       <th></th>
     </tr>
   </thead>
@@ -131,8 +130,8 @@ class KeyValueWizard extends \Widget
 		{
 			$return .= '
     <tr>
-      <td><input type="text" name="'.$this->strId.'['.$i.'][key]" id="'.$this->strId.'_key_'.$i.'" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]['key']).'"'.$this->getAttributes().'></td>
-      <td><input type="text" name="'.$this->strId.'['.$i.'][value]" id="'.$this->strId.'_value_'.$i.'" class="tl_text" value="'.\StringUtil::specialchars($this->varValue[$i]['value']).'"'.$this->getAttributes().'></td>';
+      <td><input type="text" name="' . $this->strId . '[' . $i . '][key]" id="' . $this->strId . '_key_' . $i . '" class="tl_text" value="' . \StringUtil::specialchars($this->varValue[$i]['key']) . '"' . $this->getAttributes() . '></td>
+      <td><input type="text" name="' . $this->strId . '[' . $i . '][value]" id="' . $this->strId . '_value_' . $i . '" class="tl_text" value="' . \StringUtil::specialchars($this->varValue[$i]['value']) . '"' . $this->getAttributes() . '></td>';
 
 			// Add row buttons
 			$return .= '
@@ -146,7 +145,7 @@ class KeyValueWizard extends \Widget
 				}
 				else
 				{
-					$return .= ' <button type="button" data-command="' . $button . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_'.$button]) . '">' . \Image::getHtml($button.'.svg') . '</button>';
+					$return .= ' <button type="button" data-command="' . $button . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_' . $button]) . '">' . \Image::getHtml($button . '.svg') . '</button>';
 				}
 			}
 
@@ -154,9 +153,9 @@ class KeyValueWizard extends \Widget
     </tr>';
 		}
 
-		return $return.'
+		return $return . '
   </tbody>
   </table>
-  <script>Backend.keyValueWizard("ctrl_'.$this->strId.'")</script>';
+  <script>Backend.keyValueWizard("ctrl_' . $this->strId . '")</script>';
 	}
 }

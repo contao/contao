@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -198,7 +197,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
  */
 class tl_newsletter_recipients extends Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -221,7 +219,7 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->newsletters) || !\is_array($this->User->newsletters))
+		if (empty($this->User->newsletters) || !is_array($this->User->newsletters))
 		{
 			$root = array(0);
 		}
@@ -230,21 +228,22 @@ class tl_newsletter_recipients extends Backend
 			$root = $this->User->newsletters;
 		}
 
-		$id = \strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
 
 		// Check current action
 		switch (Input::get('act'))
 		{
 			case 'paste':
 			case 'select':
-				if (!\in_array(CURRENT_ID, $root)) // check CURRENT_ID here (see #247)
+				// Check CURRENT_ID here (see #247)
+				if (!in_array(CURRENT_ID, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
 				}
 				break;
 
 			case 'create':
-				if (!\strlen(Input::get('pid')) || !\in_array(Input::get('pid'), $root))
+				if (!strlen(Input::get('pid')) || !in_array(Input::get('pid'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create newsletters recipients in channel ID ' . Input::get('pid') . '.');
 				}
@@ -252,11 +251,11 @@ class tl_newsletter_recipients extends Backend
 
 			case 'cut':
 			case 'copy':
-				if (!\in_array(Input::get('pid'), $root))
+				if (!in_array(Input::get('pid'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter recipient ID ' . $id . ' to channel ID ' . Input::get('pid') . '.');
 				}
-				// NO BREAK STATEMENT HERE
+				// no break
 
 			case 'edit':
 			case 'show':
@@ -271,7 +270,7 @@ class tl_newsletter_recipients extends Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid newsletter recipient ID ' . $id . '.');
 				}
 
-				if (!\in_array($objRecipient->pid, $root))
+				if (!in_array($objRecipient->pid, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' recipient ID ' . $id . ' of newsletter channel ID ' . $objRecipient->pid . '.');
 				}
@@ -282,7 +281,7 @@ class tl_newsletter_recipients extends Backend
 			case 'overrideAll':
 			case 'cutAll':
 			case 'copyAll':
-				if (!\in_array($id, $root))
+				if (!in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
 				}
@@ -299,11 +298,12 @@ class tl_newsletter_recipients extends Backend
 				break;
 
 			default:
-				if (\strlen(Input::get('act')))
+				if (strlen(Input::get('act')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '".');
 				}
-				elseif (!\in_array($id, $root))
+
+				if (!in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access newsletter recipient ID ' . $id . '.');
 				}
@@ -405,7 +405,7 @@ class tl_newsletter_recipients extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (\strlen(Input::get('tid')))
+		if (strlen(Input::get('tid')))
 		{
 			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
@@ -417,14 +417,14 @@ class tl_newsletter_recipients extends Backend
 			return '';
 		}
 
-		$href .= '&amp;tid='.$row['id'].'&amp;state='.($row['active'] ? '' : 1);
+		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['active'] ? '' : 1);
 
 		if (!$row['active'])
 		{
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="' . ($row['active'] ? 1 : 0) . '"').'</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['active'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**
@@ -448,16 +448,16 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		// Trigger the onload_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_newsletter_recipients']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_newsletter_recipients']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_newsletter_recipients']['config']['onload_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -487,16 +487,16 @@ class tl_newsletter_recipients extends Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_newsletter_recipients']['fields']['active']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_newsletter_recipients']['fields']['active']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_newsletter_recipients']['fields']['active']['save_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -516,16 +516,16 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_newsletter_recipients']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_newsletter_recipients']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_newsletter_recipients']['config']['onsubmit_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}

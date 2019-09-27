@@ -23,7 +23,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class BackendPreview extends \Backend
 {
-
 	/**
 	 * Initialize the controller
 	 *

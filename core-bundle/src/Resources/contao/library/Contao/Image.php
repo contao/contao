@@ -39,7 +39,6 @@ use Imagine\Image\Point;
  */
 class Image
 {
-
 	/**
 	 * The File instance of the original image
 	 *
@@ -193,7 +192,6 @@ class Image
 
 			$this->importantPart['width'] = max(1, min($this->fileObj->viewWidth - $this->importantPart['x'], (int) $importantPart['width']));
 			$this->importantPart['height'] = max(1, min($this->fileObj->viewHeight - $this->importantPart['y'], (int) $importantPart['height']));
-
 		}
 		else
 		{
@@ -387,7 +385,7 @@ class Image
 
 		$strCacheKey = substr(md5
 		(
-			  '-w' . $this->getTargetWidth()
+			'-w' . $this->getTargetWidth()
 			. '-h' . $this->getTargetHeight()
 			. '-o' . $this->getOriginalPath()
 			. '-m' . $this->getResizeMode()
@@ -631,25 +629,23 @@ class Image
 
 			return 'assets/contao/images/' . $src;
 		}
-		else
+
+		$theme = \Backend::getTheme();
+
+		if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
 		{
-			$theme = \Backend::getTheme();
-
-			if (pathinfo($src, PATHINFO_EXTENSION) == 'svg')
-			{
-				return 'system/themes/' . $theme . '/icons/' . $src;
-			}
-
-			$filename = pathinfo($src, PATHINFO_FILENAME);
-
-			// Prefer SVG icons
-			if (file_exists(TL_ROOT . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
-			{
-				return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
-			}
-
-			return 'system/themes/' . $theme . '/images/' . $src;
+			return 'system/themes/' . $theme . '/icons/' . $src;
 		}
+
+		$filename = pathinfo($src, PATHINFO_FILENAME);
+
+		// Prefer SVG icons
+		if (file_exists(TL_ROOT . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
+		{
+			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
+		}
+
+		return 'system/themes/' . $theme . '/images/' . $src;
 	}
 
 	/**

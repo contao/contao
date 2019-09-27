@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class PageRoot extends \Frontend
 {
-
 	/**
 	 * Redirect to the first active regular page
 	 *

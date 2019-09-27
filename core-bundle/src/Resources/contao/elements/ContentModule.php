@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentModule extends \ContentElement
 {
-
 	/**
 	 * Parse the template
 	 *
@@ -71,5 +70,7 @@ class ContentModule extends \ContentElement
 	/**
 	 * Generate the content element
 	 */
-	protected function compile() {}
+	protected function compile()
+	{
+	}
 }

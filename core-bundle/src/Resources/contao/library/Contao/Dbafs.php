@@ -24,7 +24,6 @@ namespace Contao;
  */
 class Dbafs
 {
-
 	/**
 	 * Synchronize the database
 	 * @var array
@@ -122,7 +121,8 @@ class Dbafs
 						TL_ROOT . '/' . $strResource,
 						\FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
 					)
-				), \RecursiveIteratorIterator::SELF_FIRST
+				),
+				\RecursiveIteratorIterator::SELF_FIRST
 			);
 
 			// Add the relative path
@@ -286,6 +286,7 @@ class Dbafs
 		{
 			static::updateFolderHashes($strPath);
 		}
+
 		if (($strPath = \dirname($strDestination)) != \Config::get('uploadPath'))
 		{
 			static::updateFolderHashes($strPath);
@@ -368,6 +369,7 @@ class Dbafs
 		{
 			static::updateFolderHashes($strPath);
 		}
+
 		if (($strPath = \dirname($strDestination)) != \Config::get('uploadPath'))
 		{
 			static::updateFolderHashes($strPath);
@@ -380,8 +382,6 @@ class Dbafs
 	 * Removes a file or folder
 	 *
 	 * @param string $strResource The path to the file or folder
-	 *
-	 * @return null Explicitly return null
 	 */
 	public static function deleteResource($strResource)
 	{
@@ -502,7 +502,8 @@ class Dbafs
 					TL_ROOT . '/' . \Config::get('uploadPath'),
 					\FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
 				)
-			), \RecursiveIteratorIterator::SELF_FIRST
+			),
+			\RecursiveIteratorIterator::SELF_FIRST
 		);
 
 		$strLog = 'system/tmp/' . md5(uniqid(mt_rand(), true));
@@ -769,7 +770,7 @@ class Dbafs
 
 		$objChildren = \Database::getInstance()
 			->prepare("SELECT hash, name FROM tl_files WHERE path LIKE ? AND path NOT LIKE ? ORDER BY name")
-			->execute($strPath.'/%', $strPath.'/%/%')
+			->execute($strPath . '/%', $strPath . '/%/%')
 		;
 
 		if ($objChildren !== null)

@@ -27,7 +27,6 @@ use Patchwork\Utf8;
  */
 class ModuleComments extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string

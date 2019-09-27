@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class Theme extends \Backend
 {
-
 	/**
 	 * Import a theme
 	 *
@@ -110,18 +109,18 @@ class Theme extends \Backend
 		// Return the form
 		return \Message::generate() . '
 <div id="tl_buttons">
-<a href="'.ampersand(str_replace('&key=importTheme', '', \Environment::get('request'))).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="' . ampersand(str_replace('&key=importTheme', '', \Environment::get('request'))) . '" class="header_back" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
-<form action="'.ampersand(\Environment::get('request'), true).'" id="tl_theme_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
+<form action="' . ampersand(\Environment::get('request'), true) . '" id="tl_theme_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_theme_import">
-<input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-<input type="hidden" name="MAX_FILE_SIZE" value="'.\Config::get('maxFileSize').'">
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<input type="hidden" name="MAX_FILE_SIZE" value="' . \Config::get('maxFileSize') . '">
 
 <div class="tl_tbox">
   <div class="widget">
-    <h3>'.$GLOBALS['TL_LANG']['tl_theme']['source'][0].'</h3>'.$objUploader->generateMarkup().(isset($GLOBALS['TL_LANG']['tl_theme']['source'][1]) ? '
-    <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_theme']['source'][1].'</p>' : '').'
+    <h3>' . $GLOBALS['TL_LANG']['tl_theme']['source'][0] . '</h3>' . $objUploader->generateMarkup() . (isset($GLOBALS['TL_LANG']['tl_theme']['source'][1]) ? '
+    <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_theme']['source'][1] . '</p>' : '') . '
   </div>
 </div>
 
@@ -130,7 +129,7 @@ class Theme extends \Backend
 <div class="tl_formbody_submit">
 
 <div class="tl_submit_container">
-  <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['tl_theme']['importTheme'][0].'</button>
+  <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['tl_theme']['importTheme'][0] . '</button>
 </div>
 
 </div>
@@ -149,12 +148,12 @@ class Theme extends \Backend
 	{
 		$return = \Message::generate() . '
 <div id="tl_buttons">
-<a href="'.ampersand(str_replace('&key=importTheme', '', \Environment::get('request'))).'" class="header_back" title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="' . ampersand(str_replace('&key=importTheme', '', \Environment::get('request'))) . '" class="header_back" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
-<form action="'.ampersand(\Environment::get('request'), true).'" id="tl_theme_import" class="tl_form tl_edit_form" method="post">
+<form action="' . ampersand(\Environment::get('request'), true) . '" id="tl_theme_import" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_theme_import">
-<input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
 <input type="hidden" name="confirm" value="1">';
 
 		$count = 0;
@@ -164,9 +163,9 @@ class Theme extends \Backend
 		{
 			$return .= '
 
-<div class="tl_'. (($count++ < 1) ? 't' : '') .'box theme_import">
-  <h3>'. basename($strFile) .'</h3>
-  <h4>'.$GLOBALS['TL_LANG']['tl_theme']['tables_fields'].'</h4>';
+<div class="tl_' . (($count++ < 1) ? 't' : '') . 'box theme_import">
+  <h3>' . basename($strFile) . '</h3>
+  <h4>' . $GLOBALS['TL_LANG']['tl_theme']['tables_fields'] . '</h4>';
 
 			// Find the XML file
 			$objArchive = new \ZipReader($strFile);
@@ -174,7 +173,7 @@ class Theme extends \Backend
 			// Continue if there is no XML file
 			if ($objArchive->getFile('theme.xml') === false)
 			{
-				$return .= "\n  " . '<p class="tl_red" style="margin:0">'. sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_xml'], basename($strFile)) ."</p>\n</div>";
+				$return .= "\n  " . '<p class="tl_red" style="margin:0">' . sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_xml'], basename($strFile)) . "</p>\n</div>";
 				continue;
 			}
 
@@ -221,7 +220,7 @@ class Theme extends \Backend
 					if (!\in_array($name, $arrDbFields[$table]))
 					{
 						$blnHasError = true;
-						$return .= "\n  " . '<p class="tl_red" style="margin:0">'. sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_field'], $table .'.'. $name) .'</p>';
+						$return .= "\n  " . '<p class="tl_red" style="margin:0">' . sprintf($GLOBALS['TL_LANG']['tl_theme']['missing_field'], $table . '.' . $name) . '</p>';
 					}
 				}
 			}
@@ -229,12 +228,12 @@ class Theme extends \Backend
 			// Confirmation
 			if (!$blnHasError)
 			{
-				$return .= "\n  " . '<p class="tl_green" style="margin:0">'. $GLOBALS['TL_LANG']['tl_theme']['tables_ok'] .'</p>';
+				$return .= "\n  " . '<p class="tl_green" style="margin:0">' . $GLOBALS['TL_LANG']['tl_theme']['tables_ok'] . '</p>';
 			}
 
 			// Check the custom templates
 			$return .= '
-  <h4>'.$GLOBALS['TL_LANG']['tl_theme']['custom_templates'].'</h4>';
+  <h4>' . $GLOBALS['TL_LANG']['tl_theme']['custom_templates'] . '</h4>';
 
 			$objArchive->reset();
 			$blnTplExists = false;
@@ -247,17 +246,17 @@ class Theme extends \Backend
 					continue;
 				}
 
-				if (file_exists(TL_ROOT .'/'. $objArchive->file_name))
+				if (file_exists(TL_ROOT . '/' . $objArchive->file_name))
 				{
 					$blnTplExists = true;
-					$return .= "\n  " . '<p class="tl_red" style="margin:0">'. sprintf($GLOBALS['TL_LANG']['tl_theme']['template_exists'], $objArchive->file_name) .'</p>';
+					$return .= "\n  " . '<p class="tl_red" style="margin:0">' . sprintf($GLOBALS['TL_LANG']['tl_theme']['template_exists'], $objArchive->file_name) . '</p>';
 				}
 			}
 
 			// Confirmation
 			if (!$blnTplExists)
 			{
-				$return .= "\n  " . '<p class="tl_green" style="margin:0">'. $GLOBALS['TL_LANG']['tl_theme']['templates_ok'] .'</p>';
+				$return .= "\n  " . '<p class="tl_green" style="margin:0">' . $GLOBALS['TL_LANG']['tl_theme']['templates_ok'] . '</p>';
 			}
 
 			// HOOK: add custom logic
@@ -281,7 +280,7 @@ class Theme extends \Backend
 <div class="tl_formbody_submit">
 
 <div class="tl_submit_container">
-  <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['continue'].'</button>
+  <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['continue'] . '</button>
 </div>
 
 </div>
@@ -474,7 +473,7 @@ class Theme extends \Backend
 						}
 
 						// Increment the ID
-						elseif ($name == 'id')
+						if ($name == 'id')
 						{
 							$value = $arrMapper[$table][$value];
 						}
@@ -540,7 +539,7 @@ class Theme extends \Backend
 						// Adjust duplicate theme and style sheet names
 						elseif (($table == 'tl_theme' || $table == 'tl_style_sheet') && $name == 'name')
 						{
-							$objCount = $this->Database->prepare("SELECT COUNT(*) AS count FROM ". $table ." WHERE name=?")
+							$objCount = $this->Database->prepare("SELECT COUNT(*) AS count FROM " . $table . " WHERE name=?")
 													   ->execute($value);
 
 							if ($objCount->count > 0)
@@ -731,7 +730,7 @@ class Theme extends \Backend
 
 		// Generate the archive
 		$strTmp = md5(uniqid(mt_rand(), true));
-		$objArchive = new \ZipWriter('system/tmp/'. $strTmp);
+		$objArchive = new \ZipWriter('system/tmp/' . $strTmp);
 
 		// Add the files
 		$this->addTableTlFiles($xml, $tables, $objTheme, $objArchive);
@@ -755,7 +754,7 @@ class Theme extends \Backend
 		$objArchive->close();
 
 		// Open the "save as …" dialogue
-		$objFile = new \File('system/tmp/'. $strTmp);
+		$objFile = new \File('system/tmp/' . $strTmp);
 		$objFile->sendToBrowser($strName . '.cto');
 	}
 
@@ -1075,7 +1074,7 @@ class Theme extends \Backend
 	protected function addFolderToArchive(ZipWriter $objArchive, $strFolder, \DOMDocument $xml, \DOMElement $table, array $arrOrder=array())
 	{
 		// Strip the custom upload folder name
-		$strFolder = preg_replace('@^'.preg_quote(\Config::get('uploadPath'), '@').'/@', '', $strFolder);
+		$strFolder = preg_replace('@^' . preg_quote(\Config::get('uploadPath'), '@') . '/@', '', $strFolder);
 
 		// Add the default upload folder name
 		if ($strFolder == '')
@@ -1086,7 +1085,7 @@ class Theme extends \Backend
 		else
 		{
 			$strTarget = 'files/' . $strFolder;
-			$strFolder = \Config::get('uploadPath') .'/'. $strFolder;
+			$strFolder = \Config::get('uploadPath') . '/' . $strFolder;
 		}
 
 		if (\Validator::isInsecurePath($strFolder))
@@ -1095,13 +1094,13 @@ class Theme extends \Backend
 		}
 
 		// Return if the folder does not exist
-		if (!is_dir(TL_ROOT .'/'. $strFolder))
+		if (!is_dir(TL_ROOT . '/' . $strFolder))
 		{
 			return;
 		}
 
 		// Recursively add the files and subfolders
-		foreach (scan(TL_ROOT .'/'. $strFolder) as $strFile)
+		foreach (scan(TL_ROOT . '/' . $strFolder) as $strFile)
 		{
 			// Skip hidden resources
 			if (strncmp($strFile, '.', 1) === 0)
@@ -1109,18 +1108,18 @@ class Theme extends \Backend
 				continue;
 			}
 
-			if (is_dir(TL_ROOT .'/'. $strFolder .'/'. $strFile))
+			if (is_dir(TL_ROOT . '/' . $strFolder . '/' . $strFile))
 			{
-				$this->addFolderToArchive($objArchive, $strFolder .'/'. $strFile, $xml, $table, $arrOrder);
+				$this->addFolderToArchive($objArchive, $strFolder . '/' . $strFile, $xml, $table, $arrOrder);
 			}
 			else
 			{
 				// Always store files in files and convert the directory upon import
-				$objArchive->addFile($strFolder .'/'. $strFile, $strTarget .'/'. $strFile);
+				$objArchive->addFile($strFolder . '/' . $strFile, $strTarget . '/' . $strFile);
 
 				$arrRow = array();
-				$objFile = new \File($strFolder .'/'. $strFile);
-				$objModel = \FilesModel::findByPath($strFolder .'/'. $strFile);
+				$objFile = new \File($strFolder . '/' . $strFile);
+				$objModel = \FilesModel::findByPath($strFolder . '/' . $strFile);
 
 				if ($objModel !== null)
 				{
@@ -1133,7 +1132,7 @@ class Theme extends \Backend
 				}
 
 				// Always use files as directory and convert it upon import
-				$arrRow['path'] = $strTarget .'/'. $strFile;
+				$arrRow['path'] = $strTarget . '/' . $strFile;
 				$arrRow['hash'] = $objFile->hash;
 
 				// Add the row
@@ -1169,7 +1168,7 @@ class Theme extends \Backend
 		}
 
 		// Return if the folder does not exist
-		if (!is_dir(TL_ROOT .'/'. $strFolder))
+		if (!is_dir(TL_ROOT . '/' . $strFolder))
 		{
 			return;
 		}
@@ -1178,11 +1177,11 @@ class Theme extends \Backend
 		$arrAllowed[] = 'sql'; // see #7048
 
 		// Add all template files to the archive
-		foreach (scan(TL_ROOT .'/'. $strFolder) as $strFile)
+		foreach (scan(TL_ROOT . '/' . $strFolder) as $strFile)
 		{
 			if (preg_match('/\.(' . implode('|', $arrAllowed) . ')$/', $strFile) && strncmp($strFile, 'be_', 3) !== 0 && strncmp($strFile, 'nl_', 3) !== 0)
 			{
-				$objArchive->addFile($strFolder .'/'. $strFile);
+				$objArchive->addFile($strFolder . '/' . $strFile);
 			}
 		}
 	}

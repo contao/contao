@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentText extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string

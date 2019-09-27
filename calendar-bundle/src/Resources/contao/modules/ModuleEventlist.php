@@ -30,7 +30,6 @@ use Patchwork\Utf8;
  */
 class ModuleEventlist extends \Events
 {
-
 	/**
 	 * Current date object
 	 * @var Date

@@ -22,7 +22,6 @@ namespace Contao;
  */
 class BackendTemplate extends \Template
 {
-
 	/**
 	 * Add a hook to modify the template output
 	 *

@@ -90,7 +90,6 @@ namespace Contao;
  */
 class CommentsModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

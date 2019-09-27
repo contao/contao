@@ -41,7 +41,7 @@ class UserPasswordCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $connection = $this->createMock(Connection::class);
 

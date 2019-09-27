@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentList extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string

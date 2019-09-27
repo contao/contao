@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -215,7 +214,6 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
  */
 class tl_style_sheet extends Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -253,7 +251,7 @@ class tl_style_sheet extends Backend
 
 		$session = $objSession->get('style_sheet_updater');
 
-		if (empty($session) || !\is_array($session))
+		if (empty($session) || !is_array($session))
 		{
 			return;
 		}
@@ -279,7 +277,7 @@ class tl_style_sheet extends Backend
 	public function scheduleUpdate($id)
 	{
 		// The onsubmit_callback passes a DataContainer object
-		if (\is_object($id))
+		if (is_object($id))
 		{
 			$id = $id->id;
 		}
@@ -313,21 +311,20 @@ class tl_style_sheet extends Backend
 
 		if ($row['cc'] != '')
 		{
-			$cc = ' &lt;!--['. $row['cc'] .']&gt;';
+			$cc = ' &lt;!--[' . $row['cc'] . ']&gt;';
 		}
 
 		if ($row['mediaQuery'] != '')
 		{
-			return '<div class="tl_content_left">'. $row['name'] .' <span style="color:#999;padding-left:3px">@media '. $row['mediaQuery'] . $cc .'</span>' . "</div>\n";
+			return '<div class="tl_content_left">' . $row['name'] . ' <span style="color:#999;padding-left:3px">@media ' . $row['mediaQuery'] . $cc . '</span>' . "</div>\n";
 		}
-		elseif (!empty($media) && \is_array($media))
+
+		if (!empty($media) && is_array($media))
 		{
-			return '<div class="tl_content_left">'. $row['name'] .' <span style="color:#999;padding-left:3px">@media '. implode(', ', $media) . $cc .'</span>' . "</div>\n";
+			return '<div class="tl_content_left">' . $row['name'] . ' <span style="color:#999;padding-left:3px">@media ' . implode(', ', $media) . $cc . '</span>' . "</div>\n";
 		}
-		else
-		{
-			return '<div class="tl_content_left">'. $row['name'] . $cc ."</div>\n";
-		}
+
+		return '<div class="tl_content_left">' . $row['name'] . $cc . "</div>\n";
 	}
 
 	/**
@@ -373,6 +370,6 @@ class tl_style_sheet extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_style_sheet') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_style_sheet') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

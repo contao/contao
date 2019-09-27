@@ -24,7 +24,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class Ajax extends \Backend
 {
-
 	/**
 	 * Ajax action
 	 * @var string

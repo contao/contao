@@ -93,7 +93,8 @@ class NewsPickerProviderTest extends TestCase
                 'linkAttributes' => ['class' => 'newsPicker'],
                 'current' => true,
                 'uri' => 'contao_backend?do=news&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
-            ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'newsPicker'))
+            ],
+            $this->provider->createMenuItem(new PickerConfig('link', [], '', 'newsPicker'))
         );
     }
 

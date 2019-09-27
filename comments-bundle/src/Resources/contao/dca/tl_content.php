@@ -87,7 +87,6 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_template'] = array
  */
 class tl_content_comments extends Backend
 {
-
 	/**
 	 * Return all comments templates as array
 	 *

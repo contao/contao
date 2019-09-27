@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentVimeo extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -42,7 +41,7 @@ class ContentVimeo extends \ContentElement
 
 			if ($this->headline != '')
 			{
-				$return = '<'. $this->hl .'>'. $this->headline .'</'. $this->hl .'>'. $return;
+				$return = '<' . $this->hl . '>' . $this->headline . '</' . $this->hl . '>' . $return;
 			}
 
 			return $return;

@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleCustomnav extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -143,7 +142,7 @@ class ModuleCustomnav extends \Module
 							$href = $objNext->getFrontendUrl();
 							break;
 						}
-						// DO NOT ADD A break; STATEMENT
+						// no break
 
 					default:
 						$href = $objModel->getFrontendUrl();

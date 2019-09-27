@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_image_size'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -211,7 +210,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
  */
 class tl_image_size extends Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -247,7 +245,7 @@ class tl_image_size extends Backend
 	public function adjustPermissions($insertId)
 	{
 		// The oncreate_callback passes $insertId as second argument
-		if (\func_num_args() == 4)
+		if (func_num_args() == 4)
 		{
 			$insertId = func_get_arg(1);
 		}
@@ -258,7 +256,7 @@ class tl_image_size extends Backend
 		}
 
 		// Set the image sizes
-		if (empty($this->User->imageSizes) || !\is_array($this->User->imageSizes))
+		if (empty($this->User->imageSizes) || !is_array($this->User->imageSizes))
 		{
 			$imageSizes = array();
 		}
@@ -268,7 +266,7 @@ class tl_image_size extends Backend
 		}
 
 		// The image size is enabled already
-		if (\in_array($insertId, $imageSizes))
+		if (in_array($insertId, $imageSizes))
 		{
 			return;
 		}
@@ -278,7 +276,7 @@ class tl_image_size extends Backend
 
 		$arrNew = $objSessionBag->get('new_records');
 
-		if (\is_array($arrNew['tl_image_size']) && \in_array($insertId, $arrNew['tl_image_size']))
+		if (is_array($arrNew['tl_image_size']) && in_array($insertId, $arrNew['tl_image_size']))
 		{
 			// Add the permissions on group level
 			if ($this->User->inherit != 'custom')
@@ -289,7 +287,7 @@ class tl_image_size extends Backend
 				{
 					$arrThemes = StringUtil::deserialize($objGroup->themes);
 
-					if (\is_array($arrThemes) && \in_array('image_sizes', $arrThemes))
+					if (is_array($arrThemes) && in_array('image_sizes', $arrThemes))
 					{
 						$arrImageSizes = StringUtil::deserialize($objGroup->imageSizes, true);
 						$arrImageSizes[] = $insertId;
@@ -309,7 +307,7 @@ class tl_image_size extends Backend
 
 				$arrThemes = StringUtil::deserialize($objUser->themes);
 
-				if (\is_array($arrThemes) && \in_array('image_sizes', $arrThemes))
+				if (is_array($arrThemes) && in_array('image_sizes', $arrThemes))
 				{
 					$arrImageSizes = StringUtil::deserialize($objUser->imageSizes, true);
 					$arrImageSizes[] = $insertId;
@@ -386,6 +384,6 @@ class tl_image_size extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_image_size') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_image_size') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

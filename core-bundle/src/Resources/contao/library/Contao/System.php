@@ -55,7 +55,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 abstract class System
 {
-
 	/**
 	 * Container
 	 * @var ContainerInterface
@@ -357,7 +356,7 @@ abstract class System
 		$strCacheKey = $strLanguage;
 
 		// Make sure the language exists
-        if ($strLanguage != 'en' && !static::isInstalledLanguage($strLanguage))
+		if ($strLanguage != 'en' && !static::isInstalledLanguage($strLanguage))
 		{
 			$strShortLang = substr($strLanguage, 0, 2);
 
@@ -737,11 +736,9 @@ abstract class System
 		{
 			return substr_replace($strIp, ':0000', strrpos($strIp, ':'));
 		}
+
 		// IPv4
-		else
-		{
-			return substr_replace($strIp, '.0', strrpos($strIp, '.'));
-		}
+		return substr_replace($strIp, '.0', strrpos($strIp, '.'));
 	}
 
 	/**

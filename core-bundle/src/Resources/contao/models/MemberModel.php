@@ -172,7 +172,6 @@ namespace Contao;
  */
 class MemberModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

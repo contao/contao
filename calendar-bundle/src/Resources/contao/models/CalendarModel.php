@@ -82,11 +82,9 @@ namespace Contao;
  */
 class CalendarModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_calendar';
-
 }

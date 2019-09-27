@@ -73,7 +73,6 @@ namespace Contao;
  */
 class StyleSheetModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

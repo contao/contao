@@ -33,7 +33,6 @@ namespace Contao;
  */
 class GdImage
 {
-
 	/**
 	 * The GD resource handle
 	 *

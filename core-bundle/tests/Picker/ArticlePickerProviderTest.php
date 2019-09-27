@@ -93,7 +93,8 @@ class ArticlePickerProviderTest extends TestCase
                 'linkAttributes' => ['class' => 'articlePicker'],
                 'current' => true,
                 'uri' => 'contao_backend?do=article&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
-            ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'articlePicker'))
+            ],
+            $this->provider->createMenuItem(new PickerConfig('link', [], '', 'articlePicker'))
         );
     }
 

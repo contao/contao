@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentToplink extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string

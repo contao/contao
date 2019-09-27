@@ -18,7 +18,6 @@ namespace Contao\Model;
  */
 class QueryBuilder
 {
-
 	/**
 	 * Build a query based on the given options
 	 *

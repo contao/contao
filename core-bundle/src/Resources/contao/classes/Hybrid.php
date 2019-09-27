@@ -24,7 +24,6 @@ namespace Contao;
  */
 abstract class Hybrid extends \Frontend
 {
-
 	/**
 	 * Key
 	 * @var string

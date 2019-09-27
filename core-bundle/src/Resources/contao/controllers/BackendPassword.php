@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class BackendPassword extends \Backend
 {
-
 	/**
 	 * Initialize the controller
 	 *

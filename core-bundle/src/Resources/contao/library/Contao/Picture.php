@@ -48,7 +48,6 @@ use Imagine\Image\Point;
  */
 class Picture
 {
-
 	/**
 	 * The Image instance of the source image
 	 *

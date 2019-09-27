@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class PageRedirect extends \Frontend
 {
-
 	/**
 	 * Redirect to an external page
 	 *

@@ -19,7 +19,6 @@ namespace Contao;
  */
 class MetaWizard extends \Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean

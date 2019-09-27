@@ -25,7 +25,6 @@ use Patchwork\Utf8;
  */
 class ModuleEventReader extends \Events
 {
-
 	/**
 	 * Template
 	 * @var string

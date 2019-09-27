@@ -39,7 +39,6 @@ namespace Contao;
  */
 class Email
 {
-
 	/**
 	 * Mailer object
 	 * @var \Swift_Mailer

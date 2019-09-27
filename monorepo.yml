@@ -8,6 +8,9 @@ composer:
         'contao/monorepo-tools': 'dev-master'
         'friendsofphp/php-cs-fixer': '^2.12.7'
         'php-coveralls/php-coveralls': '^2.1'
+    autoload-dev:
+        'psr-4':
+            'Contao\Contao\': 'src/'
 
 repositories:
     core-bundle:

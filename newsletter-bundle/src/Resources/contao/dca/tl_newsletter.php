@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_newsletter'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -270,7 +269,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
  */
 class tl_newsletter extends Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -293,7 +291,7 @@ class tl_newsletter extends Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->newsletters) || !\is_array($this->User->newsletters))
+		if (empty($this->User->newsletters) || !is_array($this->User->newsletters))
 		{
 			$root = array(0);
 		}
@@ -302,21 +300,22 @@ class tl_newsletter extends Backend
 			$root = $this->User->newsletters;
 		}
 
-		$id = \strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
 
 		// Check current action
 		switch (Input::get('act'))
 		{
 			case 'paste':
 			case 'select':
-				if (!\in_array(CURRENT_ID, $root)) // check CURRENT_ID here (see #247)
+				// Check CURRENT_ID here (see #247)
+				if (!in_array(CURRENT_ID, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
 				}
 				break;
 
 			case 'create':
-				if (!\strlen(Input::get('pid')) || !\in_array(Input::get('pid'), $root))
+				if (!strlen(Input::get('pid')) || !in_array(Input::get('pid'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create newsletters in channel ID ' . Input::get('pid') . '.');
 				}
@@ -324,11 +323,11 @@ class tl_newsletter extends Backend
 
 			case 'cut':
 			case 'copy':
-				if (!\in_array(Input::get('pid'), $root))
+				if (!in_array(Input::get('pid'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter ID ' . $id . ' to channel ID ' . Input::get('pid') . '.');
 				}
-				// NO BREAK STATEMENT HERE
+				// no break
 
 			case 'edit':
 			case 'show':
@@ -342,7 +341,7 @@ class tl_newsletter extends Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid newsletter ID ' . $id . '.');
 				}
 
-				if (!\in_array($objChannel->pid, $root))
+				if (!in_array($objChannel->pid, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter ID ' . $id . ' of newsletter channel ID ' . $objChannel->pid . '.');
 				}
@@ -353,7 +352,7 @@ class tl_newsletter extends Backend
 			case 'overrideAll':
 			case 'cutAll':
 			case 'copyAll':
-				if (!\in_array($id, $root))
+				if (!in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
 				}
@@ -370,7 +369,7 @@ class tl_newsletter extends Backend
 				break;
 
 			default:
-				if (\strlen(Input::get('act')))
+				if (strlen(Input::get('act')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '".');
 				}
@@ -386,12 +385,12 @@ class tl_newsletter extends Backend
 						throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid newsletter ID ' . $id . '.');
 					}
 
-					if (!\in_array($objChannel->pid, $root))
+					if (!in_array($objChannel->pid, $root))
 					{
 						throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to send newsletter ID ' . $id . ' of newsletter channel ID ' . $objChannel->pid . '.');
 					}
 				}
-				elseif (!\in_array($id, $root))
+				elseif (!in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
 				}
@@ -425,7 +424,7 @@ class tl_newsletter extends Backend
 	 */
 	public function convertAbsoluteLinks($strContent)
 	{
-		return str_replace('src="' .Environment::get('base'), 'src="', $strContent);
+		return str_replace('src="' . Environment::get('base'), 'src="', $strContent);
 	}
 
 	/**

@@ -39,7 +39,6 @@ namespace Contao;
  */
 abstract class Model
 {
-
 	/**
 	 * Insert flag
 	 * @var integer
@@ -635,7 +634,6 @@ abstract class Model
 						(
 							'order' => \Database::getInstance()->findInSet($strField, $arrValues)
 						),
-
 						$arrOptions
 					);
 
@@ -778,7 +776,6 @@ abstract class Model
 				'value'  => $varValue,
 				'return' => 'Model'
 			),
-
 			$arrOptions
 		);
 
@@ -819,7 +816,6 @@ abstract class Model
 				'value'  => $varId,
 				'return' => 'Model'
 			),
-
 			$arrOptions
 		);
 
@@ -872,7 +868,6 @@ abstract class Model
 					'order'  => \Database::getInstance()->findInSet("$t.id", $arrIds),
 					'return' => 'Collection'
 				),
-
 				$arrOptions
 			);
 
@@ -918,7 +913,6 @@ abstract class Model
 				'value'  => $varValue,
 				'return' => 'Model'
 			),
-
 			$arrOptions
 		);
 
@@ -952,7 +946,6 @@ abstract class Model
 				'value'  => $varValue,
 				'return' => $blnModel ? 'Model' : 'Collection'
 			),
-
 			$arrOptions
 		);
 
@@ -974,7 +967,6 @@ abstract class Model
 			(
 				'return' => 'Collection'
 			),
-
 			$arrOptions
 		);
 
@@ -1073,6 +1065,7 @@ abstract class Model
 		{
 			$arrOptions['limit'] = 0;
 		}
+
 		if (!isset($arrOptions['offset']))
 		{
 			$arrOptions['offset'] = 0;
@@ -1106,14 +1099,13 @@ abstract class Model
 
 			return static::createModelFromDbResult($objResult);
 		}
-		elseif ($arrOptions['return'] == 'Array')
+
+		if ($arrOptions['return'] == 'Array')
 		{
 			return static::createCollectionFromDbResult($objResult, static::$strTable)->getModels();
 		}
-		else
-		{
-			return static::createCollectionFromDbResult($objResult, static::$strTable);
-		}
+
+		return static::createCollectionFromDbResult($objResult, static::$strTable);
 	}
 
 	/**
@@ -1164,7 +1156,6 @@ abstract class Model
 				'column' => $strColumn,
 				'value'  => $varValue
 			),
-
 			$arrOptions
 		);
 
@@ -1203,19 +1194,17 @@ abstract class Model
 
 			return static::$arrClassNames[$strTable];
 		}
-		else
+
+		$arrChunks = explode('_', $strTable);
+
+		if ($arrChunks[0] == 'tl')
 		{
-			$arrChunks = explode('_', $strTable);
-
-			if ($arrChunks[0] == 'tl')
-			{
-				array_shift($arrChunks);
-			}
-
-			static::$arrClassNames[$strTable] = implode('', array_map('ucfirst', $arrChunks)) . 'Model';
-
-			return static::$arrClassNames[$strTable];
+			array_shift($arrChunks);
 		}
+
+		static::$arrClassNames[$strTable] = implode('', array_map('ucfirst', $arrChunks)) . 'Model';
+
+		return static::$arrClassNames[$strTable];
 	}
 
 	/**

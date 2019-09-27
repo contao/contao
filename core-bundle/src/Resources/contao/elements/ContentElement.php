@@ -103,7 +103,6 @@ namespace Contao;
  */
 abstract class ContentElement extends \Frontend
 {
-
 	/**
 	 * Template
 	 * @var string

@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentYouTube extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -42,7 +41,7 @@ class ContentYouTube extends \ContentElement
 
 			if ($this->headline != '')
 			{
-				$return = '<'. $this->hl .'>'. $this->headline .'</'. $this->hl .'>'. $return;
+				$return = '<' . $this->hl . '>' . $this->headline . '</' . $this->hl . '>' . $return;
 			}
 
 			return $return;

@@ -20,7 +20,6 @@ namespace Contao;
  */
 class ImageSize extends \Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -170,10 +169,12 @@ class ImageSize extends \Widget
 		{
 			if (isset($arrOption['value']))
 			{
-				$arrOptions[] = sprintf('<option value="%s"%s>%s</option>',
-									   \StringUtil::specialchars($arrOption['value']),
-									   $this->optionSelected($arrOption['value'], $this->varValue[2]),
-									   $arrOption['label']);
+				$arrOptions[] = sprintf(
+					'<option value="%s"%s>%s</option>',
+					\StringUtil::specialchars($arrOption['value']),
+					$this->optionSelected($arrOption['value'], $this->varValue[2]),
+					$arrOption['label']
+				);
 			}
 			else
 			{
@@ -181,37 +182,45 @@ class ImageSize extends \Widget
 
 				foreach ($arrOption as $arrOptgroup)
 				{
-					$arrOptgroups[] = sprintf('<option value="%s"%s>%s</option>',
-											   \StringUtil::specialchars($arrOptgroup['value']),
-											   $this->optionSelected($arrOptgroup['value'], $this->varValue[2]),
-											   $arrOptgroup['label']);
+					$arrOptgroups[] = sprintf(
+						'<option value="%s"%s>%s</option>',
+						\StringUtil::specialchars($arrOptgroup['value']),
+						$this->optionSelected($arrOptgroup['value'], $this->varValue[2]),
+						$arrOptgroup['label']
+					);
 				}
 
 				$arrOptions[] = sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', \StringUtil::specialchars($strKey), implode('', $arrOptgroups));
 			}
 		}
 
-		$arrFields[] = sprintf('<select name="%s[2]" id="ctrl_%s" class="tl_select_interval" onfocus="Backend.getScrollOffset()"%s>%s</select>',
-								$this->strName,
-								$this->strId.'_3',
-								$this->getAttribute('disabled'),
-								implode(' ', $arrOptions));
+		$arrFields[] = sprintf(
+			'<select name="%s[2]" id="ctrl_%s" class="tl_select_interval" onfocus="Backend.getScrollOffset()"%s>%s</select>',
+			$this->strName,
+			$this->strId . '_3',
+			$this->getAttribute('disabled'),
+			implode(' ', $arrOptions)
+		);
 
 		for ($i=0; $i<2; $i++)
 		{
-			$arrFields[] = sprintf('<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s onfocus="Backend.getScrollOffset()">',
-									$this->strName,
-									$i,
-									$this->strId.'_'.$i,
-									$i,
-									\StringUtil::specialchars(@$this->varValue[$i]), // see #4979
-									$this->getAttributes());
+			$arrFields[] = sprintf(
+				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s onfocus="Backend.getScrollOffset()">',
+				$this->strName,
+				$i,
+				$this->strId . '_' . $i,
+				$i,
+				\StringUtil::specialchars(@$this->varValue[$i]), // see #4979
+				$this->getAttributes()
+			);
 		}
 
-		return sprintf('<div id="ctrl_%s" class="tl_image_size%s">%s</div>%s',
-						$this->strId,
-						(($this->strClass != '') ? ' ' . $this->strClass : ''),
-						implode(' ', $arrFields),
-						$this->wizard);
+		return sprintf(
+			'<div id="ctrl_%s" class="tl_image_size%s">%s</div>%s',
+			$this->strId,
+			(($this->strClass != '') ? ' ' . $this->strClass : ''),
+			implode(' ', $arrFields),
+			$this->wizard
+		);
 	}
 }

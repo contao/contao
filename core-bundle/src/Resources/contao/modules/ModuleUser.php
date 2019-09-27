@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ModuleUser extends \BackendModule
 {
-
 	/**
 	 * Template
 	 * @var string

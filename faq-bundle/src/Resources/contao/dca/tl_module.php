@@ -50,7 +50,6 @@ if (isset($bundles['ContaoCommentsBundle']))
  */
 class tl_module_faq extends Backend
 {
-
 	/**
 	 * Get all FAQ reader modules and return them as array
 	 *

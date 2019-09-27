@@ -29,7 +29,6 @@ use TrueBV\Punycode;
  */
 class Idna
 {
-
 	/**
 	 * Encode an internationalized domain name
 	 *

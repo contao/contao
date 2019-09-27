@@ -78,11 +78,9 @@ namespace Contao;
  */
 class FaqCategoryModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_faq_category';
-
 }

@@ -17,7 +17,6 @@ namespace Contao;
  */
 trait TemplateInheritance
 {
-
 	/**
 	 * Template file
 	 * @var string
@@ -168,7 +167,8 @@ trait TemplateInheritance
 			// Combine the contents of the child blocks
 			elseif (\is_array($this->arrBlocks[$name]))
 			{
-				$callback = function ($current, $parent) {
+				$callback = function ($current, $parent)
+				{
 					return str_replace('[[TL_PARENT]]', $parent, $current);
 				};
 

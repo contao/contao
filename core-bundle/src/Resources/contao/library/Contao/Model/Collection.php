@@ -21,7 +21,6 @@ use Contao\Model;
  */
 class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 {
-
 	/**
 	 * Table name
 	 * @var string

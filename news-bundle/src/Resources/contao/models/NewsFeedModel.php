@@ -71,7 +71,6 @@ namespace Contao;
  */
 class NewsFeedModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

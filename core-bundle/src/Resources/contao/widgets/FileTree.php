@@ -27,7 +27,6 @@ namespace Contao;
  */
 class FileTree extends \Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -124,18 +123,17 @@ class FileTree extends \Widget
 
 			return '';
 		}
-		elseif (strpos($varInput, ',') === false)
+
+		if (strpos($varInput, ',') === false)
 		{
 			$varInput = \StringUtil::uuidToBin($varInput);
 
 			return $this->multiple ? array($varInput) : $varInput;
 		}
-		else
-		{
-			$arrValue = array_filter(explode(',', $varInput));
 
-			return $this->multiple ? array_map('StringUtil::uuidToBin', $arrValue) : \StringUtil::uuidToBin($arrValue[0]);
-		}
+		$arrValue = array_filter(explode(',', $varInput));
+
+		return $this->multiple ? array_map('StringUtil::uuidToBin', $arrValue) : \StringUtil::uuidToBin($arrValue[0]);
 	}
 
 	/**
@@ -215,7 +213,8 @@ class FileTree extends \Widget
 		$arrValues = array();
 		$blnHasOrder = ($this->orderField != '' && \is_array($this->{$this->orderField}));
 
-		if (!empty($this->varValue)) // Can be an array
+		// $this->varValue can be an array, so use empty() here
+		if (!empty($this->varValue))
 		{
 			$objFiles = \FilesModel::findMultipleByUuids((array) $this->varValue);
 			$allowedDownload = \StringUtil::trimsplit(',', strtolower(\Config::get('allowedDownload')));
@@ -353,15 +352,15 @@ class FileTree extends \Widget
 		$strSet = implode(',', array_map('StringUtil::binToUuid', $arrSet));
 		$strOrder = $blnHasOrder ? implode(',', array_map('StringUtil::binToUuid', $this->{$this->orderField})) : '';
 
-		$return = '<input type="hidden" name="'.$this->strName.'" id="ctrl_'.$this->strId.'" value="'.$strSet.'">' . ($blnHasOrder ? '
-  <input type="hidden" name="'.$this->strOrderName.'" id="ctrl_'.$this->strOrderId.'" value="'.$strOrder.'">' : '') . '
+		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . $strSet . '">' . ($blnHasOrder ? '
+  <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . $strOrder . '">' : '') . '
   <div class="selector_container">' . (($blnHasOrder && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_'.$this->strId.'" class="'.trim(($blnHasOrder ? 'sortable ' : '').($this->isGallery ? 'sgallery' : '')).'">';
+    <ul id="sort_' . $this->strId . '" class="' . trim(($blnHasOrder ? 'sortable ' : '') . ($this->isGallery ? 'sgallery' : '')) . '">';
 
 		foreach ($arrValues as $k=>$v)
 		{
-			$return .= '<li data-id="'.\StringUtil::binToUuid($k).'">'.$v.'</li>';
+			$return .= '<li data-id="' . \StringUtil::binToUuid($k) . '">' . $v . '</li>';
 		}
 
 		$return .= '</ul>';
@@ -369,7 +368,7 @@ class FileTree extends \Widget
 		if (!\System::getContainer()->get('contao.picker.builder')->supportsContext('file'))
 		{
 			$return .= '
-	<p><button class="tl_submit" disabled>'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</button></p>';
+	<p><button class="tl_submit" disabled>' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</button></p>';
 		}
 		else
 		{
@@ -396,14 +395,14 @@ class FileTree extends \Widget
 			}
 
 			$return .= '
-    <p><a href="' . ampersand(\System::getContainer()->get('contao.picker.builder')->getUrl('file', $extras)) . '" class="tl_submit" id="ft_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+    <p><a href="' . ampersand(\System::getContainer()->get('contao.picker.builder')->getUrl('file', $extras)) . '" class="tl_submit" id="ft_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
     <script>
       $("ft_' . $this->strName . '").addEvent("click", function(e) {
         e.preventDefault();
         Backend.openModalSelector({
           "id": "tl_listing",
           "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])) . '",
-          "url": this.href + document.getElementById("ctrl_'.$this->strId.'").value,
+          "url": this.href + document.getElementById("ctrl_' . $this->strId . '").value,
           "callback": function(table, value) {
             new Request.Contao({
               evalScripts: false,
@@ -416,7 +415,7 @@ class FileTree extends \Widget
         });
       });
     </script>' . ($blnHasOrder ? '
-    <script>Backend.makeMultiSrcSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'", "ctrl_'.$this->strId.'")</script>' : '');
+    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strOrderId . '", "ctrl_' . $this->strId . '")</script>' : '');
 		}
 
 		$return = '<div>' . $return . '</div></div>';

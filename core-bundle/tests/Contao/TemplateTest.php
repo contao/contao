@@ -104,7 +104,9 @@ class TemplateTest extends TestCase
      */
     public function testHandlesExceptionsInsideBlocks()
     {
-        file_put_contents($this->getRootDir().'/templates/test_template.html5', <<<'EOF'
+        file_put_contents(
+            $this->getRootDir().'/templates/test_template.html5',
+            <<<'EOF'
 <?php
     echo 'test1';
     $this->block('a');
@@ -138,7 +140,9 @@ EOF
      */
     public function testHandlesExceptionsInParentTemplate()
     {
-        file_put_contents($this->getRootDir().'/templates/test_parent.html5', <<<'EOF'
+        file_put_contents(
+            $this->getRootDir().'/templates/test_parent.html5',
+            <<<'EOF'
 <?php
     echo 'test1';
     $this->block('a');
@@ -157,7 +161,9 @@ EOF
 EOF
         );
 
-        file_put_contents($this->getRootDir().'/templates/test_template.html5', <<<'EOF'
+        file_put_contents(
+            $this->getRootDir().'/templates/test_template.html5',
+            <<<'EOF'
 <?php
     echo 'test1';
     $this->extend('test_parent');
@@ -198,7 +204,9 @@ EOF
     {
         file_put_contents($this->getRootDir().'/templates/test_parent.html5', '');
 
-        file_put_contents($this->getRootDir().'/templates/test_template.html5', <<<'EOF'
+        file_put_contents(
+            $this->getRootDir().'/templates/test_template.html5',
+            <<<'EOF'
 <?php
     echo 'test1';
     $this->extend('test_parent');

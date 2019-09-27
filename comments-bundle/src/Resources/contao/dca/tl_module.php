@@ -80,7 +80,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_template'] = array
  */
 class tl_module_comments extends Backend
 {
-
 	/**
 	 * Return all navigation templates as array
 	 *

@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentHeadline extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -27,5 +26,7 @@ class ContentHeadline extends \ContentElement
 	/**
 	 * Generate the content element
 	 */
-	protected function compile() {}
+	protected function compile()
+	{
+	}
 }

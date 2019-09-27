@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentDownload extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string

@@ -26,7 +26,6 @@ use Patchwork\Utf8;
  */
 class Validator
 {
-
 	/**
 	 * Numeric characters (including full stop [.] and minus [-])
 	 *
@@ -96,7 +95,7 @@ class Validator
 	 */
 	public static function isDate($varValue)
 	{
-		return preg_match('~^'. \Date::getRegexp(\Date::getNumericDateFormat()) .'$~i', $varValue);
+		return preg_match('~^' . \Date::getRegexp(\Date::getNumericDateFormat()) . '$~i', $varValue);
 	}
 
 	/**
@@ -108,7 +107,7 @@ class Validator
 	 */
 	public static function isTime($varValue)
 	{
-		return preg_match('~^'. \Date::getRegexp(\Date::getNumericTimeFormat()) .'$~i', $varValue);
+		return preg_match('~^' . \Date::getRegexp(\Date::getNumericTimeFormat()) . '$~i', $varValue);
 	}
 
 	/**
@@ -120,7 +119,7 @@ class Validator
 	 */
 	public static function isDatim($varValue)
 	{
-		return preg_match('~^'. \Date::getRegexp(\Date::getNumericDatimFormat()) .'$~i', $varValue);
+		return preg_match('~^' . \Date::getRegexp(\Date::getNumericDatimFormat()) . '$~i', $varValue);
 	}
 
 	/**
@@ -161,7 +160,9 @@ class Validator
 		{
 			$varValue = \Idna::encodeUrl($varValue);
 		}
-		catch (\InvalidArgumentException $e) {}
+		catch (\InvalidArgumentException $e)
+		{
+		}
 
 		return preg_match('/^[\w\/.*+?$#%:,;{}()[\]@&!=~|-]+$/u', $varValue);
 	}

@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ModuleRandomImage extends \Module
 {
-
 	/**
 	 * Files object
 	 * @var Model\Collection|FilesModel

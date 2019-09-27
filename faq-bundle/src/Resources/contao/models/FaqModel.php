@@ -110,7 +110,6 @@ namespace Contao;
  */
 class FaqModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

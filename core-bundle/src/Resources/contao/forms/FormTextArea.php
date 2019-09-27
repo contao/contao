@@ -25,7 +25,6 @@ namespace Contao;
  */
 class FormTextArea extends \Widget
 {
-
 	/**
 	 * Submit user input
 	 *
@@ -157,13 +156,15 @@ class FormTextArea extends \Widget
 	 */
 	public function generate()
 	{
-		return sprintf('<textarea name="%s" id="ctrl_%s" class="textarea%s" rows="%s" cols="%s"%s>%s</textarea>',
-						$this->strName,
-						$this->strId,
-						(($this->strClass != '') ? ' ' . $this->strClass : ''),
-						$this->intRows,
-						$this->intCols,
-						$this->getAttributes(),
-						$this->value);
+		return sprintf(
+			'<textarea name="%s" id="ctrl_%s" class="textarea%s" rows="%s" cols="%s"%s>%s</textarea>',
+			$this->strName,
+			$this->strId,
+			(($this->strClass != '') ? ' ' . $this->strClass : ''),
+			$this->intRows,
+			$this->intCols,
+			$this->getAttributes(),
+			$this->value
+		);
 	}
 }

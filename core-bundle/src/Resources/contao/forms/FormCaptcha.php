@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class FormCaptcha extends \Widget
 {
-
 	/**
 	 * Template
 	 *
@@ -131,7 +130,7 @@ class FormCaptcha extends \Widget
 
 		$arrCaptcha = $objSession->get('captcha_' . $this->strId);
 
-		if (!\is_array($arrCaptcha) || !\strlen($arrCaptcha['key']) || !\strlen($arrCaptcha['sum']) || \Input::post($arrCaptcha['key']) != $arrCaptcha['sum'] || $arrCaptcha['time'] > (time() - 3) || \Input::post($arrCaptcha['key'].'_name'))
+		if (!\is_array($arrCaptcha) || !\strlen($arrCaptcha['key']) || !\strlen($arrCaptcha['sum']) || \Input::post($arrCaptcha['key']) != $arrCaptcha['sum'] || $arrCaptcha['time'] > (time() - 3) || \Input::post($arrCaptcha['key'] . '_name'))
 		{
 			$this->class = 'error';
 			$this->addError($GLOBALS['TL_LANG']['ERR']['captcha']);
@@ -145,7 +144,8 @@ class FormCaptcha extends \Widget
 	 */
 	protected function generateCaptcha()
 	{
-		if ($this->arrCaptcha) {
+		if ($this->arrCaptcha)
+		{
 			return;
 		}
 
@@ -214,12 +214,14 @@ class FormCaptcha extends \Widget
 			return '';
 		}
 
-		return sprintf('<label for="ctrl_%s" class="mandatory%s"><span class="invisible">%s </span>%s<span class="mandatory">*</span><span class="invisible"> %s</span></label>',
-						$this->strId,
-						(($this->strClass != '') ? ' ' . $this->strClass : ''),
-						$GLOBALS['TL_LANG']['MSC']['mandatory'],
-						$this->strLabel,
-						$this->getQuestion());
+		return sprintf(
+			'<label for="ctrl_%s" class="mandatory%s"><span class="invisible">%s </span>%s<span class="mandatory">*</span><span class="invisible"> %s</span></label>',
+			$this->strId,
+			(($this->strClass != '') ? ' ' . $this->strClass : ''),
+			$GLOBALS['TL_LANG']['MSC']['mandatory'],
+			$this->strLabel,
+			$this->getQuestion()
+		);
 	}
 
 	/**
@@ -229,13 +231,15 @@ class FormCaptcha extends \Widget
 	 */
 	public function generate()
 	{
-		return sprintf('<input type="text" name="%s" id="ctrl_%s" class="captcha mandatory%s" value="" aria-describedby="captcha_text_%s"%s%s',
-						$this->strCaptchaKey,
-						$this->strId,
-						(($this->strClass != '') ? ' ' . $this->strClass : ''),
-						$this->strId,
-						$this->getAttributes(),
-						$this->strTagEnding);
+		return sprintf(
+			'<input type="text" name="%s" id="ctrl_%s" class="captcha mandatory%s" value="" aria-describedby="captcha_text_%s"%s%s',
+			$this->strCaptchaKey,
+			$this->strId,
+			(($this->strClass != '') ? ' ' . $this->strClass : ''),
+			$this->strId,
+			$this->getAttributes(),
+			$this->strTagEnding
+		);
 	}
 
 	/**
@@ -245,9 +249,11 @@ class FormCaptcha extends \Widget
 	 */
 	public function generateQuestion()
 	{
-		return sprintf('<span id="captcha_text_%s" class="captcha_text%s">%s</span>',
-						$this->strId,
-						(($this->strClass != '') ? ' ' . $this->strClass : ''),
-						$this->getQuestion());
+		return sprintf(
+			'<span id="captcha_text_%s" class="captcha_text%s">%s</span>',
+			$this->strId,
+			(($this->strClass != '') ? ' ' . $this->strClass : ''),
+			$this->getQuestion()
+		);
 	}
 }

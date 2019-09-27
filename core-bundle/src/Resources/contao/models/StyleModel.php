@@ -262,11 +262,9 @@ namespace Contao;
  */
 class StyleModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_style';
-
 }

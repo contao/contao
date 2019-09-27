@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_form'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -282,7 +281,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
  */
 class tl_form extends Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -305,7 +303,7 @@ class tl_form extends Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		if (empty($this->User->forms) || !is_array($this->User->forms))
 		{
 			$root = array(0);
 		}
@@ -335,14 +333,14 @@ class tl_form extends Backend
 
 			case 'edit':
 				// Dynamically add the record to the user profile
-				if (!\in_array(Input::get('id'), $root))
+				if (!in_array(Input::get('id'), $root))
 				{
 					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
 					$objSessionBag = $objSession->getBag('contao_backend');
 
 					$arrNew = $objSessionBag->get('new_records');
 
-					if (\is_array($arrNew['tl_form']) && \in_array(Input::get('id'), $arrNew['tl_form']))
+					if (is_array($arrNew['tl_form']) && in_array(Input::get('id'), $arrNew['tl_form']))
 					{
 						// Add the permissions on group level
 						if ($this->User->inherit != 'custom')
@@ -353,7 +351,7 @@ class tl_form extends Backend
 							{
 								$arrFormp = StringUtil::deserialize($objGroup->formp);
 
-								if (\is_array($arrFormp) && \in_array('create', $arrFormp))
+								if (is_array($arrFormp) && in_array('create', $arrFormp))
 								{
 									$arrForms = StringUtil::deserialize($objGroup->forms, true);
 									$arrForms[] = Input::get('id');
@@ -373,7 +371,7 @@ class tl_form extends Backend
 
 							$arrFormp = StringUtil::deserialize($objUser->formp);
 
-							if (\is_array($arrFormp) && \in_array('create', $arrFormp))
+							if (is_array($arrFormp) && in_array('create', $arrFormp))
 							{
 								$arrForms = StringUtil::deserialize($objUser->forms, true);
 								$arrForms[] = Input::get('id');
@@ -388,12 +386,12 @@ class tl_form extends Backend
 						$this->User->forms = $root;
 					}
 				}
-				// No break;
+				// no break
 
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!\in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'formp')))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'formp')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form ID ' . Input::get('id') . '.');
 				}
@@ -403,6 +401,7 @@ class tl_form extends Backend
 			case 'deleteAll':
 			case 'overrideAll':
 				$session = $objSession->all();
+
 				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'formp'))
 				{
 					$session['CURRENT']['IDS'] = array();
@@ -415,7 +414,7 @@ class tl_form extends Backend
 				break;
 
 			default:
-				if (\strlen(Input::get('act')))
+				if (strlen(Input::get('act')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' forms.');
 				}
@@ -504,7 +503,7 @@ class tl_form extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_form') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_form') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -521,7 +520,7 @@ class tl_form extends Backend
 	 */
 	public function copyForm($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'formp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('create', 'formp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -538,6 +537,6 @@ class tl_form extends Backend
 	 */
 	public function deleteForm($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'formp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('delete', 'formp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

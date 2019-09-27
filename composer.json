@@ -76,9 +76,9 @@
         "webmozart/path-util": "^2.0"
     },
     "replace": {
-        "contao/core-bundle": "self.version",
         "contao/calendar-bundle": "self.version",
         "contao/comments-bundle": "self.version",
+        "contao/core-bundle": "self.version",
         "contao/faq-bundle": "self.version",
         "contao/installation-bundle": "self.version",
         "contao/listing-bundle": "self.version",
@@ -116,9 +116,9 @@
             "require": "^3.3"
         },
         "contao-manager-plugin": {
-            "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
             "contao/comments-bundle": "Contao\\CommentsBundle\\ContaoManager\\Plugin",
+            "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
             "contao/faq-bundle": "Contao\\FaqBundle\\ContaoManager\\Plugin",
             "contao/installation-bundle": "Contao\\InstallationBundle\\ContaoManager\\Plugin",
             "contao/listing-bundle": "Contao\\ListingBundle\\ContaoManager\\Plugin",
@@ -187,6 +187,7 @@
     "autoload-dev": {
         "psr-4": {
             "Contao\\CalendarBundle\\Tests\\": "calendar-bundle/tests/",
+            "Contao\\Contao\\": "src/",
             "Contao\\CoreBundle\\Tests\\": "core-bundle/tests/",
             "Contao\\FaqBundle\\Tests\\": "faq-bundle/tests/",
             "Contao\\InstallationBundle\\Tests\\": "installation-bundle/tests/",

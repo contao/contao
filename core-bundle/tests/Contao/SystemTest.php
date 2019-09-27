@@ -28,7 +28,7 @@ class SystemTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         // Load the System class so it's not using the fixture
         require __DIR__.'/../../src/Resources/contao/library/Contao/System.php';

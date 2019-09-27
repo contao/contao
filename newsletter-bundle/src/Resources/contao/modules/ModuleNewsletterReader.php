@@ -22,7 +22,6 @@ use Patchwork\Utf8;
  */
 class ModuleNewsletterReader extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string

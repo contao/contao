@@ -96,7 +96,6 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  */
 abstract class User extends \System
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var User
@@ -151,7 +150,9 @@ abstract class User extends \System
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Set an object property
@@ -478,7 +479,7 @@ abstract class User extends \System
 		}
 
 		// Check whether the account is disabled
-		elseif ($this->disable)
+		if ($this->disable)
 		{
 			\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
 			$this->log('The account has been disabled', __METHOD__, TL_ACCESS);
@@ -487,7 +488,7 @@ abstract class User extends \System
 		}
 
 		// Check wether login is allowed (front end only)
-		elseif ($this instanceof FrontendUser && !$this->login)
+		if ($this instanceof FrontendUser && !$this->login)
 		{
 			\Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
 			$this->log('User "' . $this->username . '" is not allowed to log in', __METHOD__, TL_ACCESS);
@@ -496,7 +497,7 @@ abstract class User extends \System
 		}
 
 		// Check whether account is not active yet or anymore
-		elseif ($this->start != '' || $this->stop != '')
+		if ($this->start != '' || $this->stop != '')
 		{
 			$time = \Date::floorToMinute($time);
 

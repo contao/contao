@@ -24,7 +24,6 @@ use Patchwork\Utf8;
  */
 class ModuleLogout extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -86,5 +85,7 @@ class ModuleLogout extends \Module
 	/**
 	 * Generate the module
 	 */
-	protected function compile() {}
+	protected function compile()
+	{
+	}
 }

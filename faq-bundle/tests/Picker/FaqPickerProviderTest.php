@@ -93,7 +93,8 @@ class FaqPickerProviderTest extends TestCase
                 'linkAttributes' => ['class' => 'faqPicker'],
                 'current' => true,
                 'uri' => 'contao_backend?do=faq&popup=1&picker='.urlencode(strtr(base64_encode($picker), '+/=', '-_,')),
-            ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'faqPicker'))
+            ],
+            $this->provider->createMenuItem(new PickerConfig('link', [], '', 'faqPicker'))
         );
     }
 

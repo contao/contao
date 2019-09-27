@@ -24,7 +24,6 @@ use Patchwork\Utf8;
  */
 class Password extends \Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -145,14 +144,16 @@ class Password extends \Widget
 	 */
 	public function generate()
 	{
-		return sprintf('<input type="password" autocomplete="off" name="%s" id="ctrl_%s" class="tl_text tl_password%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s%s',
-						$this->strName,
-						$this->strId,
-						(\strlen($this->strClass) ? ' ' . $this->strClass : ''),
-						(($this->varValue != '') ? '*****' : ''),
-						$this->getAttributes(),
-						$this->wizard,
-						((\strlen($this->description) && \Config::get('showHelp') && !$this->hasErrors()) ? "\n  " . '<p class="tl_help tl_tip">'.$this->description.'</p>' : ''));
+		return sprintf(
+			'<input type="password" autocomplete="off" name="%s" id="ctrl_%s" class="tl_text tl_password%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s%s',
+			$this->strName,
+			$this->strId,
+			(\strlen($this->strClass) ? ' ' . $this->strClass : ''),
+			(($this->varValue != '') ? '*****' : ''),
+			$this->getAttributes(),
+			$this->wizard,
+			((\strlen($this->description) && \Config::get('showHelp') && !$this->hasErrors()) ? "\n  " . '<p class="tl_help tl_tip">' . $this->description . '</p>' : '')
+		);
 	}
 
 	/**
@@ -162,12 +163,14 @@ class Password extends \Widget
 	 */
 	public function generateConfirmationLabel()
 	{
-		return sprintf('<label for="ctrl_%s_confirm" class="confirm%s">%s%s%s</label>',
-						$this->strId,
-						(\strlen($this->strClass) ? ' ' . $this->strClass : ''),
-						($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].' </span>' : ''),
-						$GLOBALS['TL_LANG']['MSC']['confirm'][0],
-						($this->mandatory ? '<span class="mandatory">*</span>' : ''));
+		return sprintf(
+			'<label for="ctrl_%s_confirm" class="confirm%s">%s%s%s</label>',
+			$this->strId,
+			(\strlen($this->strClass) ? ' ' . $this->strClass : ''),
+			($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
+			$GLOBALS['TL_LANG']['MSC']['confirm'][0],
+			($this->mandatory ? '<span class="mandatory">*</span>' : '')
+		);
 	}
 
 	/**
@@ -177,12 +180,14 @@ class Password extends \Widget
 	 */
 	public function generateConfirmation()
 	{
-		return sprintf('<input type="password" autocomplete="off" name="%s_confirm" id="ctrl_%s_confirm" class="tl_text tl_password confirm%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s',
-						$this->strName,
-						$this->strId,
-						(\strlen($this->strClass) ? ' ' . $this->strClass : ''),
-						(($this->varValue != '') ? '*****' : ''),
-						$this->getAttributes(),
-						((\strlen($GLOBALS['TL_LANG']['MSC']['confirm'][1]) && \Config::get('showHelp')) ? "\n  " . '<p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['confirm'][1].'</p>' : ''));
+		return sprintf(
+			'<input type="password" autocomplete="off" name="%s_confirm" id="ctrl_%s_confirm" class="tl_text tl_password confirm%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s',
+			$this->strName,
+			$this->strId,
+			(\strlen($this->strClass) ? ' ' . $this->strClass : ''),
+			(($this->varValue != '') ? '*****' : ''),
+			$this->getAttributes(),
+			((\strlen($GLOBALS['TL_LANG']['MSC']['confirm'][1]) && \Config::get('showHelp')) ? "\n  " . '<p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['MSC']['confirm'][1] . '</p>' : '')
+		);
 	}
 }

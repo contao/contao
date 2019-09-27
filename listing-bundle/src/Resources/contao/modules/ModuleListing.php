@@ -30,7 +30,6 @@ use Patchwork\Utf8;
  */
 class ModuleListing extends \Module
 {
-
 	/**
 	 * Primary key
 	 * @var string

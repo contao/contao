@@ -79,7 +79,9 @@ class ContaoAuthenticatorTest extends TestCase
         $this->expectException(AuthenticationException::class);
 
         $authenticator->authenticateToken(
-            new PreAuthenticatedToken('foo', 'bar', 'console'), $this->mockUserProvider(), 'console'
+            new PreAuthenticatedToken('foo', 'bar', 'console'),
+            $this->mockUserProvider(),
+            'console'
         );
     }
 
@@ -93,7 +95,9 @@ class ContaoAuthenticatorTest extends TestCase
         $this->expectException('LogicException');
 
         $authenticator->authenticateToken(
-            new AnonymousToken('frontend', 'anon.'), $this->mockUserProvider(), 'frontend'
+            new AnonymousToken('frontend', 'anon.'),
+            $this->mockUserProvider(),
+            'frontend'
         );
     }
 

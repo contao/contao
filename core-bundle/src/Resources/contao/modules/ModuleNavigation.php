@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleNavigation extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string

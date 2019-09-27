@@ -25,7 +25,6 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
  */
 class InsertTags extends \Controller
 {
-
 	/**
 	 * Make the constructor public
 	 */
@@ -415,7 +414,7 @@ class InsertTags extends \Controller
 									$strUrl = $objNext->getFrontendUrl();
 									break;
 								}
-								// DO NOT ADD A break; STATEMENT
+								// no break
 
 							default:
 								$strUrl = $objNextPage->getFrontendUrl();
@@ -720,7 +719,7 @@ class InsertTags extends \Controller
 				case 'acronym':
 					if ($elements[1] != '')
 					{
-						$arrCache[$strTag] = '<abbr title="'. \StringUtil::specialchars($elements[1]) .'">';
+						$arrCache[$strTag] = '<abbr title="' . \StringUtil::specialchars($elements[1]) . '">';
 					}
 					else
 					{

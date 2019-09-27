@@ -26,7 +26,7 @@ class SymlinksCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    protected function tearDown()
     {
         $fs = new Filesystem();
 

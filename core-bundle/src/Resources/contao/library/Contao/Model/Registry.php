@@ -22,7 +22,6 @@ use Contao\Model;
  */
 class Registry implements \Countable
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var static
@@ -50,12 +49,16 @@ class Registry implements \Countable
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 */
-	protected function __construct() {}
+	protected function __construct()
+	{
+	}
 
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Return the current object instance (Singleton)

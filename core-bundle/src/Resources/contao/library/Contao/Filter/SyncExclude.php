@@ -20,7 +20,6 @@ namespace Contao\Filter;
  */
 class SyncExclude extends \RecursiveFilterIterator
 {
-
 	/**
 	 * Exempted folders
 	 * @var array

@@ -68,7 +68,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class File extends \System
 {
-
 	/**
 	 * File handle
 	 * @var resource
@@ -245,10 +244,8 @@ class File extends \System
 				{
 					return 'data:' . $this->mime . ';base64,' . base64_encode(gzdecode($this->getContent()));
 				}
-				else
-				{
-					return 'data:' . $this->mime . ';base64,' . base64_encode($this->getContent());
-				}
+
+				return 'data:' . $this->mime . ';base64,' . base64_encode($this->getContent());
 				break;
 
 			case 'imageSize':
@@ -288,7 +285,7 @@ class File extends \System
 								$this->arrImageSize = false;
 							}
 						}
-						catch(\Exception $e)
+						catch (\Exception $e)
 						{
 							$this->arrImageSize = false;
 						}
@@ -344,7 +341,7 @@ class File extends \System
 								$this->arrImageViewSize = false;
 							}
 						}
-						catch(\Exception $e)
+						catch (\Exception $e)
 						{
 							$this->arrImageViewSize = false;
 						}
@@ -393,7 +390,7 @@ class File extends \System
 			case 'handle':
 				if (!\is_resource($this->resFile))
 				{
-					$this->resFile = fopen(TL_ROOT . '/' . $this->strFile, 'rb');
+					$this->resFile = fopen(TL_ROOT . '/' . $this->strFile, 'r');
 				}
 
 				return $this->resFile;
@@ -860,10 +857,8 @@ class File extends \System
 		{
 			return '';
 		}
-		else
-		{
-			return md5_file(TL_ROOT . '/' . $this->strFile);
-		}
+
+		return md5_file(TL_ROOT . '/' . $this->strFile);
 	}
 
 	/**

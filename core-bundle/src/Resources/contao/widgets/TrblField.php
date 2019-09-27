@@ -20,7 +20,6 @@ namespace Contao;
  */
 class TrblField extends \Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -119,10 +118,12 @@ class TrblField extends \Widget
 
 		foreach ($this->arrUnits as $arrUnit)
 		{
-			$arrUnits[] = sprintf('<option value="%s"%s>%s</option>',
-								   \StringUtil::specialchars($arrUnit['value']),
-								   $this->isSelected($arrUnit),
-								   $arrUnit['label']);
+			$arrUnits[] = sprintf(
+				'<option value="%s"%s>%s</option>',
+				\StringUtil::specialchars($arrUnit['value']),
+				$this->isSelected($arrUnit),
+				$arrUnit['label']
+			);
 		}
 
 		$arrFields = array();
@@ -135,21 +136,25 @@ class TrblField extends \Widget
 
 		foreach ($arrKeys as $strKey)
 		{
-			$arrFields[] = sprintf('<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_trbl trbl_%s%s" value="%s"%s onfocus="Backend.getScrollOffset()">',
-									$this->strName,
-									$strKey,
-									$this->strId.'_'.$strKey,
-									$strKey,
-									(($this->strClass != '') ? ' ' . $this->strClass : ''),
-									\StringUtil::specialchars(@$this->varValue[$strKey]), // see #4979
-									$this->getAttributes());
+			$arrFields[] = sprintf(
+				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_trbl trbl_%s%s" value="%s"%s onfocus="Backend.getScrollOffset()">',
+				$this->strName,
+				$strKey,
+				$this->strId . '_' . $strKey,
+				$strKey,
+				(($this->strClass != '') ? ' ' . $this->strClass : ''),
+				\StringUtil::specialchars(@$this->varValue[$strKey]), // see #4979
+				$this->getAttributes()
+			);
 		}
 
-		return sprintf('%s <select name="%s[unit]" class="tl_select_unit" onfocus="Backend.getScrollOffset()"%s>%s</select>%s',
-						implode(' ', $arrFields),
-						$this->strName,
-						$this->getAttribute('disabled'),
-						implode('', $arrUnits),
-						$this->wizard);
+		return sprintf(
+			'%s <select name="%s[unit]" class="tl_select_unit" onfocus="Backend.getScrollOffset()"%s>%s</select>%s',
+			implode(' ', $arrFields),
+			$this->strName,
+			$this->getAttribute('disabled'),
+			implode('', $arrUnits),
+			$this->wizard
+		);
 	}
 }

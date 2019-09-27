@@ -33,7 +33,6 @@ use Patchwork\Utf8;
  */
 class Search
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var Search
@@ -543,7 +542,9 @@ class Search
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Search class is now static.
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Return the object instance (Singleton)

@@ -178,7 +178,6 @@ namespace Contao;
  */
 class CalendarEventsModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

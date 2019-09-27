@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -212,7 +211,6 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
  */
 class tl_calendar_feed extends Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -235,7 +233,7 @@ class tl_calendar_feed extends Backend
 		}
 
 		// Set the root IDs
-		if (empty($this->User->calendarfeeds) || !\is_array($this->User->calendarfeeds))
+		if (empty($this->User->calendarfeeds) || !is_array($this->User->calendarfeeds))
 		{
 			$root = array(0);
 		}
@@ -265,14 +263,14 @@ class tl_calendar_feed extends Backend
 
 			case 'edit':
 				// Dynamically add the record to the user profile
-				if (!\in_array(Input::get('id'), $root))
+				if (!in_array(Input::get('id'), $root))
 				{
 					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
 					$objSessionBag = $objSession->getBag('contao_backend');
 
 					$arrNew = $objSessionBag->get('new_records');
 
-					if (\is_array($arrNew['tl_calendar_feed']) && \in_array(Input::get('id'), $arrNew['tl_calendar_feed']))
+					if (is_array($arrNew['tl_calendar_feed']) && in_array(Input::get('id'), $arrNew['tl_calendar_feed']))
 					{
 						// Add the permissions on group level
 						if ($this->User->inherit != 'custom')
@@ -283,7 +281,7 @@ class tl_calendar_feed extends Backend
 							{
 								$arrCalendarfeedp = StringUtil::deserialize($objGroup->calendarfeedp);
 
-								if (\is_array($arrCalendarfeedp) && \in_array('create', $arrCalendarfeedp))
+								if (is_array($arrCalendarfeedp) && in_array('create', $arrCalendarfeedp))
 								{
 									$arrCalendarfeeds = StringUtil::deserialize($objGroup->calendarfeeds, true);
 									$arrCalendarfeeds[] = Input::get('id');
@@ -303,7 +301,7 @@ class tl_calendar_feed extends Backend
 
 							$arrCalendarfeedp = StringUtil::deserialize($objUser->calendarfeedp);
 
-							if (\is_array($arrCalendarfeedp) && \in_array('create', $arrCalendarfeedp))
+							if (is_array($arrCalendarfeedp) && in_array('create', $arrCalendarfeedp))
 							{
 								$arrCalendarfeeds = StringUtil::deserialize($objUser->calendarfeeds, true);
 								$arrCalendarfeeds[] = Input::get('id');
@@ -318,12 +316,12 @@ class tl_calendar_feed extends Backend
 						$this->User->calendarfeeds = $root;
 					}
 				}
-				// No break;
+				// no break
 
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!\in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'calendarfeedp')))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'calendarfeedp')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' calendar feed ID ' . Input::get('id') . '.');
 				}
@@ -333,6 +331,7 @@ class tl_calendar_feed extends Backend
 			case 'deleteAll':
 			case 'overrideAll':
 				$session = $objSession->all();
+
 				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'calendarfeedp'))
 				{
 					$session['CURRENT']['IDS'] = array();
@@ -345,7 +344,7 @@ class tl_calendar_feed extends Backend
 				break;
 
 			default:
-				if (\strlen(Input::get('act')))
+				if (strlen(Input::get('act')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' calendar feeds.');
 				}
@@ -363,7 +362,7 @@ class tl_calendar_feed extends Backend
 
 		$session = $objSession->get('calendar_feed_updater');
 
-		if (empty($session) || !\is_array($session))
+		if (empty($session) || !is_array($session))
 		{
 			return;
 		}
@@ -458,7 +457,7 @@ class tl_calendar_feed extends Backend
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);
 
 		// Alias exists
-		if (\in_array($varValue, $arrFeeds))
+		if (in_array($varValue, $arrFeeds))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}

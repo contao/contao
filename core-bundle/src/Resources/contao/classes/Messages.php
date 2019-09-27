@@ -17,7 +17,6 @@ namespace Contao;
  */
 class Messages extends \Backend
 {
-
 	/**
 	 * Check for the latest Contao version
 	 *
@@ -42,10 +41,8 @@ class Messages extends \Backend
 			{
 				return '<p class="tl_new"><a href="contao/main.php?do=maintenance">' . sprintf($GLOBALS['TL_LANG']['MSC']['updateVersion'], $strVersion) . '</a></p>';
 			}
-			else
-			{
-				return '<p class="tl_new">' . sprintf($GLOBALS['TL_LANG']['MSC']['updateVersion'], $strVersion) . '</p>';
-			}
+
+			return '<p class="tl_new">' . sprintf($GLOBALS['TL_LANG']['MSC']['updateVersion'], $strVersion) . '</p>';
 		}
 
 		return '';

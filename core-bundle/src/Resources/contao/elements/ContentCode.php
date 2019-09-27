@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentCode extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -33,11 +32,11 @@ class ContentCode extends \ContentElement
 	{
 		if (TL_MODE == 'BE')
 		{
-			$return = '<pre>'. htmlspecialchars($this->code) .'</pre>';
+			$return = '<pre>' . htmlspecialchars($this->code) . '</pre>';
 
 			if ($this->headline != '')
 			{
-				$return = '<'. $this->hl .'>'. $this->headline .'</'. $this->hl .'>'. $return;
+				$return = '<' . $this->hl . '>' . $this->headline . '</' . $this->hl . '>' . $return;
 			}
 
 			return $return;

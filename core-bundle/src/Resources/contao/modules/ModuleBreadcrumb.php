@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleBreadcrumb extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -122,7 +121,7 @@ class ModuleBreadcrumb extends \Module
 						$href = $objNext->getFrontendUrl();
 						break;
 					}
-					// DO NOT ADD A break; STATEMENT
+					// no break
 
 				default:
 					$href = $pages[$i]->getFrontendUrl();

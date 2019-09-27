@@ -58,7 +58,6 @@ namespace Contao;
  */
 class MemberGroupModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

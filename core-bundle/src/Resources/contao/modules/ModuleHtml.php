@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ModuleHtml extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string

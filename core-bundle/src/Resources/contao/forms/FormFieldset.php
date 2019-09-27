@@ -15,13 +15,12 @@ use Patchwork\Utf8;
 /**
  * Class FormFieldset
  *
- * @property string  $fsType
+ * @property string $fsType
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FormFieldset extends \Widget
 {
-
 	/**
 	 * Template
 	 *
@@ -32,7 +31,9 @@ class FormFieldset extends \Widget
 	/**
 	 * Do not validate
 	 */
-	public function validate() {}
+	public function validate()
+	{
+	}
 
 	/**
 	 * Parse the template file and return it as string
@@ -75,9 +76,7 @@ class FormFieldset extends \Widget
 		{
 			return "  <fieldset" . ($this->strClass ? ' class="' . $this->strClass . '"' : '') . ">\n" . (($this->label != '') ? "  <legend>" . $this->label . "</legend>\n" : '');
 		}
-		else
-		{
-			return "  </fieldset>\n";
-		}
+
+		return "  </fieldset>\n";
 	}
 }

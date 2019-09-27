@@ -36,7 +36,7 @@ class ScriptHandlerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         $this->handler = new ScriptHandler();
     }

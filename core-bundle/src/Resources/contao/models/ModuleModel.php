@@ -314,11 +314,9 @@ namespace Contao;
  */
 class ModuleModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_module';
-
 }

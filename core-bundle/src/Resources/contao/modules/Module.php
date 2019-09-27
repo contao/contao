@@ -89,7 +89,6 @@ namespace Contao;
  */
 abstract class Module extends \Frontend
 {
-
 	/**
 	 * Template
 	 * @var string

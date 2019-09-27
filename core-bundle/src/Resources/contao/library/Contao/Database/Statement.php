@@ -35,7 +35,6 @@ use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
  */
 class Statement
 {
-
 	/**
 	 * Connection ID
 	 * @var Connection
@@ -176,9 +175,11 @@ class Statement
 		// INSERT
 		if (strncasecmp($this->strQuery, 'INSERT', 6) === 0)
 		{
-			$strQuery = sprintf('(%s) VALUES (%s)',
-								implode(', ', array_map('Database::quoteIdentifier', array_keys($arrParams))),
-								str_replace('%', '%%', implode(', ', array_values($arrParams))));
+			$strQuery = sprintf(
+				'(%s) VALUES (%s)',
+				implode(', ', array_map('Database::quoteIdentifier', array_keys($arrParams))),
+				str_replace('%', '%%', implode(', ', array_values($arrParams)))
+			);
 		}
 
 		// UPDATE

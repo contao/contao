@@ -54,7 +54,6 @@ namespace Contao;
  */
 class NewsletterChannelModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

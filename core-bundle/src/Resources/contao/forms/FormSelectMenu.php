@@ -23,7 +23,6 @@ namespace Contao;
  */
 class FormSelectMenu extends \Widget
 {
-
 	/**
 	 * Submit user input
 	 *
@@ -307,17 +306,17 @@ class FormSelectMenu extends \Widget
 					$strOptions .= '</optgroup>';
 				}
 
-				$strOptions .= sprintf('<optgroup label="%s">',
-										\StringUtil::specialchars($arrOption['label']));
-
+				$strOptions .= sprintf('<optgroup label="%s">', \StringUtil::specialchars($arrOption['label']));
 				$blnHasGroups = true;
 				continue;
 			}
 
-			$strOptions .= sprintf('<option value="%s"%s>%s</option>',
-									$arrOption['value'],
-									$this->isSelected($arrOption),
-									$arrOption['label']);
+			$strOptions .= sprintf(
+				'<option value="%s"%s>%s</option>',
+				$arrOption['value'],
+				$this->isSelected($arrOption),
+				$arrOption['label']
+			);
 		}
 
 		if ($blnHasGroups)
@@ -325,11 +324,13 @@ class FormSelectMenu extends \Widget
 			$strOptions .= '</optgroup>';
 		}
 
-		return sprintf('<select name="%s" id="ctrl_%s" class="%s"%s>%s</select>',
-						$this->strName,
-						$this->strId,
-						$this->class,
-						$this->getAttributes(),
-						$strOptions);
+		return sprintf(
+			'<select name="%s" id="ctrl_%s" class="%s"%s>%s</select>',
+			$this->strName,
+			$this->strId,
+			$this->class,
+			$this->getAttributes(),
+			$strOptions
+		);
 	}
 }

@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class BackendCustom extends BackendMain
 {
-
 	/**
 	 * Constructor.
 	 */

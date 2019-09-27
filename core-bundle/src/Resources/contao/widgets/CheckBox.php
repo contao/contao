@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  */
 class CheckBox extends \Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -131,7 +130,7 @@ class CheckBox extends \Widget
 			// Multidimensional array
 			foreach ($arrOption as $k=>$v)
 			{
-				$arrOptions[] = $this->generateCheckbox($v, standardize($i).'_'.$k);
+				$arrOptions[] = $this->generateCheckbox($v, standardize($i) . '_' . $k);
 			}
 
 			$arrOptions[] = '</fieldset>';
@@ -142,33 +141,35 @@ class CheckBox extends \Widget
 		// Add a "no entries found" message if there are no options
 		if (empty($arrOptions))
 		{
-			$arrOptions[]= '<p class="tl_noopt">'.$GLOBALS['TL_LANG']['MSC']['noResult'].'</p>';
+			$arrOptions[]= '<p class="tl_noopt">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
 			$blnCheckAll = false;
 		}
 
 		if ($this->multiple)
 		{
-			return sprintf('<fieldset id="ctrl_%s" class="tl_checkbox_container%s"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s%s</fieldset>%s',
-							$this->strId,
-							(($this->strClass != '') ? ' ' . $this->strClass : ''),
-							($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].' </span>' : ''),
-							$this->strLabel,
-							($this->mandatory ? '<span class="mandatory">*</span>' : ''),
-							$this->xlabel,
-							$this->strName,
-							($blnCheckAll ? '<input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,\'ctrl_' . $this->strId . '\')' . ($this->onclick ? ';' . $this->onclick : '') . '"> <label for="check_all_' . $this->strId . '" style="color:#a6a6a6"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>' : ''),
-							str_replace('<br></fieldset><br>', '</fieldset>', implode('<br>', $arrOptions)),
-							$this->wizard);
+			return sprintf(
+				'<fieldset id="ctrl_%s" class="tl_checkbox_container%s"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s%s</fieldset>%s',
+				$this->strId,
+				(($this->strClass != '') ? ' ' . $this->strClass : ''),
+				($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
+				$this->strLabel,
+				($this->mandatory ? '<span class="mandatory">*</span>' : ''),
+				$this->xlabel,
+				$this->strName,
+				($blnCheckAll ? '<input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,\'ctrl_' . $this->strId . '\')' . ($this->onclick ? ';' . $this->onclick : '') . '"> <label for="check_all_' . $this->strId . '" style="color:#a6a6a6"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>' : ''),
+				str_replace('<br></fieldset><br>', '</fieldset>', implode('<br>', $arrOptions)),
+				$this->wizard
+			);
 		}
-		else
-		{
-			return sprintf('<div id="ctrl_%s" class="tl_checkbox_single_container%s"><input type="hidden" name="%s" value="">%s</div>%s',
-							$this->strId,
-							(($this->strClass != '') ? ' ' . $this->strClass : ''),
-							$this->strName,
-							str_replace('<br></div><br>', '</div>', implode('<br>', $arrOptions)),
-							$this->wizard);
-		}
+
+		return sprintf(
+			'<div id="ctrl_%s" class="tl_checkbox_single_container%s"><input type="hidden" name="%s" value="">%s</div>%s',
+			$this->strId,
+			(($this->strClass != '') ? ' ' . $this->strClass : ''),
+			$this->strName,
+			str_replace('<br></div><br>', '</div>', implode('<br>', $arrOptions)),
+			$this->wizard
+		);
 	}
 
 	/**
@@ -181,15 +182,17 @@ class CheckBox extends \Widget
 	 */
 	protected function generateCheckbox($arrOption, $i)
 	{
-		return sprintf('<input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s%s%s</label>',
-						$this->strName . ($this->multiple ? '[]' : ''),
-						$this->strId.'_'.$i,
-						($this->multiple ? \StringUtil::specialchars($arrOption['value']) : 1),
-						$this->isChecked($arrOption),
-						$this->getAttributes(),
-						$this->strId.'_'.$i,
-						($this->mandatory && !$this->multiple ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].' </span>' : ''),
-						$arrOption['label'],
-						($this->mandatory && !$this->multiple ? '<span class="mandatory">*</span>' : ''));
+		return sprintf(
+			'<input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s%s%s</label>',
+			$this->strName . ($this->multiple ? '[]' : ''),
+			$this->strId . '_' . $i,
+			($this->multiple ? \StringUtil::specialchars($arrOption['value']) : 1),
+			$this->isChecked($arrOption),
+			$this->getAttributes(),
+			$this->strId . '_' . $i,
+			($this->mandatory && !$this->multiple ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
+			$arrOption['label'],
+			($this->mandatory && !$this->multiple ? '<span class="mandatory">*</span>' : '')
+		);
 	}
 }

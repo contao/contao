@@ -52,7 +52,7 @@ class InstallWebDirCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -67,7 +67,7 @@ class InstallWebDirCommandTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    protected function tearDown()
     {
         $this->filesystem->remove($this->tmpdir);
     }

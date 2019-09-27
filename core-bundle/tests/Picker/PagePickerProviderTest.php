@@ -93,7 +93,8 @@ class PagePickerProviderTest extends TestCase
                 'linkAttributes' => ['class' => 'pagePicker'],
                 'current' => true,
                 'uri' => 'contao_backend?do=page&popup=1&picker='.strtr(base64_encode($picker), '+/=', '-_,'),
-            ], $this->provider->createMenuItem(new PickerConfig('link', [], '', 'pagePicker'))
+            ],
+            $this->provider->createMenuItem(new PickerConfig('link', [], '', 'pagePicker'))
         );
     }
 

@@ -86,7 +86,6 @@ namespace Contao;
  */
 class FilesModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string
@@ -337,7 +336,7 @@ class FilesModel extends \Model
 		$t = static::$strTable;
 		$strPath = str_replace(array('\\', '%', '_'), array('\\\\', '\\%', '\\_'), $strPath);
 
-		return static::findBy(array("$t.type='file' AND $t.path LIKE ? AND $t.path NOT LIKE ?"), array($strPath.'/%', $strPath.'/%/%'), $arrOptions);
+		return static::findBy(array("$t.type='file' AND $t.path LIKE ? AND $t.path NOT LIKE ?"), array($strPath . '/%', $strPath . '/%/%'), $arrOptions);
 	}
 
 	/**
@@ -345,5 +344,7 @@ class FilesModel extends \Model
 	 *
 	 * @param integer $intType The query type (Model::INSERT or Model::UPDATE)
 	 */
-	protected function postSave($intType) {}
+	protected function postSave($intType)
+	{
+	}
 }

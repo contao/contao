@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentMedia extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -71,7 +70,7 @@ class ContentMedia extends \ContentElement
 
 			if ($this->headline != '')
 			{
-				$return = '<'. $this->hl .'>'. $this->headline .'</'. $this->hl .'>'. $return;
+				$return = '<' . $this->hl . '>' . $this->headline . '</' . $this->hl . '>' . $return;
 			}
 
 			return $return;

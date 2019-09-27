@@ -39,7 +39,6 @@ use Symfony\Component\Finder\Glob;
  */
 abstract class Controller extends \System
 {
-
 	/**
 	 * Find a particular template file and return its path
 	 *
@@ -151,7 +150,8 @@ abstract class Controller extends \System
 		// Show the template sources (see #6875)
 		foreach ($arrTemplates as $k=>$v)
 		{
-			$v = array_filter($v, function ($a) {
+			$v = array_filter($v, function ($a)
+			{
 				return $a != 'root';
 			});
 
@@ -284,61 +284,58 @@ abstract class Controller extends \System
 		}
 
 		// Other modules
+		if (\is_object($intId))
+		{
+			$objRow = $intId;
+		}
 		else
 		{
-			if (\is_object($intId))
-			{
-				$objRow = $intId;
-			}
-			else
-			{
-				$objRow = \ModuleModel::findByPk($intId);
+			$objRow = \ModuleModel::findByPk($intId);
 
-				if ($objRow === null)
-				{
-					return '';
-				}
-			}
-
-			// Check the visibility (see #6311)
-			if (!static::isVisibleElement($objRow))
+			if ($objRow === null)
 			{
 				return '';
 			}
-
-			$strClass = \Module::findClass($objRow->type);
-
-			// Return if the class does not exist
-			if (!class_exists($strClass))
-			{
-				static::log('Module class "'.$strClass.'" (module "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
-
-				return '';
-			}
-
-			$objRow->typePrefix = 'mod_';
-
-			/** @var Module $objModule */
-			$objModule = new $strClass($objRow, $strColumn);
-			$strBuffer = $objModule->generate();
-
-			// HOOK: add custom logic
-			if (isset($GLOBALS['TL_HOOKS']['getFrontendModule']) && \is_array($GLOBALS['TL_HOOKS']['getFrontendModule']))
-			{
-				foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback)
-				{
-					$strBuffer = static::importStatic($callback[0])->{$callback[1]}($objRow, $strBuffer, $objModule);
-				}
-			}
-
-			// Disable indexing if protected
-			if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
-			{
-				$strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
-			}
-
-			return $strBuffer;
 		}
+
+		// Check the visibility (see #6311)
+		if (!static::isVisibleElement($objRow))
+		{
+			return '';
+		}
+
+		$strClass = \Module::findClass($objRow->type);
+
+		// Return if the class does not exist
+		if (!class_exists($strClass))
+		{
+			static::log('Module class "' . $strClass . '" (module "' . $objRow->type . '") does not exist', __METHOD__, TL_ERROR);
+
+			return '';
+		}
+
+		$objRow->typePrefix = 'mod_';
+
+		/** @var Module $objModule */
+		$objModule = new $strClass($objRow, $strColumn);
+		$strBuffer = $objModule->generate();
+
+		// HOOK: add custom logic
+		if (isset($GLOBALS['TL_HOOKS']['getFrontendModule']) && \is_array($GLOBALS['TL_HOOKS']['getFrontendModule']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback)
+			{
+				$strBuffer = static::importStatic($callback[0])->{$callback[1]}($objRow, $strBuffer, $objModule);
+			}
+		}
+
+		// Disable indexing if protected
+		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
+		{
+			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+		}
+
+		return $strBuffer;
 	}
 
 	/**
@@ -422,7 +419,7 @@ abstract class Controller extends \System
 		// Disable indexing if protected
 		if ($objArticle->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
+			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
 		return $strBuffer;
@@ -468,7 +465,7 @@ abstract class Controller extends \System
 		// Return if the class does not exist
 		if (!class_exists($strClass))
 		{
-			static::log('Content element class "'.$strClass.'" (content element "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
+			static::log('Content element class "' . $strClass . '" (content element "' . $objRow->type . '") does not exist', __METHOD__, TL_ERROR);
 
 			return '';
 		}
@@ -491,7 +488,7 @@ abstract class Controller extends \System
 		// Disable indexing if protected
 		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
+			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
 		return $strBuffer;
@@ -531,7 +528,7 @@ abstract class Controller extends \System
 
 		if (!class_exists($strClass))
 		{
-			static::log('Form class "'.$strClass.'" does not exist', __METHOD__, TL_ERROR);
+			static::log('Form class "' . $strClass . '" does not exist', __METHOD__, TL_ERROR);
 
 			return '';
 		}
@@ -591,7 +588,7 @@ abstract class Controller extends \System
 	public static function getPageStatusIcon($objPage)
 	{
 		$sub = 0;
-		$image = $objPage->type.'.svg';
+		$image = $objPage->type . '.svg';
 
 		// Page not published or not active
 		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop < time()))
@@ -614,7 +611,7 @@ abstract class Controller extends \System
 		// Get the image name
 		if ($sub > 0)
 		{
-			$image = $objPage->type.'_'.$sub.'.svg';
+			$image = $objPage->type . '_' . $sub . '.svg';
 		}
 
 		// HOOK: add custom logic
@@ -923,18 +920,18 @@ abstract class Controller extends \System
 			{
 				return $strType . ':' . $top . $arrValues['unit'] . ';';
 			}
-			elseif ($top == $bottom && $right == $left)
+
+			if ($top == $bottom && $right == $left)
 			{
 				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
 			}
-			elseif ($top != $bottom && $right == $left)
+
+			if ($top != $bottom && $right == $left)
 			{
 				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ';';
 			}
-			else
-			{
-				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
-			}
+
+			return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
 		}
 
 		$return = array();
@@ -948,7 +945,7 @@ abstract class Controller extends \System
 			}
 		}
 
-		return implode($return);
+		return implode('', $return);
 	}
 
 	/**
@@ -1172,7 +1169,7 @@ abstract class Controller extends \System
 		}
 
 		$search = $blnHrefOnly ? 'href' : 'href|src';
-		$arrUrls = preg_split('/(('.$search.')="([^"]+)")/i', $strContent, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$arrUrls = preg_split('/((' . $search . ')="([^"]+)")/i', $strContent, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$strContent = '';
 
 		for ($i=0, $c=\count($arrUrls); $i<$c; $i+=4)
@@ -1342,12 +1339,11 @@ abstract class Controller extends \System
 			$intId = $objParent->pid;
 
 			// Add the log entry
-			$arrParent[] = $strTable .'.id=' . $intId;
+			$arrParent[] = $strTable . '.id=' . $intId;
 
 			// Load the data container of the parent table
 			$this->loadDataContainer($strTable);
-		}
-		while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		} while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
@@ -1877,14 +1873,16 @@ abstract class Controller extends \System
 		{
 			return $intId->loadDetails();
 		}
-		elseif ($intId instanceof Model\Collection)
+
+		if ($intId instanceof Model\Collection)
 		{
 			/** @var PageModel $objPage */
 			$objPage = $intId->current();
 
 			return $objPage->loadDetails();
 		}
-		elseif (\is_object($intId))
+
+		if (\is_object($intId))
 		{
 			$strKey = __METHOD__ . '-' . $intId->id;
 
@@ -1903,28 +1901,26 @@ abstract class Controller extends \System
 
 			return $objPage;
 		}
-		else
+
+		// Invalid ID
+		if (!\strlen($intId) || $intId < 1)
 		{
-			// Invalid ID
-			if (!\strlen($intId) || $intId < 1)
-			{
-				return null;
-			}
-
-			$strKey = __METHOD__ . '-' . $intId;
-
-			// Try to load from cache
-			if (\Cache::has($strKey))
-			{
-				return \Cache::get($strKey);
-			}
-
-			$objPage = \PageModel::findWithDetails($intId);
-
-			\Cache::set($strKey, $objPage);
-
-			return $objPage;
+			return null;
 		}
+
+		$strKey = __METHOD__ . '-' . $intId;
+
+		// Try to load from cache
+		if (\Cache::has($strKey))
+		{
+			return \Cache::get($strKey);
+		}
+
+		$objPage = \PageModel::findWithDetails($intId);
+
+		\Cache::set($strKey, $objPage);
+
+		return $objPage;
 	}
 
 	/**

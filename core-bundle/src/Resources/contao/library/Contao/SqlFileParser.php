@@ -17,7 +17,6 @@ namespace Contao;
  */
 class SqlFileParser
 {
-
 	/**
 	 * Parse a database.sql file
 	 *

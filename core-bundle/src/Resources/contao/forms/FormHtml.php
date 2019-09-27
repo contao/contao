@@ -19,7 +19,6 @@ namespace Contao;
  */
 class FormHtml extends \Widget
 {
-
 	/**
 	 * Template
 	 *
@@ -30,7 +29,9 @@ class FormHtml extends \Widget
 	/**
 	 * Do not validate
 	 */
-	public function validate() {}
+	public function validate()
+	{
+	}
 
 	/**
 	 * Parse the template file and return it as string

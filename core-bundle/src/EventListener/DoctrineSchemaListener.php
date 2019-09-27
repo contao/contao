@@ -85,7 +85,8 @@ class DoctrineSchemaListener
                     $data['unique'],
                     $data['primary'],
                     $data['flags'],
-                    $data['options'])
+                    $data['options']
+                )
             );
 
             $event->preventDefault();

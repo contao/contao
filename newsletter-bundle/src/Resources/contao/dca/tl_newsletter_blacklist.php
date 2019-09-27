@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_newsletter_blacklist'] = array
 (
-
 	// Config
 	'config' => array
 	(

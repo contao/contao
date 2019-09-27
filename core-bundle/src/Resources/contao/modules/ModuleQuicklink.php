@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleQuicklink extends \Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -123,7 +122,7 @@ class ModuleQuicklink extends \Module
 						$href = $objNext->getFrontendUrl();
 						break;
 					}
-					// DO NOT ADD A break; STATEMENT
+					// no break
 
 				default:
 					$href = $objSubpage->getFrontendUrl();

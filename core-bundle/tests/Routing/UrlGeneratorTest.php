@@ -250,7 +250,7 @@ class UrlGeneratorTest extends TestCase
                 'index',
                 ['_domain' => 'contao.org:443', '_ssl' => true],
                 UrlGeneratorInterface::ABSOLUTE_URL
-           )
+            )
         );
 
         $this->assertSame(

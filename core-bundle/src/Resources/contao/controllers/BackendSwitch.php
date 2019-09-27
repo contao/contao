@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class BackendSwitch extends \Backend
 {
-
 	/**
 	 * Initialize the controller
 	 *
@@ -108,7 +107,7 @@ class BackendSwitch extends \Backend
 				$this->Database->prepare("DELETE FROM tl_session WHERE tstamp<? OR hash=?")
 							   ->execute(($time - \Config::get('sessionTimeout')), $strHash);
 
-			   // Log in the front end user
+				// Log in the front end user
 				if (\Input::post('user'))
 				{
 					$objUser = \MemberModel::findByUsername(\Input::post('user'));

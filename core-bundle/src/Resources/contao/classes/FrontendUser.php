@@ -13,14 +13,13 @@ namespace Contao;
 /**
  * Provide methods to manage front end users.
  *
- * @property array   $allGroups
- * @property string  $loginPage
+ * @property array  $allGroups
+ * @property string $loginPage
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FrontendUser extends \User
 {
-
 	/**
 	 * Current object instance (do not remove)
 	 * @var FrontendUser

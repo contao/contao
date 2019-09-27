@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_news_archive'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -254,7 +253,6 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
  */
 class tl_news_archive extends Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -285,7 +283,7 @@ class tl_news_archive extends Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->news) || !\is_array($this->User->news))
+		if (empty($this->User->news) || !is_array($this->User->news))
 		{
 			$root = array(0);
 		}
@@ -315,14 +313,14 @@ class tl_news_archive extends Backend
 
 			case 'edit':
 				// Dynamically add the record to the user profile
-				if (!\in_array(Input::get('id'), $root))
+				if (!in_array(Input::get('id'), $root))
 				{
 					/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
 					$objSessionBag = $objSession->getBag('contao_backend');
 
 					$arrNew = $objSessionBag->get('new_records');
 
-					if (\is_array($arrNew['tl_news_archive']) && \in_array(Input::get('id'), $arrNew['tl_news_archive']))
+					if (is_array($arrNew['tl_news_archive']) && in_array(Input::get('id'), $arrNew['tl_news_archive']))
 					{
 						// Add the permissions on group level
 						if ($this->User->inherit != 'custom')
@@ -333,7 +331,7 @@ class tl_news_archive extends Backend
 							{
 								$arrNewp = StringUtil::deserialize($objGroup->newp);
 
-								if (\is_array($arrNewp) && \in_array('create', $arrNewp))
+								if (is_array($arrNewp) && in_array('create', $arrNewp))
 								{
 									$arrNews = StringUtil::deserialize($objGroup->news, true);
 									$arrNews[] = Input::get('id');
@@ -353,7 +351,7 @@ class tl_news_archive extends Backend
 
 							$arrNewp = StringUtil::deserialize($objUser->newp);
 
-							if (\is_array($arrNewp) && \in_array('create', $arrNewp))
+							if (is_array($arrNewp) && in_array('create', $arrNewp))
 							{
 								$arrNews = StringUtil::deserialize($objUser->news, true);
 								$arrNews[] = Input::get('id');
@@ -368,12 +366,12 @@ class tl_news_archive extends Backend
 						$this->User->news = $root;
 					}
 				}
-				// No break;
+				// no break
 
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!\in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newp')))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newp')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news archive ID ' . Input::get('id') . '.');
 				}
@@ -383,6 +381,7 @@ class tl_news_archive extends Backend
 			case 'deleteAll':
 			case 'overrideAll':
 				$session = $objSession->all();
+
 				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newp'))
 				{
 					$session['CURRENT']['IDS'] = array();
@@ -395,7 +394,7 @@ class tl_news_archive extends Backend
 				break;
 
 			default:
-				if (\strlen(Input::get('act')))
+				if (strlen(Input::get('act')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news archives.');
 				}
@@ -413,7 +412,7 @@ class tl_news_archive extends Backend
 
 		$session = $objSession->get('news_feed_updater');
 
-		if (empty($session) || !\is_array($session))
+		if (empty($session) || !is_array($session))
 		{
 			return;
 		}
@@ -469,7 +468,7 @@ class tl_news_archive extends Backend
 	 */
 	public function manageFeeds($href, $label, $title, $class, $attributes)
 	{
-		return ($this->User->isAdmin || !empty($this->User->newsfeeds) || $this->User->hasAccess('create', 'newsfeedp')) ? '<a href="'.$this->addToUrl($href).'" class="'.$class.'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : '';
+		return ($this->User->isAdmin || !empty($this->User->newsfeeds) || $this->User->hasAccess('create', 'newsfeedp')) ? '<a href="' . $this->addToUrl($href) . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
 	}
 
 	/**
@@ -486,7 +485,7 @@ class tl_news_archive extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_news_archive') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_news_archive') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -503,7 +502,7 @@ class tl_news_archive extends Backend
 	 */
 	public function copyArchive($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'newp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('create', 'newp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -520,6 +519,6 @@ class tl_news_archive extends Backend
 	 */
 	public function deleteArchive($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'newp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('delete', 'newp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

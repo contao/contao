@@ -253,7 +253,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class PageModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string
@@ -330,7 +329,7 @@ class PageModel extends \Model
 
 			if (!empty($varLanguage))
 			{
-				$arrColumns[] = "($t.language IN('". implode("','", $varLanguage) ."') OR $t.fallback='1')";
+				$arrColumns[] = "($t.language IN('" . implode("','", $varLanguage) . "') OR $t.fallback='1')";
 			}
 			else
 			{
@@ -350,24 +349,22 @@ class PageModel extends \Model
 
 			return static::findOneBy($arrColumns, $strHost, $arrOptions);
 		}
-		else
+
+		$arrColumns = array("$t.type='root' AND ($t.dns=? OR $t.dns='') AND ($t.language=? OR $t.fallback='1')");
+		$arrValues = array($strHost, $varLanguage);
+
+		if (!isset($arrOptions['order']))
 		{
-			$arrColumns = array("$t.type='root' AND ($t.dns=? OR $t.dns='') AND ($t.language=? OR $t.fallback='1')");
-			$arrValues = array($strHost, $varLanguage);
-
-			if (!isset($arrOptions['order']))
-			{
-				$arrOptions['order'] = "$t.dns DESC, $t.fallback";
-			}
-
-			if (!static::isPreviewMode($arrOptions))
-			{
-				$time = \Date::floorToMinute();
-				$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
-			}
-
-			return static::findOneBy($arrColumns, $arrValues, $arrOptions);
+			$arrOptions['order'] = "$t.dns DESC, $t.fallback";
 		}
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = \Date::floorToMinute();
+			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
+		}
+
+		return static::findOneBy($arrColumns, $arrValues, $arrOptions);
 	}
 
 	/**
@@ -886,6 +883,7 @@ class PageModel extends \Model
 						{
 							$this->layout = $objParentPage->layout;
 						}
+
 						if ($this->mobileLayout === false)
 						{
 							$this->mobileLayout = $objParentPage->mobileLayout;
@@ -953,7 +951,7 @@ class PageModel extends \Model
 		// No root page found
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
-			\System::log('Page ID "'. $this->id .'" does not belong to a root page', __METHOD__, TL_ERROR);
+			\System::log('Page ID "' . $this->id . '" does not belong to a root page', __METHOD__, TL_ERROR);
 			throw new NoRootPageFoundException('No root page found');
 		}
 
@@ -964,10 +962,12 @@ class PageModel extends \Model
 		{
 			$this->dateFormat = \Config::get('dateFormat');
 		}
+
 		if ($this->timeFormat == '')
 		{
 			$this->timeFormat = \Config::get('timeFormat');
 		}
+
 		if ($this->datimFormat == '')
 		{
 			$this->datimFormat = \Config::get('datimFormat');

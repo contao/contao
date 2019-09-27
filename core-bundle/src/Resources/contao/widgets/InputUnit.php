@@ -22,7 +22,6 @@ namespace Contao;
  */
 class InputUnit extends \Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -137,10 +136,12 @@ class InputUnit extends \Widget
 
 		foreach ($this->arrUnits as $arrUnit)
 		{
-			$arrUnits[] = sprintf('<option value="%s"%s>%s</option>',
-								   \StringUtil::specialchars($arrUnit['value']),
-								   $this->isSelected($arrUnit),
-								   $arrUnit['label']);
+			$arrUnits[] = sprintf(
+				'<option value="%s"%s>%s</option>',
+				\StringUtil::specialchars($arrUnit['value']),
+				$this->isSelected($arrUnit),
+				$arrUnit['label']
+			);
 		}
 
 		if (!\is_array($this->varValue))
@@ -148,15 +149,17 @@ class InputUnit extends \Widget
 			$this->varValue = array('value'=>$this->varValue);
 		}
 
-		return sprintf('<input type="text" name="%s[value]" id="ctrl_%s" class="tl_text_unit%s" value="%s"%s onfocus="Backend.getScrollOffset()"> <select name="%s[unit]" class="tl_select_unit" onfocus="Backend.getScrollOffset()"%s>%s</select>%s',
-						$this->strName,
-						$this->strId,
-						(\strlen($this->strClass) ? ' ' . $this->strClass : ''),
-						\StringUtil::specialchars($this->varValue['value']),
-						$this->getAttributes(),
-						$this->strName,
-						$this->getAttribute('disabled'),
-						implode('', $arrUnits),
-						$this->wizard);
+		return sprintf(
+			'<input type="text" name="%s[value]" id="ctrl_%s" class="tl_text_unit%s" value="%s"%s onfocus="Backend.getScrollOffset()"> <select name="%s[unit]" class="tl_select_unit" onfocus="Backend.getScrollOffset()"%s>%s</select>%s',
+			$this->strName,
+			$this->strId,
+			(\strlen($this->strClass) ? ' ' . $this->strClass : ''),
+			\StringUtil::specialchars($this->varValue['value']),
+			$this->getAttributes(),
+			$this->strName,
+			$this->getAttribute('disabled'),
+			implode('', $arrUnits),
+			$this->wizard
+		);
 	}
 }

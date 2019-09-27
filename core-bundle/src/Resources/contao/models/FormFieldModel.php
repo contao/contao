@@ -165,7 +165,6 @@ namespace Contao;
  */
 class FormFieldModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

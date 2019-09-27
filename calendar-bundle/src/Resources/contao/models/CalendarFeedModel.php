@@ -71,7 +71,6 @@ namespace Contao;
  */
 class CalendarFeedModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

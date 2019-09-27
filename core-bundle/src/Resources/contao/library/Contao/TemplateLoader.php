@@ -28,7 +28,6 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class TemplateLoader
 {
-
 	/**
 	 * Known files
 	 * @var array
@@ -142,7 +141,9 @@ class TemplateLoader
 				$strPath = $file->getPathname();
 			}
 		}
-		catch (\InvalidArgumentException $e) {}
+		catch (\InvalidArgumentException $e)
+		{
+		}
 
 		if ($strPath !== null)
 		{
@@ -175,7 +176,9 @@ class TemplateLoader
 					self::addFile($file->getBasename('.html5'), rtrim($objFilesystem->makePathRelative($file->getPath(), TL_ROOT), '/'));
 				}
 			}
-			catch (\InvalidArgumentException $e) {}
+			catch (\InvalidArgumentException $e)
+			{
+			}
 		}
 	}
 }

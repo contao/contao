@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentAccordionStop extends \ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string

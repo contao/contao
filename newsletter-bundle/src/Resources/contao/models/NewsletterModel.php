@@ -91,7 +91,6 @@ namespace Contao;
  */
 class NewsletterModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string

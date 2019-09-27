@@ -97,7 +97,6 @@ namespace Contao;
  */
 class FormModel extends \Model
 {
-
 	/**
 	 * Table name
 	 * @var string
@@ -118,9 +117,7 @@ class FormModel extends \Model
 		{
 			return $objResult->maxlength;
 		}
-		else
-		{
-			return \Config::get('maxFileSize');
-		}
+
+		return \Config::get('maxFileSize');
 	}
 }

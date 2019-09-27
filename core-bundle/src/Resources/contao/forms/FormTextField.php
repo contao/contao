@@ -27,7 +27,6 @@ namespace Contao;
  */
 class FormTextField extends \Widget
 {
-
 	/**
 	 * Submit user input
 	 *
@@ -147,7 +146,7 @@ class FormTextField extends \Widget
 						{
 							$this->addAttribute('step', 'any');
 						}
-						// NO break; here
+						// no break
 
 					case 'natural':
 						return 'number';
@@ -196,7 +195,9 @@ class FormTextField extends \Widget
 			{
 				$varInput = \Idna::encodeUrl($varInput);
 			}
-			catch (\InvalidArgumentException $e) {}
+			catch (\InvalidArgumentException $e)
+			{
+			}
 		}
 		elseif ($this->rgxp == 'email' || $this->rgxp == 'friendly')
 		{
@@ -213,14 +214,16 @@ class FormTextField extends \Widget
 	 */
 	public function generate()
 	{
-		return sprintf('<input type="%s" name="%s" id="ctrl_%s" class="text%s%s" value="%s"%s%s',
-						$this->type,
-						$this->strName,
-						$this->strId,
-						($this->hideInput ? ' password' : ''),
-						(($this->strClass != '') ? ' ' . $this->strClass : ''),
-						\StringUtil::specialchars($this->value),
-						$this->getAttributes(),
-						$this->strTagEnding);
+		return sprintf(
+			'<input type="%s" name="%s" id="ctrl_%s" class="text%s%s" value="%s"%s%s',
+			$this->type,
+			$this->strName,
+			$this->strId,
+			($this->hideInput ? ' password' : ''),
+			(($this->strClass != '') ? ' ' . $this->strClass : ''),
+			\StringUtil::specialchars($this->value),
+			$this->getAttributes(),
+			$this->strTagEnding
+		);
 	}
 }

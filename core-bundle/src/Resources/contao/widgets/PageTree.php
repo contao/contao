@@ -22,7 +22,6 @@ namespace Contao;
  */
 class PageTree extends \Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -119,16 +118,15 @@ class PageTree extends \Widget
 
 			return '';
 		}
-		elseif (strpos($varInput, ',') === false)
+
+		if (strpos($varInput, ',') === false)
 		{
 			return $this->multiple ? array((int) $varInput) : (int) $varInput;
 		}
-		else
-		{
-			$arrValue = array_map('\intval', array_filter(explode(',', $varInput)));
 
-			return $this->multiple ? $arrValue : $arrValue[0];
-		}
+		$arrValue = array_map('\intval', array_filter(explode(',', $varInput)));
+
+		return $this->multiple ? $arrValue : $arrValue[0];
 	}
 
 	/**
@@ -169,7 +167,8 @@ class PageTree extends \Widget
 		$arrValues = array();
 		$blnHasOrder = ($this->orderField != '' && \is_array($this->{$this->orderField}));
 
-		if (!empty($this->varValue)) // can be an array
+		// $this->varValue can be an array, so use empty() here
+		if (!empty($this->varValue))
 		{
 			$objPages = \PageModel::findMultipleByIds((array) $this->varValue);
 
@@ -209,15 +208,15 @@ class PageTree extends \Widget
 			}
 		}
 
-		$return = '<input type="hidden" name="'.$this->strName.'" id="ctrl_'.$this->strId.'" value="'.implode(',', $arrSet).'">' . ($blnHasOrder ? '
-  <input type="hidden" name="'.$this->strOrderName.'" id="ctrl_'.$this->strOrderId.'" value="'.$this->{$this->orderField}.'">' : '') . '
+		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '">' . ($blnHasOrder ? '
+  <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . $this->{$this->orderField} . '">' : '') . '
   <div class="selector_container">' . (($blnHasOrder && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_'.$this->strId.'" class="'.($blnHasOrder ? 'sortable' : '').'">';
+    <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder ? 'sortable' : '') . '">';
 
 		foreach ($arrValues as $k=>$v)
 		{
-			$return .= '<li data-id="'.$k.'">'.$v.'</li>';
+			$return .= '<li data-id="' . $k . '">' . $v . '</li>';
 		}
 
 		$return .= '</ul>';
@@ -225,14 +224,14 @@ class PageTree extends \Widget
 		if (!\System::getContainer()->get('contao.picker.builder')->supportsContext('page'))
 		{
 			$return .= '
-	<p><button class="tl_submit" disabled>'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</button></p>';
+	<p><button class="tl_submit" disabled>' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</button></p>';
 		}
 		else
 		{
 			$extras = array
 			(
 				'fieldType' => $this->fieldType,
-				'source' => $this->strTable.'.'.$this->currentRecord,
+				'source' => $this->strTable . '.' . $this->currentRecord,
 			);
 
 			if (\is_array($this->rootNodes))
@@ -241,14 +240,14 @@ class PageTree extends \Widget
 			}
 
 			$return .= '
-	<p><a href="' . ampersand(\System::getContainer()->get('contao.picker.builder')->getUrl('page', $extras)) . '" class="tl_submit" id="pt_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+	<p><a href="' . ampersand(\System::getContainer()->get('contao.picker.builder')->getUrl('page', $extras)) . '" class="tl_submit" id="pt_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
 	<script>
 	  $("pt_' . $this->strName . '").addEvent("click", function(e) {
 		e.preventDefault();
 		Backend.openModalSelector({
 		  "id": "tl_listing",
 		  "title": "' . \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0])) . '",
-		  "url": this.href + document.getElementById("ctrl_'.$this->strId.'").value,
+		  "url": this.href + document.getElementById("ctrl_' . $this->strId . '").value,
 		  "callback": function(table, value) {
 			new Request.Contao({
 			  evalScripts: false,
@@ -261,7 +260,7 @@ class PageTree extends \Widget
 		});
 	  });
 	</script>' . ($blnHasOrder ? '
-	<script>Backend.makeMultiSrcSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'", "ctrl_'.$this->strId.'")</script>' : '');
+	<script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strOrderId . '", "ctrl_' . $this->strId . '")</script>' : '');
 		}
 
 		$return = '<div>' . $return . '</div></div>';
