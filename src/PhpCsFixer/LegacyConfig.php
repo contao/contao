@@ -82,21 +82,23 @@ class LegacyConfig extends DefaultConfig
         $rules['trailing_comma_in_multiline_array'] = false;
         $rules['yoda_style'] = false;
 
-        unset($rules['no_extra_blank_lines']['tokens']['throw']);
+        if (false !== $key = array_search('throw', $rules['no_extra_blank_lines']['tokens'], true)) {
+            unset($rules['no_extra_blank_lines']['tokens'][$key]);
+        }
     }
 
     private function adjustPhpCsFixerRules(array &$rules): void
     {
         $rules['array_syntax'] = ['syntax' => 'long'];
-        $rules['blank_line_before_statement'] = false;
         $rules['multiline_whitespace_before_semicolons'] = false;
-        $rules['no_extra_blank_lines'] = true;
         $rules['ordered_class_elements'] = false;
         $rules['phpdoc_order'] = false;
         $rules['strict_comparison'] = false;
         $rules['strict_param'] = false;
 
-        unset($rules['blank_line_before_statement']['statements']['case']);
+        if (false !== $key = array_search('case', $rules['blank_line_before_statement']['statements'], true)) {
+            unset($rules['blank_line_before_statement']['statements'][$key]);
+        }
     }
 
     private function adjustPhp71MigrationRules(array &$rules): void
