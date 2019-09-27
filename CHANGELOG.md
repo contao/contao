@@ -2,6 +2,9 @@
 
 ## DEV
 
+ * Support using `.env` and `.env.local.php` files (see #768).
+ * Do not install the tests with "prefer-dist" (see #762).
+ * Simplify registering custom fragment types (see #776).
  * Add a SERP preview wherever page meta data can be edited.
  * Dynamically add the robots.txt and favicon.ico files per root page (see #717).
  * Moved folderUrl setting to the root page (see #706).
