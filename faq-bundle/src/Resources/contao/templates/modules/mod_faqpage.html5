@@ -2,7 +2,7 @@
 
 <?php $this->block('content'); ?>
 
-  <?php foreach($this->faq as $category): ?>
+  <?php foreach ($this->faq as $category): ?>
     <article class="<?= $category['class'] ?>">
       <h2><?= $category['headline'] ?></h2>
 
