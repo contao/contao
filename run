@@ -44,8 +44,8 @@ function php-cs-fixer() {
   fi
 
   vendor/bin/php-cs-fixer fix -v "$@"
-  vendor/bin/php-cs-fixer fix -v --config .php_cs.legacy "$@"
-  vendor/bin/php-cs-fixer fix -v --config .php_cs.template "$@"
+  PHP_CS_CONFIG=legacy vendor/bin/php-cs-fixer fix -v "$@"
+  PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix -v "$@"
 }
 
 function phpstan() {
