@@ -880,8 +880,8 @@ abstract class Widget extends \Controller
 		{
 			switch ($this->rgxp)
 			{
-				// Special validation rule for style sheets
 				case strncmp($this->rgxp, 'digit_', 6) === 0:
+					// Special validation rule for style sheets
 					$textual = explode('_', $this->rgxp);
 					array_shift($textual);
 
