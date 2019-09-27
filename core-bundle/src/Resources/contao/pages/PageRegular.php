@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PageRegular extends Frontend
 {
-
 	/**
 	 * Generate a regular page
 	 *
@@ -115,7 +114,7 @@ class PageRegular extends Frontend
 		// Get all modules in a single DB query
 		$objModules = ModuleModel::findMultipleByIds($arrModuleIds);
 
-		if ($objModules !== null || \in_array(0, $arrModuleIds)) // see #4137
+		if ($objModules !== null || \in_array(0, $arrModuleIds))
 		{
 			$arrMapper = array();
 
@@ -150,14 +149,17 @@ class PageRegular extends Frontend
 					{
 						continue;
 					}
+
 					if ($arrModule['col'] == 'left' && $objLayout->cols != '2cll' && $objLayout->cols != '3cl')
 					{
 						continue;
 					}
+
 					if ($arrModule['col'] == 'right' && $objLayout->cols != '2clr' && $objLayout->cols != '3cl')
 					{
 						continue;
 					}
+
 					if ($arrModule['col'] == 'footer' && $objLayout->rows != '2rwf' && $objLayout->rows != '3rw')
 					{
 						continue;
@@ -396,7 +398,7 @@ class PageRegular extends Frontend
 					// Local fallback (thanks to DyaGa)
 					if ($objLayout->jSource == 'j_fallback')
 					{
-						$this->Template->mooScripts .= Template::generateInlineScript('window.jQuery || document.write(\'<script src="' . Controller::addAssetsUrlTo('assets/jquery/js/jquery.min.js') .'">\x3C/script>\')') . "\n";
+						$this->Template->mooScripts .= Template::generateInlineScript('window.jQuery || document.write(\'<script src="' . Controller::addAssetsUrlTo('assets/jquery/js/jquery.min.js') . '">\x3C/script>\')') . "\n";
 					}
 				}
 				catch (\OutOfBoundsException $e)

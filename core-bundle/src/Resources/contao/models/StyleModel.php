@@ -264,13 +264,11 @@ use Contao\Model\Collection;
  */
 class StyleModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_style';
-
 }
 
 class_alias(StyleModel::class, 'StyleModel');

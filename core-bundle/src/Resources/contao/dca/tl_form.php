@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_form'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -267,7 +266,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
  */
 class tl_form extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -290,7 +288,7 @@ class tl_form extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		if (empty($this->User->forms) || !is_array($this->User->forms))
 		{
 			$root = array(0);
 		}
@@ -336,7 +334,7 @@ class tl_form extends Contao\Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!\in_array(Contao\Input::get('id'), $root) || (Contao\Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'formp')))
+				if (!in_array(Contao\Input::get('id'), $root) || (Contao\Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'formp')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' form ID ' . Contao\Input::get('id') . '.');
 				}
@@ -347,6 +345,7 @@ class tl_form extends Contao\Backend
 			case 'overrideAll':
 			case 'copyAll':
 				$session = $objSession->all();
+
 				if (Contao\Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'formp'))
 				{
 					$session['CURRENT']['IDS'] = array();
@@ -375,7 +374,7 @@ class tl_form extends Contao\Backend
 	public function adjustPermissions($insertId)
 	{
 		// The oncreate_callback passes $insertId as second argument
-		if (\func_num_args() == 4)
+		if (func_num_args() == 4)
 		{
 			$insertId = func_get_arg(1);
 		}
@@ -386,7 +385,7 @@ class tl_form extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->forms) || !\is_array($this->User->forms))
+		if (empty($this->User->forms) || !is_array($this->User->forms))
 		{
 			$root = array(0);
 		}
@@ -396,7 +395,7 @@ class tl_form extends Contao\Backend
 		}
 
 		// The form is enabled already
-		if (\in_array($insertId, $root))
+		if (in_array($insertId, $root))
 		{
 			return;
 		}
@@ -406,7 +405,7 @@ class tl_form extends Contao\Backend
 
 		$arrNew = $objSessionBag->get('new_records');
 
-		if (\is_array($arrNew['tl_form']) && \in_array($insertId, $arrNew['tl_form']))
+		if (is_array($arrNew['tl_form']) && in_array($insertId, $arrNew['tl_form']))
 		{
 			// Add the permissions on group level
 			if ($this->User->inherit != 'custom')
@@ -417,7 +416,7 @@ class tl_form extends Contao\Backend
 				{
 					$arrFormp = Contao\StringUtil::deserialize($objGroup->formp);
 
-					if (\is_array($arrFormp) && \in_array('create', $arrFormp))
+					if (is_array($arrFormp) && in_array('create', $arrFormp))
 					{
 						$arrForms = Contao\StringUtil::deserialize($objGroup->forms, true);
 						$arrForms[] = $insertId;
@@ -437,7 +436,7 @@ class tl_form extends Contao\Backend
 
 				$arrFormp = Contao\StringUtil::deserialize($objUser->formp);
 
-				if (\is_array($arrFormp) && \in_array('create', $arrFormp))
+				if (is_array($arrFormp) && in_array('create', $arrFormp))
 				{
 					$arrForms = Contao\StringUtil::deserialize($objUser->forms, true);
 					$arrForms[] = $insertId;
@@ -526,7 +525,7 @@ class tl_form extends Contao\Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_form') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->canEditFieldsOf('tl_form') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -543,7 +542,7 @@ class tl_form extends Contao\Backend
 	 */
 	public function copyForm($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'formp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('create', 'formp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -560,6 +559,6 @@ class tl_form extends Contao\Backend
 	 */
 	public function deleteForm($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'formp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('delete', 'formp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

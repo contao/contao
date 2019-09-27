@@ -39,7 +39,6 @@ use Imagine\Image\Box;
  */
 class Image
 {
-
 	/**
 	 * The File instance of the original image
 	 *
@@ -201,7 +200,6 @@ class Image
 
 			$this->importantPart['width'] = max(1, min($this->fileObj->viewWidth - $this->importantPart['x'], (int) $importantPart['width']));
 			$this->importantPart['height'] = max(1, min($this->fileObj->viewHeight - $this->importantPart['y'], (int) $importantPart['height']));
-
 		}
 		else
 		{
@@ -395,7 +393,7 @@ class Image
 
 		$strCacheKey = substr(md5
 		(
-			  '-w' . $this->getTargetWidth()
+			'-w' . $this->getTargetWidth()
 			. '-h' . $this->getTargetHeight()
 			. '-o' . $this->getOriginalPath()
 			. '-m' . $this->getResizeMode()
@@ -717,7 +715,7 @@ class Image
 
 		$context = (strncmp($src, 'assets/', 7) === 0) ? 'assets_context' : 'files_context';
 
-		return '<img src="' . Controller::addStaticUrlTo(System::urlEncode($src), $container->get('contao.assets.'.$context)) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . ($attributes ? ' ' . $attributes : '') . '>';
+		return '<img src="' . Controller::addStaticUrlTo(System::urlEncode($src), $container->get('contao.assets.' . $context)) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="' . StringUtil::specialchars($alt) . '"' . ($attributes ? ' ' . $attributes : '') . '>';
 	}
 
 	/**

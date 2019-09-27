@@ -19,7 +19,6 @@ use Symfony\Component\Finder\Finder;
  */
 class PurgeData extends Backend implements \executable
 {
-
 	/**
 	 * Return true if the module is active
 	 *

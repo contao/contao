@@ -30,7 +30,6 @@ namespace Contao;
  */
 class Encryption
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var Encryption
@@ -83,7 +82,7 @@ class Encryption
 		$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size(static::$resTd));
 		mcrypt_generic_init(static::$resTd, md5($strKey), $iv);
 		$strEncrypted = mcrypt_generic(static::$resTd, $varValue);
-		$strEncrypted = base64_encode($iv.$strEncrypted);
+		$strEncrypted = base64_encode($iv . $strEncrypted);
 		mcrypt_generic_deinit(static::$resTd);
 
 		return $strEncrypted;
@@ -235,7 +234,9 @@ class Encryption
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Return the object instance (Singleton)

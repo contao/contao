@@ -57,7 +57,6 @@ namespace Contao;
  */
 class ZipReader
 {
-
 	/**
 	 * File signatur
 	 * @var string
@@ -142,7 +141,7 @@ class ZipReader
 			throw new \Exception("Could not find file $strFile");
 		}
 
-		$this->resFile = @fopen($this->strRootDir . '/' . $strFile, 'rb');
+		$this->resFile = @fopen($this->strRootDir . '/' . $strFile, 'r');
 
 		// Could not open file
 		if (!\is_resource($this->resFile))
@@ -190,6 +189,7 @@ class ZipReader
 				{
 					$this->first();
 				}
+
 				if (isset($this->arrFiles[$this->intIndex][$strKey]))
 				{
 					return $this->arrFiles[$this->intIndex][$strKey];
@@ -450,8 +450,7 @@ class ZipReader
 
 			$fseek = @fseek($this->resFile, $intOffset, SEEK_END);
 			$strBuffer = @fread($this->resFile, abs($intOffset)) . $strBuffer;
-		}
-		while ($fseek != -1 && ($pos = strpos($strBuffer, self::CENTRAL_DIR_END)) === false);
+		} while ($fseek != -1 && ($pos = strpos($strBuffer, self::CENTRAL_DIR_END)) === false);
 
 		// Reposition pointer
 		fseek($this->resFile, ($intOffset + $pos), SEEK_END);
@@ -554,11 +553,11 @@ class ZipReader
 	{
 		return mktime
 		(
-			 ($intTime & 0xf800) >> 11,
-			 ($intTime & 0x07e0) >>  5,
-			 ($intTime & 0x001f) <<  1,
-			 ($intDate & 0x01e0) >>  5,
-			 ($intDate & 0x001f),
+			($intTime & 0xf800) >> 11,
+			($intTime & 0x07e0) >>  5,
+			($intTime & 0x001f) <<  1,
+			($intDate & 0x01e0) >>  5,
+			($intDate & 0x001f),
 			(($intDate & 0xfe00) >>  9) + 1980
 		);
 	}

@@ -26,7 +26,6 @@ use Patchwork\Utf8;
  */
 class ModuleSubscribe extends Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -93,7 +92,7 @@ class ModuleSubscribe extends Module
 		{
 			$arrField = array
 			(
-				'name' => 'subscribe_'.$this->id,
+				'name' => 'subscribe_' . $this->id,
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
 				'inputType' => 'captcha',
 				'eval' => array('mandatory'=>true)

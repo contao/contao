@@ -17,7 +17,6 @@ namespace Contao;
  */
 class Pagination
 {
-
 	/**
 	 * Current page number
 	 * @var integer

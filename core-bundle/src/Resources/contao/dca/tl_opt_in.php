@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_opt_in'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -138,12 +137,11 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
  */
 class tl_opt_in extends Contao\Backend
 {
-
 	/**
 	 * Show the related records
 	 *
 	 * @param array $data
-	 * @param array $arrRow
+	 * @param array $row
 	 */
 	public function showRelatedRecords($data, $row)
 	{
@@ -160,7 +158,7 @@ class tl_opt_in extends Contao\Backend
 
 			foreach ($arrRow as $k=>$v)
 			{
-				$label = \is_array($GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label']) ? $GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'][0] : $GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'];
+				$label = is_array($GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label']) ? $GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'][0] : $GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'];
 
 				$arrAdd[$label] = $v;
 			}
@@ -199,6 +197,6 @@ class tl_opt_in extends Contao\Backend
 	 */
 	public function resendButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return (!$row['confirmedOn'] &&!$row['invalidatedThrough'] && $row['emailSubject'] && $row['emailText'] && $row['createdOn'] > strtotime('-24 hours')) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : '';
+		return (!$row['confirmedOn'] &&!$row['invalidatedThrough'] && $row['emailSubject'] && $row['emailText'] && $row['createdOn'] > strtotime('-24 hours')) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : '';
 	}
 }

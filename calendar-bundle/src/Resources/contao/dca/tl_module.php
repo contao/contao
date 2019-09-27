@@ -141,7 +141,6 @@ if (isset($bundles['ContaoCommentsBundle']))
  */
 class tl_module_calendar extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -158,7 +157,7 @@ class tl_module_calendar extends Contao\Backend
 	 */
 	public function getCalendars()
 	{
-		if (!$this->User->isAdmin && !\is_array($this->User->calendars))
+		if (!$this->User->isAdmin && !is_array($this->User->calendars))
 		{
 			return array();
 		}

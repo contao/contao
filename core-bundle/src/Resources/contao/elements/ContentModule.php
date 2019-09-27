@@ -19,7 +19,6 @@ use FOS\HttpCache\ResponseTagger;
  */
 class ContentModule extends ContentElement
 {
-
 	/**
 	 * Parse the template
 	 *
@@ -81,7 +80,9 @@ class ContentModule extends ContentElement
 	/**
 	 * Generate the content element
 	 */
-	protected function compile() {}
+	protected function compile()
+	{
+	}
 }
 
 class_alias(ContentModule::class, 'ContentModule');

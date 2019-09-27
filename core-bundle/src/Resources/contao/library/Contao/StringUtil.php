@@ -26,7 +26,6 @@ use Psr\Log\LogLevel;
  */
 class StringUtil
 {
-
 	/**
 	 * Shorten a string to a given number of characters
 	 *
@@ -468,7 +467,7 @@ class StringUtil
 	 */
 	public static function splitCsv($strString, $strDelimiter=',')
 	{
-		$arrValues = preg_split('/'.$strDelimiter.'(?=(?:[^"]*"[^"]*")*(?![^"]*"))/', $strString);
+		$arrValues = preg_split('/' . $strDelimiter . '(?=(?:[^"]*"[^"]*")*(?![^"]*"))/', $strString);
 
 		foreach ($arrValues as $k=>$v)
 		{
@@ -974,8 +973,7 @@ class StringUtil
 		do
 		{
 			$strString = preg_replace('/{{[^{}]*}}/', '', $strString, -1, $count);
-		}
-		while ($count > 0);
+		} while ($count > 0);
 
 		return $strString;
 	}
@@ -1089,7 +1087,7 @@ class StringUtil
 		}
 		else
 		{
-			$arrFragments = array_map('trim', preg_split('/'.$strPattern.'/ui', $strString));
+			$arrFragments = array_map('trim', preg_split('/' . $strPattern . '/ui', $strString));
 		}
 
 		// Empty array

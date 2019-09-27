@@ -20,7 +20,6 @@ use Patchwork\Utf8;
  */
 class ModuleRegistration extends Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -315,7 +314,7 @@ class ModuleRegistration extends Module
 		// Captcha
 		if (!$this->disableCaptcha)
 		{
-			$objCaptcha->rowClass = 'row_'.$i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
+			$objCaptcha->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
 			$strCaptcha = $objCaptcha->parse();
 
 			$this->Template->fields .= $strCaptcha;
@@ -460,7 +459,7 @@ class ModuleRegistration extends Module
 	/**
 	 * Send the activation mail
 	 *
-	 * @param MemberModel $objNewUser
+	 * @param array $arrData
 	 */
 	protected function sendActivationMail($arrData)
 	{

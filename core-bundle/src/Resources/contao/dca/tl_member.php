@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_member'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -390,7 +389,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 );
 
 // Filter disabled groups in the front end (see #6757)
-if (\defined('TL_MODE') && TL_MODE == 'FE')
+if (defined('TL_MODE') && TL_MODE == 'FE')
 {
 	$GLOBALS['TL_DCA']['tl_member']['fields']['groups']['options_callback'] = array('tl_member', 'getActiveGroups');
 }
@@ -402,7 +401,6 @@ if (\defined('TL_MODE') && TL_MODE == 'FE')
  */
 class tl_member extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -478,19 +476,19 @@ class tl_member extends Contao\Backend
 	 */
 	public function switchUser($row, $href, $label, $title, $icon)
 	{
-		$blnCanSwitchUser = ($this->User->isAdmin || (!empty($this->User->amg) && \is_array($this->User->amg)));
+		$blnCanSwitchUser = ($this->User->isAdmin || (!empty($this->User->amg) && is_array($this->User->amg)));
 
 		if (!$blnCanSwitchUser)
 		{
 			return '';
 		}
 
-		if (!$row['login'] || $row['username'] == '' || (!$this->User->isAdmin && \count(array_intersect(Contao\StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
+		if (!$row['login'] || $row['username'] == '' || (!$this->User->isAdmin && count(array_intersect(Contao\StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
 		{
-			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
-		return '<a href="contao/preview.php?user='.rawurlencode($row['username']).'" title="'.Contao\StringUtil::specialchars($title).'" target="_blank">'.Contao\Image::getHtml($icon, $label).'</a> ';
+		return '<a href="contao/preview.php?user=' . rawurlencode($row['username']) . '" title="' . Contao\StringUtil::specialchars($title) . '" target="_blank">' . Contao\Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -516,7 +514,7 @@ class tl_member extends Contao\Backend
 		// HOOK: set new password callback
 		if ($objUser->numRows)
 		{
-			if (isset($GLOBALS['TL_HOOKS']['setNewPassword']) && \is_array($GLOBALS['TL_HOOKS']['setNewPassword']))
+			if (isset($GLOBALS['TL_HOOKS']['setNewPassword']) && is_array($GLOBALS['TL_HOOKS']['setNewPassword']))
 			{
 				foreach ($GLOBALS['TL_HOOKS']['setNewPassword'] as $callback)
 				{
@@ -588,14 +586,14 @@ class tl_member extends Contao\Backend
 			return '';
 		}
 
-		$href .= '&amp;tid='.$row['id'].'&amp;state='.$row['disable'];
+		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . $row['disable'];
 
 		if ($row['disable'])
 		{
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
 	}
 
 	/**
@@ -619,16 +617,16 @@ class tl_member extends Contao\Backend
 		}
 
 		// Trigger the onload_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -661,16 +659,16 @@ class tl_member extends Contao\Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_member']['fields']['disable']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_member']['fields']['disable']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member']['fields']['disable']['save_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -690,16 +688,16 @@ class tl_member extends Contao\Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onsubmit_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}

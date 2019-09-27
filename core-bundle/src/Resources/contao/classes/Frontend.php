@@ -25,7 +25,6 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
  */
 abstract class Frontend extends Controller
 {
-
 	/**
 	 * Meta array
 	 * @var array
@@ -316,7 +315,7 @@ abstract class Frontend extends Controller
 		if (!empty($_GET['language']) && Config::get('addLanguageToUrl'))
 		{
 			$strUri = Environment::get('url') . '/' . Input::get('language') . '/';
-			$strError = 'No root page found (host "' . $host . '", language "'. Input::get('language') .'")';
+			$strError = 'No root page found (host "' . $host . '", language "' . Input::get('language') . '")';
 		}
 
 		// No language given

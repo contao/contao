@@ -31,7 +31,6 @@ use Patchwork\Utf8;
  */
 class Input
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var Input
@@ -560,13 +559,23 @@ class Input
 		$varValue = preg_replace('/\r+/', '', $varValue);
 
 		// Replace unicode entities
-		$varValue = preg_replace_callback('~&#x([0-9a-f]+);~i', static function ($matches) {
-			return Utf8::chr(hexdec($matches[1]));
-		}, $varValue);
+		$varValue = preg_replace_callback(
+			'~&#x([0-9a-f]+);~i',
+			static function ($matches)
+			{
+				return Utf8::chr(hexdec($matches[1]));
+			},
+			$varValue
+		);
 
-		$varValue = preg_replace_callback('~&#([0-9]+);~', static function ($matches) {
-			return Utf8::chr($matches[1]);
-		}, $varValue);
+		$varValue = preg_replace_callback(
+			'~&#([0-9]+);~',
+			static function ($matches)
+			{
+				return Utf8::chr($matches[1]);
+			},
+			$varValue
+		);
 
 		// Remove null bytes
 		$varValue = str_replace(\chr(0), '', $varValue);
@@ -808,7 +817,9 @@ class Input
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Input class is now static.
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Return the object instance (Singleton)

@@ -12,7 +12,6 @@ Contao\System::loadLanguageFile('tl_files');
 
 $GLOBALS['TL_DCA']['tl_templates'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -135,7 +134,6 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
  */
 class tl_templates extends Contao\Backend
 {
-
 	/**
 	 * Adjust some global settings in the template editor
 	 */
@@ -196,7 +194,7 @@ class tl_templates extends Contao\Backend
 		$arrLinks = array();
 
 		// Add root link
-		$arrLinks[] = Contao\Image::getHtml('filemounts.svg') . ' <a href="' . $this->addToUrl('fn=') . '" title="'.Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']).'">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
+		$arrLinks[] = Contao\Image::getHtml('filemounts.svg') . ' <a href="' . $this->addToUrl('fn=') . '" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 
 		// Generate breadcrumb trail
 		foreach ($arrNodes as $strFolder)
@@ -210,7 +208,7 @@ class tl_templates extends Contao\Backend
 			}
 			else
 			{
-				$arrLinks[] = Contao\Image::getHtml('folderC.svg') . ' <a href="' . $this->addToUrl('fn='.$strPath) . '" title="'.Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']).'">' . $strFolder . '</a>';
+				$arrLinks[] = Contao\Image::getHtml('folderC.svg') . ' <a href="' . $this->addToUrl('fn=' . $strPath) . '" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolder . '</a>';
 			}
 		}
 
@@ -327,34 +325,34 @@ class tl_templates extends Contao\Backend
 		// Show form
 		return ($strError ? '
 <div class="tl_message">
-<p class="tl_error">'.$strError.'</p>
-</div>' : '').'
+<p class="tl_error">' . $strError . '</p>
+</div>' : '') . '
 
 <div id="tl_buttons">
-<a href="'.$this->getReferer(true).'" class="header_back" title="'.Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="' . $this->getReferer(true) . '" class="header_back" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 
-<form action="'.ampersand(Contao\Environment::get('request')).'" id="tl_create_template" class="tl_form tl_edit_form" method="post">
+<form action="' . ampersand(Contao\Environment::get('request')) . '" id="tl_create_template" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_create_template">
-<input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
 <div class="tl_tbox cf">
 <div class="w50 widget">
-  <h3><label for="ctrl_original">'.$GLOBALS['TL_LANG']['tl_templates']['original'][0].'</label></h3>
-  <select name="original" id="ctrl_original" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()">'.$strAllTemplates.'</select>'.(($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Contao\Config::get('showHelp')) ? '
-  <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_templates']['original'][1].'</p>' : '').'
+  <h3><label for="ctrl_original">' . $GLOBALS['TL_LANG']['tl_templates']['original'][0] . '</label></h3>
+  <select name="original" id="ctrl_original" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()">' . $strAllTemplates . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Contao\Config::get('showHelp')) ? '
+  <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_templates']['original'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">
-  <h3><label for="ctrl_target">'.$GLOBALS['TL_LANG']['tl_templates']['target'][0].'</label></h3>
-  <select name="target" id="ctrl_target" class="tl_select" onfocus="Backend.getScrollOffset()"><option value="templates">templates</option>'. $this->getTargetFolders('templates') .'</select>'.(($GLOBALS['TL_LANG']['tl_templates']['target'][1] && Contao\Config::get('showHelp')) ? '
-  <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_templates']['target'][1].'</p>' : '').'
+  <h3><label for="ctrl_target">' . $GLOBALS['TL_LANG']['tl_templates']['target'][0] . '</label></h3>
+  <select name="target" id="ctrl_target" class="tl_select" onfocus="Backend.getScrollOffset()"><option value="templates">templates</option>' . $this->getTargetFolders('templates') . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['target'][1] && Contao\Config::get('showHelp')) ? '
+  <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_templates']['target'][1] . '</p>' : '') . '
 </div>
 </div>
 </div>
 
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
-  <button type="submit" name="create" id="create" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['tl_templates']['newTpl'].'</button>
+  <button type="submit" name="create" id="create" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['tl_templates']['newTpl'] . '</button>
 </div>
 </div>
 </form>';
@@ -390,7 +388,7 @@ class tl_templates extends Contao\Backend
 		if ($blnOverridesAnotherTpl)
 		{
 			$strCompareName = $strName;
-			$strComparePath = $arrTemplates[$strCompareName] . '/' .$strCompareName . '.' . $strExtension;
+			$strComparePath = $arrTemplates[$strCompareName] . '/' . $strCompareName . '.' . $strExtension;
 
 			if ($strComparePath !== null)
 			{
@@ -407,7 +405,7 @@ class tl_templates extends Contao\Backend
 				if (isset($arrTemplates[$strName]))
 				{
 					$strCompareName = $strName;
-					$strComparePath = $arrTemplates[$strCompareName] . '/' .$strCompareName . '.' . $strExtension;
+					$strComparePath = $arrTemplates[$strCompareName] . '/' . $strCompareName . '.' . $strExtension;
 					break;
 				}
 			}
@@ -417,7 +415,7 @@ class tl_templates extends Contao\Backend
 		if (Contao\Input::post('from') && isset($arrTemplates[Contao\Input::post('from')]))
 		{
 			$strCompareName = Contao\Input::post('from');
-			$strComparePath = $arrTemplates[$strCompareName] . '/' .$strCompareName . '.' . $strExtension;
+			$strComparePath = $arrTemplates[$strCompareName] . '/' . $strCompareName . '.' . $strExtension;
 		}
 
 		if ($strComparePath !== null)
@@ -450,7 +448,7 @@ class tl_templates extends Contao\Backend
 
 		// Templates to compare against
 		$arrComparable = array();
-		$intPrefixLength = \strlen($strPrefix);
+		$intPrefixLength = strlen($strPrefix);
 
 		foreach ($arrTemplates as $k => $v)
 		{
@@ -497,7 +495,7 @@ class tl_templates extends Contao\Backend
 	 */
 	public function compareButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return is_file(Contao\System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . Contao\StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return is_file(Contao\System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . Contao\StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -514,7 +512,7 @@ class tl_templates extends Contao\Backend
 	 */
 	public function dragFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return '<button type="button" title="'.Contao\StringUtil::specialchars($title).'" '.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</button> ';
+		return '<button type="button" title="' . Contao\StringUtil::specialchars($title) . '" ' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</button> ';
 	}
 
 	/**
@@ -528,16 +526,16 @@ class tl_templates extends Contao\Backend
 	protected function getTargetFolders($strFolder, $intLevel=1)
 	{
 		$strFolders = '';
-		$strPath = Contao\System::getContainer()->getParameter('kernel.project_dir') .'/'. $strFolder;
+		$strPath = Contao\System::getContainer()->getParameter('kernel.project_dir') . '/' . $strFolder;
 
 		foreach (scan($strPath) as $strFile)
 		{
-			if (!is_dir($strPath .'/'. $strFile) || strncmp($strFile, '.', 1) === 0)
+			if (!is_dir($strPath . '/' . $strFile) || strncmp($strFile, '.', 1) === 0)
 			{
 				continue;
 			}
 
-			$strRelPath = $strFolder .'/'. $strFile;
+			$strRelPath = $strFolder . '/' . $strFile;
 			$strFolders .= sprintf('<option value="%s"%s>%s%s</option>', $strRelPath, ((Contao\Input::post('target') == $strRelPath) ? ' selected="selected"' : ''), str_repeat(' &nbsp; ', $intLevel), basename($strRelPath));
 			$strFolders .= $this->getTargetFolders($strRelPath, ($intLevel + 1));
 		}
@@ -559,7 +557,7 @@ class tl_templates extends Contao\Backend
 	 */
 	public function editSource($row, $href, $label, $title, $icon, $attributes)
 	{
-		return is_file(Contao\System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return is_file(Contao\System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**

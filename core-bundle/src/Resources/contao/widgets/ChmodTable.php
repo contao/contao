@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ChmodTable extends Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -42,12 +41,12 @@ class ChmodTable extends Widget
 		$return = '  <table id="ctrl_defaultChmod" class="tl_chmod">
     <tr>
       <th></th>
-      <th scope="col">'.$GLOBALS['TL_LANG']['CHMOD']['editpage'].'</th>
-      <th scope="col">'.$GLOBALS['TL_LANG']['CHMOD']['editnavigation'].'</th>
-      <th scope="col">'.$GLOBALS['TL_LANG']['CHMOD']['deletepage'].'</th>
-      <th scope="col">'.$GLOBALS['TL_LANG']['CHMOD']['editarticles'].'</th>
-      <th scope="col">'.$GLOBALS['TL_LANG']['CHMOD']['movearticles'].'</th>
-      <th scope="col">'.$GLOBALS['TL_LANG']['CHMOD']['deletearticles'].'</th>
+      <th scope="col">' . $GLOBALS['TL_LANG']['CHMOD']['editpage'] . '</th>
+      <th scope="col">' . $GLOBALS['TL_LANG']['CHMOD']['editnavigation'] . '</th>
+      <th scope="col">' . $GLOBALS['TL_LANG']['CHMOD']['deletepage'] . '</th>
+      <th scope="col">' . $GLOBALS['TL_LANG']['CHMOD']['editarticles'] . '</th>
+      <th scope="col">' . $GLOBALS['TL_LANG']['CHMOD']['movearticles'] . '</th>
+      <th scope="col">' . $GLOBALS['TL_LANG']['CHMOD']['deletearticles'] . '</th>
     </tr>';
 
 		// Build rows for user, group and world
@@ -55,20 +54,20 @@ class ChmodTable extends Widget
 		{
 			$return .= '
     <tr>
-      <th scope="row">'.$GLOBALS['TL_LANG']['CHMOD'][$v].'</th>';
+      <th scope="row">' . $GLOBALS['TL_LANG']['CHMOD'][$v] . '</th>';
 
 			// Add checkboxes
 			for ($j=1; $j<=6; $j++)
 			{
 				$return .= '
-      <td><input type="checkbox" name="'.$this->strName.'[]" value="'.StringUtil::specialchars($k.$j).'"'.static::optionChecked($k.$j, $this->varValue).' onfocus="Backend.getScrollOffset()"></td>';
+      <td><input type="checkbox" name="' . $this->strName . '[]" value="' . StringUtil::specialchars($k . $j) . '"' . static::optionChecked($k . $j, $this->varValue) . ' onfocus="Backend.getScrollOffset()"></td>';
 			}
 
 			$return .= '
     </tr>';
 		}
 
-		return $return.'
+		return $return . '
   </table>';
 	}
 }

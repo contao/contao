@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentArticle extends ContentElement
 {
-
 	/**
 	 * Parse the template
 	 *
@@ -31,7 +30,9 @@ class ContentArticle extends ContentElement
 	/**
 	 * Generate the content element
 	 */
-	protected function compile() {}
+	protected function compile()
+	{
+	}
 }
 
 class_alias(ContentArticle::class, 'ContentArticle');

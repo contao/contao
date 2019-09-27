@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_page'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -661,7 +660,6 @@ if (Contao\Input::get('popup'))
  */
 class tl_page extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -693,7 +691,7 @@ class tl_page extends Contao\Backend
 		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Contao\Config::get('defaultGroup') ?: (int) $this->User->groups[0];
 
 		// Restrict the page tree
-		if (empty($this->User->pagemounts) || !\is_array($this->User->pagemounts))
+		if (empty($this->User->pagemounts) || !is_array($this->User->pagemounts))
 		{
 			$root = array(0);
 		}
@@ -705,7 +703,7 @@ class tl_page extends Contao\Backend
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $root;
 
 		// Set allowed page IDs (edit multiple)
-		if (\is_array($session['CURRENT']['IDS']))
+		if (is_array($session['CURRENT']['IDS']))
 		{
 			$edit_all = array();
 			$delete_all = array();
@@ -739,7 +737,7 @@ class tl_page extends Contao\Backend
 		}
 
 		// Set allowed clipboard IDs
-		if (isset($session['CLIPBOARD']['tl_page']) && \is_array($session['CLIPBOARD']['tl_page']['id']))
+		if (isset($session['CLIPBOARD']['tl_page']) && is_array($session['CLIPBOARD']['tl_page']['id']))
 		{
 			$clipboard = array();
 
@@ -851,7 +849,7 @@ class tl_page extends Contao\Backend
 				$pagemounts = array_unique($pagemounts);
 
 				// Do not allow to paste after pages on the root level (pagemounts)
-				if ((Contao\Input::get('act') == 'cut' || Contao\Input::get('act') == 'cutAll') && Contao\Input::get('mode') == 1 && \in_array(Contao\Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
+				if ((Contao\Input::get('act') == 'cut' || Contao\Input::get('act') == 'cutAll') && Contao\Input::get('mode') == 1 && in_array(Contao\Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to paste page ID ' . Contao\Input::get('id') . ' after mounted page ID ' . Contao\Input::get('pid') . ' (root level).');
 				}
@@ -861,9 +859,9 @@ class tl_page extends Contao\Backend
 				// Check each page
 				foreach ($ids as $i=>$id)
 				{
-					if (!\in_array($id, $pagemounts))
+					if (!in_array($id, $pagemounts))
 					{
-						$this->log('Page ID '. $id .' was not mounted', __METHOD__, TL_ERROR);
+						$this->log('Page ID ' . $id . ' was not mounted', __METHOD__, TL_ERROR);
 
 						$error = true;
 						break;
@@ -888,7 +886,7 @@ class tl_page extends Contao\Backend
 					// In "edit multiple" mode, $ids contains only the parent ID, therefore check $id != $_GET['pid'] (see #5620)
 					if ($i == 0 && $id != Contao\Input::get('pid') && Contao\Input::get('act') != 'create' && !$this->User->hasAccess($objPage->type, 'alpty'))
 					{
-						$this->log('Not enough permissions to  '. Contao\Input::get('act') .' '. $objPage->type .' pages', __METHOD__, TL_ERROR);
+						$this->log('Not enough permissions to  ' . Contao\Input::get('act') . ' ' . $objPage->type . ' pages', __METHOD__, TL_ERROR);
 
 						$error = true;
 						break;
@@ -1005,7 +1003,7 @@ class tl_page extends Contao\Backend
 
 		$session = $objSession->get('sitemap_updater');
 
-		if (empty($session) || !\is_array($session))
+		if (empty($session) || !is_array($session))
 		{
 			return;
 		}
@@ -1147,7 +1145,7 @@ class tl_page extends Contao\Backend
 		}
 
 		// No title or not a regular page
-		if ($dc->activeRecord->title == '' || !\in_array($dc->activeRecord->type, array('regular', 'error_401', 'error_403', 'error_404')))
+		if ($dc->activeRecord->title == '' || !in_array($dc->activeRecord->type, array('regular', 'error_401', 'error_403', 'error_404')))
 		{
 			return;
 		}
@@ -1158,7 +1156,7 @@ class tl_page extends Contao\Backend
 		$new_records = $objSessionBag->get('new_records');
 
 		// Not a new page
-		if (!$new_records || !\is_array($new_records[$dc->table]) || !\in_array($dc->id, $new_records[$dc->table]))
+		if (!$new_records || !is_array($new_records[$dc->table]) || !in_array($dc->id, $new_records[$dc->table]))
 		{
 			return;
 		}
@@ -1234,7 +1232,7 @@ class tl_page extends Contao\Backend
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);
 
 		// Alias exists
-		if (\in_array($varValue, $arrFeeds))
+		if (in_array($varValue, $arrFeeds))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}
@@ -1403,7 +1401,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function editPage($row, $href, $label, $title, $icon, $attributes)
 	{
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1426,7 +1424,7 @@ class tl_page extends Contao\Backend
 			return '';
 		}
 
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1451,7 +1449,7 @@ class tl_page extends Contao\Backend
 
 		$objSubpages = Contao\PageModel::findByPid($row['id']);
 
-		return ($objSubpages !== null && $objSubpages->count() > 0 && $this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($objSubpages !== null && $objSubpages->count() > 0 && $this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1468,7 +1466,7 @@ class tl_page extends Contao\Backend
 	 */
 	public function cutPage($row, $href, $label, $title, $icon, $attributes)
 	{
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1488,7 +1486,7 @@ class tl_page extends Contao\Backend
 		$disablePI = false;
 
 		// Disable all buttons if there is a circular reference
-		if ($arrClipboard !== false && (($arrClipboard['mode'] == 'cut' && ($cr == 1 || $arrClipboard['id'] == $row['id'])) || ($arrClipboard['mode'] == 'cutAll' && ($cr == 1 || \in_array($row['id'], $arrClipboard['id'])))))
+		if ($arrClipboard !== false && (($arrClipboard['mode'] == 'cut' && ($cr == 1 || $arrClipboard['id'] == $row['id'])) || ($arrClipboard['mode'] == 'cutAll' && ($cr == 1 || in_array($row['id'], $arrClipboard['id'])))))
 		{
 			$disablePA = true;
 			$disablePI = true;
@@ -1537,7 +1535,7 @@ class tl_page extends Contao\Backend
 			}
 
 			// Disable "paste after" button if the parent page is a root page and the user is not an administrator
-			if (!$disablePA && ($row['pid'] < 1 || \in_array($row['id'], $dc->rootIds)))
+			if (!$disablePA && ($row['pid'] < 1 || in_array($row['id'], $dc->rootIds)))
 			{
 				$disablePA = true;
 			}
@@ -1551,10 +1549,10 @@ class tl_page extends Contao\Backend
 
 		if ($row['id'] > 0)
 		{
-			$return = $disablePA ? Contao\Image::getHtml('pasteafter_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=1&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.Contao\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteAfter.'</a> ';
+			$return = $disablePA ? Contao\Image::getHtml('pasteafter_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . Contao\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteafter'][1], $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
 		}
 
-		return $return.($disablePI ? Contao\Image::getHtml('pasteinto_.svg').' ' : '<a href="'.$this->addToUrl('act='.$arrClipboard['mode'].'&amp;mode=2&amp;pid='.$row['id'].(!\is_array($arrClipboard['id']) ? '&amp;id='.$arrClipboard['id'] : '')).'" title="'.Contao\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][$row['id'] > 0 ? 1 : 0], $row['id'])).'" onclick="Backend.getScrollOffset()">'.$imagePasteInto.'</a> ');
+		return $return . ($disablePI ? Contao\Image::getHtml('pasteinto_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $row['id'] . (!is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . Contao\StringUtil::specialchars(sprintf($GLOBALS['TL_LANG'][$table]['pasteinto'][$row['id'] > 0 ? 1 : 0], $row['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ');
 	}
 
 	/**
@@ -1573,7 +1571,7 @@ class tl_page extends Contao\Backend
 	{
 		$root = func_get_arg(7);
 
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !\in_array($row['id'], $root))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(Contao\BackendUser::CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !in_array($row['id'], $root))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1594,7 +1592,7 @@ class tl_page extends Contao\Backend
 			return '';
 		}
 
-		return ($row['type'] == 'regular' || $row['type'] == 'error_401' || $row['type'] == 'error_403' || $row['type'] == 'error_404') ? '<a href="' . $this->addToUrl($href.'&amp;pn='.$row['id']) . '" title="'.Contao\StringUtil::specialchars($title).'">'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return ($row['type'] == 'regular' || $row['type'] == 'error_401' || $row['type'] == 'error_403' || $row['type'] == 'error_404') ? '<a href="' . $this->addToUrl($href . '&amp;pn=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '">' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1638,12 +1636,12 @@ class tl_page extends Contao\Backend
 				// Generate new alias through save callbacks
 				foreach ($GLOBALS['TL_DCA'][$dc->table]['fields']['alias']['save_callback'] as $callback)
 				{
-					if (\is_array($callback))
+					if (is_array($callback))
 					{
 						$this->import($callback[0]);
 						$strAlias = $this->{$callback[0]}->{$callback[1]}($strAlias, $dc);
 					}
-					elseif (\is_callable($callback))
+					elseif (is_callable($callback))
 					{
 						$strAlias = $callback($strAlias, $dc);
 					}
@@ -1671,7 +1669,7 @@ class tl_page extends Contao\Backend
 		}
 
 		// Add the button
-		$arrButtons['alias'] = '<button type="submit" name="alias" id="alias" class="tl_submit" accesskey="a">'.$GLOBALS['TL_LANG']['MSC']['aliasSelected'].'</button> ';
+		$arrButtons['alias'] = '<button type="submit" name="alias" id="alias" class="tl_submit" accesskey="a">' . $GLOBALS['TL_LANG']['MSC']['aliasSelected'] . '</button> ';
 
 		return $arrButtons;
 	}
@@ -1702,7 +1700,7 @@ class tl_page extends Contao\Backend
 			return '';
 		}
 
-		$href .= '&amp;tid='.$row['id'].'&amp;state='.($row['published'] ? '' : 1);
+		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
 
 		if (!$row['published'])
 		{
@@ -1714,7 +1712,7 @@ class tl_page extends Contao\Backend
 			return Contao\Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**
@@ -1738,16 +1736,16 @@ class tl_page extends Contao\Backend
 		}
 
 		// Trigger the onload_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_page']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_page']['config']['onload_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -1777,16 +1775,16 @@ class tl_page extends Contao\Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_page']['fields']['published']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_page']['fields']['published']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_page']['fields']['published']['save_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -1806,16 +1804,16 @@ class tl_page extends Contao\Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}

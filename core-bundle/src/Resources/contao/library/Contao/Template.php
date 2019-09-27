@@ -654,7 +654,7 @@ abstract class Template extends Controller
 		{
 			fastcgi_finish_request();
 		}
-		elseif (PHP_SAPI !== 'cli')
+		elseif (\PHP_SAPI !== 'cli')
 		{
 			$status = ob_get_status(true);
 			$level = \count($status);

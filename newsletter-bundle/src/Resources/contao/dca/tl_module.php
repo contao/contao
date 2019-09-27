@@ -90,7 +90,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
  */
 class tl_module_newsletter extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -141,7 +140,7 @@ class tl_module_newsletter extends Contao\Backend
 	 */
 	public function getChannels()
 	{
-		if (!$this->User->isAdmin && !\is_array($this->User->newsletters))
+		if (!$this->User->isAdmin && !is_array($this->User->newsletters))
 		{
 			return array();
 		}

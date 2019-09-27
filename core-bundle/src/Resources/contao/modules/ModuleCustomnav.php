@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleCustomnav extends Module
 {
-
 	/**
 	 * Template
 	 * @var string

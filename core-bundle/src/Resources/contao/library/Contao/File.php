@@ -68,7 +68,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class File extends System
 {
-
 	/**
 	 * File handle
 	 * @var resource
@@ -355,7 +354,7 @@ class File extends System
 								$this->arrImageViewSize = false;
 							}
 						}
-						catch(\Exception $e)
+						catch (\Exception $e)
 						{
 							$this->arrImageViewSize = false;
 						}
@@ -404,7 +403,7 @@ class File extends System
 			case 'handle':
 				if (!\is_resource($this->resFile))
 				{
-					$this->resFile = fopen($this->strRootDir . '/' . $this->strFile, 'rb');
+					$this->resFile = fopen($this->strRootDir . '/' . $this->strFile, 'r');
 				}
 
 				return $this->resFile;

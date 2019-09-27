@@ -84,7 +84,6 @@ use FOS\HttpCache\ResponseTagger;
  */
 abstract class Module extends Frontend
 {
-
 	/**
 	 * Template
 	 * @var string

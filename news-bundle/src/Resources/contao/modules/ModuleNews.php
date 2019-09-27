@@ -23,7 +23,6 @@ use FOS\HttpCache\ResponseTagger;
  */
 abstract class ModuleNews extends Module
 {
-
 	/**
 	 * Sort out protected archives
 	 *
@@ -360,11 +359,13 @@ abstract class ModuleNews extends Module
 		// Internal link
 		if ($objArticle->source != 'external')
 		{
-			return sprintf('<a href="%s" title="%s" itemprop="url"><span itemprop="headline">%s</span>%s</a>',
-							News::generateNewsUrl($objArticle, $blnAddArchive),
-							StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
-							$strLink,
-							($blnIsReadMore ? '<span class="invisible"> '.$objArticle->headline.'</span>' : ''));
+			return sprintf(
+				'<a href="%s" title="%s" itemprop="url"><span itemprop="headline">%s</span>%s</a>',
+				News::generateNewsUrl($objArticle, $blnAddArchive),
+				StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
+				$strLink,
+				($blnIsReadMore ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
+			);
 		}
 
 		// Encode e-mail addresses
@@ -380,11 +381,13 @@ abstract class ModuleNews extends Module
 		}
 
 		// External link
-		return sprintf('<a href="%s" title="%s"%s itemprop="url"><span itemprop="headline">%s</span></a>',
-						$strArticleUrl,
-						StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
-						($objArticle->target ? ' target="_blank"' : ''),
-						$strLink);
+		return sprintf(
+			'<a href="%s" title="%s"%s itemprop="url"><span itemprop="headline">%s</span></a>',
+			$strArticleUrl,
+			StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
+			($objArticle->target ? ' target="_blank"' : ''),
+			$strLink
+		);
 	}
 }
 

@@ -549,8 +549,8 @@ class RoutingTest extends ContaoTestCase
                             'foo/bar',
                             'foo',
                         ],
-                        $options)
-                    ;
+                        $options
+                    );
 
                     return true;
                 }

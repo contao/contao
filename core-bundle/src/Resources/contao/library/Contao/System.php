@@ -59,7 +59,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 abstract class System
 {
-
 	/**
 	 * Container
 	 * @var ContainerInterface
@@ -724,7 +723,7 @@ abstract class System
 			$session->start();
 		}
 
-		return sha1($session->getId().$strCookie);
+		return sha1($session->getId() . $strCookie);
 	}
 
 	/**

@@ -60,7 +60,6 @@ use Contao\Model\Collection;
  */
 class MemberGroupModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

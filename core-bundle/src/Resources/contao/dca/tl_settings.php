@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_settings'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -170,7 +169,6 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
  */
 class tl_settings extends Backend
 {
-
 	/**
 	 * Remove protected search results if the feature is being disabled
 	 *

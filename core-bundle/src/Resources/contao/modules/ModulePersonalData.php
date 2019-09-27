@@ -21,7 +21,6 @@ use Patchwork\Utf8;
  */
 class ModulePersonalData extends Module
 {
-
 	/**
 	 * Template
 	 * @var string

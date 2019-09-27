@@ -47,7 +47,6 @@ use Contao\Model\Collection;
  */
 class Picture
 {
-
 	/**
 	 * The Image instance of the source image
 	 *

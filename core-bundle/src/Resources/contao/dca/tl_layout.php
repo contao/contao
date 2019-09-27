@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_layout'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -464,7 +463,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
  */
 class tl_layout extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -585,7 +583,7 @@ class tl_layout extends Contao\Backend
 	 */
 	public function listLayout($row)
 	{
-		return '<div class="tl_content_left">'. $row['name'] .'</div>';
+		return '<div class="tl_content_left">' . $row['name'] . '</div>';
 	}
 
 	/**
@@ -597,7 +595,7 @@ class tl_layout extends Contao\Backend
 	 */
 	public function styleSheetLink(Contao\DataContainer $dc)
 	{
-		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'title\':\''.Contao\StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])).'\',\'url\':this.href});return false">' . Contao\Image::getHtml('edit.svg') . '</a>';
+		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'title\':\'' . Contao\StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])) . '\',\'url\':this.href});return false">' . Contao\Image::getHtml('edit.svg') . '</a>';
 	}
 
 	/**
@@ -616,12 +614,12 @@ class tl_layout extends Contao\Backend
 
 		$array = Contao\StringUtil::deserialize($value);
 
-		if (empty($array) || !\is_array($array))
+		if (empty($array) || !is_array($array))
 		{
 			return $value;
 		}
 
-		if (($i = array_search('responsive.css', $array)) !== false && !\in_array('layout.css', $array))
+		if (($i = array_search('responsive.css', $array)) !== false && !in_array('layout.css', $array))
 		{
 			array_insert($array, $i, 'layout.css');
 		}

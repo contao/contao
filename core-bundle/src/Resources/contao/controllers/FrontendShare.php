@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class FrontendShare extends Frontend
 {
-
 	/**
 	 * Run the controller
 	 *

@@ -17,7 +17,6 @@ namespace Contao;
  */
 trait TemplateInheritance
 {
-
 	/**
 	 * Template file
 	 * @var string

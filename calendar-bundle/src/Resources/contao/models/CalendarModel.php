@@ -84,13 +84,11 @@ use Contao\Model\Collection;
  */
 class CalendarModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_calendar';
-
 }
 
 class_alias(CalendarModel::class, 'CalendarModel');

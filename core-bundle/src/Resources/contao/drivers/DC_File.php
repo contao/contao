@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  */
 class DC_File extends DataContainer implements \editable
 {
-
 	/**
 	 * Initialize the object
 	 *
@@ -180,7 +179,7 @@ class DC_File extends DataContainer implements \editable
 					$class .= (($cls && $legend) ? ' ' . $cls : '');
 				}
 
-				$return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_'.$key.'"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
+				$return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
 
 				// Build rows of the current box
 				foreach ($v as $vv)
@@ -189,7 +188,7 @@ class DC_File extends DataContainer implements \editable
 					{
 						if ($blnAjax && Environment::get('isAjaxRequest'))
 						{
-							return $strAjax . '<input type="hidden" name="FORM_FIELDS[]" value="'.StringUtil::specialchars($this->strPalette).'">';
+							return $strAjax . '<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">';
 						}
 
 						$blnAjax = false;
@@ -202,7 +201,7 @@ class DC_File extends DataContainer implements \editable
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
-						$return .= "\n  " . '<div id="'.$thisId.'" class="subpal cf">';
+						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
 
 						continue;
 					}
@@ -268,8 +267,8 @@ class DC_File extends DataContainer implements \editable
 
 		// Submit buttons
 		$arrButtons = array();
-		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['save'].'</button>';
-		$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['saveNclose'].'</button>';
+		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
+		$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
 
 		// Call the buttons_callback (see #4691)
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback']))
@@ -300,15 +299,15 @@ class DC_File extends DataContainer implements \editable
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = Message::generate() . ($this->noReload ? '
-<p class="tl_error">'.$GLOBALS['TL_LANG']['ERR']['general'].'</p>' : '') . '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
 <div id="tl_buttons">
-<a href="'.$this->getReferer(true).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" onclick="Backend.getScrollOffset()">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
-<form action="'.ampersand(Environment::get('request')).'" id="'.$this->strTable.'" class="tl_form tl_edit_form" method="post"'.(!empty($this->onsubmit) ? ' onsubmit="'.implode(' ', $this->onsubmit).'"' : '').'>
+<form action="' . ampersand(Environment::get('request')) . '" id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
-<input type="hidden" name="FORM_SUBMIT" value="'.$this->strTable.'">
-<input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-<input type="hidden" name="FORM_FIELDS[]" value="'.StringUtil::specialchars($this->strPalette).'">' . $return;
+<input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">' . $return;
 
 		// Reload the page to prevent _POST variables from being sent twice
 		if (Input::post('FORM_SUBMIT') == $this->strTable && !$this->noReload)
@@ -456,11 +455,11 @@ class DC_File extends DataContainer implements \editable
 			{
 				if ($arrData['inputType'] == 'password' || $arrData['inputType'] == 'textStore')
 				{
-					$this->log('The global configuration variable "'.$this->strField.'" has been changed', __METHOD__, TL_CONFIGURATION);
+					$this->log('The global configuration variable "' . $this->strField . '" has been changed', __METHOD__, TL_CONFIGURATION);
 				}
 				else
 				{
-					$this->log('The global configuration variable "'.$this->strField.'" has been changed from "'.$prior.'" to "'.$varValue.'"', __METHOD__, TL_CONFIGURATION);
+					$this->log('The global configuration variable "' . $this->strField . '" has been changed from "' . $prior . '" to "' . $varValue . '"', __METHOD__, TL_CONFIGURATION);
 				}
 			}
 
@@ -493,7 +492,7 @@ class DC_File extends DataContainer implements \editable
 				// Overwrite the trigger if the page is not reloaded
 				if (Input::post('FORM_SUBMIT') == $this->strTable)
 				{
-					$key = (Input::get('act') == 'editAll') ? $name.'_'.$this->intId : $name;
+					$key = (Input::get('act') == 'editAll') ? $name . '_' . $this->intId : $name;
 
 					if (!$GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['submitOnChange'])
 					{
@@ -516,7 +515,7 @@ class DC_File extends DataContainer implements \editable
 					else
 					{
 						$sValues[] = $trigger;
-						$key = $name .'_'. $trigger;
+						$key = $name . '_' . $trigger;
 
 						// Look for a subpalette
 						if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
@@ -554,7 +553,7 @@ class DC_File extends DataContainer implements \editable
 			// Include subpalettes
 			foreach ($subpalettes as $k=>$v)
 			{
-				$strPalette = preg_replace('/\b'. preg_quote($k, '/').'\b/i', $k.',['.$k.'],'.$v.',[EOF]', $strPalette);
+				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);
 			}
 		}
 

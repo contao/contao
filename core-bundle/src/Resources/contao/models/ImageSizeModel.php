@@ -80,13 +80,11 @@ use Contao\Model\Collection;
  */
 class ImageSizeModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_image_size';
-
 }
 
 class_alias(ImageSizeModel::class, 'ImageSizeModel');

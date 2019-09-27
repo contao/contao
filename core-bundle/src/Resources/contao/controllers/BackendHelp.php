@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class BackendHelp extends Backend
 {
-
 	/**
 	 * Initialize the controller
 	 *

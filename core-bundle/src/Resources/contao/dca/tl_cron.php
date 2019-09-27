@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_cron'] = array
 (
-
 	// Config
 	'config' => array
 	(

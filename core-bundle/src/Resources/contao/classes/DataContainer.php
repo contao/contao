@@ -35,7 +35,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  */
 abstract class DataContainer extends Backend
 {
-
 	/**
 	 * Current ID
 	 * @var integer
@@ -244,13 +243,13 @@ abstract class DataContainer extends Backend
 		// Toggle line wrap (textarea)
 		if ($arrData['inputType'] == 'textarea' && !isset($arrData['eval']['rte']))
 		{
-			$xlabel .= ' ' . Image::getHtml('wrap.svg', $GLOBALS['TL_LANG']['MSC']['wordWrap'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['wordWrap']) . '" class="toggleWrap" onclick="Backend.toggleWrap(\'ctrl_'.$this->strInputName.'\')"');
+			$xlabel .= ' ' . Image::getHtml('wrap.svg', $GLOBALS['TL_LANG']['MSC']['wordWrap'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['wordWrap']) . '" class="toggleWrap" onclick="Backend.toggleWrap(\'ctrl_' . $this->strInputName . '\')"');
 		}
 
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'])
 		{
-			$xlabel .= ' <a href="contao/help.php?table='.$this->strTable.'&amp;field='.$this->strField.'" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0])).'\',\'url\':this.href});return false">'.Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']).'</a>';
+			$xlabel .= ' <a href="contao/help.php?table=' . $this->strTable . '&amp;field=' . $this->strField . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0])) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
 		}
 
 		// Add a custom xlabel
@@ -443,7 +442,7 @@ abstract class DataContainer extends Backend
 		if ($arrData['eval']['datepicker'])
 		{
 			$rgxp = $arrData['eval']['rgxp'];
-			$format = Date::formatToJs(Config::get($rgxp.'Format'));
+			$format = Date::formatToJs(Config::get($rgxp . 'Format'));
 
 			switch ($rgxp)
 			{
@@ -468,7 +467,7 @@ abstract class DataContainer extends Backend
 				$strOnSelect = ",\n        onSelect: function() { Backend.autoSubmit(\"" . $this->strTable . "\"); }";
 			}
 
-			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', '', 'title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['datepicker']).'" id="toggle_' . $objWidget->id . '" style="cursor:pointer"') . '
+			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', '', 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['datepicker']) . '" id="toggle_' . $objWidget->id . '" style="cursor:pointer"') . '
   <script>
     window.addEvent("domready", function() {
       new Picker.Date($("ctrl_' . $objWidget->id . '"), {
@@ -491,7 +490,7 @@ abstract class DataContainer extends Backend
 			// Support single fields as well (see #5240)
 			$strKey = $arrData['eval']['multiple'] ? $this->strField . '_0' : $this->strField;
 
-			$wizard .= ' ' . Image::getHtml('pickcolor.svg', $GLOBALS['TL_LANG']['MSC']['colorpicker'], 'title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['colorpicker']).'" id="moo_' . $this->strField . '" style="cursor:pointer"') . '
+			$wizard .= ' ' . Image::getHtml('pickcolor.svg', $GLOBALS['TL_LANG']['MSC']['colorpicker'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['colorpicker']) . '" id="moo_' . $this->strField . '" style="cursor:pointer"') . '
   <script>
     window.addEvent("domready", function() {
       var cl = $("ctrl_' . $strKey . '").value.hexToRgb(true) || [255, 0, 0];
@@ -613,9 +612,9 @@ abstract class DataContainer extends Backend
 <div class="widget">
   <fieldset class="tl_radio_container">
   <legend>' . $GLOBALS['TL_LANG']['MSC']['updateMode'] . '</legend>
-    <input type="radio" name="'.$this->strInputName.'_update" id="opt_'.$this->strInputName.'_update_1" class="tl_radio" value="add" onfocus="Backend.getScrollOffset()"> <label for="opt_'.$this->strInputName.'_update_1">' . $GLOBALS['TL_LANG']['MSC']['updateAdd'] . '</label><br>
-    <input type="radio" name="'.$this->strInputName.'_update" id="opt_'.$this->strInputName.'_update_2" class="tl_radio" value="remove" onfocus="Backend.getScrollOffset()"> <label for="opt_'.$this->strInputName.'_update_2">' . $GLOBALS['TL_LANG']['MSC']['updateRemove'] . '</label><br>
-    <input type="radio" name="'.$this->strInputName.'_update" id="opt_'.$this->strInputName.'_update_0" class="tl_radio" value="replace" checked="checked" onfocus="Backend.getScrollOffset()"> <label for="opt_'.$this->strInputName.'_update_0">' . $GLOBALS['TL_LANG']['MSC']['updateReplace'] . '</label>
+    <input type="radio" name="' . $this->strInputName . '_update" id="opt_' . $this->strInputName . '_update_1" class="tl_radio" value="add" onfocus="Backend.getScrollOffset()"> <label for="opt_' . $this->strInputName . '_update_1">' . $GLOBALS['TL_LANG']['MSC']['updateAdd'] . '</label><br>
+    <input type="radio" name="' . $this->strInputName . '_update" id="opt_' . $this->strInputName . '_update_2" class="tl_radio" value="remove" onfocus="Backend.getScrollOffset()"> <label for="opt_' . $this->strInputName . '_update_2">' . $GLOBALS['TL_LANG']['MSC']['updateRemove'] . '</label><br>
+    <input type="radio" name="' . $this->strInputName . '_update" id="opt_' . $this->strInputName . '_update_0" class="tl_radio" value="replace" checked="checked" onfocus="Backend.getScrollOffset()"> <label for="opt_' . $this->strInputName . '_update_0">' . $GLOBALS['TL_LANG']['MSC']['updateReplace'] . '</label>
   </fieldset>';
 		}
 
@@ -690,7 +689,7 @@ abstract class DataContainer extends Backend
 		}
 
 		return '
-  <p class="tl_help tl_tip' . $strClass . '">'.$return.'</p>';
+  <p class="tl_help tl_tip' . $strClass . '">' . $return . '</p>';
 	}
 
 	/**
@@ -711,8 +710,8 @@ abstract class DataContainer extends Backend
 
 			foreach ($return as $k=>$v)
 			{
-				$buffer[] = ($k%2 == 0) ? $v : $v.$names[$i];
-				$buffer[] = ($k%2 == 0) ? $v.$names[$i] : $v;
+				$buffer[] = ($k%2 == 0) ? $v : $v . $names[$i];
+				$buffer[] = ($k%2 == 0) ? $v . $names[$i] : $v;
 			}
 
 			$return = $buffer;
@@ -743,7 +742,7 @@ abstract class DataContainer extends Backend
 
 		$strUrl = TL_SCRIPT . '?' . implode('&', $arrKeys);
 
-		return $strUrl . (!empty($arrKeys) ? '&' : '') . (Input::get('table') ? 'table='.Input::get('table').'&amp;' : '').'act=edit&amp;id='.rawurlencode($id);
+		return $strUrl . (!empty($arrKeys) ? '&' : '') . (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
 	}
 
 	/**
@@ -824,10 +823,10 @@ abstract class DataContainer extends Backend
 					}
 					else
 					{
-						$href = $this->addToUrl($v['href'].'&amp;id='.$arrRow['id'].'&amp;popup=1');
+						$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . '&amp;popup=1');
 					}
 
-					$return .= '<a href="'.$href.'" title="'.StringUtil::specialchars($title).'" onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", $label)).'\',\'url\':this.href});return false"'.$attributes.'>'.Image::getHtml($v['icon'], $label).'</a> ';
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $label)) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
 				}
 				else
 				{
@@ -837,10 +836,10 @@ abstract class DataContainer extends Backend
 					}
 					else
 					{
-						$href = $this->addToUrl($v['href'].'&amp;id='.$arrRow['id'].(Input::get('nb') ? '&amp;nc=1' : ''));
+						$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
 					}
 
-					$return .= '<a href="'.$href.'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($v['icon'], $label).'</a> ';
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
 				}
 
 				continue;
@@ -854,16 +853,16 @@ abstract class DataContainer extends Backend
 				$label = $GLOBALS['TL_LANG'][$strTable][$dir][0] ?: $dir;
 				$title = $GLOBALS['TL_LANG'][$strTable][$dir][1] ?: $dir;
 
-				$label = Image::getHtml($dir.'.svg', $label);
+				$label = Image::getHtml($dir . '.svg', $label);
 				$href = $v['href'] ?: '&amp;act=move';
 
 				if ($dir == 'up')
 				{
-					$return .= ((is_numeric($strPrevious) && (empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']) || !\in_array($arrRow['id'], $arrRootIds))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$arrRow['id']).'&amp;sid='. (int) $strPrevious .'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : Image::getHtml('up_.svg')).' ';
+					$return .= ((is_numeric($strPrevious) && (empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']) || !\in_array($arrRow['id'], $arrRootIds))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $arrRow['id']) . '&amp;sid=' . (int) $strPrevious . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml('up_.svg')) . ' ';
 				}
 				else
 				{
-					$return .= ((is_numeric($strNext) && (empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']) || !\in_array($arrRow['id'], $arrRootIds))) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$arrRow['id']).'&amp;sid='. (int) $strNext .'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ' : Image::getHtml('down_.svg')).' ';
+					$return .= ((is_numeric($strNext) && (empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']) || !\in_array($arrRow['id'], $arrRootIds))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $arrRow['id']) . '&amp;sid=' . (int) $strNext . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml('down_.svg')) . ' ';
 				}
 			}
 		}
@@ -915,6 +914,7 @@ abstract class DataContainer extends Backend
 			{
 				$label = $k;
 			}
+
 			if ($title == '')
 			{
 				$title = $label;
@@ -943,7 +943,7 @@ abstract class DataContainer extends Backend
 				$href = $this->addToUrl($v['href']);
 			}
 
-			$return .= '<a href="'.$href.'" class="'.$v['class'].'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$label.'</a> ';
+			$return .= '<a href="' . $href . '" class="' . $v['class'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
 		}
 
 		return $return;
@@ -1034,10 +1034,10 @@ abstract class DataContainer extends Backend
 				}
 				else
 				{
-					$href = $this->addToUrl($v['href'].'&amp;id='.$arrRow['id'].'&amp;popup=1');
+					$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . '&amp;popup=1');
 				}
 
-				$return .= '<a href="'.$href.'" title="'.StringUtil::specialchars($title).'" onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", sprintf(\is_array($GLOBALS['TL_LANG'][$strPtable]['show']) ? $GLOBALS['TL_LANG'][$strPtable]['show'][1] : $GLOBALS['TL_LANG'][$strPtable]['show'], $arrRow['id']))).'\',\'url\':this.href});return false"'.$attributes.'>'.Image::getHtml($v['icon'], $label).'</a> ';
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", sprintf(\is_array($GLOBALS['TL_LANG'][$strPtable]['show']) ? $GLOBALS['TL_LANG'][$strPtable]['show'][1] : $GLOBALS['TL_LANG'][$strPtable]['show'], $arrRow['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
 			}
 			else
 			{
@@ -1047,10 +1047,10 @@ abstract class DataContainer extends Backend
 				}
 				else
 				{
-					$href = $this->addToUrl($v['href'].'&amp;id='.$arrRow['id'].(Input::get('nb') ? '&amp;nc=1' : ''));
+					$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
 				}
 
-				$return .= '<a href="'.$href.'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($v['icon'], $label).'</a> ';
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
 			}
 		}
 
@@ -1111,10 +1111,10 @@ abstract class DataContainer extends Backend
 		switch ($this->strPickerFieldType)
 		{
 			case 'checkbox':
-				return ' <input type="checkbox" name="picker[]" id="picker_'.$id.'" class="tl_tree_checkbox" value="'.StringUtil::specialchars(\call_user_func($this->objPickerCallback, $value)).'" onfocus="Backend.getScrollOffset()"'.Widget::optionChecked($value, $this->arrPickerValue).$attributes.'>';
+				return ' <input type="checkbox" name="picker[]" id="picker_' . $id . '" class="tl_tree_checkbox" value="' . StringUtil::specialchars(\call_user_func($this->objPickerCallback, $value)) . '" onfocus="Backend.getScrollOffset()"' . Widget::optionChecked($value, $this->arrPickerValue) . $attributes . '>';
 
 			case 'radio':
-				return ' <input type="radio" name="picker" id="picker_'.$id.'" class="tl_tree_radio" value="'.StringUtil::specialchars(\call_user_func($this->objPickerCallback, $value)).'" onfocus="Backend.getScrollOffset()"'.Widget::optionChecked($value, $this->arrPickerValue).$attributes.'>';
+				return ' <input type="radio" name="picker" id="picker_' . $id . '" class="tl_tree_radio" value="' . StringUtil::specialchars(\call_user_func($this->objPickerCallback, $value)) . '" onfocus="Backend.getScrollOffset()"' . Widget::optionChecked($value, $this->arrPickerValue) . $attributes . '>';
 		}
 
 		return '';
@@ -1141,7 +1141,7 @@ abstract class DataContainer extends Backend
 			$data = $objSessionBag->all();
 
 			unset($data['filter'][$this->strTable]);
-			unset($data['filter'][$this->strTable.'_'.CURRENT_ID]);
+			unset($data['filter'][$this->strTable . '_' . CURRENT_ID]);
 			unset($data['sorting'][$this->strTable]);
 			unset($data['search'][$this->strTable]);
 
@@ -1239,10 +1239,10 @@ abstract class DataContainer extends Backend
 		}
 
 		$return = '
-<form action="'.ampersand(Environment::get('request')).'" class="tl_form" method="post" aria-label="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']).'">
+<form action="' . ampersand(Environment::get('request')) . '" class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-  <input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
+  <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
   ' . $return . '
 </div>
 </form>';

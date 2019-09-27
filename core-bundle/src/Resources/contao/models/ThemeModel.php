@@ -60,13 +60,11 @@ use Contao\Model\Collection;
  */
 class ThemeModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_theme';
-
 }
 
 class_alias(ThemeModel::class, 'ThemeModel');

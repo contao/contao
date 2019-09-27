@@ -26,7 +26,6 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
  */
 class InsertTags extends Controller
 {
-
 	/**
 	 * @var array
 	 */
@@ -752,7 +751,7 @@ class InsertTags extends Controller
 				case 'acronym':
 					if ($elements[1] != '')
 					{
-						$arrCache[$strTag] = '<abbr title="'. StringUtil::specialchars($elements[1]) .'">';
+						$arrCache[$strTag] = '<abbr title="' . StringUtil::specialchars($elements[1]) . '">';
 					}
 					else
 					{

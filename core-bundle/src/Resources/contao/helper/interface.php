@@ -16,8 +16,11 @@
 interface listable
 {
 	public function delete();
+
 	public function show();
+
 	public function showAll();
+
 	public function undo();
 }
 
@@ -29,9 +32,13 @@ interface listable
 interface editable
 {
 	public function create();
+
 	public function cut();
+
 	public function copy();
+
 	public function move();
+
 	public function edit();
 }
 
@@ -43,6 +50,7 @@ interface editable
 interface executable
 {
 	public function run();
+
 	public function isActive();
 }
 
@@ -51,4 +59,6 @@ interface executable
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-interface uploadable {}
+interface uploadable
+{
+}

@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class ModulePassword extends Module
 {
-
 	/**
 	 * Template
 	 * @var string

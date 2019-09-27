@@ -21,7 +21,6 @@ use Patchwork\Utf8;
  */
 class ModuleFaqPage extends Module
 {
-
 	/**
 	 * Template
 	 * @var string

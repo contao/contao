@@ -17,7 +17,6 @@ namespace Contao;
  */
 class OptionWizard extends Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -97,11 +96,11 @@ class OptionWizard extends Widget
 		}
 
 		// Begin the table
-		$return = '<table id="ctrl_'.$this->strId.'" class="tl_optionwizard">
+		$return = '<table id="ctrl_' . $this->strId . '" class="tl_optionwizard">
   <thead>
     <tr>
-      <th>'.$GLOBALS['TL_LANG']['MSC']['ow_value'].'</th>
-      <th>'.$GLOBALS['TL_LANG']['MSC']['ow_label'].'</th>
+      <th>' . $GLOBALS['TL_LANG']['MSC']['ow_value'] . '</th>
+      <th>' . $GLOBALS['TL_LANG']['MSC']['ow_label'] . '</th>
       <th></th>
       <th></th>
       <th></th>
@@ -114,10 +113,10 @@ class OptionWizard extends Widget
 		{
 			$return .= '
     <tr>
-      <td><input type="text" name="'.$this->strId.'['.$i.'][value]" id="'.$this->strId.'_value_'.$i.'" class="tl_text" value="'.StringUtil::specialchars($this->varValue[$i]['value']).'"></td>
-      <td><input type="text" name="'.$this->strId.'['.$i.'][label]" id="'.$this->strId.'_label_'.$i.'" class="tl_text" value="'.StringUtil::specialchars($this->varValue[$i]['label']).'"></td>
-      <td><input type="checkbox" name="'.$this->strId.'['.$i.'][default]" id="'.$this->strId.'_default_'.$i.'" class="fw_checkbox" value="1"'.($this->varValue[$i]['default'] ? ' checked="checked"' : '').'> <label for="'.$this->strId.'_default_'.$i.'">'.$GLOBALS['TL_LANG']['MSC']['ow_default'].'</label></td>
-      <td><input type="checkbox" name="'.$this->strId.'['.$i.'][group]" id="'.$this->strId.'_group_'.$i.'" class="fw_checkbox" value="1"'.($this->varValue[$i]['group'] ? ' checked="checked"' : '').'> <label for="'.$this->strId.'_group_'.$i.'">'.$GLOBALS['TL_LANG']['MSC']['ow_group'].'</label></td>';
+      <td><input type="text" name="' . $this->strId . '[' . $i . '][value]" id="' . $this->strId . '_value_' . $i . '" class="tl_text" value="' . StringUtil::specialchars($this->varValue[$i]['value']) . '"></td>
+      <td><input type="text" name="' . $this->strId . '[' . $i . '][label]" id="' . $this->strId . '_label_' . $i . '" class="tl_text" value="' . StringUtil::specialchars($this->varValue[$i]['label']) . '"></td>
+      <td><input type="checkbox" name="' . $this->strId . '[' . $i . '][default]" id="' . $this->strId . '_default_' . $i . '" class="fw_checkbox" value="1"' . ($this->varValue[$i]['default'] ? ' checked="checked"' : '') . '> <label for="' . $this->strId . '_default_' . $i . '">' . $GLOBALS['TL_LANG']['MSC']['ow_default'] . '</label></td>
+      <td><input type="checkbox" name="' . $this->strId . '[' . $i . '][group]" id="' . $this->strId . '_group_' . $i . '" class="fw_checkbox" value="1"' . ($this->varValue[$i]['group'] ? ' checked="checked"' : '') . '> <label for="' . $this->strId . '_group_' . $i . '">' . $GLOBALS['TL_LANG']['MSC']['ow_group'] . '</label></td>';
 
 			// Add row buttons
 			$return .= '
@@ -131,7 +130,7 @@ class OptionWizard extends Widget
 				}
 				else
 				{
-					$return .= ' <button type="button" data-command="' . $button . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_'.$button]) . '">' . Image::getHtml($button.'.svg') . '</button>';
+					$return .= ' <button type="button" data-command="' . $button . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_' . $button]) . '">' . Image::getHtml($button . '.svg') . '</button>';
 				}
 			}
 
@@ -139,10 +138,10 @@ class OptionWizard extends Widget
     </tr>';
 		}
 
-		return $return.'
+		return $return . '
   </tbody>
   </table>
-  <script>Backend.optionsWizard("ctrl_'.$this->strId.'")</script>';
+  <script>Backend.optionsWizard("ctrl_' . $this->strId . '")</script>';
 	}
 }
 

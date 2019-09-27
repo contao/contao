@@ -25,7 +25,6 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  */
 class BackendIndex extends Backend
 {
-
 	/**
 	 * Initialize the controller
 	 *

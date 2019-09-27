@@ -78,7 +78,6 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_template'] = array
  */
 class tl_content_comments extends Contao\Backend
 {
-
 	/**
 	 * Return all comments templates as array
 	 *

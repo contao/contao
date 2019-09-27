@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrontendCron extends Frontend
 {
-
 	/**
 	 * Run the controller
 	 *

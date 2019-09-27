@@ -196,13 +196,11 @@ use Contao\Model\Collection;
  */
 class LayoutModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_layout';
-
 }
 
 class_alias(LayoutModel::class, 'LayoutModel');

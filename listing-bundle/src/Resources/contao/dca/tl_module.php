@@ -94,7 +94,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_layout'] = array
  */
 class tl_module_listing extends Contao\Backend
 {
-
 	/**
 	 * Get all tables and return them as array
 	 *

@@ -169,8 +169,7 @@ function strip_insert_tags($strString)
 	do
 	{
 		$strString = preg_replace('/{{[^{}]*}}/', '', $strString, -1, $count);
-	}
-	while ($count > 0);
+	} while ($count > 0);
 
 	return $strString;
 }
@@ -191,7 +190,7 @@ function deserialize($varValue, $blnForceArray=false)
 	@trigger_error('Using deserialize() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::deserialize() instead.', E_USER_DEPRECATED);
 
 	// Already an array
-	if (\is_array($varValue))
+	if (is_array($varValue))
 	{
 		return $varValue;
 	}
@@ -203,7 +202,7 @@ function deserialize($varValue, $blnForceArray=false)
 	}
 
 	// Not a string
-	if (!\is_string($varValue))
+	if (!is_string($varValue))
 	{
 		return $blnForceArray ? array($varValue) : $varValue;
 	}
@@ -224,7 +223,7 @@ function deserialize($varValue, $blnForceArray=false)
 
 	$varUnserialized = @unserialize($varValue, array('allowed_classes' => false));
 
-	if (\is_array($varUnserialized))
+	if (is_array($varUnserialized))
 	{
 		$varValue = $varUnserialized;
 	}
@@ -252,17 +251,17 @@ function trimsplit($strPattern, $strString)
 	@trigger_error('Using trimsplit() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::trimsplit() instead.', E_USER_DEPRECATED);
 
 	// Split
-	if (\strlen($strPattern) == 1)
+	if (strlen($strPattern) == 1)
 	{
 		$arrFragments = array_map('trim', explode($strPattern, $strString));
 	}
 	else
 	{
-		$arrFragments = array_map('trim', preg_split('/'.$strPattern.'/ui', $strString));
+		$arrFragments = array_map('trim', preg_split('/' . $strPattern . '/ui', $strString));
 	}
 
 	// Empty array
-	if (\count($arrFragments) < 2 && !\strlen($arrFragments[0]))
+	if (count($arrFragments) < 2 && !strlen($arrFragments[0]))
 	{
 		$arrFragments = array();
 	}
@@ -388,7 +387,7 @@ function natcaseksort($arrArray)
  */
 function length_sort_asc($a, $b)
 {
-	return \strlen($a) - \strlen($b);
+	return strlen($a) - strlen($b);
 }
 
 /**
@@ -401,7 +400,7 @@ function length_sort_asc($a, $b)
  */
 function length_sort_desc($a, $b)
 {
-	return \strlen($b) - \strlen($a);
+	return strlen($b) - strlen($a);
 }
 
 /**
@@ -413,14 +412,14 @@ function length_sort_desc($a, $b)
  */
 function array_insert(&$arrCurrent, $intIndex, $arrNew)
 {
-	if (!\is_array($arrCurrent))
+	if (!is_array($arrCurrent))
 	{
 		$arrCurrent = $arrNew;
 
 		return;
 	}
 
-	if (\is_array($arrNew))
+	if (is_array($arrNew))
 	{
 		$arrBuffer = array_splice($arrCurrent, 0, $intIndex);
 		$arrCurrent = array_merge_recursive($arrBuffer, $arrNew, $arrCurrent);
@@ -453,7 +452,7 @@ function array_duplicate($arrStack, $intIndex)
 		$arrStack[] = $arrBuffer[$i];
 	}
 
-	for ($i=$intIndex, $c=\count($arrBuffer); $i<$c; $i++)
+	for ($i=$intIndex, $c=count($arrBuffer); $i<$c; $i++)
 	{
 		$arrStack[] = $arrBuffer[$i];
 	}
@@ -504,7 +503,7 @@ function array_move_down($arrStack, $intIndex)
 {
 	@trigger_error('Using array_move_down() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-	if (($intIndex+1) < \count($arrStack))
+	if (($intIndex+1) < count($arrStack))
 	{
 		$arrBuffer = $arrStack[$intIndex];
 		$arrStack[$intIndex] = $arrStack[($intIndex+1)];
@@ -547,7 +546,7 @@ function array_delete($arrStack, $intIndex)
  */
 function array_is_assoc($arrArray)
 {
-	return \is_array($arrArray) && array_keys($arrArray) !== range(0, \count($arrArray) - 1);
+	return is_array($arrArray) && array_keys($arrArray) !== range(0, count($arrArray) - 1);
 }
 
 /**
@@ -649,13 +648,23 @@ function utf8_decode_entities($str)
 {
 	@trigger_error('Using utf8_decode_entities() has been deprecated and will no longer work in Contao 5.0. Use html_entity_decode() instead.', E_USER_DEPRECATED);
 
-	$str = preg_replace_callback('~&#x([0-9a-f]+);~i', static function ($matches) {
-		return Utf8::chr(hexdec($matches[1]));
-	}, $str);
+	$str = preg_replace_callback(
+		'~&#x([0-9a-f]+);~i',
+		static function ($matches)
+		{
+			return Utf8::chr(hexdec($matches[1]));
+		},
+		$str
+	);
 
-	$str = preg_replace_callback('~&#([0-9]+);~', static function ($matches) {
-		return Utf8::chr($matches[1]);
-	}, $str);
+	$str = preg_replace_callback(
+		'~&#([0-9]+);~',
+		static function ($matches)
+		{
+			return Utf8::chr($matches[1]);
+		},
+		$str
+	);
 
 	return $str;
 }

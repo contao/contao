@@ -25,7 +25,6 @@ namespace Contao;
  */
 class DcaLoader extends Controller
 {
-
 	/**
 	 * @var array
 	 */

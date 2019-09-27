@@ -41,11 +41,11 @@ class Authenticator
         $issuer = rawurlencode($request->getSchemeAndHttpHost());
 
         return sprintf(
-                'otpauth://totp/%s:%s?secret=%s&issuer=%s',
-                $issuer,
-                rawurlencode($user->getUsername()).'@'.$issuer,
-                $this->getUpperUnpaddedSecretForUser($user),
-                $issuer
+            'otpauth://totp/%s:%s?secret=%s&issuer=%s',
+            $issuer,
+            rawurlencode($user->getUsername()).'@'.$issuer,
+            $this->getUpperUnpaddedSecretForUser($user),
+            $issuer
         );
     }
 

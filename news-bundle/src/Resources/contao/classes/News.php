@@ -17,7 +17,6 @@ namespace Contao;
  */
 class News extends Frontend
 {
-
 	/**
 	 * URL cache array
 	 * @var array

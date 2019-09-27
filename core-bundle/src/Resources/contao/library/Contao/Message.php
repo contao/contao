@@ -27,7 +27,6 @@ namespace Contao;
  */
 class Message
 {
-
 	/**
 	 * Add an error message
 	 *
