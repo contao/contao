@@ -42,5 +42,6 @@ return PhpCsFixer\Config::create()
         'static_lambda' => true,
     ])
     ->setFinder($finder)
+    ->setCacheFile('.php_cs.cache/template')
     ->setRiskyAllowed(true)
 ;

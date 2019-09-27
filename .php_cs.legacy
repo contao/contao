@@ -95,5 +95,6 @@ return PhpCsFixer\Config::create()
     ])
     ->setIndent("\t")
     ->setFinder($finder)
+    ->setCacheFile('.php_cs.cache/legacy')
     ->setRiskyAllowed(true)
 ;
