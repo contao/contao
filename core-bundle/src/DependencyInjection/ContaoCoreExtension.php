@@ -37,9 +37,9 @@ class ContaoCoreExtension extends Extension
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
         return new Configuration(
-             $container->getParameter('kernel.project_dir'),
-             $container->getParameter('kernel.default_locale')
-         );
+            $container->getParameter('kernel.project_dir'),
+            $container->getParameter('kernel.default_locale')
+        );
     }
 
     /**
