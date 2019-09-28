@@ -743,8 +743,8 @@ class Image
 	/**
 	 * Create an image instance from the given image path and size
 	 *
-	 * @param string|File   $image The image path or File instance
-	 * @param array|integer $size  The image size as array (width, height, resize mode) or an tl_image_size ID
+	 * @param string|File          $image The image path or File instance
+	 * @param array|integer|string $size  The image size as array (width, height, resize mode) or an tl_image_size ID or a predifined image size key
 	 *
 	 * @return static The created image instance
 	 *
@@ -769,6 +769,12 @@ class Image
 			$size = (int) $size[2];
 		}
 
+		// predefined image size as resize mode
+		elseif (\is_array($size) && !empty($size[2]) && is_string($size[2]) && $size[2][0] === '_')
+		{
+			$size = $size[2];
+		}
+
 		if (\is_array($size))
 		{
 			$size += array(0, 0, 'crop');
@@ -780,8 +786,8 @@ class Image
 			;
 		}
 
-		// Load the image size from the database if $size is an ID
-		elseif (($imageSize = ImageSizeModel::findByPk($size)) !== null)
+		// Load the image size from the database if $size is an ID or a predefined size
+		elseif (($imageSize = self::getImageSizeConfig($size)) !== null)
 		{
 			$imageObj
 				->setTargetWidth($imageSize->width)
@@ -807,6 +813,42 @@ class Image
 		}
 
 		return $imageObj;
+	}
+
+	private static function getImageSizeConfig($size)
+	{
+		if (is_numeric($size))
+		{
+			return ImageSizeModel::findByPk($size);
+		}
+
+		if (!is_string($size) || $size[0] !== '_')
+		{
+			return null;
+		}
+
+		static $predefinedSizes = null;
+
+		if ($predefinedSizes === null)
+		{
+			$factory = System::getContainer()->get('contao.image.image_factory');
+			$predefinedSizes = (new \ReflectionObject($factory))->getProperty('predefinedSizes');
+			$predefinedSizes->setAccessible(true);
+			$predefinedSizes = $predefinedSizes->getValue($factory) ?? [];
+		}
+
+		if (!isset($predefinedSizes[$size]))
+		{
+			return null;
+		}
+
+		$imageSize = new \stdClass();
+		$imageSize->width = $predefinedSizes[$size]['width'];
+		$imageSize->height = $predefinedSizes[$size]['height'];
+		$imageSize->resizeMode = $predefinedSizes[$size]['resizeMode'];
+		$imageSize->zoom = $predefinedSizes[$size]['zoom'];
+
+		return $imageSize;
 	}
 
 	/**
