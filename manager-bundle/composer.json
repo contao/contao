@@ -1,12 +1,17 @@
 {
     "name": "contao/manager-bundle",
     "type": "symfony-bundle",
-    "description": "Contao 4 manager bundle",
+    "description": "This bundle contains code necessary to run the Contao 4 Managed Edition.",
+    "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
     "authors": [
         {
             "name": "Andreas Schempp",
             "homepage": "https://github.com/aschempp"
+        },
+        {
+            "name": "Contao Community",
+            "homepage": "https://contao.org/contributors"
         }
     ],
     "require": {
@@ -47,9 +52,6 @@
         "symfony/web-profiler-bundle": "4.2.* || 4.3.*",
         "symfony/yaml": "4.2.* || 4.3.*",
         "toflar/psr6-symfony-http-cache-store": "^2.0"
-    },
-    "conflict": {
-        "symfony/twig-bundle": "4.1.0"
     },
     "require-dev": {
         "composer/composer": "^1.0",

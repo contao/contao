@@ -2,6 +2,7 @@
     "name": "contao/faq-bundle",
     "type": "contao-bundle",
     "description": "Adds FAQ functionality to Contao 4",
+    "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
     "authors": [
         {

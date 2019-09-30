@@ -2,6 +2,7 @@
     "name": "contao/listing-bundle",
     "type": "contao-bundle",
     "description": "Allows to list arbitrary data in the Contao 4 front end",
+    "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
     "authors": [
         {
