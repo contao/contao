@@ -162,6 +162,12 @@ class ImageSize extends \Widget
 			$this->varValue = array($this->varValue);
 		}
 
+		// Handle the old image format (see #795)
+		if ($this->varValue == array('', '', 'proportional'))
+		{
+			$this->varValue = array('', '', '');
+		}
+
 		$arrFields = array();
 		$arrOptions = array();
 
