@@ -763,16 +763,19 @@ class Image
 		/** @var Image $imageObj */
 		$imageObj = new static($image);
 
-		// tl_image_size ID as resize mode
-		if (\is_array($size) && !empty($size[2]) && is_numeric($size[2]))
+		if (\is_array($size) && !empty($size[2]))
 		{
-			$size = (int) $size[2];
-		}
+			// tl_image_size ID as resize mode
+			if (is_numeric($size[2]))
+			{
+				$size = (int) $size[2];
+			}
 
-		// predefined image size as resize mode
-		elseif (\is_array($size) && !empty($size[2]) && is_string($size[2]) && $size[2][0] === '_')
-		{
-			$size = $size[2];
+			// predefined image size as resize mode
+			elseif (is_string($size[2]) && $size[2][0] === '_')
+			{
+				$size = $size[2];
+			}
 		}
 
 		if (\is_array($size))
