@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Use the robots meta data to determine whether to add a page to the XML sitemap (see #501).
  * Do not versionize the file name and path (see #694).
  * Update the comments notification URL if it has changed (see #373).
  * Hide the "generate aliases" button if the alias field has not been enabled (see #771).
