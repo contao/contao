@@ -62,7 +62,7 @@ class AuthenticatorTest extends TestCase
 
         $this->assertSame(
             sprintf(
-                'otpauth://totp/https%%3A%%2F%%2Fexample.com:foobar@https%%3A%%2F%%2Fexample.com?secret=%s&issuer=https%%3A%%2F%%2Fexample.com',
+                'otpauth://totp/example.com:foobar@example.com?secret=%s&issuer=example.com',
                 Base32::encodeUpperUnpadded($secret)
             ),
             $authenticator->getProvisionUri($user, $request)
@@ -70,7 +70,7 @@ class AuthenticatorTest extends TestCase
 
         $this->assertNotSame(
             sprintf(
-                'otpauth://totp/https%%3A%%2F%%2Fexample.com:foobar@https%%3A%%2F%%2Fexample.com?secret=%s&issuer=https%%3A%%2F%%2Fexample.com',
+                'otpauth://totp/example.com:foobar@example.com?secret=%s&issuer=example.com',
                 Base32::encodeUpperUnpadded('foobar')
             ),
             $authenticator->getProvisionUri($user, $request)
