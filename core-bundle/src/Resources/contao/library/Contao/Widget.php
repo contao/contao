@@ -979,7 +979,7 @@ abstract class Widget extends \Controller
 
 				case 'friendly':
 					list ($strName, $varInput) = \StringUtil::splitFriendlyEmail($varInput);
-				// no break
+					// no break
 
 				case 'email':
 					if (!\Validator::isEmail($varInput))
