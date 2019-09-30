@@ -378,7 +378,7 @@ class tl_image_size extends Contao\Backend
 	 */
 	public function getFormats(Contao\DataContainer $dc=null)
 	{
-		$formats = [];
+		$formats = array();
 
 		if ($dc->value)
 		{

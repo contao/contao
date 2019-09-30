@@ -743,11 +743,11 @@ class tl_user extends Contao\Backend
 	/**
 	 * Return all modules except profile modules
 	 *
-	 * @param DataContainer $dc
+	 * @param Contao\DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getModules(DataContainer $dc)
+	public function getModules(Contao\DataContainer $dc)
 	{
 		$arrModules = array();
 

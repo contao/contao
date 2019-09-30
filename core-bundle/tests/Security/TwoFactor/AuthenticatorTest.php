@@ -54,8 +54,8 @@ class AuthenticatorTest extends TestCase
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->exactly(2))
-            ->method('getSchemeAndHttpHost')
-            ->willReturn('https://example.com')
+            ->method('getHttpHost')
+            ->willReturn('example.com')
         ;
 
         $authenticator = new Authenticator();
@@ -97,14 +97,14 @@ SVG;
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->once())
-            ->method('getSchemeAndHttpHost')
-            ->willReturn('https://example.com')
+            ->method('getHttpHost')
+            ->willReturn('example.com')
         ;
 
         $authenticator = new Authenticator();
         $svg = $authenticator->getQrCode($user, $request);
 
-        $this->assertSame(7192, \strlen($svg));
+        $this->assertSame(5897, \strlen($svg));
         $this->assertSame(0, strpos($svg, $beginSvg));
     }
 }
