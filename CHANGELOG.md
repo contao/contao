@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Correctly render the paste buttons when moving files in the file manager (see #802).
  * Correctly redirect to the last page visited in the login module (see #569).
  * Only add the min/max attributes to numeric text fields (see #774).
  * Update the comments notification URL if it has changed (see #373).
