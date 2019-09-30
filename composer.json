@@ -137,11 +137,11 @@
         "ext-fileinfo": "*",
         "composer/composer": "^1.0",
         "contao/monorepo-tools": "dev-master",
+        "contao/php-cs-fixer": "^2.0",
         "contao/phpstan": "^0.8",
         "contao/test-case": "^3.0",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/event-manager": "^1.0",
-        "friendsofphp/php-cs-fixer": "^2.14",
         "monolog/monolog": "^1.22",
         "php-coveralls/php-coveralls": "^2.1",
         "phpstan/extension-installer": "^1.0",
@@ -228,7 +228,6 @@
     "autoload-dev": {
         "psr-4": {
             "Contao\\CalendarBundle\\Tests\\": "calendar-bundle/tests/",
-            "Contao\\Contao\\": "src/",
             "Contao\\CoreBundle\\Fixtures\\": "core-bundle/tests/Fixtures/src/",
             "Contao\\CoreBundle\\Tests\\": "core-bundle/tests/",
             "Contao\\FaqBundle\\Tests\\": "faq-bundle/tests/",

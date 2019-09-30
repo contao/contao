@@ -203,8 +203,7 @@ class Registry implements \Countable
 		$strPk    = $objModel->getPk();
 		$intPk    = $objModel->$strPk;
 
-		unset($this->arrIdentities[$intObjectId]);
-		unset($this->arrRegistry[$strTable][$intPk]);
+		unset($this->arrIdentities[$intObjectId], $this->arrRegistry[$strTable][$intPk]);
 
 		// Allow the model to modify the registry
 		$objModel->onUnregister($this);

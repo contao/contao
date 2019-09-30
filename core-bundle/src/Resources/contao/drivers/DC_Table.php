@@ -483,7 +483,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 			elseif (\is_array($value))
 			{
-				if (\count($value) == 2 && isset($value['value']) && isset($value['unit']))
+				if (\count($value) == 2 && isset($value['value'], $value['unit']))
 				{
 					$row[$i] = trim($value['value'] . ', ' . $value['unit']);
 				}

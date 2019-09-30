@@ -126,7 +126,7 @@ class ModuleEventReader extends Events
 		{
 			$arrRange = StringUtil::deserialize($objEvent->repeatEach);
 
-			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
+			if (\is_array($arrRange) && isset($arrRange['unit'], $arrRange['value']))
 			{
 				while (($this->cal_hideRunning ? $intStartTime : $intEndTime) < time() && $intEndTime < $objEvent->repeatEnd)
 				{
@@ -161,7 +161,7 @@ class ModuleEventReader extends Events
 		{
 			$arrRange = StringUtil::deserialize($objEvent->repeatEach);
 
-			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
+			if (\is_array($arrRange) && isset($arrRange['unit'], $arrRange['value']))
 			{
 				if ($arrRange['value'] == 1)
 				{

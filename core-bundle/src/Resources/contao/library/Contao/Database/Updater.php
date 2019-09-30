@@ -106,8 +106,7 @@ class Updater extends Controller
 
 			$arrSet['source'] = 'tl_news';
 			$arrSet['parent'] = $arrSet['pid'];
-			unset($arrSet['id']);
-			unset($arrSet['pid']);
+			unset($arrSet['id'], $arrSet['pid']);
 
 			$this->Database->prepare("INSERT INTO tl_comments %s")->set($arrSet)->execute();
 		}
@@ -791,7 +790,7 @@ class Updater extends Controller
 						}
 
 						// Convert the order fields as well
-						if (isset($arrField['eval']['orderField']) && isset($GLOBALS['TL_DCA'][$strTable]['fields'][$arrField['eval']['orderField']]))
+						if (isset($arrField['eval']['orderField'], $GLOBALS['TL_DCA'][$strTable]['fields'][$arrField['eval']['orderField']]))
 						{
 							if ($this->Database->fieldExists($arrField['eval']['orderField'], $strTable, true))
 							{

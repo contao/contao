@@ -909,7 +909,7 @@ class tl_calendar_events extends Contao\Backend
 			{
 				$arrRange = Contao\StringUtil::deserialize($dc->activeRecord->repeatEach);
 
-				if (is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
+				if (is_array($arrRange) && isset($arrRange['unit'], $arrRange['value']))
 				{
 					$arg = $arrRange['value'] * $dc->activeRecord->recurrences;
 					$unit = $arrRange['unit'];

@@ -1140,10 +1140,12 @@ abstract class DataContainer extends Backend
 
 			$data = $objSessionBag->all();
 
-			unset($data['filter'][$this->strTable]);
-			unset($data['filter'][$this->strTable . '_' . CURRENT_ID]);
-			unset($data['sorting'][$this->strTable]);
-			unset($data['search'][$this->strTable]);
+			unset(
+				$data['filter'][$this->strTable],
+				$data['filter'][$this->strTable . '_' . CURRENT_ID],
+				$data['sorting'][$this->strTable],
+				$data['search'][$this->strTable]
+			);
 
 			$objSessionBag->replace($data);
 
