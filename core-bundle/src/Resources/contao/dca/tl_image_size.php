@@ -372,13 +372,22 @@ class tl_image_size extends Contao\Backend
 	/**
 	 * Return the image format options
 	 *
+	 * @param Contao\DataContainer $dc
+	 *
 	 * @return array
 	 */
-	public function getFormats()
+	public function getFormats(Contao\DataContainer $dc=null)
 	{
+		$formats = [];
+
+		if ($dc->value)
+		{
+			$formats = Contao\StringUtil::deserialize($dc->value, true);
+		}
+
 		if (!in_array('webp', Contao\StringUtil::trimsplit(',', Contao\Config::get('validImageTypes'))))
 		{
-			return array();
+			return $formats;
 		}
 
 		if (!$this->supportsWebp())
@@ -389,10 +398,10 @@ class tl_image_size extends Contao\Backend
 				$GLOBALS['TL_LANG']['tl_image_size']['formatsWebpNotSupported'],
 			);
 
-			return array();
+			return $formats;
 		}
 
-		return array('png:webp,png', 'jpg:webp,jpg;jpeg:webp,jpeg', 'gif:webp,gif');
+		return array_merge($formats, array('png:webp,png', 'jpg:webp,jpg;jpeg:webp,jpeg', 'gif:webp,gif'));
 	}
 
 	/**
