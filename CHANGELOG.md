@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Prevent regular users from enabling the template editor for themselves (see #749).
  * Use the robots meta data to determine whether to add a page to the XML sitemap (see #501).
  * Do not versionize the file name and path (see #694).
  * Update the comments notification URL if it has changed (see #373).

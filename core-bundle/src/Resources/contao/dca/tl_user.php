@@ -731,9 +731,11 @@ class tl_user extends Backend
 	/**
 	 * Return all modules except profile modules
 	 *
+	 * @param DataContainer $dc
+	 *
 	 * @return array
 	 */
-	public function getModules()
+	public function getModules(DataContainer $dc)
 	{
 		$arrModules = array();
 
@@ -741,9 +743,22 @@ class tl_user extends Backend
 		{
 			if (!empty($v))
 			{
-				unset($v['undo']);
 				$arrModules[$k] = array_keys($v);
 			}
+		}
+
+		// Unset the undo module as it is always allowed
+		if (($key = array_search('undo', $arrModules['system'])) !== false)
+		{
+			unset($arrModules['system'][$key]);
+		}
+
+		$modules = Contao\StringUtil::deserialize($dc->activeRecord->modules);
+
+		// Unset the template editor unless the user is an administrator or has been granted access to the template editor
+		if (!$this->User->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
+		{
+			unset($arrModules['design'][$key]);
 		}
 
 		return $arrModules;
