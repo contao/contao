@@ -647,23 +647,8 @@ function utf8_decode_entities($str)
 {
 	@trigger_error('Using utf8_decode_entities() has been deprecated and will no longer work in Contao 5.0. Use html_entity_decode() instead.', E_USER_DEPRECATED);
 
-	$str = preg_replace_callback(
-		'~&#x([0-9a-f]+);~i',
-		function ($matches)
-		{
-			return Utf8::chr(hexdec($matches[1]));
-		},
-		$str
-	);
-
-	$str = preg_replace_callback(
-		'~&#([0-9]+);~',
-		function ($matches)
-		{
-			return Utf8::chr($matches[1]);
-		},
-		$str
-	);
+	$str = preg_replace_callback('~&#x([0-9a-f]+);~i', function ($matches) { return Utf8::chr(hexdec($matches[1])); }, $str);
+	$str = preg_replace_callback('~&#([0-9]+);~', function ($matches) { return Utf8::chr($matches[1]); }, $str);
 
 	return $str;
 }
