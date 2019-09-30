@@ -412,20 +412,20 @@ class Installer extends Controller
 					$index_fields = implode(
 						', ',
 						array_map
-					(
-						static function ($item) use ($quote)
-						{
-							if (strpos($item, '(') === false)
+						(
+							static function ($item) use ($quote)
 							{
-								return $quote($item);
-							}
+								if (strpos($item, '(') === false)
+								{
+									return $quote($item);
+								}
 
-							list($name, $length) = explode('(', rtrim($item, ')'));
+								list($name, $length) = explode('(', rtrim($item, ')'));
 
-							return $quote($name) . '(' . $length . ')';
-						},
-						$field['index_fields']
-					)
+								return $quote($name) . '(' . $length . ')';
+							},
+							$field['index_fields']
+						)
 					);
 
 					switch ($field['index'])

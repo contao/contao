@@ -147,7 +147,7 @@ class Versions extends Controller
 	/**
 	 * Create a new version of a record
 	 *
-	 * @param mixed $blnHideUser
+	 * @param boolean $blnHideUser
 	 */
 	public function create($blnHideUser=false)
 	{
@@ -170,6 +170,17 @@ class Versions extends Controller
 			return;
 		}
 
+		$data = $objRecord->row();
+
+		// Remove fields that are excluded from versioning
+		foreach (array_keys($data) as $k)
+		{
+			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['versionize']) && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['versionize'] === false)
+			{
+				unset($data[$k]);
+			}
+		}
+
 		// Store the content if it is an editable file
 		if ($this->strTable == 'tl_files')
 		{
@@ -181,11 +192,11 @@ class Versions extends Controller
 
 				if ($objFile->extension == 'svgz')
 				{
-					$objRecord->content = gzdecode($objFile->getContent());
+					$data['content'] = gzdecode($objFile->getContent());
 				}
 				else
 				{
-					$objRecord->content = $objFile->getContent();
+					$data['content'] = $objFile->getContent();
 				}
 			}
 		}
@@ -202,21 +213,21 @@ class Versions extends Controller
 
 		$strDescription = '';
 
-		if (!empty($objRecord->title))
+		if (!empty($data['title']))
 		{
-			$strDescription = $objRecord->title;
+			$strDescription = $data['title'];
 		}
-		elseif (!empty($objRecord->name))
+		elseif (!empty($data['name']))
 		{
-			$strDescription = $objRecord->name;
+			$strDescription = $data['name'];
 		}
-		elseif (!empty($objRecord->firstname))
+		elseif (!empty($data['firstname']))
 		{
-			$strDescription = $objRecord->firstname . ' ' . $objRecord->lastname;
+			$strDescription = $data['firstname'] . ' ' . $data['lastname'];
 		}
-		elseif (!empty($objRecord->headline))
+		elseif (!empty($data['headline']))
 		{
-			$chunks = StringUtil::deserialize($objRecord->headline);
+			$chunks = StringUtil::deserialize($data['headline']);
 
 			if (\is_array($chunks) && isset($chunks['value']))
 			{
@@ -224,23 +235,23 @@ class Versions extends Controller
 			}
 			else
 			{
-				$strDescription = $objRecord->headline;
+				$strDescription = $data['headline'];
 			}
 		}
-		elseif (!empty($objRecord->selector))
+		elseif (!empty($data['selector']))
 		{
-			$strDescription = $objRecord->selector;
+			$strDescription = $data['selector'];
 		}
-		elseif (!empty($objRecord->subject))
+		elseif (!empty($data['subject']))
 		{
-			$strDescription = $objRecord->subject;
+			$strDescription = $data['subject'];
 		}
 
 		$this->Database->prepare("UPDATE tl_version SET active='' WHERE pid=? AND fromTable=?")
 					   ->execute($this->intPid, $this->strTable);
 
 		$this->Database->prepare("INSERT INTO tl_version (pid, tstamp, version, fromTable, username, userid, description, editUrl, active, data) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?)")
-					   ->execute($this->intPid, time(), $intVersion, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($objRecord->row()));
+					   ->execute($this->intPid, time(), $intVersion, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($data));
 
 		// Trigger the oncreate_version_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_version_callback']))
@@ -250,11 +261,11 @@ class Versions extends Controller
 				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $objRecord->row());
+					$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intPid, $intVersion, $data);
 				}
 				elseif (\is_callable($callback))
 				{
-					$callback($this->strTable, $this->intPid, $intVersion, $objRecord->row());
+					$callback($this->strTable, $this->intPid, $intVersion, $data);
 				}
 			}
 		}
@@ -324,20 +335,25 @@ class Versions extends Controller
 			$data[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql']);
 		}
 
-		// Reset unique fields if the restored value already exists (see #698)
 		foreach ($data as $k=>$v)
 		{
-			if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['unique']) || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['unique'] !== true)
+			// Remove fields that are excluded from versioning
+			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['versionize']) && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['versionize'] === false)
 			{
+				unset($data[$k]);
 				continue;
 			}
 
-			$objResult = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($k) . "=? AND id!=?")
-										->execute($v, $this->intPid);
-
-			if ($objResult->cnt > 0)
+			// Reset unique fields if the restored value already exists (see #698)
+			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['unique']) && $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['unique'] === true)
 			{
-				$data[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql']);
+				$objResult = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($k) . "=? AND id!=?")
+											->execute($v, $this->intPid);
+
+				if ($objResult->cnt > 0)
+				{
+					$data[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['sql']);
+				}
 			}
 		}
 
@@ -476,7 +492,7 @@ class Versions extends Controller
 
 				// Get the order fields
 				$objDcaExtractor = DcaExtractor::getInstance($this->strTable);
-				$arrOrder = $objDcaExtractor->getOrderFields();
+				$arrFields = $objDcaExtractor->getFields();
 
 				// Find the changed fields and highlight the changes
 				foreach ($to as $k=>$v)
@@ -488,7 +504,7 @@ class Versions extends Controller
 							continue;
 						}
 
-						$blnIsBinary = ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['inputType'] == 'fileTree' || \in_array($k, $arrOrder));
+						$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
 
 						// Decrypt the values
 						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['encrypt'])

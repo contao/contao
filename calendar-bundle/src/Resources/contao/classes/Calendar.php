@@ -350,7 +350,7 @@ class Calendar extends Frontend
 						}
 
 						// The target page is exempt from the sitemap (see #6418)
-						if ($objParent->sitemap == 'map_never')
+						if ($objParent->robots == 'noindex,nofollow')
 						{
 							continue;
 						}

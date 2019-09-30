@@ -656,20 +656,17 @@ abstract class Backend extends Controller
 		// Recursively walk through all subpages
 		foreach ($objPages as $objPage)
 		{
-			if ($objPage->type == 'regular')
+			// Searchable and not protected
+			if ($objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsSitemap) && (!$blnIsSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || \Config::get('indexProtected')))
 			{
-				// Searchable and not protected
-				if ((!$objPage->noSearch || $blnIsSitemap) && (!$objPage->protected || (Config::get('indexProtected') && (!$blnIsSitemap || $objPage->sitemap == 'map_always'))) && (!$blnIsSitemap || $objPage->sitemap != 'map_never') && !$objPage->requireItem)
-				{
-					$arrPages[] = $objPage->getAbsoluteUrl();
+				$arrPages[] = $objPage->getAbsoluteUrl();
 
-					// Get articles with teaser
-					if (($objArticles = ArticleModel::findPublishedWithTeaserByPid($objPage->id, array('ignoreFePreview'=>true))) !== null)
+				// Get articles with teaser
+				if (($objArticles = ArticleModel::findPublishedWithTeaserByPid($objPage->id, array('ignoreFePreview'=>true))) !== null)
+				{
+					foreach ($objArticles as $objArticle)
 					{
-						foreach ($objArticles as $objArticle)
-						{
-							$arrPages[] = $objPage->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
-						}
+						$arrPages[] = $objPage->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
 					}
 				}
 			}
