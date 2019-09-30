@@ -262,46 +262,15 @@ class Automator extends \System
 
 		$this->purgeXmlFiles();
 
-		// Only root pages should have sitemap names
-		$objDatabase->execute("UPDATE tl_page SET createSitemap='', sitemapName='' WHERE type!='root'");
+		$strQuery = "SELECT id, language, sitemapName FROM tl_page WHERE type='root' AND createSitemap='1' AND sitemapName!='' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'";
 
 		// Get a particular root page
 		if ($intId > 0)
 		{
-			do
-			{
-				$objRoot = $objDatabase->prepare("SELECT * FROM tl_page WHERE id=?")
-									   ->limit(1)
-									   ->execute($intId);
-
-				if ($objRoot->numRows < 1)
-				{
-					break;
-				}
-
-				$intId = $objRoot->pid;
-			} while ($objRoot->type != 'root' && $intId > 0);
-
-			// Make sure the page is published
-			if (!$objRoot->published || ($objRoot->start != '' && $objRoot->start > $time) || ($objRoot->stop != '' && $objRoot->stop <= ($time + 60)))
-			{
-				return;
-			}
-
-			// Check the sitemap name
-			if (!$objRoot->createSitemap || !$objRoot->sitemapName)
-			{
-				return;
-			}
-
-			$objRoot->reset();
+			$strQuery .= ' AND id=' . (int) $intId;
 		}
 
-		// Get all published root pages
-		else
-		{
-			$objRoot = $objDatabase->execute("SELECT id, language, sitemapName FROM tl_page WHERE type='root' AND createSitemap='1' AND sitemapName!='' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'");
-		}
+		$objRoot = $objDatabase->execute($strQuery);
 
 		// Return if there are no pages
 		if ($objRoot->numRows < 1)
