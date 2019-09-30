@@ -2,6 +2,7 @@
 
 ## DEV
 
+ * Do not versionize the file name and path (see #694).
  * Update the comments notification URL if it has changed (see #373).
  * Hide the "generate aliases" button if the alias field has not been enabled (see #771).
  * Show only the active columns in the module wizard (see #765).

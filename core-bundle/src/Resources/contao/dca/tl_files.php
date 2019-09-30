@@ -148,7 +148,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		'path' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['path'],
-			'eval'                    => array('unique'=>true),
+			'eval'                    => array('unique'=>true, 'versionize'=>false),
 			'sql'                     => "varchar(1022) NOT NULL default ''",
 		),
 		'extension' => array
@@ -168,7 +168,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['name'],
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'versionize'=>false, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'wizard' => array
 			(
 				array('tl_files', 'addFileLocation')
