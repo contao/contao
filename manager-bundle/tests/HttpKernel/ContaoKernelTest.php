@@ -197,7 +197,7 @@ class ContaoKernelTest extends ContaoTestCase
         yield [
             __DIR__.'/../Fixtures/HttpKernel/WithConfigsYml',
             'prod',
-            ['config_prod.yml'],
+            ['config_prod.yml', 'services.yml'],
         ];
 
         yield [
