@@ -5,6 +5,9 @@
  * Correctly render the paste buttons when moving files in the file manager (see #802).
  * Correctly redirect to the last page visited in the login module (see #569).
  * Only add the min/max attributes to numeric text fields (see #774).
+ * Prevent regular users from enabling the template editor for themselves (see #749).
+ * Use the robots meta data to determine whether to add a page to the XML sitemap (see #501).
+ * Do not versionize the file name and path (see #694).
  * Update the comments notification URL if it has changed (see #373).
  * Hide the "generate aliases" button if the alias field has not been enabled (see #771).
  * Show only the active columns in the module wizard (see #765).
