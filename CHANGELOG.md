@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.8.4 (2019-10-01)
 
  * Correctly render the paste buttons when moving files in the file manager (see #802).
  * Correctly redirect to the last page visited in the login module (see #569).

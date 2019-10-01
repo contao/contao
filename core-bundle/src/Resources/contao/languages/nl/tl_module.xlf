@@ -227,15 +227,19 @@
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
         <source>Context length</source>
+        <target>Contextlengte</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
         <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
+        <target>Het eerste veld definieert het aantal tekens aan de linker- en rechterkant van elk trefwoord en het tweede de totale contextlengte per resultaat.</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.0">
         <source>Minimum keyword length</source>
+        <target>Minimale lengte trefwoord</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.1">
         <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
+        <target>Zoektermen die kleiner zijn dan de minimumlengte worden genegeerd in de zoekopdracht. Voer 0 in om dit uit te schakelen.</target>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>
@@ -618,6 +622,7 @@ Indien u geen nieuw wachtwoord aanvroeg, gelieve dan met de administrator van de
       </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
+        <target>Maak een nieuwe module aan</target>
       </trans-unit>
       <trans-unit id="tl_module.show">
         <source>Show the details of module ID %s</source>

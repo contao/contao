@@ -294,6 +294,9 @@
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
       </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Por favor, suma %d y %d.</target>

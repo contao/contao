@@ -301,6 +301,9 @@
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
         <target>レイアウトセクションのID: &quot;%s&quot;が重複しています!</target>
       </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>%dと%dを加算してください。</target>

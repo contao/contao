@@ -615,6 +615,7 @@ Se non hai richiesto questa e-mail, contatta l'amministratore del sito web.
       </trans-unit>
       <trans-unit id="tl_module.new.0">
         <source>New</source>
+        <target>Nuovo</target>
       </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>

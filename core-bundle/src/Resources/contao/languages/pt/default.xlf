@@ -300,6 +300,9 @@
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
         <target>ID de layout de secção &quot;%s&quot; em duplicado!</target>
       </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Favor adicionar %d e %d.</target>

@@ -521,6 +521,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>
+        <target>Nuovo</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>

@@ -195,6 +195,7 @@
       </trans-unit>
       <trans-unit id="tl_article.new.0">
         <source>New</source>
+        <target>Nuovo</target>
       </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>

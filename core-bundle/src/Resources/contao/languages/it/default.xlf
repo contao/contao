@@ -300,6 +300,9 @@
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
         <target>Duplicare l'ID &quot;%s&quot; della sezione del layout!</target>
       </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Somma %d a %d.</target>
@@ -2588,6 +2591,7 @@
       </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
+        <target>Nuovo</target>
       </trans-unit>
       <trans-unit id="DCA.new.1">
         <source>Create a new element</source>

@@ -301,6 +301,10 @@
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
         <target>Dupliceer lay-out sectie ID &quot;%s&quot;!</target>
       </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
+        <target>Wijs alle modules aan een kolom toe!</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Tel %d en %d bij elkaar op.</target>
@@ -2159,6 +2163,7 @@
       </trans-unit>
       <trans-unit id="MSC.sKeywordHint">
         <source>Note that keywords shorter than %s characters and without a modifier have been ignored.</source>
+        <target>Houd er rekening mee dat zoekwoorden korter dan %stekens en zonder modifier worden genegeerd.</target>
       </trans-unit>
       <trans-unit id="MSC.seconds">
         <source>seconds</source>
@@ -2622,6 +2627,7 @@
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
+        <target>Sleep element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.editheader.0">
         <source>Edit the element settings</source>

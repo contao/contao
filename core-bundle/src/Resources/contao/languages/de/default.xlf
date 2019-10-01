@@ -301,6 +301,10 @@
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
         <target>Doppelte Layoutbereichs-ID &quot;%s&quot;!</target>
       </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
+        <target>Bitte weisen Sie alle Module einer Spalte zu!</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Bitte addieren Sie %d und %d.</target>

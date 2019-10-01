@@ -301,6 +301,10 @@
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
         <target>Дублировать секции макета ID &quot;%s&quot;!</target>
       </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
+        <target>Назначьте все модули в колонку!</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Пожалуйста, прибавьте %d к %d.</target>

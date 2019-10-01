@@ -203,6 +203,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.new.0">
         <source>New</source>
+        <target>Nuovo</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>

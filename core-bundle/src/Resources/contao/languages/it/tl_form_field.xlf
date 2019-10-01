@@ -482,6 +482,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.new.0">
         <source>New</source>
+        <target>Nuovo</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.1">
         <source>Create a new form field</source>

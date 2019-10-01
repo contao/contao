@@ -343,7 +343,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.jquery.1">
         <source>Here you can select one or more jQuery templates.</source>
-        <target>Hier können Sie eines oder mehrere jQuery-Templates auswählen.</target>
+        <target>Hier können Sie ein oder mehrere jQuery-Templates auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_layout.addMooTools.0">
         <source>Include MooTools</source>
@@ -367,7 +367,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.mootools.1">
         <source>Here you can select one or more MooTools templates.</source>
-        <target>Hier können Sie eines oder mehrere MooTools-Templates auswählen.</target>
+        <target>Hier können Sie ein oder mehrere MooTools-Templates auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_layout.scripts.0">
         <source>JavaScript templates</source>
@@ -375,7 +375,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.scripts.1">
         <source>Here you can select one or more JavaScript templates.</source>
-        <target>Hier können Sie eines oder mehrere JavaScript-Templates auswählen.</target>
+        <target>Hier können Sie ein oder mehrere JavaScript-Templates auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_layout.analytics.0">
         <source>Analytics templates</source>
@@ -383,7 +383,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.analytics.1">
         <source>Here you can select one or more analytics templates.</source>
-        <target>Hier können Sie eines oder mehrere Analytics-Templates auswählen.</target>
+        <target>Hier können Sie ein oder mehrere Analytics-Templates auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_layout.externalJs.0">
         <source>External JavaScripts</source>
