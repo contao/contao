@@ -771,8 +771,8 @@ class Image
 				$size = (int) $size[2];
 			}
 
-			// predefined image size as resize mode
-			elseif (is_string($size[2]) && $size[2][0] === '_')
+			// Predefined image size as resize mode
+			elseif (\is_string($size[2]) && $size[2][0] === '_')
 			{
 				$size = $size[2];
 			}
@@ -825,7 +825,7 @@ class Image
 			return ImageSizeModel::findByPk($size);
 		}
 
-		if (!is_string($size) || $size[0] !== '_')
+		if (!\is_string($size) || $size[0] !== '_')
 		{
 			return null;
 		}
@@ -837,7 +837,7 @@ class Image
 			$factory = System::getContainer()->get('contao.image.image_factory');
 			$predefinedSizes = (new \ReflectionObject($factory))->getProperty('predefinedSizes');
 			$predefinedSizes->setAccessible(true);
-			$predefinedSizes = $predefinedSizes->getValue($factory) ?? [];
+			$predefinedSizes = $predefinedSizes->getValue($factory) ?? array();
 		}
 
 		if (!isset($predefinedSizes[$size]))

@@ -105,8 +105,8 @@ class Picture
 				$size = (int) $size[2];
 			}
 
-			// predefined image size as resize mode
-			elseif (is_string($size[2]) && $size[2][0] === '_')
+			// Predefined image size as resize mode
+			elseif (\is_string($size[2]) && $size[2][0] === '_')
 			{
 				$size = $size[2];
 			}
@@ -114,7 +114,7 @@ class Picture
 
 		$imageSize = null;
 
-		if (!\is_array($size) && (!is_string($size) || $size[0] !== '_'))
+		if (!\is_array($size) && (!\is_string($size) || $size[0] !== '_'))
 		{
 			$imageSize = ImageSizeModel::findByPk($size);
 
@@ -124,7 +124,7 @@ class Picture
 			}
 		}
 
-		if (is_string($size) && $size[0] === '_')
+		if (\is_string($size) && $size[0] === '_')
 		{
 			$imageSize = $size;
 		}
@@ -221,7 +221,7 @@ class Picture
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 		$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $this->image->getOriginalPath());
 
-		if (is_string($this->imageSize) && $this->imageSize[0] === '_')
+		if (\is_string($this->imageSize) && $this->imageSize[0] === '_')
 		{
 			$config = $this->imageSize;
 		}
