@@ -167,7 +167,7 @@ class PageTree extends Widget
 		$arrValues = array();
 		$blnHasOrder = ($this->orderField != '' && \is_array($this->{$this->orderField}));
 
-		// $this->varValue can be an array, so use !empty() here
+		// $this->varValue can be an array, so use empty() here
 		if (!empty($this->varValue))
 		{
 			$objPages = PageModel::findMultipleByIds((array) $this->varValue);

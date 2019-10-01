@@ -653,7 +653,7 @@ abstract class Backend extends Controller
 		foreach ($objPages as $objPage)
 		{
 			// Searchable and not protected
-			if ($objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsSitemap) && (!$blnIsSitemap || $objPage->sitemap != 'map_never') && (!$objPage->protected || (Config::get('indexProtected') && (!$blnIsSitemap || $objPage->sitemap == 'map_always'))))
+			if ($objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsSitemap) && (!$blnIsSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || Config::get('indexProtected')))
 			{
 				$arrPages[] = $objPage->getAbsoluteUrl();
 

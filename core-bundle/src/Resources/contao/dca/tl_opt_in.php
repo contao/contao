@@ -141,7 +141,7 @@ class tl_opt_in extends Contao\Backend
 	 * Show the related records
 	 *
 	 * @param array $data
-	 * @param mixed $row
+	 * @param array $row
 	 */
 	public function showRelatedRecords($data, $row)
 	{

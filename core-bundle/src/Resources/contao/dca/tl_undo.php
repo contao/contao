@@ -150,7 +150,7 @@ class tl_undo extends Contao\Backend
 	 * Show the deleted records
 	 *
 	 * @param array $data
-	 * @param mixed $row
+	 * @param array $row
 	 */
 	public function showDeletedRecords($data, $row)
 	{

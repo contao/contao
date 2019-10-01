@@ -2266,8 +2266,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 					{
 						Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
 					}
-
-					$this->blnCreateNewVersion = true;
 				}
 
 				$this->log('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"', __METHOD__, TL_FILES);
@@ -2390,7 +2388,11 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				$this->objActiveRecord->{$this->strField} = $varValue;
 				$this->objActiveRecord->save();
 
-				$this->blnCreateNewVersion = true;
+				if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
+				{
+					$this->blnCreateNewVersion = true;
+				}
+
 				$this->varValue = StringUtil::deserialize($varValue);
 			}
 		}
@@ -2680,7 +2682,15 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			{
 				$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 				$imagePasteInto = Image::getHtml('pasteinto.svg', sprintf($labelPasteInto[1], $currentEncoded));
-				$return .= (($arrClipboard['mode'] == 'cut' || $arrClipboard['mode'] == 'copy') && preg_match('#^' . preg_quote($currentFolder, '#') . '(/|$)#i', $arrClipboard['id'])) ? Image::getHtml('pasteinto_.svg') : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $currentEncoded . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteInto[1], $currentEncoded)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
+
+				if (\in_array($arrClipboard['mode'], array('copy', 'cut')) && (($arrClipboard['mode'] == 'cut' && \dirname($arrClipboard['id']) == $currentFolder) || preg_match('#^' . preg_quote($arrClipboard['id'], '#') . '(/|$)#i', $currentFolder)))
+				{
+					$return .= Image::getHtml('pasteinto_.svg');
+				}
+				else
+				{
+					$return .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $currentEncoded . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteInto[1], $currentEncoded)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
+				}
 			}
 			// Default buttons
 			else

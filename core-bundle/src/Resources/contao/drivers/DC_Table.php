@@ -3172,7 +3172,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			if ($objUpdateStmt->affectedRows)
 			{
-				$this->blnCreateNewVersion = true;
+				if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
+				{
+					$this->blnCreateNewVersion = true;
+				}
+
 				$this->varValue = StringUtil::deserialize($varValue);
 
 				if (\is_object($this->objActiveRecord))
