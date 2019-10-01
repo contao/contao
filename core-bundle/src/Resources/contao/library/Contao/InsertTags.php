@@ -1005,7 +1005,7 @@ class InsertTags extends Controller
 						}
 					}
 
-					$this->log('Unknown insert tag {{' . $strTag . '}}', __METHOD__, TL_ERROR);
+					$this->log('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'), __METHOD__, TL_ERROR);
 					break;
 			}
 
@@ -1102,7 +1102,7 @@ class InsertTags extends Controller
 								}
 							}
 
-							$this->log('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}}', __METHOD__, TL_ERROR);
+							$this->log('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'), __METHOD__, TL_ERROR);
 							break;
 					}
 				}
