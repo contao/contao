@@ -81,8 +81,8 @@ class Picture
 	/**
 	 * Create a picture instance from the given image path and size
 	 *
-	 * @param string|File   $file The image path or File instance
-	 * @param array|integer $size The image size as array (width, height, resize mode) or an tl_image_size ID
+	 * @param string|File          $file The image path or File instance
+	 * @param array|integer|string $size The image size as array (width, height, resize mode) or an tl_image_size ID or a predifined image size key
 	 *
 	 * @return static The created picture instance
 	 */
@@ -96,15 +96,24 @@ class Picture
 		$imageSize = null;
 		$picture = new static($file);
 
-		// tl_image_size ID as resize mode
-		if (\is_array($size) && !empty($size[2]) && is_numeric($size[2]))
+		if (\is_array($size) && !empty($size[2]))
 		{
-			$size = (int) $size[2];
+			// tl_image_size ID as resize mode
+			if (is_numeric($size[2]))
+			{
+				$size = (int) $size[2];
+			}
+
+			// Predefined image size as resize mode
+			elseif (\is_string($size[2]) && $size[2][0] === '_')
+			{
+				$size = $size[2];
+			}
 		}
 
 		$imageSize = null;
 
-		if (!\is_array($size))
+		if (!\is_array($size) && (!\is_string($size) || $size[0] !== '_'))
 		{
 			$imageSize = ImageSizeModel::findByPk($size);
 
@@ -112,6 +121,11 @@ class Picture
 			{
 				$size = array();
 			}
+		}
+
+		if (\is_string($size) && $size[0] === '_')
+		{
+			$imageSize = $size;
 		}
 
 		if (\is_array($size))
@@ -166,7 +180,7 @@ class Picture
 	/**
 	 * Set the image size
 	 *
-	 * @param ImageSizeModel|object $imageSize The image size
+	 * @param ImageSizeModel|object|string $imageSize The image size or a predifined image size key
 	 *
 	 * @return $this The picture object
 	 */
@@ -206,17 +220,24 @@ class Picture
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 		$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $this->image->getOriginalPath());
 
-		$config = new PictureConfiguration();
-		$config->setSize($this->getConfigurationItem($this->imageSize));
-
-		$sizeItems = array();
-
-		foreach ($this->imageSizeItems as $imageSizeItem)
+		if (\is_string($this->imageSize) && $this->imageSize[0] === '_')
 		{
-			$sizeItems[] = $this->getConfigurationItem($imageSizeItem);
+			$config = $this->imageSize;
 		}
+		else
+		{
+			$config = new PictureConfiguration();
+			$config->setSize($this->getConfigurationItem($this->imageSize));
 
-		$config->setSizeItems($sizeItems);
+			$sizeItems = array();
+
+			foreach ($this->imageSizeItems as $imageSizeItem)
+			{
+				$sizeItems[] = $this->getConfigurationItem($imageSizeItem);
+			}
+
+			$config->setSizeItems($sizeItems);
+		}
 
 		$importantPart = $this->image->getImportantPart();
 		$imageSize = $image->getDimensions()->getSize();
@@ -234,8 +255,8 @@ class Picture
 		$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
 
 		$picture = $container
-			->get('contao.image.picture_generator')
-			->generate(
+			->get('contao.image.picture_factory')
+			->create(
 				$image,
 				$config,
 				(new ResizeOptions())
