@@ -1,6 +1,6 @@
 # Change log
 
-## DEV
+## 4.4.44 (2019-10-01)
 
  * Prevent regular users from enabling the template editor for themselves (see #749).
  * Use the robots meta data to determine whether to add a page to the XML sitemap (see #501).

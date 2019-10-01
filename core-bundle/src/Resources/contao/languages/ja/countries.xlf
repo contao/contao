@@ -158,7 +158,7 @@
         <target>ココス諸島</target>
       </trans-unit>
       <trans-unit id="CNT.cd">
-        <source>Democratic Republic of the Congo</source>
+        <source>Congo - Kinshasa</source>
         <target>コンゴ民主共和国</target>
       </trans-unit>
       <trans-unit id="CNT.cf">
@@ -166,7 +166,7 @@
         <target>中央アフリカ</target>
       </trans-unit>
       <trans-unit id="CNT.cg">
-        <source>Republic of the Congo</source>
+        <source>Congo - Brazzaville</source>
         <target>コンゴ共和国</target>
       </trans-unit>
       <trans-unit id="CNT.ch">
@@ -222,7 +222,7 @@
         <target>キプロス</target>
       </trans-unit>
       <trans-unit id="CNT.cz">
-        <source>Czech Republic</source>
+        <source>Czechia</source>
         <target>チェコ</target>
       </trans-unit>
       <trans-unit id="CNT.de">
@@ -582,8 +582,8 @@
         <target>マーシャル諸島</target>
       </trans-unit>
       <trans-unit id="CNT.mk">
-        <source>Macedonia</source>
-        <target>マケドニア</target>
+        <source>North Macedonia</source>
+        <target>北マケドニア</target>
       </trans-unit>
       <trans-unit id="CNT.ml">
         <source>Mali</source>
@@ -858,8 +858,8 @@
         <target>シリア</target>
       </trans-unit>
       <trans-unit id="CNT.sz">
-        <source>Swaziland</source>
-        <target>スワジランド</target>
+        <source>Eswatini</source>
+        <target>エスワティニ</target>
       </trans-unit>
       <trans-unit id="CNT.ta">
         <source>Tristan da Cunha</source>

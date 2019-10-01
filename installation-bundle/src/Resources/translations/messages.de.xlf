@@ -293,7 +293,7 @@
       </trans-unit>
       <trans-unit id="59">
         <source>admin_error_extnd</source>
-        <target>Aus Sicherheitsgründen können Sie folgende Zeichen hier nicht verwenden: #()/&lt;=&gt;</target>
+        <target>Aus Sicherheitsgründen können Sie folgende Zeichen hier nicht verwenden: #&lt;&gt;()\=</target>
         
       </trans-unit>
       <trans-unit id="60">

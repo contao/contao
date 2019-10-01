@@ -198,8 +198,7 @@
         <target>Caratteri alfanumerici estesi</target>
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
-        <source>Allows everything except special characters which are usually encoded for security reasons (#/()&lt;=&gt;).</source>
-        <target>impedisci l'uso dei caratteri predefiniti (@&amp;()/), esempio: per non avere problemi con il campo password.</target>
+        <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>

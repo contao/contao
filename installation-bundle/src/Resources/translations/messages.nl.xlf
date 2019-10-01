@@ -293,7 +293,7 @@
       </trans-unit>
       <trans-unit id="59">
         <source>admin_error_extnd</source>
-        <target>Om veiligheidsredenen mag u de volgende karakters hier niet gebruiken: #()/&lt;=&gt;</target>
+        <target>Om veiligheidsredenen kunt u de volgende karakters hier niet gebruiken: #&lt;&gt;()\=</target>
         
       </trans-unit>
       <trans-unit id="60">

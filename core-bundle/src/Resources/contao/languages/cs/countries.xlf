@@ -158,16 +158,16 @@
         <target>Kokosové ostrovy</target>
       </trans-unit>
       <trans-unit id="CNT.cd">
-        <source>Democratic Republic of the Congo</source>
-        <target>Demokratická republika Kongo</target>
+        <source>Congo - Kinshasa</source>
+        <target>Kongo - Kinšasa</target>
       </trans-unit>
       <trans-unit id="CNT.cf">
         <source>Central African Republic</source>
         <target>Středoafrická republika</target>
       </trans-unit>
       <trans-unit id="CNT.cg">
-        <source>Republic of the Congo</source>
-        <target>Republika Kongo</target>
+        <source>Congo - Brazzaville</source>
+        <target>Kongo - Brazavil</target>
       </trans-unit>
       <trans-unit id="CNT.ch">
         <source>Switzerland</source>
@@ -222,8 +222,7 @@
         <target>Kypr</target>
       </trans-unit>
       <trans-unit id="CNT.cz">
-        <source>Czech Republic</source>
-        <target>Česká republika</target>
+        <source>Czechia</source>
       </trans-unit>
       <trans-unit id="CNT.de">
         <source>Germany</source>
@@ -582,8 +581,7 @@
         <target>Marshallovy ostrovy</target>
       </trans-unit>
       <trans-unit id="CNT.mk">
-        <source>Macedonia</source>
-        <target>Makedonie</target>
+        <source>North Macedonia</source>
       </trans-unit>
       <trans-unit id="CNT.ml">
         <source>Mali</source>
@@ -858,8 +856,7 @@
         <target>Sýrie</target>
       </trans-unit>
       <trans-unit id="CNT.sz">
-        <source>Swaziland</source>
-        <target>Švýcarsko</target>
+        <source>Eswatini</source>
       </trans-unit>
       <trans-unit id="CNT.ta">
         <source>Tristan da Cunha</source>

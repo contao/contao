@@ -293,7 +293,6 @@
       </trans-unit>
       <trans-unit id="59">
         <source>admin_error_extnd</source>
-        <target>Z bezpečnostních důvodů nemůžete použít následující znaky: #()/&lt;=&gt;</target>
         
       </trans-unit>
       <trans-unit id="60">

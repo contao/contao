@@ -198,8 +198,8 @@
         <target>拡張した英数字</target>
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
-        <source>Allows everything except special characters which are usually encoded for security reasons (#/()&lt;=&gt;).</source>
-        <target>セキュリティ上の理由で、通常はエンコードが必要な特殊文字(#/()&lt;=&gt;)以外のすべてを許可します。</target>
+        <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
+        <target>セキュリティ上の理由で次の通常はエンコードが必要な特殊文字以外すべてを許可します: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>
