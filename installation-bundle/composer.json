@@ -1,7 +1,7 @@
 {
     "name": "contao/installation-bundle",
     "type": "contao-bundle",
-    "description": "Required to install and update Contao 4",
+     "description": "Required to install and update Contao",
     "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
     "authors": [
