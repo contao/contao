@@ -2,6 +2,7 @@
     "name": "contao/contao",
     "type": "symfony-bundle",
     "description": "Contao 4 bundles",
+    "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
     "authors": [
         {
@@ -130,7 +131,6 @@
         "symfony/doctrine-bridge": "<3.4",
         "symfony/security-core": "4.2.* <4.2.3",
         "symfony/swiftmailer-bundle": "2.6.* <2.6.2",
-        "symfony/twig-bundle": "4.1.0",
         "zendframework/zend-code": "<3.3.1"
     },
     "require-dev": {

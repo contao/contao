@@ -1,7 +1,8 @@
 {
     "name": "contao/core-bundle",
     "type": "symfony-bundle",
-    "description": "Contao 4 core bundle",
+    "description": "Provides the Contao core functionality",
+    "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
     "authors": [
         {
@@ -106,8 +107,7 @@
         "lexik/maintenance-bundle": "2.1.4",
         "symfony/doctrine-bridge": "<3.4",
         "symfony/security-core": "4.2.* <4.2.3",
-        "symfony/swiftmailer-bundle": "2.6.* <2.6.2",
-        "symfony/twig-bundle": "4.1.0"
+        "symfony/swiftmailer-bundle": "2.6.* <2.6.2"
     },
     "require-dev": {
         "ext-fileinfo": "*",
