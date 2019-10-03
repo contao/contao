@@ -1,7 +1,7 @@
 {
     "name": "contao/newsletter-bundle",
     "type": "contao-bundle",
-     "description": "Adds newsletter functionality to Contao",
+    "description": "Adds newsletter functionality to Contao",
     "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
     "authors": [

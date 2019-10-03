@@ -1,7 +1,7 @@
 {
     "name": "contao/comments-bundle",
     "type": "contao-bundle",
-     "description": "Adds comments functionality to Contao",
+    "description": "Adds comments functionality to Contao",
     "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
     "authors": [
