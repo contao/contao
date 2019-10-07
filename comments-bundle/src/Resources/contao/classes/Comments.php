@@ -422,7 +422,7 @@ class Comments extends Frontend
 			// Pending for approval
 			if ($objConfig->moderate)
 			{
-				$flashBag->set('comment_added', $GLOBALS['TL_LANG']['MSC']['com_confirm']);
+				$session->getFlashBag()->set('comment_added', $GLOBALS['TL_LANG']['MSC']['com_confirm']);
 			}
 			else
 			{
