@@ -293,18 +293,22 @@ class Comments extends Frontend
 		$objTemplate->hasError = $doNotSubmit;
 
 		$session = System::getContainer()->get('session');
-		$flashBag = $session->getFlashBag();
 
 		// Do not index or cache the page with the confirmation message
-		if ($session->isStarted() && $flashBag->has('comment_added'))
+		if ($session->isStarted())
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
+			$flashBag = $session->getFlashBag();
 
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
+			if ($flashBag->has('comment_added'))
+			{
+				/** @var PageModel $objPage */
+				global $objPage;
 
-			$objTemplate->confirm = $flashBag->get('comment_added')[0];
+				$objPage->noSearch = 1;
+				$objPage->cache = 0;
+
+				$objTemplate->confirm = $flashBag->get('comment_added')[0];
+			}
 		}
 
 		// Store the comment
