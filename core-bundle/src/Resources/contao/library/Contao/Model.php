@@ -414,7 +414,7 @@ abstract class Model
 	public function save()
 	{
 		// Deprecated call
-		if (\count(\func_get_args()))
+		if (\func_num_args() > 0)
 		{
 			throw new \InvalidArgumentException('The $blnForceInsert argument has been removed (see system/docs/UPGRADE.md)');
 		}

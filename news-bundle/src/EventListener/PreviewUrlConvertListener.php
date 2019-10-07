@@ -14,7 +14,6 @@ namespace Contao\NewsBundle\EventListener;
 
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\News;
 use Contao\NewsModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -52,10 +51,7 @@ class PreviewUrlConvertListener
             return;
         }
 
-        /** @var News $newsAdapter */
-        $newsAdapter = $this->framework->getAdapter(News::class);
-
-        $event->setUrl($request->getSchemeAndHttpHost().'/'.$newsAdapter->generateNewsUrl($news));
+        $event->setUrl($request->getSchemeAndHttpHost().'/'.$news->getFrontendUrl());
     }
 
     private function getNewsModel(Request $request): ?NewsModel

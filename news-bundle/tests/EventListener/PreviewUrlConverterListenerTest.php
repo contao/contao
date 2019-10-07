@@ -14,7 +14,6 @@ namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\News;
 use Contao\NewsBundle\EventListener\PreviewUrlConvertListener;
 use Contao\NewsModel;
 use Contao\TestCase\ContaoTestCase;
@@ -34,10 +33,14 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $requestStack->push($request);
 
         $newsModel = $this->createMock(NewsModel::class);
+        $newsModel
+            ->expects($this->once())
+            ->method('getFrontendUrl')
+            ->willReturn('news/james-wilson-returns.html')
+        ;
 
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => $newsModel]),
-            News::class => $this->mockConfiguredAdapter(['generateNewsUrl' => 'news/james-wilson-returns.html']),
         ];
 
         $framework = $this->mockContaoFramework($adapters);

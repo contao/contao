@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
+use Contao\Model\Routable;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -272,7 +273,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PageModel extends Model
+class PageModel extends Model implements Routable
 {
 	/**
 	 * Table name
@@ -1064,12 +1065,7 @@ class PageModel extends Model
 	}
 
 	/**
-	 * Generate a front end URL
-	 *
-	 * @param string $strParams    An optional string of URL parameters
-	 * @param string $strForceLang Force a certain language
-	 *
-	 * @return string An URL that can be used in the front end
+	 * {@inheritdoc}
 	 */
 	public function getFrontendUrl($strParams=null, $strForceLang=null)
 	{
@@ -1103,11 +1099,7 @@ class PageModel extends Model
 	}
 
 	/**
-	 * Generate an absolute URL depending on the current rewriteURL setting
-	 *
-	 * @param string $strParams An optional string of URL parameters
-	 *
-	 * @return string An absolute URL that can be used in the front end
+	 * {@inheritdoc}
 	 */
 	public function getAbsoluteUrl($strParams=null)
 	{

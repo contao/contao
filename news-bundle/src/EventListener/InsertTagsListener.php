@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\News;
 use Contao\NewsFeedModel;
 use Contao\NewsModel;
 use Contao\StringUtil;
@@ -82,14 +81,11 @@ class InsertTagsListener
             return '';
         }
 
-        /** @var News $news */
-        $news = $this->framework->getAdapter(News::class);
-
         switch ($insertTag) {
             case 'news':
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
-                    $news->generateNewsUrl($model, false, \in_array('absolute', $flags, true)),
+                    \in_array('absolute', $flags, true) ? $model->getAbsoluteUrl() : $model->getFrontendUrl(),
                     StringUtil::specialchars($model->headline),
                     $model->headline
                 );
@@ -97,12 +93,12 @@ class InsertTagsListener
             case 'news_open':
                 return sprintf(
                     '<a href="%s" title="%s">',
-                    $news->generateNewsUrl($model, false, \in_array('absolute', $flags, true)),
+                    \in_array('absolute', $flags, true) ? $model->getAbsoluteUrl() : $model->getFrontendUrl(),
                     StringUtil::specialchars($model->headline)
                 );
 
             case 'news_url':
-                return $news->generateNewsUrl($model, false, \in_array('absolute', $flags, true));
+                return \in_array('absolute', $flags, true) ? $model->getAbsoluteUrl() : $model->getFrontendUrl();
 
             case 'news_title':
                 return StringUtil::specialchars($model->headline);

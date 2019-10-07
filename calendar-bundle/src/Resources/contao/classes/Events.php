@@ -306,7 +306,7 @@ abstract class Events extends Module
 		$arrEvent['link'] = $objEvents->title;
 		$arrEvent['target'] = '';
 		$arrEvent['title'] = StringUtil::specialchars($objEvents->title, true);
-		$arrEvent['href'] = $this->generateEventUrl($objEvents);
+		$arrEvent['href'] = $objEvents->current()->getFrontendUrl();
 		$arrEvent['class'] = $objEvents->cssClass ? ' ' . $objEvents->cssClass : '';
 		$arrEvent['recurring'] = $recurring;
 		$arrEvent['until'] = $until;
@@ -418,9 +418,14 @@ abstract class Events extends Module
 	 * @param boolean             $blnAbsolute
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0;
+	 *             use CalendardEventsModel::getFrontendUrl() instead
 	 */
 	public static function generateEventUrl($objEvent, $blnAbsolute=false)
 	{
+		@trigger_error('Using Events::generateEventUrl() has been deprecated and will no longer work in Contao 5.0. Use CalendardEventsModel::getFrontendUrl() instead.', E_USER_DEPRECATED);
+
 		$strCacheKey = 'id_' . $objEvent->id . ($blnAbsolute ? '_absolute' : '');
 
 		// Load the URL from cache

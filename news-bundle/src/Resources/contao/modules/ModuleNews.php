@@ -79,6 +79,11 @@ abstract class ModuleNews extends Module
 	 */
 	protected function parseArticle($objArticle, $blnAddArchive=false, $strClass='', $intCount=0)
 	{
+		if ($blnAddArchive !== false)
+		{
+			@trigger_error('Passing true as second argument to ModuleNews::parseArticle() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		}
+
 		$objTemplate = new FrontendTemplate($this->news_template ?: 'news_latest');
 		$objTemplate->setData($objArticle->row());
 
@@ -98,7 +103,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
 		$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
 		$objTemplate->more = $this->generateLink($GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
-		$objTemplate->link = News::generateNewsUrl($objArticle, $blnAddArchive);
+		$objTemplate->link = $objArticle->getFrontendUrl();
 		$objTemplate->archive = $objArticle->getRelated('pid');
 		$objTemplate->count = $intCount; // see #5708
 		$objTemplate->text = '';
@@ -245,6 +250,11 @@ abstract class ModuleNews extends Module
 	 */
 	protected function parseArticles($objArticles, $blnAddArchive=false)
 	{
+		if ($blnAddArchive !== false)
+		{
+			@trigger_error('Passing true as second argument to ModuleNews::parseArticles() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		}
+
 		$limit = $objArticles->count();
 
 		if ($limit < 1)
@@ -335,11 +345,11 @@ abstract class ModuleNews extends Module
 	 * @return string
 	 *
 	 * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
-	 *             Use News::generateNewsUrl() instead.
+	 *             Use NewsModel::getFrontendUrl() instead.
 	 */
 	protected function generateNewsUrl($objItem, $blnAddArchive=false)
 	{
-		@trigger_error('Using ModuleNews::generateNewsUrl() has been deprecated and will no longer work in Contao 5.0. Use News::generateNewsUrl() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using ModuleNews::generateNewsUrl() has been deprecated and will no longer work in Contao 5.0. Use NewsModel::getFrontendUrl() instead.', E_USER_DEPRECATED);
 
 		return News::generateNewsUrl($objItem, $blnAddArchive);
 	}
@@ -356,12 +366,17 @@ abstract class ModuleNews extends Module
 	 */
 	protected function generateLink($strLink, $objArticle, $blnAddArchive=false, $blnIsReadMore=false)
 	{
+		if ($blnAddArchive !== false)
+		{
+			@trigger_error('Passing true as third argument to ModuleNews::generateLink() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		}
+
 		// Internal link
 		if ($objArticle->source != 'external')
 		{
 			return sprintf(
 				'<a href="%s" title="%s" itemprop="url"><span itemprop="headline">%s</span>%s</a>',
-				News::generateNewsUrl($objArticle, $blnAddArchive),
+				$objArticle->getFrontendUrl(),
 				StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
 				$strLink,
 				($blnIsReadMore ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')

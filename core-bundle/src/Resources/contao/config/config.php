@@ -233,7 +233,8 @@ $GLOBALS['BE_FFL'] = array
 	'imageSize'      => 'Contao\ImageSize',
 	'timePeriod'     => 'Contao\TimePeriod',
 	'metaWizard'     => 'Contao\MetaWizard',
-	'sectionWizard'  => 'Contao\SectionWizard'
+	'sectionWizard'  => 'Contao\SectionWizard',
+	'serpPreview'    => 'Contao\SerpPreview'
 );
 
 // Front end form fields

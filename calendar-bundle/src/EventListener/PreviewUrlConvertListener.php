@@ -15,7 +15,6 @@ namespace Contao\CalendarBundle\EventListener;
 use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Events;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -52,10 +51,7 @@ class PreviewUrlConvertListener
             return;
         }
 
-        /** @var Events $eventsAdapter */
-        $eventsAdapter = $this->framework->getAdapter(Events::class);
-
-        $event->setUrl($request->getSchemeAndHttpHost().'/'.$eventsAdapter->generateEventUrl($eventModel));
+        $event->setUrl($request->getSchemeAndHttpHost().'/'.$eventModel->getFrontendUrl());
     }
 
     private function getEventModel(Request $request): ?CalendarEventsModel

@@ -15,7 +15,6 @@ namespace Contao\CalendarBundle\Tests\EventListener;
 use Contao\CalendarBundle\EventListener\InsertTagsListener;
 use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
-use Contao\Events;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -47,23 +46,18 @@ class InsertTagsListenerTest extends ContaoTestCase
         $eventModel->title = 'The "foobar" event';
         $eventModel->teaser = '<p>The annual foobar event.</p>';
 
-        $events = $this->mockAdapter(['generateEventUrl']);
-        $events
-            ->method('generateEventUrl')
-            ->willReturnCallback(
-                static function (CalendarEventsModel $model, bool $absolute): string {
-                    if ($absolute) {
-                        return 'http://domain.tld/events/the-foobar-event.html';
-                    }
+        $eventModel
+            ->method('getFrontendUrl')
+            ->willReturn('events/the-foobar-event.html')
+        ;
 
-                    return 'events/the-foobar-event.html';
-                }
-            )
+        $eventModel
+            ->method('getAbsoluteUrl')
+            ->willReturn('http://domain.tld/events/the-foobar-event.html')
         ;
 
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $eventModel]),
-            Events::class => $events,
         ];
 
         $listener = new InsertTagsListener($this->mockContaoFramework($adapters));

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\Model\Collection;
+use Contao\Model\Routable;
 
 /**
  * Reads and writes news
@@ -162,13 +163,23 @@ use Contao\Model\Collection;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class NewsModel extends Model
+class NewsModel extends Model implements Routable
 {
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_news';
+
+	/**
+	 * @var string
+	 */
+	private $strFrontendUrl;
+
+	/**
+	 * @var string
+	 */
+	private $strAbsoluteUrl;
 
 	/**
 	 * Find a published news item from one or more news archives by its ID or alias
@@ -410,6 +421,93 @@ class NewsModel extends Model
 		}
 
 		return static::countBy($arrColumns, array($intFrom, $intTo), $arrOptions);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getFrontendUrl()
+	{
+		if (!$this->strFrontendUrl)
+		{
+			$this->strFrontendUrl = $this->getUrl('getFrontendUrl');
+		}
+
+		return $this->strFrontendUrl;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getAbsoluteUrl()
+	{
+		if (!$this->strAbsoluteUrl)
+		{
+			$this->strAbsoluteUrl = $this->getUrl('getAbsoluteUrl');
+		}
+
+		return $this->strAbsoluteUrl;
+	}
+
+	/**
+	 * Reset the URLs if the record is refreshed
+	 *
+	 * @param integer $intType
+	 */
+	public function refresh()
+	{
+		parent::refresh();
+
+		$this->strFrontendUrl = null;
+		$this->strAbsoluteUrl = null;
+	}
+
+	/**
+	 * Return the URL depending on the source
+	 *
+	 * @param $strMethod
+	 *
+	 * @return string
+	 */
+	private function getUrl($strMethod)
+	{
+		switch ($this->source)
+		{
+			// Link to an external page
+			case 'external':
+				if (0 === strncmp($this->url, 'mailto:', 7))
+				{
+					return StringUtil::encodeEmail($this->url);
+				}
+
+				return ampersand($this->url);
+
+			// Link to an internal page
+			case 'internal':
+				if (($objTarget = $this->getRelated('jumpTo')) instanceof PageModel)
+				{
+					return $objTarget->$strMethod();
+				}
+				break;
+
+			// Link to an article
+			case 'article':
+				if (($objArticle = ArticleModel::findByPk($this->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
+				{
+					return $objPid->$strMethod('/articles/' . ($objArticle->alias ?: $objArticle->id));
+				}
+				break;
+		}
+
+		// Link to the default page
+		$objPage = PageModel::findByPk($this->getRelated('pid')->jumpTo);
+
+		if (!$objPage instanceof PageModel)
+		{
+			return ampersand(Environment::get('request'));
+		}
+
+		return $objPage->$strMethod((Config::get('useAutoItem') ? '/' : '/items/') . ($this->alias ?: $this->id));
 	}
 }
 

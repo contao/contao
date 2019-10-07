@@ -1505,12 +1505,9 @@ ul.sgallery li {
 }
 
 /* SERP preview */
-.serp {
-	margin-top:1px;
-}
 .serp-preview {
 	max-width:600px;
-	margin:1px 0 2px;
+	margin:2px 0;
 	padding:4px 6px;
 	font-family:Arial,sans-serif;
 	font-weight:400;

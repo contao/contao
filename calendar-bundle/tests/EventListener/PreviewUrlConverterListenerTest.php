@@ -16,7 +16,6 @@ use Contao\CalendarBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Events;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -34,10 +33,14 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $requestStack->push($request);
 
         $eventModel = $this->createMock(CalendarEventsModel::class);
+        $eventModel
+            ->expects($this->once())
+            ->method('getFrontendUrl')
+            ->willReturn('events/winter-holidays.html')
+        ;
 
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByPk' => $eventModel]),
-            Events::class => $this->mockConfiguredAdapter(['generateEventUrl' => 'events/winter-holidays.html']),
         ];
 
         $framework = $this->mockContaoFramework($adapters);

@@ -153,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	(
 		'__selector__'                => array('type', 'fallback', 'autoforward', 'protected', 'createSitemap', 'includeLayout', 'includeCache', 'includeChmod', 'enforceTwoFactor'),
 		'default'                     => '{title_legend},title,alias,type',
-		'regular'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description,serp_preview;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch,guests,requireItem;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
+		'regular'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description,serpPreview;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch,guests,requireItem;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'forward'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'redirect'                    => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'root'                        => '{title_legend},title,alias,type;{meta_legend},pageTitle;{dns_legend},dns,useSSL,language,fallback;{global_legend:hide},dateFormat,timeFormat,datimFormat,adminEmail,staticFiles,staticPlugins;{alias_legend:hide},validAliasCharacters,useFolderUrl;{sitemap_legend:hide},createSitemap;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
@@ -264,11 +264,12 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
 		),
-		'serp_preview' => array
+		'serpPreview' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serp_preview'],
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
-			'input_field_callback'    => array('tl_page', 'showSerpPreview')
+			'inputType'               => 'serpPreview',
+			'eval'                    => array('serpPreview'=>array('title'=>array('pageTitle', 'title')))
 		),
 		'redirect' => array
 		(
@@ -1285,35 +1286,6 @@ class tl_page extends Contao\Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Show the SERP preview
-	 *
-	 * @param Contao\DataContainer $dc
-	 *
-	 * @return string
-	 */
-	public function showSerpPreview(Contao\DataContainer $dc)
-	{
-		$page = Contao\PageModel::findByPk($dc->activeRecord->id);
-		$url = $page->getAbsoluteUrl();
-		$suffix = substr($dc->inputName, strlen($dc->field));
-
-		list($baseUrl) = explode($page->alias ?: $page->id, $url);
-
-		$template = new Contao\FrontendTemplate('be_serp');
-		$template->id = $page->id;
-		$template->title = $page->pageTitle ?: $page->title;
-		$template->url = $url;
-		$template->description = $page->description;
-		$template->baseUrl = $baseUrl;
-		$template->titleField = 'ctrl_pageTitle' . $suffix;
-		$template->titleFallbackField = 'ctrl_title' . $suffix;
-		$template->aliasField = 'ctrl_alias' . $suffix;
-		$template->descriptionField = 'ctrl_description' . $suffix;
-
-		return $template->parse();
 	}
 
 	/**
