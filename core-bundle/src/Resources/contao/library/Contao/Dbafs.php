@@ -495,8 +495,9 @@ class Dbafs
 
 		$objDatabase = Database::getInstance();
 
-		// Lock the files table
+		// Begin atomic database access
 		$objDatabase->lockTables(array('tl_files'=>'WRITE'));
+		$objDatabase->beginTransaction();
 
 		// Reset the "found" flag
 		$objDatabase->query("UPDATE tl_files SET found=''");
@@ -746,7 +747,8 @@ class Dbafs
 		// Reset the found flag
 		$objDatabase->query("UPDATE tl_files SET found=1 WHERE found=2");
 
-		// Unlock the tables
+		// Finalize database access
+		$objDatabase->commitTransaction();
 		$objDatabase->unlockTables();
 
 		// Return the path to the log file
