@@ -56,7 +56,7 @@ $GLOBALS['TL_CONFIG']['encryptionCipher'] = 'rijndael-256';
 
 // File uploads
 $GLOBALS['TL_CONFIG']['uploadTypes']
-	= 'jpg,jpeg,gif,png,ico,svg,svgz,webp'
+	= 'jpg,jpeg,gif,png,ico,svg,svgz,webp,'
 	. 'odt,ods,odp,odg,ott,ots,otp,otg,pdf,csv,'
 	. 'doc,docx,dot,dotx,xls,xlsx,xlt,xltx,ppt,pptx,pot,potx,'
 	. 'mp3,mp4,m4a,m4v,webm,ogg,ogv,wma,wmv,ram,rm,mov,fla,flv,swf,'
