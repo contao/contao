@@ -260,6 +260,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
 			'eval'                    => array('serpPreview'=>array('title'=>array('pageTitle', 'title'), 'description'=>array('description', 'teaser'))),
+			'sql'                     => null
 		),
 		'location' => array
 		(

@@ -240,6 +240,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
 			'eval'                    => array('serpPreview'=>array('title'=>array('pageTitle', 'headline'), 'description'=>array('description', 'teaser'))),
+			'sql'                     => null
 		),
 		'subheadline' => array
 		(

@@ -398,7 +398,7 @@ class DcaExtractor extends Controller
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field=>$config)
 			{
 				// Check whether all fields have an SQL definition
-				if (!isset($config['sql']) && isset($config['inputType']))
+				if (!\array_key_exists('sql', $config) && isset($config['inputType']))
 				{
 					$blnFromFile = true;
 				}
