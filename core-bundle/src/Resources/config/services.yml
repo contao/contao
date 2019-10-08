@@ -445,6 +445,14 @@ services:
             - ['addRouteFilter', ['@contao.routing.language_filter']]
         public: true
 
+    contao.routing.page_model_router:
+        class: Contao\CoreBundle\Routing\PageModelRouter
+        arguments:
+            - '@contao.routing.url_generator'
+            - '@request_stack'
+        tags:
+            - { name: router }
+
     contao.routing.page_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
         arguments:
