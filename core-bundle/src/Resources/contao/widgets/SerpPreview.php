@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\Model\Routable;
-
 /**
  * @property array $serpPreview
  */
@@ -36,15 +34,10 @@ class SerpPreview extends Widget
 			throw new \RuntimeException('Could not fetch the associated model');
 		}
 
-		if (!$model instanceof Routable && !isset($this->serpPreview['url']))
-		{
-			throw new \LogicException('The model is not routable and no "url" parameter has been given');
-		}
-
 		$id = $model->id;
 		$title = StringUtil::substr($this->getTitle($model), 64);
-		$url = $this->serpPreview['url'] ?? $model->getAbsoluteUrl();
 		$description = StringUtil::substr($this->getDescription($model), 160);
+		$url = $this->getUrl($model);
 		list($baseUrl) = explode($model->alias ?: $model->id, $url);
 		$urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
 		$suffix = substr($this->objDca->inputName, \strlen($this->objDca->field));
@@ -105,6 +98,33 @@ EOT;
 		}
 
 		return $model->{$this->serpPreview['description']};
+	}
+
+	private function getUrl(Model $model)
+	{
+		if (isset($this->serpPreview['url']))
+		{
+			return $this->serpPreview['url'];
+		}
+
+		// FIXME: use the router to generate the URL (see #831)
+		switch (true)
+		{
+			case $model instanceof PageModel:
+				return $model->getAbsoluteUrl();
+				break;
+
+			case $model instanceof NewsModel:
+				return News::generateNewsUrl($model, false, true);
+				break;
+
+			case $model instanceof CalendarEventsModel:
+				return Events::generateEventUrl($model, true);
+				break;
+
+			default:
+				throw new \RuntimeException(sprintf('Unsupported model class "%s"', \get_class($model)));
+		}
 	}
 
 	private function getTitleField()

@@ -351,14 +351,9 @@ class News extends Frontend
 	 * @param boolean   $blnAbsolute
 	 *
 	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0;
-	 *             use NewsModel::getFrontendUrl() instead
 	 */
 	public static function generateNewsUrl($objItem, $blnAddArchive=false, $blnAbsolute=false)
 	{
-		@trigger_error('Using News::generateNewsUrl() has been deprecated and will no longer work in Contao 5.0. Use NewsModel::getFrontendUrl() instead.', E_USER_DEPRECATED);
-
 		$strCacheKey = 'id_' . $objItem->id . ($blnAbsolute ? '_absolute' : '');
 
 		// Load the URL from cache

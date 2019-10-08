@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Tests\EventListener;
 
+use Contao\News;
 use Contao\NewsBundle\EventListener\InsertTagsListener;
 use Contao\NewsFeedModel;
 use Contao\NewsModel;
@@ -46,18 +47,23 @@ class InsertTagsListenerTest extends ContaoTestCase
         $newsModel->headline = '"Foo" is not "bar"';
         $newsModel->teaser = '<p>Foo does not equal bar.</p>';
 
-        $newsModel
-            ->method('getFrontendUrl')
-            ->willReturn('news/foo-is-not-bar.html')
-        ;
+        $news = $this->mockAdapter(['generateNewsUrl']);
+        $news
+            ->method('generateNewsUrl')
+            ->willReturnCallback(
+                static function (NewsModel $model, bool $addArchive, bool $absolute): string {
+                    if ($absolute) {
+                        return 'http://domain.tld/news/foo-is-not-bar.html';
+                    }
 
-        $newsModel
-            ->method('getAbsoluteUrl')
-            ->willReturn('http://domain.tld/news/foo-is-not-bar.html')
+                    return 'news/foo-is-not-bar.html';
+                }
+            )
         ;
 
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $newsModel]),
+            News::class => $news,
         ];
 
         $listener = new InsertTagsListener($this->mockContaoFramework($adapters));

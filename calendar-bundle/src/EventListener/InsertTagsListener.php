@@ -15,6 +15,7 @@ namespace Contao\CalendarBundle\EventListener;
 use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\Events;
 use Contao\StringUtil;
 
 class InsertTagsListener
@@ -81,11 +82,14 @@ class InsertTagsListener
             return '';
         }
 
+        /** @var Events $events */
+        $events = $this->framework->getAdapter(Events::class);
+
         switch ($insertTag) {
             case 'event':
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
-                    \in_array('absolute', $flags, true) ? $model->getAbsoluteUrl() : $model->getFrontendUrl(),
+                    $events->generateEventUrl($model, \in_array('absolute', $flags, true)),
                     StringUtil::specialchars($model->title),
                     $model->title
                 );
@@ -93,12 +97,12 @@ class InsertTagsListener
             case 'event_open':
                 return sprintf(
                     '<a href="%s" title="%s">',
-                    \in_array('absolute', $flags, true) ? $model->getAbsoluteUrl() : $model->getFrontendUrl(),
+                    $events->generateEventUrl($model, \in_array('absolute', $flags, true)),
                     StringUtil::specialchars($model->title)
                 );
 
             case 'event_url':
-                return \in_array('absolute', $flags, true) ? $model->getAbsoluteUrl() : $model->getFrontendUrl();
+                return $events->generateEventUrl($model, \in_array('absolute', $flags, true));
 
             case 'event_title':
                 return StringUtil::specialchars($model->title);
