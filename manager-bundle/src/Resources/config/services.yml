@@ -16,6 +16,11 @@ services:
             - '@contao_manager.jwt_manager'
         public: true
 
+    Contao\ManagerBundle\Twig\FileExtensionFilterIterator:
+        decorates: 'twig.template_iterator'
+        arguments:
+            - '@Contao\ManagerBundle\Twig\FileExtensionFilterIterator.inner'
+
     # Backwards compatibility
     contao_manager.controller.debug:
         alias: Contao\ManagerBundle\Controller\DebugController
