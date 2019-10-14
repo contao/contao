@@ -59,6 +59,10 @@
         "phpunit/phpunit": "^7.5",
         "symfony/phpunit-bridge": "^4.3"
     },
+    "suggest": {
+        "contao/tcpdf-bundle": "To export articles as PDF files.",
+        "contao/mobile-page-layout-bundle": "To re-gain the functionality of mobile page layouts (not recommended)."
+    },
     "extra": {
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
         "symfony": {
