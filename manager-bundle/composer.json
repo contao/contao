@@ -60,7 +60,7 @@
         "symfony/phpunit-bridge": "^4.3"
     },
     "suggest": {
-        "contao/tcpdf-bundle": "To export articles as PDF files."
+        "contao/tcpdf-bundle": "To export articles as PDF files"
     },
     "extra": {
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
