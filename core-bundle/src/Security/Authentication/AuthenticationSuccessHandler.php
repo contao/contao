@@ -64,8 +64,8 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         if ($token instanceof TwoFactorTokenInterface) {
             $response = $this->httpUtils->createRedirectResponse(
                 $request,
-                $request->request->get('_failure_path') ?: 'contao_root')
-            ;
+                $request->request->get('_failure_path') ?: 'contao_root'
+            );
 
             $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $response->getTargetUrl());
 

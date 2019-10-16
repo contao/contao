@@ -23,7 +23,6 @@ namespace Contao;
  */
 class ZipWriter
 {
-
 	/**
 	 * File signatur
 	 * @var string
@@ -103,7 +102,7 @@ class ZipWriter
 		}
 
 		// Open temporary file
-		if (!$this->resFile = @fopen($this->strTemp, 'wb'))
+		if (!$this->resFile = @fopen($this->strTemp, 'w'))
 		{
 			throw new \Exception("Cannot open temporary file");
 		}

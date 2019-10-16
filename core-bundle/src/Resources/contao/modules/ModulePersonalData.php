@@ -21,7 +21,6 @@ use Patchwork\Utf8;
  */
 class ModulePersonalData extends Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -165,13 +164,10 @@ class ModulePersonalData extends Module
 						$arrData['eval']['required'] = true;
 					}
 				}
-				else
+				// Use strlen() here (see #3277)
+				elseif (!\strlen($this->User->$field))
 				{
-					// Use strlen() here (see #3277)
-					if (!\strlen($this->User->$field))
-					{
-						$arrData['eval']['required'] = true;
-					}
+					$arrData['eval']['required'] = true;
 				}
 			}
 
@@ -236,13 +232,13 @@ class ModulePersonalData extends Module
 				}
 
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if ($arrData['eval']['unique'] && $varValue != '' && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
+				if ($varValue != '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
 				{
 					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
 				}
 
 				// Trigger the save_callback (see #5247)
-				if ($objWidget->submitInput() && !$objWidget->hasErrors() && \is_array($arrData['save_callback']))
+				if (\is_array($arrData['save_callback']) && $objWidget->submitInput() && !$objWidget->hasErrors())
 				{
 					foreach ($arrData['save_callback'] as $callback)
 					{
@@ -328,7 +324,7 @@ class ModulePersonalData extends Module
 		$this->Template->hasError = $doNotSubmit;
 
 		// Redirect or reload if there was no error
-		if (Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
+		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId)
 		{
 			// HOOK: updated personal data
 			if (isset($GLOBALS['TL_HOOKS']['updatePersonalData']) && \is_array($GLOBALS['TL_HOOKS']['updatePersonalData']))
@@ -389,7 +385,7 @@ class ModulePersonalData extends Module
 			$this->Template->message = $arrMessages[0];
 		}
 
-		$this->Template->categories = $arrGroups;
+		$this->Template->categories = array_filter($arrGroups);
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['saveData']);
 		$this->Template->action = Environment::get('indexFreeRequest');

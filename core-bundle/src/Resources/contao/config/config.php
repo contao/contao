@@ -17,13 +17,13 @@ $GLOBALS['BE_MOD'] = array
 		'article' => array
 		(
 			'tables'      => array('tl_article', 'tl_content'),
-			'table'       => array('contao.controller.backend_csv_import', 'importTableWizardAction'),
-			'list'        => array('contao.controller.backend_csv_import', 'importListWizardAction')
+			'table'       => array('Contao\CoreBundle\Controller\BackendCsvImportController', 'importTableWizardAction'),
+			'list'        => array('Contao\CoreBundle\Controller\BackendCsvImportController', 'importListWizardAction')
 		),
 		'form' => array
 		(
 			'tables'      => array('tl_form', 'tl_form_field'),
-			'option'      => array('contao.controller.backend_csv_import', 'importOptionWizardAction')
+			'option'      => array('Contao\CoreBundle\Controller\BackendCsvImportController', 'importOptionWizardAction')
 		)
 	),
 
@@ -233,26 +233,27 @@ $GLOBALS['BE_FFL'] = array
 	'imageSize'      => 'Contao\ImageSize',
 	'timePeriod'     => 'Contao\TimePeriod',
 	'metaWizard'     => 'Contao\MetaWizard',
-	'sectionWizard'  => 'Contao\SectionWizard'
+	'sectionWizard'  => 'Contao\SectionWizard',
+	'serpPreview'    => 'Contao\SerpPreview'
 );
 
 // Front end form fields
 $GLOBALS['TL_FFL'] = array
 (
-    'explanation'   => 'Contao\FormExplanation',
-    'html'          => 'Contao\FormHtml',
-    'fieldsetStart' => 'Contao\FormFieldsetStart',
-    'fieldsetStop'  => 'Contao\FormFieldsetStop',
-    'text'          => 'Contao\FormTextField',
-    'password'      => 'Contao\FormPassword',
-    'textarea'      => 'Contao\FormTextArea',
-    'select'        => 'Contao\FormSelectMenu',
-    'radio'         => 'Contao\FormRadioButton',
-    'checkbox'      => 'Contao\FormCheckBox',
-    'upload'        => 'Contao\FormFileUpload',
-    'hidden'        => 'Contao\FormHidden',
-    'captcha'       => 'Contao\FormCaptcha',
-    'submit'        => 'Contao\FormSubmit',
+	'explanation'   => 'Contao\FormExplanation',
+	'html'          => 'Contao\FormHtml',
+	'fieldsetStart' => 'Contao\FormFieldsetStart',
+	'fieldsetStop'  => 'Contao\FormFieldsetStop',
+	'text'          => 'Contao\FormTextField',
+	'password'      => 'Contao\FormPassword',
+	'textarea'      => 'Contao\FormTextArea',
+	'select'        => 'Contao\FormSelectMenu',
+	'radio'         => 'Contao\FormRadioButton',
+	'checkbox'      => 'Contao\FormCheckBox',
+	'upload'        => 'Contao\FormFileUpload',
+	'hidden'        => 'Contao\FormHidden',
+	'captcha'       => 'Contao\FormCaptcha',
+	'submit'        => 'Contao\FormSubmit',
 );
 
 // Page types

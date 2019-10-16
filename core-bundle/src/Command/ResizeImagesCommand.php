@@ -152,7 +152,7 @@ class ResizeImagesCommand extends Command
             return 0;
         }
 
-        $output->write(str_pad($path, $this->terminalWidth - 14, '.').' ');
+        $output->write(str_pad($path, $this->terminalWidth + \strlen($path) - mb_strlen($path, 'UTF-8') - 13, '.').' ');
 
         try {
             $image = $this->imageFactory->create($this->targetDir.'/'.$path);

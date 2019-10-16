@@ -19,7 +19,6 @@ use Contao\Model\Collection;
  */
 class ContentMedia extends ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -73,7 +72,7 @@ class ContentMedia extends ContentElement
 
 			if ($this->headline != '')
 			{
-				$return = '<'. $this->hl .'>'. $this->headline .'</'. $this->hl .'>'. $return;
+				$return = '<' . $this->hl . '>' . $this->headline . '</' . $this->hl . '>' . $return;
 			}
 
 			return $return;
@@ -95,12 +94,9 @@ class ContentMedia extends ContentElement
 		$this->Template->poster = false;
 
 		// Optional poster
-		if ($this->posterSRC != '')
+		if ($this->posterSRC != '' && ($objFile = FilesModel::findByUuid($this->posterSRC)) !== null)
 		{
-			if (($objFile = FilesModel::findByUuid($this->posterSRC)) !== null)
-			{
-				$this->Template->poster = $objFile->path;
-			}
+			$this->Template->poster = $objFile->path;
 		}
 
 		$objFiles = $this->objFiles;

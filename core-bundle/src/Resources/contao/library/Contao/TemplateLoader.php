@@ -28,7 +28,6 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class TemplateLoader
 {
-
 	/**
 	 * Known files
 	 * @var array
@@ -107,12 +106,9 @@ class TemplateLoader
 		}
 
 		// Then check the global templates directory (see #5547)
-		if ($custom != 'templates')
+		if ($custom != 'templates' && file_exists($rootDir . '/templates/' . $file))
 		{
-			if (file_exists($rootDir . '/templates/' . $file))
-			{
-				return $rootDir . '/templates/' . $file;
-			}
+			return $rootDir . '/templates/' . $file;
 		}
 
 		return static::getDefaultPath($template, $format);
@@ -150,7 +146,9 @@ class TemplateLoader
 				$strPath = $file->getPathname();
 			}
 		}
-		catch (\InvalidArgumentException $e) {}
+		catch (\InvalidArgumentException $e)
+		{
+		}
 
 		if ($strPath !== null)
 		{
@@ -184,7 +182,9 @@ class TemplateLoader
 					self::addFile($file->getBasename('.html5'), rtrim($objFilesystem->makePathRelative($file->getPath(), $container->getParameter('kernel.project_dir')), '/'));
 				}
 			}
-			catch (\InvalidArgumentException $e) {}
+			catch (\InvalidArgumentException $e)
+			{
+			}
 		}
 	}
 

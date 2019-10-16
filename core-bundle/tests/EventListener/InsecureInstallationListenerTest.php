@@ -16,7 +16,7 @@ use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -65,7 +65,7 @@ class InsecureInstallationListenerTest extends TestCase
         return $request;
     }
 
-    private function getResponseEvent(Request $request = null): GetResponseEvent
+    private function getResponseEvent(Request $request = null): RequestEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -73,6 +73,6 @@ class InsecureInstallationListenerTest extends TestCase
             $request = new Request();
         }
 
-        return new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        return new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
     }
 }

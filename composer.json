@@ -7,6 +7,10 @@
         {
             "name": "Leo Feyer",
             "homepage": "https://github.com/leofeyer"
+        },
+        {
+            "name": "Contao Community",
+            "homepage": "https://contao.org/contributors"
         }
     ],
     "require": {
@@ -99,6 +103,7 @@
         "symfony/swiftmailer-bundle": "^2.6 || ^3.1.5",
         "symfony/translation": "4.2.* || 4.3.*",
         "symfony/twig-bundle": "4.2.* || 4.3.*",
+        "symfony/var-dumper": "4.2.* || 4.3.*",
         "symfony/web-profiler-bundle": "4.2.* || 4.3.*",
         "symfony/yaml": "4.2.* || 4.3.*",
         "terminal42/service-annotation-bundle": "^1.0",
@@ -137,12 +142,12 @@
         "ext-fileinfo": "*",
         "composer/composer": "^1.0",
         "contao/monorepo-tools": "dev-master",
-        "contao/phpstan": "^0.8",
-        "contao/test-case": "^3.0",
+        "contao/php-cs-fixer": "^2.0",
+        "contao/phpstan": "^0.8.1",
+        "contao/test-case": "^3.1",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/event-manager": "^1.0",
-        "friendsofphp/php-cs-fixer": "^2.14",
-        "monolog/monolog": "^1.22",
+        "monolog/monolog": "^1.24",
         "php-coveralls/php-coveralls": "^2.1",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.11",
@@ -168,7 +173,7 @@
             "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
         },
         "symfony": {
-            "require": "^4.2"
+            "require": "^4.3"
         }
     },
     "autoload": {

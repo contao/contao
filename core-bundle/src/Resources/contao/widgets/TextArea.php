@@ -23,7 +23,6 @@ namespace Contao;
  */
 class TextArea extends Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -113,15 +112,17 @@ class TextArea extends Widget
 			$this->strClass = trim($this->strClass . ' noresize');
 		}
 
-		return sprintf('<textarea name="%s" id="ctrl_%s" class="tl_textarea%s" rows="%s" cols="%s"%s onfocus="Backend.getScrollOffset()">%s</textarea>%s',
-						$this->strName,
-						$this->strId,
-						($this->strClass ? ' ' . $this->strClass : ''),
-						$this->intRows,
-						$this->intCols,
-						$this->getAttributes(),
-						StringUtil::specialchars($this->varValue),
-						$this->wizard);
+		return sprintf(
+			'<textarea name="%s" id="ctrl_%s" class="tl_textarea%s" rows="%s" cols="%s"%s onfocus="Backend.getScrollOffset()">%s</textarea>%s',
+			$this->strName,
+			$this->strId,
+			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->intRows,
+			$this->intCols,
+			$this->getAttributes(),
+			StringUtil::specialchars($this->varValue),
+			$this->wizard
+		);
 	}
 }
 

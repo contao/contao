@@ -71,7 +71,7 @@ class ScriptHandler
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
                 $cmd,
                 self::getVerbosityFlag($event),
-                getenv('SYMFONY_ENV') ?: 'prod'
+                getenv('APP_ENV') ?: 'prod'
             )
         );
 

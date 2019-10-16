@@ -23,7 +23,6 @@ namespace Contao;
  */
 class SelectMenu extends Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -123,10 +122,12 @@ class SelectMenu extends Widget
 		{
 			if (isset($arrOption['value']))
 			{
-				$arrOptions[] = sprintf('<option value="%s"%s>%s</option>',
-										 StringUtil::specialchars($arrOption['value']),
-										 $this->isSelected($arrOption),
-										 $arrOption['label']);
+				$arrOptions[] = sprintf(
+					'<option value="%s"%s>%s</option>',
+					StringUtil::specialchars($arrOption['value']),
+					$this->isSelected($arrOption),
+					$arrOption['label']
+				);
 			}
 			else
 			{
@@ -134,10 +135,12 @@ class SelectMenu extends Widget
 
 				foreach ($arrOption as $arrOptgroup)
 				{
-					$arrOptgroups[] = sprintf('<option value="%s"%s>%s</option>',
-											   StringUtil::specialchars($arrOptgroup['value']),
-											   $this->isSelected($arrOptgroup),
-											   $arrOptgroup['label']);
+					$arrOptgroups[] = sprintf(
+						'<option value="%s"%s>%s</option>',
+						StringUtil::specialchars($arrOptgroup['value']),
+						$this->isSelected($arrOptgroup),
+						$arrOptgroup['label']
+					);
 				}
 
 				$arrOptions[] = sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
@@ -150,15 +153,17 @@ class SelectMenu extends Widget
 			$strClass .= ' tl_chosen';
 		}
 
-		return sprintf('%s<select name="%s" id="ctrl_%s" class="%s%s"%s onfocus="Backend.getScrollOffset()">%s</select>%s',
-						($this->multiple ? '<input type="hidden" name="'. rtrim($this->strName, '[]') .'" value="">' : ''),
-						$this->strName,
-						$this->strId,
-						$strClass,
-						($this->strClass ? ' ' . $this->strClass : ''),
-						$this->getAttributes(),
-						implode('', $arrOptions),
-						$this->wizard);
+		return sprintf(
+			'%s<select name="%s" id="ctrl_%s" class="%s%s"%s onfocus="Backend.getScrollOffset()">%s</select>%s',
+			($this->multiple ? '<input type="hidden" name="' . rtrim($this->strName, '[]') . '" value="">' : ''),
+			$this->strName,
+			$this->strId,
+			$strClass,
+			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->getAttributes(),
+			implode('', $arrOptions),
+			$this->wizard
+		);
 	}
 }
 

@@ -18,6 +18,7 @@ use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
+use Contao\Validator;
 use Doctrine\DBAL\DBALException;
 use Patchwork\Utf8;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -115,7 +116,7 @@ class InstallationController implements ContainerAwareInterface
     {
         $event = new InitializeApplicationEvent();
 
-        $this->container->get('event_dispatcher')->dispatch(ContaoInstallationEvents::INITIALIZE_APPLICATION, $event);
+        $this->container->get('event_dispatcher')->dispatch($event, ContaoInstallationEvents::INITIALIZE_APPLICATION);
 
         if ($event->hasOutput()) {
             return $this->render('initialize.html.twig', [
@@ -316,18 +317,8 @@ class InstallationController implements ContainerAwareInterface
             return $this->render('misconfigured_database_url.html.twig');
         }
 
-        $parameters = [
-            'parameters' => [
-                'database_host' => $this->getContainerParameter('database_host'),
-                'database_port' => $this->getContainerParameter('database_port'),
-                'database_user' => $this->getContainerParameter('database_user'),
-                'database_password' => $this->getContainerParameter('database_password'),
-                'database_name' => $this->getContainerParameter('database_name'),
-            ],
-        ];
-
         if ('tl_database_login' !== $request->request->get('FORM_SUBMIT')) {
-            return $this->render('database.html.twig', $parameters);
+            return $this->render('database.html.twig');
         }
 
         $parameters = [
@@ -335,14 +326,10 @@ class InstallationController implements ContainerAwareInterface
                 'database_host' => $request->request->get('dbHost'),
                 'database_port' => $request->request->get('dbPort'),
                 'database_user' => $request->request->get('dbUser'),
-                'database_password' => $this->getContainerParameter('database_password'),
+                'database_password' => $request->request->get('dbPassword'),
                 'database_name' => $request->request->get('dbName'),
             ],
         ];
-
-        if ('*****' !== $request->request->get('dbPassword')) {
-            $parameters['parameters']['database_password'] = $request->request->get('dbPassword');
-        }
 
         if (false !== strpos($parameters['parameters']['database_name'], '.')) {
             return $this->render('database.html.twig', array_merge(
@@ -530,6 +517,8 @@ class InstallationController implements ContainerAwareInterface
         $this->context['admin_username_value'] = $username;
         $this->context['admin_name_value'] = $name;
         $this->context['admin_email_value'] = $email;
+        $this->context['admin_password_value'] = $password;
+        $this->context['admin_confirmation_value'] = $confirmation;
 
         // All fields are mandatory
         if ('' === $username || '' === $name || '' === $email || '' === $password) {
@@ -539,7 +528,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         // Do not allow special characters in usernames
-        if (preg_match('/[#()\/<=>]/', $username)) {
+        if (!Validator::isExtendedAlphanumeric($username)) {
             $this->context['admin_username_error'] = $this->trans('admin_error_extnd');
 
             return null;
@@ -553,7 +542,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         // Validate the e-mail address (see #6003)
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) !== $email) {
+        if (!Validator::isEmail($email)) {
             $this->context['admin_email_error'] = $this->trans('admin_error_email');
 
             return null;

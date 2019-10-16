@@ -34,7 +34,6 @@ use Doctrine\DBAL\DriverManager;
  */
 class Database
 {
-
 	/**
 	 * Object instances (Singleton)
 	 * @var array
@@ -102,13 +101,15 @@ class Database
 	 */
 	public function __destruct()
 	{
-		unset($this->resConnection);
+		$this->resConnection = null;
 	}
 
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Return an object property

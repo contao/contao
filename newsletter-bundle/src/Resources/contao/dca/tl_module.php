@@ -78,9 +78,12 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options_callback'        => array('tl_module_newsletter', 'getNewsletterTemplates'),
-	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default 'nl_simple'"
+	'options_callback' => static function ()
+	{
+		return Contao\Controller::getTemplateGroup('nl_');
+	},
+	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+	'sql'                     => "varchar(64) NOT NULL default ''"
 );
 
 /**
@@ -90,7 +93,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
  */
 class tl_module_newsletter extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -141,7 +143,7 @@ class tl_module_newsletter extends Contao\Backend
 	 */
 	public function getChannels()
 	{
-		if (!$this->User->isAdmin && !\is_array($this->User->newsletters))
+		if (!$this->User->isAdmin && !is_array($this->User->newsletters))
 		{
 			return array();
 		}
@@ -158,15 +160,5 @@ class tl_module_newsletter extends Contao\Backend
 		}
 
 		return $arrChannels;
-	}
-
-	/**
-	 * Return all newsletter templates as array
-	 *
-	 * @return array
-	 */
-	public function getNewsletterTemplates()
-	{
-		return $this->getTemplateGroup('nl_');
 	}
 }

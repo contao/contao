@@ -24,7 +24,7 @@ use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class CommandSchedulerListenerTest extends TestCase
@@ -44,7 +44,7 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection());
-        $listener->onKernelTerminate($this->getPostResponseEvent('contao_frontend'));
+        $listener->onKernelTerminate($this->getTerminateEvent('contao_frontend'));
     }
 
     public function testDoesNotRunTheCommandSchedulerIfTheContaoFrameworkIsNotInitialized(): void
@@ -61,7 +61,7 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection());
-        $listener->onKernelTerminate($this->getPostResponseEvent('contao_backend'));
+        $listener->onKernelTerminate($this->getTerminateEvent('contao_backend'));
     }
 
     public function testDoesNotRunTheCommandSchedulerInTheInstallTool(): void
@@ -81,7 +81,7 @@ class CommandSchedulerListenerTest extends TestCase
         $pathInfo->setAccessible(true);
         $pathInfo->setValue($request, '/contao/install');
 
-        $event = new PostResponseEvent($this->createMock(KernelInterface::class), $request, new Response());
+        $event = new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection());
         $listener->onKernelTerminate($event);
@@ -104,7 +104,7 @@ class CommandSchedulerListenerTest extends TestCase
         $pathInfo->setAccessible(true);
         $pathInfo->setValue($request, '/foo/_fragment/bar');
 
-        $event = new PostResponseEvent($this->createMock(KernelInterface::class), $request, new Response());
+        $event = new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection());
         $listener->onKernelTerminate($event);
@@ -130,7 +130,7 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection());
-        $listener->onKernelTerminate($this->getPostResponseEvent('contao_backend'));
+        $listener->onKernelTerminate($this->getTerminateEvent('contao_backend'));
     }
 
     public function testDoesNotRunTheCommandSchedulerIfCronjobsAreDisabled(): void
@@ -154,7 +154,7 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection());
-        $listener->onKernelTerminate($this->getPostResponseEvent('contao_frontend'));
+        $listener->onKernelTerminate($this->getTerminateEvent('contao_frontend'));
     }
 
     public function testDoesNotRunTheCommandSchedulerIfThereIsADatabaseConnectionError(): void
@@ -183,7 +183,7 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $listener = new CommandSchedulerListener($framework, $connection);
-        $listener->onKernelTerminate($this->getPostResponseEvent('contao_backend'));
+        $listener->onKernelTerminate($this->getTerminateEvent('contao_backend'));
     }
 
     /**
@@ -211,7 +211,7 @@ class CommandSchedulerListenerTest extends TestCase
         return $connection;
     }
 
-    private function getPostResponseEvent(string $route = null): PostResponseEvent
+    private function getTerminateEvent(string $route = null): TerminateEvent
     {
         $request = new Request();
 
@@ -219,6 +219,6 @@ class CommandSchedulerListenerTest extends TestCase
             $request->attributes->set('_route', $route);
         }
 
-        return new PostResponseEvent($this->createMock(KernelInterface::class), $request, new Response());
+        return new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
     }
 }

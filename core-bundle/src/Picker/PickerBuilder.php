@@ -110,7 +110,7 @@ class PickerBuilder implements PickerBuilderInterface
      */
     public function getUrl($context, array $extras = [], $value = ''): string
     {
-        $providers = (isset($extras['providers']) && \is_array($extras['providers'])) ? $extras['providers'] : null;
+        $providers = isset($extras['providers']) && \is_array($extras['providers']) ? $extras['providers'] : null;
 
         if (!$this->supportsContext($context, $providers)) {
             return '';

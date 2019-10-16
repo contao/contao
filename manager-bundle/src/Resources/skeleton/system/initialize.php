@@ -25,7 +25,7 @@ if (\in_array('phar', stream_get_wrappers(), true)) {
 $loader = require __DIR__.'/../vendor/autoload.php';
 
 $request = Request::create('/_contao/initialize', 'GET', [], $_COOKIE, [], $_SERVER);
-$request->attributes->set('_scope', ('BE' === TL_MODE ? 'backend' : 'frontend'));
+$request->attributes->set('_scope', 'BE' === TL_MODE ? 'backend' : 'frontend');
 
 $kernel = ContaoKernel::fromRequest(\dirname(__DIR__), $request);
 $response = $kernel->handle($request);

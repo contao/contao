@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class ModulePassword extends Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -138,7 +137,7 @@ class ModulePassword extends Module
 		$this->Template->hasError = $doNotSubmit;
 
 		// Look for an account and send the password link
-		if (Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
+		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId)
 		{
 			if ($this->reg_skipName)
 			{

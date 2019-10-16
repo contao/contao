@@ -39,7 +39,6 @@ namespace Contao;
  */
 class Email
 {
-
 	/**
 	 * Mailer object
 	 * @var \Swift_Mailer
@@ -172,18 +171,22 @@ class Email
 					case 'highest':
 						$this->intPriority = 1;
 						break;
+
 					case 2:
 					case 'high':
 						$this->intPriority = 2;
 						break;
+
 					case 3:
 					case 'normal':
 						$this->intPriority = 3;
 						break;
+
 					case 4:
 					case 'low':
 						$this->intPriority = 4;
 						break;
+
 					case 5:
 					case 'lowest':
 						$this->intPriority = 5;

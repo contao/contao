@@ -31,7 +31,6 @@ use ScssPhp\ScssPhp\Formatter\Expanded;
  */
 class Combiner extends System
 {
-
 	/**
 	 * The .css file extension
 	 * @var string
@@ -435,7 +434,7 @@ class Combiner extends System
 		$strName = $arrFile['name'];
 
 		// Strip the web/ prefix
-		if (strpos($strName, $this->strWebDir .'/') === 0)
+		if (strpos($strName, $this->strWebDir . '/') === 0)
 		{
 			$strName = substr($strName, \strlen($this->strWebDir) + 1);
 		}
@@ -516,7 +515,7 @@ class Combiner extends System
 	protected function hasMediaTag($strFile)
 	{
 		$return = false;
-		$fh = fopen($this->strRootDir . '/' . $strFile, 'rb');
+		$fh = fopen($this->strRootDir . '/' . $strFile, 'r');
 
 		while (($line = fgets($fh)) !== false)
 		{

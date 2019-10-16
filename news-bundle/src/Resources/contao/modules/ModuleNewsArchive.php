@@ -26,7 +26,6 @@ use Patchwork\Utf8;
  */
 class ModuleNewsArchive extends ModuleNews
 {
-
 	/**
 	 * Template
 	 * @var string

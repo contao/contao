@@ -20,7 +20,6 @@ namespace Contao;
  */
 class Config
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var Config
@@ -97,7 +96,9 @@ class Config
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Return the current object instance (Singleton)
@@ -181,7 +182,7 @@ class Config
 		if (static::$blnHasLcf)
 		{
 			$strMode = 'top';
-			$resFile = fopen($this->strRootDir . '/system/config/localconfig.php', 'rb');
+			$resFile = fopen($this->strRootDir . '/system/config/localconfig.php', 'r');
 
 			while (!feof($resFile))
 			{
@@ -253,7 +254,7 @@ class Config
 		$strTemp = md5(uniqid(mt_rand(), true));
 
 		// Write to a temp file first
-		$objFile = fopen($this->strRootDir . '/system/tmp/' . $strTemp, 'wb');
+		$objFile = fopen($this->strRootDir . '/system/tmp/' . $strTemp, 'w');
 		fwrite($objFile, $strFile);
 		fclose($objFile);
 
@@ -507,7 +508,7 @@ class Config
 	 */
 	protected function escape($varValue)
 	{
-		if (is_numeric($varValue) && !preg_match('/e|^[+-]?0[^.]/', $varValue) && $varValue < PHP_INT_MAX)
+		if (is_numeric($varValue) && $varValue < PHP_INT_MAX && !preg_match('/e|^[+-]?0[^.]/', $varValue))
 		{
 			return $varValue;
 		}

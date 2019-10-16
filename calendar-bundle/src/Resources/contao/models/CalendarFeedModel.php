@@ -73,7 +73,6 @@ use Contao\Model\Collection;
  */
 class CalendarFeedModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

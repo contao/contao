@@ -99,7 +99,6 @@ use Contao\Model\Collection;
  */
 class FormModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

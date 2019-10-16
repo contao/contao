@@ -57,7 +57,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         $record = $this->processRecord($record);
         $record['formatted'] = $this->getFormatter()->format($record);
 
-        if (!isset($record['extra']['contao']) || !($record['extra']['contao'] instanceof ContaoContext)) {
+        if (!isset($record['extra']['contao']) || !$record['extra']['contao'] instanceof ContaoContext) {
             return false;
         }
 

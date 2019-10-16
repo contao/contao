@@ -43,7 +43,7 @@ class BackendMenuBuilder
     {
         $tree = $this->factory->createItem('root');
 
-        $this->eventDispatcher->dispatch(ContaoCoreEvents::BACKEND_MENU_BUILD, new MenuEvent($this->factory, $tree));
+        $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
 
         return $tree;
     }

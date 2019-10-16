@@ -43,7 +43,7 @@ class FaviconController
     }
 
     /**
-     * @Route("/favicon.ico", name="contao_favicon")
+     * @Route("/favicon.ico")
      */
     public function __invoke(Request $request): Response
     {

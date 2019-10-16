@@ -243,4 +243,40 @@ class TemplateLoaderTest extends TestCase
 
         unset($GLOBALS['CTLG']);
     }
+
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using hyphens in the template name "mod_article-custom.html5" has been deprecated %s.
+     */
+    public function testSupportsHyphensInCustomTemplateNames(): void
+    {
+        $fs = new Filesystem();
+        $fs->touch($this->getFixturesDir().'/templates/mod_article-custom.html5');
+        $fs->touch($this->getFixturesDir().'/templates/mod_article_custom.html5');
+
+        TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
+
+        $this->assertSame(
+            [
+                'mod_article' => 'mod_article',
+                'mod_article-custom' => 'mod_article-custom (global)',
+                'mod_article_custom' => 'mod_article_custom (global)',
+            ],
+            Controller::getTemplateGroup('mod_article')
+        );
+
+        $this->assertSame(
+            [
+                'mod_article-custom' => 'mod_article-custom (global)',
+                'mod_article_custom' => 'mod_article_custom (global)',
+            ],
+            Controller::getTemplateGroup('mod_article_')
+        );
+
+        $fs->remove($this->getFixturesDir().'/templates/mod_article-custom.html5');
+        $fs->remove($this->getFixturesDir().'/templates/mod_article_custom.html5');
+
+        TemplateLoader::reset();
+    }
 }

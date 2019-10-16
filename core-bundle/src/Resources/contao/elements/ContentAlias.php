@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentAlias extends ContentElement
 {
-
 	/**
 	 * Parse the template
 	 *
@@ -68,7 +67,9 @@ class ContentAlias extends ContentElement
 	/**
 	 * Generate the content element
 	 */
-	protected function compile() {}
+	protected function compile()
+	{
+	}
 }
 
 class_alias(ContentAlias::class, 'ContentAlias');

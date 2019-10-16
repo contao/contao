@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class BackendFile extends Backend
 {
-
 	/**
 	 * Current Ajax object
 	 * @var Ajax

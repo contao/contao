@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PageError401 extends Frontend
 {
-
 	/**
 	 * Generate an error 401 page
 	 *
@@ -120,7 +119,10 @@ class PageError401 extends Frontend
 				throw new ForwardPageNotFoundException('Forward page not found');
 			}
 
-			$this->redirect($objNextPage->getFrontendUrl(), (($obj401->redirect == 'temporary') ? 302 : 301));
+			// Add the referer so the login module can redirect back
+			$referer = base64_encode(Environment::get('request'));
+
+			$this->redirect($objNextPage->getFrontendUrl() . '?referer=' . $referer, (($obj401->redirect == 'temporary') ? 302 : 301));
 		}
 
 		return $obj401;

@@ -35,7 +35,6 @@ namespace Contao;
  */
 class Folder extends System
 {
-
 	/**
 	 * Folder name
 	 * @var string
@@ -372,8 +371,7 @@ class Folder extends System
 			}
 
 			$path = \dirname($path);
-		}
-		while ($path != '.');
+		} while ($path != '.');
 
 		return false;
 	}
@@ -427,8 +425,7 @@ class Folder extends System
 			}
 
 			$path = \dirname($path);
-		}
-		while ($path != '.');
+		} while ($path != '.');
 
 		return false;
 	}
@@ -466,7 +463,8 @@ class Folder extends System
 			new \RecursiveDirectoryIterator(
 				$this->strRootDir . '/' . $this->strFolder,
 				\FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
-			), \RecursiveIteratorIterator::SELF_FIRST
+			),
+			\RecursiveIteratorIterator::SELF_FIRST
 		);
 
 		foreach ($it as $i)

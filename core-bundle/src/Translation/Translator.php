@@ -16,24 +16,14 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class Translator implements TranslatorInterface, TranslatorBagInterface
+class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface, LegacyTranslatorInterface
 {
-    // Reserved translation domains for the Contao bundles
-    private const CONTAO_BUNDLES = [
-        'contao_calendar',
-        'contao_comments',
-        'contao_faq',
-        'contao_installation',
-        'contao_listing',
-        'contao_manager',
-        'contao_news',
-        'contao_newsletter',
-    ];
-
     /**
-     * @var TranslatorInterface|TranslatorBagInterface
+     * @var TranslatorInterface|TranslatorBagInterface|LegacyTranslatorInterface
      */
     private $translator;
 
@@ -57,7 +47,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     public function trans($id, array $parameters = [], $domain = null, $locale = null): string
     {
         // Forward to the default translator
-        if (null === $domain || 0 !== strncmp($domain, 'contao_', 7) || \in_array($domain, self::CONTAO_BUNDLES, true)) {
+        if (null === $domain || 0 !== strncmp($domain, 'contao_', 7)) {
             return $this->translator->trans($id, $parameters, $domain, $locale);
         }
 
@@ -92,9 +82,9 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     /**
      * {@inheritdoc}
      */
-    public function setLocale($locale): ?string
+    public function setLocale($locale): void
     {
-        return $this->translator->setLocale($locale);
+        $this->translator->setLocale($locale);
     }
 
     /**

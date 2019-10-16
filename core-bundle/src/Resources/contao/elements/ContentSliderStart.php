@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentSliderStart extends ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string

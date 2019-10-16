@@ -20,7 +20,6 @@ use Patchwork\Utf8;
  */
 class ModuleSearch extends Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -261,12 +260,25 @@ class ModuleSearch extends Module
 				$this->Template->page = $page;
 			}
 
-			list($contextLength, $totalLength) = StringUtil::deserialize($this->contextLength);
+			$contextLength = 48;
+			$totalLength = 360;
+
+			$lengths = StringUtil::deserialize($this->contextLength);
+
+			if ($lengths[0] > 0)
+			{
+				$contextLength = $lengths[0];
+			}
+
+			if ($lengths[1] > 0)
+			{
+				$totalLength = $lengths[1];
+			}
 
 			// Get the results
 			for ($i=($from-1); $i<$to && $i<$count; $i++)
 			{
-				$objTemplate = new FrontendTemplate($this->searchTpl);
+				$objTemplate = new FrontendTemplate($this->searchTpl ?: 'search_default');
 				$objTemplate->setData($arrResult[$i]);
 				$objTemplate->href = $arrResult[$i]['url'];
 				$objTemplate->link = $arrResult[$i]['title'];
@@ -283,7 +295,7 @@ class ModuleSearch extends Module
 				foreach ($arrMatches as $strWord)
 				{
 					$arrChunks = array();
-					preg_match_all('/(^|\b.{0,'.$contextLength.'}(?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}))' . preg_quote($strWord, '/') . '((?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}).{0,'.$contextLength.'}\b|$)/ui', $strText, $arrChunks);
+					preg_match_all('/(^|\b.{0,' . $contextLength . '}(?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}))' . preg_quote($strWord, '/') . '((?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}).{0,' . $contextLength . '}\b|$)/ui', $strText, $arrChunks);
 
 					foreach ($arrChunks[0] as $strContext)
 					{

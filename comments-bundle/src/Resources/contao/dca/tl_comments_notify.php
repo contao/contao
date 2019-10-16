@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 (
-
 	// Config
 	'config' => array
 	(

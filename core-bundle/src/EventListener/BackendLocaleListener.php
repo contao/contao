@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 class BackendLocaleListener
 {
@@ -25,11 +25,11 @@ class BackendLocaleListener
     private $security;
 
     /**
-     * @var TranslatorInterface
+     * @var LocaleAwareInterface
      */
     private $translator;
 
-    public function __construct(Security $security, TranslatorInterface $translator)
+    public function __construct(Security $security, LocaleAwareInterface $translator)
     {
         $this->security = $security;
         $this->translator = $translator;
@@ -38,7 +38,7 @@ class BackendLocaleListener
     /**
      * Sets the default locale based on the user language.
      */
-    public function onKernelRequest(GetResponseEvent $event): void
+    public function onKernelRequest(RequestEvent $event): void
     {
         $user = $this->security->getUser();
 

@@ -23,9 +23,8 @@ final class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('contao_manager');
-
-        $rootNode = $treeBuilder->getRootNode();
-        $rootNode
+        $treeBuilder
+            ->getRootNode()
             ->children()
                 ->scalarNode('manager_path')
                     ->defaultNull()

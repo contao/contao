@@ -15,8 +15,6 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
-use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
-use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
@@ -28,24 +26,36 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Registers Contao fragments in the registry.
  *
- * For custom fragment tags, create your own compiler pass by extending this
- * class and replacing the process() method.
+ * For custom fragment tags, register your own compiler pass instance in your bundle.
  */
 class RegisterFragmentsPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
 
     /**
+     * @var string
+     */
+    private $tag;
+
+    public function __construct(string $tag = null)
+    {
+        if (null === $tag) {
+            @trigger_error('Using "new RegisterFragmentsPass()" without passing the tag name has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+        }
+
+        $this->tag = $tag;
+    }
+
+    /**
      * Adds the fragments to the registry.
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has('contao.fragment.registry')) {
+        if (!$this->tag || !$container->has('contao.fragment.registry')) {
             return;
         }
 
-        $this->registerFragments($container, ContentElementReference::TAG_NAME);
-        $this->registerFragments($container, FrontendModuleReference::TAG_NAME);
+        $this->registerFragments($container, $this->tag);
     }
 
     /**

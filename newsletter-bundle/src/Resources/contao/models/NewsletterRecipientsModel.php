@@ -56,7 +56,6 @@ use Contao\Model\Collection;
  */
 class NewsletterRecipientsModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

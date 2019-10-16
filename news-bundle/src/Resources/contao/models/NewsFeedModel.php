@@ -73,7 +73,6 @@ use Contao\Model\Collection;
  */
 class NewsFeedModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

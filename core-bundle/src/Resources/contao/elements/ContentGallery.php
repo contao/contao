@@ -20,7 +20,6 @@ use Contao\Model\Collection;
  */
 class ContentGallery extends ContentElement
 {
-
 	/**
 	 * Files object
 	 * @var Collection|FilesModel
@@ -291,10 +290,10 @@ class ContentGallery extends ContentElement
 				$key = 'row_' . $rowcount . $class_tr . $class_eo;
 
 				// Empty cell
-				if (!\is_array($images[($i+$j)]) || ($j+$i) >= $limit)
+				if (($j+$i) >= $limit || !\is_array($images[($i+$j)]))
 				{
 					$objCell->colWidth = $colwidth . '%';
-					$objCell->class = 'col_'.$j . $class_td;
+					$objCell->class = 'col_' . $j . $class_td;
 				}
 				else
 				{
@@ -307,7 +306,7 @@ class ContentGallery extends ContentElement
 
 					// Add column width and class
 					$objCell->colWidth = $colwidth . '%';
-					$objCell->class = 'col_'.$j . $class_td;
+					$objCell->class = 'col_' . $j . $class_td;
 				}
 
 				$body[$key][$j] = $objCell;
@@ -316,15 +315,13 @@ class ContentGallery extends ContentElement
 			++$rowcount;
 		}
 
-		$strTemplate = 'gallery_default';
-
-		// Use a custom template
-		if (TL_MODE == 'FE' && $this->galleryTpl != '')
+		// Always use the default template in the back end
+		if (TL_MODE == 'BE')
 		{
-			$strTemplate = $this->galleryTpl;
+			$this->galleryTpl = '';
 		}
 
-		$objTemplate = new FrontendTemplate($strTemplate);
+		$objTemplate = new FrontendTemplate($this->galleryTpl ?: 'gallery_default');
 		$objTemplate->setData($this->arrData);
 		$objTemplate->body = $body;
 		$objTemplate->headline = $this->headline; // see #1603

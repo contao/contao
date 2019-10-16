@@ -347,18 +347,22 @@ abstract class Template extends Controller
 	 */
 	public function previewRoute($strName, $arrParams=array())
 	{
-		$objRouter = System::getContainer()->get('router');
-		$objContext = $objRouter->getContext();
+		$container = System::getContainer();
 
-		$objPreviewContext = clone $objContext;
-		$objPreviewContext->setBaseUrl('/preview.php');
+		if (!$previewScript = $container->getParameter('contao.preview_script'))
+		{
+			return $this->route($strName, $arrParams);
+		}
 
-		$objRouter->setContext($objPreviewContext);
+		$router = $container->get('router');
 
-		$strUrl = $objRouter->generate($strName, $arrParams);
+		$context = $router->getContext();
+		$context->setBaseUrl($previewScript);
+
+		$strUrl = $router->generate($strName, $arrParams);
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
-		$objRouter->setContext($objContext);
+		$context->setBaseUrl('');
 
 		return ampersand($strUrl);
 	}
@@ -391,6 +395,18 @@ abstract class Template extends Controller
 
 		// Contao paths are relative to the <base> tag, so remove leading slashes
 		return ltrim($url, '/');
+	}
+
+	/**
+	 * Returns a container parameter
+	 *
+	 * @param string $strKey
+	 *
+	 * @return mixed
+	 */
+	public function param($strKey)
+	{
+		return System::getContainer()->getParameter($strKey);
 	}
 
 	/**
@@ -650,7 +666,7 @@ abstract class Template extends Controller
 		{
 			fastcgi_finish_request();
 		}
-		elseif (PHP_SAPI !== 'cli')
+		elseif (\PHP_SAPI !== 'cli')
 		{
 			$status = ob_get_status(true);
 			$level = \count($status);

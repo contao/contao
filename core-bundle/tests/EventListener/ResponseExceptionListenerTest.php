@@ -17,7 +17,7 @@ use Contao\CoreBundle\Exception\ResponseException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -50,11 +50,11 @@ class ResponseExceptionListenerTest extends TestCase
         $this->assertFalse($event->isAllowingCustomResponseCode());
     }
 
-    private function getResponseEvent(\Exception $exception): GetResponseForExceptionEvent
+    private function getResponseEvent(\Exception $exception): ExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
         $request = new Request();
 
-        return new GetResponseForExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
+        return new ExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
     }
 }

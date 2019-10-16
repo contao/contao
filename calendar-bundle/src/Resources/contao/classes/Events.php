@@ -21,7 +21,6 @@ use FOS\HttpCache\ResponseTagger;
  */
 abstract class Events extends Module
 {
-
 	/**
 	 * Current URL
 	 * @var string
@@ -133,7 +132,7 @@ abstract class Events extends Module
 				{
 					$arrRepeat = StringUtil::deserialize($objEvents->repeatEach);
 
-					if (!\is_array($arrRepeat) || !isset($arrRepeat['unit']) || !isset($arrRepeat['value']) || $arrRepeat['value'] < 1)
+					if (!isset($arrRepeat['unit'], $arrRepeat['value']) || $arrRepeat['value'] < 1)
 					{
 						continue;
 					}
@@ -253,15 +252,15 @@ abstract class Events extends Module
 		{
 			$arrRange = StringUtil::deserialize($objEvents->repeatEach);
 
-			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
+			if (isset($arrRange['unit'], $arrRange['value']))
 			{
 				if ($arrRange['value'] == 1)
 				{
-					$repeat = $GLOBALS['TL_LANG']['MSC']['cal_single_'.$arrRange['unit']];
+					$repeat = $GLOBALS['TL_LANG']['MSC']['cal_single_' . $arrRange['unit']];
 				}
 				else
 				{
-					$repeat = sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_'.$arrRange['unit']], $arrRange['value']);
+					$repeat = sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_' . $arrRange['unit']], $arrRange['value']);
 				}
 
 				if ($objEvents->recurrences > 0)
@@ -370,6 +369,7 @@ abstract class Events extends Module
 		{
 			$this->intTodayBegin = strtotime('00:00:00');
 		}
+
 		if ($this->intTodayEnd === null)
 		{
 			$this->intTodayEnd = strtotime('23:59:59');

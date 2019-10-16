@@ -49,6 +49,11 @@ class ContaoFaqExtensionTest extends TestCase
         $this->assertSame(InsertTagsListener::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
         $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('contao.hook', $tags);
+        $this->assertSame('replaceInsertTags', $tags['contao.hook'][0]['hook']);
     }
 
     public function testRegistersTheEventPickerProvider(): void
@@ -58,6 +63,7 @@ class ContaoFaqExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao_faq.picker.faq_provider');
 
         $this->assertSame(FaqPickerProvider::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
         $this->assertSame('router', (string) $definition->getArgument(1));
         $this->assertSame('translator', (string) $definition->getArgument(2));

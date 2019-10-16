@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_module'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -223,15 +222,21 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_module', 'getNavigationTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('nav_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'customTpl' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_module', 'getModuleTemplates'),
+			'options_callback' => static function (Contao\DataContainer $dc)
+			{
+				return Contao\Controller::getTemplateGroup('mod_' . $dc->activeRecord->type . '_');
+			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -300,8 +305,11 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_module', 'getMemberTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('member_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'form' => array
@@ -334,7 +342,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'tl_class'=>'w50'),
+			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'tl_class'=>'w50', 'placeholder'=>array(48, 360)),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'minKeywordLength' => array
@@ -364,8 +372,11 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_module', 'getSearchTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('search_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'inColumn' => array
@@ -475,9 +486,12 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_module', 'getRssTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default 'rss_default'"
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('rss_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'numberOfItems' => array
 		(
@@ -615,7 +629,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
  */
 class tl_module extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -693,7 +706,7 @@ class tl_module extends Contao\Backend
 	 */
 	public function getForms()
 	{
-		if (!$this->User->isAdmin && !\is_array($this->User->forms))
+		if (!$this->User->isAdmin && !is_array($this->User->forms))
 		{
 			return array();
 		}
@@ -729,7 +742,7 @@ class tl_module extends Contao\Backend
 			$arrCustom = Contao\StringUtil::deserialize($objLayout->sections);
 
 			// Add the custom layout sections
-			if (!empty($arrCustom) && \is_array($arrCustom))
+			if (!empty($arrCustom) && is_array($arrCustom))
 			{
 				foreach ($arrCustom as $v)
 				{
@@ -742,58 +755,6 @@ class tl_module extends Contao\Backend
 		}
 
 		return Contao\Backend::convertLayoutSectionIdsToAssociativeArray($arrSections);
-	}
-
-	/**
-	 * Return all navigation templates as array
-	 *
-	 * @return array
-	 */
-	public function getNavigationTemplates()
-	{
-		return $this->getTemplateGroup('nav_');
-	}
-
-	/**
-	 * Return all module templates as array
-	 *
-	 * @param Contao\DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function getModuleTemplates(Contao\DataContainer $dc)
-	{
-		return $this->getTemplateGroup('mod_' . $dc->activeRecord->type . '_');
-	}
-
-	/**
-	 * Return all member templates as array
-	 *
-	 * @return array
-	 */
-	public function getMemberTemplates()
-	{
-		return $this->getTemplateGroup('member_');
-	}
-
-	/**
-	 * Return all search templates as array
-	 *
-	 * @return array
-	 */
-	public function getSearchTemplates()
-	{
-		return $this->getTemplateGroup('search_');
-	}
-
-	/**
-	 * Return all navigation templates as array
-	 *
-	 * @return array
-	 */
-	public function getRssTemplates()
-	{
-		return $this->getTemplateGroup('rss_');
 	}
 
 	/**
@@ -827,7 +788,7 @@ class tl_module extends Contao\Backend
 	{
 		if (!trim($varValue))
 		{
-			$varValue = (\is_array($GLOBALS['TL_LANG']['tl_module']['emailText']) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : $GLOBALS['TL_LANG']['tl_module']['emailText']);
+			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['emailText']) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : $GLOBALS['TL_LANG']['tl_module']['emailText']);
 		}
 
 		return $varValue;
@@ -844,7 +805,7 @@ class tl_module extends Contao\Backend
 	{
 		if (!trim($varValue))
 		{
-			$varValue = (\is_array($GLOBALS['TL_LANG']['tl_module']['passwordText']) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : $GLOBALS['TL_LANG']['tl_module']['passwordText']);
+			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['passwordText']) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : $GLOBALS['TL_LANG']['tl_module']['passwordText']);
 		}
 
 		return $varValue;
@@ -859,7 +820,7 @@ class tl_module extends Contao\Backend
 	 */
 	public function listModule($row)
 	{
-		return '<div class="tl_content_left">'. $row['name'] .' <span style="color:#999;padding-left:3px">['. ($GLOBALS['TL_LANG']['FMD'][$row['type']][0] ?? $row['type']) .']</span></div>';
+		return '<div class="tl_content_left">' . $row['name'] . ' <span style="color:#999;padding-left:3px">[' . ($GLOBALS['TL_LANG']['FMD'][$row['type']][0] ?? $row['type']) . ']</span></div>';
 	}
 
 	/**

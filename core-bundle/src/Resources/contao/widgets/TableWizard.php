@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -23,7 +24,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class TableWizard extends Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -90,7 +90,7 @@ class TableWizard extends Widget
 
 		// Begin the table
 		$return = '<div id="tl_tablewizard">
-  <table id="ctrl_'.$this->strId.'" class="tl_tablewizard">
+  <table id="ctrl_' . $this->strId . '" class="tl_tablewizard">
   <thead>
     <tr>';
 
@@ -103,7 +103,7 @@ class TableWizard extends Widget
 			// Add column buttons
 			foreach ($arrColButtons as $button)
 			{
-				$return .= ' <button type="button" data-command="' . $button . '" class="tl_tablewizard_img" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_'.$button]) . '">' . Image::getHtml(substr($button, 1).'.svg') . '</button>';
+				$return .= ' <button type="button" data-command="' . $button . '" class="tl_tablewizard_img" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_' . $button]) . '">' . Image::getHtml(substr($button, 1) . '.svg') . '</button>';
 			}
 
 			$return .= '</td>';
@@ -125,7 +125,7 @@ class TableWizard extends Widget
 			for ($j=0, $d=\count($this->varValue[$i]); $j<$d; $j++)
 			{
 				$return .= '
-      <td class="tcontainer"><textarea name="'.$this->strId.'['.$i.']['.$j.']" class="tl_textarea noresize" rows="'.$this->intRows.'" cols="'.$this->intCols.'"'.$this->getAttributes().'>'.StringUtil::specialchars($this->varValue[$i][$j]).'</textarea></td>';
+      <td class="tcontainer"><textarea name="' . $this->strId . '[' . $i . '][' . $j . ']" class="tl_textarea noresize" rows="' . $this->intRows . '" cols="' . $this->intCols . '"' . $this->getAttributes() . '>' . StringUtil::specialchars($this->varValue[$i][$j]) . '</textarea></td>';
 			}
 
 			$return .= '
@@ -140,7 +140,7 @@ class TableWizard extends Widget
 				}
 				else
 				{
-					$return .= ' <button type="button" data-command="' . $button . '" class="tl_tablewizard_img" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_'.$button]) . '">' . Image::getHtml(substr($button, 1).'.svg') . '</button>';
+					$return .= ' <button type="button" data-command="' . $button . '" class="tl_tablewizard_img" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_' . $button]) . '">' . Image::getHtml(substr($button, 1) . '.svg') . '</button>';
 				}
 			}
 
@@ -152,7 +152,7 @@ class TableWizard extends Widget
   </tbody>
   </table>
   </div>
-  <script>Backend.tableWizard("ctrl_'.$this->strId.'")</script>';
+  <script>Backend.tableWizard("ctrl_' . $this->strId . '")</script>';
 
 		return $return;
 	}
@@ -168,11 +168,11 @@ class TableWizard extends Widget
 	 * @throws ResponseException
 	 *
 	 * @deprecated Deprecated since Contao 4.3 to be removed in 5.0.
-	 *             Use the contao.controller.backend_csv_import service instead.
+	 *             Use the Contao\CoreBundle\Controller\BackendCsvImportController service instead.
 	 */
 	public function importTable(DataContainer $dc)
 	{
-		$response = System::getContainer()->get('contao.controller.backend_csv_import')->importTableWizardAction($dc);
+		$response = System::getContainer()->get(BackendCsvImportController::class)->importTableWizardAction($dc);
 
 		if ($response instanceof RedirectResponse)
 		{

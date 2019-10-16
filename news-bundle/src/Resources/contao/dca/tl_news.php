@@ -12,7 +12,6 @@ Contao\System::loadLanguageFile('tl_content');
 
 $GLOBALS['TL_DCA']['tl_news'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -125,7 +124,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'addEnclosure', 'source', 'overwriteMeta'),
-		'default'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{meta_legend},pageTitle,description;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{source_legend:hide},source;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop'
+		'default'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{meta_legend},pageTitle,description,serpPreview;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{source_legend:hide},source;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
@@ -234,6 +233,14 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
+		),
+		'serpPreview' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
+			'exclude'                 => true,
+			'inputType'               => 'serpPreview',
+			'eval'                    => array('serpPreview'=>array('title'=>array('pageTitle', 'headline'), 'description'=>array('description', 'teaser'))),
+			'sql'                     => null
 		),
 		'subheadline' => array
 		(
@@ -472,7 +479,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
  */
 class tl_news extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -504,7 +510,7 @@ class tl_news extends Contao\Backend
 		}
 
 		// Set the root IDs
-		if (empty($this->User->news) || !\is_array($this->User->news))
+		if (empty($this->User->news) || !is_array($this->User->news))
 		{
 			$root = array(0);
 		}
@@ -513,21 +519,22 @@ class tl_news extends Contao\Backend
 			$root = $this->User->news;
 		}
 
-		$id = \strlen(Contao\Input::get('id')) ? Contao\Input::get('id') : CURRENT_ID;
+		$id = strlen(Contao\Input::get('id')) ? Contao\Input::get('id') : CURRENT_ID;
 
 		// Check current action
 		switch (Contao\Input::get('act'))
 		{
 			case 'paste':
 			case 'select':
-				if (!\in_array(CURRENT_ID, $root)) // check CURRENT_ID here (see #247)
+				// Check CURRENT_ID here (see #247)
+				if (!in_array(CURRENT_ID, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
 				}
 				break;
 
 			case 'create':
-				if (!Contao\Input::get('pid') || !\in_array(Contao\Input::get('pid'), $root))
+				if (!Contao\Input::get('pid') || !in_array(Contao\Input::get('pid'), $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create news items in news archive ID ' . Contao\Input::get('pid') . '.');
 				}
@@ -553,7 +560,7 @@ class tl_news extends Contao\Backend
 					$pid = Contao\Input::get('pid');
 				}
 
-				if (!\in_array($pid, $root))
+				if (!in_array($pid, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' news item ID ' . $id . ' to news archive ID ' . $pid . '.');
 				}
@@ -573,7 +580,7 @@ class tl_news extends Contao\Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid news item ID ' . $id . '.');
 				}
 
-				if (!\in_array($objArchive->pid, $root))
+				if (!in_array($objArchive->pid, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' news item ID ' . $id . ' of news archive ID ' . $objArchive->pid . '.');
 				}
@@ -584,7 +591,7 @@ class tl_news extends Contao\Backend
 			case 'overrideAll':
 			case 'cutAll':
 			case 'copyAll':
-				if (!\in_array($id, $root))
+				if (!in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
 				}
@@ -606,7 +613,7 @@ class tl_news extends Contao\Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Contao\Input::get('act') . '".');
 				}
 
-				if (!\in_array($id, $root))
+				if (!in_array($id, $root))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
 				}
@@ -709,7 +716,7 @@ class tl_news extends Contao\Backend
 				return $arrAlias;
 			}
 
-			$objAlias = $this->Database->prepare("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(". implode(',', array_map('\intval', array_unique($arrPids))) .") ORDER BY parent, a.sorting")
+			$objAlias = $this->Database->prepare("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting")
 									   ->execute($dc->id);
 		}
 		else
@@ -804,7 +811,7 @@ class tl_news extends Contao\Backend
 
 		$session = $objSession->get('news_feed_updater');
 
-		if (empty($session) || !\is_array($session))
+		if (empty($session) || !is_array($session))
 		{
 			return;
 		}
@@ -875,14 +882,14 @@ class tl_news extends Contao\Backend
 			return '';
 		}
 
-		$href .= '&amp;fid='.$row['id'].'&amp;state='.($row['featured'] ? '' : 1);
+		$href .= '&amp;fid=' . $row['id'] . '&amp;state=' . ($row['featured'] ? '' : 1);
 
 		if (!$row['featured'])
 		{
 			$icon = 'featured_.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['featured'] ? 1 : 0) . '"').'</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['featured'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**
@@ -912,16 +919,16 @@ class tl_news extends Contao\Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_news']['fields']['featured']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_news']['fields']['featured']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_news']['fields']['featured']['save_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $this);
 				}
@@ -929,7 +936,7 @@ class tl_news extends Contao\Backend
 		}
 
 		// Update the database
-		$this->Database->prepare("UPDATE tl_news SET tstamp=". time() .", featured='" . ($blnVisible ? 1 : '') . "' WHERE id=?")
+		$this->Database->prepare("UPDATE tl_news SET tstamp=" . time() . ", featured='" . ($blnVisible ? 1 : '') . "' WHERE id=?")
 					   ->execute($intId);
 
 		$objVersions->create();
@@ -961,14 +968,14 @@ class tl_news extends Contao\Backend
 			return '';
 		}
 
-		$href .= '&amp;tid='.$row['id'].'&amp;state='.($row['published'] ? '' : 1);
+		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
 
 		if (!$row['published'])
 		{
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"').'</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**
@@ -990,16 +997,16 @@ class tl_news extends Contao\Backend
 		}
 
 		// Trigger the onload_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_news']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_news']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -1029,16 +1036,16 @@ class tl_news extends Contao\Backend
 		$objVersions->initialize();
 
 		// Trigger the save_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_news']['fields']['published']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_news']['fields']['published']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_news']['fields']['published']['save_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -1058,16 +1065,16 @@ class tl_news extends Contao\Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_news']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_news']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_news']['config']['onsubmit_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}

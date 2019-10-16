@@ -13,14 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class ClearSessionDataListener
 {
     /**
      * Clear the Contao session data if not a POST request.
      */
-    public function onKernelResponse(FilterResponseEvent $event): void
+    public function onKernelResponse(ResponseEvent $event): void
     {
         if (!$event->isMasterRequest()) {
             return;
@@ -59,7 +59,7 @@ class ClearSessionDataListener
             $waitingTime = max(30, (int) ini_get('max_execution_time')) * 2;
 
             // Leave the data available for $waitingTime seconds (for redirect confirmation pages)
-            if (($_SESSION['FORM_DATA']['SUBMITTED_AT'] + $waitingTime) > time()) {
+            if ($_SESSION['FORM_DATA']['SUBMITTED_AT'] + $waitingTime > time()) {
                 return;
             }
         }

@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TwoFactorController extends AbstractFrontendModuleController
 {
@@ -50,6 +50,9 @@ class TwoFactorController extends AbstractFrontendModuleController
         return parent::__invoke($request, $model, $section, $classes);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();

@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_files'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -151,7 +150,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'path' => array
 		(
-			'eval'                    => array('unique'=>true),
+			'eval'                    => array('unique'=>true, 'versionize'=>false),
 			'sql'                     => "varchar(1022) BINARY NOT NULL default ''",
 		),
 		'extension' => array
@@ -169,7 +168,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		'name' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50', 'addWizardClass'=>false),
+			'eval'                    => array('mandatory'=>true, 'versionize'=>false, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50', 'addWizardClass'=>false),
 			'wizard' => array
 			(
 				array('tl_files', 'addFileLocation')
@@ -241,7 +240,6 @@ $GLOBALS['TL_DCA']['tl_files'] = array
  */
 class tl_files extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -264,7 +262,7 @@ class tl_files extends Contao\Backend
 		}
 
 		// Permissions
-		if (!\is_array($this->User->fop))
+		if (!is_array($this->User->fop))
 		{
 			$this->User->fop = array();
 		}
@@ -302,7 +300,7 @@ class tl_files extends Contao\Backend
 		$session = $objSession->all();
 
 		// Set allowed page IDs (edit multiple)
-		if (\is_array($session['CURRENT']['IDS']))
+		if (is_array($session['CURRENT']['IDS']))
 		{
 			if (Contao\Input::get('act') == 'editAll')
 			{
@@ -324,17 +322,14 @@ class tl_files extends Contao\Backend
 					{
 						$folders[] = $id;
 
-						if ($canDeleteRecursive || ($canDeleteOne && \count(scan($rootDir . '/' . $id)) < 1))
+						if ($canDeleteRecursive || ($canDeleteOne && count(scan($rootDir . '/' . $id)) < 1))
 						{
 							$delete_all[] = $id;
 						}
 					}
-					else
+					elseif (($canDeleteOne || $canDeleteRecursive) && !in_array(dirname($id), $folders))
 					{
-						if (($canDeleteOne || $canDeleteRecursive) && !\in_array(\dirname($id), $folders))
-						{
-							$delete_all[] = $id;
-						}
+						$delete_all[] = $id;
 					}
 				}
 
@@ -343,7 +338,7 @@ class tl_files extends Contao\Backend
 		}
 
 		// Set allowed clipboard IDs
-		if (isset($session['CLIPBOARD']['tl_files']) && !$canEdit)
+		if (!$canEdit && isset($session['CLIPBOARD']['tl_files']))
 		{
 			$session['CLIPBOARD']['tl_files'] = array();
 		}
@@ -382,7 +377,7 @@ class tl_files extends Contao\Backend
 					{
 						$finder = Symfony\Component\Finder\Finder::create()->in($rootDir . '/' . $strFile);
 
-						if ($finder->count() > 0 && !$canDeleteRecursive)
+						if (!$canDeleteRecursive && $finder->count() > 0)
 						{
 							throw new Contao\CoreBundle\Exception\AccessDeniedException('No permission to delete folder "' . $strFile . '" recursively.');
 						}
@@ -444,7 +439,7 @@ class tl_files extends Contao\Backend
 
 		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
 
-		if (is_dir($rootDir . '/' . $dc->id) || !\in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('validImageTypes')))))
+		if (is_dir($rootDir . '/' . $dc->id) || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('validImageTypes')))))
 		{
 			$GLOBALS['TL_DCA'][$dc->table]['palettes'] = str_replace(',importantPartX,importantPartY,importantPartWidth,importantPartHeight', '', $GLOBALS['TL_DCA'][$dc->table]['palettes']);
 		}
@@ -491,7 +486,7 @@ class tl_files extends Contao\Backend
 
 			if ($dc->activeRecord->type == 'file')
 			{
-				$intMaxlength -= (\strlen($dc->activeRecord->extension) + 1);
+				$intMaxlength -= (strlen($dc->activeRecord->extension) + 1);
 			}
 
 			if ($intMaxlength && Patchwork\Utf8::strlen($varValue) > $intMaxlength)
@@ -516,7 +511,7 @@ class tl_files extends Contao\Backend
 	 */
 	public function syncFiles($href, $label, $title, $class, $attributes)
 	{
-		return $this->User->hasAccess('f6', 'fop') ? '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'" class="'.$class.'"'.$attributes.'>'.$label.'</a> ' : '';
+		return $this->User->hasAccess('f6', 'fop') ? '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '" class="' . $class . '"' . $attributes . '>' . $label . '</a> ' : '';
 	}
 
 	/**
@@ -533,7 +528,7 @@ class tl_files extends Contao\Backend
 	 */
 	public function editFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('f2', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('f2', 'fop') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -550,7 +545,7 @@ class tl_files extends Contao\Backend
 	 */
 	public function copyFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('f2', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('f2', 'fop') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -567,7 +562,7 @@ class tl_files extends Contao\Backend
 	 */
 	public function cutFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('f2', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('f2', 'fop') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -584,7 +579,7 @@ class tl_files extends Contao\Backend
 	 */
 	public function dragFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('f2', 'fop') ? '<button type="button" title="'.Contao\StringUtil::specialchars($title).'" '.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</button> ' : ' ';
+		return $this->User->hasAccess('f2', 'fop') ? '<button type="button" title="' . Contao\StringUtil::specialchars($title) . '" ' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</button> ' : ' ';
 	}
 
 	/**
@@ -601,9 +596,9 @@ class tl_files extends Contao\Backend
 	 */
 	public function uploadFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (!$GLOBALS['TL_DCA']['tl_files']['config']['closed'] && !$GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] && Contao\Input::get('act') != 'select' && isset($row['type']) && $row['type'] == 'folder')
+		if (isset($row['type']) && $row['type'] == 'folder' && !$GLOBALS['TL_DCA']['tl_files']['config']['closed'] && !$GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] && Contao\Input::get('act') != 'select')
 		{
-			return '<a href="'.$this->addToUrl($href.'&amp;pid='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'" '.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ';
+			return '<a href="' . $this->addToUrl($href . '&amp;pid=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '" ' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ';
 		}
 
 		return ' ';
@@ -628,17 +623,17 @@ class tl_files extends Contao\Backend
 
 		if (!is_dir($path))
 		{
-			return ($this->User->hasAccess('f3', 'fop') || $this->User->hasAccess('f4', 'fop')) ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+			return ($this->User->hasAccess('f3', 'fop') || $this->User->hasAccess('f4', 'fop')) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
 		$finder = Symfony\Component\Finder\Finder::create()->in($path);
 
 		if ($finder->count() > 0)
 		{
-			return $this->User->hasAccess('f4', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+			return $this->User->hasAccess('f4', 'fop') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
-		return $this->User->hasAccess('f3', 'fop') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('f3', 'fop') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -670,12 +665,12 @@ class tl_files extends Contao\Backend
 
 		$objFile = new Contao\File($strDecoded);
 
-		if (!\in_array($objFile->extension, Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('editableFiles')))))
+		if (!in_array($objFile->extension, Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('editableFiles')))))
 		{
-			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
-		return '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ';
+		return '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -697,7 +692,7 @@ class tl_files extends Contao\Backend
 			return '';
 		}
 
-		return '<a href="contao/popup.php?src=' . base64_encode($row['id']) . '" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.' onclick="Backend.openModalIframe({\'title\':\''.str_replace("'", "\\'", Contao\StringUtil::specialchars($row['fileNameEncoded'])).'\',\'url\':this.href});return false">'.Contao\Image::getHtml($icon, $label).'</a> ';
+		return '<a href="contao/popup.php?src=' . base64_encode($row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . ' onclick="Backend.openModalIframe({\'title\':\'' . str_replace("'", "\\'", Contao\StringUtil::specialchars($row['fileNameEncoded'])) . '\',\'url\':this.href});return false">' . Contao\Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -725,7 +720,7 @@ class tl_files extends Contao\Backend
 			$count = 0;
 			$strName = basename($strPath);
 
-			if (($strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count)) && $count > 0 && is_dir($rootDir . '/' . $strNewPath))
+			if ($count > 0 && ($strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count)) && is_dir($rootDir . '/' . $strNewPath))
 			{
 				$strPath = $strNewPath;
 			}
@@ -759,22 +754,19 @@ class tl_files extends Contao\Backend
 					$this->Automator->generateSymlinks();
 				}
 			}
-			else
+			elseif ($blnUnprotected)
 			{
-				if ($blnUnprotected)
-				{
-					$blnUnprotected = false;
-					$objFolder->protect();
+				$blnUnprotected = false;
+				$objFolder->protect();
 
-					$this->import('Contao\Automator', 'Automator');
-					$this->Automator->generateSymlinks();
-				}
+				$this->import('Contao\Automator', 'Automator');
+				$this->Automator->generateSymlinks();
 			}
 		}
 
 		$class = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx';
 
-		if (Contao\Input::get('act') == 'editAll' || Contao\Input::get('act') == 'overrideAll')
+		if (in_array(Contao\Input::get('act'), array('editAll', 'overrideAll')))
 		{
 			$class = str_replace(array('w50', 'clr', 'wizard', 'long', 'm12', 'cbx'), '', $class);
 		}
@@ -815,7 +807,7 @@ class tl_files extends Contao\Backend
 			$count = 0;
 			$strName = basename($strPath);
 
-			if (($strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count)) && $count > 0 && is_dir($rootDir . '/' . $strNewPath))
+			if ($count > 0 && ($strNewPath = str_replace($strName, Contao\Input::post('name'), $strPath, $count)) && is_dir($rootDir . '/' . $strNewPath))
 			{
 				$strPath = $strNewPath;
 			}
@@ -846,19 +838,16 @@ class tl_files extends Contao\Backend
 					$objFolder->unsynchronize();
 				}
 			}
-			else
+			elseif ($blnUnsynchronized)
 			{
-				if ($blnUnsynchronized)
-				{
-					$blnUnsynchronized = false;
-					$objFolder->synchronize();
-				}
+				$blnUnsynchronized = false;
+				$objFolder->synchronize();
 			}
 		}
 
 		$class = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['tl_class'] . ' cbx';
 
-		if (Contao\Input::get('act') == 'editAll' || Contao\Input::get('act') == 'overrideAll')
+		if (in_array(Contao\Input::get('act'), array('editAll', 'overrideAll')))
 		{
 			$class = str_replace(array('w50', 'clr', 'wizard', 'long', 'm12', 'cbx'), '', $class);
 		}

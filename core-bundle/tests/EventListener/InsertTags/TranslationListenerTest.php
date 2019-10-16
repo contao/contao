@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\InsertTags;
 
 use Contao\CoreBundle\EventListener\InsertTags\TranslationListener;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Translation\Translator;
 
 class TranslationListenerTest extends TestCase
 {
@@ -23,7 +23,7 @@ class TranslationListenerTest extends TestCase
      */
     public function testReplacesInsertTagsWithTranslation(string $id, string $result, string $domain = null, array $parameters = []): void
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createMock(Translator::class);
         $translator
             ->expects($this->once())
             ->method('trans')
@@ -53,7 +53,7 @@ class TranslationListenerTest extends TestCase
 
     public function testIgnoresOtherInsertTags(): void
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createMock(Translator::class);
         $translator
             ->expects($this->never())
             ->method('trans')

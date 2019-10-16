@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     contao.install_tool:
         class: Contao\InstallationBundle\InstallTool
         arguments:
@@ -7,16 +10,14 @@ services:
             - '@logger'
         public: true
 
+    contao.install_tool_twig_extension:
+        class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension
+
     contao.install_tool_user:
         class: Contao\InstallationBundle\InstallToolUser
         arguments:
             - '@session'
         public: true
-
-    contao.install_tool_twig_extension:
-        class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension
-        tags:
-            - { name: twig.extension }
 
     contao.installer:
         class: Contao\InstallationBundle\Database\Installer

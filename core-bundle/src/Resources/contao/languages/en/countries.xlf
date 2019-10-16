@@ -120,13 +120,13 @@
         <source>Cocos (Keeling) Islands</source>
       </trans-unit>
       <trans-unit id="CNT.cd">
-        <source>Democratic Republic of the Congo</source>
+        <source>Congo - Kinshasa</source>
       </trans-unit>
       <trans-unit id="CNT.cf">
         <source>Central African Republic</source>
       </trans-unit>
       <trans-unit id="CNT.cg">
-        <source>Republic of the Congo</source>
+        <source>Congo - Brazzaville</source>
       </trans-unit>
       <trans-unit id="CNT.ch">
         <source>Switzerland</source>
@@ -168,7 +168,7 @@
         <source>Cyprus</source>
       </trans-unit>
       <trans-unit id="CNT.cz">
-        <source>Czech Republic</source>
+        <source>Czechia</source>
       </trans-unit>
       <trans-unit id="CNT.de">
         <source>Germany</source>
@@ -438,7 +438,7 @@
         <source>Marshall Islands</source>
       </trans-unit>
       <trans-unit id="CNT.mk">
-        <source>Macedonia</source>
+        <source>North Macedonia</source>
       </trans-unit>
       <trans-unit id="CNT.ml">
         <source>Mali</source>
@@ -645,7 +645,7 @@
         <source>Syria</source>
       </trans-unit>
       <trans-unit id="CNT.sz">
-        <source>Swaziland</source>
+        <source>Eswatini</source>
       </trans-unit>
       <trans-unit id="CNT.ta">
         <source>Tristan da Cunha</source>

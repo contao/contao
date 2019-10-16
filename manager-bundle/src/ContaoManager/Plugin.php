@@ -30,7 +30,6 @@ use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
-use Contao\User;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Doctrine\DBAL\DriverManager;
@@ -54,7 +53,6 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
 
 class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface, ApiPluginInterface
 {
@@ -243,38 +241,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             case 'doctrine':
                 return $this->addDefaultServerVersion($extensionConfigs, $container);
 
-            case 'security':
-                return $this->handleSecurityEncoder($extensionConfigs, $container);
-
             default:
                 return $extensionConfigs;
         }
-    }
-
-    /**
-     * Fall back to the bcrypt password hashing algorithm in Symfony <4.3.
-     *
-     * Backwards compatibility: This can be removed as soon as Symfony 4.3 is
-     * the minimum required version.
-     *
-     * @return array<string,array<string,mixed>>
-     */
-    private function handleSecurityEncoder(array $extensionConfigs, ContainerBuilder $container): array
-    {
-        if (class_exists(NativePasswordEncoder::class)) {
-            return $extensionConfigs;
-        }
-
-        foreach ($extensionConfigs as &$extensionConfig) {
-            if (
-                isset($extensionConfig['encoders'][User::class]['algorithm'])
-                && 'auto' === $extensionConfig['encoders'][User::class]['algorithm']
-            ) {
-                $extensionConfig['encoders'][User::class]['algorithm'] = 'bcrypt';
-            }
-        }
-
-        return $extensionConfigs;
     }
 
     /**

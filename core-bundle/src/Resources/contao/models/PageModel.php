@@ -274,7 +274,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class PageModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string
@@ -355,7 +354,7 @@ class PageModel extends Model
 
 			if (!empty($varLanguage))
 			{
-				$arrColumns[] = "($t.language IN('". implode("','", $varLanguage) ."') OR $t.fallback='1')";
+				$arrColumns[] = "($t.language IN('" . implode("','", $varLanguage) . "') OR $t.fallback='1')";
 			}
 			else
 			{
@@ -1017,7 +1016,7 @@ class PageModel extends Model
 		// No root page found
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
-			System::log('Page ID "'. $this->id .'" does not belong to a root page', __METHOD__, TL_ERROR);
+			System::log('Page ID "' . $this->id . '" does not belong to a root page', __METHOD__, TL_ERROR);
 			throw new NoRootPageFoundException('No root page found');
 		}
 
@@ -1028,10 +1027,12 @@ class PageModel extends Model
 		{
 			$this->dateFormat = Config::get('dateFormat');
 		}
+
 		if ($this->timeFormat == '')
 		{
 			$this->timeFormat = Config::get('timeFormat');
 		}
+
 		if ($this->datimFormat == '')
 		{
 			$this->datimFormat = Config::get('datimFormat');
@@ -1098,9 +1099,7 @@ class PageModel extends Model
 			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 		}
 
-		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
-
-		return $strUrl;
+		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
 
 	/**
@@ -1128,9 +1127,47 @@ class PageModel extends Model
 			UrlGeneratorInterface::ABSOLUTE_URL
 		);
 
-		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
+		return $this->applyLegacyLogic($strUrl, $strParams);
+	}
 
-		return $strUrl;
+	/**
+	 * Generate the front end preview URL
+	 *
+	 * @param string $strParams An optional string of URL parameters
+	 *
+	 * @return string The front end preview URL
+	 */
+	public function getPreviewUrl($strParams=null)
+	{
+		$container = System::getContainer();
+
+		if (!$previewScript = $container->getParameter('contao.preview_script'))
+		{
+			return $this->getAbsoluteUrl($strParams);
+		}
+
+		$router = $container->get('router');
+
+		$context = $router->getContext();
+		$context->setBaseUrl($previewScript);
+
+		$objUrlGenerator = $container->get('contao.routing.url_generator');
+
+		$strUrl = $objUrlGenerator->generate
+		(
+			($this->alias ?: $this->id) . $strParams,
+			array
+			(
+				'_locale' => $this->rootLanguage,
+				'_domain' => $this->domain,
+				'_ssl' => (bool) $this->rootUseSSL,
+			),
+			UrlGeneratorInterface::ABSOLUTE_URL
+		);
+
+		$context->setBaseUrl('');
+
+		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
 
 	/**

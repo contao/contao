@@ -100,7 +100,6 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  */
 abstract class User extends System implements UserInterface, EquatableInterface, \Serializable
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var User
@@ -167,7 +166,9 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Set an object property
@@ -586,7 +587,9 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
-	public function eraseCredentials() {}
+	public function eraseCredentials()
+	{
+	}
 
 	/**
 	 * {@inheritdoc}

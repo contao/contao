@@ -25,7 +25,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\ServiceUnavailableException as ContaoServiceUnavailableException;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -53,7 +53,7 @@ class ExceptionConverterListener
     /**
      * Maps known exceptions to HTTP exceptions.
      */
-    public function onKernelException(GetResponseForExceptionEvent $event): void
+    public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getException();
         $class = $this->getTargetClass($exception);

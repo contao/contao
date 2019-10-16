@@ -156,7 +156,7 @@ class ImageFactory implements ImageFactoryInterface
             [$resizeConfig, $importantPart, $options] = $this->createConfig($size, $image);
         }
 
-        if (!\is_object($path) || !($path instanceof ImageInterface)) {
+        if (!\is_object($path) || !$path instanceof ImageInterface) {
             if (null === $importantPart) {
                 $importantPart = $this->createImportantPart($image);
             }
@@ -170,6 +170,10 @@ class ImageFactory implements ImageFactoryInterface
 
         if (!$options instanceof ResizeOptions) {
             $options = new ResizeOptions();
+
+            if (!$size instanceof ResizeConfiguration && $resizeConfig->isEmpty()) {
+                $options->setSkipIfDimensionsMatch(true);
+            }
         }
 
         if (null !== $targetPath) {

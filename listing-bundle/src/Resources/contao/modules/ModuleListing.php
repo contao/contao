@@ -30,7 +30,6 @@ use Patchwork\Utf8;
  */
 class ModuleListing extends Module
 {
-
 	/**
 	 * Primary key
 	 * @var string
@@ -69,18 +68,12 @@ class ModuleListing extends Module
 		}
 
 		// Disable the details page
-		if (Input::get('show') && $this->list_info == '')
+		if ($this->list_info == '' && Input::get('show'))
 		{
 			return '';
 		}
 
-		// Fallback to the default template
-		if ($this->list_layout == '')
-		{
-			$this->list_layout = 'list_default';
-		}
-
-		$this->strTemplate = $this->list_layout;
+		$this->strTemplate = $this->list_layout ?: 'list_default';
 
 		$this->list_where = $this->replaceInsertTags($this->list_where, false);
 		$this->list_info_where = $this->replaceInsertTags($this->list_info_where, false);
@@ -365,13 +358,7 @@ class ModuleListing extends Module
 	 */
 	protected function listSingleRecord($id)
 	{
-		// Fallback template
-		if (!$this->list_info_layout)
-		{
-			$this->list_info_layout = 'info_default';
-		}
-
-		$this->Template = new FrontendTemplate($this->list_info_layout);
+		$this->Template = new FrontendTemplate($this->list_info_layout ?: 'info_default');
 		$this->Template->record = array();
 		$this->Template->referer = 'javascript:history.go(-1)';
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];

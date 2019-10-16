@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class PageLogout extends Frontend
 {
-
 	/**
 	 * Return a redirect response object
 	 *

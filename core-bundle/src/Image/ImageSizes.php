@@ -80,7 +80,7 @@ class ImageSizes
 
         $event = new ImageSizesEvent($this->options);
 
-        $this->eventDispatcher->dispatch(ContaoCoreEvents::IMAGE_SIZES_ALL, $event);
+        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::IMAGE_SIZES_ALL);
 
         return $event->getImageSizes();
     }
@@ -107,7 +107,7 @@ class ImageSizes
             $event = new ImageSizesEvent($this->filterOptions($options), $user);
         }
 
-        $this->eventDispatcher->dispatch(ContaoCoreEvents::IMAGE_SIZES_USER, $event);
+        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::IMAGE_SIZES_USER);
 
         return $event->getImageSizes();
     }

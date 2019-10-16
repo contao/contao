@@ -67,13 +67,12 @@ class ContaoLoginFactory extends FormLoginFactory
     }
 
     /**
-     * {@inheritdoc}
+     * @param ContainerBuilder $container
      */
     protected function createListener($container, $id, $config, $userProvider): string
     {
         $listenerId = parent::createListener($container, $id, $config, $userProvider);
 
-        /* @var ContainerBuilder $container */
         $container
             ->getDefinition($listenerId)
             ->replaceArgument(

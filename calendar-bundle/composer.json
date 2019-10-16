@@ -7,6 +7,10 @@
         {
             "name": "Leo Feyer",
             "homepage": "https://github.com/leofeyer"
+        },
+        {
+            "name": "Contao Community",
+            "homepage": "https://contao.org/contributors"
         }
     ],
     "require": {
@@ -37,7 +41,7 @@
         },
         "contao-manager-plugin": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
         "symfony": {
-            "require": "^4.2"
+            "require": "^4.3"
         }
     },
     "autoload": {

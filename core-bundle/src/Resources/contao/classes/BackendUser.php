@@ -29,7 +29,6 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class BackendUser extends User
 {
-
 	/**
 	 * Edit page flag
 	 * @var string
@@ -308,10 +307,12 @@ class BackendUser extends User
 			{
 				$row['chmod'] = Config::get('defaultChmod');
 			}
+
 			if ($row['cuser'] === false)
 			{
 				$row['cuser'] = (int) Config::get('defaultUser');
 			}
+
 			if ($row['cgroup'] === false)
 			{
 				$row['cgroup'] = (int) Config::get('defaultGroup');
@@ -321,16 +322,16 @@ class BackendUser extends User
 		// Set permissions
 		$chmod = StringUtil::deserialize($row['chmod']);
 		$chmod = \is_array($chmod) ? $chmod : array($chmod);
-		$permission = array('w'.$int);
+		$permission = array('w' . $int);
 
 		if (\in_array($row['cgroup'], $this->groups))
 		{
-			$permission[] = 'g'.$int;
+			$permission[] = 'g' . $int;
 		}
 
 		if ($row['cuser'] == $this->id)
 		{
-			$permission[] = 'u'.$int;
+			$permission[] = 'u' . $int;
 		}
 
 		return \count(array_intersect($permission, $chmod)) > 0;

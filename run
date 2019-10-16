@@ -16,7 +16,11 @@ function phpunit() {
   )
 
   for bundle in ${bundles[*]}; do
-    vendor/bin/phpunit -c ${bundle} "$@"
+    if [[ $DEPRECATIONS ]]; then
+      vendor/bin/phpunit -c "$bundle" "$@"
+    else
+      SYMFONY_DEPRECATIONS_HELPER='max[self]=0&verbose=0' vendor/bin/phpunit -c "$bundle" "$@"
+    fi
   done
 }
 
@@ -26,7 +30,11 @@ function functional() {
     exit 1
   fi
 
-  vendor/bin/phpunit -c core-bundle --testsuite=functional  "$@"
+  if [[ $DEPRECATIONS ]]; then
+    vendor/bin/phpunit -c core-bundle --testsuite=functional  "$@"
+  else
+    SYMFONY_DEPRECATIONS_HELPER='max[self]=0&verbose=0' vendor/bin/phpunit -c core-bundle --testsuite=functional  "$@"
+  fi
 }
 
 function php-cs-fixer() {
@@ -36,8 +44,8 @@ function php-cs-fixer() {
   fi
 
   vendor/bin/php-cs-fixer fix -v "$@"
-  vendor/bin/php-cs-fixer fix -v --config .php_cs.legacy "$@"
-  vendor/bin/php-cs-fixer fix -v --config .php_cs.template "$@"
+  PHP_CS_CONFIG=legacy vendor/bin/php-cs-fixer fix -v "$@"
+  PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix -v "$@"
 }
 
 function phpstan() {
@@ -60,7 +68,7 @@ function composer() {
 
 function usage() {
   cat <<HEREDOC
-Usage: ./run [task]
+Usage: ./run [task] [--show-deprecations]
   phpunit       Run the unit tests
   functional    Run the functional tests
   php-cs-fixer  Run the PHP coding style fixer
@@ -69,17 +77,28 @@ Usage: ./run [task]
 HEREDOC
 }
 
+ARGS=()
+DEPRECATIONS=''
+
+for var in "${@:2}"; do
+  if [[ $var = '--show-deprecations' ]]; then
+    DEPRECATIONS=1
+  else
+    ARGS=("$var" "${ARGS[@]}")
+  fi
+done
+
 case "$1" in
   phpunit)
-    phpunit "${@:2}"
+    phpunit "${ARGS[@]}"
     exit 0
   ;;
   functional)
-    functional
+    functional "${ARGS[@]}"
     exit 0
   ;;
   php-cs-fixer)
-    php-cs-fixer "${@:2}"
+    php-cs-fixer "${ARGS[@]}"
     exit 0
   ;;
   phpstan)
@@ -91,9 +110,9 @@ case "$1" in
     exit 0
   ;;
   all)
-    phpunit "${@:2}"
-    functional
-    php-cs-fixer "${@:2}"
+    phpunit "${ARGS[@]}"
+    functional "${ARGS[@]}"
+    php-cs-fixer "${ARGS[@]}"
     phpstan
     composer
     exit 0

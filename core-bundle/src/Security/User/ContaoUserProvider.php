@@ -121,7 +121,7 @@ class ContaoUserProvider implements UserProviderInterface
         $config = $this->framework->getAdapter(Config::class);
         $timeout = (int) $config->get('sessionTimeout');
 
-        if ($timeout > 0 && (time() - $this->session->getMetadataBag()->getLastUsed()) < $timeout) {
+        if ($timeout > 0 && time() - $this->session->getMetadataBag()->getLastUsed() < $timeout) {
             return;
         }
 

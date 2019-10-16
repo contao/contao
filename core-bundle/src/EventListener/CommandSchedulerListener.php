@@ -18,7 +18,7 @@ use Contao\FrontendCron;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
 class CommandSchedulerListener
 {
@@ -47,7 +47,7 @@ class CommandSchedulerListener
     /**
      * Runs the command scheduler.
      */
-    public function onKernelTerminate(PostResponseEvent $event): void
+    public function onKernelTerminate(TerminateEvent $event): void
     {
         if (!$this->framework->isInitialized() || !$this->canRunController($event->getRequest())) {
             return;

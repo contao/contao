@@ -19,6 +19,7 @@ use Contao\FrontendTemplate;
 use Contao\System;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\VarDumper\VarDumper;
 
 class TemplateTest extends TestCase
 {
@@ -88,7 +89,9 @@ class TemplateTest extends TestCase
 
     public function testHandlesExceptionsInsideBlocks(): void
     {
-        file_put_contents($this->getFixturesDir().'/templates/test_template.html5', <<<'EOF'
+        file_put_contents(
+            $this->getFixturesDir().'/templates/test_template.html5',
+            <<<'EOF'
 <?php
     echo 'test1';
     $this->block('a');
@@ -119,7 +122,9 @@ EOF
 
     public function testHandlesExceptionsInParentTemplate(): void
     {
-        file_put_contents($this->getFixturesDir().'/templates/test_parent.html5', <<<'EOF'
+        file_put_contents(
+            $this->getFixturesDir().'/templates/test_parent.html5',
+            <<<'EOF'
 <?php
     echo 'test1';
     $this->block('a');
@@ -138,7 +143,9 @@ EOF
 EOF
         );
 
-        file_put_contents($this->getFixturesDir().'/templates/test_template.html5', <<<'EOF'
+        file_put_contents(
+            $this->getFixturesDir().'/templates/test_template.html5',
+            <<<'EOF'
 <?php
     echo 'test1';
     $this->extend('test_parent');
@@ -176,7 +183,9 @@ EOF
     {
         file_put_contents($this->getFixturesDir().'/templates/test_parent.html5', '');
 
-        file_put_contents($this->getFixturesDir().'/templates/test_template.html5', <<<'EOF'
+        file_put_contents(
+            $this->getFixturesDir().'/templates/test_template.html5',
+            <<<'EOF'
 <?php
     echo 'test1';
     $this->extend('test_parent');
@@ -225,5 +234,21 @@ EOF
 
         $template = new FrontendTemplate();
         $template->asset('/path/to/asset', 'package_name');
+    }
+
+    public function testCanDumpTemplateVars(): void
+    {
+        $template = new FrontendTemplate();
+        $template->setData(['test' => 1]);
+
+        $dump = null;
+
+        VarDumper::setHandler(static function ($var) use (&$dump): void {
+            $dump = $var;
+        });
+
+        $template->dumpTemplateVars();
+
+        $this->assertSame(['test' => 1], $dump);
     }
 }

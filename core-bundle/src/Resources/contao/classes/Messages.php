@@ -17,7 +17,6 @@ namespace Contao;
  */
 class Messages extends Backend
 {
-
 	/**
 	 * Check for the latest Contao version
 	 *

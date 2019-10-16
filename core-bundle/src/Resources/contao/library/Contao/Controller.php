@@ -43,7 +43,6 @@ use Symfony\Component\Finder\Glob;
  */
 abstract class Controller extends System
 {
-
 	/**
 	 * Find a particular template file and return its path
 	 *
@@ -118,8 +117,16 @@ abstract class Controller extends System
 			$arrTemplates[$strTemplate][] = 'root';
 		}
 
+		$strGlobPrefix = $strPrefix;
+
+		// Backwards compatibility (see #725)
+		if (substr($strGlobPrefix, -1) == '_')
+		{
+			$strGlobPrefix = substr($strGlobPrefix, 0, -1) . '[_-]';
+		}
+
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strPrefix . '*.html5');
+		$arrCustomized = self::braceGlob($rootDir . '/templates/' . $strGlobPrefix . '*.html5');
 
 		// Add the customized templates
 		if (\is_array($arrCustomized))
@@ -127,6 +134,11 @@ abstract class Controller extends System
 			foreach ($arrCustomized as $strFile)
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
+
+				if (strpos($strTemplate, '-') !== false)
+				{
+					@trigger_error('Using hyphens in the template name "' . $strTemplate . '.html5" has been deprecated and will no longer work in Contao 5.0. Use snake_case instead.', E_USER_DEPRECATED);
+				}
 
 				// Ignore bundle templates, e.g. mod_article and mod_article_list
 				if (\in_array($strTemplate, $arrBundleTemplates))
@@ -168,7 +180,7 @@ abstract class Controller extends System
 				{
 					if ($objTheme->templates != '')
 					{
-						$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strPrefix . '*.html5');
+						$arrThemeTemplates = self::braceGlob($rootDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
 
 						if (\is_array($arrThemeTemplates))
 						{
@@ -345,7 +357,7 @@ abstract class Controller extends System
 		// Return if the class does not exist
 		if (!class_exists($strClass))
 		{
-			static::log('Module class "'.$strClass.'" (module "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
+			static::log('Module class "' . $strClass . '" (module "' . $objRow->type . '") does not exist', __METHOD__, TL_ERROR);
 
 			return '';
 		}
@@ -368,7 +380,7 @@ abstract class Controller extends System
 		// Disable indexing if protected
 		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
+			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
 		return $strBuffer;
@@ -455,7 +467,7 @@ abstract class Controller extends System
 		// Disable indexing if protected
 		if ($objArticle->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
+			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
 		return $strBuffer;
@@ -477,7 +489,7 @@ abstract class Controller extends System
 		}
 		else
 		{
-			if (!\strlen($intId) || $intId < 1)
+			if ($intId < 1 || !\strlen($intId))
 			{
 				return '';
 			}
@@ -501,7 +513,7 @@ abstract class Controller extends System
 		// Return if the class does not exist
 		if (!class_exists($strClass))
 		{
-			static::log('Content element class "'.$strClass.'" (content element "'.$objRow->type.'") does not exist', __METHOD__, TL_ERROR);
+			static::log('Content element class "' . $strClass . '" (content element "' . $objRow->type . '") does not exist', __METHOD__, TL_ERROR);
 
 			return '';
 		}
@@ -524,7 +536,7 @@ abstract class Controller extends System
 		// Disable indexing if protected
 		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->". $strBuffer ."<!-- indexer::continue -->\n";
+			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
 		return $strBuffer;
@@ -564,7 +576,7 @@ abstract class Controller extends System
 
 		if (!class_exists($strClass))
 		{
-			static::log('Form class "'.$strClass.'" does not exist', __METHOD__, TL_ERROR);
+			static::log('Form class "' . $strClass . '" does not exist', __METHOD__, TL_ERROR);
 
 			return '';
 		}
@@ -624,7 +636,7 @@ abstract class Controller extends System
 	public static function getPageStatusIcon($objPage)
 	{
 		$sub = 0;
-		$image = $objPage->type.'.svg';
+		$image = $objPage->type . '.svg';
 
 		// Page not published or not active
 		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop < time()))
@@ -647,7 +659,7 @@ abstract class Controller extends System
 		// Get the image name
 		if ($sub > 0)
 		{
-			$image = $objPage->type.'_'.$sub.'.svg';
+			$image = $objPage->type . '_' . $sub . '.svg';
 		}
 
 		// HOOK: add custom logic
@@ -1009,7 +1021,7 @@ abstract class Controller extends System
 			}
 		}
 
-		return implode($return);
+		return implode('', $return);
 	}
 
 	/**
@@ -1093,27 +1105,10 @@ abstract class Controller extends System
 	protected static function replaceOldBePaths($strContext)
 	{
 		$router = System::getContainer()->get('router');
-		$previewScript = System::getContainer()->getParameter('contao.preview_script');
 
-		$generate = static function ($route) use ($router, $previewScript)
+		$generate = static function ($route) use ($router)
 		{
-			if ($route == 'contao_backend_preview')
-			{
-				$origContext = $router->getContext();
-
-				$context = clone $origContext;
-				$context->setBaseUrl($previewScript);
-
-				$router->setContext($context);
-				$url = $router->generate($route);
-				$router->setContext($origContext);
-			}
-			else
-			{
-				$url = $router->generate($route);
-			}
-
-			return substr($url, \strlen(Environment::get('path')) + 1);
+			return substr($router->generate($route), \strlen(Environment::get('path')) + 1);
 		};
 
 		$arrMapper = array
@@ -1245,7 +1240,7 @@ abstract class Controller extends System
 		}
 
 		$search = $blnHrefOnly ? 'href' : 'href|src';
-		$arrUrls = preg_split('/(('.$search.')="([^"]+)")/i', $strContent, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$arrUrls = preg_split('/((' . $search . ')="([^"]+)")/i', $strContent, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$strContent = '';
 
 		for ($i=0, $c=\count($arrUrls); $i<$c; $i+=4)
@@ -1366,13 +1361,7 @@ abstract class Controller extends System
 			$strParams = '/articles/' . (($objArticle->inColumn != 'main') ? $objArticle->inColumn . ':' : '') . $strArticle;
 		}
 
-		$strUrl = $objPage->getFrontendUrl($strParams);
-
-		// Make sure the URL is absolute (see #4332)
-		if (strncmp($strUrl, 'http://', 7) !== 0 && strncmp($strUrl, 'https://', 8) !== 0)
-		{
-			$strUrl = Environment::get('base') . $strUrl;
-		}
+		$strUrl = $objPage->getPreviewUrl($strParams);
 
 		if (!$blnReturn)
 		{
@@ -1418,12 +1407,11 @@ abstract class Controller extends System
 			$intId = $objParent->pid;
 
 			// Add the log entry
-			$arrParent[] = $strTable .'.id=' . $intId;
+			$arrParent[] = $strTable . '.id=' . $intId;
 
 			// Load the data container of the parent table
 			$this->loadDataContainer($strTable);
-		}
-		while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		} while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
@@ -1667,7 +1655,7 @@ abstract class Controller extends System
 		$picture['alt'] = StringUtil::specialchars($arrItem['alt']);
 
 		// Move the title to the link tag so it is shown in the lightbox
-		if (($arrItem['fullsize'] || $arrItem['imageUrl']) && $arrItem['imageTitle'] && !$arrItem['linkTitle'])
+		if ($arrItem['imageTitle'] && !$arrItem['linkTitle'] && ($arrItem['fullsize'] || $arrItem['imageUrl']))
 		{
 			$arrItem['linkTitle'] = $arrItem['imageTitle'];
 			unset($arrItem['imageTitle']);
@@ -1702,7 +1690,7 @@ abstract class Controller extends System
 		}
 
 		// Image link
-		if ($arrItem['imageUrl'] && TL_MODE == 'FE')
+		if (TL_MODE == 'FE' && $arrItem['imageUrl'])
 		{
 			$objTemplate->$strHrefKey = $arrItem['imageUrl'];
 			$objTemplate->attributes = '';
@@ -1710,7 +1698,7 @@ abstract class Controller extends System
 			if ($arrItem['fullsize'])
 			{
 				// Open images in the lightbox
-				if (preg_match('/\.(' . strtr(preg_quote(Config::get('validImageTypes'), '/'), ',', '|'). ')$/i', $arrItem['imageUrl']))
+				if (preg_match('/\.(' . strtr(preg_quote(Config::get('validImageTypes'), '/'), ',', '|') . ')$/i', $arrItem['imageUrl']))
 				{
 					// Do not add the TL_FILES_URL to external URLs (see #4923)
 					if (strncmp($arrItem['imageUrl'], 'http://', 7) !== 0 && strncmp($arrItem['imageUrl'], 'https://', 8) !== 0)
@@ -1746,7 +1734,7 @@ abstract class Controller extends System
 		}
 
 		// Fullsize view
-		elseif ($arrItem['fullsize'] && TL_MODE == 'FE')
+		elseif (TL_MODE == 'FE' && $arrItem['fullsize'])
 		{
 			try
 			{
@@ -2082,7 +2070,7 @@ abstract class Controller extends System
 		}
 
 		// Invalid ID
-		if (!\strlen($intId) || $intId < 1)
+		if ($intId < 1 || !\strlen($intId))
 		{
 			return null;
 		}

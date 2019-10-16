@@ -15,11 +15,11 @@ namespace Contao\ManagerBundle\Tests\ContaoManager\ApiCommand;
 use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\ParseJwtCookieCommand;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
+use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ParseJwtCookieCommandTest extends TestCase
+class ParseJwtCookieCommandTest extends ContaoTestCase
 {
     /**
      * @var JwtManager&MockObject
@@ -43,7 +43,7 @@ class ParseJwtCookieCommandTest extends TestCase
         $application = $this->createMock(Application::class);
         $application
             ->method('getProjectDir')
-            ->willReturn(sys_get_temp_dir())
+            ->willReturn($this->getTempDir())
         ;
 
         $this->command = new ParseJwtCookieCommand($application, $this->jwtManager);

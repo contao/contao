@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\Tests\EventListener;
+namespace Contao\ManagerBundle\Tests\Controller;
 
-use Contao\ManagerBundle\EventListener\DebugListener;
+use Contao\ManagerBundle\Controller\DebugController;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -21,46 +21,46 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 
-class DebugListenerTest extends ContaoTestCase
+class DebugControllerTest extends ContaoTestCase
 {
     public function testReturnsRedirectResponseWithDebugEnabledCookie(): void
     {
-        $listener = new DebugListener(
+        $listener = new DebugController(
             $this->mockSecurityHelper(),
             $this->mockRequestStack(),
             $this->mockJwtManager(true, true)
         );
 
-        $listener->onEnable();
+        $listener->enableAction();
     }
 
     public function testReturnsRedirectResponseWithDebugDisabledCookie(): void
     {
-        $listener = new DebugListener(
+        $listener = new DebugController(
             $this->mockSecurityHelper(),
             $this->mockRequestStack(),
             $this->mockJwtManager(true, false)
         );
 
-        $listener->onDisable();
+        $listener->disableAction();
     }
 
     public function testResponseContainsReferer(): void
     {
-        $listener = new DebugListener(
+        $listener = new DebugController(
             $this->mockSecurityHelper(),
             $this->mockRequestStack('https://example.com/foo/bar.html', 'foo=bar'),
             $this->mockJwtManager(true, true)
         );
 
-        $response = $listener->onEnable();
+        $response = $listener->enableAction();
 
         $this->assertSame('https://example.com/foo/bar.html?foo=bar', $response->getTargetUrl());
     }
 
     public function testThrowsAccessDeniedExceptionIfUserIsNotAdmin(): void
     {
-        $listener = new DebugListener(
+        $listener = new DebugController(
             $this->mockSecurityHelper(false),
             new RequestStack(),
             $this->mockJwtManager(false)
@@ -68,12 +68,12 @@ class DebugListenerTest extends ContaoTestCase
 
         $this->expectException(AccessDeniedException::class);
 
-        $listener->onEnable();
+        $listener->enableAction();
     }
 
     public function testThrowsExceptionIfRequestStackIsEmpty(): void
     {
-        $listener = new DebugListener(
+        $listener = new DebugController(
             $this->mockSecurityHelper(),
             new RequestStack(),
             $this->mockJwtManager(false)
@@ -82,7 +82,7 @@ class DebugListenerTest extends ContaoTestCase
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('The request stack did not contain a request');
 
-        $listener->onEnable();
+        $listener->enableAction();
     }
 
     /**

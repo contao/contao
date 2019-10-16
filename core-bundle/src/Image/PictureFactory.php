@@ -158,7 +158,7 @@ class PictureFactory implements PictureFactoryInterface
                 $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
                 $imageSizes = $imageSizeModel->findByPk($size[2]);
 
-                $config->setSize($this->createConfigItem((null !== $imageSizes) ? $imageSizes->row() : null));
+                $config->setSize($this->createConfigItem(null !== $imageSizes ? $imageSizes->row() : null));
 
                 if (null !== $imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
@@ -250,6 +250,10 @@ class PictureFactory implements PictureFactoryInterface
 
         if (!empty($size[2])) {
             $resizeConfig->setMode($size[2]);
+        }
+
+        if ($resizeConfig->isEmpty()) {
+            $options->setSkipIfDimensionsMatch(true);
         }
 
         $configItem = new PictureConfigurationItem();

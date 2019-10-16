@@ -26,7 +26,6 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
  */
 abstract class Frontend extends Controller
 {
-
 	/**
 	 * Meta array
 	 * @var array
@@ -317,7 +316,7 @@ abstract class Frontend extends Controller
 		if (!empty($_GET['language']) && Config::get('addLanguageToUrl'))
 		{
 			$strUri = Environment::get('url') . '/' . Input::get('language') . '/';
-			$strError = 'No root page found (host "' . $host . '", language "'. Input::get('language') .'")';
+			$strError = 'No root page found (host "' . $host . '", language "' . Input::get('language') . '")';
 		}
 
 		// No language given
@@ -611,36 +610,8 @@ abstract class Frontend extends Controller
 	{
 		@trigger_error('Using Frontend::indexPageIfApplicable() has been deprecated and will no longer work in Contao 5.0. Use the "contao.search.indexer" service instead.', E_USER_DEPRECATED);
 
-		if (!$response->headers->has('Contao-Search'))
-		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$memberId = null;
-			$token = System::getContainer()->get('security.token_storage')->getToken();
-
-			// Load the user from the security storage
-			if ($token !== null && $token->getUser() instanceof FrontendUser)
-			{
-				$memberId = $token->id;
-			}
-
-			$meta = array
-			(
-				'id' => $objPage->id,
-				'noSearch' => $objPage->noSearch,
-				'protected' => $objPage->protected,
-				'groups' => $objPage->groups,
-				'memberId' => $memberId,
-			);
-
-			$response->headers->set('Contao-Search', base64_encode(json_encode($meta)));
-		}
-
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
 		$document = Document::createFromRequestResponse($request, $response);
-
 		System::getContainer()->get('contao.search.indexer')->index($document);
 	}
 
