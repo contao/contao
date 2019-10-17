@@ -21,8 +21,8 @@ use Contao\System;
 use Contao\User;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
@@ -59,7 +59,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     /**
      * Redirects the authenticated user.
      */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token): RedirectResponse
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
         if ($token instanceof TwoFactorTokenInterface) {
             $response = $this->httpUtils->createRedirectResponse(
