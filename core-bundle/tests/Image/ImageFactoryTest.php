@@ -181,6 +181,15 @@ class ImageFactoryTest extends TestCase
         $imageFactory->create($this->getFixturesDir().'/images/dummy.foo');
     }
 
+    public function testFailsToCreateAnImageObjectIfThePathIsNotAbsolute(): void
+    {
+        $imageFactory = $this->getImageFactory();
+
+        $this->expectException('InvalidArgumentException');
+
+        $imageFactory->create('images/dummy.jpg');
+    }
+
     public function testCreatesAnImageObjectFromAnImagePathWithAnImageSize(): void
     {
         $path = $this->getFixturesDir().'/images/dummy.jpg';
@@ -449,7 +458,7 @@ class ImageFactoryTest extends TestCase
         $path = $this->getFixturesDir().'/images/none.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
 
-        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem = $this->getMockBuilder(Filesystem::class)->setMethods(['exists'])->getMock();
         $filesystem
             ->expects($this->once())
             ->method('exists')
