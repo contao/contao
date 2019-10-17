@@ -1,5 +1,9 @@
 # Change log
 
+## DEV
+
+ * Also support the `form_textfield_` prefix for custom text field templates (see #828).
+
 ## 4.8.4 (2019-10-01)
 
  * Correctly render the paste buttons when moving files in the file manager (see #802).
