@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * Front end module "lost password".
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @todo Rename to ModuleLostPassword in Contao 5.0
  */
 class ModulePassword extends Module
 {

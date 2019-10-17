@@ -21,6 +21,8 @@ namespace Contao;
  * @property boolean $doNotOverwrite
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @todo Rename to FormUpload in Contao 5.0
  */
 class FormFileUpload extends Widget implements \uploadable
 {
