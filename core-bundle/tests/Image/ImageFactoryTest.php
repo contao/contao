@@ -186,6 +186,7 @@ class ImageFactoryTest extends TestCase
         $imageFactory = $this->getImageFactory();
 
         $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Image path "images/dummy.jpg" must be absolute');
 
         $imageFactory->create('images/dummy.jpg');
     }
