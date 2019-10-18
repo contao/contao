@@ -136,9 +136,7 @@ class ImageFactory implements ImageFactoryInterface
             }
 
             if (!$this->filesystem->isAbsolutePath($path)) {
-                throw new \InvalidArgumentException(
-                    sprintf('Image path "%s" must be absolute', $path)
-                );
+                throw new \InvalidArgumentException(sprintf('Image path "%s" must be absolute', $path));
             }
 
             if (

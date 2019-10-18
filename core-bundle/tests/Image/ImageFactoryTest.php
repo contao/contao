@@ -458,7 +458,12 @@ class ImageFactoryTest extends TestCase
         $path = $this->getFixturesDir().'/images/none.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
 
-        $filesystem = $this->getMockBuilder(Filesystem::class)->setMethods(['exists'])->getMock();
+        $filesystem = $this
+            ->getMockBuilder(Filesystem::class)
+            ->setMethods(['exists'])
+            ->getMock()
+        ;
+
         $filesystem
             ->expects($this->once())
             ->method('exists')
