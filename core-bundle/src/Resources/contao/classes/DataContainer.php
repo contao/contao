@@ -676,7 +676,7 @@ abstract class DataContainer extends Backend
 	{
 		$return = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1];
 
-		if ($return == '' || !Config::get('showHelp') || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password')
+		if ($return == '' || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password' || !Config::get('showHelp'))
 		{
 			return '';
 		}

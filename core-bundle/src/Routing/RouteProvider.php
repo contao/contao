@@ -407,7 +407,7 @@ class RouteProvider implements RouteProviderInterface
             /** @var PageModel $pageB */
             $pageB = $b->getDefault('pageModel');
 
-            // TODO Check if this is really necessary, as routes are generated from pages so pageModel is always there
+            // Check if the page models are valid (should always be the case, as routes are generated from pages)
             if (!$pageA instanceof PageModel || !$pageB instanceof PageModel) {
                 return 0;
             }
