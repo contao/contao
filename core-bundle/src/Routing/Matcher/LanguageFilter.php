@@ -37,7 +37,7 @@ class LanguageFilter implements RouteFilterInterface
      */
     public function filter(RouteCollection $collection, Request $request): RouteCollection
     {
-        $languages = str_replace('_', '-', $request->getLanguages());
+        $languages = $request->getLanguages();
 
         foreach ($collection->all() as $name => $route) {
             if ('.fallback' !== substr($name, -9) && ($this->prependLocale || '.root' !== substr($name, -5))) {
@@ -51,7 +51,8 @@ class LanguageFilter implements RouteFilterInterface
                 !$pageModel instanceof PageModel
                 || $pageModel->rootIsFallback
                 || \in_array($pageModel->rootLanguage, $languages, true)
-                || preg_grep('/'.preg_quote($pageModel->rootLanguage, '/').'-[A-Z]{2}/', $languages)
+                || \in_array(str_replace('-', '_', $pageModel->rootLanguage), $languages, true)
+                || preg_grep('/'.preg_quote($pageModel->rootLanguage, '/').'_[A-Z]{2}/', $languages)
             ) {
                 continue;
             }
