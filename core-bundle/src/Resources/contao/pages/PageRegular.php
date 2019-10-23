@@ -818,16 +818,8 @@ class PageRegular extends Frontend
 
 			// Backwards compatibility: Do not use $GLOBALS['TL_NOINDEX_KEYS'] anymore
 			// but make sure your page type delivers the correct meta robots tag
-			foreach (array_keys($_GET) as $key)
-			{
-				foreach ($GLOBALS['TL_NOINDEX_KEYS'] as $noIndexKey)
-				{
-					if (preg_match('/^' . $noIndexKey . '$/', $key))
-					{
-						$noSearch = true;
-						break 2;
-					}
-				}
+			if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET))) {
+				$noSearch = true;
 			}
 
 			$meta = array
