@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
+use Contao\CoreBundle\Search\Indexer\DelegatingIndexer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -23,7 +24,7 @@ class SearchIndexerPassTest extends TestCase
     public function testAddsTheIndexersIfThereIsADelegatingIndexer(): void
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('contao.search.indexer.delegating', new Definition());
+        $container->setDefinition(DelegatingIndexer::class, new Definition());
 
         $definition = new Definition();
         $definition->addTag('contao.search_indexer');
@@ -33,7 +34,7 @@ class SearchIndexerPassTest extends TestCase
         $pass = new SearchIndexerPass();
         $pass->process($container);
 
-        $methodCalls = $container->findDefinition('contao.search.indexer.delegating')->getMethodCalls();
+        $methodCalls = $container->findDefinition(DelegatingIndexer::class)->getMethodCalls();
 
         $this->assertCount(1, $methodCalls);
         $this->assertSame('addIndexer', $methodCalls[0][0]);

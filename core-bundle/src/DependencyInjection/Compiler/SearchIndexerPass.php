@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Contao\CoreBundle\Search\Indexer\DelegatingIndexer;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -25,11 +26,11 @@ class SearchIndexerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has('contao.search.indexer.delegating')) {
+        if (!$container->has(DelegatingIndexer::class)) {
             return;
         }
 
-        $definition = $container->findDefinition('contao.search.indexer.delegating');
+        $definition = $container->findDefinition(DelegatingIndexer::class);
         $references = $this->findAndSortTaggedServices('contao.search_indexer', $container);
 
         foreach ($references as $reference) {
