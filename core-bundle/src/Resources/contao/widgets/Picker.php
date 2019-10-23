@@ -116,6 +116,7 @@ class Picker extends Widget
 	 */
 	public function generate()
 	{
+		$strContext = $this->context ?: 'universal.'.$this->getRelatedTable();
 		$blnHasOrder = ($this->orderField != '' && \is_array($this->{$this->orderField}));
 		$arrValues = $this->generateValues($blnHasOrder);
 		$arrSet = array_keys($arrValues);
@@ -133,7 +134,7 @@ class Picker extends Widget
 
 		$return .= '</ul>';
 
-		if (!System::getContainer()->get('contao.picker.builder')->supportsContext($this->context))
+		if (!System::getContainer()->get('contao.picker.builder')->supportsContext($strContext))
 		{
 			$return .= '
 	<p><button class="tl_submit" disabled>'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</button></p>';
@@ -147,7 +148,7 @@ class Picker extends Widget
 			);
 
 			$return .= '
-    <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl($this->context, $extras)) . '" class="tl_submit" id="picker_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+    <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl($strContext, $extras)) . '" class="tl_submit" id="picker_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
     <script>
       $("picker_' . $this->strName . '").addEvent("click", function(e) {
         e.preventDefault();
@@ -178,8 +179,7 @@ class Picker extends Widget
 
 	protected function generateValues($blnHasOrder): array
 	{
-		$arrRelations = DcaExtractor::getInstance($this->strTable)->getRelations();
-		$strRelatedTable = $arrRelations[$this->strField]['table'] ?? null;
+		$strRelatedTable = $this->getRelatedTable();
 
 		if (!$strRelatedTable)
 		{
@@ -270,5 +270,12 @@ class Picker extends Widget
 		}
 
 		return $arrRow['id'];
+	}
+
+	private function getRelatedTable(): string
+	{
+		$arrRelations = DcaExtractor::getInstance($this->strTable)->getRelations();
+
+		return (string) $arrRelations[$this->strField]['table'];
 	}
 }

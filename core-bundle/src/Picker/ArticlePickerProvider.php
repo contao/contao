@@ -79,6 +79,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
 
         if ('article' === $config->getContext()) {
             $value = $config->getValue();
+
             if ($fieldType = $config->getExtra('fieldType')) {
                 $attributes['fieldType'] = $fieldType;
             }

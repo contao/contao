@@ -731,10 +731,9 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'picker',
-			'foreignKey'              => 'tl_content.type',
-			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr', 'context'=>'content', 'fieldType'=>'radio', 'table'=>'tl_article'),
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr', 'fieldType'=>'radio'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy'),
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy', 'table'=>'tl_content'),
 			'save_callback' => array
 			(
 				array('tl_content', 'saveAlias'),
@@ -745,7 +744,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'picker',
 			'foreignKey'              => 'tl_article.title',
-			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr', 'context'=>'article', 'fieldType'=>'radio'),
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr', 'fieldType'=>'radio'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy'),
 			'save_callback' => array
@@ -758,7 +757,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'picker',
 			'foreignKey'              => 'tl_article.title',
-			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr', 'context'=>'article', 'fieldType'=>'radio'),
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr', 'fieldType'=>'radio'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy'),
 		),
