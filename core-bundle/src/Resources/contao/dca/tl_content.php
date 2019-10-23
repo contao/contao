@@ -1286,7 +1286,7 @@ class tl_content extends Contao\Backend
 	}
 
 	/**
-	 * Saves the article alias
+	 * Throws an exception if the current article is selected (circular reference)).
 	 *
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc
@@ -1399,7 +1399,7 @@ class tl_content extends Contao\Backend
 	}
 
 	/**
-	 * Saves the article alias
+	 * Throws an exception if the current content element is selected (circular reference).
 	 *
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc

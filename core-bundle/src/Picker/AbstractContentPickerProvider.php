@@ -62,11 +62,7 @@ abstract class AbstractContentPickerProvider extends AbstractPickerProvider impl
             ->where($qb->expr()->eq('id', $config->getValue()))
         ;
 
-        if ($qb->execute()->fetchColumn() === $this->getParentTable()) {
-            return true;
-        }
-
-        return false;
+        return $qb->execute()->fetchColumn() === $this->getParentTable();
     }
 
     /**
@@ -94,11 +90,7 @@ abstract class AbstractContentPickerProvider extends AbstractPickerProvider impl
         }
 
         if ($value) {
-            $intval = static function ($val) {
-                return (int) $val;
-            };
-
-            $attributes['value'] = array_map($intval, explode(',', $value));
+            $attributes['value'] = array_map('\intval', explode(',', $value));
         }
 
         return $attributes;
