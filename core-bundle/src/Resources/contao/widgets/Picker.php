@@ -272,7 +272,7 @@ class Picker extends Widget
 		return $arrRow['id'];
 	}
 
-	private function getRelatedTable(): string
+	protected function getRelatedTable(): string
 	{
 		$arrRelations = DcaExtractor::getInstance($this->strTable)->getRelations();
 
