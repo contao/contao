@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Search\Document;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -600,51 +601,25 @@ abstract class Frontend extends Controller
 	/**
 	 * Index a page if applicable
 	 *
-	 * @param Response $objResponse
+	 * @param Response $response
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
+	 *             Use the "contao.search.indexer" service instead.
 	 */
-	public static function indexPageIfApplicable(Response $objResponse)
+	public static function indexPageIfApplicable(Response $response)
 	{
-		global $objPage;
+		@trigger_error('Using Frontend::indexPageIfApplicable() has been deprecated and will no longer work in Contao 5.0. Use the "contao.search.indexer" service instead.', E_USER_DEPRECATED);
 
-		if ($objPage === null)
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request === null)
 		{
-			return;
+			throw new \RuntimeException('The request stack did not contain a request');
 		}
 
-		// Index page if searching is allowed and there is no back end user
-		if (!BE_USER_LOGGED_IN && !$objPage->noSearch && Config::get('enableSearch') && $objResponse->getStatusCode() == 200)
-		{
-			// Index protected pages if enabled
-			if ((!FE_USER_LOGGED_IN && !$objPage->protected) || Config::get('indexProtected'))
-			{
-				$blnIndex = true;
+		$document = Document::createFromRequestResponse($request, $response);
 
-				// Do not index the page if certain parameters are set
-				foreach (array_keys($_GET) as $key)
-				{
-					if (strncmp($key, 'page_', 5) === 0 || \in_array($key, $GLOBALS['TL_NOINDEX_KEYS']))
-					{
-						$blnIndex = false;
-						break;
-					}
-				}
-
-				if ($blnIndex)
-				{
-					$arrData = array(
-						'url'       => Environment::get('base') . Environment::get('relativeRequest'),
-						'content'   => $objResponse->getContent(),
-						'title'     => $objPage->pageTitle ?: $objPage->title,
-						'protected' => ($objPage->protected ? '1' : ''),
-						'groups'    => $objPage->groups,
-						'pid'       => $objPage->id,
-						'language'  => $objPage->language
-					);
-
-					Search::indexPage($arrData);
-				}
-			}
-		}
+		System::getContainer()->get('contao.search.indexer')->index($document);
 	}
 
 	/**

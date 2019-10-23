@@ -11,7 +11,7 @@ services:
     contao.listener.add_to_search_index:
         class: Contao\CoreBundle\EventListener\AddToSearchIndexListener
         arguments:
-            - '@contao.framework'
+            - '@contao.search.indexer'
             - '%fragment.path%'
         tags:
             - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }

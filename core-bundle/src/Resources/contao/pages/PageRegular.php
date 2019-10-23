@@ -218,7 +218,7 @@ class PageRegular extends Frontend
 		$this->Template->class = trim($objLayout->cssClass . ' ' . $objPage->cssClass);
 
 		// Execute AFTER the modules have been generated and create footer scripts first
-		$this->createFooterScripts($objLayout);
+		$this->createFooterScripts($objLayout, $objPage);
 		$this->createHeaderScripts($objPage, $objLayout);
 	}
 
@@ -699,8 +699,11 @@ class PageRegular extends Frontend
 	 * Create all footer scripts
 	 *
 	 * @param LayoutModel $objLayout
+	 * @param PageModel   $objPage
+	 *
+	 * @todo Change the method signature to ($objPage, $objLayout) in Contao 5.0
 	 */
-	protected function createFooterScripts($objLayout)
+	protected function createFooterScripts($objLayout, $objPage = null)
 	{
 		$strScripts = '';
 
@@ -806,6 +809,40 @@ class PageRegular extends Frontend
 					$strScripts .= Template::generateScriptTag($objFiles->path, false, null);
 				}
 			}
+		}
+
+		// Add search index meta data
+		if ($objPage !== null)
+		{
+			$noSearch = (bool) $objPage->noSearch;
+
+			// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
+			if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET)))
+			{
+				$noSearch = true;
+			}
+
+			$meta = array
+			(
+				'@context' => 'https://contao.org/',
+				'@type' => 'PageMetaData',
+				'pageId' => (int) $objPage->id,
+				'language' => $objPage->language,
+				'title' => $objPage->pageTitle ?: $objPage->title,
+				'noSearch' => $noSearch,
+				'protected' => (bool) $objPage->protected,
+				'groups' => array_map('intval', array_filter((array) $objPage->groups)),
+				'fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
+			);
+
+			$token = System::getContainer()->get('security.token_storage')->getToken();
+
+			if ($token !== null && $token->getUser() instanceof FrontendUser)
+			{
+				$meta['memberId'] = (int) $token->getUser()->id;
+			}
+
+			$strScripts .= '<script type="application/ld+json">' . json_encode($meta) . '</script>';
 		}
 
 		// Add the custom JavaScript

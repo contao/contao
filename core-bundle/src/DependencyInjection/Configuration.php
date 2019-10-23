@@ -115,6 +115,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
+                ->append($this->addSearchNode())
             ->end()
         ;
 
@@ -313,6 +314,30 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue(false)
                         ->end()
                     ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addSearchNode(): NodeDefinition
+    {
+        return (new TreeBuilder('search'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('default_indexer')
+                    ->info('The default search indexer, which indexes pages in the database')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('enable')
+                            ->info('Enables the default search indexer')
+                            ->defaultTrue()
+                        ->end()
+                    ->end()
+                ->end()
+                ->scalarNode('indexProtected')
+                    ->info('Enables indexing of protected pages')
+                    ->defaultFalse()
                 ->end()
             ->end()
         ;

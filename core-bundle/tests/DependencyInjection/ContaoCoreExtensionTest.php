@@ -96,6 +96,7 @@ use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
+use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint;
 use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
@@ -245,7 +246,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(AddToSearchIndexListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame('contao.search.indexer', (string) $definition->getArgument(0));
         $this->assertSame('%fragment.path%', (string) $definition->getArgument(1));
 
         $tags = $definition->getTags();
@@ -1910,6 +1911,56 @@ class ContaoCoreExtensionTest extends TestCase
         foreach ($services as $service) {
             $this->assertTrue($this->container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
         }
+    }
+
+    public function testRegistersTheDefaultSearchIndexer(): void
+    {
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $this->container);
+
+        $extension->load(
+            [
+                'contao' => [
+                    'search' => [
+                        'default_indexer' => [
+                            'enable' => true,
+                        ],
+                        'indexProtected' => true,
+                    ],
+                ],
+            ],
+            $this->container
+        );
+
+        $this->assertArrayHasKey(IndexerInterface::class, $this->container->getAutoconfiguredInstanceof());
+        $this->assertTrue($this->container->hasDefinition('contao.search.indexer.default'));
+
+        $definition = $this->container->getDefinition('contao.search.indexer.default');
+
+        $this->assertTrue($definition->getArgument(2));
+    }
+
+    public function testDoesNotRegisterTheDefaultSearchIndexerIfItIsDisabled(): void
+    {
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $this->container);
+
+        $extension->load(
+            [
+                'contao' => [
+                    'search' => [
+                        'default_indexer' => [
+                            'enable' => false,
+                        ],
+                    ],
+                ],
+            ],
+            $this->container
+        );
+
+        // Should still have the interface registered for autoconfiguration
+        $this->assertArrayHasKey(IndexerInterface::class, $this->container->getAutoconfiguredInstanceof());
+        $this->assertFalse($this->container->hasDefinition('contao.search.indexer.default'));
     }
 
     /**

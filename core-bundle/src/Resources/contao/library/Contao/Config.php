@@ -476,6 +476,8 @@ class Config
 			'urlSuffix'        => 'contao.url_suffix',
 			'uploadPath'       => 'contao.upload_path',
 			'debugMode'        => 'kernel.debug',
+			'enableSearch'     => 'contao.search.default_indexer.enable',
+			'indexProtected'   => 'contao.search.indexProtected',
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)
