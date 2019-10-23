@@ -493,7 +493,7 @@ services:
             - '%contao.prepend_locale%'
         public: true
 
-     contao.search.indexer.default:
+    contao.search.indexer.default:
         arguments:
             - '@contao.framework'
             - '@database_connection'
