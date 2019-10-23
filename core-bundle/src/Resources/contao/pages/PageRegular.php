@@ -843,11 +843,11 @@ class PageRegular extends Frontend
 				'fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
 			);
 
-			$token = System::getContainer()->get('security.token_storage')->getToken();
+			$user = System::getContainer()->get('security.helper')->getUser();
 
-			if ($token !== null && $token->getUser() instanceof FrontendUser)
+			if ($user instanceof FrontendUser)
 			{
-				$meta['memberId'] = (int) $token->getUser()->id;
+				$meta['memberId'] = (int) $user->id;
 			}
 
 			$strScripts .= "\n<script type=\"application/ld+json\">" . json_encode($meta) . "</script>\n";
