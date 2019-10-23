@@ -494,6 +494,7 @@ services:
         public: true
 
     contao.search.indexer.default:
+        class: Contao\CoreBundle\Search\Indexer\DefaultIndexer
         arguments:
             - '@contao.framework'
             - '@database_connection'
