@@ -20,19 +20,26 @@ class SearchIndexerPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
 
+    private const DELEGATING_SERVICE_ID = 'contao.search.indexer.delegating';
+
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has('contao.search.indexer.delegating')) {
+        if (!$container->has(self::DELEGATING_SERVICE_ID)) {
             return;
         }
 
-        $definition = $container->findDefinition('contao.search.indexer.delegating');
+        $definition = $container->findDefinition(self::DELEGATING_SERVICE_ID);
         $references = $this->findAndSortTaggedServices('contao.search_indexer', $container);
 
         foreach ($references as $reference) {
+            // Make sure we don't add ourselves to prevent endless redirects
+            if (self::DELEGATING_SERVICE_ID === (string) $reference) {
+                continue;
+            }
+
             $definition->addMethodCall('addIndexer', [$reference]);
         }
     }

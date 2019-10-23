@@ -23,11 +23,13 @@ class SearchIndexerPassTest extends TestCase
     public function testAddsTheIndexersIfThereIsADelegatingIndexer(): void
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('contao.search.indexer.delegating', new Definition());
+
+        $delegatingDefinition = new Definition();
+        $delegatingDefinition->addTag('contao.search_indexer');
+        $container->setDefinition('contao.search.indexer.delegating', $delegatingDefinition);
 
         $definition = new Definition();
         $definition->addTag('contao.search_indexer');
-
         $container->setDefinition('contao.search.super-indexer', $definition);
 
         $pass = new SearchIndexerPass();
