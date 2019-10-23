@@ -477,7 +477,7 @@ class Config
 			'uploadPath'       => 'contao.upload_path',
 			'debugMode'        => 'kernel.debug',
 			'enableSearch'     => 'contao.search.default_indexer.enable',
-			'indexProtected'   => 'contao.search.default_indexer.enableIndexProtected',
+			'indexProtected'   => 'contao.search.indexProtected',
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)

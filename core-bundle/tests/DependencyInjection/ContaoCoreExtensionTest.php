@@ -96,6 +96,7 @@ use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
+use Contao\CoreBundle\Search\Indexer\DefaultIndexer;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint;
 use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
@@ -1924,8 +1925,8 @@ class ContaoCoreExtensionTest extends TestCase
                     'search' => [
                         'default_indexer' => [
                             'enable' => true,
-                            'enableIndexProtected' => true,
                         ],
+                        'indexProtected' => true,
                     ],
                 ],
             ],
@@ -1934,9 +1935,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey(IndexerInterface::class, $this->container->getAutoconfiguredInstanceof());
 
-        $this->assertTrue($this->container->hasDefinition('Contao\CoreBundle\Search\Indexer\DefaultIndexer'));
+        $this->assertTrue($this->container->hasDefinition(DefaultIndexer::class));
 
-        $definition = $this->container->getDefinition('Contao\CoreBundle\Search\Indexer\DefaultIndexer');
+        $definition = $this->container->getDefinition(DefaultIndexer::class);
         $this->assertTrue($definition->getArgument(2));
     }
 
