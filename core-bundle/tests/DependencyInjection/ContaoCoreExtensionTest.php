@@ -1933,14 +1933,14 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertArrayHasKey(IndexerInterface::class, $this->container->getAutoconfiguredInstanceof());
-
         $this->assertTrue($this->container->hasDefinition('contao.search.indexer.default'));
 
         $definition = $this->container->getDefinition('contao.search.indexer.default');
+
         $this->assertTrue($definition->getArgument(2));
     }
 
-    public function testDoesNotRegisterTheDefaultSearchIndexerIfDisabled(): void
+    public function testDoesNotRegisterTheDefaultSearchIndexerIfItIsDisabled(): void
     {
         $extension = new ContaoCoreExtension();
         $extension->load([], $this->container);

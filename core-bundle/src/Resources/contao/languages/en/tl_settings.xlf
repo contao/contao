@@ -158,9 +158,6 @@
       <trans-unit id="tl_settings.cron_legend">
         <source>Cron job settings</source>
       </trans-unit>
-      <trans-unit id="tl_settings.search_legend">
-        <source>Search engine settings</source>
-      </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
       </trans-unit>

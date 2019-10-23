@@ -611,7 +611,14 @@ abstract class Frontend extends Controller
 		@trigger_error('Using Frontend::indexPageIfApplicable() has been deprecated and will no longer work in Contao 5.0. Use the "contao.search.indexer" service instead.', E_USER_DEPRECATED);
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request === null)
+		{
+			throw new \RuntimeException('The request stack did not contain a request');
+		}
+
 		$document = Document::createFromRequestResponse($request, $response);
+
 		System::getContainer()->get('contao.search.indexer')->index($document);
 	}
 

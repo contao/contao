@@ -326,7 +326,7 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->arrayNode('default_indexer')
-                    ->info('Settings regarding the default search indexer which indexes pages in the database.')
+                    ->info('The default search indexer, which indexes pages in the database')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('enable')

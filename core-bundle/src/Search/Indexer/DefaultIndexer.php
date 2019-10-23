@@ -32,7 +32,7 @@ class DefaultIndexer implements IndexerInterface
     /**
      * @var bool
      */
-    private $indexProtected = false;
+    private $indexProtected;
 
     public function __construct(ContaoFramework $framework, Connection $connection, bool $indexProtected = false)
     {
@@ -71,21 +71,20 @@ class DefaultIndexer implements IndexerInterface
             return;
         }
 
-        // If the page is protected, we only index if the member is logged in and protecting indexed pages is enabled
-        if (isset($meta['protected']) && true === $meta['protected']) {
-            if (!$this->indexProtected) {
-                return;
-            }
+        // If the page is protected and no member is logged in or indexing protecting pages is disabled, we do not index
+        if (isset($meta['protected']) && true === $meta['protected'] && !$this->indexProtected) {
+            return;
         }
 
         $this->framework->initialize();
 
         /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
+
         $search->indexPage([
             'url' => (string) $document->getUri(),
             'content' => $document->getBody(),
-            'protected' => ($meta['protected']) ? '1' : '',
+            'protected' => $meta['protected'] ? '1' : '',
             'groups' => $meta['groups'],
             'pid' => $meta['pageId'],
             'title' => $meta['title'],

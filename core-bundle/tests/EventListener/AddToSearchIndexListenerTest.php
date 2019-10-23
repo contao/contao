@@ -23,68 +23,42 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class AddToSearchIndexListenerTest extends TestCase
 {
-    public function testIndexesTheResponse(): void
+    /**
+     * @dataProvider getRequestResponse
+     */
+    public function testIndexesTheResponse(Request $request, Response $response, bool $index): void
     {
         $indexer = $this->createMock(IndexerInterface::class);
-
         $indexer
-            ->expects($this->once())
+            ->expects($index ? $this->once() : $this->never())
             ->method('index')
             ->with($this->isInstanceOf(Document::class))
         ;
 
-        $request = Request::create('/foobar');
-        $response = new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>');
-
-        $event = new TerminateEvent(
-            $this->createMock(HttpKernelInterface::class),
-            $request,
-            $response
-        );
+        $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
 
         $listener = new AddToSearchIndexListener($indexer);
         $listener->onKernelTerminate($event);
     }
 
-    public function testDoesNotIndexTheResponseIfTheRequestMethodIsNotGet(): void
+    public function getRequestResponse(): \Generator
     {
-        $indexer = $this->createMock(IndexerInterface::class);
-        $indexer
-            ->expects($this->never())
-            ->method('index')
-        ;
+        yield [
+            Request::create('/foobar'),
+            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
+            true,
+        ];
 
-        $request = Request::create('/foobar', 'POST');
-        $response = new Response();
+        yield [
+            Request::create('/foobar', 'POST'),
+            new Response(),
+            false,
+        ];
 
-        $event = new TerminateEvent(
-            $this->createMock(HttpKernelInterface::class),
-            $request,
-            $response
-        );
-
-        $listener = new AddToSearchIndexListener($indexer);
-        $listener->onKernelTerminate($event);
-    }
-
-    public function testDoesNotIndexTheResponseUponFragmentRequests(): void
-    {
-        $indexer = $this->createMock(IndexerInterface::class);
-        $indexer
-            ->expects($this->never())
-            ->method('index')
-        ;
-
-        $request = Request::create('_fragment/foo/bar');
-        $response = new Response();
-
-        $event = new TerminateEvent(
-            $this->createMock(HttpKernelInterface::class),
-            $request,
-            $response
-        );
-
-        $listener = new AddToSearchIndexListener($indexer);
-        $listener->onKernelTerminate($event);
+        yield [
+            Request::create('_fragment/foo/bar'),
+            new Response(),
+            false,
+        ];
     }
 }

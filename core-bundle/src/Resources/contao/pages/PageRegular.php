@@ -700,6 +700,8 @@ class PageRegular extends Frontend
 	 *
 	 * @param LayoutModel $objLayout
 	 * @param PageModel   $objPage
+	 *
+	 * @todo Change the method signature to ($objPage, $objLayout) in Contao 5.0
 	 */
 	protected function createFooterScripts($objLayout, $objPage = null)
 	{
@@ -814,8 +816,8 @@ class PageRegular extends Frontend
 		{
 			$noSearch = (bool) $objPage->noSearch;
 
-			// BC, do not use $GLOBALS['TL_NOINDEX_KEYS'] anymore but make sure your page type delivers the correct
-			// <meta name="robots" content="noindex"> tag.
+			// Backwards compatibility: Do not use $GLOBALS['TL_NOINDEX_KEYS'] anymore
+			// but make sure your page type delivers the correct meta robots tag
 			foreach (array_keys($_GET) as $key)
 			{
 				foreach ($GLOBALS['TL_NOINDEX_KEYS'] as $noIndexKey)

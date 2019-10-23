@@ -24,7 +24,7 @@ class DefaultIndexerTest extends ContaoTestCase
     /**
      * @dataProvider indexProvider
      */
-    public function testIndexesCorrectly(Document $document, ?array $expectedIndexParams, bool $indexProtected = false): void
+    public function testIndexesADocument(Document $document, ?array $expectedIndexParams, bool $indexProtected = false): void
     {
         $searchAdapter = $this->mockAdapter(['indexPage']);
 
@@ -104,7 +104,7 @@ class DefaultIndexerTest extends ContaoTestCase
         ];
     }
 
-    public function testClear(): void
+    public function testClearsTheSearchIndex(): void
     {
         $framework = $this->mockContaoFramework();
 

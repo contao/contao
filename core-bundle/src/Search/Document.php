@@ -31,14 +31,12 @@ class Document
     private $statusCode;
 
     /**
-     * An array of headers.
-     * The key is the header name in lowercase letters
-     * and the value is again an array of header
-     * values.
+     * The key is the header name in lowercase letters and the value is again
+     * an array of header values.
      *
      * @var array<string,array>
      */
-    private $headers = [];
+    private $headers;
 
     /**
      * @var string
@@ -82,7 +80,7 @@ class Document
      * Extracts all <script type="application/ld+json"> script tags and returns their contents as a JSON decoded
      * array. Optionally allows to restrict it to a given context and type.
      */
-    public function extractJsonLdScripts($context = '', $type = ''): array
+    public function extractJsonLdScripts(string $context = '', string $type = ''): array
     {
         if (null !== $this->jsonLds) {
             return $this->filterJsonLd($this->jsonLds, $context, $type);
@@ -96,17 +94,22 @@ class Document
 
         $crawler = new Crawler($this->body);
 
-        $this->jsonLds = $crawler->filterXPath('descendant-or-self::script[@type = \'application/ld+json\']')->each(static function (Crawler $node) {
-            $data = json_decode($node->text(), true);
+        $this->jsonLds = $crawler
+            ->filterXPath('descendant-or-self::script[@type = "application/ld+json"]')
+            ->each(
+                static function (Crawler $node) {
+                    $data = json_decode($node->text(), true);
 
-            if (JSON_ERROR_NONE !== json_last_error()) {
-                return null;
-            }
+                    if (JSON_ERROR_NONE !== json_last_error()) {
+                        return null;
+                    }
 
-            return $data;
-        });
+                    return $data;
+                }
+            )
+        ;
 
-        // Filter null (invalid) values
+        // Filter invalid (null) values
         $this->jsonLds = array_filter($this->jsonLds);
 
         return $this->filterJsonLd($this->jsonLds, $context, $type);
@@ -122,7 +125,7 @@ class Document
         );
     }
 
-    private function filterJsonLd(array $jsonLds, $context = '', $type = ''): array
+    private function filterJsonLd(array $jsonLds, string $context = '', string $type = ''): array
     {
         $matching = [];
 

@@ -46,16 +46,16 @@ class AddToSearchIndexListener
         if (!$request->isMethod(Request::METHOD_GET)) {
             return;
         }
+
         // Do not index fragments
         if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $request->getPathInfo())) {
             return;
         }
 
         $document = Document::createFromRequestResponse($request, $event->getResponse());
-
-        // If there are no json ld scripts at all, nothing will be indexed.
         $lds = $document->extractJsonLdScripts();
 
+        // If there are no json ld scripts at all, nothing will be indexed
         if (0 === \count($lds)) {
             return;
         }

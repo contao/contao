@@ -42,13 +42,14 @@ class DocumentTest extends TestCase
     {
         $request = Request::create('https://example.com/foo?bar=baz', 'GET');
         $response = new Response('body', 200, ['content-type' => ['text/html']]);
-
         $document = Document::createFromRequestResponse($request, $response);
 
         $this->assertSame('https://example.com/foo?bar=baz', (string) $document->getUri());
         $this->assertSame(200, $document->getStatusCode());
+
         $headers = $document->getHeaders();
         unset($headers['date']);
+
         $this->assertSame(['content-type' => ['text/html'], 'cache-control' => ['no-cache, private']], $headers);
     }
 
@@ -61,29 +62,38 @@ class DocumentTest extends TestCase
             '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script></body></html>'
         );
 
-        $this->assertSame([
+        $this->assertSame(
             [
-                '@context' => 'https://contao.org/',
-                '@type' => 'PageMetaData',
-                'foobar' => true,
+                [
+                    '@context' => 'https://contao.org/',
+                    '@type' => 'PageMetaData',
+                    'foobar' => true,
+                ],
             ],
-        ], $document->extractJsonLdScripts());
+            $document->extractJsonLdScripts()
+        );
 
-        $this->assertSame([
+        $this->assertSame(
             [
-                '@context' => 'https://contao.org/',
-                '@type' => 'PageMetaData',
-                'foobar' => true,
+                [
+                    '@context' => 'https://contao.org/',
+                    '@type' => 'PageMetaData',
+                    'foobar' => true,
+                ],
             ],
-        ], $document->extractJsonLdScripts('https://contao.org/'));
+            $document->extractJsonLdScripts('https://contao.org/')
+        );
 
-        $this->assertSame([
+        $this->assertSame(
             [
-                '@context' => 'https://contao.org/',
-                '@type' => 'PageMetaData',
-                'foobar' => true,
+                [
+                    '@context' => 'https://contao.org/',
+                    '@type' => 'PageMetaData',
+                    'foobar' => true,
+                ],
             ],
-        ], $document->extractJsonLdScripts('https://contao.org/', 'PageMetaData'));
+            $document->extractJsonLdScripts('https://contao.org/', 'PageMetaData')
+        );
 
         $this->assertSame([], $document->extractJsonLdScripts('https://example.com/'));
         $this->assertSame([], $document->extractJsonLdScripts('https://contao.org/', 'nonsense-type'));

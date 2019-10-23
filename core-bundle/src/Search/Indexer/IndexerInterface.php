@@ -17,8 +17,7 @@ use Contao\CoreBundle\Search\Document;
 interface IndexerInterface
 {
     /**
-     * Indexes a given Document in whatever
-     * way the indexer prefers.
+     * Indexes a given document.
      */
     public function index(Document $document): void;
 

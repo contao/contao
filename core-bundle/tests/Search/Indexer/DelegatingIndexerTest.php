@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 
 class DelegatingIndexerTest extends TestCase
 {
-    public function testDelegatesAllMethodCallsCorrectly(): void
+    public function testDelegatesTheMethodCalls(): void
     {
         $indexer1 = $this->createMock(IndexerInterface::class);
         $indexer1
@@ -27,6 +27,7 @@ class DelegatingIndexerTest extends TestCase
             ->method('index')
             ->with($this->isInstanceOf(Document::class))
         ;
+
         $indexer1
             ->expects($this->once())
             ->method('clear')
@@ -38,6 +39,7 @@ class DelegatingIndexerTest extends TestCase
             ->method('index')
             ->with($this->isInstanceOf(Document::class))
         ;
+
         $indexer2
             ->expects($this->once())
             ->method('clear')
@@ -46,7 +48,6 @@ class DelegatingIndexerTest extends TestCase
         $delegating = new DelegatingIndexer();
         $delegating->addIndexer($indexer1);
         $delegating->addIndexer($indexer2);
-
         $delegating->index($this->createMock(Document::class));
         $delegating->clear();
     }

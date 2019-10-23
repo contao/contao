@@ -108,14 +108,13 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
         $container->setParameter('contao.search.indexProtected', $config['search']['indexProtected']);
 
-        $defaultIndexer = $container->getDefinition('contao.search.indexer.default');
-
-        // Configure whether to index protected pages on the default indexer
-        $defaultIndexer->setArgument(2, $config['search']['indexProtected']);
-
-        // Remove the default indexer completely if it was disabled
         if (!$config['search']['default_indexer']['enable']) {
+            // Remove the default indexer completely if it was disabled
             $container->removeDefinition('contao.search.indexer.default');
+        } else {
+            // Configure whether to index protected pages on the default indexer
+            $defaultIndexer = $container->getDefinition('contao.search.indexer.default');
+            $defaultIndexer->setArgument(2, $config['search']['indexProtected']);
         }
     }
 
