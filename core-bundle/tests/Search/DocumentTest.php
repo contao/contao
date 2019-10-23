@@ -20,25 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DocumentTest extends TestCase
 {
-    /**
-     * @dataProvider documentProvider
-     */
-    public function testDocument(string $body, array $expectedJsonLds): void
-    {
-        $document = new Document(
-            new Uri('https://example.com'),
-            200,
-            ['Content-Type' => ['text/html']],
-            $body
-        );
-
-        $this->assertSame('https://example.com', (string) $document->getUri());
-        $this->assertSame(200, $document->getStatusCode());
-        $this->assertSame(['content-type' => ['text/html']], $document->getHeaders());
-        $this->assertSame($expectedJsonLds, $document->extractJsonLdScripts());
-    }
-
-    public function testFactory(): void
+    public function testCreatesADocumentFromRequestAndResponse(): void
     {
         $request = Request::create('https://example.com/foo?bar=baz', 'GET');
         $response = new Response('body', 200, ['content-type' => ['text/html']]);
@@ -53,50 +35,22 @@ class DocumentTest extends TestCase
         $this->assertSame(['content-type' => ['text/html'], 'cache-control' => ['no-cache, private']], $headers);
     }
 
-    public function testContextAndTypeFiltersCorrectly(): void
+    /**
+     * @dataProvider documentProvider
+     */
+    public function testExtractsTheJsdonLdScript(string $body, array $expectedJsonLds): void
     {
         $document = new Document(
             new Uri('https://example.com'),
             200,
             ['Content-Type' => ['text/html']],
-            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script></body></html>'
+            $body
         );
 
-        $this->assertSame(
-            [
-                [
-                    '@context' => 'https://contao.org/',
-                    '@type' => 'PageMetaData',
-                    'foobar' => true,
-                ],
-            ],
-            $document->extractJsonLdScripts()
-        );
-
-        $this->assertSame(
-            [
-                [
-                    '@context' => 'https://contao.org/',
-                    '@type' => 'PageMetaData',
-                    'foobar' => true,
-                ],
-            ],
-            $document->extractJsonLdScripts('https://contao.org/')
-        );
-
-        $this->assertSame(
-            [
-                [
-                    '@context' => 'https://contao.org/',
-                    '@type' => 'PageMetaData',
-                    'foobar' => true,
-                ],
-            ],
-            $document->extractJsonLdScripts('https://contao.org/', 'PageMetaData')
-        );
-
-        $this->assertSame([], $document->extractJsonLdScripts('https://example.com/'));
-        $this->assertSame([], $document->extractJsonLdScripts('https://contao.org/', 'nonsense-type'));
+        $this->assertSame('https://example.com', (string) $document->getUri());
+        $this->assertSame(200, $document->getStatusCode());
+        $this->assertSame(['content-type' => ['text/html']], $document->getHeaders());
+        $this->assertSame($expectedJsonLds, $document->extractJsonLdScripts());
     }
 
     public function documentProvider(): \Generator
@@ -143,5 +97,18 @@ class DocumentTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    public function testDoesNotExtractTheJsdonLdScriptIfTheContextOrTypeDoesNotMatch(): void
+    {
+        $document = new Document(
+            new Uri('https://example.com'),
+            200,
+            ['Content-Type' => ['text/html']],
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script></body></html>'
+        );
+
+        $this->assertSame([], $document->extractJsonLdScripts('https://example.com/'));
+        $this->assertSame([], $document->extractJsonLdScripts('https://contao.org/', 'nonsense-type'));
     }
 }

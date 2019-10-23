@@ -816,9 +816,9 @@ class PageRegular extends Frontend
 		{
 			$noSearch = (bool) $objPage->noSearch;
 
-			// Backwards compatibility: Do not use $GLOBALS['TL_NOINDEX_KEYS'] anymore
-			// but make sure your page type delivers the correct meta robots tag
-			if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET))) {
+			// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
+			if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET)))
+			{
 				$noSearch = true;
 			}
 
@@ -835,14 +835,14 @@ class PageRegular extends Frontend
 				'fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
 			);
 
-			$user = System::getContainer()->get('security.helper')->getUser();
+			$token = System::getContainer()->get('security.token_storage')->getToken();
 
-			if ($user instanceof FrontendUser)
+			if ($token !== null && $token->getUser() instanceof FrontendUser)
 			{
-				$meta['memberId'] = (int) $user->id;
+				$meta['memberId'] = (int) $token->getUser()->id;
 			}
 
-			$strScripts .= "\n<script type=\"application/ld+json\">" . json_encode($meta) . "</script>\n";
+			$strScripts .= '<script type="application/ld+json">' . json_encode($meta) . '</script>';
 		}
 
 		// Add the custom JavaScript
