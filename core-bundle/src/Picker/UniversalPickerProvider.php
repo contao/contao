@@ -146,9 +146,13 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
     /**
      * {@inheritdoc}
      */
-    public function createMenuItem(PickerConfig $config): void
+    public function createMenuItem(PickerConfig $config): ItemInterface
     {
-        dump($config);
+        $menu = $this->menuFactory->createItem('picker');
+
+        $this->addMenuItems($menu, $config);
+
+        return $menu->getFirstChild();
     }
 
     /**
