@@ -2,6 +2,9 @@
 
 ## DEV
 
+ * Implement a search indexer abstraction (see #730).
+ * Pass the mime type to the download element links (see #604).
+ * Optimize the DBAFS file sync (see #672).
  * Support using `.env` and `.env.local.php` files (see #768).
  * Do not install the tests with "prefer-dist" (see #762).
  * Simplify registering custom fragment types (see #776).

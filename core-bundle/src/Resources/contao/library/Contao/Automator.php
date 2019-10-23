@@ -35,13 +35,11 @@ class Automator extends System
 	 */
 	public function purgeSearchTables()
 	{
-		$objDatabase = Database::getInstance();
+		// Clear the index
 		$container = System::getContainer();
-
-		// Clear index
 		$container->get('contao.search.indexer')->clear();
 
-		$strCachePath = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
+		$strCachePath = StringUtil::stripRootDir($container->getParameter('kernel.cache_dir'));
 
 		// Purge the cache folder
 		$objFolder = new Folder($strCachePath . '/contao/search');
