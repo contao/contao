@@ -505,7 +505,7 @@ services:
         class: Contao\CoreBundle\Search\Indexer\DelegatingIndexer
 
     contao.search.indexer:
-        alias: 'Contao\CoreBundle\Search\Indexer\DelegatingIndexer'
+        alias: 'contao.search.indexer.delegating'
         public: true
 
     contao.security.authentication_failure_handler:
