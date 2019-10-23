@@ -143,7 +143,7 @@ class Picker extends Widget
 		{
 			$extras = array
 			(
-				'fieldType' => $this->fieldType,
+				'fieldType' => $this->multiple ? 'checkbox' : 'radio',
 				'source' => $this->strTable.'.'.$this->currentRecord,
 			);
 
