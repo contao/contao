@@ -501,7 +501,8 @@ services:
         tags:
             - { name: 'contao.search_indexer' }
 
-    contao.search.indexer.delegating: ~
+    contao.search.indexer.delegating:
+        class: Contao\CoreBundle\Search\Indexer\DelegatingIndexer
 
     contao.search.indexer:
         alias: 'Contao\CoreBundle\Search\Indexer\DelegatingIndexer'
