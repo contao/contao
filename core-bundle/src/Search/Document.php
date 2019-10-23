@@ -98,6 +98,7 @@ class Document
 
         $this->jsonLds = $crawler->filterXPath('descendant-or-self::script[@type = \'application/ld+json\']')->each(static function (Crawler $node) {
             $data = json_decode($node->text(), true);
+
             if (JSON_ERROR_NONE !== json_last_error()) {
                 return null;
             }

@@ -493,14 +493,14 @@ services:
             - '%contao.prepend_locale%'
         public: true
 
-    Contao\CoreBundle\Search\Indexer\DefaultIndexer:
+     contao.search.indexer.default:
         arguments:
             - '@contao.framework'
             - '@database_connection'
         tags:
             - { name: 'contao.search_indexer' }
 
-    Contao\CoreBundle\Search\Indexer\DelegatingIndexer: ~
+    contao.search.indexer.delegating: ~
 
     contao.search.indexer:
         alias: 'Contao\CoreBundle\Search\Indexer\DelegatingIndexer'

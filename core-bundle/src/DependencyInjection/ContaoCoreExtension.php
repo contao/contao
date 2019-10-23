@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Picker\PickerProviderInterface;
-use Contao\CoreBundle\Search\Indexer\DefaultIndexer;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
@@ -109,7 +108,7 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
         $container->setParameter('contao.search.indexProtected', $config['search']['indexProtected']);
 
-        $defaultIndexer = $container->getDefinition(DefaultIndexer::class);
+        $defaultIndexer = $container->getDefinition('contao.search.indexer.default');
 
         // Configure whether to index protected pages on the default indexer
         $defaultIndexer->setArgument(2, $config['search']['indexProtected']);

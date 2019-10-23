@@ -699,7 +699,7 @@ class PageRegular extends Frontend
 	 * Create all footer scripts
 	 *
 	 * @param LayoutModel $objLayout
-	 * @param PageModel $objPage
+	 * @param PageModel   $objPage
 	 */
 	protected function createFooterScripts($objLayout, $objPage = null)
 	{
@@ -842,6 +842,7 @@ class PageRegular extends Frontend
 			);
 
 			$token = System::getContainer()->get('security.token_storage')->getToken();
+
 			if ($token !== null && $token->getUser() instanceof FrontendUser)
 			{
 				$meta['memberId'] = (int) $token->getUser()->id;
