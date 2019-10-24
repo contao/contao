@@ -501,7 +501,12 @@ class RouteProvider implements RouteProviderInterface
         $return = [];
         $models = array_filter($models);
 
-        array_walk_recursive($models, static function ($i) use (&$return): void { $return[] = $i; });
+        array_walk_recursive(
+            $models,
+            static function ($i) use (&$return): void {
+                $return[] = $i;
+            }
+        );
 
         return $return;
     }

@@ -17,8 +17,6 @@ final class ContaoInstallationEvents
     /**
      * The contao_installation.initialize_application event is triggered in the install tool.
      *
-     * @var string
-     *
      * @see InitializeApplicationEvent
      */
     public const INITIALIZE_APPLICATION = 'contao_installation.initialize_application';
