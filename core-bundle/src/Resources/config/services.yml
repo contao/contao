@@ -359,6 +359,7 @@ services:
     contao.picker.universal_provider:
         class: Contao\CoreBundle\Picker\UniversalPickerProvider
         arguments:
+            - '@contao.framework'
             - '@knp_menu.factory'
             - '@router'
             - '@translator'

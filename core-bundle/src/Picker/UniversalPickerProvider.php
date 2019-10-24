@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Picker;
 
 use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DcaLoader;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
@@ -21,6 +23,14 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
 {
+    private const PREFIX = 'universal.';
+    private const PREFIX_LENGTH = 10;
+
+    /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
     /**
      * @var FactoryInterface
      */
@@ -41,8 +51,9 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
      */
     private $connection;
 
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator, Connection $connection)
+    public function __construct(ContaoFramework $framework, FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator, Connection $connection)
     {
+        $this->framework = $framework;
         $this->menuFactory = $menuFactory;
         $this->router = $router;
         $this->translator = $translator;
@@ -62,72 +73,42 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
      */
     public function getUrl(PickerConfig $config): string
     {
-        $table = $this->getTable($config->getContext());
-        $modules = $this->getModulesForTable($config->getContext());
-        $value = $config->getValue();
+        $table = $this->getTableFromContext($config->getContext());
+        $modules = $this->getModulesForTable($table);
 
-        if (!$value) {
-            return $this->getUrlForValue($config, array_keys($modules)[0]);
+        if (0 === \count($modules)) {
+            throw new \RuntimeException(sprintf('Table %s is not in any back end module (context: %s)', $table, $config->getContext()));
         }
 
-        // Use the first value if array to find a database record
-        $value = array_map('\intval', explode(',', $value))[0];
+        $module = array_keys($modules)[0];
+        [$ptable, $pid] = $this->getPtableAndPid($table, $config->getValue());
 
-        Controller::loadDataContainer($table);
-
-        $pid = null;
-        $ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
-        $dynamicPtable = $GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false;
-
-        if ($ptable || $dynamicPtable) {
-            $qb = $this->connection->createQueryBuilder();
-            $qb->select('pid')->from($table)->where($qb->expr()->eq('id', $value));
-
-            if ($dynamicPtable) {
-                $qb->addSelect('ptable');
-            }
-
-            $data = $qb->execute()->fetch();
-
-            if (false === $data) {
-                return $this->getUrlForValue($config, array_keys($modules)[0]);
-            }
-
-            $pid = $data['pid'];
-
-            if ($dynamicPtable) {
-                $ptable = $data['ptable'] ?: $ptable;
-
-                // Backwards compatibility, assuming old data in tl_content
-                if (!$ptable) {
-                    $ptable = 'tl_article';
+        if ($ptable) {
+            foreach ($modules as $k => $tables) {
+                if (\in_array($ptable, $tables, true)) {
+                    $module = $k;
+                    break;
                 }
             }
         }
 
-        if (1 === \count($modules) || !$ptable) {
-            return $this->getUrlForValue($config, array_keys($modules)[0]);
+        if (0 === array_search($table, $modules[$module], true)) {
+            return $this->getUrlForValue($config, $module);
         }
 
-        foreach ($modules as $module => $tables) {
-            if (\in_array($ptable, $tables, true)) {
-                return $this->getUrlForValue($config, $module, $table, $pid);
-            }
-        }
-
-        return $this->getUrlForValue($config, array_keys($modules)[0], $table, $pid);
+        return $this->getUrlForValue($config, $module, $table, $pid);
     }
 
     public function addMenuItems(ItemInterface $menu, PickerConfig $config): void
     {
-        $modules = array_keys($this->getModulesForTable($config->getContext()));
+        $modules = array_keys($this->getModulesForTable($this->getTableFromContext($config->getContext())));
 
         foreach ($modules as $name) {
             $params = array_merge(
                 [
                     'do' => $name,
                     'popup' => '1',
-                    'picker' => $config->cloneForCurrent('universal.'.$name)->urlEncode(),
+                    'picker' => $config->cloneForCurrent(self::PREFIX.$name)->urlEncode(),
                 ]
             );
 
@@ -136,7 +117,7 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
                 [
                     'label' => $this->translator->trans('MOD.'.$name.'.0', [], 'contao_default'),
                     'linkAttributes' => ['class' => $name],
-                    'current' => $this->isCurrent($config) && substr($config->getCurrent(), 10) === $name,
+                    'current' => $this->isCurrent($config) && substr($config->getCurrent(), self::PREFIX_LENGTH) === $name,
                     'uri' => $this->router->generate('contao_backend', $params),
                 ]
             ));
@@ -160,7 +141,7 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
      */
     public function supportsContext($context): bool
     {
-        return 0 === strpos($context, 'universal.') && 0 !== \count($this->getModulesForTable($context));
+        return 0 === strpos($context, self::PREFIX) && 0 !== \count($this->getModulesForTable($this->getTableFromContext($context)));
     }
 
     /**
@@ -176,7 +157,7 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
      */
     public function isCurrent(PickerConfig $config): bool
     {
-        return 0 === strpos($config->getCurrent(), 'universal.');
+        return 0 === strpos($config->getCurrent(), self::PREFIX);
     }
 
     /**
@@ -190,7 +171,7 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
             return '';
         }
 
-        return $this->getTable($config->getContext());
+        return $this->getTableFromContext($config->getContext());
     }
 
     /**
@@ -225,9 +206,8 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
         return (int) $value;
     }
 
-    private function getModulesForTable(string $context): array
+    private function getModulesForTable(string $table): array
     {
-        $table = $this->getTable($context);
         $modules = [];
 
         foreach ($GLOBALS['BE_MOD'] as $v) {
@@ -241,9 +221,9 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
         return $modules;
     }
 
-    private function getTable(string $context): string
+    private function getTableFromContext(string $context): string
     {
-        return substr($context, 10);
+        return substr($context, self::PREFIX_LENGTH);
     }
 
     private function getUrlForValue(PickerConfig $config, string $module, string $table = null, string $pid = null): string
@@ -251,7 +231,7 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
         $params = [
             'do' => $module,
             'popup' => '1',
-            'picker' => $config->cloneForCurrent('universal.'.$module)->urlEncode(),
+            'picker' => $config->cloneForCurrent(self::PREFIX.$module)->urlEncode(),
         ];
 
         if (null !== $table) {
@@ -263,5 +243,52 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
         }
 
         return $this->router->generate('contao_backend', $params);
+    }
+
+    private function getPtableAndPid(string $table, string $value): array
+    {
+        // Use the first value if array to find a database record
+        $id = (int) explode(',', $value)[0];
+
+        if (!$value) {
+            return [null, null];
+        }
+
+        $this->framework->initialize();
+        $this->framework->createInstance(DcaLoader::class, [$table])->load();
+
+        $pid = null;
+        $ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
+        $dynamicPtable = $GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false;
+
+        if (!$ptable && !$dynamicPtable) {
+            return [null, null];
+        }
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pid')->from($table)->where($qb->expr()->eq('id', $id));
+
+        if ($dynamicPtable) {
+            $qb->addSelect('ptable');
+        }
+
+        $data = $qb->execute()->fetch();
+
+        if (false === $data) {
+            return [null, null];
+        }
+
+        $pid = $data['pid'];
+
+        if ($dynamicPtable) {
+            $ptable = $data['ptable'] ?: $ptable;
+
+            // Backwards compatibility, assuming old data in tl_content
+            if (!$ptable) {
+                $ptable = 'tl_article';
+            }
+        }
+
+        return [$ptable, $pid];
     }
 }
