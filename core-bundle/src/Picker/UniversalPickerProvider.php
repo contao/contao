@@ -170,11 +170,9 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
     /**
      * {@inheritdoc}
      */
-    public function getDcaTable(/* PickerConfig $config */): string
+    public function getDcaTable(PickerConfig $config = null): string
     {
-        $config = func_get_arg(0);
-
-        if (!$config instanceof PickerConfig) {
+        if (null === $config) {
             return '';
         }
 
