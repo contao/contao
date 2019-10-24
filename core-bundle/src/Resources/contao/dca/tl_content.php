@@ -732,12 +732,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'picker',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy', 'table'=>'tl_content'),
 			'save_callback' => array
 			(
 				array('tl_content', 'saveAlias'),
-			)
+			),
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy', 'table'=>'tl_content')
 		),
 		'articleAlias' => array
 		(
@@ -745,12 +745,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'picker',
 			'foreignKey'              => 'tl_article.title',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy'),
 			'save_callback' => array
 			(
 				array('tl_content', 'saveArticleAlias'),
-			)
+			),
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'article' => array
 		(
@@ -759,7 +759,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'foreignKey'              => 'tl_article.title',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy'),
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'form' => array
 		(
@@ -1212,7 +1212,7 @@ class tl_content extends Contao\Backend
 	 *
 	 * @return string
 	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function editArticleAlias(Contao\DataContainer $dc)
 	{
@@ -1235,7 +1235,7 @@ class tl_content extends Contao\Backend
 	 *
 	 * @return array
 	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function getArticleAlias(Contao\DataContainer $dc)
 	{
@@ -1285,7 +1285,7 @@ class tl_content extends Contao\Backend
 	}
 
 	/**
-	 * Throws an exception if the current article is selected (circular reference)).
+	 * Throw an exception if the current article is selected (circular reference))
 	 *
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc
@@ -1309,7 +1309,7 @@ class tl_content extends Contao\Backend
 	 *
 	 * @return string
 	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function editAlias(Contao\DataContainer $dc)
 	{
@@ -1330,7 +1330,7 @@ class tl_content extends Contao\Backend
 	 *
 	 * @return array
 	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function getAlias()
 	{
@@ -1398,7 +1398,7 @@ class tl_content extends Contao\Backend
 	}
 
 	/**
-	 * Throws an exception if the current content element is selected (circular reference).
+	 * Throw an exception if the current content element is selected (circular reference)
 	 *
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc
@@ -1504,7 +1504,7 @@ class tl_content extends Contao\Backend
 	 *
 	 * @return string
 	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function editArticle(Contao\DataContainer $dc)
 	{
@@ -1527,7 +1527,7 @@ class tl_content extends Contao\Backend
 	 *
 	 * @return array
 	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function getArticles(Contao\DataContainer $dc)
 	{

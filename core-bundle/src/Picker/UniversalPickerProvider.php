@@ -12,14 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
-use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DcaLoader;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
 {
@@ -77,16 +76,18 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
         $modules = $this->getModulesForTable($table);
 
         if (0 === \count($modules)) {
-            throw new \RuntimeException(sprintf('Table %s is not in any back end module (context: %s)', $table, $config->getContext()));
+            throw new \RuntimeException(
+                sprintf('Table "%s" is not in any back end module (context: %s)', $table, $config->getContext())
+            );
         }
 
         $module = array_keys($modules)[0];
         [$ptable, $pid] = $this->getPtableAndPid($table, $config->getValue());
 
         if ($ptable) {
-            foreach ($modules as $k => $tables) {
+            foreach ($modules as $key => $tables) {
                 if (\in_array($ptable, $tables, true)) {
-                    $module = $k;
+                    $module = $key;
                     break;
                 }
             }
@@ -99,6 +100,9 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
         return $this->getUrlForValue($config, $module, $table, $pid);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function addMenuItems(ItemInterface $menu, PickerConfig $config): void
     {
         $modules = array_keys($this->getModulesForTable($this->getTableFromContext($config->getContext())));
@@ -117,7 +121,7 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
                 [
                     'label' => $this->translator->trans('MOD.'.$name.'.0', [], 'contao_default'),
                     'linkAttributes' => ['class' => $name],
-                    'current' => $this->isCurrent($config) && substr($config->getCurrent(), self::PREFIX_LENGTH) === $name,
+                    'current' => $this->isCurrent($config) && $name === substr($config->getCurrent(), self::PREFIX_LENGTH),
                     'uri' => $this->router->generate('contao_backend', $params),
                 ]
             ));
@@ -141,7 +145,10 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
      */
     public function supportsContext($context): bool
     {
-        return 0 === strpos($context, self::PREFIX) && 0 !== \count($this->getModulesForTable($this->getTableFromContext($context)));
+        return
+            0 === strpos($context, self::PREFIX)
+            && 0 !== \count($this->getModulesForTable($this->getTableFromContext($context)))
+        ;
     }
 
     /**
@@ -180,7 +187,6 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
     public function getDcaAttributes(PickerConfig $config): array
     {
         $attributes = ['fieldType' => 'radio'];
-
         $value = $config->getValue();
 
         if ($fieldType = $config->getExtra('fieldType')) {
@@ -212,7 +218,11 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
 
         foreach ($GLOBALS['BE_MOD'] as $v) {
             foreach ($v as $name => $module) {
-                if (isset($module['tables']) && \is_array($module['tables']) && \in_array($table, $module['tables'], true)) {
+                if (
+                    isset($module['tables'])
+                    && \is_array($module['tables'])
+                    && \in_array($table, $module['tables'], true)
+                ) {
                     $modules[$name] = array_values($module['tables']);
                 }
             }
@@ -283,9 +293,8 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
         if ($dynamicPtable) {
             $ptable = $data['ptable'] ?: $ptable;
 
-            // Backwards compatibility, assuming old data in tl_content
             if (!$ptable) {
-                $ptable = 'tl_article';
+                $ptable = 'tl_article'; // backwards compatibility
             }
         }
 

@@ -346,7 +346,6 @@ class Ajax extends Backend
 						$strKey = 'pageTree';
 						break;
 
-					case 'reloadFiletree':
 					default:
 						$strKey = 'fileTree';
 				}

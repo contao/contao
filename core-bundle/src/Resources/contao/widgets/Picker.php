@@ -15,7 +15,6 @@ namespace Contao;
  */
 class Picker extends Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -116,20 +115,20 @@ class Picker extends Widget
 	 */
 	public function generate()
 	{
-		$strContext = $this->context ?: 'universal.'.$this->getRelatedTable();
+		$strContext = $this->context ?: 'universal.' . $this->getRelatedTable();
 		$blnHasOrder = ($this->orderField != '' && \is_array($this->{$this->orderField}));
 		$arrValues = $this->generateValues($blnHasOrder);
 		$arrSet = array_keys($arrValues);
 
-		$return = '<input type="hidden" name="'.$this->strName.'" id="ctrl_'.$this->strId.'" value="'.implode(',', $arrSet).'">' . ($blnHasOrder ? '
-  <input type="hidden" name="'.$this->strOrderName.'" id="ctrl_'.$this->strOrderId.'" value="'.$this->{$this->orderField}.'">' : '') . '
+		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '">' . ($blnHasOrder ? '
+  <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . $this->{$this->orderField} . '">' : '') . '
   <div class="selector_container">' . (($blnHasOrder && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_'.$this->strId.'" class="'.($blnHasOrder ? 'sortable' : '').'">';
+    <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder ? 'sortable' : '') . '">';
 
 		foreach ($arrValues as $k=>$v)
 		{
-			$return .= '<li data-id="'.$k.'">'.$v.'</li>';
+			$return .= '<li data-id="' . $k . '">' . $v . '</li>';
 		}
 
 		$return .= '</ul>';
@@ -137,18 +136,18 @@ class Picker extends Widget
 		if (!System::getContainer()->get('contao.picker.builder')->supportsContext($strContext))
 		{
 			$return .= '
-	<p><button class="tl_submit" disabled>'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</button></p>';
+	<p><button class="tl_submit" disabled>' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</button></p>';
 		}
 		else
 		{
 			$extras = array
 			(
 				'fieldType' => $this->multiple ? 'checkbox' : 'radio',
-				'source' => $this->strTable.'.'.$this->currentRecord,
+				'source' => $this->strTable . '.' . $this->currentRecord,
 			);
 
 			$return .= '
-    <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl($strContext, $extras)) . '" class="tl_submit" id="picker_' . $this->strName . '">'.$GLOBALS['TL_LANG']['MSC']['changeSelection'].'</a></p>
+    <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl($strContext, $extras)) . '" class="tl_submit" id="picker_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
     <script>
       $("picker_' . $this->strName . '").addEvent("click", function(e) {
         e.preventDefault();
@@ -169,7 +168,7 @@ class Picker extends Widget
         });
       });
     </script>' . ($blnHasOrder ? '
-    <script>Backend.makeMultiSrcSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'", "ctrl_'.$this->strId.'")</script>' : '');
+    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strOrderId . '", "ctrl_' . $this->strId . '")</script>' : '');
 		}
 
 		$return = '<div>' . $return . '</div></div>';
@@ -190,9 +189,9 @@ class Picker extends Widget
 
 		$arrValues = array();
 
-		if (!empty($this->varValue)) // can be an array
-		{
-			$objRows = $this->Database->execute("SELECT * FROM $strRelatedTable WHERE id IN (".implode(',', array_map('intval', (array) $this->varValue)).")");
+		if (!empty($this->varValue))
+		{ // can be an array
+			$objRows = $this->Database->execute("SELECT * FROM $strRelatedTable WHERE id IN (" . implode(',', array_map('intval', (array) $this->varValue)) . ")");
 
 			if ($objRows->numRows)
 			{
@@ -241,7 +240,7 @@ class Picker extends Widget
 		{
 			$callback = $GLOBALS['TL_DCA'][$strRelatedTable]['list']['sorting']['child_record_callback'];
 
-			if (is_array($callback))
+			if (\is_array($callback))
 			{
 				$this->import($callback[0]);
 
@@ -257,7 +256,7 @@ class Picker extends Widget
 		$labelConfig = &$GLOBALS['TL_DCA'][$strRelatedTable]['list']['label'];
 		$label = vsprintf($labelConfig['format'], array_intersect_key($arrRow, array_flip($labelConfig['fields'])));
 
-		if (is_array($labelConfig['label_callback']))
+		if (\is_array($labelConfig['label_callback']))
 		{
 			$this->import($labelConfig['label_callback'][0]);
 
