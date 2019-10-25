@@ -68,8 +68,7 @@ class WebsiteRootsConfigProvider implements ProviderInterface
      */
     private function isCorsRequest(Request $request): bool
     {
-        return
-            $request->headers->has('Origin')
+        return $request->headers->has('Origin')
             && $request->headers->get('Origin') !== $request->getSchemeAndHttpHost()
         ;
     }

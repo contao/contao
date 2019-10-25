@@ -43,7 +43,7 @@ class Version410Update extends AbstractVersionUpdate
 
         $options = [];
 
-        foreach ($crop as $group => $modes) {
+        foreach ($crop as $modes) {
             $options[] = array_values($modes);
         }
 
