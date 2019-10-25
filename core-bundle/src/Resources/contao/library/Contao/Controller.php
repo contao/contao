@@ -1930,13 +1930,13 @@ abstract class Controller extends System
 				$GLOBALS['objPage'] = func_get_arg(0);
 			}
 		}
-
-		\define('TL_ASSETS_URL', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl());
-		\define('TL_FILES_URL', System::getContainer()->get('contao.assets.files_context')->getStaticUrl());
+		$framework = System::getContainer()->get('contao.framework');
+		$framework->setConstant('TL_ASSETS_URL', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl());
+		$framework->setConstant('TL_FILES_URL', System::getContainer()->get('contao.assets.files_context')->getStaticUrl());
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		\define('TL_SCRIPT_URL', TL_ASSETS_URL);
-		\define('TL_PLUGINS_URL', TL_ASSETS_URL);
+		$framework->setConstant('TL_SCRIPT_URL', $framework->getConstant('TL_ASSETS_URL'));
+		$framework->setConstant('TL_PLUGINS_URL', $framework->getConstant('TL_ASSETS_URL'));
 	}
 
 	/**

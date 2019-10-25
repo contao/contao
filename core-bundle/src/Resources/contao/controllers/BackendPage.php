@@ -74,7 +74,8 @@ class BackendPage extends Backend
 		$strField = Input::get('field');
 
 		// Define the current ID
-		\define('CURRENT_ID', (Input::get('table') ? $objSession->get('CURRENT_ID') : Input::get('id')));
+		$framework = System::getContainer()->get('contao.framework');
+		$framework->setConstant('CURRENT_ID', (Input::get('table') ? $objSession->get('CURRENT_ID') : Input::get('id')));
 
 		$this->loadDataContainer($strTable);
 		$strDriver = 'DC_' . $GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'];

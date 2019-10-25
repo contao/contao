@@ -328,7 +328,9 @@ abstract class Backend extends Controller
 			$objSession->set('CURRENT_ID', $id);
 		}
 
-		\define('CURRENT_ID', (Input::get('table') ? $id : Input::get('id')));
+		$framework = System::getContainer()->get('contao.framework');
+		$framework->setConstant('CURRENT_ID', (Input::get('table') ? $id : Input::get('id')));
+
 		$this->Template->headline = $GLOBALS['TL_LANG']['MOD'][$module][0];
 
 		// Add the module style sheet
