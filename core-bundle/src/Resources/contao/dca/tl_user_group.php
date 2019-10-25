@@ -323,7 +323,8 @@ class tl_user_group extends Backend
 			unset($arrModules['design'][$key]);
 		}
 
-		return $arrModules;
+		// Reset the module indexes and return modules
+		return array_map('array_values', $arrModules);
 	}
 
 	/**

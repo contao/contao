@@ -761,7 +761,8 @@ class tl_user extends Backend
 			unset($arrModules['design'][$key]);
 		}
 
-		return $arrModules;
+		// Reset the module indexes and return modules
+		return array_map('array_values', $arrModules);
 	}
 
 	/**
