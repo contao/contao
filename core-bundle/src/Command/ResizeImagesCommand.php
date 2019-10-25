@@ -165,7 +165,8 @@ class ResizeImagesCommand extends Command
                     // Clear the current output line
                     $output->write("\r".str_repeat(' ', $this->terminalWidth)."\r");
                 } else {
-                    $output->writeln(sprintf('done%7.3Fs', $duration = microtime(true) - $startTime));
+                    $duration = microtime(true) - $startTime;
+                    $output->writeln(sprintf('done%7.3Fs', $duration));
 
                     return $duration;
                 }

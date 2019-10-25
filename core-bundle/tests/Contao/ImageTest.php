@@ -1365,7 +1365,7 @@ class ImageTest extends TestCase
     public function testExecutesTheResizeHook(): void
     {
         $GLOBALS['TL_HOOKS'] = [
-            'executeResize' => [[\get_class($this), 'executeResizeHookCallback']],
+            'executeResize' => [[static::class, 'executeResizeHookCallback']],
         ];
 
         $file = new File('dummy.jpg');
@@ -1447,7 +1447,7 @@ class ImageTest extends TestCase
         System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($deferredImage);
 
         $GLOBALS['TL_HOOKS'] = [
-            'getImage' => [[\get_class($this), 'getImageHookCallback']],
+            'getImage' => [[static::class, 'getImageHookCallback']],
         ];
 
         $imageObj = new Image($file);
