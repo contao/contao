@@ -19,6 +19,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\RouterInterface;
 use Terminal42\Escargot\Escargot;
 use Terminal42\Escargot\Event\FinishedCrawlingEvent;
+use Terminal42\Escargot\Event\ResponseEvent;
 use Terminal42\Escargot\Event\SuccessfulResponseEvent;
 
 class SearchIndexListener extends AbstractFileLoggingListener
@@ -43,8 +44,12 @@ class SearchIndexListener extends AbstractFileLoggingListener
         return 'search-index';
     }
 
-    public function onSuccessfulResponse(SuccessfulResponseEvent $event): void
+    public function onResponse(ResponseEvent $event): void
     {
+        if (!$event->getCurrentChunk()->isLast()) {
+            return;
+        }
+
         $response = $event->getResponse();
 
         $this->logLines[] = [
@@ -81,7 +86,7 @@ class SearchIndexListener extends AbstractFileLoggingListener
     public static function getSubscribedEvents()
     {
         return [
-            SuccessfulResponseEvent::class => 'onSuccessfulResponse',
+            ResponseEvent::class => 'onResponse',
             FinishedCrawlingEvent::class => 'onFinishedCrawling',
         ];
     }
@@ -90,7 +95,7 @@ class SearchIndexListener extends AbstractFileLoggingListener
     {
         $this->initLogFile($escargot->getJobId());
 
-        return sprintf('<a href="%s">Download log as CSV!</a>', $this->getDownloadLink($escargot->getJobId()));
+        return sprintf('<a href="%s">Download log as CSV!</a>', $this->getDownloadLink($escargot));
     }
 
     public function addResultToConsole(Escargot $escargot, OutputInterface $output): void

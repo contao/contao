@@ -35,17 +35,10 @@ class EscargotSubscriberController
     }
 
     /**
-     * @Route("/_contao/escargot_subscriber", name="contao_escargot_subscriber")
+     * @Route("/_contao/escargot_subscriber/{subscriber}/{jobId}", name="contao_escargot_subscriber")
      */
-    public function __invoke(Request $request): Response
+    public function __invoke(Request $request, string $subscriber, string $jobId): Response
     {
-        $subscriber = $request->query->get('subscriber');
-        $jobId = $request->query->get('jobId');
-
-        if (!$subscriber || !$jobId) {
-            throw new NotFoundHttpException();
-        }
-
         $subscribers = $this->escargotFactory->getSubscribers([$subscriber]);
 
         if (1 !== \count($subscribers)) {

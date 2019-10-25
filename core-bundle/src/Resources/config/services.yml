@@ -525,13 +525,6 @@ services:
             - '@contao.routing.url_generator'
         public: true;
 
-    contao.search.escargot_subscriber.broken_link_checker:
-        class: Contao\CoreBundle\Search\EventListener\BrokenLinkCheckerListener
-        arguments:
-            - '@router'
-        tags:
-            - { name: 'contao.escargot_subscriber' }
-
     contao.search.escargot_subscriber.search_index:
         class: Contao\CoreBundle\Search\EventListener\SearchIndexListener
         arguments:

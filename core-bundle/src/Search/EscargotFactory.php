@@ -13,18 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Search;
 
 use Contao\CoreBundle\Search\EventListener\EscargotEventSubscriber;
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Escargot;
+use Terminal42\Escargot\EventSubscriber\HtmlCrawlerSubscriber;
+use Terminal42\Escargot\EventSubscriber\MustMatchContentTypeSubscriber;
+use Terminal42\Escargot\EventSubscriber\RobotsSubscriber;
 use Terminal42\Escargot\Exception\InvalidJobIdException;
 use Terminal42\Escargot\Queue\DoctrineQueue;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 use Terminal42\Escargot\Queue\LazyQueue;
-use Terminal42\Escargot\Queue\QueueInterface;
 
 class EscargotFactory
 {
@@ -88,7 +89,7 @@ class EscargotFactory
         );
     }
 
-    public function createLazyQueue(): LazyQueue
+    private function createLazyQueue(): LazyQueue
     {
         return new LazyQueue(new InMemoryQueue(), new DoctrineQueue(
             $this->connection,
@@ -138,12 +139,13 @@ class EscargotFactory
     /**
      * @throws \InvalidArgumentException
      */
-    public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, HttpClientInterface $client = null): Escargot
+    public function create(BaseUriCollection $baseUris, array $selectedSubscribers): Escargot
     {
         $selectedSubsribers = $this->validateSubscribers($selectedSubscribers);
 
-        $escargot = Escargot::create($baseUris, $queue, $client);
+        $escargot = Escargot::create($baseUris, $this->createLazyQueue());
 
+        $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $selectedSubsribers);
 
         return $escargot;
@@ -153,15 +155,23 @@ class EscargotFactory
      * @throws \InvalidArgumentException
      * @throws InvalidJobIdException
      */
-    public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, HttpClientInterface $client = null): Escargot
+    public function createFromJobId(string $jobId, array $selectedSubscribers): Escargot
     {
         $selectedSubsribers = $this->validateSubscribers($selectedSubscribers);
 
-        $escargot = Escargot::createFromJobId($jobId, $queue, $client);
+        $escargot = Escargot::createFromJobId($jobId, $this->createLazyQueue());
 
+        $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $selectedSubsribers);
 
         return $escargot;
+    }
+
+    private function registerDefaultSubscribers(Escargot $escargot): void
+    {
+        $escargot->addSubscriber(new MustMatchContentTypeSubscriber('text/html'));
+        $escargot->addSubscriber(new RobotsSubscriber());
+        $escargot->addSubscriber(new HtmlCrawlerSubscriber());
     }
 
     private function registerSubscribers(Escargot $escargot, array $selectedSubsribers): void

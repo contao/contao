@@ -15,6 +15,7 @@ use Contao\CoreBundle\Search\EscargotFactory;
 use Nyholm\Psr7\Uri;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Terminal42\Escargot\Exception\InvalidJobIdException;
+use Terminal42\Escargot\Queue\LazyQueue;
 
 /**
  * Maintenance module "crawl".
@@ -64,31 +65,33 @@ class Crawl extends Backend implements \executable
 		$template->isRunning = true;
 		$template->subscribers = $subscribers;
 
-		$queue = $factory->createLazyQueue();
-
 		if (!$jobId) {
 			$baseUris = $factory->getSearchUriCollection();
-			//$baseUris->add(new Uri('https://www.terminal42.ch')); // TODO: debug
-			$baseUris->add(new Uri('https:/contao.org')); // TODO: debug
-			$escargot = $factory->create($baseUris, $queue, $selectedSubscribers);
+			$baseUris->add(new Uri('https://www.terminal42.ch')); // TODO: debug
+			//$baseUris->add(new Uri('https://contao.org')); // TODO: debug
+			$escargot = $factory->create($baseUris, $selectedSubscribers);
 			Controller::redirect(\Controller::addToUrl('&jobId=' . $escargot->getJobId()));
 		} else {
 			try {
-				$escargot = $factory->createFromJobId($jobId, $queue, $selectedSubscribers);
+				$escargot = $factory->createFromJobId($jobId, $selectedSubscribers);
 			} catch (InvalidJobIdException $e) {
 				Controller::redirect(str_replace('&jobId='. $jobId, '', Environment::get('request')));
 			}
 		}
 
-		$escargot->setConcurrency(10); // TODO: Configurable
-		$escargot->setMaxRequests(rand(3, 8)); // TODO: Configurable
+		$escargot = $escargot->withConcurrency(10); // TODO: Configurable
+		$escargot = $escargot->withMaxRequests(rand(3, 8)); // TODO: Configurable
 
 		if (Environment::get('isAjaxRequest')) {
 			// Start crawling
 			$escargot->crawl();
 
+			$queue = $escargot->getQueue();
+
 			// Commit the result on the lazy queue
-			$queue->commit($jobId);
+			if ($queue instanceof LazyQueue) {
+				$queue->commit($jobId);
+			}
 
 			// Return the results
 			$pending = $queue->countPending($jobId);
@@ -98,7 +101,7 @@ class Crawl extends Backend implements \executable
 
 			if ($finished) {
 				foreach ($factory->getSubscribers($selectedSubscribers) as $subscriber) {
-					$results[$subscriber->getName()] = $subscriber->getResultAsHtml($escargot, $jobId);
+					$results[$subscriber->getName()] = $subscriber->getResultAsHtml($escargot);
 				}
 
 				$queue->deleteJobId($jobId);

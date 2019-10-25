@@ -101,11 +101,11 @@ abstract class AbstractFileLoggingListener implements EscargotEventSubscriber, C
 
     abstract protected function getFileName(): string;
 
-    protected function getDownloadLink(string $jobId, array $query = []): string
+    protected function getDownloadLink(Escargot $escargot, array $parameters = []): string
     {
         return $this->router->generate('contao_escargot_subscriber', array_merge([
             'subscriber' => $this->getName(),
-            'jobId' => $jobId,
-        ], $query));
+            'jobId' => $escargot->getJobId(),
+        ], $parameters));
     }
 }
