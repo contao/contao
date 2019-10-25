@@ -43,10 +43,6 @@ class FrontendControllerTest extends TestCase
         $controller->loginAction();
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testRendersTheError401PageUponLogin(): void
     {
         $framework = $this->mockContaoFramework();
@@ -70,10 +66,6 @@ class FrontendControllerTest extends TestCase
         unset($GLOBALS['TL_PTY']);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testThrowsAnExceptionUponLoginIfTheError401PageThrowsAnException(): void
     {
         $framework = $this->mockContaoFramework();
@@ -155,10 +147,6 @@ class FrontendControllerTest extends TestCase
         $this->assertSame('document.querySelectorAll("input[name=REQUEST_TOKEN]").forEach(function(i){i.value="tokenValue"})', $response->getContent());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testRendersTheError401PageForTwoFactorRoute(): void
     {
         $framework = $this->mockContaoFramework();
@@ -182,10 +170,6 @@ class FrontendControllerTest extends TestCase
         unset($GLOBALS['TL_PTY']);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testThrowsUnauthorizedHttpExceptionIfNoError401PageTypeIsAvailableForTwoFactorRoute(): void
     {
         $framework = $this->mockContaoFramework();
@@ -206,10 +190,6 @@ class FrontendControllerTest extends TestCase
         $controller->twoFactorAuthenticationAction();
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testThrowsAnExceptionUponTwoFactorAuthenticationIfTheError401PageThrowsAnException(): void
     {
         $framework = $this->mockContaoFramework();
