@@ -45,7 +45,7 @@ class ScriptHandler
             self::loadRandomCompat($event);
         }
 
-        putenv(self::RANDOM_SECRET_NAME.'='.bin2hex(random_bytes(32)));
+        putenv(static::RANDOM_SECRET_NAME.'='.bin2hex(random_bytes(32)));
     }
 
     /**
