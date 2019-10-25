@@ -17,7 +17,7 @@ use Knp\Menu\ItemInterface;
 interface PickerMenuInterface
 {
     /**
-     * Add one or multiple menu items to the picker.
+     * Adds one or more menu items to the picker.
      */
     public function addMenuItems(ItemInterface $menu, PickerConfig $config): void;
 }

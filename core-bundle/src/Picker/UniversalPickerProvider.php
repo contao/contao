@@ -93,6 +93,7 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
             }
         }
 
+        // If the table is the first in the module, we don't need to add table=xy to the URL
         if (0 === array_search($table, $modules[$module], true)) {
             return $this->getUrlForValue($config, $module);
         }
