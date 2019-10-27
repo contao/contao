@@ -88,6 +88,7 @@ class ResizeImagesCommand extends Command
                 new InputOption('time-limit', 'l', InputArgument::OPTIONAL, 'Time limit in seconds', '0'),
                 new InputOption('concurrent', 'c', InputArgument::OPTIONAL, 'Run multiple processes concurrently', '1'),
                 new InputOption('throttle', 't', InputArgument::OPTIONAL, 'Pause between resizes to limit CPU utilization, 0.1 relates to 10% CPU usage', '1'),
+                new InputOption('image', null, InputArgument::OPTIONAL, 'Image name to resize a single image'),
             ])
             ->setDescription('Resizes deferred images that have not been processed yet.')
         ;
@@ -100,6 +101,13 @@ class ResizeImagesCommand extends Command
     {
         if (!$this->resizer instanceof DeferredResizerInterface) {
             throw new \RuntimeException('Deferred resizer not available');
+        }
+
+        $io = new SymfonyStyle($input, $output);
+        $image = $input->getOption('image');
+
+        if (null !== $image) {
+            return $this->resizeImage($image, $io);
         }
 
         $timeLimit = (float) $input->getOption('time-limit');
@@ -118,37 +126,10 @@ class ResizeImagesCommand extends Command
             throw new InvalidArgumentException(sprintf('Concurrent value "%s" is invalid.', $concurrent));
         }
 
-        $io = new SymfonyStyle($input, $output);
-
-        if ($concurrent > 1) {
-            return $this->executeConcurrent($concurrent, $io);
-        }
-
-        $startTime = microtime(true);
-
-        $maxDuration = 0;
-        $lastDuration = 0;
-
-        foreach ($this->storage->listPaths() as $path) {
-            $sleep = (1 - $throttle) / $throttle * $lastDuration;
-
-            if ($timeLimit && microtime(true) - $startTime + $maxDuration + $sleep > $timeLimit) {
-                $io->writeln("\n".'Time limit of '.$timeLimit.' seconds reached.');
-
-                return 0;
-            }
-
-            usleep((int) ($sleep * 1000000));
-
-            $maxDuration = max($maxDuration, $lastDuration = $this->resizeImage($path, $io));
-        }
-
-        $io->writeln("\n".'All images resized.');
-
-        return 0;
+        return $this->resizeImages($timeLimit, $throttle, $concurrent, $io);
     }
 
-    private function resizeImage(string $path, SymfonyStyle $io): float
+    private function resizeImage(string $path, SymfonyStyle $io): int
     {
         $startTime = microtime(true);
 
@@ -171,7 +152,7 @@ class ResizeImagesCommand extends Command
                 } else {
                     $io->writeln(sprintf('done%7.3Fs', $duration = microtime(true) - $startTime));
 
-                    return $duration;
+                    return 0;
                 }
             } else {
                 // Clear the current output line
@@ -185,85 +166,134 @@ class ResizeImagesCommand extends Command
             } else {
                 $io->writeln($exception->getMessage());
             }
+
+            return 1;
         }
 
         return 0;
     }
 
-    private function executeConcurrent(int $count, SymfonyStyle $io): int
+    private function resizeImages(float $timeLimit, float $throttle, int $concurrent, SymfonyStyle $io)
+    {
+        if ($this->supportsSubProcesses()) {
+            $this->executeConcurrent($timeLimit, $throttle, $concurrent, $io);
+        }
+        else {
+            $this->executeInCurrentProcess($timeLimit, $throttle, $io);
+        }
+
+        $io->writeln("\n".'All images resized.');
+
+        return 0;
+    }
+
+    private function supportsSubProcesses(): bool
     {
         $phpFinder = new PhpExecutableFinder();
 
-        $io->writeln('Starting '.$count.' concurrent processes...');
-
         if (false === ($phpPath = $phpFinder->find())) {
-            throw new \RuntimeException('The php executable could not be found.');
+            return false;
         }
 
-        /** @var Process[] $processes */
-        $processes = [];
+        $process = new Process(array_merge(
+            [$phpPath],
+            $_SERVER['argv'],
+            ['--help']
+        ));
 
-        /** @var string[] $buffers */
-        $buffers = [];
+        return 0 === $process->run();
+    }
 
-        for ($i = 0; $i < $count; ++$i) {
-            $process = new Process(array_merge(
-                [$phpPath],
-                $_SERVER['argv'],
-                ['--concurrent=1', $io->isDecorated() ? '--ansi' : '--no-ansi']
-            ));
+    private function executeInCurrentProcess(float $timeLimit, float $throttle, SymfonyStyle $io): void
+    {
+        $startTime = microtime(true);
 
-            $process->setTimeout(null);
-            $process->setEnv(['LINES' => getenv('LINES'), 'COLUMNS' => getenv('COLUMNS') - 4]);
-            $process->start();
+        $maxDuration = 0;
+        $lastDuration = 0;
 
-            $processes[] = $process;
-            $buffers[] = '';
-        }
+        foreach ($this->storage->listPaths() as $path) {
+            $sleep = (1 - $throttle) / $throttle * $lastDuration;
 
-        do {
-            $isRunning = false;
+            if ($timeLimit && microtime(true) - $startTime + $maxDuration + $sleep > $timeLimit) {
+                $io->writeln("\n".'Time limit of '.$timeLimit.' seconds reached.');
 
-            foreach ($processes as $index => $process) {
-                if ($process->isRunning()) {
-                    $isRunning = true;
-                }
-
-                // Append new output to remaining buffer from previous loop run
-                $buffers[$index] .= $process->getIncrementalOutput();
-
-                // Split output into rows
-                $rows = explode("\n", $buffers[$index]);
-
-                // Buffer and remove last line of output, as it might be incomplete
-                $buffers[$index] = array_pop($rows);
-
-                // Write remaining rows to the output with thread prefix
-                $io->write(array_map(
-                    static function ($row) use ($index) {
-                        return sprintf('%02d: ', $index + 1).preg_replace('/^.*\r/s', '', $row)."\n";
-                    },
-                    $rows
-                ));
+                return;
             }
 
-            usleep(15000);
-        } while ($isRunning);
+            usleep((int) ($sleep * 1000000));
 
-        $io->write($buffers);
+            $resizeStart = microtime(true);
 
-        $io->write(array_map(
-            static function (Process $process): string {
-                return $process->getErrorOutput();
-            },
-            $processes
-        ));
+            $this->resizeImage($path, $io);
 
-        return max(...array_map(
-            static function (Process $process): int {
-                return (int) $process->getExitCode();
-            },
-            $processes
-        ));
+            $lastDuration = microtime(true) - $resizeStart;
+            $maxDuration = max($maxDuration, $lastDuration);
+        }
+    }
+
+    private function executeConcurrent(float $timeLimit, float $throttle, int $concurrent, SymfonyStyle $io): int
+    {
+        $phpFinder = new PhpExecutableFinder();
+        $phpPath = $phpFinder->find();
+
+        /** @var Process[] $processes */
+        $processes = array_fill(0, $concurrent, null);
+
+        $paths = array_fill(0, $concurrent, '');
+
+        $startTimes = array_fill(0, $concurrent, 0);
+
+        foreach ($this->storage->listPaths() as $path) {
+            while (true) {
+                foreach ($processes as $index => $process) {
+
+                    if (null !== $process) {
+                        if ($process->isRunning()) {
+                            continue;
+                        }
+
+                        $this->finishSubProcess($process, $paths[$index], $startTimes[$index], $io);
+                    }
+
+                    $process = new Process(array_merge(
+                        [$phpPath],
+                        $_SERVER['argv'],
+                        ['--image='.$path, $io->isDecorated() ? '--ansi' : '--no-ansi']
+                    ));
+
+                    $process->setTimeout(null);
+                    $process->setEnv(['LINES' => getenv('LINES'), 'COLUMNS' => getenv('COLUMNS')]);
+                    $process->start();
+
+                    $processes[$index] = $process;
+                    $startTimes[$index] = microtime(true);
+                    $paths[$index] = $path;
+
+                    continue 3;
+                }
+
+                usleep(15000);
+            }
+        }
+
+        foreach ($processes as $index => $process) {
+            if (null === $process) {
+                continue;
+            }
+            $this->finishSubProcess($process, $paths[$index], $startTimes[$index], $io);
+        }
+
+        return 0;
+    }
+
+    private function finishSubProcess(Process $process, string $path, float $startTime, SymfonyStyle $io)
+    {
+        $process->wait();
+        $io->write(str_pad($path, $this->terminalWidth + \strlen($path) - mb_strlen($path, 'UTF-8') - 13, '.').' ');
+        if ($process->isSuccessful()) {
+            $io->writeln(sprintf('done%7.3Fs', microtime(true) - $startTime));
+        } else {
+            $io->writeln('failed');
+        }
     }
 }
