@@ -677,3 +677,11 @@ services:
             - '@request_stack'
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
+
+    Contao\CoreBundle\Doctrine\ORM\ExtendableEntity\ExtensionRegistry:
+
+    Contao\CoreBundle\Doctrine\ORM\ExtendableEntity\DelegatingAnnotationReader:
+        decorates: 'annotation_reader'
+        arguments:
+            - '@Contao\CoreBundle\Doctrine\ORM\ExtendableEntity\DelegatingAnnotationReader.inner'
+            - '@Contao\CoreBundle\Doctrine\ORM\ExtendableEntity\ExtensionRegistry'
