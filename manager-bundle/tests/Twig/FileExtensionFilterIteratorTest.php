@@ -19,7 +19,7 @@ class FileExtensionFilterIteratorTest extends ContaoTestCase
 {
     public function testRemovesPathsWithoutTwigFileExtension(): void
     {
-        $input = ['foo.twig', 'bar.twig', 'foobar.php', 'foo/bar'];
+        $input = ['foo.twig', 'bar.twig', 'foobar.sql', 'foo/bar.sql'];
         $expected = ['foo.twig', 'bar.twig'];
 
         $this->assertSame($expected, $this->applyFilter($input));
@@ -27,7 +27,7 @@ class FileExtensionFilterIteratorTest extends ContaoTestCase
 
     public function testDoesNotAlterNamespacedPaths(): void
     {
-        $input = ['@FooBundle/foo.twig', '@FooBundle/foo.other'];
+        $input = ['@FooBundle/foo.twig', '@FooBundle/foo.sql'];
 
         $this->assertSame($input, $this->applyFilter($input));
     }

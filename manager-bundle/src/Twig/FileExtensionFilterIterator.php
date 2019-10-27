@@ -37,6 +37,6 @@ class FileExtensionFilterIterator implements \IteratorAggregate
      */
     private function acceptsPath(string $path): bool
     {
-        return 0 === strncmp($path, '@', 1) || '.twig' === substr($path, -5);
+        return 0 === strncmp($path, '@', 1) || '.sql' !== substr($path, -4);
     }
 }
