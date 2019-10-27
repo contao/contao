@@ -13,3 +13,7 @@ services:
             - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 64 }
+
+    Contao\FaqBundle\Entity\FaqModule:
+        tags:
+            - { name: contao.extendable_entity, entity: 'faq' }

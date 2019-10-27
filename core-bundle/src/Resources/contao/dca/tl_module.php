@@ -22,13 +22,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			array('tl_module', 'checkPermission'),
 			array('tl_module', 'addCustomLayoutSectionReferences')
 		),
-		'sql' => array
-		(
-			'keys' => array
-			(
-				'id' => 'primary'
-			)
-		)
 	),
 
 	// List
@@ -131,17 +124,14 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_theme.name',
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'name' => array
 		(
@@ -151,7 +141,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'headline' => array
 		(
@@ -160,7 +149,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'inputUnit',
 			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
 			'eval'                    => array('maxlength'=>200, 'tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(255) NOT NULL default 'a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}'"
 		),
 		'type' => array
 		(
@@ -172,7 +160,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options_callback'        => array('tl_module', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default 'navigation'"
+			'default'			      => 'navigation'
 		),
 		'levelOffset' => array
 		(
@@ -238,7 +226,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Contao\Controller::getTemplateGroup('mod_' . $dc->activeRecord->type . '_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'pages' => array
 		(
@@ -319,7 +306,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'foreignKey'              => 'tl_form.title',
 			'options_callback'        => array('tl_module', 'getForms'),
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'queryType' => array
@@ -464,7 +450,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('allowHtml'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
-			'sql'                     => "text NULL"
 		),
 		'rss_cache' => array
 		(
@@ -594,7 +579,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'groups' => array
 		(
@@ -602,7 +586,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
-			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
 		'guests' => array
@@ -610,14 +593,12 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'cssID' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
 		)
 	)
 );
