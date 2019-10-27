@@ -59,7 +59,9 @@ class DcaSchemaProvider
         $config = $this->getSqlDefinitions();
 
         foreach ($config as $tableName => $definitions) {
-            $table = $schema->createTable($tableName);
+            $table = $schema->hasTable($tableName) ?
+                $schema->getTable($tableName) :
+                $schema->createTable($tableName);
 
             // Parse the table options first
             if (isset($definitions['TABLE_OPTIONS'])) {
