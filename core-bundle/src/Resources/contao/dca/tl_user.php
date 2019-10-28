@@ -270,7 +270,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'admin' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['admin'],
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'filter'                  => true,
 			'eval'                    => array('submitOnChange'=>true),
