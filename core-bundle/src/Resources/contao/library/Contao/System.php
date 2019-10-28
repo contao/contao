@@ -1079,7 +1079,7 @@ abstract class System
 	}
 
 	/**
-	 * Split a friendly-name e-address and return name and e-mail as array
+	 * Split a friendly-name e-mail address and return name and e-mail as array
 	 *
 	 * @param string $strEmail A friendly-name e-mail address
 	 *
