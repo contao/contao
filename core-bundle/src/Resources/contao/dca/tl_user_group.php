@@ -313,6 +313,7 @@ class tl_user_group extends Backend
 		if (($key = array_search('undo', $arrModules['system'])) !== false)
 		{
 			unset($arrModules['system'][$key]);
+			$arrModules['system'] = array_values($arrModules['system']);
 		}
 
 		$modules = Contao\StringUtil::deserialize($dc->activeRecord->modules);
@@ -321,6 +322,7 @@ class tl_user_group extends Backend
 		if (!$this->User->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
 		{
 			unset($arrModules['design'][$key]);
+			$arrModules['design'] = array_values($arrModules['design']);
 		}
 
 		return $arrModules;
