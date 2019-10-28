@@ -759,6 +759,7 @@ class tl_user extends Backend
 		if (!$this->User->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
 		{
 			unset($arrModules['design'][$key]);
+			$arrModules['design'] = array_values($arrModules['design']);
 		}
 
 		return $arrModules;
