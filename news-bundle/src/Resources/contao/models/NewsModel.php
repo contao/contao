@@ -347,16 +347,16 @@ class NewsModel extends Model
 	/**
 	 * Find all published news items of a certain period of time by their parent ID
 	 *
-	 * @param integer $intFrom    The start date as Unix timestamp
-	 * @param integer $intTo      The end date as Unix timestamp
-	 * @param array   $arrPids    An array of news archive IDs
-	 * @param integer $intLimit   An optional limit
-	 * @param integer $intOffset  An optional offset
-	 * @param array   $arrOptions An optional options array
+	 * @param integer|float $from       The start date as Unix timestamp
+	 * @param integer|float $to         The end date as Unix timestamp
+	 * @param array         $arrPids    An array of news archive IDs
+	 * @param integer       $intLimit   An optional limit
+	 * @param integer       $intOffset  An optional offset
+	 * @param array         $arrOptions An optional options array
 	 *
 	 * @return Collection|NewsModel[]|NewsModel|null A collection of models or null if there are no news
 	 */
-	public static function findPublishedFromToByPids($intFrom, $intTo, $arrPids, $intLimit=0, $intOffset=0, array $arrOptions=array())
+	public static function findPublishedFromToByPids($from, $to, $arrPids, $intLimit=0, $intOffset=0, array $arrOptions=array())
 	{
 		if (empty($arrPids) || !\is_array($arrPids))
 		{
@@ -380,20 +380,20 @@ class NewsModel extends Model
 		$arrOptions['limit']  = $intLimit;
 		$arrOptions['offset'] = $intOffset;
 
-		return static::findBy($arrColumns, array($intFrom, $intTo), $arrOptions);
+		return static::findBy($arrColumns, array($from, $to), $arrOptions);
 	}
 
 	/**
 	 * Count all published news items of a certain period of time by their parent ID
 	 *
-	 * @param integer $intFrom    The start date as Unix timestamp
-	 * @param integer $intTo      The end date as Unix timestamp
-	 * @param array   $arrPids    An array of news archive IDs
-	 * @param array   $arrOptions An optional options array
+	 * @param integer|float $from       The start date as Unix timestamp
+	 * @param integer|float $to         The end date as Unix timestamp
+	 * @param array         $arrPids    An array of news archive IDs
+	 * @param array         $arrOptions An optional options array
 	 *
 	 * @return integer The number of news items
 	 */
-	public static function countPublishedFromToByPids($intFrom, $intTo, $arrPids, array $arrOptions=array())
+	public static function countPublishedFromToByPids($from, $to, $arrPids, array $arrOptions=array())
 	{
 		if (empty($arrPids) || !\is_array($arrPids))
 		{
@@ -409,7 +409,7 @@ class NewsModel extends Model
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
-		return static::countBy($arrColumns, array($intFrom, $intTo), $arrOptions);
+		return static::countBy($arrColumns, array($from, $to), $arrOptions);
 	}
 }
 
