@@ -13,18 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Search\EscargotFactory;
-use Nyholm\Psr7\Uri;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Terminal42\Escargot\Event\AbstractResponseEvent;
 use Terminal42\Escargot\Event\FinishedCrawlingEvent;
-use Terminal42\Escargot\Event\SuccessfulResponseEvent;
-use Terminal42\Escargot\Event\UnsuccessfulResponseEvent;
+use Terminal42\Escargot\Event\ResponseEvent;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 
 class CrawlCommand extends Command
@@ -66,8 +64,6 @@ class CrawlCommand extends Command
         $subscribers = $input->getOption('subscribers');
         $queue = new InMemoryQueue();
         $baseUris = $this->escargotFactory->getSearchUriCollection();
-        //$baseUris->add(new Uri('https://www.terminal42.ch')); // TODO: debug
-        $baseUris->add(new Uri('https://contao.org')); // TODO: debug
 
         try {
             $escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers);
@@ -76,6 +72,8 @@ class CrawlCommand extends Command
 
             return 1;
         }
+
+        $escargot = $escargot->withLogger(new ConsoleLogger($output));
 
         $io->comment('Started crawling...');
 
@@ -86,8 +84,8 @@ class CrawlCommand extends Command
         $progressBar->start();
         $progressSubscriber = $this->getProgressSubscriber($progressBar);
 
-        $escargot->setConcurrency((int) $input->getOption('concurrency'));
-        $escargot->setRequestDelay((int) $input->getOption('delay'));
+        $escargot = $escargot->withConcurrency((int) $input->getOption('concurrency'));
+        $escargot = $escargot->withRequestDelay((int) $input->getOption('delay'));
         $escargot->addSubscriber($progressSubscriber);
 
         $escargot->crawl();
@@ -129,8 +127,12 @@ class CrawlCommand extends Command
                 return $this->isFinished;
             }
 
-            public function onResponse(AbstractResponseEvent $event): void
+            public function onResponse(ResponseEvent $event): void
             {
+                if (!$event->getCurrentChunk()->isLast()) {
+                    return;
+                }
+
                 $escargot = $event->getEscargot();
 
                 $this->progressBar->setMessage((string) $event->getCrawlUri()->getUri(), 'title');
@@ -148,8 +150,7 @@ class CrawlCommand extends Command
             public static function getSubscribedEvents()
             {
                 return [
-                    SuccessfulResponseEvent::class => 'onResponse',
-                    UnsuccessfulResponseEvent::class => 'onResponse',
+                    ResponseEvent::class => 'onResponse',
                     FinishedCrawlingEvent::class => 'onFinished',
                 ];
             }

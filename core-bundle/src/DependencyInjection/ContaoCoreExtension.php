@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Picker\PickerProviderInterface;
-use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Search\EventListener\EscargotEventSubscriber;
+use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;

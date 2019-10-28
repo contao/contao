@@ -16,12 +16,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\HeaderUtils;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Terminal42\Escargot\Escargot;
 
-abstract class AbstractFileLoggingListener implements EscargotEventSubscriber, ControllerResultProvidingSubscriberInterface
+abstract class AbstractFileHandlingListener implements EscargotEventSubscriber
 {
     /**
      * @var RouterInterface
@@ -32,16 +31,6 @@ abstract class AbstractFileLoggingListener implements EscargotEventSubscriber, C
      * @var Filesystem
      */
     protected $filesystem;
-
-    /**
-     * @var string
-     */
-    protected $logFile;
-
-    /**
-     * @var array
-     */
-    protected $logLines = [];
 
     public function __construct(RouterInterface $router, Filesystem $filesystem = null)
     {
@@ -55,57 +44,56 @@ abstract class AbstractFileLoggingListener implements EscargotEventSubscriber, C
 
     abstract public function addResultToConsole(Escargot $escargot, OutputInterface $output): void;
 
-    public function controllerAction(Request $request, string $jobId): Response
+    protected function createBinaryFileResponseForDownload(string $jobId, string $filename): BinaryFileResponse
     {
-        $this->initLogFile($jobId);
+        $file = $this->initFile($jobId, $filename);
 
-        $response = new BinaryFileResponse($this->logFile);
+        $response = new BinaryFileResponse($file);
         $response->setPrivate();
-        $response->setContentDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $this->getFileName());
+        $response->setContentDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $filename);
 
         return $response;
     }
 
-    protected function writeLogLinesToFile(array $headers): void
+    protected function writeCsv(string $jobId, string $filename, array $headers, array $lines): void
     {
-        $handle = fopen($this->logFile, 'a');
+        $file = $this->initFile($jobId, $filename);
+
+        $handle = fopen($file, 'a');
 
         // Check if we need to add the headlines
-        if (0 === filesize($this->logFile)) {
+        if (0 === filesize($file)) {
             fputcsv($handle, $headers);
         }
 
-        foreach ($this->logLines as $line) {
+        foreach ($lines as $line) {
             fputcsv($handle, $line);
         }
 
         fclose($handle);
     }
 
-    protected function initLogFile(string $jobId): void
+    protected function initFile(string $jobId, string $filename): string
     {
-        if (null !== $this->logFile) {
-            return;
-        }
-
-        $this->logFile = sprintf('%s/%s-%s',
+        $file = sprintf(
+            '%s/%s-%s',
             sys_get_temp_dir(),
             $jobId,
-            $this->getFileName()
+            $filename
         );
 
-        if (!$this->filesystem->exists($this->logFile)) {
-            $this->filesystem->dumpFile($this->logFile, '');
+        if (!$this->filesystem->exists($file)) {
+            $this->filesystem->dumpFile($file, '');
         }
+
+        return $file;
     }
 
-    abstract protected function getFileName(): string;
-
-    protected function getDownloadLink(Escargot $escargot, array $parameters = []): string
+    protected function generateControllerLink(string $jobId, array $parameters = []): string
     {
         return $this->router->generate('contao_escargot_subscriber', array_merge([
             'subscriber' => $this->getName(),
-            'jobId' => $escargot->getJobId(),
-        ], $parameters));
+            'jobId' => $jobId,
+        ], $parameters), UrlGeneratorInterface::ABSOLUTE_PATH);
     }
 }

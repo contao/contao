@@ -522,7 +522,7 @@ services:
         class: Contao\CoreBundle\Search\EscargotFactory
         arguments:
             - '@database_connection'
-            - '@contao.routing.url_generator'
+            - '@contao.framework'
         public: true;
 
     contao.search.escargot_subscriber.search_index:

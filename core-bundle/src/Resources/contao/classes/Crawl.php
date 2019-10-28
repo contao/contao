@@ -25,13 +25,18 @@ use Terminal42\Escargot\Queue\LazyQueue;
 class Crawl extends Backend implements \executable
 {
 	/**
+	 * @var bool
+	 */
+	private $valid = true;
+
+	/**
 	 * Return true if the module is active
 	 *
 	 * @return boolean
 	 */
 	public function isActive()
 	{
-		return Input::get('act') == 'crawl';
+		return Input::get('act') == 'crawl' && $this->valid;
 	}
 
 	/**
@@ -41,57 +46,64 @@ class Crawl extends Backend implements \executable
 	 */
 	public function run()
 	{
+		// TODO: bring back FE user auth
+
 		$template = new BackendTemplate('be_crawl');
 		$template->action = ampersand(Environment::get('request'));
 		$template->isActive = $this->isActive();
 
-
 		/** @var EscargotFactory $factory */
 		$factory = System::getContainer()->get('contao.search.escargot_factory');
-		$template->subscriberNames = $factory->getSubscriberNames();
 
-		if (!$this->isActive()) {
-			return $template->parse();
-		}
+		$subscriberNames = $factory->getSubscriberNames();
 
-		$selectedSubscribers = (array) \Input::get('crawl_subscriber_names');
-		$jobId = \Input::get('jobId');
+		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
+		$concurrencyWidget = $this->generateConcurrencyWidget();
+		$maxRequestsWidget = $this->generateMaxRequestsWidget();
 
-		if (!$selectedSubscribers || !($subscribers = $factory->getSubscribers($selectedSubscribers))) {
-			$template->error = 'You have to select at least one subscriber!';
+		$template->subscribersWidget = $subscribersWidget;
+		$template->concurrencyWidget = $concurrencyWidget;
+		$template->maxRequestsWidget = $maxRequestsWidget;
+
+		if (!$this->isActive())
+		{
 			return $template->parse();
 		}
 
 		$template->isRunning = true;
-		$template->subscribers = $subscribers;
+		$template->activeSubscribers = $factory->getSubscribers($subscribersWidget->value);
 
-		if (!$jobId) {
+		$jobId = \Input::get('jobId');
+		$queue = $factory->createLazyQueue();
+
+		if (!$jobId)
+		{
 			$baseUris = $factory->getSearchUriCollection();
-			$baseUris->add(new Uri('https://www.terminal42.ch')); // TODO: debug
-			//$baseUris->add(new Uri('https://contao.org')); // TODO: debug
-			$escargot = $factory->create($baseUris, $selectedSubscribers);
+			$escargot = $factory->create($baseUris, $queue, $subscribersWidget->value);
 			Controller::redirect(\Controller::addToUrl('&jobId=' . $escargot->getJobId()));
-		} else {
-			try {
-				$escargot = $factory->createFromJobId($jobId, $selectedSubscribers);
-			} catch (InvalidJobIdException $e) {
+		}
+		else
+		{
+			try
+			{
+				$escargot = $factory->createFromJobId($jobId, $queue, $subscribersWidget->value);
+			}
+			catch (InvalidJobIdException $e)
+			{
 				Controller::redirect(str_replace('&jobId='. $jobId, '', Environment::get('request')));
 			}
 		}
 
-		$escargot = $escargot->withConcurrency(10); // TODO: Configurable
-		$escargot = $escargot->withMaxRequests(rand(3, 8)); // TODO: Configurable
+		$escargot = $escargot->withConcurrency((int) $concurrencyWidget->value);
+		$escargot = $escargot->withMaxRequests((int) $maxRequestsWidget->value);
 
-		if (Environment::get('isAjaxRequest')) {
+		if (Environment::get('isAjaxRequest'))
+		{
 			// Start crawling
 			$escargot->crawl();
 
-			$queue = $escargot->getQueue();
-
 			// Commit the result on the lazy queue
-			if ($queue instanceof LazyQueue) {
-				$queue->commit($jobId);
-			}
+			$queue->commit($jobId);
 
 			// Return the results
 			$pending = $queue->countPending($jobId);
@@ -99,8 +111,10 @@ class Crawl extends Backend implements \executable
 			$finished = 0 === $pending;
 			$results = [];
 
-			if ($finished) {
-				foreach ($factory->getSubscribers($selectedSubscribers) as $subscriber) {
+			if ($finished)
+			{
+				foreach ($factory->getSubscribers($subscribersWidget->value) as $subscriber)
+				{
 					$results[$subscriber->getName()] = $subscriber->getResultAsHtml($escargot);
 				}
 
@@ -118,5 +132,89 @@ class Crawl extends Backend implements \executable
 		}
 
 		return $template->parse();
+	}
+
+	private function generateSubscribersWidget(array $subscriberNames): Widget
+	{
+		$name = 'crawl_subscriber_names';
+		$widget = new CheckBox();
+		$widget->id = $name;
+		$widget->name = $name;
+		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscribersLabel'][0];
+		$widget->mandatory = true;
+		$widget->multiple = true;
+		$widget->setInputCallback($this->getInputCallback($name));
+
+		$options = [];
+
+		foreach ($subscriberNames as $subscriberName) {
+			$options[] = [
+				'value' => $subscriberName,
+				'label' => $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscriberNames'][$subscriberName],
+			];
+		}
+
+		$widget->options = $options;
+
+		if ($this->isActive()) {
+			$widget->validate();
+
+			if ($widget->hasErrors()) {
+				$this->valid = false;
+			}
+		}
+
+		return $widget;
+	}
+
+	private function generateConcurrencyWidget(): Widget
+	{
+		$name = 'crawl_concurrency';
+		$widget = new TextField();
+		$widget->id = $name;
+		$widget->name = $name;
+		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['concurrencyLabel'][0];
+		$widget->rgxp = 'digit';
+		$widget->value = 10;
+		$widget->setInputCallback($this->getInputCallback($name));
+
+		if ($this->isActive()) {
+			$widget->validate();
+
+			if ($widget->hasErrors()) {
+				$this->valid = false;
+			}
+		}
+
+		return $widget;
+	}
+
+	private function generateMaxRequestsWidget(): Widget
+	{
+		$name = 'crawl_max_requests';
+		$widget = new TextField();
+		$widget->id = $name;
+		$widget->name = $name;
+		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['maxRequestsLabel'][0];
+		$widget->rgxp = 'digit';
+		$widget->value = 20;
+		$widget->setInputCallback($this->getInputCallback($name));
+
+		if ($this->isActive()) {
+			$widget->validate();
+
+			if ($widget->hasErrors()) {
+				$this->valid = false;
+			}
+		}
+
+		return $widget;
+	}
+
+	private function getInputCallback(string $name): \Closure
+	{
+		return function () use ($name) {
+			return \Input::get($name);
+		};
 	}
 }

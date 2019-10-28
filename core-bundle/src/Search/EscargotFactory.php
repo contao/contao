@@ -12,11 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\EventListener\EscargotEventSubscriber;
+use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Escargot;
 use Terminal42\Escargot\EventSubscriber\HtmlCrawlerSubscriber;
@@ -26,6 +28,7 @@ use Terminal42\Escargot\Exception\InvalidJobIdException;
 use Terminal42\Escargot\Queue\DoctrineQueue;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 use Terminal42\Escargot\Queue\LazyQueue;
+use Terminal42\Escargot\Queue\QueueInterface;
 
 class EscargotFactory
 {
@@ -35,9 +38,9 @@ class EscargotFactory
     private $connection;
 
     /**
-     * @var UrlGeneratorInterface
+     * @var ContaoFramework
      */
-    private $urlGenerator;
+    private $framework;
 
     /**
      * @var EscargotEventSubscriber[]
@@ -49,10 +52,10 @@ class EscargotFactory
      */
     private $additionalUris = [];
 
-    public function __construct(Connection $connection, UrlGeneratorInterface $urlGenerator, array $additionalUris = [])
+    public function __construct(Connection $connection, ContaoFramework $framework, array $additionalUris = [])
     {
         $this->connection = $connection;
-        $this->urlGenerator = $urlGenerator;
+        $this->framework = $framework;
         $this->additionalUris = $additionalUris;
     }
 
@@ -82,14 +85,15 @@ class EscargotFactory
 
     public function getSubscriberNames(): array
     {
-        return array_map(static function (EscargotEventSubscriber $subscriber) {
-            return $subscriber->getName();
-        },
+        return array_map(
+            static function (EscargotEventSubscriber $subscriber) {
+                return $subscriber->getName();
+            },
             $this->subscribers
         );
     }
 
-    private function createLazyQueue(): LazyQueue
+    public function createLazyQueue(): LazyQueue
     {
         return new LazyQueue(new InMemoryQueue(), new DoctrineQueue(
             $this->connection,
@@ -118,35 +122,35 @@ class EscargotFactory
 
     public function getRootPageUriCollection(): BaseUriCollection
     {
-        $stmt = $this->connection->prepare('SELECT id, alias, language, dns, useSSL FROM tl_page WHERE type = :type');
-        $stmt->execute([':type' => 'root']);
-        $rootPages = $stmt->fetchAll();
+        $this->framework->initialize();
 
-        foreach ($rootPages as $rootPage) {
-            $uri = $this->urlGenerator->generate(
-                $rootPage['alias'] ?: $rootPage['id'],
-                [
-                    '_locale' => $rootPage['language'],
-                    '_domain' => $rootPage['dns'],
-                    '_ssl' => (bool) $rootPage['useSSL'],
-                ]
-            );
+        $collection = new BaseUriCollection();
+
+        /** @var array<PageModel> $rootPages */
+        $rootPages = $this->framework->getAdapter(PageModel::class)->findPublishedRootPages();
+
+        if (null === $rootPages) {
+            return $collection;
         }
 
-        return new BaseUriCollection(); // TODO: find out how to exactly generate the root URLs and use them here
+        foreach ($rootPages as $rootPage) {
+            $collection->add(new Uri($rootPage->getAbsoluteUrl()));
+        }
+
+        return $collection;
     }
 
     /**
      * @throws \InvalidArgumentException
      */
-    public function create(BaseUriCollection $baseUris, array $selectedSubscribers): Escargot
+    public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, ?HttpClientInterface $client = null): Escargot
     {
-        $selectedSubsribers = $this->validateSubscribers($selectedSubscribers);
+        $selectedSubscribers = $this->validateSubscribers($selectedSubscribers);
 
-        $escargot = Escargot::create($baseUris, $this->createLazyQueue());
+        $escargot = Escargot::create($baseUris, $queue, $client);
 
         $this->registerDefaultSubscribers($escargot);
-        $this->registerSubscribers($escargot, $selectedSubsribers);
+        $this->registerSubscribers($escargot, $selectedSubscribers);
 
         return $escargot;
     }
@@ -155,14 +159,14 @@ class EscargotFactory
      * @throws \InvalidArgumentException
      * @throws InvalidJobIdException
      */
-    public function createFromJobId(string $jobId, array $selectedSubscribers): Escargot
+    public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, ?HttpClientInterface $client = null): Escargot
     {
-        $selectedSubsribers = $this->validateSubscribers($selectedSubscribers);
+        $selectedSubscribers = $this->validateSubscribers($selectedSubscribers);
 
-        $escargot = Escargot::createFromJobId($jobId, $this->createLazyQueue());
+        $escargot = Escargot::createFromJobId($jobId, $queue, $client);
 
         $this->registerDefaultSubscribers($escargot);
-        $this->registerSubscribers($escargot, $selectedSubsribers);
+        $this->registerSubscribers($escargot, $selectedSubscribers);
 
         return $escargot;
     }
@@ -174,10 +178,10 @@ class EscargotFactory
         $escargot->addSubscriber(new HtmlCrawlerSubscriber());
     }
 
-    private function registerSubscribers(Escargot $escargot, array $selectedSubsribers): void
+    private function registerSubscribers(Escargot $escargot, array $selectedSubscribers): void
     {
         foreach ($this->subscribers as $subscriber) {
-            if (\in_array($subscriber->getName(), $selectedSubsribers, true)) {
+            if (\in_array($subscriber->getName(), $selectedSubscribers, true)) {
                 $escargot->addSubscriber($subscriber);
             }
         }

@@ -57,7 +57,7 @@
   }
 </style>
 
-<div id="tl_crawl" class="maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
+<div id="tl_crawl" class="tl_box maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
   <h2 class="sub_headline sub_headline_index">Crawler</h2>
 
   <?php if ($this->isRunning): ?>
@@ -68,9 +68,11 @@
       <div class="progress-count">0 / 0</div>
 
       <div class="results running">
-        <?php foreach ($this->subscribers as $subscriber): ?>
-        <h3>TODO: Label for <?= $subscriber->getName() ?></h3>
-        <div data-subscriber="<?= $subscriber->getName() ?>" class="result"><span class="spinner"></span> Please wait for the crawler to finish.</div>
+        <?php foreach ($this->activeSubscribers as $subscriber): ?>
+        <h3><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscriberNames'][$subscriber->getName()] ?></h3>
+        <div data-subscriber="<?= $subscriber->getName() ?>" class="result"><span class="spinner"></span>
+          <p><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['waitToBeFinished'] ?></p>
+        </div>
         <?php endforeach; ?>
       </div>
 
@@ -127,24 +129,20 @@
         <input type="hidden" name="do" value="maintenance">
         <input type="hidden" name="act" value="crawl">
         <input type="hidden" name="rt" value="<?= REQUEST_TOKEN ?>">
-        <div class="widget">
-          <fieldset id="crawl_subscriber_names" class="tl_checkbox_container mandatory<?php if ($this->error):?> error<?php endif; ?>">
-            <legend><span class="invisible">Mandatory field </span>Subscribers<span class="mandatory">*</span></legend>
-            <input type="checkbox" id="check_all_crawl_subscriber_names" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,'crawl_subscriber_names')">
-            <label for="check_all_crawl_subscriber_names" style="color:#a6a6a6"><em>Select all</em></label>
-            <br>
-            <?php foreach($this->subscriberNames as $name): ?>
-              <input type="checkbox" name="crawl_subscriber_names[]" id="crawl_subscriber_names_<?= $name ?>" class="tl_checkbox" value="<?= $name ?>"<?php if (1 === \count($this->subscriberNames)): ?> checked<?php endif; ?>>
-              <label for="crawl_subscriber_names_<?= $name ?>">TODO: Label for <?= $name ?></label>
-              <br>
-            <?php endforeach; ?>
-          </fieldset>
-          <?php if ($this->error):?>
-          <p class="tl_error tl_tip" title=""><?= $this->error ?></p>
-          <?php endif; ?>
+        <div class="widget w50">
+          <?= $this->subscribersWidget->parse() ?>
+          <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscribersLabel'][1] ?></p>
+        </div>
+        <div class="widget w50 clr">
+          <?= $this->concurrencyWidget->parse() ?>
+          <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['concurrencyLabel'][1] ?></p>
+        </div>
+        <div class="widget w50">
+          <?= $this->maxRequestsWidget->parse() ?>
+          <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['maxRequestsLabel'][1] ?></p>
         </div>
       </div>
-      <div class="tl_submit_container">
+      <div class="tl_submit_container clr">
         <button type="submit" id="index" class="tl_submit">Start crawling</button>
       </div>
     </form>
