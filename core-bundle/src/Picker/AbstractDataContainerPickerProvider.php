@@ -20,10 +20,10 @@ use Knp\Menu\ItemInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
+abstract class AbstractDataContainerPickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
 {
-    private const PREFIX = 'universal.';
-    private const PREFIX_LENGTH = 10;
+    private const PREFIX = 'dc.';
+    private const PREFIX_LENGTH = 3;
 
     /**
      * @var ContaoFramework
@@ -64,7 +64,7 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
      */
     public function getName(): string
     {
-        return 'universalPicker';
+        return 'dcTablePicker';
     }
 
     /**
@@ -146,10 +146,17 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
      */
     public function supportsContext($context): bool
     {
-        return
-            0 === strpos($context, self::PREFIX)
-            && 0 !== \count($this->getModulesForTable($this->getTableFromContext($context)))
-        ;
+        if (0 !== strpos($context, self::PREFIX)) {
+            return false;
+        }
+
+        $table = $this->getTableFromContext($context);
+
+        $this->framework->initialize();
+        $this->framework->createInstance(DcaLoader::class, [$table])->load();
+
+        return $this->getDataContainer() === $GLOBALS['TL_DCA'][$table]['config']['dataContainer']
+            && 0 !== \count($this->getModulesForTable($table));
     }
 
     /**
@@ -211,7 +218,7 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
         return (int) $value;
     }
 
-    private function getModulesForTable(string $table): array
+    protected function getModulesForTable(string $table): array
     {
         $modules = [];
 
@@ -230,12 +237,12 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
         return $modules;
     }
 
-    private function getTableFromContext(string $context): string
+    protected function getTableFromContext(string $context): string
     {
         return substr($context, self::PREFIX_LENGTH);
     }
 
-    private function getUrlForValue(PickerConfig $config, string $module, string $table = null, string $pid = null): string
+    protected function getUrlForValue(PickerConfig $config, string $module, string $table = null, string $pid = null): string
     {
         $params = [
             'do' => $module,
@@ -254,7 +261,7 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
         return $this->router->generate('contao_backend', $params);
     }
 
-    private function getPtableAndPid(string $table, string $value): array
+    protected function getPtableAndPid(string $table, string $value): array
     {
         // Use the first value if array to find a database record
         $id = (int) explode(',', $value)[0];
@@ -299,4 +306,9 @@ class UniversalPickerProvider implements PickerProviderInterface, DcaPickerProvi
 
         return [$ptable, $pid];
     }
+
+    /**
+     * Returns the DataContainer name supported by this picker (e.g. "Table" for DC_Table).
+     */
+    abstract protected function getDataContainer(): string;
 }

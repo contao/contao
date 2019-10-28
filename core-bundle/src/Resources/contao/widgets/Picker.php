@@ -115,7 +115,7 @@ class Picker extends Widget
 	 */
 	public function generate()
 	{
-		$strContext = $this->context ?: 'universal.' . $this->getRelatedTable();
+		$strContext = $this->context ?: 'dc.' . $this->getRelatedTable();
 		$blnHasOrder = ($this->orderField != '' && \is_array($this->{$this->orderField}));
 		$arrValues = $this->generateValues($blnHasOrder);
 		$arrSet = array_keys($arrValues);
