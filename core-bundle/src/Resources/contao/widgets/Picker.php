@@ -190,15 +190,26 @@ class Picker extends Widget
 		$arrValues = array();
 
 		if (!empty($this->varValue))
-		{ // can be an array
+		{
 			$objRows = $this->Database->execute("SELECT * FROM $strRelatedTable WHERE id IN (" . implode(',', array_map('intval', (array) $this->varValue)) . ")");
 
 			if ($objRows->numRows)
 			{
+				$dataContainer = 'DC_' . $GLOBALS['TL_DCA'][$strRelatedTable]['config']['dataContainer'];
+				$dc = new $dataContainer($strRelatedTable);
+
 				while ($objRows->next())
 				{
+					$dc->id = $objRows->id;
+					$dc->activeRecord = $objRows;
+
 					$arrSet[] = $objRows->id;
-					$arrValues[$objRows->id] = $this->renderLabel($objRows->row(), $strRelatedTable);
+					$arrValues[$objRows->id] = $this->renderLabel($objRows->row(), $dc);
+
+					// showColumns
+					if (\is_array($arrValues[$objRows->id])) {
+						$arrValues[$objRows->id] = implode(', ', $arrValues[$objRows->id]);
+					}
 				}
 			}
 
@@ -232,13 +243,13 @@ class Picker extends Widget
 		return $arrValues;
 	}
 
-	protected function renderLabel(array $arrRow, string $strRelatedTable)
+	protected function renderLabel(array $arrRow, DataContainer $dc)
 	{
-		$mode = $GLOBALS['TL_DCA'][$strRelatedTable]['list']['sorting']['mode'] ?? 1;
+		$mode = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['mode'] ?? 1;
 
 		if ($mode === 4)
 		{
-			$callback = $GLOBALS['TL_DCA'][$strRelatedTable]['list']['sorting']['child_record_callback'];
+			$callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'];
 
 			if (\is_array($callback))
 			{
@@ -253,19 +264,19 @@ class Picker extends Widget
 			}
 		}
 
-		$labelConfig = &$GLOBALS['TL_DCA'][$strRelatedTable]['list']['label'];
+		$labelConfig = &$GLOBALS['TL_DCA'][$dc->table]['list']['label'];
 		$label = vsprintf($labelConfig['format'], array_intersect_key($arrRow, array_flip($labelConfig['fields'])));
 
 		if (\is_array($labelConfig['label_callback']))
 		{
 			$this->import($labelConfig['label_callback'][0]);
 
-			return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label);
+			return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, $arrRow);
 		}
 
 		if (\is_callable($labelConfig['label_callback']))
 		{
-			return $labelConfig['label_callback']($arrRow, $label);
+			return $labelConfig['label_callback']($arrRow, $label, $dc, $arrRow);
 		}
 
 		return $arrRow['id'];
