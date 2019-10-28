@@ -39,7 +39,6 @@ use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Entity\RememberMe;
-use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\EventListener\BackendMenuListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
@@ -60,6 +59,7 @@ use Contao\CoreBundle\EventListener\RefererIdListener;
 use Contao\CoreBundle\EventListener\RequestTokenListener;
 use Contao\CoreBundle\EventListener\ResponseExceptionListener;
 use Contao\CoreBundle\EventListener\RobotsTxtListener;
+use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
 use Contao\CoreBundle\EventListener\TwoFactorFrontendListener;
@@ -238,13 +238,13 @@ class ContaoCoreExtensionTest extends TestCase
         yield ['contao.command.version', VersionCommand::class];
     }
 
-    public function testRegistersTheAddToSearchIndexListener(): void
+    public function testRegistersTheSearchIndexListener(): void
     {
-        $this->assertTrue($this->container->has('contao.listener.add_to_search_index'));
+        $this->assertTrue($this->container->has('contao.listener.search_index'));
 
-        $definition = $this->container->getDefinition('contao.listener.add_to_search_index');
+        $definition = $this->container->getDefinition('contao.listener.search_index');
 
-        $this->assertSame(AddToSearchIndexListener::class, $definition->getClass());
+        $this->assertSame(SearchIndexListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('contao.search.indexer', (string) $definition->getArgument(0));
         $this->assertSame('%fragment.path%', (string) $definition->getArgument(1));

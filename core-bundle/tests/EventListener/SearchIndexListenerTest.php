@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
+use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\TestCase;
@@ -21,12 +21,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class AddToSearchIndexListenerTest extends TestCase
+class SearchIndexListenerTest extends TestCase
 {
     /**
      * @dataProvider getRequestResponse
      */
-    public function testIndexesTheResponse(Request $request, Response $response, bool $index): void
+    public function testIndexesOrDeletesTheDocument(Request $request, Response $response, bool $index, bool $delete): void
     {
         $indexer = $this->createMock(IndexerInterface::class);
         $indexer
@@ -34,31 +34,53 @@ class AddToSearchIndexListenerTest extends TestCase
             ->method('index')
             ->with($this->isInstanceOf(Document::class))
         ;
+        $indexer
+            ->expects($delete ? $this->once() : $this->never())
+            ->method('delete')
+            ->with($this->isInstanceOf(Document::class))
+        ;
 
         $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
 
-        $listener = new AddToSearchIndexListener($indexer);
+        $listener = new SearchIndexListener($indexer);
         $listener->onKernelTerminate($event);
     }
 
     public function getRequestResponse(): \Generator
     {
-        yield [
+        yield 'Should index because the response was successful and contains ld+json information' => [
             Request::create('/foobar'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
-            true,
+            true, // Should index
+            false, // Should not delete
         ];
 
-        yield [
+        yield 'Should be skipped because it is not a GET request' => [
             Request::create('/foobar', 'POST'),
             new Response(),
-            false,
+            false, // Should not index
+            false, // Should not delete
         ];
 
-        yield [
+        yield 'Should be skipped because it is a fragment request' => [
             Request::create('_fragment/foo/bar'),
             new Response(),
-            false,
+            false, // Should not index
+            false, // Should not delete
+        ];
+
+        yield 'Should be deleted because the response was not successful (404)' => [
+            Request::create('/foobar', 'GET'),
+            new Response('', 404),
+            false, // Should not index
+            true, // Should delete
+        ];
+
+        yield 'Should be deleted because the response was not successful (403)' => [
+            Request::create('/foobar', 'GET'),
+            new Response('', 403),
+            false, // Should not index
+            true, // Should delete
         ];
     }
 }

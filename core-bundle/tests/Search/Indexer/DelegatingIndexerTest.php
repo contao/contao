@@ -30,6 +30,12 @@ class DelegatingIndexerTest extends TestCase
 
         $indexer1
             ->expects($this->once())
+            ->method('delete')
+            ->with($this->isInstanceOf(Document::class))
+        ;
+
+        $indexer1
+            ->expects($this->once())
             ->method('clear')
         ;
 
@@ -42,6 +48,12 @@ class DelegatingIndexerTest extends TestCase
 
         $indexer2
             ->expects($this->once())
+            ->method('delete')
+            ->with($this->isInstanceOf(Document::class))
+        ;
+
+        $indexer2
+            ->expects($this->once())
             ->method('clear')
         ;
 
@@ -49,6 +61,7 @@ class DelegatingIndexerTest extends TestCase
         $delegating->addIndexer($indexer1);
         $delegating->addIndexer($indexer2);
         $delegating->index($this->createMock(Document::class));
+        $delegating->delete($this->createMock(Document::class));
         $delegating->clear();
     }
 }

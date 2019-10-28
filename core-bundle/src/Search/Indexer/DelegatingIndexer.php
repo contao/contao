@@ -41,6 +41,16 @@ class DelegatingIndexer implements IndexerInterface
     /**
      * {@inheritdoc}
      */
+    public function delete(Document $document): void
+    {
+        foreach ($this->indexers as $indexer) {
+            $indexer->delete($document);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function clear(): void
     {
         foreach ($this->indexers as $indexer) {
