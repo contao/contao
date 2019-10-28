@@ -211,6 +211,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         } elseif ($configFile = $this->getConfigFile('config.yml')) {
             $loader->load($configFile);
         }
+
+        // Automatically load the services.yml file if it exists
+        if ($servicesFile = $this->getConfigFile('services.yml')) {
+            $loader->load($servicesFile);
+        }
     }
 
     /**
