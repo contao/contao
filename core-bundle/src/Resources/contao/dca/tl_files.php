@@ -600,11 +600,6 @@ class tl_files extends Backend
 	 */
 	public function editSource($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (!$this->User->hasAccess('f5', 'fop'))
-		{
-			return '';
-		}
-
 		$strDecoded = rawurldecode($row['id']);
 
 		if (is_dir(TL_ROOT . '/' . $strDecoded))
@@ -614,7 +609,14 @@ class tl_files extends Backend
 
 		$objFile = new File($strDecoded);
 
-		if (!in_array($objFile->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
+		static $editableFiles;
+
+		if ($editableFiles === null)
+		{
+			$editableFiles = StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')));
+		}
+
+		if (!$this->User->hasAccess('f5', 'fop') || !in_array($objFile->extension, $editableFiles))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
