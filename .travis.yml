@@ -155,6 +155,6 @@ before_install:
         }
         file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
       '
-      composer update --no-interaction --no-suggest
+      ROOT_COMPOSER_VERSION=dev-$TRAVIS_COMMIT composer update --no-interaction --no-suggest
       php vendor/bin/phpunit --colors=always
     }
