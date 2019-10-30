@@ -2524,7 +2524,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 				{
 					if ($v == '__new__')
 					{
-						$this->Files->rmdir(\StringUtil::stripRootDir($path) . '/' . $v);
+						$this->Files->rrdir(\StringUtil::stripRootDir($path) . '/' . $v);
 					}
 					else
 					{
