@@ -412,7 +412,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 
 		$imagePasteInto = \Image::getHtml('pasteinto.svg', $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'][0]);
 
-		if ($session['search'][$this->strTable]['value'] != '')
+		if ($session['search'][$this->strTable]['value'] != '' && Config::get('fileSyncExclude') != '')
 		{
 			\Message::addInfo($GLOBALS['TL_LANG']['MSC']['searchExclude']);
 		}
