@@ -75,6 +75,7 @@ h2 {
 #diff dl {
 	margin:0;
 	padding:0;
+	font:.75rem "Roboto Mono",monospace;
 }
 #diff dt,#diff dd {
 	margin:0;
