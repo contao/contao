@@ -47,7 +47,7 @@ class SearchIndexListener
             return;
         }
 
-        // Do handle fragments
+        // Do not handle fragments
         if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $request->getPathInfo())) {
             return;
         }
