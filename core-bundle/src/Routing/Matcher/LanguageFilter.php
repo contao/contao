@@ -50,7 +50,7 @@ class LanguageFilter implements RouteFilterInterface
             if (
                 !$pageModel instanceof PageModel
                 || $pageModel->rootIsFallback
-                || \in_array($pageModel->rootLanguage, $languages, true)
+                || \in_array(str_replace('-', '_', $pageModel->rootLanguage), $languages, true)
                 || preg_grep('/'.preg_quote($pageModel->rootLanguage, '/').'_[A-Z]{2}/', $languages)
             ) {
                 continue;

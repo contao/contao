@@ -114,5 +114,13 @@ class LanguageFilterTest extends TestCase
             true,
             false,
         ];
+
+        yield 'Does not remove a route if the root page language with region code equals the accepted language' => [
+            'tl_page.2.root',
+            $this->mockClassWithProperties(PageModel::class, ['rootIsFallback' => false, 'rootLanguage' => 'de-CH']),
+            'de-CH',
+            true,
+            false
+        ];
     }
 }
