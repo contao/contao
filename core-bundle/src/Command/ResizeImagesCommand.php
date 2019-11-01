@@ -169,7 +169,8 @@ class ResizeImagesCommand extends Command
                     // Clear the current output line
                     $io->write("\r".str_repeat(' ', $this->terminalWidth)."\r");
                 } else {
-                    $io->writeln(sprintf('done%7.3Fs', $duration = microtime(true) - $startTime));
+                    $duration = microtime(true) - $startTime;
+                    $io->writeln(sprintf('done%7.3Fs', $duration));
 
                     return $duration;
                 }
@@ -180,7 +181,7 @@ class ResizeImagesCommand extends Command
         } catch (\Throwable $exception) {
             $io->writeln('failed');
 
-            if ($io->isVerbose()) {
+            if ($io->isVerbose() && method_exists(FlattenException::class, 'getAsString')) {
                 $io->error(FlattenException::createFromThrowable($exception)->getAsString());
             } else {
                 $io->writeln($exception->getMessage());
