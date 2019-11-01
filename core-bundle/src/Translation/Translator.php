@@ -143,8 +143,8 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     private function getFromGlobals(string $id): ?string
     {
         // Split the ID into chunks allowing escaped dots (\.) and backslashes (\\)
-        preg_match_all('/(?:\\\\[.\\\\]|[^.])++/', $id, $matches);
-        $parts = preg_replace('/\\\\([.\\\\])/', '$1', $matches[0]);
+        preg_match_all('/(?:\\\\[\\\\.]|[^.])++/', $id, $matches);
+        $parts = preg_replace('/\\\\([\\\\.])/', '$1', $matches[0]);
 
         $item = &$GLOBALS['TL_LANG'];
 
