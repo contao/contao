@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_user.thumbnails.1">
         <source>Show thumbnail images in the file manager.</source>
-        <target>Vorschaubilder im Dateimanager anzeigen.</target>
+        <target>Vorschaubilder in der Dateiverwaltung anzeigen.</target>
       </trans-unit>
       <trans-unit id="tl_user.useRTE.0">
         <source>Enable the rich text editor</source>

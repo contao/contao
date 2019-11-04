@@ -227,15 +227,19 @@
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
         <source>Context length</source>
+        <target>Longitud del contexto</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
         <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
+        <target>El primer campo define el número de caracteres en el lado izquierdo y derecho de cada palabra clave y el segundo, la longitud total del contexto por resultado.</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.0">
         <source>Minimum keyword length</source>
+        <target>Longitud mínima de palabra clave</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.1">
         <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
+        <target>Las palabras clave que fallecen la longitud mínima serán ignoradas en los resultados de búsqueda. Establecer en 0 para deshabilitar.</target>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>
@@ -564,6 +568,16 @@ The confirmation link is valid for 24 hours.
 
 If you did not request an account, please ignore this e-mail.
 </source>
+        <target>Gracias por su registro en ##domain##.
+
+Haga clic aquí para completar su registro y activar su cuenta:
+
+##link##
+
+El enlace de confirmación es válido por 24 horas.
+
+Si no solicitó una cuenta, ignore este correo electrónico.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
@@ -578,6 +592,14 @@ Click here to set the new password:
 
 If you did not request this e-mail, please contact the website administrator.
 </source>
+        <target>Ha solicitado una nueva contraseña para ##domain##.
+
+Haga clic aquí para establecer la nueva contraseña:
+
+##link##
+
+Si no solicitó este correo electrónico, comuníquese con el administrador del sitio web.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>
@@ -597,9 +619,11 @@ If you did not request this e-mail, please contact the website administrator.
       </trans-unit>
       <trans-unit id="tl_module.new.0">
         <source>New</source>
+        <target>Nuevo</target>
       </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
+        <target>Crear un módulo nuevo</target>
       </trans-unit>
       <trans-unit id="tl_module.show">
         <source>Show the details of module ID %s</source>

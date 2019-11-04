@@ -87,9 +87,11 @@
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
+        <target>Doble suscripción</target>
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
         <source>Manage the double opt-in tokens</source>
+        <target>Administrar los tokens de doble suscripción</target>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
@@ -129,9 +131,11 @@
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
+        <target>Seguridad</target>
       </trans-unit>
       <trans-unit id="MOD.security.1">
         <source>Secure your account</source>
+        <target>Asegure su cuenta</target>
       </trans-unit>
       <trans-unit id="MOD.undo.0">
         <source>Restore</source>
@@ -266,8 +270,7 @@
         <target>generar un menú de paginación para navegar por artículos</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.0">
-        <source>Sitemap</source>
-        <target>Mapa web</target>
+        <source>HTML sitemap</source>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
         <source>Generates a list of all pages in the site structure</source>
@@ -391,9 +394,11 @@
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>
+        <target>Autenticación de dos factores</target>
       </trans-unit>
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
+        <target>Genera un formulario para configurar o cambiar la autenticación de dos factores</target>
       </trans-unit>
     </body>
   </file>
