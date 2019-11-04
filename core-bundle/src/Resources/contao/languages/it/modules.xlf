@@ -254,8 +254,7 @@
         <target>genera un menu di navigazione degli articoli</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.0">
-        <source>Sitemap</source>
-        <target>Mappa del sito</target>
+        <source>HTML sitemap</source>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
         <source>Generates a list of all pages in the site structure</source>

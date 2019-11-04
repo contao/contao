@@ -18,6 +18,7 @@
       </trans-unit>
       <trans-unit id="4">
         <source>locked_explanation</source>
+        <target>Por razones de seguridad, la herramienta de instalación se ha bloqueado después de haber introducido una contraseña incorrecta más de tres veces seguidas. Puede desbloquearlo en el Contao Manager o ejecutando &lt;code&gt;contao: install: unlock&lt;/code&gt; en la línea de comando.</target>
         
       </trans-unit>
       <trans-unit id="5">
@@ -292,7 +293,7 @@
       </trans-unit>
       <trans-unit id="59">
         <source>admin_error_extnd</source>
-        <target>Por motivos de seguridad no puede utilizar ninguno de los caracteres siguientes: #()/&lt;=&gt;</target>
+        <target>Por razones de seguridad, no puede usar los siguientes caracteres aquí: # &lt;&gt; () \ =</target>
         
       </trans-unit>
       <trans-unit id="60">
@@ -362,6 +363,7 @@
       </trans-unit>
       <trans-unit id="73">
         <source>duplicate_subscriptions</source>
+        <target>Suscripciones duplicadas</target>
         
       </trans-unit>
       <trans-unit id="74">
