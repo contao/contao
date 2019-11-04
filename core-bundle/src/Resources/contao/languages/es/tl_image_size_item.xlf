@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.source_legend">
         <source>Image source settings</source>
+        <target>Configuración de fuente de imagen</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.visibility_legend">
         <source>Visibility</source>
@@ -38,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.0">
         <source>New</source>
+        <target>Nuevo</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new media query</source>
@@ -69,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle">
         <source>Activate/deactivate media query ID %s</source>
+        <target>Activar/desactivar ID de consulta de medios %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>
@@ -80,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Create a new media query at the top</source>
+        <target>Crear una nueva consulta de medios en la parte superior</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Create a new media query after media query ID %s</source>
+        <target>Crear una nueva consulta de medios después del ID de la consulta de medios %s</target>
       </trans-unit>
     </body>
   </file>

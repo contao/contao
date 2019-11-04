@@ -243,9 +243,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
+        <target>Tamaño de imagen del lightbox</target>
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.1">
         <source>Here you can select an image size for the images shown in the lightbox.</source>
+        <target>Aquí puede seleccionar un tamaño de imagen para las imágenes que se muestran en el lightbox.</target>
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.0">
         <source>Default image pixel densities</source>
@@ -521,24 +523,31 @@
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>
+        <target>Nuevo</target>
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
+        <target>Crear un nuevo diseño de página</target>
       </trans-unit>
       <trans-unit id="tl_layout.show">
         <source>Show the details of page layout ID %s</source>
+        <target>Mostrar los detalles del diseño de página con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit">
         <source>Edit page layout ID %s</source>
+        <target>Editar el layout de página con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.copy">
         <source>Duplicate page layout ID %s</source>
+        <target>Duplicar el diseño de página con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut">
         <source>Move page layout ID %s</source>
+        <target>Mover el diseño de página con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.delete">
         <source>Delete page layout ID %s</source>
+        <target>Eliminar el diesño de página con ID %s</target>
       </trans-unit>
     </body>
   </file>

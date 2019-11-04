@@ -304,12 +304,10 @@
         <target>A(s) classe(s) serão utilizadas no menu de navegação a na tag &amp;lt;body&amp;gt;.</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
-        <source>Show in sitemap</source>
-        <target>Mostrar no mapa do site</target>
+        <source>Show in HTML sitemap</source>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
-        <source>Here you can define whether the page is shown in the sitemap.</source>
-        <target>Aqui você pode definir se a página é mostrada no mapa do site.</target>
+        <source>Here you can define whether the page is shown in the HTML sitemap.</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>

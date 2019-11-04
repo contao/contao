@@ -207,6 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
         <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
+        <target>Permite todo excepto caracteres especiales que generalmente están codificados por razones de seguridad: # &lt;&gt; () \ =</target>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>
@@ -282,15 +283,19 @@
       </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>
+        <target>Valor mínimo</target>
       </trans-unit>
       <trans-unit id="tl_form_field.minval.1">
         <source>Here you can set the minimum value for numeric fields.</source>
+        <target>Aquí puede establecer el valor mínimo para los campos numéricos.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.0">
         <source>Maximum value</source>
+        <target>Valor máximo</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.1">
         <source>Here you can set the maximum value for numeric fields.</source>
+        <target>Aquí puede establecer el valor máximo para los campos numéricos.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>
@@ -482,24 +487,31 @@
       </trans-unit>
       <trans-unit id="tl_form_field.new.0">
         <source>New</source>
+        <target>Nuevo</target>
       </trans-unit>
       <trans-unit id="tl_form_field.new.1">
         <source>Create a new form field</source>
+        <target>Crear un nuevo campo de formulario</target>
       </trans-unit>
       <trans-unit id="tl_form_field.show">
         <source>Show the details of form field ID %s</source>
+        <target>Mostrar los detalles del ID del campo del formulario %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.edit">
         <source>Edit form field ID %s</source>
+        <target>Editar ID de campo de formulario %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.cut">
         <source>Move form field ID %s</source>
+        <target>Mover ID de campo de formulario %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.copy">
         <source>Duplicate form field ID %s</source>
+        <target>Duplicar ID de campo de formulario %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.delete">
         <source>Delete form field ID %s</source>
+        <target>Eliminar ID de campo de formulario %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.editheader">
         <source>Edit the form settings</source>
@@ -507,6 +519,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.toggle">
         <source>Hide/unhide form field ID %s</source>
+        <target>Ocultar/mostrar ID de campo de formulario %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>
@@ -514,12 +527,15 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>
+        <target>Pegar después de la ID del campo del formulario %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
         <source>Create a new form field at the top</source>
+        <target>Crea un nuevo campo de formulario en la parte superior</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
         <source>Create a new form field after form field ID %s</source>
+        <target>Crear un nuevo campo de formulario después de la ID del campo de formulario %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>

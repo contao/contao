@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New</source>
+        <target>Nuevo</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.1">
         <source>Create a new user group</source>
@@ -86,18 +87,23 @@
       </trans-unit>
       <trans-unit id="tl_user_group.show">
         <source>Show the details of user group ID %s</source>
+        <target>Mostrar los detalles del ID del grupo de usuarios %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.edit">
         <source>Edit user group ID %s</source>
+        <target>Editar ID de grupo de usuarios %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.copy">
         <source>Duplicate user group ID %s</source>
+        <target>ID de grupo de usuarios duplicado %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.delete">
         <source>Delete user group ID %s</source>
+        <target>Eliminar ID de grupo de usuarios %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.toggle">
         <source>Activate/deactivate user group ID %s</source>
+        <target>Activar/desactivar ID de grupo de usuarios %s</target>
       </trans-unit>
     </body>
   </file>

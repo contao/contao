@@ -270,8 +270,8 @@
         <target>アーティクルをページネーションするメニューを生成</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.0">
-        <source>Sitemap</source>
-        <target>サイトマップ</target>
+        <source>HTML sitemap</source>
+        <target>HTMLのサイトマップ</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
         <source>Generates a list of all pages in the site structure</source>

@@ -59,6 +59,7 @@
       </trans-unit>
       <trans-unit id="ERR.extnd">
         <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <target>Por razones de seguridad, no puede usar los siguientes caracteres aquí: # &lt;&gt; () \ =</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -254,6 +255,7 @@
       </trans-unit>
       <trans-unit id="ERR.formCookieWarning">
         <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+        <target>No podrá enviar este formulario porque ha deshabilitado las cookies en su navegador.</target>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -281,21 +283,27 @@
       </trans-unit>
       <trans-unit id="ERR.largeImage">
         <source>Image exceeds the maximum dimensions of %sx%s.</source>
+        <target>La imagen excede las dimensiones máximas de %sx%s.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
+        <target>¡Código de verificación invalido!</target>
       </trans-unit>
       <trans-unit id="ERR.emptyTitleOrId">
         <source>Please enter both title and ID!</source>
+        <target>Por favor introduzca el título y la ID</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>Duplicar título de sección de diseño &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>Duplicar ID de sección de diseño &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
+        <target>¡Por favor asigne todos los módulos a una columna!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1287,6 +1295,7 @@
       </trans-unit>
       <trans-unit id="MSC.all.1">
         <source>Edit multiple elements at once</source>
+        <target>Editar múltiples elementos a la vez</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
@@ -1294,6 +1303,7 @@
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
         <source>Override multiple elements at once</source>
+        <target>Sobreescribir múltiples elementos a la vez</target>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
@@ -1489,6 +1499,7 @@
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
+        <target>¿Realmente quiere eliminar el elemento ID %s?</target>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
@@ -1760,6 +1771,7 @@
       </trans-unit>
       <trans-unit id="MSC.dashboard">
         <source>Dashboard</source>
+        <target>Dashboard</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -2151,6 +2163,7 @@
       </trans-unit>
       <trans-unit id="MSC.sKeywordHint">
         <source>Note that keywords shorter than %s characters and without a modifier have been ignored.</source>
+        <target>Tenga en cuenta que se han ignorado las palabras clave más cortas que %s caracteres sin un modificador.</target>
       </trans-unit>
       <trans-unit id="MSC.seconds">
         <source>seconds</source>
@@ -2310,12 +2323,15 @@
       </trans-unit>
       <trans-unit id="MSC.tokenConfirmed">
         <source>This token has already been confirmed</source>
+        <target>Este token ya ha sido confirmado</target>
       </trans-unit>
       <trans-unit id="MSC.tokenEmailMismatch">
         <source>The e-mail address of the token does not match</source>
+        <target>La dirección de correo electrónico del token no coincide</target>
       </trans-unit>
       <trans-unit id="MSC.resendToken">
         <source>The token has been re-sent to %s.</source>
+        <target>El token ha sido reenviado a %s.</target>
       </trans-unit>
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
@@ -2391,36 +2407,47 @@
       </trans-unit>
       <trans-unit id="MSC.security">
         <source>Security</source>
+        <target>Seguridad</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorAuthentication">
         <source>Two-factor authentication</source>
+        <target>Autenticación de dos factores</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerification">
         <source>Verification code</source>
+        <target>Código de verificación</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorVerificationHelp">
         <source>Please enter the verification code generated by your 2FA/TOTP app.</source>
+        <target>Introduzca el código de verificación generado por su aplicación 2FA/TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorExplain">
         <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
+        <target>Aquí puede habilitar la autenticación de dos factores, que agrega una capa adicional de seguridad a su cuenta. Además de su nombre de usuario y contraseña, deberá ingresar un código de verificación generado por una aplicación de dos factores como 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator o cualquier otra aplicación TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
+        <target>Escanee el código QR con su aplicación 2FA/TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
+        <target>La autenticación de dos factores ha sido habilitada.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
+        <target>Habilite la autenticación de dos factores antes de continuar.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTextCode">
         <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>Si no puede escanear el código QR, introduzca esta clave en su lugar:</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>Hay al menos un usuario normal con acceso al editor de plantillas. Como las plantillas son archivos PHP, ¡estos usuarios tienen implícitamente un control total sobre el sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.groupTemplateEditor">
         <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>Hay al menos un grupo de usuarios que otorga acceso al editor de plantillas. Como las plantillas son archivos PHP, ¡los usuarios de estos grupos tienen implícitamente un control total sobre el sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2432,6 +2459,7 @@
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>¡El editor CSS interno ha quedado obsoleto y se eliminará en una de las próximas versiones de Contao! Considere exportar sus hojas de estilo existentes y volver a agregarlas al diseño de página como hojas de estilo externas.</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2559,6 +2587,7 @@
       </trans-unit>
       <trans-unit id="DCA.all.1">
         <source>Edit multiple elements at once</source>
+        <target>Editar múltiples elementos a la vez</target>
       </trans-unit>
       <trans-unit id="DCA.toggleNodes.0">
         <source>Toggle all</source>
@@ -2570,36 +2599,47 @@
       </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
+        <target>Nuevo</target>
       </trans-unit>
       <trans-unit id="DCA.new.1">
         <source>Create a new element</source>
+        <target>Crear un elemento nuevo</target>
       </trans-unit>
       <trans-unit id="DCA.show">
         <source>Show the details of element ID %s</source>
+        <target>Mostrar los detalles de la ID del elemento %s</target>
       </trans-unit>
       <trans-unit id="DCA.edit">
         <source>Edit element ID %s</source>
+        <target>Editar ID de elemento %s</target>
       </trans-unit>
       <trans-unit id="DCA.cut">
         <source>Move element ID %s</source>
+        <target>Mover ID de elemento %s</target>
       </trans-unit>
       <trans-unit id="DCA.copy">
         <source>Duplicate element ID %s</source>
+        <target>Duplicar ID de elemento %s</target>
       </trans-unit>
       <trans-unit id="DCA.delete">
         <source>Delete element ID %s</source>
+        <target>Eliminar ID de elemento %s</target>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
+        <target>Arrastrar ID de elemento %s</target>
       </trans-unit>
       <trans-unit id="DCA.editheader.0">
         <source>Edit the element settings</source>
+        <target>Editar la configuración del elemento</target>
       </trans-unit>
       <trans-unit id="DCA.editheader.1">
         <source>Edit the settings of element ID %s</source>
+        <target>Edite la configuración de la ID del elemento %s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
+        <target>Publicar/no publicar ID del elemento %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>
@@ -2607,6 +2647,7 @@
       </trans-unit>
       <trans-unit id="DCA.pasteinto.1">
         <source>Paste into element ID %s</source>
+        <target>Pegar dentro de la ID del elemento %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.0">
         <source>Paste at the top</source>
@@ -2614,12 +2655,15 @@
       </trans-unit>
       <trans-unit id="DCA.pasteafter.1">
         <source>Paste after element ID %s</source>
+        <target>Pegar después del elemento con ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pastenew.0">
         <source>Create a new element at the top</source>
+        <target>Crear un nuevo elemento en la parte superior</target>
       </trans-unit>
       <trans-unit id="DCA.pastenew.1">
         <source>Create a new element after element ID %s</source>
+        <target>Crear un nuevo elemento después del elemento con la ID %s</target>
       </trans-unit>
     </body>
   </file>

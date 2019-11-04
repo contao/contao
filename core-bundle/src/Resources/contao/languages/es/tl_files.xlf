@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_files.syncExclude.0">
         <source>Do not synchronize</source>
+        <target>No sincronizar</target>
       </trans-unit>
       <trans-unit id="tl_files.syncExclude.1">
         <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>No sincronice la carpeta y sus subcarpetas con la base de datos.</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
@@ -133,9 +135,11 @@
       </trans-unit>
       <trans-unit id="tl_files.dropzoneFileTooBig">
         <source>The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.</source>
+        <target>El archivo es demasiado grande ({{filesize}} MiB). El tamaño máximo de archivo es {{maxFilesize}} MiB.</target>
       </trans-unit>
       <trans-unit id="tl_files.dropzoneInvalidType">
         <source>Files of this type cannot be uploaded.</source>
+        <target>Los archivos de este tipo no se pueden cargar.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>File location: %s</source>
@@ -219,6 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_files.drag">
         <source>Drag file or folder &quot;%s&quot;</source>
+        <target>Arrastre el archivo o carpeta &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.source">
         <source>Edit file &quot;%s&quot;</source>
@@ -238,9 +243,11 @@
       </trans-unit>
       <trans-unit id="tl_files.pasteinto.0">
         <source>Paste into the root folder</source>
+        <target>Pegar en la carpeta raíz</target>
       </trans-unit>
       <trans-unit id="tl_files.pasteinto.1">
         <source>Paste into folder &quot;%s&quot;</source>
+        <target>Pegar en la carpeta &quot;%s&quot;</target>
       </trans-unit>
     </body>
   </file>

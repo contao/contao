@@ -300,12 +300,10 @@
         <target>Inserendo una classe css verrà usato come attributo &lt;em&gt;class&lt;/em&gt; nel menu di navigazione e nel &amp;lt;body&amp;gt; tag. In questo modo sarà possibile applicare uno stile personalizzato.</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
-        <source>Show in sitemap</source>
-        <target>Mostra nella mappa del sito (sitemap)</target>
+        <source>Show in HTML sitemap</source>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
-        <source>Here you can define whether the page is shown in the sitemap.</source>
-        <target>Puoi definire se visualizzare la pagina nella mappa del sito (sitemap)</target>
+        <source>Here you can define whether the page is shown in the HTML sitemap.</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>

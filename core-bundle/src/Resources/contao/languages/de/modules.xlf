@@ -270,8 +270,8 @@
         <target>Erzeugt ein Seitenumbruch-Menü zur Artikelnavigation</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.0">
-        <source>Sitemap</source>
-        <target>Sitemap</target>
+        <source>HTML sitemap</source>
+        <target>HTML-Sitemap</target>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
         <source>Generates a list of all pages in the site structure</source>

@@ -63,24 +63,31 @@
       </trans-unit>
       <trans-unit id="tl_member_group.new.0">
         <source>New</source>
+        <target>Nuevo</target>
       </trans-unit>
       <trans-unit id="tl_member_group.new.1">
         <source>Create a new member group</source>
+        <target>Crear un nuevo grupo de miembros</target>
       </trans-unit>
       <trans-unit id="tl_member_group.show">
         <source>Show the details of member group ID %s</source>
+        <target>Mostrar los detalles del ID del grupo de miembros %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.edit">
         <source>Edit member group ID %s</source>
+        <target>Editar ID de grupo de miembros %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.copy">
         <source>Duplicate member group ID %s</source>
+        <target>Duplicar ID de grupo de miembros %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.delete">
         <source>Delete member group ID %s</source>
+        <target>Eliminar ID de grupo de miembros %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.toggle">
         <source>Activate/deactivate member group ID %s</source>
+        <target>Activar/desactivar ID de grupo de miembros %s</target>
       </trans-unit>
     </body>
   </file>

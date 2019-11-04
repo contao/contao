@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.endTime.1">
         <source>Leave blank to create an open-ended event.</source>
+        <target>Déjelo en blanco para crear un evento abierto.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.startDate.0">
         <source>Start date</source>
@@ -66,15 +67,19 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.pageTitle.0">
         <source>Meta title</source>
+        <target>Meta título</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Aquí puede agregar un meta título personalizado para sobrescribir el título de página predeterminado.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
+        <target>Metadescripción</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Aquí puede agregar una meta descripción personalizada para sobrescribir la descripción de página predeterminada.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
@@ -326,6 +331,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.0">
         <source>New</source>
+        <target>Nuevo</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
@@ -357,6 +363,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>
+        <target>Edite la configuración de ID de evento %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

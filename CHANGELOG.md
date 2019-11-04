@@ -1,8 +1,17 @@
 # Change log
 
-## DEV
+## 4.8.5 (2019-11-04)
 
  * Also support the `form_textfield_` prefix for custom text field templates (see #828).
+ * Reduce the number of DB queries in the picture factory (see #921).
+ * Hide the breadcrumb menu if the node is not within the given path (see #888).
+ * Also export the media type(s) when exporting style sheets (see #905).
+ * Only hide newsletter channels without redirect page in the web modules (see #907).
+ * Quote the identifiers in the back end filter menu (see #906).
+ * Use a monospace font in the diff view (see #904).
+ * If there are no unsynchronized folders, do not show an info message (see #897).
+ * Distinguish between XML and HTML sitemap (see #879).
+ * Re-index array of modules after unset keys to prevent inconsistency (see #834).
 
 ## 4.8.4 (2019-10-01)
 
