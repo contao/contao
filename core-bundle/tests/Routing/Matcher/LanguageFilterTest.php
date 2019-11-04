@@ -120,7 +120,7 @@ class LanguageFilterTest extends TestCase
             $this->mockClassWithProperties(PageModel::class, ['rootIsFallback' => false, 'rootLanguage' => 'de-CH']),
             'de-CH',
             true,
-            false
+            false,
         ];
     }
 }

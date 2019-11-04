@@ -5542,6 +5542,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			foreach ($sortingFields as $field)
 			{
+				$what = Database::quoteIdentifier($field);
+
 				if (isset($session['filter'][$filter][$field]))
 				{
 					// Sort by day
@@ -5549,12 +5551,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 					{
 						if ($session['filter'][$filter][$field] == '')
 						{
-							$this->procedure[] = $field . "=''";
+							$this->procedure[] = $what . "=''";
 						}
 						else
 						{
 							$objDate = new Date($session['filter'][$filter][$field]);
-							$this->procedure[] = $field . ' BETWEEN ? AND ?';
+							$this->procedure[] = $what . ' BETWEEN ? AND ?';
 							$this->values[] = $objDate->dayBegin;
 							$this->values[] = $objDate->dayEnd;
 						}
@@ -5565,12 +5567,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 					{
 						if ($session['filter'][$filter][$field] == '')
 						{
-							$this->procedure[] = $field . "=''";
+							$this->procedure[] = $what . "=''";
 						}
 						else
 						{
 							$objDate = new Date($session['filter'][$filter][$field]);
-							$this->procedure[] = $field . ' BETWEEN ? AND ?';
+							$this->procedure[] = $what . ' BETWEEN ? AND ?';
 							$this->values[] = $objDate->monthBegin;
 							$this->values[] = $objDate->monthEnd;
 						}
@@ -5581,12 +5583,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 					{
 						if ($session['filter'][$filter][$field] == '')
 						{
-							$this->procedure[] = $field . "=''";
+							$this->procedure[] = $what . "=''";
 						}
 						else
 						{
 							$objDate = new Date($session['filter'][$filter][$field]);
-							$this->procedure[] = $field . ' BETWEEN ? AND ?';
+							$this->procedure[] = $what . ' BETWEEN ? AND ?';
 							$this->values[] = $objDate->yearBegin;
 							$this->values[] = $objDate->yearEnd;
 						}
@@ -5603,7 +5605,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 						else
 						{
-							$this->procedure[] = $field . ' LIKE ?';
+							$this->procedure[] = $what . ' LIKE ?';
 							$this->values[] = '%"' . $session['filter'][$filter][$field] . '"%';
 						}
 					}
@@ -5611,7 +5613,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					// Other sort algorithm
 					else
 					{
-						$this->procedure[] = $field . '=?';
+						$this->procedure[] = $what . '=?';
 						$this->values[] = $session['filter'][$filter][$field];
 					}
 				}

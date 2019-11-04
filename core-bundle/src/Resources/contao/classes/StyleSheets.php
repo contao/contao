@@ -1392,10 +1392,18 @@ class StyleSheets extends Backend
 		$objFile = new File('system/tmp/' . md5(uniqid(mt_rand(), true)));
 		$objFile->write('');
 
+		$blnClose = false;
+
 		// Add the media query (see #7560)
 		if ($objStyleSheet->mediaQuery != '')
 		{
 			$objFile->append('@media ' . $objStyleSheet->mediaQuery . ' {');
+			$blnClose = true;
+		}
+		elseif (\is_array(($tmp = \StringUtil::deserialize($objStyleSheet->media))) && (\count($tmp) > 1 || $tmp[0] != 'all'))
+		{
+			$objFile->append('@media ' . implode(', ', $tmp) . ' {');
+			$blnClose = true;
 		}
 
 		$objDefinitions = $this->Database->prepare("SELECT * FROM tl_style WHERE pid=? AND invisible!='1' ORDER BY sorting")
@@ -1408,7 +1416,7 @@ class StyleSheets extends Backend
 		}
 
 		// Close the media query
-		if ($objStyleSheet->mediaQuery != '')
+		if ($blnClose)
 		{
 			$objFile->append('}');
 		}

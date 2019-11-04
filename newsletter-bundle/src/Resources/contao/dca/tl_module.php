@@ -138,15 +138,25 @@ class tl_module_newsletter extends Contao\Backend
 	 *
 	 * @return array
 	 */
-	public function getChannels()
+	public function getChannels(Contao\DataContainer $dc)
 	{
 		if (!$this->User->isAdmin && !is_array($this->User->newsletters))
 		{
 			return array();
 		}
 
+		$strQuery = "SELECT id, title FROM tl_newsletter_channel";
+
+		// Show only channels with a redirect page in the web modules
+		if (in_array($dc->activeRecord->type, array('newsletterlist', 'newsletterreader')))
+		{
+			$strQuery .= " WHERE jumpTo>0";
+		}
+
+		$strQuery .= " ORDER BY title";
+
 		$arrChannels = array();
-		$objChannels = $this->Database->execute("SELECT id, title FROM tl_newsletter_channel WHERE jumpTo>0 ORDER BY title");
+		$objChannels = $this->Database->execute($strQuery);
 
 		while ($objChannels->next())
 		{

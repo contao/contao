@@ -336,6 +336,7 @@ class tl_user_group extends Contao\Backend
 		if (!$this->User->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
 		{
 			unset($arrModules['design'][$key]);
+			$arrModules['design'] = array_values($arrModules['design']);
 		}
 
 		return $arrModules;
@@ -392,9 +393,6 @@ class tl_user_group extends Contao\Backend
 		}
 
 		ksort($arrReturn);
-
-		// Unset the tl_user.admin field, because it will not be shown to regular users anyway
-		unset($arrReturn['tl_user']['tl_user::admin']);
 
 		return $arrReturn;
 	}
