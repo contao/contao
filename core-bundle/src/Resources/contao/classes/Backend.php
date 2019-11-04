@@ -634,11 +634,11 @@ abstract class Backend extends Controller
 	 *
 	 * @param integer $pid
 	 * @param string  $domain
-	 * @param boolean $blnIsSitemap
+	 * @param boolean $blnIsXmlSitemap
 	 *
 	 * @return array
 	 */
-	public static function findSearchablePages($pid=0, $domain='', $blnIsSitemap=false)
+	public static function findSearchablePages($pid=0, $domain='', $blnIsXmlSitemap=false)
 	{
 		$objPages = PageModel::findPublishedByPid($pid, array('ignoreFePreview'=>true));
 
@@ -653,7 +653,7 @@ abstract class Backend extends Controller
 		foreach ($objPages as $objPage)
 		{
 			// Searchable and not protected
-			if ($objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsSitemap) && (!$blnIsSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || Config::get('indexProtected')))
+			if ($objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || Config::get('indexProtected')))
 			{
 				$arrPages[] = $objPage->getAbsoluteUrl();
 
@@ -668,7 +668,7 @@ abstract class Backend extends Controller
 			}
 
 			// Get subpages
-			if ((!$objPage->protected || Config::get('indexProtected')) && ($arrSubpages = static::findSearchablePages($objPage->id, $domain, $blnIsSitemap)))
+			if ((!$objPage->protected || Config::get('indexProtected')) && ($arrSubpages = static::findSearchablePages($objPage->id, $domain, $blnIsXmlSitemap)))
 			{
 				$arrPages = array_merge($arrPages, $arrSubpages);
 			}

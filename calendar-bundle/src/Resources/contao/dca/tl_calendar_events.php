@@ -911,7 +911,7 @@ class tl_calendar_events extends Contao\Backend
 			// Unlimited recurrences end on 2106-02-07 07:28:15 (see #4862 and #510)
 			if ($dc->activeRecord->recurrences == 0)
 			{
-				$arrSet['repeatEnd'] = 4294967295;
+				$arrSet['repeatEnd'] = min(4294967295, PHP_INT_MAX);
 			}
 			else
 			{

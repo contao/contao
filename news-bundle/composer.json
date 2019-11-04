@@ -1,7 +1,8 @@
 {
     "name": "contao/news-bundle",
     "type": "contao-bundle",
-    "description": "Adds news functionality to Contao 4",
+    "description": "Adds news functionality to Contao",
+    "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
     "authors": [
         {

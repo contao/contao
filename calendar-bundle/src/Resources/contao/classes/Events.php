@@ -510,7 +510,7 @@ abstract class Events extends Module
 				return array($objDate->yearBegin, $objDate->yearEnd, $GLOBALS['TL_LANG']['MSC']['cal_emptyYear']);
 
 			case 'cal_all': // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
-				return array(0, 4294967295, $GLOBALS['TL_LANG']['MSC']['cal_empty']);
+				return array(0, min(4294967295, PHP_INT_MAX), $GLOBALS['TL_LANG']['MSC']['cal_empty']);
 				break;
 
 			case 'next_7':
@@ -547,7 +547,7 @@ abstract class Events extends Module
 				return array(strtotime('first day of january next year 00:00:00'), strtotime('last day of december next year 23:59:59'), $GLOBALS['TL_LANG']['MSC']['cal_empty']);
 
 			case 'next_all': // 2106-02-07 07:28:15
-				return array(time(), 4294967295, $GLOBALS['TL_LANG']['MSC']['cal_empty']);
+				return array(time(), min(4294967295, PHP_INT_MAX), $GLOBALS['TL_LANG']['MSC']['cal_empty']);
 
 			case 'past_7':
 				return array(strtotime('-7 days'), time(), $GLOBALS['TL_LANG']['MSC']['cal_empty']);

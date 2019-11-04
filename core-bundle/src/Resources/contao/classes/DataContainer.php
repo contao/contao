@@ -1059,11 +1059,6 @@ abstract class DataContainer extends Backend
 	 */
 	public function initPicker(PickerInterface $picker)
 	{
-		if (!empty($_GET['act']))
-		{
-			return null;
-		}
-
 		$provider = $picker->getCurrentProvider();
 
 		if (!$provider instanceof DcaPickerProviderInterface || $provider->getDcaTable() != $this->strTable)

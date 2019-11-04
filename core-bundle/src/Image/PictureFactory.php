@@ -28,6 +28,11 @@ use Contao\StringUtil;
 class PictureFactory implements PictureFactoryInterface
 {
     /**
+     * @var array
+     */
+    private $imageSizeItemsCache = [];
+
+    /**
      * @var PictureGeneratorInterface
      */
     private $pictureGenerator;
@@ -191,9 +196,13 @@ class PictureFactory implements PictureFactoryInterface
                     }
                 }
 
-                /** @var ImageSizeItemModel $imageSizeItemModel */
-                $imageSizeItemModel = $this->framework->getAdapter(ImageSizeItemModel::class);
-                $imageSizeItems = $imageSizeItemModel->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
+                if (!\array_key_exists($size[2], $this->imageSizeItemsCache)) {
+                    /** @var ImageSizeItemModel $adapter */
+                    $adapter = $this->framework->getAdapter(ImageSizeItemModel::class);
+                    $this->imageSizeItemsCache[$size[2]] = $adapter->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
+                }
+
+                $imageSizeItems = $this->imageSizeItemsCache[$size[2]];
 
                 if (null !== $imageSizeItems) {
                     $configItems = [];

@@ -122,15 +122,19 @@ class ModuleSubscribe extends Module
 		}
 
 		$session = System::getContainer()->get('session');
-		$flashBag = $session->getFlashBag();
 
 		// Confirmation message
-		if ($session->isStarted() && $flashBag->has('nl_confirm'))
+		if ($session->isStarted())
 		{
-			$arrMessages = $flashBag->get('nl_confirm');
+			$flashBag = $session->getFlashBag();
 
-			$this->Template->mclass = 'confirm';
-			$this->Template->message = $arrMessages[0];
+			if ($flashBag->has('nl_confirm'))
+			{
+				$arrMessages = $flashBag->get('nl_confirm');
+
+				$this->Template->mclass = 'confirm';
+				$this->Template->message = $arrMessages[0];
+			}
 		}
 
 		$arrChannels = array();

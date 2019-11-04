@@ -110,37 +110,37 @@ before_install:
     - |
       # Helper functions
       run_tests () {
-          local status=0
-          php vendor/bin/phpunit -c calendar-bundle --colors=always || status=1
-          php vendor/bin/phpunit -c core-bundle --colors=always || status=1
-          php vendor/bin/phpunit -c core-bundle --testsuite=functional --colors=always || status=1
-          php vendor/bin/phpunit -c faq-bundle --colors=always || status=1
-          php vendor/bin/phpunit -c installation-bundle --colors=always || status=1
-          php vendor/bin/phpunit -c manager-bundle --colors=always || status=1
-          php vendor/bin/phpunit -c news-bundle --colors=always || status=1
-          return $status
+        local status=0
+        php vendor/bin/phpunit -c calendar-bundle --colors=always || status=1
+        php vendor/bin/phpunit -c core-bundle --colors=always || status=1
+        php vendor/bin/phpunit -c core-bundle --testsuite=functional --colors=always || status=1
+        php vendor/bin/phpunit -c faq-bundle --colors=always || status=1
+        php vendor/bin/phpunit -c installation-bundle --colors=always || status=1
+        php vendor/bin/phpunit -c manager-bundle --colors=always || status=1
+        php vendor/bin/phpunit -c news-bundle --colors=always || status=1
+        return $status
       }
       run_split_tests () {
-          php -r '
-              $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
-              if ("contao/core-bundle" !== $data["name"]) {
-                  $data["repositories"][0]["type"] = "path";
-                  $data["repositories"][0]["url"] = "../core-bundle";
-              }
-              if ("contao/installation-bundle" !== $data["name"]) {
-                  $data["repositories"][1]["type"] = "path";
-                  $data["repositories"][1]["url"] = "../installation-bundle";
-              }
-              file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
-          '
-          composer update --no-interaction --no-suggest
-          php vendor/bin/phpunit --colors=always
+        php -r '
+          $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
+          if ("contao/core-bundle" !== $data["name"]) {
+            $data["repositories"][0]["type"] = "path";
+            $data["repositories"][0]["url"] = "../core-bundle";
+          }
+          if ("contao/installation-bundle" !== $data["name"]) {
+            $data["repositories"][1]["type"] = "path";
+            $data["repositories"][1]["url"] = "../installation-bundle";
+          }
+          file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
+        '
+        COMPOSER_ROOT_VERSION=dev-$TRAVIS_COMMIT composer update --no-interaction --no-suggest
+        php vendor/bin/phpunit --colors=always
       }
       update_composer_json () {
-          php -r '
-              $data = ["require" => ["contao/monorepo-tools" => "dev-master"]];
-              file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
-          '
+        php -r '
+          $data = ["require" => ["contao/monorepo-tools" => "dev-master"]];
+          file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
+        '
       }
     - phpenv config-rm xdebug.ini || true
     - composer global require symfony/flex

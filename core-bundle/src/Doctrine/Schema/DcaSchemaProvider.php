@@ -154,15 +154,21 @@ class DcaSchemaProvider
 
     private function parseColumnSql(Table $table, string $columnName, string $sql): void
     {
-        [$dbType, $def] = explode(' ', $sql, 2);
+        $chunks = explode(' ', $sql, 2);
+        $dbType = $chunks[0];
+        $def = $chunks[1] ?? null;
 
         $type = strtok(strtolower($dbType), '(), ');
         $length = (int) strtok('(), ');
+
         $fixed = false;
         $scale = null;
         $precision = null;
         $default = null;
         $collation = null;
+        $unsigned = false;
+        $notnull = false;
+        $autoincrement = false;
 
         $this->setLengthAndPrecisionByType($type, $dbType, $length, $scale, $precision, $fixed);
 
@@ -173,32 +179,38 @@ class DcaSchemaProvider
             $length = null;
         }
 
-        if (preg_match('/default (\'[^\']*\'|\d+(?:\.\d+)?)/i', $def, $match)) {
-            if (is_numeric($match[1])) {
-                $default = $match[1] * 1;
-            } else {
-                $default = trim($match[1], "'");
+        if (null !== $def) {
+            if (preg_match('/default (\'[^\']*\'|\d+(?:\.\d+)?)/i', $def, $match)) {
+                if (is_numeric($match[1])) {
+                    $default = $match[1] * 1;
+                } else {
+                    $default = trim($match[1], "'");
+                }
             }
-        }
 
-        if (preg_match('/collate ([^ ]+)/i', $def, $match)) {
-            $collation = $match[1];
-        }
+            if (preg_match('/collate ([^ ]+)/i', $def, $match)) {
+                $collation = $match[1];
+            }
 
-        // Use the binary collation if the BINARY flag is set (see #1286)
-        if (0 === strncasecmp($def, 'binary ', 7)) {
-            $collation = $this->getBinaryCollation($table);
+            // Use the binary collation if the BINARY flag is set (see #1286)
+            if (0 === strncasecmp($def, 'binary ', 7)) {
+                $collation = $this->getBinaryCollation($table);
+            }
+
+            $unsigned = false !== stripos($def, 'unsigned');
+            $notnull = false !== stripos($def, 'not null');
+            $autoincrement = false !== stripos($def, 'auto_increment');
         }
 
         $options = [
             'length' => $length,
-            'unsigned' => false !== stripos($def, 'unsigned'),
+            'unsigned' => $unsigned,
             'fixed' => $fixed,
             'default' => $default,
-            'notnull' => false !== stripos($def, 'not null'),
+            'notnull' => $notnull,
             'scale' => null,
             'precision' => null,
-            'autoincrement' => false !== stripos($def, 'auto_increment'),
+            'autoincrement' => $autoincrement,
             'comment' => null,
         ];
 

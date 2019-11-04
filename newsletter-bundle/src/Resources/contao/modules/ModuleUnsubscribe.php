@@ -112,15 +112,19 @@ class ModuleUnsubscribe extends Module
 		}
 
 		$session = System::getContainer()->get('session');
-		$flashBag = $session->getFlashBag();
 
 		// Confirmation message
-		if ($session->isStarted() && $flashBag->has('nl_removed'))
+		if ($session->isStarted())
 		{
-			$arrMessages = $flashBag->get('nl_removed');
+			$flashBag = $session->getFlashBag();
 
-			$this->Template->mclass = 'confirm';
-			$this->Template->message = $arrMessages[0];
+			if ($flashBag->has('nl_removed'))
+			{
+				$arrMessages = $flashBag->get('nl_removed');
+
+				$this->Template->mclass = 'confirm';
+				$this->Template->message = $arrMessages[0];
+			}
 		}
 
 		$arrChannels = array();
