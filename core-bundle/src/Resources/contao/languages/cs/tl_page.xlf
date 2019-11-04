@@ -274,12 +274,10 @@
         <target>Třída(y) budou použité v navigaci a v tagu &amp;lt;body&amp;gt;</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
-        <source>Show in sitemap</source>
-        <target>Ukázat ve struktuře webové stránky</target>
+        <source>Show in HTML sitemap</source>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
-        <source>Here you can define whether the page is shown in the sitemap.</source>
-        <target>Zde můžete určit, zda se stránka objeví ve výpisu struktury Vaší webové stránky.</target>
+        <source>Here you can define whether the page is shown in the HTML sitemap.</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>

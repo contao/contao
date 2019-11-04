@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_article.protected.1">
         <source>Show the article to certain member groups only.</source>
-        <target>Den Artikel  nur bestimmten Gruppen anzeigen.</target>
+        <target>Den Artikel nur bestimmten Gruppen anzeigen.</target>
       </trans-unit>
       <trans-unit id="tl_article.groups.0">
         <source>Allowed member groups</source>

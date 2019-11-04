@@ -274,12 +274,12 @@
         <target>このclassはナビゲーションメニューと&amp;lt;body&amp;gt;タグで使用します。</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.0">
-        <source>Show in sitemap</source>
-        <target>サイトマップに表示</target>
+        <source>Show in HTML sitemap</source>
+        <target>HTMLのサイトマップに表示</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
-        <source>Here you can define whether the page is shown in the sitemap.</source>
-        <target>サイトマップにページを表示するかどうか指定します。</target>
+        <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>このページをHTMLのサイトマップに表示するかどうか指定できます。</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide from navigation</source>
