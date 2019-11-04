@@ -326,8 +326,8 @@ class ImageFactory implements ImageFactoryInterface
         }
 
         if (
-            (float) $file->importantPartX + (float) $file->importantPartWidth > 1
-            || (float) $file->importantPartY + (float) $file->importantPartHeight > 1
+            (float) $file->importantPartX + (float) $file->importantPartWidth >= 2
+            || (float) $file->importantPartY + (float) $file->importantPartHeight >= 2
         ) {
             if ($this->logger) {
                 $this->logger->warning(
