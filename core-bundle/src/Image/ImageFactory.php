@@ -325,6 +325,8 @@ class ImageFactory implements ImageFactoryInterface
             return null;
         }
 
+        // Larger values are considered to be in the old format (in absolute
+        // pixels) so we try to convert them to the new format if possible.
         if (
             (float) $file->importantPartX + (float) $file->importantPartWidth >= 2
             || (float) $file->importantPartY + (float) $file->importantPartHeight >= 2
