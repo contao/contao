@@ -521,7 +521,10 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getInvalidImportantParts
+     * @expectedDeprecation Using the old important part format (in absolute pixels) has been deprecated %s.
      */
     public function testCreatesAnImageObjectFromAnImagePathWithInvalidImportantPart($invalid, $expected): void
     {
