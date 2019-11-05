@@ -327,6 +327,8 @@ class ImageFactory implements ImageFactoryInterface
 
         // Larger values are considered to be in the old format (in absolute
         // pixels) so we try to convert them to the new format if possible.
+        // Because of rounding errors the value in the new format might slightly
+        // exceed 1.0, this is why we check for `>= 2` to detect the old format.
         if (
             (float) $file->importantPartX + (float) $file->importantPartWidth >= 2
             || (float) $file->importantPartY + (float) $file->importantPartHeight >= 2
