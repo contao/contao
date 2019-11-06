@@ -325,10 +325,16 @@ class ImageFactory implements ImageFactoryInterface
             return null;
         }
 
+        // Larger values are considered to be in the old format (in absolute
+        // pixels) so we try to convert them to the new format if possible.
+        // Because of rounding errors, the values of the new format might slightly
+        // exceed 1.0, this is why we check for ">= 2" to detect the old format.
         if (
-            (float) $file->importantPartX + (float) $file->importantPartWidth > 1
-            || (float) $file->importantPartY + (float) $file->importantPartHeight > 1
+            (float) $file->importantPartX + (float) $file->importantPartWidth >= 2
+            || (float) $file->importantPartY + (float) $file->importantPartHeight >= 2
         ) {
+            @trigger_error(sprintf('Defining the important part in absolute pixels has been deprecated and will no longer work in Contao 5.0. Run the database migration to migrate to the new format.'), E_USER_DEPRECATED);
+
             if ($this->logger) {
                 $this->logger->warning(
                     sprintf(
