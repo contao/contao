@@ -54,15 +54,14 @@ class SearchIndexListener
 
         $document = Document::createFromRequestResponse($request, $event->getResponse());
 
-        // Index if successful, clear if not
+        // If there are no json ld scripts at all, this should not be handled by our indexer
+        $lds = $document->extractJsonLdScripts();
+
+        if (0 === \count($lds)) {
+            return;
+        }
+
         if ($event->getResponse()->isSuccessful()) {
-            // If there are no json ld scripts at all, nothing will be indexed
-            $lds = $document->extractJsonLdScripts();
-
-            if (0 === \count($lds)) {
-                return;
-            }
-
             $this->indexer->index($document);
         } else {
             $this->indexer->delete($document);

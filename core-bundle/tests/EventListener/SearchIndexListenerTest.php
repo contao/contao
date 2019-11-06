@@ -69,16 +69,23 @@ class SearchIndexListenerTest extends TestCase
             false, // Should not delete
         ];
 
-        yield 'Should be deleted because the response was not successful (404)' => [
+        yield 'Should be ignored because the response was not successful (404) but there was no ld+json data' => [
             Request::create('/foobar', 'GET'),
             new Response('', 404),
+            false, // Should not index
+            false, // Should not delete
+        ];
+
+        yield 'Should be deleted because the response was not successful (404)' => [
+            Request::create('/foobar', 'GET'),
+            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 404),
             false, // Should not index
             true, // Should delete
         ];
 
         yield 'Should be deleted because the response was not successful (403)' => [
             Request::create('/foobar', 'GET'),
-            new Response('', 403),
+            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 403),
             false, // Should not index
             true, // Should delete
         ];
