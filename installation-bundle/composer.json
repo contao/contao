@@ -15,10 +15,10 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
         "ext-filter": "*",
         "contao/core-bundle": "self.version",
-        "doctrine/dbal": "^2.5",
+        "doctrine/dbal": "^2.10",
         "patchwork/utf8": "^1.2",
         "psr/log": "^1.0",
         "sensiolabs/ansi-to-html": "^1.1",
