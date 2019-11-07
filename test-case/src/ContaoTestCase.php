@@ -129,7 +129,15 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function mockAdapter(array $methods): Adapter
     {
-        return $this->createPartialMock(Adapter::class, $methods);
+        return $this
+            ->getMockBuilder(Adapter::class)
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->disableArgumentCloning()
+            ->disallowMockingUnknownTypes()
+            ->addMethods($methods)
+            ->getMock()
+        ;
     }
 
     /**
@@ -197,16 +205,10 @@ abstract class ContaoTestCase extends TestCase
             throw new \InvalidArgumentException(sprintf('Class "%s" is not a Contao\User class', $class));
         }
 
-        $user = $this->createPartialMock($class, ['hasAccess']);
-        $user
-            ->method('hasAccess')
-            ->willReturn(true)
-        ;
-
         $token = $this->createMock(TokenInterface::class);
         $token
             ->method('getUser')
-            ->willReturn($user)
+            ->willReturn($this->createMock($class))
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
