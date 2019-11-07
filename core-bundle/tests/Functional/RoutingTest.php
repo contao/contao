@@ -75,7 +75,7 @@ class RoutingTest extends WebTestCase
 
         $this->assertSame($statusCode, $response->getStatusCode());
         $this->assertSame($query, $_GET);
-        $this->assertContains($pageTitle, $title);
+        $this->assertStringContainsString($pageTitle, $title);
     }
 
     public function getAliases(): \Generator
@@ -310,7 +310,7 @@ class RoutingTest extends WebTestCase
 
         $this->assertSame($statusCode, $response->getStatusCode());
         $this->assertSame($query, $_GET);
-        $this->assertContains($pageTitle, $title);
+        $this->assertStringContainsString($pageTitle, $title);
     }
 
     public function getAliasesWithLocale(): \Generator
@@ -535,7 +535,7 @@ class RoutingTest extends WebTestCase
 
         $this->assertSame($statusCode, $response->getStatusCode());
         $this->assertSame($query, $_GET);
-        $this->assertContains($pageTitle, $title);
+        $this->assertStringContainsString($pageTitle, $title);
     }
 
     public function getAliasesWithoutUrlSuffix(): \Generator
@@ -731,7 +731,7 @@ class RoutingTest extends WebTestCase
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
-        $this->assertContains($pageTitle, $title);
+        $this->assertStringContainsString($pageTitle, $title);
     }
 
     public function getRootAliases(): \Generator
@@ -822,7 +822,7 @@ class RoutingTest extends WebTestCase
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
-        $this->assertContains($pageTitle, $title);
+        $this->assertStringContainsString($pageTitle, $title);
     }
 
     public function getRootAliasesWithLocale(): \Generator
@@ -950,6 +950,6 @@ class RoutingTest extends WebTestCase
         $response = $client->getResponse();
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertContains('', $title);
+        $this->assertStringContainsString('', $title);
     }
 }

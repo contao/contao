@@ -27,6 +27,6 @@ class VersionCommandTest extends TestCase
         $code = $tester->execute([]);
 
         $this->assertSame(0, $code);
-        $this->assertContains(PackageUtil::getContaoVersion(), $tester->getDisplay());
+        $this->assertStringContainsString(PackageUtil::getContaoVersion(), $tester->getDisplay());
     }
 }
