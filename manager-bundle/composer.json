@@ -56,8 +56,8 @@
     "require-dev": {
         "composer/composer": "^1.0",
         "contao/test-case": "^4.0",
-        "phpunit/phpunit": "^8.0",
-        "symfony/phpunit-bridge": "^4.3"
+        "phpunit/phpunit": "^8.3",
+        "symfony/phpunit-bridge": "^4.3.4"
     },
     "suggest": {
         "contao/tcpdf-bundle": "To export articles as PDF files"
