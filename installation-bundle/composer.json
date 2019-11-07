@@ -15,10 +15,10 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
         "ext-filter": "*",
         "contao/core-bundle": "self.version",
-        "doctrine/dbal": "^2.5",
+        "doctrine/dbal": "^2.10",
         "patchwork/utf8": "^1.2",
         "psr/log": "^1.0",
         "sensiolabs/ansi-to-html": "^1.1",
@@ -40,8 +40,8 @@
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
         "php-http/guzzle6-adapter": "^1.1",
-        "phpunit/phpunit": "^7.5",
-        "symfony/phpunit-bridge": "^4.3"
+        "phpunit/phpunit": "^8.3",
+        "symfony/phpunit-bridge": "^4.3.4"
     },
     "extra": {
         "branch-alias": {

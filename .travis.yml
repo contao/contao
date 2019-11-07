@@ -37,15 +37,6 @@ jobs:
               - php vendor/bin/monorepo-tools composer-json --validate
 
         - stage: test
-          php: 7.1
-          install:
-              - composer update --no-interaction --no-suggest
-          script:
-              - run_tests
-              - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
-              - php vendor/bin/monorepo-tools composer-json --validate
-
-        - stage: test
           php: 7.2
           install:
               - composer update --no-interaction --no-suggest

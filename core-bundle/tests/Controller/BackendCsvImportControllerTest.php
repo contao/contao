@@ -380,7 +380,7 @@ EOF;
     /**
      * Mocks a Contao framework with a file uploader.
      *
-     * @return ContaoFramework|\PHPUnit_Framework_MockObject_MockObject
+     * @return ContaoFramework&MockObject
      */
     private function mockContaoFrameworkWithUploader(): ContaoFramework
     {

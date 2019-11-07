@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Authentication;
 
 use Contao\BackendUser;
-use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
@@ -137,19 +136,12 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $listener = $this->createPartialMock(Controller::class, ['onPostLogin']);
-        $listener
-            ->expects($this->once())
-            ->method('onPostLogin')
-            ->with($user)
-        ;
-
         $systemAdapter = $this->mockAdapter(['importStatic']);
         $systemAdapter
             ->expects($this->once())
             ->method('importStatic')
-            ->with('HookListener')
-            ->willReturn($listener)
+            ->with(static::class)
+            ->willReturn($this)
         ;
 
         $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
@@ -158,12 +150,17 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('initialize')
         ;
 
-        $GLOBALS['TL_HOOKS']['postLogin'] = [['HookListener', 'onPostLogin']];
+        $GLOBALS['TL_HOOKS']['postLogin'][] = [static::class, 'onPostLogin'];
 
         $handler = $this->getHandler($framework, $logger);
         $handler->onAuthenticationSuccess($request, $token);
 
         unset($GLOBALS['TL_HOOKS']);
+    }
+
+    public function onPostLogin(): void
+    {
+        // Dummy method to test the postLogin hook
     }
 
     public function testUsesTheUrlOfThePage(): void
