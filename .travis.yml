@@ -52,12 +52,10 @@ jobs:
           install:
               - composer update --no-interaction --no-suggest
           script:
-              - phpdbg -qrr vendor/bin/simple-phpunit --testsuite=coverage --coverage-clover=clover.xml
+              - php vendor/bin/simple-phpunit
               - php vendor/bin/simple-phpunit --testsuite=functional
               - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
               - php vendor/bin/monorepo-tools composer-json --validate
-          after_script:
-              - php vendor/bin/php-coveralls -o coveralls-upload.json -x clover.xml
 
         - stage: test
           if: 'type = cron'
