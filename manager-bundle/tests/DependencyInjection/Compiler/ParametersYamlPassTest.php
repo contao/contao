@@ -18,6 +18,36 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ParametersYamlPassTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        if (isset($_SERVER['APP_SECRET'])) {
+            $_SERVER['APP_SECRET_ORIG'] = $_SERVER['APP_SECRET'];
+            unset($_SERVER['APP_SECRET']);
+        }
+
+        if (isset($_SERVER['DATABASE_URL'])) {
+            $_SERVER['DATABASE_URL_ORIG'] = $_SERVER['DATABASE_URL'];
+            unset($_SERVER['DATABASE_URL']);
+        }
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        if (isset($_SERVER['APP_SECRET_ORIG'])) {
+            $_SERVER['APP_SECRET'] = $_SERVER['APP_SECRET_ORIG'];
+            unset($_SERVER['APP_SECRET_ORIG']);
+        }
+
+        if (isset($_SERVER['DATABASE_URL_ORIG'])) {
+            $_SERVER['DATABASE_URL'] = $_SERVER['DATABASE_URL_ORIG'];
+            unset($_SERVER['DATABASE_URL_ORIG']);
+        }
+    }
+
     public function testUpdatesTheMailerTransport(): void
     {
         $container = $this->getContainer();

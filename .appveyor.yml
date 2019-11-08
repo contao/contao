@@ -3,7 +3,7 @@ clone_depth: 50
 
 environment:
     # This sets the PHP version (from Chocolatey)
-    PHPCI_CHOCO_VERSION: 7.3.1
+    PHPCI_CHOCO_VERSION: 7.3.11
     PHPCI_CACHE: C:\tools\phpci
     PHPCI_PHP: C:\tools\phpci\php
     PHPCI_COMPOSER: C:\tools\phpci\composer
@@ -41,9 +41,4 @@ install:
 
 test_script:
     - cd %APPVEYOR_BUILD_FOLDER%
-    - vendor\bin\phpunit.bat -c calendar-bundle
-    - vendor\bin\phpunit.bat -c core-bundle
-    - vendor\bin\phpunit.bat -c faq-bundle
-    - vendor\bin\phpunit.bat -c installation-bundle
-    - vendor\bin\phpunit.bat -c manager-bundle
-    - vendor\bin\phpunit.bat -c news-bundle
+    - vendor\bin\simple-phpunit.bat

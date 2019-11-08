@@ -32,7 +32,8 @@ jobs:
           install:
               - composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
           script:
-              - run_tests
+              - php vendor/bin/simple-phpunit
+              - php vendor/bin/simple-phpunit --testsuite=functional
               - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
               - php vendor/bin/monorepo-tools composer-json --validate
 
@@ -41,7 +42,8 @@ jobs:
           install:
               - composer update --no-interaction --no-suggest
           script:
-              - run_tests
+              - php vendor/bin/simple-phpunit
+              - php vendor/bin/simple-phpunit --testsuite=functional
               - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
               - php vendor/bin/monorepo-tools composer-json --validate
 
@@ -50,16 +52,12 @@ jobs:
           install:
               - composer update --no-interaction --no-suggest
           script:
-              - phpdbg -qrr vendor/bin/phpunit -c calendar-bundle --coverage-clover=calendar-bundle.xml
-              - phpdbg -qrr vendor/bin/phpunit -c core-bundle --testsuite=coverage --coverage-clover=core-bundle.xml
-              - php vendor/bin/phpunit -c core-bundle --testsuite=functional
-              - phpdbg -qrr vendor/bin/phpunit -c faq-bundle --coverage-clover=faq-bundle.xml
-              - phpdbg -qrr vendor/bin/phpunit -c manager-bundle --coverage-clover=manager-bundle.xml
-              - phpdbg -qrr vendor/bin/phpunit -c news-bundle --coverage-clover=news-bundle.xml
+              - phpdbg -qrr vendor/bin/simple-phpunit --testsuite=coverage --coverage-clover=coverage.xml
+              - php vendor/bin/simple-phpunit --testsuite=functional
               - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
               - php vendor/bin/monorepo-tools composer-json --validate
           after_script:
-              - php vendor/bin/php-coveralls -o coveralls-upload.json -x calendar-bundle.xml -x core-bundle.xml -x faq-bundle.xml -x manager-bundle.xml -x news-bundle.xml
+              - php vendor/bin/php-coveralls -o coveralls-upload.json -x coverage.xml
 
         - stage: test
           if: 'type = cron'
@@ -67,7 +65,8 @@ jobs:
           install:
               - composer update --no-interaction --no-suggest
           script:
-              - run_tests
+              - php vendor/bin/simple-phpunit
+              - php vendor/bin/simple-phpunit --testsuite=functional
               - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
               - php vendor/bin/monorepo-tools composer-json --validate
 
@@ -78,7 +77,8 @@ jobs:
           install:
               - composer update --ignore-platform-reqs --no-interaction --no-suggest
           script:
-              - run_tests
+              - php vendor/bin/simple-phpunit
+              - php vendor/bin/simple-phpunit --testsuite=functional
               - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
               - php vendor/bin/monorepo-tools composer-json --validate
 
@@ -100,17 +100,6 @@ jobs:
 before_install:
     - |
       # Helper functions
-      run_tests () {
-        local status=0
-        php vendor/bin/phpunit -c calendar-bundle --colors=always || status=1
-        php vendor/bin/phpunit -c core-bundle --colors=always || status=1
-        php vendor/bin/phpunit -c core-bundle --testsuite=functional --colors=always || status=1
-        php vendor/bin/phpunit -c faq-bundle --colors=always || status=1
-        php vendor/bin/phpunit -c installation-bundle --colors=always || status=1
-        php vendor/bin/phpunit -c manager-bundle --colors=always || status=1
-        php vendor/bin/phpunit -c news-bundle --colors=always || status=1
-        return $status
-      }
       run_split_tests () {
         php -r '
           $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
@@ -125,7 +114,7 @@ before_install:
           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
         '
         COMPOSER_ROOT_VERSION=dev-$TRAVIS_COMMIT composer update --no-interaction --no-suggest
-        php vendor/bin/phpunit --colors=always
+        php vendor/bin/simple-phpunit --colors=always
       }
       update_composer_json () {
         php -r '

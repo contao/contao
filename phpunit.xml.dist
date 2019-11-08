@@ -3,7 +3,7 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/8.4/phpunit.xsd"
          colors="true"
-         defaultTestSuite="core-bundle"
+         defaultTestSuite="unit"
          bootstrap="vendor/autoload.php"
 >
     <php>
@@ -16,32 +16,32 @@
     </php>
 
     <testsuites>
-        <testsuite name="core-bundle">
-            <directory>./tests</directory>
-            <exclude>./tests/Fixtures</exclude>
-            <exclude>./tests/Functional</exclude>
+        <testsuite name="unit">
+            <directory>./*-bundle/tests</directory>
+            <exclude>./*-bundle/tests/Fixtures</exclude>
+            <exclude>./*-bundle/tests/Functional</exclude>
         </testsuite>
         <testsuite name="functional">
-            <directory>./tests/Functional</directory>
-            <exclude>./tests/Functional/app</exclude>
+            <directory>./core-bundle/tests/Functional</directory>
+            <exclude>./core-bundle/tests/Functional/app</exclude>
         </testsuite>
         <testsuite name="coverage">
-            <directory>./tests</directory>
-            <exclude>./tests/Contao</exclude>
-            <exclude>./tests/Fixtures</exclude>
-            <exclude>./tests/Functional</exclude>
+            <directory>./core-bundle/tests</directory>
+            <exclude>./core-bundle/tests/Contao</exclude>
+            <exclude>./core-bundle/tests/Fixtures</exclude>
+            <exclude>./core-bundle/tests/Functional</exclude>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./src</directory>
+            <directory>./*-bundle/src</directory>
             <exclude>
-                <directory>./src/Resources</directory>
+                <directory>./*-bundle/src/Resources</directory>
                 <!-- exclude files with symbols and side-effects -->
-                <file>./src/EventListener/UserAwareTrait.php</file>
-                <file>./src/Exception/ServiceUnavailableException.php</file>
-                <file>./src/Framework/ScopeAwareTrait.php</file>
+                <file>./core-bundle/src/EventListener/UserAwareTrait.php</file>
+                <file>./core-bundle/src/Exception/ServiceUnavailableException.php</file>
+                <file>./core-bundle/src/Framework/ScopeAwareTrait.php</file>
             </exclude>
         </whitelist>
     </filter>

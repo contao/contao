@@ -1,40 +1,21 @@
 #!/usr/bin/env bash
 
 function phpunit() {
-  if [[ ! -e ./vendor/bin/phpunit ]]; then
-    echo "The vendor/bin/phpunit file is missing. Did you install the dependencies?"
+  if [[ ! -e ./vendor/bin/simple-phpunit ]]; then
+    echo "The vendor/bin/simple-phpunit file is missing. Did you install the dependencies?"
     exit 1
   fi
 
-  local bundles=(
-    calendar-bundle
-    core-bundle
-    faq-bundle
-    installation-bundle
-    manager-bundle
-    news-bundle
-  )
-
-  for bundle in ${bundles[*]}; do
-    if [[ $DEPRECATIONS ]]; then
-      vendor/bin/phpunit -c "$bundle" "$@"
-    else
-      SYMFONY_DEPRECATIONS_HELPER='max[self]=0&verbose=0' vendor/bin/phpunit -c "$bundle" "$@"
-    fi
-  done
+  vendor/bin/simple-phpunit "$@"
 }
 
 function functional() {
-  if [[ ! -e ./vendor/bin/phpunit ]]; then
-    echo "The vendor/bin/phpunit file is missing. Did you install the dependencies?"
+  if [[ ! -e ./vendor/bin/simple-phpunit ]]; then
+    echo "The vendor/bin/simple-phpunit file is missing. Did you install the dependencies?"
     exit 1
   fi
 
-  if [[ $DEPRECATIONS ]]; then
-    vendor/bin/phpunit -c core-bundle --testsuite=functional  "$@"
-  else
-    SYMFONY_DEPRECATIONS_HELPER='max[self]=0&verbose=0' vendor/bin/phpunit -c core-bundle --testsuite=functional  "$@"
-  fi
+  vendor/bin/simple-phpunit --testsuite=functional  "$@"
 }
 
 function php-cs-fixer() {
@@ -68,7 +49,7 @@ function composer() {
 
 function usage() {
   cat <<HEREDOC
-Usage: ./run [task] [--show-deprecations]
+Usage: ./run [task]
   phpunit       Run the unit tests
   functional    Run the functional tests
   php-cs-fixer  Run the PHP coding style fixer
@@ -77,28 +58,17 @@ Usage: ./run [task] [--show-deprecations]
 HEREDOC
 }
 
-ARGS=()
-DEPRECATIONS=''
-
-for var in "${@:2}"; do
-  if [[ $var = '--show-deprecations' ]]; then
-    DEPRECATIONS=1
-  else
-    ARGS=("$var" "${ARGS[@]}")
-  fi
-done
-
 case "$1" in
   phpunit)
-    phpunit "${ARGS[@]}"
+    phpunit "${@:2}"
     exit 0
   ;;
   functional)
-    functional "${ARGS[@]}"
+    functional "${@:2}"
     exit 0
   ;;
   php-cs-fixer)
-    php-cs-fixer "${ARGS[@]}"
+    php-cs-fixer "${@:2}"
     exit 0
   ;;
   phpstan)
@@ -110,9 +80,9 @@ case "$1" in
     exit 0
   ;;
   all)
-    phpunit "${ARGS[@]}"
-    functional "${ARGS[@]}"
-    php-cs-fixer "${ARGS[@]}"
+    phpunit "${@:2}"
+    functional "${@:2}"
+    php-cs-fixer "${@:2}"
     phpstan
     composer
     exit 0
