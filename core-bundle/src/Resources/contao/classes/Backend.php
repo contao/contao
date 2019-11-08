@@ -286,7 +286,7 @@ abstract class Backend extends Controller
 		$finder = Finder::create()->files()->in($appDir);
 
 		// Remove the app folder if there are no more files in it
-		if (0 === \count($finder))
+		if (!$finder->hasResults())
 		{
 			(new Filesystem())->remove($appDir);
 		}
