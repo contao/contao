@@ -21,7 +21,6 @@ use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
-use Contao\User;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
@@ -44,7 +43,6 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Security\Core\Encoder\NativePasswordEncoder;
 
 class PluginTest extends ContaoTestCase
 {
@@ -343,39 +341,6 @@ class PluginTest extends ContaoTestCase
         );
 
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
-
-        $this->assertSame($expect, $extensionConfig);
-    }
-
-    public function testFallsBackToBcryptIfAutoModeIsNotAvailable(): void
-    {
-        if (class_exists(NativePasswordEncoder::class)) {
-            $this->markTestSkipped('This test is only relevant for symfony/security <4.3');
-        }
-
-        $expect = [
-            [
-                'encoders' => [
-                    User::class => [
-                        'algorithm' => 'bcrypt',
-                    ],
-                ],
-            ],
-        ];
-
-        $container = new PluginContainerBuilder($this->createMock(PluginLoader::class), []);
-
-        $extensionConfigs = [
-            [
-                'encoders' => [
-                    User::class => [
-                        'algorithm' => 'auto',
-                    ],
-                ],
-            ],
-        ];
-
-        $extensionConfig = (new Plugin())->getExtensionConfig('security', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
     }
