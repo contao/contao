@@ -26,18 +26,26 @@
             <exclude>./core-bundle/tests/Functional/app</exclude>
         </testsuite>
         <testsuite name="coverage">
-            <directory>./core-bundle/tests</directory>
+            <directory>./*-bundle/tests</directory>
+            <exclude>./*-bundle/tests/Fixtures</exclude>
             <exclude>./core-bundle/tests/Contao</exclude>
-            <exclude>./core-bundle/tests/Fixtures</exclude>
             <exclude>./core-bundle/tests/Functional</exclude>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./*-bundle/src</directory>
+            <directory>./calendar-bundle/src</directory>
+            <directory>./core-bundle/src</directory>
+            <directory>./faq-bundle/src</directory>
+            <directory>./manager-bundle/src</directory>
+            <directory>./news-bundle/src</directory>
             <exclude>
-                <directory>./*-bundle/src/Resources</directory>
+                <directory>./calendar-bundle/src/Resources</directory>
+                <directory>./core-bundle/src/Resources</directory>
+                <directory>./faq-bundle/src/Resources</directory>
+                <directory>./manager-bundle/src/Resources</directory>
+                <directory>./news-bundle/src/Resources</directory>
                 <!-- exclude files with symbols and side-effects -->
                 <file>./core-bundle/src/EventListener/UserAwareTrait.php</file>
                 <file>./core-bundle/src/Exception/ServiceUnavailableException.php</file>
