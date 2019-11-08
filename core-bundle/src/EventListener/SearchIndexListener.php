@@ -17,7 +17,7 @@ use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
-class AddToSearchIndexListener
+class SearchIndexListener
 {
     /**
      * @var IndexerInterface
@@ -42,12 +42,12 @@ class AddToSearchIndexListener
     {
         $request = $event->getRequest();
 
-        // Only index GET requests (see #1194)
+        // Only handle GET requests (see #1194)
         if (!$request->isMethod(Request::METHOD_GET)) {
             return;
         }
 
-        // Do not index fragments
+        // Do not handle fragments
         if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $request->getPathInfo())) {
             return;
         }
@@ -55,11 +55,15 @@ class AddToSearchIndexListener
         $document = Document::createFromRequestResponse($request, $event->getResponse());
         $lds = $document->extractJsonLdScripts();
 
-        // If there are no json ld scripts at all, nothing will be indexed
+        // If there are no json ld scripts at all, this should not be handled by our indexer
         if (0 === \count($lds)) {
             return;
         }
 
-        $this->indexer->index($document);
+        if ($event->getResponse()->isSuccessful()) {
+            $this->indexer->index($document);
+        } else {
+            $this->indexer->delete($document);
+        }
     }
 }

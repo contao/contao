@@ -22,6 +22,11 @@ interface IndexerInterface
     public function index(Document $document): void;
 
     /**
+     * Deletes a given document.
+     */
+    public function delete(Document $document): void;
+
+    /**
      * Clears the search index.
      */
     public function clear(): void;

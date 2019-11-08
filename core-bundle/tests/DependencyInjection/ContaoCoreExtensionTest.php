@@ -39,7 +39,6 @@ use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Entity\RememberMe;
-use Contao\CoreBundle\EventListener\AddToSearchIndexListener;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\EventListener\BackendMenuListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
@@ -60,6 +59,7 @@ use Contao\CoreBundle\EventListener\RefererIdListener;
 use Contao\CoreBundle\EventListener\RequestTokenListener;
 use Contao\CoreBundle\EventListener\ResponseExceptionListener;
 use Contao\CoreBundle\EventListener\RobotsTxtListener;
+use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
 use Contao\CoreBundle\EventListener\TwoFactorFrontendListener;
@@ -236,24 +236,6 @@ class ContaoCoreExtensionTest extends TestCase
         yield ['contao.command.symlinks', SymlinksCommand::class, true];
         yield ['contao.command.user_password_command', UserPasswordCommand::class];
         yield ['contao.command.version', VersionCommand::class];
-    }
-
-    public function testRegistersTheAddToSearchIndexListener(): void
-    {
-        $this->assertTrue($this->container->has('contao.listener.add_to_search_index'));
-
-        $definition = $this->container->getDefinition('contao.listener.add_to_search_index');
-
-        $this->assertSame(AddToSearchIndexListener::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.search.indexer', (string) $definition->getArgument(0));
-        $this->assertSame('%fragment.path%', (string) $definition->getArgument(1));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.terminate', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelTerminate', $tags['kernel.event_listener'][0]['method']);
     }
 
     public function testRegistersTheBackendLocaleListener(): void
@@ -624,6 +606,24 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertArrayHasKey('kernel.event_listener', $tags);
         $this->assertSame('contao.robots_txt', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onRobotsTxt', $tags['kernel.event_listener'][0]['method']);
+    }
+
+    public function testRegistersTheSearchIndexListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.search_index'));
+
+        $definition = $this->container->getDefinition('contao.listener.search_index');
+
+        $this->assertSame(SearchIndexListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('contao.search.indexer', (string) $definition->getArgument(0));
+        $this->assertSame('%fragment.path%', (string) $definition->getArgument(1));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertSame('kernel.terminate', $tags['kernel.event_listener'][0]['event']);
+        $this->assertSame('onKernelTerminate', $tags['kernel.event_listener'][0]['method']);
     }
 
     public function testRegistersTheStoreRefererListener(): void

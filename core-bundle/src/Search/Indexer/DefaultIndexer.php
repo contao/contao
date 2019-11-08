@@ -95,6 +95,18 @@ class DefaultIndexer implements IndexerInterface
     /**
      * {@inheritdoc}
      */
+    public function delete(Document $document): void
+    {
+        $this->framework->initialize();
+
+        /** @var Search $search */
+        $search = $this->framework->getAdapter(Search::class);
+        $search->removeEntry((string) $document->getUri());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function clear(): void
     {
         $this->connection->exec('TRUNCATE TABLE tl_search');
