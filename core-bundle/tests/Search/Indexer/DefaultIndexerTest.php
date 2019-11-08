@@ -114,7 +114,6 @@ class DefaultIndexerTest extends ContaoTestCase
         ;
 
         $framework = $this->mockContaoFramework([Search::class => $searchAdapter]);
-
         $framework
             ->expects($this->once())
             ->method('initialize')

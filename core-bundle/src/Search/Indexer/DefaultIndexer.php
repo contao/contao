@@ -101,7 +101,6 @@ class DefaultIndexer implements IndexerInterface
 
         /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
-
         $search->removeEntry((string) $document->getUri());
     }
 

@@ -53,10 +53,9 @@ class SearchIndexListener
         }
 
         $document = Document::createFromRequestResponse($request, $event->getResponse());
-
-        // If there are no json ld scripts at all, this should not be handled by our indexer
         $lds = $document->extractJsonLdScripts();
 
+        // If there are no json ld scripts at all, this should not be handled by our indexer
         if (0 === \count($lds)) {
             return;
         }

@@ -34,6 +34,7 @@ class SearchIndexListenerTest extends TestCase
             ->method('index')
             ->with($this->isInstanceOf(Document::class))
         ;
+
         $indexer
             ->expects($delete ? $this->once() : $this->never())
             ->method('delete')
@@ -51,43 +52,43 @@ class SearchIndexListenerTest extends TestCase
         yield 'Should index because the response was successful and contains ld+json information' => [
             Request::create('/foobar'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
-            true, // Should index
-            false, // Should not delete
+            true,
+            false,
         ];
 
         yield 'Should be skipped because it is not a GET request' => [
             Request::create('/foobar', 'POST'),
             new Response(),
-            false, // Should not index
-            false, // Should not delete
+            false,
+            false,
         ];
 
         yield 'Should be skipped because it is a fragment request' => [
             Request::create('_fragment/foo/bar'),
             new Response(),
-            false, // Should not index
-            false, // Should not delete
+            false,
+            false,
         ];
 
         yield 'Should be ignored because the response was not successful (404) but there was no ld+json data' => [
             Request::create('/foobar', 'GET'),
             new Response('', 404),
-            false, // Should not index
-            false, // Should not delete
+            false,
+            false,
         ];
 
         yield 'Should be deleted because the response was not successful (404)' => [
             Request::create('/foobar', 'GET'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 404),
-            false, // Should not index
-            true, // Should delete
+            false,
+            true,
         ];
 
         yield 'Should be deleted because the response was not successful (403)' => [
             Request::create('/foobar', 'GET'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 403),
-            false, // Should not index
-            true, // Should delete
+            false,
+            true,
         ];
     }
 }

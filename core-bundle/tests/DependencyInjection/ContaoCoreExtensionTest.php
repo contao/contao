@@ -238,24 +238,6 @@ class ContaoCoreExtensionTest extends TestCase
         yield ['contao.command.version', VersionCommand::class];
     }
 
-    public function testRegistersTheSearchIndexListener(): void
-    {
-        $this->assertTrue($this->container->has('contao.listener.search_index'));
-
-        $definition = $this->container->getDefinition('contao.listener.search_index');
-
-        $this->assertSame(SearchIndexListener::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.search.indexer', (string) $definition->getArgument(0));
-        $this->assertSame('%fragment.path%', (string) $definition->getArgument(1));
-
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.terminate', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelTerminate', $tags['kernel.event_listener'][0]['method']);
-    }
-
     public function testRegistersTheBackendLocaleListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.backend_locale'));
@@ -624,6 +606,24 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertArrayHasKey('kernel.event_listener', $tags);
         $this->assertSame('contao.robots_txt', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onRobotsTxt', $tags['kernel.event_listener'][0]['method']);
+    }
+
+    public function testRegistersTheSearchIndexListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.search_index'));
+
+        $definition = $this->container->getDefinition('contao.listener.search_index');
+
+        $this->assertSame(SearchIndexListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('contao.search.indexer', (string) $definition->getArgument(0));
+        $this->assertSame('%fragment.path%', (string) $definition->getArgument(1));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertSame('kernel.terminate', $tags['kernel.event_listener'][0]['event']);
+        $this->assertSame('onKernelTerminate', $tags['kernel.event_listener'][0]['method']);
     }
 
     public function testRegistersTheStoreRefererListener(): void
