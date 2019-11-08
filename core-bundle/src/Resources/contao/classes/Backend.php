@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\Database\Result;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -285,10 +286,19 @@ abstract class Backend extends Controller
 
 		$finder = Finder::create()->files()->in($appDir);
 
-		// Remove the app folder if there are no more files in it
-		if (!$finder->hasResults())
+		// Do not remove the app folder if there are still files in it
+		if ($finder->hasResults())
+		{
+			return;
+		}
+
+		try
 		{
 			(new Filesystem())->remove($appDir);
+		}
+		catch (IOException $e)
+		{
+			// ignore
 		}
 	}
 
