@@ -230,6 +230,12 @@
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
       </trans-unit>
+      <trans-unit id="ERR.startAfterStop">
+        <source>The start time cannot be after the end time!</source>
+      </trans-unit>
+      <trans-unit id="ERR.stopBeforeStart">
+        <source>The end time cannot be before the start time!</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>

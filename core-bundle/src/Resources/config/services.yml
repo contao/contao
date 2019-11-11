@@ -151,6 +151,13 @@ services:
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: 'contao' }
 
+    contao.data_container.start_stop_validator:
+        class: Contao\CoreBundle\DataContainer\StartStopValidator
+        arguments:
+            - '@request_stack'
+            - '@translator'
+        public: true
+
     contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
         arguments:
