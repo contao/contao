@@ -14,6 +14,9 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\Database\Result;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -272,6 +275,30 @@ abstract class Backend extends Controller
 			}
 
 			System::log("File $strRelpath ran once and has then been removed successfully", __METHOD__, TL_GENERAL);
+		}
+
+		$appDir = System::getContainer()->getParameter('kernel.project_dir') . '/app';
+
+		if (!is_dir($appDir))
+		{
+			return;
+		}
+
+		$finder = Finder::create()->files()->in($appDir);
+
+		// Do not remove the app folder if there are still files in it
+		if ($finder->hasResults())
+		{
+			return;
+		}
+
+		try
+		{
+			(new Filesystem())->remove($appDir);
+		}
+		catch (IOException $e)
+		{
+			// ignore
 		}
 	}
 
