@@ -83,11 +83,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * @var array
      */
-    private $constants = [];
-
-    /**
-     * @var array
-     */
     private $hookListeners = [];
 
     public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, string $rootDir, int $errorLevel)
@@ -165,20 +160,14 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
     public function setConstant(string $name, $value): void
     {
-        if (isset($this->constants[$name])) {
-            throw new \InvalidArgumentException(sprintf('The constant "%s" has already been defined', $name));
-        }
-
         if (!\defined($name)) {
             \define($name, $value);
         }
-
-        $this->constants[$name] = $value;
     }
 
     public function getConstant(string $name)
     {
-        return $this->constants[$name] ?? null;
+        return \defined($name) ? \constant($name) : null;
     }
 
     /**
