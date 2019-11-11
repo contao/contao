@@ -1,5 +1,7 @@
 parameters:
-    bootstrap: %currentWorkingDirectory%/vendor/autoload.php
+    autoload_files:
+        - %currentWorkingDirectory%/vendor/autoload.php
+        - %currentWorkingDirectory%/vendor/bin/.phpunit/phpunit-8.4/vendor/autoload.php
 
     contao:
         services_yml_path: %currentWorkingDirectory%/core-bundle/src/Resources/config/services.yml
