@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\Twig;
 
+use Contao\ManagerBundle\Tests\Fixtures\IteratorAggregateStub;
 use Contao\ManagerBundle\Twig\FileExtensionFilterIterator;
 use Contao\TestCase\ContaoTestCase;
 
