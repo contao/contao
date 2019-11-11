@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Doctrine\Schema;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
@@ -118,10 +119,13 @@ class DcaSchemaProvider
         /** @var ClassMetadata[] $metadata */
         $metadata = $manager->getMetadataFactory()->getAllMetadata();
 
+        /** @var Connection $connection */
+        $connection = $this->doctrine->getConnection();
+
         // Apply the schema filter
-        if ($filter = $this->doctrine->getConnection()->getConfiguration()->getFilterSchemaAssetsExpression()) {
+        if ($filter = $connection->getConfiguration()->getSchemaAssetsFilter()) {
             foreach ($metadata as $key => $data) {
-                if (!preg_match($filter, $data->getTableName())) {
+                if (!$filter($data->getTableName())) {
                     unset($metadata[$key]);
                 }
             }
@@ -362,10 +366,13 @@ class DcaSchemaProvider
             }
         }
 
+        /** @var Connection $connection */
+        $connection = $this->doctrine->getConnection();
+
         // Apply the schema filter (see contao/installation-bundle#78)
-        if ($filter = $this->doctrine->getConnection()->getConfiguration()->getFilterSchemaAssetsExpression()) {
+        if ($filter = $connection->getConfiguration()->getSchemaAssetsFilter()) {
             foreach (array_keys($sqlTarget) as $key) {
-                if (!preg_match($filter, $key)) {
+                if (!$filter($key)) {
                     unset($sqlTarget[$key]);
                 }
             }
