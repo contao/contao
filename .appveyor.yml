@@ -1,5 +1,6 @@
 build: off
 clone_depth: 50
+skip_branch_with_pr: true
 
 environment:
     # This sets the PHP version (from Chocolatey)
