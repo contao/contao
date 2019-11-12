@@ -495,7 +495,7 @@ class DcaExtractor extends Controller
 				}
 			}
 		}
-		
+
 		// Relations
 		if (!empty($arrRelations))
 		{
