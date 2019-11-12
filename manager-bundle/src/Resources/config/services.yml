@@ -48,4 +48,4 @@ services:
         class: Contao\ManagerBundle\Twig\FileExtensionFilterIterator
         decorates: 'twig.template_iterator'
         arguments:
-            - '@Contao\ManagerBundle\Twig\FileExtensionFilterIterator.inner'
+            - '@contao_manager.twig.file_extension_filter_iterator.inner'

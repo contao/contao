@@ -28,17 +28,9 @@ class FileExtensionFilterIterator implements \IteratorAggregate
     {
         return new \CallbackFilterIterator(
             new \IteratorIterator($this->iterator),
-            function ($path): bool {
-                return $this->acceptsPath($path);
+            static function ($path): bool {
+                return 0 === strncmp($path, '@', 1) || '.twig' === substr($path, -5);
             }
         );
-    }
-
-    /**
-     * Filter files by extension (in the root namespace).
-     */
-    private function acceptsPath(string $path): bool
-    {
-        return 0 === strncmp($path, '@', 1) || '.twig' === substr($path, -5);
     }
 }
