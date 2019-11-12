@@ -43,3 +43,9 @@ services:
         class: Contao\ManagerBundle\Security\Logout\LogoutHandler
         arguments:
             - '@?contao_manager.jwt_manager'
+
+    contao_manager.twig.file_extension_filter_iterator:
+        class: Contao\ManagerBundle\Twig\FileExtensionFilterIterator
+        decorates: 'twig.template_iterator'
+        arguments:
+            - '@contao_manager.twig.file_extension_filter_iterator.inner'
