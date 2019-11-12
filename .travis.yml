@@ -14,6 +14,11 @@ env:
         - COMPOSER_ALLOW_XDEBUG=0
         - COMPOSER_MEMORY_LIMIT=-1
 
+branches:
+    only:
+        - master
+        - /^\d+\.\d+$/
+
 jobs:
     include:
         - stage: test
@@ -52,10 +57,13 @@ jobs:
           install:
               - composer update --no-interaction --no-suggest
           script:
-              - php vendor/bin/simple-phpunit
+              - phpdbg -qrr vendor/bin/simple-phpunit --testsuite=coverage --coverage-clover=clover.xml
               - php vendor/bin/simple-phpunit --testsuite=functional
               - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
               - php vendor/bin/monorepo-tools composer-json --validate
+          after_script:
+              - composer global require php-coveralls/php-coveralls --no-interaction --no-suggest
+              - php $HOME/.composer/vendor/bin/php-coveralls -o coveralls-upload.json -x clover.xml
 
         - stage: test
           if: 'type = cron'
