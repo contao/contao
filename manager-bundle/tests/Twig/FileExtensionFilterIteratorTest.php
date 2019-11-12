@@ -14,16 +14,15 @@ namespace Contao\ManagerBundle\Tests\Twig;
 
 use Contao\ManagerBundle\Tests\Fixtures\IteratorAggregateStub;
 use Contao\ManagerBundle\Twig\FileExtensionFilterIterator;
-use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\TestCase;
 
-class FileExtensionFilterIteratorTest extends ContaoTestCase
+class FileExtensionFilterIteratorTest extends TestCase
 {
     public function testRemovesPathsWithoutTwigFileExtension(): void
     {
         $input = ['foo.twig', 'bar.twig', 'foobar.php', 'foo/bar'];
-        $expected = ['foo.twig', 'bar.twig'];
 
-        $this->assertSame($expected, $this->applyFilter($input));
+        $this->assertSame(['foo.twig', 'bar.twig'], $this->applyFilter($input));
     }
 
     public function testDoesNotAlterNamespacedPaths(): void
@@ -35,12 +34,9 @@ class FileExtensionFilterIteratorTest extends ContaoTestCase
 
     private function applyFilter(array $input): array
     {
-        $iteratorAggregate = new IteratorAggregateStub($input);
-        $iteratorAggregate = new FileExtensionFilterIterator($iteratorAggregate);
+        $iterator = new FileExtensionFilterIterator(new IteratorAggregateStub($input));
+        $output = iterator_to_array($iterator->getIterator());
 
-        $output = iterator_to_array($iteratorAggregate->getIterator());
-
-        // normalize keys
         return array_values($output);
     }
 }

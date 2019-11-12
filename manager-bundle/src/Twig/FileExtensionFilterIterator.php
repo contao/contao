@@ -14,7 +14,9 @@ namespace Contao\ManagerBundle\Twig;
 
 class FileExtensionFilterIterator implements \IteratorAggregate
 {
-    /** @var \Traversable */
+    /**
+     * @var \Traversable
+     */
     private $iterator;
 
     public function __construct(\IteratorAggregate $templateIterator)
@@ -22,11 +24,11 @@ class FileExtensionFilterIterator implements \IteratorAggregate
         $this->iterator = $templateIterator->getIterator();
     }
 
-    public function getIterator()
+    public function getIterator(): \CallbackFilterIterator
     {
         return new \CallbackFilterIterator(
             new \IteratorIterator($this->iterator),
-            function ($path) {
+            function ($path): bool {
                 return $this->acceptsPath($path);
             }
         );
