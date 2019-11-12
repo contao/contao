@@ -1,12 +1,11 @@
 name: PHP CS Fixer
 
 on:
-    push:
+    push: ~
+    pull_request:
         branches-ignore:
             - bugfix/*
             - feature/*
-
-    pull_request: ~
 
 jobs:
     fix:
