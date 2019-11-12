@@ -1,9 +1,10 @@
 name: PHP CS Fixer
 
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
     fix:
+        name: PHP CS Fixer
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
@@ -11,6 +12,7 @@ jobs:
               with:
                   php-version: 7.3
                   extension-csv: intl
+                  coverage: none
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -21,12 +23,7 @@ jobs:
               run: composer install --no-interaction --no-suggest
 
             - name: Run the CS fixer
-              run: ./run php-cs-fixer
-
-            - name: Commit the changes
-              uses: stefanzweifel/git-auto-commit-action@v2.1.0
-              with:
-                  commit_message: Run the CS fixer
-                  branch: ${{ github.head_ref }}
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
+                  PHP_CS_CONFIG=legacy vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
+                  PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
