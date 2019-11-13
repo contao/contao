@@ -9,8 +9,8 @@ on:
     pull_request: ~
 
 jobs:
-    coverage:
-        name: Coverage
+    codecov:
+        name: Codecov
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
