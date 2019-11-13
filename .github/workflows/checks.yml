@@ -1,4 +1,4 @@
-name: PHP CS Fixer
+name: Checks
 
 on:
     push:
@@ -9,7 +9,7 @@ on:
     pull_request: ~
 
 jobs:
-    fix:
+    php-cs-fixer:
         name: PHP CS Fixer
         runs-on: ubuntu-latest
         steps:
