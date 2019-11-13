@@ -1,0 +1,43 @@
+name: Coverage
+
+on:
+    push:
+        branches-ignore:
+            - bugfix/*
+            - feature/*
+
+    pull_request: ~
+
+jobs:
+    codecov:
+        name: Codecov
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@1.4.4
+              with:
+                  php-version: 7.3
+                  extension-csv: intl
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v1
+              with:
+                  fetch-depth: 50
+
+            - name: Install dependencies
+              run: composer update --no-interaction --no-suggest
+
+            - name: Generate the coverage reports
+              run: |
+                  phpdbg -qrr -dmemory_limit=1G vendor/bin/phpunit -c calendar-bundle --coverage-clover=calendar-clover.xml
+                  phpdbg -qrr -dmemory_limit=1G vendor/bin/phpunit -c core-bundle --exclude-group contao3 --coverage-clover=core-clover.xml
+                  phpdbg -qrr -dmemory_limit=1G vendor/bin/phpunit -c faq-bundle --coverage-clover=faq-clover.xml
+                  phpdbg -qrr -dmemory_limit=1G vendor/bin/phpunit -c manager-bundle --coverage-clover=manager-clover.xml
+                  phpdbg -qrr -dmemory_limit=1G vendor/bin/phpunit -c news-bundle --coverage-clover=news-clover.xml
+
+            - name: Upload the reports to Codecov
+              uses: codecov/codecov-action@v1.0.3
+              with:
+                  token: ${{secrets.CODECOV_TOKEN}}
+                  file: ./*-clover.xml
