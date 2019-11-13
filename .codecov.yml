@@ -1,0 +1,9 @@
+coverage:
+    status:
+        patch:
+            default:
+                threshold: 0.2%
+
+comment:
+    layout: diff
+    require_changes: true
