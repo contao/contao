@@ -927,6 +927,27 @@ class InsertTags extends Controller
 					}
 					break;
 
+				case 'template':
+					if (Validator::isInsecurePath($elements[1]))
+					{
+						throw new \RuntimeException('Invalid path ' . $elements[1]);
+					}
+
+					$file = Controller::getTemplate($elements[1]);
+
+					ob_start();
+
+					try
+					{
+						include $file;
+						$arrCache[$strTag] = ob_get_contents();
+					}
+					finally
+					{
+						ob_end_clean();
+					}
+					break;
+
 				// Files (UUID or template path)
 				case 'file':
 					if (Validator::isUuid($elements[1]))
