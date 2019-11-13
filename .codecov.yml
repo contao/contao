@@ -1,9 +1,8 @@
 coverage:
     status:
-        patch:
+        patch: false
+        project:
             default:
                 threshold: 0.2%
 
-comment:
-    layout: diff
-    require_changes: true
+comment: false
