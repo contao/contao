@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
@@ -86,7 +87,7 @@ class ContaoCoreExtension extends Extension
             $container->setParameter('contao.localconfig', $config['localconfig']);
         }
 
-        $this->handleSearchIndexer($config, $container);
+        $this->handleSearchConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
@@ -97,7 +98,7 @@ class ContaoCoreExtension extends Extension
         ;
     }
 
-    private function handleSearchIndexer(array $config, ContainerBuilder $container): void
+    private function handleSearchConfig(array $config, ContainerBuilder $container): void
     {
         $container
             ->registerForAutoconfiguration(IndexerInterface::class)
@@ -115,6 +116,21 @@ class ContaoCoreExtension extends Extension
             // Configure whether to index protected pages on the default indexer
             $defaultIndexer = $container->getDefinition('contao.search.indexer.default');
             $defaultIndexer->setArgument(2, $config['search']['indexProtected']);
+        }
+
+        // Configure search index listener
+        switch ($config['search']['listener']) {
+            case 'index_only':
+                $container->getDefinition('contao.listener.search_index')->setArgument(2, SearchIndexListener::FEATURE_INDEX);
+                break;
+
+            case 'delete_only':
+                $container->getDefinition('contao.listener.search_index')->setArgument(2, SearchIndexListener::FEATURE_DELETE);
+                break;
+
+            case 'disable':
+                $container->removeDefinition('contao.listener.search_index');
+                break;
         }
     }
 

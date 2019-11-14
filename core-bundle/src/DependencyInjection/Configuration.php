@@ -339,6 +339,11 @@ class Configuration implements ConfigurationInterface
                     ->info('Enables indexing of protected pages')
                     ->defaultFalse()
                 ->end()
+                ->enumNode('listener')
+                    ->info('Configures how the search index listener shall behave. It can index valid and delete invalid responses on every request. You may limit it to one of the features or disable it completely.')
+                    ->values(['index_and_delete', 'index_only', 'delete_only', 'disable'])
+                    ->defaultValue('index_and_delete')
+                ->end()
             ->end()
         ;
     }
