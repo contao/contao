@@ -25,7 +25,7 @@ jobs:
               with:
                   fetch-depth: 50
 
-            - name: Install dependencies
+            - name: Install the dependencies
               run: |
                   composer global require symfony/flex
                   composer install --no-interaction --no-suggest
@@ -33,7 +33,7 @@ jobs:
             - name: Generate the coverage report
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
 
-            - name: Upload the report
+            - name: Upload the coverage report
               run: bash <(curl -s https://codecov.io/bash) -f clover.xml
               env:
                   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -54,7 +54,7 @@ jobs:
               with:
                   fetch-depth: 50
 
-            - name: Install dependencies
+            - name: Install the dependencies
               run: |
                   composer global require symfony/flex
                   composer install --no-interaction --no-suggest
@@ -91,7 +91,7 @@ jobs:
               with:
                   fetch-depth: 50
 
-            - name: Install dependencies
+            - name: Install the dependencies
               run: |
                   composer global require symfony/flex
                   composer install --no-interaction --no-suggest
@@ -123,7 +123,7 @@ jobs:
               with:
                   fetch-depth: 50
 
-            - name: Install dependencies
+            - name: Install the dependencies
               run: |
                   composer global require symfony/flex
                   composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
@@ -139,8 +139,6 @@ jobs:
     bundles:
         name: Bundles
         runs-on: ubuntu-latest
-        env:
-            BUNDLES: 'calendar-bundle core-bundle faq-bundle manager-bundle news-bundle'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@1.5.1
@@ -154,10 +152,10 @@ jobs:
               with:
                   fetch-depth: 50
 
-            - name: Install dependencies
+            - name: Test the single bundles
               run: |
                   composer global require symfony/flex
-                  bundles=(${{ env.BUNDLES }})
+                  bundles=(calendar-bundle core-bundle faq-bundle manager-bundle news-bundle)
                   for bundle in "${bundles[@]}"; do
                       cd $bundle
                       php -r '
@@ -173,14 +171,6 @@ jobs:
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '
                       COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction --no-suggest
-                      cd ..
-                  done
-
-            - name: Run the unit tests
-              run: |
-                  bundles=(${{ env.BUNDLES }})
-                  for bundle in "${bundles[@]}"; do
-                      cd $bundle
                       vendor/bin/phpunit
                       cd ..
                   done
@@ -195,13 +185,13 @@ jobs:
                   php-version: 7.3
                   coverage: none
 
-            - name: Enable PHP extensions
+            - name: Enable the PHP extensions
               run: |
                 echo extension=php_intl.dll >> C:\tools\php\php.ini
                 echo extension=php_gd2.dll >> C:\tools\php\php.ini
                 echo extension=php_fileinfo.dll >> C:\tools\php\php.ini
 
-            - name: Adjust the Git autocrlf settings
+            - name: Adjust the Git autocrlf setting
               run: git config --global core.autocrlf false
 
             - name: Checkout
@@ -209,10 +199,48 @@ jobs:
               with:
                   fetch-depth: 50
 
-            - name: Install dependencies
+            - name: Install the dependencies
               run: |
                   composer global require symfony/flex --no-progress
                   composer install --no-interaction --no-suggest --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat
+
+    monorepo-split:
+        name: Monorepo Split
+        runs-on: ubuntu-latest
+        if: github.event_name == 'push'
+        needs: [coding-style, tests, prefer-lowest, bundles, windows]
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@1.5.1
+              with:
+                  php-version: 7.3
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v1
+              with:
+                  fetch-depth: 50
+
+            - name: Cache the monorepo split
+              uses: actions/cache@v1
+              with:
+                path: $HOME/.monorepo-split-cache
+                key: dev-${GITHUB_REF##*/}
+
+            - name: Install the dependencies
+              run: |
+                  php -r '
+                      $data = ["require" => ["contao/monorepo-tools" => "dev-master"]];
+                      file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
+                  '
+                  composer install --no-interaction --no-suggest
+
+            - name: Validate the composer.json files
+              run: vendor/bin/monorepo-tools composer-json --validate
+
+            - name: Split the monorepo
+              run: |
+                  vendor/bin/monorepo-tools split ${GITHUB_REF##*/} --cache-dir $HOME/.monorepo-split-cache
