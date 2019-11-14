@@ -71,12 +71,6 @@ jobs:
             fail-fast: false
             matrix:
                 php: [7.2, 7.3]
-        services:
-            mysql:
-                image: mysql:5.7
-                ports:
-                    - 3306
-                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@1.5.1
@@ -96,10 +90,13 @@ jobs:
             - name: Run the unit tests
               run: vendor/bin/phpunit
 
+            - name: Create the database
+              run: mysql -uroot -proot -e "CREATE database contao_test"
+
             - name: Run the functional tests
-              run: |
-                  mysql -e "CREATE database contao_test"
-                  vendor/bin/phpunit --testsuite=functional
+              run: vendor/bin/phpunit --testsuite=functional
+              env:
+                  DATABASE_URL: mysql://root:root@localhost:3306/contao_test
 
     windows:
         name: Windows
