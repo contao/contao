@@ -1,0 +1,46 @@
+name: Tests
+
+on:
+    push:
+        branches:
+            - master
+            - '[0-9]+.[0-9]+'
+
+    pull_request: ~
+
+jobs:
+    tests:
+        name: PHP ${{ matrix.php }} on ${{ matrix.os }}
+        runs-on: ${{ matrix.operating-system }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest, windows-latest]
+                php: [7.2, 7.3]
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@1.5.1
+              with:
+                  php-version: ${{ matrix.php }}
+                  extension-csv: intl
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v1
+              with:
+                  fetch-depth: 50
+
+            - name: Install dependencies
+              run: composer install --no-interaction --no-suggest
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit
+
+#            - name: Run the functional tests
+#              run: vendor/bin/phpunit --testsuite=functional
+
+    split:
+        name: Split the monorepo
+        runs-on: ubuntu-latest
+        needs: tests
+        steps:
+            - run: echo "Split the monorepo"
