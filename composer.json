@@ -152,6 +152,7 @@
         "phpstan/phpstan": "^0.11",
         "phpstan/phpstan-phpunit": "^0.11.2",
         "phpstan/phpstan-symfony": "^0.11.6",
+        "phpunit/phpunit": "^8.4",
         "symfony/browser-kit": "4.2.* || 4.3.*",
         "symfony/phpunit-bridge": "^4.3.4"
     },
@@ -255,7 +256,7 @@
             "@monorepo-tools"
         ],
         "functional-tests": [
-            "vendor/bin/simple-phpunit --testsuite=functional"
+            "vendor/bin/phpunit --testsuite=functional --colors=always"
         ],
         "monorepo-tools": [
             "vendor/bin/monorepo-tools composer --validate"
@@ -269,7 +270,7 @@
             "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3 --no-progress --ansi"
         ],
         "unit-tests": [
-            "vendor/bin/simple-phpunit"
+            "vendor/bin/phpunit --colors=always"
         ]
     },
     "support": {

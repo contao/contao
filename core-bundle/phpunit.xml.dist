@@ -9,7 +9,6 @@
     <php>
         <ini name="error_reporting" value="-1" />
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0" />
-        <env name="SYMFONY_PHPUNIT_VERSION" value="8.4" />
         <env name="KERNEL_CLASS" value="Contao\CoreBundle\Tests\Functional\app\AppKernel" />
         <env name="APP_SECRET" value="foobar" />
         <env name="DATABASE_URL" value="mysql://root@localhost:3306/contao_test" />

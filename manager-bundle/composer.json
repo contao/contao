@@ -56,6 +56,7 @@
     "require-dev": {
         "composer/composer": "^1.0",
         "contao/test-case": "^4.0",
+        "phpunit/phpunit": "^8.4",
         "symfony/phpunit-bridge": "^4.3.4"
     },
     "suggest": {
