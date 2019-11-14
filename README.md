@@ -76,12 +76,14 @@ you can submit your pull request directly from within your application.
 
 ## Running scripts
 
-You can use the `run` command to run scripts in all bundles:
+You can use Composer to run the code quality scripts:
 
 ```bash
-./run phpunit
-./run php-cs-fixer [--show-deprecations]
-./run phpstan
+composer run all
+composer run unit-tests
+composer run functional-tests
+composer run php-cs-fixer
+composer run phpstan
 ```
 
 ## Functional tests
