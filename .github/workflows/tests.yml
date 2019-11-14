@@ -10,18 +10,19 @@ on:
 
 jobs:
     tests:
-        name: PHP ${{ matrix.php }} on ${{ matrix.os }}
+        name: PHP ${{ matrix.php }} ${{ matrix.os }}
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
                 os: [ubuntu-latest, windows-latest]
                 php: [7.2, 7.3]
+            fail-fast: false
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@1.5.1
               with:
                   php-version: ${{ matrix.php }}
-                  extension-csv: intl
+                  extension-csv: intl, gd, fileinfo
                   coverage: none
 
             - name: Checkout
