@@ -39,7 +39,7 @@ jobs:
                   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     coding-style:
-        name: Coding style
+        name: Coding Style
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
@@ -104,8 +104,8 @@ jobs:
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
 
-    lowest:
-        name: Prefer lowest
+    prefer-lowest:
+        name: Prefer Lowest
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
@@ -135,6 +135,55 @@ jobs:
               run: vendor/bin/phpunit --testsuite=functional
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+
+    bundles:
+        name: Bundles
+        runs-on: ubuntu-latest
+        env:
+            BUNDLES: 'calendar-bundle core-bundle faq-bundle manager-bundle news-bundle'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@1.5.1
+              with:
+                  php-version: 7.3
+                  extension-csv: intl
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v1
+              with:
+                  fetch-depth: 50
+
+            - name: Install dependencies
+              run: |
+                  composer global require symfony/flex
+                  bundles=(${{ env.BUNDLES }})
+                  for bundle in "${bundles[@]}"; do
+                      cd $bundle
+                      php -r '
+                          $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
+                          if ("contao/core-bundle" !== $data["name"]) {
+                              $data["repositories"][0]["type"] = "path";
+                              $data["repositories"][0]["url"] = "../core-bundle";
+                          }
+                          if ("contao/installation-bundle" !== $data["name"]) {
+                              $data["repositories"][1]["type"] = "path";
+                              $data["repositories"][1]["url"] = "../installation-bundle";
+                          }
+                          file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
+                      '
+                      COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction --no-suggest
+                      cd ..
+                  done
+
+            - name: Run the unit tests
+              run: |
+                  bundles=(${{ env.BUNDLES }})
+                  for bundle in "${bundles[@]}"; do
+                      cd $bundle
+                      vendor/bin/phpunit
+                      cd ..
+                  done
 
     windows:
         name: Windows
@@ -167,14 +216,3 @@ jobs:
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat
-
-    split:
-        name: Split the monorepo
-        runs-on: ubuntu-latest
-        if: github.event_name == 'push'
-        needs: [coding-style, tests, windows]
-        steps:
-            #- name: Validate the composer.json files
-            #  run: vendor/bin/monorepo-tools composer-json --validate
-
-            - run: echo "Split the monorepo"
