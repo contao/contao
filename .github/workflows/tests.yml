@@ -11,7 +11,7 @@ on:
 jobs:
     tests:
         name: PHP ${{ matrix.php }} on ${{ matrix.os }}
-        runs-on: ${{ matrix.operating-system }}
+        runs-on: ${{ matrix.os }}
         strategy:
             matrix:
                 os: [ubuntu-latest, windows-latest]
