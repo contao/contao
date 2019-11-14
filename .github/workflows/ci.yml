@@ -1,0 +1,143 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - master
+            - '[0-9]+.[0-9]+'
+
+    pull_request: ~
+
+jobs:
+    coverage:
+        name: Coverage
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@1.5.1
+              with:
+                  php-version: 7.3
+                  extension-csv: intl
+                  coverage: pcov
+
+            - name: Checkout
+              uses: actions/checkout@v1
+              with:
+                  fetch-depth: 50
+
+            - name: Install dependencies
+              run: composer install --no-interaction --no-suggest
+
+            - name: Generate the coverage report
+              run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
+
+            - name: Upload the report
+              run: bash <(curl -s https://codecov.io/bash) -f clover.xml
+              env:
+                  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+    coding-style:
+        name: Coding style
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@1.5.1
+              with:
+                  php-version: 7.3
+                  extension-csv: intl
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v1
+              with:
+                  fetch-depth: 50
+
+            - name: Install dependencies
+              run: composer install --no-interaction --no-suggest
+
+            - name: Check the coding style
+              run: |
+                  PHP_CS_CONFIG=default vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
+                  PHP_CS_CONFIG=legacy vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
+                  PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
+
+            - name: Analyze the code
+              run: vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
+
+    tests:
+        name: PHP ${{ matrix.php }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php: [7.2, 7.3]
+        services:
+            mysql:
+                image: mysql:5.7
+                ports:
+                    - 3306
+                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@1.5.1
+              with:
+                  php-version: ${{ matrix.php }}
+                  extension-csv: intl
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v1
+              with:
+                  fetch-depth: 50
+
+            - name: Install dependencies
+              run: composer install --no-interaction --no-suggest
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit
+
+            - name: Run the functional tests
+              run: |
+                  mysql -e "CREATE database contao_test"
+                  vendor/bin/phpunit --testsuite=functional
+
+    windows:
+        name: Windows
+        runs-on: windows-latest
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@1.5.1
+              with:
+                  php-version: 7.3
+                  coverage: none
+
+            - name: Enable PHP extensions
+              run: |
+                echo extension=php_fileinfo.dll >> C:\tools\php\php.ini
+                echo extension=php_gd2.dll >> C:\tools\php\php.ini
+                echo extension=php_intl.dll >> C:\tools\php\php.ini
+
+            - name: Adjust the Git autocrlf settings
+              run: git config --global core.autocrlf false
+
+            - name: Checkout
+              uses: actions/checkout@v1
+              with:
+                  fetch-depth: 50
+
+            - name: Install dependencies
+              run: composer install --no-interaction --no-progress --no-suggest
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit.bat
+
+    split:
+        name: Split the monorepo
+        runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
+        needs: [coding-style, tests, windows]
+        steps:
+            #- name: Validate the composer.json files
+            #  run: vendor/bin/monorepo-tools composer-json --validate
+
+            - run: echo "Split the monorepo"
