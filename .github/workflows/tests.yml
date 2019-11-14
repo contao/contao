@@ -30,7 +30,7 @@ jobs:
                   fetch-depth: 50
 
             - name: Install dependencies
-              run: composer install --no-interaction --no-progress --no-suggest
+              run: composer install --no-interaction --no-suggest
 
             - name: Run the unit tests
               run: vendor/bin/phpunit
@@ -53,6 +53,9 @@ jobs:
                 echo extension=php_fileinfo.dll >> C:\tools\php\php.ini
                 echo extension=php_gd2.dll >> C:\tools\php\php.ini
                 echo extension=php_intl.dll >> C:\tools\php\php.ini
+
+            - name: Adjust the Git autocrlf settings
+              run: git config --global core.autocrlf false
 
             - name: Checkout
               uses: actions/checkout@v1

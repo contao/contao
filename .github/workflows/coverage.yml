@@ -26,7 +26,7 @@ jobs:
                   fetch-depth: 50
 
             - name: Install dependencies
-              run: composer install --no-interaction --no-progress --no-suggest
+              run: composer install --no-interaction --no-suggest
 
             - name: Generate the coverage report
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
