@@ -10,19 +10,18 @@ on:
 
 jobs:
     tests:
-        name: PHP ${{ matrix.php }} ${{ matrix.os }}
-        runs-on: ${{ matrix.os }}
+        name: PHP ${{ matrix.php }}
+        runs-on: ubuntu-latest
         strategy:
-            matrix:
-                os: [ubuntu-latest, windows-latest]
-                php: [7.2, 7.3]
             fail-fast: false
+            matrix:
+                php: [7.2, 7.3]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@1.5.1
               with:
                   php-version: ${{ matrix.php }}
-                  extension-csv: intl, gd, fileinfo
+                  extension-csv: intl
                   coverage: none
 
             - name: Checkout
@@ -39,9 +38,31 @@ jobs:
 #            - name: Run the functional tests
 #              run: vendor/bin/phpunit --testsuite=functional
 
+    windows:
+        name: Windows
+        runs-on: windows-latest
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@1.5.1
+              with:
+                  php-version: 7.3
+                  extension-csv: intl, gdlib, fileinfo, mbstring
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v1
+              with:
+                  fetch-depth: 50
+
+            - name: Install dependencies
+              run: composer install --no-interaction --no-suggest
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit.bat
+
     split:
         name: Split the monorepo
         runs-on: ubuntu-latest
-        needs: tests
+        needs: [tests, windows]
         steps:
             - run: echo "Split the monorepo"
