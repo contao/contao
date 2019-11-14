@@ -26,7 +26,9 @@ jobs:
                   fetch-depth: 50
 
             - name: Install dependencies
-              run: composer install --no-interaction --no-suggest
+              run: |
+                  composer global require symfony/flex
+                  composer install --no-interaction --no-suggest
 
             - name: Generate the coverage report
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
@@ -53,7 +55,9 @@ jobs:
                   fetch-depth: 50
 
             - name: Install dependencies
-              run: composer install --no-interaction --no-suggest
+              run: |
+                  composer global require symfony/flex
+                  composer install --no-interaction --no-suggest
 
             - name: Check the coding style
               run: |
@@ -79,19 +83,53 @@ jobs:
                   extension-csv: intl
                   coverage: none
 
+            - name: Create the database
+              run: mysql -uroot -proot -e "CREATE database contao_test"
+
             - name: Checkout
               uses: actions/checkout@v1
               with:
                   fetch-depth: 50
 
             - name: Install dependencies
-              run: composer install --no-interaction --no-suggest
+              run: |
+                  composer global require symfony/flex
+                  composer install --no-interaction --no-suggest
 
             - name: Run the unit tests
               run: vendor/bin/phpunit
 
+            - name: Run the functional tests
+              run: vendor/bin/phpunit --testsuite=functional
+              env:
+                  DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+
+    lowest:
+        name: Prefer lowest
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@1.5.1
+              with:
+                  php-version: 7.3
+                  extension-csv: intl
+                  coverage: none
+
             - name: Create the database
               run: mysql -uroot -proot -e "CREATE database contao_test"
+
+            - name: Checkout
+              uses: actions/checkout@v1
+              with:
+                  fetch-depth: 50
+
+            - name: Install dependencies
+              run: |
+                  composer global require symfony/flex
+                  composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit
 
             - name: Run the functional tests
               run: vendor/bin/phpunit --testsuite=functional
@@ -110,9 +148,9 @@ jobs:
 
             - name: Enable PHP extensions
               run: |
-                echo extension=php_fileinfo.dll >> C:\tools\php\php.ini
-                echo extension=php_gd2.dll >> C:\tools\php\php.ini
                 echo extension=php_intl.dll >> C:\tools\php\php.ini
+                echo extension=php_gd2.dll >> C:\tools\php\php.ini
+                echo extension=php_fileinfo.dll >> C:\tools\php\php.ini
 
             - name: Adjust the Git autocrlf settings
               run: git config --global core.autocrlf false
@@ -123,7 +161,9 @@ jobs:
                   fetch-depth: 50
 
             - name: Install dependencies
-              run: composer install --no-interaction --no-progress --no-suggest
+              run: |
+                  composer global require symfony/flex --no-progress
+                  composer install --no-interaction --no-suggest --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat
@@ -131,7 +171,7 @@ jobs:
     split:
         name: Split the monorepo
         runs-on: ubuntu-latest
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'push'
         needs: [coding-style, tests, windows]
         steps:
             #- name: Validate the composer.json files
