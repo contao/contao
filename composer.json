@@ -261,7 +261,7 @@
             "vendor/bin/monorepo-tools composer --validate"
         ],
         "php-cs-fixer": [
-            "vendor/bin/php-cs-fixer fix -v --ansi",
+            "PHP_CS_CONFIG=default vendor/bin/php-cs-fixer fix -v --ansi",
             "PHP_CS_CONFIG=legacy vendor/bin/php-cs-fixer fix -v --ansi",
             "PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix -v --ansi"
         ],
