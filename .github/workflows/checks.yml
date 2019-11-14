@@ -9,12 +9,12 @@ on:
     pull_request: ~
 
 jobs:
-    php-cs-fixer:
-        name: PHP CS Fixer
+    checks:
+        name: Checks
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@1.4.4
+              uses: shivammathur/setup-php@1.5.1
               with:
                   php-version: 7.3
                   extension-csv: intl
@@ -28,8 +28,14 @@ jobs:
             - name: Install dependencies
               run: composer install --no-interaction --no-suggest
 
-            - name: Run the CS fixer
+            - name: Check the coding style
               run: |
-                  vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
+                  PHP_CS_CONFIG=default vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
                   PHP_CS_CONFIG=legacy vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
                   PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
+
+            - name: Analyze the code
+              run: vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
+
+            - name: Validate the composer.json files
+              run: vendor/bin/monorepo-tools composer-json --validate

@@ -9,12 +9,12 @@ on:
     pull_request: ~
 
 jobs:
-    codecov:
-        name: Codecov
+    coverage:
+        name: Coverage
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@1.4.4
+              uses: shivammathur/setup-php@1.5.1
               with:
                   php-version: 7.3
                   extension-csv: intl
@@ -29,10 +29,9 @@ jobs:
               run: composer install --no-interaction --no-suggest
 
             - name: Generate the coverage report
-              run: phpdbg -qrr -dmemory_limit=1G vendor/bin/simple-phpunit --testsuite=coverage --coverage-clover=clover.xml
+              run: phpdbg -qrr -dmemory_limit=1G vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
 
-            - name: Upload the report to Codecov
-              uses: codecov/codecov-action@v1.0.3
-              with:
-                  token: ${{secrets.CODECOV_TOKEN}}
-                  file: ./clover.xml
+            - name: Upload the report
+              run: bash <(curl -s https://codecov.io/bash) -f clover.xml
+              env:
+                  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

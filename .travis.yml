@@ -37,30 +37,24 @@ jobs:
           install:
               - composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
           script:
-              - php vendor/bin/simple-phpunit
-              - php vendor/bin/simple-phpunit --testsuite=functional
-              - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
-              - php vendor/bin/monorepo-tools composer-json --validate
+              - php vendor/bin/phpunit
+              - php vendor/bin/phpunit --testsuite=functional
 
         - stage: test
           php: 7.2
           install:
               - composer update --no-interaction --no-suggest
           script:
-              - php vendor/bin/simple-phpunit
-              - php vendor/bin/simple-phpunit --testsuite=functional
-              - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
-              - php vendor/bin/monorepo-tools composer-json --validate
+              - php vendor/bin/phpunit
+              - php vendor/bin/phpunit --testsuite=functional
 
         - stage: test
           php: 7.3
           install:
               - composer update --no-interaction --no-suggest
           script:
-              - php vendor/bin/simple-phpunit
-              - php vendor/bin/simple-phpunit --testsuite=functional
-              - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
-              - php vendor/bin/monorepo-tools composer-json --validate
+              - php vendor/bin/phpunit
+              - php vendor/bin/phpunit --testsuite=functional
 
         - stage: test
           if: 'type = cron'
@@ -68,10 +62,8 @@ jobs:
           install:
               - composer update --no-interaction --no-suggest
           script:
-              - php vendor/bin/simple-phpunit
-              - php vendor/bin/simple-phpunit --testsuite=functional
-              - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
-              - php vendor/bin/monorepo-tools composer-json --validate
+              - php vendor/bin/phpunit
+              - php vendor/bin/phpunit --testsuite=functional
 
         # Ignore the platform requirements for the upcoming PHP version
         - stage: test
@@ -80,10 +72,8 @@ jobs:
           install:
               - composer update --ignore-platform-reqs --no-interaction --no-suggest
           script:
-              - php vendor/bin/simple-phpunit
-              - php vendor/bin/simple-phpunit --testsuite=functional
-              - php vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
-              - php vendor/bin/monorepo-tools composer-json --validate
+              - php vendor/bin/phpunit
+              - php vendor/bin/phpunit --testsuite=functional
 
         # Split the monorepo
         - stage: split
@@ -117,7 +107,7 @@ before_install:
           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
         '
         COMPOSER_ROOT_VERSION=dev-$TRAVIS_COMMIT composer update --no-interaction --no-suggest
-        php vendor/bin/simple-phpunit --colors=always
+        php vendor/bin/phpunit --colors=always
       }
       update_composer_json () {
         php -r '
