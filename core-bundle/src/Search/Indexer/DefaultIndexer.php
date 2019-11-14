@@ -50,12 +50,6 @@ class DefaultIndexer implements IndexerInterface
             return;
         }
 
-        // TODO: double check text/html content-type here, every indexer has to decide on their own what they can index
-        // and what not.
-
-        // TODO: consider X-Robots-Tag and <meta name="robots"> here. If they contain "noindex" we have to skip that
-        // document.
-
         $meta = [
             'title' => 'undefined',
             'language' => 'en',
