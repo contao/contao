@@ -30,7 +30,7 @@ jobs:
                   fetch-depth: 50
 
             - name: Install dependencies
-              run: composer install --no-interaction --no-suggest
+              run: composer install --no-interaction --no-progress --no-suggest
 
             - name: Run the unit tests
               run: vendor/bin/phpunit
@@ -46,8 +46,13 @@ jobs:
               uses: shivammathur/setup-php@1.5.1
               with:
                   php-version: 7.3
-                  extension-csv: intl, gdlib, fileinfo, mbstring
                   coverage: none
+
+            - name: Enable PHP extensions
+              run: |
+                echo extension=php_fileinfo.dll >> C:\tools\php\php.ini
+                echo extension=php_gd2.dll >> C:\tools\php\php.ini
+                echo extension=php_intl.dll >> C:\tools\php\php.ini
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -55,13 +60,14 @@ jobs:
                   fetch-depth: 50
 
             - name: Install dependencies
-              run: composer install --no-interaction --no-suggest
+              run: composer install --no-interaction --no-progress --no-suggest
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat
 
     split:
         name: Split the monorepo
+        if: github.event_name == 'pull_request'
         runs-on: ubuntu-latest
         needs: [tests, windows]
         steps:
