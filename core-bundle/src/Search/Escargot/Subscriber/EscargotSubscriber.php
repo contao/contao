@@ -10,13 +10,13 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Search\EventListener;
+namespace Contao\CoreBundle\Search\Escargot\Subscriber;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Terminal42\Escargot\Escargot;
+use Terminal42\Escargot\Subscriber\SubscriberInterface;
 
-interface EscargotEventSubscriber extends EventSubscriberInterface
+interface EscargotSubscriber extends SubscriberInterface
 {
     /**
      * Has to return a unique subscriber name so that it can be

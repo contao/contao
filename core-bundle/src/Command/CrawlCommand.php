@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Search\EscargotFactory;
+use Contao\CoreBundle\Search\Escargot\Factory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,19 +20,24 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Terminal42\Escargot\Event\FinishedCrawlingEvent;
-use Terminal42\Escargot\Event\ResponseEvent;
+use Symfony\Contracts\HttpClient\ChunkInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
+use Terminal42\Escargot\CrawlUri;
+use Terminal42\Escargot\Escargot;
+use Terminal42\Escargot\EscargotAwareInterface;
+use Terminal42\Escargot\EscargotAwareTrait;
 use Terminal42\Escargot\Queue\InMemoryQueue;
+use Terminal42\Escargot\Subscriber\FinishedCrawlingSubscriberInterface;
+use Terminal42\Escargot\Subscriber\SubscriberInterface;
 
 class CrawlCommand extends Command
 {
     /**
-     * @var EscargotFactory
+     * @var Factory
      */
     private $escargotFactory;
 
-    public function __construct(EscargotFactory $escargotFactory)
+    public function __construct(Factory $escargotFactory)
     {
         $this->escargotFactory = $escargotFactory;
 
@@ -49,6 +54,7 @@ class CrawlCommand extends Command
             ->addOption('subscribers', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'A list of subscribers to enable.', $this->escargotFactory->getSubscriberNames())
             ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed.', 10)
             ->addOption('delay', 'd', InputOption::VALUE_REQUIRED, 'The number of microseconds to wait between requests. (0 = throttling is disabled)', 0)
+            ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progess bar output')
             ->setDescription('Crawls all Contao root pages plus additional URIs configured using (contao.search.additional_uris) and triggers the desired subscribers.')
         ;
     }
@@ -73,86 +79,81 @@ class CrawlCommand extends Command
             return 1;
         }
 
-        $escargot = $escargot->withLogger(new ConsoleLogger($output));
+        $loggerOutputSection = $output->section();
+
+        $escargot = $escargot->withLogger(new ConsoleLogger($loggerOutputSection));
+        $escargot = $escargot->withConcurrency((int) $input->getOption('concurrency'));
+        $escargot = $escargot->withRequestDelay((int) $input->getOption('delay'));
 
         $io->comment('Started crawling...');
 
-        $progressBar = new ProgressBar($output);
-        $progressBar->setFormat("%title%\n%current%/%max% [%bar%] %percent:3s%%");
-        $progressBar->setMessage('Starting to crawl...', 'title');
-
-        $progressBar->start();
-        $progressSubscriber = $this->getProgressSubscriber($progressBar);
-
-        $escargot = $escargot->withConcurrency((int) $input->getOption('concurrency'));
-        $escargot = $escargot->withRequestDelay((int) $input->getOption('delay'));
-        $escargot->addSubscriber($progressSubscriber);
+        if (!$input->getOption('no-progress')) {
+            $this->addProgressBar($escargot, $output);
+        }
 
         $escargot->crawl();
 
-        if ($progressSubscriber->isFinished()) {
-            $output->writeln('');
-            $output->writeln('');
-            $io->success('Finished crawling! Find the details for each subscriber below:');
+        $output->writeln('');
+        $output->writeln('');
+        $io->success('Finished crawling! Find the details for each subscriber below:');
 
-            foreach ($this->escargotFactory->getSubscribers($subscribers) as $subscriber) {
-                $io->section($subscriber->getName());
-                $subscriber->addResultToConsole($escargot, $output);
-            }
+        foreach ($this->escargotFactory->getSubscribers($subscribers) as $subscriber) {
+            $io->section($subscriber->getName());
+            $subscriber->addResultToConsole($escargot, $output);
         }
 
         return 0;
     }
 
-    private function getProgressSubscriber(ProgressBar $progressBar): EventSubscriberInterface
+    private function addProgressBar(Escargot $escargot, OutputInterface $output): void
     {
-        return new class($progressBar) implements EventSubscriberInterface {
+        $progressBar = new ProgressBar($output->section());
+        $progressBar->setFormat("%title%\n%current%/%max% [%bar%] %percent:3s%%");
+        $progressBar->setMessage('Starting to crawl...', 'title');
+
+        $progressBar->start();
+        $escargot->addSubscriber($this->getProgressSubscriber($progressBar));
+    }
+
+    private function getProgressSubscriber(ProgressBar $progressBar): SubscriberInterface
+    {
+        return new class($progressBar) implements SubscriberInterface, EscargotAwareInterface, FinishedCrawlingSubscriberInterface {
+            use EscargotAwareTrait;
+
             /**
              * @var ProgressBar
              */
             private $progressBar;
-
-            /**
-             * @var bool
-             */
-            private $isFinished = false;
 
             public function __construct(ProgressBar $progressBar)
             {
                 $this->progressBar = $progressBar;
             }
 
-            public function isFinished(): bool
+            public function shouldRequest(CrawlUri $crawlUri, string $currentDecision): string
             {
-                return $this->isFinished;
-            }
-
-            public function onResponse(ResponseEvent $event): void
-            {
-                if (!$event->getCurrentChunk()->isLast()) {
-                    return;
-                }
-
-                $escargot = $event->getEscargot();
-
-                $this->progressBar->setMessage((string) $event->getCrawlUri()->getUri(), 'title');
-                $this->progressBar->setMaxSteps($escargot->getQueue()->countAll($escargot->getJobId()));
+                // We advance with every shouldRequest() call to update the progress bar frequently enough
                 $this->progressBar->advance(1);
+                $this->progressBar->setMaxSteps($this->escargot->getQueue()->countAll($this->escargot->getJobId()));
+
+                return $currentDecision;
             }
 
-            public function onFinished(FinishedCrawlingEvent $event): void
+            public function needsContent(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk, string $currentDecision): string
+            {
+                return $currentDecision;
+            }
+
+            public function onLastChunk(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk): void
+            {
+                // We only update the message here, otherwise too many nonsense URIs will be shown
+                $this->progressBar->setMessage((string) $crawlUri->getUri(), 'title');
+            }
+
+            public function finishedCrawling(): void
             {
                 $this->progressBar->setMessage('Done!', 'title');
                 $this->progressBar->finish();
-                $this->isFinished = true;
-            }
-
-            public static function getSubscribedEvents()
-            {
-                return [
-                    ResponseEvent::class => 'onResponse',
-                    FinishedCrawlingEvent::class => 'onFinished',
-                ];
             }
         };
     }

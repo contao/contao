@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Search\EventListener;
+namespace Contao\CoreBundle\Search\Escargot\Subscriber;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Terminal42\Escargot\Escargot;
 
-abstract class AbstractFileHandlingListener implements EscargotEventSubscriber
+abstract class AbstractFileHandlingSubscriber implements EscargotSubscriber
 {
     /**
      * @var RouterInterface

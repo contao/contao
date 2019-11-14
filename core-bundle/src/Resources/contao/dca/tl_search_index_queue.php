@@ -52,5 +52,9 @@ $GLOBALS['TL_DCA']['tl_search_index_queue'] = array
 		(
 			'sql'                     => "tinyint(1) NOT NULL"
 		),
+		'tags' => array
+		(
+			'sql'                     => "text NULL"
+		),
 	)
 );

@@ -10,27 +10,27 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Search;
+namespace Contao\CoreBundle\Search\Escargot;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Search\EventListener\EscargotEventSubscriber;
+use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriber;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Escargot;
-use Terminal42\Escargot\EventSubscriber\HtmlCrawlerSubscriber;
-use Terminal42\Escargot\EventSubscriber\MustMatchContentTypeSubscriber;
-use Terminal42\Escargot\EventSubscriber\RobotsSubscriber;
 use Terminal42\Escargot\Exception\InvalidJobIdException;
 use Terminal42\Escargot\Queue\DoctrineQueue;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 use Terminal42\Escargot\Queue\LazyQueue;
 use Terminal42\Escargot\Queue\QueueInterface;
+use Terminal42\Escargot\Subscriber\HtmlCrawlerSubscriber;
+use Terminal42\Escargot\Subscriber\RobotsSubscriber;
 
-class EscargotFactory
+class Factory
 {
     /**
      * @var Connection
@@ -43,7 +43,7 @@ class EscargotFactory
     private $framework;
 
     /**
-     * @var EscargotEventSubscriber[]
+     * @var EscargotSubscriber[]
      */
     private $subscribers = [];
 
@@ -52,14 +52,20 @@ class EscargotFactory
      */
     private $additionalUris = [];
 
-    public function __construct(Connection $connection, ContaoFramework $framework, array $additionalUris = [])
+    /**
+     * @var array
+     */
+    private $proxy;
+
+    public function __construct(Connection $connection, ContaoFramework $framework, array $additionalUris = [], array $defaultHttpClientOptions = [])
     {
         $this->connection = $connection;
         $this->framework = $framework;
         $this->additionalUris = $additionalUris;
+        $this->defaultHttpClientOptions = $defaultHttpClientOptions;
     }
 
-    public function addSubscriber(EscargotEventSubscriber $eventSubscriber): self
+    public function addSubscriber(EscargotSubscriber $eventSubscriber): self
     {
         $this->subscribers[] = $eventSubscriber;
 
@@ -67,7 +73,7 @@ class EscargotFactory
     }
 
     /**
-     * @return EscargotEventSubscriber[]
+     * @return EscargotSubscriber[]
      */
     public function getSubscribers(array $selectedSubscribers = []): array
     {
@@ -77,7 +83,7 @@ class EscargotFactory
 
         return array_filter(
             $this->subscribers,
-            static function (EscargotEventSubscriber $subscriber) use ($selectedSubscribers) {
+            static function (EscargotSubscriber $subscriber) use ($selectedSubscribers) {
                 return \in_array($subscriber->getName(), $selectedSubscribers, true);
             }
         );
@@ -86,7 +92,7 @@ class EscargotFactory
     public function getSubscriberNames(): array
     {
         return array_map(
-            static function (EscargotEventSubscriber $subscriber) {
+            static function (EscargotSubscriber $subscriber) {
                 return $subscriber->getName();
             },
             $this->subscribers
@@ -102,6 +108,11 @@ class EscargotFactory
             },
             'tl_search_index_queue'
         ));
+    }
+
+    public function getDefaultHttpClientOptions(): array
+    {
+        return $this->defaultHttpClientOptions;
     }
 
     public function getSearchUriCollection(): BaseUriCollection
@@ -147,7 +158,7 @@ class EscargotFactory
     {
         $selectedSubscribers = $this->validateSubscribers($selectedSubscribers);
 
-        $escargot = Escargot::create($baseUris, $queue, $client);
+        $escargot = Escargot::create($baseUris, $queue, $client ?? $this->createDefaultHttpClient());
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $selectedSubscribers);
@@ -163,7 +174,7 @@ class EscargotFactory
     {
         $selectedSubscribers = $this->validateSubscribers($selectedSubscribers);
 
-        $escargot = Escargot::createFromJobId($jobId, $queue, $client);
+        $escargot = Escargot::createFromJobId($jobId, $queue, $client ?? $this->createDefaultHttpClient());
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $selectedSubscribers);
@@ -171,9 +182,13 @@ class EscargotFactory
         return $escargot;
     }
 
+    private function createDefaultHttpClient(): HttpClientInterface
+    {
+        return HttpClient::create($this->getDefaultHttpClientOptions());
+    }
+
     private function registerDefaultSubscribers(Escargot $escargot): void
     {
-        $escargot->addSubscriber(new MustMatchContentTypeSubscriber('text/html'));
         $escargot->addSubscriber(new RobotsSubscriber());
         $escargot->addSubscriber(new HtmlCrawlerSubscriber());
     }

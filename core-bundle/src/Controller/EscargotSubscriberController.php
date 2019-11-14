@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Search\EscargotFactory;
-use Contao\CoreBundle\Search\EventListener\ControllerResultProvidingSubscriberInterface;
+use Contao\CoreBundle\Search\Escargot\Factory;
+use Contao\CoreBundle\Search\Escargot\Subscriber\ControllerResultProvidingSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -25,11 +25,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class EscargotSubscriberController
 {
     /**
-     * @var EscargotFactory
+     * @var Factory
      */
     private $escargotFactory;
 
-    public function __construct(EscargotFactory $escargotFactory)
+    public function __construct(Factory $escargotFactory)
     {
         $this->escargotFactory = $escargotFactory;
     }

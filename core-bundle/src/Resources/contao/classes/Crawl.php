@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Search\EscargotFactory;
+use Contao\CoreBundle\Search\Escargot\Factory;
 use Nyholm\Psr7\Uri;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Terminal42\Escargot\Exception\InvalidJobIdException;
@@ -52,7 +52,7 @@ class Crawl extends Backend implements \executable
 		$template->action = ampersand(Environment::get('request'));
 		$template->isActive = $this->isActive();
 
-		/** @var EscargotFactory $factory */
+		/** @var Factory $factory */
 		$factory = System::getContainer()->get('contao.search.escargot_factory');
 
 		$subscriberNames = $factory->getSubscriberNames();
@@ -151,7 +151,12 @@ class Crawl extends Backend implements \executable
 			$options[] = [
 				'value' => $subscriberName,
 				'label' => $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscriberNames'][$subscriberName],
+				'default' => false,
 			];
+		}
+
+		if (1 === \count($options)) {
+			$options[0]['default'] = true;
 		}
 
 		$widget->options = $options;

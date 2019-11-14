@@ -519,14 +519,14 @@ services:
         public: true
 
     contao.search.escargot_factory:
-        class: Contao\CoreBundle\Search\EscargotFactory
+        class: Contao\CoreBundle\Search\Escargot\Factory
         arguments:
             - '@database_connection'
             - '@contao.framework'
         public: true;
 
     contao.search.escargot_subscriber.search_index:
-        class: Contao\CoreBundle\Search\EventListener\SearchIndexListener
+        class: Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber
         arguments:
             - '@contao.search.indexer'
             - '@router'
