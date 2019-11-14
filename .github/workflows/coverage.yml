@@ -18,7 +18,7 @@ jobs:
               with:
                   php-version: 7.3
                   extension-csv: intl
-                  coverage: none
+                  coverage: pcov
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -29,7 +29,7 @@ jobs:
               run: composer install --no-interaction --no-suggest
 
             - name: Generate the coverage report
-              run: phpdbg -qrr -dmemory_limit=1G vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
+              run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
 
             - name: Upload the report
               run: bash <(curl -s https://codecov.io/bash) -f clover.xml
