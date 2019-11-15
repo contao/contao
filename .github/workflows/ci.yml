@@ -19,7 +19,7 @@ jobs:
               uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
-                  extension-csv: intl
+                  extension-csv: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
                   coverage: pcov
 
             - name: Checkout
@@ -49,7 +49,7 @@ jobs:
               uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
-                  extension-csv: intl
+                  extension-csv: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
                   coverage: none
 
             - name: Checkout
@@ -84,12 +84,8 @@ jobs:
               uses: shivammathur/setup-php@master
               with:
                   php-version: ${{ matrix.php }}
-                  extension-csv: intl
+                  extension-csv: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
                   coverage: none
-
-            - name: Install missing PHP 7.4 extensions
-              if: matrix.php == '7.4'
-              run: sudo apt-get install php7.4-gd php7.4-mbstring php7.4-mysql
 
             - name: Create the database
               run: mysql -uroot -proot -e "CREATE database contao_test"
@@ -121,7 +117,7 @@ jobs:
               uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
-                  extension-csv: intl
+                  extension-csv: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
                   coverage: none
 
             - name: Create the database
@@ -154,7 +150,7 @@ jobs:
               uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
-                  extension-csv: intl
+                  extension-csv: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
                   coverage: none
 
             - name: Checkout
@@ -194,13 +190,8 @@ jobs:
               uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
+                  extension-csv: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
                   coverage: none
-
-            - name: Enable the PHP extensions
-              run: |
-                echo extension=php_intl.dll >> C:\tools\php\php.ini
-                echo extension=php_gd2.dll >> C:\tools\php\php.ini
-                echo extension=php_fileinfo.dll >> C:\tools\php\php.ini
 
             - name: Adjust the Git autocrlf setting
               run: git config --global core.autocrlf false
@@ -227,6 +218,7 @@ jobs:
               uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
+                  extension-csv: json, zlib
                   coverage: none
 
             - name: Checkout
