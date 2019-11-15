@@ -231,7 +231,7 @@ jobs:
             - name: Cache the monorepo split
               uses: actions/cache@v1
               with:
-                path: $HOME/.monorepo-split-cache
+                path: .monorepo-split-cache
                 key: dev-${GITHUB_REF##*/}
 
             - name: Install the dependencies
@@ -241,6 +241,6 @@ jobs:
               run: $HOME/.composer/vendor/bin/monorepo-tools composer-json --validate --ansi
 
             - name: Split the monorepo
-              run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/} --cache-dir $HOME/.monorepo-split-cache --ansi
+              run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/}
               env:
                   GITHUB_TOKEN: ${{ secrets.MONOREPO_SPLIT_TOKEN }}
