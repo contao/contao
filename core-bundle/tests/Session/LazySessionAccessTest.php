@@ -66,7 +66,7 @@ class LazySessionAccessTest extends TestCase
         $_SESSION = new LazySessionAccess($session);
 
         $this->assertFalse($session->isStarted());
-        $this->assertNull($_SESSION['foobar']['nested']);
+        $this->assertNull($_SESSION['foobar']);
         $this->assertTrue($session->isStarted());
         $this->assertSame($beBag, $_SESSION['BE_DATA']);
         $this->assertSame($feBag, $_SESSION['FE_DATA']);
