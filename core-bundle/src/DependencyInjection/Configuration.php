@@ -352,7 +352,20 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('additionalURIs')
                     ->info('Additional URIs to crawl (by default, only the ones defined in the root pages are crawled).')
-                    // TODO: validate for http(s)://
+                    ->validate()
+                    ->ifTrue(
+                        static function (array $uris): bool {
+                            foreach ($uris as $uri) {
+                                if (!preg_match('@^https?://@', $uri)) {
+                                    return true;
+                                }
+
+                                return false;
+                            }
+                        }
+                    )
+                    ->thenInvalid('All provided additional URIs must start with either http:// or https://.')
+                    ->end()
                     ->prototype('scalar')->end()
                     ->defaultValue([])
                 ->end()

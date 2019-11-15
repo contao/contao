@@ -1963,6 +1963,35 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($this->container->hasDefinition('contao.search.indexer.default'));
     }
 
+    public function testCrawlSection(): void
+    {
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $this->container);
+
+        $this->assertTrue($this->container->has('contao.search.escargot_factory'));
+        $this->assertSame([], $this->container->getDefinition('contao.search.escargot_factory')->getArgument(2));
+        $this->assertSame([], $this->container->getDefinition('contao.search.escargot_factory')->getArgument(3));
+
+        $extension->load(
+            [
+                'contao' => [
+                    'crawl' => [
+                        'additionalURIs' => [
+                            'https://examle.com',
+                        ],
+                        'defaultHttpClientOptions' => [
+                            'proxy' => 'http://localhost:7080',
+                        ],
+                    ],
+                ],
+            ],
+            $this->container
+        );
+
+        $this->assertSame(['https://examle.com'], $this->container->getDefinition('contao.search.escargot_factory')->getArgument(2));
+        $this->assertSame(['proxy' => 'http://localhost:7080'], $this->container->getDefinition('contao.search.escargot_factory')->getArgument(3));
+    }
+
     /**
      * @group legacy
      *

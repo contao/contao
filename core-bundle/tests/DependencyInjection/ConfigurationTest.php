@@ -75,6 +75,22 @@ class ConfigurationTest extends TestCase
         $this->assertSame('C:\Temp\contao', $configuration['image']['target_dir']);
     }
 
+    public function testDeniesInvalidCrawlUris(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "contao.crawl.additionalURIs": All provided additional URIs must start with either http:// or https://.');
+
+        $params = [
+            'contao' => [
+                'crawl' => [
+                    'additionalURIs' => ['invalid.com'],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
     public function getPaths(): \Generator
     {
         yield ['/tmp/contao', 'C:\Temp\contao'];
