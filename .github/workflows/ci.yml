@@ -190,10 +190,8 @@ jobs:
               uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
-                  extension-csv: dom, fileinfo, filter, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  extension-csv: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
                   coverage: none
-                  # TODO: remove once https://github.com/shivammathur/setup-php/issues/80 has been addressed
-                  ini-values-csv: extension=gd2
 
             - name: Adjust the Git autocrlf setting
               run: git config --global core.autocrlf false
