@@ -65,9 +65,9 @@ class Factory
         $this->defaultHttpClientOptions = $defaultHttpClientOptions;
     }
 
-    public function addSubscriber(EscargotSubscriber $eventSubscriber): self
+    public function addSubscriber(EscargotSubscriber $subscriber): self
     {
-        $this->subscribers[] = $eventSubscriber;
+        $this->subscribers[] = $subscriber;
 
         return $this;
     }
