@@ -14,7 +14,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@1.5.1
+              uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
                   extension-csv: intl
@@ -31,7 +31,7 @@ jobs:
                   composer install --no-interaction --no-suggest
 
             - name: Generate the coverage report
-              run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
+              run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
 
             - name: Upload the coverage report
               run: bash <(curl -s https://codecov.io/bash) -f clover.xml
@@ -43,7 +43,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@1.5.1
+              uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
                   extension-csv: intl
@@ -77,7 +77,7 @@ jobs:
                 php: [7.2, 7.3]
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@1.5.1
+              uses: shivammathur/setup-php@master
               with:
                   php-version: ${{ matrix.php }}
                   extension-csv: intl
@@ -97,10 +97,10 @@ jobs:
                   composer install --no-interaction --no-suggest
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit
+              run: vendor/bin/phpunit --colors=always
 
             - name: Run the functional tests
-              run: vendor/bin/phpunit --testsuite=functional
+              run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
 
@@ -109,7 +109,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@1.5.1
+              uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
                   extension-csv: intl
@@ -129,10 +129,10 @@ jobs:
                   composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit
+              run: vendor/bin/phpunit --colors=always
 
             - name: Run the functional tests
-              run: vendor/bin/phpunit --testsuite=functional
+              run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
 
@@ -141,7 +141,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@1.5.1
+              uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
                   extension-csv: intl
@@ -171,7 +171,7 @@ jobs:
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '
                       COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction --no-suggest
-                      vendor/bin/phpunit
+                      vendor/bin/phpunit --colors=always
                       cd ..
                   done
 
@@ -180,7 +180,7 @@ jobs:
         runs-on: windows-latest
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@1.5.1
+              uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
                   coverage: none
@@ -205,7 +205,7 @@ jobs:
                   composer install --no-interaction --no-suggest --no-progress
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit.bat
+              run: vendor/bin/phpunit.bat --colors=always
 
     monorepo-split:
         name: Monorepo Split
@@ -214,7 +214,7 @@ jobs:
         needs: [coding-style, tests, prefer-lowest, bundles, windows]
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@1.5.1
+              uses: shivammathur/setup-php@master
               with:
                   php-version: 7.3
                   coverage: none
@@ -231,16 +231,12 @@ jobs:
                 key: dev-${GITHUB_REF##*/}
 
             - name: Install the dependencies
-              run: |
-                  php -r '
-                      $data = ["require" => ["contao/monorepo-tools" => "dev-master"]];
-                      file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
-                  '
-                  composer install --no-interaction --no-suggest
+              run: composer global require contao/monorepo-tools:dev-master
 
             - name: Validate the composer.json files
-              run: vendor/bin/monorepo-tools composer-json --validate
+              run: $HOME/.composer/vendor/bin/monorepo-tools composer-json --validate --ansi
 
             - name: Split the monorepo
-              run: |
-                  vendor/bin/monorepo-tools split ${GITHUB_REF##*/} --cache-dir $HOME/.monorepo-split-cache
+              run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/} --cache-dir $HOME/.monorepo-split-cache --ansi
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

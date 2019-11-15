@@ -259,7 +259,7 @@
             "vendor/bin/phpunit --testsuite=functional --colors=always"
         ],
         "monorepo-tools": [
-            "vendor/bin/monorepo-tools composer-json --validate"
+            "vendor/bin/monorepo-tools composer-json --validate --ansi"
         ],
         "php-cs-fixer": [
             "PHP_CS_CONFIG=default vendor/bin/php-cs-fixer fix -v --ansi",
