@@ -17,6 +17,7 @@ use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredImageStorageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ResizerInterface;
+use Patchwork\Utf8;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
@@ -156,7 +157,7 @@ class ResizeImagesCommand extends Command
             return 0;
         }
 
-        $io->write(str_pad($path, $this->terminalWidth + \strlen($path) - mb_strlen($path, 'UTF-8') - 13, '.').' ');
+        $io->write(str_pad($path, $this->terminalWidth + \strlen($path) - Utf8::strlen($path) - 13, '.').' ');
 
         try {
             $image = $this->imageFactory->create($this->targetDir.'/'.$path);
