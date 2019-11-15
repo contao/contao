@@ -40,6 +40,24 @@ class FrontendPreviewToken extends AbstractToken
     /**
      * {@inheritdoc}
      */
+    public function __serialize(): array
+    {
+        return [$this->showUnpublished, parent::__serialize()];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __unserialize(array $data): void
+    {
+        [$this->showUnpublished, $parentData] = $data;
+
+        parent::__unserialize($parentData);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getCredentials()
     {
         return null;
@@ -48,23 +66,5 @@ class FrontendPreviewToken extends AbstractToken
     public function showUnpublished(): bool
     {
         return $this->showUnpublished;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function serialize(): string
-    {
-        return serialize([$this->showUnpublished, parent::serialize()]);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function unserialize($serialized): void
-    {
-        [$this->showUnpublished, $parentStr] = unserialize($serialized, ['allowed_classes' => true]);
-
-        parent::unserialize($parentStr);
     }
 }
