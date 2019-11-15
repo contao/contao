@@ -508,6 +508,20 @@ services:
         alias: 'contao.search.indexer.delegating'
         public: true
 
+    contao.search.escargot_factory:
+        class: Contao\CoreBundle\Search\Escargot\Factory
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+        public: true;
+
+    contao.search.escargot_subscriber.search_index:
+        class: Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber
+        arguments:
+            - '@contao.search.indexer'
+        tags:
+            - { name: 'contao.escargot_subscriber' }
+
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:

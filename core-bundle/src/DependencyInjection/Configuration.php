@@ -116,6 +116,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
+                ->append($this->addCrawlNode())
             ->end()
         ;
 
@@ -338,6 +339,27 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('indexProtected')
                     ->info('Enables indexing of protected pages')
                     ->defaultFalse()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addCrawlNode(): NodeDefinition
+    {
+        return (new TreeBuilder('crawl'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('additionalURIs')
+                    ->info('Additional URIs to crawl (by default, only the ones defined in the root pages are crawled).')
+                    // TODO: validate for http(s)://
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
+                ->end()
+                ->arrayNode('defaultHttpClientOptions')
+                    ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
                 ->end()
             ->end()
         ;
