@@ -68,7 +68,6 @@ class DebugPluginsCommand extends Command
         $this->projectDir = $projectDir;
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -78,8 +77,13 @@ class DebugPluginsCommand extends Command
             ->setDefinition([
                 new InputArgument('name', InputArgument::OPTIONAL, 'The plugin class or package name'),
             ])
-            ->addOption('bundles', null, InputOption::VALUE_NONE, 'List all bundles or bundles config of the specified plugin')
-            ->setDescription('Displays the configuration of Contao Manager plugins.')
+            ->addOption(
+                'bundles',
+                null,
+                InputOption::VALUE_NONE,
+                'List all bundles or the bundle configuration of the given plugin'
+            )
+            ->setDescription('Displays the Contao Manager plugin configurations')
         ;
     }
 
@@ -104,19 +108,24 @@ class DebugPluginsCommand extends Command
 
     private function listPlugins(): int
     {
-        $title = 'Contao Manager plugins with their package name';
+        $title = 'Contao Manager Plugins';
+
         $headers = [
-            [new TableCell('Plugin class', ['rowspan' => 2]), new TableCell('Composer package', ['rowspan' => 2]), new TableCell('Features / Plugin Interfaces', ['colspan' => 6])],
+            [
+                new TableCell('Plugin Class', ['rowspan' => 2]),
+                new TableCell('Composer Package', ['rowspan' => 2]),
+                new TableCell('Features / Plugin Interfaces', ['colspan' => 6]),
+            ],
             ['Bundle', 'Routing', 'Config', 'Extension', 'Dependent', 'API'],
         ];
-        $rows = [];
 
+        $rows = [];
         $plugins = $this->pluginLoader->getInstances();
         $check = '\\' === \DIRECTORY_SEPARATOR ? '1' : "\xE2\x9C\x94"; // HEAVY CHECK MARK (U+2714)
 
         foreach ($plugins as $packageName => $plugin) {
             $rows[] = [
-                get_class($plugin),
+                \get_class($plugin),
                 $packageName,
                 $plugin instanceof BundlePluginInterface ? $check : '',
                 $plugin instanceof RoutingPluginInterface ? $check : '',
@@ -135,15 +144,14 @@ class DebugPluginsCommand extends Command
 
     private function listBundles(): int
     {
-        $title = 'Available registered bundles in loading order';
-        $headers = ['Bundle name', 'Contao Resources path'];
+        $title = 'Registered Bundles in Loading Order';
+        $headers = ['Bundle Name', 'Contao Resources Path'];
         $rows = [];
-
         $bundles = $this->kernel->getBundles();
 
         foreach ($bundles as $name => $bundle) {
             $path = '';
-            $class = get_class($bundle);
+            $class = \get_class($bundle);
 
             if (ContaoModuleBundle::class === $class) {
                 $path = sprintf('system/modules/%s', $name);
@@ -174,17 +182,13 @@ class DebugPluginsCommand extends Command
         [, $plugin] = $this->findPlugin($name);
 
         if ($plugin instanceof BundlePluginInterface) {
-            $choices['BundlePluginInterface'] = 'Symfony bundles loaded by this plugin.';
+            $choices[] = 'Bundle';
         }
 
-        $result = $this->io->choice(
-            sprintf('Which features of the "%s" plugin do you want to debug?', $name),
-            $choices
-        );
+        $result = $this->io->choice('Which feature do you want to debug?', $choices);
 
-        switch ($result) {
-            case 'BundlePluginInterface':
-                return $this->showPluginBundles($name);
+        if ('Bundle' === $result) {
+            return $this->showPluginBundles($name);
         }
 
         return -1;
@@ -201,8 +205,8 @@ class DebugPluginsCommand extends Command
         if (!$plugin instanceof BundlePluginInterface) {
             $this->io->error(
                 sprintf(
-                    "The plugin \"%s\" does not register bundles.\n(It does not implement the \"%s\" interface.)",
-                    get_class($plugin),
+                    'The "%s" plugin does not implement the "%s" interface.',
+                    \get_class($plugin),
                     BundlePluginInterface::class
                 )
             );
@@ -210,10 +214,9 @@ class DebugPluginsCommand extends Command
             return -1;
         }
 
-        $title = sprintf('Bundles registered by plugin "%s"', get_class($plugin));
-        $headers = ['Bundle', 'Replaces', 'Load after', 'Environment'];
+        $title = sprintf('Bundles Registered by Plugin "%s"', \get_class($plugin));
+        $headers = ['Bundle', 'Replaces', 'Load After', 'Environment'];
         $rows = [];
-
         $configs = $plugin->getBundles($this->getBundleParser());
 
         foreach ($configs as $config) {
@@ -221,12 +224,14 @@ class DebugPluginsCommand extends Command
                 $config->getName(),
                 implode("\n", $config->getReplace()),
                 implode("\n", $config->getLoadAfter()),
-                $config->loadInProduction() && $config->loadInDevelopment() ? 'All' : ($config->loadInProduction() ? 'Production' : 'Development'),
+                $config->loadInProduction() && $config->loadInDevelopment()
+                    ? 'All'
+                    : ($config->loadInProduction() ? 'Production' : 'Development'),
             ];
             $rows[] = new TableSeparator();
         }
 
-        // Remove last separator
+        // Remove the last separator
         array_pop($rows);
 
         $this->io->title($title);
@@ -244,7 +249,7 @@ class DebugPluginsCommand extends Command
         }
 
         foreach ($plugins as $packageName => $plugin) {
-            if (get_class($plugin) === $name) {
+            if (\get_class($plugin) === $name) {
                 return [$packageName, $plugin];
             }
         }
