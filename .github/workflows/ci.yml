@@ -83,9 +83,9 @@ jobs:
                   extension-csv: intl
                   coverage: none
 
-            - name: Install php7.4-gd
+            - name: Install missing PHP 7.4 extensions
               if: matrix.php == '7.4'
-              run: sudo apt-get install php7.4-gd
+              run: sudo apt-get install php7.4-gd php7.4-mbstring
 
             - name: Create the database
               run: mysql -uroot -proot -e "CREATE database contao_test"
