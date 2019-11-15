@@ -36,7 +36,7 @@ class SubscriberResult
      *
      * @var array
      */
-    private $info;
+    private $info = [];
 
     public function __construct(bool $wasSuccessful, string $summary)
     {
@@ -78,9 +78,12 @@ class SubscriberResult
         return $this;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getInfo(string $key)
     {
-        return $this->info[$key];
+        return $this->info[$key] ?? null;
     }
 
     public function getAllInfo(): array
