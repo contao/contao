@@ -1,17 +1,19 @@
 name: CI
 
 on:
+    pull_request: ~
     push:
         branches:
             - master
             - '[0-9]+.[0-9]+'
-
-    pull_request: ~
+    schedule:
+        - cron: '0 13 * * MON,TUE'
 
 jobs:
     coverage:
         name: Coverage
         runs-on: ubuntu-latest
+        if: github.event_name != 'schedule'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@master
@@ -41,6 +43,7 @@ jobs:
     coding-style:
         name: Coding Style
         runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@master
@@ -71,6 +74,7 @@ jobs:
     tests:
         name: PHP ${{ matrix.php }}
         runs-on: ubuntu-latest
+        if: github.event_name != 'push'
         strategy:
             fail-fast: false
             matrix:
@@ -111,6 +115,7 @@ jobs:
     prefer-lowest:
         name: Prefer Lowest
         runs-on: ubuntu-latest
+        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@master
@@ -143,6 +148,7 @@ jobs:
     bundles:
         name: Bundles
         runs-on: ubuntu-latest
+        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@master
@@ -182,6 +188,7 @@ jobs:
     windows:
         name: Windows
         runs-on: windows-latest
+        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@master
@@ -215,7 +222,6 @@ jobs:
         name: Monorepo Split
         runs-on: ubuntu-latest
         if: github.event_name == 'push'
-        needs: [coding-style, tests, prefer-lowest, bundles, windows]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@master
