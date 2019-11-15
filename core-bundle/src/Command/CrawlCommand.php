@@ -18,6 +18,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\ChunkInterface;
@@ -79,7 +80,9 @@ class CrawlCommand extends Command
             return 1;
         }
 
-        $escargot = $escargot->withLogger($this->createSourceProvidingConsoleLogger($output->section()));
+        $logOutput = $output instanceof ConsoleOutput ? $output->section() : $output;
+
+        $escargot = $escargot->withLogger($this->createSourceProvidingConsoleLogger($logOutput));
         $escargot = $escargot->withConcurrency((int) $input->getOption('concurrency'));
         $escargot = $escargot->withRequestDelay((int) $input->getOption('delay'));
 
@@ -130,7 +133,9 @@ class CrawlCommand extends Command
 
     private function addProgressBar(Escargot $escargot, OutputInterface $output): void
     {
-        $progressBar = new ProgressBar($output->section());
+        $processOutput = $output instanceof ConsoleOutput ? $output->section() : $output;
+
+        $progressBar = new ProgressBar($processOutput);
         $progressBar->setFormat("%title%\n%current%/%max% [%bar%] %percent:3s%%");
         $progressBar->setMessage('Starting to crawl...', 'title');
 

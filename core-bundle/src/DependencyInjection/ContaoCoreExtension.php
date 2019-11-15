@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Picker\PickerProviderInterface;
-use Contao\CoreBundle\Search\EventListener\EscargotEventSubscriber;
+use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriber;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
@@ -99,7 +99,7 @@ class ContaoCoreExtension extends Extension
         ;
 
         $container
-            ->registerForAutoconfiguration(EscargotEventSubscriber::class)
+            ->registerForAutoconfiguration(EscargotSubscriber::class)
             ->addTag('contao.escargot_subscriber')
         ;
     }

@@ -55,7 +55,7 @@ class Factory
     /**
      * @var array
      */
-    private $proxy;
+    private $defaultHttpClientOptions;
 
     public function __construct(Connection $connection, ContaoFramework $framework, array $additionalUris = [], array $defaultHttpClientOptions = [])
     {
@@ -89,6 +89,9 @@ class Factory
         );
     }
 
+    /**
+     * @return array<string>
+     */
     public function getSubscriberNames(): array
     {
         return array_map(
@@ -104,7 +107,7 @@ class Factory
         return new LazyQueue(new InMemoryQueue(), new DoctrineQueue(
             $this->connection,
             static function () {
-                return (string) Uuid::uuid4();
+                return Uuid::uuid4()->toString();
             },
             'tl_search_index_queue'
         ));
@@ -137,8 +140,10 @@ class Factory
 
         $collection = new BaseUriCollection();
 
-        /** @var array<PageModel> $rootPages */
-        $rootPages = $this->framework->getAdapter(PageModel::class)->findPublishedRootPages();
+        /** @var PageModel $pageModel */
+        $pageModel = $this->framework->getAdapter(PageModel::class);
+
+        $rootPages = $pageModel->findPublishedRootPages();
 
         if (null === $rootPages) {
             return $collection;
