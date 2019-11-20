@@ -495,6 +495,7 @@ class Versions extends \Controller
 				// Get the order fields
 				$objDcaExtractor = \DcaExtractor::getInstance($this->strTable);
 				$arrFields = $objDcaExtractor->getFields();
+				$arrOrderFields = $objDcaExtractor->getOrderFields();
 
 				// Find the changed fields and highlight the changes
 				foreach ($to as $k=>$v)
@@ -515,7 +516,7 @@ class Versions extends \Controller
 							$from[$k] = \Encryption::decrypt($from[$k]);
 						}
 
-						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'])
+						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] || \in_array($k, $arrOrderFields))
 						{
 							if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['csv']))
 							{
@@ -558,7 +559,7 @@ class Versions extends \Controller
 
 							if (\Validator::isBinaryUuid($from[$k]))
 							{
-								$to[$k] = \StringUtil::binToUuid($from[$k]);
+								$from[$k] = \StringUtil::binToUuid($from[$k]);
 							}
 						}
 
