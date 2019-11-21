@@ -711,7 +711,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.cache.clear_internal');
 
         $this->assertSame(ContaoCacheClearer::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
+        $this->assertTrue($definition->isPublic());
         $this->assertSame('filesystem', (string) $definition->getArgument(0));
 
         $tags = $definition->getTags();
@@ -726,7 +726,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.cache.warm_internal');
 
         $this->assertSame(ContaoCacheWarmer::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
+        $this->assertTrue($definition->isPublic());
         $this->assertSame('filesystem', (string) $definition->getArgument(0));
         $this->assertSame('contao.resource_finder', (string) $definition->getArgument(1));
         $this->assertSame('contao.resource_locator', (string) $definition->getArgument(2));
