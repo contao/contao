@@ -761,6 +761,11 @@ class tl_module extends Contao\Backend
 	 */
 	public function getModuleTemplates(Contao\DataContainer $dc)
 	{
+		if (Contao\Input::get('act') == 'overrideAll')
+		{
+			return $this->getTemplateGroup('mod_');
+		}
+
 		return $this->getTemplateGroup('mod_' . $dc->activeRecord->type . '_');
 	}
 

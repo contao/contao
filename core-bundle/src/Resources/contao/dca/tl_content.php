@@ -1463,6 +1463,11 @@ class tl_content extends Contao\Backend
 	 */
 	public function getElementTemplates(Contao\DataContainer $dc)
 	{
+		if (Contao\Input::get('act') == 'overrideAll')
+		{
+			return $this->getTemplateGroup('ce_');
+		}
+
 		return $this->getTemplateGroup('ce_' . $dc->activeRecord->type . '_');
 	}
 
