@@ -1262,7 +1262,7 @@ abstract class Widget extends Controller
 		$arrAttributes['name'] = $strName;
 		$arrAttributes['strField'] = $strField;
 		$arrAttributes['strTable'] = $strTable;
-		$arrAttributes['label'] = (($label = \is_array($arrData['label']) ? $arrData['label'][0] : $arrData['label']) != false) ? $label : $strField;
+		$arrAttributes['label'] = (($label = \is_array($arrData['label']) ? $arrData['label'][0] : $arrData['label']) !== false) ? $label : $strField;
 		$arrAttributes['description'] = $arrData['label'][1];
 		$arrAttributes['type'] = $arrData['inputType'];
 		$arrAttributes['dataContainer'] = $objDca;
