@@ -319,20 +319,6 @@ class DcaSchemaProvider
                 $flags[] = 'fulltext';
             }
 
-            // Backwards compatibility for doctrine/dbal <2.9
-            if (array_filter($lengths) && !method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
-                $columns = array_combine(
-                    $columns,
-                    array_map(
-                        static function ($column, $length) {
-                            return $column.($length ? '('.$length.')' : '');
-                        },
-                        $columns,
-                        $lengths
-                    )
-                );
-            }
-
             $table->addIndex($columns, $matches[2], $flags, ['lengths' => $lengths]);
         }
     }
