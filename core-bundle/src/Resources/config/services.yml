@@ -57,6 +57,7 @@ services:
             - '@filesystem'
         tags:
             - { name: kernel.cache_clearer }
+        public: true
 
     contao.cache.warm_internal:
         class: Contao\CoreBundle\Cache\ContaoCacheWarmer
@@ -69,6 +70,7 @@ services:
             - '@contao.framework'
         tags:
             - { name: kernel.cache_warmer }
+        public: true
 
     contao.controller.backend_csv_import:
         class: Contao\CoreBundle\Controller\BackendCsvImportController
