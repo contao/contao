@@ -55,7 +55,7 @@ class ExceptionConverterListener
      */
     public function onKernelException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
         $class = $this->getTargetClass($exception);
 
         if (null === $class) {
@@ -63,7 +63,7 @@ class ExceptionConverterListener
         }
 
         if (null !== ($httpException = $this->convertToHttpException($exception, $class))) {
-            $event->setException($httpException);
+            $event->setThrowable($httpException);
         }
     }
 

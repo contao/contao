@@ -51,10 +51,12 @@ class SetDotEnvCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $dotenv = new DotenvDumper($this->projectDir.'/.env');
         $dotenv->setParameter($input->getArgument('key'), $input->getArgument('value'));
         $dotenv->dump();
+
+        return 0;
     }
 }

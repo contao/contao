@@ -98,7 +98,7 @@ class InitializeController extends AbstractController
         $this->get('event_dispatcher')->dispatch($event, KernelEvents::EXCEPTION);
 
         // A listener might have replaced the exception
-        $e = $event->getException();
+        $e = $event->getThrowable();
 
         if (!$response = $event->getResponse()) {
             throw $e;

@@ -48,13 +48,15 @@ class VersionCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->write(json_encode([
             'version' => Application::VERSION,
             'commands' => $this->getCommandNames(),
             'features' => $this->getFeatures(),
         ]));
+
+        return 0;
     }
 
     /**

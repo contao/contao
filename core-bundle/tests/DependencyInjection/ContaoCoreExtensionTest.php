@@ -133,7 +133,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
-use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
+use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\LocaleListener as BaseLocaleListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -192,7 +192,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('onKernelRequest', $events['kernel.request'][1][0]);
         $this->assertSame(16, $events['kernel.request'][1][1]);
 
-        $events = ExceptionListener::getSubscribedEvents();
+        $events = ErrorListener::getSubscribedEvents();
 
         $this->assertSame('onKernelException', $events['kernel.exception'][1][0]);
         $this->assertSame(-128, $events['kernel.exception'][1][1]);

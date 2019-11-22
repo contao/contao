@@ -107,6 +107,7 @@ jobs:
               run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+                  SYMFONY_DEPRECATIONS_HELPER: disabled=1
 
     prefer-lowest:
         name: Prefer Lowest
@@ -140,6 +141,7 @@ jobs:
               run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+                  SYMFONY_DEPRECATIONS_HELPER: disabled=1
 
     bundles:
         name: Bundles
