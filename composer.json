@@ -155,7 +155,7 @@
         "phpstan/phpstan-symfony": "^0.11.6",
         "phpunit/phpunit": "^8.4",
         "symfony/browser-kit": "4.4.*",
-        "symfony/phpunit-bridge": "^4.3.4"
+        "symfony/phpunit-bridge": "4.4.*"
     },
     "extra": {
         "branch-alias": {
@@ -173,7 +173,7 @@
             "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
         },
         "symfony": {
-            "require": "^4.3"
+            "require": "^4.4"
         }
     },
     "autoload": {

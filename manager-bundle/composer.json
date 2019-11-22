@@ -58,7 +58,7 @@
         "composer/composer": "^1.0",
         "contao/test-case": "^4.0",
         "phpunit/phpunit": "^8.4",
-        "symfony/phpunit-bridge": "^4.3.4"
+        "symfony/phpunit-bridge": "4.4.*"
     },
     "suggest": {
         "contao/tcpdf-bundle": "To export articles as PDF files"
@@ -69,7 +69,7 @@
         },
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
         "symfony": {
-            "require": "^4.3"
+            "require": "^4.4"
         }
     },
     "autoload": {

@@ -125,7 +125,7 @@
         "php-http/guzzle6-adapter": "^1.1",
         "phpunit/phpunit": "^8.4",
         "symfony/browser-kit": "4.4.*",
-        "symfony/phpunit-bridge": "^4.3.4"
+        "symfony/phpunit-bridge": "4.4.*"
     },
     "suggest": {
         "contao/tcpdf-bundle": "To export articles as PDF files",
@@ -137,7 +137,7 @@
         },
         "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin",
         "symfony": {
-            "require": "^4.3"
+            "require": "^4.4"
         }
     },
     "autoload": {
