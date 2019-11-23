@@ -36,7 +36,7 @@ class BackendAccessVoterTest extends TestCase
     public function testAbstainsIfExpressionLanguageAttribute(): void
     {
         $token = $this->createMock(TokenInterface::class);
-        $attributes = [new Expression('!is_granted(ROLE_MEMBER)')];
+        $attributes = [new Expression('!is_granted("ROLE_MEMBER")')];
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, 'foo', $attributes));
     }
