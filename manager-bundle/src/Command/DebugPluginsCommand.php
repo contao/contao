@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Command;
 
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
+use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerPlugin\Api\ApiPluginInterface;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
@@ -22,7 +23,6 @@ use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
-use Contao\ManagerPlugin\PluginLoader;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableCell;
@@ -33,39 +33,26 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 class DebugPluginsCommand extends Command
 {
     protected static $defaultName = 'debug:plugins';
 
     /**
-     * @var PluginLoader
-     */
-    private $pluginLoader;
-
-    /**
-     * @var KernelInterface
+     * @var ContaoKernel
      */
     private $kernel;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
 
     /**
      * @var SymfonyStyle
      */
     private $io;
 
-    public function __construct(PluginLoader $pluginLoader, KernelInterface $kernel, string $projectDir)
+    public function __construct(ContaoKernel $kernel)
     {
         parent::__construct();
 
-        $this->pluginLoader = $pluginLoader;
         $this->kernel = $kernel;
-        $this->projectDir = $projectDir;
     }
 
     /**
@@ -120,7 +107,7 @@ class DebugPluginsCommand extends Command
         ];
 
         $rows = [];
-        $plugins = $this->pluginLoader->getInstances();
+        $plugins = $this->kernel->getPluginLoader()->getInstances();
         $check = '\\' === \DIRECTORY_SEPARATOR ? '1' : "\xE2\x9C\x94"; // HEAVY CHECK MARK (U+2714)
 
         foreach ($plugins as $packageName => $plugin) {
@@ -159,7 +146,7 @@ class DebugPluginsCommand extends Command
                 $reflection = new \ReflectionClass($class);
 
                 if (is_dir($dir = \dirname($reflection->getFileName()).'/Resources/contao')) {
-                    $path = (new Filesystem())->makePathRelative($dir, $this->projectDir);
+                    $path = (new Filesystem())->makePathRelative($dir, $this->kernel->getProjectDir());
                 }
             }
 
@@ -242,7 +229,7 @@ class DebugPluginsCommand extends Command
 
     private function findPlugin(string $name): ?array
     {
-        $plugins = $this->pluginLoader->getInstances();
+        $plugins = $this->kernel->getPluginLoader()->getInstances();
 
         if (isset($plugins[$name])) {
             return [$name, $plugins[$name]];
