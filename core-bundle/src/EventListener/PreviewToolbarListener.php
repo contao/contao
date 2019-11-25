@@ -52,7 +52,7 @@ class PreviewToolbarListener
 
     public function onKernelResponse(ResponseEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
+        if (!$this->scopeMatcher->isFrontendMasterRequest($event)) {
             return;
         }
 
