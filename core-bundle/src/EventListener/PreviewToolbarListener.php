@@ -86,7 +86,7 @@ class PreviewToolbarListener
     {
         $content = $response->getContent();
 
-        if (false === strpos($content, '<body')) {
+        if (false === stripos($content, '<body')) {
             return;
         }
 
@@ -99,7 +99,7 @@ class PreviewToolbarListener
         );
 
         $content = preg_replace(
-            '/<body[\\s\\S]*?>/',
+            '/<body.*?>/is',
             "\$0\n".$toolbar."\n",
             $content
         );
