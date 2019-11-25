@@ -241,7 +241,7 @@ class DebugPluginsCommand extends Command
             }
         }
 
-        $this->io->error(sprintf('No plugin with class or package name "%s" was found', $name));
+        $this->io->error(sprintf('No plugin with the class or package name "%s" found.', $name));
 
         return null;
     }
