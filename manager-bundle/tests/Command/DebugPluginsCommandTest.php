@@ -25,6 +25,7 @@ use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerBundle\Tests\Fixtures\ContaoManager\Plugin as FixturesPlugin;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\NewsBundle\ContaoManager\Plugin as NewsBundlePlugin;
+use Contao\NewsBundle\ContaoNewsBundle;
 use Contao\NewsletterBundle\ContaoManager\Plugin as NewsletterBundlePlugin;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -52,7 +53,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute($arguments);
 
-        $this->assertSame($expectedOutput, $commandTester->getDisplay());
+        $this->assertSame($expectedOutput, $commandTester->getDisplay(true));
     }
 
     public function commandOutputProvider(): \Generator
@@ -97,7 +98,10 @@ class DebugPluginsCommandTest extends ContaoTestCase
 
         yield 'Lists the bundles in loading order' => [
             [],
-            [new ContaoCoreBundle()],
+            [
+                new ContaoCoreBundle(),
+                new ContaoNewsBundle(),
+            ],
             ['--bundles' => true],
             $this->getLoadingOrderOutput(),
         ];
@@ -114,7 +118,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
 
         $this->assertSame(
             '[ERROR] The "Contao\ManagerBundle\Tests\Fixtures\ContaoManager\Plugin" plugin does not implement the "Contao\ManagerPlugin\Bundle\BundlePluginInterface" interface.',
-            $this->normalizeDisplay($commandTester->getDisplay())
+            $this->normalizeDisplay($commandTester->getDisplay(true))
         );
     }
 
@@ -129,7 +133,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
 
         $this->assertSame(
             '[ERROR] No plugin with the class or package name "foo/baz-bundle" found.',
-            $this->normalizeDisplay($commandTester->getDisplay())
+            $this->normalizeDisplay($commandTester->getDisplay(true))
         );
     }
 
@@ -174,7 +178,9 @@ class DebugPluginsCommandTest extends ContaoTestCase
 
     private function getPluginsOutput(): string
     {
-        return <<<'OUTPUT'
+        $check = '\\' === \DIRECTORY_SEPARATOR ? '1' : "\xE2\x9C\x94";
+
+        return <<<OUTPUT
 
 Contao Manager Plugins
 ======================
@@ -184,15 +190,15 @@ Contao Manager Plugins
  ------------------------------------------------ ---------------------------- -------- --------- -------- ----------- ----------- ----- 
                                                                                 Bundle   Routing   Config   Extension   Dependent   API  
  ------------------------------------------------ ---------------------------- -------- --------- -------- ----------- ----------- ----- 
-  Contao\CoreBundle\ContaoManager\Plugin           contao/core-bundle           ✔        ✔                                               
-  Contao\CalendarBundle\ContaoManager\Plugin       contao/calendar-bundle       ✔                                                        
-  Contao\CommentsBundle\ContaoManager\Plugin       contao/comments-bundle       ✔                                                        
-  Contao\FaqBundle\ContaoManager\Plugin            contao/faq-bundle            ✔                                                        
-  Contao\InstallationBundle\ContaoManager\Plugin   contao/installation-bundle   ✔        ✔                                               
-  Contao\ListingBundle\ContaoManager\Plugin        contao/listing-bundle        ✔                                                        
-  Contao\NewsBundle\ContaoManager\Plugin           contao/news-bundle           ✔                                                        
-  Contao\NewsletterBundle\ContaoManager\Plugin     contao/newsletter-bundle     ✔                                                        
-  Contao\ManagerBundle\ContaoManager\Plugin        contao/manager-bundle        ✔        ✔         ✔        ✔           ✔           ✔    
+  Contao\\CoreBundle\\ContaoManager\\Plugin           contao/core-bundle           $check        $check                                               
+  Contao\\CalendarBundle\\ContaoManager\\Plugin       contao/calendar-bundle       $check                                                        
+  Contao\\CommentsBundle\\ContaoManager\\Plugin       contao/comments-bundle       $check                                                        
+  Contao\\FaqBundle\\ContaoManager\\Plugin            contao/faq-bundle            $check                                                        
+  Contao\\InstallationBundle\\ContaoManager\\Plugin   contao/installation-bundle   $check        $check                                               
+  Contao\\ListingBundle\\ContaoManager\\Plugin        contao/listing-bundle        $check                                                        
+  Contao\\NewsBundle\\ContaoManager\\Plugin           contao/news-bundle           $check                                                        
+  Contao\\NewsletterBundle\\ContaoManager\\Plugin     contao/newsletter-bundle     $check                                                        
+  Contao\\ManagerBundle\\ContaoManager\\Plugin        contao/manager-bundle        $check        $check         $check        $check           $check           $check    
  ------------------------------------------------ ---------------------------- -------- --------- -------- ----------- ----------- ----- 
 
 
@@ -202,7 +208,9 @@ OUTPUT
 
     private function getTestPluginOutput(): string
     {
-        return <<<'OUTPUT'
+        $check = '\\' === \DIRECTORY_SEPARATOR ? '1' : "\xE2\x9C\x94";
+
+        return <<<OUTPUT
 
 Contao Manager Plugins
 ======================
@@ -212,7 +220,7 @@ Contao Manager Plugins
  ---------------------------------------------------------- ------------------ -------- --------- -------- ----------- ----------- ----- 
                                                                                 Bundle   Routing   Config   Extension   Dependent   API  
  ---------------------------------------------------------- ------------------ -------- --------- -------- ----------- ----------- ----- 
-  Contao\ManagerBundle\Tests\Fixtures\ContaoManager\Plugin   foo/bar-bundle                                 ✔                            
+  Contao\\ManagerBundle\\Tests\\Fixtures\\ContaoManager\\Plugin   foo/bar-bundle                                 $check                            
  ---------------------------------------------------------- ------------------ -------- --------- -------- ----------- ----------- ----- 
 
 
@@ -272,6 +280,7 @@ Registered Bundles in Loading Order
   Bundle Name        Contao Resources Path                     
  ------------------ ------------------------------------------ 
   ContaoCoreBundle   contao/core-bundle/src/Resources/contao/  
+  ContaoNewsBundle   contao/news-bundle/src/Resources/contao/  
  ------------------ ------------------------------------------ 
 
 
