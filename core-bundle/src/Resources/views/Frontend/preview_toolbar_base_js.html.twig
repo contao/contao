@@ -5,12 +5,21 @@
         font: 400 .875rem/1 -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
         color: #444;
         background: #f2f2f2;
-        padding: 3px 6px;
         overflow: hidden;
-        text-align: right;
         position: sticky;
         top: 0;
         z-index: 99999;
+        display: grid;
+        grid-template: auto / 1fr auto;
+    }
+
+    .cto-toolbar--hidden {
+        position: fixed;
+        right: 0;
+    }
+
+    .cto-toolbar--hidden form {
+        display: none;
     }
 
     .cto-toolbar.ajax-loading .formbody {
@@ -22,6 +31,8 @@
         display: flex;
         align-items: baseline;
         justify-content: flex-end;
+        padding: .33em 0;
+        margin-right: .5em;
     }
 
     .cto-toolbar .formbody > div {
@@ -83,12 +94,28 @@
         color: #aaa;
     }
 
-    .cto-toolbar .close {
-        font-size: 1rem;
-        color: #999;
+    .cto-toolbar__close {
+        border-left: 1px solid #dddddd;
+    }
+
+    .cto-toolbar__close a {
+        width: 1.5em;
         font-weight: 600;
-        padding: 0 2px 0 3px;
-        vertical-align: text-bottom;
+        font-size: 2em;
+        color: #444444;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        height: 1.5em;
+        line-height: 1.45em;
+    }
+
+    .cto-toolbar__close a:hover {
+        background: rgba(0, 0, 0, .03);
+    }
+
+    .cto-toolbar__close a:hover {
+        color: #666666;
     }
 </style>
 <script>/*<![CDATA[*/
@@ -169,6 +196,12 @@
                     }, false);
                 });
             }
+
+            // Collapse toolbar
+            toolbar.querySelector('.cto-toolbar__close').addEventListener('click', function (e) {
+                e.preventDefault();
+                toolbar.classList.toggle('cto-toolbar--hidden');
+            });
         });
     })();
     /*]]>*/</script>

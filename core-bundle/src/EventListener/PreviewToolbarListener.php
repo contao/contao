@@ -76,10 +76,7 @@ class PreviewToolbarListener
             return;
         }
 
-        try {
-            $this->injectToolbar($response, $request);
-        } catch (TwigError $e) {
-        }
+        $this->injectToolbar($response, $request);
     }
 
     /**

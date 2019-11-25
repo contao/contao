@@ -94,7 +94,11 @@ class BackendPreviewSwitchController
         }
 
         if ($request->isMethod('GET')) {
-            $toolbar = $this->renderToolbar($user);
+            try {
+                $toolbar = $this->renderToolbar($user);
+            } catch (TwigError $e) {
+                return Response::create('', Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
 
             return Response::create($toolbar);
         }
@@ -111,7 +115,7 @@ class BackendPreviewSwitchController
             return JsonResponse::create($data);
         }
 
-        return Response::create('', 404);
+        return Response::create('', Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
