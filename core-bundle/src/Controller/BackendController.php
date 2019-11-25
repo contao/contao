@@ -154,18 +154,6 @@ class BackendController extends AbstractController
     }
 
     /**
-     * @Route("/contao/switch", name="contao_backend_switch")
-     */
-    public function switchAction(): Response
-    {
-        $this->get('contao.framework')->initialize();
-
-        $controller = new BackendSwitch();
-
-        return $controller->run();
-    }
-
-    /**
      * @Route("/contao/alerts", name="contao_backend_alerts")
      */
     public function alertsAction(): Response
