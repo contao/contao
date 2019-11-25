@@ -50,16 +50,18 @@ class RemoveDotEnvCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $file = $this->projectDir.'/.env';
 
         if (!file_exists($file)) {
-            return;
+            return 0;
         }
 
         $dotenv = new DotenvDumper($file);
         $dotenv->unsetParameter($input->getArgument('key'));
         $dotenv->dump();
+
+        return 0;
     }
 }

@@ -50,7 +50,7 @@ class SetConfigCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $data = @json_decode($input->getArgument('json'), true);
 
@@ -59,5 +59,7 @@ class SetConfigCommand extends Command
         }
 
         $this->managerConfig->write($data);
+
+        return 0;
     }
 }
