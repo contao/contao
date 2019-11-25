@@ -21,7 +21,6 @@ use Contao\BackendMain;
 use Contao\BackendPage;
 use Contao\BackendPassword;
 use Contao\BackendPopup;
-use Contao\BackendPreview;
 use Contao\BackendSwitch;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
@@ -90,24 +89,6 @@ class BackendController extends AbstractController
         $this->get('contao.framework')->initialize();
 
         $controller = new BackendPassword();
-
-        return $controller->run();
-    }
-
-    /**
-     * @Route("/contao/preview", name="contao_backend_preview")
-     */
-    public function previewAction(Request $request): Response
-    {
-        $previewScript = $this->getParameter('contao.preview_script');
-
-        if ($request->getScriptName() !== $previewScript) {
-            return $this->redirect($previewScript.$request->getRequestUri());
-        }
-
-        $this->get('contao.framework')->initialize();
-
-        $controller = new BackendPreview();
 
         return $controller->run();
     }

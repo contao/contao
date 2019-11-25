@@ -1,0 +1,174 @@
+<div class="cto-toolbar"></div>
+
+<style>
+    .cto-toolbar {
+        font: 400 .875rem/1 -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+        color: #444;
+        background: #f2f2f2;
+        padding: 3px 6px;
+        overflow: hidden;
+        text-align: right;
+        position: sticky;
+        top: 0;
+        z-index: 99999;
+    }
+
+    .cto-toolbar.ajax-loading .formbody {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    .cto-toolbar .formbody {
+        display: flex;
+        align-items: baseline;
+        justify-content: flex-end;
+    }
+
+    .cto-toolbar .formbody > div {
+        display: flex;
+        align-items: baseline;
+        margin-left: 1em;
+    }
+
+    .cto-toolbar label {
+        width: auto;
+        margin: 0 .25em 0 0;
+        font-weight: 500;
+    }
+
+    .cto-toolbar input[type="text"] {
+        margin: 0;
+        box-sizing: border-box;
+        padding: 5px 6px 6px;
+        border: 1px solid #aaa;
+        border-radius: 2px;
+        background-color: #fff;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+    }
+
+    .cto-toolbar .tl_select {
+        margin: 0;
+        box-sizing: border-box;
+        border: 1px solid #aaa;
+        padding: 5px 22px 6px 6px;
+        border-radius: 2px;
+        background: #fff url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDUwMCA1MDAiPjxsaW5lYXJHcmFkaWVudCBpZD0iYSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIxMzEuNTIzIiB5MT0iNDIuNjMiIHgyPSIzNjguNDc4IiB5Mj0iMjc5LjU4NCI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYjNiM2IzIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOTk5Ii8+PC9saW5lYXJHcmFkaWVudD48cGF0aCBmaWxsPSJ1cmwoI2EpIiBkPSJNMjUwIDM5Ni42NjZjLTEuMTU1IDAtNC4xMS0xLjgzMi03LjExMy02Ljc1bC0xNjkuNi0yNzcuNDU1Yy0yLjUxNy00LjExNC0zLjE5LTYuOTgtMy4yOC04LjMxNC44MjctLjMzIDIuNTY1LS44MTIgNS42MjctLjgxMmgzNDguNzMzYzMuMDYzIDAgNC43OTguNDgyIDUuNjI3LjgxMi0uMDkgMS4zMzQtLjc2NiA0LjItMy4yOCA4LjMxNWwtMTY5LjYgMjc3LjQ1N2MtMy4wMDUgNC45MTctNS45NiA2Ljc1LTcuMTE0IDYuNzV6Ii8+PC9zdmc+) right -16px center no-repeat;
+        background-origin: content-box;
+        cursor: pointer;
+        text-transform: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+    }
+
+    .cto-toolbar .tl_submit {
+        padding: .175em 1em;
+        border: 1px solid #aaa;
+        border-radius: 2px;
+        box-sizing: border-box;
+        cursor: pointer;
+        background: #eee;
+        transition: background .2s ease;
+        font-family: inherit;
+        font-size: 1em;
+        margin-left: 1em;
+    }
+
+    .cto-toolbar .tl_submit:hover {
+        color: inherit;
+        background-color: #f6f6f6;
+    }
+
+    .cto-toolbar .tl_submit:active {
+        color: #aaa;
+    }
+
+    .cto-toolbar .close {
+        font-size: 1rem;
+        color: #999;
+        font-weight: 600;
+        padding: 0 2px 0 3px;
+        vertical-align: text-bottom;
+    }
+</style>
+<script>/*<![CDATA[*/
+    (function () {
+        const toolbar = document.querySelector('.cto-toolbar');
+
+        function request(method, uri, body, callback, addClass = true) {
+            body = body || null;
+            const request = new XMLHttpRequest();
+            request.open(method, uri, true);
+            request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+            if (addClass) {
+                toolbar.classList.add('ajax-loading');
+            }
+
+            request.onload = function () {
+                toolbar.classList.remove('ajax-loading');
+
+                callback.apply(this);
+            };
+            request.send(body)
+        }
+
+        // Fetch toolbar
+        request('GET', '{{ action }}', null, function () {
+            if (200 === this.status) {
+                toolbar.innerHTML = this.responseText;
+
+                const event = new Event('cto-toolbar-loaded');
+                window.dispatchEvent(event);
+            } else {
+                toolbar.innerHTML = '<p>Error while loading the preview bar.</p>';
+            }
+        });
+
+        // Js for the authenticator
+        window.addEventListener("cto-toolbar-loaded", function () {
+            const form = toolbar.querySelector('input[name="FORM_SUBMIT"][value="tl_switch"]').form;
+            if (!form) {
+                return;
+            }
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const formData = new FormData(form);
+
+                request('POST', form.action, formData, function () {
+                    if (200 === this.status) {
+                        location.reload();
+                    } else {
+                        location.reload();
+                    }
+                });
+            });
+
+            if (document.createElement('datalist') && window.HTMLDataListElement) {
+                const userField = form.querySelector('input[name="user"]');
+                const userList = form.querySelector('datalist[id="userlist"]');
+
+                userField.addEventListener('keyup', function () {
+                    if (userField.value.length < 2) {
+                        return;
+                    }
+
+                    const body = {
+                        FORM_SUBMIT: 'datalist_members',
+                        REQUEST_TOKEN: form.querySelector('input[name="REQUEST_TOKEN"]').value,
+                        value: userField.value
+                    };
+
+                    request('POST', form.action, new URLSearchParams(body), function () {
+                        userList.innerHTML = '';
+                        JSON.parse(this.response).forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item;
+                            userList.appendChild(option);
+                        });
+                    }, false);
+                });
+            }
+        });
+    })();
+    /*]]>*/</script>

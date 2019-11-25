@@ -132,6 +132,16 @@ services:
             # The priority must be higher than the one of the Twig exception listener (defaults to -128)
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: -96 }
 
+    contao.listener.preview_bar:
+        class: Contao\CoreBundle\EventListener\PreviewToolbarListener
+        arguments:
+            - '%contao.preview_script%'
+            - '@contao.routing.scope_matcher'
+            - '@twig'
+            - '@router'
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener
         arguments:
