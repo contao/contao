@@ -238,12 +238,29 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             case 'contao':
                 return $this->handlePrependLocale($extensionConfigs, $container);
 
+            case 'framework':
+                if (!isset($_SERVER['APP_SECRET'])) {
+                    $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
+                }
+
+                return $extensionConfigs;
+
             case 'doctrine':
+                if (!isset($_SERVER['DATABASE_URL'])) {
+                    $container->setParameter('env(DATABASE_URL)', $this->getDatabaseUrl($container));
+                }
+
                 return $this->addDefaultServerVersion($extensionConfigs, $container);
 
-            default:
-                return $extensionConfigs;
+            case 'swiftmailer':
+                if (!isset($_SERVER['MAILER_URL'])) {
+                    $container->setParameter('env(MAILER_URL)', $this->getMailerUrl($container));
+                }
+
+                return $this->checkMailerTransport($extensionConfigs, $container);
         }
+
+        return $extensionConfigs;
     }
 
     /**
@@ -291,10 +308,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $params = array_merge(...$params);
         }
 
-        $parameterBag = $container->getParameterBag();
-
         foreach ($params as $key => $value) {
-            $params[$key] = $parameterBag->resolveValue($value);
+            $params[$key] = $container->resolveEnvPlaceholders($value, true);
         }
 
         // If there are no DB credentials yet (install tool), we have to set
@@ -316,5 +331,82 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         return $extensionConfigs;
+    }
+
+    /**
+     * Changes the mail transport from "mail" to "sendmail".
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function checkMailerTransport(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        if ('mail' === $container->getParameter('mailer_transport')) {
+            $container->setParameter('mailer_transport', 'sendmail');
+        }
+
+        return $extensionConfigs;
+    }
+
+    private function getDatabaseUrl(ContainerBuilder $container): string
+    {
+        $userPassword = '';
+
+        if ($user = $container->getParameter('database_user')) {
+            $userPassword = $user;
+
+            if ($password = $container->getParameter('database_password')) {
+                $userPassword .= ':'.$password;
+            }
+
+            $userPassword .= '@';
+        }
+
+        $dbName = '';
+
+        if ($name = $container->getParameter('database_name')) {
+            $dbName = '/'.$name;
+        }
+
+        return sprintf(
+            'mysql://%s%s:%s%s',
+            $userPassword,
+            $container->getParameter('database_host'),
+            $container->getParameter('database_port'),
+            $dbName
+        );
+    }
+
+    private function getMailerUrl(ContainerBuilder $container): string
+    {
+        if ('sendmail' === $container->getParameter('mailer_transport')) {
+            return 'sendmail://localhost';
+        }
+
+        $parameters = [];
+
+        if ($user = $container->getParameter('mailer_user')) {
+            $parameters[] = 'username='.rawurlencode($user);
+
+            if ($password = $container->getParameter('mailer_password')) {
+                $parameters[] = 'password='.rawurlencode($password);
+            }
+        }
+
+        if ($encryption = $container->getParameter('mailer_encryption')) {
+            $parameters[] = 'encryption='.rawurlencode($encryption);
+        }
+
+        $qs = '';
+
+        if (!empty($parameters)) {
+            $qs = '?'.implode('&', $parameters);
+        }
+
+        return sprintf(
+            'smtp://%s:%s%s',
+            rawurlencode($container->getParameter('mailer_host')),
+            (int) $container->getParameter('mailer_port'),
+            $qs
+        );
     }
 }
