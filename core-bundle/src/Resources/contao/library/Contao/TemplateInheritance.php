@@ -92,6 +92,11 @@ trait TemplateInheritance
 
 			try
 			{
+				if (!file_exists($strParent))
+				{
+					throw new \Exception('Invalid template path: ' . $strParent); // see #798
+				}
+
 				include $strParent;
 
 				// Capture the output of the root template
