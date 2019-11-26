@@ -14,9 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -44,11 +42,6 @@ class DebugFragmentsCommand extends Command
      */
     private $io;
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function add(string $identifier, FragmentConfig $config, array $attributes)
     {
         $this->identifiers[] = $identifier;
@@ -62,11 +55,7 @@ class DebugFragmentsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDefinition([
-                new InputArgument('name', InputArgument::OPTIONAL, 'The plugin class or package name'),
-            ])
-            ->addOption('bundles', null, InputOption::VALUE_NONE, 'List all bundles or bundles config of the specified plugin')
-            ->setDescription('Displays the configuration of Contao Manager plugins.')
+            ->setDescription('Displays the fragment controller configuration.')
         ;
     }
 
@@ -91,10 +80,8 @@ class DebugFragmentsCommand extends Command
             ];
         }
 
-
         $this->io->title('Contao Fragments');
         $this->io->table(['Identifier', 'Controller', 'Renderer', 'Render Options', 'Fragment Options'], $rows);
-
 
         return 0;
     }
