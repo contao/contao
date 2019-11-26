@@ -16,13 +16,15 @@ use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Psr\Log\LogLevel;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\ChunkInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Terminal42\Escargot\CrawlUri;
 use Terminal42\Escargot\EscargotAwareInterface;
 use Terminal42\Escargot\EscargotAwareTrait;
+use Terminal42\Escargot\Subscriber\HtmlCrawlerSubscriber;
+use Terminal42\Escargot\Subscriber\RobotsSubscriber;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
+use Terminal42\Escargot\Subscriber\Util;
 
 class SearchIndexSubscriber implements EscargotSubscriber, EscargotAwareInterface
 {
@@ -51,28 +53,44 @@ class SearchIndexSubscriber implements EscargotSubscriber, EscargotAwareInterfac
         return 'search-index';
     }
 
-    public function shouldRequest(CrawlUri $crawlUri, string $currentDecision): string
+    public function shouldRequest(CrawlUri $crawlUri): string
     {
-        // We do not interfere with any decision in between. We only want to index the data that
-        // is coming in. Other subscribers decide whether it's requested or not.
-        return $currentDecision;
-    }
+        // Check the original crawlUri to see if that one contained nofollow information
+        if (null !== $crawlUri->getFoundOn() && ($originalCrawlUri = $this->escargot->getCrawlUri($crawlUri->getFoundOn()))) {
+            if ($originalCrawlUri->hasTag(RobotsSubscriber::TAG_NOFOLLOW)) {
+                $this->escargot->log(
+                    LogLevel::DEBUG,
+                    $crawlUri->createLogMessage('Do not request because when the crawl URI was found, the robots information disallowed following this URI.'),
+                    ['source' => \get_class($this)]
+                );
 
-    public function needsContent(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk, string $currentDecision): string
-    {
-        // So some other subscriber asked for the request. Great, now we want to make sure the whole
-        // content is downloaded if it's HTML.
-        if ($this->isHtml($response)) {
-            return SubscriberInterface::DECISION_POSITIVE;
+                return SubscriberInterface::DECISION_NEGATIVE;
+            }
         }
 
-        // If it's not HTML, we do not interfere with any decision taken so far.
-        return $currentDecision;
-    }
+        // Skip rel="nofollow" links
+        if ($crawlUri->hasTag(HtmlCrawlerSubscriber::TAG_REL_NOFOLLOW)) {
+            $this->escargot->log(
+                LogLevel::DEBUG,
+                $crawlUri->createLogMessage('Do not request because when the crawl URI was found, the "rel" attribute contained "nofollow".'),
+                ['source' => \get_class($this)]
+            );
 
-    public function onLastChunk(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk): void
-    {
-        // Only index URIs of the same host
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
+        // Skip the links that have the "type" attribute set and it's not text/html
+        if ($crawlUri->hasTag(HtmlCrawlerSubscriber::TAG_NO_TEXT_HTML_TYPE)) {
+            $this->escargot->log(
+                LogLevel::DEBUG,
+                $crawlUri->createLogMessage('Do not request because when the crawl URI was found, the "type" attribute was present and did not contain "text/html".'),
+                ['source' => \get_class($this)]
+            );
+
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
+        // Skip links that do not belong to our base URI collection
         if (!$this->escargot->getBaseUris()->containsHost($crawlUri->getUri()->getHost())) {
             $this->escargot->log(
                 LogLevel::DEBUG,
@@ -80,20 +98,48 @@ class SearchIndexSubscriber implements EscargotSubscriber, EscargotAwareInterfac
                 ['source' => \get_class($this)]
             );
 
-            return;
+            return SubscriberInterface::DECISION_NEGATIVE;
         }
 
-        // Only index HTML
-        if (!$this->isHtml($response)) {
+        // Let's go otherwise!
+        return SubscriberInterface::DECISION_POSITIVE;
+    }
+
+    public function needsContent(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk): string
+    {
+        // We only care about successful responses
+        if ($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
             $this->escargot->log(
                 LogLevel::DEBUG,
-                $crawlUri->createLogMessage('Did not index because it was not an HTML response.'),
+                $crawlUri->createLogMessage(sprintf(
+                    'Did not index because according to the HTTP status code the response was not successful (%s).',
+                    $response->getStatusCode()
+                )),
                 ['source' => \get_class($this)]
             );
 
-            return;
+            return SubscriberInterface::DECISION_NEGATIVE;
         }
 
+        // No HTML, no index
+        if (!Util::isOfContentType($response, 'text/html')) {
+            $this->escargot->log(
+                LogLevel::DEBUG,
+                $crawlUri->createLogMessage(
+                    'Did not index because the response did not contain a "text/html" Content-Type header.'
+                ),
+                ['source' => \get_class($this)]
+            );
+
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
+        // Let's go otherwise!
+        return SubscriberInterface::DECISION_POSITIVE;
+    }
+
+    public function onLastChunk(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk): void
+    {
         $document = new Document(
             $crawlUri->getUri(),
             $response->getStatusCode(),
@@ -145,14 +191,5 @@ class SearchIndexSubscriber implements EscargotSubscriber, EscargotAwareInterfac
         $result->addInfo('stats', $stats);
 
         return $result;
-    }
-
-    private function isHtml(ResponseInterface $response): bool
-    {
-        if (!\in_array('content-type', array_keys($response->getHeaders()), true)) {
-            return false;
-        }
-
-        return false !== strpos($response->getHeaders()['content-type'][0], 'text/html');
     }
 }

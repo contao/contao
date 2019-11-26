@@ -130,7 +130,7 @@ class FactoryTest extends TestCase
     {
         $factory = new Factory(
             $this->createMock(Connection::class),
-            $this->mockContaoFramework(),
+            $this->mockContaoFramework()
         );
 
         $subscriber1 = $this->createMock(EscargotSubscriber::class);

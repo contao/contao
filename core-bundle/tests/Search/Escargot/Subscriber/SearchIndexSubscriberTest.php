@@ -25,6 +25,8 @@ use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\CrawlUri;
 use Terminal42\Escargot\Escargot;
 use Terminal42\Escargot\Queue\InMemoryQueue;
+use Terminal42\Escargot\Subscriber\HtmlCrawlerSubscriber;
+use Terminal42\Escargot\Subscriber\RobotsSubscriber;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
 
 class SearchIndexSubscriberTest extends TestCase
@@ -35,95 +37,144 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame('search-index', $subscriber->getName());
     }
 
-    public function testDoesNotInterfereWithDecisionOnShouldRequest(): void
-    {
-        $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class));
-        $decision = $subscriber->shouldRequest(
-            $this->getCrawlUri(),
-            SubscriberInterface::DECISION_ABSTAIN
-        );
-
-        $this->assertSame(SubscriberInterface::DECISION_ABSTAIN, $decision);
-    }
-
-    public function testOnlyRequestsContentIfTheResponseContainedHtml(): void
-    {
-        $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class));
-        $decision = $subscriber->needsContent(
-            $this->getCrawlUri(),
-            $this->getResponse(false),
-            $this->createMock(ChunkInterface::class),
-            SubscriberInterface::DECISION_ABSTAIN
-        );
-
-        $this->assertSame(SubscriberInterface::DECISION_ABSTAIN, $decision);
-
-        $decision = $subscriber->needsContent(
-            $this->getCrawlUri(),
-            $this->getResponse(true),
-            $this->createMock(ChunkInterface::class),
-            SubscriberInterface::DECISION_ABSTAIN
-        );
-
-        $this->assertSame(SubscriberInterface::DECISION_POSITIVE, $decision);
-    }
-
-    public function testIgnoresIrrelevantHosts(): void
+    /**
+     * @dataProvider shouldRequestProvider
+     */
+    public function testShouldRequest(CrawlUri $crawlUri, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri $foundOnUri = null): void
     {
         $logger = $this->createMock(LoggerInterface::class);
-        $logger
-            ->expects($this->once())
-            ->method('log')
-            ->with(
-                LogLevel::DEBUG,
-                '[URI: https://example.com/ (Level: 0, Processed: no, Found on: root, Tags: none)] Did not index because it was not part of the base URI collection.',
-                ['source' => SearchIndexSubscriber::class]
-            )
-        ;
 
-        $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
+        if ('' !== $expectedLogLevel) {
+            $logger
+                ->expects($this->once())
+                ->method('log')
+                ->with(
+                    $expectedLogLevel,
+                    $expectedLogMessage,
+                    ['source' => SearchIndexSubscriber::class]
+                )
+            ;
+        } else {
+            $logger
+                ->expects($this->never())
+                ->method('log')
+            ;
+        }
+
+        $queue = new InMemoryQueue();
+        $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), $queue);
         $escargot = $escargot->withLogger($logger);
+
+        if ($foundOnUri) {
+            $queue->add($escargot->getJobId(), $foundOnUri);
+        }
 
         $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class));
         $subscriber->setEscargot($escargot);
 
-        $subscriber->onLastChunk(
-            $this->getCrawlUri('https://example.com'),
-            $this->getResponse(true),
-            $this->createMock(ChunkInterface::class)
-        );
+        $decision = $subscriber->shouldRequest($crawlUri);
+
+        $this->assertSame($expectedDecision, $decision);
     }
 
-    public function testIgnoresNonHtmlResponses(): void
+    public function shouldRequestProvider(): \Generator
     {
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger
-            ->expects($this->once())
-            ->method('log')
-            ->with(
-                LogLevel::DEBUG,
-                '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: none)] Did not index because it was not an HTML response.',
-                ['source' => SearchIndexSubscriber::class]
-            )
-        ;
+        yield 'Test skips URIs where the original URI contained a no-follow tag' => [
+            (new CrawlUri(new Uri('https://contao.org'), 1, false, new Uri('https://original.contao.org'))),
+            SubscriberInterface::DECISION_NEGATIVE,
+            LogLevel::DEBUG,
+            '[URI: https://contao.org/ (Level: 1, Processed: no, Found on: https://original.contao.org/, Tags: none)] Do not request because when the crawl URI was found, the robots information disallowed following this URI.',
+            (new CrawlUri(new Uri('https://original.contao.org'), 0, true))->addTag(RobotsSubscriber::TAG_NOFOLLOW),
+        ];
 
-        $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
-        $escargot = $escargot->withLogger($logger);
+        yield 'Test skips URIs that contained the rel-nofollow tag' => [
+            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(HtmlCrawlerSubscriber::TAG_REL_NOFOLLOW),
+            SubscriberInterface::DECISION_NEGATIVE,
+            LogLevel::DEBUG,
+            '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: rel-nofollow)] Do not request because when the crawl URI was found, the "rel" attribute contained "nofollow".',
+        ];
 
-        $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class));
-        $subscriber->setEscargot($escargot);
+        yield 'Test skips URIs that contained the no-html-type tag' => [
+            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(HtmlCrawlerSubscriber::TAG_NO_TEXT_HTML_TYPE),
+            SubscriberInterface::DECISION_NEGATIVE,
+            LogLevel::DEBUG,
+            '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: no-txt-html-type)] Do not request because when the crawl URI was found, the "type" attribute was present and did not contain "text/html".',
+        ];
 
-        $subscriber->onLastChunk(
-            $this->getCrawlUri(),
-            $this->getResponse(false),
-            $this->createMock(ChunkInterface::class)
-        );
+        yield 'Test skips URIs that do not belong to our base URI collection' => [
+            (new CrawlUri(new Uri('https://github.com'), 0)),
+            SubscriberInterface::DECISION_NEGATIVE,
+            LogLevel::DEBUG,
+            '[URI: https://github.com/ (Level: 0, Processed: no, Found on: root, Tags: none)] Did not index because it was not part of the base URI collection.',
+        ];
+
+        yield 'Test requests if everything is okay' => [
+            (new CrawlUri(new Uri('https://contao.org/foobar'), 0)),
+            SubscriberInterface::DECISION_POSITIVE,
+        ];
     }
 
     /**
-     * @dataProvider passesOnDocumentToIndexerCorrectlyProvider
+     * @dataProvider needsContentProvider
      */
-    public function testPassesOnDocumentToIndexerCorrectly(IndexerException $indexerException = null, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats): void
+    public function testNeedsContent(ResponseInterface $response, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = ''): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+
+        if ('' !== $expectedLogLevel) {
+            $logger
+                ->expects($this->once())
+                ->method('log')
+                ->with(
+                    $expectedLogLevel,
+                    $expectedLogMessage,
+                    ['source' => SearchIndexSubscriber::class]
+                )
+            ;
+        } else {
+            $logger
+                ->expects($this->never())
+                ->method('log')
+            ;
+        }
+
+        $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
+        $escargot = $escargot->withLogger($logger);
+
+        $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class));
+        $subscriber->setEscargot($escargot);
+
+        $decision = $subscriber->needsContent(new CrawlUri(new Uri('https://contao.org'), 0), $response, $this->createMock(ChunkInterface::class));
+
+        $this->assertSame($expectedDecision, $decision);
+    }
+
+    public function needsContentProvider(): \Generator
+    {
+        yield 'Test skips responses that were not successful' => [
+            $this->getResponse(true, 404),
+            SubscriberInterface::DECISION_NEGATIVE,
+            LogLevel::DEBUG,
+            '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: none)] Did not index because according to the HTTP status code the response was not successful (404).',
+        ];
+
+        yield 'Test skips responses that were not HTML responses' => [
+            $this->getResponse(false),
+            SubscriberInterface::DECISION_NEGATIVE,
+            LogLevel::DEBUG,
+            '[URI: https://contao.org/ (Level: 0, Processed: no, Found on: root, Tags: none)] Did not index because the response did not contain a "text/html" Content-Type header.',
+        ];
+
+        yield 'Test requests successful HTML responses' => [
+            $this->getResponse(true),
+            SubscriberInterface::DECISION_POSITIVE,
+        ];
+    }
+
+    /**
+     * @dataProvider onLastChunkProvider
+     */
+    public function testOnLastChunk(IndexerException $indexerException = null, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats): void
     {
         $logger = $this->createMock(LoggerInterface::class);
         $logger
@@ -158,7 +209,7 @@ class SearchIndexSubscriberTest extends TestCase
         $subscriber->setEscargot($escargot);
 
         $subscriber->onLastChunk(
-            $this->getCrawlUri(),
+            new CrawlUri(new Uri('https://contao.org'), 0),
             $this->getResponse(true),
             $this->createMock(ChunkInterface::class)
         );
@@ -167,7 +218,7 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function passesOnDocumentToIndexerCorrectlyProvider(): \Generator
+    public function onLastChunkProvider(): \Generator
     {
         yield 'Successful index' => [
             null,
@@ -191,12 +242,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
     }
 
-    private function getCrawlUri(string $uri = 'https://contao.org'): CrawlUri
-    {
-        return new CrawlUri(new Uri($uri), 0);
-    }
-
-    private function getResponse(bool $asHtml): ResponseInterface
+    private function getResponse(bool $asHtml, int $statusCode = 200): ResponseInterface
     {
         $headers = $asHtml ? ['content-type' => ['text/html']] : [];
 
@@ -205,6 +251,11 @@ class SearchIndexSubscriberTest extends TestCase
             ->expects($this->any())
             ->method('getHeaders')
             ->willReturn($headers)
+        ;
+        $response
+            ->expects($this->any())
+            ->method('getStatusCode')
+            ->willReturn($statusCode)
         ;
 
         return $response;
