@@ -20,6 +20,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\MockObject\Matcher\Invocation;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -36,7 +37,7 @@ class LegacyMatcherTest extends TestCase
 
         $matcher = new LegacyMatcher(
             $this->mockContaoFramework(),
-            $this->mockRequestMatcher(),
+            $this->mockRequestMatcher($this->once()),
             '.html',
             false
         );
@@ -66,7 +67,7 @@ class LegacyMatcherTest extends TestCase
 
         $matcher = new LegacyMatcher(
             $this->mockFrameworkWithAdapters(),
-            $this->mockRequestMatcher(),
+            $this->mockRequestMatcher($noRouteFound ? $this->never() : $this->once()),
             '.html',
             $prependLocale
         );
@@ -104,6 +105,7 @@ class LegacyMatcherTest extends TestCase
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = $hooks;
 
         $config = [
+            'folderUrl' => false,
             'useAutoItem' => $useAutoItem,
         ];
 
@@ -111,7 +113,7 @@ class LegacyMatcherTest extends TestCase
 
         $matcher = new LegacyMatcher(
             $framework,
-            $this->mockRequestMatcher($resultPath),
+            $this->mockRequestMatcher($this->once(), $resultPath),
             $urlSuffix,
             null !== $language
         );
@@ -234,6 +236,7 @@ class LegacyMatcherTest extends TestCase
     public function testMatchRequestFromPathIfFolderUrlIsNotFound(): void
     {
         $config = [
+            'folderUrl' => true,
             'useAutoItem' => false,
         ];
 
@@ -288,6 +291,7 @@ class LegacyMatcherTest extends TestCase
     public function testMatchRequestFromPathIfFolderUrlHasNoModel(): void
     {
         $config = [
+            'folderUrl' => true,
             'useAutoItem' => false,
         ];
 
@@ -343,6 +347,7 @@ class LegacyMatcherTest extends TestCase
     public function testUsesPageAliasFromFolderUrlRoute(): void
     {
         $config = [
+            'folderUrl' => true,
             'useAutoItem' => false,
         ];
 
@@ -401,6 +406,7 @@ class LegacyMatcherTest extends TestCase
     public function testMatchesFragmentsWithParametersFolderUrlRoute(): void
     {
         $config = [
+            'folderUrl' => true,
             'useAutoItem' => false,
         ];
 
@@ -462,6 +468,7 @@ class LegacyMatcherTest extends TestCase
     public function testAddsAutoItemToFragmentsOfFolderUrlRoute(): void
     {
         $config = [
+            'folderUrl' => true,
             'useAutoItem' => true,
         ];
 
@@ -523,6 +530,7 @@ class LegacyMatcherTest extends TestCase
     public function testThrowsExceptionIfUrlSuffixDoesNotMatch(): void
     {
         $config = [
+            'folderUrl' => false,
             'useAutoItem' => false,
         ];
 
@@ -537,7 +545,7 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
 
-        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher(), '.html', false);
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()), '.html', false);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('URL suffix does not match');
@@ -563,7 +571,7 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [[]];
 
-        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher(), '.html', true);
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()), '.html', true);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Locale does not match');
@@ -574,6 +582,7 @@ class LegacyMatcherTest extends TestCase
     public function testThrowsExceptionIfHookReturnsAnEmptyAlias(): void
     {
         $config = [
+            'folderUrl' => false,
             'useAutoItem' => false,
         ];
 
@@ -592,7 +601,7 @@ class LegacyMatcherTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getPageIdFromUrl'] = [['foo', 'bar']];
 
-        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher(), '.html', false);
+        $matcher = new LegacyMatcher($framework, $this->mockRequestMatcher($this->never()), '.html', false);
 
         $this->expectException(ResourceNotFoundException::class);
         $this->expectExceptionMessage('Page alias is empty');
@@ -654,23 +663,15 @@ class LegacyMatcherTest extends TestCase
     /**
      * @return RequestMatcherInterface&MockObject
      */
-    private function mockRequestMatcher(string $pathInfo = null, array $match = []): RequestMatcherInterface
+    private function mockRequestMatcher(Invocation $expects, string $pathInfo = null, array $match = []): RequestMatcherInterface
     {
-        $expectCalls = null === $pathInfo ? 1 : 2;
-
         $matcher = $this->createMock(RequestMatcherInterface::class);
         $matcher
-            ->expects($this->exactly($expectCalls))
+            ->expects($expects)
             ->method('matchRequest')
             ->with($this->callback(
-                static function (Request $request) use ($pathInfo, &$expectCalls) {
-                    if (1 === $expectCalls) {
-                        return null === $pathInfo || $request->getPathInfo() === $pathInfo;
-                    }
-
-                    --$expectCalls;
-
-                    return true;
+                static function (Request $request) use ($pathInfo) {
+                    return null === $pathInfo || $request->getPathInfo() === $pathInfo;
                 }
             ))
             ->willReturn($match)

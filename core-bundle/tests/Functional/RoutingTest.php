@@ -57,9 +57,12 @@ class RoutingTest extends WebTestCase
     /**
      * @dataProvider getAliases
      */
-    public function testResolvesAliases(string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
+    public function testResolvesAliases(string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem, bool $folderUrl): void
     {
         Config::set('useAutoItem', $autoItem);
+        Config::set('folderUrl', $folderUrl);
+        Config::set('urlSuffix', '.html');
+        Config::set('addLanguageToUrl', false);
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
@@ -87,6 +90,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-index.local',
             false,
+            false,
         ];
 
         yield 'Redirects to the first regular page if the alias is not "index" and the request is empty' => [
@@ -95,6 +99,7 @@ class RoutingTest extends WebTestCase
             'Redirecting to http://root-with-home.local/home.html',
             [],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -105,6 +110,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Renders the 404 page if there is an item with an empty key' => [
@@ -113,6 +119,7 @@ class RoutingTest extends WebTestCase
             '(404 Not Found)',
             [],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -123,6 +130,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Renders the 404 page if the URL contains the "auto_item" keyword' => [
@@ -131,6 +139,7 @@ class RoutingTest extends WebTestCase
             '(404 Not Found)',
             [],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -141,6 +150,7 @@ class RoutingTest extends WebTestCase
             ['foo' => 'bar1'],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Renders the 404 page if the path contains an unused argument' => [
@@ -149,6 +159,7 @@ class RoutingTest extends WebTestCase
             '(404 Not Found)',
             ['foo' => 'bar'],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -159,6 +170,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Renders the 404 page if the path contains an unused argument with an empty value' => [
@@ -167,6 +179,7 @@ class RoutingTest extends WebTestCase
             '(404 Not Found)',
             ['foo' => ''],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -177,6 +190,7 @@ class RoutingTest extends WebTestCase
             ['items' => 'foobar'],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Renders the 404 page if the path contains an item with an empty key' => [
@@ -185,6 +199,7 @@ class RoutingTest extends WebTestCase
             '(404 Not Found)',
             [],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -195,6 +210,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Urldecodes the alias' => [
@@ -203,6 +219,7 @@ class RoutingTest extends WebTestCase
             'Höme - Root with special chars',
             [],
             'root-with-special-chars.local',
+            false,
             false,
         ];
 
@@ -213,6 +230,7 @@ class RoutingTest extends WebTestCase
             ['auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-home.local',
             true,
+            false,
         ];
 
         yield 'Renders the 404 page if auto items are enabled and the URL contains the "auto_item" keyword' => [
@@ -222,6 +240,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-home.local',
             true,
+            false,
         ];
 
         yield 'Renders the 404 page if auto items are enabled and the URL contains an auto item keyword' => [
@@ -231,6 +250,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-home.local',
             true,
+            false,
         ];
 
         yield 'Redirects to the first regular page if the folder URL alias is not "index" and the request is empty' => [
@@ -240,6 +260,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-folder-urls.local',
             false,
+            true,
         ];
 
         yield 'Renders the page if the folder URL alias matches' => [
@@ -249,6 +270,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-folder-urls.local',
             false,
+            true,
         ];
 
         yield 'Renders the folder URL page if an existing item is requested' => [
@@ -258,6 +280,7 @@ class RoutingTest extends WebTestCase
             ['items' => 'foobar'],
             'root-with-folder-urls.local',
             false,
+            true,
         ];
 
         yield 'Renders the folder URL page if auto items are enabled an existing item is requested' => [
@@ -266,6 +289,7 @@ class RoutingTest extends WebTestCase
             'Foobar - Root with folder URLs',
             ['auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-folder-urls.local',
+            true,
             true,
         ];
 
@@ -276,6 +300,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-folder-urls.local',
             true,
+            true,
         ];
 
         yield 'Renders the 404 page if auto items are enabled and the folder URL contains an auto item keyword' => [
@@ -285,15 +310,18 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-folder-urls.local',
             true,
+            true,
         ];
     }
 
     /**
      * @dataProvider getAliasesWithLocale
      */
-    public function testResolvesAliasesWithLocale(string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
+    public function testResolvesAliasesWithLocale(string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem, bool $folderUrl): void
     {
         Config::set('useAutoItem', $autoItem);
+        Config::set('folderUrl', $folderUrl);
+        Config::set('urlSuffix', '.html');
         Config::set('addLanguageToUrl', true);
 
         $_SERVER['REQUEST_URI'] = $request;
@@ -322,6 +350,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en'],
             'root-with-index.local',
             false,
+            false,
         ];
 
         yield 'Renders the page if the alias is "index" and the request contains the language only' => [
@@ -330,6 +359,7 @@ class RoutingTest extends WebTestCase
             'Index - Root with index page',
             ['language' => 'en'],
             'root-with-index.local',
+            false,
             false,
         ];
 
@@ -340,6 +370,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en'],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Redirects if the alias matches but no language is given' => [
@@ -348,6 +379,7 @@ class RoutingTest extends WebTestCase
             'Redirecting to http://root-with-home.local/en/home.html',
             [],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -358,6 +390,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en'],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Renders the 404 page if the URL contains the "auto_item" keyword' => [
@@ -366,6 +399,7 @@ class RoutingTest extends WebTestCase
             '(404 Not Found)',
             ['language' => 'en'],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -376,6 +410,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en', 'foo' => 'bar1'],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Renders the 404 page if the path contains an unused argument' => [
@@ -384,6 +419,7 @@ class RoutingTest extends WebTestCase
             '(404 Not Found)',
             ['language' => 'en', 'foo' => 'bar'],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -394,6 +430,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en', 'items' => 'foobar'],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Renders the 404 page if the path contains item with an empty key' => [
@@ -402,6 +439,7 @@ class RoutingTest extends WebTestCase
             '(404 Not Found)',
             ['language' => 'en'],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -412,6 +450,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en'],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Urldecodes the alias' => [
@@ -420,6 +459,7 @@ class RoutingTest extends WebTestCase
             'Höme - Root with special chars',
             ['language' => 'en'],
             'root-with-special-chars.local',
+            false,
             false,
         ];
 
@@ -430,6 +470,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en', 'auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-home.local',
             true,
+            false,
         ];
 
         yield 'Renders the 404 page if auto items are enabled and there is item with an empty key' => [
@@ -439,6 +480,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en', 'auto_item' => 'foobar'],
             'root-with-home.local',
             true,
+            false,
         ];
 
         yield 'Renders the page if there is an item with an empty value and another item with an empty key' => [
@@ -448,6 +490,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en', 'foobar' => ''],
             'root-with-home.local',
             true,
+            false,
         ];
 
         yield 'Renders the 404 page if auto items are enabled and the URL contains the "auto_item" keyword' => [
@@ -457,6 +500,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en'],
             'root-with-home.local',
             true,
+            false,
         ];
 
         yield 'Renders the 404 page if auto items are enabled and the URL contains an auto item keyword' => [
@@ -466,6 +510,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en'],
             'root-with-home.local',
             true,
+            false,
         ];
 
         yield 'Renders the page if the folder URL alias matches' => [
@@ -475,6 +520,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en'],
             'root-with-folder-urls.local',
             false,
+            true,
         ];
 
         yield 'Renders the folder URL page if an existing item is requested' => [
@@ -484,6 +530,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en', 'items' => 'foobar'],
             'root-with-folder-urls.local',
             false,
+            true,
         ];
 
         yield 'Renders the folder URL page if auto items are enabled an existing item is requested' => [
@@ -492,6 +539,7 @@ class RoutingTest extends WebTestCase
             'Foobar - Root with folder URLs',
             ['language' => 'en', 'auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-folder-urls.local',
+            true,
             true,
         ];
 
@@ -502,6 +550,7 @@ class RoutingTest extends WebTestCase
             ['language' => 'en'],
             'root-with-folder-urls.local',
             true,
+            true,
         ];
 
         yield 'Renders the 404 page if auto items are enabled and the folder URL contains an auto item keyword' => [
@@ -511,15 +560,19 @@ class RoutingTest extends WebTestCase
             ['language' => 'en'],
             'root-with-folder-urls.local',
             true,
+            true,
         ];
     }
 
     /**
      * @dataProvider getAliasesWithoutUrlSuffix
      */
-    public function testResolvesAliasesWithoutUrlSuffix(string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
+    public function testResolvesAliasesWithoutUrlSuffix(string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem, bool $folderUrl): void
     {
         Config::set('useAutoItem', $autoItem);
+        Config::set('folderUrl', $folderUrl);
+        Config::set('urlSuffix', '');
+        Config::set('addLanguageToUrl', false);
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
@@ -547,6 +600,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-index.local',
             false,
+            false,
         ];
 
         yield 'Redirects to the first regular page if the alias is not "index" and the request is empty' => [
@@ -555,6 +609,7 @@ class RoutingTest extends WebTestCase
             'Redirecting to http://root-with-home.local/home',
             [],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -565,6 +620,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Renders the 404 page if the URL suffix does not match' => [
@@ -573,6 +629,7 @@ class RoutingTest extends WebTestCase
             '(404 Not Found)',
             [],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -583,6 +640,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Renders the 404 page if the path contains duplicate keys' => [
@@ -591,6 +649,7 @@ class RoutingTest extends WebTestCase
             '(404 Not Found)',
             ['foo' => 'bar1'],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -601,6 +660,7 @@ class RoutingTest extends WebTestCase
             ['foo' => 'bar'],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Renders the page if an existing item is requested' => [
@@ -609,6 +669,7 @@ class RoutingTest extends WebTestCase
             'Foobar - Root with home page',
             ['items' => 'foobar'],
             'root-with-home.local',
+            false,
             false,
         ];
 
@@ -619,6 +680,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-home.local',
             false,
+            false,
         ];
 
         yield 'Urldecodes the alias' => [
@@ -627,6 +689,7 @@ class RoutingTest extends WebTestCase
             'Höme - Root with special chars',
             [],
             'root-with-special-chars.local',
+            false,
             false,
         ];
 
@@ -637,6 +700,7 @@ class RoutingTest extends WebTestCase
             ['auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-home.local',
             true,
+            false,
         ];
 
         yield 'Renders the 404 page if auto items are enabled and the URL contains the "auto_item" keyword' => [
@@ -646,6 +710,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-home.local',
             true,
+            false,
         ];
 
         yield 'Renders the 404 page if auto items are enabled and the URL contains an auto item keyword' => [
@@ -655,6 +720,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-home.local',
             true,
+            false,
         ];
 
         yield 'Redirects to the first regular page if the folder URL alias is not "index" and the request is empty' => [
@@ -664,6 +730,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-folder-urls.local',
             false,
+            true,
         ];
 
         yield 'Renders the page if the folder URL alias matches' => [
@@ -673,6 +740,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-folder-urls.local',
             false,
+            true,
         ];
 
         yield 'Renders the folder URL page if an existing item is requested' => [
@@ -682,6 +750,7 @@ class RoutingTest extends WebTestCase
             ['items' => 'foobar'],
             'root-with-folder-urls.local',
             false,
+            true,
         ];
 
         yield 'Renders the folder URL page if auto items are enabled an existing item is requested' => [
@@ -690,6 +759,7 @@ class RoutingTest extends WebTestCase
             'Foobar - Root with folder URLs',
             ['auto_item' => 'foobar', 'items' => 'foobar'],
             'root-with-folder-urls.local',
+            true,
             true,
         ];
 
@@ -700,6 +770,7 @@ class RoutingTest extends WebTestCase
             [],
             'root-with-folder-urls.local',
             true,
+            true,
         ];
 
         yield 'Renders the 404 page if auto items are enabled and the folder URL contains an auto item keyword' => [
@@ -708,6 +779,7 @@ class RoutingTest extends WebTestCase
             '(404 Not Found)',
             [],
             'root-with-folder-urls.local',
+            true,
             true,
         ];
     }
