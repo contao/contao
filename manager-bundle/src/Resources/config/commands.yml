@@ -2,6 +2,11 @@ services:
     _defaults:
         autoconfigure: true
 
+    contao.command.debug-plugins:
+        class: Contao\ManagerBundle\Command\DebugPluginsCommand
+        arguments:
+            - '@kernel'
+
     contao.command.install-web-dir:
         class: Contao\ManagerBundle\Command\InstallWebDirCommand
         arguments:

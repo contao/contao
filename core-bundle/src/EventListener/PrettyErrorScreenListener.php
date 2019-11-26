@@ -93,7 +93,7 @@ class PrettyErrorScreenListener
 
     private function handleException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         try {
             $isBackendUser = $this->security->isGranted('ROLE_USER');
@@ -129,7 +129,7 @@ class PrettyErrorScreenListener
 
     private function renderBackendException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $this->logException($exception);
         $this->renderTemplate('backend', $this->getStatusCodeForException($exception), $event);
@@ -179,7 +179,7 @@ class PrettyErrorScreenListener
      */
     private function renderErrorScreenByException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
         $statusCode = $this->getStatusCodeForException($exception);
         $template = null;
 
@@ -227,7 +227,7 @@ class PrettyErrorScreenListener
             'base' => $event->getRequest()->getBasePath(),
             'language' => $event->getRequest()->getLocale(),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
-            'exception' => $event->getException()->getMessage(),
+            'exception' => $event->getThrowable()->getMessage(),
         ];
     }
 

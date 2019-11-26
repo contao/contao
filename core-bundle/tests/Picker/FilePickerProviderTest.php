@@ -222,7 +222,7 @@ class FilePickerProviderTest extends ContaoTestCase
         $security
             ->expects(null === $accessGranted ? $this->never() : $this->atLeastOnce())
             ->method('isGranted')
-            ->willReturn($accessGranted)
+            ->willReturn($accessGranted ?? false)
         ;
 
         $menuFactory = $this->createMock(FactoryInterface::class);

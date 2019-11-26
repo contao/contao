@@ -50,10 +50,12 @@ class ParseJwtCookieCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $payload = $this->jwtManager->parseCookie($input->getArgument('content'));
 
         $output->write(json_encode($payload));
+
+        return 0;
     }
 }
