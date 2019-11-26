@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Command;
 use Contao\CoreBundle\Search\Escargot\Factory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
@@ -27,6 +28,7 @@ use Terminal42\Escargot\CrawlUri;
 use Terminal42\Escargot\Escargot;
 use Terminal42\Escargot\EscargotAwareInterface;
 use Terminal42\Escargot\EscargotAwareTrait;
+use Terminal42\Escargot\Exception\InvalidJobIdException;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 use Terminal42\Escargot\Subscriber\FinishedCrawlingSubscriberInterface;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
@@ -38,11 +40,21 @@ class CrawlCommand extends Command
      */
     private $escargotFactory;
 
+    /**
+     * @var Escargot
+     */
+    private $escargot;
+
     public function __construct(Factory $escargotFactory)
     {
         $this->escargotFactory = $escargotFactory;
 
         parent::__construct();
+    }
+
+    public function getEscargot(): Escargot
+    {
+        return $this->escargot;
     }
 
     /**
@@ -52,9 +64,12 @@ class CrawlCommand extends Command
     {
         $this
             ->setName('contao:crawl')
+            ->addArgument('job', InputArgument::OPTIONAL, 'An optional existing job ID')
             ->addOption('subscribers', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'A list of subscribers to enable.', $this->escargotFactory->getSubscriberNames())
             ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed.', 10)
-            ->addOption('delay', 'd', InputOption::VALUE_REQUIRED, 'The number of microseconds to wait between requests. (0 = throttling is disabled)', 0)
+            ->addOption('delay', null, InputOption::VALUE_REQUIRED, 'The number of microseconds to wait between requests. (0 = throttling is disabled)', 0)
+            ->addOption('max-requests', null, InputOption::VALUE_REQUIRED, 'The maximum number of requests to execute. (0 = no limit)', 0)
+            ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for. (0 = no limit)', 0)
             ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progess bar output')
             ->setDescription('Crawls all Contao root pages plus additional URIs configured using (contao.search.additional_uris) and triggers the desired subscribers.')
         ;
@@ -73,7 +88,15 @@ class CrawlCommand extends Command
         $baseUris = $this->escargotFactory->getSearchUriCollection();
 
         try {
-            $escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers);
+            if ($jobId = $input->getArgument('job')) {
+                $this->escargot = $this->escargotFactory->createFromJobId($jobId, $queue, $subscribers);
+            } else {
+                $this->escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers);
+            }
+        } catch (InvalidJobIdException $e) {
+            $io->error('Could not find given job ID.');
+
+            return 1;
         } catch (\InvalidArgumentException $e) {
             $io->error($e->getMessage());
 
@@ -82,17 +105,19 @@ class CrawlCommand extends Command
 
         $logOutput = $output instanceof ConsoleOutput ? $output->section() : $output;
 
-        $escargot = $escargot->withLogger($this->createSourceProvidingConsoleLogger($logOutput));
-        $escargot = $escargot->withConcurrency((int) $input->getOption('concurrency'));
-        $escargot = $escargot->withRequestDelay((int) $input->getOption('delay'));
+        $this->escargot = $this->escargot->withLogger($this->createSourceProvidingConsoleLogger($logOutput));
+        $this->escargot = $this->escargot->withConcurrency((int) $input->getOption('concurrency'));
+        $this->escargot = $this->escargot->withRequestDelay((int) $input->getOption('delay'));
+        $this->escargot = $this->escargot->withMaxRequests((int) $input->getOption('max-requests'));
+        $this->escargot = $this->escargot->withMaxDepth((int) $input->getOption('max-depth'));
 
         $io->comment('Started crawling...');
 
         if (!$input->getOption('no-progress')) {
-            $this->addProgressBar($escargot, $output);
+            $this->addProgressBar($output);
         }
 
-        $escargot->crawl();
+        $this->escargot->crawl();
 
         $output->writeln('');
         $output->writeln('');
@@ -131,7 +156,7 @@ class CrawlCommand extends Command
         };
     }
 
-    private function addProgressBar(Escargot $escargot, OutputInterface $output): void
+    private function addProgressBar(OutputInterface $output): void
     {
         $processOutput = $output instanceof ConsoleOutput ? $output->section() : $output;
 
@@ -140,7 +165,7 @@ class CrawlCommand extends Command
         $progressBar->setMessage('Starting to crawl...', 'title');
 
         $progressBar->start();
-        $escargot->addSubscriber($this->getProgressSubscriber($progressBar));
+        $this->escargot->addSubscriber($this->getProgressSubscriber($progressBar));
     }
 
     private function getProgressSubscriber(ProgressBar $progressBar): SubscriberInterface
@@ -158,18 +183,18 @@ class CrawlCommand extends Command
                 $this->progressBar = $progressBar;
             }
 
-            public function shouldRequest(CrawlUri $crawlUri, string $currentDecision): string
+            public function shouldRequest(CrawlUri $crawlUri): string
             {
                 // We advance with every shouldRequest() call to update the progress bar frequently enough
-                $this->progressBar->advance(1);
+                $this->progressBar->advance();
                 $this->progressBar->setMaxSteps($this->escargot->getQueue()->countAll($this->escargot->getJobId()));
 
-                return $currentDecision;
+                return SubscriberInterface::DECISION_ABSTAIN;
             }
 
-            public function needsContent(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk, string $currentDecision): string
+            public function needsContent(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk): string
             {
-                return $currentDecision;
+                return SubscriberInterface::DECISION_ABSTAIN;
             }
 
             public function onLastChunk(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk): void
@@ -182,6 +207,7 @@ class CrawlCommand extends Command
             {
                 $this->progressBar->setMessage('Done!', 'title');
                 $this->progressBar->finish();
+                $this->progressBar->display();
             }
         };
     }
