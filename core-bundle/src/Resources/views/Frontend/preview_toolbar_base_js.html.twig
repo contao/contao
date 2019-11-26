@@ -1,5 +1,3 @@
-<div class="cto-toolbar"></div>
-
 <style>
     .cto-toolbar {
         font: 400 .875rem/1 -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -111,7 +109,7 @@
     }
 
     .cto-toolbar__close a:hover {
-        background: rgba(0, 0, 0, .03);
+        background: rgba(0, 0, 0, 0.03);
     }
 
     .cto-toolbar__close a:hover {
@@ -120,7 +118,9 @@
 </style>
 <script>/*<![CDATA[*/
     (function () {
-        const toolbar = document.querySelector('.cto-toolbar');
+        const toolbar = document.createElement('div');
+        toolbar.classList.add('cto-toolbar');
+        document.querySelector('body').prepend(toolbar);
 
         function request(method, uri, body, callback, addClass = true) {
             body = body || null;
@@ -163,7 +163,7 @@
                 const formData = new FormData(form);
 
                 request('POST', form.action, formData, function () {
-                    if (200 === this.status) {
+                    if (204 === this.status) {
                         location.reload();
                     } else {
                         location.reload();

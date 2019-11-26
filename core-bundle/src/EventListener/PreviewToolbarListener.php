@@ -25,7 +25,7 @@ use Twig\Error\Error as TwigError;
  *
  * The onKernelResponse method must be connected to the kernel.response event.
  *
- * The toolbar is only injected on well-formed HTML (with a proper <body> tag).
+ * The toolbar is only injected on well-formed HTML (with a proper </body> tag).
  * This means that the toolbar is never included in sub-requests or ESI requests.
  */
 class PreviewToolbarListener
@@ -85,25 +85,18 @@ class PreviewToolbarListener
     private function injectToolbar(Response $response, Request $request): void
     {
         $content = $response->getContent();
+        $pos = strripos($content, '</body>');
 
-        if (false === stripos($content, '<body ')) {
-            return;
+        if (false !== $pos) {
+            $toolbar = "\n".$this->twig->render(
+                '@ContaoCore/Frontend/preview_toolbar_base_js.html.twig',
+                [
+                    'action' => $this->router->generate('contao_backend_preview_switch'),
+                    'request' => $request,
+                ]
+            )."\n";
+            $content = substr($content, 0, $pos).$toolbar.substr($content, $pos);
+            $response->setContent($content);
         }
-
-        $toolbar = $this->twig->render(
-            '@ContaoCore/Frontend/preview_toolbar_base_js.html.twig',
-            [
-                'action' => $this->router->generate('contao_backend_preview_switch'),
-                'request' => $request,
-            ]
-        );
-
-        $content = preg_replace(
-            '/<body.*?>/is',
-            "\$0\n".$toolbar."\n",
-            $content
-        );
-
-        $response->setContent($content);
     }
 }
