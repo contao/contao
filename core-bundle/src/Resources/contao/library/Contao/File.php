@@ -279,6 +279,7 @@ class File extends System
 									'jpg' => IMAGETYPE_JPEG,
 									'jpeg' => IMAGETYPE_JPEG,
 									'png' => IMAGETYPE_PNG,
+									'webp' => IMAGETYPE_WEBP,
 								);
 
 								$this->arrImageSize = array
@@ -377,7 +378,7 @@ class File extends System
 				break;
 
 			case 'isGdImage':
-				return \in_array($this->extension, array('gif', 'jpg', 'jpeg', 'png'));
+				return \in_array($this->extension, array('gif', 'jpg', 'jpeg', 'png', 'webp'));
 				break;
 
 			case 'isSvgImage':
