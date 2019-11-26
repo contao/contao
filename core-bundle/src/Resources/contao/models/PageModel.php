@@ -1057,12 +1057,6 @@ class PageModel extends Model
 
 		$this->loadDetails();
 
-		$context = System::getContainer()->get('router')->getContext();
-		$baseUrl = $context->getBaseUrl();
-
-		// Always generate the URL without the preview script (see #942)
-		$context->setBaseUrl('');
-
 		$objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
 
 		$strUrl = $objUrlGenerator->generate
@@ -1082,8 +1076,6 @@ class PageModel extends Model
 			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 		}
 
-		$context->setBaseUrl($baseUrl);
-
 		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
 
 		return $strUrl;
@@ -1100,12 +1092,6 @@ class PageModel extends Model
 	{
 		$this->loadDetails();
 
-		$context = System::getContainer()->get('router')->getContext();
-		$baseUrl = $context->getBaseUrl();
-
-		// Always generate the URL without the preview script (see #942)
-		$context->setBaseUrl('');
-
 		$objUrlGenerator = System::getContainer()->get('contao.routing.url_generator');
 
 		$strUrl = $objUrlGenerator->generate
@@ -1119,8 +1105,6 @@ class PageModel extends Model
 			),
 			UrlGeneratorInterface::ABSOLUTE_URL
 		);
-
-		$context->setBaseUrl($baseUrl);
 
 		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
 
@@ -1146,7 +1130,7 @@ class PageModel extends Model
 		$context = $container->get('router')->getContext();
 		$baseUrl = $context->getBaseUrl();
 
-		// Always generate the URL with the preview script
+		// Add the preview script
 		$context->setBaseUrl($previewScript);
 
 		$objUrlGenerator = $container->get('contao.routing.url_generator');
