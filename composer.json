@@ -110,7 +110,7 @@
         "symfony/var-dumper": "4.4.*",
         "symfony/web-profiler-bundle": "4.4.*",
         "symfony/yaml": "4.4.*",
-        "terminal42/escargot": "dev-master",
+        "terminal42/escargot": "^0.1",
         "terminal42/service-annotation-bundle": "^1.0",
         "toflar/psr6-symfony-http-cache-store": "^2.1",
         "true/punycode": "^2.1",
