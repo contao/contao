@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Search\Document;
+use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
@@ -60,10 +61,14 @@ class SearchIndexListener
             return;
         }
 
-        if ($event->getResponse()->isSuccessful()) {
-            $this->indexer->index($document);
-        } else {
-            $this->indexer->delete($document);
+        try {
+            if ($event->getResponse()->isSuccessful()) {
+                $this->indexer->index($document);
+            } else {
+                $this->indexer->delete($document);
+            }
+        } catch (IndexerException $e) {
+            // Noop
         }
     }
 }
