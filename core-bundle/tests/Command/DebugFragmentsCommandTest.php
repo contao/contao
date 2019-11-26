@@ -66,7 +66,6 @@ Contao Fragments
 
 
 OUTPUT
-
         ];
 
         yield 'Multiple fragments' => [
@@ -88,7 +87,6 @@ Contao Fragments
 
 
 OUTPUT
-
         ];
 
         yield 'ESI fragment' => [
@@ -109,7 +107,6 @@ Contao Fragments
 
 
 OUTPUT
-
         ];
     }
 }

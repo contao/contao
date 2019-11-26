@@ -42,7 +42,7 @@ class DebugFragmentsCommand extends Command
      */
     private $io;
 
-    public function add(string $identifier, FragmentConfig $config, array $attributes)
+    public function add(string $identifier, FragmentConfig $config, array $attributes): void
     {
         $this->identifiers[] = $identifier;
         $this->configs[$identifier] = $config;
@@ -90,13 +90,14 @@ class DebugFragmentsCommand extends Command
     {
         $return = [];
 
-        $length = array_reduce(array_keys($values), function($carry, $item) {
-            $length = strlen($item);
+        $length = array_reduce(array_keys($values), static function ($carry, $item) {
+            $length = \strlen($item);
+
             return $carry > $length ? $carry : $length;
         }, 0);
 
         foreach ($values as $k => $v) {
-            if (is_bool($v)) {
+            if (\is_bool($v)) {
                 $v = $v ? 'true' : 'false';
             }
 
