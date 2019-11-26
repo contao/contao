@@ -181,7 +181,7 @@ class SearchIndexSubscriber implements EscargotSubscriber, EscargotAwareInterfac
 
         $result = new SubscriberResult(
             0 === $stats['error'],
-            sprintf('Indexed %d URI(s) successfully. %d failed.', $stats['ok'], $stats['error']),
+            sprintf('Indexed %d URI(s) successfully. %d failed.', $stats['ok'], $stats['error'])
         );
 
         if (0 !== $stats['warning']) {
