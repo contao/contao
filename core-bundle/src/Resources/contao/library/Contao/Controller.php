@@ -1122,7 +1122,6 @@ abstract class Controller extends System
 			'contao/password.php'  => $generate('contao_backend_password'),
 			'contao/popup.php'     => $generate('contao_backend_popup'),
 			'contao/preview.php'   => $generate('contao_backend_preview'),
-			'contao/switch.php'    => $generate('contao_backend_switch')
 		);
 
 		return str_replace(array_keys($arrMapper), $arrMapper, $strContext);
