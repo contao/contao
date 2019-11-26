@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -85,19 +84,19 @@ class BackendPreviewSwitchController
      */
     public function __invoke(Request $request): Response
     {
-        $this->contaoFramework->initialize(false);
+        $this->contaoFramework->initialize();
 
         $user = $this->security->getUser();
 
         if (!($user instanceof BackendUser) || !$request->isXmlHttpRequest()) {
-            throw new PageNotFoundException('Bad response');
+            return new Response('Bad Request', Response::HTTP_BAD_REQUEST);
         }
 
         if ($request->isMethod('GET')) {
             try {
                 $toolbar = $this->renderToolbar($user);
             } catch (TwigError $e) {
-                return Response::create('', Response::HTTP_INTERNAL_SERVER_ERROR);
+                return new Response('', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
             return Response::create($toolbar);
@@ -106,16 +105,16 @@ class BackendPreviewSwitchController
         if ('tl_switch' === $request->request->get('FORM_SUBMIT')) {
             $this->authenticatePreview($user, $request);
 
-            return Response::create();
+            return new Response('', Response::HTTP_NO_CONTENT);
         }
 
         if ('datalist_members' === $request->request->get('FORM_SUBMIT')) {
             $data = $this->getMembersDataList($user, $request);
 
-            return JsonResponse::create($data);
+            return new JsonResponse($data);
         }
 
-        return Response::create('', Response::HTTP_INTERNAL_SERVER_ERROR);
+        return new Response('', Response::HTTP_BAD_REQUEST);
     }
 
     /**

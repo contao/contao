@@ -14,12 +14,11 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\PageModel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -69,13 +68,13 @@ class BackendPreviewController
     public function __invoke(Request $request): Response
     {
         if ($request->getScriptName() !== $this->previewScript) {
-            throw new RedirectResponseException($this->previewScript.$request->getRequestUri());
+            return new RedirectResponse($this->previewScript.$request->getRequestUri());
         }
 
-        $this->contaoFramework->initialize(false);
+        $this->contaoFramework->initialize();
 
         if (!$this->authorizationChecker->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException('Access denied');
+            return new Response('Access denied', Response::HTTP_FORBIDDEN);
         }
 
         // Switch to a particular member (see contao/core#6546)
@@ -86,7 +85,8 @@ class BackendPreviewController
 
         if ($request->query->get('url')) {
             $targetUrl = $request->getBaseUrl().'/'.$request->query->get('url');
-            throw new RedirectResponseException($targetUrl);
+
+            return new RedirectResponse($targetUrl);
         }
 
         if ($request->query->get('page') && null !== $page = PageModel::findWithDetails($request->query->get('page'))) {
@@ -101,18 +101,16 @@ class BackendPreviewController
                 );
             }
 
-            throw new RedirectResponseException($page->getPreviewUrl($params));
+            return new RedirectResponse($page->getPreviewUrl($params));
         }
 
         $urlConvertEvent = new PreviewUrlConvertEvent();
         $this->dispatcher->dispatch($urlConvertEvent);
 
         if (null !== $targetUrl = $urlConvertEvent->getUrl()) {
-            throw new RedirectResponseException($targetUrl);
+            return new RedirectResponse($targetUrl);
         }
 
-        throw new RedirectResponseException(
-            $this->router->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL)
-        );
+        return new RedirectResponse($this->router->generate('contao_root', [], UrlGeneratorInterface::ABSOLUTE_URL));
     }
 }

@@ -86,7 +86,7 @@ class PreviewToolbarListener
     {
         $content = $response->getContent();
 
-        if (false === stripos($content, '<body')) {
+        if (false === stripos($content, '<body ')) {
             return;
         }
 
