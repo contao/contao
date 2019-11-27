@@ -13,6 +13,8 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
@@ -121,7 +123,11 @@ class InitializeController extends Controller
             $this->get('event_dispatcher')->dispatch(KernelEvents::RESPONSE, $event);
             $response = $event->getResponse();
 
-            $this->get('event_dispatcher')->dispatch(KernelEvents::FINISH_REQUEST, new FinishRequestEvent($this->get('http_kernel'), $request, $type));
+            $this->get('event_dispatcher')->dispatch(
+                KernelEvents::FINISH_REQUEST,
+                new FinishRequestEvent($this->get('http_kernel'), $request, $type)
+            );
+
             $this->get('request_stack')->pop();
         } catch (\Exception $e) {
             // ignore and continue with original response
