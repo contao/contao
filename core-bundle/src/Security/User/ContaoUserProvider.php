@@ -23,10 +23,11 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class ContaoUserProvider implements UserProviderInterface
+class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     /**
      * @var ContaoFramework
@@ -151,5 +152,13 @@ class ContaoUserProvider implements UserProviderInterface
         foreach ($GLOBALS['TL_HOOKS']['postAuthenticate'] as $callback) {
             $system->importStatic($callback[0])->{$callback[1]}($user);
         }
+    }
+
+    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    {
+        /** @var User $user */
+        $user->password = $newEncodedPassword;
+
+        $user->save();
     }
 }

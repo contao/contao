@@ -207,6 +207,24 @@ class ContaoUserProviderTest extends TestCase
         $this->getProvider(null, 'LdapUser');
     }
 
+    public function testStoresUpgradedPasswords(): void
+    {
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->expects($this->once())->method('save');
+        $user->username = 'foobar';
+        $user->password = 'superhash';
+
+        $userProvider = new ContaoUserProvider(
+            $this->mockContaoFramework(),
+            $this->createMock(SessionInterface::class),
+            BackendUser::class
+        );
+
+        $userProvider->upgradePassword($user, 'newsuperhash');
+
+        $this->assertSame('newsuperhash', $user->password);
+    }
+
     /**
      * @group legacy
      *
