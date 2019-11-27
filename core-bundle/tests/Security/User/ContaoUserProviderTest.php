@@ -207,6 +207,35 @@ class ContaoUserProviderTest extends TestCase
         $this->getProvider(null, 'LdapUser');
     }
 
+    public function testUpgradesPasswords(): void
+    {
+        /** @var BackendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->username = 'foobar';
+        $user->password = 'superhash';
+
+        $user
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        $userProvider = $this->getProvider(null, BackendUser::class);
+        $userProvider->upgradePassword($user, 'newsuperhash');
+
+        $this->assertSame('newsuperhash', $user->password);
+    }
+
+    public function testFailsToUpgradePasswordsOfUnsupportedUsers(): void
+    {
+        $user = $this->createMock(UserInterface::class);
+        $provider = $this->getProvider();
+
+        $this->expectException(UnsupportedUserException::class);
+        $this->expectExceptionMessage(sprintf('Unsupported class "%s".', \get_class($user)));
+
+        $provider->upgradePassword($user, 'newsuperhash');
+    }
+
     /**
      * @group legacy
      *
