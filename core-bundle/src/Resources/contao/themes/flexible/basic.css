@@ -44,7 +44,10 @@ button {
 
 /* Font */
 body {
-	font:400 .875rem/1 -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+	font-family:-apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+	font-weight:400;
+	font-size:.875rem;
+	line-height:1;
 	color:#444;
 }
 h1,h2,h3,h4,h5,h6,strong,b,th {
