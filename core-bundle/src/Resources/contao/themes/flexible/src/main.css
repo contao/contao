@@ -444,9 +444,6 @@ h2.sub_headline {
 	width:60%;
 	margin-left:1%;
 }
-input[type=search]::-webkit-search-decoration {
-	-webkit-appearance:none;
-}
 
 /* Boxes */
 .tl_xpl {
