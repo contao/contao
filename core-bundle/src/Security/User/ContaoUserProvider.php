@@ -108,6 +108,19 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     }
 
     /**
+     * @param User $user
+     */
+    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    {
+        if (!is_a($user, $this->userClass)) {
+            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
+        }
+
+        $user->password = $newEncodedPassword;
+        $user->save();
+    }
+
+    /**
      * Validates the session lifetime and logs the user out if the session has expired.
      *
      * @throws UsernameNotFoundException
@@ -152,13 +165,5 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         foreach ($GLOBALS['TL_HOOKS']['postAuthenticate'] as $callback) {
             $system->importStatic($callback[0])->{$callback[1]}($user);
         }
-    }
-
-    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
-    {
-        /** @var User $user */
-        $user->password = $newEncodedPassword;
-
-        $user->save();
     }
 }
