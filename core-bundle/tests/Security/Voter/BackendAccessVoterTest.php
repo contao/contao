@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Security\Voter;
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\Voter\BackendAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -30,6 +31,14 @@ class BackendAccessVoterTest extends TestCase
         parent::setUp();
 
         $this->voter = new BackendAccessVoter();
+    }
+
+    public function testAbstainsIfTheAttributeIsNotAString(): void
+    {
+        $token = $this->createMock(TokenInterface::class);
+        $attributes = [new Expression('!is_granted("ROLE_MEMBER")')];
+
+        $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, 'foo', $attributes));
     }
 
     public function testAbstainsIfThereIsNoContaoUserAttribute(): void
