@@ -365,11 +365,11 @@ class File extends System
 				break;
 
 			case 'viewWidth':
-				return $this->imageViewSize[0];
+				return $this->imageViewSize !== false ? $this->imageViewSize[0] : null;
 				break;
 
 			case 'viewHeight':
-				return $this->imageViewSize[1];
+				return $this->imageViewSize !== false ? $this->imageViewSize[1] : null;
 				break;
 
 			case 'isImage':
