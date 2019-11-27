@@ -1127,9 +1127,10 @@ class PageModel extends Model
 			return $this->getAbsoluteUrl($strParams);
 		}
 
-		$router = $container->get('router');
+		$context = $container->get('router')->getContext();
+		$baseUrl = $context->getBaseUrl();
 
-		$context = $router->getContext();
+		// Add the preview script
 		$context->setBaseUrl($previewScript);
 
 		$objUrlGenerator = $container->get('contao.routing.url_generator');
@@ -1146,7 +1147,7 @@ class PageModel extends Model
 			UrlGeneratorInterface::ABSOLUTE_URL
 		);
 
-		$context->setBaseUrl('');
+		$context->setBaseUrl($baseUrl);
 
 		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
 
