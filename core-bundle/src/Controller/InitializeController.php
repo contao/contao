@@ -116,6 +116,17 @@ class InitializeController extends Controller
             }
         }
 
+        try {
+            $event = new FilterResponseEvent($this->get('http_kernel'), $request, $type, $response);
+            $this->get('event_dispatcher')->dispatch(KernelEvents::RESPONSE, $event);
+            $response = $event->getResponse();
+
+            $this->get('event_dispatcher')->dispatch(KernelEvents::FINISH_REQUEST, new FinishRequestEvent($this->get('http_kernel'), $request, $type));
+            $this->get('request_stack')->pop();
+        } catch (\Exception $e) {
+            // ignore and continue with original response
+        }
+
         $response->send();
         $this->get('kernel')->terminate($request, $response);
         exit;
