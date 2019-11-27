@@ -35,15 +35,17 @@ class SearchIndexerPass implements CompilerPassInterface
         $definition = $container->findDefinition(self::DELEGATING_SERVICE_ID);
         $references = $this->findAndSortTaggedServices('contao.search_indexer', $container);
 
-        // Make sure we don't add the delegating indexer to itself to prevent endless redirects
-        $references = array_filter($references, static function (Reference $reference) {
-            return self::DELEGATING_SERVICE_ID !== (string) $reference;
-        });
+        // Make sure we do not add the delegating indexer to itself to prevent endless redirects
+        $references = array_filter(
+            $references,
+            static function (Reference $reference): bool {
+                return self::DELEGATING_SERVICE_ID !== (string) $reference;
+            }
+        );
 
+        // Remove the service and the search index listener if there are no indexers
         if (0 === \count($references)) {
             $container->removeDefinition(self::DELEGATING_SERVICE_ID);
-
-            // Also remove the search index listener
             $container->removeDefinition('contao.listener.search_index');
 
             return;

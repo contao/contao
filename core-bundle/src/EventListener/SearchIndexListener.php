@@ -69,11 +69,13 @@ class SearchIndexListener
             return;
         }
 
-        if ($event->getResponse()->isSuccessful() && $this->enabledFeatures & self::FEATURE_INDEX) {
+        $success = $event->getResponse()->isSuccessful();
+
+        if ($success && $this->enabledFeatures & self::FEATURE_INDEX) {
             $this->indexer->index($document);
         }
 
-        if (!$event->getResponse()->isSuccessful() && $this->enabledFeatures & self::FEATURE_DELETE) {
+        if (!$success && $this->enabledFeatures & self::FEATURE_DELETE) {
             $this->indexer->delete($document);
         }
     }

@@ -118,24 +118,23 @@ class ContaoCoreExtension extends Extension
             $defaultIndexer->setArgument(2, $config['search']['indexProtected']);
         }
 
-        // Configure search index listener
         $features = SearchIndexListener::FEATURE_INDEX | SearchIndexListener::FEATURE_DELETE;
 
         if (!$config['search']['listener']['index']) {
-            $features = $features ^ SearchIndexListener::FEATURE_INDEX;
+            $features ^= SearchIndexListener::FEATURE_INDEX;
         }
 
         if (!$config['search']['listener']['delete']) {
-            $features = $features ^ SearchIndexListener::FEATURE_DELETE;
+            $features ^= SearchIndexListener::FEATURE_DELETE;
         }
 
         if (0 === $features) {
+            // Remove the search index listener if no features are enabled
             $container->removeDefinition('contao.listener.search_index');
-
-            return;
+        } else {
+            // Configure the search index listener
+            $container->getDefinition('contao.listener.search_index')->setArgument(2, $features);
         }
-
-        $container->getDefinition('contao.listener.search_index')->setArgument(2, $features);
     }
 
     /**

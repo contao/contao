@@ -626,51 +626,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('onKernelTerminate', $tags['kernel.event_listener'][0]['method']);
     }
 
-    public function testSetsTheCorrectFeatureFlagOnSearchIndexListener(): void
-    {
-        $extension = new ContaoCoreExtension();
-        $extension->load([], $this->container);
-
-        $extension->load(
-            [
-                'contao' => [
-                    'search' => [
-                        'listener' => [
-                            'delete' => false,
-                        ],
-                    ],
-                ],
-            ],
-            $this->container
-        );
-
-        $definition = $this->container->getDefinition('contao.listener.search_index');
-        $this->assertSame(SearchIndexListener::class, $definition->getClass());
-        $this->assertSame(SearchIndexListener::FEATURE_INDEX, $definition->getArgument(2));
-    }
-
-    public function testRemovesSearchIndexListenerIfDisabled(): void
-    {
-        $extension = new ContaoCoreExtension();
-        $extension->load([], $this->container);
-
-        $extension->load(
-            [
-                'contao' => [
-                    'search' => [
-                        'listener' => [
-                            'index' => false,
-                            'delete' => false,
-                        ],
-                    ],
-                ],
-            ],
-            $this->container
-        );
-
-        $this->assertFalse($this->container->has('contao.listener.search_index'));
-    }
-
     public function testRegistersTheStoreRefererListener(): void
     {
         $this->assertTrue($this->container->has('contao.listener.store_referer'));
@@ -2006,6 +1961,52 @@ class ContaoCoreExtensionTest extends TestCase
         // Should still have the interface registered for autoconfiguration
         $this->assertArrayHasKey(IndexerInterface::class, $this->container->getAutoconfiguredInstanceof());
         $this->assertFalse($this->container->hasDefinition('contao.search.indexer.default'));
+    }
+
+    public function testSetsTheCorrectFeatureFlagOnTheSearchIndexListener(): void
+    {
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $this->container);
+
+        $extension->load(
+            [
+                'contao' => [
+                    'search' => [
+                        'listener' => [
+                            'delete' => false,
+                        ],
+                    ],
+                ],
+            ],
+            $this->container
+        );
+
+        $definition = $this->container->getDefinition('contao.listener.search_index');
+
+        $this->assertSame(SearchIndexListener::class, $definition->getClass());
+        $this->assertSame(SearchIndexListener::FEATURE_INDEX, $definition->getArgument(2));
+    }
+
+    public function testRemovesTheSearchIndexListenerIfItIsDisabled(): void
+    {
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $this->container);
+
+        $extension->load(
+            [
+                'contao' => [
+                    'search' => [
+                        'listener' => [
+                            'index' => false,
+                            'delete' => false,
+                        ],
+                    ],
+                ],
+            ],
+            $this->container
+        );
+
+        $this->assertFalse($this->container->has('contao.listener.search_index'));
     }
 
     /**
