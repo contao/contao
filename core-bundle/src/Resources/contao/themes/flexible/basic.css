@@ -44,7 +44,9 @@ button {
 
 /* Font */
 body {
-	font:400 .875rem/1;
+	font-weight:400;
+	font-size:.875rem;
+	line-height:1;
 	font-family:-apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
 	color:#444;
 }
