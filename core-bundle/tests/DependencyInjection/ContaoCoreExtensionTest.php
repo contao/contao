@@ -635,7 +635,9 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'contao' => [
                     'search' => [
-                        'listener' => 'index_only',
+                        'listener' => [
+                            'delete' => false,
+                        ],
                     ],
                 ],
             ],
@@ -656,7 +658,10 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'contao' => [
                     'search' => [
-                        'listener' => 'disable',
+                        'listener' => [
+                            'index' => false,
+                            'delete' => false,
+                        ],
                     ],
                 ],
             ],

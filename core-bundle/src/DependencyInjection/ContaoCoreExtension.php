@@ -119,19 +119,23 @@ class ContaoCoreExtension extends Extension
         }
 
         // Configure search index listener
-        switch ($config['search']['listener']) {
-            case 'index_only':
-                $container->getDefinition('contao.listener.search_index')->setArgument(2, SearchIndexListener::FEATURE_INDEX);
-                break;
+        $features = SearchIndexListener::FEATURE_INDEX | SearchIndexListener::FEATURE_DELETE;
 
-            case 'delete_only':
-                $container->getDefinition('contao.listener.search_index')->setArgument(2, SearchIndexListener::FEATURE_DELETE);
-                break;
-
-            case 'disable':
-                $container->removeDefinition('contao.listener.search_index');
-                break;
+        if (!$config['search']['listener']['index']) {
+            $features = $features ^ SearchIndexListener::FEATURE_INDEX;
         }
+
+        if (!$config['search']['listener']['delete']) {
+            $features = $features ^ SearchIndexListener::FEATURE_DELETE;
+        }
+
+        if (0 === $features) {
+            $container->removeDefinition('contao.listener.search_index');
+
+            return;
+        }
+
+        $container->getDefinition('contao.listener.search_index')->setArgument(2, $features);
     }
 
     /**
