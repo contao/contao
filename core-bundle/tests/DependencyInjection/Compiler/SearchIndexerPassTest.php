@@ -32,6 +32,8 @@ class SearchIndexerPassTest extends TestCase
         $definition->addTag('contao.search_indexer');
         $container->setDefinition('contao.search.super-indexer', $definition);
 
+        $container->setDefinition('contao.listener.search_index', new Definition());
+
         $pass = new SearchIndexerPass();
         $pass->process($container);
 
@@ -40,5 +42,24 @@ class SearchIndexerPassTest extends TestCase
         $this->assertCount(1, $methodCalls);
         $this->assertSame('addIndexer', $methodCalls[0][0]);
         $this->assertInstanceOf(Reference::class, $methodCalls[0][1][0]);
+
+        $this->assertTrue($container->hasDefinition('contao.listener.search_index'));
+    }
+
+    public function testRemovesTheDelegatingIndexerAndDisablesTheListenerIfNoIndexersWereGiven(): void
+    {
+        $container = new ContainerBuilder();
+
+        $delegatingDefinition = new Definition();
+        $delegatingDefinition->addTag('contao.search_indexer');
+        $container->setDefinition('contao.search.indexer.delegating', $delegatingDefinition);
+
+        $container->setDefinition('contao.listener.search_index', new Definition());
+
+        $pass = new SearchIndexerPass();
+        $pass->process($container);
+
+        $this->assertFalse($container->hasDefinition('contao.search.indexer.delegating'));
+        $this->assertFalse($container->hasDefinition('contao.listener.search_index'));
     }
 }

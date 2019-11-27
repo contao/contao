@@ -1963,6 +1963,52 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($this->container->hasDefinition('contao.search.indexer.default'));
     }
 
+    public function testSetsTheCorrectFeatureFlagOnTheSearchIndexListener(): void
+    {
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $this->container);
+
+        $extension->load(
+            [
+                'contao' => [
+                    'search' => [
+                        'listener' => [
+                            'delete' => false,
+                        ],
+                    ],
+                ],
+            ],
+            $this->container
+        );
+
+        $definition = $this->container->getDefinition('contao.listener.search_index');
+
+        $this->assertSame(SearchIndexListener::class, $definition->getClass());
+        $this->assertSame(SearchIndexListener::FEATURE_INDEX, $definition->getArgument(2));
+    }
+
+    public function testRemovesTheSearchIndexListenerIfItIsDisabled(): void
+    {
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $this->container);
+
+        $extension->load(
+            [
+                'contao' => [
+                    'search' => [
+                        'listener' => [
+                            'index' => false,
+                            'delete' => false,
+                        ],
+                    ],
+                ],
+            ],
+            $this->container
+        );
+
+        $this->assertFalse($this->container->has('contao.listener.search_index'));
+    }
+
     /**
      * @group legacy
      *
