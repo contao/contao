@@ -10,39 +10,29 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\NewsBundle\Tests\EventListener;
+namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\ArticleModel;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
+use Contao\CoreBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\News;
-use Contao\NewsBundle\EventListener\PreviewUrlConvertListener;
-use Contao\NewsModel;
+use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 class PreviewUrlConverterListenerTest extends ContaoTestCase
 {
-    public function testConvertsThePreviewUrl(): void
+    public function testConvertsThePreviewUrlWithUrl(): void
     {
         $request = new Request();
-        $request->query->set('news', 1);
-        $request->server->set('SERVER_NAME', 'localhost');
-        $request->server->set('SERVER_PORT', 80);
+        $request->query->set('url', 'en/content-elements.html');
 
-        $newsModel = $this->createMock(NewsModel::class);
-
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => $newsModel]),
-            News::class => $this->mockConfiguredAdapter(['generateNewsUrl' => 'news/james-wilson-returns.html']),
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
         $event = new PreviewUrlConvertEvent($request);
 
-        $listener = new PreviewUrlConvertListener($framework);
+        $listener = new PreviewUrlConvertListener($this->mockContaoFramework());
         $listener->onPreviewUrlConvert($event);
 
-        $this->assertSame('http://localhost/news/james-wilson-returns.html', $event->getUrl());
+        $this->assertSame('/en/content-elements.html', $event->getUrl());
     }
 
     public function testDoesNotConvertThePreviewUrlIfTheFrameworkIsNotInitialized(): void
@@ -61,34 +51,51 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $this->assertNull($event->getUrl());
     }
 
-    public function testDoesNotConvertThePreviewUrlIfTheNewsParameterIsNotSet(): void
+    public function testDoesNotConvertThePreviewUrlWithoutParameter(): void
     {
         $request = new Request();
-        $request->server->set('SERVER_NAME', 'localhost');
-        $request->server->set('SERVER_PORT', 80);
 
-        $framework = $this->mockContaoFramework();
         $event = new PreviewUrlConvertEvent($request);
 
-        $listener = new PreviewUrlConvertListener($framework);
+        $listener = new PreviewUrlConvertListener($this->mockContaoFramework());
         $listener->onPreviewUrlConvert($event);
 
         $this->assertNull($event->getUrl());
     }
 
-    public function testDoesNotConvertThePreviewUrlIfThereIsNoNewsItem(): void
+    public function testConvertsThePreviewUrlWithPage(): void
     {
         $request = new Request();
-        $request->query->set('news', null);
-        $request->server->set('SERVER_NAME', 'localhost');
-        $request->server->set('SERVER_PORT', 80);
+        $request->query->set('page', '9');
+
+        $event = new PreviewUrlConvertEvent($request);
+
+        $pageModel = $this->createConfiguredMock(PageModel::class, ['getPreviewUrl' => '/en/content-elements.html']);
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
+            PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
+            ArticleModel::class => $this->mockConfiguredAdapter(['findByAlias' => null]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
+
+        $listener = new PreviewUrlConvertListener($framework);
+        $listener->onPreviewUrlConvert($event);
+
+        $this->assertSame('/en/content-elements.html', $event->getUrl());
+    }
+
+    public function testDoesNotConvertThePreviewUrlIfThereIsNoPage(): void
+    {
+        $request = new Request();
+
         $event = new PreviewUrlConvertEvent($request);
+
+        $adapters = [
+            PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => null]),
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
 
         $listener = new PreviewUrlConvertListener($framework);
         $listener->onPreviewUrlConvert($event);

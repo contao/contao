@@ -101,8 +101,7 @@ class ContaoCalendarExtensionTest extends TestCase
 
         $this->assertSame(PreviewUrlConvertListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('request_stack', (string) $definition->getArgument(0));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
 
         $tags = $definition->getTags();
 

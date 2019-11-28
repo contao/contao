@@ -219,3 +219,10 @@ services:
             - '@event_dispatcher'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    contao.listener.preview_url_convert:
+        class: Contao\CoreBundle\EventListener\PreviewUrlConvertListener
+        tags:
+            - { name: kernel.event_listener, event: contao.preview_url_convert, method: onPreviewUrlConvert }
+        arguments:
+          ['@contao.framework']
