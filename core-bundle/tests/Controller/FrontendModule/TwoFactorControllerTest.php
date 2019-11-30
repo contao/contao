@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
+use Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\FrontendUser;
@@ -461,6 +462,8 @@ class TwoFactorControllerTest extends TestCase
 
         $translator = $this->createMock(TranslatorInterface::class);
 
+        $backupCodeManager = $this->createMock(BackupCodeManager::class);
+
         $container = new ContainerBuilder();
         $container->set('contao.framework', $framework);
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
@@ -468,6 +471,7 @@ class TwoFactorControllerTest extends TestCase
         $container->set('security.token_storage', $tokenStorage);
         $container->set('contao.security.two_factor.authenticator', $authenticator);
         $container->set('security.authentication_utils', $authenticationUtils);
+        $container->set('contao.security.two_factor.backup_code_manager', $backupCodeManager);
 
         return $container;
     }
