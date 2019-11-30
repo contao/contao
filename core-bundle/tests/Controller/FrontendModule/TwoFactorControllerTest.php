@@ -461,7 +461,6 @@ class TwoFactorControllerTest extends TestCase
         ;
 
         $translator = $this->createMock(TranslatorInterface::class);
-
         $backupCodeManager = $this->createMock(BackupCodeManager::class);
 
         $container = new ContainerBuilder();
