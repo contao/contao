@@ -15,6 +15,7 @@ use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Back end module "two factor".
@@ -42,6 +43,9 @@ class ModuleTwoFactor extends BackendModule
 		$user = BackendUser::getInstance();
 		$showBackupCodes = false;
 
+		/** @var Security $security */
+		$security = $container->get('security.helper');
+
 		// Inform the user if 2FA is enforced
 		if (!$user->useTwoFactor && empty($_GET['act']) && $container->getParameter('contao.security.two_factor.enforce_backend'))
 		{
@@ -65,12 +69,12 @@ class ModuleTwoFactor extends BackendModule
 			$this->disableTwoFactor($user, $return);
 		}
 
-		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_show_backup_codes')
+		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_show_backup_codes' && $security->isGranted('IS_AUTHENTICATED_FULLY'))
 		{
 			$showBackupCodes = true;
 		}
 
-		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_generate_backup_codes')
+		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_generate_backup_codes' && $security->isGranted('IS_AUTHENTICATED_FULLY'))
 		{
 			/** @var BackupCodeManager $backupCodeManager */
 			$backupCodeManager = $container->get('contao.security.two_factor.backup_code_manager');
