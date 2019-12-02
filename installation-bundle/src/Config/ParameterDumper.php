@@ -90,7 +90,7 @@ class ParameterDumper
      *
      * @return array<string,string[]>
      *
-     * @see http://symfony.com/doc/current/service_container/parameters.html#parameters-in-configuration-files
+     * @see https://symfony.com/doc/current/service_container.html#service-parameters
      */
     private function getEscapedValues(): array
     {
