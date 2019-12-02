@@ -97,11 +97,6 @@ class ContaoCoreExtension extends Extension
             ->registerForAutoconfiguration(PickerProviderInterface::class)
             ->addTag('contao.picker_provider')
         ;
-
-        $container
-            ->registerForAutoconfiguration(EscargotSubscriber::class)
-            ->addTag('contao.escargot_subscriber')
-        ;
     }
 
     private function handleSearchIndexer(array $config, ContainerBuilder $container): void
@@ -127,6 +122,11 @@ class ContaoCoreExtension extends Extension
 
     private function handleCrawlConfig(array $config, ContainerBuilder $container): void
     {
+        $container
+            ->registerForAutoconfiguration(EscargotSubscriber::class)
+            ->addTag('contao.escargot_subscriber')
+        ;
+
         if (!$container->hasDefinition('contao.search.escargot_factory')) {
             return;
         }
