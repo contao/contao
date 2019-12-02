@@ -38,7 +38,7 @@ class BackendPreviewControllerTest extends TestCase
         );
 
         /** @var RedirectResponse $response */
-        $response = $controller->__invoke(new Request());
+        $response = $controller(new Request());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('preview.php', $response->getTargetUrl());
@@ -55,7 +55,7 @@ class BackendPreviewControllerTest extends TestCase
             $this->mockAuthorizationChecker(false)
         );
 
-        $response = $controller->__invoke($this->mockRequest());
+        $response = $controller($this->mockRequest());
 
         $this->assertSame($response->getStatusCode(), Response::HTTP_FORBIDDEN);
     }
@@ -81,7 +81,7 @@ class BackendPreviewControllerTest extends TestCase
             $this->mockAuthorizationChecker()
         );
 
-        $response = $controller->__invoke($request);
+        $response = $controller($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
@@ -105,7 +105,7 @@ class BackendPreviewControllerTest extends TestCase
         );
 
         /** @var RedirectResponse $response */
-        $response = $controller->__invoke($this->mockRequest());
+        $response = $controller($this->mockRequest());
 
         $this->assertTrue($response->isRedirection());
     }
@@ -122,7 +122,7 @@ class BackendPreviewControllerTest extends TestCase
         );
 
         /** @var RedirectResponse $response */
-        $response = $controller->__invoke($this->mockRequest());
+        $response = $controller($this->mockRequest());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('/index.html', $response->getTargetUrl());

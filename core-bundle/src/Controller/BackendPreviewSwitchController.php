@@ -93,13 +93,7 @@ class BackendPreviewSwitchController
         }
 
         if ($request->isMethod('GET')) {
-            try {
-                $toolbar = $this->renderToolbar($user);
-            } catch (TwigError $e) {
-                return new Response('', Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
-
-            return Response::create($toolbar);
+            return Response::create($this->renderToolbar($user));
         }
 
         if ('tl_switch' === $request->request->get('FORM_SUBMIT')) {
@@ -117,25 +111,26 @@ class BackendPreviewSwitchController
         return new Response('', Response::HTTP_BAD_REQUEST);
     }
 
-    /**
-     * @throws TwigError
-     */
     private function renderToolbar(BackendUser $user): string
     {
         $canSwitchUser = ($user->isAdmin || (!empty($user->amg) && \is_array($user->amg)));
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
         $showUnpublished = $this->tokenChecker->isPreviewMode();
 
-        return $this->twig->render(
-            '@ContaoCore/Frontend/preview_toolbar_base.html.twig',
-            [
-                'request_token' => $this->tokenManager->getToken($this->csrfTokenName)->getValue(),
-                'action' => $this->router->generate('contao_backend_preview_switch'),
-                'canSwitchUser' => $canSwitchUser,
-                'user' => $frontendUsername,
-                'show' => $showUnpublished,
-            ]
-        );
+        try {
+            return $this->twig->render(
+                '@ContaoCore/Frontend/preview_toolbar_base.html.twig',
+                [
+                    'request_token' => $this->tokenManager->getToken($this->csrfTokenName)->getValue(),
+                    'action' => $this->router->generate('contao_backend_preview_switch'),
+                    'canSwitchUser' => $canSwitchUser,
+                    'user' => $frontendUsername,
+                    'show' => $showUnpublished,
+                ]
+            );
+        } catch (TwigError $e) {
+            return 'Error while rendering twig template: '.$e->getMessage();
+        }
     }
 
     private function authenticatePreview(BackendUser $user, Request $request): void
