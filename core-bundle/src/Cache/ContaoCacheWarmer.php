@@ -291,6 +291,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
         $statement->execute();
 
+        // Always load the English language (see #1040)
         $languages = ['en'];
 
         while (false !== ($language = $statement->fetch(\PDO::FETCH_OBJ))) {
