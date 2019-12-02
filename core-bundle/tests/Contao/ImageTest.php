@@ -1482,11 +1482,7 @@ class ImageTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
-    /**
-     * @param object $fileObj
-     * @param object $imageObj
-     */
-    public static function getImageHookCallback(string $originalPath, int $targetWidth, int $targetHeight, string $resizeMode, string $cacheName, $fileObj, string $targetPath, $imageObj): string
+    public static function getImageHookCallback(string $originalPath, int $targetWidth, int $targetHeight, string $resizeMode, string $cacheName, object $fileObj, string $targetPath, object $imageObj): string
     {
         // Do not include $cacheName as it is dynamic (mtime)
         $path = 'assets/'
