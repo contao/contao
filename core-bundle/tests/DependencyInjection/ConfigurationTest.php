@@ -77,9 +77,6 @@ class ConfigurationTest extends TestCase
 
     public function testDeniesInvalidCrawlUris(): void
     {
-        $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Invalid configuration for path "contao.crawl.additionalURIs": All provided additional URIs must start with either http:// or https://.');
-
         $params = [
             'contao' => [
                 'crawl' => [
@@ -88,7 +85,10 @@ class ConfigurationTest extends TestCase
             ],
         ];
 
-        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "contao.crawl.additionalURIs": All provided additional URIs must start with either http:// or https://.');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
     }
 
     public function getPaths(): \Generator

@@ -68,7 +68,7 @@ class SearchIndexListener
                 $this->indexer->delete($document);
             }
         } catch (IndexerException $e) {
-            // Noop
+            // ignore
         }
     }
 }

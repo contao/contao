@@ -12,21 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search\Escargot\Subscriber;
 
-use Terminal42\Escargot\Escargot;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
 
 interface EscargotSubscriber extends SubscriberInterface
 {
     /**
-     * Has to return a unique subscriber name so that it can be
-     * identified.
+     * Has to return a unique subscriber name so that it can be identified.
      */
     public function getName(): string;
 
     /**
-     * Returns the result. As Escargot can pick up on an existing
-     * job ID, your results might be e.g. stored between requests
-     * so you might have a previous result of your subscriber.
+     * Returns the result. As Escargot can pick up on an existing job ID, your
+     * results might be e.g. stored between requests so you might have a
+     * previous result of your subscriber.
      */
     public function getResult(SubscriberResult $previousResult = null): SubscriberResult;
 }

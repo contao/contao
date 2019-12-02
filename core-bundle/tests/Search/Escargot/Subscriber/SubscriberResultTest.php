@@ -28,10 +28,12 @@ class SubscriberResultTest extends TestCase
         $this->assertEmpty($result->getAllInfo());
 
         $result = new SubscriberResult(false, 'Summary');
+
         $this->assertFalse($result->wasSuccessful());
 
         $result->addInfo('foobar', 'baz');
         $result->setWarning('Warning');
+
         $this->assertSame('Warning', $result->getWarning());
         $this->assertSame('baz', $result->getInfo('foobar'));
         $this->assertSame(['foobar' => 'baz'], $result->getAllInfo());

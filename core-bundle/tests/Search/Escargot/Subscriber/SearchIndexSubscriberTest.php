@@ -48,11 +48,7 @@ class SearchIndexSubscriberTest extends TestCase
             $logger
                 ->expects($this->once())
                 ->method('log')
-                ->with(
-                    $expectedLogLevel,
-                    $expectedLogMessage,
-                    ['source' => SearchIndexSubscriber::class]
-                )
+                ->with($expectedLogLevel, $expectedLogMessage, ['source' => SearchIndexSubscriber::class])
             ;
         } else {
             $logger
@@ -125,11 +121,7 @@ class SearchIndexSubscriberTest extends TestCase
             $logger
                 ->expects($this->once())
                 ->method('log')
-                ->with(
-                    $expectedLogLevel,
-                    $expectedLogMessage,
-                    ['source' => SearchIndexSubscriber::class]
-                )
+                ->with($expectedLogLevel, $expectedLogMessage, ['source' => SearchIndexSubscriber::class])
             ;
         } else {
             $logger
@@ -144,7 +136,11 @@ class SearchIndexSubscriberTest extends TestCase
         $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class));
         $subscriber->setEscargot($escargot);
 
-        $decision = $subscriber->needsContent(new CrawlUri(new Uri('https://contao.org'), 0), $response, $this->createMock(ChunkInterface::class));
+        $decision = $subscriber->needsContent(
+            new CrawlUri(new Uri('https://contao.org'), 0),
+            $response,
+            $this->createMock(ChunkInterface::class)
+        );
 
         $this->assertSame($expectedDecision, $decision);
     }
@@ -180,11 +176,7 @@ class SearchIndexSubscriberTest extends TestCase
         $logger
             ->expects($this->once())
             ->method('log')
-            ->with(
-                $expectedLogLevel,
-                $expectedLogMessage,
-                ['source' => SearchIndexSubscriber::class]
-            )
+            ->with($expectedLogLevel, $expectedLogMessage, ['source' => SearchIndexSubscriber::class])
         ;
 
         $indexer = $this->createMock(IndexerInterface::class);
@@ -248,12 +240,11 @@ class SearchIndexSubscriberTest extends TestCase
 
         $response = $this->createMock(ResponseInterface::class);
         $response
-            ->expects($this->any())
             ->method('getHeaders')
             ->willReturn($headers)
         ;
+
         $response
-            ->expects($this->any())
             ->method('getStatusCode')
             ->willReturn($statusCode)
         ;

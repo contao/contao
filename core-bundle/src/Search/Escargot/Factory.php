@@ -43,19 +43,19 @@ class Factory
     private $framework;
 
     /**
-     * @var EscargotSubscriber[]
-     */
-    private $subscribers = [];
-
-    /**
      * @var array<string>
      */
-    private $additionalUris = [];
+    private $additionalUris;
 
     /**
      * @var array
      */
     private $defaultHttpClientOptions;
+
+    /**
+     * @var EscargotSubscriber[]
+     */
+    private $subscribers = [];
 
     public function __construct(Connection $connection, ContaoFramework $framework, array $additionalUris = [], array $defaultHttpClientOptions = [])
     {
@@ -83,7 +83,7 @@ class Factory
 
         return array_filter(
             $this->subscribers,
-            static function (EscargotSubscriber $subscriber) use ($selectedSubscribers) {
+            static function (EscargotSubscriber $subscriber) use ($selectedSubscribers): bool {
                 return \in_array($subscriber->getName(), $selectedSubscribers, true);
             }
         );
@@ -95,7 +95,7 @@ class Factory
     public function getSubscriberNames(): array
     {
         return array_map(
-            static function (EscargotSubscriber $subscriber) {
+            static function (EscargotSubscriber $subscriber): string {
                 return $subscriber->getName();
             },
             $this->subscribers
@@ -104,13 +104,16 @@ class Factory
 
     public function createLazyQueue(): LazyQueue
     {
-        return new LazyQueue(new InMemoryQueue(), new DoctrineQueue(
-            $this->connection,
-            static function () {
-                return Uuid::uuid4()->toString();
-            },
-            'tl_search_index_queue'
-        ));
+        return new LazyQueue(
+            new InMemoryQueue(),
+            new DoctrineQueue(
+                $this->connection,
+                static function (): string {
+                    return Uuid::uuid4()->toString();
+                },
+                'tl_search_index_queue'
+            )
+        );
     }
 
     public function getDefaultHttpClientOptions(): array
@@ -142,7 +145,6 @@ class Factory
 
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
-
         $rootPages = $pageModel->findPublishedRootPages();
 
         if (null === $rootPages) {
@@ -161,12 +163,10 @@ class Factory
      */
     public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, ?HttpClientInterface $client = null): Escargot
     {
-        $selectedSubscribers = $this->validateSubscribers($selectedSubscribers);
-
         $escargot = Escargot::create($baseUris, $queue, $client ?? $this->createDefaultHttpClient());
 
         $this->registerDefaultSubscribers($escargot);
-        $this->registerSubscribers($escargot, $selectedSubscribers);
+        $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));
 
         return $escargot;
     }
@@ -177,12 +177,10 @@ class Factory
      */
     public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, ?HttpClientInterface $client = null): Escargot
     {
-        $selectedSubscribers = $this->validateSubscribers($selectedSubscribers);
-
         $escargot = Escargot::createFromJobId($jobId, $queue, $client ?? $this->createDefaultHttpClient());
 
         $this->registerDefaultSubscribers($escargot);
-        $this->registerSubscribers($escargot, $selectedSubscribers);
+        $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));
 
         return $escargot;
     }

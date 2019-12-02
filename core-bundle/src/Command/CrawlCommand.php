@@ -94,7 +94,7 @@ class CrawlCommand extends Command
                 $this->escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers);
             }
         } catch (InvalidJobIdException $e) {
-            $io->error('Could not find given job ID.');
+            $io->error('Could not find the given job ID.');
 
             return 1;
         } catch (\InvalidArgumentException $e) {
@@ -149,9 +149,7 @@ class CrawlCommand extends Command
         return new class($output) extends ConsoleLogger {
             public function log($level, $message, array $context = []): void
             {
-                $message = '[{source}] '.$message;
-
-                parent::log($level, $message, $context);
+                parent::log($level, '[{source}] '.$message, $context);
             }
         };
     }
@@ -163,8 +161,8 @@ class CrawlCommand extends Command
         $progressBar = new ProgressBar($processOutput);
         $progressBar->setFormat("%title%\n%current%/%max% [%bar%] %percent:3s%%");
         $progressBar->setMessage('Starting to crawl...', 'title');
-
         $progressBar->start();
+
         $this->escargot->addSubscriber($this->getProgressSubscriber($progressBar));
     }
 

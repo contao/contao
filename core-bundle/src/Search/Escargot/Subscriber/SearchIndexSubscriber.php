@@ -56,16 +56,18 @@ class SearchIndexSubscriber implements EscargotSubscriber, EscargotAwareInterfac
     public function shouldRequest(CrawlUri $crawlUri): string
     {
         // Check the original crawlUri to see if that one contained nofollow information
-        if (null !== $crawlUri->getFoundOn() && ($originalCrawlUri = $this->escargot->getCrawlUri($crawlUri->getFoundOn()))) {
-            if ($originalCrawlUri->hasTag(RobotsSubscriber::TAG_NOFOLLOW)) {
-                $this->escargot->log(
-                    LogLevel::DEBUG,
-                    $crawlUri->createLogMessage('Do not request because when the crawl URI was found, the robots information disallowed following this URI.'),
-                    ['source' => \get_class($this)]
-                );
+        if (
+            null !== $crawlUri->getFoundOn()
+            && ($originalCrawlUri = $this->escargot->getCrawlUri($crawlUri->getFoundOn()))
+            && $originalCrawlUri->hasTag(RobotsSubscriber::TAG_NOFOLLOW)
+        ) {
+            $this->escargot->log(
+                LogLevel::DEBUG,
+                $crawlUri->createLogMessage('Do not request because when the crawl URI was found, the robots information disallowed following this URI.'),
+                ['source' => \get_class($this)]
+            );
 
-                return SubscriberInterface::DECISION_NEGATIVE;
-            }
+            return SubscriberInterface::DECISION_NEGATIVE;
         }
 
         // Skip rel="nofollow" links

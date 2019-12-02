@@ -19,33 +19,25 @@ use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
 use Terminal42\Escargot\BaseUriCollection;
-use Terminal42\Escargot\Escargot;
 use Terminal42\Escargot\Queue\InMemoryQueue;
-use Terminal42\Escargot\Queue\LazyQueue;
 
 class FactoryTest extends TestCase
 {
     public function testHandlesSubscribersCorrectly(): void
     {
-        $factory = new Factory(
-            $this->createMock(Connection::class),
-            $this->mockContaoFramework()
-        );
-
         $subscriber1 = $this->createMock(EscargotSubscriber::class);
         $subscriber1
-            ->expects($this->any())
             ->method('getName')
             ->willReturn('subscriber-1')
         ;
 
         $subscriber2 = $this->createMock(EscargotSubscriber::class);
         $subscriber2
-            ->expects($this->any())
             ->method('getName')
             ->willReturn('subscriber-2')
         ;
 
+        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework());
         $factory->addSubscriber($subscriber1);
         $factory->addSubscriber($subscriber2);
 
@@ -53,32 +45,19 @@ class FactoryTest extends TestCase
         $this->assertCount(2, $factory->getSubscribers(['subscriber-1', 'subscriber-2']));
         $this->assertCount(1, $factory->getSubscribers(['subscriber-1']));
         $this->assertCount(1, $factory->getSubscribers(['subscriber-2']));
-
         $this->assertSame(['subscriber-1', 'subscriber-2'], $factory->getSubscriberNames());
-    }
-
-    public function testQueueIsInstantiatedCorrectly(): void
-    {
-        $factory = new Factory(
-            $this->createMock(Connection::class),
-            $this->mockContaoFramework()
-        );
-
-        $this->assertInstanceOf(LazyQueue::class, $factory->createLazyQueue());
     }
 
     public function testBuildsUriCollectionsCorrectly(): void
     {
         $rootPage = $this->createMock(PageModel::class);
         $rootPage
-            ->expects($this->any())
             ->method('getAbsoluteUrl')
             ->willReturn('https://contao.org')
         ;
 
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
         $pageModelAdapter
-            ->expects($this->any())
             ->method('findPublishedRootPages')
             ->willReturn([$rootPage])
         ;
@@ -102,44 +81,35 @@ class FactoryTest extends TestCase
 
     public function testCreatesEscargotCorrectlyWithNewJobId(): void
     {
-        $factory = new Factory(
-            $this->createMock(Connection::class),
-            $this->mockContaoFramework()
-        );
-
         $subscriber1 = $this->createMock(EscargotSubscriber::class);
         $subscriber1
-            ->expects($this->any())
             ->method('getName')
             ->willReturn('subscriber-1')
         ;
 
+        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework());
         $factory->addSubscriber($subscriber1);
 
-        $escargot = $factory->create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue(), ['subscriber-1']);
+        $uriCollection = new BaseUriCollection([new Uri('https://contao.org')]);
+        $escargot = $factory->create($uriCollection, new InMemoryQueue(), ['subscriber-1']);
 
-        $this->assertInstanceOf(Escargot::class, $escargot);
         $this->assertCount(3, $escargot->getSubscribers());
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('You have to specify at least one valid subscriber name. Valid subscribers are: subscriber-1');
-        $factory->create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue(), ['subscriber-8']);
+
+        $factory->create($uriCollection, new InMemoryQueue(), ['subscriber-8']);
     }
 
     public function testCreatesEscargotCorrectlyWithExistingJobId(): void
     {
-        $factory = new Factory(
-            $this->createMock(Connection::class),
-            $this->mockContaoFramework()
-        );
-
         $subscriber1 = $this->createMock(EscargotSubscriber::class);
         $subscriber1
-            ->expects($this->any())
             ->method('getName')
             ->willReturn('subscriber-1')
         ;
 
+        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework());
         $factory->addSubscriber($subscriber1);
 
         $queue = new InMemoryQueue();
@@ -147,11 +117,11 @@ class FactoryTest extends TestCase
 
         $escargot = $factory->createFromJobId($jobId, $queue, ['subscriber-1']);
 
-        $this->assertInstanceOf(Escargot::class, $escargot);
         $this->assertCount(3, $escargot->getSubscribers());
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('You have to specify at least one valid subscriber name. Valid subscribers are: subscriber-1');
+
         $factory->createFromJobId($jobId, $queue, ['subscriber-8']);
     }
 }

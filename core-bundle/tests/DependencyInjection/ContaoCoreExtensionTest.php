@@ -1884,6 +1884,40 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(2));
     }
 
+    public function testRegistersTheCrawlResources(): void
+    {
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $this->container);
+
+        $this->assertTrue($this->container->has('contao.search.escargot_factory'));
+
+        $factory = $this->container->getDefinition('contao.search.escargot_factory');
+
+        $this->assertSame([], $factory->getArgument(2));
+        $this->assertSame([], $factory->getArgument(3));
+
+        $extension->load(
+            [
+                'contao' => [
+                    'crawl' => [
+                        'additionalURIs' => [
+                            'https://examle.com',
+                        ],
+                        'defaultHttpClientOptions' => [
+                            'proxy' => 'http://localhost:7080',
+                        ],
+                    ],
+                ],
+            ],
+            $this->container
+        );
+
+        $factory = $this->container->getDefinition('contao.search.escargot_factory');
+
+        $this->assertSame(['https://examle.com'], $factory->getArgument(2));
+        $this->assertSame(['proxy' => 'http://localhost:7080'], $factory->getArgument(3));
+    }
+
     public function testRegistersThePredefinedImageSizes(): void
     {
         $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
@@ -1961,35 +1995,6 @@ class ContaoCoreExtensionTest extends TestCase
         // Should still have the interface registered for autoconfiguration
         $this->assertArrayHasKey(IndexerInterface::class, $this->container->getAutoconfiguredInstanceof());
         $this->assertFalse($this->container->hasDefinition('contao.search.indexer.default'));
-    }
-
-    public function testCrawlSection(): void
-    {
-        $extension = new ContaoCoreExtension();
-        $extension->load([], $this->container);
-
-        $this->assertTrue($this->container->has('contao.search.escargot_factory'));
-        $this->assertSame([], $this->container->getDefinition('contao.search.escargot_factory')->getArgument(2));
-        $this->assertSame([], $this->container->getDefinition('contao.search.escargot_factory')->getArgument(3));
-
-        $extension->load(
-            [
-                'contao' => [
-                    'crawl' => [
-                        'additionalURIs' => [
-                            'https://examle.com',
-                        ],
-                        'defaultHttpClientOptions' => [
-                            'proxy' => 'http://localhost:7080',
-                        ],
-                    ],
-                ],
-            ],
-            $this->container
-        );
-
-        $this->assertSame(['https://examle.com'], $this->container->getDefinition('contao.search.escargot_factory')->getArgument(2));
-        $this->assertSame(['proxy' => 'http://localhost:7080'], $this->container->getDefinition('contao.search.escargot_factory')->getArgument(3));
     }
 
     /**

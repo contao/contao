@@ -29,20 +29,20 @@ class CrawlCommandTest extends TestCase
     public function testAbortsWithInvalidJobId(): void
     {
         $escargotFactory = $this->createInvalidEscargotFactory(new InvalidJobIdException(), true);
-
         $command = new CrawlCommand($escargotFactory);
+
         $tester = new CommandTester($command);
         $code = $tester->execute(['job' => 'i-do-not-exist']);
 
         $this->assertSame(1, $code);
-        $this->assertStringContainsString('[ERROR] Could not find given job ID.', $tester->getDisplay());
+        $this->assertStringContainsString('[ERROR] Could not find the given job ID.', $tester->getDisplay());
     }
 
     public function testAbortsIfEscargotCouldNotBeInstantiated(): void
     {
         $escargotFactory = $this->createInvalidEscargotFactory(new \InvalidArgumentException('Something went wrong!'));
-
         $command = new CrawlCommand($escargotFactory);
+
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
 
@@ -59,10 +59,11 @@ class CrawlCommandTest extends TestCase
         $escargot = Escargot::create($this->createBaseUriCollection(), new InMemoryQueue(), $client);
         $escargotFactory = $this->createValidEscargotFactory($escargot);
         $command = new CrawlCommand($escargotFactory);
+
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
-        $this->assertSame(0, $code);
 
+        $this->assertSame(0, $code);
         $this->assertSame(10, $command->getEscargot()->getConcurrency());
         $this->assertSame(0, $command->getEscargot()->getRequestDelay());
         $this->assertSame(0, $command->getEscargot()->getMaxRequests());
@@ -72,15 +73,11 @@ class CrawlCommandTest extends TestCase
         $escargot = Escargot::create($this->createBaseUriCollection(), new InMemoryQueue(), $client);
         $escargotFactory = $this->createValidEscargotFactory($escargot);
         $command = new CrawlCommand($escargotFactory);
-        $tester = new CommandTester($command);
-        $code = $tester->execute([
-            '-c' => 20,
-            '--delay' => 20,
-            '--max-requests' => 20,
-            '--max-depth' => 20,
-        ]);
-        $this->assertSame(0, $code);
 
+        $tester = new CommandTester($command);
+        $code = $tester->execute(['-c' => 20, '--delay' => 20, '--max-requests' => 20, '--max-depth' => 20]);
+
+        $this->assertSame(0, $code);
         $this->assertSame(20, $command->getEscargot()->getConcurrency());
         $this->assertSame(20, $command->getEscargot()->getRequestDelay());
         $this->assertSame(20, $command->getEscargot()->getMaxRequests());
@@ -107,12 +104,12 @@ class CrawlCommandTest extends TestCase
     private function createValidEscargotFactory(Escargot $escargot, bool $withExistingJobId = false): MockObject
     {
         $escargotFactory = $this->createEscargotFactory();
-
         $escargotFactory
             ->expects($this->once())
             ->method('create')
             ->willReturn($escargot)
         ;
+
         $escargotFactory
             ->expects($this->never())
             ->method('createFromJobId')
@@ -131,6 +128,7 @@ class CrawlCommandTest extends TestCase
                 ->method('createFromJobId')
                 ->willThrowException($exception)
             ;
+
             $escargotFactory
                 ->expects($this->never())
                 ->method('create')
@@ -144,6 +142,7 @@ class CrawlCommandTest extends TestCase
             ->method('create')
             ->willThrowException($exception)
         ;
+
         $escargotFactory
             ->expects($this->never())
             ->method('createFromJobId')
