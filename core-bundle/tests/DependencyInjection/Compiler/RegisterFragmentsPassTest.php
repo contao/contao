@@ -148,6 +148,7 @@ class RegisterFragmentsPassTest extends TestCase
 
         $container = new ContainerBuilder();
         $container->setDefinition('contao.fragment.registry', new Definition());
+        $container->setDefinition('contao.command.debug_fragments', new Definition());
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
         (new ResolveClassPass())->process($container);
