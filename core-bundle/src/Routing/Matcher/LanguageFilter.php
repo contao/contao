@@ -27,6 +27,9 @@ class LanguageFilter implements RouteFilterInterface
      */
     private $prependLocale;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.language_filter" service instead
+     */
     public function __construct(bool $prependLocale)
     {
         $this->prependLocale = $prependLocale;

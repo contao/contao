@@ -19,6 +19,9 @@ use Contao\FaqModel;
 use Contao\PageModel;
 use Contao\StringUtil;
 
+/**
+ * @internal
+ */
 class InsertTagsListener
 {
     private const SUPPORTED_TAGS = [

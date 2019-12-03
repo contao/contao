@@ -23,6 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
+/**
+ * @internal
+ */
 class InitializeApplicationListener implements ContainerAwareInterface
 {
     use ContainerAwareTrait;

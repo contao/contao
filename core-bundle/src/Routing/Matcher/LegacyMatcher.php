@@ -43,6 +43,9 @@ class LegacyMatcher implements RequestMatcherInterface
      */
     private $prependLocale;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.legacy_matcher" service instead
+     */
     public function __construct(ContaoFramework $framework, RequestMatcherInterface $requestMatcher, string $urlSuffix, bool $prependLocale)
     {
         $this->framework = $framework;

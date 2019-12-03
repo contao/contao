@@ -18,6 +18,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
+ * @internal
+ *
  * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5.0; use
  *             "composer show | grep contao/core-bundle | awk '{ print $2 }'" instead
  */

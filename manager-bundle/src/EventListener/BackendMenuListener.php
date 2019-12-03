@@ -15,7 +15,10 @@ namespace Contao\ManagerBundle\EventListener;
 use Contao\CoreBundle\Event\MenuEvent;
 use Symfony\Component\Security\Core\Security;
 
-final class BackendMenuListener
+/**
+ * @internal
+ */
+class BackendMenuListener
 {
     /**
      * @var Security

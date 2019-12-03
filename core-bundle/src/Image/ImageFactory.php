@@ -84,6 +84,9 @@ class ImageFactory implements ImageFactoryInterface
      */
     private $logger;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.image.image_factory" service instead
+     */
     public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir, ?LoggerInterface $logger = null)
     {
         $this->resizer = $resizer;

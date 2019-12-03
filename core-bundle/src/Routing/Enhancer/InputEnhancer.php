@@ -32,6 +32,9 @@ class InputEnhancer implements RouteEnhancerInterface
      */
     private $prependLocale;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.input_enhancer" service instead
+     */
     public function __construct(ContaoFramework $framework, bool $prependLocale)
     {
         $this->framework = $framework;

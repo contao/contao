@@ -32,6 +32,9 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
      */
     private $framework;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.translation.translator" service instead
+     */
     public function __construct(TranslatorInterface $translator, ContaoFramework $framework)
     {
         $this->translator = $translator;

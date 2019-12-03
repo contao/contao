@@ -33,6 +33,9 @@ use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 use Twig\Error\Error;
 
+/**
+ * @internal
+ */
 class PrettyErrorScreenListener
 {
     /**

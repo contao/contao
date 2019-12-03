@@ -15,6 +15,9 @@ namespace Contao\ManagerBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * @internal
+ */
 class ContaoManagerPass implements CompilerPassInterface
 {
     /**

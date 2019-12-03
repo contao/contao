@@ -19,6 +19,9 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
+/**
+ * @internal
+ */
 class MergeHttpHeadersListener
 {
     /**

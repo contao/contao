@@ -39,6 +39,9 @@ class InstallTool
      */
     private $logger;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.install_tool" service instead
+     */
     public function __construct(Connection $connection, string $rootDir, LoggerInterface $logger)
     {
         $this->connection = $connection;

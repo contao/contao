@@ -31,6 +31,8 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
  * Changes the password of a Contao back end user.
+ *
+ * @internal
  */
 class UserPasswordCommand extends Command
 {

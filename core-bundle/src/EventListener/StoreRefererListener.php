@@ -18,6 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Security\Core\Security;
 
+/**
+ * @internal
+ */
 class StoreRefererListener
 {
     /**

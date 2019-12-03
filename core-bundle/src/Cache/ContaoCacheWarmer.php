@@ -59,6 +59,9 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     private $framework;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.cache.warm_internal" service instead
+     */
     public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $rootDir, Connection $connection, ContaoFramework $framework)
     {
         $this->filesystem = $filesystem;

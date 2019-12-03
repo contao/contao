@@ -50,7 +50,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     private $logger;
 
     /**
-     * @throws \RuntimeException
+     * @internal Do not inherit from this class; decorate the "contao.security.*_user_provider" service instead
      */
     public function __construct(ContaoFramework $framework, SessionInterface $session, string $userClass, LoggerInterface $logger = null)
     {
