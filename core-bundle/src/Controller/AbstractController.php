@@ -11,7 +11,7 @@ abstract class AbstractController extends SymfonyAbstractController implements S
     /**
      * Initializes the Contao framework.
      */
-    protected function initializeContao()
+    protected function initializeContaoFramework()
     {
         $this->get('contao.framework')->initialize();
     }

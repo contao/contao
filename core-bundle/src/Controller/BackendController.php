@@ -42,7 +42,7 @@ class BackendController extends AbstractController
      */
     public function mainAction(): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         $controller = new BackendMain();
 
@@ -54,7 +54,7 @@ class BackendController extends AbstractController
      */
     public function loginAction(Request $request): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             $queryString = '';
@@ -86,7 +86,7 @@ class BackendController extends AbstractController
      */
     public function passwordAction(): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         $controller = new BackendPassword();
 
@@ -104,7 +104,7 @@ class BackendController extends AbstractController
             return $this->redirect($previewScript.$request->getRequestUri());
         }
 
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         $controller = new BackendPreview();
 
@@ -116,7 +116,7 @@ class BackendController extends AbstractController
      */
     public function confirmAction(): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         $controller = new BackendConfirm();
 
@@ -128,7 +128,7 @@ class BackendController extends AbstractController
      */
     public function fileAction(): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         $controller = new BackendFile();
 
@@ -140,7 +140,7 @@ class BackendController extends AbstractController
      */
     public function helpAction(): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         $controller = new BackendHelp();
 
@@ -152,7 +152,7 @@ class BackendController extends AbstractController
      */
     public function pageAction(): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         $controller = new BackendPage();
 
@@ -164,7 +164,7 @@ class BackendController extends AbstractController
      */
     public function popupAction(): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         $controller = new BackendPopup();
 
@@ -176,7 +176,7 @@ class BackendController extends AbstractController
      */
     public function switchAction(): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         $controller = new BackendSwitch();
 
@@ -188,7 +188,7 @@ class BackendController extends AbstractController
      */
     public function alertsAction(): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         $controller = new BackendAlerts();
 

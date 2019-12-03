@@ -33,7 +33,7 @@ class FrontendController extends AbstractController
 {
     public function indexAction(): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         $controller = new FrontendIndex();
 
@@ -45,7 +45,7 @@ class FrontendController extends AbstractController
      */
     public function cronAction(): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         $controller = new FrontendCron();
 
@@ -57,7 +57,7 @@ class FrontendController extends AbstractController
      */
     public function shareAction(): RedirectResponse
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         $controller = new FrontendShare();
 
@@ -73,7 +73,7 @@ class FrontendController extends AbstractController
      */
     public function loginAction(): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
             throw new UnauthorizedHttpException('', 'Not authorized');
@@ -159,7 +159,7 @@ class FrontendController extends AbstractController
      */
     public function twoFactorAuthenticationAction(): Response
     {
-        $this->initializeContao();
+        $this->initializeContaoFramework();
 
         if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
             throw new UnauthorizedHttpException('', 'Not authorized');
