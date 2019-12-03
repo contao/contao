@@ -24,6 +24,7 @@ use Contao\TestCase\ContaoTestCase;
 use Contao\User;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
+use Doctrine\DBAL\Connection;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
@@ -398,20 +399,26 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $class = new \ReflectionClass(Plugin::class);
-        $method = $class->getMethod('getConnectionParams');
-        $method->setAccessible(true);
+        $connection = $this->createMock(Connection::class);
+        $connection->expects($this->once())->method('connect');
+        $connection->expects($this->once())->method('close');
+
+        $dbalConnectionFactory = function ($params) use ($connection) {
+            $this->assertSame(
+                [
+                    'url' => 'mysql://root:foo%bar@localhost:3306/database',
+                    'password' => 'foo%bar',
+                ],
+                $params
+            );
+            return $connection;
+        };
 
         $url = $_ENV['DATABASE_URL'] ?? null;
         $_ENV['DATABASE_URL'] = 'mysql://root:foo%bar@localhost:3306/database';
 
-        $this->assertSame(
-            [
-                'url' => 'mysql://root:foo%bar@localhost:3306/database',
-                'password' => 'foo%bar',
-            ],
-            $method->invokeArgs(new Plugin(), [$extensionConfigs, $container])
-        );
+        $plugin = new Plugin($dbalConnectionFactory);
+        $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $_ENV['DATABASE_URL'] = $url;
     }

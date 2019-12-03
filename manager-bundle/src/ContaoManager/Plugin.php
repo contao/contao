@@ -64,11 +64,21 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private static $autoloadModules;
 
     /**
+     * @var callable
+     */
+    private $dbalConnectionFactory;
+
+    /**
      * Sets the path to enable autoloading of legacy Contao modules.
      */
     public static function autoloadModules(string $modulePath): void
     {
         static::$autoloadModules = $modulePath;
+    }
+
+    public function __construct(callable $dbalConnectionFactory = null)
+    {
+        $this->dbalConnectionFactory = $dbalConnectionFactory ?: [DriverManager::class, 'getConnection'];
     }
 
     /**
@@ -313,29 +323,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     private function addDefaultServerVersion(array $extensionConfigs, ContainerBuilder $container): array
     {
-        $params = $this->getConnectionParams($extensionConfigs, $container);
-
-        try {
-            $connection = DriverManager::getConnection($params);
-            $connection->connect();
-            $connection->close();
-        } catch (DriverException $e) {
-            $extensionConfigs[] = [
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'server_version' => '5.5',
-                        ],
-                    ],
-                ],
-            ];
-        }
-
-        return $extensionConfigs;
-    }
-
-    private function getConnectionParams(array $extensionConfigs, ContainerBuilder $container): array
-    {
         $params = [];
 
         foreach ($extensionConfigs as $extensionConfig) {
@@ -354,6 +341,24 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $params[$key] = $parameterBag->unescapeValue($container->resolveEnvPlaceholders($value, true));
         }
 
-        return $params;
+        // If there are no DB credentials yet (install tool), we have to set
+        // the server version to prevent a DBAL exception (see #1422)
+        try {
+            $connection = call_user_func($this->dbalConnectionFactory, $params);
+            $connection->connect();
+            $connection->close();
+        } catch (DriverException $e) {
+            $extensionConfigs[] = [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.5',
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        return $extensionConfigs;
     }
 }
