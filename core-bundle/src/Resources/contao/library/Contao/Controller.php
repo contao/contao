@@ -1930,6 +1930,7 @@ abstract class Controller extends System
 				$GLOBALS['objPage'] = func_get_arg(0);
 			}
 		}
+
 		$framework = System::getContainer()->get('contao.framework');
 		$framework->setConstant('TL_ASSETS_URL', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl());
 		$framework->setConstant('TL_FILES_URL', System::getContainer()->get('contao.assets.files_context')->getStaticUrl());

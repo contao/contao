@@ -41,6 +41,19 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private static $initialized = false;
 
     /**
+     * @var array
+     */
+    private static $deprecatedConstants = [
+        'TL_START' => 'The TL_START constant is deprecated and will be removed in a next major version.',
+        'TL_SCRIPT' => 'The TL_SCRIPT constant is deprecated and will be removed in a next major version.',
+        'TL_MODE' => 'The TL_MODE constant is deprecated, use the contao.routing.scope_matcher service instead.',
+        'TL_ROOT' => 'The TL_ROOT constant is deprecated, use the %kernel.project_dir% parameter instead.',
+        'TL_PATH' => 'The TL_PATH constant is deprecated, use the Request::getBasePath() method instead.',
+        'BE_USER_LOGGED_IN' => 'The BE_USER_LOGGED_IN constant is deprecated, use the contao.security.token_checker service instead.',
+        'FE_USER_LOGGED_IN' => 'The BE_USER_LOGGED_IN constant is deprecated, use the contao.security.token_checker service instead.',
+    ];
+
+    /**
      * @var RequestStack
      */
     private $requestStack;
@@ -178,6 +191,10 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
     public function getConstant(string $name)
     {
+        if (\array_key_exists($name, self::$deprecatedConstants)) {
+            trigger_error(self::$deprecatedConstants[$name], E_USER_DEPRECATED);
+        }
+
         if (\array_key_exists($name, $this->constants)) {
             return $this->constants[$name];
         }
@@ -188,6 +205,18 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     public function hasConstant(string $name): bool
     {
         return \array_key_exists($name, $this->constants) || \defined($name);
+    }
+
+    /**
+     * Marks a constant as deprecated and triggers a deprecation warning when accessing it.
+     */
+    public static function setDeprecatedConstant(string $name, string $message)
+    {
+        if (\array_key_exists($name, self::$deprecatedConstants)) {
+            return;
+        }
+
+        self::$deprecatedConstants[$name] = $message;
     }
 
     /**
