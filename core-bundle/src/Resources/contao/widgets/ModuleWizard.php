@@ -105,6 +105,8 @@ class ModuleWizard extends \Widget
 			$cols[] = 'footer';
 		}
 
+		$positions = array();
+
 		// Add custom layout sections
 		if ($objRow->sections != '')
 		{
@@ -116,7 +118,8 @@ class ModuleWizard extends \Widget
 				{
 					if (!empty($v['id']))
 					{
-						$cols[$v['id']] = $v['id'];
+						$cols[] = $v['id'];
+						$positions[$v['id']] = $v['position'];
 					}
 				}
 			}
@@ -137,17 +140,31 @@ class ModuleWizard extends \Widget
 		}
 		else
 		{
-			$arrCols = array();
-
 			// Initialize the sorting order
-			foreach (array_keys($cols) as $col)
-			{
-				$arrCols[$col] = array();
-			}
+			$arrCols = array
+ 			(
+ 				'top' => array(),
+ 				'header' => array(),
+ 				'before' => array(),
+ 				'left' => array(),
+ 				'right' => array(),
+ 				'main' => array(),
+ 				'after' => array(),
+ 				'footer' => array(),
+ 				'bottom' => array(),
+ 				'manual' => array()
+ 			);
 
 			foreach ($this->varValue as $v)
 			{
-				$arrCols[$v['col']][] = $v;
+				$key = $v['col'];
+
+				if (isset($positions[$v['col']]))
+ 				{
+ 					$key = $positions[$v['col']];
+ 				}
+
+ 				$arrCols[$key][] = $v;
 			}
 
 			$this->varValue = array();
