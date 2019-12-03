@@ -325,7 +325,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $parameterBag = $container->getParameterBag();
 
         foreach ($params as $key => $value) {
-            $params[$key] = $parameterBag->unescapeValue($parameterBag->resolveValue($value));
+            $params[$key] = $parameterBag->unescapeValue($container->resolveEnvPlaceholders($value, true));
         }
 
         // If there are no DB credentials yet (install tool), we have to set
