@@ -85,6 +85,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
+    /**
+     * @var array
+     */
+    private $constants = [];
+
     public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, string $rootDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
@@ -160,6 +165,12 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
     public function setConstant(string $name, $value): void
     {
+        if (\array_key_exists($name, $this->constants)) {
+            return;
+        }
+
+        $this->constants[$name] = $value;
+
         if (!\defined($name)) {
             \define($name, $value);
         }
@@ -167,7 +178,16 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
     public function getConstant(string $name)
     {
+        if (\array_key_exists($name, $this->constants)) {
+            return $this->constants[$name];
+        }
+
         return \defined($name) ? \constant($name) : null;
+    }
+
+    public function hasConstant(string $name): bool
+    {
+        return \array_key_exists($name, $this->constants) || \defined($name);
     }
 
     /**
