@@ -90,7 +90,7 @@ class DebugFragmentsCommand extends Command
     {
         $length = array_reduce(
             array_keys($values),
-            static function ($carry, $item) {
+            static function ($carry, $item): int {
                 $length = \strlen($item);
 
                 return $carry > $length ? $carry : $length;
