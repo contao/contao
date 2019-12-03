@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FrontendCron;
 use Contao\FrontendIndex;
 use Contao\FrontendShare;
@@ -184,7 +183,6 @@ class FrontendController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services['contao.framework'] = ContaoFramework::class;
         $services['contao.csrf.token_manager'] = CsrfTokenManagerInterface::class;
 
         return $services;

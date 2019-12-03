@@ -13,12 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FrontendTemplate;
 use Contao\Model;
 use Contao\StringUtil;
 use Contao\Template;
-use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Symfony\Component\DependencyInjection\Container;
 
 abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface
@@ -31,19 +29,6 @@ abstract class AbstractFragmentController extends AbstractController implements 
     public function setFragmentOptions(array $options): void
     {
         $this->options = $options;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedServices(): array
-    {
-        return array_merge(
-            parent::getSubscribedServices(),
-            [
-                'fos_http_cache.http.symfony_response_tagger' => '?'.SymfonyResponseTagger::class,
-            ]
-        );
     }
 
     /**
@@ -92,15 +77,6 @@ abstract class AbstractFragmentController extends AbstractController implements 
     protected function addSectionToTemplate(Template $template, string $section): void
     {
         $template->inColumn = $section;
-    }
-
-    protected function tagResponse(array $tags): void
-    {
-        if (!$this->has('fos_http_cache.http.symfony_response_tagger')) {
-            return;
-        }
-
-        $this->get('fos_http_cache.http.symfony_response_tagger')->addTags($tags);
     }
 
     /**

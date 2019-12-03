@@ -23,7 +23,6 @@ use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\BackendPreview;
 use Contao\BackendSwitch;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -244,7 +243,6 @@ class BackendController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services['contao.framework'] = ContaoFramework::class;
         $services['contao.picker.builder'] = PickerBuilderInterface::class;
 
         return $services;
