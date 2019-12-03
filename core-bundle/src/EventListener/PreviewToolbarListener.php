@@ -59,7 +59,7 @@ class PreviewToolbarListener
         $request = $event->getRequest();
         $response = $event->getResponse();
 
-        if ($request->getScriptName() !== $this->previewScript) {
+        if ('' === $this->previewScript || $request->getScriptName() !== $this->previewScript) {
             return;
         }
 

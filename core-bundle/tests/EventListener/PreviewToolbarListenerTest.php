@@ -91,6 +91,29 @@ class PreviewToolbarListenerTest extends TestCase
         $this->assertSame("<html><head></head><body>\nCONTAO\n</body></html>", $response->getContent());
     }
 
+    public function testToolbarIsNotInjectedWhenNoPreviewEntrypoint(): void
+    {
+        $response = new Response('<html><head></head><body></body></html>');
+        $response->headers->set('Content-Type', 'text/html; charset=utf-8');
+
+        $event = new ResponseEvent(
+            $this->getKernelMock(),
+            $this->getRequestMock(),
+            HttpKernelInterface::MASTER_REQUEST,
+            $response
+        );
+
+        $listener = new PreviewToolbarListener(
+            '',
+            $this->mockScopeMatcher(),
+            $this->getTwigMock(),
+            $this->mockRouterWithContext()
+        );
+        $listener->onKernelResponse($event);
+
+        $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
+    }
+
     /**
      * @depends testToolbarIsInjected
      */
