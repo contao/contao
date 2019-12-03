@@ -379,4 +379,40 @@ class PluginTest extends ContaoTestCase
 
         $this->assertSame($expect, $extensionConfig);
     }
+
+    public function testRetrievesTheConnectionParametersFromTheConfiguration(): void
+    {
+        $pluginLoader = $this->createMock(PluginLoader::class);
+        $container = new PluginContainerBuilder($pluginLoader, []);
+
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'url' => '%env(DATABASE_URL)%',
+                            'password' => 'foo%%bar',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $class = new \ReflectionClass(Plugin::class);
+        $method = $class->getMethod('getConnectionParams');
+        $method->setAccessible(true);
+
+        $url = $_ENV['DATABASE_URL'] ?? null;
+        $_ENV['DATABASE_URL'] = 'mysql://root:foo%bar@localhost:3306/database';
+
+        $this->assertSame(
+            [
+                'url' => 'mysql://root:foo%bar@localhost:3306/database',
+                'password' => 'foo%bar',
+            ],
+            $method->invokeArgs(new Plugin(), [$extensionConfigs, $container])
+        );
+
+        $_ENV['DATABASE_URL'] = $url;
+    }
 }

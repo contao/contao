@@ -306,9 +306,35 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Adds the database server version to the Doctrine DBAL configuration.
      *
+     * If there are no DB credentials yet (install tool), we have to set the
+     * server version to prevent a DBAL exception (see #1422).
+     *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
     private function addDefaultServerVersion(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        $params = $this->getConnectionParams($extensionConfigs, $container);
+
+        try {
+            $connection = DriverManager::getConnection($params);
+            $connection->connect();
+            $connection->close();
+        } catch (DriverException $e) {
+            $extensionConfigs[] = [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.5',
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        return $extensionConfigs;
+    }
+
+    private function getConnectionParams(array $extensionConfigs, ContainerBuilder $container): array
     {
         $params = [];
 
@@ -328,24 +354,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $params[$key] = $parameterBag->unescapeValue($container->resolveEnvPlaceholders($value, true));
         }
 
-        // If there are no DB credentials yet (install tool), we have to set
-        // the server version to prevent a DBAL exception (see #1422)
-        try {
-            $connection = DriverManager::getConnection($params);
-            $connection->connect();
-            $connection->close();
-        } catch (DriverException $e) {
-            $extensionConfigs[] = [
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'server_version' => '5.5',
-                        ],
-                    ],
-                ],
-            ];
-        }
-
-        return $extensionConfigs;
+        return $params;
     }
 }
