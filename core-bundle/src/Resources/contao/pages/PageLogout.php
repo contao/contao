@@ -52,6 +52,6 @@ class PageLogout extends \Frontend
 
 		$this->User->logout();
 
-		return new RedirectResponse($strRedirect);
+		return new RedirectResponse($strRedirect, 307);
 	}
 }
