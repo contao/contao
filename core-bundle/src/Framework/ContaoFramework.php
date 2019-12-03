@@ -192,7 +192,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     public function getConstant(string $name)
     {
         if (\array_key_exists($name, self::$deprecatedConstants)) {
-            trigger_error(self::$deprecatedConstants[$name], E_USER_DEPRECATED);
+            @trigger_error(self::$deprecatedConstants[$name], E_USER_DEPRECATED);
         }
 
         if (\array_key_exists($name, $this->constants)) {
