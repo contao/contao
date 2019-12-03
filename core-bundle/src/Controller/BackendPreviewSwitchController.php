@@ -93,11 +93,11 @@ class BackendPreviewSwitchController
         }
 
         if ($request->isMethod('GET')) {
-            return Response::create($this->renderToolbar($user));
+            return Response::create($this->renderToolbar());
         }
 
         if ('tl_switch' === $request->request->get('FORM_SUBMIT')) {
-            $this->authenticatePreview($user, $request);
+            $this->authenticatePreview($request);
 
             return new Response('', Response::HTTP_NO_CONTENT);
         }
@@ -111,9 +111,9 @@ class BackendPreviewSwitchController
         return new Response('', Response::HTTP_BAD_REQUEST);
     }
 
-    private function renderToolbar(BackendUser $user): string
+    private function renderToolbar(): string
     {
-        $canSwitchUser = ($user->isAdmin || (!empty($user->amg) && \is_array($user->amg)));
+        $canSwitchUser = $this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER');
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
         $showUnpublished = $this->tokenChecker->isPreviewMode();
 
@@ -133,13 +133,12 @@ class BackendPreviewSwitchController
         }
     }
 
-    private function authenticatePreview(BackendUser $user, Request $request): void
+    private function authenticatePreview(Request $request): void
     {
-        $canSwitchUser = $this->isAllowedToAccessMembers($user);
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
         $showUnpublished = 'hide' !== $request->request->get('unpublished');
 
-        if ($canSwitchUser) {
+        if ($this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER')) {
             $frontendUsername = $request->request->get('user') ?: null;
         }
 
@@ -154,11 +153,11 @@ class BackendPreviewSwitchController
     {
         $andWhereGroups = '';
 
-        if (!$this->isAllowedToAccessMembers($user)) {
+        if (!$this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER')) {
             return [];
         }
 
-        if (!$user->isAdmin) {
+        if (!$this->security->isGranted('ROLE_ADMIN')) {
             $groups = array_map(
                 static function ($groupId) {
                     return '%"'.(int) $groupId.'"%';
@@ -191,10 +190,5 @@ SQL
         );
 
         return $result->fetchAll(FetchMode::COLUMN);
-    }
-
-    private function isAllowedToAccessMembers(BackendUser $user): bool
-    {
-        return $user->isAdmin || (!empty($user->amg) && \is_array($user->amg));
     }
 }

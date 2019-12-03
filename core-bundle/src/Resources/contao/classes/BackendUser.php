@@ -584,7 +584,12 @@ class BackendUser extends User
 	{
 		if ($this->isAdmin)
 		{
-			return array('ROLE_USER', 'ROLE_ADMIN', 'ROLE_ALLOWED_TO_SWITCH');
+			return array('ROLE_USER', 'ROLE_ADMIN', 'ROLE_ALLOWED_TO_SWITCH', 'ROLE_ALLOWED_TO_SWITCH_MEMBER');
+		}
+
+		if (\is_array($this->amg) && !empty($this->amg))
+		{
+			return array('ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH_MEMBER');
 		}
 
 		return $this->roles;
