@@ -88,13 +88,17 @@ class DebugFragmentsCommand extends Command
 
     private function generateArray(array $values): string
     {
+        $length = array_reduce(
+            array_keys($values),
+            static function ($carry, $item) {
+                $length = \strlen($item);
+
+                return $carry > $length ? $carry : $length;
+            },
+            0
+        );
+
         $return = [];
-
-        $length = array_reduce(array_keys($values), static function ($carry, $item) {
-            $length = \strlen($item);
-
-            return $carry > $length ? $carry : $length;
-        }, 0);
 
         foreach ($values as $k => $v) {
             if (\is_bool($v)) {
