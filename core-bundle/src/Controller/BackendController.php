@@ -35,6 +35,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route(defaults={"_scope" = "backend", "_token_check" = true})
+ *
+ * @internal
  */
 class BackendController extends AbstractController
 {

@@ -24,6 +24,8 @@ use webignition\RobotsTxt\File\Parser;
 
 /**
  * @Route(defaults={"_scope" = "frontend"})
+ *
+ * @internal
  */
 class RobotsTxtController
 {
