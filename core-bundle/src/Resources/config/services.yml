@@ -141,7 +141,6 @@ services:
             - '@contao.fragment.registry'
             - '@contao.fragment.pre_handlers'
             - '%kernel.debug%'
-        public: true
 
     contao.fragment.pre_handlers:
         class: Symfony\Component\DependencyInjection\ServiceLocator

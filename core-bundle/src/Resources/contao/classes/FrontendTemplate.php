@@ -79,11 +79,17 @@ class FrontendTemplate extends Template
 	 *
 	 * @return Response The response object
 	 */
-	public function getResponse($blnCheckRequest=false)
+	public function getResponse($blnCheckRequest=false, $blnForceCacheHeaders=false)
 	{
 		$this->blnCheckRequest = $blnCheckRequest;
 
-		return $this->setCacheHeaders(parent::getResponse());
+		$response = parent::getResponse();
+
+		if (0 === strncmp('fe_', $this->strTemplate, 3)) {
+			return $this->setCacheHeaders($response);
+		}
+
+		return $response;
 	}
 
 	/**

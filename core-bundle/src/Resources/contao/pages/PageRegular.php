@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Util\PackageUtil;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\HttpCache\ResponseCacheStrategy;
 
 /**
  * Provide methods to handle a regular front end page.
@@ -47,18 +46,9 @@ class PageRegular extends Frontend
 	 */
 	public function getResponse($objPage, $blnCheckRequest=false)
 	{
-		$objResponseStrategy = new ResponseCacheStrategy();
-		$objFragmentHandler = System::getContainer()->get('contao.fragment.handler');
-		$objFragmentHandler->pushStrategy($objResponseStrategy);
-
 		$this->prepare($objPage);
 
-		$objResponse = $this->Template->getResponse($blnCheckRequest);
-
-		$objResponseStrategy->update($objResponse);
-		$objFragmentHandler->popStrategy();
-
-		return $objResponse;
+		return $this->Template->getResponse($blnCheckRequest);
 	}
 
 	/**
