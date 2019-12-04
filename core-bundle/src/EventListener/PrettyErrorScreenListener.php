@@ -231,7 +231,7 @@ class PrettyErrorScreenListener
         ];
     }
 
-    private function logException(\Exception $exception): void
+    private function logException(\Throwable $exception): void
     {
         if (Kernel::VERSION_ID >= 40100 || null === $this->logger || !$this->isLoggable($exception)) {
             return;
@@ -240,7 +240,7 @@ class PrettyErrorScreenListener
         $this->logger->critical('An exception occurred.', ['exception' => $exception]);
     }
 
-    private function isLoggable(\Exception $exception): bool
+    private function isLoggable(\Throwable $exception): bool
     {
         do {
             if ($exception instanceof InvalidRequestTokenException) {
@@ -251,7 +251,7 @@ class PrettyErrorScreenListener
         return true;
     }
 
-    private function getStatusCodeForException(\Exception $exception): int
+    private function getStatusCodeForException(\Throwable $exception): int
     {
         if ($exception instanceof HttpException) {
             return (int) $exception->getStatusCode();
