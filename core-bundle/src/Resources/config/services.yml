@@ -156,7 +156,9 @@ services:
         arguments:
             - '@request_stack'
             - '@translator'
-        public: true
+        tags:
+            - { name: contao.callback, table: tl_page, target: fields.start.save, method: validateStartDate }
+            - { name: contao.callback, table: tl_page, target: fields.stop.save, method: validateStopDate }
 
     contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider

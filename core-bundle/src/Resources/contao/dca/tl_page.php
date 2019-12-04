@@ -644,10 +644,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'save_callback' => array
-			(
-				array('contao.data_container.start_stop_validator', 'validateStartDate')
-			),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'stop' => array
@@ -655,10 +651,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'save_callback' => array
-			(
-				array('contao.data_container.start_stop_validator', 'validateStopDate')
-			),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'enforceTwoFactor' => array
