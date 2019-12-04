@@ -587,15 +587,16 @@ abstract class Template extends Controller
 	/**
 	 * Generate the markup for a JavaScript tag
 	 *
-	 * @param string      $src         The script path
-	 * @param boolean     $async       True to add the async attribute
-	 * @param mixed       $mtime       The file mtime
-	 * @param string|null $hash        An optional integrity hash
-	 * @param string|null $crossorigin An optional crossorigin attribute
+	 * @param string      $src            The script path
+	 * @param boolean     $async          True to add the async attribute
+	 * @param mixed       $mtime          The file mtime
+	 * @param string|null $hash           An optional integrity hash
+	 * @param string|null $crossorigin    An optional crossorigin attribute
+	 * @param string|null $referrerpolicy An optional referrerpolicy attribute
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null, $crossorigin=null)
+	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null, $crossorigin=null, $referrerpolicy=null)
 	{
 		// Add the filemtime if not given and not an external file
 		if ($mtime === null && !preg_match('@^https?://@', $src))
@@ -624,7 +625,7 @@ abstract class Template extends Controller
 			$src .= '?v=' . substr(md5($mtime), 0, 8);
 		}
 
-		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($crossorigin ? ' crossorigin="' . $crossorigin . '"' : '') . '></script>';
+		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($crossorigin ? ' crossorigin="' . $crossorigin . '"' : '') . ($referrerpolicy ? ' referrerpolicy="' . $referrerpolicy . '"' : '') . '></script>';
 	}
 
 	/**
