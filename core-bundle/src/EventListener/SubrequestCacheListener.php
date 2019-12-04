@@ -39,18 +39,16 @@ class SubrequestCacheListener
     {
         $response = $event->getResponse();
 
-        if (KernelInterface::MASTER_REQUEST === $event->getRequestType()) {
-            if ($this->currentStrategy && $response->headers->has(self::MERGE_CACHE_HEADER)) {
+        if ($this->currentStrategy && $response->headers->has(self::MERGE_CACHE_HEADER)) {
+            if (KernelInterface::MASTER_REQUEST === $event->getRequestType()) {
                 $this->currentStrategy->update($response);
+            } else {
+                $this->currentStrategy->add($response);
             }
-
-            $this->currentStrategy = array_pop($this->strategyStack);
-
-            return;
         }
 
-        if ($this->currentStrategy && $response->headers->has('Cache-Control')) {
-            $this->currentStrategy->add($response);
+        if (KernelInterface::MASTER_REQUEST === $event->getRequestType()) {
+            $this->currentStrategy = array_pop($this->strategyStack);
         }
     }
 }
