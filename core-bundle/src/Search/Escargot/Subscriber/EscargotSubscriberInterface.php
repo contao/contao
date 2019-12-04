@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Search\Escargot\Subscriber;
 
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
 
-interface EscargotSubscriber extends SubscriberInterface
+interface EscargotSubscriberInterface extends SubscriberInterface
 {
     /**
      * Has to return a unique subscriber name so that it can be identified.

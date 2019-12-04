@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
-use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriber;
+use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
@@ -142,7 +142,7 @@ class ContaoCoreExtension extends Extension
     private function handleCrawlConfig(array $config, ContainerBuilder $container): void
     {
         $container
-            ->registerForAutoconfiguration(EscargotSubscriber::class)
+            ->registerForAutoconfiguration(EscargotSubscriberInterface::class)
             ->addTag('contao.escargot_subscriber')
         ;
 

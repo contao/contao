@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Search\Escargot;
 
 use Contao\CoreBundle\Search\Escargot\Factory;
-use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriber;
+use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
@@ -25,13 +25,13 @@ class FactoryTest extends TestCase
 {
     public function testHandlesSubscribersCorrectly(): void
     {
-        $subscriber1 = $this->createMock(EscargotSubscriber::class);
+        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
             ->willReturn('subscriber-1')
         ;
 
-        $subscriber2 = $this->createMock(EscargotSubscriber::class);
+        $subscriber2 = $this->createMock(EscargotSubscriberInterface::class);
         $subscriber2
             ->method('getName')
             ->willReturn('subscriber-2')
@@ -81,7 +81,7 @@ class FactoryTest extends TestCase
 
     public function testCreatesEscargotCorrectlyWithNewJobId(): void
     {
-        $subscriber1 = $this->createMock(EscargotSubscriber::class);
+        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
             ->willReturn('subscriber-1')
@@ -103,7 +103,7 @@ class FactoryTest extends TestCase
 
     public function testCreatesEscargotCorrectlyWithExistingJobId(): void
     {
-        $subscriber1 = $this->createMock(EscargotSubscriber::class);
+        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
             ->willReturn('subscriber-1')

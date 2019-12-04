@@ -26,7 +26,7 @@ use Terminal42\Escargot\Subscriber\RobotsSubscriber;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
 use Terminal42\Escargot\Subscriber\Util;
 
-class SearchIndexSubscriber implements EscargotSubscriber, EscargotAwareInterface
+class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwareInterface
 {
     use EscargotAwareTrait;
 

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Search\Escargot;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriber;
+use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
@@ -53,7 +53,7 @@ class Factory
     private $defaultHttpClientOptions;
 
     /**
-     * @var EscargotSubscriber[]
+     * @var EscargotSubscriberInterface[]
      */
     private $subscribers = [];
 
@@ -65,7 +65,7 @@ class Factory
         $this->defaultHttpClientOptions = $defaultHttpClientOptions;
     }
 
-    public function addSubscriber(EscargotSubscriber $subscriber): self
+    public function addSubscriber(EscargotSubscriberInterface $subscriber): self
     {
         $this->subscribers[] = $subscriber;
 
@@ -73,7 +73,7 @@ class Factory
     }
 
     /**
-     * @return EscargotSubscriber[]
+     * @return EscargotSubscriberInterface[]
      */
     public function getSubscribers(array $selectedSubscribers = []): array
     {
@@ -83,7 +83,7 @@ class Factory
 
         return array_filter(
             $this->subscribers,
-            static function (EscargotSubscriber $subscriber) use ($selectedSubscribers): bool {
+            static function (EscargotSubscriberInterface $subscriber) use ($selectedSubscribers): bool {
                 return \in_array($subscriber->getName(), $selectedSubscribers, true);
             }
         );
@@ -95,7 +95,7 @@ class Factory
     public function getSubscriberNames(): array
     {
         return array_map(
-            static function (EscargotSubscriber $subscriber): string {
+            static function (EscargotSubscriberInterface $subscriber): string {
                 return $subscriber->getName();
             },
             $this->subscribers
