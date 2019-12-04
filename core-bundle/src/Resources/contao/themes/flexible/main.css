@@ -1439,8 +1439,7 @@ ul.sgallery li {
 	max-width:200px;
 }
 .tl_metawizard_new .tl_submit {
-	padding-top:6px;
-	padding-bottom:6px;
+	line-height:1;
 }
 
 /* Section wizard */
