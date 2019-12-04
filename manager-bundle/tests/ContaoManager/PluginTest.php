@@ -400,8 +400,15 @@ class PluginTest extends ContaoTestCase
         ];
 
         $connection = $this->createMock(Connection::class);
-        $connection->expects($this->once())->method('connect');
-        $connection->expects($this->once())->method('close');
+        $connection
+            ->expects($this->once())
+            ->method('connect')
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('close')
+        ;
 
         $dbalConnectionFactory = function ($params) use ($connection) {
             $this->assertSame(
@@ -411,6 +418,7 @@ class PluginTest extends ContaoTestCase
                 ],
                 $params
             );
+
             return $connection;
         };
 

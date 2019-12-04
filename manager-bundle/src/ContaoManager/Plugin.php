@@ -68,17 +68,17 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     private $dbalConnectionFactory;
 
+    public function __construct(callable $dbalConnectionFactory = null)
+    {
+        $this->dbalConnectionFactory = $dbalConnectionFactory ?: [DriverManager::class, 'getConnection'];
+    }
+
     /**
      * Sets the path to enable autoloading of legacy Contao modules.
      */
     public static function autoloadModules(string $modulePath): void
     {
         static::$autoloadModules = $modulePath;
-    }
-
-    public function __construct(callable $dbalConnectionFactory = null)
-    {
-        $this->dbalConnectionFactory = $dbalConnectionFactory ?: [DriverManager::class, 'getConnection'];
     }
 
     /**
@@ -316,9 +316,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Adds the database server version to the Doctrine DBAL configuration.
      *
-     * If there are no DB credentials yet (install tool), we have to set the
-     * server version to prevent a DBAL exception (see #1422).
-     *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
     private function addDefaultServerVersion(array $extensionConfigs, ContainerBuilder $container): array
@@ -344,7 +341,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         // If there are no DB credentials yet (install tool), we have to set
         // the server version to prevent a DBAL exception (see #1422)
         try {
-            $connection = call_user_func($this->dbalConnectionFactory, $params);
+            $connection = \call_user_func($this->dbalConnectionFactory, $params);
             $connection->connect();
             $connection->close();
         } catch (DriverException $e) {
