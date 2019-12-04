@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Search\Document;
+use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
@@ -69,14 +70,18 @@ class SearchIndexListener
             return;
         }
 
-        $success = $event->getResponse()->isSuccessful();
+        try {
+            $success = $event->getResponse()->isSuccessful();
 
-        if ($success && $this->enabledFeatures & self::FEATURE_INDEX) {
-            $this->indexer->index($document);
-        }
+            if ($success && $this->enabledFeatures & self::FEATURE_INDEX) {
+                $this->indexer->index($document);
+            }
 
-        if (!$success && $this->enabledFeatures & self::FEATURE_DELETE) {
-            $this->indexer->delete($document);
+            if (!$success && $this->enabledFeatures & self::FEATURE_DELETE) {
+                $this->indexer->delete($document);
+            }
+        } catch (IndexerException $e) {
+            // ignore
         }
     }
 }

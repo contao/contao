@@ -493,6 +493,20 @@ services:
             - '%contao.prepend_locale%'
         public: true
 
+    contao.search.escargot_factory:
+        class: Contao\CoreBundle\Search\Escargot\Factory
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+        public: true
+
+    contao.search.escargot_subscriber.search_index:
+        class: Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber
+        arguments:
+            - '@contao.search.indexer'
+        tags:
+            - { name: 'contao.escargot_subscriber' }
+
     contao.search.indexer.default:
         class: Contao\CoreBundle\Search\Indexer\DefaultIndexer
         arguments:

@@ -175,4 +175,20 @@ class ConfigurationTest extends TestCase
         yield ['center_bottom'];
         yield ['right_bottom'];
     }
+
+    public function testDeniesInvalidCrawlUris(): void
+    {
+        $params = [
+            'contao' => [
+                'crawl' => [
+                    'additionalURIs' => ['invalid.com'],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "contao.crawl.additionalURIs": All provided additional URIs must start with either http:// or https://.');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
 }

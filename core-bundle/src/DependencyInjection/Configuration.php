@@ -116,6 +116,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
+                ->append($this->addCrawlNode())
             ->end()
         ;
 
@@ -352,6 +353,40 @@ class Configuration implements ConfigurationInterface
                             ->defaultTrue()
                         ->end()
                     ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addCrawlNode(): NodeDefinition
+    {
+        return (new TreeBuilder('crawl'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('additionalURIs')
+                    ->info('Additional URIs to crawl (by default, only the ones defined in the root pages are crawled).')
+                    ->validate()
+                    ->ifTrue(
+                        static function (array $uris): bool {
+                            foreach ($uris as $uri) {
+                                if (!preg_match('@^https?://@', $uri)) {
+                                    return true;
+                                }
+
+                                return false;
+                            }
+                        }
+                    )
+                    ->thenInvalid('All provided additional URIs must start with either http:// or https://.')
+                    ->end()
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
+                ->end()
+                ->arrayNode('defaultHttpClientOptions')
+                    ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
                 ->end()
             ->end()
         ;

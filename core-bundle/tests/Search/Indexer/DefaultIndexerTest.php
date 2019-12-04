@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Search\Indexer;
 
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\DefaultIndexer;
+use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\Search;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Driver\Connection;
@@ -24,7 +25,7 @@ class DefaultIndexerTest extends ContaoTestCase
     /**
      * @dataProvider indexProvider
      */
-    public function testIndexesADocument(Document $document, ?array $expectedIndexParams, bool $indexProtected = false): void
+    public function testIndexesADocument(Document $document, ?array $expectedIndexParams, string $expectedMessage = null, bool $indexProtected = false): void
     {
         $searchAdapter = $this->mockAdapter(['indexPage']);
 
@@ -50,6 +51,11 @@ class DefaultIndexerTest extends ContaoTestCase
             ;
         }
 
+        if (null !== $expectedMessage) {
+            $this->expectException(IndexerException::class);
+            $this->expectExceptionMessage($expectedMessage);
+        }
+
         $indexer = new DefaultIndexer($framework, $this->createMock(Connection::class), $indexProtected);
         $indexer->index($document);
     }
@@ -59,21 +65,25 @@ class DefaultIndexerTest extends ContaoTestCase
         yield 'Test does not index on empty content' => [
             new Document(new Uri('https://example.com'), 200, [], ''),
             null,
+            'Cannot index empty response.',
         ];
 
         yield 'Test does not index if noSearch is set to true' => [
             new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":true,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             null,
+            'Was explicitly marked "noSearch" in page settings.',
         ];
 
         yield 'Test does not index if json ld data is not of type "PageMetaData"' => [
             new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"FoobarType","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             null,
+            'Was explicitly marked "noSearch" in page settings.',
         ];
 
         yield 'Test does not index if protected is set to true' => [
             new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","pageId":2,"noSearch":false,"protected":true,"groups":[],"fePreview":false}</script></body></html>'),
             null,
+            'Indexing protected pages is disabled.',
         ];
 
         yield 'Test valid index when not protected' => [
@@ -100,6 +110,7 @@ class DefaultIndexerTest extends ContaoTestCase
                 'title' => 'Foo title',
                 'language' => 'de',
             ],
+            null,
             true,
         ];
     }

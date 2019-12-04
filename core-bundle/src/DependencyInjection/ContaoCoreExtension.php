@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
+use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
@@ -88,6 +89,7 @@ class ContaoCoreExtension extends Extension
         }
 
         $this->handleSearchConfig($config, $container);
+        $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
@@ -135,6 +137,22 @@ class ContaoCoreExtension extends Extension
             // Configure the search index listener
             $container->getDefinition('contao.listener.search_index')->setArgument(2, $features);
         }
+    }
+
+    private function handleCrawlConfig(array $config, ContainerBuilder $container): void
+    {
+        $container
+            ->registerForAutoconfiguration(EscargotSubscriberInterface::class)
+            ->addTag('contao.escargot_subscriber')
+        ;
+
+        if (!$container->hasDefinition('contao.search.escargot_factory')) {
+            return;
+        }
+
+        $factory = $container->getDefinition('contao.search.escargot_factory');
+        $factory->setArgument(2, $config['crawl']['additionalURIs']);
+        $factory->setArgument(3, $config['crawl']['defaultHttpClientOptions']);
     }
 
     /**
