@@ -18,7 +18,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		'dataContainer'               => 'Table',
 		'ptable'                      => 'tl_image_size',
 		'enableVersioning'            => true,
-		'markAsCopy'                  => 'media',
 		'onload_callback' => array
 		(
 			array('tl_image_size_item', 'checkPermission')
