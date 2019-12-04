@@ -167,7 +167,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
             $this->escargot->log(
                 LogLevel::DEBUG,
-                sprintf('Sent %s to the search indexer. Did not index because of the following reason: %s.', (string) $crawlUri->getUri(), $e->getMessage()),
+                sprintf('Sent %s to the search indexer. Did not index because of the following reason: %s', (string) $crawlUri->getUri(), $e->getMessage()),
                 ['source' => \get_class($this)]
             );
         }
@@ -178,7 +178,9 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
         $stats = $this->stats;
 
         if (null !== $previousResult) {
-            $stats = array_merge($previousResult->getInfo('stats'));
+            $stats['ok'] += $previousResult->getInfo('stats')['ok'];
+            $stats['warning'] += $previousResult->getInfo('stats')['warning'];
+            $stats['error'] += $previousResult->getInfo('stats')['error'];
         }
 
         $result = new SubscriberResult(

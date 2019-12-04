@@ -27,6 +27,19 @@ class SubscriberResultTest extends TestCase
         $this->assertNull($result->getInfo('foobar'));
         $this->assertEmpty($result->getAllInfo());
 
+        $expectedArray = [
+            'wasSuccessful' => true,
+            'summary' => 'Summary',
+            'warning' => null,
+            'info' => [],
+        ];
+
+        $this->assertSame($expectedArray, $result->toArray());
+
+        $result2 = SubscriberResult::fromArray($expectedArray);
+
+        $this->assertSame($result->toArray(), $result2->toArray());
+
         $result = new SubscriberResult(false, 'Summary');
 
         $this->assertFalse($result->wasSuccessful());
@@ -37,5 +50,18 @@ class SubscriberResultTest extends TestCase
         $this->assertSame('Warning', $result->getWarning());
         $this->assertSame('baz', $result->getInfo('foobar'));
         $this->assertSame(['foobar' => 'baz'], $result->getAllInfo());
+
+        $expectedArray = [
+            'wasSuccessful' => false,
+            'summary' => 'Summary',
+            'warning' => 'Warning',
+            'info' => ['foobar' => 'baz'],
+        ];
+
+        $this->assertSame($expectedArray, $result->toArray());
+
+        $result2 = SubscriberResult::fromArray($expectedArray);
+
+        $this->assertSame($result->toArray(), $result2->toArray());
     }
 }
