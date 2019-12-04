@@ -443,13 +443,19 @@ class tl_files extends Contao\Backend
 		// Remove the meta data when editing folders
 		if ($blnIsFolder)
 		{
-			$GLOBALS['TL_DCA'][$dc->table]['palettes'] = str_replace(';meta', '', $GLOBALS['TL_DCA'][$dc->table]['palettes']);
+			Contao\CoreBundle\DataContainer\PaletteManipulator::create()
+				->removeField('meta')
+				->applyToPalette('default', $dc->table)
+			;
 		}
 
 		// Only show the important part fields for images
 		if ($blnIsFolder || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('validImageTypes')))))
 		{
-			$GLOBALS['TL_DCA'][$dc->table]['palettes'] = str_replace(',importantPartX,importantPartY,importantPartWidth,importantPartHeight', '', $GLOBALS['TL_DCA'][$dc->table]['palettes']);
+			Contao\CoreBundle\DataContainer\PaletteManipulator::create()
+				->removeField(array('importantPartX', 'importantPartY', 'importantPartWidth', 'importantPartHeight'))
+				->applyToPalette('default', $dc->table)
+			;
 		}
 	}
 
