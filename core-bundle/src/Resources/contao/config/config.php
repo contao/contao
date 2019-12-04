@@ -273,7 +273,7 @@ $GLOBALS['TL_PTY'] = array
 $GLOBALS['TL_MAINTENANCE'] = array
 (
 	'Contao\Maintenance',
-	'Contao\RebuildIndex',
+	'Contao\Crawl',
 	'Contao\PurgeData'
 );
 

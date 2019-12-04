@@ -29,24 +29,6 @@
       <trans-unit id="tl_maintenance.cacheCleared">
         <source>The data has been purged</source>
       </trans-unit>
-      <trans-unit id="tl_maintenance.searchIndex">
-        <source>Rebuild the search index</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexSubmit">
-        <source>Rebuild index</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.noSearchable">
-        <source>No searchable pages found</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexNote">
-        <source>Please wait for the page to load completely before you proceed!</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexLoading">
-        <source>Please wait while the search index is being rebuilt.</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexComplete">
-        <source>The search index has been rebuilt. You can now proceed.</source>
-      </trans-unit>
       <trans-unit id="tl_maintenance.updateHelp">
         <source>Please enter your %s here.</source>
       </trans-unit>
@@ -115,6 +97,30 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
         <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawl.subscribersLabel.0">
+        <source>Enabled features</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawl.subscribersLabel.1">
+        <source>The crawler crawls all URLs it finds. You may decide what is being done with these results here.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawl.concurrencyLabel.0">
+        <source>Number of concurrent pages to crawl</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawl.concurrencyLabel.1">
+        <source>The crawler can crawl multiple pages at once. However, depending on your server there's a maximum of concurrent requests it can handle.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawl.maxRequestsLabel.0">
+        <source>Number of pages to crawl per iteration</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawl.maxRequestsLabel.1">
+        <source>Crawling can take very long. That's why the whole process is split into chunks of pages. You may configure the size of these chunks here.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawl.waitToBeFinished">
+        <source>The crawler is currently working, please wait for it to be finished to see your results.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawl.subscriberNames.search-index">
+        <source>Update search index</source>
       </trans-unit>
     </body>
   </file>
