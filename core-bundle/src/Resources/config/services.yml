@@ -498,7 +498,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
-        public: true;
+        public: true
 
     contao.search.escargot_subscriber.search_index:
         class: Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber
