@@ -20,6 +20,9 @@ use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
 class SearchIndexListener
 {
+    public const FEATURE_INDEX = 0b01;
+    public const FEATURE_DELETE = 0b10;
+
     /**
      * @var IndexerInterface
      */
@@ -30,10 +33,16 @@ class SearchIndexListener
      */
     private $fragmentPath;
 
-    public function __construct(IndexerInterface $indexer, string $fragmentPath = '_fragment')
+    /**
+     * @var int
+     */
+    private $enabledFeatures;
+
+    public function __construct(IndexerInterface $indexer, string $fragmentPath = '_fragment', int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE)
     {
         $this->indexer = $indexer;
         $this->fragmentPath = $fragmentPath;
+        $this->enabledFeatures = $enabledFeatures;
     }
 
     /**
@@ -62,9 +71,13 @@ class SearchIndexListener
         }
 
         try {
-            if ($event->getResponse()->isSuccessful()) {
+            $success = $event->getResponse()->isSuccessful();
+
+            if ($success && $this->enabledFeatures & self::FEATURE_INDEX) {
                 $this->indexer->index($document);
-            } else {
+            }
+
+            if (!$success && $this->enabledFeatures & self::FEATURE_DELETE) {
                 $this->indexer->delete($document);
             }
         } catch (IndexerException $e) {

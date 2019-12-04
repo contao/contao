@@ -64,8 +64,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     {
         $options = parent::getOptions();
 
-        // Only works as of Symfony 4.3+
-        $options['trace_level'] = $this->isDebug ? 'full' : 'short';
+        $options['trace_level'] = $_SERVER['TRACE_LEVEL'] ?? 'short';
         $options['trace_header'] = 'Contao-Cache';
 
         return $options;

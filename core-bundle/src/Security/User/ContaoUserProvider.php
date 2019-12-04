@@ -23,10 +23,11 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class ContaoUserProvider implements UserProviderInterface
+class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     /**
      * @var ContaoFramework
@@ -104,6 +105,19 @@ class ContaoUserProvider implements UserProviderInterface
     public function supportsClass($class): bool
     {
         return $this->userClass === $class;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    {
+        if (!is_a($user, $this->userClass)) {
+            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
+        }
+
+        $user->password = $newEncodedPassword;
+        $user->save();
     }
 
     /**

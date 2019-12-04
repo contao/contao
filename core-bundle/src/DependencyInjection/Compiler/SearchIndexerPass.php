@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 class SearchIndexerPass implements CompilerPassInterface
 {
@@ -34,12 +35,23 @@ class SearchIndexerPass implements CompilerPassInterface
         $definition = $container->findDefinition(self::DELEGATING_SERVICE_ID);
         $references = $this->findAndSortTaggedServices('contao.search_indexer', $container);
 
-        foreach ($references as $reference) {
-            // Make sure we don't add ourselves to prevent endless redirects
-            if (self::DELEGATING_SERVICE_ID === (string) $reference) {
-                continue;
+        // Make sure we do not add the delegating indexer to itself to prevent endless redirects
+        $references = array_filter(
+            $references,
+            static function (Reference $reference): bool {
+                return self::DELEGATING_SERVICE_ID !== (string) $reference;
             }
+        );
 
+        // Remove the service and the search index listener if there are no indexers
+        if (0 === \count($references)) {
+            $container->removeDefinition(self::DELEGATING_SERVICE_ID);
+            $container->removeDefinition('contao.listener.search_index');
+
+            return;
+        }
+
+        foreach ($references as $reference) {
             $definition->addMethodCall('addIndexer', [$reference]);
         }
     }
