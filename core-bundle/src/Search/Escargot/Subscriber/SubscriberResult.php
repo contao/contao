@@ -20,14 +20,14 @@ class SubscriberResult
     private $wasSuccessful;
 
     /**
-     * @var string|null
-     */
-    private $warning;
-
-    /**
      * @var string
      */
     private $summary;
+
+    /**
+     * @var string|null
+     */
+    private $warning;
 
     /**
      * Mixed custom info. Must be serializable so
@@ -88,5 +88,30 @@ class SubscriberResult
     public function getAllInfo(): array
     {
         return $this->info;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'wasSuccessful' => $this->wasSuccessful(),
+            'summary' => $this->getSummary(),
+            'warning' => $this->getWarning(),
+            'info' => $this->getAllInfo(),
+        ];
+    }
+
+    public static function fromArray(array $data): self
+    {
+        $result = new self($data['wasSuccessful'], $data['summary']);
+
+        if (isset($data['warning'])) {
+            $result->setWarning($data['warning']);
+        }
+
+        if (isset($data['info'])) {
+            $result->setInfo($data['info']);
+        }
+
+        return $result;
     }
 }

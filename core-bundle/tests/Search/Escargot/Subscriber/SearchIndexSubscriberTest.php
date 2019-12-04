@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Search\Escargot\Subscriber;
 
 use Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber;
+use Contao\CoreBundle\Search\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Nyholm\Psr7\Uri;
@@ -170,7 +171,7 @@ class SearchIndexSubscriberTest extends TestCase
     /**
      * @dataProvider onLastChunkProvider
      */
-    public function testOnLastChunk(IndexerException $indexerException = null, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats): void
+    public function testOnLastChunk(IndexerException $indexerException = null, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
         $logger = $this->createMock(LoggerInterface::class);
         $logger
@@ -206,7 +207,14 @@ class SearchIndexSubscriberTest extends TestCase
             $this->createMock(ChunkInterface::class)
         );
 
-        $result = $subscriber->getResult();
+        $previousResult = null;
+
+        if (0 !== \count($previousStats)) {
+            $previousResult = new SubscriberResult(true, 'foobar');
+            $previousResult->addInfo('stats', $previousStats);
+        }
+
+        $result = $subscriber->getResult($previousResult);
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
@@ -219,17 +227,41 @@ class SearchIndexSubscriberTest extends TestCase
             ['ok' => 1, 'warning' => 0, 'error' => 0],
         ];
 
+        yield 'Successful index with previous result' => [
+            null,
+            LogLevel::INFO,
+            'Sent https://contao.org/ to the search indexer. Was indexed successfully.',
+            ['ok' => 2, 'warning' => 0, 'error' => 0],
+            ['ok' => 1, 'warning' => 0, 'error' => 0],
+        ];
+
         yield 'Unsuccessful index (warning only)' => [
-            IndexerException::createAsWarning('Warning'),
+            IndexerException::createAsWarning('Warning!'),
             LogLevel::DEBUG,
-            'Sent https://contao.org/ to the search indexer. Did not index because of the following reason: Warning.',
+            'Sent https://contao.org/ to the search indexer. Did not index because of the following reason: Warning!',
             ['ok' => 0, 'warning' => 1, 'error' => 0],
+        ];
+
+        yield 'Unsuccessful index (warning only) with previous result' => [
+            IndexerException::createAsWarning('Warning!'),
+            LogLevel::DEBUG,
+            'Sent https://contao.org/ to the search indexer. Did not index because of the following reason: Warning!',
+            ['ok' => 0, 'warning' => 11, 'error' => 0],
+            ['ok' => 0, 'warning' => 10, 'error' => 0],
         ];
 
         yield 'Unsuccessful index' => [
             new IndexerException('Major failure!'),
             LogLevel::DEBUG,
-            'Sent https://contao.org/ to the search indexer. Did not index because of the following reason: Major failure!.',
+            'Sent https://contao.org/ to the search indexer. Did not index because of the following reason: Major failure!',
+            ['ok' => 0, 'warning' => 0, 'error' => 1],
+        ];
+
+        yield 'Unsuccessful index with previous result' => [
+            new IndexerException('Major failure!'),
+            LogLevel::DEBUG,
+            'Sent https://contao.org/ to the search indexer. Did not index because of the following reason: Major failure!',
+            ['ok' => 0, 'warning' => 0, 'error' => 2],
             ['ok' => 0, 'warning' => 0, 'error' => 1],
         ];
     }
