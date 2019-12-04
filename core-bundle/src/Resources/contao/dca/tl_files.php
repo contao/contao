@@ -20,7 +20,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			array('tl_files', 'checkPermission'),
 			array('tl_files', 'addBreadcrumb'),
-			array('tl_files', 'checkImportantPart')
+			array('tl_files', 'adjustPalettes')
 		),
 		'sql' => array
 		(
@@ -426,11 +426,11 @@ class tl_files extends Contao\Backend
 	}
 
 	/**
-	 * Only show the important part fields for images
+	 * Adjust the palettes
 	 *
 	 * @param Contao\DataContainer $dc
 	 */
-	public function checkImportantPart(Contao\DataContainer $dc)
+	public function adjustPalettes(Contao\DataContainer $dc)
 	{
 		if (!$dc->id)
 		{
@@ -438,8 +438,16 @@ class tl_files extends Contao\Backend
 		}
 
 		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
+		$blnIsFolder = is_dir($rootDir . '/' . $dc->id);
 
-		if (is_dir($rootDir . '/' . $dc->id) || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('validImageTypes')))))
+		// Remove the meta data when editing folders
+		if ($blnIsFolder)
+		{
+			$GLOBALS['TL_DCA'][$dc->table]['palettes'] = str_replace(';meta', '', $GLOBALS['TL_DCA'][$dc->table]['palettes']);
+		}
+
+		// Only show the important part fields for images
+		if ($blnIsFolder || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('validImageTypes')))))
 		{
 			$GLOBALS['TL_DCA'][$dc->table]['palettes'] = str_replace(',importantPartX,importantPartY,importantPartWidth,importantPartHeight', '', $GLOBALS['TL_DCA'][$dc->table]['palettes']);
 		}
