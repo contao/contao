@@ -33,9 +33,11 @@ class SubscriberResultTest extends TestCase
             'warning' => null,
             'info' => [],
         ];
+
         $this->assertSame($expectedArray, $result->toArray());
 
         $result2 = SubscriberResult::fromArray($expectedArray);
+
         $this->assertSame($result->toArray(), $result2->toArray());
 
         $result = new SubscriberResult(false, 'Summary');
@@ -55,9 +57,11 @@ class SubscriberResultTest extends TestCase
             'warning' => 'Warning',
             'info' => ['foobar' => 'baz'],
         ];
+
         $this->assertSame($expectedArray, $result->toArray());
 
         $result2 = SubscriberResult::fromArray($expectedArray);
+
         $this->assertSame($result->toArray(), $result2->toArray());
     }
 }
