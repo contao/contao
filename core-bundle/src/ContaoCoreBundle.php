@@ -80,8 +80,8 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new FragmentRendererPass('contao.fragment.handler'));
         $container->addCompilerPass(new RemembermeServicesPass('contao_frontend'));
         $container->addCompilerPass(new MapFragmentsToGlobalsPass());
-        $container->addCompilerPass(new DataContainerCallbackPass());
         $container->addCompilerPass(new TranslationDataCollectorPass());
+        $container->addCompilerPass(new DataContainerCallbackPass(), PassConfig::TYPE_OPTIMIZE);
         $container->addCompilerPass(new RegisterHookListenersPass(), PassConfig::TYPE_OPTIMIZE);
         $container->addCompilerPass(new SearchIndexerPass());
         $container->addCompilerPass(new EscargotSubscriberPass());

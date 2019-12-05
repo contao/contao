@@ -49,7 +49,7 @@ class StartStopValidator
     public function validateStartDate($value, DataContainer $dc)
     {
         // No change or empty value
-        if ($value === $dc->value || '' === $value) {
+        if ($value === (int) $dc->value || '' === $value) {
             return $value;
         }
 
@@ -74,7 +74,7 @@ class StartStopValidator
     public function validateStopDate($value, DataContainer $dc)
     {
         // No change or empty value
-        if ($value === $dc->value || '' === $value) {
+        if ($value === (int) $dc->value || '' === $value) {
             return $value;
         }
 

@@ -12,8 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle;
 
+use Contao\NewsBundle\DependencyInjection\Compiler\StartStopValidatorPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoNewsBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container): void
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new StartStopValidatorPass());
+    }
 }

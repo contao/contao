@@ -12,8 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\CalendarBundle;
 
+use Contao\CalendarBundle\DependencyInjection\Compiler\StartStopValidatorPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoCalendarBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container): void
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new StartStopValidatorPass());
+    }
 }
