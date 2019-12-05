@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
+/**
+ * @internal
+ */
 class Version350Update extends AbstractVersionUpdate
 {
     /**

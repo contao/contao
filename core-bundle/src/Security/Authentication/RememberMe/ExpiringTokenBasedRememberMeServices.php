@@ -43,6 +43,9 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
      */
     private $secret;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.security.expiring_token_based_remember_me_services" service instead
+     */
     public function __construct(RememberMeRepository $repository, array $userProviders, string $secret, string $providerKey, array $options = [], LoggerInterface $logger = null)
     {
         parent::__construct($userProviders, $secret, $providerKey, $options, $logger);

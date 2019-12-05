@@ -17,6 +17,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
+/**
+ * @internal
+ */
 class LocaleListener
 {
     /**

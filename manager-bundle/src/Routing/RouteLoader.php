@@ -40,6 +40,9 @@ class RouteLoader
      */
     private $rootDir;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao_manager.routing_loader" service instead
+     */
     public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel, string $rootDir)
     {
         $this->loader = $loader;

@@ -18,6 +18,9 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Events;
 use Contao\StringUtil;
 
+/**
+ * @internal
+ */
 class InsertTagsListener
 {
     private const SUPPORTED_TAGS = [

@@ -25,6 +25,9 @@ class ImagesLoader extends Loader
      */
     private $pathPrefix;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.images_loader" service instead
+     */
     public function __construct(string $projectDir, string $imageTargetDir, Filesystem $filesystem)
     {
         $this->pathPrefix = rtrim($filesystem->makePathRelative($imageTargetDir, $projectDir), '/');

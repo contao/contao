@@ -27,6 +27,8 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Custom controller to support legacy entry points.
  *
+ * @internal
+ *
  * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0
  */
 class InitializeController extends AbstractController

@@ -67,6 +67,9 @@ class PictureFactory implements PictureFactoryInterface
      */
     private $predefinedSizes = [];
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.image.picture_factory" service instead
+     */
     public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFramework $framework, bool $bypassCache, array $imagineOptions)
     {
         $this->pictureGenerator = $pictureGenerator;

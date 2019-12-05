@@ -16,6 +16,9 @@ use Contao\CoreBundle\Command\InstallCommand;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * @internal
+ */
 class InstallCommandListener
 {
     /**

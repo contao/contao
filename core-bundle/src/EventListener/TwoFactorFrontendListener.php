@@ -24,6 +24,9 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
+/**
+ * @internal
+ */
 class TwoFactorFrontendListener
 {
     use TargetPathTrait;

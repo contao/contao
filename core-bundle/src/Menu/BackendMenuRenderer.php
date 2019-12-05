@@ -23,6 +23,9 @@ class BackendMenuRenderer implements RendererInterface
      */
     private $twig;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.menu.backend_menu_renderer" service instead
+     */
     public function __construct(Environment $twig)
     {
         $this->twig = $twig;

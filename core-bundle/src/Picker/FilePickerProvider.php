@@ -36,6 +36,9 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private $uploadPath;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.picker.file_provider" service instead
+     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator, Security $security, string $uploadPath)
     {
         parent::__construct($menuFactory, $router, $translator);

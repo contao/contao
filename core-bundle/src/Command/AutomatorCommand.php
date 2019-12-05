@@ -23,6 +23,8 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
  * Runs Contao automator tasks on the command line.
+ *
+ * @internal
  */
 class AutomatorCommand extends Command
 {

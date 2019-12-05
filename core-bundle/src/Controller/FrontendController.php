@@ -29,6 +29,8 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * @Route(defaults={"_scope" = "frontend", "_token_check" = true})
+ *
+ * @internal
  */
 class FrontendController extends AbstractController
 {

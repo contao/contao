@@ -32,6 +32,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
+ *
+ * @internal
  */
 class InstallationController implements ContainerAwareInterface
 {

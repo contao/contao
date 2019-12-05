@@ -19,6 +19,9 @@ use webignition\RobotsTxt\Directive\Directive;
 use webignition\RobotsTxt\Inspector\Inspector;
 use webignition\RobotsTxt\Record\Record;
 
+/**
+ * @internal
+ */
 class RobotsTxtListener
 {
     /**

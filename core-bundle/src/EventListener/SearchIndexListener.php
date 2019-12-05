@@ -18,6 +18,9 @@ use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
+/**
+ * @internal
+ */
 class SearchIndexListener
 {
     public const FEATURE_INDEX = 0b01;

@@ -23,6 +23,9 @@ use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
+/**
+ * @internal
+ */
 class MapFragmentsToGlobalsPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
