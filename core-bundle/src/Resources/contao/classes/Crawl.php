@@ -185,7 +185,6 @@ class Crawl extends Backend implements \executable
 				'finished' => $finished,
 				'results' => $results,
 				'hasDebugLog' => file_exists($debugLogPath),
-				'test' => $debugLogPath,
 			));
 
 			throw new ResponseException($response);
