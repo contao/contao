@@ -505,7 +505,7 @@ class DataContainerCallbackPassTest extends TestCase
         $pass->process($container);
     }
 
-    public function testThrowsExceptionIfConfiguredMethodDoesNotExist()
+    public function testThrowsExceptionIfConfiguredMethodDoesNotExist(): void
     {
         $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', ['table' => 'tl_page', 'target' => 'tl_page.config.foo', 'method' => 'onFooCallback']);
@@ -521,7 +521,7 @@ class DataContainerCallbackPassTest extends TestCase
         $pass->process($container);
     }
 
-    public function testThrowsExceptionIfConfiguredMethodIsPrivate()
+    public function testThrowsExceptionIfConfiguredMethodIsPrivate(): void
     {
         $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', ['table' => 'tl_page', 'target' => 'tl_page.config.foo', 'method' => 'onPrivateCallback']);
@@ -537,7 +537,7 @@ class DataContainerCallbackPassTest extends TestCase
         $pass->process($container);
     }
 
-    public function testThrowsExceptionIfGeneratedMethodIsPrivate()
+    public function testThrowsExceptionIfGeneratedMethodIsPrivate(): void
     {
         $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', ['table' => 'tl_page', 'target' => 'tl_page.config.private']);
@@ -553,7 +553,7 @@ class DataContainerCallbackPassTest extends TestCase
         $pass->process($container);
     }
 
-    public function testThrowsExceptionIfNoValidMethodExists()
+    public function testThrowsExceptionIfNoValidMethodExists(): void
     {
         $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', ['table' => 'tl_page', 'target' => 'tl_page.config.foo']);

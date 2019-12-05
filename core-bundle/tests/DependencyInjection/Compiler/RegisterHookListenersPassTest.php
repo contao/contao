@@ -323,7 +323,7 @@ class RegisterHookListenersPassTest extends TestCase
         $pass->process($container);
     }
 
-    public function testThrowsExceptionIfConfiguredMethodDoesNotExist()
+    public function testThrowsExceptionIfConfiguredMethodDoesNotExist(): void
     {
         $definition = new Definition(TestListener::class);
         $definition->addTag('contao.hook', ['hook' => 'onInitializeSystem', 'method' => 'onFoo']);
@@ -339,7 +339,7 @@ class RegisterHookListenersPassTest extends TestCase
         $pass->process($container);
     }
 
-    public function testThrowsExceptionIfConfiguredMethodIsPrivate()
+    public function testThrowsExceptionIfConfiguredMethodIsPrivate(): void
     {
         $definition = new Definition(TestListener::class);
         $definition->addTag('contao.hook', ['hook' => 'onInitializeSystem', 'method' => 'onPrivateCallback']);
@@ -355,7 +355,7 @@ class RegisterHookListenersPassTest extends TestCase
         $pass->process($container);
     }
 
-    public function testThrowsExceptionIfGeneratedMethodIsPrivate()
+    public function testThrowsExceptionIfGeneratedMethodIsPrivate(): void
     {
         $definition = new Definition(TestListener::class);
         $definition->addTag('contao.hook', ['hook' => 'privateCallback']);
@@ -371,7 +371,7 @@ class RegisterHookListenersPassTest extends TestCase
         $pass->process($container);
     }
 
-    public function testThrowsExceptionIfNoValidMethodExists()
+    public function testThrowsExceptionIfNoValidMethodExists(): void
     {
         $definition = new Definition(TestListener::class);
         $definition->addTag('contao.hook', ['hook' => 'fooBar']);
