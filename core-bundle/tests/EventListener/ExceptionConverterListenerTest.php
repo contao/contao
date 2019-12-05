@@ -168,16 +168,15 @@ class ExceptionConverterListenerTest extends TestCase
         $this->assertInstanceOf(ServiceUnavailableException::class, $exception->getPrevious());
     }
 
-    public function testConvertsUnknownExceptions(): void
+    public function testDoesNotConvertUnknownExceptions(): void
     {
-        $event = $this->getResponseEvent(new \RuntimeException());
+        $e = new \RuntimeException();
+        $event = $this->getResponseEvent($e);
 
         $listener = new ExceptionConverterListener();
         $listener->onKernelException($event);
 
-        $exception = $event->getThrowable();
-
-        $this->assertInstanceOf('RuntimeException', $exception);
+        $this->assertSame($e, $event->getThrowable());
     }
 
     public function testConvertsDerivedPageNotFoundExceptions(): void

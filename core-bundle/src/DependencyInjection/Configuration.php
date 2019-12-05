@@ -373,9 +373,9 @@ class Configuration implements ConfigurationInterface
                                 if (!preg_match('@^https?://@', $uri)) {
                                     return true;
                                 }
-
-                                return false;
                             }
+
+                            return false;
                         }
                     )
                     ->thenInvalid('All provided additional URIs must start with either http:// or https://.')

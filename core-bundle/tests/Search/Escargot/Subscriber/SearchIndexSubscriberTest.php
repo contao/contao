@@ -171,7 +171,7 @@ class SearchIndexSubscriberTest extends TestCase
     /**
      * @dataProvider onLastChunkProvider
      */
-    public function testOnLastChunk(IndexerException $indexerException = null, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    public function testOnLastChunk(?IndexerException $indexerException, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
         $logger = $this->createMock(LoggerInterface::class);
         $logger

@@ -132,7 +132,7 @@ class WidgetTest extends TestCase
         $widget = $this
             ->getMockBuilder(Widget::class)
             ->disableOriginalConstructor()
-            ->setMethods(['validator'])
+            ->onlyMethods(['validator'])
             ->getMockForAbstractClass()
         ;
 

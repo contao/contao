@@ -74,7 +74,7 @@ class ContaoManagerPassTest extends ContaoTestCase
         $pass = new ContaoManagerPass();
 
         $this->expectException('LogicException');
-        $this->expectExceptionMessageRegExp('/^You have configured "contao_manager.manager_path" but the file/');
+        $this->expectExceptionMessageMatches('/^You have configured "contao_manager.manager_path" but the file/');
 
         $pass->process($container);
     }
