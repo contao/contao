@@ -231,10 +231,10 @@
         <source>Please assign all modules to a column!</source>
       </trans-unit>
       <trans-unit id="ERR.startAfterStop">
-        <source>The start time cannot be equal to or after the end time!</source>
+        <source>The start time must be before the end time!</source>
       </trans-unit>
       <trans-unit id="ERR.stopBeforeStart">
-        <source>The end time cannot be equal to or before the start time!</source>
+        <source>The end time must be after the start time!</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
