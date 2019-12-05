@@ -32,7 +32,7 @@
     animation: crawl-progress-bar-stripes 1s linear infinite;
   }
 
-  #tl_crawl .progress-bar.completed {
+  #tl_crawl .progress-bar.finished {
     background-color: #589b0e;
   }
 
@@ -56,23 +56,40 @@
     background-size: 16px;
   }
 
-  #tl_crawl .result.success {
+  #tl_crawl .results.running .show-when-running {
+    display: inherit;
+  }
+
+  #tl_crawl .results.finished .show-when-running {
+    display: none;
+  }
+
+  #tl_crawl .results.running .show-when-finished {
+    display: none;
+  }
+
+  #tl_crawl .results.finished .show-when-finished {
+    display: inherit;
+  }
+
+  #tl_crawl .result .summary.success {
     color: green;
   }
 
-  #tl_crawl .result.warning {
-    color: orange;
+  #tl_crawl .result .summary.failure {
+    color: red;
   }
 
-  #tl_crawl .result.failure {
-    color: red;
+  #tl_crawl .result .warning {
+    display: none;
+    color: orange;
   }
 </style>
 
 <div id="tl_crawl" class="tl_box maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
   <h2 class="sub_headline sub_headline_index">
     Crawler
-    <a href="<?= $this->logHref ?>" title="Download the log file" class="log" style="display: none; float: right;"><img src="system/themes/flexible/icons/show.svg" alt="" width="16" height="16" role="presentation"></a>
+    <a href="<?= $this->debugLogHref ?>" title="<?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['debugLogFileTitle'] ?>" class="debugLog" style="display: none; float: right;"><img src="system/themes/flexible/icons/show.svg" alt="" width="16" height="16" role="presentation"></a>
   </h2>
   <?php if ($this->isRunning): ?>
     <div class="inner">
@@ -84,8 +101,14 @@
       <div class="results running">
         <?php foreach ($this->activeSubscribers as $subscriber): ?>
           <h3><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscriberNames'][$subscriber->getName()] ?></h3>
-          <div data-subscriber="<?= $subscriber->getName() ?>" class="result"><span class="spinner"></span>
-            <p><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['waitToBeFinished'] ?></p>
+          <div data-subscriber="<?= $subscriber->getName() ?>" class="result">
+              <span class="spinner show-when-running"></span>
+              <p class="show-when-running"><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['waitToBeFinished'] ?></p>
+              <a class="show-when-finished log" style="display: none" href="<?= $this->subscriberLogHrefs[$subscriber->getName()] ?>" title="<?= specialchars(sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscriberLogFileTitle'], $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscriberNames'][$subscriber->getName()])) ?>">
+                <img src="system/themes/flexible/icons/show.svg" alt="" width="16" height="16" role="presentation">
+              </a>
+              <p class="summary show-when-finished"></p>
+              <p class="warning show-when-finished"></p>
           </div>
         <?php endforeach; ?>
       </div>
@@ -95,7 +118,8 @@
               var timeout = 2000;
               var progressBar = $$('#tl_crawl .progress-bar')[0];
               var progressCount = $$('#tl_crawl .progress-count')[0];
-              var logHref = $$('#tl_crawl .log')[0];
+              var resultsBox = $$('#tl_crawl .results')[0];
+              var debugLog = $$('#tl_crawl .debugLog')[0];
 
               function updateData(response) {
                   var done = response.total - response.pending;
@@ -110,25 +134,31 @@
                       return;
                   }
 
-                  progressBar.removeClass('running').addClass('completed');
+                  progressBar.removeClass('running').addClass('finished');
+                  resultsBox.removeClass('running').addClass('finished');
 
-                  if (response.hasLog) {
-                      logHref.setStyle('display', 'block');
+                  if (response.hasDebugLog) {
+                      debugLog.setStyle('display', 'block');
                   }
 
                   for (result in response.results) {
                       if (response.results.hasOwnProperty(result)) {
-                          var subscriberContainer = $$('#tl_crawl .results .result[data-subscriber="' + result + '"]')[0];
+                          var summaryEl = $$('#tl_crawl .results .result[data-subscriber="' + result + '"] p.summary')[0];
+                          var warningEl = $$('#tl_crawl .results .result[data-subscriber="' + result + '"] p.warning')[0];
+                          var logEl = $$('#tl_crawl .results .result[data-subscriber="' + result + '"] a.log')[0];
                           var subscriberResults = response.results[result];
-                          var cssClass = subscriberResults.wasSuccessful.warning ? 'warning' : subscriberResults.wasSuccessful ? 'success' : 'failure';
                           var summary = subscriberResults.summary;
 
                           if (subscriberResults.warning) {
-                              summary = summary + ' [' + subscriberResults.warning + ']';
+                              warningEl.set('html', subscriberResults.warning);
                           }
 
-                          subscriberContainer.addClass(cssClass);
-                          subscriberContainer.set('html', summary);
+                          if (subscriberResults.hasLog) {
+                              logEl.setStyle('display', 'inline');
+                          }
+
+                          summaryEl.addClass(subscriberResults.wasSuccessful ? 'success' : 'failure');
+                          summaryEl.set('html', summary);
                       }
                   }
               }
