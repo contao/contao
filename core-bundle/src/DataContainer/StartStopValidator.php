@@ -64,7 +64,7 @@ class StartStopValidator
             : $dc->activeRecord->{$this->stopField}
         ;
 
-        if ($stop && $value > $stop) {
+        if ($stop && $value >= $stop) {
             throw new \RuntimeException($this->translator->trans('ERR.startAfterStop', [], 'contao_default'));
         }
 
@@ -89,7 +89,7 @@ class StartStopValidator
             : $dc->activeRecord->{$this->startField}
         ;
 
-        if ($start && $start > $value) {
+        if ($start && $start >= $value) {
             throw new \RuntimeException($this->translator->trans('ERR.stopBeforeStart', [], 'contao_default'));
         }
 
