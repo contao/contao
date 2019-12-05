@@ -109,8 +109,10 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
     public function needsContent(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk): string
     {
+        $statusCode = $response->getStatusCode();
+
         // We only care about successful responses
-        if ($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
+        if ($statusCode < 200 || $statusCode >= 300) {
             $this->escargot->log(
                 LogLevel::DEBUG,
                 $crawlUri->createLogMessage(sprintf(
