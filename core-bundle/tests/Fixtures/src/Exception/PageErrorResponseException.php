@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Fixtures\Exception;
 
 use Contao\CoreBundle\Exception\ResponseException;
@@ -7,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PageErrorResponseException
 {
-    public function getResponse()
+    public function getResponse(): void
     {
         throw new ResponseException(new Response('foo'));
     }
