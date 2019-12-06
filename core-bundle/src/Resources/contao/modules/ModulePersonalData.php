@@ -89,7 +89,7 @@ class ModulePersonalData extends Module
 				}
 				elseif (\is_callable($callback))
 				{
-					$callback();
+					$callback(new DC_Table('tl_member'));
 				}
 			}
 		}
