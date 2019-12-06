@@ -85,7 +85,7 @@ class ModulePersonalData extends Module
 				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}();
+					$this->{$callback[0]}->{$callback[1]}(new DC_Table('tl_member'));
 				}
 				elseif (\is_callable($callback))
 				{
