@@ -271,6 +271,7 @@ class LegacyMatcherTest extends TestCase
                 static function () use (&$folderUrlMatched) {
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
+
                         throw new ResourceNotFoundException('');
                     }
 

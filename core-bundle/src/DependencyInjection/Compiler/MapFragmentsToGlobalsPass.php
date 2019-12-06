@@ -76,15 +76,11 @@ class MapFragmentsToGlobalsPass implements CompilerPassInterface
 
             foreach ($definition->getTag($tag) as $attributes) {
                 if (!isset($attributes['category'])) {
-                    throw new InvalidConfigurationException(
-                        sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, (string) $reference)
-                    );
+                    throw new InvalidConfigurationException(sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, (string) $reference));
                 }
 
                 if (!isset($attributes['type'])) {
-                    throw new InvalidConfigurationException(
-                        sprintf('Missing type for "%s" fragment on service ID "%s"', $tag, (string) $reference)
-                    );
+                    throw new InvalidConfigurationException(sprintf('Missing type for "%s" fragment on service ID "%s"', $tag, (string) $reference));
                 }
 
                 $result[] = $attributes;

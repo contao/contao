@@ -442,7 +442,6 @@ class News extends Frontend
 			// Link to an external page
 			case 'external':
 				return $objItem->url;
-				break;
 
 			// Link to an internal page
 			case 'internal':
