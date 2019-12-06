@@ -3006,7 +3006,7 @@ class DC_Folder extends \DataContainer implements \listable, \editable
 			$strNode = System::getContainer()->get('session')->getBag('contao_backend')->get('tl_files_node');
 
 			// If the files node is not within the current path, remove it (see #856)
-			if ($strNode && ($i = array_search($strNode, $this->arrFilemounts)) !== false && strncmp($strNode . '/', $strPath . '/', strlen($strPath) + 1) !== 0)
+			if ($strNode && ($i = array_search($strNode, $this->arrFilemounts)) !== false && strncmp($strNode . '/', $strPath . '/', \strlen($strPath) + 1) !== 0)
 			{
 				unset($this->arrFilemounts[$i], $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb']);
 			}

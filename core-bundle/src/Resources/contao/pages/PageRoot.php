@@ -71,6 +71,7 @@ class PageRoot extends \Frontend
 		if (null === $objNextPage)
 		{
 			$this->log('No active page found under root page "' . $rootPageId . '"', __METHOD__, TL_ERROR);
+
 			throw new NoActivePageFoundException('No active page found under root page.');
 		}
 

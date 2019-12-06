@@ -142,29 +142,29 @@ class ModuleWizard extends \Widget
 		{
 			// Initialize the sorting order
 			$arrCols = array
- 			(
- 				'top' => array(),
- 				'header' => array(),
- 				'before' => array(),
- 				'left' => array(),
- 				'right' => array(),
- 				'main' => array(),
- 				'after' => array(),
- 				'footer' => array(),
- 				'bottom' => array(),
- 				'manual' => array()
- 			);
+			(
+				'top' => array(),
+				'header' => array(),
+				'before' => array(),
+				'left' => array(),
+				'right' => array(),
+				'main' => array(),
+				'after' => array(),
+				'footer' => array(),
+				'bottom' => array(),
+				'manual' => array()
+			);
 
 			foreach ($this->varValue as $v)
 			{
 				$key = $v['col'];
 
 				if (isset($positions[$v['col']]))
- 				{
- 					$key = $positions[$v['col']];
- 				}
+				{
+					$key = $positions[$v['col']];
+				}
 
- 				$arrCols[$key][] = $v;
+				$arrCols[$key][] = $v;
 			}
 
 			$this->varValue = array();
