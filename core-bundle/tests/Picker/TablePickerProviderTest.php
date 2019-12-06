@@ -193,11 +193,14 @@ class TablePickerProviderTest extends ContaoTestCase
      */
     public function testAddMenuItems(array $modules, string $current)
     {
+        $expectedCurrent = [];
+
         foreach ($modules as $module) {
             $GLOBALS['BE_MOD']['foo'][$module]['tables'] = ['tl_foobar'];
+            $expectedCurrent[] = ['dcTablePicker.'.$module];
         }
 
-        $config = $this->mockPickerConfig('tl_foobar', '', 'dcTablePicker.'.$current);
+        $config = $this->mockPickerConfig('tl_foobar', '', 'dcTablePicker.'.$current, $expectedCurrent);
         $provider = $this->createMenuTableProvider($modules, $current);
 
         $menu = $this->createMock(ItemInterface::class);
@@ -214,8 +217,11 @@ class TablePickerProviderTest extends ContaoTestCase
      */
     public function testCreateMenuItem(array $modules, string $current)
     {
+        $expectedCurrent = [];
+
         foreach ($modules as $module) {
             $GLOBALS['BE_MOD']['foo'][$module]['tables'] = ['tl_foobar'];
+            $expectedCurrent[] = ['dcTablePicker.'.$module];
         }
 
         $menu = $this->createMock(ItemInterface::class);
@@ -231,7 +237,7 @@ class TablePickerProviderTest extends ContaoTestCase
             ->willReturn($this->createMock(ItemInterface::class))
         ;
 
-        $config = $this->mockPickerConfig('tl_foobar', '', 'dcTablePicker.'.$current);
+        $config = $this->mockPickerConfig('tl_foobar', '', 'dcTablePicker.'.$current, $expectedCurrent);
         $provider = $this->createMenuTableProvider($modules, $current, $menu);
 
         $provider->createMenuItem($config);
@@ -546,8 +552,14 @@ class TablePickerProviderTest extends ContaoTestCase
         );
     }
 
-    private function mockPickerConfig(string $table = '', string $value = '', string $current = '')
+    private function mockPickerConfig(string $table = '', string $value = '', string $current = '', array $expectedCurrent = null)
     {
+        if (!$expectedCurrent) {
+            if ('' !== $current) {
+                $expectedCurrent = [[$current]];
+            }
+        }
+
         $config = $this->createMock(PickerConfig::class);
 
         $config
@@ -568,11 +580,16 @@ class TablePickerProviderTest extends ContaoTestCase
             ->willReturn($current)
         ;
 
-        $config
+        $clone = $config
             ->expects($this->any())
             ->method('cloneForCurrent')
-            ->willReturnSelf()
         ;
+
+        if ($expectedCurrent) {
+            $clone->withConsecutive(...$expectedCurrent);
+        }
+
+        $clone->willReturnSelf();
 
         $config
             ->expects($this->any())

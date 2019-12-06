@@ -104,7 +104,7 @@ abstract class AbstractDatabasePickerProvider implements PickerProviderInterface
             $params = [
                 'do' => $name,
                 'popup' => '1',
-                'picker' => $config->cloneForCurrent(self::PREFIX.$name)->urlEncode(),
+                'picker' => $config->cloneForCurrent($this->getName().'.'.$name)->urlEncode(),
             ];
 
             $menu->addChild($this->menuFactory->createItem(
@@ -124,8 +124,6 @@ abstract class AbstractDatabasePickerProvider implements PickerProviderInterface
      */
     public function createMenuItem(PickerConfig $config): ItemInterface
     {
-        @trigger_error('For classes implementing PickerMenuInterface, use method addMenuItems instead of createMenuItem.', E_USER_DEPRECATED);
-
         $menu = $this->menuFactory->createItem('picker');
 
         $this->addMenuItems($menu, $config);
