@@ -39,14 +39,14 @@ class TablePickerProviderTest extends ContaoTestCase
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_MOD']);
     }
 
-    public function testName()
+    public function testName(): void
     {
         $provider = $this->createTableProvider();
 
         $this->assertSame('dcTablePicker', $provider->getName());
     }
 
-    public function testSupportsContext()
+    public function testSupportsContext(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Table';
         $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_foobar'];
@@ -58,14 +58,14 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertTrue($provider->supportsContext('dc.tl_foobar'));
     }
 
-    public function testDoesNotSupportsContextWithoutPrefix()
+    public function testDoesNotSupportsContextWithoutPrefix(): void
     {
         $provider = $this->createTableProvider();
 
         $this->assertFalse($provider->supportsContext('foobar'));
     }
 
-    public function testDoesNotSupportContextWithoutDataContainer()
+    public function testDoesNotSupportContextWithoutDataContainer(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Foobar';
         $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_foobar'];
@@ -77,7 +77,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertFalse($provider->supportsContext('dc.tl_foobar'));
     }
 
-    public function testDoesNotSupportContextWithoutModule()
+    public function testDoesNotSupportContextWithoutModule(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Table';
         $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_page'];
@@ -89,14 +89,14 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertFalse($provider->supportsContext('dc.tl_foobar'));
     }
 
-    public function testSupportsValue()
+    public function testSupportsValue(): void
     {
         $provider = $this->createTableProvider();
 
         $this->assertTrue($provider->supportsValue($this->mockPickerConfig()));
     }
 
-    public function testIsCurrent()
+    public function testIsCurrent(): void
     {
         $provider = $this->createTableProvider();
 
@@ -107,7 +107,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertFalse($provider->isCurrent($config));
     }
 
-    public function testGetDcaTableFromContext()
+    public function testGetDcaTableFromContext(): void
     {
         $config = $this->mockPickerConfig('tl_content');
 
@@ -116,14 +116,14 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertSame('tl_content', $provider->getDcaTable($config));
     }
 
-    public function testGetDcaTableFromEmptyContext()
+    public function testGetDcaTableFromEmptyContext(): void
     {
         $provider = $this->createTableProvider();
 
         $this->assertSame('', $provider->getDcaTable());
     }
 
-    public function testConvertDcaValueToInteger()
+    public function testConvertDcaValueToInteger(): void
     {
         $provider = $this->createTableProvider();
         $config = $this->mockPickerConfig();
@@ -135,7 +135,7 @@ class TablePickerProviderTest extends ContaoTestCase
     /**
      * @dataProvider dcaAttributesProvider
      */
-    public function testGetDcaAttributes(array $extra, string $value, array $expected)
+    public function testGetDcaAttributes(array $extra, string $value, array $expected): void
     {
         $provider = $this->createTableProvider();
         $config = new PickerConfig('', $extra, $value);
@@ -148,50 +148,50 @@ class TablePickerProviderTest extends ContaoTestCase
         yield 'default fieldtype radio' => [
             [],
             '',
-            ['fieldType' => 'radio']
+            ['fieldType' => 'radio'],
         ];
 
         yield 'single value' => [
             [],
             '15',
-            ['fieldType' => 'radio', 'value' => [15]]
+            ['fieldType' => 'radio', 'value' => [15]],
         ];
 
         yield 'multiple values' => [
             [],
             '15,10,3',
-            ['fieldType' => 'radio', 'value' => [15, 10, 3]]
+            ['fieldType' => 'radio', 'value' => [15, 10, 3]],
         ];
 
         yield 'field type' => [
             ['fieldType' => 'checkbox'],
             '',
-            ['fieldType' => 'checkbox']
+            ['fieldType' => 'checkbox'],
         ];
 
         yield 'preserve source record' => [
             ['source' => '15'],
             '',
-            ['fieldType' => 'radio', 'preserveRecord' => '15']
+            ['fieldType' => 'radio', 'preserveRecord' => '15'],
         ];
 
         yield 'everything' => [
             ['fieldType' => 'foobar', 'source' => '42'],
             '1,2,3',
-            ['fieldType' => 'foobar', 'preserveRecord' => '42', 'value' => [1,2,3]]
+            ['fieldType' => 'foobar', 'preserveRecord' => '42', 'value' => [1, 2, 3]],
         ];
 
         yield 'ignores additional extras' => [
             ['foo' => 'bar'],
             '',
-            ['fieldType' => 'radio']
+            ['fieldType' => 'radio'],
         ];
     }
 
     /**
      * @dataProvider menuItemsProvider
      */
-    public function testAddMenuItems(array $modules, string $current)
+    public function testAddMenuItems(array $modules, string $current): void
     {
         $expectedCurrent = [];
 
@@ -215,7 +215,7 @@ class TablePickerProviderTest extends ContaoTestCase
     /**
      * @dataProvider menuItemsProvider
      */
-    public function testCreateMenuItem(array $modules, string $current)
+    public function testCreateMenuItem(array $modules, string $current): void
     {
         $expectedCurrent = [];
 
@@ -256,20 +256,20 @@ class TablePickerProviderTest extends ContaoTestCase
         yield 'multiple modules with second as current' => [['article', 'news'], 'news'];
     }
 
-    public function testGetUrlWithoutValue()
+    public function testGetUrlWithoutValue(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article']];
 
         $GLOBALS['TL_DCA']['tl_article'] = [
             'config' => [
                 'dataContainer' => 'Table',
-            ]
+            ],
         ];
 
         $params = [
             'do' => 'article',
             'popup' => '1',
-            'picker' => 'foobar'
+            'picker' => 'foobar',
         ];
 
         $config = $this->mockPickerConfig('tl_article', '');
@@ -283,20 +283,20 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->getUrl($config);
     }
 
-    public function testGetUrlWithoutPtable()
+    public function testGetUrlWithoutPtable(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article']];
 
         $GLOBALS['TL_DCA']['tl_article'] = [
             'config' => [
                 'dataContainer' => 'Table',
-            ]
+            ],
         ];
 
         $params = [
             'do' => 'article',
             'popup' => '1',
-            'picker' => 'foobar'
+            'picker' => 'foobar',
         ];
 
         $config = $this->mockPickerConfig('tl_article', '15');
@@ -310,7 +310,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->getUrl($config);
     }
 
-    public function testGetUrlWithPtable()
+    public function testGetUrlWithPtable(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article']];
 
@@ -318,13 +318,13 @@ class TablePickerProviderTest extends ContaoTestCase
             'config' => [
                 'dataContainer' => 'Table',
                 'ptable' => 'tl_page',
-            ]
+            ],
         ];
 
         $params = [
             'do' => 'article',
             'popup' => '1',
-            'picker' => 'foobar'
+            'picker' => 'foobar',
         ];
 
         $config = $this->mockPickerConfig('tl_article', '15');
@@ -338,7 +338,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->getUrl($config);
     }
 
-    public function testGetUrlWithPtableAndMultipleTables()
+    public function testGetUrlWithPtableAndMultipleTables(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_page', 'tl_article']];
 
@@ -346,7 +346,7 @@ class TablePickerProviderTest extends ContaoTestCase
             'config' => [
                 'dataContainer' => 'Table',
                 'ptable' => 'tl_page',
-            ]
+            ],
         ];
 
         $params = [
@@ -368,7 +368,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->getUrl($config);
     }
 
-    public function testGetUrlWithDynamicPtable()
+    public function testGetUrlWithDynamicPtable(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
         $GLOBALS['BE_MOD']['foo']['news'] = ['tables' => ['tl_news', 'tl_content']];
@@ -377,7 +377,7 @@ class TablePickerProviderTest extends ContaoTestCase
             'config' => [
                 'dataContainer' => 'Table',
                 'dynamicPtable' => true,
-            ]
+            ],
         ];
 
         $params = [
@@ -399,7 +399,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->getUrl($config);
     }
 
-    public function testGetUrlWithEmptyDynamicPtable()
+    public function testGetUrlWithEmptyDynamicPtable(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
         $GLOBALS['BE_MOD']['foo']['news'] = ['tables' => ['tl_news', 'tl_content']];
@@ -408,7 +408,7 @@ class TablePickerProviderTest extends ContaoTestCase
             'config' => [
                 'dataContainer' => 'Table',
                 'dynamicPtable' => true,
-            ]
+            ],
         ];
 
         $params = [
@@ -430,7 +430,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->getUrl($config);
     }
 
-    public function testGetUrlWithoutDbRecordRendersFirstModule()
+    public function testGetUrlWithoutDbRecordRendersFirstModule(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article']];
 
@@ -438,7 +438,7 @@ class TablePickerProviderTest extends ContaoTestCase
             'config' => [
                 'dataContainer' => 'Table',
                 'ptable' => 'tl_page',
-            ]
+            ],
         ];
 
         $params = [
@@ -458,7 +458,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->getUrl($config);
     }
 
-    public function testGetUrlAddsTableIfItsNotFirstInModule()
+    public function testGetUrlAddsTableIfItsNotFirstInModule(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
 
@@ -466,7 +466,7 @@ class TablePickerProviderTest extends ContaoTestCase
             'config' => [
                 'dataContainer' => 'Table',
                 'ptable' => 'tl_article',
-            ]
+            ],
         ];
 
         $params = [
@@ -487,7 +487,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->getUrl($config);
     }
 
-    public function testThrowsExceptionIfTableIsNotInAnyModule()
+    public function testThrowsExceptionIfTableIsNotInAnyModule(): void
     {
         $config = new PickerConfig('tl_foobar');
 
@@ -531,7 +531,7 @@ class TablePickerProviderTest extends ContaoTestCase
                     'linkAttributes' => ['class' => $module],
                     'current' => $current === $module,
                     'uri' => '',
-                ]
+                ],
             ];
         }
 
@@ -624,6 +624,7 @@ class TablePickerProviderTest extends ContaoTestCase
     private function mockRouterWithExpectedParams(array ...$consecutive)
     {
         $expected = [];
+
         foreach ($consecutive as $params) {
             $expected[] = ['contao_backend', $params];
         }

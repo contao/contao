@@ -112,7 +112,7 @@ abstract class AbstractDatabasePickerProvider implements PickerProviderInterface
                 [
                     'label' => $this->translator->trans('MOD.'.$name.'.0', [], 'contao_default'),
                     'linkAttributes' => ['class' => $name],
-                    'current' => $this->isCurrent($config) && $name === substr($config->getCurrent(), strlen($this->getName().'.')),
+                    'current' => $this->isCurrent($config) && $name === substr($config->getCurrent(), \strlen($this->getName().'.')),
                     'uri' => $this->router->generate('contao_backend', $params),
                 ]
             ));
