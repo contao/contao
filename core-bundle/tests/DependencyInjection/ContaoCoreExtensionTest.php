@@ -37,6 +37,7 @@ use Contao\CoreBundle\Controller\RobotsTxtController;
 use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
+use Contao\CoreBundle\DataContainer\StartStopValidator;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Entity\RememberMe;
@@ -921,6 +922,70 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertArrayHasKey('data_collector', $tags);
         $this->assertSame('@ContaoCore/Collector/contao.html.twig', $tags['data_collector'][0]['template']);
         $this->assertSame('contao', $tags['data_collector'][0]['id']);
+    }
+
+    public function testRegistersTheStartStopValidator(): void
+    {
+        $this->assertTrue($this->container->has('contao.data_container.start_stop_validator'));
+
+        $definition = $this->container->getDefinition('contao.data_container.start_stop_validator');
+
+        $this->assertSame(StartStopValidator::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('request_stack', (string) $definition->getArgument(0));
+        $this->assertSame('translator', (string) $definition->getArgument(1));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('contao.callback', $tags);
+        $this->assertSame('tl_article', $tags['contao.callback'][0]['table']);
+        $this->assertSame('fields.start.save', $tags['contao.callback'][0]['target']);
+        $this->assertSame('validateStartDate', $tags['contao.callback'][0]['method']);
+        $this->assertSame('tl_article', $tags['contao.callback'][1]['table']);
+        $this->assertSame('fields.stop.save', $tags['contao.callback'][1]['target']);
+        $this->assertSame('validateStopDate', $tags['contao.callback'][1]['method']);
+
+        $this->assertSame('tl_content', $tags['contao.callback'][2]['table']);
+        $this->assertSame('fields.start.save', $tags['contao.callback'][2]['target']);
+        $this->assertSame('validateStartDate', $tags['contao.callback'][2]['method']);
+        $this->assertSame('tl_content', $tags['contao.callback'][3]['table']);
+        $this->assertSame('fields.stop.save', $tags['contao.callback'][3]['target']);
+        $this->assertSame('validateStopDate', $tags['contao.callback'][3]['method']);
+
+        $this->assertSame('tl_member', $tags['contao.callback'][4]['table']);
+        $this->assertSame('fields.start.save', $tags['contao.callback'][4]['target']);
+        $this->assertSame('validateStartDate', $tags['contao.callback'][4]['method']);
+        $this->assertSame('tl_member', $tags['contao.callback'][5]['table']);
+        $this->assertSame('fields.stop.save', $tags['contao.callback'][5]['target']);
+        $this->assertSame('validateStopDate', $tags['contao.callback'][5]['method']);
+
+        $this->assertSame('tl_member_group', $tags['contao.callback'][6]['table']);
+        $this->assertSame('fields.start.save', $tags['contao.callback'][6]['target']);
+        $this->assertSame('validateStartDate', $tags['contao.callback'][6]['method']);
+        $this->assertSame('tl_member_group', $tags['contao.callback'][7]['table']);
+        $this->assertSame('fields.stop.save', $tags['contao.callback'][7]['target']);
+        $this->assertSame('validateStopDate', $tags['contao.callback'][7]['method']);
+
+        $this->assertSame('tl_page', $tags['contao.callback'][8]['table']);
+        $this->assertSame('fields.start.save', $tags['contao.callback'][8]['target']);
+        $this->assertSame('validateStartDate', $tags['contao.callback'][8]['method']);
+        $this->assertSame('tl_page', $tags['contao.callback'][9]['table']);
+        $this->assertSame('fields.stop.save', $tags['contao.callback'][9]['target']);
+        $this->assertSame('validateStopDate', $tags['contao.callback'][9]['method']);
+
+        $this->assertSame('tl_user', $tags['contao.callback'][10]['table']);
+        $this->assertSame('fields.start.save', $tags['contao.callback'][10]['target']);
+        $this->assertSame('validateStartDate', $tags['contao.callback'][10]['method']);
+        $this->assertSame('tl_user', $tags['contao.callback'][11]['table']);
+        $this->assertSame('fields.stop.save', $tags['contao.callback'][11]['target']);
+        $this->assertSame('validateStopDate', $tags['contao.callback'][11]['method']);
+
+        $this->assertSame('tl_user_group', $tags['contao.callback'][12]['table']);
+        $this->assertSame('fields.start.save', $tags['contao.callback'][12]['target']);
+        $this->assertSame('validateStartDate', $tags['contao.callback'][12]['method']);
+        $this->assertSame('tl_user_group', $tags['contao.callback'][13]['table']);
+        $this->assertSame('fields.stop.save', $tags['contao.callback'][13]['target']);
+        $this->assertSame('validateStopDate', $tags['contao.callback'][13]['method']);
     }
 
     public function testRegistersTheDoctrineSchemaProvider(): void

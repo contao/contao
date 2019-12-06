@@ -59,12 +59,17 @@ class StartStopValidator
             throw new \RuntimeException('The request stack did not contain a request');
         }
 
-        $stop = $request->request->has($this->stopField)
-            ? strtotime($request->request->get($this->stopField))
-            : $dc->activeRecord->{$this->stopField}
-        ;
+        if ($request->request->has($this->stopField)) {
+            $stop = $request->request->get($this->stopField);
 
-        if ($stop && $value >= $stop) {
+            if ('' !== $stop) {
+                $stop = strtotime($stop);
+            }
+        } else {
+            $stop = $dc->activeRecord->{$this->stopField};
+        }
+
+        if ('' !== $stop && $value >= $stop) {
             throw new \RuntimeException($this->translator->trans('ERR.startAfterStop', [], 'contao_default'));
         }
 
@@ -84,12 +89,17 @@ class StartStopValidator
             throw new \RuntimeException('The request stack did not contain a request');
         }
 
-        $start = $request->request->has($this->startField)
-            ? strtotime($request->request->get($this->startField))
-            : $dc->activeRecord->{$this->startField}
-        ;
+        if ($request->request->has($this->startField)) {
+            $start = $request->request->get($this->startField);
 
-        if ($start && $start >= $value) {
+            if ('' !== $start) {
+                $start = strtotime($start);
+            }
+        } else {
+            $start = $dc->activeRecord->{$this->startField};
+        }
+
+        if ('' !== $start && $start >= $value) {
             throw new \RuntimeException($this->translator->trans('ERR.stopBeforeStart', [], 'contao_default'));
         }
 
