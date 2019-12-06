@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Tests\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\NewsBundle\DependencyInjection\Compiler\StartStopValidatorPass;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 

@@ -14,7 +14,7 @@ namespace Contao\CalendarBundle\Tests;
 
 use Contao\CalendarBundle\ContaoCalendarBundle;
 use Contao\CalendarBundle\DependencyInjection\Compiler\StartStopValidatorPass;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ContaoCalendarBundleTest extends TestCase

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CalendarBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CalendarBundle\DependencyInjection\Compiler\StartStopValidatorPass;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 

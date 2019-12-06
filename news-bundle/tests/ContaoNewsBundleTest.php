@@ -14,7 +14,7 @@ namespace Contao\NewsBundle\Tests;
 
 use Contao\NewsBundle\ContaoNewsBundle;
 use Contao\NewsBundle\DependencyInjection\Compiler\StartStopValidatorPass;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ContaoNewsBundleTest extends TestCase
