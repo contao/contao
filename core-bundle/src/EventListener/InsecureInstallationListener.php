@@ -39,8 +39,6 @@ class InsecureInstallationListener
             return;
         }
 
-        throw new InsecureInstallationException(
-            'Your installation is not secure. Please set the document root to the /web subfolder.'
-        );
+        throw new InsecureInstallationException('Your installation is not secure. Please set the document root to the /web subfolder.');
     }
 }

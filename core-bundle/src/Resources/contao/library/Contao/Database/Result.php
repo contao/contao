@@ -148,19 +148,15 @@ class Result
 		{
 			case 'query':
 				return $this->strQuery;
-				break;
 
 			case 'numRows':
 				return $this->count();
-				break;
 
 			case 'numFields':
 				return $this->resResult->columnCount();
-				break;
 
 			case 'isModified':
 				return $this->blnModified;
-				break;
 
 			default:
 				if (empty($this->arrCache))

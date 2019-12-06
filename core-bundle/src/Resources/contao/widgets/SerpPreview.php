@@ -112,15 +112,12 @@ EOT;
 		{
 			case $model instanceof PageModel:
 				return $model->getAbsoluteUrl();
-				break;
 
 			case $model instanceof NewsModel:
 				return News::generateNewsUrl($model, false, true);
-				break;
 
 			case $model instanceof CalendarEventsModel:
 				return Events::generateEventUrl($model, true);
-				break;
 
 			default:
 				throw new \RuntimeException(sprintf('Unsupported model class "%s"', \get_class($model)));

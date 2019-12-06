@@ -286,9 +286,7 @@ class BackendCsvImportController
             $extension = pathinfo($file, PATHINFO_EXTENSION);
 
             if ('csv' !== $extension) {
-                throw new \RuntimeException(
-                    sprintf($this->translator->trans('ERR.filetype', [], 'contao_default'), $extension)
-                );
+                throw new \RuntimeException(sprintf($this->translator->trans('ERR.filetype', [], 'contao_default'), $extension));
             }
 
             $file = $this->projectDir.'/'.$file;

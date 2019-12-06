@@ -227,15 +227,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		{
 			case 'path':
 				return $this->strPath;
-				break;
 
 			case 'extension':
 				return $this->strExtension;
-				break;
 
 			case 'isDbAssisted':
 				return $this->blnIsDbAssisted;
-				break;
 		}
 
 		return parent::__get($strKey);

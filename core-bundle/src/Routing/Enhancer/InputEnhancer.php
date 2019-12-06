@@ -94,9 +94,7 @@ class InputEnhancer implements RouteEnhancerInterface
                 && $config->get('useAutoItem')
                 && \in_array($fragments[$i], $GLOBALS['TL_AUTO_ITEM'], true)
             ) {
-                throw new ResourceNotFoundException(
-                    sprintf('"%s" is an auto_item keyword (duplicate content)', $fragments[$i])
-                );
+                throw new ResourceNotFoundException(sprintf('"%s" is an auto_item keyword (duplicate content)', $fragments[$i]));
             }
 
             $input->setGet($fragments[$i], $fragments[$i + 1], true);

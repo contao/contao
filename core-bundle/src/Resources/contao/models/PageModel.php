@@ -1017,6 +1017,7 @@ class PageModel extends Model
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
 			System::log('Page ID "' . $this->id . '" does not belong to a root page', __METHOD__, TL_ERROR);
+
 			throw new NoRootPageFoundException('No root page found');
 		}
 
