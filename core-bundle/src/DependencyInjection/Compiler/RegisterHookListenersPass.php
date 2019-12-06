@@ -71,9 +71,7 @@ class RegisterHookListenersPass implements CompilerPassInterface
     private function addHookCallback(array &$hooks, string $serviceId, array $attributes): void
     {
         if (!isset($attributes['hook'])) {
-            throw new InvalidConfigurationException(
-                sprintf('Missing hook attribute in tagged hook service with service id "%s"', $serviceId)
-            );
+            throw new InvalidConfigurationException(sprintf('Missing hook attribute in tagged hook service with service id "%s"', $serviceId));
         }
 
         $priority = (int) ($attributes['priority'] ?? 0);
