@@ -20,7 +20,7 @@ use Knp\Menu\ItemInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-abstract class AbstractDataContainerPickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
+abstract class AbstractDatabasePickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
 {
     private const PREFIX = 'dc.';
     private const PREFIX_LENGTH = 3;
@@ -57,14 +57,6 @@ abstract class AbstractDataContainerPickerProvider implements PickerProviderInte
         $this->router = $router;
         $this->translator = $translator;
         $this->connection = $connection;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName(): string
-    {
-        return 'dcTablePicker';
     }
 
     /**
@@ -109,20 +101,18 @@ abstract class AbstractDataContainerPickerProvider implements PickerProviderInte
         $modules = array_keys($this->getModulesForTable($this->getTableFromContext($config->getContext())));
 
         foreach ($modules as $name) {
-            $params = array_merge(
-                [
-                    'do' => $name,
-                    'popup' => '1',
-                    'picker' => $config->cloneForCurrent(self::PREFIX.$name)->urlEncode(),
-                ]
-            );
+            $params = [
+                'do' => $name,
+                'popup' => '1',
+                'picker' => $config->cloneForCurrent(self::PREFIX.$name)->urlEncode(),
+            ];
 
             $menu->addChild($this->menuFactory->createItem(
                 $name,
                 [
                     'label' => $this->translator->trans('MOD.'.$name.'.0', [], 'contao_default'),
                     'linkAttributes' => ['class' => $name],
-                    'current' => $this->isCurrent($config) && $name === substr($config->getCurrent(), self::PREFIX_LENGTH),
+                    'current' => $this->isCurrent($config) && $name === substr($config->getCurrent(), strlen($this->getName().'.')),
                     'uri' => $this->router->generate('contao_backend', $params),
                 ]
             ));
@@ -134,6 +124,8 @@ abstract class AbstractDataContainerPickerProvider implements PickerProviderInte
      */
     public function createMenuItem(PickerConfig $config): ItemInterface
     {
+        @trigger_error('For classes implementing PickerMenuInterface, use method addMenuItems instead of createMenuItem.', E_USER_DEPRECATED);
+
         $menu = $this->menuFactory->createItem('picker');
 
         $this->addMenuItems($menu, $config);
@@ -172,7 +164,7 @@ abstract class AbstractDataContainerPickerProvider implements PickerProviderInte
      */
     public function isCurrent(PickerConfig $config): bool
     {
-        return 0 === strpos($config->getCurrent(), self::PREFIX);
+        return 0 === strpos($config->getCurrent(), $this->getName().'.');
     }
 
     /**
@@ -242,12 +234,12 @@ abstract class AbstractDataContainerPickerProvider implements PickerProviderInte
         return substr($context, self::PREFIX_LENGTH);
     }
 
-    protected function getUrlForValue(PickerConfig $config, string $module, string $table = null, string $pid = null): string
+    protected function getUrlForValue(PickerConfig $config, string $module, string $table = null, int $pid = null): string
     {
         $params = [
             'do' => $module,
             'popup' => '1',
-            'picker' => $config->cloneForCurrent(self::PREFIX.$module)->urlEncode(),
+            'picker' => $config->cloneForCurrent($this->getName().'.'.$module)->urlEncode(),
         ];
 
         if (null !== $table) {
@@ -294,7 +286,7 @@ abstract class AbstractDataContainerPickerProvider implements PickerProviderInte
             return [null, null];
         }
 
-        $pid = $data['pid'];
+        $pid = (int) $data['pid'];
 
         if ($dynamicPtable) {
             $ptable = $data['ptable'] ?: $ptable;

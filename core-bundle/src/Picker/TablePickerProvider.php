@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
-class TablePickerProvider extends AbstractDataContainerPickerProvider
+class TablePickerProvider extends AbstractDatabasePickerProvider
 {
     /**
      * {@inheritdoc}
