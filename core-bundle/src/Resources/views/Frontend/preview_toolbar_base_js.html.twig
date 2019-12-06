@@ -7,16 +7,22 @@
         position: sticky;
         top: 0;
         z-index: 99999;
+        border-bottom: 1px solid #ffffff;
+    }
+
+    .cto-toolbar__inside {
         display: grid;
         grid-template: auto / 1fr auto;
+        border-bottom: 1px solid #cccccc;
     }
 
     .cto-toolbar--hidden {
         position: fixed;
         right: 0;
+        border: none;
     }
 
-    .cto-toolbar--hidden form {
+    .cto-toolbar--hidden .cto-toolbar__inside {
         display: none;
     }
 
@@ -37,6 +43,18 @@
         display: flex;
         align-items: baseline;
         margin-left: 1em;
+    }
+
+
+    @media only screen and (max-width: 676px) {
+        .cto-toolbar .formbody {
+            display: block;
+        }
+
+        .cto-toolbar .formbody > div {
+            justify-content: space-between;
+            padding: 3px 0;
+        }
     }
 
     .cto-toolbar label {
@@ -92,6 +110,35 @@
         color: #aaa;
     }
 
+    .cto-toolbar__open {
+        display: none;
+        width: 40px;
+        height: 35px;
+        background: #222;
+        border-radius: 0 0 0 2px;
+    }
+
+    .cto-toolbar__open a {
+        display: flex;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        opacity: .7;
+    }
+
+    .cto-toolbar__open a:hover {
+        opacity: .9;
+    }
+
+    .cto-toolbar--hidden {
+        border-radius: 0 0 0 4px;
+
+    }
+
+    .cto-toolbar--hidden .cto-toolbar__open {
+        display: block;
+    }
+
     .cto-toolbar__close {
         border-left: 1px solid #dddddd;
     }
@@ -138,6 +185,13 @@
                 callback.apply(this);
             };
             request.send(body)
+        }
+
+        // Initialize toolbar
+        if ('hidden' === localStorage.getItem('contao/previewBar/displayState')) {
+            toolbar.classList.add('cto-toolbar--hidden');
+        } else {
+            toolbar.classList.add('cto-toolbar--visible');
         }
 
         // Fetch toolbar
@@ -198,9 +252,20 @@
             }
 
             // Collapse toolbar
-            toolbar.querySelector('.cto-toolbar__close').addEventListener('click', function (e) {
-                e.preventDefault();
-                toolbar.classList.toggle('cto-toolbar--hidden');
+            Array.from([toolbar.querySelector('.cto-toolbar__close'), toolbar.querySelector('.cto-toolbar__open')]).forEach(toggle => {
+                toggle.addEventListener('click', function (event) {
+                    event.preventDefault();
+
+                    const toolbar = event.currentTarget.closest('.cto-toolbar');
+                    if (toolbar.classList.contains('cto-toolbar--hidden')) {
+                        localStorage.setItem('contao/previewBar/displayState', 'visible');
+                        toolbar.classList.replace('cto-toolbar--hidden', 'cto-toolbar--visible');
+                    } else {
+                        localStorage.setItem('contao/previewBar/displayState', 'hidden');
+                        toolbar.classList.replace('cto-toolbar--visible', 'cto-toolbar--hidden');
+                    }
+
+                });
             });
         });
     })();
