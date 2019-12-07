@@ -16,7 +16,6 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Security\TwoFactor\BackupCode\BackupCodeManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
-use Contao\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -26,7 +25,6 @@ class BackupCodeManagerTest extends TestCase
     {
         $backupCodeManager = new BackupCodeManager();
 
-        /** @var User&MockObject $user */
         $user = $this->createMock(UserInterface::class);
 
         $this->assertFalse($backupCodeManager->isBackupCode($user, '123456'));
@@ -69,8 +67,8 @@ class BackupCodeManagerTest extends TestCase
         $backupCodes = json_encode(['123456', '234567']);
         $backupCodeManager = new BackupCodeManager();
 
-        /** @var User&MockObject $user */
-        $user = $this->mockClassWithProperties(User::class, ['backupCodes']);
+        /** @var BackendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class, ['backupCodes']);
         $user->backupCodes = $backupCodes;
 
         $user
