@@ -30,7 +30,7 @@ class BackupCodeManagerTest extends TestCase
         $user = $this->createMock(UserInterface::class);
 
         $this->assertFalse($backupCodeManager->isBackupCode($user, '123456'));
-        $this->assertNull($backupCodeManager->invalidateBackupCode($user, '123456'));
+        $backupCodeManager->invalidateBackupCode($user, '123456');
     }
 
     public function testHandlesContaoUsers(): void
