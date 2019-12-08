@@ -18,6 +18,7 @@ use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
+use Contao\CoreBundle\Security\TwoFactor\TrustedDevice\TrustedDeviceManager;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -77,6 +78,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['translator'] = TranslatorInterface::class;
         $services[BackupCodeManager::class] = BackupCodeManager::class;
         $services['doctrine.orm.entity_manager'] = EntityManagerInterface::class;
+        $services['contao.security.two_factor.trusted_device_manager'] = TrustedDeviceManager::class;
 
         return $services;
     }
@@ -166,7 +168,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->countryLabel = $translator->trans('MSC.country', [], 'contao_default');
         $template->createdLabel = $translator->trans('MSC.createdOn', [], 'contao_default');
         $template->clearTrustedDevicesButton = $translator->trans('MSC.clearTrustedDevices', [], 'contao_default');
-        $template->trustedDevices = $trustedDeviceRepository->findForFrontendUser($user);
+        $template->trustedDevices = $trustedDeviceRepository->findForUser($user);
         $template->countries = System::getCountries();
         $template->currentDevice = $request->cookies->get($this->getParameter('scheb_two_factor.trusted_device.cookie_name'));
 
@@ -236,23 +238,11 @@ class TwoFactorController extends AbstractFrontendModuleController
         $backupCodeManager->generateBackupCodes($user);
     }
 
-    private function clearTrustedDevices(FrontendUser $user): Response
+    private function clearTrustedDevices(FrontendUser $user): ?Response
     {
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = $this->get('doctrine.orm.entity_manager');
-
-        /** @var TrustedDeviceRepository $trustedDeviceRepository */
-        $trustedDeviceRepository = $entityManager->getRepository(TrustedDevice::class);
-        $trustedDevices = $trustedDeviceRepository->findForFrontendUser($user);
-
-        foreach ($trustedDevices as $trustedDevice) {
-            $entityManager->remove($trustedDevice);
-        }
-
-        $entityManager->flush();
-
-        ++$user->trustedVersion;
-        $user->save();
+        /** @var TrustedDeviceManager $trustedDeviceManager */
+        $trustedDeviceManager = $this->get('contao.security.two_factor.trusted_device_manager');
+        $trustedDeviceManager->clearTrustedDevices($user);
 
         return new RedirectResponse($this->page->getAbsoluteUrl());
     }

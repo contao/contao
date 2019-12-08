@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
+use Contao\CoreBundle\Security\TwoFactor\TrustedDevice\TrustedDeviceManager;
 use Doctrine\ORM\EntityManagerInterface;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
@@ -222,22 +223,9 @@ class ModuleTwoFactor extends BackendModule
 	{
 		$container = System::getContainer();
 
-		/** @var EntityManagerInterface $entityManager */
-		$entityManager = $container->get('doctrine.orm.entity_manager');
-
-		/** @var TrustedDeviceRepository $trustedDeviceRepository */
-		$trustedDeviceRepository = $entityManager->getRepository(TrustedDevice::class);
-		$trustedDevices = $trustedDeviceRepository->findForBackendUser($user);
-
-		foreach ($trustedDevices as $trustedDevice)
-		{
-			$entityManager->remove($trustedDevice);
-		}
-
-		$entityManager->flush();
-
-		$user->trustedVersion++;
-		$user->save();
+		/** @var TrustedDeviceManager $trustedDeviceManager */
+		$trustedDeviceManager = $container->get('contao.security.two_factor.trusted_device_manager');
+		$trustedDeviceManager->clearTrustedDevices($user);
 
 		throw new RedirectResponseException($return);
 	}

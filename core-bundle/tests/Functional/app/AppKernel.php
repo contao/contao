@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Functional\app;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\NewsBundle\ContaoNewsBundle;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Http\HttplugBundle\HttplugBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
 use Psr\Log\NullLogger;
@@ -46,6 +47,7 @@ class AppKernel extends Kernel
             new CmfRoutingBundle(),
             new ContaoCoreBundle(),
             new ContaoNewsBundle(),
+            new HttplugBundle(),
         ];
     }
 

@@ -12,28 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Repository;
 
-use Contao\BackendUser;
-use Contao\FrontendUser;
+use Contao\User;
 use Doctrine\ORM\EntityRepository;
 
 class TrustedDeviceRepository extends EntityRepository
 {
-    public function findForBackendUser(BackendUser $user)
+    public function findForUser(User $user)
     {
         return $this->createQueryBuilder('td')
-            ->andWhere('td.user = :user')
-            ->setParameter('user', (int) $user->id)
-
-            ->getQuery()
-            ->execute()
-        ;
-    }
-
-    public function findForFrontendUser(FrontendUser $user)
-    {
-        return $this->createQueryBuilder('td')
-            ->andWhere('td.member = :member')
-            ->setParameter('member', (int) $user->id)
+            ->andWhere('td.userClass = :userClass')
+            ->andWhere('td.userId = :userId')
+            ->setParameter('userClass', \get_class($user))
+            ->setParameter('userId', (int) $user->id)
 
             ->getQuery()
             ->execute()

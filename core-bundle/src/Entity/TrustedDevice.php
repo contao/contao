@@ -37,18 +37,18 @@ class TrustedDevice
     protected $created;
 
     /**
-     * @var int|null
+     * @var string|null
      *
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $user;
+    protected $userClass;
 
     /**
      * @var int|null
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected $member;
+    protected $userId;
 
     /**
      * @var string
@@ -123,26 +123,26 @@ class TrustedDevice
         return $this;
     }
 
-    public function getUser(): int
+    public function getUserClass(): string
     {
-        return $this->user;
+        return $this->userClass;
     }
 
-    public function setUser(?int $user): self
+    public function setUserClass(?string $userClass): self
     {
-        $this->user = $user;
+        $this->userClass = $userClass;
 
         return $this;
     }
 
-    public function getMember(): int
+    public function getUserId(): int
     {
-        return $this->member;
+        return $this->userId;
     }
 
-    public function setMember(?int $member): self
+    public function setUserId(?int $userId): self
     {
-        $this->member = $member;
+        $this->userId = $userId;
 
         return $this;
     }

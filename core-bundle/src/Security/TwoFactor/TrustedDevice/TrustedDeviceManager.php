@@ -12,9 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\TwoFactor\TrustedDevice;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Entity\TrustedDevice;
-use Contao\FrontendUser;
+use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Http\Client\Exception;
@@ -66,7 +65,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
     public function addTrustedDevice($user, string $firewallName): void
     {
-        if (!($user instanceof User)) {
+        if (!$user instanceof User || !$user instanceof TrustedDeviceInterface) {
             return;
         }
 
@@ -88,6 +87,8 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
         $trustedDevice = new TrustedDevice();
         $trustedDevice
+            ->setUserId((int) $user->id)
+            ->setUserClass(\get_class($user))
             ->setCreated(new \DateTime())
             ->setCookieValue($this->trustedTokenStorage->getCookieValue())
             ->setUserAgent($userAgent)
@@ -97,14 +98,6 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->setVersion($version)
             ->setCountry(strtolower($country))
         ;
-
-        if ($user instanceof BackendUser) {
-            $trustedDevice->setUser((int) $user->id);
-        }
-
-        if ($user instanceof FrontendUser) {
-            $trustedDevice->setMember((int) $user->id);
-        }
 
         $this->entityManager->persist($trustedDevice);
         $this->entityManager->flush();
@@ -120,6 +113,22 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $version = $this->getTrustedTokenVersion($user);
 
         return $this->trustedTokenStorage->hasTrustedToken($username, $firewallName, $version);
+    }
+
+    public function clearTrustedDevices(User $user): void
+    {
+        /** @var TrustedDeviceRepository $trustedDeviceRepository */
+        $trustedDeviceRepository = $this->entityManager->getRepository(TrustedDevice::class);
+        $trustedDevices = $trustedDeviceRepository->findForUser($user);
+
+        foreach ($trustedDevices as $trustedDevice) {
+            $this->entityManager->remove($trustedDevice);
+        }
+
+        $this->entityManager->flush();
+
+        ++$user->trustedVersion;
+        $user->save();
     }
 
     private function getTrustedTokenVersion($user): int
