@@ -217,7 +217,7 @@ class MigrateCommand extends Command
 
             $this->io->listing($commandsByHash);
 
-            $options = ['yes', 'yes, with delets', 'no'];
+            $options = ['yes', 'yes, with deletes', 'no'];
 
             if ($completeOption) {
                 array_shift($options);
