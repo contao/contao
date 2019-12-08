@@ -61,7 +61,7 @@ class HtaccessAnalyzer
             return false;
         }
 
-        return (false !== stripos($line, 'Allow from all')) || (false !== stripos($line, 'Require all granted'));
+        return false !== stripos($line, 'Allow from all') || false !== stripos($line, 'Require all granted');
     }
 
     /**

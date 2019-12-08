@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PageError404 extends Frontend
 {
-
 	/**
 	 * Generate an error 404 page
 	 */
@@ -82,9 +81,6 @@ class PageError404 extends Frontend
 	 */
 	protected function prepare()
 	{
-		// Check the search index (see #3761)
-		Search::removeEntry(Environment::get('base') . Environment::get('relativeRequest'));
-
 		// Find the matching root page
 		$objRootPage = $this->getRootPageFromUrl();
 
@@ -135,6 +131,7 @@ class PageError404 extends Frontend
 			if (null === $objNextPage)
 			{
 				$this->log('Forward page ID "' . $obj404->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
+
 				throw new ForwardPageNotFoundException('Forward page not found');
 			}
 

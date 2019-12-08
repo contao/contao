@@ -172,7 +172,7 @@ class ImageSizesTest extends TestCase
         $this->eventDispatcher
             ->expects($this->atLeastOnce())
             ->method('dispatch')
-            ->with($event, $this->isInstanceOf(ImageSizesEvent::class))
+            ->with($this->isInstanceOf(ImageSizesEvent::class), $event)
         ;
     }
 

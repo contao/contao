@@ -112,7 +112,6 @@ use Contao\Model\Collection;
  */
 class FaqModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

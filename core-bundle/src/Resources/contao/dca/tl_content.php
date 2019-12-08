@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_content'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -22,7 +21,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'onload_callback'             => array
 		(
 			array('tl_content', 'adjustDcaByType'),
-			array('tl_content', 'showJsLibraryHint')
+			array('tl_content', 'showJsLibraryHint'),
+			array('tl_content', 'preserveReferenced')
 		),
 		'sql' => array
 		(
@@ -442,6 +442,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'overwriteLink' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['overwriteMeta'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
@@ -536,7 +537,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'options'                 => array('custom', 'name_asc', 'name_desc', 'date_asc', 'date_desc', 'random'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'metaIgnore' => array
@@ -550,15 +551,21 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getGalleryTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('gallery_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'customTpl' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getElementTemplates'),
+			'options_callback' => static function (Contao\DataContainer $dc)
+			{
+				return Contao\Controller::getTemplateGroup('ce_' . $dc->activeRecord->type . '_');
+			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -672,6 +679,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'youtubeOptions' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['playerOptions'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array('youtube_autoplay', 'youtube_controls', 'youtube_cc_load_policy', 'youtube_fs', 'youtube_hl', 'youtube_iv_load_policy', 'youtube_modestbranding', 'youtube_rel', 'youtube_showinfo', 'youtube_nocookie'),
@@ -681,6 +689,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'vimeoOptions' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['playerOptions'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array('vimeo_autoplay', 'vimeo_loop', 'vimeo_portrait', 'vimeo_title', 'vimeo_byline'),
@@ -836,10 +845,10 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 );
 
 // Dynamically add the permission check and parent table (see #5241)
-if (Contao\Input::get('do') == 'article' || Contao\Input::get('do') == 'page')
+if (in_array(Contao\Input::get('do'), array('article', 'page')))
 {
 	$GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_article';
-	$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('tl_content', 'checkPermission');
+	array_unshift($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'], array('tl_content', 'checkPermission'));
 }
 
 /**
@@ -849,7 +858,6 @@ if (Contao\Input::get('do') == 'article' || Contao\Input::get('do') == 'page')
  */
 class tl_content extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -864,20 +872,6 @@ class tl_content extends Contao\Backend
 	 */
 	public function checkPermission()
 	{
-		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-		$objSession = Contao\System::getContainer()->get('session');
-
-		// Prevent deleting referenced elements (see #4898)
-		if (Contao\Input::get('act') == 'deleteAll')
-		{
-			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND type='alias'")
-									 ->execute();
-
-			$session = $objSession->all();
-			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objCes->fetchEach('cteAlias'));
-			$objSession->replace($session);
-		}
-
 		if ($this->User->isAdmin)
 		{
 			return;
@@ -916,13 +910,16 @@ class tl_content extends Contao\Backend
 			case 'cutAll':
 			case 'copyAll':
 				// Check access to the parent element if a content element is moved
-				if (Contao\Input::get('act') == 'cutAll' || Contao\Input::get('act') == 'copyAll')
+				if (in_array(Contao\Input::get('act'), array('cutAll', 'copyAll')))
 				{
 					$this->checkAccessToElement(Contao\Input::get('pid'), $pagemounts, (Contao\Input::get('mode') == 2));
 				}
 
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND pid=?")
 										 ->execute(CURRENT_ID);
+
+				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+				$objSession = Contao\System::getContainer()->get('session');
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCes->fetchEach('id'));
@@ -973,7 +970,7 @@ class tl_content extends Contao\Backend
 		}
 
 		// The page is not mounted
-		if (!\in_array($objPage->id, $pagemounts))
+		if (!in_array($objPage->id, $pagemounts))
 		{
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify article ID ' . $objPage->aid . ' on page ID ' . $objPage->id . '.');
 		}
@@ -1031,7 +1028,7 @@ class tl_content extends Contao\Backend
 	/**
 	 * Adjust the DCA by type
 	 *
-	 * @param object
+	 * @param object $dc
 	 */
 	public function adjustDcaByType($dc)
 	{
@@ -1055,9 +1052,39 @@ class tl_content extends Contao\Backend
 	}
 
 	/**
+	 * Prevent deleting referenced elements (see #4898)
+	 */
+	public function preserveReferenced()
+	{
+		if (Contao\Input::get('act') == 'delete')
+		{
+			$objCes = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND type='alias' AND cteAlias=?")
+									 ->execute(Contao\Input::get('id'));
+
+			if ($objCes->cnt > 0)
+			{
+				throw new Contao\CoreBundle\Exception\InternalServerErrorException('Content element ID ' . Contao\Input::get('id') . ' is used in an alias element and can therefore not be deleted.');
+			}
+		}
+
+		if (Contao\Input::get('act') == 'deleteAll')
+		{
+			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND type='alias'")
+									 ->execute();
+
+			/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+			$objSession = Contao\System::getContainer()->get('session');
+
+			$session = $objSession->all();
+			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objCes->fetchEach('cteAlias'));
+			$objSession->replace($session);
+		}
+	}
+
+	/**
 	 * Show a hint if a JavaScript library needs to be included in the page layout
 	 *
-	 * @param object
+	 * @param object $dc
 	 */
 	public function showJsLibraryHint($dc)
 	{
@@ -1123,7 +1150,7 @@ class tl_content extends Contao\Backend
 		$class = 'limit_height';
 
 		// Remove the class if it is a wrapper element
-		if (\in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['start']) || \in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['separator']) || \in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['stop']))
+		if (in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['start']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['separator']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['stop']))
 		{
 			$class = '';
 
@@ -1134,7 +1161,7 @@ class tl_content extends Contao\Backend
 		}
 
 		// Add the group name if it is a single element (see #5814)
-		elseif (\in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['single']))
+		elseif (in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['single']))
 		{
 			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
 			{
@@ -1159,12 +1186,9 @@ class tl_content extends Contao\Backend
 		}
 
 		// Add the headline level (see #5858)
-		if ($arrRow['type'] == 'headline')
+		if ($arrRow['type'] == 'headline' && is_array($headline = Contao\StringUtil::deserialize($arrRow['headline'])))
 		{
-			if (\is_array($headline = Contao\StringUtil::deserialize($arrRow['headline'])))
-			{
-				$type .= ' (' . $headline['unit'] . ')';
-			}
+			$type .= ' (' . $headline['unit'] . ')';
 		}
 
 		// Limit the element's height
@@ -1231,7 +1255,7 @@ class tl_content extends Contao\Backend
 				return $arrAlias;
 			}
 
-			$objAlias = $this->Database->prepare("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(". implode(',', array_map('\intval', array_unique($arrPids))) .") AND a.id!=(SELECT pid FROM tl_content WHERE id=?) ORDER BY parent, a.sorting")
+			$objAlias = $this->Database->prepare("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") AND a.id!=(SELECT pid FROM tl_content WHERE id=?) ORDER BY parent, a.sorting")
 									   ->execute($dc->id);
 		}
 		else
@@ -1300,7 +1324,7 @@ class tl_content extends Contao\Backend
 				return $arrAlias;
 			}
 
-			$objAlias = $this->Database->prepare("SELECT c.id, c.pid, c.type, (CASE c.type WHEN 'module' THEN m.name WHEN 'form' THEN f.title WHEN 'table' THEN c.summary ELSE c.headline END) AS headline, c.text, a.title FROM tl_content c LEFT JOIN tl_article a ON a.id=c.pid LEFT JOIN tl_module m ON m.id=c.module LEFT JOIN tl_form f on f.id=c.form WHERE a.pid IN(". implode(',', array_map('\intval', array_unique($arrPids))) .") AND (c.ptable='tl_article' OR c.ptable='') AND c.id!=? ORDER BY a.title, c.sorting")
+			$objAlias = $this->Database->prepare("SELECT c.id, c.pid, c.type, (CASE c.type WHEN 'module' THEN m.name WHEN 'form' THEN f.title WHEN 'table' THEN c.summary ELSE c.headline END) AS headline, c.text, a.title FROM tl_content c LEFT JOIN tl_article a ON a.id=c.pid LEFT JOIN tl_module m ON m.id=c.module LEFT JOIN tl_form f on f.id=c.form WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") AND (c.ptable='tl_article' OR c.ptable='') AND c.id!=? ORDER BY a.title, c.sorting")
 									   ->execute(Contao\Input::get('id'));
 		}
 		else
@@ -1367,7 +1391,7 @@ class tl_content extends Contao\Backend
 	 */
 	public function getForms()
 	{
-		if (!$this->User->isAdmin && !\is_array($this->User->forms))
+		if (!$this->User->isAdmin && !is_array($this->User->forms))
 		{
 			return array();
 		}
@@ -1421,28 +1445,6 @@ class tl_content extends Contao\Backend
 		}
 
 		return $arrModules;
-	}
-
-	/**
-	 * Return all gallery templates as array
-	 *
-	 * @return array
-	 */
-	public function getGalleryTemplates()
-	{
-		return $this->getTemplateGroup('gallery_');
-	}
-
-	/**
-	 * Return all content element templates as array
-	 *
-	 * @param Contao\DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function getElementTemplates(Contao\DataContainer $dc)
-	{
-		return $this->getTemplateGroup('ce_' . $dc->activeRecord->type . '_');
 	}
 
 	/**
@@ -1500,13 +1502,13 @@ class tl_content extends Contao\Backend
 		// Limit pages to the user's pagemounts
 		if ($this->User->isAdmin)
 		{
-			$objArticle = $this->Database->execute("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid" . (!empty($arrRoot) ? " WHERE a.pid IN(". implode(',', array_map('\intval', array_unique($arrRoot))) .")" : "") . " ORDER BY parent, a.sorting");
+			$objArticle = $this->Database->execute("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid" . (!empty($arrRoot) ? " WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrRoot))) . ")" : "") . " ORDER BY parent, a.sorting");
 		}
 		else
 		{
 			foreach ($this->User->pagemounts as $id)
 			{
-				if (!\in_array($id, $arrRoot))
+				if (!in_array($id, $arrRoot))
 				{
 					continue;
 				}
@@ -1524,7 +1526,7 @@ class tl_content extends Contao\Backend
 				return $arrArticle;
 			}
 
-			$objArticle = $this->Database->execute("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(". implode(',', array_map('\intval', array_unique($arrPids))) .") ORDER BY parent, a.sorting");
+			$objArticle = $this->Database->execute("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
 		}
 
 		// Edit the result
@@ -1656,7 +1658,7 @@ class tl_content extends Contao\Backend
 									 ->limit(1)
 									 ->execute($row['id']);
 
-		return $objElement->numRows ? Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ' : '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ';
+		return $objElement->numRows ? Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ' : '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -1790,14 +1792,14 @@ class tl_content extends Contao\Backend
 			return '';
 		}
 
-		$href .= '&amp;id='.Contao\Input::get('id').'&amp;cid='.$row['id'].'&amp;state='.$row['invisible'];
+		$href .= '&amp;id=' . Contao\Input::get('id') . '&amp;cid=' . $row['id'] . '&amp;state=' . $row['invisible'];
 
 		if ($row['invisible'])
 		{
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'" data-tid="cid"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '" data-tid="cid"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 
 	/**
@@ -1821,16 +1823,16 @@ class tl_content extends Contao\Backend
 		}
 
 		// Trigger the onload_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -1863,16 +1865,16 @@ class tl_content extends Contao\Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -1892,16 +1894,16 @@ class tl_content extends Contao\Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}

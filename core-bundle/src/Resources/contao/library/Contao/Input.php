@@ -31,7 +31,6 @@ use Patchwork\Utf8;
  */
 class Input
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var Input
@@ -305,8 +304,7 @@ class Input
 
 		$strKey = static::cleanKey($strKey);
 
-		unset(static::$arrCache['getEncoded'][$strKey]);
-		unset(static::$arrCache['getDecoded'][$strKey]);
+		unset(static::$arrCache['getEncoded'][$strKey], static::$arrCache['getDecoded'][$strKey]);
 
 		if ($varValue === null)
 		{
@@ -333,12 +331,14 @@ class Input
 	{
 		$strKey = static::cleanKey($strKey);
 
-		unset(static::$arrCache['postEncoded'][$strKey]);
-		unset(static::$arrCache['postDecoded'][$strKey]);
-		unset(static::$arrCache['postHtmlEncoded'][$strKey]);
-		unset(static::$arrCache['postHtmlDecoded'][$strKey]);
-		unset(static::$arrCache['postRaw'][$strKey]);
-		unset(static::$arrCache['postUnsafeRaw'][$strKey]);
+		unset(
+			static::$arrCache['postEncoded'][$strKey],
+			static::$arrCache['postDecoded'][$strKey],
+			static::$arrCache['postHtmlEncoded'][$strKey],
+			static::$arrCache['postHtmlDecoded'][$strKey],
+			static::$arrCache['postRaw'][$strKey],
+			static::$arrCache['postUnsafeRaw'][$strKey]
+		);
 
 		if ($varValue === null)
 		{
@@ -360,8 +360,7 @@ class Input
 	{
 		$strKey = static::cleanKey($strKey);
 
-		unset(static::$arrCache['cookieEncoded'][$strKey]);
-		unset(static::$arrCache['cookieDecoded'][$strKey]);
+		unset(static::$arrCache['cookieEncoded'][$strKey], static::$arrCache['cookieDecoded'][$strKey]);
 
 		if ($varValue === null)
 		{
@@ -560,13 +559,8 @@ class Input
 		$varValue = preg_replace('/\r+/', '', $varValue);
 
 		// Replace unicode entities
-		$varValue = preg_replace_callback('~&#x([0-9a-f]+);~i', static function ($matches) {
-			return Utf8::chr(hexdec($matches[1]));
-		}, $varValue);
-
-		$varValue = preg_replace_callback('~&#([0-9]+);~', static function ($matches) {
-			return Utf8::chr($matches[1]);
-		}, $varValue);
+		$varValue = preg_replace_callback('~&#x([0-9a-f]+);~i', static function ($matches) { return Utf8::chr(hexdec($matches[1])); }, $varValue);
+		$varValue = preg_replace_callback('~&#([0-9]+);~', static function ($matches) { return Utf8::chr($matches[1]); }, $varValue);
 
 		// Remove null bytes
 		$varValue = str_replace(\chr(0), '', $varValue);
@@ -808,7 +802,9 @@ class Input
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Input class is now static.
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Return the object instance (Singleton)

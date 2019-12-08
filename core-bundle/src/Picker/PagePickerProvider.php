@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Picker;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
@@ -24,6 +24,9 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private $security;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.picker.page_provider" service instead
+     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
     {
         parent::__construct($menuFactory, $router, $translator);
@@ -89,11 +92,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
             }
 
             if ($value) {
-                $intval = static function ($val) {
-                    return (int) $val;
-                };
-
-                $attributes['value'] = array_map($intval, explode(',', $value));
+                $attributes['value'] = array_map('\intval', explode(',', $value));
             }
 
             return $attributes;

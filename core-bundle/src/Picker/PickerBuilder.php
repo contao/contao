@@ -32,6 +32,9 @@ class PickerBuilder implements PickerBuilderInterface
      */
     private $providers = [];
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.picker.builder" service instead
+     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router)
     {
         $this->menuFactory = $menuFactory;
@@ -110,7 +113,7 @@ class PickerBuilder implements PickerBuilderInterface
      */
     public function getUrl($context, array $extras = [], $value = ''): string
     {
-        $providers = (isset($extras['providers']) && \is_array($extras['providers'])) ? $extras['providers'] : null;
+        $providers = isset($extras['providers']) && \is_array($extras['providers']) ? $extras['providers'] : null;
 
         if (!$this->supportsContext($context, $providers)) {
             return '';

@@ -117,7 +117,6 @@ use FOS\HttpCache\ResponseTagger;
  */
 abstract class ContentElement extends Frontend
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -174,7 +173,7 @@ abstract class ContentElement extends Frontend
 		$this->arrData = $objElement->row();
 		$this->cssID = StringUtil::deserialize($objElement->cssID, true);
 
-		if ($this->customTpl != '' && TL_MODE == 'FE')
+		if ($this->customTpl && TL_MODE == 'FE')
 		{
 			$this->strTemplate = $this->customTpl;
 		}

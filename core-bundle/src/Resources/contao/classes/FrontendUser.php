@@ -13,14 +13,13 @@ namespace Contao;
 /**
  * Provide methods to manage front end users.
  *
- * @property array   $allGroups
- * @property string  $loginPage
+ * @property array  $allGroups
+ * @property string $loginPage
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FrontendUser extends User
 {
-
 	/**
 	 * Symfony Security session key
 	 * @var string
@@ -139,11 +138,9 @@ class FrontendUser extends User
 		{
 			case 'allGroups':
 				return $this->arrGroups;
-				break;
 
 			case 'loginPage':
 				return $this->strLoginPage;
-				break;
 		}
 
 		return parent::__get($strKey);

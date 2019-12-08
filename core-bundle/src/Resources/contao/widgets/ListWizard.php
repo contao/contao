@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -22,7 +23,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class ListWizard extends Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -77,13 +77,13 @@ class ListWizard extends Widget
 			Cache::set('tabindex', 1);
 		}
 
-		$return = '<ul id="ctrl_'.$this->strId.'" class="tl_listwizard">';
+		$return = '<ul id="ctrl_' . $this->strId . '" class="tl_listwizard">';
 
 		// Add input fields
 		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
 		{
 			$return .= '
-    <li><input type="text" name="'.$this->strId.'[]" class="tl_text" value="'.StringUtil::specialchars($this->varValue[$i]).'"' . $this->getAttributes() . '> ';
+    <li><input type="text" name="' . $this->strId . '[]" class="tl_text" value="' . StringUtil::specialchars($this->varValue[$i]) . '"' . $this->getAttributes() . '> ';
 
 			// Add buttons
 			foreach ($arrButtons as $button)
@@ -94,16 +94,16 @@ class ListWizard extends Widget
 				}
 				else
 				{
-					$return .= ' <button type="button" data-command="' . $button . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['lw_'.$button]) . '">' . Image::getHtml($button.'.svg') . '</button>';
+					$return .= ' <button type="button" data-command="' . $button . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['lw_' . $button]) . '">' . Image::getHtml($button . '.svg') . '</button>';
 				}
 			}
 
 			$return .= '</li>';
 		}
 
-		return $return.'
+		return $return . '
   </ul>
-  <script>Backend.listWizard("ctrl_'.$this->strId.'")</script>';
+  <script>Backend.listWizard("ctrl_' . $this->strId . '")</script>';
 	}
 
 	/**
@@ -117,11 +117,11 @@ class ListWizard extends Widget
 	 * @throws ResponseException
 	 *
 	 * @deprecated Deprecated since Contao 4.3 to be removed in 5.0.
-	 *             Use the contao.controller.backend_csv_import service instead.
+	 *             Use the Contao\CoreBundle\Controller\BackendCsvImportController service instead.
 	 */
 	public function importList(DataContainer $dc)
 	{
-		$response = System::getContainer()->get('contao.controller.backend_csv_import')->importListWizardAction($dc);
+		$response = System::getContainer()->get(BackendCsvImportController::class)->importListWizardAction($dc);
 
 		if ($response instanceof RedirectResponse)
 		{
@@ -129,7 +129,7 @@ class ListWizard extends Widget
 		}
 
 		return $response->getContent();
-    }
+	}
 }
 
 class_alias(ListWizard::class, 'ListWizard');

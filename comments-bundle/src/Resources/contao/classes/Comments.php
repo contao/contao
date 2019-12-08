@@ -21,7 +21,6 @@ use FOS\HttpCache\ResponseTagger;
  */
 class Comments extends Frontend
 {
-
 	/**
 	 * Add comments to a template
 	 *
@@ -103,13 +102,7 @@ class Comments extends Frontend
 		if ($objComments !== null && ($total = $objComments->count()) > 0)
 		{
 			$count = 0;
-
-			if ($objConfig->template == '')
-			{
-				$objConfig->template = 'com_default';
-			}
-
-			$objPartial = new FrontendTemplate($objConfig->template);
+			$objPartial = new FrontendTemplate($objConfig->template ?: 'com_default');
 
 			while ($objComments->next())
 			{
@@ -129,18 +122,15 @@ class Comments extends Frontend
 				$objPartial->addReply = false;
 
 				// Reply
-				if ($objComments->addReply && $objComments->reply != '')
+				if ($objComments->addReply && $objComments->reply != '' && ($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
 				{
-					if (($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
-					{
-						$objPartial->addReply = true;
-						$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
-						$objPartial->reply = $this->replaceInsertTags($objComments->reply);
-						$objPartial->author = $objAuthor;
+					$objPartial->addReply = true;
+					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
+					$objPartial->reply = $this->replaceInsertTags($objComments->reply);
+					$objPartial->author = $objAuthor;
 
-						// Clean the RTE output
-						$objPartial->reply = StringUtil::toHtml5($objPartial->reply);
-					}
+					// Clean the RTE output
+					$objPartial->reply = StringUtil::toHtml5($objPartial->reply);
 				}
 
 				$arrComments[] = $objPartial->parse();
@@ -250,7 +240,7 @@ class Comments extends Frontend
 
 		$doNotSubmit = false;
 		$arrWidgets = array();
-		$strFormId = 'com_'. $strSource .'_'. $intParent;
+		$strFormId = 'com_' . $strSource . '_' . $intParent;
 
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
@@ -293,17 +283,23 @@ class Comments extends Frontend
 		$objTemplate->formId = $strFormId;
 		$objTemplate->hasError = $doNotSubmit;
 
+		$session = System::getContainer()->get('session');
+
 		// Do not index or cache the page with the confirmation message
-		if ($_SESSION['TL_COMMENT_ADDED'])
+		if ($session->isStarted())
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
+			$flashBag = $session->getFlashBag();
 
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
+			if ($flashBag->has('comment_added'))
+			{
+				/** @var PageModel $objPage */
+				global $objPage;
 
-			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_confirm'];
-			unset($_SESSION['TL_COMMENT_ADDED']);
+				$objPage->noSearch = 1;
+				$objPage->cache = 0;
+
+				$objTemplate->confirm = $flashBag->get('comment_added')[0];
+			}
 		}
 
 		// Store the comment
@@ -390,11 +386,13 @@ class Comments extends Frontend
 			$strComment = str_replace(array('[&]', '[lt]', '[gt]'), array('&', '<', '>'), $strComment);
 
 			// Add the comment details
-			$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_message'],
-									  $arrSet['name'] . ' (' . $arrSet['email'] . ')',
-									  $strComment,
-									  Idna::decode(Environment::get('base')) . Environment::get('request'),
-									  Idna::decode(Environment::get('base')) . 'contao?do=comments&act=edit&id=' . $objComment->id);
+			$objEmail->text = sprintf(
+				$GLOBALS['TL_LANG']['MSC']['com_message'],
+				$arrSet['name'] . ' (' . $arrSet['email'] . ')',
+				$strComment,
+				Idna::decode(Environment::get('base')) . Environment::get('request'),
+				Idna::decode(Environment::get('base')) . 'contao?do=comments&act=edit&id=' . $objComment->id
+			);
 
 			// Add a moderation hint to the e-mail (see #7478)
 			if ($objConfig->moderate)
@@ -415,7 +413,7 @@ class Comments extends Frontend
 			// Pending for approval
 			if ($objConfig->moderate)
 			{
-				$_SESSION['TL_COMMENT_ADDED'] = true;
+				$session->getFlashBag()->set('comment_added', $GLOBALS['TL_LANG']['MSC']['com_confirm']);
 			}
 			else
 			{
@@ -472,10 +470,10 @@ class Comments extends Frontend
 			'<strong>$1</strong>',
 			'<em>$1</em>',
 			'<span style="text-decoration:underline">$1</span>',
-			"\n\n" . '<div class="code"><p>'. $GLOBALS['TL_LANG']['MSC']['com_code'] .'</p><pre>$1</pre></div>' . "\n\n",
+			"\n\n" . '<div class="code"><p>' . $GLOBALS['TL_LANG']['MSC']['com_code'] . '</p><pre>$1</pre></div>' . "\n\n",
 			'<span style="color:$1">$2</span>',
 			"\n\n" . '<blockquote>$1</blockquote>' . "\n\n",
-			"\n\n" . '<blockquote><p>'. sprintf($GLOBALS['TL_LANG']['MSC']['com_quote'], '$1') .'</p>$2</blockquote>' . "\n\n",
+			"\n\n" . '<blockquote><p>' . sprintf($GLOBALS['TL_LANG']['MSC']['com_quote'], '$1') . '</p>$2</blockquote>' . "\n\n",
 			'<img src="$1" alt="" />',
 			'<a href="$1">$1</a>',
 			'<a href="$1">$2</a>',
@@ -509,7 +507,7 @@ class Comments extends Frontend
 		// Use paragraphs to generate new lines
 		if (strncmp('<p>', $strComment, 3) !== 0)
 		{
-			$strComment = '<p>'. $strComment .'</p>';
+			$strComment = '<p>' . $strComment . '</p>';
 		}
 
 		$arrReplace = array
@@ -572,7 +570,7 @@ class Comments extends Frontend
 			'url'          => Environment::get('request'),
 			'addedOn'      => $time,
 			'active'       => '',
-			'tokenRemove'  => 'cor-'.bin2hex(random_bytes(10))
+			'tokenRemove'  => 'cor-' . bin2hex(random_bytes(10))
 		);
 
 		// Store the subscription
@@ -670,6 +668,13 @@ class Comments extends Frontend
 				if ($objNotify->email == $objComment->email)
 				{
 					continue;
+				}
+
+				// Update the notification URL if it has changed (see #373)
+				if (TL_MODE == 'FE' && $objNotify->url != Environment::get('request'))
+				{
+					$objNotify->url = Environment::get('request');
+					$objNotify->save();
 				}
 
 				// Prepare the URL

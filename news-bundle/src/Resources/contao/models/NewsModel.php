@@ -164,7 +164,6 @@ use Contao\Model\Collection;
  */
 class NewsModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

@@ -18,10 +18,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * Front end module "lost password".
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @todo Rename to ModuleLostPassword in Contao 5.0
  */
 class ModulePassword extends Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -138,7 +139,7 @@ class ModulePassword extends Module
 		$this->Template->hasError = $doNotSubmit;
 
 		// Look for an account and send the password link
-		if (Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit)
+		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId)
 		{
 			if ($this->reg_skipName)
 			{

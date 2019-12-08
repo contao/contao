@@ -17,7 +17,6 @@ namespace Contao;
  */
 class News extends Frontend
 {
-
 	/**
 	 * URL cache array
 	 * @var array
@@ -165,7 +164,7 @@ class News extends Frontend
 				}
 
 				// Skip the event if it requires a jumpTo URL but there is none
-				if ($arrUrls[$jumpTo] === false && $objArticle->source == 'default')
+				if ($objArticle->source == 'default' && $arrUrls[$jumpTo] === false)
 				{
 					continue;
 				}
@@ -316,7 +315,7 @@ class News extends Frontend
 						}
 
 						// The target page is exempt from the sitemap (see #6418)
-						if ($objParent->sitemap == 'map_never')
+						if ($objParent->robots == 'noindex,nofollow')
 						{
 							continue;
 						}
@@ -443,7 +442,6 @@ class News extends Frontend
 			// Link to an external page
 			case 'external':
 				return $objItem->url;
-				break;
 
 			// Link to an internal page
 			case 'internal':

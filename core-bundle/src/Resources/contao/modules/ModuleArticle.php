@@ -34,7 +34,6 @@ use FOS\HttpCache\ResponseTagger;
  */
 class ModuleArticle extends Module
 {
-
 	/**
 	 * Template
 	 * @var string

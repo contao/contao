@@ -76,7 +76,7 @@ $GLOBALS['TL_MIME'] = array
 
 	// Audio files
 	'm4a'   => array('audio/x-m4a', 'iconM4A.svg'),
-	'mp3'   => array('audio/mp3', 'iconMP3.svg'),
+	'mp3'   => array('audio/mpeg', 'iconMP3.svg'),
 	'wma'   => array('audio/wma', 'iconWMA.svg'),
 	'mpeg'  => array('audio/mpeg', 'iconMPEG.svg'),
 	'wav'   => array('audio/wav', 'iconWAV.svg'),

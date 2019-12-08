@@ -24,7 +24,6 @@ use Patchwork\Utf8;
  */
 class ModuleCalendar extends Events
 {
-
 	/**
 	 * Current date object
 	 * @var Date
@@ -111,13 +110,13 @@ class ModuleCalendar extends Events
 		$time = Date::floorToMinute();
 
 		// Find the boundaries
-		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(". implode(',', array_map('\intval', $this->cal_calendar)) .")" . (!BE_USER_LOGGED_IN ? " AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'" : ""));
-
-		$objTemplate = new FrontendTemplate($this->cal_ctemplate);
+		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(" . implode(',', array_map('\intval', $this->cal_calendar)) . ")" . (!BE_USER_LOGGED_IN ? " AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') AND published='1'" : ""));
 
 		// Store year and month
 		$intYear = date('Y', $this->Date->tstamp);
 		$intMonth = date('m', $this->Date->tstamp);
+
+		$objTemplate = new FrontendTemplate($this->cal_ctemplate ?: 'cal_default');
 		$objTemplate->intYear = $intYear;
 		$objTemplate->intMonth = $intMonth;
 
@@ -137,7 +136,7 @@ class ModuleCalendar extends Events
 		}
 
 		// Current month
-		$objTemplate->current = $GLOBALS['TL_LANG']['MONTHS'][(date('m', $this->Date->tstamp) - 1)] .  ' ' . date('Y', $this->Date->tstamp);
+		$objTemplate->current = $GLOBALS['TL_LANG']['MONTHS'][(date('m', $this->Date->tstamp) - 1)] . ' ' . date('Y', $this->Date->tstamp);
 
 		// Next month
 		$nextMonth = ($intMonth == 12) ? 1 : ($intMonth + 1);
@@ -146,7 +145,7 @@ class ModuleCalendar extends Events
 		$intNextYm = $nextYear . str_pad($nextMonth, 2, 0, STR_PAD_LEFT);
 
 		// Only generate a link if there are events (see #4160)
-		if (($objMinMax->dateTo !== null && $intNextYm <= date('Ym', max($objMinMax->dateTo, $objMinMax->repeatUntil))) || $intNextYm <= date('Ym'))
+		if ($intNextYm <= date('Ym') || ($objMinMax->dateTo !== null && $intNextYm <= date('Ym', max($objMinMax->dateTo, $objMinMax->repeatUntil))))
 		{
 			$objTemplate->nextHref = $this->strUrl . '?month=' . $intNextYm;
 			$objTemplate->nextTitle = StringUtil::specialchars($lblNext);

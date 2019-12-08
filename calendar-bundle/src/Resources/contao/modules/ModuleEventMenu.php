@@ -23,7 +23,6 @@ use Patchwork\Utf8;
  */
 class ModuleEventMenu extends ModuleCalendar
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -86,7 +85,7 @@ class ModuleEventMenu extends ModuleCalendar
 	protected function compileYearlyMenu()
 	{
 		$arrData = array();
-		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, 4294967295); // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
+		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, min(4294967295, PHP_INT_MAX)); // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
 
 		foreach ($arrAllEvents as $intDay=>$arrDay)
 		{
@@ -129,7 +128,7 @@ class ModuleEventMenu extends ModuleCalendar
 	protected function compileMonthlyMenu()
 	{
 		$arrData = array();
-		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, 4294967295); // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
+		$arrAllEvents = $this->getAllEvents($this->cal_calendar, 0, min(4294967295, PHP_INT_MAX)); // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
 
 		foreach ($arrAllEvents as $intDay=>$arrDay)
 		{
@@ -165,7 +164,7 @@ class ModuleEventMenu extends ModuleCalendar
 				$arrItems[$intYear][$intMonth]['date'] = $intDate;
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
 				$arrItems[$intYear][$intMonth]['href'] = $this->strLink . '?month=' . $intDate;
-				$arrItems[$intYear][$intMonth]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.$intYear . ' (' . $quantity . ')');
+				$arrItems[$intYear][$intMonth]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear . ' (' . $quantity . ')');
 				$arrItems[$intYear][$intMonth]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
 				$arrItems[$intYear][$intMonth]['isActive'] = (Input::get('month') == $intDate);
 				$arrItems[$intYear][$intMonth]['quantity'] = $quantity;

@@ -26,7 +26,7 @@ h2 {
 }
 .formbody .tl_select {
 	width:42%;
-	max-width:220px;
+	max-width:280px;
 }
 .formbody .tl_submit {
 	padding-top:5px;
@@ -75,6 +75,7 @@ h2 {
 #diff dl {
 	margin:0;
 	padding:0;
+	font:.75rem "Roboto Mono",monospace;
 }
 #diff dt,#diff dd {
 	margin:0;

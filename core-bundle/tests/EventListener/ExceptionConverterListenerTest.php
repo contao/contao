@@ -27,7 +27,7 @@ use Contao\CoreBundle\Fixtures\Exception\DerivedPageNotFoundException;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -45,7 +45,7 @@ class ExceptionConverterListenerTest extends TestCase
         $listener = new ExceptionConverterListener();
         $listener->onKernelException($event);
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $this->assertInstanceOf(AccessDeniedHttpException::class, $exception);
         $this->assertInstanceOf(AccessDeniedException::class, $exception->getPrevious());
@@ -58,7 +58,7 @@ class ExceptionConverterListenerTest extends TestCase
         $listener = new ExceptionConverterListener();
         $listener->onKernelException($event);
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $this->assertInstanceOf(InternalServerErrorHttpException::class, $exception);
         $this->assertInstanceOf(ForwardPageNotFoundException::class, $exception->getPrevious());
@@ -71,7 +71,7 @@ class ExceptionConverterListenerTest extends TestCase
         $listener = new ExceptionConverterListener();
         $listener->onKernelException($event);
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $this->assertInstanceOf(InternalServerErrorHttpException::class, $exception);
         $this->assertInstanceOf(InsecureInstallationException::class, $exception->getPrevious());
@@ -84,7 +84,7 @@ class ExceptionConverterListenerTest extends TestCase
         $listener = new ExceptionConverterListener();
         $listener->onKernelException($event);
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $this->assertInstanceOf(UnauthorizedHttpException::class, $exception);
         $this->assertInstanceOf(InsufficientAuthenticationException::class, $exception->getPrevious());
@@ -97,7 +97,7 @@ class ExceptionConverterListenerTest extends TestCase
         $listener = new ExceptionConverterListener();
         $listener->onKernelException($event);
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $this->assertInstanceOf(BadRequestHttpException::class, $exception);
         $this->assertInstanceOf(InvalidRequestTokenException::class, $exception->getPrevious());
@@ -110,7 +110,7 @@ class ExceptionConverterListenerTest extends TestCase
         $listener = new ExceptionConverterListener();
         $listener->onKernelException($event);
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $this->assertInstanceOf(NotFoundHttpException::class, $exception);
         $this->assertInstanceOf(NoActivePageFoundException::class, $exception->getPrevious());
@@ -123,7 +123,7 @@ class ExceptionConverterListenerTest extends TestCase
         $listener = new ExceptionConverterListener();
         $listener->onKernelException($event);
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $this->assertInstanceOf(InternalServerErrorHttpException::class, $exception);
         $this->assertInstanceOf(NoLayoutSpecifiedException::class, $exception->getPrevious());
@@ -136,7 +136,7 @@ class ExceptionConverterListenerTest extends TestCase
         $listener = new ExceptionConverterListener();
         $listener->onKernelException($event);
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $this->assertInstanceOf(NotFoundHttpException::class, $exception);
         $this->assertInstanceOf(NoRootPageFoundException::class, $exception->getPrevious());
@@ -149,7 +149,7 @@ class ExceptionConverterListenerTest extends TestCase
         $listener = new ExceptionConverterListener();
         $listener->onKernelException($event);
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $this->assertInstanceOf(NotFoundHttpException::class, $exception);
         $this->assertInstanceOf(PageNotFoundException::class, $exception->getPrevious());
@@ -162,22 +162,21 @@ class ExceptionConverterListenerTest extends TestCase
         $listener = new ExceptionConverterListener();
         $listener->onKernelException($event);
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $this->assertInstanceOf(ServiceUnavailableHttpException::class, $exception);
         $this->assertInstanceOf(ServiceUnavailableException::class, $exception->getPrevious());
     }
 
-    public function testConvertsUnknownExceptions(): void
+    public function testDoesNotConvertUnknownExceptions(): void
     {
-        $event = $this->getResponseEvent(new \RuntimeException());
+        $e = new \RuntimeException();
+        $event = $this->getResponseEvent($e);
 
         $listener = new ExceptionConverterListener();
         $listener->onKernelException($event);
 
-        $exception = $event->getException();
-
-        $this->assertInstanceOf('RuntimeException', $exception);
+        $this->assertSame($e, $event->getThrowable());
     }
 
     public function testConvertsDerivedPageNotFoundExceptions(): void
@@ -187,17 +186,17 @@ class ExceptionConverterListenerTest extends TestCase
         $listener = new ExceptionConverterListener();
         $listener->onKernelException($event);
 
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $this->assertInstanceOf(NotFoundHttpException::class, $exception);
         $this->assertInstanceOf(PageNotFoundException::class, $exception->getPrevious());
     }
 
-    private function getResponseEvent(\Exception $exception): GetResponseForExceptionEvent
+    private function getResponseEvent(\Exception $exception): ExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
         $request = new Request();
 
-        return new GetResponseForExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
+        return new ExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
     }
 }

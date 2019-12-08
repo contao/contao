@@ -27,12 +27,6 @@ $loader = require __DIR__.'/../vendor/autoload.php';
 
 $request = Request::createFromGlobals();
 $kernel = ContaoKernel::fromRequest(\dirname(__DIR__), $request);
-$cache = $kernel->getHttpCache();
-
-// Enable the Symfony reverse proxy if request has no surrogate capability
-if (null !== $cache->getSurrogate() && !$cache->getSurrogate()->hasSurrogateCapability($request)) {
-    $kernel = $cache;
-}
 
 $response = $kernel->handle($request);
 $response->send();

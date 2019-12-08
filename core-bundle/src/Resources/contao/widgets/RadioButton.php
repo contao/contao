@@ -20,7 +20,6 @@ namespace Contao;
  */
 class RadioButton extends Widget
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean
@@ -91,31 +90,35 @@ class RadioButton extends Widget
 
 		foreach ($this->arrOptions as $i=>$arrOption)
 		{
-			$arrOptions[] = sprintf('<input type="radio" name="%s" id="opt_%s" class="tl_radio" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s</label>',
-									 $this->strName,
-									 $this->strId.'_'.$i,
-									 StringUtil::specialchars($arrOption['value']),
-									 $this->isChecked($arrOption),
-									 $this->getAttributes(),
-									 $this->strId.'_'.$i,
-									 $arrOption['label']);
+			$arrOptions[] = sprintf(
+				'<input type="radio" name="%s" id="opt_%s" class="tl_radio" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s</label>',
+				$this->strName,
+				$this->strId . '_' . $i,
+				StringUtil::specialchars($arrOption['value']),
+				$this->isChecked($arrOption),
+				$this->getAttributes(),
+				$this->strId . '_' . $i,
+				$arrOption['label']
+			);
 		}
 
 		// Add a "no entries found" message if there are no options
 		if (empty($arrOptions))
 		{
-			$arrOptions[]= '<p class="tl_noopt">'.$GLOBALS['TL_LANG']['MSC']['noResult'].'</p>';
+			$arrOptions[]= '<p class="tl_noopt">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
 		}
 
-		return sprintf('<fieldset id="ctrl_%s" class="tl_radio_container%s"><legend>%s%s%s%s</legend>%s</fieldset>%s',
-						$this->strId,
-						($this->strClass ? ' ' . $this->strClass : ''),
-						($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].' </span>' : ''),
-						$this->strLabel,
-						($this->mandatory ? '<span class="mandatory">*</span>' : ''),
-						$this->xlabel,
-						implode('<br>', $arrOptions),
-						$this->wizard);
+		return sprintf(
+			'<fieldset id="ctrl_%s" class="tl_radio_container%s"><legend>%s%s%s%s</legend>%s</fieldset>%s',
+			$this->strId,
+			($this->strClass ? ' ' . $this->strClass : ''),
+			($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
+			$this->strLabel,
+			($this->mandatory ? '<span class="mandatory">*</span>' : ''),
+			$this->xlabel,
+			implode('<br>', $arrOptions),
+			$this->wizard
+		);
 	}
 }
 

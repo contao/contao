@@ -32,7 +32,6 @@ namespace Contao;
  */
 class Cache
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var Cache
@@ -96,7 +95,9 @@ class Cache
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Cache class is now static.
 	 */
-	protected function __construct() {}
+	protected function __construct()
+	{
+	}
 
 	/**
 	 * Prevent cloning of the object (Singleton)
@@ -104,7 +105,9 @@ class Cache
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Cache class is now static.
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Check whether a key is set

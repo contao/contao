@@ -175,13 +175,11 @@ use Contao\Model\Collection;
  */
 class UserModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_user';
-
 }
 
 class_alias(UserModel::class, 'UserModel');

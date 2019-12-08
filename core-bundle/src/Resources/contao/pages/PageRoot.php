@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class PageRoot extends Frontend
 {
-
 	/**
 	 * Redirect to the first active regular page
 	 *
@@ -71,7 +70,8 @@ class PageRoot extends Frontend
 		// No published pages yet
 		if (null === $objNextPage)
 		{
-			$this->log('No active page found under root page "' . $rootPageId . '")', __METHOD__, TL_ERROR);
+			$this->log('No active page found under root page "' . $rootPageId . '"', __METHOD__, TL_ERROR);
+
 			throw new NoActivePageFoundException('No active page found under root page.');
 		}
 

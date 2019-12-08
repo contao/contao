@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Authentication\Provider;
 
-use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Exception\LockedException;
@@ -172,7 +171,7 @@ class AuthenticationProviderTest extends TestCase
      *
      * @expectedDeprecation Using the "checkCredentials" hook has been deprecated %s.
      */
-    public function testTriggersTheCheckCredentialsHook(bool $success): void
+    public function testTriggersTheCheckCredentialsHook(string $callback): void
     {
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
@@ -216,20 +215,11 @@ class AuthenticationProviderTest extends TestCase
             ->willReturn('bar')
         ;
 
-        $listener = $this->createPartialMock(Controller::class, ['onCheckCredentials']);
-        $listener
-            ->expects($this->once())
-            ->method('onCheckCredentials')
-            ->with('foo', 'bar', $user)
-            ->willReturn($success)
-        ;
-
         $systemAdapter = $this->mockAdapter(['importStatic']);
         $systemAdapter
-            ->expects($this->once())
             ->method('importStatic')
-            ->with('HookListener')
-            ->willReturn($listener)
+            ->with(static::class)
+            ->willReturn($this)
         ;
 
         $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
@@ -238,11 +228,11 @@ class AuthenticationProviderTest extends TestCase
             ->method('initialize')
         ;
 
-        $GLOBALS['TL_HOOKS']['checkCredentials'] = [['HookListener', 'onCheckCredentials']];
+        $GLOBALS['TL_HOOKS']['checkCredentials'][] = [static::class, $callback];
 
         $provider = $this->getProvider($framework);
 
-        if (!$success) {
+        if ('onInvalidCredentials' === $callback) {
             $this->expectException(BadCredentialsException::class);
             $this->expectExceptionMessage('Invalid password submitted for username "foo"');
         }
@@ -254,8 +244,18 @@ class AuthenticationProviderTest extends TestCase
 
     public function getCheckCredentialsHookData(): \Generator
     {
-        yield [true];
-        yield [false];
+        yield ['onValidCredentials'];
+        yield ['onInvalidCredentials'];
+    }
+
+    public function onValidCredentials($username): bool
+    {
+        return true;
+    }
+
+    public function onInvalidCredentials($username): bool
+    {
+        return false;
     }
 
     /**

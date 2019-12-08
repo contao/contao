@@ -46,8 +46,8 @@ abstract class DoctrineTestCase extends TestCase
 
         $config = $this->createMock(Configuration::class);
         $config
-            ->method('getFilterSchemaAssetsExpression')
-            ->willReturn($filter)
+            ->method('getSchemaAssetsFilter')
+            ->willReturn($this->getSchemaAssetsFilter($filter))
         ;
 
         $connection = $this->createMock(Connection::class);
@@ -111,8 +111,8 @@ abstract class DoctrineTestCase extends TestCase
     {
         $config = $this->createMock(Configuration::class);
         $config
-            ->method('getFilterSchemaAssetsExpression')
-            ->willReturn($filter)
+            ->method('getSchemaAssetsFilter')
+            ->willReturn($this->getSchemaAssetsFilter($filter))
         ;
 
         $connection = $this->createMock(Connection::class);
@@ -228,5 +228,16 @@ abstract class DoctrineTestCase extends TestCase
             $this->mockContaoFrameworkWithInstaller($dca, $file),
             $this->mockDoctrineRegistry($statement, $filter)
         );
+    }
+
+    protected function getSchemaAssetsFilter(string $filter = null): ?callable
+    {
+        if (null === $filter) {
+            return null;
+        }
+
+        return static function (string $assetName) use ($filter): bool {
+            return (bool) preg_match($filter, $assetName);
+        };
     }
 }

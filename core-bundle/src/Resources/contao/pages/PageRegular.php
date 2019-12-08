@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PageRegular extends Frontend
 {
-
 	/**
 	 * Generate a regular page
 	 *
@@ -115,7 +114,7 @@ class PageRegular extends Frontend
 		// Get all modules in a single DB query
 		$objModules = ModuleModel::findMultipleByIds($arrModuleIds);
 
-		if ($objModules !== null || \in_array(0, $arrModuleIds)) // see #4137
+		if ($objModules !== null || \in_array(0, $arrModuleIds))
 		{
 			$arrMapper = array();
 
@@ -131,7 +130,7 @@ class PageRegular extends Frontend
 			foreach ($arrModules as $arrModule)
 			{
 				// Disabled module
-				if (!$arrModule['enable'] && !BE_USER_LOGGED_IN)
+				if (!BE_USER_LOGGED_IN && !$arrModule['enable'])
 				{
 					continue;
 				}
@@ -146,19 +145,22 @@ class PageRegular extends Frontend
 				if (\in_array($arrModule['col'], $arrSections))
 				{
 					// Filter active sections (see #3273)
-					if ($arrModule['col'] == 'header' && $objLayout->rows != '2rwh' && $objLayout->rows != '3rw')
+					if ($objLayout->rows != '2rwh' && $objLayout->rows != '3rw' && $arrModule['col'] == 'header')
 					{
 						continue;
 					}
-					if ($arrModule['col'] == 'left' && $objLayout->cols != '2cll' && $objLayout->cols != '3cl')
+
+					if ($objLayout->cols != '2cll' && $objLayout->cols != '3cl' && $arrModule['col'] == 'left')
 					{
 						continue;
 					}
-					if ($arrModule['col'] == 'right' && $objLayout->cols != '2clr' && $objLayout->cols != '3cl')
+
+					if ($objLayout->cols != '2clr' && $objLayout->cols != '3cl' && $arrModule['col'] == 'right')
 					{
 						continue;
 					}
-					if ($arrModule['col'] == 'footer' && $objLayout->rows != '2rwf' && $objLayout->rows != '3rw')
+
+					if ($objLayout->rows != '2rwf' && $objLayout->rows != '3rw' && $arrModule['col'] == 'footer')
 					{
 						continue;
 					}
@@ -216,7 +218,7 @@ class PageRegular extends Frontend
 		$this->Template->class = trim($objLayout->cssClass . ' ' . $objPage->cssClass);
 
 		// Execute AFTER the modules have been generated and create footer scripts first
-		$this->createFooterScripts($objLayout);
+		$this->createFooterScripts($objLayout, $objPage);
 		$this->createHeaderScripts($objPage, $objLayout);
 	}
 
@@ -235,6 +237,7 @@ class PageRegular extends Frontend
 		if (null === $objLayout)
 		{
 			$this->log('Could not find layout ID "' . $objPage->layout . '"', __METHOD__, TL_ERROR);
+
 			throw new NoLayoutSpecifiedException('No layout specified');
 		}
 
@@ -391,12 +394,12 @@ class PageRegular extends Frontend
 						$cache->save($hash);
 					}
 
-					$this->Template->mooScripts .= Template::generateScriptTag('https://code.jquery.com/jquery-' . PackageUtil::getNormalizedVersion('contao-components/jquery') . '.min.js', false, false, $hash->get(), 'anonymous') . "\n";
+					$this->Template->mooScripts .= Template::generateScriptTag('https://code.jquery.com/jquery-' . PackageUtil::getNormalizedVersion('contao-components/jquery') . '.min.js', false, false, $hash->get(), 'anonymous', 'no-referrer') . "\n";
 
 					// Local fallback (thanks to DyaGa)
 					if ($objLayout->jSource == 'j_fallback')
 					{
-						$this->Template->mooScripts .= Template::generateInlineScript('window.jQuery || document.write(\'<script src="' . Controller::addAssetsUrlTo('assets/jquery/js/jquery.min.js') .'">\x3C/script>\')') . "\n";
+						$this->Template->mooScripts .= Template::generateInlineScript('window.jQuery || document.write(\'<script src="' . Controller::addAssetsUrlTo('assets/jquery/js/jquery.min.js') . '">\x3C/script>\')') . "\n";
 					}
 				}
 				catch (\OutOfBoundsException $e)
@@ -421,11 +424,11 @@ class PageRegular extends Frontend
 
 					if (version_compare($version, '1.5.1', '>'))
 					{
-						$this->Template->mooScripts .= Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools.min.js', false, false, null, 'anonymous') . "\n";
+						$this->Template->mooScripts .= Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools.min.js', false, false, null, 'anonymous', 'no-referrer') . "\n";
 					}
 					else
 					{
-						$this->Template->mooScripts .= Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools-yui-compressed.js', false, false, null, 'anonymous') . "\n";
+						$this->Template->mooScripts .= Template::generateScriptTag('https://ajax.googleapis.com/ajax/libs/mootools/' . $version . '/mootools-yui-compressed.js', false, false, null, 'anonymous', 'no-referrer') . "\n";
 					}
 
 					// Local fallback (thanks to DyaGa)
@@ -481,10 +484,11 @@ class PageRegular extends Frontend
 			$this->Template->positions = $arrPositions;
 		}
 
-		// Add the check_cookies URL if the "alwaysLoadFromCache" option is enabled
+		// Add the check_cookies image and the request token script if needed
 		if ($objPage->alwaysLoadFromCache)
 		{
 			$GLOBALS['TL_BODY'][] = sprintf('<img src="%s" width="1" height="1" class="invisible" alt aria-hidden="true" onload="this.parentNode.removeChild(this)">', System::getContainer()->get('router')->generate('contao_frontend_check_cookies'));
+			$GLOBALS['TL_BODY'][] = sprintf('<script src="%s" async></script>', System::getContainer()->get('router')->generate('contao_frontend_request_token_script'));
 		}
 
 		// Default settings
@@ -576,22 +580,18 @@ class PageRegular extends Frontend
 
 						$strCcStyleSheets .= $strStyleSheet . "\n";
 					}
+					elseif ($objStylesheets->type == 'external')
+					{
+						$objFile = FilesModel::findByPk($objStylesheets->singleSRC);
+
+						if ($objFile !== null)
+						{
+							$GLOBALS['TL_USER_CSS'][] = $objFile->path . '|' . $media . '|static';
+						}
+					}
 					else
 					{
-						// External style sheet
-						if ($objStylesheets->type == 'external')
-						{
-							$objFile = FilesModel::findByPk($objStylesheets->singleSRC);
-
-							if ($objFile !== null)
-							{
-								$GLOBALS['TL_USER_CSS'][] = $objFile->path . '|' . $media . '|static';
-							}
-						}
-						else
-						{
-							$GLOBALS['TL_USER_CSS'][] = 'assets/css/' . $objStylesheets->name . '.css|' . $media . '|static|' . max($objStylesheets->tstamp, $objStylesheets->tstamp2, $objStylesheets->tstamp3);
-						}
+						$GLOBALS['TL_USER_CSS'][] = 'assets/css/' . $objStylesheets->name . '.css|' . $media . '|static|' . max($objStylesheets->tstamp, $objStylesheets->tstamp2, $objStylesheets->tstamp3);
 					}
 				}
 			}
@@ -700,8 +700,11 @@ class PageRegular extends Frontend
 	 * Create all footer scripts
 	 *
 	 * @param LayoutModel $objLayout
+	 * @param PageModel   $objPage
+	 *
+	 * @todo Change the method signature to ($objPage, $objLayout) in Contao 5.0
 	 */
-	protected function createFooterScripts($objLayout)
+	protected function createFooterScripts($objLayout, $objPage = null)
 	{
 		$strScripts = '';
 
@@ -762,39 +765,35 @@ class PageRegular extends Frontend
 		// Add the external JavaScripts
 		$arrExternalJs = StringUtil::deserialize($objLayout->externalJs);
 
-		// External JavaScripts
-		if (!empty($arrExternalJs) && \is_array($arrExternalJs))
+		// Consider the sorting order (see #5038)
+		if (!empty($arrExternalJs) && \is_array($arrExternalJs) && $objLayout->orderExtJs != '')
 		{
-			// Consider the sorting order (see #5038)
-			if ($objLayout->orderExtJs != '')
+			$tmp = StringUtil::deserialize($objLayout->orderExtJs);
+
+			if (!empty($tmp) && \is_array($tmp))
 			{
-				$tmp = StringUtil::deserialize($objLayout->orderExtJs);
+				// Remove all values
+				$arrOrder = array_map(static function () {}, array_flip($tmp));
 
-				if (!empty($tmp) && \is_array($tmp))
+				// Move the matching elements to their position in $arrOrder
+				foreach ($arrExternalJs as $k=>$v)
 				{
-					// Remove all values
-					$arrOrder = array_map(static function () {}, array_flip($tmp));
-
-					// Move the matching elements to their position in $arrOrder
-					foreach ($arrExternalJs as $k=>$v)
+					if (\array_key_exists($v, $arrOrder))
 					{
-						if (\array_key_exists($v, $arrOrder))
-						{
-							$arrOrder[$v] = $v;
-							unset($arrExternalJs[$k]);
-						}
+						$arrOrder[$v] = $v;
+						unset($arrExternalJs[$k]);
 					}
-
-					// Append the left-over JavaScripts at the end
-					if (!empty($arrExternalJs))
-					{
-						$arrOrder = array_merge($arrOrder, array_values($arrExternalJs));
-					}
-
-					// Remove empty (unreplaced) entries
-					$arrExternalJs = array_values(array_filter($arrOrder));
-					unset($arrOrder);
 				}
+
+				// Append the left-over JavaScripts at the end
+				if (!empty($arrExternalJs))
+				{
+					$arrOrder = array_merge($arrOrder, array_values($arrExternalJs));
+				}
+
+				// Remove empty (unreplaced) entries
+				$arrExternalJs = array_values(array_filter($arrOrder));
+				unset($arrOrder);
 			}
 		}
 
@@ -811,6 +810,40 @@ class PageRegular extends Frontend
 					$strScripts .= Template::generateScriptTag($objFiles->path, false, null);
 				}
 			}
+		}
+
+		// Add search index meta data
+		if ($objPage !== null)
+		{
+			$noSearch = (bool) $objPage->noSearch;
+
+			// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
+			if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET)))
+			{
+				$noSearch = true;
+			}
+
+			$meta = array
+			(
+				'@context' => 'https://contao.org/',
+				'@type' => 'PageMetaData',
+				'pageId' => (int) $objPage->id,
+				'language' => $objPage->language,
+				'title' => $objPage->pageTitle ?: $objPage->title,
+				'noSearch' => $noSearch,
+				'protected' => (bool) $objPage->protected,
+				'groups' => array_map('intval', array_filter((array) $objPage->groups)),
+				'fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
+			);
+
+			$token = System::getContainer()->get('security.token_storage')->getToken();
+
+			if ($token !== null && $token->getUser() instanceof FrontendUser)
+			{
+				$meta['memberId'] = (int) $token->getUser()->id;
+			}
+
+			$strScripts .= '<script type="application/ld+json">' . json_encode($meta) . '</script>';
 		}
 
 		// Add the custom JavaScript

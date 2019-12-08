@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentTable extends ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -54,7 +53,7 @@ class ContentTable extends ContentElement
 			{
 				$arrHeader[] = array
 				(
-					'class' => 'head_'.$i . (($i == 0) ? ' col_first' : '') . (($i == (\count($rows[0]) - 1)) ? ' col_last' : '') . (($i == 0 && $this->tleft) ? ' unsortable' : ''),
+					'class' => 'head_' . $i . (($i == 0) ? ' col_first' : '') . (($i == (\count($rows[0]) - 1)) ? ' col_last' : '') . (($i == 0 && $this->tleft) ? ' unsortable' : ''),
 					'content' => (($v != '') ? $this->nl2br($v) : '&nbsp;')
 				);
 			}
@@ -98,7 +97,7 @@ class ContentTable extends ContentElement
 
 				$arrBody['row_' . $j . $class_tr . $class_eo][] = array
 				(
-					'class' => 'col_'.$i . $class_td,
+					'class' => 'col_' . $i . $class_td,
 					'content' => (($v != '') ? $this->nl2br($v) : '&nbsp;')
 				);
 			}
@@ -113,7 +112,7 @@ class ContentTable extends ContentElement
 			{
 				$arrFooter[] = array
 				(
-					'class' => 'foot_'.$i . (($i == 0) ? ' col_first' : '') . (($i == (\count($rows[(\count($rows)-1)]) - 1)) ? ' col_last' : ''),
+					'class' => 'foot_' . $i . (($i == 0) ? ' col_first' : '') . (($i == (\count($rows[(\count($rows)-1)]) - 1)) ? ' col_last' : ''),
 					'content' => (($v != '') ? $this->nl2br($v) : '&nbsp;')
 				);
 			}

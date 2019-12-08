@@ -27,6 +27,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $type
  * @property string  $pageTitle
  * @property string  $language
+ * @property boolean $useFolderUrl
  * @property string  $robots
  * @property string  $description
  * @property string  $redirect
@@ -38,6 +39,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string  $staticFiles
  * @property string  $staticPlugins
  * @property string  $fallback
+ * @property string  $favicon
+ * @property string  $robotsTxt
  * @property string  $adminEmail
  * @property string  $dateFormat
  * @property string  $timeFormat
@@ -112,6 +115,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByType($val, array $opt=array())
  * @method static PageModel|null findOneByPageTitle($val, array $opt=array())
  * @method static PageModel|null findOneByLanguage($val, array $opt=array())
+ * @method static PageModel|null findOneByUseFolderUrl($val, array $opt=array())
  * @method static PageModel|null findOneByRobots($val, array $opt=array())
  * @method static PageModel|null findOneByDescription($val, array $opt=array())
  * @method static PageModel|null findOneByRedirect($val, array $opt=array())
@@ -123,6 +127,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByStaticFiles($val, array $opt=array())
  * @method static PageModel|null findOneByStaticPlugins($val, array $opt=array())
  * @method static PageModel|null findOneByFallback($val, array $opt=array())
+ * @method static PageModel|null findOneByFavicon($val, array $opt=array())
+ * @method static PageModel|null findOneByRobotsTxt($val, array $opt=array())
  * @method static PageModel|null findOneByAdminEmail($val, array $opt=array())
  * @method static PageModel|null findOneByDateFormat($val, array $opt=array())
  * @method static PageModel|null findOneByTimeFormat($val, array $opt=array())
@@ -162,6 +168,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByType($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByPageTitle($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByLanguage($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByUseFolderUrl($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRobots($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDescription($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRedirect($val, array $opt=array())
@@ -173,6 +180,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByStaticFiles($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByStaticPlugins($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByFallback($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByFavicon($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByRobotsTxt($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByAdminEmail($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDateFormat($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByTimeFormat($val, array $opt=array())
@@ -216,6 +225,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByType($val, array $opt=array())
  * @method static integer countByPageTitle($val, array $opt=array())
  * @method static integer countByLanguage($val, array $opt=array())
+ * @method static integer countByUseFolderUrl($val, array $opt=array())
  * @method static integer countByRobots($val, array $opt=array())
  * @method static integer countByDescription($val, array $opt=array())
  * @method static integer countByRedirect($val, array $opt=array())
@@ -227,6 +237,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByStaticFiles($val, array $opt=array())
  * @method static integer countByStaticPlugins($val, array $opt=array())
  * @method static integer countByFallback($val, array $opt=array())
+ * @method static integer countByFavicon($val, array $opt=array())
+ * @method static integer countByRobotsTxt($val, array $opt=array())
  * @method static integer countByAdminEmail($val, array $opt=array())
  * @method static integer countByDateFormat($val, array $opt=array())
  * @method static integer countByTimeFormat($val, array $opt=array())
@@ -262,7 +274,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class PageModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string
@@ -343,7 +354,7 @@ class PageModel extends Model
 
 			if (!empty($varLanguage))
 			{
-				$arrColumns[] = "($t.language IN('". implode("','", $varLanguage) ."') OR $t.fallback='1')";
+				$arrColumns[] = "($t.language IN('" . implode("','", $varLanguage) . "') OR $t.fallback='1')";
 			}
 			else
 			{
@@ -702,6 +713,11 @@ class PageModel extends Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.dns=? AND $t.fallback='1'");
 
+		if (isset($arrOptions['fallbackToEmpty']) && $arrOptions['fallbackToEmpty'] === true)
+		{
+			$arrColumns = array("($t.dns=? OR $t.dns='') AND $t.fallback='1'");
+		}
+
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
@@ -721,7 +737,12 @@ class PageModel extends Model
 	public static function findPublishedRootPages(array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = array("$t.type=?");
+		$arrColumns = array("$t.type='root'");
+
+		if (isset($arrOptions['dns']))
+		{
+			$arrColumns = array("$t.type='root' AND $t.dns=?");
+		}
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -729,7 +750,7 @@ class PageModel extends Model
 			$arrColumns[] = "($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'" . ($time + 60) . "') AND $t.published='1'";
 		}
 
-		return static::findBy($arrColumns, 'root', $arrOptions);
+		return static::findBy($arrColumns, $arrOptions['dns'] ?? null, $arrOptions);
 	}
 
 	/**
@@ -969,6 +990,7 @@ class PageModel extends Model
 			$this->adminEmail = $objParentPage->adminEmail;
 			$this->enforceTwoFactor = $objParentPage->enforceTwoFactor;
 			$this->twoFactorJumpTo = $objParentPage->twoFactorJumpTo;
+			$this->useFolderUrl = $objParentPage->useFolderUrl;
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = ($objParentPage->published && ($objParentPage->start == '' || $objParentPage->start <= $time) && ($objParentPage->stop == '' || $objParentPage->stop > ($time + 60)));
@@ -994,7 +1016,8 @@ class PageModel extends Model
 		// No root page found
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
-			System::log('Page ID "'. $this->id .'" does not belong to a root page', __METHOD__, TL_ERROR);
+			System::log('Page ID "' . $this->id . '" does not belong to a root page', __METHOD__, TL_ERROR);
+
 			throw new NoRootPageFoundException('No root page found');
 		}
 
@@ -1005,10 +1028,12 @@ class PageModel extends Model
 		{
 			$this->dateFormat = Config::get('dateFormat');
 		}
+
 		if ($this->timeFormat == '')
 		{
 			$this->timeFormat = Config::get('timeFormat');
 		}
+
 		if ($this->datimFormat == '')
 		{
 			$this->datimFormat = Config::get('datimFormat');
@@ -1075,9 +1100,7 @@ class PageModel extends Model
 			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 		}
 
-		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
-
-		return $strUrl;
+		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
 
 	/**
@@ -1105,9 +1128,47 @@ class PageModel extends Model
 			UrlGeneratorInterface::ABSOLUTE_URL
 		);
 
-		$strUrl = $this->applyLegacyLogic($strUrl, $strParams);
+		return $this->applyLegacyLogic($strUrl, $strParams);
+	}
 
-		return $strUrl;
+	/**
+	 * Generate the front end preview URL
+	 *
+	 * @param string $strParams An optional string of URL parameters
+	 *
+	 * @return string The front end preview URL
+	 */
+	public function getPreviewUrl($strParams=null)
+	{
+		$container = System::getContainer();
+
+		if (!$previewScript = $container->getParameter('contao.preview_script'))
+		{
+			return $this->getAbsoluteUrl($strParams);
+		}
+
+		$router = $container->get('router');
+
+		$context = $router->getContext();
+		$context->setBaseUrl($previewScript);
+
+		$objUrlGenerator = $container->get('contao.routing.url_generator');
+
+		$strUrl = $objUrlGenerator->generate
+		(
+			($this->alias ?: $this->id) . $strParams,
+			array
+			(
+				'_locale' => $this->rootLanguage,
+				'_domain' => $this->domain,
+				'_ssl' => (bool) $this->rootUseSSL,
+			),
+			UrlGeneratorInterface::ABSOLUTE_URL
+		);
+
+		$context->setBaseUrl('');
+
+		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
 
 	/**

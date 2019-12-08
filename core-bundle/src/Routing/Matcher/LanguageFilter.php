@@ -27,6 +27,9 @@ class LanguageFilter implements RouteFilterInterface
      */
     private $prependLocale;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.language_filter" service instead
+     */
     public function __construct(bool $prependLocale)
     {
         $this->prependLocale = $prependLocale;
@@ -50,7 +53,7 @@ class LanguageFilter implements RouteFilterInterface
             if (
                 !$pageModel instanceof PageModel
                 || $pageModel->rootIsFallback
-                || \in_array($pageModel->rootLanguage, $languages, true)
+                || \in_array(str_replace('-', '_', $pageModel->rootLanguage), $languages, true)
                 || preg_grep('/'.preg_quote($pageModel->rootLanguage, '/').'_[A-Z]{2}/', $languages)
             ) {
                 continue;

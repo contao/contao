@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_news_feed'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -206,7 +205,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
  */
 class tl_news_feed extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -229,7 +227,7 @@ class tl_news_feed extends Contao\Backend
 		}
 
 		// Set the root IDs
-		if (empty($this->User->newsfeeds) || !\is_array($this->User->newsfeeds))
+		if (empty($this->User->newsfeeds) || !is_array($this->User->newsfeeds))
 		{
 			$root = array(0);
 		}
@@ -275,7 +273,7 @@ class tl_news_feed extends Contao\Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!\in_array(Contao\Input::get('id'), $root) || (Contao\Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newsfeedp')))
+				if (!in_array(Contao\Input::get('id'), $root) || (Contao\Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newsfeedp')))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' news feed ID ' . Contao\Input::get('id') . '.');
 				}
@@ -286,6 +284,7 @@ class tl_news_feed extends Contao\Backend
 			case 'overrideAll':
 			case 'copyAll':
 				$session = $objSession->all();
+
 				if (Contao\Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newsfeedp'))
 				{
 					$session['CURRENT']['IDS'] = array();
@@ -314,7 +313,7 @@ class tl_news_feed extends Contao\Backend
 	public function adjustPermissions($insertId)
 	{
 		// The oncreate_callback passes $insertId as second argument
-		if (\func_num_args() == 4)
+		if (func_num_args() == 4)
 		{
 			$insertId = func_get_arg(1);
 		}
@@ -325,7 +324,7 @@ class tl_news_feed extends Contao\Backend
 		}
 
 		// Set root IDs
-		if (empty($this->User->newsfeeds) || !\is_array($this->User->newsfeeds))
+		if (empty($this->User->newsfeeds) || !is_array($this->User->newsfeeds))
 		{
 			$root = array(0);
 		}
@@ -335,7 +334,7 @@ class tl_news_feed extends Contao\Backend
 		}
 
 		// The feed is enabled already
-		if (\in_array($insertId, $root))
+		if (in_array($insertId, $root))
 		{
 			return;
 		}
@@ -345,7 +344,7 @@ class tl_news_feed extends Contao\Backend
 
 		$arrNew = $objSessionBag->get('new_records');
 
-		if (\is_array($arrNew['tl_news_feed']) && \in_array($insertId, $arrNew['tl_news_feed']))
+		if (is_array($arrNew['tl_news_feed']) && in_array($insertId, $arrNew['tl_news_feed']))
 		{
 			// Add the permissions on group level
 			if ($this->User->inherit != 'custom')
@@ -356,7 +355,7 @@ class tl_news_feed extends Contao\Backend
 				{
 					$arrNewsfeedp = Contao\StringUtil::deserialize($objGroup->newsfeedp);
 
-					if (\is_array($arrNewsfeedp) && \in_array('create', $arrNewsfeedp))
+					if (is_array($arrNewsfeedp) && in_array('create', $arrNewsfeedp))
 					{
 						$arrNewsfeeds = Contao\StringUtil::deserialize($objGroup->newsfeeds, true);
 						$arrNewsfeeds[] = $insertId;
@@ -376,7 +375,7 @@ class tl_news_feed extends Contao\Backend
 
 				$arrNewsfeedp = Contao\StringUtil::deserialize($objUser->newsfeedp);
 
-				if (\is_array($arrNewsfeedp) && \in_array('create', $arrNewsfeedp))
+				if (is_array($arrNewsfeedp) && in_array('create', $arrNewsfeedp))
 				{
 					$arrNewsfeeds = Contao\StringUtil::deserialize($objUser->newsfeeds, true);
 					$arrNewsfeeds[] = $insertId;
@@ -406,7 +405,7 @@ class tl_news_feed extends Contao\Backend
 	 */
 	public function copyFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'newsfeedp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('create', 'newsfeedp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -423,7 +422,7 @@ class tl_news_feed extends Contao\Backend
 	 */
 	public function deleteFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'newsfeedp') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess('delete', 'newsfeedp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -436,7 +435,7 @@ class tl_news_feed extends Contao\Backend
 
 		$session = $objSession->get('news_feed_updater');
 
-		if (empty($session) || !\is_array($session))
+		if (empty($session) || !is_array($session))
 		{
 			return;
 		}
@@ -532,7 +531,7 @@ class tl_news_feed extends Contao\Backend
 		$arrFeeds = $this->Automator->purgeXmlFiles(true);
 
 		// Alias exists
-		if (\in_array($varValue, $arrFeeds))
+		if (in_array($varValue, $arrFeeds))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
 		}

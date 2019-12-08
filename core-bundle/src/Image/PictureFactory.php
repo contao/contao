@@ -28,6 +28,11 @@ use Contao\StringUtil;
 class PictureFactory implements PictureFactoryInterface
 {
     /**
+     * @var array
+     */
+    private $imageSizeItemsCache = [];
+
+    /**
      * @var PictureGeneratorInterface
      */
     private $pictureGenerator;
@@ -62,6 +67,9 @@ class PictureFactory implements PictureFactoryInterface
      */
     private $predefinedSizes = [];
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.image.picture_factory" service instead
+     */
     public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFramework $framework, bool $bypassCache, array $imagineOptions)
     {
         $this->pictureGenerator = $pictureGenerator;
@@ -158,7 +166,7 @@ class PictureFactory implements PictureFactoryInterface
                 $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
                 $imageSizes = $imageSizeModel->findByPk($size[2]);
 
-                $config->setSize($this->createConfigItem((null !== $imageSizes) ? $imageSizes->row() : null));
+                $config->setSize($this->createConfigItem(null !== $imageSizes ? $imageSizes->row() : null));
 
                 if (null !== $imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
@@ -181,13 +189,24 @@ class PictureFactory implements PictureFactoryInterface
                     ));
                 }
 
-                if ($imageSizes && $imageSizes->cssClass) {
-                    $attributes['class'] = $imageSizes->cssClass;
+                if ($imageSizes) {
+                    if ($imageSizes->cssClass) {
+                        $attributes['class'] = $imageSizes->cssClass;
+                    }
+
+                    if ($imageSizes->lazyLoading) {
+                        $attributes['loading'] = 'lazy';
+                    }
                 }
 
-                /** @var ImageSizeItemModel $imageSizeItemModel */
-                $imageSizeItemModel = $this->framework->getAdapter(ImageSizeItemModel::class);
-                $imageSizeItems = $imageSizeItemModel->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
+                if (!\array_key_exists($size[2], $this->imageSizeItemsCache)) {
+                    /** @var ImageSizeItemModel $adapter */
+                    $adapter = $this->framework->getAdapter(ImageSizeItemModel::class);
+                    $this->imageSizeItemsCache[$size[2]] = $adapter->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
+                }
+
+                /** @var ImageSizeItemModel[] $imageSizeItems */
+                $imageSizeItems = $this->imageSizeItemsCache[$size[2]];
 
                 if (null !== $imageSizeItems) {
                     $configItems = [];
@@ -210,8 +229,12 @@ class PictureFactory implements PictureFactoryInterface
                 $config->setFormats($imageSizes['formats'] ?? []);
                 $options->setSkipIfDimensionsMatch($imageSizes['skipIfDimensionsMatch'] ?? false);
 
-                if ($imageSizes && isset($imageSizes['cssClass']) && $imageSizes['cssClass']) {
+                if (!empty($imageSizes['cssClass'])) {
                     $attributes['class'] = $imageSizes['cssClass'];
+                }
+
+                if (!empty($imageSizes['lazyLoading'])) {
+                    $attributes['loading'] = 'lazy';
                 }
 
                 if (\count($imageSizes['items']) > 0) {
@@ -240,6 +263,10 @@ class PictureFactory implements PictureFactoryInterface
 
         if (!empty($size[2])) {
             $resizeConfig->setMode($size[2]);
+        }
+
+        if ($resizeConfig->isEmpty()) {
+            $options->setSkipIfDimensionsMatch(true);
         }
 
         $configItem = new PictureConfigurationItem();

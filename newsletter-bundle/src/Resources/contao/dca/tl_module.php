@@ -78,9 +78,12 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options_callback'        => array('tl_module_newsletter', 'getNewsletterTemplates'),
-	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default 'nl_simple'"
+	'options_callback' => static function ()
+	{
+		return Contao\Controller::getTemplateGroup('nl_');
+	},
+	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+	'sql'                     => "varchar(64) NOT NULL default ''"
 );
 
 /**
@@ -90,7 +93,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
  */
 class tl_module_newsletter extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -139,15 +141,25 @@ class tl_module_newsletter extends Contao\Backend
 	 *
 	 * @return array
 	 */
-	public function getChannels()
+	public function getChannels(Contao\DataContainer $dc)
 	{
-		if (!$this->User->isAdmin && !\is_array($this->User->newsletters))
+		if (!$this->User->isAdmin && !is_array($this->User->newsletters))
 		{
 			return array();
 		}
 
+		$strQuery = "SELECT id, title FROM tl_newsletter_channel";
+
+		// Show only channels with a redirect page in the web modules
+		if (in_array($dc->activeRecord->type, array('newsletterlist', 'newsletterreader')))
+		{
+			$strQuery .= " WHERE jumpTo>0";
+		}
+
+		$strQuery .= " ORDER BY title";
+
 		$arrChannels = array();
-		$objChannels = $this->Database->execute("SELECT id, title FROM tl_newsletter_channel WHERE jumpTo>0 ORDER BY title");
+		$objChannels = $this->Database->execute($strQuery);
 
 		while ($objChannels->next())
 		{
@@ -158,15 +170,5 @@ class tl_module_newsletter extends Contao\Backend
 		}
 
 		return $arrChannels;
-	}
-
-	/**
-	 * Return all newsletter templates as array
-	 *
-	 * @return array
-	 */
-	public function getNewsletterTemplates()
-	{
-		return $this->getTemplateGroup('nl_');
 	}
 }

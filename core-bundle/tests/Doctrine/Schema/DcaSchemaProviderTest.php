@@ -194,6 +194,25 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ];
     }
 
+    public function testHandlesSimpleFieldDefinition(): void
+    {
+        $dca = [
+            'tl_member' => [
+                'TABLE_FIELDS' => [
+                    'id' => '`id` INTEGER',
+                ],
+            ],
+        ];
+
+        $schema = $this->getProvider($dca)->createSchema();
+        $table = $schema->getTable('tl_member');
+
+        $this->assertTrue($table->hasColumn('id'));
+        $this->assertSame('integer', $table->getColumn('id')->getType()->getName());
+        $this->assertFalse($table->getColumn('id')->getNotnull());
+        $this->assertFalse($table->getColumn('id')->getFixed());
+    }
+
     public function testReadsTheTableOptions(): void
     {
         $options = 'ENGINE=InnoDB ROW_FORMAT=DYNAMIC';

@@ -17,6 +17,9 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 
+/**
+ * @internal
+ */
 class Version430Update extends AbstractMigration
 {
     /**
@@ -56,7 +59,7 @@ class Version430Update extends AbstractMigration
     public function run(): MigrationResult
     {
         $this->connection->query('
-            ALTER TABLE 
+            ALTER TABLE
                 tl_layout
             CHANGE
                 sections sections blob NULL

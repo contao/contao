@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ModuleTwoFactor extends BackendModule
 {
-
 	/**
 	 * Template
 	 * @var string

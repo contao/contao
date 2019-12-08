@@ -31,6 +31,8 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
  * Changes the password of a Contao back end user.
+ *
+ * @internal
  */
 class UserPasswordCommand extends Command
 {
@@ -153,9 +155,7 @@ class UserPasswordCommand extends Command
         $passwordLength = $config->get('minPasswordLength') ?: 8;
 
         if (Utf8::strlen($password) < $passwordLength) {
-            throw new InvalidArgumentException(
-                sprintf('The password must be at least %s characters long.', $passwordLength)
-            );
+            throw new InvalidArgumentException(sprintf('The password must be at least %s characters long.', $passwordLength));
         }
 
         $encoder = $this->encoderFactory->getEncoder(BackendUser::class);

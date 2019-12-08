@@ -23,7 +23,6 @@ use Contao\StringUtil;
  */
 class SyncExclude extends \RecursiveFilterIterator
 {
-
 	/**
 	 * Check whether the current element of the iterator is acceptable
 	 *

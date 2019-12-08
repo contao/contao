@@ -28,7 +28,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrontendTemplate extends Template
 {
-
 	/**
 	 * Unsued $_GET check
 	 * @var boolean
@@ -134,7 +133,7 @@ class FrontendTemplate extends Template
 		// Check whether all $_GET parameters have been used (see #4277)
 		if ($this->blnCheckRequest && Input::hasUnusedGet())
 		{
-			throw new \UnusedArgumentsException('Unused arguments: '.implode(', ', Input::getUnusedGet()));
+			throw new \UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedGet()));
 		}
 
 		/** @var PageModel $objPage */
@@ -391,7 +390,8 @@ class FrontendTemplate extends Template
 			// response from cache, even if the request contains a cookie – in
 			// case the admin has configured to do so. A typical use case would
 			// be serving public pages from cache to logged in members.
-			if (!$objPage->alwaysLoadFromCache) {
+			if (!$objPage->alwaysLoadFromCache)
+			{
 				$response->setVary(array('Cookie'));
 			}
 

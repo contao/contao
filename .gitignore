@@ -9,4 +9,8 @@
 /node_modules/
 
 # PhpUnit
+/.phpunit.result.cache
 /phpunit.xml
+
+# CS fixer
+/.php_cs.cache

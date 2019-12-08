@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_search'] = array
 (
-
 	// Config
 	'config' => array
 	(

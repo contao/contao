@@ -51,14 +51,14 @@ class InstallCommandTest extends TestCase
         $output = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertContains(' * assets/css', $output);
-        $this->assertContains(' * assets/images', $output);
-        $this->assertContains(' * assets/js', $output);
-        $this->assertContains(' * system/cache', $output);
-        $this->assertContains(' * system/config', $output);
-        $this->assertContains(' * system/tmp', $output);
-        $this->assertContains(' * templates', $output);
-        $this->assertContains(' * web/system', $output);
+        $this->assertStringContainsString(' * assets/css', $output);
+        $this->assertStringContainsString(' * assets/images', $output);
+        $this->assertStringContainsString(' * assets/js', $output);
+        $this->assertStringContainsString(' * system/cache', $output);
+        $this->assertStringContainsString(' * system/config', $output);
+        $this->assertStringContainsString(' * system/tmp', $output);
+        $this->assertStringContainsString(' * templates', $output);
+        $this->assertStringContainsString(' * web/system', $output);
     }
 
     public function testHandlesCustomFilesAndImagesPaths(): void
@@ -69,7 +69,7 @@ class InstallCommandTest extends TestCase
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertContains(' * files_test', $display);
-        $this->assertContains(' * assets/images_test', $display);
+        $this->assertStringContainsString(' * files_test', $display);
+        $this->assertStringContainsString(' * assets/images_test', $display);
     }
 }

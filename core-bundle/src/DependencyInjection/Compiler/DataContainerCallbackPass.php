@@ -17,6 +17,9 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * @internal
+ */
 class DataContainerCallbackPass implements CompilerPassInterface
 {
     /**
@@ -64,15 +67,11 @@ class DataContainerCallbackPass implements CompilerPassInterface
     private function addCallback(array &$callbacks, string $serviceId, array $attributes): void
     {
         if (!isset($attributes['table'])) {
-            throw new InvalidConfigurationException(
-                sprintf('Missing table attribute in tagged callback service ID "%s"', $serviceId)
-            );
+            throw new InvalidConfigurationException(sprintf('Missing table attribute in tagged callback service ID "%s"', $serviceId));
         }
 
         if (!isset($attributes['target'])) {
-            throw new InvalidConfigurationException(
-                sprintf('Missing target attribute in tagged callback service ID "%s"', $serviceId)
-            );
+            throw new InvalidConfigurationException(sprintf('Missing target attribute in tagged callback service ID "%s"', $serviceId));
         }
 
         if (

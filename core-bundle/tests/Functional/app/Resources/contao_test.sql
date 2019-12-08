@@ -1,8 +1,8 @@
--- MySQL dump 10.17  Distrib 10.3.15-MariaDB, for osx10.14 (x86_64)
+-- MariaDB dump 10.17  Distrib 10.4.6-MariaDB, for osx10.14 (x86_64)
 --
 -- Host: localhost    Database: contao_test
 -- ------------------------------------------------------
--- Server version	10.3.15-MariaDB
+-- Server version	10.4.6-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -28,7 +28,7 @@ CREATE TABLE `tl_article` (
   `sorting` int(10) unsigned NOT NULL DEFAULT 0,
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `alias` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `author` int(10) unsigned NOT NULL DEFAULT 0,
   `inColumn` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'main',
   `keywords` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -107,7 +107,7 @@ CREATE TABLE `tl_calendar_events` (
   `pid` int(10) unsigned NOT NULL DEFAULT 0,
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `alias` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `author` int(10) unsigned NOT NULL DEFAULT 0,
   `addTime` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `startTime` int(11) DEFAULT NULL,
@@ -173,7 +173,7 @@ CREATE TABLE `tl_calendar_feed` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `alias` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `language` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `calendars` blob DEFAULT NULL,
   `format` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'rss',
@@ -422,7 +422,7 @@ CREATE TABLE `tl_faq` (
   `sorting` int(10) unsigned NOT NULL DEFAULT 0,
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
   `question` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `alias` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `author` int(10) unsigned NOT NULL DEFAULT 0,
   `answer` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `addImage` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -540,7 +540,7 @@ CREATE TABLE `tl_form` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `alias` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `jumpTo` int(10) unsigned NOT NULL DEFAULT 0,
   `sendViaEmail` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `recipient` varchar(1022) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -610,6 +610,8 @@ CREATE TABLE `tl_form_field` (
   `slabel` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `imageSubmit` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `singleSRC` binary(16) DEFAULT NULL,
+  `maxval` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `minval` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `pid` (`pid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
@@ -830,6 +832,8 @@ CREATE TABLE `tl_member` (
   `locked` int(10) unsigned NOT NULL DEFAULT 0,
   `session` blob DEFAULT NULL,
   `newsletter` blob DEFAULT NULL,
+  `useTwoFactor` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `secret` binary(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `email` (`email`)
@@ -1015,7 +1019,7 @@ CREATE TABLE `tl_news` (
   `pid` int(10) unsigned NOT NULL DEFAULT 0,
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
   `headline` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `alias` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `author` int(10) unsigned NOT NULL DEFAULT 0,
   `date` int(10) unsigned NOT NULL DEFAULT 0,
   `time` int(11) NOT NULL DEFAULT 0,
@@ -1111,7 +1115,7 @@ CREATE TABLE `tl_news_feed` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `alias` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `language` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `archives` blob DEFAULT NULL,
   `format` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'rss',
@@ -1145,7 +1149,7 @@ CREATE TABLE `tl_newsletter` (
   `pid` int(10) unsigned NOT NULL DEFAULT 0,
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
   `subject` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `alias` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `content` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `text` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `addFile` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -1326,7 +1330,7 @@ CREATE TABLE `tl_page` (
   `sorting` int(10) unsigned NOT NULL DEFAULT 0,
   `tstamp` int(10) unsigned NOT NULL DEFAULT 0,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `alias` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
+  `alias` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'regular',
   `pageTitle` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `language` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
@@ -1373,11 +1377,13 @@ CREATE TABLE `tl_page` (
   `validAliasCharacters` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `redirectBack` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `alwaysLoadFromCache` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `twoFactorJumpTo` int(10) unsigned NOT NULL DEFAULT 0,
+  `enforceTwoFactor` char(1) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `alias` (`alias`),
   KEY `pid_type_start_stop_published` (`pid`,`type`,`start`,`stop`,`published`),
   KEY `type_dns` (`type`,`dns`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1386,7 +1392,7 @@ CREATE TABLE `tl_page` (
 
 LOCK TABLES `tl_page` WRITE;
 /*!40000 ALTER TABLE `tl_page` DISABLE KEYS */;
-INSERT INTO `tl_page` VALUES (1,0,128,1539679763,'Root with index page','root-with-index-page','root','','en','',NULL,'permanent',0,'','','root-with-index.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(2,1,128,1539698035,'Index','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(3,0,256,1539679767,'Root with home page','root-with-home-page','root','','en','',NULL,'permanent',0,'','','root-with-home.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(4,3,128,1539698035,'Home','home','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(5,0,384,1539680233,'Root with special chars','root-with-special-chars','root','','en','',NULL,'permanent',0,'','','root-with-special-chars.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(6,5,128,1539698035,'Höme','höme','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(7,0,512,1539680468,'Root with folder URLs','root-with-folder-urls','root','','en','',NULL,'permanent',0,'','','root-with-folder-urls.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(8,7,128,1539698035,'Home','folder/url/home','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(9,0,640,1539694676,'Root without fallback language','root-without-fallback-language','root','','en','',NULL,'permanent',0,'','','root-without-fallback-language.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(10,9,128,1539698035,'English','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(11,0,768,1550250980,'Same domain root English','same-domain-root-english','root','','en','',NULL,'permanent',0,'','','same-domain-root.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(12,11,128,1539698035,'English site','english-site','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(13,0,896,1550250980,'Same domain root German','same-domain-root-german','root','','de','',NULL,'permanent',0,'','','same-domain-root.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(14,13,128,1539698035,'German site','german-site','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(15,0,960,1550250933,'Same domain root English with index','same-domain-root-english-with-index','root','','en','',NULL,'permanent',0,'','','same-domain-root-with-index.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(16,15,128,1539698035,'English site','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(17,0,896,1539696285,'Same domain root German with index','same-domain-root-german-with-index','root','','de','',NULL,'permanent',0,'','','same-domain-root-with-index.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(18,17,128,1539698035,'German site','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(19,0,1024,1539696285,'Domain without hostname','domain-without-hostname','root','','en','',NULL,'permanent',0,'','','','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(20,19,128,1539698035,'Home','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','',''),(21,0,1024,1539696285,'Domain with port','domain-with-port','root','','en','',NULL,'permanent',0,'','','domain-with-port.local:8080','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','',''),(22,21,128,1539698035,'Home','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','');
+INSERT INTO `tl_page` VALUES (1,0,128,1539679763,'Root with index page','root-with-index-page','root','','en','',NULL,'permanent',0,'','','root-with-index.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','','',0,''),(2,1,128,1539698035,'Index','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(3,0,256,1539679767,'Root with home page','root-with-home-page','root','','en','',NULL,'permanent',0,'','','root-with-home.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','','',0,''),(4,3,128,1539698035,'Home','home','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(5,0,384,1539680233,'Root with special chars','root-with-special-chars','root','','en','',NULL,'permanent',0,'','','root-with-special-chars.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','','',0,''),(6,5,128,1539698035,'Höme','höme','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(7,0,512,1539680468,'Root with folder URLs','root-with-folder-urls','root','','en','',NULL,'permanent',0,'','','root-with-folder-urls.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','','',0,''),(8,7,128,1539698035,'Home','folder/url/home','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(9,0,640,1539694676,'Root without fallback language','root-without-fallback-language','root','','en','',NULL,'permanent',0,'','','root-without-fallback-language.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','','',0,''),(10,9,128,1539698035,'English','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(11,0,768,1550250980,'Same domain root English','same-domain-root-english','root','','en','',NULL,'permanent',0,'','','same-domain-root.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','','',0,''),(12,11,128,1539698035,'English site','english-site','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(13,0,896,1550250980,'Same domain root German','same-domain-root-german','root','','de','',NULL,'permanent',0,'','','same-domain-root.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','','',0,''),(14,13,128,1539698035,'German site','german-site','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(15,0,960,1550250933,'Same domain root English with index','same-domain-root-english-with-index','root','','en','',NULL,'permanent',0,'','','same-domain-root-with-index.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','','',0,''),(16,15,128,1539698035,'English site','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(17,0,896,1539696285,'Same domain root German with index','same-domain-root-german-with-index','root','','de','',NULL,'permanent',0,'','','same-domain-root-with-index.local','','','','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','','',0,''),(18,17,128,1539698035,'German site','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(19,0,1024,1539696285,'Domain without hostname','domain-without-hostname','root','','en','',NULL,'permanent',0,'','','','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','','',0,''),(20,19,128,1539698035,'Home','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(21,0,1024,1539696285,'Domain with port','domain-with-port','root','','en','',NULL,'permanent',0,'','','domain-with-port.local:8080','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','','',0,''),(22,21,128,1539698035,'Home','index','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:9:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g4\";i:7;s:2:\"g5\";i:8;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(23,0,1152,1568196756,'Root ZH','root-zh','root','','zh','',NULL,'permanent',0,'','','root-zh.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:12:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g1\";i:7;s:2:\"g2\";i:8;s:2:\"g3\";i:9;s:2:\"g4\";i:10;s:2:\"g5\";i:11;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','','',0,''),(24,23,128,1568196317,'Main-zh','main','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:12:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g1\";i:7;s:2:\"g2\";i:8;s:2:\"g3\";i:9;s:2:\"g4\";i:10;s:2:\"g5\";i:11;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(25,0,1280,1568196339,'Root FR','foot-fr','root','','fr','',NULL,'permanent',0,'','','root-fr.local','','','1','','','','','','','','','',NULL,'1',1,'',0,'',0,0,'a:12:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g1\";i:7;s:2:\"g2\";i:8;s:2:\"g3\";i:9;s:2:\"g4\";i:10;s:2:\"g5\";i:11;s:2:\"g6\";}','','','','','',0,'','1','','','',0,'','','',0,''),(26,25,128,1568196353,'Main-fr','main','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:12:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g1\";i:7;s:2:\"g2\";i:8;s:2:\"g3\";i:9;s:2:\"g4\";i:10;s:2:\"g5\";i:11;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(27,26,128,1568196371,'Sub-fr','main/sub-fr','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:12:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g1\";i:7;s:2:\"g2\";i:8;s:2:\"g3\";i:9;s:2:\"g4\";i:10;s:2:\"g5\";i:11;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,''),(28,24,128,1568196388,'Sub-zh','main/sub-zh','regular','','','index,follow',NULL,'permanent',0,'','','','','','','','','','','','','','','',NULL,'',0,'',0,'',0,0,'a:12:{i:0;s:2:\"u1\";i:1;s:2:\"u2\";i:2;s:2:\"u3\";i:3;s:2:\"u4\";i:4;s:2:\"u5\";i:5;s:2:\"u6\";i:6;s:2:\"g1\";i:7;s:2:\"g2\";i:8;s:2:\"g3\";i:9;s:2:\"g4\";i:10;s:2:\"g5\";i:11;s:2:\"g6\";}','1','','map_default','','',0,'','1','','','',0,'','','',0,'');
 /*!40000 ALTER TABLE `tl_page` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1820,4 +1826,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-05 16:14:50
+-- Dump completed on 2019-09-11 12:14:22

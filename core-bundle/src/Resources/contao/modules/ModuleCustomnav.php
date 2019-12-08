@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleCustomnav extends Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -106,13 +105,7 @@ class ModuleCustomnav extends Module
 
 		$arrPages = array_values(array_filter($arrPages));
 
-		// Set default template
-		if ($this->navigationTpl == '')
-		{
-			$this->navigationTpl = 'nav_default';
-		}
-
-		$objTemplate = new FrontendTemplate($this->navigationTpl);
+		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
 		$objTemplate->type = \get_class($this);
 		$objTemplate->cssID = $this->cssID; // see #4897 and 6129
 		$objTemplate->level = 'level_1';

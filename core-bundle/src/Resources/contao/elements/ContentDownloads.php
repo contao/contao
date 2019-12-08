@@ -20,7 +20,6 @@ use Contao\Model\Collection;
  */
 class ContentDownloads extends ContentElement
 {
-
 	/**
 	 * Files object
 	 * @var Collection|FilesModel

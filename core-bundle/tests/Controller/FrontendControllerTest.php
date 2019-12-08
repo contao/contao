@@ -16,8 +16,11 @@ use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Fixtures\Controller\PageError401Controller;
 use Contao\CoreBundle\Fixtures\Exception\PageError401Exception;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Exception\LogoutException;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class FrontendControllerTest extends TestCase
 {
@@ -107,12 +110,49 @@ class FrontendControllerTest extends TestCase
     public function testCheckCookiesAction(): void
     {
         $controller = new FrontendController();
+
         $response = $controller->checkCookiesAction();
 
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));
         $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
         $this->assertTrue($response->headers->hasCacheControlDirective('must-revalidate'));
         $this->assertSame('image/png', $response->headers->get('Content-Type'));
+    }
+
+    public function testRequestTokenScriptAction(): void
+    {
+        $bag = new ParameterBag();
+        $bag->set('contao.csrf_token_name', 'csrf_token');
+
+        $token = $this->createMock(CsrfToken::class);
+        $token
+            ->expects($this->once())
+            ->method('getValue')
+            ->willReturn('tokenValue')
+        ;
+
+        $tokenManager = $this->createMock(CsrfTokenManagerInterface::class);
+        $tokenManager
+            ->expects($this->once())
+            ->method('getToken')
+            ->with('csrf_token')
+            ->willReturn($token)
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('parameter_bag', $bag);
+        $container->set('contao.csrf.token_manager', $tokenManager);
+
+        $controller = new FrontendController();
+        $controller->setContainer($container);
+
+        $response = $controller->requestTokenScriptAction();
+
+        $this->assertTrue($response->headers->hasCacheControlDirective('private'));
+        $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
+        $this->assertTrue($response->headers->hasCacheControlDirective('must-revalidate'));
+        $this->assertSame('application/javascript; charset=UTF-8', $response->headers->get('Content-Type'));
+        $this->assertSame('document.querySelectorAll("input[name=REQUEST_TOKEN]").forEach(function(i){i.value="tokenValue"})', $response->getContent());
     }
 
     /**

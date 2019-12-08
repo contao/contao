@@ -35,6 +35,9 @@ class Installer
      */
     private $schemaProvider;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.installer" service instead
+     */
     public function __construct(Connection $connection, DcaSchemaProvider $schemaProvider)
     {
         $this->connection = $connection;
@@ -87,18 +90,23 @@ class Installer
             'ALTER_DROP' => [],
         ];
 
+        // The schema assets filter is a callable as of Doctrine DBAL 2.9
+        $filter = static function (string $assetName): bool {
+            return 0 === strncmp($assetName, 'tl_', 3);
+        };
+
         $config = $this->connection->getConfiguration();
 
         // Overwrite the schema filter (see #78)
-        $previousFilter = $config->getFilterSchemaAssetsExpression();
-        $config->setFilterSchemaAssetsExpression('/^tl_/');
+        $previousFilter = $config->getSchemaAssetsFilter();
+        $config->setSchemaAssetsFilter($filter);
 
         // Create the from and to schema
         $fromSchema = $this->connection->getSchemaManager()->createSchema();
         $toSchema = $this->schemaProvider->createSchema();
 
         // Reset the schema filter
-        $config->setFilterSchemaAssetsExpression($previousFilter);
+        $config->setSchemaAssetsFilter($previousFilter);
 
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
 

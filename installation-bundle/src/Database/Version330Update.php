@@ -17,6 +17,9 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 
+/**
+ * @internal
+ */
 class Version330Update extends AbstractMigration
 {
     /**

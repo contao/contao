@@ -12,8 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
+use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriberInterface;
+use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
@@ -38,9 +41,9 @@ class ContaoCoreExtension extends Extension
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
         return new Configuration(
-             $container->getParameter('kernel.project_dir'),
-             $container->getParameter('kernel.default_locale')
-         );
+            $container->getParameter('kernel.project_dir'),
+            $container->getParameter('kernel.default_locale')
+        );
     }
 
     /**
@@ -86,6 +89,8 @@ class ContaoCoreExtension extends Extension
             $container->setParameter('contao.localconfig', $config['localconfig']);
         }
 
+        $this->handleSearchConfig($config, $container);
+        $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
@@ -99,6 +104,61 @@ class ContaoCoreExtension extends Extension
             ->registerForAutoconfiguration(MigrationInterface::class)
             ->addTag('contao.migration')
         ;
+    }
+
+    private function handleSearchConfig(array $config, ContainerBuilder $container): void
+    {
+        $container
+            ->registerForAutoconfiguration(IndexerInterface::class)
+            ->addTag('contao.search_indexer')
+        ;
+
+        // Set the two parameters so they can be used in our legacy Config class for maximum BC
+        $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
+        $container->setParameter('contao.search.indexProtected', $config['search']['indexProtected']);
+
+        if (!$config['search']['default_indexer']['enable']) {
+            // Remove the default indexer completely if it was disabled
+            $container->removeDefinition('contao.search.indexer.default');
+        } else {
+            // Configure whether to index protected pages on the default indexer
+            $defaultIndexer = $container->getDefinition('contao.search.indexer.default');
+            $defaultIndexer->setArgument(2, $config['search']['indexProtected']);
+        }
+
+        $features = SearchIndexListener::FEATURE_INDEX | SearchIndexListener::FEATURE_DELETE;
+
+        if (!$config['search']['listener']['index']) {
+            $features ^= SearchIndexListener::FEATURE_INDEX;
+        }
+
+        if (!$config['search']['listener']['delete']) {
+            $features ^= SearchIndexListener::FEATURE_DELETE;
+        }
+
+        if (0 === $features) {
+            // Remove the search index listener if no features are enabled
+            $container->removeDefinition('contao.listener.search_index');
+        } else {
+            // Configure the search index listener
+            $container->getDefinition('contao.listener.search_index')->setArgument(2, $features);
+        }
+    }
+
+    private function handleCrawlConfig(array $config, ContainerBuilder $container): void
+    {
+        $container
+            ->registerForAutoconfiguration(EscargotSubscriberInterface::class)
+            ->addTag('contao.escargot_subscriber')
+        ;
+
+        if (!$container->hasDefinition('contao.search.escargot_factory')) {
+            return;
+        }
+
+        $factory = $container->getDefinition('contao.search.escargot_factory');
+        $factory->setArgument(2, $config['crawl']['additionalURIs']);
+        $factory->setArgument(3, $config['crawl']['defaultHttpClientOptions']);
     }
 
     /**

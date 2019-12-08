@@ -41,13 +41,12 @@ abstract class AbstractLockedCommand extends ContainerAwareCommand
             return 1;
         }
 
-        if (($errorCode = $this->executeLocked($input, $output)) > 0) {
-            $lock->release();
+        $errorCode = $this->executeLocked($input, $output);
+        $lock->release();
 
+        if ($errorCode > 0) {
             return $errorCode;
         }
-
-        $lock->release();
 
         return 0;
     }

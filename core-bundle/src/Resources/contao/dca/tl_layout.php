@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_layout'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -260,8 +259,11 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'sorting'                 => true,
 			'flag'                    => 11,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_layout', 'getPageTemplates'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('fe_');
+			},
+			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'minifyMarkup' => array
@@ -361,7 +363,10 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_layout', 'getJqueryTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('j_');
+			},
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
 		),
@@ -387,7 +392,10 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_layout', 'getMooToolsTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('moo_');
+			},
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
 		),
@@ -396,7 +404,10 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_layout', 'getAnalyticsTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('analytics_');
+			},
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
@@ -418,7 +429,10 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback'        => array('tl_layout', 'getScriptTemplates'),
+			'options_callback' => static function ()
+			{
+				return Contao\Controller::getTemplateGroup('js_');
+			},
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
 		),
@@ -464,7 +478,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
  */
 class tl_layout extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -527,56 +540,6 @@ class tl_layout extends Contao\Backend
 	}
 
 	/**
-	 * Return all page templates as array
-	 *
-	 * @return array
-	 */
-	public function getPageTemplates()
-	{
-		return $this->getTemplateGroup('fe_');
-	}
-
-	/**
-	 * Return all MooTools templates as array
-	 *
-	 * @return array
-	 */
-	public function getMooToolsTemplates()
-	{
-		return $this->getTemplateGroup('moo_');
-	}
-
-	/**
-	 * Return all jQuery templates as array
-	 *
-	 * @return array
-	 */
-	public function getJqueryTemplates()
-	{
-		return $this->getTemplateGroup('j_');
-	}
-
-	/**
-	 * Return all script templates as array
-	 *
-	 * @return array
-	 */
-	public function getScriptTemplates()
-	{
-		return $this->getTemplateGroup('js_');
-	}
-
-	/**
-	 * Return all analytics templates as array
-	 *
-	 * @return array
-	 */
-	public function getAnalyticsTemplates()
-	{
-		return $this->getTemplateGroup('analytics_');
-	}
-
-	/**
 	 * List a page layout
 	 *
 	 * @param array $row
@@ -585,7 +548,7 @@ class tl_layout extends Contao\Backend
 	 */
 	public function listLayout($row)
 	{
-		return '<div class="tl_content_left">'. $row['name'] .'</div>';
+		return '<div class="tl_content_left">' . $row['name'] . '</div>';
 	}
 
 	/**
@@ -597,7 +560,7 @@ class tl_layout extends Contao\Backend
 	 */
 	public function styleSheetLink(Contao\DataContainer $dc)
 	{
-		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'title\':\''.Contao\StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])).'\',\'url\':this.href});return false">' . Contao\Image::getHtml('edit.svg') . '</a>';
+		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . Contao\StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'title\':\'' . Contao\StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])) . '\',\'url\':this.href});return false">' . Contao\Image::getHtml('edit.svg') . '</a>';
 	}
 
 	/**
@@ -616,12 +579,12 @@ class tl_layout extends Contao\Backend
 
 		$array = Contao\StringUtil::deserialize($value);
 
-		if (empty($array) || !\is_array($array))
+		if (empty($array) || !is_array($array))
 		{
 			return $value;
 		}
 
-		if (($i = array_search('responsive.css', $array)) !== false && !\in_array('layout.css', $array))
+		if (($i = array_search('responsive.css', $array)) !== false && !in_array('layout.css', $array))
 		{
 			array_insert($array, $i, 'layout.css');
 		}

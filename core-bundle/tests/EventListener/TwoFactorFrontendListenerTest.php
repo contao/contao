@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -553,7 +553,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
     /**
      * @return ScopeMatcher&MockObject
      */
-    private function mockScopeMatcher(bool $hasFrontendUser, GetResponseEvent $event): ScopeMatcher
+    private function mockScopeMatcher(bool $hasFrontendUser, RequestEvent $event): ScopeMatcher
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
@@ -566,7 +566,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         return $scopeMatcher;
     }
 
-    private function getResponseEvent(Request $request = null, Response $response = null): GetResponseEvent
+    private function getResponseEvent(Request $request = null, Response $response = null): RequestEvent
     {
         $kernel = $this->createMock(Kernel::class);
 
@@ -574,7 +574,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             $request = new Request();
         }
 
-        $event = new GetResponseEvent($kernel, $request, Kernel::MASTER_REQUEST);
+        $event = new RequestEvent($kernel, $request, Kernel::MASTER_REQUEST);
 
         if (null !== $response) {
             $event->setResponse($response);

@@ -16,6 +16,9 @@ use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 
+/**
+ * @internal
+ */
 class Version410Update extends AbstractMigration
 {
     /**
@@ -62,7 +65,7 @@ class Version410Update extends AbstractMigration
 
         $options = [];
 
-        foreach ($crop as $group => $modes) {
+        foreach ($crop as $modes) {
             $options[] = array_values($modes);
         }
 

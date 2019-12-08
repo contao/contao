@@ -1,0 +1,51 @@
+extends: default
+
+ignore: |
+    /node_modules/
+    /vendor/
+
+rules:
+    braces:
+        min-spaces-inside: 1
+        max-spaces-inside: 1
+
+    brackets:
+        min-spaces-inside: 0
+        max-spaces-inside: 0
+
+    colons:
+        max-spaces-before: 0
+        max-spaces-after: 1
+
+    commas:
+        max-spaces-before: 0
+        min-spaces-after: 1
+        max-spaces-after: 1
+
+    comments:
+        min-spaces-from-content: 1
+        require-starting-space: true
+        ignore-shebangs: true
+
+    document-start: disable
+
+    empty-lines:
+        max: 1
+
+    empty-values:
+        forbid-in-block-mappings: true
+        forbid-in-flow-mappings: true
+
+    hyphens:
+        max-spaces-after: 1
+
+    indentation:
+        spaces: 4
+        indent-sequences: true
+
+    line-length: disable
+
+    octal-values:
+        forbid-implicit-octal: true
+
+    truthy: disable

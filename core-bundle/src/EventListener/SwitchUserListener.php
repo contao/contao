@@ -18,6 +18,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 
+/**
+ * @internal
+ */
 class SwitchUserListener
 {
     /**

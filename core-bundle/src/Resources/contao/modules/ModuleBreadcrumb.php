@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleBreadcrumb extends Module
 {
-
 	/**
 	 * Template
 	 * @var string

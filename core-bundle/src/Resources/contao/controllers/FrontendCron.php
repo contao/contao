@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrontendCron extends Frontend
 {
-
 	/**
 	 * Run the controller
 	 *
@@ -75,7 +74,7 @@ class FrontendCron extends Frontend
 			$intCurrent = $arrCurrent[$strInterval];
 
 			// Skip empty intervals and jobs that have been executed already
-			if (empty($GLOBALS['TL_CRON'][$strInterval]) || $arrLock[$strInterval] == $intCurrent)
+			if ($arrLock[$strInterval] == $intCurrent || empty($GLOBALS['TL_CRON'][$strInterval]))
 			{
 				continue;
 			}

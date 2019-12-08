@@ -1,19 +1,24 @@
 {
     "name": "contao/listing-bundle",
     "type": "contao-bundle",
-    "description": "Allows to list arbitrary data in the Contao 4 front end",
+    "description": "Allows to list arbitrary data in the Contao front end",
+    "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
     "authors": [
         {
             "name": "Leo Feyer",
             "homepage": "https://github.com/leofeyer"
+        },
+        {
+            "name": "Contao Community",
+            "homepage": "https://contao.org/contributors"
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
         "contao/core-bundle": "self.version",
         "patchwork/utf8": "^1.2",
-        "symfony/http-kernel": "4.2.* || 4.3.*"
+        "symfony/http-kernel": "4.4.*"
     },
     "conflict": {
         "contao/core": "*",
@@ -29,7 +34,7 @@
         },
         "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin",
         "symfony": {
-            "require": "^4.2"
+            "require": "^4.4"
         }
     },
     "autoload": {

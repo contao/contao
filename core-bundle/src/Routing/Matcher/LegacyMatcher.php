@@ -43,6 +43,9 @@ class LegacyMatcher implements RequestMatcherInterface
      */
     private $prependLocale;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.legacy_matcher" service instead
+     */
     public function __construct(ContaoFramework $framework, RequestMatcherInterface $requestMatcher, string $urlSuffix, bool $prependLocale)
     {
         $this->framework = $framework;
@@ -74,17 +77,12 @@ class LegacyMatcher implements RequestMatcherInterface
         $locale = null;
         $fragments = null;
 
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-
-        if ($config->get('folderUrl')) {
-            try {
-                $match = $this->requestMatcher->matchRequest($request);
-                $fragments = $this->createFragmentsFromMatch($match);
-                $locale = $match['_locale'] ?? null;
-            } catch (ResourceNotFoundException $e) {
-                // continue and parse fragments from path
-            }
+        try {
+            $match = $this->requestMatcher->matchRequest($request);
+            $fragments = $this->createFragmentsFromMatch($match);
+            $locale = $match['_locale'] ?? null;
+        } catch (ResourceNotFoundException $e) {
+            // continue and parse fragments from path
         }
 
         if (null === $fragments) {

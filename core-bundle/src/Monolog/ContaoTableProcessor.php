@@ -14,11 +14,12 @@ namespace Contao\CoreBundle\Monolog;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Monolog\Logger;
+use Monolog\Processor\ProcessorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ContaoTableProcessor
+class ContaoTableProcessor implements ProcessorInterface
 {
     /**
      * @var RequestStack
@@ -35,6 +36,9 @@ class ContaoTableProcessor
      */
     private $scopeMatcher;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.monolog.processor" service instead
+     */
     public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage, ScopeMatcher $scopeMatcher)
     {
         $this->requestStack = $requestStack;
@@ -49,7 +53,7 @@ class ContaoTableProcessor
      */
     public function __invoke(array $record): array
     {
-        if (!isset($record['context']['contao']) || !($record['context']['contao'] instanceof ContaoContext)) {
+        if (!isset($record['context']['contao']) || !$record['context']['contao'] instanceof ContaoContext) {
             return $record;
         }
 

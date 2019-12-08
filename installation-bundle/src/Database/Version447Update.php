@@ -17,6 +17,9 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * @internal
+ */
 class Version447Update extends AbstractMigration
 {
     /**

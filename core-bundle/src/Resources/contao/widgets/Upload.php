@@ -21,7 +21,6 @@ namespace Contao;
  */
 class Upload extends Widget implements \uploadable
 {
-
 	/**
 	 * Submit user input
 	 * @var boolean

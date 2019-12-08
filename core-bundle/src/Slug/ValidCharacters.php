@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Slug;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ValidCharacters
 {
@@ -36,6 +36,9 @@ class ValidCharacters
      */
     private $translator;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.slug.valid_characters" service instead
+     */
     public function __construct(EventDispatcherInterface $eventDispatcher, TranslatorInterface $translator)
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -57,7 +60,7 @@ class ValidCharacters
 
         $event = new SlugValidCharactersEvent($options);
 
-        $this->eventDispatcher->dispatch(ContaoCoreEvents::SLUG_VALID_CHARACTERS, $event);
+        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::SLUG_VALID_CHARACTERS);
 
         return $event->getOptions();
     }

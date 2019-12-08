@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Logout;
 
 use Contao\BackendUser;
-use Contao\Controller;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
@@ -84,19 +83,12 @@ class LogoutHandlerTest extends TestCase
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
-        $listener = $this->createPartialMock(Controller::class, ['onPostLogout']);
-        $listener
-            ->expects($this->once())
-            ->method('onPostLogout')
-            ->with($user)
-        ;
-
         $systemAdapter = $this->mockAdapter(['importStatic']);
         $systemAdapter
             ->expects($this->once())
             ->method('importStatic')
-            ->with('HookListener')
-            ->willReturn($listener)
+            ->with(static::class)
+            ->willReturn($this)
         ;
 
         $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
@@ -119,11 +111,16 @@ class LogoutHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $GLOBALS['TL_HOOKS']['postLogout'] = [['HookListener', 'onPostLogout']];
+        $GLOBALS['TL_HOOKS']['postLogout'][] = [static::class, 'onPostLogout'];
 
         $handler = new LogoutHandler($framework, $logger);
         $handler->logout(new Request(), new Response(), $token);
 
         unset($GLOBALS['TL_HOOKS']);
+    }
+
+    public function onPostLogout(): void
+    {
+        // Dummy method to test the postLogout hook
     }
 }

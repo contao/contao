@@ -26,7 +26,6 @@ use Contao\Model\Collection;
  */
 abstract class Hybrid extends Frontend
 {
-
 	/**
 	 * Key
 	 * @var string

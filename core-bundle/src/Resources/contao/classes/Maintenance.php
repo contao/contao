@@ -17,7 +17,6 @@ namespace Contao;
  */
 class Maintenance extends Backend implements \executable
 {
-
 	/**
 	 * Return true if the module is active
 	 *

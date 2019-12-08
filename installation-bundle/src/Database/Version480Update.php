@@ -18,6 +18,9 @@ use Contao\File;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 
+/**
+ * @internal
+ */
 class Version480Update extends AbstractMigration
 {
     /**
@@ -255,7 +258,9 @@ class Version480Update extends AbstractMigration
         // Since rememberme is broken in Contao 4.7 and there are no valid
         // cookies out there, we can simply drop the old table here and let the
         // install tool create the new one
-        $this->connection->query('DROP TABLE IF EXISTS tl_remember_me');
+        if ($this->connection->getSchemaManager()->tablesExist(['tl_remember_me'])) {
+            $this->connection->query('DROP TABLE tl_remember_me');
+        }
 
         return $this->createResult();
     }

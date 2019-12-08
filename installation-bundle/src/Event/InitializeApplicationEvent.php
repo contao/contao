@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class InitializeApplicationEvent extends Event
 {

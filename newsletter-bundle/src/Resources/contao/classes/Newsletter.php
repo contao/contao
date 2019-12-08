@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class Newsletter extends Backend
 {
-
 	/**
 	 * Return a form to choose an existing CSV file and import it
 	 *
@@ -40,6 +39,8 @@ class Newsletter extends Backend
 		{
 			return '';
 		}
+
+		System::loadLanguageFile('tl_newsletter_channel');
 
 		// Set the template
 		if ($objNewsletter->template == '')
@@ -103,9 +104,10 @@ class Newsletter extends Backend
 
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
+		$token = Input::get('token');
 
 		// Send newsletter
-		if (Input::get('token') != '' && Input::get('token') == $objSession->get('tl_newsletter_send'))
+		if ($token != '' && $token == $objSession->get('tl_newsletter_send'))
 		{
 			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', Environment::get('request'));
 
@@ -237,9 +239,9 @@ class Newsletter extends Backend
 		// Preview newsletter
 		$return = Message::generate() . '
 <div id="tl_buttons">
-<a href="'.$this->getReferer(true).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
-<form action="'.TL_SCRIPT.'" id="tl_newsletter_send" class="tl_form tl_edit_form" method="get">
+<form action="' . TL_SCRIPT . '" id="tl_newsletter_send" class="tl_form tl_edit_form" method="get">
 <div class="tl_formbody_edit tl_newsletter_send">
 <input type="hidden" name="do" value="' . Input::get('do') . '">
 <input type="hidden" name="table" value="' . Input::get('table') . '">
@@ -256,8 +258,8 @@ class Newsletter extends Backend
     <td class="col_1">' . $objNewsletter->subject . '</td>
   </tr>
   <tr class="row_2">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['template'][0] . '</td>
-    <td class="col_1">' . $objNewsletter->template . '</td>
+    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter_channel']['template'][0] . '</td>
+    <td class="col_1">' . ($objNewsletter->template ?: 'mail_default') . '</td>
   </tr>' . ((!empty($arrAttachments) && \is_array($arrAttachments)) ? '
   <tr class="row_3">
     <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['attachments'] . '</td>
@@ -289,7 +291,7 @@ class Newsletter extends Backend
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_recipient">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][0] . '</label></h3>
-  <input type="text" name="recipient" id="ctrl_recipient" value="'.Idna::decodeEmail($this->User->email).'" class="tl_text" onfocus="Backend.getScrollOffset()">' . (isset($_SESSION['TL_PREVIEW_MAIL_ERROR']) ? '
+  <input type="text" name="recipient" id="ctrl_recipient" value="' . Idna::decodeEmail($this->User->email) . '" class="tl_text" onfocus="Backend.getScrollOffset()">' . (isset($_SESSION['TL_PREVIEW_MAIL_ERROR']) ? '
   <div class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['email'] . '</div>' : (($GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] . '</p>' : '')) . '
 </div>
@@ -300,8 +302,8 @@ class Newsletter extends Backend
 
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
-<button type="submit" name="preview" class="tl_submit" accesskey="p">'.$GLOBALS['TL_LANG']['tl_newsletter']['preview'].'</button>
-<button type="submit" id="send" class="tl_submit" accesskey="s" onclick="return confirm(\''. str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_newsletter']['sendConfirm']) .'\')">'.$GLOBALS['TL_LANG']['tl_newsletter']['send'][0].'</button>
+<button type="submit" name="preview" class="tl_submit" accesskey="p">' . $GLOBALS['TL_LANG']['tl_newsletter']['preview'] . '</button>
+<button type="submit" id="send" class="tl_submit" accesskey="s" onclick="return confirm(\'' . str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_newsletter']['sendConfirm']) . '\')">' . $GLOBALS['TL_LANG']['tl_newsletter']['send'][0] . '</button>
 </div>
 </div>
 
@@ -366,13 +368,7 @@ class Newsletter extends Backend
 
 		if (!$objNewsletter->sendText)
 		{
-			// Default template
-			if ($objNewsletter->template == '')
-			{
-				$objNewsletter->template = 'mail_default';
-			}
-
-			$objTemplate = new BackendTemplate($objNewsletter->template);
+			$objTemplate = new BackendTemplate($objNewsletter->template ?: 'mail_default');
 			$objTemplate->setData($objNewsletter->row());
 			$objTemplate->title = $objNewsletter->subject;
 			$objTemplate->body = StringUtil::parseSimpleTokens($html, $arrRecipient);
@@ -477,7 +473,7 @@ class Newsletter extends Backend
 				$arrRecipients = array();
 				$resFile = $objFile->handle;
 
-				while(($arrRow = @fgetcsv($resFile, null, $strSeparator)) !== false)
+				while (($arrRow = @fgetcsv($resFile, null, $strSeparator)) !== false)
 				{
 					$arrRecipients[] = $arrRow;
 				}
@@ -538,29 +534,29 @@ class Newsletter extends Backend
 		// Return form
 		return '
 <div id="tl_buttons">
-<a href="'.ampersand(str_replace('&key=import', '', Environment::get('request'))).'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a>
+<a href="' . ampersand(str_replace('&key=import', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
-'.Message::generate().'
-<form action="'.ampersand(Environment::get('request')).'" id="tl_recipients_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
+' . Message::generate() . '
+<form action="' . ampersand(Environment::get('request')) . '" id="tl_recipients_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_recipients_import">
-<input type="hidden" name="REQUEST_TOKEN" value="'.REQUEST_TOKEN.'">
-<input type="hidden" name="MAX_FILE_SIZE" value="'.Config::get('maxFileSize').'">
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<input type="hidden" name="MAX_FILE_SIZE" value="' . Config::get('maxFileSize') . '">
 
 <fieldset class="tl_tbox nolegend">
   <div class="widget w50">
-    <h3><label for="separator">'.$GLOBALS['TL_LANG']['MSC']['separator'][0].'</label></h3>
+    <h3><label for="separator">' . $GLOBALS['TL_LANG']['MSC']['separator'][0] . '</label></h3>
     <select name="separator" id="separator" class="tl_select" onfocus="Backend.getScrollOffset()">
-      <option value="comma">'.$GLOBALS['TL_LANG']['MSC']['comma'].'</option>
-      <option value="semicolon">'.$GLOBALS['TL_LANG']['MSC']['semicolon'].'</option>
-      <option value="tabulator">'.$GLOBALS['TL_LANG']['MSC']['tabulator'].'</option>
-      <option value="linebreak">'.$GLOBALS['TL_LANG']['MSC']['linebreak'].'</option>
-    </select>'.(($GLOBALS['TL_LANG']['MSC']['separator'][1] != '') ? '
-    <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['separator'][1].'</p>' : '').'
+      <option value="comma">' . $GLOBALS['TL_LANG']['MSC']['comma'] . '</option>
+      <option value="semicolon">' . $GLOBALS['TL_LANG']['MSC']['semicolon'] . '</option>
+      <option value="tabulator">' . $GLOBALS['TL_LANG']['MSC']['tabulator'] . '</option>
+      <option value="linebreak">' . $GLOBALS['TL_LANG']['MSC']['linebreak'] . '</option>
+    </select>' . (($GLOBALS['TL_LANG']['MSC']['separator'][1] != '') ? '
+    <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['MSC']['separator'][1] . '</p>' : '') . '
   </div>
   <div class="widget clr">
-    <h3>'.$GLOBALS['TL_LANG']['MSC']['source'][0].'</h3>'.$objUploader->generateMarkup().(isset($GLOBALS['TL_LANG']['MSC']['source'][1]) ? '
-    <p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['MSC']['source'][1].'</p>' : '').'
+    <h3>' . $GLOBALS['TL_LANG']['MSC']['source'][0] . '</h3>' . $objUploader->generateMarkup() . (isset($GLOBALS['TL_LANG']['MSC']['source'][1]) ? '
+    <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['MSC']['source'][1] . '</p>' : '') . '
   </div>
 </fieldset>
 
@@ -569,7 +565,7 @@ class Newsletter extends Backend
 <div class="tl_formbody_submit">
 
 <div class="tl_submit_container">
-  <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['tl_newsletter_recipients']['import'][0].'</button>
+  <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['tl_newsletter_recipients']['import'][0] . '</button>
 </div>
 
 </div>
@@ -1019,7 +1015,7 @@ class Newsletter extends Backend
 						}
 
 						// The target page is exempt from the sitemap (see #6418)
-						if ($objParent->sitemap == 'map_never')
+						if ($objParent->robots == 'noindex,nofollow')
 						{
 							continue;
 						}

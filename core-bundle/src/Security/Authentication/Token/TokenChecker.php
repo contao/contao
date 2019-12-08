@@ -58,6 +58,9 @@ class TokenChecker
      */
     private $previewScript;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead
+     */
     public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, string $previewScript = '')
     {
         $this->requestStack = $requestStack;

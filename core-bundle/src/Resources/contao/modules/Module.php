@@ -84,7 +84,6 @@ use FOS\HttpCache\ResponseTagger;
  */
 abstract class Module extends Frontend
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -141,7 +140,7 @@ abstract class Module extends Frontend
 		$this->arrData = $objModule->row();
 		$this->cssID = StringUtil::deserialize($objModule->cssID, true);
 
-		if ($this->customTpl != '' && TL_MODE == 'FE')
+		if ($this->customTpl && TL_MODE == 'FE')
 		{
 			$this->strTemplate = $this->customTpl;
 		}
@@ -277,13 +276,7 @@ abstract class Module extends Frontend
 			$groups = $this->User->groups;
 		}
 
-		// Layout template fallback
-		if ($this->navigationTpl == '')
-		{
-			$this->navigationTpl = 'nav_default';
-		}
-
-		$objTemplate = new FrontendTemplate($this->navigationTpl);
+		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
 		$objTemplate->pid = $pid;
 		$objTemplate->type = \get_class($this);
 		$objTemplate->cssID = $this->cssID; // see #4897

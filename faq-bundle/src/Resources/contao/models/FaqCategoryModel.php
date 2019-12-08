@@ -80,13 +80,11 @@ use Contao\Model\Collection;
  */
 class FaqCategoryModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_faq_category';
-
 }
 
 class_alias(FaqCategoryModel::class, 'FaqCategoryModel');

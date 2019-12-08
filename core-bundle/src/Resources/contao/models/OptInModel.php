@@ -69,7 +69,6 @@ use Contao\Model\Registry;
  */
 class OptInModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

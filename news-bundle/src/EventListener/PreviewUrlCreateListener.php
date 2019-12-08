@@ -18,6 +18,9 @@ use Contao\NewsModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @internal
+ */
 class PreviewUrlCreateListener
 {
     /**

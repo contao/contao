@@ -7,14 +7,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: contao.backend_menu_build, method: onBuild, priority: -10 }
 
-    contao_manager.listener.debug:
-        class: Contao\ManagerBundle\EventListener\DebugListener
-        arguments:
-            - '@security.helper'
-            - '@request_stack'
-            - '@contao_manager.jwt_manager'
-        public: true
-
     contao_manager.listener.initialize_application:
         class: Contao\ManagerBundle\EventListener\InitializeApplicationListener
         arguments:

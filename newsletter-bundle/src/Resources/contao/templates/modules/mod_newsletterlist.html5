@@ -4,7 +4,7 @@
 
   <?php if (!empty($this->newsletters)): ?>
     <ul>
-      <?php foreach($this->newsletters as $newsletter): ?>
+      <?php foreach ($this->newsletters as $newsletter): ?>
         <li><?= $newsletter['datim'] ?>: <a href="<?= $newsletter['href'] ?>" title="<?= $newsletter['title'] ?>"><?= $newsletter['subject'] ?></a></li>
       <?php endforeach; ?>
     </ul>

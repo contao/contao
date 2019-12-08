@@ -23,7 +23,7 @@ use Knp\Menu\MenuItem;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FilePickerProviderTest extends ContaoTestCase
 {
@@ -222,7 +222,7 @@ class FilePickerProviderTest extends ContaoTestCase
         $security
             ->expects(null === $accessGranted ? $this->never() : $this->atLeastOnce())
             ->method('isGranted')
-            ->willReturn($accessGranted)
+            ->willReturn($accessGranted ?? false)
         ;
 
         $menuFactory = $this->createMock(FactoryInterface::class);

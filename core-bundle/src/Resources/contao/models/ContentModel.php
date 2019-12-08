@@ -353,7 +353,6 @@ use Contao\Model\Collection;
  */
 class ContentModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

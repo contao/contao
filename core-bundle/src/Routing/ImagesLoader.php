@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
+use Contao\CoreBundle\Controller\ImagesController;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Route;
@@ -24,6 +25,9 @@ class ImagesLoader extends Loader
      */
     private $pathPrefix;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.images_loader" service instead
+     */
     public function __construct(string $projectDir, string $imageTargetDir, Filesystem $filesystem)
     {
         $this->pathPrefix = rtrim($filesystem->makePathRelative($imageTargetDir, $projectDir), '/');
@@ -37,7 +41,7 @@ class ImagesLoader extends Loader
         $route = new Route(
             '/'.$this->pathPrefix.'/{path}',
             [
-                '_controller' => 'contao.controller.images',
+                '_controller' => ImagesController::class,
                 '_bypass_maintenance' => true,
             ],
             ['path' => '.+']

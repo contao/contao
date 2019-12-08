@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Picker;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
@@ -24,6 +24,9 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
      */
     private $security;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.picker.article_provider" service instead
+     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
     {
         parent::__construct($menuFactory, $router, $translator);

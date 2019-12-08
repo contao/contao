@@ -1365,7 +1365,7 @@ class ImageTest extends TestCase
     public function testExecutesTheResizeHook(): void
     {
         $GLOBALS['TL_HOOKS'] = [
-            'executeResize' => [[\get_class($this), 'executeResizeHookCallback']],
+            'executeResize' => [[static::class, 'executeResizeHookCallback']],
         ];
 
         $file = new File('dummy.jpg');
@@ -1447,7 +1447,7 @@ class ImageTest extends TestCase
         System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($deferredImage);
 
         $GLOBALS['TL_HOOKS'] = [
-            'getImage' => [[\get_class($this), 'getImageHookCallback']],
+            'getImage' => [[static::class, 'getImageHookCallback']],
         ];
 
         $imageObj = new Image($file);
@@ -1482,11 +1482,7 @@ class ImageTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
-    /**
-     * @param object $fileObj
-     * @param object $imageObj
-     */
-    public static function getImageHookCallback(string $originalPath, int $targetWidth, int $targetHeight, string $resizeMode, string $cacheName, $fileObj, string $targetPath, $imageObj): string
+    public static function getImageHookCallback(string $originalPath, int $targetWidth, int $targetHeight, string $resizeMode, string $cacheName, object $fileObj, string $targetPath, object $imageObj): string
     {
         // Do not include $cacheName as it is dynamic (mtime)
         $path = 'assets/'

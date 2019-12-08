@@ -35,7 +35,6 @@ use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
  */
 class Result
 {
-
 	/**
 	 * Database result
 	 * @var DoctrineStatement
@@ -149,25 +148,22 @@ class Result
 		{
 			case 'query':
 				return $this->strQuery;
-				break;
 
 			case 'numRows':
 				return $this->count();
-				break;
 
 			case 'numFields':
 				return $this->resResult->columnCount();
-				break;
 
 			case 'isModified':
 				return $this->blnModified;
-				break;
 
 			default:
 				if (empty($this->arrCache))
 				{
 					$this->next();
 				}
+
 				if (isset($this->arrCache[$strKey]))
 				{
 					return $this->arrCache[$strKey];

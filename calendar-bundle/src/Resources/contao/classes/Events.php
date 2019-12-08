@@ -21,7 +21,6 @@ use FOS\HttpCache\ResponseTagger;
  */
 abstract class Events extends Module
 {
-
 	/**
 	 * Current URL
 	 * @var string
@@ -133,7 +132,7 @@ abstract class Events extends Module
 				{
 					$arrRepeat = StringUtil::deserialize($objEvents->repeatEach);
 
-					if (!\is_array($arrRepeat) || !isset($arrRepeat['unit']) || !isset($arrRepeat['value']) || $arrRepeat['value'] < 1)
+					if (!isset($arrRepeat['unit'], $arrRepeat['value']) || $arrRepeat['value'] < 1)
 					{
 						continue;
 					}
@@ -253,15 +252,15 @@ abstract class Events extends Module
 		{
 			$arrRange = StringUtil::deserialize($objEvents->repeatEach);
 
-			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
+			if (isset($arrRange['unit'], $arrRange['value']))
 			{
 				if ($arrRange['value'] == 1)
 				{
-					$repeat = $GLOBALS['TL_LANG']['MSC']['cal_single_'.$arrRange['unit']];
+					$repeat = $GLOBALS['TL_LANG']['MSC']['cal_single_' . $arrRange['unit']];
 				}
 				else
 				{
-					$repeat = sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_'.$arrRange['unit']], $arrRange['value']);
+					$repeat = sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_' . $arrRange['unit']], $arrRange['value']);
 				}
 
 				if ($objEvents->recurrences > 0)
@@ -370,6 +369,7 @@ abstract class Events extends Module
 		{
 			$this->intTodayBegin = strtotime('00:00:00');
 		}
+
 		if ($this->intTodayEnd === null)
 		{
 			$this->intTodayEnd = strtotime('23:59:59');
@@ -510,8 +510,7 @@ abstract class Events extends Module
 				return array($objDate->yearBegin, $objDate->yearEnd, $GLOBALS['TL_LANG']['MSC']['cal_emptyYear']);
 
 			case 'cal_all': // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
-				return array(0, 4294967295, $GLOBALS['TL_LANG']['MSC']['cal_empty']);
-				break;
+				return array(0, min(4294967295, PHP_INT_MAX), $GLOBALS['TL_LANG']['MSC']['cal_empty']);
 
 			case 'next_7':
 				return array(time(), strtotime('+7 days'), $GLOBALS['TL_LANG']['MSC']['cal_empty']);
@@ -547,7 +546,7 @@ abstract class Events extends Module
 				return array(strtotime('first day of january next year 00:00:00'), strtotime('last day of december next year 23:59:59'), $GLOBALS['TL_LANG']['MSC']['cal_empty']);
 
 			case 'next_all': // 2106-02-07 07:28:15
-				return array(time(), 4294967295, $GLOBALS['TL_LANG']['MSC']['cal_empty']);
+				return array(time(), min(4294967295, PHP_INT_MAX), $GLOBALS['TL_LANG']['MSC']['cal_empty']);
 
 			case 'past_7':
 				return array(strtotime('-7 days'), time(), $GLOBALS['TL_LANG']['MSC']['cal_empty']);

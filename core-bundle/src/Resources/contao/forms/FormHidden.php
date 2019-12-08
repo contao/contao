@@ -17,7 +17,6 @@ namespace Contao;
  */
 class FormHidden extends Widget
 {
-
 	/**
 	 * Submit user input
 	 *
@@ -39,10 +38,12 @@ class FormHidden extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf('<input type="hidden" name="%s" value="%s"%s',
-						$this->strName,
-						StringUtil::specialchars($this->varValue),
-						$this->strTagEnding);
+		return sprintf(
+			'<input type="hidden" name="%s" value="%s"%s',
+			$this->strName,
+			StringUtil::specialchars($this->varValue),
+			$this->strTagEnding
+		);
 	}
 }
 
