@@ -212,7 +212,7 @@ class TwoFactorControllerTest extends TestCase
         /** @var RedirectResponse $response */
         $response = $controller($request, $model, 'main', null, $this->mockPageModel());
 
-        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
     public function testGeneratesBackupCodes(): void
@@ -250,7 +250,7 @@ class TwoFactorControllerTest extends TestCase
         /** @var RedirectResponse $response */
         $response = $controller($request, $model, 'main', null, $this->mockPageModel());
 
-        $this->assertInstanceOf(Response::class, $response);
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
     public function testReturnsIfTwoFactorAuthenticationIsAlreadyEnabled(): void
