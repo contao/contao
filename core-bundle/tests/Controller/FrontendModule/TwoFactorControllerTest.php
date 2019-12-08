@@ -110,7 +110,10 @@ class TwoFactorControllerTest extends TestCase
         $controller = new TwoFactorController();
         $controller->setContainer($container);
 
-        $response = $controller(new Request(), $model, 'main', null, $this->mockPageModel());
+        $page = $this->mockPageModel();
+        $page->enforceTwoFactor = '1';
+
+        $response = $controller(new Request(), $model, 'main', null, $page);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
@@ -180,6 +183,74 @@ class TwoFactorControllerTest extends TestCase
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('https://localhost.wip/foobar', $response->getTargetUrl());
+    }
+
+    public function testShowsBackupCodes(): void
+    {
+        /** @var FrontendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user->secret = '';
+        $user->useTwoFactor = '1';
+
+        /** @var ModuleModel&MockObject $model */
+        $model = $this->mockClassWithProperties(ModuleModel::class);
+        $token = $this->mockToken(TokenInterface::class, true, $user);
+
+        $container = $this->getContainerWithFrameworkTemplate(
+            'mod_two_factor',
+            $this->mockTokenStorageWithToken($token),
+            $this->mockAuthenticator(),
+            $this->mockAuthenticationUtils()
+        );
+
+        $controller = new TwoFactorController();
+        $controller->setContainer($container);
+
+        $request = new Request();
+        $request->request->set('FORM_SUBMIT', 'tl_two_factor_show_backup_codes');
+
+        /** @var RedirectResponse $response */
+        $response = $controller($request, $model, 'main', null, $this->mockPageModel());
+
+        $this->assertInstanceOf(Response::class, $response);
+    }
+
+    public function testGeneratesBackupCodes(): void
+    {
+        /** @var FrontendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user->secret = '';
+        $user->useTwoFactor = '1';
+
+        /** @var ModuleModel&MockObject $model */
+        $model = $this->mockClassWithProperties(ModuleModel::class);
+        $token = $this->mockToken(TokenInterface::class, true, $user);
+
+        $container = $this->getContainerWithFrameworkTemplate(
+            'mod_two_factor',
+            $this->mockTokenStorageWithToken($token),
+            $this->mockAuthenticator(),
+            $this->mockAuthenticationUtils()
+        );
+
+        /** @var BackupCodeManager&MockObject $backupCodeManager */
+        $backupCodeManager = $container->get('contao.security.two_factor.backup_code_manager');
+        $backupCodeManager
+            ->expects($this->once())
+            ->method('generateBackupCodes')
+            ->with($user)
+        ;
+
+        $controller = new TwoFactorController();
+        $controller->setContainer($container);
+
+        $request = new Request();
+        $request->request->set('FORM_SUBMIT', 'tl_two_factor_generate_backup_codes');
+
+        /** @var RedirectResponse $response */
+        $response = $controller($request, $model, 'main', null, $this->mockPageModel());
+
+        $this->assertInstanceOf(Response::class, $response);
     }
 
     public function testReturnsIfTwoFactorAuthenticationIsAlreadyEnabled(): void
