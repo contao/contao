@@ -14,7 +14,6 @@ namespace Contao\InstallationBundle;
 
 use Contao\Backend;
 use Contao\Config;
-use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Migration\Migrations;
 use Contao\File;
 use Doctrine\DBAL\Connection;

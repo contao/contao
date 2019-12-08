@@ -12,11 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Controller;
 
-use Contao\CoreBundle\Migration\MigrationResult;
-use Contao\CoreBundle\Migration\Migrations;
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
-use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
@@ -364,7 +361,7 @@ class InstallationController implements ContainerAwareInterface
     private function runDatabaseUpdates(): void
     {
         $this->context['sql_message'] = implode(
-            "<br>",
+            '<br>',
             array_map(
                 'htmlspecialchars',
                 $this->container->get('contao.install_tool')->runMigrations()
