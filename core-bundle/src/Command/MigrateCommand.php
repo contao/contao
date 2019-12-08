@@ -233,6 +233,8 @@ class MigrateCommand extends Command
                 return false;
             }
 
+            $this->io->section('Execute database migrations');
+
             $count = 0;
 
             foreach ($this->getCommandHashes($commands, 'yes, with deletes' === $answer) as $hash) {
