@@ -14,6 +14,8 @@ namespace Contao\InstallationBundle;
 
 use Contao\Backend;
 use Contao\Config;
+use Contao\CoreBundle\Migration\MigrationResult;
+use Contao\CoreBundle\Migration\Migrations;
 use Contao\File;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
@@ -40,13 +42,19 @@ class InstallTool
     private $logger;
 
     /**
+     * @var Migrations
+     */
+    private $migrations;
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.install_tool" service instead
      */
-    public function __construct(Connection $connection, string $rootDir, LoggerInterface $logger)
+    public function __construct(Connection $connection, string $rootDir, LoggerInterface $logger, Migrations $migrations)
     {
         $this->connection = $connection;
         $this->rootDir = $rootDir;
         $this->logger = $logger;
+        $this->migrations = $migrations;
     }
 
     public function isLocked(): bool
@@ -438,5 +446,16 @@ class InstallTool
     public function logException(\Exception $e): void
     {
         $this->logger->critical('An exception occurred.', ['exception' => $e]);
+    }
+
+    public function runMigrations(): array
+    {
+        $messages = [];
+
+        foreach ($this->migrations->runMigrations() as $migrationResult) {
+            $messages[] = $migrationResult->getMessage();
+        }
+
+        return $messages;
     }
 }

@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Controller;
 
+use Contao\CoreBundle\Migration\MigrationResult;
+use Contao\CoreBundle\Migration\Migrations;
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\AbstractVersionUpdate;
@@ -361,40 +363,13 @@ class InstallationController implements ContainerAwareInterface
 
     private function runDatabaseUpdates(): void
     {
-        if ($this->container->get('contao.install_tool')->isFreshInstallation()) {
-            return;
-        }
-
-        /** @var SplFileInfo[] $finder */
-        $finder = Finder::create()
-            ->files()
-            ->name('Version*Update.php')
-            ->sortByName()
-            ->in(__DIR__.'/../Database')
-        ;
-
-        $messages = [];
-
-        foreach ($finder as $file) {
-            $class = 'Contao\InstallationBundle\Database\\'.$file->getBasename('.php');
-
-            /** @var AbstractVersionUpdate $update */
-            $update = new $class($this->container->get('database_connection'));
-
-            if ($update instanceof AbstractVersionUpdate) {
-                $update->setContainer($this->container);
-
-                if ($update->shouldBeRun()) {
-                    $update->run();
-                }
-
-                if ($message = $update->getMessage()) {
-                    $messages[] = $message;
-                }
-            }
-        }
-
-        $this->context['sql_message'] = implode('', $messages);
+        $this->context['sql_message'] = implode(
+            "<br>",
+            array_map(
+                'htmlspecialchars',
+                $this->container->get('contao.install_tool')->runMigrations()
+            )
+        );
     }
 
     /**
