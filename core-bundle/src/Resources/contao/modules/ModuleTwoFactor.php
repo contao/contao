@@ -17,7 +17,6 @@ use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\TrustedDevice\TrustedDeviceManager;
-use Doctrine\ORM\EntityManagerInterface;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
