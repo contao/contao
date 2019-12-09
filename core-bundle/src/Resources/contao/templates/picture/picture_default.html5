@@ -1,3 +1,4 @@
+
 <?php if ($this->sources): ?>
   <picture>
     <!--[if IE 9]><video style="display: none;"><![endif]-->
