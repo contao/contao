@@ -32,9 +32,6 @@ abstract class AbstractController extends SymfonyAbstractController implements S
         return $services;
     }
 
-    /**
-     * Initializes the Contao framework.
-     */
     protected function initializeContaoFramework(): void
     {
         $this->get('contao.framework')->initialize();
