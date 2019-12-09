@@ -84,7 +84,7 @@ class FrontendTemplate extends Template
 
 		$response = parent::getResponse();
 
-		if (0 === strncmp('fe_', $this->strTemplate, 3)) {
+		if ($blnForceCacheHeaders || 0 === strncmp('fe_', $this->strTemplate, 3)) {
 			return $this->setCacheHeaders($response);
 		}
 
