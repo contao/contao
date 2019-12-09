@@ -16,6 +16,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpCache\ResponseCacheStrategy;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * The Symfony HttpCache ships with a ResponseCacheStrategy, which is used to merge the caching information of multiple
@@ -29,7 +30,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * To apply the cache merging, a specific header needs to be present in both the main- and subrequest response. The
  * header is automatically set for the page content and classes implementing the abstract module/element controllers.
  */
-class SubrequestCacheListener
+class SubrequestCacheListener implements ResetInterface
 {
     public const MERGE_CACHE_HEADER = 'Contao-Merge-Cache-Control';
 
@@ -72,5 +73,11 @@ class SubrequestCacheListener
         if ($isMasterRequest) {
             $this->currentStrategy = array_pop($this->strategyStack);
         }
+    }
+
+    public function reset(): void
+    {
+        $this->currentStrategy = null;
+        $this->strategyStack = [];
     }
 }
