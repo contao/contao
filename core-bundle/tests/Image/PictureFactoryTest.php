@@ -23,7 +23,6 @@ use Contao\Image\PictureConfigurationInterface;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\PictureGenerator;
 use Contao\Image\PictureGeneratorInterface;
-use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\ImageSizeItemModel;
@@ -413,6 +412,14 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
+     * Tests that the set has a single aspect ratio attribute.
+     *
+     * @param boolean $expected
+     * @param integer $imgWidth
+     * @param integer $imgHeight
+     * @param integer $sourceWidth
+     * @param integer $sourceHeight
+     *
      * @dataProvider getAspectRatios
      */
     public function testSetsHasSingleAspectRatioAttribute($expected, $imgWidth, $imgHeight, $sourceWidth, $sourceHeight)
@@ -423,12 +430,24 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator
             ->method('generate')
-            ->willReturnCallback(static function(ImageInterface $image, PictureConfigurationInterface $config) use($imageMock, $imgWidth, $imgHeight, $sourceWidth, $sourceHeight) {
-                return new Picture(
-                    ['src' => $imageMock, 'srcset' => [[$imageMock]], 'width' => $imgWidth, 'height' => $imgHeight],
-                    [['src' => $imageMock, 'srcset' => [[$imageMock]], 'width' => $sourceWidth, 'height' => $sourceHeight]]
-                );
-            })
+            ->willReturnCallback(
+                static function (ImageInterface $image, PictureConfigurationInterface $config) use ($imageMock, $imgWidth, $imgHeight, $sourceWidth, $sourceHeight) {
+                    return new Picture(
+                        [
+                            'src' => $imageMock,
+                            'srcset' => [[$imageMock]],
+                            'width' => $imgWidth,
+                            'height' => $imgHeight,
+                        ],
+                        [[
+                            'src' => $imageMock,
+                            'srcset' => [[$imageMock]],
+                            'width' => $sourceWidth,
+                            'height' => $sourceHeight,
+                        ]]
+                    );
+                }
+            )
         ;
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator);
