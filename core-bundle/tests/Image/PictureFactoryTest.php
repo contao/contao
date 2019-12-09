@@ -23,7 +23,6 @@ use Contao\Image\PictureConfigurationInterface;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\PictureGenerator;
 use Contao\Image\PictureGeneratorInterface;
-use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeConfigurationInterface;
 use Contao\ImageSizeItemModel;
@@ -220,7 +219,7 @@ class PictureFactoryTest extends TestCase
         ;
 
         $imageMock = $this->createMock(ImageInterface::class);
-        $pictureMock = $this->createMock(PictureInterface::class);
+        $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
 
         $pictureGenerator
@@ -247,7 +246,7 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator);
         $picture = $pictureFactory->create($imageMock, $pictureConfig);
 
-        $this->assertSame($pictureMock, $picture);
+        $this->assertSame($imageMock, $picture->getImg()['src']);
     }
 
     /**
@@ -257,7 +256,8 @@ class PictureFactoryTest extends TestCase
     {
         $path = $this->getRootDir().'/images/dummy.jpg';
 
-        $pictureMock = $this->createMock(PictureInterface::class);
+        $imageMock = $this->createMock(ImageInterface::class);
+        $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
 
         $pictureGenerator
@@ -291,7 +291,6 @@ class PictureFactoryTest extends TestCase
             ->willReturn($pictureMock)
         ;
 
-        $imageMock = $this->createMock(ImageInterface::class);
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
 
         $imageFactory
@@ -331,7 +330,7 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, 'left_top']);
 
-        $this->assertSame($pictureMock, $picture);
+        $this->assertSame($imageMock, $picture->getImg()['src']);
     }
 
     /**
@@ -343,7 +342,7 @@ class PictureFactoryTest extends TestCase
         $path = $this->getRootDir().'/images/dummy.jpg';
 
         $imageMock = $this->createMock(ImageInterface::class);
-        $pictureMock = $this->createMock(PictureInterface::class);
+        $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
 
         $pictureGenerator
@@ -403,13 +402,89 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
-        $this->assertSame($pictureMock, $picture);
+        $this->assertSame($imageMock, $picture->getImg()['src']);
 
         $defaultDensities = '1x, 2x';
         $pictureFactory->setDefaultDensities($defaultDensities);
         $picture = $pictureFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
-        $this->assertSame($pictureMock, $picture);
+        $this->assertSame($imageMock, $picture->getImg()['src']);
+    }
+
+    /**
+     * Tests that the set has a single aspect ratio attribute.
+     *
+     * @param boolean $expected
+     * @param integer $imgWidth
+     * @param integer $imgHeight
+     * @param integer $sourceWidth
+     * @param integer $sourceHeight
+     *
+     * @dataProvider getAspectRatios
+     */
+    public function testSetsHasSingleAspectRatioAttribute($expected, $imgWidth, $imgHeight, $sourceWidth, $sourceHeight)
+    {
+        $imageMock = $this->createMock(ImageInterface::class);
+        $pictureConfig = $this->createMock(PictureConfigurationInterface::class);
+        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
+
+        $pictureGenerator
+            ->method('generate')
+            ->willReturnCallback(
+                static function (ImageInterface $image, PictureConfigurationInterface $config) use ($imageMock, $imgWidth, $imgHeight, $sourceWidth, $sourceHeight) {
+                    return new Picture(
+                        [
+                            'src' => $imageMock,
+                            'srcset' => [[$imageMock]],
+                            'width' => $imgWidth,
+                            'height' => $imgHeight,
+                        ],
+                        [[
+                            'src' => $imageMock,
+                            'srcset' => [[$imageMock]],
+                            'width' => $sourceWidth,
+                            'height' => $sourceHeight,
+                        ]]
+                    );
+                }
+            )
+        ;
+
+        $pictureFactory = $this->getPictureFactory($pictureGenerator);
+        $picture = $pictureFactory->create($imageMock, $pictureConfig);
+
+        $this->assertSame($expected, $picture->getImg()['hasSingleAspectRatio']);
+    }
+
+    /**
+     * Provides the data for the testSetsHasSingleAspectRatioAttribute() method.
+     *
+     * @return array
+     */
+    public function getAspectRatios()
+    {
+        return [
+            [true, 100, 100, 50, 50],
+            [true, 100, 100, 101, 100],
+            [true, 100, 100, 100, 101],
+            [true, 100, 100, 105, 100],
+            [true, 100, 100, 100, 105],
+            [true, 100, 10, 105, 10],
+            [true, 10, 100, 10, 105],
+            [true, 100, 10, 95, 10],
+            [true, 10, 100, 10, 95],
+            [true, 100, 20, 100, 21],
+            [true, 20, 100, 21, 100],
+            [false, 100, 100, 100, 50],
+            [false, 100, 100, 106, 100],
+            [false, 100, 100, 100, 106],
+            [false, 100, 100, 94, 100],
+            [false, 100, 100, 100, 94],
+            [false, 100, 10, 106, 10],
+            [false, 10, 100, 10, 106],
+            [false, 100, 20, 100, 22],
+            [false, 20, 100, 22, 100],
+        ];
     }
 
     /**
