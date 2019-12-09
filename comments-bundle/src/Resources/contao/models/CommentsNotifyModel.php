@@ -68,7 +68,6 @@ use Contao\Model\Collection;
  */
 class CommentsNotifyModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

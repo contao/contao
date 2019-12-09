@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrontendIndex extends Frontend
 {
-
 	/**
 	 * Initialize the object
 	 */
@@ -161,6 +160,7 @@ class FrontendIndex extends Frontend
 		if ($objPage instanceof Collection && $objPage->count() > 1)
 		{
 			$this->log('More than one page matches ' . Environment::get('base') . Environment::get('request'), __METHOD__, TL_ERROR);
+
 			throw new \LogicException('More than one page found: ' . Environment::get('uri'));
 		}
 
@@ -244,20 +244,17 @@ class FrontendIndex extends Frontend
 		}
 
 		// Check wether the language matches the root page language
-		if (Config::get('addLanguageToUrl') && isset($_GET['language']) && Input::get('language') != $objPage->rootLanguage)
+		if (isset($_GET['language']) && Config::get('addLanguageToUrl') && Input::get('language') != $objPage->rootLanguage)
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Check whether there are domain name restrictions
-		if ($objPage->domain != '')
+		if ($objPage->domain != '' && $objPage->domain != Environment::get('host'))
 		{
-			// Load an error 404 page object
-			if ($objPage->domain != Environment::get('host'))
-			{
-				$this->log('Page ID "' . $objPage->id . '" was requested via "' . Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . Environment::get('base') . Environment::get('request') . ')', __METHOD__, TL_ERROR);
-				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-			}
+			$this->log('Page ID "' . $objPage->id . '" was requested via "' . Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . Environment::get('base') . Environment::get('request') . ')', __METHOD__, TL_ERROR);
+
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Authenticate the user if the page is protected
@@ -282,6 +279,7 @@ class FrontendIndex extends Frontend
 			if (empty($arrGroups) || !\is_array($arrGroups) || !\is_array($this->User->groups) || !\count(array_intersect($arrGroups, $this->User->groups)))
 			{
 				$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
+
 				throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
 			}
 		}
@@ -302,21 +300,18 @@ class FrontendIndex extends Frontend
 
 					/** @var PageError401 $objHandler */
 					return $objHandler->getResponse($objPage->rootId);
-					break;
 
 				case 'error_403':
 					$objHandler = new $GLOBALS['TL_PTY']['error_403']();
 
 					/** @var PageError403 $objHandler */
 					return $objHandler->getResponse($objPage->rootId);
-					break;
 
 				case 'error_404':
 					$objHandler = new $GLOBALS['TL_PTY']['error_404']();
 
 					/** @var PageError404 $objHandler */
 					return $objHandler->getResponse();
-					break;
 
 				default:
 					$objHandler = new $GLOBALS['TL_PTY'][$objPage->type]();
@@ -342,7 +337,6 @@ class FrontendIndex extends Frontend
 
 					/** @var PageRegular $objHandler */
 					return $objHandler->getResponse($objPage, true);
-					break;
 			}
 		}
 

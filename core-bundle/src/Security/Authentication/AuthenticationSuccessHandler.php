@@ -23,6 +23,7 @@ use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
@@ -48,6 +49,9 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     private $user;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.security.authentication_success_handler" service instead
+     */
     public function __construct(HttpUtils $httpUtils, ContaoFramework $framework, LoggerInterface $logger = null)
     {
         parent::__construct($httpUtils);
@@ -58,14 +62,16 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 
     /**
      * Redirects the authenticated user.
+     *
+     * @return RedirectResponse
      */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token): RedirectResponse
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
         if ($token instanceof TwoFactorTokenInterface) {
             $response = $this->httpUtils->createRedirectResponse(
                 $request,
-                $request->request->get('_failure_path') ?: 'contao_root')
-            ;
+                $request->request->get('_failure_path') ?: 'contao_root'
+            );
 
             $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $response->getTargetUrl());
 

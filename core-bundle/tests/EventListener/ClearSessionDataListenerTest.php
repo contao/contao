@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -39,7 +39,7 @@ class ClearSessionDataListenerTest extends TestCase
         $request = new Request();
         $request->setSession($session);
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
@@ -111,7 +111,7 @@ class ClearSessionDataListenerTest extends TestCase
             ->method('isMethod')
         ;
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::SUB_REQUEST,
@@ -134,7 +134,7 @@ class ClearSessionDataListenerTest extends TestCase
         $request->setSession($session);
         $request->setMethod('POST');
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
@@ -157,7 +157,7 @@ class ClearSessionDataListenerTest extends TestCase
         $request = new Request();
         $request->setSession($session);
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,
@@ -184,7 +184,7 @@ class ClearSessionDataListenerTest extends TestCase
         $request = new Request();
         $request->setSession($session);
 
-        $event = new FilterResponseEvent(
+        $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST,

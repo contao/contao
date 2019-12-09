@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Security\User;
 
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
@@ -208,6 +207,35 @@ class ContaoUserProviderTest extends TestCase
         $this->getProvider(null, 'LdapUser');
     }
 
+    public function testUpgradesPasswords(): void
+    {
+        /** @var BackendUser&MockObject $user */
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->username = 'foobar';
+        $user->password = 'superhash';
+
+        $user
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        $userProvider = $this->getProvider(null, BackendUser::class);
+        $userProvider->upgradePassword($user, 'newsuperhash');
+
+        $this->assertSame('newsuperhash', $user->password);
+    }
+
+    public function testFailsToUpgradePasswordsOfUnsupportedUsers(): void
+    {
+        $user = $this->createMock(UserInterface::class);
+        $provider = $this->getProvider();
+
+        $this->expectException(UnsupportedUserException::class);
+        $this->expectExceptionMessage(sprintf('Unsupported class "%s".', \get_class($user)));
+
+        $provider->upgradePassword($user, 'newsuperhash');
+    }
+
     /**
      * @group legacy
      *
@@ -219,19 +247,12 @@ class ContaoUserProviderTest extends TestCase
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
-        $listener = $this->createPartialMock(Controller::class, ['onPostAuthenticate']);
-        $listener
-            ->expects($this->once())
-            ->method('onPostAuthenticate')
-            ->with($user)
-        ;
-
         $systemAdapter = $this->mockAdapter(['importStatic']);
         $systemAdapter
             ->expects($this->once())
             ->method('importStatic')
-            ->with('HookListener')
-            ->willReturn($listener)
+            ->with(static::class)
+            ->willReturn($this)
         ;
 
         $framework = $this->mockContaoFramework([
@@ -244,13 +265,18 @@ class ContaoUserProviderTest extends TestCase
             ->method('initialize')
         ;
 
-        $GLOBALS['TL_HOOKS']['postAuthenticate'] = [['HookListener', 'onPostAuthenticate']];
+        $GLOBALS['TL_HOOKS']['postAuthenticate'][] = [static::class, 'onPostAuthenticate'];
 
         $provider = $this->getProvider($framework);
 
         $this->assertSame($user, $provider->refreshUser($user));
 
         unset($GLOBALS['TL_HOOKS']);
+    }
+
+    public function onPostAuthenticate(): void
+    {
+        // Dummy method to test the postAuthenticate hook
     }
 
     /**

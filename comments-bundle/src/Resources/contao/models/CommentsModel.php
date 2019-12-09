@@ -96,7 +96,6 @@ use Contao\Model\Collection;
  */
 class CommentsModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

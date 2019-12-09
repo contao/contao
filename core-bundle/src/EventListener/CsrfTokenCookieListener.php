@@ -18,9 +18,12 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
+/**
+ * @internal
+ */
 class CsrfTokenCookieListener
 {
     /**
@@ -42,7 +45,7 @@ class CsrfTokenCookieListener
     /**
      * Reads the cookies from the request and injects them into the storage.
      */
-    public function onKernelRequest(GetResponseEvent $event): void
+    public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMasterRequest()) {
             return;
@@ -54,7 +57,7 @@ class CsrfTokenCookieListener
     /**
      * Adds the token cookies to the response.
      */
-    public function onKernelResponse(FilterResponseEvent $event): void
+    public function onKernelResponse(ResponseEvent $event): void
     {
         if (!$event->isMasterRequest()) {
             return;
@@ -67,6 +70,7 @@ class CsrfTokenCookieListener
             $this->setCookies($request, $response);
         } else {
             $this->removeCookies($request, $response);
+            $this->replaceTokenOccurrences($response);
         }
     }
 
@@ -112,6 +116,22 @@ class CsrfTokenCookieListener
                 new Cookie($cookieKey, $value, $expires, $basePath, null, $isSecure, true, false, Cookie::SAMESITE_LAX)
             );
         }
+    }
+
+    private function replaceTokenOccurrences(Response $response): void
+    {
+        // Return if the response is not a HTML document
+        if (false === stripos((string) $response->headers->get('Content-Type'), 'text/html')) {
+            return;
+        }
+
+        $content = $response->getContent();
+
+        foreach ($this->tokenStorage->getUsedTokens() as $value) {
+            $content = str_replace($value, '', $content);
+        }
+
+        $response->setContent($content);
     }
 
     private function removeCookies(Request $request, Response $response): void

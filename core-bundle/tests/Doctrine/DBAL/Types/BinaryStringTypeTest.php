@@ -52,7 +52,7 @@ class BinaryStringTypeTest extends TestCase
         /** @var AbstractPlatform&MockObject $platform */
         $platform = $this
             ->getMockBuilder(AbstractPlatform::class)
-            ->setMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
+            ->onlyMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
             ->getMockForAbstractClass()
         ;
 
@@ -77,7 +77,7 @@ class BinaryStringTypeTest extends TestCase
         /** @var AbstractPlatform&MockObject $platform */
         $platform = $this
             ->getMockBuilder(AbstractPlatform::class)
-            ->setMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
+            ->onlyMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
             ->getMockForAbstractClass()
         ;
 

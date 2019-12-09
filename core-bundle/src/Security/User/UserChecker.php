@@ -29,6 +29,9 @@ class UserChecker implements UserCheckerInterface
      */
     private $framework;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.security.user_checker" service instead
+     */
     public function __construct(ContaoFramework $framework)
     {
         $this->framework = $framework;
@@ -116,7 +119,7 @@ class UserChecker implements UserCheckerInterface
         $stop = (int) $user->stop;
         $time = Date::floorToMinute(time());
         $notActiveYet = $start && $start > $time;
-        $notActiveAnymore = $stop && $stop <= ($time + 60);
+        $notActiveAnymore = $stop && $stop <= $time + 60;
         $logMessage = '';
 
         if ($notActiveYet) {

@@ -270,11 +270,9 @@ class FragmentHandlerTest extends TestCase
     }
 
     /**
-     * @param object $service
-     *
      * @return ServiceLocator&MockObject
      */
-    private function mockServiceLocator(string $name, $service): ServiceLocator
+    private function mockServiceLocator(string $name, object $service): ServiceLocator
     {
         $serviceLocator = $this->createMock(ServiceLocator::class);
         $serviceLocator

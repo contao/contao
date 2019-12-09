@@ -53,7 +53,7 @@ class BackendMenuBuilderTest extends TestCase
         $this->eventDispatcher
             ->expects($this->atLeastOnce())
             ->method('dispatch')
-            ->with(ContaoCoreEvents::BACKEND_MENU_BUILD, $this->isInstanceOf(MenuEvent::class))
+            ->with($this->isInstanceOf(MenuEvent::class), ContaoCoreEvents::BACKEND_MENU_BUILD)
         ;
 
         $this->builder->create();

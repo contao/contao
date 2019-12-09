@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ModuleMaintenance extends BackendModule
 {
-
 	/**
 	 * Template
 	 * @var string

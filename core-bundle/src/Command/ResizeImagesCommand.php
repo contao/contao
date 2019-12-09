@@ -17,19 +17,24 @@ use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredImageStorageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ResizerInterface;
+use Patchwork\Utf8;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Terminal;
+use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 /**
  * Resize deferred images that have not been processed yet.
+ *
+ * @internal
  */
 class ResizeImagesCommand extends Command
 {
@@ -116,8 +121,10 @@ class ResizeImagesCommand extends Command
             throw new InvalidArgumentException(sprintf('Concurrent value "%s" is invalid.', $concurrent));
         }
 
+        $io = new SymfonyStyle($input, $output);
+
         if ($concurrent > 1) {
-            return $this->executeConcurrent($concurrent, $input, $output);
+            return $this->executeConcurrent($concurrent, $io);
         }
 
         $startTime = microtime(true);
@@ -129,22 +136,22 @@ class ResizeImagesCommand extends Command
             $sleep = (1 - $throttle) / $throttle * $lastDuration;
 
             if ($timeLimit && microtime(true) - $startTime + $maxDuration + $sleep > $timeLimit) {
-                $output->writeln("\n".'Time limit of '.$timeLimit.' seconds reached.');
+                $io->writeln("\n".'Time limit of '.$timeLimit.' seconds reached.');
 
                 return 0;
             }
 
             usleep((int) ($sleep * 1000000));
 
-            $maxDuration = max($maxDuration, $lastDuration = $this->resizeImage($path, $output));
+            $maxDuration = max($maxDuration, $lastDuration = $this->resizeImage($path, $io));
         }
 
-        $output->writeln("\n".'All images resized.');
+        $io->writeln("\n".'All images resized.');
 
         return 0;
     }
 
-    private function resizeImage(string $path, OutputInterface $output): float
+    private function resizeImage(string $path, SymfonyStyle $io): float
     {
         $startTime = microtime(true);
 
@@ -152,7 +159,7 @@ class ResizeImagesCommand extends Command
             return 0;
         }
 
-        $output->write(str_pad($path, $this->terminalWidth - 14, '.').' ');
+        $io->write(str_pad($path, $this->terminalWidth + \strlen($path) - Utf8::strlen($path) - 13, '.').' ');
 
         try {
             $image = $this->imageFactory->create($this->targetDir.'/'.$path);
@@ -163,29 +170,35 @@ class ResizeImagesCommand extends Command
 
                 if (null === $resizedImage) {
                     // Clear the current output line
-                    $output->write("\r".str_repeat(' ', $this->terminalWidth)."\r");
+                    $io->write("\r".str_repeat(' ', $this->terminalWidth)."\r");
                 } else {
-                    $output->writeln(sprintf('done%7.3Fs', $duration = microtime(true) - $startTime));
+                    $duration = microtime(true) - $startTime;
+                    $io->writeln(sprintf('done%7.3Fs', $duration));
 
                     return $duration;
                 }
             } else {
                 // Clear the current output line
-                $output->write("\r".str_repeat(' ', $this->terminalWidth)."\r");
+                $io->write("\r".str_repeat(' ', $this->terminalWidth)."\r");
             }
         } catch (\Throwable $exception) {
-            $output->writeln('failed');
-            $output->writeln($exception->getMessage());
+            $io->writeln('failed');
+
+            if ($io->isVerbose()) {
+                $io->error(FlattenException::createFromThrowable($exception)->getAsString());
+            } else {
+                $io->writeln($exception->getMessage());
+            }
         }
 
         return 0;
     }
 
-    private function executeConcurrent(int $count, InputInterface $input, OutputInterface $output): int
+    private function executeConcurrent(int $count, SymfonyStyle $io): int
     {
         $phpFinder = new PhpExecutableFinder();
 
-        $output->writeln('Starting '.$count.' concurrent processes...');
+        $io->writeln('Starting '.$count.' concurrent processes...');
 
         if (false === ($phpPath = $phpFinder->find())) {
             throw new \RuntimeException('The php executable could not be found.');
@@ -201,7 +214,7 @@ class ResizeImagesCommand extends Command
             $process = new Process(array_merge(
                 [$phpPath],
                 $_SERVER['argv'],
-                ['--concurrent=1', $output->isDecorated() ? '--ansi' : '--no-ansi']
+                ['--concurrent=1', $io->isDecorated() ? '--ansi' : '--no-ansi']
             ));
 
             $process->setTimeout(null);
@@ -230,7 +243,7 @@ class ResizeImagesCommand extends Command
                 $buffers[$index] = array_pop($rows);
 
                 // Write remaining rows to the output with thread prefix
-                $output->write(array_map(
+                $io->write(array_map(
                     static function ($row) use ($index) {
                         return sprintf('%02d: ', $index + 1).preg_replace('/^.*\r/s', '', $row)."\n";
                     },
@@ -241,9 +254,9 @@ class ResizeImagesCommand extends Command
             usleep(15000);
         } while ($isRunning);
 
-        $output->write($buffers);
+        $io->write($buffers);
 
-        $output->write(array_map(
+        $io->write(array_map(
             static function (Process $process): string {
                 return $process->getErrorOutput();
             },

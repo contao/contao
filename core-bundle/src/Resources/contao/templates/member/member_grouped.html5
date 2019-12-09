@@ -16,14 +16,12 @@
       <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
 
       <?php foreach ($this->categories as $legend => $category): ?>
-        <?php if (!empty($category)): ?>
-          <fieldset>
-            <?php if ($legend): ?>
-              <legend><?= $legend ?></legend>
-            <?php endif; ?>
-            <?= implode('', $category) ?>
-          </fieldset>
-        <?php endif; ?>
+        <fieldset>
+          <?php if ($legend): ?>
+            <legend><?= $legend ?></legend>
+          <?php endif; ?>
+          <?= implode('', $category) ?>
+        </fieldset>
       <?php endforeach; ?>
 
       <div class="widget widget-submit">

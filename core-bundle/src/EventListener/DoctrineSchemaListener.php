@@ -19,6 +19,9 @@ use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 
+/**
+ * @internal
+ */
 class DoctrineSchemaListener
 {
     /**

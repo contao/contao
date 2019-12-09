@@ -20,7 +20,6 @@ use Patchwork\Utf8;
  */
 class ModuleRssReader extends Module
 {
-
 	/**
 	 * RSS feed
 	 * @var \SimplePie

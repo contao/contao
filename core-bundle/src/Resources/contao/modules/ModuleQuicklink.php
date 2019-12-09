@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleQuicklink extends Module
 {
-
 	/**
 	 * Template
 	 * @var string

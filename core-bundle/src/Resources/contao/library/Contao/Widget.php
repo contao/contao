@@ -84,7 +84,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @property string        $slabel            The submit button label
  * @property boolean       $preserveTags      Preserve HTML tags
  * @property boolean       $decodeEntities    Decode HTML entities
- * @property boolean       useRawRequestData  Use the raw request data from the Symfony request
+ * @property boolean       $useRawRequestData Use the raw request data from the Symfony request
  * @property integer       $minlength         The minimum length
  * @property integer       $maxlength         The maximum length
  * @property integer       $minval            The minimum value
@@ -363,15 +363,12 @@ abstract class Widget extends Controller
 		{
 			case 'id':
 				return $this->strId;
-				break;
 
 			case 'name':
 				return $this->strName;
-				break;
 
 			case 'label':
 				return $this->strLabel;
-				break;
 
 			case 'value':
 				// Encrypt the value
@@ -386,39 +383,30 @@ abstract class Widget extends Controller
 				}
 
 				return $this->varValue;
-				break;
 
 			case 'class':
 				return $this->strClass;
-				break;
 
 			case 'prefix':
 				return $this->strPrefix;
-				break;
 
 			case 'template':
 				return $this->strTemplate;
-				break;
 
 			case 'wizard':
 				return $this->strWizard;
-				break;
 
 			case 'required':
 				return $this->arrConfiguration[$strKey];
-				break;
 
 			case 'forAttribute':
 				return $this->blnForAttribute;
-				break;
 
 			case 'dataContainer':
 				return $this->objDca;
-				break;
 
 			case 'activeRecord':
 				return $this->objDca->activeRecord;
-				break;
 
 			default:
 				if (isset($this->arrAttributes[$strKey]))
@@ -449,51 +437,39 @@ abstract class Widget extends Controller
 		{
 			case 'id':
 				return isset($this->strId);
-				break;
 
 			case 'name':
 				return isset($this->strName);
-				break;
 
 			case 'label':
 				return isset($this->strLabel);
-				break;
 
 			case 'value':
 				return isset($this->varValue);
-				break;
 
 			case 'class':
 				return isset($this->strClass);
-				break;
 
 			case 'template':
 				return isset($this->strTemplate);
-				break;
 
 			case 'wizard':
 				return isset($this->strWizard);
-				break;
 
 			case 'required':
 				return isset($this->arrConfiguration[$strKey]);
-				break;
 
 			case 'forAttribute':
 				return isset($this->blnForAttribute);
-				break;
 
 			case 'dataContainer':
 				return isset($this->objDca);
-				break;
 
 			case 'activeRecord':
 				return isset($this->objDca->activeRecord);
-				break;
 
 			default:
 				return isset($this->arrAttributes[$strKey]) || isset($this->arrConfiguration[$strKey]);
-				break;
 		}
 	}
 
@@ -640,12 +616,14 @@ abstract class Widget extends Controller
 			return '';
 		}
 
-		return sprintf('<label%s%s>%s%s%s</label>',
-						($this->blnForAttribute ? ' for="ctrl_' . $this->strId . '"' : ''),
-						(($this->strClass != '') ? ' class="' . $this->strClass . '"' : ''),
-						($this->mandatory ? '<span class="invisible">'.$GLOBALS['TL_LANG']['MSC']['mandatory'].' </span>' : ''),
-						$this->strLabel,
-						($this->mandatory ? '<span class="mandatory">*</span>' : ''));
+		return sprintf(
+			'<label%s%s>%s%s%s</label>',
+			($this->blnForAttribute ? ' for="ctrl_' . $this->strId . '"' : ''),
+			(($this->strClass != '') ? ' class="' . $this->strClass . '"' : ''),
+			($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
+			$this->strLabel,
+			($this->mandatory ? '<span class="mandatory">*</span>' : '')
+		);
 	}
 
 	/**
@@ -867,8 +845,8 @@ abstract class Widget extends Controller
 		{
 			switch ($this->rgxp)
 			{
-				// Special validation rule for style sheets
 				case strncmp($this->rgxp, 'digit_', 6) === 0:
+					// Special validation rule for style sheets
 					$textual = explode('_', $this->rgxp);
 					array_shift($textual);
 
@@ -878,20 +856,19 @@ abstract class Widget extends Controller
 					}
 					// no break
 
-				// Numeric characters (including full stop [.] and minus [-])
 				case 'digit':
 					// Support decimal commas and convert them automatically (see #3488)
 					if (substr_count($varInput, ',') == 1 && strpos($varInput, '.') === false)
 					{
 						$varInput = str_replace(',', '.', $varInput);
 					}
+
 					if (!Validator::isNumeric($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['digit'], $this->strLabel));
 					}
 					break;
 
-				// Natural numbers (positive integers)
 				case 'natural':
 					if (!Validator::isNatural($varInput))
 					{
@@ -899,7 +876,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Alphabetic characters (including full stop [.] minus [-] and space [ ])
 				case 'alpha':
 					if (!Validator::isAlphabetic($varInput))
 					{
@@ -907,7 +883,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Alphanumeric characters (including full stop [.] minus [-], underscore [_] and space [ ])
 				case 'alnum':
 					if (!Validator::isAlphanumeric($varInput))
 					{
@@ -915,7 +890,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Do not allow any characters that are usually encoded by class Input ([#<>()\=])
 				case 'extnd':
 					if (!Validator::isExtendedAlphanumeric(html_entity_decode($varInput)))
 					{
@@ -923,7 +897,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Check whether the current value is a valid date format
 				case 'date':
 					if (!Validator::isDate($varInput))
 					{
@@ -943,7 +916,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Check whether the current value is a valid time format
 				case 'time':
 					if (!Validator::isTime($varInput))
 					{
@@ -951,7 +923,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Check whether the current value is a valid date and time format
 				case 'datim':
 					if (!Validator::isDatim($varInput))
 					{
@@ -971,25 +942,24 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Check whether the current value is a valid friendly name e-mail address
 				case 'friendly':
 					list ($strName, $varInput) = StringUtil::splitFriendlyEmail($varInput);
 					// no break
 
-				// Check whether the current value is a valid e-mail address
 				case 'email':
 					if (!Validator::isEmail($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['email'], $this->strLabel));
 					}
+
 					if ($this->rgxp == 'friendly' && !empty($strName))
 					{
 						$varInput = $strName . ' [' . $varInput . ']';
 					}
 					break;
 
-				// Check whether the current value is list of valid e-mail addresses
 				case 'emails':
+					// Check whether the current value is list of valid e-mail addresses
 					$arrEmails = StringUtil::trimsplit(',', $varInput);
 
 					foreach ($arrEmails as $strEmail)
@@ -1004,7 +974,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Check whether the current value is a valid URL
 				case 'url':
 					if (!Validator::isUrl($varInput))
 					{
@@ -1012,7 +981,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Check whether the current value is a valid alias
 				case 'alias':
 					if (!Validator::isAlias($varInput))
 					{
@@ -1020,7 +988,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Check whether the current value is a valid folder URL alias
 				case 'folderalias':
 					if (!Validator::isFolderAlias($varInput))
 					{
@@ -1028,7 +995,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Phone numbers (numeric characters, space [ ], plus [+], minus [-], parentheses [()] and slash [/])
 				case 'phone':
 					if (!Validator::isPhone(html_entity_decode($varInput)))
 					{
@@ -1036,7 +1002,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Check whether the current value is a percent value
 				case 'prcnt':
 					if (!Validator::isPercent($varInput))
 					{
@@ -1044,7 +1009,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Check whether the current value is a locale
 				case 'locale':
 					if (!Validator::isLocale($varInput))
 					{
@@ -1052,7 +1016,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Check whether the current value is a language code
 				case 'language':
 					if (!Validator::isLanguage($varInput))
 					{
@@ -1060,7 +1023,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Check whether the current value is a Google+ ID or vanity name
 				case 'google+':
 					if (!Validator::isGooglePlusId($varInput))
 					{
@@ -1068,7 +1030,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				// Check whether the current value is a field name
 				case 'fieldname':
 					if (!Validator::isFieldName($varInput))
 					{
@@ -1288,11 +1249,11 @@ abstract class Widget extends Controller
 		{
 			if ($arrData['inputType'] == 'checkbox' || $arrData['inputType'] == 'checkboxWizard' || $arrData['inputType'] == 'radio' || $arrData['inputType'] == 'radioTable')
 			{
-				$arrAttributes['onclick'] = trim($arrAttributes['onclick'] . " Backend.autoSubmit('".$strTable."')");
+				$arrAttributes['onclick'] = trim($arrAttributes['onclick'] . " Backend.autoSubmit('" . $strTable . "')");
 			}
 			else
 			{
-				$arrAttributes['onchange'] = trim($arrAttributes['onchange'] . " Backend.autoSubmit('".$strTable."')");
+				$arrAttributes['onchange'] = trim($arrAttributes['onchange'] . " Backend.autoSubmit('" . $strTable . "')");
 			}
 		}
 
@@ -1305,9 +1266,9 @@ abstract class Widget extends Controller
 		}
 
 		// Add Ajax event
-		if ($arrData['inputType'] == 'checkbox' && \is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && \array_key_exists($strField, $GLOBALS['TL_DCA'][$strTable]['subpalettes']) && $arrData['eval']['submitOnChange'])
+		if ($arrData['inputType'] == 'checkbox' && $arrData['eval']['submitOnChange'] && \is_array($GLOBALS['TL_DCA'][$strTable]['subpalettes']) && \array_key_exists($strField, $GLOBALS['TL_DCA'][$strTable]['subpalettes']))
 		{
-			$arrAttributes['onclick'] = "AjaxRequest.toggleSubpalette(this, 'sub_".$strName."', '".$strField."')";
+			$arrAttributes['onclick'] = "AjaxRequest.toggleSubpalette(this, 'sub_" . $strName . "', '" . $strField . "')";
 		}
 
 		// Options callback
@@ -1379,12 +1340,12 @@ abstract class Widget extends Controller
 
 		if (\is_array($arrAttributes['sql']) && !isset($arrAttributes['sql']['columnDefinition']))
 		{
-			if (isset($arrAttributes['sql']['length']) && !isset($arrAttributes['maxlength']))
+			if (!isset($arrAttributes['maxlength']) && isset($arrAttributes['sql']['length']))
 			{
 				$arrAttributes['maxlength'] = $arrAttributes['sql']['length'];
 			}
 
-			if (isset($arrAttributes['sql']['customSchemaOptions']['unique']) && !isset($arrAttributes['unique']))
+			if (!isset($arrAttributes['unique']) && isset($arrAttributes['sql']['customSchemaOptions']['unique']))
 			{
 				$arrAttributes['unique'] = $arrAttributes['sql']['customSchemaOptions']['unique'];
 			}

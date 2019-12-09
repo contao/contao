@@ -27,7 +27,6 @@ use Contao\Model\Collection;
  */
 class Dbafs
 {
-
 	/**
 	 * Synchronize the database
 	 * @var array
@@ -60,7 +59,7 @@ class Dbafs
 		$strResource = str_replace(array('\\', '//'), '/', $strResource);
 
 		// The resource does not exist or lies outside the upload directory
-		if ($strResource == '' || strncmp($strResource, $strUploadPath, \strlen($strUploadPath)) !== 0 || !file_exists($rootDir . '/' . $strResource))
+		if ($strResource == '' || !file_exists($rootDir . '/' . $strResource) || strncmp($strResource, $strUploadPath, \strlen($strUploadPath)) !== 0)
 		{
 			throw new \InvalidArgumentException("Invalid resource $strResource");
 		}
@@ -126,7 +125,8 @@ class Dbafs
 						$rootDir . '/' . $strResource,
 						\FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
 					)
-				), \RecursiveIteratorIterator::SELF_FIRST
+				),
+				\RecursiveIteratorIterator::SELF_FIRST
 			);
 
 			// Add the relative path
@@ -290,6 +290,7 @@ class Dbafs
 		{
 			static::updateFolderHashes($strPath);
 		}
+
 		if (($strPath = \dirname($strDestination)) != Config::get('uploadPath'))
 		{
 			static::updateFolderHashes($strPath);
@@ -372,6 +373,7 @@ class Dbafs
 		{
 			static::updateFolderHashes($strPath);
 		}
+
 		if (($strPath = \dirname($strDestination)) != Config::get('uploadPath'))
 		{
 			static::updateFolderHashes($strPath);
@@ -384,8 +386,6 @@ class Dbafs
 	 * Removes a file or folder
 	 *
 	 * @param string $strResource The path to the file or folder
-	 *
-	 * @return null Explicitly return null
 	 */
 	public static function deleteResource($strResource)
 	{
@@ -495,8 +495,9 @@ class Dbafs
 
 		$objDatabase = Database::getInstance();
 
-		// Lock the files table
+		// Begin atomic database access
 		$objDatabase->lockTables(array('tl_files'=>'WRITE'));
+		$objDatabase->beginTransaction();
 
 		// Reset the "found" flag
 		$objDatabase->query("UPDATE tl_files SET found=''");
@@ -510,7 +511,8 @@ class Dbafs
 					$rootDir . '/' . Config::get('uploadPath'),
 					\FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
 				)
-			), \RecursiveIteratorIterator::SELF_FIRST
+			),
+			\RecursiveIteratorIterator::SELF_FIRST
 		);
 
 		$strLog = 'system/tmp/' . md5(uniqid(mt_rand(), true));
@@ -605,26 +607,23 @@ class Dbafs
 					$arrFoldersToHash[] = $strRelpath;
 				}
 			}
+			elseif ($objFile->isDir())
+			{
+				$arrFoldersToCompare[] = $objModel;
+			}
 			else
 			{
-				if ($objFile->isDir())
-				{
-					$arrFoldersToCompare[] = $objModel;
-				}
-				else
-				{
-					// Check whether the MD5 hash has changed
-					$strHash = (new File($strRelpath))->hash;
-					$strType = ($objModel->hash != $strHash) ? 'Changed' : 'Unchanged';
+				// Check whether the MD5 hash has changed
+				$strHash = (new File($strRelpath))->hash;
+				$strType = ($objModel->hash != $strHash) ? 'Changed' : 'Unchanged';
 
-					// Add a log entry
-					$objLog->append("[$strType] $strRelpath");
+				// Add a log entry
+				$objLog->append("[$strType] $strRelpath");
 
-					// Update the record
-					$objModel->found = 1;
-					$objModel->hash  = $strHash;
-					$objModel->save();
-				}
+				// Update the record
+				$objModel->found = 1;
+				$objModel->hash  = $strHash;
+				$objModel->save();
 			}
 		}
 
@@ -748,7 +747,8 @@ class Dbafs
 		// Reset the found flag
 		$objDatabase->query("UPDATE tl_files SET found=1 WHERE found=2");
 
-		// Unlock the tables
+		// Finalize database access
+		$objDatabase->commitTransaction();
 		$objDatabase->unlockTables();
 
 		// Return the path to the log file
@@ -769,7 +769,7 @@ class Dbafs
 
 		$objChildren = Database::getInstance()
 			->prepare("SELECT hash, name FROM tl_files WHERE path LIKE ? AND path NOT LIKE ? ORDER BY name")
-			->execute($strPath.'/%', $strPath.'/%/%')
+			->execute($strPath . '/%', $strPath . '/%/%')
 		;
 
 		if ($objChildren !== null)

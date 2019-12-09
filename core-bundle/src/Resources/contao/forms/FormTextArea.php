@@ -22,10 +22,11 @@ namespace Contao;
  * @property integer $cols
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @todo Rename to FormTextarea in Contao 5.0
  */
 class FormTextArea extends Widget
 {
-
 	/**
 	 * Submit user input
 	 *
@@ -134,19 +135,15 @@ class FormTextArea extends Widget
 		{
 			case 'cols':
 				return $this->intCols;
-				break;
 
 			case 'rows':
 				return $this->intRows;
-				break;
 
 			case 'value':
 				return StringUtil::specialchars(str_replace('\n', "\n", $this->varValue), false, true);
-				break;
 
 			default:
 				return parent::__get($strKey);
-				break;
 		}
 	}
 
@@ -157,14 +154,16 @@ class FormTextArea extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf('<textarea name="%s" id="ctrl_%s" class="textarea%s" rows="%s" cols="%s"%s>%s</textarea>',
-						$this->strName,
-						$this->strId,
-						($this->strClass ? ' ' . $this->strClass : ''),
-						$this->intRows,
-						$this->intCols,
-						$this->getAttributes(),
-						$this->value);
+		return sprintf(
+			'<textarea name="%s" id="ctrl_%s" class="textarea%s" rows="%s" cols="%s"%s>%s</textarea>',
+			$this->strName,
+			$this->strId,
+			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->intRows,
+			$this->intCols,
+			$this->getAttributes(),
+			$this->value
+		);
 	}
 }
 

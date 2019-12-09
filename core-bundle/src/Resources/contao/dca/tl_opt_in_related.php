@@ -10,7 +10,6 @@
 
 $GLOBALS['TL_DCA']['tl_opt_in_related'] = array
 (
-
 	// Config
 	'config' => array
 	(

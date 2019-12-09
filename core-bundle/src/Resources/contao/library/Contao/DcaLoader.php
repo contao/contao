@@ -25,6 +25,10 @@ namespace Contao;
  */
 class DcaLoader extends Controller
 {
+	/**
+	 * @var array
+	 */
+	protected static $arrLoaded = array();
 
 	/**
 	 * Table name
@@ -63,13 +67,24 @@ class DcaLoader extends Controller
 	 */
 	public function load($blnNoCache=false)
 	{
+		$this->loadDcaFiles($blnNoCache);
+		$this->addDefaultLabels($blnNoCache);
+	}
+
+	/**
+	 * Load the DCA files
+	 *
+	 * @param boolean $blnNoCache
+	 */
+	private function loadDcaFiles($blnNoCache)
+	{
 		// Return if the data has been loaded already
-		if (isset($GLOBALS['loadDataContainer'][$this->strTable]) && !$blnNoCache)
+		if (!$blnNoCache && isset(static::$arrLoaded['dcaFiles'][$this->strTable]))
 		{
 			return;
 		}
 
-		$GLOBALS['loadDataContainer'][$this->strTable] = true; // see #6145
+		static::$arrLoaded['dcaFiles'][$this->strTable] = true; // see #6145
 
 		$strCacheDir = System::getContainer()->getParameter('kernel.cache_dir');
 
@@ -95,8 +110,6 @@ class DcaLoader extends Controller
 			}
 		}
 
-		$this->addDefaultLabels();
-
 		// HOOK: allow to load custom settings
 		if (isset($GLOBALS['TL_HOOKS']['loadDataContainer']) && \is_array($GLOBALS['TL_HOOKS']['loadDataContainer']))
 		{
@@ -118,10 +131,26 @@ class DcaLoader extends Controller
 	}
 
 	/**
-	 * Adds the default labels (see #509)
+	 * Add the default labels (see #509)
+	 *
+	 * @param boolean $blnNoCache
 	 */
-	private function addDefaultLabels()
+	private function addDefaultLabels($blnNoCache)
 	{
+		// Return if there are no labels
+		if (!isset($GLOBALS['TL_LANG'][$this->strTable]))
+		{
+			return;
+		}
+
+		// Return if the labels have been added already
+		if (!$blnNoCache && isset(static::$arrLoaded['languageFiles'][$this->strTable]))
+		{
+			return;
+		}
+
+		static::$arrLoaded['languageFiles'][$this->strTable] = true;
+
 		// Operations
 		foreach (array('global_operations', 'operations') as $key)
 		{

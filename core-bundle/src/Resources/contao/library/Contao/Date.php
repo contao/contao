@@ -42,7 +42,6 @@ namespace Contao;
  */
 class Date
 {
-
 	/**
 	 * Date string
 	 * @var int
@@ -92,59 +91,48 @@ class Date
 			case 'tstamp':
 			case 'timestamp':
 				return $this->strDate;
-				break;
 
 			case 'date':
 				return static::parse(static::getNumericDateFormat(), $this->strDate);
-				break;
 
 			case 'time':
 				return static::parse(static::getNumericTimeFormat(), $this->strDate);
-				break;
 
 			case 'datim':
 				return static::parse(static::getNumericDatimFormat(), $this->strDate);
-				break;
 
 			case 'dayBegin':
 				$this->createDateRanges();
 
 				return $this->arrRange['day']['begin'];
-				break;
 
 			case 'dayEnd':
 				$this->createDateRanges();
 
 				return $this->arrRange['day']['end'];
-				break;
 
 			case 'monthBegin':
 				$this->createDateRanges();
 
 				return $this->arrRange['month']['begin'];
-				break;
 
 			case 'monthEnd':
 				$this->createDateRanges();
 
 				return $this->arrRange['month']['end'];
-				break;
 
 			case 'yearBegin':
 				$this->createDateRanges();
 
 				return $this->arrRange['year']['begin'];
-				break;
 
 			case 'yearEnd':
 				$this->createDateRanges();
 
 				return $this->arrRange['year']['end'];
-				break;
 
 			case 'format':
 				return $this->strFormat;
-				break;
 		}
 
 		return null;
@@ -224,7 +212,9 @@ class Date
 			throw new \Exception(sprintf('Invalid date format "%s"', $strFormat));
 		}
 
-		return preg_replace_callback('/[a-zA-Z]/', static function ($matches)
+		return preg_replace_callback(
+			'/[a-zA-Z]/',
+			static function ($matches)
 			{
 				// Thanks to Christian Labuda
 				$arrRegexp = array
@@ -246,7 +236,9 @@ class Date
 				);
 
 				return $arrRegexp[$matches[0]] ?? $matches[0];
-			}, preg_quote($strFormat));
+			},
+			preg_quote($strFormat)
+		);
 	}
 
 	/**
@@ -543,15 +535,12 @@ class Date
 		{
 			case 'date':
 				return static::getNumericDateFormat();
-				break;
 
 			case 'time':
 				return static::getNumericTimeFormat();
-				break;
 
 			case 'datim':
 				return static::getNumericDatimFormat();
-				break;
 		}
 
 		return null;

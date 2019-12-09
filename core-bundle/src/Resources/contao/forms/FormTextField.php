@@ -24,10 +24,11 @@ namespace Contao;
  * @property boolean $hideInput
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @todo Rename to FormText in Contao 5.0
  */
 class FormTextField extends Widget
 {
-
 	/**
 	 * Submit user input
 	 *
@@ -46,6 +47,8 @@ class FormTextField extends Widget
 	 * Template
 	 *
 	 * @var string
+	 *
+	 * @todo Rename to form_text in Contao 5.0
 	 */
 	protected $strTemplate = 'form_textfield';
 
@@ -67,14 +70,14 @@ class FormTextField extends Widget
 		switch ($strKey)
 		{
 			case 'minlength':
-				if ($varValue > 0)
+				if ($varValue > 0 && $this->rgxp != 'digit')
 				{
 					$this->arrAttributes['minlength'] =  $varValue;
 				}
 				break;
 
 			case 'maxlength':
-				if ($varValue > 0)
+				if ($varValue > 0 && $this->rgxp != 'digit')
 				{
 					$this->arrAttributes['maxlength'] =  $varValue;
 				}
@@ -94,12 +97,18 @@ class FormTextField extends Widget
 
 			case 'min':
 			case 'minval':
-				$this->arrAttributes['min'] = $varValue;
+				if ($this->rgxp == 'digit')
+				{
+					$this->arrAttributes['min'] = $varValue;
+				}
 				break;
 
 			case 'max':
 			case 'maxval':
-				$this->arrAttributes['max'] = $varValue;
+				if ($this->rgxp == 'digit')
+				{
+					$this->arrAttributes['max'] = $varValue;
+				}
 				break;
 
 			case 'step':
@@ -166,27 +175,21 @@ class FormTextField extends Widget
 
 					case 'natural':
 						return 'number';
-						break;
 
 					case 'phone':
 						return 'tel';
-						break;
 
 					case 'email':
 						return 'email';
-						break;
 
 					case 'url':
 						return 'url';
-						break;
 				}
 
 				return 'text';
-				break;
 
 			default:
 				return parent::__get($strKey);
-				break;
 		}
 	}
 
@@ -211,7 +214,9 @@ class FormTextField extends Widget
 			{
 				$varInput = Idna::encodeUrl($varInput);
 			}
-			catch (\InvalidArgumentException $e) {}
+			catch (\InvalidArgumentException $e)
+			{
+			}
 		}
 		elseif ($this->rgxp == 'email' || $this->rgxp == 'friendly')
 		{
@@ -228,15 +233,17 @@ class FormTextField extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf('<input type="%s" name="%s" id="ctrl_%s" class="text%s%s" value="%s"%s%s',
-						$this->type,
-						$this->strName,
-						$this->strId,
-						($this->hideInput ? ' password' : ''),
-						($this->strClass ? ' ' . $this->strClass : ''),
-						StringUtil::specialchars($this->value),
-						$this->getAttributes(),
-						$this->strTagEnding);
+		return sprintf(
+			'<input type="%s" name="%s" id="ctrl_%s" class="text%s%s" value="%s"%s%s',
+			$this->type,
+			$this->strName,
+			$this->strId,
+			($this->hideInput ? ' password' : ''),
+			($this->strClass ? ' ' . $this->strClass : ''),
+			StringUtil::specialchars($this->value),
+			$this->getAttributes(),
+			$this->strTagEnding
+		);
 	}
 }
 

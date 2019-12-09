@@ -21,6 +21,9 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
 
+/**
+ * @internal
+ */
 class GeneratePageListener
 {
     /**
@@ -61,7 +64,7 @@ class GeneratePageListener
 
         foreach ($feeds as $feed) {
             $GLOBALS['TL_HEAD'][] = $template->generateFeedTag(
-                sprintf('%sshare/%s.xml', ($feed->feedBase ?: $environment->get('base')), $feed->alias),
+                sprintf('%sshare/%s.xml', $feed->feedBase ?: $environment->get('base'), $feed->alias),
                 $feed->format,
                 $feed->title
             );

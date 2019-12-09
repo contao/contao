@@ -27,7 +27,6 @@ use Patchwork\Utf8;
  */
 class ModuleEventReader extends Events
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -56,7 +55,7 @@ class ModuleEventReader extends Events
 		}
 
 		// Set the item from the auto_item parameter
-		if (!isset($_GET['events']) && Config::get('useAutoItem') && isset($_GET['auto_item']))
+		if (!isset($_GET['events']) && isset($_GET['auto_item']) && Config::get('useAutoItem'))
 		{
 			Input::setGet('events', Input::get('auto_item'));
 		}
@@ -127,7 +126,7 @@ class ModuleEventReader extends Events
 		{
 			$arrRange = StringUtil::deserialize($objEvent->repeatEach);
 
-			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
+			if (isset($arrRange['unit'], $arrRange['value']))
 			{
 				while (($this->cal_hideRunning ? $intStartTime : $intEndTime) < time() && $intEndTime < $objEvent->repeatEnd)
 				{
@@ -162,15 +161,15 @@ class ModuleEventReader extends Events
 		{
 			$arrRange = StringUtil::deserialize($objEvent->repeatEach);
 
-			if (\is_array($arrRange) && isset($arrRange['unit']) && isset($arrRange['value']))
+			if (isset($arrRange['unit'], $arrRange['value']))
 			{
 				if ($arrRange['value'] == 1)
 				{
-					$repeat = $GLOBALS['TL_LANG']['MSC']['cal_single_'.$arrRange['unit']];
+					$repeat = $GLOBALS['TL_LANG']['MSC']['cal_single_' . $arrRange['unit']];
 				}
 				else
 				{
-					$repeat = sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_'.$arrRange['unit']], $arrRange['value']);
+					$repeat = sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_' . $arrRange['unit']], $arrRange['value']);
 				}
 
 				if ($objEvent->recurrences > 0)
@@ -193,7 +192,7 @@ class ModuleEventReader extends Events
 			}
 		}
 
-		$objTemplate = new FrontendTemplate($this->cal_template);
+		$objTemplate = new FrontendTemplate($this->cal_template ?: 'event_full');
 		$objTemplate->setData($objEvent->row());
 		$objTemplate->date = $strDate;
 		$objTemplate->time = $strTime;
@@ -299,7 +298,7 @@ class ModuleEventReader extends Events
 		// Add a function to retrieve upcoming dates (see #175)
 		$objTemplate->getUpcomingDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span)
 		{
-			if (!$objEvent->recurring || !\is_array($arrRange) || !isset($arrRange['unit']) || !isset($arrRange['value']))
+			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
 			}
@@ -337,7 +336,7 @@ class ModuleEventReader extends Events
 		// Add a function to retrieve past dates (see #175)
 		$objTemplate->getPastDates = function ($recurrences) use ($objEvent, $objPage, $intStartTime, $intEndTime, $arrRange, $span)
 		{
-			if (!$objEvent->recurring || !\is_array($arrRange) || !isset($arrRange['unit']) || !isset($arrRange['value']))
+			if (!$objEvent->recurring || !isset($arrRange['unit'], $arrRange['value']))
 			{
 				return array();
 			}
@@ -407,14 +406,10 @@ class ModuleEventReader extends Events
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		// Notify the author
-		if ($objCalendar->notify != 'notify_admin')
+		/** @var UserModel $objAuthor */
+		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
 		{
-			/** @var UserModel $objAuthor */
-			if (($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
-			{
-				$arrNotifies[] = $objAuthor->email;
-			}
+			$arrNotifies[] = $objAuthor->email;
 		}
 
 		$objConfig = new \stdClass();

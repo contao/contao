@@ -17,10 +17,10 @@ use Contao\CoreBundle\EventListener\LocaleListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 class LocaleListenerTest extends TestCase
 {
@@ -34,10 +34,10 @@ class LocaleListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
         $listener = new LocaleListener(
-            $this->createMock(TranslatorInterface::class),
+            $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
             ['en']
         );
@@ -66,14 +66,14 @@ class LocaleListenerTest extends TestCase
         $request->headers->set('Accept-Language', $locale);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $event = new GetResponseEvent(
+        $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST
         );
 
         $listener = new LocaleListener(
-            $this->createMock(TranslatorInterface::class),
+            $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
             $available
         );
@@ -102,14 +102,14 @@ class LocaleListenerTest extends TestCase
             ->method('set')
         ;
 
-        $event = new GetResponseEvent(
+        $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
             Request::create('/', Request::METHOD_GET, [$attributes]),
             HttpKernelInterface::MASTER_REQUEST
         );
 
         $listener = new LocaleListener(
-            $this->createMock(TranslatorInterface::class),
+            $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
             ['en']
         );
@@ -123,14 +123,14 @@ class LocaleListenerTest extends TestCase
         $request->attributes->set('_locale', 'invalid');
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $event = new GetResponseEvent(
+        $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST
         );
 
         $listener = new LocaleListener(
-            $this->createMock(TranslatorInterface::class),
+            $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
             ['en']
         );
@@ -145,13 +145,13 @@ class LocaleListenerTest extends TestCase
         $request = Request::create('/');
         $request->headers->set('Accept-Language', 'de');
 
-        $event = new GetResponseEvent(
+        $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
             $request,
             HttpKernelInterface::MASTER_REQUEST
         );
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createMock(LocaleAwareInterface::class);
         $translator
             ->expects($this->once())
             ->method('setLocale')

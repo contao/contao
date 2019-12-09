@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class BackendConfirm extends Backend
 {
-
 	/**
 	 * Initialize the controller
 	 *
@@ -132,13 +131,16 @@ class BackendConfirm extends Backend
 		}
 		else
 		{
-			$arrInfo['act'] = $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']][0];
+			$arrInfo['act'] = \is_array($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']]) ? $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']][0] : $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']];
 		}
 
-		unset($arrInfo['pid']);
-		unset($arrInfo['clipboard']);
-		unset($arrInfo['ref']);
-		unset($arrInfo['mode']);
+		// Replace the ID wildcard
+		if (strpos($arrInfo['act'], '%s') !== false)
+		{
+			$arrInfo['act'] = sprintf($arrInfo['act'], $vars['id']);
+		}
+
+		unset($arrInfo['pid'], $arrInfo['clipboard'], $arrInfo['ref'], $arrInfo['mode']);
 
 		// Template variables
 		$objTemplate->confirm = true;

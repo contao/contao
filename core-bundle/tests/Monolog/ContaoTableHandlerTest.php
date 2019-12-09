@@ -66,7 +66,7 @@ class ContaoTableHandlerTest extends TestCase
         $container->set('contao.framework', $this->mockContaoFramework([System::class => $system]));
         $container->set('doctrine.dbal.default_connection', $connection);
 
-        $GLOBALS['TL_HOOKS']['addLogEntry'][] = [\get_class($this), 'addLogEntry'];
+        $GLOBALS['TL_HOOKS']['addLogEntry'][] = [static::class, 'addLogEntry'];
 
         $handler = new ContaoTableHandler();
         $handler->setContainer($container);

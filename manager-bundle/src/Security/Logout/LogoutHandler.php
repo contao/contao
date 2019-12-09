@@ -25,6 +25,9 @@ class LogoutHandler implements LogoutHandlerInterface
      */
     private $jwtManager;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao_manager.security.logout_handler" service instead
+     */
     public function __construct(JwtManager $jwtManager = null)
     {
         $this->jwtManager = $jwtManager;

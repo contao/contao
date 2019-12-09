@@ -76,7 +76,6 @@ use Contao\Model\Collection;
  */
 class ImageSizeItemModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

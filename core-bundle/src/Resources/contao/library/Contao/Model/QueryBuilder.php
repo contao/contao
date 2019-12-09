@@ -21,7 +21,6 @@ use Contao\DcaExtractor;
  */
 class QueryBuilder
 {
-
 	/**
 	 * Build a query based on the given options
 	 *

@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentHtml extends ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string

@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
+/**
+ * @internal
+ */
 class Version410Update extends AbstractVersionUpdate
 {
     /**
@@ -43,7 +46,7 @@ class Version410Update extends AbstractVersionUpdate
 
         $options = [];
 
-        foreach ($crop as $group => $modes) {
+        foreach ($crop as $modes) {
             $options[] = array_values($modes);
         }
 

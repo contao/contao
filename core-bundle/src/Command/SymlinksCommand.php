@@ -29,6 +29,8 @@ use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Symlinks the public resources into the web directory.
+ *
+ * @internal
  */
 class SymlinksCommand extends Command
 {
@@ -196,7 +198,7 @@ class SymlinksCommand extends Command
     {
         $event = new GenerateSymlinksEvent();
 
-        $this->eventDispatcher->dispatch(ContaoCoreEvents::GENERATE_SYMLINKS, $event);
+        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::GENERATE_SYMLINKS);
 
         foreach ($event->getSymlinks() as $target => $link) {
             $this->symlink($target, $link);

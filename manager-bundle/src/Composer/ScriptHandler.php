@@ -71,7 +71,7 @@ class ScriptHandler
                 $event->getIO()->isDecorated() ? ' --ansi' : '',
                 $cmd,
                 self::getVerbosityFlag($event),
-                getenv('SYMFONY_ENV') ?: 'prod'
+                getenv('APP_ENV') ?: 'prod'
             )
         );
 
@@ -85,9 +85,7 @@ class ScriptHandler
         );
 
         if (!$process->isSuccessful()) {
-            throw new \RuntimeException(
-                sprintf('An error occurred while executing the "%s" command: %s', $cmd, $process->getErrorOutput())
-            );
+            throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command: %s', $cmd, $process->getErrorOutput()));
         }
     }
 

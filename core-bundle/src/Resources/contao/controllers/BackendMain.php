@@ -16,9 +16,8 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Util\PackageUtil;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Role\SwitchUserRole;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
 
 /**
@@ -28,7 +27,6 @@ use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
  */
 class BackendMain extends Backend
 {
-
 	/**
 	 * Current Ajax object
 	 * @var Ajax
@@ -150,12 +148,9 @@ class BackendMain extends Backend
 			{
 				$picker = System::getContainer()->get('contao.picker.builder')->createFromData(Input::get('picker', true));
 
-				if ($picker !== null)
+				if ($picker !== null && ($menu = $picker->getMenu()) && $menu->count() > 1)
 				{
-					if (($menu = $picker->getMenu()) && $menu->count() > 1)
-					{
-						$this->Template->pickerMenu = System::getContainer()->get('contao.menu.renderer')->render($menu);
-					}
+					$this->Template->pickerMenu = System::getContainer()->get('contao.menu.renderer')->render($menu);
 				}
 			}
 
@@ -227,17 +222,10 @@ class BackendMain extends Backend
 		$objSession = $container->get('session');
 
 		// File picker reference (backwards compatibility)
-		if (Input::get('popup') && Input::get('act') != 'show' && ((Input::get('do') == 'page' && $this->User->hasAccess('page', 'modules')) || (Input::get('do') == 'files' && $this->User->hasAccess('files', 'modules'))) && $objSession->get('filePickerRef'))
+		if (Input::get('popup') && Input::get('act') != 'show' && $objSession->get('filePickerRef') && ((Input::get('do') == 'page' && $this->User->hasAccess('page', 'modules')) || (Input::get('do') == 'files' && $this->User->hasAccess('files', 'modules'))))
 		{
 			$this->Template->managerHref = ampersand($objSession->get('filePickerRef'));
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
-		}
-
-		$referer = null;
-
-		if ($request = $container->get('request_stack')->getCurrentRequest())
-		{
-			$referer = base64_encode($request->getQueryString());
 		}
 
 		$this->Template->theme = Backend::getTheme();
@@ -250,7 +238,7 @@ class BackendMain extends Backend
 		$this->Template->preview = $GLOBALS['TL_LANG']['MSC']['fePreview'];
 		$this->Template->previewTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['fePreviewTitle']);
 		$this->Template->profile = $GLOBALS['TL_LANG']['MSC']['profile'];
-		$this->Template->referer = $referer;
+		$this->Template->referer = base64_encode(Environment::get('queryString'));
 		$this->Template->profileTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['profileTitle']);
 		$this->Template->security = $GLOBALS['TL_LANG']['MSC']['security'];
 		$this->Template->logout = $GLOBALS['TL_LANG']['MSC']['logoutBT'];
@@ -299,7 +287,7 @@ class BackendMain extends Backend
 			elseif (Input::get('do') != '')
 			{
 				$event = new PreviewUrlCreateEvent(Input::get('do'), CURRENT_ID);
-				$container->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CREATE, $event);
+				$container->get('event_dispatcher')->dispatch($event, ContaoCoreEvents::PREVIEW_URL_CREATE);
 
 				if (($strQuery = $event->getQuery()) !== null)
 				{
@@ -320,23 +308,14 @@ class BackendMain extends Backend
 	{
 		$token = System::getContainer()->get('security.token_storage')->getToken();
 
-		if (!$token instanceof TokenInterface)
+		if (!$token instanceof SwitchUserToken)
 		{
 			return;
 		}
 
-		$impersonatorUser = null;
+		$impersonator = $token->getOriginalToken()->getUsername();
 
-		foreach ($token->getRoles() as $role)
-		{
-			if ($role instanceof SwitchUserRole)
-			{
-				$impersonatorUser = $role->getSource()->getUsername();
-				break;
-			}
-		}
-
-		if (!$impersonatorUser)
+		if (!$impersonator)
 		{
 			return;
 		}
@@ -359,7 +338,7 @@ class BackendMain extends Backend
 		// Take the use back to the "users" module
 		$arrParams = array('do' => 'user', urlencode($switchUserConfig['parameter']) => SwitchUserListener::EXIT_VALUE);
 
-		$this->Template->logout = sprintf($GLOBALS['TL_LANG']['MSC']['switchBT'], $impersonatorUser);
+		$this->Template->logout = sprintf($GLOBALS['TL_LANG']['MSC']['switchBT'], $impersonator);
 		$this->Template->logoutLink = System::getContainer()->get('router')->generate('contao_backend', $arrParams);
 	}
 }

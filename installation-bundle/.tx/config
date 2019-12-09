@@ -2,7 +2,7 @@
 host = https://www.transifex.com
 type = XLIFF
 
-[installation-bundle.v4_8-messages]
-source_file = src/Resources/translations/messages.en.xlf
+[installation-bundle.v4_9-ContaoInstallationBundle]
+source_file = src/Resources/translations/ContaoInstallationBundle.en.xlf
 source_lang = en
-file_filter = src/Resources/translations/messages.<lang>.xlf
+file_filter = src/Resources/translations/ContaoInstallationBundle.<lang>.xlf

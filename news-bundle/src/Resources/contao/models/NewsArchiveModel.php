@@ -84,13 +84,11 @@ use Contao\Model\Collection;
  */
 class NewsArchiveModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_news_archive';
-
 }
 
 class_alias(NewsArchiveModel::class, 'NewsArchiveModel');

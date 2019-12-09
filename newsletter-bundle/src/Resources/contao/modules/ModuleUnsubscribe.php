@@ -24,7 +24,6 @@ use Patchwork\Utf8;
  */
 class ModuleUnsubscribe extends Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -83,7 +82,7 @@ class ModuleUnsubscribe extends Module
 		{
 			$arrField = array
 			(
-				'name' => 'unsubscribe_'.$this->id,
+				'name' => 'unsubscribe_' . $this->id,
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
 				'inputType' => 'captcha',
 				'eval' => array('mandatory'=>true)
@@ -113,15 +112,19 @@ class ModuleUnsubscribe extends Module
 		}
 
 		$session = System::getContainer()->get('session');
-		$flashBag = $session->getFlashBag();
 
 		// Confirmation message
-		if ($session->isStarted() && $flashBag->has('nl_removed'))
+		if ($session->isStarted())
 		{
-			$arrMessages = $flashBag->get('nl_removed');
+			$flashBag = $session->getFlashBag();
 
-			$this->Template->mclass = 'confirm';
-			$this->Template->message = $arrMessages[0];
+			if ($flashBag->has('nl_removed'))
+			{
+				$arrMessages = $flashBag->get('nl_removed');
+
+				$this->Template->mclass = 'confirm';
+				$this->Template->message = $arrMessages[0];
+			}
 		}
 
 		$arrChannels = array();

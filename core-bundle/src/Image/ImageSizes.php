@@ -53,6 +53,9 @@ class ImageSizes
      */
     private $options;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.image.image_sizes" service instead
+     */
     public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework, Translator $translator)
     {
         $this->connection = $connection;
@@ -80,7 +83,7 @@ class ImageSizes
 
         $event = new ImageSizesEvent($this->options);
 
-        $this->eventDispatcher->dispatch(ContaoCoreEvents::IMAGE_SIZES_ALL, $event);
+        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::IMAGE_SIZES_ALL);
 
         return $event->getImageSizes();
     }
@@ -107,7 +110,7 @@ class ImageSizes
             $event = new ImageSizesEvent($this->filterOptions($options), $user);
         }
 
-        $this->eventDispatcher->dispatch(ContaoCoreEvents::IMAGE_SIZES_USER, $event);
+        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::IMAGE_SIZES_USER);
 
         return $event->getImageSizes();
     }

@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class PageForward extends Frontend
 {
-
 	/**
 	 * Redirect to an internal page
 	 *
@@ -68,6 +67,7 @@ class PageForward extends Frontend
 		if (!$objNextPage instanceof PageModel)
 		{
 			$this->log('Forward page ID "' . $objPage->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
+
 			throw new ForwardPageNotFoundException('Forward page not found');
 		}
 
@@ -92,7 +92,7 @@ class PageForward extends Frontend
 		{
 			foreach (array_keys($_GET) as $key)
 			{
-				if (Config::get('addLanguageToUrl') && $key == 'language')
+				if ($key == 'language' && Config::get('addLanguageToUrl'))
 				{
 					continue;
 				}

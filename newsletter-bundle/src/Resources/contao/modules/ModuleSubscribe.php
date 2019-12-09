@@ -26,7 +26,6 @@ use Patchwork\Utf8;
  */
 class ModuleSubscribe extends Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -93,7 +92,7 @@ class ModuleSubscribe extends Module
 		{
 			$arrField = array
 			(
-				'name' => 'subscribe_'.$this->id,
+				'name' => 'subscribe_' . $this->id,
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
 				'inputType' => 'captcha',
 				'eval' => array('mandatory'=>true)
@@ -123,15 +122,19 @@ class ModuleSubscribe extends Module
 		}
 
 		$session = System::getContainer()->get('session');
-		$flashBag = $session->getFlashBag();
 
 		// Confirmation message
-		if ($session->isStarted() && $flashBag->has('nl_confirm'))
+		if ($session->isStarted())
 		{
-			$arrMessages = $flashBag->get('nl_confirm');
+			$flashBag = $session->getFlashBag();
 
-			$this->Template->mclass = 'confirm';
-			$this->Template->message = $arrMessages[0];
+			if ($flashBag->has('nl_confirm'))
+			{
+				$arrMessages = $flashBag->get('nl_confirm');
+
+				$this->Template->mclass = 'confirm';
+				$this->Template->message = $arrMessages[0];
+			}
 		}
 
 		$arrChannels = array();

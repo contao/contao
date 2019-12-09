@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FrontendCron;
 use Contao\FrontendIndex;
 use Contao\FrontendShare;
@@ -24,9 +25,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\LogoutException;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * @Route(defaults={"_scope" = "frontend", "_token_check" = true})
+ *
+ * @internal
  */
 class FrontendController extends AbstractController
 {
@@ -126,6 +130,31 @@ class FrontendController extends AbstractController
     }
 
     /**
+     * Returns a script that makes sure a valid request token is filled into
+     * all forms if the "alwaysLoadFromCache" option is enabled.
+     *
+     * @Route("/_contao/request_token_script", name="contao_frontend_request_token_script")
+     */
+    public function requestTokenScriptAction(): Response
+    {
+        $token = $this
+            ->get('contao.csrf.token_manager')
+            ->getToken($this->getParameter('contao.csrf_token_name'))
+            ->getValue()
+        ;
+
+        $token = json_encode($token);
+
+        $response = new Response();
+        $response->setContent('document.querySelectorAll("input[name=REQUEST_TOKEN]").forEach(function(i){i.value='.$token.'})');
+        $response->headers->set('Content-Type', 'application/javascript; charset=UTF-8');
+        $response->headers->addCacheControlDirective('no-store');
+        $response->headers->addCacheControlDirective('must-revalidate');
+
+        return $response;
+    }
+
+    /**
      * Redirects the user to the Contao front end in case they manually call the
      * /_contao/two-factor route. Will be intercepted by the two factor bundle otherwise.
      *
@@ -149,5 +178,18 @@ class FrontendController extends AbstractController
         } catch (InsufficientAuthenticationException $e) {
             throw new UnauthorizedHttpException('', $e->getMessage());
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['contao.framework'] = ContaoFramework::class;
+        $services['contao.csrf.token_manager'] = CsrfTokenManagerInterface::class;
+
+        return $services;
     }
 }

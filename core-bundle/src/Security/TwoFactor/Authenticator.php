@@ -38,14 +38,14 @@ class Authenticator
      */
     public function getProvisionUri(User $user, Request $request): string
     {
-        $issuer = rawurlencode($request->getSchemeAndHttpHost());
+        $issuer = rawurlencode($request->getHttpHost());
 
         return sprintf(
-                'otpauth://totp/%s:%s?secret=%s&issuer=%s',
-                $issuer,
-                rawurlencode($user->getUsername()).'@'.$issuer,
-                $this->getUpperUnpaddedSecretForUser($user),
-                $issuer
+            'otpauth://totp/%s:%s?secret=%s&issuer=%s',
+            $issuer,
+            rawurlencode($user->getUsername()).'@'.$issuer,
+            $this->getUpperUnpaddedSecretForUser($user),
+            $issuer
         );
     }
 

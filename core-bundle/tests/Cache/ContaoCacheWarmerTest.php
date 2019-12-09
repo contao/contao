@@ -93,27 +93,27 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileExists($this->getFixturesDir().'/var/cache/contao/sql');
         $this->assertFileExists($this->getFixturesDir().'/var/cache/contao/sql/tl_test.php');
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "\$GLOBALS['TL_TEST'] = true;",
             file_get_contents($this->getFixturesDir().'/var/cache/contao/config/config.php')
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "'dummy' => 'templates'",
             file_get_contents($this->getFixturesDir().'/var/cache/contao/config/templates.php')
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "\$GLOBALS['TL_DCA']['tl_test'] = [\n",
             file_get_contents($this->getFixturesDir().'/var/cache/contao/dca/tl_test.php')
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "\$GLOBALS['TL_LANG']['MSC']['first']",
             file_get_contents($this->getFixturesDir().'/var/cache/contao/languages/en/default.php')
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "\$this->arrFields = array (\n  'id' => 'int(10) unsigned NOT NULL auto_increment',\n);",
             file_get_contents($this->getFixturesDir().'/var/cache/contao/sql/tl_test.php')
         );

@@ -12,7 +12,6 @@ Contao\System::loadLanguageFile('tl_user');
 
 $GLOBALS['TL_DCA']['tl_user_group'] = array
 (
-
 	// Config
 	'config' => array
 	(
@@ -252,7 +251,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
  */
 class tl_user_group extends Contao\Backend
 {
-
 	/**
 	 * Import the back end user object
 	 */
@@ -295,7 +293,7 @@ class tl_user_group extends Contao\Backend
 
 		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
 
-		if ($row['disable'] || $disabled)
+		if ($disabled || $row['disable'])
 		{
 			$image .= '_';
 		}
@@ -306,28 +304,39 @@ class tl_user_group extends Contao\Backend
 	/**
 	 * Return all modules except profile modules
 	 *
+	 * @param Contao\DataContainer $dc
+	 *
 	 * @return array
 	 */
-	public function getModules()
+	public function getModules(Contao\DataContainer $dc)
 	{
 		$arrModules = array();
 
 		foreach ($GLOBALS['BE_MOD'] as $k=>$v)
 		{
-			if (!empty($v))
+			if (empty($v))
 			{
-				if ($k == 'accounts')
-				{
-					unset($v['login']);
-				}
-
-				if ($k == 'system')
-				{
-					unset($v['undo']);
-				}
-
-				$arrModules[$k] = array_keys($v);
+				continue;
 			}
+
+			foreach ($v as $kk=>$vv)
+			{
+				if (isset($vv['disablePermissionChecks']) && $vv['disablePermissionChecks'] === true)
+				{
+					unset($v[$kk]);
+				}
+			}
+
+			$arrModules[$k] = array_keys($v);
+		}
+
+		$modules = Contao\StringUtil::deserialize($dc->activeRecord->modules);
+
+		// Unset the template editor unless the user is an administrator or has been granted access to the template editor
+		if (!$this->User->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
+		{
+			unset($arrModules['design'][$key]);
+			$arrModules['design'] = array_values($arrModules['design']);
 		}
 
 		return $arrModules;
@@ -347,7 +356,7 @@ class tl_user_group extends Contao\Backend
 
 		foreach ($files as $file)
 		{
-			if (\in_array($file->getBasename(), $processed))
+			if (in_array($file->getBasename(), $processed))
 			{
 				continue;
 			}
@@ -365,7 +374,7 @@ class tl_user_group extends Contao\Backend
 		// Get all excluded fields
 		foreach ($GLOBALS['TL_DCA'] as $k=>$v)
 		{
-			if (\is_array($v['fields']))
+			if (is_array($v['fields']))
 			{
 				foreach ($v['fields'] as $kk=>$vv)
 				{
@@ -377,7 +386,7 @@ class tl_user_group extends Contao\Backend
 
 					if ($vv['exclude'] || $vv['orig_exclude'])
 					{
-						$arrReturn[$k][Contao\StringUtil::specialchars($k.'::'.$kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span style="color:#999;padding-left:3px">[' . $kk . ']</span>' : $kk;
+						$arrReturn[$k][Contao\StringUtil::specialchars($k . '::' . $kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span style="color:#999;padding-left:3px">[' . $kk . ']</span>' : $kk;
 					}
 				}
 			}
@@ -414,14 +423,14 @@ class tl_user_group extends Contao\Backend
 			return '';
 		}
 
-		$href .= '&amp;tid='.$row['id'].'&amp;state='.$row['disable'];
+		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . $row['disable'];
 
 		if ($row['disable'])
 		{
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="'.$this->addToUrl($href).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"').'</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['disable'] ? 0 : 1) . '"') . '</a> ';
 	}
 
 	/**
@@ -445,16 +454,16 @@ class tl_user_group extends Contao\Backend
 		}
 
 		// Trigger the onload_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_user_group']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['config']['onload_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user_group']['config']['onload_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}
@@ -487,16 +496,16 @@ class tl_user_group extends Contao\Backend
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_user_group']['fields']['disable']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['fields']['disable']['save_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user_group']['fields']['disable']['save_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$blnVisible = $callback($blnVisible, $dc);
 				}
@@ -504,16 +513,16 @@ class tl_user_group extends Contao\Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (\is_array($GLOBALS['TL_DCA']['tl_user_group']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_user_group']['config']['onsubmit_callback']))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_user_group']['config']['onsubmit_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if (is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($dc);
 				}
-				elseif (\is_callable($callback))
+				elseif (is_callable($callback))
 				{
 					$callback($dc);
 				}

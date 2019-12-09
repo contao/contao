@@ -28,9 +28,10 @@ use ProxyManager\Configuration;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Debug\Debug;
 use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 class ContaoKernel extends Kernel implements HttpCacheProvider
@@ -159,12 +160,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $this->bundleLoader = $bundleLoader;
     }
 
-    public function getJwtManager(): JwtManager
+    public function getJwtManager(): ?JwtManager
     {
-        if (null === $this->jwtManager) {
-            $this->jwtManager = new JwtManager($this->getProjectDir());
-        }
-
         return $this->jwtManager;
     }
 
@@ -192,8 +189,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      */
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        if ($configFile = $this->getConfigFile('parameters.yml')) {
-            $loader->load($configFile);
+        if ($parametersFile = $this->getConfigFile('parameters.yml')) {
+            $loader->load($parametersFile);
         }
 
         $config = $this->getManagerConfig()->all();
@@ -205,8 +202,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         // Reload the parameters.yml file
-        if ($configFile = $this->getConfigFile('parameters.yml')) {
-            $loader->load($configFile);
+        if ($parametersFile) {
+            $loader->load($parametersFile);
         }
 
         if ($configFile = $this->getConfigFile('config_'.$this->getEnvironment().'.yml')) {
@@ -214,12 +211,17 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         } elseif ($configFile = $this->getConfigFile('config.yml')) {
             $loader->load($configFile);
         }
+
+        // Automatically load the services.yml file if it exists
+        if ($servicesFile = $this->getConfigFile('services.yml')) {
+            $loader->load($servicesFile);
+        }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getHttpCache()
+    public function getHttpCache(): ContaoCache
     {
         if (null !== $this->httpCache) {
             return $this->httpCache;
@@ -236,9 +238,12 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         self::$projectDir = realpath($projectDir) ?: $projectDir;
     }
 
-    public static function fromRequest(string $projectDir, Request $request): self
+    /**
+     * @return ContaoKernel|ContaoCache
+     */
+    public static function fromRequest(string $projectDir, Request $request): HttpKernelInterface
     {
-        self::loadEnv($projectDir);
+        self::loadEnv($projectDir, 'jwt');
 
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
         if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
@@ -251,17 +256,21 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
         Request::enableHttpMethodParameterOverride();
 
-        $env = null;
-        $parseJwt = !isset($_SERVER['APP_DEBUG']) && !isset($_SERVER['SYMFONY_DEBUG']);
         $jwtManager = null;
+        $env = null;
+        $parseJwt = 'jwt' === $_SERVER['APP_ENV'];
 
         if ($parseJwt) {
+            $env = 'prod';
+
             $jwtManager = new JwtManager($projectDir);
             $jwt = $jwtManager->parseRequest($request);
 
             if (\is_array($jwt) && $jwt['debug'] ?? false) {
                 $env = 'dev';
             }
+
+            $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $env;
         }
 
         $kernel = static::create($projectDir, $env);
@@ -270,14 +279,25 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $kernel->setJwtManager($jwtManager);
         }
 
+        if (!$kernel->isDebug()) {
+            $cache = $kernel->getHttpCache();
+
+            // Enable the Symfony reverse proxy if request has no surrogate capability
+            if (($surrogate = $cache->getSurrogate()) && !$surrogate->hasSurrogateCapability($request)) {
+                return $cache;
+            }
+        }
+
         return $kernel;
     }
 
-    public static function fromInput(string $projectDir, InputInterface $input)
+    public static function fromInput(string $projectDir, InputInterface $input): self
     {
-        self::loadEnv($projectDir);
+        $env = $input->getParameterOption(['--env', '-e'], null);
 
-        return static::create($projectDir, $input->getParameterOption(['--env', '-e'], null));
+        self::loadEnv($projectDir, $env ?: 'prod');
+
+        return static::create($projectDir, $env);
     }
 
     /**
@@ -310,8 +330,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
 
         // Set the JWT manager only if the debug mode has not been configured in env variables
-        if (!isset($_SERVER['APP_DEBUG']) && !isset($_SERVER['SYMFONY_DEBUG'])) {
-            $container->set('contao_manager.jwt_manager', $this->getJwtManager());
+        if ($jwtManager = $this->getJwtManager()) {
+            $container->set('contao_manager.jwt_manager', $jwtManager);
         }
     }
 
@@ -355,7 +375,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     private static function create(string $projectDir, string $env = null): self
     {
         if (null === $env) {
-            $env = (string) ($_SERVER['APP_ENV'] ?? $_SERVER['SYMFONY_ENV'] ?? 'prod');
+            $env = (string) ($_SERVER['APP_ENV'] ?? 'prod');
         }
 
         if ('dev' !== $env && 'prod' !== $env) {
@@ -372,20 +392,24 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return new static($env, 'dev' === $env);
     }
 
-    private static function loadEnv(string $projectDir): void
+    private static function loadEnv(string $projectDir, string $defaultEnv = 'prod'): void
     {
-        $varName = isset($_SERVER['SYMFONY_ENV']) ? 'SYMFONY_ENV' : 'APP_ENV';
-
         // Do not load .env files if they are already loaded or actual env variables are used
-        if (isset($_SERVER[$varName])) {
+        if (isset($_SERVER['APP_ENV'])) {
             return;
         }
 
-        if (!file_exists($projectDir.'/.env')) {
-            return;
+        // Load cached env vars if the .env.local.php file exists
+        // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/config/bootstrap.php
+        if (\is_array($env = @include $projectDir.'/.env.local.php')) {
+            foreach ($env as $k => $v) {
+                $_ENV[$k] = $_ENV[$k] ?? (isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v);
+            }
+        } elseif (file_exists($projectDir.'/.env')) {
+            (new Dotenv(false))->loadEnv($projectDir.'/.env', 'APP_ENV', $defaultEnv);
         }
 
-        $dotEnv = new Dotenv(false);
-        $dotEnv->loadEnv($projectDir.'/.env', $varName, 'prod', []);
+        $_SERVER += $_ENV;
+        $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null) ?: $defaultEnv;
     }
 }

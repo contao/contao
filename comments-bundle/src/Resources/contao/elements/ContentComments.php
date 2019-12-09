@@ -21,7 +21,6 @@ use Patchwork\Utf8;
  */
 class ContentComments extends ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string

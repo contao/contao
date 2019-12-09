@@ -25,7 +25,6 @@ namespace Contao;
  */
 class Environment
 {
-
 	/**
 	 * Object instance (Singleton)
 	 * @var Environment
@@ -36,7 +35,7 @@ class Environment
 	 * The SAPI name
 	 * @var string
 	 */
-	protected static $strSapi = PHP_SAPI;
+	protected static $strSapi = \PHP_SAPI;
 
 	/**
 	 * Cache
@@ -339,16 +338,7 @@ class Environment
 	 */
 	protected static function url()
 	{
-		$host = static::get('httpHost');
-		$xhost = static::get('httpXForwardedHost');
-
-		// SSL proxy
-		if ($xhost != '' && $xhost == Config::get('sslProxyDomain'))
-		{
-			return 'https://' .  $xhost . '/' . $host;
-		}
-
-		return (static::get('ssl') ? 'https://' : 'http://') . $host;
+		return (static::get('ssl') ? 'https://' : 'http://') . static::get('httpHost');
 	}
 
 	/**
@@ -591,7 +581,9 @@ class Environment
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Environment class is now static.
 	 */
-	protected function __construct() {}
+	protected function __construct()
+	{
+	}
 
 	/**
 	 * Prevent cloning of the object (Singleton)
@@ -599,7 +591,9 @@ class Environment
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             The Environment class is now static.
 	 */
-	final public function __clone() {}
+	final public function __clone()
+	{
+	}
 
 	/**
 	 * Return an environment variable

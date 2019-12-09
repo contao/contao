@@ -284,13 +284,11 @@ use Contao\Model\Collection;
  */
 class ModuleModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string
 	 */
 	protected static $strTable = 'tl_module';
-
 }
 
 class_alias(ModuleModel::class, 'ModuleModel');

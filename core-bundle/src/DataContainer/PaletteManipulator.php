@@ -231,7 +231,7 @@ class PaletteManipulator
             }
 
             if (!\is_int($legend)) {
-                $palette .= sprintf('{%s%s},', $legend, ($group['hide'] ? ':hide' : ''));
+                $palette .= sprintf('{%s%s},', $legend, $group['hide'] ? ':hide' : '');
             }
 
             $palette .= implode(',', $group['fields']);

@@ -16,10 +16,11 @@ use Contao\Model\Collection;
  * Content element "mediaelement".
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @todo Rename to ContentPlayer in Contao 5.0
  */
 class ContentMedia extends ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -73,7 +74,7 @@ class ContentMedia extends ContentElement
 
 			if ($this->headline != '')
 			{
-				$return = '<'. $this->hl .'>'. $this->headline .'</'. $this->hl .'>'. $return;
+				$return = '<' . $this->hl . '>' . $this->headline . '</' . $this->hl . '>' . $return;
 			}
 
 			return $return;
@@ -95,12 +96,9 @@ class ContentMedia extends ContentElement
 		$this->Template->poster = false;
 
 		// Optional poster
-		if ($this->posterSRC != '')
+		if ($this->posterSRC != '' && ($objFile = FilesModel::findByUuid($this->posterSRC)) !== null)
 		{
-			if (($objFile = FilesModel::findByUuid($this->posterSRC)) !== null)
-			{
-				$this->Template->poster = $objFile->path;
-			}
+			$this->Template->poster = $objFile->path;
 		}
 
 		$objFiles = $this->objFiles;

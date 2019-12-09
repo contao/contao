@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PageError403 extends Frontend
 {
-
 	/**
 	 * Generate an error 403 page
 	 *
@@ -117,6 +116,7 @@ class PageError403 extends Frontend
 			if (null === $objNextPage)
 			{
 				$this->log('Forward page ID "' . $obj403->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
+
 				throw new ForwardPageNotFoundException('Forward page not found');
 			}
 

@@ -19,7 +19,6 @@ use Patchwork\Utf8;
  */
 class ModuleSitemap extends Module
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -71,7 +70,7 @@ class ModuleSitemap extends Module
 			$objRootPage = PageModel::findWithDetails($this->rootPage);
 
 			// Set the language
-			if (Config::get('addLanguageToUrl') && $objRootPage->rootLanguage != $objPage->rootLanguage)
+			if ($objRootPage->rootLanguage != $objPage->rootLanguage && Config::get('addLanguageToUrl'))
 			{
 				$lang = $objRootPage->rootLanguage;
 			}

@@ -20,7 +20,7 @@ use Contao\Validator;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
@@ -36,6 +36,9 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private $uploadPath;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.picker.file_provider" service instead
+     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator, Security $security, string $uploadPath)
     {
         parent::__construct($menuFactory, $router, $translator);

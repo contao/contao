@@ -20,9 +20,6 @@ use Doctrine\DBAL\Types\Type;
  */
 class BinaryStringType extends Type
 {
-    /**
-     * @var string
-     */
     public const NAME = 'binary_string';
 
     /**

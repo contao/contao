@@ -35,7 +35,7 @@ array_insert($GLOBALS['FE_MOD'], 2, array
 $GLOBALS['TL_CRON']['daily']['generateCalendarFeeds'] = array('Contao\Calendar', 'generateFeeds');
 
 // Style sheet
-if (\defined('TL_MODE') && TL_MODE == 'BE')
+if (defined('TL_MODE') && TL_MODE == 'BE')
 {
 	$GLOBALS['TL_CSS'][] = 'bundles/contaocalendar/calendar.min.css|static';
 }
@@ -43,9 +43,7 @@ if (\defined('TL_MODE') && TL_MODE == 'BE')
 // Register hooks
 $GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array('Contao\Calendar', 'purgeOldFeeds');
 $GLOBALS['TL_HOOKS']['getSearchablePages'][] = array('Contao\Calendar', 'getSearchablePages');
-$GLOBALS['TL_HOOKS']['generatePage'][] = array('contao_calendar.listener.generate_page', 'onGeneratePage');
 $GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array('Contao\Calendar', 'generateFeeds');
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = array('contao_calendar.listener.insert_tags', 'onReplaceInsertTags');
 
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'calendars';

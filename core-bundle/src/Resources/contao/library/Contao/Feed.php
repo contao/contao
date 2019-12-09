@@ -38,7 +38,6 @@ namespace Contao;
  */
 class Feed
 {
-
 	/**
 	 * Feed name
 	 * @var string

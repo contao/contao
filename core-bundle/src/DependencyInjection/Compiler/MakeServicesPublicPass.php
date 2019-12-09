@@ -17,6 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Makes services public that we need to retrieve directly.
+ *
+ * @internal
  */
 class MakeServicesPublicPass implements CompilerPassInterface
 {

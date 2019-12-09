@@ -21,7 +21,7 @@ use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -33,6 +33,9 @@ use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 use Twig\Error\Error;
 
+/**
+ * @internal
+ */
 class PrettyErrorScreenListener
 {
     /**
@@ -72,7 +75,7 @@ class PrettyErrorScreenListener
     /**
      * Map an exception to an error screen.
      */
-    public function onKernelException(GetResponseForExceptionEvent $event): void
+    public function onKernelException(ExceptionEvent $event): void
     {
         if (!$event->isMasterRequest()) {
             return;
@@ -91,9 +94,9 @@ class PrettyErrorScreenListener
         $this->handleException($event);
     }
 
-    private function handleException(GetResponseForExceptionEvent $event): void
+    private function handleException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         try {
             $isBackendUser = $this->security->isGranted('ROLE_USER');
@@ -127,15 +130,15 @@ class PrettyErrorScreenListener
         }
     }
 
-    private function renderBackendException(GetResponseForExceptionEvent $event): void
+    private function renderBackendException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         $this->logException($exception);
         $this->renderTemplate('backend', $this->getStatusCodeForException($exception), $event);
     }
 
-    private function renderErrorScreenByType(int $type, GetResponseForExceptionEvent $event): void
+    private function renderErrorScreenByType(int $type, ExceptionEvent $event): void
     {
         static $processing;
 
@@ -177,9 +180,9 @@ class PrettyErrorScreenListener
     /**
      * Checks the exception chain for a known exception.
      */
-    private function renderErrorScreenByException(GetResponseForExceptionEvent $event): void
+    private function renderErrorScreenByException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
         $statusCode = $this->getStatusCodeForException($exception);
         $template = null;
 
@@ -195,7 +198,7 @@ class PrettyErrorScreenListener
         $this->renderTemplate($template ?: 'error', $statusCode, $event);
     }
 
-    private function renderTemplate(string $template, int $statusCode, GetResponseForExceptionEvent $event): void
+    private function renderTemplate(string $template, int $statusCode, ExceptionEvent $event): void
     {
         if (!$this->prettyErrorScreens) {
             return;
@@ -214,7 +217,7 @@ class PrettyErrorScreenListener
     /**
      * @return array<string,string|int>
      */
-    private function getTemplateParameters(string $view, int $statusCode, GetResponseForExceptionEvent $event): array
+    private function getTemplateParameters(string $view, int $statusCode, ExceptionEvent $event): array
     {
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
@@ -227,11 +230,11 @@ class PrettyErrorScreenListener
             'base' => $event->getRequest()->getBasePath(),
             'language' => $event->getRequest()->getLocale(),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
-            'exception' => $event->getException()->getMessage(),
+            'exception' => $event->getThrowable()->getMessage(),
         ];
     }
 
-    private function logException(\Exception $exception): void
+    private function logException(\Throwable $exception): void
     {
         if (Kernel::VERSION_ID >= 40100 || null === $this->logger || !$this->isLoggable($exception)) {
             return;
@@ -240,7 +243,7 @@ class PrettyErrorScreenListener
         $this->logger->critical('An exception occurred.', ['exception' => $exception]);
     }
 
-    private function isLoggable(\Exception $exception): bool
+    private function isLoggable(\Throwable $exception): bool
     {
         do {
             if ($exception instanceof InvalidRequestTokenException) {
@@ -251,7 +254,7 @@ class PrettyErrorScreenListener
         return true;
     }
 
-    private function getStatusCodeForException(\Exception $exception): int
+    private function getStatusCodeForException(\Throwable $exception): int
     {
         if ($exception instanceof HttpException) {
             return (int) $exception->getStatusCode();

@@ -87,24 +87,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
         }
     }
 
-    public function testCommandDoesNotOverrideOptionals(): void
-    {
-        foreach ($this->webFiles as $file) {
-            $this->filesystem->dumpFile($this->getTempDir().'/web/'.$file->getRelativePathname(), 'foobar-content');
-        }
-
-        $commandTester = new CommandTester($this->command);
-        $commandTester->execute([]);
-
-        foreach ($this->webFiles as $file) {
-            if ('robots.txt' === $file->getRelativePathname()) {
-                $this->assertStringEqualsFile($this->getTempDir().'/web/'.$file->getFilename(), 'foobar-content');
-            } else {
-                $this->assertStringNotEqualsFile($this->getTempDir().'/web/'.$file->getFilename(), 'foobar-content');
-            }
-        }
-    }
-
     public function testHtaccessIsNotChangedIfRewriteRuleExists(): void
     {
         $existingHtaccess = <<<'EOT'

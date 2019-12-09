@@ -75,7 +75,6 @@ use Contao\Model\Collection;
  */
 class StyleSheetModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

@@ -17,7 +17,6 @@ namespace Contao;
  */
 class ContentHyperlink extends ContentElement
 {
-
 	/**
 	 * Template
 	 * @var string
@@ -55,7 +54,7 @@ class ContentHyperlink extends ContentElement
 
 		if ($this->rel)
 		{
-			$this->Template->attribute = ' data-lightbox="'. $this->rel .'"';
+			$this->Template->attribute = ' data-lightbox="' . $this->rel . '"';
 		}
 
 		if ($this->linkTitle == '')

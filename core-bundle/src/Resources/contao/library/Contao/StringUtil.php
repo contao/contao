@@ -26,7 +26,6 @@ use Psr\Log\LogLevel;
  */
 class StringUtil
 {
-
 	/**
 	 * Shorten a string to a given number of characters
 	 *
@@ -161,7 +160,7 @@ class StringUtil
 					// Store opening tags in the open_tags array
 					if (strncmp($strTagName, '/', 1) !== 0)
 					{
-						if (!empty($arrChunks[$i]) || $i<$c)
+						if ($i<$c || !empty($arrChunks[$i]))
 						{
 							$arrOpenTags[] = $strTagName;
 						}
@@ -170,7 +169,7 @@ class StringUtil
 					}
 
 					// Closing tags will be removed from the "open tags" array
-					if (!empty($arrChunks[$i]) || $i<$c)
+					if ($i<$c || !empty($arrChunks[$i]))
 					{
 						$arrOpenTags = array_values($arrOpenTags);
 
@@ -186,7 +185,7 @@ class StringUtil
 				}
 
 				// If the current chunk contains text, add tags and text to the return string
-				if (\strlen($arrChunks[$i]) || $i<$c)
+				if ($i<$c || \strlen($arrChunks[$i]))
 				{
 					$strReturn .= implode('', $arrTagBuffer) . $arrChunks[$i];
 				}
@@ -403,7 +402,7 @@ class StringUtil
 	}
 
 	/**
-	 * Split a friendly-name e-address and return name and e-mail as array
+	 * Split a friendly-name e-mail address and return name and e-mail as array
 	 *
 	 * @param string $strEmail A friendly-name e-mail address
 	 *
@@ -468,7 +467,7 @@ class StringUtil
 	 */
 	public static function splitCsv($strString, $strDelimiter=',')
 	{
-		$arrValues = preg_split('/'.$strDelimiter.'(?=(?:[^"]*"[^"]*")*(?![^"]*"))/', $strString);
+		$arrValues = preg_split('/' . $strDelimiter . '(?=(?:[^"]*"[^"]*")*(?![^"]*"))/', $strString);
 
 		foreach ($arrValues as $k=>$v)
 		{
@@ -974,8 +973,7 @@ class StringUtil
 		do
 		{
 			$strString = preg_replace('/{{[^{}]*}}/', '', $strString, -1, $count);
-		}
-		while ($count > 0);
+		} while ($count > 0);
 
 		return $strString;
 	}
@@ -1089,7 +1087,7 @@ class StringUtil
 		}
 		else
 		{
-			$arrFragments = array_map('trim', preg_split('/'.$strPattern.'/ui', $strString));
+			$arrFragments = array_map('trim', preg_split('/' . $strPattern . '/ui', $strString));
 		}
 
 		// Empty array

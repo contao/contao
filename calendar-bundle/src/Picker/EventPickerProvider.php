@@ -22,7 +22,7 @@ use Contao\CoreBundle\Picker\PickerConfig;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EventPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
@@ -33,6 +33,9 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
      */
     private $security;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao_calendar.picker.event_provider" service instead
+     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
     {
         parent::__construct($menuFactory, $router, $translator);

@@ -22,7 +22,7 @@ use Contao\NewsModel;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
@@ -33,6 +33,9 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private $security;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao_news.picker.news_provider" service instead
+     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
     {
         parent::__construct($menuFactory, $router, $translator);

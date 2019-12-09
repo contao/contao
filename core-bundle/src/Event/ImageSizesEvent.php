@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Event;
 
 use Contao\BackendUser;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ImageSizesEvent extends Event
 {

@@ -26,7 +26,6 @@ use Patchwork\Utf8;
  */
 class ModuleNewsMenu extends ModuleNews
 {
-
 	/**
 	 * Current date object
 	 * @var Date
@@ -191,7 +190,7 @@ class ModuleNewsMenu extends ModuleNews
 				$arrItems[$intYear][$intMonth]['date'] = $intDate;
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
 				$arrItems[$intYear][$intMonth]['href'] = $this->strUrl . '?month=' . $intDate;
-				$arrItems[$intYear][$intMonth]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.$intYear . ' (' . $quantity . ')');
+				$arrItems[$intYear][$intMonth]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear . ' (' . $quantity . ')');
 				$arrItems[$intYear][$intMonth]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
 				$arrItems[$intYear][$intMonth]['isActive'] = (Input::get('month') == $intDate);
 				$arrItems[$intYear][$intMonth]['quantity'] = $quantity;
@@ -250,7 +249,7 @@ class ModuleNewsMenu extends ModuleNews
 		$this->Template->prevLabel = $GLOBALS['TL_LANG']['MSC']['news_previous'];
 
 		// Current month
-		$this->Template->current = $GLOBALS['TL_LANG']['MONTHS'][(date('m', $this->Date->tstamp) - 1)] .  ' ' . date('Y', $this->Date->tstamp);
+		$this->Template->current = $GLOBALS['TL_LANG']['MONTHS'][(date('m', $this->Date->tstamp) - 1)] . ' ' . date('Y', $this->Date->tstamp);
 
 		// Next month
 		$nextMonth = ($intMonth == 12) ? 1 : ($intMonth + 1);

@@ -39,7 +39,6 @@ use Contao\Model\Collection;
  */
 class NewsletterBlacklistModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

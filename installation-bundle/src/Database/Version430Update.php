@@ -14,6 +14,9 @@ namespace Contao\InstallationBundle\Database;
 
 use Contao\StringUtil;
 
+/**
+ * @internal
+ */
 class Version430Update extends AbstractVersionUpdate
 {
     /**
@@ -38,7 +41,7 @@ class Version430Update extends AbstractVersionUpdate
     public function run(): void
     {
         $this->connection->query('
-            ALTER TABLE 
+            ALTER TABLE
                 tl_layout
             CHANGE
                 sections sections blob NULL

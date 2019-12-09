@@ -17,7 +17,6 @@ namespace Contao;
  */
 class FormFieldsetStart extends Widget
 {
-
 	/**
 	 * Template
 	 *
@@ -60,9 +59,11 @@ class FormFieldsetStart extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf('<fieldset%s>%s',
-						($this->strClass ? ' class="' . $this->strClass . '"' : ''),
-						($this->label ? '<legend>' . $this->label . '</legend>' : ''));
+		return sprintf(
+			'<fieldset%s>%s',
+			($this->strClass ? ' class="' . $this->strClass . '"' : ''),
+			($this->label ? '<legend>' . $this->label . '</legend>' : '')
+		);
 	}
 }
 

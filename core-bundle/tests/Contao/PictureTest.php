@@ -16,6 +16,7 @@ use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
+use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
 use Contao\FilesModel;
@@ -342,8 +343,17 @@ class PictureTest extends TestCase
 
         $pictureGenerator = new PictureGenerator($resizer);
 
+        $pictureFactory = new PictureFactory(
+            $pictureGenerator,
+            $imageFactory,
+            $framework,
+            $container->getParameter('contao.image.bypass_cache'),
+            $container->getParameter('contao.image.imagine_options')
+        );
+
         $container->set('contao.image.image_factory', $imageFactory);
         $container->set('contao.image.picture_generator', $pictureGenerator);
+        $container->set('contao.image.picture_factory', $pictureFactory);
 
         return $container;
     }

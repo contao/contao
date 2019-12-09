@@ -93,7 +93,6 @@ use Contao\Model\Collection;
  */
 class NewsletterModel extends Model
 {
-
 	/**
 	 * Table name
 	 * @var string

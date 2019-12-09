@@ -1,20 +1,34 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     Contao\ManagerBundle\HttpKernel\JwtManager: '@contao_manager.jwt_manager'
 
     contao_manager.cache.clear_bundle:
         class: Contao\ManagerBundle\Cache\BundleCacheClearer
         arguments:
             - '@?filesystem'
-        tags:
-            - { name: kernel.cache_clearer }
 
-    contao_manager.plugin_loader:
-        synthetic: true
+    Contao\ManagerBundle\Controller\DebugController:
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '@contao_manager.jwt_manager'
+        public: true
+
+    # Backwards compatibility
+    contao_manager.controller.debug:
+        alias: Contao\ManagerBundle\Controller\DebugController
+        deprecated: 'Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\ManagerBundle\Controller\DebugController" instead.'
         public: true
 
     contao_manager.jwt_manager:
-        synthetic: true
         public: true
+        synthetic: true
+
+    contao_manager.plugin_loader:
+        public: true
+        synthetic: true
 
     contao_manager.routing_loader:
         class: Contao\ManagerBundle\Routing\RouteLoader
@@ -29,3 +43,9 @@ services:
         class: Contao\ManagerBundle\Security\Logout\LogoutHandler
         arguments:
             - '@?contao_manager.jwt_manager'
+
+    contao_manager.twig.file_extension_filter_iterator:
+        class: Contao\ManagerBundle\Twig\FileExtensionFilterIterator
+        decorates: 'twig.template_iterator'
+        arguments:
+            - '@contao_manager.twig.file_extension_filter_iterator.inner'

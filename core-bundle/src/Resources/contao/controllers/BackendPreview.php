@@ -24,7 +24,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class BackendPreview extends Backend
 {
-
 	/**
 	 * Initialize the controller
 	 *
@@ -104,7 +103,7 @@ class BackendPreview extends Backend
 		else
 		{
 			$event = new PreviewUrlConvertEvent();
-			System::getContainer()->get('event_dispatcher')->dispatch(ContaoCoreEvents::PREVIEW_URL_CONVERT, $event);
+			System::getContainer()->get('event_dispatcher')->dispatch($event, ContaoCoreEvents::PREVIEW_URL_CONVERT);
 			$strUrl = $event->getUrl();
 		}
 

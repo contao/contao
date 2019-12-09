@@ -37,6 +37,9 @@ class AuthenticationProvider extends DaoAuthenticationProvider
      */
     private $options;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.security.authentication_provider" service instead
+     */
     public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFramework $framework, array $options = [])
     {
         parent::__construct($userProvider, $userChecker, $providerKey, $encoderFactory, false);

@@ -59,7 +59,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 abstract class System
 {
-
 	/**
 	 * Container
 	 * @var ContainerInterface
@@ -366,7 +365,7 @@ abstract class System
 		}
 
 		// Return if the language file has been loaded already
-		if (isset(static::$arrLanguageFiles[$strName][$strLanguage]) && !$blnNoCache)
+		if (!$blnNoCache && isset(static::$arrLanguageFiles[$strName][$strLanguage]))
 		{
 			return;
 		}
@@ -399,7 +398,6 @@ abstract class System
 
 		// Prepare the XLIFF loader
 		$xlfLoader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), true);
-
 		$strCacheDir = static::getContainer()->getParameter('kernel.cache_dir');
 
 		// Load the language(s)
@@ -725,7 +723,7 @@ abstract class System
 			$session->start();
 		}
 
-		return sha1($session->getId().$strCookie);
+		return sha1($session->getId() . $strCookie);
 	}
 
 	/**
@@ -1095,7 +1093,7 @@ abstract class System
 	}
 
 	/**
-	 * Split a friendly-name e-address and return name and e-mail as array
+	 * Split a friendly-name e-mail address and return name and e-mail as array
 	 *
 	 * @param string $strEmail A friendly-name e-mail address
 	 *

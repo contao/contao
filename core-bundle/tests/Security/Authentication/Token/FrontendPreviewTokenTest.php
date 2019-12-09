@@ -32,11 +32,7 @@ class FrontendPreviewTokenTest extends TestCase
         $this->assertTrue($token->isAuthenticated());
         $this->assertSame($user, $token->getUser());
 
-        $roles = $token->getRoles();
-
-        $this->assertIsArray($roles);
-        $this->assertCount(1, $roles);
-        $this->assertSame('ROLE_MEMBER', $roles[0]->getRole());
+        $this->assertSame(['ROLE_MEMBER'], $token->getRoleNames());
     }
 
     public function testAuthenticatesGuests(): void
@@ -57,22 +53,8 @@ class FrontendPreviewTokenTest extends TestCase
     public function testSerializesItself(): void
     {
         $token = new FrontendPreviewToken(null, true);
-        $serialized = $token->serialize();
-
-        switch (true) {
-            case false !== strpos($serialized, '"a:4:{'):
-                // Backwards compatility with symfony/security <4.2.3
-                $expected = serialize([true, serialize(['anon.', true, [], []])]);
-                break;
-
-            case false !== strpos($serialized, ';a:4:{'):
-                // Backwards compatility with symfony/security <4.3
-                $expected = serialize([true, ['anon.', true, [], []]]);
-                break;
-
-            default:
-                $expected = serialize([true, ['anon.', true, [], [], []]]);
-        }
+        $serialized = $token->__serialize();
+        $expected = [true, ['anon.', true, [], [], []]];
 
         $this->assertSame($expected, $serialized);
 
@@ -80,7 +62,7 @@ class FrontendPreviewTokenTest extends TestCase
 
         $this->assertFalse($token->showUnpublished());
 
-        $token->unserialize($expected);
+        $token->__unserialize($expected);
 
         $this->assertTrue($token->showUnpublished());
     }
