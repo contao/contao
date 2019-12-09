@@ -159,9 +159,7 @@ class UserPasswordCommand extends ContainerAwareCommand
         $passwordLength = $config->get('minPasswordLength') ?: 8;
 
         if (Utf8::strlen($password) < $passwordLength) {
-            throw new InvalidArgumentException(
-                sprintf('The password must be at least %s characters long.', $passwordLength)
-            );
+            throw new InvalidArgumentException(sprintf('The password must be at least %s characters long.', $passwordLength));
         }
 
         return password_hash($password, PASSWORD_DEFAULT);

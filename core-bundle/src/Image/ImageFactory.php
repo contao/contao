@@ -113,9 +113,7 @@ class ImageFactory implements ImageFactoryInterface
             }
 
             if (!\in_array($fileExtension, $this->validExtensions, true)) {
-                throw new \InvalidArgumentException(
-                    sprintf('Image type "%s" was not allowed to be processed', $fileExtension)
-                );
+                throw new \InvalidArgumentException(sprintf('Image type "%s" was not allowed to be processed', $fileExtension));
             }
 
             $image = new Image((string) $path, $imagine, $this->filesystem);

@@ -312,6 +312,7 @@ abstract class Frontend extends \Controller
 			if ($objRootPage === null)
 			{
 				\System::log('No root page found (host "' . $host . '", language "' . \Input::get('language') . '")', __METHOD__, TL_ERROR);
+
 				throw new NoRootPageFoundException('No root page found');
 			}
 		}
@@ -334,6 +335,7 @@ abstract class Frontend extends \Controller
 			if ($objRootPage === null)
 			{
 				\System::log('No root page found (host "' . \Environment::get('host') . '", languages "' . implode(', ', \Environment::get('httpAcceptLanguage')) . '")', __METHOD__, TL_ERROR);
+
 				throw new NoRootPageFoundException('No root page found');
 			}
 

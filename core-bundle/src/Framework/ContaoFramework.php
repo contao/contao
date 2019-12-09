@@ -406,9 +406,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
         // Show the "incomplete installation" message
         if (!$config->isComplete()) {
-            throw new IncompleteInstallationException(
-                'The installation has not been completed. Open the Contao install tool to continue.'
-            );
+            throw new IncompleteInstallationException('The installation has not been completed. Open the Contao install tool to continue.');
         }
     }
 
