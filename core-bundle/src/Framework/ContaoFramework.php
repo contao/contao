@@ -27,11 +27,12 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @internal Do not use this class in your code; use the "contao.framework" service instead
  */
-class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterface
+class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterface, ResetInterface
 {
     use ContainerAwareTrait;
 
@@ -92,6 +93,12 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $this->tokenChecker = $tokenChecker;
         $this->rootDir = $rootDir;
         $this->errorLevel = $errorLevel;
+    }
+
+    public function reset(): void
+    {
+        $this->adapterCache = [];
+        $this->isFrontend = false;
     }
 
     /**

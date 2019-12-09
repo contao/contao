@@ -14,8 +14,9 @@ namespace Contao\CoreBundle\Csrf;
 
 use Symfony\Component\Security\Csrf\Exception\TokenNotFoundException;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
-class MemoryTokenStorage implements TokenStorageInterface
+class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
 {
     /**
      * @var array
@@ -98,6 +99,12 @@ class MemoryTokenStorage implements TokenStorageInterface
         }
 
         return array_intersect_key($this->tokens, $this->usedTokens);
+    }
+
+    public function reset(): void
+    {
+        $this->tokens = null;
+        $this->usedTokens = [];
     }
 
     /**

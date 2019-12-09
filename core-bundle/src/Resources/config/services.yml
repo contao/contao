@@ -145,6 +145,8 @@ services:
 
     contao.csrf.token_storage:
         class: Contao\CoreBundle\Csrf\MemoryTokenStorage
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
@@ -195,12 +197,16 @@ services:
             - '%kernel.project_dir%'
             - '%contao.error_level%'
         public: true
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
         arguments:
             - '%contao.image.target_dir%'
             - '@?filesystem'
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.image.imagine.gd:
         class: Imagine\Gd\Imagine
@@ -250,6 +256,8 @@ services:
             - '@contao.framework'
             - '@contao.translation.translator'
         public: true
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory
@@ -684,6 +692,8 @@ services:
         arguments:
             - '@contao.translation.translator.data_collector.inner'
         autoconfigure: false
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.twig.template_extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension

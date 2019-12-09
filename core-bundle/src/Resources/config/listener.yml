@@ -119,6 +119,7 @@ services:
             - '@contao.framework'
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 256 }
+            - { name: kernel.reset, method: reset }
 
     contao.listener.pretty_error_screens:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
