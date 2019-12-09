@@ -112,9 +112,7 @@ class ImageFactory implements ImageFactoryInterface
     public function create($path, $size = null, $options = null): ImageInterface
     {
         if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptions) {
-            throw new \InvalidArgumentException(
-                'Options must be of type null, string or '.ResizeOptions::class
-            );
+            throw new \InvalidArgumentException('Options must be of type null, string or '.ResizeOptions::class);
         }
 
         if ($path instanceof ImageInterface) {
@@ -130,9 +128,7 @@ class ImageFactory implements ImageFactoryInterface
             }
 
             if (!\in_array($fileExtension, $this->validExtensions, true)) {
-                throw new \InvalidArgumentException(
-                    sprintf('Image type "%s" was not allowed to be processed', $fileExtension)
-                );
+                throw new \InvalidArgumentException(sprintf('Image type "%s" was not allowed to be processed', $fileExtension));
             }
 
             if (!$this->filesystem->isAbsolutePath($path)) {

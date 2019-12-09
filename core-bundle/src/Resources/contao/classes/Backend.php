@@ -862,6 +862,7 @@ abstract class Backend extends Controller
 		if (!$objUser->hasAccess($arrIds, 'pagemounts'))
 		{
 			$objSession->set($strKey, 0);
+
 			throw new AccessDeniedException('Page ID ' . $intNode . ' is not mounted.');
 		}
 
@@ -1039,6 +1040,7 @@ abstract class Backend extends Controller
 		if (!$objUser->hasAccess($strNode, 'filemounts'))
 		{
 			$objSession->set($strKey, '');
+
 			throw new AccessDeniedException('Folder ID "' . $strNode . '" is not mounted');
 		}
 

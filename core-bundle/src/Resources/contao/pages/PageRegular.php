@@ -237,6 +237,7 @@ class PageRegular extends Frontend
 		if (null === $objLayout)
 		{
 			$this->log('Could not find layout ID "' . $objPage->layout . '"', __METHOD__, TL_ERROR);
+
 			throw new NoLayoutSpecifiedException('No layout specified');
 		}
 

@@ -160,6 +160,7 @@ class FrontendIndex extends Frontend
 		if ($objPage instanceof Collection && $objPage->count() > 1)
 		{
 			$this->log('More than one page matches ' . Environment::get('base') . Environment::get('request'), __METHOD__, TL_ERROR);
+
 			throw new \LogicException('More than one page found: ' . Environment::get('uri'));
 		}
 
@@ -255,6 +256,7 @@ class FrontendIndex extends Frontend
 			if ($objPage->domain != Environment::get('host'))
 			{
 				$this->log('Page ID "' . $objPage->id . '" was requested via "' . Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . Environment::get('base') . Environment::get('request') . ')', __METHOD__, TL_ERROR);
+
 				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 			}
 		}
@@ -281,6 +283,7 @@ class FrontendIndex extends Frontend
 			if (empty($arrGroups) || !\is_array($arrGroups) || !\is_array($this->User->groups) || !\count(array_intersect($arrGroups, $this->User->groups)))
 			{
 				$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
+
 				throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
 			}
 		}

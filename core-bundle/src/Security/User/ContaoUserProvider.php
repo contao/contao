@@ -132,9 +132,7 @@ class ContaoUserProvider implements UserProviderInterface
             );
         }
 
-        throw new UsernameNotFoundException(
-            sprintf('User "%s" has been logged out automatically due to inactivity.', $user->username)
-        );
+        throw new UsernameNotFoundException(sprintf('User "%s" has been logged out automatically due to inactivity.', $user->username));
     }
 
     private function triggerPostAuthenticateHook(User $user): void
