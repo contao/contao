@@ -1697,7 +1697,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
         $this->assertSame('session', (string) $definition->getArgument(3));
         $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(4));
-        $this->assertSame('%contao.preview_script%', (string) $definition->getArgument(5));
+        $this->assertSame('security.access.simple_role_voter', (string) $definition->getArgument(5));
+        $this->assertSame('%contao.preview_script%', (string) $definition->getArgument(6));
     }
 
     public function testRegistersTheSecurityTwoFactorAuthenticator(): void
