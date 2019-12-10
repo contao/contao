@@ -29,6 +29,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Contracts\Service\ResetInterface;
 
 class ContaoFrameworkTest extends TestCase
 {
@@ -632,6 +633,11 @@ class ContaoFrameworkTest extends TestCase
             ],
             $GLOBALS['TL_HOOKS']['isVisibleElement']
         );
+    }
+
+    public function testServiceIsResetable()
+    {
+        $this->assertInstanceOf(ResetInterface::class, $this->mockFramework());
     }
 
     /**
