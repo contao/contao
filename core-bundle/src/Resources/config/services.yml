@@ -576,6 +576,7 @@ services:
             - '@security.token_storage'
             - '@session'
             - '@security.authentication.trust_resolver'
+            - '@security.access.simple_role_voter'
             - '%contao.preview_script%'
         public: true
 
