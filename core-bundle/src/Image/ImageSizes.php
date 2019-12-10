@@ -50,7 +50,7 @@ class ImageSizes implements ResetInterface
     private $predefinedSizes = [];
 
     /**
-     * @var array
+     * @var array|null
      */
     private $options;
 
