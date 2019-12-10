@@ -104,18 +104,6 @@
       <trans-unit id="tl_maintenance.crawl.subscribersLabel.1">
         <source>The crawler crawls all URLs it finds. You may decide what is being done with these results here.</source>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawl.concurrencyLabel.0">
-        <source>Number of concurrent pages to crawl</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.crawl.concurrencyLabel.1">
-        <source>The crawler can crawl multiple pages at once. However, depending on your server there's a maximum of concurrent requests it can handle.</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.crawl.maxRequestsLabel.0">
-        <source>Number of pages to crawl per iteration</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.crawl.maxRequestsLabel.1">
-        <source>Crawling can take very long. That's why the whole process is split into chunks of pages. You may configure the size of these chunks here.</source>
-      </trans-unit>
       <trans-unit id="tl_maintenance.crawl.waitToBeFinished">
         <source>The crawler is currently working, please wait for it to be finished to see your results.</source>
       </trans-unit>

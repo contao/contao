@@ -64,12 +64,8 @@ class Crawl extends Backend implements \executable
 		$subscriberNames = $factory->getSubscriberNames();
 
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
-		$concurrencyWidget = $this->generateConcurrencyWidget();
-		$maxRequestsWidget = $this->generateMaxRequestsWidget();
 
 		$template->subscribersWidget = $subscribersWidget;
-		$template->concurrencyWidget = $concurrencyWidget;
-		$template->maxRequestsWidget = $maxRequestsWidget;
 
 		if (!$this->isActive())
 		{
@@ -120,23 +116,12 @@ class Crawl extends Backend implements \executable
 			Controller::redirect(str_replace('&jobId=' . $jobId, '', Environment::get('request')));
 		}
 
-		$escargot = $escargot->withConcurrency((int) $concurrencyWidget->value);
-		$escargot = $escargot->withMaxRequests((int) $maxRequestsWidget->value);
+		// Configure with sane defaults for the back end. Maybe we should make this configurable one day.
+		$escargot = $escargot->withConcurrency(5);
+		$escargot = $escargot->withMaxDepth(32);
+		$escargot = $escargot->withMaxRequests(20);
 
-		try
-		{
-			$escargot = $factory->createFromJobId($jobId, $queue, $activeSubscribers);
-		}
-		catch (InvalidJobIdException $e)
-		{
-			Controller::redirect(str_replace('&jobId=' . $jobId, '', Environment::get('request')));
-		}
-
-		$logger = $this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath);
-
-		$escargot = $escargot->withConcurrency((int) $concurrencyWidget->value);
-		$escargot = $escargot->withMaxRequests((int) $maxRequestsWidget->value);
-		$escargot = $escargot->withLogger($logger);
+		$escargot = $escargot->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
 
 		if (Environment::get('isAjaxRequest'))
 		{
@@ -267,54 +252,6 @@ class Crawl extends Backend implements \executable
 		}
 
 		$widget->options = $options;
-
-		if ($this->isActive())
-		{
-			$widget->validate();
-
-			if ($widget->hasErrors())
-			{
-				$this->valid = false;
-			}
-		}
-
-		return $widget;
-	}
-
-	private function generateConcurrencyWidget(): Widget
-	{
-		$name = 'crawl_concurrency';
-		$widget = new TextField();
-		$widget->id = $name;
-		$widget->name = $name;
-		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['concurrencyLabel'][0];
-		$widget->rgxp = 'digit';
-		$widget->value = 10;
-		$widget->setInputCallback($this->getInputCallback($name));
-
-		if ($this->isActive())
-		{
-			$widget->validate();
-
-			if ($widget->hasErrors())
-			{
-				$this->valid = false;
-			}
-		}
-
-		return $widget;
-	}
-
-	private function generateMaxRequestsWidget(): Widget
-	{
-		$name = 'crawl_max_requests';
-		$widget = new TextField();
-		$widget->id = $name;
-		$widget->name = $name;
-		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['maxRequestsLabel'][0];
-		$widget->rgxp = 'digit';
-		$widget->value = 20;
-		$widget->setInputCallback($this->getInputCallback($name));
 
 		if ($this->isActive())
 		{

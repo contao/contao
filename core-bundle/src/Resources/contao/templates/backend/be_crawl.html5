@@ -193,14 +193,6 @@
           <?= $this->subscribersWidget->parse() ?>
           <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscribersLabel'][1] ?></p>
         </div>
-        <div class="widget w50 clr">
-          <?= $this->concurrencyWidget->parse() ?>
-          <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['concurrencyLabel'][1] ?></p>
-        </div>
-        <div class="widget w50">
-          <?= $this->maxRequestsWidget->parse() ?>
-          <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['maxRequestsLabel'][1] ?></p>
-        </div>
       </div>
       <div class="tl_submit_container clr">
         <button type="submit" id="index" class="tl_submit">Start crawling</button>
