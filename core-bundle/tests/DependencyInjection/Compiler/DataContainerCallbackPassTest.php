@@ -508,7 +508,14 @@ class DataContainerCallbackPassTest extends TestCase
     public function testThrowsExceptionIfConfiguredMethodDoesNotExist(): void
     {
         $definition = new Definition(TestListener::class);
-        $definition->addTag('contao.callback', ['table' => 'tl_page', 'target' => 'tl_page.config.foo', 'method' => 'onFooCallback']);
+        $definition->addTag(
+            'contao.callback',
+            [
+                'table' => 'tl_page',
+                'target' => 'tl_page.config.foo',
+                'method' => 'onFooCallback',
+            ]
+        );
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('test.callback_listener', $definition);
@@ -524,7 +531,14 @@ class DataContainerCallbackPassTest extends TestCase
     public function testThrowsExceptionIfConfiguredMethodIsPrivate(): void
     {
         $definition = new Definition(TestListener::class);
-        $definition->addTag('contao.callback', ['table' => 'tl_page', 'target' => 'tl_page.config.foo', 'method' => 'onPrivateCallback']);
+        $definition->addTag(
+            'contao.callback',
+            [
+                'table' => 'tl_page',
+                'target' => 'tl_page.config.foo',
+                'method' => 'onPrivateCallback',
+            ]
+        );
 
         $container = $this->getContainerBuilder();
         $container->setDefinition('test.callback_listener', $definition);
