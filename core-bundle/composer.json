@@ -165,7 +165,8 @@
         "psr-4": {
             "Contao\\CoreBundle\\Fixtures\\": "tests/Fixtures/src/",
             "Contao\\CoreBundle\\Tests\\": "tests/",
-            "Contao\\TestBundle\\": "tests/Fixtures/vendor/contao/test-bundle/"
+            "Contao\\TestBundle\\": "tests/Fixtures/vendor/contao/test-bundle/",
+            "Contao\\NewBundle\\": "tests/Fixtures/vendor/contao/new-bundle/src/"
         }
     },
     "support": {
