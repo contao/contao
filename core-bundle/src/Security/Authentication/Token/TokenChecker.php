@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Http\FirewallMapInterface;
 
 class TokenChecker
@@ -55,7 +55,7 @@ class TokenChecker
     private $trustResolver;
 
     /**
-     * @var RoleVoter
+     * @var VoterInterface
      */
     private $roleVoter;
 
@@ -64,7 +64,7 @@ class TokenChecker
      */
     private $previewScript;
 
-    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, RoleVoter $roleVoter, string $previewScript = '')
+    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, VoterInterface $roleVoter, string $previewScript = '')
     {
         $this->requestStack = $requestStack;
         $this->firewallMap = $firewallMap;
