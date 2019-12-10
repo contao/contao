@@ -238,7 +238,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertSame('no-cache, private', $response->headers->get('Cache-Control'));
     }
 
-    public function testServiceIsResetable()
+    public function testServiceIsResetable(): void
     {
         $response = new Response();
         $response->headers = $this->createMock(ResponseHeaderBag::class);

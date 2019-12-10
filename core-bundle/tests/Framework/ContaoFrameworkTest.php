@@ -635,7 +635,7 @@ class ContaoFrameworkTest extends TestCase
         );
     }
 
-    public function testServiceIsResetable()
+    public function testServiceIsResetable(): void
     {
         $this->assertInstanceOf(ResetInterface::class, $this->mockFramework());
     }

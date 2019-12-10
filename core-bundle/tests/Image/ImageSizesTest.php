@@ -172,7 +172,7 @@ class ImageSizesTest extends TestCase
         $this->assertSame([], $options);
     }
 
-    public function testServiceIsResetable()
+    public function testServiceIsResetable(): void
     {
         $this->assertInstanceOf(ResetInterface::class, $this->imageSizes);
 

@@ -78,7 +78,7 @@ class DataCollectorTranslatorTest extends TestCase
         $this->assertSame('translation', $translator->trans('translation_key', [], 'message_domain', 'en'));
     }
 
-    public function testServiceIsResetable()
+    public function testServiceIsResetable(): void
     {
         $originalTranslator = $this->createMock(SymfonyDataCollectorTranslator::class);
 

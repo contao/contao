@@ -100,7 +100,7 @@ class MemoryTokenStorageTest extends TestCase
         $memoryTokenStorage->removeToken('foo');
     }
 
-    public function testServiceIsResetable()
+    public function testServiceIsResetable(): void
     {
         $memoryTokenStorage = new MemoryTokenStorage();
 
