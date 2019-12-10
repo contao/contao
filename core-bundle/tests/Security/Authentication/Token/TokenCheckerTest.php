@@ -19,6 +19,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\User;
 use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,6 +76,43 @@ class TokenCheckerTest extends TestCase
             $this->assertTrue($tokenChecker->hasFrontendUser());
         } else {
             $this->assertTrue($tokenChecker->hasBackendUser());
+        }
+    }
+
+    /**
+     * @dataProvider getUserInTokenStorageData
+     */
+    public function testChecksForTwoFactorTokenInTokenStorageIfFirewallContextMatches(string $class, string $firewallContext): void
+    {
+        $user = $this->mockUser($class);
+        $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
+
+        $twoFactorToken = new TwoFactorToken($token, null, '2fa-provider', []);
+
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->never())
+            ->method('isStarted')
+        ;
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
+            ->method('getToken')
+            ->willReturn($twoFactorToken)
+        ;
+
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext($firewallContext),
+            $tokenStorage,
+            $session,
+            $this->trustResolver
+        );
+
+        if (FrontendUser::class === $class) {
+            $this->assertFalse($tokenChecker->hasFrontendUser());
+        } else {
+            $this->assertFalse($tokenChecker->hasBackendUser());
         }
     }
 
