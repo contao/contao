@@ -40,7 +40,7 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         $response = $this->getResponse($template, $model, $request);
 
         if (null === $response) {
-            $response = new Response($template->parse());
+            $response = $template->getResponse();
         }
 
         return $response;
