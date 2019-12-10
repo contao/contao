@@ -1,87 +1,96 @@
 <?php
 
-namespace Contao\CoreBundle\Fixtures\EventListener;
+declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Fixtures\EventListener;
 
 class TestListener
 {
-    private function onPrivateCallback()
+    public function onLoadPage(): void
     {
     }
 
-    public function onLoadPage()
+    public function onLoadCallback(): void
     {
     }
 
-    public function onLoadCallback()
+    public function onListitemsXlabel(): void
     {
     }
 
-    public function onListitemsXlabel()
+    public function onFoobarCallback(): void
     {
     }
 
-    public function onFoobarCallback()
+    public function loadFirst(): void
     {
     }
 
-    public function loadFirst()
+    public function loadSecond(): void
     {
     }
 
-    public function loadSecond()
+    public function onSaveCallback(): void
     {
     }
 
-    public function onSaveCallback()
+    public function onLabelCallback(): void
     {
     }
 
-    public function onLabelCallback()
+    public function onLoadFirst(): void
     {
     }
 
-    public function onLoadFirst()
+    public function onLoadSecond(): void
     {
     }
 
-    public function onLoadSecond()
+    public function onArticleWizard(): void
     {
     }
 
-    public function onArticleWizard()
+    public function onInitializeSystem(): void
     {
     }
 
-    public function onInitializeSystem()
+    public function onGeneratePage(): void
     {
     }
 
-    public function onGeneratePage()
+    public function onInitializeSystemFirst(): void
     {
     }
 
-    public function onInitializeSystemFirst()
+    public function onInitializeSystemSecond(): void
     {
     }
 
-    public function onInitializeSystemSecond()
+    public function onParseTemplate(): void
     {
     }
 
-    public function onParseTemplate()
+    public function onInitializeSystemLow(): void
     {
     }
 
-    public function onInitializeSystemLow()
+    public function onInitializeSystemHigh(): void
     {
     }
 
-    public function onInitializeSystemHigh()
+    public function onInitializeSystemAfter(): void
     {
     }
 
-    public function onInitializeSystemAfter()
+    private function onPrivateCallback(): void
     {
     }
 }

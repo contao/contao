@@ -99,11 +99,13 @@ class DataContainerCallbackPass implements CompilerPassInterface
         if (isset($attributes['method'])) {
             if (!$ref->hasMethod($attributes['method'])) {
                 $invalid .= sprintf('The class "%s" does not have a method "%s".', $class, $attributes['method']);
+
                 throw new InvalidDefinitionException($invalid);
             }
 
             if (!$ref->getMethod($attributes['method'])->isPublic()) {
                 $invalid .= sprintf('The "%s::%s" method exists but is not public.', $class, $attributes['method']);
+
                 throw new InvalidDefinitionException($invalid);
             }
 

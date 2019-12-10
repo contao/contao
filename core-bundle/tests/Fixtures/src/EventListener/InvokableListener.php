@@ -1,12 +1,20 @@
 <?php
 
-namespace Contao\CoreBundle\Fixtures\EventListener;
+declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Fixtures\EventListener;
 
 class InvokableListener
 {
-    public function __invoke()
+    public function __invoke(): void
     {
-
     }
 }
