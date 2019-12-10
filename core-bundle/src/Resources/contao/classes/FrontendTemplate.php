@@ -74,7 +74,8 @@ class FrontendTemplate extends Template
 	/**
 	 * Return a response object
 	 *
-	 * @param bool $blnCheckRequest If true, check for unsued $_GET parameters
+	 * @param bool $blnCheckRequest 	  If true, check for unsued $_GET parameters
+	 * @param mixed $blnForceCacheHeaders
 	 *
 	 * @return Response The response object
 	 */
@@ -84,7 +85,8 @@ class FrontendTemplate extends Template
 
 		$response = parent::getResponse();
 
-		if ($blnForceCacheHeaders || 0 === strncmp('fe_', $this->strTemplate, 3)) {
+		if ($blnForceCacheHeaders || 0 === strncmp('fe_', $this->strTemplate, 3))
+		{
 			return $this->setCacheHeaders($response);
 		}
 
