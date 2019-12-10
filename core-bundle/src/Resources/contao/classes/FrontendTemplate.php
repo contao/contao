@@ -74,8 +74,8 @@ class FrontendTemplate extends Template
 	/**
 	 * Return a response object
 	 *
-	 * @param bool $blnCheckRequest 	  If true, check for unsued $_GET parameters
-	 * @param mixed $blnForceCacheHeaders
+	 * @param bool $blnCheckRequest      If true, check for unsued $_GET parameters
+	 * @param bool $blnForceCacheHeaders
 	 *
 	 * @return Response The response object
 	 */
