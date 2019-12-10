@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Security\Authentication\Token;
 
 use Contao\BackendUser;
 use Contao\FrontendUser;
-use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -76,7 +75,7 @@ class TokenChecker
     {
         $token = $this->getToken(self::FRONTEND_FIREWALL);
 
-        return null !== $token && !$token instanceof TwoFactorTokenInterface && $token->getUser() instanceof FrontendUser;
+        return null !== $token && \in_array('ROLE_MEMBER', array_map('strval', $token->getRoles()), true);
     }
 
     /**
@@ -86,7 +85,7 @@ class TokenChecker
     {
         $token = $this->getToken(self::BACKEND_FIREWALL);
 
-        return null !== $token && !$token instanceof TwoFactorTokenInterface && $token->getUser() instanceof BackendUser;
+        return null !== $token && \in_array('ROLE_USER', array_map('strval', $token->getRoles()), true);
     }
 
     /**
