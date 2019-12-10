@@ -70,8 +70,8 @@ class CrawlCommand extends Command
             ->addOption('delay', null, InputOption::VALUE_REQUIRED, 'The number of microseconds to wait between requests. (0 = throttling is disabled)', 0)
             ->addOption('max-requests', null, InputOption::VALUE_REQUIRED, 'The maximum number of requests to execute. (0 = no limit)', 0)
             ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for. (0 = no limit)', 0)
-            ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progess bar output')
-            ->setDescription('Crawls all Contao root pages plus additional URIs configured using (contao.search.additional_uris) and triggers the desired subscribers.')
+            ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progress bar output')
+            ->setDescription('Crawls all Contao root pages plus additional URIs configured using (contao.crawl.additionalURIs) and triggers the desired subscribers.')
         ;
     }
 
@@ -105,11 +105,12 @@ class CrawlCommand extends Command
 
         $logOutput = $output instanceof ConsoleOutput ? $output->section() : $output;
 
-        $this->escargot = $this->escargot->withLogger($this->createSourceProvidingConsoleLogger($logOutput));
-        $this->escargot = $this->escargot->withConcurrency((int) $input->getOption('concurrency'));
-        $this->escargot = $this->escargot->withRequestDelay((int) $input->getOption('delay'));
-        $this->escargot = $this->escargot->withMaxRequests((int) $input->getOption('max-requests'));
-        $this->escargot = $this->escargot->withMaxDepth((int) $input->getOption('max-depth'));
+        $this->escargot = $this->escargot
+            ->withLogger($this->createSourceProvidingConsoleLogger($logOutput))
+            ->withConcurrency((int) $input->getOption('concurrency'))
+            ->withRequestDelay((int) $input->getOption('delay'))
+            ->withMaxRequests((int) $input->getOption('max-requests'))
+            ->withMaxDepth((int) $input->getOption('max-depth'));
 
         $io->comment('Started crawling...');
 
