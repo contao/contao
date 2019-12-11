@@ -110,7 +110,8 @@ class CrawlCommand extends Command
             ->withConcurrency((int) $input->getOption('concurrency'))
             ->withRequestDelay((int) $input->getOption('delay'))
             ->withMaxRequests((int) $input->getOption('max-requests'))
-            ->withMaxDepth((int) $input->getOption('max-depth'));
+            ->withMaxDepth((int) $input->getOption('max-depth'))
+        ;
 
         $io->comment('Started crawling...');
 

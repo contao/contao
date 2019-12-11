@@ -99,10 +99,11 @@ class Crawl extends Backend implements \executable
 			$response = new BinaryFileResponse($filePath);
 			$response->setPrivate();
 			$response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $fileName);
+
 			throw new ResponseException($response);
 		}
 
-		$clientOptions = [];
+		$clientOptions = array();
 
 		/** @var FrontendPreviewAuthenticator $objAuthenticator */
 		$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
@@ -110,22 +111,23 @@ class Crawl extends Backend implements \executable
 		if ($memberWidget->value)
 		{
 			$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')->execute((int) $memberWidget->value);
+
 			if (!$objAuthenticator->authenticateFrontendUser($objMember->username, false))
 			{
 				$objAuthenticator->removeFrontendAuthentication();
-				$clientOptions = [];
+				$clientOptions = array();
 			}
 			else
 			{
 				/** @var SessionInterface $session */
 				$session = System::getContainer()->get('session');
-				$clientOptions = ['headers' => ['Cookie' => sprintf('%s=%s', $session->getName(), $session->getId())]];
+				$clientOptions = array('headers' => array('Cookie' => sprintf('%s=%s', $session->getName(), $session->getId())));
 			}
 		}
 		else
 		{
 			$objAuthenticator->removeFrontendAuthentication();
-			$clientOptions = [];
+			$clientOptions = array();
 		}
 
 		if (!$jobId)
@@ -145,11 +147,11 @@ class Crawl extends Backend implements \executable
 		}
 
 		// Configure with sane defaults for the back end. Maybe we should make this configurable one day.
-		$escargot = $escargot->withConcurrency(1);
-		$escargot = $escargot->withMaxDepth(32);
-		$escargot = $escargot->withMaxRequests(20);
-
-		$escargot = $escargot->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
+		$escargot = $escargot
+			->withConcurrency(5)
+			->withMaxDepth(32)
+			->withMaxRequests(20)
+			->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
 
 		if (Environment::get('isAjaxRequest'))
 		{
@@ -304,7 +306,7 @@ class Crawl extends Backend implements \executable
 		$widget->setInputCallback($this->getInputCallback($name));
 		$time = time();
 
-		$options = [['value' => '', 'label' => '-', 'default' => true]];
+		$options = array(array('value' => '', 'label' => '-', 'default' => true));
 
 		// Get the active front end users
 		if (BackendUser::getInstance()->isAdmin)
@@ -314,6 +316,7 @@ class Crawl extends Backend implements \executable
 		else
 		{
 			$amg = StringUtil::deserialize(BackendUser::getInstance()->amg);
+
 			if (!empty($amg) && \is_array($amg))
 			{
 				$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE (groups LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
