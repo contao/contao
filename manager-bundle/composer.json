@@ -30,33 +30,35 @@
         "nelmio/security-bundle": "^2.2",
         "ocramius/proxy-manager": "^2.1",
         "php-http/guzzle6-adapter": "^1.1",
-        "symfony/config": "4.2.* || 4.3.*",
-        "symfony/console": "4.2.* || 4.3.*",
-        "symfony/debug-bundle": "4.2.* || 4.3.*",
-        "symfony/dependency-injection": "4.2.* || 4.3.*",
-        "symfony/dotenv": "4.2.* || 4.3.*",
-        "symfony/expression-language": "4.2.* || 4.3.*",
-        "symfony/filesystem": "4.2.* || 4.3.*",
-        "symfony/finder": "4.2.* || 4.3.*",
-        "symfony/framework-bundle": "4.2.* || 4.3.*",
-        "symfony/http-foundation": "4.2.* || 4.3.*",
-        "symfony/http-kernel": "4.2.* || 4.3.*",
-        "symfony/monolog-bridge": "4.2.* || 4.3.*",
+        "symfony/config": "4.4.*",
+        "symfony/console": "4.4.*",
+        "symfony/debug": "4.4.*",
+        "symfony/debug-bundle": "4.4.*",
+        "symfony/dependency-injection": "4.4.*",
+        "symfony/dotenv": "4.4.*",
+        "symfony/expression-language": "4.4.*",
+        "symfony/filesystem": "4.4.*",
+        "symfony/finder": "4.4.*",
+        "symfony/framework-bundle": "4.4.*",
+        "symfony/http-foundation": "4.4.*",
+        "symfony/http-kernel": "4.4.*",
+        "symfony/monolog-bridge": "4.4.*",
         "symfony/monolog-bundle": "^3.1",
-        "symfony/process": "4.2.* || 4.3.*",
-        "symfony/proxy-manager-bridge": "4.2.* || 4.3.*",
-        "symfony/routing": "4.2.* || 4.3.*",
-        "symfony/security-bundle": "4.2.* || 4.3.*",
+        "symfony/process": "4.4.*",
+        "symfony/proxy-manager-bridge": "4.4.*",
+        "symfony/routing": "4.4.*",
+        "symfony/security-bundle": "4.4.*",
         "symfony/swiftmailer-bundle": "^2.6 || ^3.1.5",
-        "symfony/twig-bundle": "4.2.* || 4.3.*",
-        "symfony/web-profiler-bundle": "4.2.* || 4.3.*",
-        "symfony/yaml": "4.2.* || 4.3.*",
+        "symfony/twig-bundle": "4.4.*",
+        "symfony/web-profiler-bundle": "4.4.*",
+        "symfony/yaml": "4.4.*",
         "toflar/psr6-symfony-http-cache-store": "^2.1"
     },
     "require-dev": {
         "composer/composer": "^1.0",
         "contao/test-case": "^4.0",
-        "symfony/phpunit-bridge": "^4.3.4"
+        "phpunit/phpunit": "^8.4",
+        "symfony/phpunit-bridge": "4.4.*"
     },
     "suggest": {
         "contao/tcpdf-bundle": "To export articles as PDF files"
@@ -67,7 +69,7 @@
         },
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
         "symfony": {
-            "require": "^4.3"
+            "require": "^4.4"
         }
     },
     "autoload": {

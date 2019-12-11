@@ -23,7 +23,7 @@ class BackendAccessVoter extends Voter
      */
     protected function supports($attribute, $subject): bool
     {
-        return 0 === strncmp($attribute, 'contao_user.', 12);
+        return \is_string($attribute) && 0 === strncmp($attribute, 'contao_user.', 12);
     }
 
     /**

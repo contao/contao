@@ -511,7 +511,6 @@ abstract class Events extends Module
 
 			case 'cal_all': // 1970-01-01 00:00:00 - 2106-02-07 07:28:15
 				return array(0, min(4294967295, PHP_INT_MAX), $GLOBALS['TL_LANG']['MSC']['cal_empty']);
-				break;
 
 			case 'next_7':
 				return array(time(), strtotime('+7 days'), $GLOBALS['TL_LANG']['MSC']['cal_empty']);

@@ -84,7 +84,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $this->assertTrue($response->headers->has('Set-Cookie'));
 
-        $allHeaders = $response->headers->get('Set-Cookie', null, false);
+        $allHeaders = $response->headers->all('Set-Cookie');
 
         $this->assertSame('content=foobar; path=/', $allHeaders[0]);
         $this->assertSame('new-content=foobar; path=/', $allHeaders[1]);
@@ -193,7 +193,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $listener->onKernelResponse($responseEvent);
 
         $response = $responseEvent->getResponse();
-        $allHeaders = $response->headers->get('Set-Cookie', null, false);
+        $allHeaders = $response->headers->all('Set-Cookie');
 
         $this->assertTrue($response->headers->has('Set-Cookie'));
         $this->assertCount(1, $allHeaders);
@@ -206,7 +206,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $response = $responseEvent->getResponse();
 
-        $allHeaders = $response->headers->get('Set-Cookie', null, false);
+        $allHeaders = $response->headers->all('Set-Cookie');
 
         $this->assertTrue($response->headers->has('Set-Cookie'));
         $this->assertCount(2, $allHeaders);

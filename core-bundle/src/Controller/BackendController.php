@@ -24,7 +24,6 @@ use Contao\BackendPopup;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +32,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route(defaults={"_scope" = "backend", "_token_check" = true})
+ *
+ * @internal
  */
 class BackendController extends AbstractController
 {
@@ -41,7 +42,7 @@ class BackendController extends AbstractController
      */
     public function mainAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendMain();
 
@@ -53,7 +54,7 @@ class BackendController extends AbstractController
      */
     public function loginAction(Request $request): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             $queryString = '';
@@ -85,7 +86,7 @@ class BackendController extends AbstractController
      */
     public function passwordAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendPassword();
 
@@ -97,7 +98,7 @@ class BackendController extends AbstractController
      */
     public function confirmAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendConfirm();
 
@@ -109,7 +110,7 @@ class BackendController extends AbstractController
      */
     public function fileAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendFile();
 
@@ -121,7 +122,7 @@ class BackendController extends AbstractController
      */
     public function helpAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendHelp();
 
@@ -133,7 +134,7 @@ class BackendController extends AbstractController
      */
     public function pageAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendPage();
 
@@ -145,7 +146,7 @@ class BackendController extends AbstractController
      */
     public function popupAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendPopup();
 
@@ -157,7 +158,7 @@ class BackendController extends AbstractController
      */
     public function alertsAction(): Response
     {
-        $this->get('contao.framework')->initialize();
+        $this->initializeContaoFramework();
 
         $controller = new BackendAlerts();
 
@@ -213,7 +214,6 @@ class BackendController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services['contao.framework'] = ContaoFramework::class;
         $services['contao.picker.builder'] = PickerBuilderInterface::class;
 
         return $services;

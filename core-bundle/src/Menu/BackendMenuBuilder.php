@@ -30,6 +30,9 @@ class BackendMenuBuilder
      */
     private $eventDispatcher;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.menu.backend_menu_builder" service instead
+     */
     public function __construct(FactoryInterface $factory, EventDispatcherInterface $eventDispatcher)
     {
         $this->factory = $factory;

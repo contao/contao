@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\Translation;
 use Symfony\Component\Translation\DataCollectorTranslator as SymfonyDataCollectorTranslator;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
+/**
+ * @internal
+ */
 class DataCollectorTranslator extends SymfonyDataCollectorTranslator
 {
     /**

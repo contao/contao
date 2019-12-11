@@ -21,6 +21,9 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
 
+/**
+ * @internal
+ */
 class GeneratePageListener
 {
     /**

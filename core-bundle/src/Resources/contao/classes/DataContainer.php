@@ -184,35 +184,27 @@ abstract class DataContainer extends Backend
 		{
 			case 'id':
 				return $this->intId;
-				break;
 
 			case 'table':
 				return $this->strTable;
-				break;
 
 			case 'value':
 				return $this->varValue;
-				break;
 
 			case 'field':
 				return $this->strField;
-				break;
 
 			case 'inputName':
 				return $this->strInputName;
-				break;
 
 			case 'palette':
 				return $this->strPalette;
-				break;
 
 			case 'activeRecord':
 				return $this->objActiveRecord;
-				break;
 
 			case 'createNewVersion':
 				return $this->blnCreateNewVersion;
-				break;
 		}
 
 		return parent::__get($strKey);

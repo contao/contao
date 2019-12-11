@@ -36,6 +36,9 @@ class ContaoTableProcessor implements ProcessorInterface
      */
     private $scopeMatcher;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.monolog.processor" service instead
+     */
     public function __construct(RequestStack $requestStack, TokenStorageInterface $tokenStorage, ScopeMatcher $scopeMatcher)
     {
         $this->requestStack = $requestStack;

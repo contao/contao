@@ -24,6 +24,9 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private $security;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.picker.page_provider" service instead
+     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
     {
         parent::__construct($menuFactory, $router, $translator);

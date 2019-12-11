@@ -53,6 +53,9 @@ class ImageSizes
      */
     private $options;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.image.image_sizes" service instead
+     */
     public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework, Translator $translator)
     {
         $this->connection = $connection;

@@ -46,6 +46,36 @@ use Symfony\Component\Routing\RouteCollection;
 
 class PluginTest extends ContaoTestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        if (isset($_SERVER['APP_SECRET'])) {
+            $_SERVER['APP_SECRET_ORIG'] = $_SERVER['APP_SECRET'];
+            unset($_SERVER['APP_SECRET']);
+        }
+
+        if (isset($_SERVER['DATABASE_URL'])) {
+            $_SERVER['DATABASE_URL_ORIG'] = $_SERVER['DATABASE_URL'];
+            unset($_SERVER['DATABASE_URL']);
+        }
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        if (isset($_SERVER['APP_SECRET_ORIG'])) {
+            $_SERVER['APP_SECRET'] = $_SERVER['APP_SECRET_ORIG'];
+            unset($_SERVER['APP_SECRET_ORIG']);
+        }
+
+        if (isset($_SERVER['DATABASE_URL_ORIG'])) {
+            $_SERVER['DATABASE_URL'] = $_SERVER['DATABASE_URL_ORIG'];
+            unset($_SERVER['DATABASE_URL_ORIG']);
+        }
+    }
+
     public function testReturnsTheBundles(): void
     {
         $plugin = new Plugin();
@@ -294,11 +324,9 @@ class PluginTest extends ContaoTestCase
      *
      * @expectedDeprecation Defining the "prepend_locale" parameter in the parameters.yml file %s.
      */
-    public function testGetExtensionConfigContao(): void
+    public function testHandlesThePrependLocaleParameter(): void
     {
-        $pluginLoader = $this->createMock(PluginLoader::class);
-
-        $container = new PluginContainerBuilder($pluginLoader, []);
+        $container = $this->getContainer();
         $container->setParameter('prepend_locale', true);
 
         $expect = [[
@@ -310,11 +338,86 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expect, $extensionConfig);
     }
 
-    public function testGetExtensionConfigDoctrine(): void
+    public function testSetsTheAppSecret(): void
     {
-        $pluginLoader = $this->createMock(PluginLoader::class);
-        $container = new PluginContainerBuilder($pluginLoader, []);
+        $container = $this->getContainer();
 
+        (new Plugin())->getExtensionConfig('framework', [], $container);
+
+        $bag = $container->getParameterBag()->all();
+
+        $this->assertSame('ThisTokenIsNotSoSecretChangeIt', $bag['env(APP_SECRET)']);
+    }
+
+    /**
+     * @dataProvider getDatabaseParameters
+     */
+    public function testSetsTheDatabaseUrl(?string $user, ?string $password, ?string $name, string $expected): void
+    {
+        $container = $this->getContainer();
+        $container->setParameter('database_user', $user);
+        $container->setParameter('database_password', $password);
+        $container->setParameter('database_name', $name);
+
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'pdo_mysql',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $bag = $container->getParameterBag()->all();
+
+        $this->assertSame($expected, $bag['env(DATABASE_URL)']);
+    }
+
+    public function getDatabaseParameters(): \Generator
+    {
+        yield [
+            null,
+            null,
+            null,
+            'mysql://localhost:3306',
+        ];
+
+        yield [
+            null,
+            null,
+            'contao_test',
+            'mysql://localhost:3306/contao_test',
+        ];
+
+        yield [
+            null,
+            'foobar',
+            'contao_test',
+            'mysql://localhost:3306/contao_test',
+        ];
+
+        yield [
+            'root',
+            null,
+            'contao_test',
+            'mysql://root@localhost:3306/contao_test',
+        ];
+
+        yield [
+            'root',
+            'foobar',
+            'contao_test',
+            'mysql://root:foobar@localhost:3306/contao_test',
+        ];
+    }
+
+    public function testAddsTheDefaultServerVersion(): void
+    {
         $extensionConfigs = [
             [
                 'dbal' => [
@@ -340,8 +443,133 @@ class PluginTest extends ContaoTestCase
             ]]
         );
 
+        $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function testUpdatesTheMailerTransport(): void
+    {
+        $container = $this->getContainer();
+        $container->setParameter('mailer_transport', 'mail');
+
+        (new Plugin())->getExtensionConfig('swiftmailer', [], $container);
+
+        $this->assertSame('sendmail', $container->getParameter('mailer_transport'));
+    }
+
+    /**
+     * @dataProvider getMailerParameters
+     */
+    public function testSetsTheMailerUrl(string $transport, string $host, ?string $user, ?string $password, int $port, ?string $encryption, string $expected): void
+    {
+        $container = $this->getContainer();
+        $container->setParameter('mailer_transport', $transport);
+        $container->setParameter('mailer_host', $host);
+        $container->setParameter('mailer_user', $user);
+        $container->setParameter('mailer_password', $password);
+        $container->setParameter('mailer_port', $port);
+        $container->setParameter('mailer_encryption', $encryption);
+
+        (new Plugin())->getExtensionConfig('swiftmailer', [], $container);
+
+        $bag = $container->getParameterBag()->all();
+
+        $this->assertSame($expected, $bag['env(MAILER_URL)']);
+    }
+
+    public function getMailerParameters(): \Generator
+    {
+        yield [
+            'sendmail',
+            '127.0.0.1',
+            null,
+            null,
+            25,
+            null,
+            'sendmail://localhost',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            null,
+            null,
+            25,
+            null,
+            'smtp://127.0.0.1:25',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            null,
+            'foobar',
+            25,
+            null,
+            'smtp://127.0.0.1:25',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            'foo@bar.com',
+            null,
+            25,
+            null,
+            'smtp://127.0.0.1:25?username=foo%40bar.com',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            'foo@bar.com',
+            'foobar',
+            25,
+            null,
+            'smtp://127.0.0.1:25?username=foo%40bar.com&password=foobar',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            null,
+            null,
+            587,
+            'tls',
+            'smtp://127.0.0.1:587?encryption=tls',
+        ];
+
+        yield [
+            'smtp',
+            '127.0.0.1',
+            'foo@bar.com',
+            'foobar',
+            587,
+            'tls',
+            'smtp://127.0.0.1:587?username=foo%40bar.com&password=foobar&encryption=tls',
+        ];
+    }
+
+    private function getContainer(): PluginContainerBuilder
+    {
+        $pluginLoader = $this->createMock(PluginLoader::class);
+
+        $container = new PluginContainerBuilder($pluginLoader, []);
+        $container->setParameter('database_host', 'localhost');
+        $container->setParameter('database_port', 3306);
+        $container->setParameter('database_user', null);
+        $container->setParameter('database_password', null);
+        $container->setParameter('database_name', null);
+        $container->setParameter('mailer_transport', 'sendmail');
+        $container->setParameter('mailer_host', '127.0.0.1');
+        $container->setParameter('mailer_user', null);
+        $container->setParameter('mailer_password', null);
+        $container->setParameter('mailer_port', 25);
+        $container->setParameter('mailer_encryption', null);
+        $container->setParameter('secret', 'ThisTokenIsNotSoSecretChangeIt');
+
+        return $container;
     }
 }

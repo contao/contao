@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
+/**
+ * @internal
+ */
 class ResponseExceptionListener
 {
     /**
@@ -22,7 +25,7 @@ class ResponseExceptionListener
      */
     public function onKernelException(ExceptionEvent $event): void
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         if (!$exception instanceof ResponseException) {
             return;

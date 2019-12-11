@@ -10,4 +10,4 @@
 /phpunit.xml
 
 # Functional tests
-/tests/Functional/var/
+/var/

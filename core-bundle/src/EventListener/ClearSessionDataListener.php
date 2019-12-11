@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\EventListener;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
+/**
+ * @internal
+ */
 class ClearSessionDataListener
 {
     /**

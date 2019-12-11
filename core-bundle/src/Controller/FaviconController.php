@@ -23,6 +23,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route(defaults={"_scope" = "frontend"})
+ *
+ * @internal
  */
 class FaviconController
 {

@@ -36,6 +36,9 @@ class ContaoTemplateExtension extends AbstractExtension
      */
     private $scopeMatcher;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.twig.template_extension" service instead
+     */
     public function __construct(RequestStack $requestStack, ContaoFramework $framework, ScopeMatcher $scopeMatcher)
     {
         $this->requestStack = $requestStack;

@@ -21,6 +21,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Installs the required Contao directories.
+ *
+ * @internal
  */
 class InstallCommand extends Command
 {

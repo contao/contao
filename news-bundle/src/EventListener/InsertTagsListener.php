@@ -18,6 +18,9 @@ use Contao\NewsFeedModel;
 use Contao\NewsModel;
 use Contao\StringUtil;
 
+/**
+ * @internal
+ */
 class InsertTagsListener
 {
     private const SUPPORTED_TAGS = [

@@ -135,19 +135,15 @@ class FormTextArea extends Widget
 		{
 			case 'cols':
 				return $this->intCols;
-				break;
 
 			case 'rows':
 				return $this->intRows;
-				break;
 
 			case 'value':
 				return StringUtil::specialchars(str_replace('\n', "\n", $this->varValue), false, true);
-				break;
 
 			default:
 				return parent::__get($strKey);
-				break;
 		}
 	}
 

@@ -181,7 +181,6 @@ class ZipReader
 			case 'zipfile_comment_length':
 			case 'zipfile_comment':
 				return $this->arrHeader[$strKey];
-				break;
 
 			// Current file
 			default:

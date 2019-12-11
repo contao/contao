@@ -65,6 +65,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
     {
         $preHandlers = [];
         $registry = $container->findDefinition('contao.fragment.registry');
+        $command = $container->findDefinition('contao.command.debug_fragments');
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $priority => $reference) {
             $definition = $container->findDefinition($reference);
@@ -88,6 +89,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 }
 
                 $registry->addMethodCall('add', [$identifier, $config]);
+                $command->addMethodCall('add', [$identifier, $config, $attributes]);
                 $definition->addTag($tag, $attributes);
             }
         }

@@ -229,47 +229,36 @@ class Email
 		{
 			case 'subject':
 				return $this->strSubject;
-				break;
 
 			case 'text':
 				return $this->strText;
-				break;
 
 			case 'html':
 				return $this->strHtml;
-				break;
 
 			case 'from':
 				return $this->strSender;
-				break;
 
 			case 'fromName':
 				return $this->strSenderName;
-				break;
 
 			case 'priority':
 				return $this->intPriority;
-				break;
 
 			case 'charset':
 				return $this->strCharset;
-				break;
 
 			case 'imageDir':
 				return $this->strImageDir;
-				break;
 
 			case 'embedImages':
 				return $this->blnEmbedImages;
-				break;
 
 			case 'logFile':
 				return $this->strLogFile;
-				break;
 
 			case 'failures':
 				return $this->arrFailures;
-				break;
 		}
 
 		return null;

@@ -18,6 +18,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @internal
+ */
 class VersionCommand extends Command
 {
     /**
@@ -48,13 +51,15 @@ class VersionCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->write(json_encode([
             'version' => Application::VERSION,
             'commands' => $this->getCommandNames(),
             'features' => $this->getFeatures(),
         ]));
+
+        return 0;
     }
 
     /**

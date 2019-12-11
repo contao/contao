@@ -28,13 +28,8 @@ class LockedExceptionTest extends TestCase
     public function testSerializesItself(): void
     {
         $exception = new LockedException(300, 'foobar');
-        $serialized = $exception->serialize();
-
-        if (false !== strpos($serialized, '"a:2:{')) {
-            $expected = serialize([300, serialize([null, serialize([null, 0, 'foobar', __FILE__, 30])])]);
-        } else {
-            $expected = serialize([300, [null, [null, 0, 'foobar', __FILE__, 30]]]);
-        }
+        $serialized = $exception->__serialize();
+        $expected = [300, [null, [null, 0, 'foobar', __FILE__, 30]]];
 
         $this->assertSame($expected, $serialized);
 
@@ -43,7 +38,7 @@ class LockedExceptionTest extends TestCase
         $this->assertSame(0, $exception->getLockedSeconds());
         $this->assertSame('', $exception->getMessage());
 
-        $exception->unserialize($serialized);
+        $exception->__unserialize($serialized);
 
         $this->assertSame(300, $exception->getLockedSeconds());
         $this->assertSame('foobar', $exception->getMessage());

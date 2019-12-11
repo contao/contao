@@ -28,8 +28,8 @@ use ProxyManager\Configuration;
 use Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Debug\Debug;
 use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
@@ -283,7 +283,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $cache = $kernel->getHttpCache();
 
             // Enable the Symfony reverse proxy if request has no surrogate capability
-            if (null !== $cache->getSurrogate() && !$cache->getSurrogate()->hasSurrogateCapability($request)) {
+            if (($surrogate = $cache->getSurrogate()) && !$surrogate->hasSurrogateCapability($request)) {
                 return $cache;
             }
         }

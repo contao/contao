@@ -15,6 +15,9 @@ namespace Contao\ManagerBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * @internal
+ */
 class ContaoManagerPass implements CompilerPassInterface
 {
     /**
@@ -30,12 +33,7 @@ class ContaoManagerPass implements CompilerPassInterface
                 $managerPath = 'contao-manager.phar.php';
             }
         } elseif (!is_file($webDir.'/'.$managerPath)) {
-            throw new \LogicException(
-                sprintf(
-                    'You have configured "contao_manager.manager_path" but the file "%s" does not exist',
-                    $webDir.'/'.$managerPath
-                )
-            );
+            throw new \LogicException(sprintf('You have configured "contao_manager.manager_path" but the file "%s" does not exist', $webDir.'/'.$managerPath));
         }
 
         $container->setParameter('contao_manager.manager_path', $managerPath);

@@ -16,6 +16,9 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
+/**
+ * @internal
+ */
 class RefererIdListener
 {
     /**

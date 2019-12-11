@@ -19,6 +19,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @internal
+ */
 class SetConfigCommand extends Command
 {
     /**
@@ -50,7 +53,7 @@ class SetConfigCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $data = @json_decode($input->getArgument('json'), true);
 
@@ -59,5 +62,7 @@ class SetConfigCommand extends Command
         }
 
         $this->managerConfig->write($data);
+
+        return 0;
     }
 }

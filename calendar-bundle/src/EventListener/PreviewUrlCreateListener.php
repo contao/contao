@@ -18,6 +18,9 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @internal
+ */
 class PreviewUrlCreateListener
 {
     /**

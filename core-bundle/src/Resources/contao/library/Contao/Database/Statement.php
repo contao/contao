@@ -91,21 +91,17 @@ class Statement
 		{
 			case 'query':
 				return $this->strQuery;
-				break;
 
 			case 'error':
 				$info = $this->statement->errorInfo();
 
 				return 'SQLSTATE ' . $info[0] . ': error ' . $info[1] . ': ' . $info[2];
-				break;
 
 			case 'affectedRows':
 				return $this->statement->rowCount();
-				break;
 
 			case 'insertId':
 				return $this->resConnection->lastInsertId();
-				break;
 		}
 
 		return null;

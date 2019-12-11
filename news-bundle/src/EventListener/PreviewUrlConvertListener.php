@@ -18,6 +18,9 @@ use Contao\News;
 use Contao\NewsModel;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @internal
+ */
 class PreviewUrlConvertListener
 {
     private $framework;

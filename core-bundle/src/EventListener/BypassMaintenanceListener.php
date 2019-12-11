@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
+/**
+ * @internal
+ */
 class BypassMaintenanceListener
 {
     /**
