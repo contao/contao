@@ -68,9 +68,7 @@ abstract class AbstractDatabasePickerProvider implements PickerProviderInterface
         $modules = $this->getModulesForTable($table);
 
         if (0 === \count($modules)) {
-            throw new \RuntimeException(
-                sprintf('Table "%s" is not in any back end module (context: %s)', $table, $config->getContext())
-            );
+            throw new \RuntimeException(sprintf('Table "%s" is not in any back end module (context: %s)', $table, $config->getContext()));
         }
 
         $module = array_keys($modules)[0];
@@ -85,7 +83,7 @@ abstract class AbstractDatabasePickerProvider implements PickerProviderInterface
             }
         }
 
-        // If the table is the first in the module, we don't need to add table=xy to the URL
+        // If the table is the first in the module, we do not need to add table=xy to the URL
         if (0 === array_search($table, $modules[$module], true)) {
             return $this->getUrlForValue($config, $module);
         }
@@ -146,7 +144,8 @@ abstract class AbstractDatabasePickerProvider implements PickerProviderInterface
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
         return $this->getDataContainer() === $GLOBALS['TL_DCA'][$table]['config']['dataContainer']
-            && 0 !== \count($this->getModulesForTable($table));
+            && 0 !== \count($this->getModulesForTable($table))
+        ;
     }
 
     /**
@@ -183,7 +182,6 @@ abstract class AbstractDatabasePickerProvider implements PickerProviderInterface
     public function getDcaAttributes(PickerConfig $config): array
     {
         $attributes = ['fieldType' => 'radio'];
-        $value = $config->getValue();
 
         if ($fieldType = $config->getExtra('fieldType')) {
             $attributes['fieldType'] = $fieldType;
@@ -193,7 +191,7 @@ abstract class AbstractDatabasePickerProvider implements PickerProviderInterface
             $attributes['preserveRecord'] = $source;
         }
 
-        if ($value) {
+        if ($value = $config->getValue()) {
             $attributes['value'] = array_map('\intval', explode(',', $value));
         }
 

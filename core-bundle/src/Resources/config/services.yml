@@ -335,17 +335,6 @@ services:
             - '@router'
         public: true
 
-    contao.picker.table_provider:
-        class: Contao\CoreBundle\Picker\TablePickerProvider
-        arguments:
-            - '@contao.framework'
-            - '@knp_menu.factory'
-            - '@router'
-            - '@translator'
-            - '@database_connection'
-        tags:
-            - { name: contao.picker_provider }
-
     contao.picker.file_provider:
         class: Contao\CoreBundle\Picker\FilePickerProvider
         arguments:
@@ -366,6 +355,17 @@ services:
             - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 192 }
+
+    contao.picker.table_provider:
+        class: Contao\CoreBundle\Picker\TablePickerProvider
+        arguments:
+            - '@contao.framework'
+            - '@knp_menu.factory'
+            - '@router'
+            - '@translator'
+            - '@database_connection'
+        tags:
+            - { name: contao.picker_provider }
 
     contao.repository.remember_me:
         class: Contao\CoreBundle\Repository\RememberMeRepository
