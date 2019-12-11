@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Search\Escargot\Factory;
 use Contao\CoreBundle\Search\Escargot\Subscriber\SubscriberResult;
+use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\GroupHandler;
 use Monolog\Handler\StreamHandler;
@@ -21,6 +22,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Terminal42\Escargot\Exception\InvalidJobIdException;
 
 /**
@@ -52,8 +54,6 @@ class Crawl extends Backend implements \executable
 	 */
 	public function run()
 	{
-		// TODO: bring back FE user auth
-
 		$template = new BackendTemplate('be_crawl');
 		$template->action = ampersand(Environment::get('request'));
 		$template->isActive = $this->isActive();
@@ -64,8 +64,10 @@ class Crawl extends Backend implements \executable
 		$subscriberNames = $factory->getSubscriberNames();
 
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
+		$memberWidget = $this->generateMemberWidget();
 
 		$template->subscribersWidget = $subscribersWidget;
+		$template->memberWidget = $memberWidget;
 
 		if (!$this->isActive())
 		{
@@ -100,16 +102,42 @@ class Crawl extends Backend implements \executable
 			throw new ResponseException($response);
 		}
 
+		$clientOptions = [];
+
+		/** @var FrontendPreviewAuthenticator $objAuthenticator */
+		$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
+
+		if ($memberWidget->value)
+		{
+			$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')->execute((int) $memberWidget->value);
+			if (!$objAuthenticator->authenticateFrontendUser($objMember->username, false))
+			{
+				$objAuthenticator->removeFrontendAuthentication();
+				$clientOptions = [];
+			}
+			else
+			{
+				/** @var SessionInterface $session */
+				$session = System::getContainer()->get('session');
+				$clientOptions = ['headers' => ['Cookie' => sprintf('%s=%s', $session->getName(), $session->getId())]];
+			}
+		}
+		else
+		{
+			$objAuthenticator->removeFrontendAuthentication();
+			$clientOptions = [];
+		}
+
 		if (!$jobId)
 		{
 			$baseUris = $factory->getSearchUriCollection();
-			$escargot = $factory->create($baseUris, $queue, $activeSubscribers);
+			$escargot = $factory->create($baseUris, $queue, $activeSubscribers, $clientOptions);
 			Controller::redirect(\Controller::addToUrl('&jobId=' . $escargot->getJobId()));
 		}
 
 		try
 		{
-			$escargot = $factory->createFromJobId($jobId, $queue, $activeSubscribers);
+			$escargot = $factory->createFromJobId($jobId, $queue, $activeSubscribers, $clientOptions);
 		}
 		catch (InvalidJobIdException $e)
 		{
@@ -117,7 +145,7 @@ class Crawl extends Backend implements \executable
 		}
 
 		// Configure with sane defaults for the back end. Maybe we should make this configurable one day.
-		$escargot = $escargot->withConcurrency(5);
+		$escargot = $escargot->withConcurrency(1);
 		$escargot = $escargot->withMaxDepth(32);
 		$escargot = $escargot->withMaxRequests(20);
 
@@ -249,6 +277,58 @@ class Crawl extends Backend implements \executable
 		if (1 === \count($options))
 		{
 			$options[0]['default'] = true;
+		}
+
+		$widget->options = $options;
+
+		if ($this->isActive())
+		{
+			$widget->validate();
+
+			if ($widget->hasErrors())
+			{
+				$this->valid = false;
+			}
+		}
+
+		return $widget;
+	}
+
+	private function generateMemberWidget(): Widget
+	{
+		$name = 'crawl_member';
+		$widget = new SelectMenu();
+		$widget->id = $name;
+		$widget->name = $name;
+		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['memberLabel'][0];
+		$widget->setInputCallback($this->getInputCallback($name));
+		$time = time();
+
+		$options = [['value' => '', 'label' => '-', 'default' => true]];
+
+		// Get the active front end users
+		if (BackendUser::getInstance()->isAdmin)
+		{
+			$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
+		}
+		else
+		{
+			$amg = StringUtil::deserialize(BackendUser::getInstance()->amg);
+			if (!empty($amg) && \is_array($amg))
+			{
+				$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE (groups LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND login='1' AND disable!='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'" . ($time + 60) . "') ORDER BY username");
+			}
+		}
+
+		if ($objMembers !== null)
+		{
+			while ($objMembers->next())
+			{
+				$options[] = array(
+					'value' => $objMembers->id,
+					'label' => $objMembers->username . ' (' . $objMembers->id . ')'
+				);
+			}
 		}
 
 		$widget->options = $options;

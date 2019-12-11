@@ -161,9 +161,9 @@ class Factory
     /**
      * @throws \InvalidArgumentException
      */
-    public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, ?HttpClientInterface $client = null): Escargot
+    public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
-        $escargot = Escargot::create($baseUris, $queue, $client ?? $this->createDefaultHttpClient());
+        $escargot = Escargot::create($baseUris, $queue, $this->createHttpClient($clientOptions));
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));
@@ -175,9 +175,9 @@ class Factory
      * @throws \InvalidArgumentException
      * @throws InvalidJobIdException
      */
-    public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, ?HttpClientInterface $client = null): Escargot
+    public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
-        $escargot = Escargot::createFromJobId($jobId, $queue, $client ?? $this->createDefaultHttpClient());
+        $escargot = Escargot::createFromJobId($jobId, $queue, $this->createHttpClient($clientOptions));
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));
@@ -185,9 +185,12 @@ class Factory
         return $escargot;
     }
 
-    private function createDefaultHttpClient(): HttpClientInterface
+    private function createHttpClient(array $options = []): HttpClientInterface
     {
-        return HttpClient::create($this->getDefaultHttpClientOptions());
+        return HttpClient::create(array_merge_recursive(
+            $this->getDefaultHttpClientOptions(),
+            $options
+        ));
     }
 
     private function registerDefaultSubscribers(Escargot $escargot): void

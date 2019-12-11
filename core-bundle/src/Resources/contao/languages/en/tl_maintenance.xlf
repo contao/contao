@@ -8,12 +8,6 @@
       <trans-unit id="tl_maintenance.cacheTables.1">
         <source>Please select the data you want to purge or rebuild.</source>
       </trans-unit>
-      <trans-unit id="tl_maintenance.frontendUser.0">
-        <source>Front end user</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.frontendUser.1">
-        <source>Automatically log in a front end user to index protected pages.</source>
-      </trans-unit>
       <trans-unit id="tl_maintenance.job">
         <source>Job</source>
       </trans-unit>
@@ -103,6 +97,12 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawl.subscribersLabel.1">
         <source>The crawler crawls all URLs it finds. You may decide what is being done with these results here.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawl.memberLabel.0">
+        <source>Front end member</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawl.memberLabel.1">
+        <source>Automatically log in a front end member to index protected pages.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawl.waitToBeFinished">
         <source>The crawler is currently working, please wait for it to be finished to see your results.</source>

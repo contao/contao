@@ -189,9 +189,13 @@
         <input type="hidden" name="do" value="maintenance">
         <input type="hidden" name="act" value="crawl">
         <input type="hidden" name="rt" value="<?= REQUEST_TOKEN ?>">
-        <div class="widget w50">
+        <div class="widget w50 autoheight">
           <?= $this->subscribersWidget->parse() ?>
           <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscribersLabel'][1] ?></p>
+        </div>
+        <div class="widget w50">
+          <?= $this->memberWidget->parse() ?>
+          <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['memberLabel'][1] ?></p>
         </div>
       </div>
       <div class="tl_submit_container clr">
