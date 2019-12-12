@@ -48,6 +48,7 @@
         "symfony/proxy-manager-bridge": "4.4.*",
         "symfony/routing": "4.4.*",
         "symfony/security-bundle": "4.4.*",
+        "symfony/stopwatch": "4.4.*",
         "symfony/swiftmailer-bundle": "^2.6 || ^3.1.5",
         "symfony/twig-bundle": "4.4.*",
         "symfony/web-profiler-bundle": "4.4.*",
