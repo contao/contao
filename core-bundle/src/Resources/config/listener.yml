@@ -182,6 +182,13 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
+    contao.listener.subrequest_cache:
+        class: Contao\CoreBundle\EventListener\SubrequestCacheListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 255 }
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -255 }
+            - { name: kernel.reset, method: reset }
+
     contao.listener.switch_user:
         class: Contao\CoreBundle\EventListener\SwitchUserListener
         arguments:
