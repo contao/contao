@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -58,36 +58,73 @@ class RegisterHookListenersPass implements CompilerPassInterface
                 $serviceId = (string) $container->getAlias($serviceId);
             }
 
-            foreach ($tags as $attributes) {
-                $this->addHookCallback($hooks, $serviceId, $attributes);
-            }
+            $definition = $container->findDefinition($serviceId);
+            $definition->setPublic(true);
 
-            $container->findDefinition($serviceId)->setPublic(true);
+            foreach ($tags as $attributes) {
+                $this->addHookCallback($hooks, $serviceId, $definition->getClass(), $attributes);
+            }
         }
 
         return $hooks;
     }
 
     /**
-     * @throws InvalidConfigurationException
+     * @throws InvalidDefinitionException
      */
-    private function addHookCallback(array &$hooks, string $serviceId, array $attributes): void
+    private function addHookCallback(array &$hooks, string $serviceId, string $class, array $attributes): void
     {
         if (!isset($attributes['hook'])) {
-            throw new InvalidConfigurationException(sprintf('Missing hook attribute in tagged hook service with service id "%s"', $serviceId));
+            throw new InvalidDefinitionException(sprintf('Missing hook attribute in tagged hook service with service id "%s"', $serviceId));
         }
 
         $priority = (int) ($attributes['priority'] ?? 0);
 
-        $hooks[$attributes['hook']][$priority][] = [$serviceId, $this->getMethod($attributes)];
+        $hooks[$attributes['hook']][$priority][] = [$serviceId, $this->getMethod($attributes, $class, $serviceId)];
     }
 
-    private function getMethod(array $attributes): string
+    private function getMethod(array $attributes, string $class, string $serviceId): string
     {
+        $ref = new \ReflectionClass($class);
+        $invalid = sprintf('The contao.hook definition for service "%s" is invalid. ', $serviceId);
+
         if (isset($attributes['method'])) {
+            if (!$ref->hasMethod($attributes['method'])) {
+                $invalid .= sprintf('The class "%s" does not have a method "%s".', $class, $attributes['method']);
+
+                throw new InvalidDefinitionException($invalid);
+            }
+
+            if (!$ref->getMethod($attributes['method'])->isPublic()) {
+                $invalid .= sprintf('The "%s::%s" method exists but is not public.', $class, $attributes['method']);
+
+                throw new InvalidDefinitionException($invalid);
+            }
+
             return (string) $attributes['method'];
         }
 
-        return 'on'.ucfirst($attributes['hook']);
+        $method = 'on'.ucfirst($attributes['hook']);
+        $private = false;
+
+        if ($ref->hasMethod($method)) {
+            if ($ref->getMethod($method)->isPublic()) {
+                return $method;
+            }
+
+            $private = true;
+        }
+
+        if ($ref->hasMethod('__invoke')) {
+            return '__invoke';
+        }
+
+        if ($private) {
+            $invalid .= sprintf('The "%s::%s" method exists but is not public.', $class, $method);
+        } else {
+            $invalid .= sprintf('Either specify a method name or implement the "%s" or __invoke method.', $method);
+        }
+
+        throw new InvalidDefinitionException($invalid);
     }
 }
