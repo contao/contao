@@ -259,7 +259,18 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('serpPreview'=>array('title'=>array('pageTitle', 'title'), 'description'=>array('description', 'teaser'))),
+			'eval'                    => array
+			(
+				'serpPreview' => array
+				(
+					'url' => static function (Contao\CalendarEventsModel $model)
+					{
+						return Contao\Events::generateEventUrl($model, true);
+					},
+					'title' => array('pageTitle', 'title'),
+					'description' => array('description', 'teaser')
+				)
+			),
 			'sql'                     => null
 		),
 		'location' => array

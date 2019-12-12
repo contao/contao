@@ -239,7 +239,18 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('serpPreview'=>array('title'=>array('pageTitle', 'headline'), 'description'=>array('description', 'teaser'))),
+			'eval'                    => array
+			(
+				'serpPreview' => array
+				(
+					'url' => static function (Contao\NewsModel $model)
+					{
+						return Contao\News::generateNewsUrl($model, false, true);
+					},
+					'title' => array('pageTitle', 'headline'),
+					'description' => array('description', 'teaser')
+				)
+			),
 			'sql'                     => null
 		),
 		'subheadline' => array
