@@ -31,7 +31,6 @@ class ContaoTableProcessorTest extends TestCase
         $processor = $this->getContaoTableProcessor();
 
         $this->assertEmpty($processor([]));
-        $this->assertSame(['foo' => 'bar'], $processor(['foo' => 'bar']));
         $this->assertSame(['context' => ['contao' => false]], $processor(['context' => ['contao' => false]]));
     }
 

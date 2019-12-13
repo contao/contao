@@ -18,7 +18,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageError404;
 use Contao\StringUtil;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -27,7 +26,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
@@ -58,18 +56,12 @@ class PrettyErrorScreenListener
      */
     private $security;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security, LoggerInterface $logger = null)
+    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;
         $this->security = $security;
-        $this->logger = $logger;
     }
 
     /**
@@ -134,7 +126,6 @@ class PrettyErrorScreenListener
     {
         $exception = $event->getThrowable();
 
-        $this->logException($exception);
         $this->renderTemplate('backend', $this->getStatusCodeForException($exception), $event);
     }
 
@@ -186,8 +177,6 @@ class PrettyErrorScreenListener
         $statusCode = $this->getStatusCodeForException($exception);
         $template = null;
 
-        $this->logException($exception);
-
         // Look for a template
         do {
             if ($exception instanceof InvalidRequestTokenException) {
@@ -232,26 +221,6 @@ class PrettyErrorScreenListener
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
             'exception' => $event->getThrowable()->getMessage(),
         ];
-    }
-
-    private function logException(\Throwable $exception): void
-    {
-        if (Kernel::VERSION_ID >= 40100 || null === $this->logger || !$this->isLoggable($exception)) {
-            return;
-        }
-
-        $this->logger->critical('An exception occurred.', ['exception' => $exception]);
-    }
-
-    private function isLoggable(\Throwable $exception): bool
-    {
-        do {
-            if ($exception instanceof InvalidRequestTokenException) {
-                return false;
-            }
-        } while (null !== ($exception = $exception->getPrevious()));
-
-        return true;
     }
 
     private function getStatusCodeForException(\Throwable $exception): int
