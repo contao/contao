@@ -40,7 +40,7 @@ class SerpPreview extends Widget
 
 		// Get the URL with a %s placeholder for the alias or ID
 		$url = $this->getUrl($model);
-		list($baseUrl) = explode('%s', $url);
+		list($baseUrl, $urlSuffix) = explode('%s', $url);
 		$url = sprintf($url, $model->alias ?: $model->id);
 
 		// Get the input field suffix (edit multiple mode)
@@ -51,7 +51,6 @@ class SerpPreview extends Widget
 		$aliasField = $this->getAliasField($suffix);
 		$descriptionField = $this->getDescriptionField($suffix);
 		$descriptionFallbackField = $this->getDescriptionFallbackField($suffix);
-		$urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
 
 		return <<<EOT
 <div class="serp-preview">
