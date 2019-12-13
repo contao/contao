@@ -70,10 +70,10 @@
         "oyejorge/less.php": "^1.7",
         "paragonie/constant_time_encoding": "^2.2",
         "patchwork/utf8": "^1.2",
-        "php-http/guzzle6-adapter": "^1.1",
         "phpspec/php-diff": "^1.0",
         "phpunit/php-token-stream": "^1.4 || ^2.0 || ^3.0",
         "psr/log": "^1.0",
+        "ramsey/uuid": "^3.8",
         "scheb/two-factor-bundle": "^4.7",
         "scssphp/scssphp": "^1.0",
         "sensiolabs/ansi-to-html": "^1.1",
@@ -94,6 +94,7 @@
         "symfony/filesystem": "4.4.*",
         "symfony/finder": "4.4.*",
         "symfony/framework-bundle": "4.4.*",
+        "symfony/http-client": "4.4.*",
         "symfony/http-foundation": "4.4.*",
         "symfony/http-kernel": "4.4.*",
         "symfony/lock": "4.4.*",
@@ -103,12 +104,14 @@
         "symfony/proxy-manager-bridge": "4.4.*",
         "symfony/routing": "4.4.*",
         "symfony/security-bundle": "4.4.*",
+        "symfony/stopwatch": "4.4.*",
         "symfony/swiftmailer-bundle": "^2.6 || ^3.1.5",
         "symfony/translation": "4.4.*",
         "symfony/twig-bundle": "4.4.*",
         "symfony/var-dumper": "4.4.*",
         "symfony/web-profiler-bundle": "4.4.*",
         "symfony/yaml": "4.4.*",
+        "terminal42/escargot": "^0.1",
         "terminal42/service-annotation-bundle": "^1.0",
         "toflar/psr6-symfony-http-cache-store": "^2.1",
         "true/punycode": "^2.1",
@@ -144,15 +147,12 @@
         "composer/composer": "^1.0",
         "contao/monorepo-tools": "dev-master",
         "contao/php-cs-fixer": "^2.0",
-        "contao/phpstan": "^0.8.1",
+        "contao/phpstan": "^0.12",
         "contao/test-case": "^4.0",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/event-manager": "^1.0",
         "monolog/monolog": "^1.24",
         "phpstan/extension-installer": "^1.0",
-        "phpstan/phpstan": "^0.11",
-        "phpstan/phpstan-phpunit": "^0.11.2",
-        "phpstan/phpstan-symfony": "^0.11.6",
         "phpunit/phpunit": "^8.4",
         "symfony/browser-kit": "4.4.*",
         "symfony/phpunit-bridge": "4.4.*"
@@ -268,7 +268,7 @@
             "PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix -v --ansi"
         ],
         "phpstan": [
-            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3 --no-progress --ansi"
+            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3 --memory-limit=1G --ansi"
         ],
         "unit-tests": [
             "vendor/bin/phpunit --colors=always"

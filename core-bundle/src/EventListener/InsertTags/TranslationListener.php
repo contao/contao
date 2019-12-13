@@ -14,6 +14,9 @@ namespace Contao\CoreBundle\EventListener\InsertTags;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @internal
+ */
 class TranslationListener
 {
     /**

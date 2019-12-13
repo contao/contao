@@ -919,36 +919,28 @@ class Image
 			case '':
 			case 'px':
 				return (int) round($value);
-				break;
 
 			case 'pc':
 			case 'em':
 				return (int) round($value * 16);
-				break;
 
 			case 'ex':
 				return (int) round($value * 16 / 2);
-				break;
 
 			case 'pt':
 				return (int) round($value * 16 / 12);
-				break;
 
 			case 'in':
 				return (int) round($value * 16 * 6);
-				break;
 
 			case 'cm':
 				return (int) round($value * 16 / (2.54 / 6));
-				break;
 
 			case 'mm':
 				return (int) round($value * 16 / (25.4 / 6));
-				break;
 
 			case '%':
 				return (int) round($value * 16 / 100);
-				break;
 		}
 
 		return 0;

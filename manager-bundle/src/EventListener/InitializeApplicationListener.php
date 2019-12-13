@@ -14,6 +14,9 @@ namespace Contao\ManagerBundle\EventListener;
 
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * @internal
+ */
 class InitializeApplicationListener
 {
     /**

@@ -29,6 +29,8 @@ use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Symlinks the public resources into the web directory.
+ *
+ * @internal
  */
 class SymlinksCommand extends Command
 {

@@ -33,6 +33,8 @@ use Symfony\Component\Process\Process;
 
 /**
  * Resize deferred images that have not been processed yet.
+ *
+ * @internal
  */
 class ResizeImagesCommand extends Command
 {

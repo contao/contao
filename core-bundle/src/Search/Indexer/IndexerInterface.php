@@ -18,16 +18,22 @@ interface IndexerInterface
 {
     /**
      * Indexes a given document.
+     *
+     * @throws IndexerException If indexing did not work
      */
     public function index(Document $document): void;
 
     /**
      * Deletes a given document.
+     *
+     * @throws IndexerException If deleting did not work
      */
     public function delete(Document $document): void;
 
     /**
      * Clears the search index.
+     *
+     * @throws IndexerException If clearing did not work
      */
     public function clear(): void;
 }

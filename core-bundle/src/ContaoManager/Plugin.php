@@ -36,6 +36,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Terminal42\ServiceAnnotationBundle\Terminal42ServiceAnnotationBundle;
 
+/**
+ * @internal
+ */
 class Plugin implements BundlePluginInterface, RoutingPluginInterface
 {
     /**

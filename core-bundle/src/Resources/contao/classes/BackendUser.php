@@ -165,31 +165,24 @@ class BackendUser extends User
 		{
 			case 'isAdmin':
 				return $this->arrData['admin'] ? true : false;
-				break;
 
 			case 'groups':
 				return \is_array($this->arrData['groups']) ? $this->arrData['groups'] : (($this->arrData['groups'] != '') ? array($this->arrData['groups']) : array());
-				break;
 
 			case 'pagemounts':
 				return \is_array($this->arrData['pagemounts']) ? $this->arrData['pagemounts'] : (($this->arrData['pagemounts'] != '') ? array($this->arrData['pagemounts']) : false);
-				break;
 
 			case 'filemounts':
 				return \is_array($this->arrData['filemounts']) ? $this->arrData['filemounts'] : (($this->arrData['filemounts'] != '') ? array($this->arrData['filemounts']) : false);
-				break;
 
 			case 'filemountIds':
 				return $this->arrFilemountIds;
-				break;
 
 			case 'fop':
 				return \is_array($this->arrData['fop']) ? $this->arrData['fop'] : (($this->arrData['fop'] != '') ? array($this->arrData['fop']) : false);
-				break;
 
 			case 'alexf':
 				return $this->alexf;
-				break;
 		}
 
 		return parent::__get($strKey);

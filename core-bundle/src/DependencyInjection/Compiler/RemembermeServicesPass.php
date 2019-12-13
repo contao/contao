@@ -16,6 +16,9 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * @internal
+ */
 class RemembermeServicesPass implements CompilerPassInterface
 {
     public const OVERRIDE_PREFIX = 'security.authentication.rememberme.services.simplehash';

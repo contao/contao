@@ -35,6 +35,9 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private $prependLocale;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.url_generator" service instead
+     */
     public function __construct(UrlGeneratorInterface $router, ContaoFramework $framework, bool $prependLocale)
     {
         $this->router = $router;
@@ -131,9 +134,7 @@ class UrlGenerator implements UrlGeneratorInterface
                 $param = $matches[1];
 
                 if (!isset($parameters[$param])) {
-                    throw new MissingMandatoryParametersException(
-                        sprintf('Parameters "%s" is missing to generate a URL for "%s"', $param, $alias)
-                    );
+                    throw new MissingMandatoryParametersException(sprintf('Parameters "%s" is missing to generate a URL for "%s"', $param, $alias));
                 }
 
                 $value = $parameters[$param];

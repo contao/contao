@@ -34,6 +34,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * @internal
+ */
 class DebugPluginsCommand extends Command
 {
     protected static $defaultName = 'debug:plugins';

@@ -15,6 +15,9 @@ namespace Contao\InstallationBundle\Database;
 use Contao\File;
 use Contao\StringUtil;
 
+/**
+ * @internal
+ */
 class Version480Update extends AbstractVersionUpdate
 {
     /**

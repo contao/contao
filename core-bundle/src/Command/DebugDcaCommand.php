@@ -23,6 +23,8 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
 
 /**
  * Dumps debug information about a Contao DCA.
+ *
+ * @internal
  */
 class DebugDcaCommand extends Command
 {

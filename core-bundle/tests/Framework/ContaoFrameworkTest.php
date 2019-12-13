@@ -24,11 +24,13 @@ use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\CoreBundle\Session\MockNativeSessionStorage;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Input;
 use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Contracts\Service\ResetInterface;
 
 class ContaoFrameworkTest extends TestCase
 {
@@ -632,6 +634,20 @@ class ContaoFrameworkTest extends TestCase
             ],
             $GLOBALS['TL_HOOKS']['isVisibleElement']
         );
+    }
+
+    public function testServiceIsResetable(): void
+    {
+        $this->assertInstanceOf(ResetInterface::class, $this->mockFramework());
+
+        $framework = $this->mockFramework();
+        $adapter = $framework->getAdapter(Input::class);
+
+        $this->assertSame($adapter, $framework->getAdapter(Input::class));
+
+        $framework->reset();
+
+        $this->assertNotSame($adapter, $framework->getAdapter(Input::class));
     }
 
     /**

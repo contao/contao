@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Adds the composer packages and version numbers to the container.
+ *
+ * @internal
  */
 class AddPackagesPass implements CompilerPassInterface
 {

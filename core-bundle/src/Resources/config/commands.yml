@@ -12,10 +12,18 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.command.crawl:
+        class: Contao\CoreBundle\Command\CrawlCommand
+        arguments:
+            - '@contao.search.escargot_factory'
+
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand
         arguments:
             - '@contao.framework'
+
+    contao.command.debug_fragments:
+        class: Contao\CoreBundle\Command\DebugFragmentsCommand
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand

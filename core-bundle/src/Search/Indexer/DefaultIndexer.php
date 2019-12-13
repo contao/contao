@@ -34,6 +34,9 @@ class DefaultIndexer implements IndexerInterface
      */
     private $indexProtected;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.search.indexer.default" service instead
+     */
     public function __construct(ContaoFramework $framework, Connection $connection, bool $indexProtected = false)
     {
         $this->framework = $framework;
@@ -47,7 +50,11 @@ class DefaultIndexer implements IndexerInterface
     public function index(Document $document): void
     {
         if (200 !== $document->getStatusCode()) {
-            return;
+            $this->throwBecause('HTTP Statuscode is not equal to 200.');
+        }
+
+        if ('' === $document->getBody()) {
+            $this->throwBecause('Cannot index empty response.');
         }
 
         $meta = [
@@ -63,17 +70,17 @@ class DefaultIndexer implements IndexerInterface
 
         // If search was disabled in the page settings, we do not index
         if (isset($meta['noSearch']) && true === $meta['noSearch']) {
-            return;
+            $this->throwBecause('Was explicitly marked "noSearch" in page settings.');
         }
 
         // If the front end preview is activated, we do not index
         if (isset($meta['fePreview']) && true === $meta['fePreview']) {
-            return;
+            $this->throwBecause('Indexing when the front end preview is enabled is not possible.');
         }
 
-        // If the page is protected and no member is logged in or indexing protecting pages is disabled, we do not index
+        // If the page is protected and indexing protecting pages is disabled, we do not index
         if (isset($meta['protected']) && true === $meta['protected'] && !$this->indexProtected) {
-            return;
+            $this->throwBecause('Indexing protected pages is disabled.');
         }
 
         $this->framework->initialize();
@@ -81,15 +88,19 @@ class DefaultIndexer implements IndexerInterface
         /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
 
-        $search->indexPage([
-            'url' => (string) $document->getUri(),
-            'content' => $document->getBody(),
-            'protected' => $meta['protected'] ? '1' : '',
-            'groups' => $meta['groups'],
-            'pid' => $meta['pageId'],
-            'title' => $meta['title'],
-            'language' => $meta['language'],
-        ]);
+        try {
+            $search->indexPage([
+                'url' => (string) $document->getUri(),
+                'content' => $document->getBody(),
+                'protected' => $meta['protected'] ? '1' : '',
+                'groups' => $meta['groups'],
+                'pid' => $meta['pageId'],
+                'title' => $meta['title'],
+                'language' => $meta['language'],
+            ]);
+        } catch (\Throwable $t) {
+            $this->throwBecause('Could not add a search index entry: '.$t->getMessage(), false);
+        }
     }
 
     /**
@@ -111,6 +122,18 @@ class DefaultIndexer implements IndexerInterface
     {
         $this->connection->exec('TRUNCATE TABLE tl_search');
         $this->connection->exec('TRUNCATE TABLE tl_search_index');
+    }
+
+    /**
+     * @throws IndexerException
+     */
+    private function throwBecause(string $message, bool $onlyWarning = true): void
+    {
+        if ($onlyWarning) {
+            throw IndexerException::createAsWarning($message);
+        }
+
+        throw new IndexerException($message);
     }
 
     private function extendMetaFromJsonLdScripts(Document $document, array &$meta): void

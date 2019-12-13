@@ -2257,7 +2257,7 @@ var Backend =
 	/**
 	 * Meta wizard
 	 *
-	 * @param {object} el The select element
+	 * @param {object} el The submit button
 	 * @param {string} ul The DOM element
 	 */
 	metaWizard: function(el, ul) {
@@ -2304,10 +2304,9 @@ var Backend =
 		// Disable the "add language" button
 		el.getParent('div').getElement('input[type="button"]').setProperty('disabled', true);
 
-		// Disable the option and update chosen
+		// Disable the option
 		opt.options[opt.selectedIndex].setProperty('disabled', true);
 		opt.value = '';
-		opt.fireEvent('liszt:updated');
 	},
 
 	/**

@@ -134,7 +134,7 @@ class ConfigurationTest extends TestCase
         ];
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessageRegExp('/The image size name "123" cannot contain only digits/');
+        $this->expectExceptionMessageMatches('/The image size name "123" cannot contain only digits/');
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }
@@ -155,7 +155,7 @@ class ConfigurationTest extends TestCase
         ];
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessageRegExp('/"'.$name.'" is a reserved image size name/');
+        $this->expectExceptionMessageMatches('/"'.$name.'" is a reserved image size name/');
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }
@@ -174,5 +174,21 @@ class ConfigurationTest extends TestCase
         yield ['left_bottom'];
         yield ['center_bottom'];
         yield ['right_bottom'];
+    }
+
+    public function testDeniesInvalidCrawlUris(): void
+    {
+        $params = [
+            'contao' => [
+                'crawl' => [
+                    'additionalURIs' => ['invalid.com'],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "contao.crawl.additionalURIs": All provided additional URIs must start with either http:// or https://.');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
     }
 }

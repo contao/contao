@@ -175,27 +175,21 @@ class FormTextField extends Widget
 
 					case 'natural':
 						return 'number';
-						break;
 
 					case 'phone':
 						return 'tel';
-						break;
 
 					case 'email':
 						return 'email';
-						break;
 
 					case 'url':
 						return 'url';
-						break;
 				}
 
 				return 'text';
-				break;
 
 			default:
 				return parent::__get($strKey);
-				break;
 		}
 	}
 

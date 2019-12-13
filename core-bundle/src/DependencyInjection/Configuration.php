@@ -116,6 +116,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
+                ->append($this->addCrawlNode())
             ->end()
         ;
 
@@ -183,31 +184,15 @@ class Configuration implements ConfigurationInterface
 
                                 foreach ($value as $name => $config) {
                                     if (preg_match('/^\d+$/', (string) $name)) {
-                                        throw new \InvalidArgumentException(
-                                            sprintf(
-                                                'The image size name "%s" cannot contain only digits',
-                                                $name
-                                            )
-                                        );
+                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" cannot contain only digits', $name));
                                     }
 
                                     if (\in_array($name, $reservedImageSizeNames, true)) {
-                                        throw new \InvalidArgumentException(
-                                            sprintf(
-                                                '"%s" is a reserved image size name (reserved names: %s)',
-                                                $name,
-                                                implode(', ', $reservedImageSizeNames)
-                                            )
-                                        );
+                                        throw new \InvalidArgumentException(sprintf('"%s" is a reserved image size name (reserved names: %s)', $name, implode(', ', $reservedImageSizeNames)));
                                     }
 
                                     if (preg_match('/[^a-z0-9_]/', (string) $name)) {
-                                        throw new \InvalidArgumentException(
-                                            sprintf(
-                                                'The image size name "%s" must consist of lowercase letters, digits and underscores only',
-                                                $name
-                                            )
-                                        );
+                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" must consist of lowercase letters, digits and underscores only', $name));
                                     }
                                 }
 
@@ -338,6 +323,54 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('indexProtected')
                     ->info('Enables indexing of protected pages')
                     ->defaultFalse()
+                ->end()
+                ->arrayNode('listener')
+                    ->info('Configures how the search index listener behaves. It can index valid and delete invalid responses on every request. You may limit it to one of the features or disable it completely.')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('index')
+                            ->info('Enables indexing successful responses')
+                            ->defaultTrue()
+                        ->end()
+                        ->scalarNode('delete')
+                            ->info('Enables deleting unsuccessful responses from the index')
+                            ->defaultTrue()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addCrawlNode(): NodeDefinition
+    {
+        return (new TreeBuilder('crawl'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('additionalURIs')
+                    ->info('Additional URIs to crawl (by default, only the ones defined in the root pages are crawled).')
+                    ->validate()
+                    ->ifTrue(
+                        static function (array $uris): bool {
+                            foreach ($uris as $uri) {
+                                if (!preg_match('@^https?://@', $uri)) {
+                                    return true;
+                                }
+                            }
+
+                            return false;
+                        }
+                    )
+                    ->thenInvalid('All provided additional URIs must start with either http:// or https://.')
+                    ->end()
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
+                ->end()
+                ->arrayNode('defaultHttpClientOptions')
+                    ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
                 ->end()
             ->end()
         ;

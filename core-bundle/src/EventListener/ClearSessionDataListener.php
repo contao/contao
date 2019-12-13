@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\EventListener;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
+/**
+ * @internal
+ */
 class ClearSessionDataListener
 {
     /**
@@ -32,7 +35,7 @@ class ClearSessionDataListener
             return;
         }
 
-        if (null === ($session = $request->getSession()) || !$session->isStarted()) {
+        if (!$request->hasSession() || !$request->getSession()->isStarted()) {
             return;
         }
 
@@ -47,7 +50,6 @@ class ClearSessionDataListener
             return;
         }
 
-        /** @var AttributeBag $bag */
         if (($bag = $_SESSION[$key]) instanceof AttributeBag && !$bag->count()) {
             unset($_SESSION[$key]);
         }

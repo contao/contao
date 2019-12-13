@@ -33,7 +33,7 @@ class HtaccessAnalyzer
 
     public static function create(\SplFileInfo $file): self
     {
-        return new static($file);
+        return new self($file);
     }
 
     /**

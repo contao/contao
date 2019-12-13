@@ -91,59 +91,48 @@ class Date
 			case 'tstamp':
 			case 'timestamp':
 				return $this->strDate;
-				break;
 
 			case 'date':
 				return static::parse(static::getNumericDateFormat(), $this->strDate);
-				break;
 
 			case 'time':
 				return static::parse(static::getNumericTimeFormat(), $this->strDate);
-				break;
 
 			case 'datim':
 				return static::parse(static::getNumericDatimFormat(), $this->strDate);
-				break;
 
 			case 'dayBegin':
 				$this->createDateRanges();
 
 				return $this->arrRange['day']['begin'];
-				break;
 
 			case 'dayEnd':
 				$this->createDateRanges();
 
 				return $this->arrRange['day']['end'];
-				break;
 
 			case 'monthBegin':
 				$this->createDateRanges();
 
 				return $this->arrRange['month']['begin'];
-				break;
 
 			case 'monthEnd':
 				$this->createDateRanges();
 
 				return $this->arrRange['month']['end'];
-				break;
 
 			case 'yearBegin':
 				$this->createDateRanges();
 
 				return $this->arrRange['year']['begin'];
-				break;
 
 			case 'yearEnd':
 				$this->createDateRanges();
 
 				return $this->arrRange['year']['end'];
-				break;
 
 			case 'format':
 				return $this->strFormat;
-				break;
 		}
 
 		return null;
@@ -546,15 +535,12 @@ class Date
 		{
 			case 'date':
 				return static::getNumericDateFormat();
-				break;
 
 			case 'time':
 				return static::getNumericTimeFormat();
-				break;
 
 			case 'datim':
 				return static::getNumericDatimFormat();
-				break;
 		}
 
 		return null;
