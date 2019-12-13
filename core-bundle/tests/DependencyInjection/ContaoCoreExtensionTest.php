@@ -513,6 +513,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(256, $tags['kernel.event_listener'][0]['priority']);
+
+        $this->assertArrayHasKey('kernel.reset', $tags);
+        $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
     public function testRegistersThePrettyErrorScreensListener(): void
@@ -904,6 +907,11 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(MemoryTokenStorage::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.reset', $tags);
+        $this->assertSame([['method' => 'reset']], $tags['kernel.reset']);
     }
 
     public function testRegistersTheDataCollector(): void
@@ -1007,6 +1015,11 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.security.token_checker', (string) $definition->getArgument(2));
         $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));
         $this->assertSame('%contao.error_level%', (string) $definition->getArgument(4));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.reset', $tags);
+        $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
     public function testRegistersTheDeferredImageStorage(): void
@@ -1018,6 +1031,11 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('%contao.image.target_dir%', (string) $definition->getArgument(0));
         $this->assertSame('filesystem', (string) $definition->getArgument(1));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.reset', $tags);
+        $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
     public function testRegistersTheImageImagineService(): void
@@ -1095,6 +1113,11 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('event_dispatcher', (string) $definition->getArgument(1));
         $this->assertSame('contao.framework', (string) $definition->getArgument(2));
         $this->assertSame('contao.translation.translator', (string) $definition->getArgument(3));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.reset', $tags);
+        $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
     public function testRegistersTheImagePictureFactory(): void
@@ -1899,6 +1922,11 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
         $this->assertNull($definition->getDecoratedService());
         $this->assertSame('contao.translation.translator.data_collector.inner', (string) $definition->getArgument(0));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('kernel.reset', $tags);
+        $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
     public function testRegistersTheTwigTemplateExtension(): void
