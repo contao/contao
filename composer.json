@@ -147,15 +147,12 @@
         "composer/composer": "^1.0",
         "contao/monorepo-tools": "dev-master",
         "contao/php-cs-fixer": "^2.0",
-        "contao/phpstan": "^0.8.1",
+        "contao/phpstan": "^0.12",
         "contao/test-case": "^4.0",
         "doctrine/doctrine-migrations-bundle": "^1.1",
         "doctrine/event-manager": "^1.0",
         "monolog/monolog": "^1.24",
         "phpstan/extension-installer": "^1.0",
-        "phpstan/phpstan": "^0.11",
-        "phpstan/phpstan-phpunit": "^0.11.2",
-        "phpstan/phpstan-symfony": "^0.11.6",
         "phpunit/phpunit": "^8.4",
         "symfony/browser-kit": "4.4.*",
         "symfony/phpunit-bridge": "4.4.*"
@@ -271,7 +268,7 @@
             "PHP_CS_CONFIG=template vendor/bin/php-cs-fixer fix -v --ansi"
         ],
         "phpstan": [
-            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3 --no-progress --ansi"
+            "vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3 --memory-limit=1G --ansi"
         ],
         "unit-tests": [
             "vendor/bin/phpunit --colors=always"
