@@ -255,7 +255,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(7, $tags['kernel.event_listener'][0]['priority']);
@@ -273,7 +275,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('contao.backend_menu_build', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onBuild', $tags['kernel.event_listener'][0]['method']);
     }
@@ -290,7 +294,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(6, $tags['kernel.event_listener'][0]['priority']);
@@ -307,7 +313,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(-768, $tags['kernel.event_listener'][0]['priority']);
@@ -327,7 +335,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.terminate', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelTerminate', $tags['kernel.event_listener'][0]['method']);
     }
@@ -344,7 +354,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(2, $tags['kernel.event_listener']);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(36, $tags['kernel.event_listener'][0]['priority']);
@@ -363,7 +375,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('contao.hook', $tags);
+        $this->assertCount(1, $tags['contao.hook']);
         $this->assertSame('loadDataContainer', $tags['contao.hook'][0]['hook']);
     }
 
@@ -379,7 +393,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('doctrine.event_listener', $tags);
+        $this->assertCount(2, $tags['doctrine.event_listener']);
         $this->assertSame('onSchemaIndexDefinition', $tags['doctrine.event_listener'][0]['event']);
         $this->assertSame('postGenerateSchema', $tags['doctrine.event_listener'][1]['event']);
     }
@@ -395,7 +411,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.exception', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelException', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(96, $tags['kernel.event_listener'][0]['priority']);
@@ -412,7 +430,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
     }
@@ -429,7 +449,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('contao.hook', $tags);
+        $this->assertCount(1, $tags['contao.hook']);
         $this->assertSame('replaceInsertTags', $tags['contao.hook'][0]['hook']);
     }
 
@@ -445,7 +467,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('contao.hook', $tags);
+        $this->assertCount(1, $tags['contao.hook']);
         $this->assertSame('replaceInsertTags', $tags['contao.hook'][0]['hook']);
     }
 
@@ -463,7 +487,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(2, $tags['kernel.event_listener']);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(20, $tags['kernel.event_listener'][0]['priority']);
@@ -483,7 +509,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
 
@@ -509,12 +537,15 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(2, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(256, $tags['kernel.event_listener'][0]['priority']);
 
         $this->assertArrayHasKey('kernel.reset', $tags);
+        $this->assertCount(1, $tags['kernel.reset']);
         $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
@@ -533,7 +564,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.exception', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelException', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(-96, $tags['kernel.event_listener'][0]['priority']);
@@ -552,7 +585,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(20, $tags['kernel.event_listener'][0]['priority']);
@@ -574,7 +609,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(14, $tags['kernel.event_listener'][0]['priority']);
@@ -591,7 +628,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.exception', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelException', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(64, $tags['kernel.event_listener'][0]['priority']);
@@ -609,7 +648,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('contao.robots_txt', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onRobotsTxt', $tags['kernel.event_listener'][0]['method']);
     }
@@ -627,7 +668,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.terminate', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelTerminate', $tags['kernel.event_listener'][0]['method']);
     }
@@ -645,7 +688,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
     }
@@ -663,7 +708,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('security.switch_user', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onSwitchUser', $tags['kernel.event_listener'][0]['method']);
     }
@@ -683,7 +730,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
     }
@@ -703,7 +752,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.event_listener', $tags);
+        $this->assertCount(1, $tags['kernel.event_listener']);
         $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
     }
@@ -796,6 +847,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('controller.service_arguments', $tags);
     }
 
@@ -818,7 +870,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('contao.frontend_module', $tags);
+        $this->assertCount(1, $tags['contao.frontend_module']);
         $this->assertSame('user', $tags['contao.frontend_module'][0]['category']);
     }
 
@@ -857,6 +911,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('controller.service_arguments', $tags);
     }
 
@@ -884,6 +939,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('nelmio_cors.options_provider', $tags);
     }
 
@@ -910,8 +966,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.reset', $tags);
-        $this->assertSame([['method' => 'reset']], $tags['kernel.reset']);
+        $this->assertCount(1, $tags['kernel.reset']);
+        $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
     public function testRegistersTheDataCollector(): void
@@ -925,7 +983,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('data_collector', $tags);
+        $this->assertCount(1, $tags['data_collector']);
         $this->assertSame('@ContaoCore/Collector/contao.html.twig', $tags['data_collector'][0]['template']);
         $this->assertSame('contao', $tags['data_collector'][0]['id']);
     }
@@ -998,7 +1058,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.fragment_renderer', $tags);
+        $this->assertCount(1, $tags['kernel.fragment_renderer']);
         $this->assertSame('forward', $tags['kernel.fragment_renderer'][0]['alias']);
     }
 
@@ -1018,7 +1080,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.reset', $tags);
+        $this->assertCount(1, $tags['kernel.reset']);
         $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
@@ -1034,7 +1098,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.reset', $tags);
+        $this->assertCount(1, $tags['kernel.reset']);
         $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
@@ -1116,7 +1182,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.reset', $tags);
+        $this->assertCount(1, $tags['kernel.reset']);
         $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
@@ -1204,7 +1272,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('controller.argument_value_resolver', $tags);
+        $this->assertCount(1, $tags['controller.argument_value_resolver']);
         $this->assertSame(101, $tags['controller.argument_value_resolver'][0]['priority']);
     }
 
@@ -1221,7 +1291,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('monolog.logger', $tags);
+        $this->assertCount(1, $tags['monolog.logger']);
         $this->assertSame('contao', $tags['monolog.logger'][0]['channel']);
     }
 
@@ -1291,7 +1363,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('contao.picker_provider', $tags);
+        $this->assertCount(1, $tags['contao.picker_provider']);
         $this->assertSame(160, $tags['contao.picker_provider'][0]['priority']);
     }
 
@@ -1310,7 +1384,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('contao.picker_provider', $tags);
+        $this->assertCount(1, $tags['contao.picker_provider']);
         $this->assertSame(192, $tags['contao.picker_provider'][0]['priority']);
     }
 
@@ -1396,6 +1472,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('routing.loader', $tags);
     }
 
@@ -1428,6 +1505,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('routing.loader', $tags);
     }
 
@@ -1524,7 +1602,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('router', $tags);
+        $this->assertCount(1, $tags['router']);
         $this->assertSame(20, $tags['router'][0]['priority']);
     }
 
@@ -1614,6 +1694,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('contao.escargot_subscriber', $tags);
     }
 
@@ -1712,7 +1793,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('monolog.logger', $tags);
+        $this->assertCount(1, $tags['monolog.logger']);
         $this->assertSame('security', $tags['monolog.logger'][0]['channel']);
     }
 
@@ -1806,7 +1889,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('scheb_two_factor.provider', $tags);
+        $this->assertCount(1, $tags['scheb_two_factor.provider']);
         $this->assertSame('contao', $tags['scheb_two_factor.provider'][0]['alias']);
     }
 
@@ -1925,7 +2010,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
+        $this->assertCount(1, $tags);
         $this->assertArrayHasKey('kernel.reset', $tags);
+        $this->assertCount(1, $tags['kernel.reset']);
         $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
