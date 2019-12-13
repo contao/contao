@@ -50,7 +50,7 @@ use Contao\Model\Collection;
  * @property string  $secret
  * @property integer $lastLogin
  * @property integer $currentLogin
- * @property integer $loginCount
+ * @property integer $loginAttempts
  * @property integer $locked
  *
  * @method static UserModel|null findById($id, array $opt=array())
@@ -91,7 +91,7 @@ use Contao\Model\Collection;
  * @method static UserModel|null findOneBySecret($val, array $opt=array())
  * @method static UserModel|null findOneByLastLogin($val, array $opt=array())
  * @method static UserModel|null findOneByCurrentLogin($val, array $opt=array())
- * @method static UserModel|null findOneByLoginCount($val, array $opt=array())
+ * @method static UserModel|null findOneByLoginAttempts($val, array $opt=array())
  * @method static UserModel|null findOneByLocked($val, array $opt=array())
  *
  * @method static Collection|UserModel[]|UserModel|null findByTstamp($val, array $opt=array())
@@ -127,7 +127,7 @@ use Contao\Model\Collection;
  * @method static Collection|UserModel[]|UserModel|null findBySecret($val, array $opt=array())
  * @method static Collection|UserModel[]|UserModel|null findByLastLogin($val, array $opt=array())
  * @method static Collection|UserModel[]|UserModel|null findByCurrentLogin($val, array $opt=array())
- * @method static Collection|UserModel[]|UserModel|null findByLoginCount($val, array $opt=array())
+ * @method static Collection|UserModel[]|UserModel|null findByLoginAttempts($val, array $opt=array())
  * @method static Collection|UserModel[]|UserModel|null findByLocked($val, array $opt=array())
  * @method static Collection|UserModel[]|UserModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|UserModel[]|UserModel|null findBy($col, $val, array $opt=array())
@@ -168,7 +168,7 @@ use Contao\Model\Collection;
  * @method static integer countBySecret($val, array $opt=array())
  * @method static integer countByLastLogin($val, array $opt=array())
  * @method static integer countByCurrentLogin($val, array $opt=array())
- * @method static integer countByLoginCount($val, array $opt=array())
+ * @method static integer countByLoginAttempts($val, array $opt=array())
  * @method static integer countByLocked($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
