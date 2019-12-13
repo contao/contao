@@ -130,7 +130,6 @@ class AddAssetsPackagesPassTest extends TestCase
     public function testUsesTheJsonManifestVersionStrategyForBundles(): void
     {
         $bundlePath = static::getTempDir().'/ManifestJsonBundle';
-
         $container = $this->getContainerWithAssets('ManifestJsonBundle', 'Foo\Bar\ManifestJsonBundle', $bundlePath);
 
         $pass = new AddAssetsPackagesPass();
@@ -145,6 +144,7 @@ class AddAssetsPackagesPassTest extends TestCase
         $this->assertTrue($container->hasDefinition('assets._version_manifest_json'));
 
         $definition = $container->getDefinition('assets._version_manifest_json');
+
         $this->assertInstanceOf(ChildDefinition::class, $definition);
         $this->assertSame('assets.json_manifest_version_strategy', $definition->getParent());
         $this->assertSame($bundlePath.'/Resources/public/manifest.json', $definition->getArgument(0));
