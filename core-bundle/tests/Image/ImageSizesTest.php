@@ -176,9 +176,9 @@ class ImageSizesTest extends TestCase
     {
         $this->assertInstanceOf(ResetInterface::class, $this->imageSizes);
 
-        $this->framework
-            ->expects($this->exactly(2))
-            ->method('initialize')
+        $this->eventDispatcher
+            ->expects($this->exactly(3))
+            ->method('dispatch')
         ;
 
         $this->connection
@@ -187,6 +187,7 @@ class ImageSizesTest extends TestCase
             ->willReturn([])
         ;
 
+        // Test that fetchAll() is only called once
         $this->imageSizes->getAllOptions();
         $this->imageSizes->getAllOptions();
 
