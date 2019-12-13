@@ -36,11 +36,9 @@ class BackupCodeManagerTest extends TestCase
         $backupCodes = json_encode(['123456', '234567']);
         $backupCodeManager = new BackupCodeManager();
 
-        /** @var FrontendUser&MockObject $user */
         $frontendUser = $this->mockClassWithProperties(FrontendUser::class, ['backupCodes']);
         $frontendUser->backupCodes = $backupCodes;
 
-        /** @var BackendUser&MockObject $user */
         $backendUser = $this->mockClassWithProperties(BackendUser::class, ['backupCodes']);
         $backendUser->backupCodes = $backupCodes;
 
