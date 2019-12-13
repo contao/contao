@@ -20,8 +20,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\System;
-use PHPUnit\Framework\MockObject\Matcher\Invocation;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Rule\InvokedCount;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
@@ -664,7 +664,7 @@ class LegacyMatcherTest extends TestCase
     /**
      * @return RequestMatcherInterface&MockObject
      */
-    private function mockRequestMatcher(Invocation $expects, string $pathInfo = null, array $match = []): RequestMatcherInterface
+    private function mockRequestMatcher(InvokedCount $expects, string $pathInfo = null, array $match = []): RequestMatcherInterface
     {
         $matcher = $this->createMock(RequestMatcherInterface::class);
         $matcher

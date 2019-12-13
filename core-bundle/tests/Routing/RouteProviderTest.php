@@ -324,7 +324,7 @@ class RouteProviderTest extends TestCase
             ->willReturn(new Collection(array_values($pages), 'tl_page'))
         ;
 
-        $configAdapter = $this->mockConfigAdapter(['folderUrl' => false]);
+        $configAdapter = $this->mockConfigAdapter(['folderUrl' => true]);
         $framework = $this->mockFramework($pageAdapter, $configAdapter);
         $request = $this->mockRequestWithPath('/foo/bar/baz.html', $languages);
 
@@ -476,7 +476,7 @@ class RouteProviderTest extends TestCase
             ->willReturn(new Collection([$page], 'tl_page'))
         ;
 
-        $configAdapter = $this->mockConfigAdapter(['folderUrl' => false]);
+        $configAdapter = $this->mockConfigAdapter(['folderUrl' => true]);
         $framework = $this->mockFramework($pageAdapter, $configAdapter);
         $request = $this->mockRequestWithPath(($prependLocale ? '/'.$language : '').'/foo/bar'.$urlSuffix);
 
@@ -528,6 +528,24 @@ class RouteProviderTest extends TestCase
                 }
             }
         }
+    }
+
+    /**
+     * @return Adapter&MockObject
+     */
+    private function mockConfigAdapter(array $config): Adapter
+    {
+        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter
+            ->method('get')
+            ->willReturnCallback(
+                static function ($param) use ($config) {
+                    return $config[$param] ?? null;
+                }
+            )
+        ;
+
+        return $configAdapter;
     }
 
     /**

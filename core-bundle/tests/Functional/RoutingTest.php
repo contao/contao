@@ -61,8 +61,6 @@ class RoutingTest extends WebTestCase
     {
         Config::set('useAutoItem', $autoItem);
         Config::set('folderUrl', $folderUrl);
-        Config::set('urlSuffix', '.html');
-        Config::set('addLanguageToUrl', false);
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
@@ -321,7 +319,6 @@ class RoutingTest extends WebTestCase
     {
         Config::set('useAutoItem', $autoItem);
         Config::set('folderUrl', $folderUrl);
-        Config::set('urlSuffix', '.html');
         Config::set('addLanguageToUrl', true);
 
         $_SERVER['REQUEST_URI'] = $request;
@@ -571,8 +568,6 @@ class RoutingTest extends WebTestCase
     {
         Config::set('useAutoItem', $autoItem);
         Config::set('folderUrl', $folderUrl);
-        Config::set('urlSuffix', '');
-        Config::set('addLanguageToUrl', false);
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
