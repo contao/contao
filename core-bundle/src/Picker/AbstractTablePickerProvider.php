@@ -20,7 +20,7 @@ use Knp\Menu\ItemInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-abstract class AbstractDatabasePickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
+abstract class AbstractTablePickerProvider implements PickerProviderInterface, DcaPickerProviderInterface, PickerMenuInterface
 {
     private const PREFIX = 'dc.';
     private const PREFIX_LENGTH = 3;

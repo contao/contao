@@ -12,14 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
-class TablePickerProvider extends AbstractDatabasePickerProvider
+class TablePickerProvider extends AbstractTablePickerProvider
 {
     /**
      * {@inheritdoc}
      */
     public function getName(): string
     {
-        return 'dcTablePicker';
+        return 'tablePicker';
     }
 
     /**

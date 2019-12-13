@@ -44,7 +44,7 @@ class TablePickerProviderTest extends ContaoTestCase
     {
         $provider = $this->createTableProvider();
 
-        $this->assertSame('dcTablePicker', $provider->getName());
+        $this->assertSame('tablePicker', $provider->getName());
     }
 
     public function testSupportsContext(): void
@@ -95,11 +95,11 @@ class TablePickerProviderTest extends ContaoTestCase
     {
         $provider = $this->createTableProvider();
 
-        $config = $this->mockPickerConfig('', '', 'dcTablePicker.article');
+        $config = $this->mockPickerConfig('', '', 'tablePicker.article');
 
         $this->assertTrue($provider->isCurrent($config));
 
-        $config = $this->mockPickerConfig('', '', 'dcFooBar.article');
+        $config = $this->mockPickerConfig('', '', 'fooBar.article');
 
         $this->assertFalse($provider->isCurrent($config));
     }
@@ -194,10 +194,10 @@ class TablePickerProviderTest extends ContaoTestCase
 
         foreach ($modules as $module) {
             $GLOBALS['BE_MOD']['foo'][$module]['tables'] = ['tl_foobar'];
-            $expectedCurrent[] = ['dcTablePicker.'.$module];
+            $expectedCurrent[] = ['tablePicker.'.$module];
         }
 
-        $config = $this->mockPickerConfig('tl_foobar', '', 'dcTablePicker.'.$current, $expectedCurrent);
+        $config = $this->mockPickerConfig('tl_foobar', '', 'tablePicker.'.$current, $expectedCurrent);
         $provider = $this->createMenuTableProvider($modules, $current);
 
         $menu = $this->createMock(ItemInterface::class);
@@ -218,7 +218,7 @@ class TablePickerProviderTest extends ContaoTestCase
 
         foreach ($modules as $module) {
             $GLOBALS['BE_MOD']['foo'][$module]['tables'] = ['tl_foobar'];
-            $expectedCurrent[] = ['dcTablePicker.'.$module];
+            $expectedCurrent[] = ['tablePicker.'.$module];
         }
 
         $menu = $this->createMock(ItemInterface::class);
@@ -233,7 +233,7 @@ class TablePickerProviderTest extends ContaoTestCase
             ->willReturn($this->createMock(ItemInterface::class))
         ;
 
-        $config = $this->mockPickerConfig('tl_foobar', '', 'dcTablePicker.'.$current, $expectedCurrent);
+        $config = $this->mockPickerConfig('tl_foobar', '', 'tablePicker.'.$current, $expectedCurrent);
         $provider = $this->createMenuTableProvider($modules, $current, $menu);
 
         $provider->createMenuItem($config);
