@@ -23,9 +23,6 @@ class ContaoLoginFactory extends FormLoginFactory
     {
         parent::__construct();
 
-        $this->addOption('lock_period', 300);
-        $this->addOption('login_attempts', 3);
-
         unset(
             $this->options['username_parameter'],
             $this->options['password_parameter'],
@@ -55,12 +52,6 @@ class ContaoLoginFactory extends FormLoginFactory
             ->replaceArgument(0, new Reference($userProviderId))
             ->replaceArgument(1, new Reference('security.user_checker.'.$id))
             ->replaceArgument(2, $id)
-            ->addArgument(
-                [
-                    'lock_period' => $config['lock_period'],
-                    'login_attempts' => $config['login_attempts'],
-                ]
-            )
         ;
 
         return $provider;

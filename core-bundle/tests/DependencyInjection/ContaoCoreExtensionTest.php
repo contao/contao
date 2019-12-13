@@ -70,7 +70,7 @@ use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
-use Contao\CoreBundle\EventListener\TwoFactorFrontendListener;
+use Contao\CoreBundle\EventListener\TwoFactor\FrontendListener;
 use Contao\CoreBundle\EventListener\UserSessionListener as EventUserSessionListener;
 use Contao\CoreBundle\Fragment\ForwardFragmentRenderer;
 use Contao\CoreBundle\Fragment\FragmentHandler;
@@ -1071,7 +1071,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition('contao.listener.two_factor.frontend');
 
-        $this->assertSame(TwoFactorFrontendListener::class, $definition->getClass());
+        $this->assertSame(FrontendListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
         $this->assertEquals(

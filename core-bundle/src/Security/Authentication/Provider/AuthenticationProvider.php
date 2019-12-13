@@ -33,19 +33,13 @@ class AuthenticationProvider extends DaoAuthenticationProvider
     private $framework;
 
     /**
-     * @var array
-     */
-    private $options;
-
-    /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_provider" service instead
      */
-    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFramework $framework, array $options = [])
+    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFramework $framework)
     {
         parent::__construct($userProvider, $userChecker, $providerKey, $encoderFactory, false);
 
         $this->framework = $framework;
-        $this->options = array_merge(['login_attempts' => 3, 'lock_period' => 300], $options);
     }
 
     /**
@@ -70,19 +64,19 @@ class AuthenticationProvider extends DaoAuthenticationProvider
                 throw $this->onBadCredentials($user, $exception);
             }
         }
-
-        $user->loginCount = $this->options['login_attempts'];
-        $user->save();
     }
 
     /**
-     * Counts the login attempts and locks the user if it reaches zero.
+     * Counts the login attempts and locks the user after the first try for for a specific delay scheme.
+     * After each failed attempt A, the authentication server
+     * would wait for an increased T * A number of seconds, e.g., say T = 5,
+     * then after 1 attempt, the server waits for 5 seconds, at the second
+     * failed attempt, it waits for 5 * 2 = 10 seconds, etc.
      */
     public function onBadCredentials(User $user, AuthenticationException $exception): AuthenticationException
     {
-        --$user->loginCount;
-
-        if ($user->loginCount > 0) {
+        if (0 === $user->loginCount) {
+            ++$user->loginCount;
             $user->save();
 
             return new BadCredentialsException(
@@ -92,16 +86,16 @@ class AuthenticationProvider extends DaoAuthenticationProvider
             );
         }
 
-        $user->locked = time() + $this->options['lock_period'];
-        $user->loginCount = $this->options['login_attempts'];
+        $lockedSeconds = $user->loginCount * 5;
+        ++$user->loginCount;
+        $user->locked = time() + $lockedSeconds;
         $user->save();
 
         $lockedSeconds = $user->locked - time();
-        $lockedMinutes = (int) ceil($lockedSeconds / 60);
 
         $exception = new LockedException(
             $lockedSeconds,
-            sprintf('User "%s" has been locked for %s minutes', $user->username, $lockedMinutes),
+            sprintf('User "%s" has been locked for %s seconds', $user->username, $lockedSeconds),
             0,
             $exception
         );

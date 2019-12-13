@@ -67,7 +67,18 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
+        $user = $token->getUser();
+
+        if (!$user instanceof User) {
+            return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
+        }
+
         if ($token instanceof TwoFactorTokenInterface) {
+            // Reset login count and locked values
+            $user->loginCount = 0;
+            $user->locked = 0;
+            $user->save();
+
             $response = $this->httpUtils->createRedirectResponse(
                 $request,
                 $request->request->get('_failure_path') ?: 'contao_root'
@@ -78,15 +89,14 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
             return $response;
         }
 
-        $user = $token->getUser();
-
-        if (!$user instanceof User) {
-            return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
-        }
-
         $this->user = $user;
         $this->user->lastLogin = $this->user->currentLogin;
         $this->user->currentLogin = time();
+
+        // Reset login count and locked values
+        $this->user->loginCount = 0;
+        $this->user->locked = 0;
+
         $this->user->save();
 
         $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
