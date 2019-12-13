@@ -3925,7 +3925,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6)
 			{
-				$selected = $this->Database->execute("SELECT pid FROM {$this->strTable} WHERE id IN (" . implode(',', array_map('\intval', $this->arrPickerValue)) . ')')->fetchEach('pid');
+				$selected = $this->Database->execute("SELECT pid FROM {$this->strTable} WHERE id IN (" . implode(',', array_map('\intval', $this->arrPickerValue)) . ')')
+										   ->fetchEach('pid');
 			}
 
 			if (!empty(array_intersect($this->Database->getChildRecords(array($id), $table), $selected)))
