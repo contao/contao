@@ -107,11 +107,14 @@ class MemoryTokenStorageTest extends TestCase
         $this->assertInstanceOf(ResetInterface::class, $memoryTokenStorage);
 
         $memoryTokenStorage->initialize([]);
+
         $this->assertFalse($memoryTokenStorage->hasToken('foo'));
 
         $memoryTokenStorage->reset();
-        $this->expectException(\LogicException::class);
+
+        $this->expectException('LogicException');
         $this->expectExceptionMessage('MemoryTokenStorage must not be accessed before it was initialized.');
+
         $memoryTokenStorage->hasToken('foo');
     }
 }

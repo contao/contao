@@ -513,6 +513,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
         $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
         $this->assertSame(256, $tags['kernel.event_listener'][0]['priority']);
+
+        $this->assertArrayHasKey('kernel.reset', $tags);
+        $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
     public function testRegistersThePrettyErrorScreensListener(): void
@@ -907,7 +910,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
 
         $tags = $definition->getTags();
-        $this->assertCount(1, $tags);
+
         $this->assertArrayHasKey('kernel.reset', $tags);
         $this->assertSame([['method' => 'reset']], $tags['kernel.reset']);
     }
@@ -1015,9 +1018,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('%contao.error_level%', (string) $definition->getArgument(4));
 
         $tags = $definition->getTags();
-        $this->assertCount(1, $tags);
+
         $this->assertArrayHasKey('kernel.reset', $tags);
-        $this->assertSame([['method' => 'reset']], $tags['kernel.reset']);
+        $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
     public function testRegistersTheDeferredImageStorage(): void
@@ -1031,9 +1034,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('filesystem', (string) $definition->getArgument(1));
 
         $tags = $definition->getTags();
-        $this->assertCount(1, $tags);
+
         $this->assertArrayHasKey('kernel.reset', $tags);
-        $this->assertSame([['method' => 'reset']], $tags['kernel.reset']);
+        $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
     public function testRegistersTheImageImagineService(): void
@@ -1113,9 +1116,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.translation.translator', (string) $definition->getArgument(3));
 
         $tags = $definition->getTags();
-        $this->assertCount(1, $tags);
+
         $this->assertArrayHasKey('kernel.reset', $tags);
-        $this->assertSame([['method' => 'reset']], $tags['kernel.reset']);
+        $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
     public function testRegistersTheImagePictureFactory(): void
@@ -1922,9 +1925,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.translation.translator.data_collector.inner', (string) $definition->getArgument(0));
 
         $tags = $definition->getTags();
-        $this->assertCount(1, $tags);
+
         $this->assertArrayHasKey('kernel.reset', $tags);
-        $this->assertSame([['method' => 'reset']], $tags['kernel.reset']);
+        $this->assertSame('reset', $tags['kernel.reset'][0]['method']);
     }
 
     public function testRegistersTheTwigTemplateExtension(): void
