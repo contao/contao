@@ -243,9 +243,9 @@
             "Contao\\FaqBundle\\Tests\\": "faq-bundle/tests/",
             "Contao\\InstallationBundle\\Tests\\": "installation-bundle/tests/",
             "Contao\\ManagerBundle\\Tests\\": "manager-bundle/tests/",
+            "Contao\\NewBundle\\": "core-bundle/tests/Fixtures/vendor/contao/new-bundle/src",
             "Contao\\NewsBundle\\Tests\\": "news-bundle/tests/",
-            "Contao\\TestBundle\\": "core-bundle/tests/Fixtures/vendor/contao/test-bundle/",
-            "Contao\\NewBundle\\": "core-bundle/tests/Fixtures/vendor/contao/new-bundle/src"
+            "Contao\\TestBundle\\": "core-bundle/tests/Fixtures/vendor/contao/test-bundle/"
         }
     },
     "bin": [
