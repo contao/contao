@@ -130,7 +130,7 @@ abstract class Frontend extends Controller
 		$arrFragments = null;
 
 		// Use folder-style URLs
-		if (strpos($strRequest, '/') !== false)
+		if (Config::get('folderUrl') && strpos($strRequest, '/') !== false)
 		{
 			$strAlias = $strRequest;
 			$arrOptions = array($strAlias);
