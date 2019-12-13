@@ -59,7 +59,7 @@ class XliffFileLoader extends Loader
         $fileNodes = $xml->getElementsByTagName('file');
         $language = strtolower($language);
 
-        /** @var \DOMElement[] $fileNodes */
+        /** @var \DOMElement $fileNode */
         foreach ($fileNodes as $fileNode) {
             $tagName = 'target';
 
@@ -79,11 +79,11 @@ class XliffFileLoader extends Loader
         $return = '';
         $units = $fileNode->getElementsByTagName('trans-unit');
 
-        /** @var \DOMElement[] $units */
+        /** @var \DOMElement $unit */
         foreach ($units as $unit) {
             $node = $unit->getElementsByTagName($tagName);
 
-            if (null === $node || null === $node->item(0)) {
+            if (null === $node->item(0)) {
                 continue;
             }
 

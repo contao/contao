@@ -273,15 +273,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			case 'parentTable':
 				return $this->ptable;
-				break;
 
 			case 'childTable':
 				return $this->ctable;
-				break;
 
 			case 'rootIds':
 				return $this->root;
-				break;
 		}
 
 		return parent::__get($strKey);

@@ -222,7 +222,7 @@ class FilePickerProviderTest extends ContaoTestCase
         $security
             ->expects(null === $accessGranted ? $this->never() : $this->atLeastOnce())
             ->method('isGranted')
-            ->willReturn($accessGranted)
+            ->willReturn($accessGranted ?? false)
         ;
 
         $menuFactory = $this->createMock(FactoryInterface::class);
@@ -245,7 +245,7 @@ class FilePickerProviderTest extends ContaoTestCase
         $router
             ->method('generate')
             ->willReturnCallback(
-                static function (string $name, array $params): ?string {
+                static function (string $name, array $params): string {
                     return $name.'?'.http_build_query($params);
                 }
             )

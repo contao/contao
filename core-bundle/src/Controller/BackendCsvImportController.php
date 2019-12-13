@@ -58,6 +58,9 @@ class BackendCsvImportController
      */
     private $projectDir;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "Contao\CoreBundle\Controller\BackendCsvImportController" service instead
+     */
     public function __construct(ContaoFramework $framework, Connection $connection, RequestStack $requestStack, TranslatorInterface $translator, string $projectDir)
     {
         $this->framework = $framework;
@@ -283,9 +286,7 @@ class BackendCsvImportController
             $extension = pathinfo($file, PATHINFO_EXTENSION);
 
             if ('csv' !== $extension) {
-                throw new \RuntimeException(
-                    sprintf($this->translator->trans('ERR.filetype', [], 'contao_default'), $extension)
-                );
+                throw new \RuntimeException(sprintf($this->translator->trans('ERR.filetype', [], 'contao_default'), $extension));
             }
 
             $file = $this->projectDir.'/'.$file;

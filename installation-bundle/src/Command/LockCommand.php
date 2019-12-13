@@ -19,6 +19,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Locks the install tool.
+ *
+ * @internal
  */
 class LockCommand extends Command
 {

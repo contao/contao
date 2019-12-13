@@ -14,7 +14,6 @@ namespace Contao\ManagerBundle\Tests;
 
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerBundle\DependencyInjection\Compiler\ContaoManagerPass;
-use Contao\ManagerBundle\DependencyInjection\Compiler\ParametersYamlPass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -30,6 +29,5 @@ class ContaoManagerBundleTest extends TestCase
         $passes = $container->getCompilerPassConfig()->getBeforeOptimizationPasses();
 
         $this->assertInstanceOf(ContaoManagerPass::class, $passes[3]);
-        $this->assertInstanceOf(ParametersYamlPass::class, $passes[4]);
     }
 }

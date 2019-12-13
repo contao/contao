@@ -363,15 +363,12 @@ abstract class Widget extends Controller
 		{
 			case 'id':
 				return $this->strId;
-				break;
 
 			case 'name':
 				return $this->strName;
-				break;
 
 			case 'label':
 				return $this->strLabel;
-				break;
 
 			case 'value':
 				// Encrypt the value
@@ -386,39 +383,30 @@ abstract class Widget extends Controller
 				}
 
 				return $this->varValue;
-				break;
 
 			case 'class':
 				return $this->strClass;
-				break;
 
 			case 'prefix':
 				return $this->strPrefix;
-				break;
 
 			case 'template':
 				return $this->strTemplate;
-				break;
 
 			case 'wizard':
 				return $this->strWizard;
-				break;
 
 			case 'required':
 				return $this->arrConfiguration[$strKey];
-				break;
 
 			case 'forAttribute':
 				return $this->blnForAttribute;
-				break;
 
 			case 'dataContainer':
 				return $this->objDca;
-				break;
 
 			case 'activeRecord':
 				return $this->objDca->activeRecord;
-				break;
 
 			default:
 				if (isset($this->arrAttributes[$strKey]))
@@ -449,51 +437,39 @@ abstract class Widget extends Controller
 		{
 			case 'id':
 				return isset($this->strId);
-				break;
 
 			case 'name':
 				return isset($this->strName);
-				break;
 
 			case 'label':
 				return isset($this->strLabel);
-				break;
 
 			case 'value':
 				return isset($this->varValue);
-				break;
 
 			case 'class':
 				return isset($this->strClass);
-				break;
 
 			case 'template':
 				return isset($this->strTemplate);
-				break;
 
 			case 'wizard':
 				return isset($this->strWizard);
-				break;
 
 			case 'required':
 				return isset($this->arrConfiguration[$strKey]);
-				break;
 
 			case 'forAttribute':
 				return isset($this->blnForAttribute);
-				break;
 
 			case 'dataContainer':
 				return isset($this->objDca);
-				break;
 
 			case 'activeRecord':
 				return isset($this->objDca->activeRecord);
-				break;
 
 			default:
 				return isset($this->arrAttributes[$strKey]) || isset($this->arrConfiguration[$strKey]);
-				break;
 		}
 	}
 

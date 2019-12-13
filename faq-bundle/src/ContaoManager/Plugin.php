@@ -18,6 +18,9 @@ use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 
+/**
+ * @internal
+ */
 class Plugin implements BundlePluginInterface
 {
     /**

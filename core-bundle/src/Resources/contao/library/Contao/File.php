@@ -175,7 +175,6 @@ class File extends System
 			case 'size':
 			case 'filesize':
 				return filesize($this->strRootDir . '/' . $this->strFile);
-				break;
 
 			case 'name':
 			case 'basename':
@@ -185,7 +184,6 @@ class File extends System
 				}
 
 				return $this->arrPathinfo['basename'];
-				break;
 
 			case 'dirname':
 			case 'filename':
@@ -203,7 +201,6 @@ class File extends System
 				}
 
 				return strtolower($this->arrPathinfo['extension']);
-				break;
 
 			case 'origext':
 				if (!isset($this->arrPathinfo['extension']))
@@ -212,40 +209,31 @@ class File extends System
 				}
 
 				return $this->arrPathinfo['extension'];
-				break;
 
 			case 'tmpname':
 				return basename($this->strTmp);
-				break;
 
 			case 'path':
 			case 'value':
 				return $this->strFile;
-				break;
 
 			case 'mime':
 				return $this->getMimeType();
-				break;
 
 			case 'hash':
 				return $this->getHash();
-				break;
 
 			case 'ctime':
 				return filectime($this->strRootDir . '/' . $this->strFile);
-				break;
 
 			case 'mtime':
 				return filemtime($this->strRootDir . '/' . $this->strFile);
-				break;
 
 			case 'atime':
 				return fileatime($this->strRootDir . '/' . $this->strFile);
-				break;
 
 			case 'icon':
 				return $this->getIcon();
-				break;
 
 			case 'dataUri':
 				if ($this->extension == 'svgz')
@@ -254,7 +242,6 @@ class File extends System
 				}
 
 				return 'data:' . $this->mime . ';base64,' . base64_encode($this->getContent());
-				break;
 
 			case 'imageSize':
 				if (empty($this->arrImageSize))
@@ -311,15 +298,12 @@ class File extends System
 				}
 
 				return $this->arrImageSize;
-				break;
 
 			case 'width':
 				return $this->imageSize[0];
-				break;
 
 			case 'height':
 				return $this->imageSize[1];
-				break;
 
 			case 'imageViewSize':
 				if (empty($this->arrImageViewSize))
@@ -362,43 +346,33 @@ class File extends System
 				}
 
 				return $this->arrImageViewSize;
-				break;
 
 			case 'viewWidth':
 				return $this->imageViewSize !== false ? $this->imageViewSize[0] : null;
-				break;
 
 			case 'viewHeight':
 				return $this->imageViewSize !== false ? $this->imageViewSize[1] : null;
-				break;
 
 			case 'isImage':
 				return $this->isGdImage || $this->isSvgImage;
-				break;
 
 			case 'isGdImage':
 				return \in_array($this->extension, array('gif', 'jpg', 'jpeg', 'png'));
-				break;
 
 			case 'isSvgImage':
 				return \in_array($this->extension, array('svg', 'svgz'));
-				break;
 
 			case 'channels':
 				return $this->imageSize['channels'];
-				break;
 
 			case 'bits':
 				return $this->imageSize['bits'];
-				break;
 
 			case 'isRgbImage':
 				return $this->channels == 3;
-				break;
 
 			case 'isCmykImage':
 				return $this->channels == 4;
-				break;
 
 			case 'handle':
 				if (!\is_resource($this->resFile))
@@ -407,11 +381,9 @@ class File extends System
 				}
 
 				return $this->resFile;
-				break;
 
 			default:
 				return parent::__get($strKey);
-				break;
 		}
 	}
 

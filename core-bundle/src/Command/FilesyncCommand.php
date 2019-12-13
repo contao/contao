@@ -21,6 +21,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Synchronizes the file system with the database.
+ *
+ * @internal
  */
 class FilesyncCommand extends Command implements FrameworkAwareInterface
 {

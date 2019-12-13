@@ -19,6 +19,9 @@ use Contao\Events;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @internal
+ */
 class PreviewUrlConvertListener
 {
     /**

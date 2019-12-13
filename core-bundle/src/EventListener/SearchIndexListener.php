@@ -13,12 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Search\Document;
+use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
+/**
+ * @internal
+ */
 class SearchIndexListener
 {
+    public const FEATURE_INDEX = 0b01;
+    public const FEATURE_DELETE = 0b10;
+
     /**
      * @var IndexerInterface
      */
@@ -29,10 +36,16 @@ class SearchIndexListener
      */
     private $fragmentPath;
 
-    public function __construct(IndexerInterface $indexer, string $fragmentPath = '_fragment')
+    /**
+     * @var int
+     */
+    private $enabledFeatures;
+
+    public function __construct(IndexerInterface $indexer, string $fragmentPath = '_fragment', int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE)
     {
         $this->indexer = $indexer;
         $this->fragmentPath = $fragmentPath;
+        $this->enabledFeatures = $enabledFeatures;
     }
 
     /**
@@ -60,10 +73,18 @@ class SearchIndexListener
             return;
         }
 
-        if ($event->getResponse()->isSuccessful()) {
-            $this->indexer->index($document);
-        } else {
-            $this->indexer->delete($document);
+        try {
+            $success = $event->getResponse()->isSuccessful();
+
+            if ($success && $this->enabledFeatures & self::FEATURE_INDEX) {
+                $this->indexer->index($document);
+            }
+
+            if (!$success && $this->enabledFeatures & self::FEATURE_DELETE) {
+                $this->indexer->delete($document);
+            }
+        } catch (IndexerException $e) {
+            // ignore
         }
     }
 }

@@ -13,7 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 
+/**
+ * @internal
+ */
 class MakeResponsePrivateListener
 {
     /**
@@ -36,6 +40,9 @@ class MakeResponsePrivateListener
 
         $request = $event->getRequest();
         $response = $event->getResponse();
+
+        // Disable the default Symfony auto cache control
+        $response->headers->set(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER, true);
 
         // If the response is not cacheable for a reverse proxy, we don't have to do anything anyway
         if (!$response->isCacheable()) {

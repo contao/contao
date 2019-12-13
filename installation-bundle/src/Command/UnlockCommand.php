@@ -19,6 +19,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Unlocks the install tool.
+ *
+ * @internal
  */
 class UnlockCommand extends Command
 {

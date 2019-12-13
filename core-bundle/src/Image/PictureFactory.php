@@ -67,6 +67,9 @@ class PictureFactory implements PictureFactoryInterface
      */
     private $predefinedSizes = [];
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.image.picture_factory" service instead
+     */
     public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFramework $framework, bool $bypassCache, array $imagineOptions)
     {
         $this->pictureGenerator = $pictureGenerator;
@@ -202,6 +205,7 @@ class PictureFactory implements PictureFactoryInterface
                     $this->imageSizeItemsCache[$size[2]] = $adapter->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
                 }
 
+                /** @var ImageSizeItemModel[] $imageSizeItems */
                 $imageSizeItems = $this->imageSizeItemsCache[$size[2]];
 
                 if (null !== $imageSizeItems) {

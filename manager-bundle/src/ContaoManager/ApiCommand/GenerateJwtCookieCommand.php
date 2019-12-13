@@ -19,6 +19,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @internal
+ */
 class GenerateJwtCookieCommand extends Command
 {
     /**
@@ -50,10 +53,12 @@ class GenerateJwtCookieCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $cookie = $this->jwtManager->createCookie(['debug' => $input->getOption('debug')]);
 
         $output->write((string) $cookie);
+
+        return 0;
     }
 }

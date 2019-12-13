@@ -15,6 +15,9 @@ namespace Contao\ManagerBundle\Api;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * @internal
+ */
 class ManagerConfig
 {
     /**

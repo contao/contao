@@ -20,6 +20,9 @@ use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
+/**
+ * @internal
+ */
 class CommandSchedulerListener
 {
     /**

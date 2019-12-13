@@ -16,7 +16,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaConfig;
@@ -37,6 +36,9 @@ class DcaSchemaProvider
      */
     private $doctrine;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.doctrine.schema_provider" service instead
+     */
     public function __construct(ContaoFramework $framework, Registry $doctrine)
     {
         $this->framework = $framework;
@@ -317,20 +319,6 @@ class DcaSchemaProvider
         } else {
             if (false !== strpos($matches[1], 'fulltext')) {
                 $flags[] = 'fulltext';
-            }
-
-            // Backwards compatibility for doctrine/dbal <2.9
-            if (array_filter($lengths) && !method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
-                $columns = array_combine(
-                    $columns,
-                    array_map(
-                        static function ($column, $length) {
-                            return $column.($length ? '('.$length.')' : '');
-                        },
-                        $columns,
-                        $lengths
-                    )
-                );
             }
 
             $table->addIndex($columns, $matches[2], $flags, ['lengths' => $lengths]);

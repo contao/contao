@@ -24,6 +24,9 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
      */
     private $security;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.picker.article_provider" service instead
+     */
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
     {
         parent::__construct($menuFactory, $router, $translator);

@@ -6,7 +6,7 @@ parameters:
         services_yml_path: %currentWorkingDirectory%/core-bundle/src/Resources/config/services.yml
 
     symfony:
-        container_xml_path: %currentWorkingDirectory%/core-bundle/tests/Functional/var/cache/phpstan/appContao_CoreBundle_Tests_Functional_app_AppKernelPhpstanDebugContainer.xml
+        container_xml_path: %currentWorkingDirectory%/core-bundle/var/cache/phpstan/appContao_CoreBundle_Tests_Functional_app_AppKernelPhpstanDebugContainer.xml
 
     excludes_analyse:
         - %currentWorkingDirectory%/core-bundle/src/Resources/*
@@ -23,6 +23,9 @@ parameters:
 
         # Ignore backwards compatibility layers when preferring lowest dependencies
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
+
+        # Ingore forward compatibility layers
+        - '#Method Symfony\\Component\\HttpFoundation\\ResponseHeaderBag::all\(\) invoked with 1 parameter, 0 required\.#'
 
         # Ignore configuration tree errors
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'

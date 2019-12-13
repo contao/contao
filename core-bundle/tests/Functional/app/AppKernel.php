@@ -51,7 +51,7 @@ class AppKernel extends Kernel
 
     public function getProjectDir(): string
     {
-        return \dirname(__DIR__);
+        return \dirname(__DIR__, 3).'/var';
     }
 
     /**
@@ -66,12 +66,12 @@ class AppKernel extends Kernel
 
     public function getCacheDir(): string
     {
-        return \dirname(__DIR__).'/var/cache/'.$this->environment;
+        return $this->getProjectDir().'/cache/'.$this->environment;
     }
 
     public function getLogDir(): string
     {
-        return \dirname(__DIR__).'/var/logs';
+        return $this->getProjectDir().'/logs';
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
