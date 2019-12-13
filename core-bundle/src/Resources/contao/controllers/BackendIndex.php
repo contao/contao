@@ -56,7 +56,7 @@ class BackendIndex extends Backend
 
 		if ($exception instanceof LockedException)
 		{
-			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedMinutes()));
+			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedSeconds()));
 		}
 		elseif ($exception instanceof InvalidTwoFactorCodeException)
 		{

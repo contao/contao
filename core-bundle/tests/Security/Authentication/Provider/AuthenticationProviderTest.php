@@ -34,7 +34,7 @@ class AuthenticationProviderTest extends TestCase
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
-        $user->loginCount = 3;
+        $user->loginAttempts = 0;
 
         $user
             ->expects($this->once())
@@ -98,13 +98,13 @@ class AuthenticationProviderTest extends TestCase
         $this->addToAssertionCount(1); // does not throw an exception
     }
 
-    public function testLocksAUserAfterThreeFailedLoginAttempts(): void
+    public function testLocksAUserAfterAFailedLoginAttempt(): void
     {
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->locked = 0;
-        $user->loginCount = 1;
+        $user->loginAttempts = 1;
         $user->name = 'Admin';
         $user->firstname = 'Foo';
         $user->lastname = 'Bar';
@@ -143,7 +143,7 @@ class AuthenticationProviderTest extends TestCase
         $provider = $this->getProvider($framework);
 
         $this->expectException(LockedException::class);
-        $this->expectExceptionMessage('User "foo" has been locked for 5 minutes');
+        $this->expectExceptionMessage('User "foo" has been locked for 5 seconds');
 
         $provider->checkAuthentication($user, $token);
     }
@@ -176,17 +176,12 @@ class AuthenticationProviderTest extends TestCase
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
-        $user->loginCount = 3;
+        $user->loginAttempts = 0;
 
         $user
             ->expects($this->once())
             ->method('getPassword')
             ->willReturn('foobar')
-        ;
-
-        $user
-            ->expects($this->once())
-            ->method('save')
         ;
 
         $currentUser = $this->createMock(UserInterface::class);

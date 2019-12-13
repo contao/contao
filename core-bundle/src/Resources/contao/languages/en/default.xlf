@@ -123,7 +123,7 @@
         <source>The passwords did not match!</source>
       </trans-unit>
       <trans-unit id="ERR.accountLocked">
-        <source>This account has been locked! You can log in again in %d minutes.</source>
+        <source>This account has been locked! You can log in again in %d seconds.</source>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -1115,7 +1115,7 @@
       <trans-unit id="MSC.firstLogin">
         <source>This seems to be your first login. Welcome to Contao!</source>
       </trans-unit>
-      <trans-unit id="MSC.loginCount">
+      <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
       </trans-unit>
       <trans-unit id="MSC.locked">

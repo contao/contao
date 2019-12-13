@@ -64,14 +64,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
-        if ($token instanceof TwoFactorTokenInterface) {
-            $response = new RedirectResponse($request->getUri());
-
-            $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $response->getTargetUrl());
-
-            return $response;
-        }
-
         $user = $token->getUser();
 
         if (!$user instanceof User) {
@@ -79,6 +71,21 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         }
 
         $this->user = $user;
+
+        // Reset login attempts and locked values
+        $this->user->loginAttempts = 0;
+        $this->user->locked = 0;
+
+        if ($token instanceof TwoFactorTokenInterface) {
+            $this->user->save();
+
+            $response = new RedirectResponse($request->getUri());
+
+            $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $response->getTargetUrl());
+
+            return $response;
+        }
+
         $this->user->lastLogin = $this->user->currentLogin;
         $this->user->currentLogin = time();
         $this->user->save();

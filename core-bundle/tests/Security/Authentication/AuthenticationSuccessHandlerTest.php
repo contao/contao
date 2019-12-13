@@ -308,11 +308,25 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($session)
         ;
 
+        /** @var FrontendUser&MockObject $user */
+        $user = $this->createPartialMock(FrontendUser::class, ['save']);
+        $user
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        /** @var TwoFactorTokenInterface&MockObject $token */
         $token = $this->createMock(TwoFactorTokenInterface::class);
         $token
             ->expects($this->once())
             ->method('getProviderKey')
             ->willReturn('contao_frontend')
+        ;
+
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
         ;
 
         $response = $this->getHandler()->onAuthenticationSuccess($request, $token);
