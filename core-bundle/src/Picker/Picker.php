@@ -67,7 +67,11 @@ class Picker implements PickerInterface
         $this->menu = $this->menuFactory->createItem('picker');
 
         foreach ($this->providers as $provider) {
-            $this->menu->addChild($provider->createMenuItem($this->config));
+            if ($provider instanceof PickerMenuInterface) {
+                $provider->addMenuItems($this->menu, $this->config);
+            } else {
+                $this->menu->addChild($provider->createMenuItem($this->config));
+            }
         }
 
         return $this->menu;

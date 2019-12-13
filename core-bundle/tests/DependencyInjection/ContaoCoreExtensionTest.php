@@ -84,6 +84,7 @@ use Contao\CoreBundle\Picker\ArticlePickerProvider;
 use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PagePickerProvider;
 use Contao\CoreBundle\Picker\PickerBuilder;
+use Contao\CoreBundle\Picker\TablePickerProvider;
 use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Routing\FrontendLoader;
@@ -1312,6 +1313,25 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey('contao.picker_provider', $tags);
         $this->assertSame(192, $tags['contao.picker_provider'][0]['priority']);
+    }
+
+    public function testRegistersTheTablePickerProvider(): void
+    {
+        $this->assertTrue($this->container->has('contao.picker.table_provider'));
+
+        $definition = $this->container->getDefinition('contao.picker.table_provider');
+
+        $this->assertSame(TablePickerProvider::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(1));
+        $this->assertSame('router', (string) $definition->getArgument(2));
+        $this->assertSame('translator', (string) $definition->getArgument(3));
+        $this->assertSame('database_connection', (string) $definition->getArgument(4));
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('contao.picker_provider', $tags);
     }
 
     public function testRegistersTheRememberMeRepository(): void
