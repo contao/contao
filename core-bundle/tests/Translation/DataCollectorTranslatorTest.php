@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Translation;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\DataCollectorTranslator;
 use Symfony\Component\Translation\DataCollectorTranslator as SymfonyDataCollectorTranslator;
+use Symfony\Contracts\Service\ResetInterface;
 
 class DataCollectorTranslatorTest extends TestCase
 {
@@ -75,5 +76,37 @@ class DataCollectorTranslatorTest extends TestCase
         $translator = new DataCollectorTranslator($originalTranslator);
 
         $this->assertSame('translation', $translator->trans('translation_key', [], 'message_domain', 'en'));
+    }
+
+    public function testServiceIsResetable(): void
+    {
+        $originalTranslator = $this->createMock(SymfonyDataCollectorTranslator::class);
+        $originalTranslator
+            ->method('getCollectedMessages')
+            ->willReturn([])
+        ;
+
+        $originalTranslator
+            ->method('getLocale')
+            ->willReturn('en')
+        ;
+
+        $originalTranslator
+            ->method('trans')
+            ->willReturn('bar')
+        ;
+
+        $translator = new DataCollectorTranslator($originalTranslator);
+
+        $this->assertInstanceOf(ResetInterface::class, $translator);
+        $this->assertEmpty($translator->getCollectedMessages());
+
+        $translator->trans('foo', [], 'contao_default');
+
+        $this->assertCount(1, $translator->getCollectedMessages());
+
+        $translator->reset();
+
+        $this->assertEmpty($translator->getCollectedMessages());
     }
 }

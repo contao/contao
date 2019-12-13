@@ -113,7 +113,7 @@ class UserSessionListener
      */
     private function getSessionBag(Request $request): SessionBagInterface
     {
-        if (!$request->hasSession() || null === ($session = $request->getSession())) {
+        if (!$request->hasSession()) {
             throw new \RuntimeException('The request did not contain a session.');
         }
 
@@ -123,6 +123,6 @@ class UserSessionListener
             $name = 'contao_backend';
         }
 
-        return $session->getBag($name);
+        return $request->getSession()->getBag($name);
     }
 }

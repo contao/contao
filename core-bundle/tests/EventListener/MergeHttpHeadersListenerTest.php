@@ -18,9 +18,11 @@ use Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 class MergeHttpHeadersListenerTest extends TestCase
 {
@@ -234,6 +236,37 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $this->assertTrue($response->headers->has('Cache-Control'));
         $this->assertSame('no-cache, private', $response->headers->get('Cache-Control'));
+    }
+
+    public function testServiceIsResetable(): void
+    {
+        $response = new Response();
+        $response->headers = $this->createMock(ResponseHeaderBag::class);
+
+        $response->headers
+            ->expects($this->exactly(2))
+            ->method('set')
+            ->with('foo', 'Bar')
+        ;
+
+        $framework = $this->createMock(ContaoFramework::class);
+        $framework
+            ->expects($this->exactly(3))
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $headerStorage = new MemoryHeaderStorage(['Foo: Bar']);
+
+        $listener = new MergeHttpHeadersListener($framework, $headerStorage);
+
+        $this->assertInstanceOf(ResetInterface::class, $listener);
+
+        $listener->onKernelResponse($this->getResponseEvent($response));
+        $listener->onKernelResponse($this->getResponseEvent($response));
+
+        $listener->reset();
+        $listener->onKernelResponse($this->getResponseEvent($response));
     }
 
     private function getResponseEvent(Response $response = null): ResponseEvent

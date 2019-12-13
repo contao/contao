@@ -82,10 +82,11 @@ class StoreRefererListener
             return;
         }
 
-        if (!$request->hasSession() || null === ($session = $request->getSession())) {
+        if (!$request->hasSession()) {
             throw new \RuntimeException('The request did not contain a session.');
         }
 
+        $session = $request->getSession();
         $key = $request->query->has('popup') ? 'popupReferer' : 'referer';
         $refererId = $request->attributes->get('_contao_referer_id');
         $referers = $this->prepareBackendReferer($refererId, $session->get($key));
@@ -141,10 +142,11 @@ class StoreRefererListener
      */
     private function storeFrontendReferer(Request $request): void
     {
-        if (!$request->hasSession() || null === ($session = $request->getSession())) {
+        if (!$request->hasSession()) {
             throw new \RuntimeException('The request did not contain a session.');
         }
 
+        $session = $request->getSession();
         $refererOld = $session->get('referer');
 
         if (!$this->canModifyFrontendSession($request, $refererOld)) {
