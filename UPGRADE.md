@@ -7,6 +7,12 @@
 The `contao/image` library got updated from version 0.3 to 1.0. See
 [contao/image/UPGRADE.md][1] to get more information about the changes.
 
+### User agent body class
+
+The body class for the user agent (via the `{{ua::class}}` insert tag) has been
+removed in Contao `4.8` to improve caching capabilities. Adjust your CSS or use
+JavaScript if you need information about the user agent on the client side.
+
 ## Version 4.* to 4.6
 
 ### Anonymize Google Analytics
@@ -437,11 +443,5 @@ from its numeric ID, e.g. `article-1`.
 In Contao 3 the table inspection methods of the `Database` class processed both
 tables and views. However, the Doctrine schema manager, which is used in Contao
 4, only processes tables.
-
-### User agent body class
-
-The body class for the user agent (via the `{{ua::class}}` insert tag) has been 
-removed in Contao `4.8` to improve caching capabilities. Adjust your CSS or use 
-JavaScript, if you need information about the user agent on the client side.
 
 [1]: https://github.com/contao/image/blob/master/UPGRADE.md#version-03-to-10
