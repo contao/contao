@@ -14,11 +14,12 @@ namespace Contao\CoreBundle\Translation;
 
 use Symfony\Component\Translation\DataCollectorTranslator as SymfonyDataCollectorTranslator;
 use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @internal
  */
-class DataCollectorTranslator extends SymfonyDataCollectorTranslator
+class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements ResetInterface
 {
     /**
      * @var SymfonyDataCollectorTranslator
@@ -99,6 +100,11 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator
         }
 
         return $this->messages;
+    }
+
+    public function reset(): void
+    {
+        $this->messages = [];
     }
 
     private function collectMessage(string $locale, string $domain, string $id, string $translation, array $parameters = []): void

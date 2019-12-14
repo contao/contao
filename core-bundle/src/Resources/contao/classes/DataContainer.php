@@ -1053,7 +1053,7 @@ abstract class DataContainer extends Backend
 	{
 		$provider = $picker->getCurrentProvider();
 
-		if (!$provider instanceof DcaPickerProviderInterface || $provider->getDcaTable() != $this->strTable)
+		if (!$provider instanceof DcaPickerProviderInterface || $provider->getDcaTable($picker->getConfig()) != $this->strTable)
 		{
 			return null;
 		}

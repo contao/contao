@@ -74,15 +74,23 @@ class FrontendTemplate extends Template
 	/**
 	 * Return a response object
 	 *
-	 * @param bool $blnCheckRequest If true, check for unsued $_GET parameters
+	 * @param bool $blnCheckRequest      If true, check for unsued $_GET parameters
+	 * @param bool $blnForceCacheHeaders
 	 *
 	 * @return Response The response object
 	 */
-	public function getResponse($blnCheckRequest=false)
+	public function getResponse($blnCheckRequest=false, $blnForceCacheHeaders=false)
 	{
 		$this->blnCheckRequest = $blnCheckRequest;
 
-		return $this->setCacheHeaders(parent::getResponse());
+		$response = parent::getResponse();
+
+		if ($blnForceCacheHeaders || 0 === strncmp('fe_', $this->strTemplate, 3))
+		{
+			return $this->setCacheHeaders($response);
+		}
+
+		return $response;
 	}
 
 	/**

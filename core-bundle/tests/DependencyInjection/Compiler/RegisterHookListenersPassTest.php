@@ -13,9 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
+use Contao\CoreBundle\Fixtures\EventListener\InvokableListener;
+use Contao\CoreBundle\Fixtures\EventListener\TestListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
@@ -30,7 +32,7 @@ class RegisterHookListenersPassTest extends TestCase
             'private' => false,
         ];
 
-        $definition = new Definition('Test\HookListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.hook', $attributes);
 
         $container = $this->getContainerBuilder();
@@ -58,7 +60,7 @@ class RegisterHookListenersPassTest extends TestCase
             'method' => 'onInitializeSystem',
         ];
 
-        $definition = new Definition('Test\HookListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.hook', $attributes);
         $definition->setPublic(false);
 
@@ -79,7 +81,7 @@ class RegisterHookListenersPassTest extends TestCase
             'hook' => 'generatePage',
         ];
 
-        $definition = new Definition('Test\HookListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.hook', $attributes);
 
         $container = $this->getContainerBuilder();
@@ -100,6 +102,33 @@ class RegisterHookListenersPassTest extends TestCase
         );
     }
 
+    public function testUsesInvokeMethodIfNoneGiven(): void
+    {
+        $attributes = [
+            'hook' => 'generatePage',
+        ];
+
+        $definition = new Definition(InvokableListener::class);
+        $definition->addTag('contao.hook', $attributes);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.hook_listener', $definition);
+
+        $pass = new RegisterHookListenersPass();
+        $pass->process($container);
+
+        $this->assertSame(
+            [
+                'generatePage' => [
+                    0 => [
+                        ['test.hook_listener', '__invoke'],
+                    ],
+                ],
+            ],
+            $this->getHookListenersFromDefinition($container)[0]
+        );
+    }
+
     public function testSetsTheDefaultPriorityIfNoPriorityGiven(): void
     {
         $attributes = [
@@ -107,7 +136,7 @@ class RegisterHookListenersPassTest extends TestCase
             'method' => 'onInitializeSystem',
         ];
 
-        $definition = new Definition('Test\HookListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.hook', $attributes);
 
         $container = $this->getContainerBuilder();
@@ -130,7 +159,7 @@ class RegisterHookListenersPassTest extends TestCase
 
     public function testHandlesMultipleTags(): void
     {
-        $definition = new Definition('Test\HookListener');
+        $definition = new Definition(TestListener::class);
 
         $definition->addTag(
             'contao.hook',
@@ -195,7 +224,7 @@ class RegisterHookListenersPassTest extends TestCase
 
     public function testSortsTheHooksByPriority(): void
     {
-        $definitionA = new Definition('Test\HookListenerA');
+        $definitionA = new Definition(TestListener::class);
 
         $definitionA->addTag(
             'contao.hook',
@@ -206,7 +235,7 @@ class RegisterHookListenersPassTest extends TestCase
             ]
         );
 
-        $definitionB = new Definition('Test\HookListenerB');
+        $definitionB = new Definition(TestListener::class);
 
         $definitionB->addTag(
             'contao.hook',
@@ -281,7 +310,7 @@ class RegisterHookListenersPassTest extends TestCase
 
     public function testFailsIfTheHookAttributeIsMissing(): void
     {
-        $definition = new Definition('Test\HookListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.hook', ['method' => 'onInitializeSystemAfter']);
 
         $container = $this->getContainerBuilder();
@@ -289,7 +318,71 @@ class RegisterHookListenersPassTest extends TestCase
 
         $pass = new RegisterHookListenersPass();
 
-        $this->expectException(InvalidConfigurationException::class);
+        $this->expectException(InvalidDefinitionException::class);
+
+        $pass->process($container);
+    }
+
+    public function testThrowsExceptionIfConfiguredMethodDoesNotExist(): void
+    {
+        $definition = new Definition(TestListener::class);
+        $definition->addTag('contao.hook', ['hook' => 'onInitializeSystem', 'method' => 'onFoo']);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.hook_listener', $definition);
+
+        $pass = new RegisterHookListenersPass();
+
+        $this->expectException(InvalidDefinitionException::class);
+        $this->expectDeprecationMessage('The class "Contao\CoreBundle\Fixtures\EventListener\TestListener" does not have a method "onFoo".');
+
+        $pass->process($container);
+    }
+
+    public function testThrowsExceptionIfConfiguredMethodIsPrivate(): void
+    {
+        $definition = new Definition(TestListener::class);
+        $definition->addTag('contao.hook', ['hook' => 'onInitializeSystem', 'method' => 'onPrivateCallback']);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.hook_listener', $definition);
+
+        $pass = new RegisterHookListenersPass();
+
+        $this->expectException(InvalidDefinitionException::class);
+        $this->expectDeprecationMessage('The "Contao\CoreBundle\Fixtures\EventListener\TestListener::onPrivateCallback" method exists but is not public.');
+
+        $pass->process($container);
+    }
+
+    public function testThrowsExceptionIfGeneratedMethodIsPrivate(): void
+    {
+        $definition = new Definition(TestListener::class);
+        $definition->addTag('contao.hook', ['hook' => 'privateCallback']);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.hook_listener', $definition);
+
+        $pass = new RegisterHookListenersPass();
+
+        $this->expectException(InvalidDefinitionException::class);
+        $this->expectDeprecationMessage('The "Contao\CoreBundle\Fixtures\EventListener\TestListener::onPrivateCallback" method exists but is not public.');
+
+        $pass->process($container);
+    }
+
+    public function testThrowsExceptionIfNoValidMethodExists(): void
+    {
+        $definition = new Definition(TestListener::class);
+        $definition->addTag('contao.hook', ['hook' => 'fooBar']);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.hook_listener', $definition);
+
+        $pass = new RegisterHookListenersPass();
+
+        $this->expectException(InvalidDefinitionException::class);
+        $this->expectDeprecationMessage('Either specify a method name or implement the "onFooBar" or __invoke method.');
 
         $pass->process($container);
     }

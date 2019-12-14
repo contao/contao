@@ -730,38 +730,36 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'cteAlias' => array
 		(
 			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getAlias'),
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
-			'wizard' => array
+			'inputType'               => 'picker',
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr'),
+			'save_callback' => array
 			(
-				array('tl_content', 'editAlias')
+				array('tl_content', 'saveAlias'),
 			),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy', 'table'=>'tl_content')
 		),
 		'articleAlias' => array
 		(
 			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getArticleAlias'),
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
-			'wizard' => array
+			'inputType'               => 'picker',
+			'foreignKey'              => 'tl_article.title',
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr'),
+			'save_callback' => array
 			(
-				array('tl_content', 'editArticleAlias')
+				array('tl_content', 'saveArticleAlias'),
 			),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'article' => array
 		(
 			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getArticles'),
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
-			'wizard' => array
-			(
-				array('tl_content', 'editArticle')
-			),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'inputType'               => 'picker',
+			'foreignKey'              => 'tl_article.title',
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'form' => array
 		(
@@ -1213,9 +1211,13 @@ class tl_content extends Contao\Backend
 	 * @param Contao\DataContainer $dc
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function editArticleAlias(Contao\DataContainer $dc)
 	{
+		@trigger_error('Using tl_content::editArticleAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		if ($dc->value < 1)
 		{
 			return '';
@@ -1232,9 +1234,13 @@ class tl_content extends Contao\Backend
 	 * @param Contao\DataContainer $dc
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function getArticleAlias(Contao\DataContainer $dc)
 	{
+		@trigger_error('Using tl_content::getArticleAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		$arrPids = array();
 		$arrAlias = array();
 
@@ -1279,14 +1285,36 @@ class tl_content extends Contao\Backend
 	}
 
 	/**
+	 * Throw an exception if the current article is selected (circular reference))
+	 *
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
+	 *
+	 * @return mixed
+	 */
+	public function saveArticleAlias($varValue, DataContainer $dc)
+	{
+		if ($dc->activeRecord && $dc->activeRecord->pid == $varValue)
+		{
+			throw new \RuntimeException($GLOBALS['TL_LANG']['ERR']['circularPicker']);
+		}
+
+		return $varValue;
+	}
+
+	/**
 	 * Return the edit alias wizard
 	 *
 	 * @param Contao\DataContainer $dc
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function editAlias(Contao\DataContainer $dc)
 	{
+		@trigger_error('Using tl_content::editAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		if ($dc->value < 1)
 		{
 			return '';
@@ -1301,9 +1329,13 @@ class tl_content extends Contao\Backend
 	 * Get all content elements and return them as array (content element alias)
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function getAlias()
 	{
+		@trigger_error('Using tl_content::getAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		$arrPids = array();
 		$arrAlias = array();
 
@@ -1363,6 +1395,24 @@ class tl_content extends Contao\Backend
 		}
 
 		return $arrAlias;
+	}
+
+	/**
+	 * Throw an exception if the current content element is selected (circular reference)
+	 *
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
+	 *
+	 * @return mixed
+	 */
+	public function saveAlias($varValue, DataContainer $dc)
+	{
+		if ($dc->activeRecord && $dc->activeRecord->id == $varValue)
+		{
+			throw new \RuntimeException($GLOBALS['TL_LANG']['ERR']['circularPicker']);
+		}
+
+		return $varValue;
 	}
 
 	/**
@@ -1453,9 +1503,13 @@ class tl_content extends Contao\Backend
 	 * @param Contao\DataContainer $dc
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function editArticle(Contao\DataContainer $dc)
 	{
+		@trigger_error('Using tl_content::editArticle() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		if ($dc->value < 1)
 		{
 			return '';
@@ -1472,9 +1526,13 @@ class tl_content extends Contao\Backend
 	 * @param Contao\DataContainer $dc
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function getArticles(Contao\DataContainer $dc)
 	{
+		@trigger_error('Using tl_content::getArticles() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		$arrPids = array();
 		$arrArticle = array();
 		$arrRoot = array();
