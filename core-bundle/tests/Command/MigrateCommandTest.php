@@ -106,7 +106,7 @@ class MigrateCommandTest extends TestCase
         $command = $this->getCommand([], [], [], $installer);
 
         $tester = new CommandTester($command);
-        $tester->setInputs(['y', 'y']);
+        $tester->setInputs(['yes', 'yes']);
 
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
