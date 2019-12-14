@@ -121,6 +121,49 @@ class MigrateCommandTest extends TestCase
         $this->assertRegExp('/All migrations completed/', $display);
     }
 
+    public function testAbortsIfAnswerIsNo(): void
+    {
+        $command = $this->getCommand(
+            [['Migration 1', 'Migration 2']],
+            [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]]
+        );
+
+        $tester = new CommandTester($command);
+        $tester->setInputs(['n']);
+
+        $code = $tester->execute([]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(1, $code);
+        $this->assertRegExp('/Migration 1/', $display);
+        $this->assertRegExp('/Migration 2/', $display);
+        $this->assertNotRegExp('/Result 1/', $display);
+        $this->assertNotRegExp('/Result 2/', $display);
+        $this->assertNotRegExp('/All migrations completed/', $display);
+    }
+
+    public function testDoesNotAbortIfMigrationFails(): void
+    {
+        $command = $this->getCommand(
+            [['Migration 1', 'Migration 2']],
+            [[new MigrationResult(false, 'Result 1'), new MigrationResult(true, 'Result 2')]]
+        );
+
+        $tester = new CommandTester($command);
+        $tester->setInputs(['y']);
+
+        $code = $tester->execute([]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(0, $code);
+        $this->assertRegExp('/Migration 1/', $display);
+        $this->assertRegExp('/Migration 2/', $display);
+        $this->assertRegExp('/Result 1/', $display);
+        $this->assertRegExp('/Migration failed/', $display);
+        $this->assertRegExp('/Result 2/', $display);
+        $this->assertRegExp('/All migrations completed/', $display);
+    }
+
     /**
      * @param array<array<string>>          $pendingMigrations
      * @param array<array<MigrationResult>> $migrationResults
