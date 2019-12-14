@@ -143,6 +143,7 @@ class MigrateCommand extends Command
 
             foreach ($this->migrations->runMigrations() as $result) {
                 $this->io->writeln(' * '.$result->getMessage());
+
                 if (!$result->isSuccessful()) {
                     $this->io->error('Migration failed');
                 }
