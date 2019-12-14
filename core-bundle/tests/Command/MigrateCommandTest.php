@@ -35,32 +35,132 @@ class MigrateCommandTest extends TestCase
         $this->assertRegExp('/All migrations completed/', $display);
     }
 
+    public function testExecutesPendingMigrations(): void
+    {
+        $command = $this->getCommand(
+            [['Migration 1', 'Migration 2']],
+            [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]]
+        );
+
+        $tester = new CommandTester($command);
+        $tester->setInputs(['y']);
+
+        $code = $tester->execute([]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(0, $code);
+        $this->assertRegExp('/Migration 1/', $display);
+        $this->assertRegExp('/Migration 2/', $display);
+        $this->assertRegExp('/Result 1/', $display);
+        $this->assertRegExp('/Result 2/', $display);
+        $this->assertRegExp('/All migrations completed/', $display);
+    }
+
+    public function testExecutesRunOnceFiles(): void
+    {
+        $runOnceFile = $this->getFixturesDir().'/runonceFile.php';
+
+        file_put_contents($runOnceFile, '<?php $GLOBALS["test_'.__CLASS__.'"] = "executed";');
+
+        $command = $this->getCommand([], [], [[$runOnceFile]]);
+
+        $tester = new CommandTester($command);
+        $tester->setInputs(['y']);
+
+        $code = $tester->execute([]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame('executed', $GLOBALS['test_'.__CLASS__]);
+
+        unset($GLOBALS['test_'.__CLASS__]);
+
+        $this->assertSame(0, $code);
+        $this->assertRegExp('/runonceFile.php/', $display);
+        $this->assertRegExp('/All migrations completed/', $display);
+    }
+
+    public function testExecutesSchemaDiff(): void
+    {
+        $installer = $this->createMock(Installer::class);
+
+        $installer
+            ->expects($this->atLeastOnce())
+            ->method('compileCommands')
+        ;
+
+        $installer
+            ->expects($this->atLeastOnce())
+            ->method('getCommands')
+            ->willReturn(
+                [
+                    'CREATE' => ['hash1' => 'First call QUERY 1', 'hash2' => 'First call QUERY 2'],
+                ],
+                [
+                    'CREATE' => ['hash3' => 'Second call QUERY 1', 'hash4' => 'Second call QUERY 2'],
+                    'DROP' => ['hash5' => 'DROP QUERY'],
+                ],
+                []
+            )
+        ;
+
+        $command = $this->getCommand([], [], [], $installer);
+
+        $tester = new CommandTester($command);
+        $tester->setInputs(['y', 'y']);
+
+        $code = $tester->execute([]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(0, $code);
+        $this->assertRegExp('/First call QUERY 1/', $display);
+        $this->assertRegExp('/First call QUERY 2/', $display);
+        $this->assertRegExp('/Second call QUERY 1/', $display);
+        $this->assertRegExp('/Second call QUERY 2/', $display);
+        $this->assertRegExp('/Executed 2 SQL queries/', $display);
+        $this->assertNotRegExp('/Executed 3 SQL queries/', $display);
+        $this->assertRegExp('/All migrations completed/', $display);
+    }
+
     /**
-     * @param string[]                   $pendingMigrations
-     * @param MigrationResult[]          $migrationResults
-     * @param string[]                   $runonceFiles
-     * @param ContaoFramework&MockObject $framework
-     * @param Installer&MockObject       $installer
+     * @param array<array<string>>          $pendingMigrations
+     * @param array<array<MigrationResult>> $migrationResults
+     * @param array<array<string>>          $runonceFiles
+     * @param Installer&MockObject          $installer
      */
-    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], ContaoFramework $framework = null, Installer $installer = null): MigrateCommand
+    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], Installer $installer = null): MigrateCommand
     {
         $migrations = $this->createMock(Migrations::class);
 
+        $pendingMigrations[] = [];
+        $pendingMigrations[] = [];
+        $pendingMigrations[] = [];
+
         $migrations
             ->method('getPendingMigrations')
-            ->willReturn($pendingMigrations)
+            ->willReturn(...$pendingMigrations)
         ;
+
+        $migrationResults[] = [];
 
         $migrations
             ->method('runMigrations')
-            ->willReturn($migrationResults)
+            ->willReturn(...$migrationResults)
         ;
+
+        $runonceFiles[] = [];
+        $runonceFiles[] = [];
+        $duplicatedRunonceFiles = [];
+
+        foreach ($runonceFiles as $runonceFile) {
+            $duplicatedRunonceFiles[] = $runonceFile;
+            $duplicatedRunonceFiles[] = $runonceFile;
+        }
 
         $fileLocator = $this->createMock(FileLocator::class);
         $fileLocator
             ->method('locate')
             ->with('config/runonce.php', null, false)
-            ->willReturn($runonceFiles)
+            ->willReturn(...$duplicatedRunonceFiles)
         ;
 
         return new MigrateCommand(
