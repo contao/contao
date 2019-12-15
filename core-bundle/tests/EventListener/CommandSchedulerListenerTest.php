@@ -38,13 +38,7 @@ class CommandSchedulerListenerTest extends TestCase
             ->with([Cron::SCOPE_WEB])
         ;
 
-        $framework = $this->mockContaoFramework();
-        $framework
-            ->method('createInstance')
-            ->willReturn($controller)
-        ;
-
-        $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $cron);
+        $listener = new CommandSchedulerListener($this->mockContaoFramework(), $this->mockConnection(), $cron);
         $listener->onKernelTerminate($this->getTerminateEvent('contao_frontend'));
     }
 
