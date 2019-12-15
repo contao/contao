@@ -35,9 +35,7 @@ class AddCronJobsPass implements CompilerPassInterface
         foreach ($serviceIds as $serviceId => $tags) {
             foreach ($tags as $attributes) {
                 if (!isset($attributes['interval'])) {
-                    throw new InvalidConfigurationException(
-                        sprintf('Missing interval attribute in tagged cron service with service id "%s"', $serviceId)
-                    );
+                    throw new InvalidConfigurationException(sprintf('Missing interval attribute in tagged cron service with service id "%s"', $serviceId));
                 }
 
                 $method = $this->getMethod($attributes);

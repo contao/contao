@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Cron\Cron;
@@ -94,7 +104,7 @@ class AddCronJobsPassTest extends TestCase
     {
         $definition = new Definition('Test\Cron');
         $definition->addTag('contao.cron', [
-            'interval' => 'minutely', 
+            'interval' => 'minutely',
             'method' => 'customMethod',
         ]);
 
@@ -122,7 +132,7 @@ class AddCronJobsPassTest extends TestCase
 
         $crons = $this->getCronsFromDefinition($container);
 
-        $this->assertSame(0, $crons[0][3]);      
+        $this->assertSame(0, $crons[0][3]);
     }
 
     public function testSetsTheDefaultScopeIfNoScopeGiven(): void
@@ -138,10 +148,10 @@ class AddCronJobsPassTest extends TestCase
 
         $crons = $this->getCronsFromDefinition($container);
 
-        $this->assertSame(null, $crons[0][4]);
+        $this->assertNull($crons[0][4]);
     }
 
-    public function testSetsScopeIfScopeIsDefined():void
+    public function testSetsScopeIfScopeIsDefined(): void
     {
         $definition = new Definition('Test\Cron');
         $definition->addTag('contao.cron', ['interval' => 'minutely', 'scope' => 'cli']);
@@ -214,6 +224,7 @@ class AddCronJobsPassTest extends TestCase
             $this->assertIsString($methodCall[1][1]);
             $this->assertIsString($methodCall[1][2]);
             $this->assertIsInt($methodCall[1][3]);
+
             if (null !== $methodCall[1][4]) {
                 $this->assertIsString($methodCall[1][4]);
             }
