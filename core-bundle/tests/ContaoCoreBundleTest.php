@@ -67,7 +67,6 @@ class ContaoCoreBundleTest extends TestCase
             SearchIndexerPass::class,
             EscargotSubscriberPass::class,
             AddCronJobsPass::class
-            AddCronJobsPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);
