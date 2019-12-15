@@ -27,13 +27,6 @@ services:
     # Backwards compatibility
     Contao\CoreBundle\Framework\ContaoFrameworkInterface: '@contao.framework'
 
-    # Controllers
-    Contao\CoreBundle\Controller\FrontendController:
-        arguments:
-            - '@Contao\CoreBundle\Cron\Cron'
-        tags:
-            - { name: 'controller.service_arguments' }
-
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
@@ -89,7 +82,11 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\FrontendController: ~
+    Contao\CoreBundle\Controller\FrontendController:
+        arguments:
+            - '@Contao\CoreBundle\Cron\Cron'
+        tags:
+            - { name: 'controller.service_arguments' }
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         tags:
