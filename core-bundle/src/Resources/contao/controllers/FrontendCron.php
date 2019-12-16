@@ -10,12 +10,18 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Cron\Cron;
+use Contao\System;
 use Symfony\Component\HttpFoundation\Response;
+
+@trigger_error('Using the "Contao\FrontendCron" class has been deprecated and will be removed in Contao 5.0. Use the Contao\CoreBundle\Cron\Cron service instead.', E_USER_DEPRECATED);
 
 /**
  * Command scheduler controller.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0; use the
+ *             Contao\CoreBundle\Cron\Cron service instead
  */
 class FrontendCron extends Frontend
 {
@@ -26,82 +32,13 @@ class FrontendCron extends Frontend
 	 */
 	public function run()
 	{
-		$objResponse = new Response('', 204);
-
-		// Do not run if there is POST data or the last execution was less than a minute ago
-		if (!empty($_POST) || $this->hasToWait())
+		// Do not run if there is POST data
+		if (empty($_POST))
 		{
-			return $objResponse;
+			System::getContainer()->get(Cron::class)->run();
 		}
 
-		$arrLock = array();
-		$arrIntervals = array('monthly', 'weekly', 'daily', 'hourly', 'minutely');
-
-		// Store the current timestamps
-		$arrCurrent = array
-		(
-			'monthly'  => date('Ym'),
-			'weekly'   => date('YW'),
-			'daily'    => date('Ymd'),
-			'hourly'   => date('YmdH'),
-			'minutely' => date('YmdHi')
-		);
-
-		// Get the timestamps from tl_cron
-		$objLock = $this->Database->query("SELECT * FROM tl_cron WHERE name !='lastrun'");
-
-		while ($objLock->next())
-		{
-			$arrLock[$objLock->name] = $objLock->value;
-		}
-
-		// Create the database entries
-		foreach ($arrIntervals as $strInterval)
-		{
-			if (!isset($arrLock[$strInterval]))
-			{
-				$arrLock[$strInterval] = 0;
-				$this->Database->query("INSERT INTO tl_cron (name, value) VALUES ('$strInterval', 0)");
-			}
-		}
-
-		// Load the default language file (see #8719)
-		System::loadLanguageFile('default');
-
-		// Run the jobs
-		foreach ($arrIntervals as $strInterval)
-		{
-			$intCurrent = $arrCurrent[$strInterval];
-
-			// Skip empty intervals and jobs that have been executed already
-			if ($arrLock[$strInterval] == $intCurrent || empty($GLOBALS['TL_CRON'][$strInterval]))
-			{
-				continue;
-			}
-
-			// Update the database before the jobs are executed, in case one of them fails
-			$this->Database->query("UPDATE tl_cron SET value=$intCurrent WHERE name='$strInterval'");
-
-			// Add a log entry if in debug mode (see #4729)
-			if (Config::get('debugMode'))
-			{
-				$this->log('Running the ' . $strInterval . ' cron jobs', __METHOD__, TL_CRON);
-			}
-
-			foreach ($GLOBALS['TL_CRON'][$strInterval] as $callback)
-			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}();
-			}
-
-			// Add a log entry if in debug mode (see #4729)
-			if (Config::get('debugMode'))
-			{
-				$this->log(ucfirst($strInterval) . ' cron jobs complete', __METHOD__, TL_CRON);
-			}
-		}
-
-		return $objResponse;
+		return new Response('', 204);
 	}
 
 	/**
@@ -111,36 +48,7 @@ class FrontendCron extends Frontend
 	 */
 	protected function hasToWait()
 	{
-		$return = true;
-
-		// Get the timestamp without seconds (see #5775)
-		$time = strtotime(date('Y-m-d H:i'));
-
-		// Lock the table
-		$this->Database->lockTables(array('tl_cron'=>'WRITE'));
-
-		// Get the last execution date
-		$objCron = $this->Database->prepare("SELECT * FROM tl_cron WHERE name='lastrun'")
-								  ->limit(1)
-								  ->execute();
-
-		// Add the cron entry
-		if ($objCron->numRows < 1)
-		{
-			$this->Database->query("INSERT INTO tl_cron (name, value) VALUES ('lastrun', $time)");
-			$return = false;
-		}
-
-		// Check the last execution time
-		elseif ($objCron->value <= ($time - $this->getCronTimeout()))
-		{
-			$this->Database->query("UPDATE tl_cron SET value=$time WHERE name='lastrun'");
-			$return = false;
-		}
-
-		$this->Database->unlockTables();
-
-		return $return;
+		return false;
 	}
 }
 

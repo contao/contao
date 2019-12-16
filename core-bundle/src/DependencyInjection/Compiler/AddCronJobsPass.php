@@ -1,0 +1,119 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\DependencyInjection\Compiler;
+
+use Contao\CoreBundle\Cron\Cron;
+use Cron\CronExpression;
+use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
+
+class AddCronJobsPass implements CompilerPassInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function process(ContainerBuilder $container): void
+    {
+        if (!$container->has(Cron::class)) {
+            return;
+        }
+
+        $serviceIds = $container->findTaggedServiceIds('contao.cron');
+        $definition = $container->findDefinition(Cron::class);
+
+        foreach ($serviceIds as $serviceId => $tags) {
+            foreach ($tags as $attributes) {
+                if (!isset($attributes['interval'])) {
+                    throw new InvalidDefinitionException(sprintf('Missing interval attribute in tagged cron service with service id "%s"', $serviceId));
+                }
+
+                $jobDefinition = $container->findDefinition($serviceId);
+
+                $method = $this->getMethod($attributes, $jobDefinition->getClass(), $serviceId);
+                $interval = $attributes['interval'];
+                $priority = (int) ($attributes['priority'] ?? 0);
+                $scope = $attributes['scope'] ?? null;
+
+                // Map interval to expression macros
+                $interval = str_replace(
+                    ['minutely', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'],
+                    ['* * * * *', '@hourly', '@daily', '@weekly', '@monthly', '@yearly'],
+                    $interval
+                );
+
+                // Validate the cron expression
+                if (!CronExpression::isValidExpression($interval)) {
+                    throw new InvalidDefinitionException(sprintf('The contao.cron definition for service "%s" has an invalid interval expression "%s"', $serviceId, $interval));
+                }
+
+                $definition->addMethodCall('addCronJob', [new Reference($serviceId), $method, $interval, $priority, $scope]);
+            }
+        }
+    }
+
+    /**
+     * @throws InvalidDefinitionException
+     */
+    private function getMethod(array $attributes, string $class, string $serviceId): string
+    {
+        $ref = new \ReflectionClass($class);
+        $invalid = sprintf('The contao.cron definition for service "%s" is invalid. ', $serviceId);
+
+        if (isset($attributes['method'])) {
+            if (!$ref->hasMethod($attributes['method'])) {
+                $invalid .= sprintf('The class "%s" does not have a method "%s".', $class, $attributes['method']);
+
+                throw new InvalidDefinitionException($invalid);
+            }
+
+            if (!$ref->getMethod($attributes['method'])->isPublic()) {
+                $invalid .= sprintf('The "%s::%s" method exists but is not public.', $class, $attributes['method']);
+
+                throw new InvalidDefinitionException($invalid);
+            }
+
+            return (string) $attributes['method'];
+        }
+
+        if ($ref->hasMethod('__invoke')) {
+            return '__invoke';
+        }
+
+        $interval = str_replace('@', '', $attributes['interval']);
+
+        if (!\in_array($interval, ['minutely', 'hourly', 'daily', 'weekly', 'monthly', 'yearly'], true)) {
+            $invalid .= 'Either specify a method name or implement the __invoke method.';
+        } else {
+            $method = 'on'.ucfirst($interval);
+            $private = false;
+
+            if ($ref->hasMethod($method)) {
+                if ($ref->getMethod($method)->isPublic()) {
+                    return $method;
+                }
+
+                $private = true;
+            }
+
+            if ($private) {
+                $invalid .= sprintf('The "%s::%s" method exists but is not public.', $class, $method);
+            } else {
+                $invalid .= sprintf('Either specify a method name or implement the "%s" or __invoke method.', $method);
+            }
+        }
+
+        throw new InvalidDefinitionException($invalid);
+    }
+}

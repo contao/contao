@@ -433,6 +433,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(CommandSchedulerListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
+        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+        $this->assertSame('database_connection', (string) $definition->getArgument(1));
+        $this->assertSame(Cron::class, (string) $definition->getArgument(2));
+        $this->assertSame('%fragment.path%', (string) $definition->getArgument(3));
 
         $this->assertEquals(
             [
