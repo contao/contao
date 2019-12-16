@@ -191,7 +191,7 @@ class MigrateCommand extends Command
     private function executeSchemaDiff(bool $completeOption): bool
     {
         if (null === $this->installer) {
-            $this->io->error('Service contao.installer of contao/installation-bundle not found.');
+            $this->io->error('Service contao.installer of contao/installation-bundle not found. The installation bundle needs to be installed in order to execute schema diff migrations.');
 
             return false;
         }
