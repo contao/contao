@@ -204,9 +204,7 @@ services:
         class: Contao\Image\DeferredImageStorageFilesystem
         arguments:
             - '%contao.image.target_dir%'
-            - '@?filesystem'
-        tags:
-            - { name: kernel.reset, method: reset }
+            - '@?filesystem'}
 
     contao.image.imagine.gd:
         class: Imagine\Gd\Imagine
