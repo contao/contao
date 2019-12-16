@@ -235,7 +235,7 @@ class ContaoCoreExtension extends Extension
         @trigger_error('Using the "contao.image.target_path" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.target_dir" parameter instead.', E_USER_DEPRECATED);
     }
 
-    private function resetDeferredImageStorage(ContainerBuilder $container)
+    private function resetDeferredImageStorage(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('contao.image.deferred_image_storage')) {
             return;

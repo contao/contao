@@ -1238,7 +1238,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('%contao.image.target_dir%', (string) $definition->getArgument(0));
         $this->assertSame('filesystem', (string) $definition->getArgument(1));
 
-        if (\method_exists($definition->getClass(), 'reset')) {
+        if (method_exists($definition->getClass(), 'reset')) {
             $this->assertSame(
                 [
                     'kernel.reset' => [
