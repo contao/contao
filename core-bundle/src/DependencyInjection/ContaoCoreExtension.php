@@ -243,7 +243,7 @@ class ContaoCoreExtension extends Extension
 
         $definition = $container->findDefinition('contao.image.deferred_image_storage');
 
-        if (\method_exists($definition->getClass(), 'reset')) {
+        if (method_exists($definition->getClass(), 'reset')) {
             $definition->addTag('kernel.reset', ['method' => 'reset']);
         }
     }
