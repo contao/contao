@@ -77,12 +77,17 @@ class LegacyMatcher implements RequestMatcherInterface
         $locale = null;
         $fragments = null;
 
-        try {
-            $match = $this->requestMatcher->matchRequest($request);
-            $fragments = $this->createFragmentsFromMatch($match);
-            $locale = $match['_locale'] ?? null;
-        } catch (ResourceNotFoundException $e) {
-            // continue and parse fragments from path
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
+
+        if ($config->get('folderUrl')) {
+            try {
+                $match = $this->requestMatcher->matchRequest($request);
+                $fragments = $this->createFragmentsFromMatch($match);
+                $locale = $match['_locale'] ?? null;
+            } catch (ResourceNotFoundException $e) {
+                // Continue and parse fragments from path
+            }
         }
 
         if (null === $fragments) {
