@@ -239,18 +239,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array
-			(
-				'serpPreview' => array
-				(
-					'url' => static function (Contao\NewsModel $model)
-					{
-						return Contao\News::generateNewsUrl($model, false, true);
-					},
-					'title' => array('pageTitle', 'headline'),
-					'description' => array('description', 'teaser')
-				)
-			),
+			'eval'                    => array('serpPreview'=>array('url'=>array('tl_news', 'getSerpUrl'), 'title'=>array('pageTitle', 'headline'), 'description'=>array('description', 'teaser'))),
 			'sql'                     => null
 		),
 		'subheadline' => array
@@ -684,6 +673,18 @@ class tl_news extends Contao\Backend
 	public function loadTime($value)
 	{
 		return strtotime('1970-01-01 ' . date('H:i:s', $value));
+	}
+
+	/**
+	 * Return the SERP URL
+	 *
+	 * @param Contao\NewsModel $model
+	 *
+	 * @return string
+	 */
+	public function getSerpUrl(Contao\NewsModel $model)
+	{
+		return Contao\News::generateNewsUrl($model, false, true);
 	}
 
 	/**

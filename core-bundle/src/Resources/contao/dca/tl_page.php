@@ -269,17 +269,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array
-			(
-				'serpPreview' => array
-				(
-					'url' => static function (Contao\PageModel $model)
-					{
-						return $model->getAbsoluteUrl();
-					},
-					'title' => array('pageTitle', 'title'),
-				)
-			),
+			'eval'                    => array('serpPreview'=>array('url'=>array('tl_page', 'getSerpUrl'), 'title'=>array('pageTitle', 'title'))),
 			'sql'                     => null
 		),
 		'redirect' => array
@@ -997,6 +987,18 @@ class tl_page extends Contao\Backend
 		}
 
 		return $varValue;
+	}
+
+	/**
+	 * Return the SERP URL
+	 *
+	 * @param Contao\PageModel $model
+	 *
+	 * @return string
+	 */
+	public function getSerpUrl(Contao\PageModel $model)
+	{
+		return $model->getAbsoluteUrl();
 	}
 
 	/**

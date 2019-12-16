@@ -41,7 +41,7 @@ class SerpPreview extends Widget
 		// Get the URL with a %s placeholder for the alias or ID
 		$url = $this->getUrl($model);
 		list($baseUrl, $urlSuffix) = explode('%s', $url);
-		$url = sprintf($url, $model->alias ?: $model->id);
+		$url = $model->alias == 'index' ? $baseUrl : sprintf($url, $model->alias ?: $model->id);
 
 		// Get the input field suffix (edit multiple mode)
 		$suffix = substr($this->objDca->inputName, \strlen($this->objDca->field));
@@ -112,23 +112,37 @@ EOT;
 	{
 		if (!isset($this->serpPreview['url']))
 		{
+			throw new \Exception('No SERP widget URL given');
+		}
+
+		if (\is_string($this->serpPreview['url']))
+		{
+			return $this->serpPreview['url'];
+		}
+
+		$placeholder = bin2hex(random_bytes(10));
+
+		// Pass a detached clone with the alias set to the placeholder
+		$tempModel = clone $model;
+		$tempModel->origAlias = $tempModel->alias;
+		$tempModel->alias = $placeholder;
+		$tempModel->preventSaving(false);
+
+		if (\is_array($this->serpPreview['url']))
+		{
+			$this->import($this->serpPreview['url'][0]);
+			$url = $this->{$this->serpPreview['url'][0]}->{$this->serpPreview['url'][1]}($tempModel);
+		}
+		elseif (\is_callable($this->serpPreview['url']))
+		{
+			$url = $this->serpPreview['url']($tempModel);
+		}
+		else
+		{
 			throw new \Exception('Please provide the SERP widget URL as string or callable');
 		}
 
-		if (\is_callable($this->serpPreview['url']))
-		{
-			$placeholder = bin2hex(random_bytes(10));
-
-			// Pass a detached clone with the alias set to the placeholder
-			$tempModel = clone $model;
-			$tempModel->origAlias = $tempModel->alias;
-			$tempModel->alias = $placeholder;
-			$tempModel->preventSaving(false);
-
-			return str_replace($placeholder, '%s', $this->serpPreview['url']($tempModel));
-		}
-
-		return $this->serpPreview['url'];
+		return str_replace($placeholder, '%s', $url);
 	}
 
 	private function getTitleField($suffix)
