@@ -122,7 +122,13 @@ class MigrateCommand extends Command
                 $this->io->writeln(' * '.$migration);
             }
 
-            foreach ($this->getRunOnceFiles() as $file) {
+            $runOnceFiles = $this->getRunOnceFiles();
+
+            if ($runOnceFiles) {
+                @trigger_error('Using runonce files has been deprecated and will no longer work in Contao 5.0. Use the migration framework instead.', E_USER_DEPRECATED);
+            }
+
+            foreach ($runOnceFiles as $file) {
                 if ($first) {
                     $this->io->section('Pending migrations');
                     $first = false;

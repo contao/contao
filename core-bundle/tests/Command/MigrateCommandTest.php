@@ -56,6 +56,11 @@ class MigrateCommandTest extends TestCase
         $this->assertRegExp('/All migrations completed/', $display);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using runonce files has been deprecated %s.
+     */
     public function testExecutesRunOnceFiles(): void
     {
         $runOnceFile = $this->getFixturesDir().'/runonceFile.php';
