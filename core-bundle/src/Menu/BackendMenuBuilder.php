@@ -39,12 +39,12 @@ class BackendMenuBuilder
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * Creates a new root node and dispatches an event to fill it with child nodes.
-     */
-    public function create(): ItemInterface
+    public function buildMainMenu(): ItemInterface
     {
-        $tree = $this->factory->createItem('root');
+        $tree = $this->factory
+            ->createItem('mainMenu')
+            ->setChildrenAttribute('class', 'menu_level_0')
+        ;
 
         $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
 

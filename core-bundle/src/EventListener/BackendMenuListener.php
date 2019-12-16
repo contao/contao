@@ -14,8 +14,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
-use Knp\Menu\FactoryInterface;
-use Knp\Menu\ItemInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 
 /**
@@ -28,9 +27,15 @@ class BackendMenuListener
      */
     private $security;
 
-    public function __construct(Security $security)
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    public function __construct(Security $security, RouterInterface $router)
     {
         $this->security = $security;
+        $this->router = $router;
     }
 
     /**
@@ -47,31 +52,48 @@ class BackendMenuListener
         $factory = $event->getFactory();
         $tree = $event->getTree();
         $modules = $user->navigation();
+        $path = $this->router->generate('contao_backend');
 
         foreach ($modules as $categoryName => $categoryData) {
             $categoryNode = $tree->getChild($categoryName);
 
             if (!$categoryNode) {
-                $categoryNode = $this->createNode($factory, $categoryName, $categoryData);
+                $categoryNode = $factory
+                    ->createItem($categoryName)
+                    ->setLabel($categoryData['label'])
+                    ->setUri($categoryData['href'])
+                    ->setLinkAttribute('class', $this->getClassFromAttributes($categoryData))
+                    ->setLinkAttribute('title', $categoryData['title'])
+                    ->setLinkAttribute('onclick', "return AjaxRequest.toggleNavigation(this, '".$categoryName."', '".$path."')")
+                    ->setChildrenAttribute('id', $categoryName)
+                    ->setExtra('translation_domain', false)
+                ;
 
                 if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', $categoryData['class'])) {
-                    $categoryNode->setDisplayChildren(false);
+                    $categoryNode->setAttribute('class', 'collapsed');
                 }
 
                 $tree->addChild($categoryNode);
             }
 
             // Create the child nodes
-            foreach ($categoryData['modules'] as $moduleName => $moduleData) {
-                $moduleNode = $this->createNode($factory, $moduleName, $moduleData);
-                $moduleNode->setCurrent((bool) $moduleData['isActive']);
+            foreach ($categoryData['modules'] as $nodeName => $nodeData) {
+                $moduleNode = $factory
+                    ->createItem($nodeName)
+                    ->setLabel($nodeData['label'])
+                    ->setUri($nodeData['href'])
+                    ->setLinkAttribute('class', $this->getClassFromAttributes($nodeData))
+                    ->setLinkAttribute('title', $nodeData['title'])
+                    ->setCurrent((bool) $nodeData['isActive'])
+                    ->setExtra('translation_domain', false)
+                ;
 
                 $categoryNode->addChild($moduleNode);
             }
         }
     }
 
-    private function createNode(FactoryInterface $factory, string $name, array $attributes): ItemInterface
+    private function getClassFromAttributes(array $attributes): string
     {
         $classes = [];
 
@@ -81,16 +103,6 @@ class BackendMenuListener
             unset($classes['node-expanded'], $classes['node-collapsed'], $classes['trail']);
         }
 
-        return $factory->createItem(
-            $name,
-            [
-                'label' => $attributes['label'],
-                'attributes' => [
-                    'title' => $attributes['title'],
-                    'href' => $attributes['href'],
-                    'class' => implode(' ', array_keys($classes)),
-                ],
-            ]
-        );
+        return implode(' ', array_keys($classes));
     }
 }
