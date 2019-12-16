@@ -9,28 +9,22 @@
  */
 
 // Back end modules
-array_insert($GLOBALS['BE_MOD']['content'], 4, array
+$GLOBALS['BE_MOD']['content']['newsletter'] = array
 (
-	'newsletter' => array
-	(
-		'tables'     => array('tl_newsletter_channel', 'tl_newsletter', 'tl_newsletter_recipients'),
-		'send'       => array('Contao\Newsletter', 'send'),
-		'import'     => array('Contao\Newsletter', 'importRecipients'),
-		'stylesheet' => 'bundles/contaonewsletter/newsletter.min.css'
-	)
-));
+	'tables'     => array('tl_newsletter_channel', 'tl_newsletter', 'tl_newsletter_recipients'),
+	'send'       => array('Contao\Newsletter', 'send'),
+	'import'     => array('Contao\Newsletter', 'importRecipients'),
+	'stylesheet' => 'bundles/contaonewsletter/newsletter.min.css'
+);
 
 // Front end modules
-array_insert($GLOBALS['FE_MOD'], 4, array
+$GLOBALS['FE_MOD']['newsletter'] = array
 (
-	'newsletter' => array
-	(
-		'subscribe'        => 'Contao\ModuleSubscribe',
-		'unsubscribe'      => 'Contao\ModuleUnsubscribe',
-		'newsletterlist'   => 'Contao\ModuleNewsletterList',
-		'newsletterreader' => 'Contao\ModuleNewsletterReader'
-	)
-));
+	'subscribe'        => 'Contao\ModuleSubscribe',
+	'unsubscribe'      => 'Contao\ModuleUnsubscribe',
+	'newsletterlist'   => 'Contao\ModuleNewsletterList',
+	'newsletterreader' => 'Contao\ModuleNewsletterReader'
+);
 
 // Register hooks
 $GLOBALS['TL_HOOKS']['createNewUser'][] = array('Contao\Newsletter', 'createNewUser');
