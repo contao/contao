@@ -94,6 +94,7 @@ use Contao\CoreBundle\Routing\Matcher\LanguageFilter;
 use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
 use Contao\CoreBundle\Routing\Matcher\PublishedFilter;
 use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
+use Contao\CoreBundle\Routing\PreviewUrlGenerator;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
@@ -109,6 +110,7 @@ use Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRemem
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
+use Contao\CoreBundle\Security\Logout\LogoutUrlGenerator;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\Provider;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
@@ -288,6 +290,11 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('security.helper'),
                 new Reference('router'),
+                new Reference('request_stack'),
+                new Reference('translator'),
+                new Reference('contao.routing.preview_url_generator'),
+                new Reference('contao.security.logout_url_generator'),
+                new Reference('contao.framework'),
             ],
             $definition->getArguments()
         );
@@ -2237,6 +2244,20 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
+    public function testRegistersTheRoutingPreviewUrlGenerator(): void
+    {
+        $this->assertTrue($this->container->has('contao.routing.preview_url_generator'));
+
+        $definition = $this->container->getDefinition('contao.routing.preview_url_generator');
+
+        $this->assertSame(PreviewUrlGenerator::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame('event_dispatcher', (string) $definition->getArgument(0));
+        $this->assertSame('router', (string) $definition->getArgument(1));
+        $this->assertSame('request_stack', (string) $definition->getArgument(2));
+        $this->assertSame('contao.framework', (string) $definition->getArgument(3));
+    }
+
     public function testRegistersTheRoutingRouteGenerator(): void
     {
         $this->assertTrue($this->container->has('contao.routing.route_generator'));
@@ -2573,6 +2594,19 @@ class ContaoCoreExtensionTest extends TestCase
             ],
             $definition->getArguments()
         );
+    }
+
+    public function testRegistersTheSecurityLogoutUrlGenerator(): void
+    {
+        $this->assertTrue($this->container->has('contao.security.logout_url_generator'));
+
+        $definition = $this->container->getDefinition('contao.security.logout_url_generator');
+
+        $this->assertSame(LogoutUrlGenerator::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+        $this->assertSame('security.logout_url_generator', (string) $definition->getArgument(0));
+        $this->assertSame('security.helper', (string) $definition->getArgument(1));
+        $this->assertSame('router', (string) $definition->getArgument(2));
     }
 
     public function testRegistersTheSecurityTokenChecker(): void

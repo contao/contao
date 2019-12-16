@@ -51,7 +51,7 @@ body:not(.fullscreen) #header .inner {
 #tmenu li {
 	position:relative;
 }
-#tmenu a,#tmenu h2 {
+#tmenu a,#tmenu .h2 {
 	padding:13px 12px;
 	display:inline-block;
 }
@@ -81,10 +81,11 @@ body:not(.fullscreen) #header .inner {
 	border:0;
 	vertical-align:top;
 }
-#tmenu .burger img {
+#tmenu .burger svg {
 	margin-bottom:-1px;
+	vertical-align:middle;
 }
-#tmenu h2 {
+#tmenu .h2 {
 	padding-right:26px;
 	cursor:pointer;
 	background:url("icons/chevron-down.svg") right 9px top 14px no-repeat;
@@ -93,17 +94,17 @@ body:not(.fullscreen) #header .inner {
 	color:#fff;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
-	#tmenu h2 {
+	#tmenu .h2 {
 		font-weight:300;
 	}
 }
-#tmenu a,#tmenu h2,#tmenu .burger button {
+#tmenu a,#tmenu .h2,#tmenu .burger button {
 	transition:background-color .3s ease;
 }
-#tmenu a:hover,#tmenu a.hover,#tmenu li:hover h2,#tmenu .active h2,#tmenu .burger button:hover {
+#tmenu a:hover,#tmenu a.hover,#tmenu li:hover .h2,#tmenu .active .h2,#tmenu .burger button:hover {
 	background-color:#e87600;
 }
-#tmenu ul.level_2 {
+#tmenu ul.menu_level_1 {
 	min-width:150px;
 	position:absolute;
 	right:6px;
@@ -118,25 +119,25 @@ body:not(.fullscreen) #header .inner {
 	visibility:hidden;
 	transition:opacity .3s ease, visibility .3s ease;
 }
-#tmenu .active ul.level_2 {
+#tmenu .active ul.menu_level_1 {
 	opacity:1;
 	visibility:visible;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
-	#tmenu ul.level_2 {
+	#tmenu ul.menu_level_1 {
 		color:#222;
 	}
 }
-#tmenu ul.level_2 li a {
+#tmenu ul.menu_level_1 li a {
 	display:block;
 	color:inherit;
 	padding:6px 20px 6px 40px;
 	white-space:nowrap;
 }
-#tmenu ul.level_2 li a:hover {
+#tmenu ul.menu_level_1 li a:hover {
 	background-color:#eee;
 }
-#tmenu ul.level_2 .info {
+#tmenu ul.menu_level_1 .info {
 	color:#808080;
 	padding:9px 20px 15px;
 	border-bottom:1px solid #e6e6e8;
@@ -144,11 +145,11 @@ body:not(.fullscreen) #header .inner {
 	margin-bottom:9px;
 	white-space:nowrap;
 }
-#tmenu ul.level_2 strong {
+#tmenu ul.menu_level_1 strong {
 	color:#222;
 	display:block;
 }
-#tmenu ul.level_2:before {
+#tmenu ul.menu_level_1:before {
 	content:"";
 	display:block;
 	width:0;
@@ -159,7 +160,7 @@ body:not(.fullscreen) #header .inner {
 	border:7px solid transparent;
 	border-bottom-color:#fff;
 }
-#tmenu ul.level_2:after {
+#tmenu ul.menu_level_1:after {
 	content:"";
 	display:block;
 	width:100%;
@@ -2059,7 +2060,7 @@ fieldset.collapsed > legend {
 	#tmenu .icon-preview {
 		background:url("icons/preview.svg") center center no-repeat;
 	}
-	#tmenu h2 {
+	#tmenu .h2 {
 		width:16px;
 		margin:0 0 -2px;
 		padding-right:12px;

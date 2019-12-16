@@ -12,17 +12,24 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\BackendMenuListener;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\PreviewUrlGenerator;
+use Contao\CoreBundle\Security\Logout\LogoutUrlGenerator;
+use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
-use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class BackendMenuListenerTest extends TestCase
+class BackendMenuListenerTest extends ContaoTestCase
 {
-    public function testCreatesANodeListFromTheBackendUserMenuArray(): void
+    public function testBuildsTheMainMenu(): void
     {
         $user = $this->createMock(BackendUser::class);
         $user
@@ -48,7 +55,16 @@ class BackendMenuListenerTest extends TestCase
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
 
-        $listener = new BackendMenuListener($security, $router);
+        $listener = new BackendMenuListener(
+            $security,
+            $router,
+            new RequestStack(),
+            $this->createMock(TranslatorInterface::class),
+            $this->createMock(PreviewUrlGenerator::class),
+            $this->createMock(LogoutUrlGenerator::class),
+            $this->createMock(ContaoFramework::class)
+        );
+
         $listener->onBuild($event);
 
         $tree = $event->getTree();
@@ -108,7 +124,41 @@ class BackendMenuListenerTest extends TestCase
         );
     }
 
-    public function testDoesNotModifyTheTreeIfNoBackendUserIsGiven(): void
+    public function testDoesNotBuildTheMainMenuIfNoUserIsGiven(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->method('getUser')
+            ->willReturn(null)
+        ;
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->never())
+            ->method('generate')
+        ;
+
+        $nodeFactory = new MenuFactory();
+        $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
+
+        $listener = new BackendMenuListener(
+            $security,
+            $router,
+            new RequestStack(),
+            $this->createMock(TranslatorInterface::class),
+            $this->createMock(PreviewUrlGenerator::class),
+            $this->createMock(LogoutUrlGenerator::class),
+            $this->createMock(ContaoFramework::class)
+        );
+
+        $listener->onBuild($event);
+
+        $tree = $event->getTree();
+
+        $this->assertCount(0, $tree->getChildren());
+    }
+
+    public function testDoesNotBuildTheMainMenuIfTheNameDoesNotMatch(): void
     {
         $security = $this->createMock(Security::class);
         $security
@@ -125,7 +175,233 @@ class BackendMenuListenerTest extends TestCase
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('root'));
 
-        $listener = new BackendMenuListener($security, $router);
+        $listener = new BackendMenuListener(
+            $security,
+            $router,
+            new RequestStack(),
+            $this->createMock(TranslatorInterface::class),
+            $this->createMock(PreviewUrlGenerator::class),
+            $this->createMock(LogoutUrlGenerator::class),
+            $this->createMock(ContaoFramework::class)
+        );
+
+        $listener->onBuild($event);
+
+        $tree = $event->getTree();
+
+        $this->assertCount(0, $tree->getChildren());
+    }
+
+    public function testBuildsTheHeaderMenu(): void
+    {
+        /** @var BackendUser $user */
+        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->name = 'Foo Bar';
+        $user->username = 'foo';
+        $user->email = 'foo@bar.com';
+
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->method('generate')
+            ->willReturnCallback(
+                static function (string $name, array $options = []): string {
+                    if ('contao_backend_alerts' === $name) {
+                        return '/contao/alerts';
+                    }
+
+                    return '/contao?'.http_build_query($options);
+                }
+            )
+        ;
+
+        $request = new Request();
+        $request->attributes->set('_contao_referer_id', 'bar');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $logoutUrlGenerator = $this->createMock(LogoutUrlGenerator::class);
+        $logoutUrlGenerator
+            ->expects($this->once())
+            ->method('getLogoutUrl')
+            ->willReturn('/contao/logout')
+        ;
+
+        $previewUrlGenerator = $this->createMock(PreviewUrlGenerator::class);
+        $previewUrlGenerator
+            ->expects($this->once())
+            ->method('getPreviewUrl')
+            ->willReturn('/contao/preview')
+        ;
+
+        $systemMessages = $this->mockAdapter(['getSystemMessages']);
+        $systemMessages
+            ->expects($this->once())
+            ->method('getSystemMessages')
+            ->willReturn('<p class="tl_error">Foo</p>')
+        ;
+
+        $nodeFactory = new MenuFactory();
+        $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('headerMenu'));
+
+        $listener = new BackendMenuListener(
+            $security,
+            $router,
+            $requestStack,
+            $this->getTranslator(),
+            $previewUrlGenerator,
+            $logoutUrlGenerator,
+            $this->mockContaoFramework([Backend::class => $systemMessages])
+        );
+
+        $listener->onBuild($event);
+
+        $tree = $event->getTree();
+
+        $this->assertSame('headerMenu', $tree->getName());
+
+        $children = $tree->getChildren();
+
+        $this->assertCount(4, $children);
+        $this->assertSame(['alerts', 'preview', 'submenu', 'burger'], array_keys($children));
+
+        // Alerts
+        $this->assertSame('MSC.systemMessages <sup>1</sup>', $children['alerts']->getLabel());
+        $this->assertSame('/contao/alerts', $children['alerts']->getUri());
+        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['alerts']->getExtras());
+
+        $this->assertSame(
+            [
+                'class' => 'icon-alert',
+                'title' => 'MSC.systemMessages',
+                'onclick' => "Backend.openModalIframe({'title':'MSC.systemMessages','url':this.href});return false",
+            ],
+            $children['alerts']->getLinkAttributes()
+        );
+
+        // Preview
+        $this->assertSame('MSC.fePreview', $children['preview']->getLabel());
+        $this->assertSame('/contao/preview', $children['preview']->getUri());
+        $this->assertSame(['translation_domain' => 'contao_default'], $children['preview']->getExtras());
+
+        $this->assertSame(
+            [
+                'class' => 'icon-preview',
+                'title' => 'MSC.fePreviewTitle',
+                'target' => '_blank',
+                'accesskey' => 'f',
+            ],
+            $children['preview']->getLinkAttributes()
+        );
+
+        // Submenu
+        $this->assertSame('MSC.user foo', $children['submenu']->getLabel());
+        $this->assertSame(['class' => 'submenu'], $children['submenu']->getAttributes());
+        $this->assertSame(['class' => 'h2'], $children['submenu']->getLabelAttributes());
+        $this->assertSame(['translation_domain' => false], $children['submenu']->getExtras());
+
+        $grandChildren = $children['submenu']->getChildren();
+
+        $this->assertCount(4, $grandChildren);
+        $this->assertSame(['info', 'login', 'security', 'logout'], array_keys($grandChildren));
+
+        // Info
+        $this->assertSame('<strong>Foo Bar</strong> foo@bar.com', $grandChildren['info']->getLabel());
+        $this->assertSame(['class' => 'info'], $grandChildren['info']->getAttributes());
+        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $grandChildren['info']->getExtras());
+
+        // Login
+        $this->assertSame('MSC.profile', $grandChildren['login']->getLabel());
+        $this->assertSame('/contao?do=login&ref=bar', $grandChildren['login']->getUri());
+        $this->assertSame(['class' => 'icon-profile'], $grandChildren['login']->getLinkAttributes());
+        $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['login']->getExtras());
+
+        // Security
+        $this->assertSame('MSC.security', $grandChildren['security']->getLabel());
+        $this->assertSame('/contao?do=security&ref=bar', $grandChildren['security']->getUri());
+        $this->assertSame(['class' => 'icon-security'], $grandChildren['security']->getLinkAttributes());
+        $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['security']->getExtras());
+
+        // Logout
+        $this->assertSame('MSC.logoutBT', $grandChildren['logout']->getLabel());
+        $this->assertSame('/contao/logout', $grandChildren['logout']->getUri());
+        $this->assertSame(['class' => 'icon-logout', 'accesskey' => 'q'], $grandChildren['logout']->getLinkAttributes());
+        $this->assertSame(['translation_domain' => false], $grandChildren['logout']->getExtras());
+
+        // Burger
+        $this->assertSame('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
+        $this->assertSame(['class' => 'burger'], $children['burger']->getAttributes());
+        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['burger']->getExtras());
+    }
+
+    public function testDoesNotBuildTheHeaderMenuIfNoUserIsGiven(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->method('getUser')
+            ->willReturn(null)
+        ;
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->never())
+            ->method('generate')
+        ;
+
+        $nodeFactory = new MenuFactory();
+        $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('headerMenu'));
+
+        $listener = new BackendMenuListener(
+            $security,
+            $router,
+            new RequestStack(),
+            $this->createMock(TranslatorInterface::class),
+            $this->createMock(PreviewUrlGenerator::class),
+            $this->createMock(LogoutUrlGenerator::class),
+            $this->createMock(ContaoFramework::class)
+        );
+
+        $listener->onBuild($event);
+
+        $tree = $event->getTree();
+
+        $this->assertCount(0, $tree->getChildren());
+    }
+
+    public function testDoesNotBuildTheHeaderMenuIfTheNameDoesNotMatch(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->method('getUser')
+            ->willReturn(null)
+        ;
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->never())
+            ->method('generate')
+        ;
+
+        $nodeFactory = new MenuFactory();
+        $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('root'));
+
+        $listener = new BackendMenuListener(
+            $security,
+            $router,
+            new RequestStack(),
+            $this->createMock(TranslatorInterface::class),
+            $this->createMock(PreviewUrlGenerator::class),
+            $this->createMock(LogoutUrlGenerator::class),
+            $this->createMock(ContaoFramework::class)
+        );
+
         $listener->onBuild($event);
 
         $tree = $event->getTree();
@@ -169,5 +445,20 @@ class BackendMenuListenerTest extends TestCase
                 'modules' => [],
             ],
         ];
+    }
+
+    private function getTranslator(): TranslatorInterface
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnCallback(
+                static function (string $id): string {
+                    return $id;
+                }
+            )
+        ;
+
+        return $translator;
     }
 }

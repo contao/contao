@@ -22,6 +22,11 @@ services:
         arguments:
             - '@security.helper'
             - '@router'
+            - '@request_stack'
+            - '@translator'
+            - '@contao.routing.preview_url_generator'
+            - '@contao.security.logout_url_generator'
+            - '@contao.framework'
         tags:
             - { name: kernel.event_listener, event: contao.backend_menu_build, method: onBuild }
 

@@ -51,25 +51,7 @@
       <header id="header">
         <div class="inner">
           <h1><a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">Contao</a></h1>
-          <nav aria-label="<?= $this->headerNavigation ?>">
-            <ul id="tmenu">
-              <li><a href="<?= $this->route('contao_backend_alerts') ?>" class="icon-alert" title="<?= Contao\StringUtil::specialchars($this->systemMessages) ?>" onclick="Backend.openModalIframe({'title':'<?= str_replace("'", "\\'", Contao\StringUtil::specialchars($this->systemMessages)) ?>','url':this.href});return false"><?= $this->systemMessages ?><?php if ($this->systemErrorMessagesCount > 0): ?> <sup><?= $this->systemErrorMessagesCount ?></sup><?php endif; ?></a></li>
-              <?php if ($this->canDebug): ?>
-                <li><a href="<?= $this->route('contao_backend', ['do' => 'debug', 'key' => $this->isDebug ? 'disable' : 'enable', 'referer' => $this->referer, 'ref' => $this->ref]) ?>" class="icon-debug<?php if ($this->isDebug): ?> hover<?php endif; ?>"><?= $this->trans('debug_mode', [], 'ContaoManagerBundle') ?></a></li>
-              <?php endif; ?>
-              <li><a href="<?= $this->previewRoute('contao_backend_preview').$this->frontendFile ?>" class="icon-preview" title="<?= $this->previewTitle ?>" target="_blank" accesskey="f"><?= $this->preview ?></a></li>
-              <li class="submenu">
-                <h2><?= $this->username ?></h2>
-                <ul class="level_2">
-                  <li class="info"><strong><?= $this->user->name ?></strong> <?= $this->user->email ?></li>
-                  <li><a href="<?= $this->route('contao_backend', ['do' => 'login', 'ref' => $this->ref]) ?>" class="icon-profile"><?= $this->profile ?></a></li>
-                  <li><a href="<?= $this->route('contao_backend', ['do' => 'security', 'ref' => $this->ref]) ?>" class="icon-security"><?= $this->security ?></a></li>
-                  <li><a href="<?= $this->logoutLink ?>" class="icon-logout" accesskey="q"><?= $this->logout ?></a></li>
-                </ul>
-              </li>
-              <li class="burger"><button type="button" id="burger"><?= Contao\Image::getHtml('burger.svg') ?></button></li>
-            </ul>
-          </nav>
+          <?= $this->headerMenu ?>
         </div>
       </header>
     <?php endif; ?>

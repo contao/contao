@@ -12,10 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\PreviewUrlGenerator;
+use Contao\CoreBundle\Security\Logout\LogoutUrlGenerator;
+use Contao\StringUtil;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -32,15 +40,42 @@ class BackendMenuListener
      */
     private $router;
 
-    public function __construct(Security $security, RouterInterface $router)
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var PreviewUrlGenerator
+     */
+    private $previewUrlGenerator;
+
+    /**
+     * @var LogoutUrlGenerator
+     */
+    private $logoutUrlGenerator;
+
+    /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
+    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, TranslatorInterface $translator, PreviewUrlGenerator $previewUrlGenerator, LogoutUrlGenerator $logoutUrlGenerator, ContaoFramework $framework)
     {
         $this->security = $security;
         $this->router = $router;
+        $this->requestStack = $requestStack;
+        $this->translator = $translator;
+        $this->previewUrlGenerator = $previewUrlGenerator;
+        $this->logoutUrlGenerator = $logoutUrlGenerator;
+        $this->framework = $framework;
     }
 
-    /**
-     * Adds the back end user navigation.
-     */
     public function onBuild(MenuEvent $event): void
     {
         $user = $this->security->getUser();
@@ -49,6 +84,17 @@ class BackendMenuListener
             return;
         }
 
+        $name = $event->getTree()->getName();
+
+        if ('mainMenu' === $name) {
+            $this->buildMainMenu($event, $user);
+        } elseif ('headerMenu' === $name) {
+            $this->buildHeaderMenu($event, $user);
+        }
+    }
+
+    private function buildMainMenu(MenuEvent $event, BackendUser $user): void
+    {
         $factory = $event->getFactory();
         $tree = $event->getTree();
         $modules = $user->navigation();
@@ -91,6 +137,139 @@ class BackendMenuListener
                 $categoryNode->addChild($moduleNode);
             }
         }
+    }
+
+    private function buildHeaderMenu(MenuEvent $event, BackendUser $user): void
+    {
+        $factory = $event->getFactory();
+        $tree = $event->getTree();
+        $ref = $this->getRefererId();
+        $systemMessages = $this->translator->trans('MSC.systemMessages', [], 'contao_default');
+
+        $alerts = $event->getFactory()
+            ->createItem('alerts')
+            ->setLabel($this->getAlertsLabel($systemMessages))
+            ->setUri($this->router->generate('contao_backend_alerts'))
+            ->setLinkAttribute('class', 'icon-alert')
+            ->setLinkAttribute('title', $systemMessages)
+            ->setLinkAttribute('onclick', "Backend.openModalIframe({'title':'".StringUtil::specialchars(str_replace("'", "\\'", $systemMessages))."','url':this.href});return false")
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false)
+        ;
+
+        $tree->addChild($alerts);
+
+        $preview = $factory
+            ->createItem('preview')
+            ->setLabel('MSC.fePreview')
+            ->setUri($this->previewUrlGenerator->getPreviewUrl())
+            ->setLinkAttribute('class', 'icon-preview')
+            ->setLinkAttribute('title', $this->trans('MSC.fePreviewTitle'))
+            ->setLinkAttribute('target', '_blank')
+            ->setLinkAttribute('accesskey', 'f')
+            ->setExtra('translation_domain', 'contao_default')
+        ;
+
+        $tree->addChild($preview);
+
+        $submenu = $factory
+            ->createItem('submenu')
+            ->setLabel($this->trans('MSC.user').' '.$user->username)
+            ->setAttribute('class', 'submenu')
+            ->setLabelAttribute('class', 'h2')
+            ->setExtra('translation_domain', false)
+        ;
+
+        $tree->addChild($submenu);
+
+        $info = $factory
+            ->createItem('info')
+            ->setLabel(sprintf('<strong>%s</strong> %s', $user->name, $user->email))
+            ->setAttribute('class', 'info')
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false)
+        ;
+
+        $submenu->addChild($info);
+
+        $login = $factory
+            ->createItem('login')
+            ->setLabel('MSC.profile')
+            ->setUri($this->router->generate('contao_backend', ['do' => 'login', 'ref' => $ref]))
+            ->setLinkAttribute('class', 'icon-profile')
+            ->setExtra('translation_domain', 'contao_default')
+        ;
+
+        $submenu->addChild($login);
+
+        $security = $factory
+            ->createItem('security')
+            ->setLabel('MSC.security')
+            ->setUri($this->router->generate('contao_backend', ['do' => 'security', 'ref' => $ref]))
+            ->setLinkAttribute('class', 'icon-security')
+            ->setExtra('translation_domain', 'contao_default')
+        ;
+
+        $submenu->addChild($security);
+
+        $logout = $factory
+            ->createItem('logout')
+            ->setLabel($this->getLogoutLabel())
+            ->setUri($this->logoutUrlGenerator->getLogoutUrl())
+            ->setLinkAttribute('class', 'icon-logout')
+            ->setLinkAttribute('accesskey', 'q')
+            ->setExtra('translation_domain', false)
+        ;
+
+        $submenu->addChild($logout);
+
+        $buger = $factory
+            ->createItem('burger')
+            ->setLabel('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
+            ->setAttribute('class', 'burger')
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false)
+        ;
+
+        $tree->addChild($buger);
+    }
+
+    private function trans(string $id): string
+    {
+        return $this->translator->trans($id, [], 'contao_default');
+    }
+
+    private function getAlertsLabel(string $systemMessages): string
+    {
+        /** @var Backend $adapter */
+        $adapter = $this->framework->getAdapter(Backend::class);
+        $count = substr_count($adapter->getSystemMessages(), 'class="tl_error');
+
+        if ($count > 0) {
+            $systemMessages .= ' <sup>'.$count.'</sup>';
+        }
+
+        return $systemMessages;
+    }
+
+    private function getRefererId(): string
+    {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
+
+        return $request->attributes->get('_contao_referer_id');
+    }
+
+    private function getLogoutLabel(): string
+    {
+        $token = $this->security->getToken();
+
+        if ($token instanceof SwitchUserToken) {
+            return sprintf($this->trans('MSC.switchBT'), $token->getOriginalToken()->getUsername());
+        }
+
+        return $this->trans('MSC.logoutBT');
     }
 
     private function getClassFromAttributes(array $attributes): string
