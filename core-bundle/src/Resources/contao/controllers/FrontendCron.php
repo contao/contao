@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Cron\Cron;
-use Contao\System;
 use Symfony\Component\HttpFoundation\Response;
 
 @trigger_error('Using the "Contao\FrontendCron" class has been deprecated and will be removed in Contao 5.0. Use the Contao\CoreBundle\Cron\Cron service instead.', E_USER_DEPRECATED);
