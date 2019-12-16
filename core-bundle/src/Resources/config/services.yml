@@ -204,7 +204,7 @@ services:
         class: Contao\Image\DeferredImageStorageFilesystem
         arguments:
             - '%contao.image.target_dir%'
-            - '@?filesystem'}
+            - '@?filesystem'
 
     contao.image.imagine.gd:
         class: Imagine\Gd\Imagine
