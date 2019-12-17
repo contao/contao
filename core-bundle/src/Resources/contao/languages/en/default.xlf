@@ -167,6 +167,9 @@
       <trans-unit id="ERR.extensionsOnly">
         <source>You can only select "%s" files!</source>
       </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
+      </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
       </trans-unit>
