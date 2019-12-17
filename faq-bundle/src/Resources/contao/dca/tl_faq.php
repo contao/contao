@@ -353,6 +353,121 @@ class tl_faq extends Backend
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields']);
 			unset($GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'][$key]);
 		}
+
+		if ($this->User->isAdmin)
+		{
+			return;
+		}
+
+		// Set the root IDs
+		if (empty($this->User->faqs) || !is_array($this->User->faqs))
+		{
+			$root = array(0);
+		}
+		else
+		{
+			$root = $this->User->faqs;
+		}
+
+		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+
+		// Check current action
+		switch (Input::get('act'))
+		{
+			case 'paste':
+			case 'select':
+				// Check CURRENT_ID here (see #247)
+				if (!in_array(CURRENT_ID, $root))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
+				}
+				break;
+
+			case 'create':
+				if (!strlen(Input::get('pid')) || !in_array(Input::get('pid'), $root))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to create FAQs in FAQ category ID ' . Input::get('pid') . '.');
+				}
+				break;
+
+			case 'cut':
+			case 'copy':
+				if (Input::get('act') == 'cut' && Input::get('mode') == 1)
+				{
+					$objFaq = $this->Database->prepare("SELECT pid FROM tl_faq WHERE id=?")
+											 ->limit(1)
+											 ->execute(Input::get('pid'));
+
+					if ($objFaq->numRows < 1)
+					{
+						throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid FAQ ID ' . Input::get('pid') . '.');
+					}
+
+					$pid = $objFaq->pid;
+				}
+				else
+				{
+					$pid = Input::get('pid');
+				}
+
+				if (!in_array($pid, $root))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ ID ' . $id . ' to FAQ category ID ' . $pid . '.');
+				}
+				// no break
+
+			case 'edit':
+			case 'show':
+			case 'delete':
+			case 'toggle':
+				$objFaq = $this->Database->prepare("SELECT pid FROM tl_faq WHERE id=?")
+											 ->limit(1)
+											 ->execute($id);
+
+				if ($objFaq->numRows < 1)
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid FAQ ID ' . $id . '.');
+				}
+
+				if (!in_array($objFaq->pid, $root))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ ID ' . $id . ' of FAQ category ID ' . $objFaq->pid . '.');
+				}
+				break;
+
+			case 'editAll':
+			case 'deleteAll':
+			case 'overrideAll':
+			case 'cutAll':
+			case 'copyAll':
+				if (!in_array($id, $root))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
+				}
+
+				$objFaq = $this->Database->prepare("SELECT id FROM tl_faq WHERE pid=?")
+											 ->execute($id);
+
+				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+				$objSession = System::getContainer()->get('session');
+
+				$session = $objSession->all();
+				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objFaq->fetchEach('id'));
+				$objSession->replace($session);
+				break;
+
+			default:
+				if (strlen(Input::get('act')))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '".');
+				}
+
+				if (!in_array($id, $root))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
+				}
+				break;
+		}
 	}
 
 	/**

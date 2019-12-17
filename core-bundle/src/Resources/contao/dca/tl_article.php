@@ -510,36 +510,38 @@ class tl_article extends Backend
 			}
 
 			// Check user permissions
-			if (Input::get('act') != 'show')
-			{
-				$pagemounts = array();
+			$pagemounts = array();
 
-				// Get all allowed pages for the current user
-				foreach ($this->User->pagemounts as $root)
+			// Get all allowed pages for the current user
+			foreach ($this->User->pagemounts as $root)
+			{
+				$pagemounts[] = $root;
+				$pagemounts = array_merge($pagemounts, $this->Database->getChildRecords($root, 'tl_page'));
+			}
+
+			$pagemounts = array_unique($pagemounts);
+
+			// Check each page
+			foreach ($ids as $id)
+			{
+				if (!in_array($id, $pagemounts))
 				{
-					$pagemounts[] = $root;
-					$pagemounts = array_merge($pagemounts, $this->Database->getChildRecords($root, 'tl_page'));
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Page ID ' . $id . ' is not mounted.');
 				}
 
-				$pagemounts = array_unique($pagemounts);
-
-				// Check each page
-				foreach ($ids as $id)
+				if (Input::get('act') == 'show')
 				{
-					if (!in_array($id, $pagemounts))
-					{
-						throw new Contao\CoreBundle\Exception\AccessDeniedException('Page ID ' . $id . ' is not mounted.');
-					}
+					continue;
+				}
 
-					$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-											  ->limit(1)
-											  ->execute($id);
+				$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
+										  ->limit(1)
+										  ->execute($id);
 
-					// Check whether the current user has permission for the current page
-					if ($objPage->numRows && !$this->User->isAllowed($permission, $objPage->row()))
-					{
-						throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' ' . (strlen(Input::get('id')) ? 'article ID ' . Input::get('id') : ' articles') . ' on page ID ' . $id . ' or to paste it/them into page ID ' . $id . '.');
-					}
+				// Check whether the current user has permission for the current page
+				if ($objPage->numRows && !$this->User->isAllowed($permission, $objPage->row()))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' ' . (strlen(Input::get('id')) ? 'article ID ' . Input::get('id') : ' articles') . ' on page ID ' . $id . ' or to paste it/them into page ID ' . $id . '.');
 				}
 			}
 		}

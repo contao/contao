@@ -846,74 +846,71 @@ class tl_page extends Backend
 			}
 
 			// Check user permissions
-			if (Input::get('act') != 'show')
+			$pagemounts = array();
+
+			// Get all allowed pages for the current user
+			foreach ($this->User->pagemounts as $root)
 			{
-				$pagemounts = array();
-
-				// Get all allowed pages for the current user
-				foreach ($this->User->pagemounts as $root)
+				if (Input::get('act') != 'delete')
 				{
-					if (Input::get('act') != 'delete')
-					{
-						$pagemounts[] = $root;
-					}
-
-					$pagemounts = array_merge($pagemounts, $this->Database->getChildRecords($root, 'tl_page'));
+					$pagemounts[] = $root;
 				}
 
-				$error = false;
-				$pagemounts = array_unique($pagemounts);
+				$pagemounts = array_merge($pagemounts, $this->Database->getChildRecords($root, 'tl_page'));
+			}
 
-				// Do not allow to paste after pages on the root level (pagemounts)
-				if ((Input::get('act') == 'cut' || Input::get('act') == 'cutAll') && Input::get('mode') == 1 && in_array(Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
+			$error = false;
+			$pagemounts = array_unique($pagemounts);
+
+			// Do not allow to paste after pages on the root level (pagemounts)
+			if ((Input::get('act') == 'cut' || Input::get('act') == 'cutAll') && Input::get('mode') == 1 && in_array(Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
+			{
+				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to paste page ID ' . Input::get('id') . ' after mounted page ID ' . Input::get('pid') . ' (root level).');
+			}
+
+			// Check each page
+			foreach ($ids as $i=>$id)
+			{
+				if (!in_array($id, $pagemounts))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to paste page ID ' . Input::get('id') . ' after mounted page ID ' . Input::get('pid') . ' (root level).');
+					$this->log('Page ID ' . $id . ' was not mounted', __METHOD__, TL_ERROR);
+
+					$error = true;
+					break;
 				}
 
-				// Check each page
-				foreach ($ids as $i=>$id)
+				// Get the page object
+				$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
+										  ->limit(1)
+										  ->execute($id);
+
+				if ($objPage->numRows < 1)
 				{
-					if (!in_array($id, $pagemounts))
-					{
-						$this->log('Page ID ' . $id . ' was not mounted', __METHOD__, TL_ERROR);
-
-						$error = true;
-						break;
-					}
-
-					// Get the page object
-					$objPage = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-											  ->limit(1)
-											  ->execute($id);
-
-					if ($objPage->numRows < 1)
-					{
-						continue;
-					}
-
-					// Check whether the current user is allowed to access the current page
-					if (!$this->User->isAllowed($permission, $objPage->row()))
-					{
-						$error = true;
-						break;
-					}
-
-					// Check the type of the first page (not the following parent pages)
-					// In "edit multiple" mode, $ids contains only the parent ID, therefore check $id != $_GET['pid'] (see #5620)
-					if ($i == 0 && $id != Input::get('pid') && Input::get('act') != 'create' && !$this->User->hasAccess($objPage->type, 'alpty'))
-					{
-						$this->log('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages', __METHOD__, TL_ERROR);
-
-						$error = true;
-						break;
-					}
+					continue;
 				}
 
-				// Redirect if there is an error
-				if ($error)
+				// Check whether the current user is allowed to access the current page
+				if (Input::get('act') != 'show' && !$this->User->isAllowed($permission, $objPage->row()))
 				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' page ID ' . $cid . ' or paste after/into page ID ' . Input::get('pid') . '.');
+					$error = true;
+					break;
 				}
+
+				// Check the type of the first page (not the following parent pages)
+				// In "edit multiple" mode, $ids contains only the parent ID, therefore check $id != $_GET['pid'] (see #5620)
+				if ($i == 0 && $id != Input::get('pid') && Input::get('act') != 'create' && !$this->User->hasAccess($objPage->type, 'alpty'))
+				{
+					$this->log('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages', __METHOD__, TL_ERROR);
+
+					$error = true;
+					break;
+				}
+			}
+
+			// Redirect if there is an error
+			if ($error)
+			{
+				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' page ID ' . $cid . ' or paste after/into page ID ' . Input::get('pid') . '.');
 			}
 		}
 	}
