@@ -58,8 +58,8 @@
         <target>Lūdzu ievadiet derīgu tālruņa numuru!</target>
       </trans-unit>
       <trans-unit id="ERR.extnd">
-        <source>For security reasons you can not use the following characters here: =&lt;&gt;&amp;/()#</source>
-        <target>Drošibas apstākļu dēļ jūs nevarat šeit izmantot šīs zīmes (=&amp;/()#)!</target>
+        <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <target>Drošības apsvērumu dēļ jūs nevarat šeit izmantot sekojošās zīmes: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="ERR.email">
         <source>Please enter a valid e-mail address!</source>
@@ -220,6 +220,9 @@
         <source>You can only select &quot;%s&quot; files!</source>
         <target>Jūs varat tikai izvēlēties &quot;%s&quot; datnes!</target>
       </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
+      </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
         <target>Jūsu atlasē ir nederīgi lapu ID!</target>
@@ -285,6 +288,9 @@
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
+      </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -380,9 +386,11 @@
       </trans-unit>
       <trans-unit id="CTE.markdown.0">
         <source>Markdown</source>
+        <target>Marķējums</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
         <source>Generates HTML code from a markdown text.</source>
+        <target>Ģenerē HTML kodu no marķējuma teksta. </target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>

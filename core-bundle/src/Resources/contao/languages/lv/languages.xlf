@@ -11,6 +11,7 @@
       </trans-unit>
       <trans-unit id="LNG.ae">
         <source>Avestan</source>
+        <target>Avesta</target>
       </trans-unit>
       <trans-unit id="LNG.af">
         <source>Afrikaans</source>
@@ -392,9 +393,11 @@
       </trans-unit>
       <trans-unit id="LNG.fy">
         <source>Western Frisian</source>
+        <target>Rietumfrīzu</target>
       </trans-unit>
       <trans-unit id="LNG.fy_NL">
         <source>Western Frisian (Netherlands)</source>
+        <target>Rietumfrīzu (Nīderlande)</target>
       </trans-unit>
       <trans-unit id="LNG.ga">
         <source>Irish</source>
@@ -464,6 +467,7 @@
       </trans-unit>
       <trans-unit id="LNG.ht">
         <source>Haitian Creole</source>
+        <target>Haitiešu</target>
       </trans-unit>
       <trans-unit id="LNG.hu">
         <source>Hungarian</source>
@@ -619,9 +623,11 @@
       </trans-unit>
       <trans-unit id="LNG.kw">
         <source>Cornish</source>
+        <target>Korniešu</target>
       </trans-unit>
       <trans-unit id="LNG.ky">
         <source>Kyrgyz</source>
+        <target>Kirgīzu</target>
       </trans-unit>
       <trans-unit id="LNG.la">
         <source>Latin</source>
@@ -875,6 +881,7 @@
       </trans-unit>
       <trans-unit id="LNG.sc">
         <source>Sardinian</source>
+        <target>Sardīniešu</target>
       </trans-unit>
       <trans-unit id="LNG.sd">
         <source>Sindhi</source>
@@ -882,6 +889,7 @@
       </trans-unit>
       <trans-unit id="LNG.se">
         <source>Northern Sami</source>
+        <target>Ziemeļsāmu</target>
       </trans-unit>
       <trans-unit id="LNG.sg">
         <source>Sango</source>
