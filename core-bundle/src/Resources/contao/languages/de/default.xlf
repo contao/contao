@@ -221,6 +221,10 @@
         <source>You can only select &quot;%s&quot; files!</source>
         <target>Sie können nur &quot;%s&quot;-Dateien auswählen!</target>
       </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
+        <target>Folgende Dateiendungen sind nicht erlaubt: %s</target>
+      </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
         <target>Ihre Auswahl enthält ungültige Seiten-IDs!</target>

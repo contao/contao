@@ -143,18 +143,23 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>
+        <target>Jauns</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new news archive</source>
+        <target>Izveidot jaunu jaunumu arhīvu</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.show">
         <source>Show the details of news archive ID %s</source>
+        <target>Rādīt jaunumu arhīva ID %s detaļas</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
+        <target>Rediģēt jaunumu arhīvu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader">
         <source>Edit the settings of news archive ID %s</source>
+        <target>Rediģēt jaunumu arhīva ID %s iestatījumus</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editmeta">
         <source>Edit the news archive settings</source>
@@ -162,12 +167,15 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>
+        <target>Dublēt jaunumu arhīvu ID %s </target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
+        <target>Dzēst jaunumu arhīvu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>
+        <target>Rādīt jaunumu arhīva ID %s komentārus</target>
       </trans-unit>
     </body>
   </file>

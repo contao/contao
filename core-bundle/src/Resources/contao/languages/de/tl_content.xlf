@@ -583,7 +583,7 @@
       </trans-unit>
       <trans-unit id="tl_content.protected.1">
         <source>Show the content element to certain member groups only.</source>
-        <target>Das Inhaltselement nur bestimmten Gruppen anzeigen.</target>
+        <target>Das Inhaltselement nur bestimmten Mitgliedergruppen anzeigen.</target>
       </trans-unit>
       <trans-unit id="tl_content.groups.0">
         <source>Allowed member groups</source>

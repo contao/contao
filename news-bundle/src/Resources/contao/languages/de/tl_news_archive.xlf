@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.protected.1">
         <source>Show news items to certain member groups only.</source>
-        <target>Nachrichten nur bestimmten Frontend-Gruppen anzeigen.</target>
+        <target>Nachrichten nur bestimmten Mitgliedergruppen anzeigen.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.groups.0">
         <source>Allowed member groups</source>
