@@ -1,5 +1,18 @@
 # Change log
 
+## 4.4.46 (2019-12-17)
+
+ * Prevent information disclosure in the back end (see CVE-2019-19712).
+ * Prevent unrestricted file uploads (see CVE-2019-19745).
+ * Set img width/height attributes as an aspect ratio (see #940).
+ * Always warm the English language cache (see #1040).
+ * Check if a template exists when inheriting templates (see #1016).
+ * Use the status code 307 to redirect on the logout page (see #1041).
+ * Sort the custom layout sections by their position (see #1042).
+ * Correctly trigger kernel response events when handling exceptions (see #1020).
+ * Do not catch Swift exceptions when submitting forms (see #1017).
+ * Correctly compare order fields in the diff view (see #1002).
+
 ## 4.4.45 (2019-11-04)
 
  * Reduce the number of DB queries in the picture factory (see #921).
@@ -26,7 +39,7 @@
 ## 4.4.43 (2019-09-05)
 
  * Handle renamed files in the version overview (see #671).
- * Hide the username if the initial version is auto-generated (see #664).  
+ * Hide the username if the initial version is auto-generated (see #664).
  * Set the e-mail priority if it has been given (see #608).
  * Also show the breadcrumb menu if there are no results (see #660).
  * Correctly replace literal insert tags (see #670).
@@ -80,7 +93,7 @@
 ## 4.4.35 (2019-02-21)
 
  * Fix the format selection in the image size widget (see #315).
- * Ignore a `.public` file in the root files directory (see #286).  
+ * Ignore a `.public` file in the root files directory (see #286).
  * Correctly load MooTools via CDN (see #318).
  * Do not double decode URL fragments (see #321).
  * Correctly replace insert tags if the page contains invalid characters (see #349).
@@ -90,7 +103,7 @@
  * Validate the primary key when registering or saving a model (see #230).
  * Exempt the "page" insert tag from caching (see #284).
  * Correctly sort the tree view records if there is an active filter (see #269).
- * Fix two routing issues (see #263, #264). 
+ * Fix two routing issues (see #263, #264).
 
 ## 4.4.33 (2019-01-16)
 
@@ -159,7 +172,7 @@
 
 ## 4.4.21 (2018-08-13)
 
- * Correctly set the back end headline for custom actions (see contao/newsletter-bundle#23). 
+ * Correctly set the back end headline for custom actions (see contao/newsletter-bundle#23).
  * Remove support for deprecated user password hashes (see contao/core-bundle#1608).
  * Fix the MySQL 8 compatibility (see contao/installation-bundle#93).
  * Revert the intermediate maintenance mode fix (see contao/manager-bundle#78).
@@ -283,7 +296,7 @@
 ## 4.4.4 (2017-09-05)
 
  * Show the form submit buttons at the end of the form instead of at the end of the page.
- * Do not add the referer ID in the Template::route() method (see contao/core-bundle#1033). 
+ * Do not add the referer ID in the Template::route() method (see contao/core-bundle#1033).
  * Correctly read the newsletter channel target page in the newsletter list (see contao/newsletter-bundle#7).
 
 ## 4.4.3 (2017-08-16)

@@ -221,6 +221,9 @@
         <source>You can only select &quot;%s&quot; files!</source>
         <target>只能选择&quot;%s&quot;文件!</target>
       </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
+      </trans-unit>
       <trans-unit id="ERR.invalidPages">
         <source>Your selection contains invalid page IDs!</source>
         <target>您的选择包含无效的页面IDs!</target>
