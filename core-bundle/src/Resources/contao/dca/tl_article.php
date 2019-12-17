@@ -485,39 +485,41 @@ class tl_article extends Contao\Backend
 			}
 
 			// Check user permissions
-			if (Contao\Input::get('act') != 'show')
+			$pagemounts = array();
+
+			// Get all allowed pages for the current user
+			foreach ($this->User->pagemounts as $root)
 			{
-				$pagemounts = array();
+				$pagemounts[] = array($root);
+				$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');
+			}
 
-				// Get all allowed pages for the current user
-				foreach ($this->User->pagemounts as $root)
+			if (!empty($pagemounts))
+			{
+				$pagemounts = array_merge(...$pagemounts);
+			}
+
+			$pagemounts = array_unique($pagemounts);
+
+			// Check each page
+			foreach ($ids as $id)
+			{
+				if (!in_array($id, $pagemounts))
 				{
-					$pagemounts[] = array($root);
-					$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Page ID ' . $id . ' is not mounted.');
 				}
 
-				if (!empty($pagemounts))
+				if (Contao\Input::get('act') == 'show')
 				{
-					$pagemounts = array_merge(...$pagemounts);
+					continue;
 				}
 
-				$pagemounts = array_unique($pagemounts);
+				$objPage = Contao\PageModel::findById($id);
 
-				// Check each page
-				foreach ($ids as $id)
+				// Check whether the current user has permission for the current page
+				if ($objPage !== null && !$this->User->isAllowed($permission, $objPage->row()))
 				{
-					if (!in_array($id, $pagemounts))
-					{
-						throw new Contao\CoreBundle\Exception\AccessDeniedException('Page ID ' . $id . ' is not mounted.');
-					}
-
-					$objPage = Contao\PageModel::findById($id);
-
-					// Check whether the current user has permission for the current page
-					if ($objPage !== null && !$this->User->isAllowed($permission, $objPage->row()))
-					{
-						throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' ' . (Contao\Input::get('id') ? 'article ID ' . Contao\Input::get('id') : ' articles') . ' on page ID ' . $id . ' or to paste it/them into page ID ' . $id . '.');
-					}
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' ' . (Contao\Input::get('id') ? 'article ID ' . Contao\Input::get('id') : ' articles') . ' on page ID ' . $id . ' or to paste it/them into page ID ' . $id . '.');
 				}
 			}
 		}
