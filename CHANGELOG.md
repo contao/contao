@@ -1,5 +1,9 @@
 # Change log
 
+## 4.8.7 (2019-12-17)
+
+ * Fix the picture_default.html5 template (see #1108).
+
 ## 4.8.6 (2019-12-17)
 
  * Prevent insert tag injection in the login module (see CVE-2019-19714).

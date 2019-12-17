@@ -17,7 +17,7 @@ env:
 branches:
   only:
     - master
-    - /^\d+\.\d+$/
+    - /^\d+\.\d+(\.\d+)?$/
 
 jobs:
   include:
