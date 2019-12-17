@@ -84,7 +84,6 @@ class ModuleWizard extends Widget
 								 ->execute($this->currentRecord);
 
 		$cols = array('main');
-		$positions = array();
 
 		if (\in_array($objRow->rows, array('2rwh', '3rw')))
 		{
@@ -105,6 +104,8 @@ class ModuleWizard extends Widget
 		{
 			$cols[] = 'footer';
 		}
+
+		$positions = array();
 
 		// Add custom layout sections
 		if ($objRow->sections != '')

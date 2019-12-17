@@ -272,7 +272,11 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'extnd', 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'extnd', 'maxlength'=>255, 'tl_class'=>'w50'),
+			'save_callback' => array
+			(
+				array('tl_form_field', 'checkExtensions')
+			),
 			'sql'                     => "varchar(255) NOT NULL default 'jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,ppt,pptx'"
 		),
 		'storeFile' => array
@@ -568,6 +572,30 @@ class tl_form_field extends Contao\Backend
 	}
 
 	/**
+	 * Check the configured extensions against the upload types
+	 *
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
+	 *
+	 * @return string
+	 */
+	public function checkExtensions($varValue, Contao\DataContainer $dc)
+	{
+		// Convert the extensions to lowercase
+		$varValue = strtolower($varValue);
+		$arrExtensions = Contao\StringUtil::trimsplit(',', $varValue);
+		$arrUploadTypes = Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('uploadTypes')));
+		$arrNotAllowed = array_diff($arrExtensions, $arrUploadTypes);
+
+		if (0 !== count($arrNotAllowed))
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['forbiddenExtensions'], implode(', ', $arrNotAllowed)));
+		}
+
+		return $varValue;
+	}
+
+	/**
 	 * Return a list of form fields
 	 *
 	 * @return array
@@ -594,9 +622,14 @@ class tl_form_field extends Contao\Backend
 	 */
 	public function getFormFieldTemplates(Contao\DataContainer $dc)
 	{
+		if (Contao\Input::get('act') == 'overrideAll')
+		{
+			return $this->getTemplateGroup('form_');
+		}
+
+		// Backwards compatibility
 		if ($dc->activeRecord->type == 'text')
 		{
-			// Backwards compatibility
 			return array_merge($this->getTemplateGroup('form_text_'), $this->getTemplateGroup('form_textfield_'));
 		}
 
