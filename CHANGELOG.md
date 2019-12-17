@@ -1,5 +1,28 @@
 # Change log
 
+## 4.8.6 (2019-12-17)
+
+ * Prevent insert tag injection in the login module (see CVE-2019-19714).
+ * Only check the fragment registry if the controller name is a string (see #1087).
+ * Unescape parameters in the installation bundle (see #1037).
+ * Fix the back end system font stack for IE 11 (see #1026).
+ * Correctly show custom templates in "override all" mode (see #1007).
+ * Do not add the preview script when rebuilding the search index (see #1008).
+ * Add webp to the list of extensions the GDlib can handle (see #1018).
+ * Add the missing fields to the logout page palette (see #1006).
+ * Use a strict check to determine whether a label is false (see #953).
+ * Do not trigger warnings for fractions with rounding errors (see #935).
+ * Prevent information disclosure in the back end (see CVE-2019-19712).
+ * Prevent unrestricted file uploads (see CVE-2019-19745).
+ * Set img width/height attributes as an aspect ratio (see #940).
+ * Always warm the English language cache (see #1040).
+ * Check if a template exists when inheriting templates (see #1016).
+ * Use the status code 307 to redirect on the logout page (see #1041).
+ * Sort the custom layout sections by their position (see #1042).
+ * Correctly trigger kernel response events when handling exceptions (see #1020).
+ * Do not catch Swift exceptions when submitting forms (see #1017).
+ * Correctly compare order fields in the diff view (see #1002).
+
 ## 4.8.5 (2019-11-04)
 
  * Also support the `form_textfield_` prefix for custom text field templates (see #828).
@@ -41,7 +64,7 @@
  * Always render deferred images in HTML emails (see #693).
  * Do not add the min/max attributes if they are zero (see #668).
  * Handle renamed files in the version overview (see #671).
- * Hide the username if the initial version is auto-generated (see #664).  
+ * Hide the username if the initial version is auto-generated (see #664).
  * Set the e-mail priority if it has been given (see #608).
  * Also show the breadcrumb menu if there are no results (see #660).
  * Correctly replace literal insert tags (see #670).

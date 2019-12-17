@@ -63,6 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
         <source>New</source>
+        <target>Jauns</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.1">
         <source>Create a new channel</source>
@@ -78,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.editheader">
         <source>Edit the settings of channel ID %s</source>
-        <target>Rediģēt kanāla ID %s uzstādījumus</target>
+        <target>Rediģēt kanāla ID %s iestatījumus</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.editmeta">
         <source>Edit the channel settings</source>

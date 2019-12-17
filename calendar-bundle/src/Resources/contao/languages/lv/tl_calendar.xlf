@@ -151,6 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.new.0">
         <source>New</source>
+        <target>Jauns</target>
       </trans-unit>
       <trans-unit id="tl_calendar.new.1">
         <source>Create a new calendar</source>
@@ -170,7 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.editheader">
         <source>Edit the settings of calendar ID %s</source>
-        <target>Rediģēt kalendāra ID %s uzstādījumus</target>
+        <target>Rediģēt kalendāra ID %s iestatījumus</target>
       </trans-unit>
       <trans-unit id="tl_calendar.copy">
         <source>Duplicate calendar ID %s</source>

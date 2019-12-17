@@ -326,6 +326,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.0">
         <source>New</source>
+        <target>Nov</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>

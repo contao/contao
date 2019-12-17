@@ -383,7 +383,7 @@
       </trans-unit>
       <trans-unit id="tl_module.protected.1">
         <source>Show the module to certain member groups only.</source>
-        <target>Das Modul nur bestimmten Gruppen anzeigen.</target>
+        <target>Das Modul nur bestimmten Mitgliedergruppen anzeigen.</target>
       </trans-unit>
       <trans-unit id="tl_module.groups.0">
         <source>Allowed member groups</source>
