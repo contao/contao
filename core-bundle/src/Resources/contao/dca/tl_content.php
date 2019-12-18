@@ -1100,8 +1100,9 @@ class tl_content extends Contao\Backend
 			$GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_content']['config']['notEditable'] = true;
 		}
-		elseif (!\in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'], $this->User->elements))
+		else
 		{
+			// Set the first allowed content element as default value
 			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $this->User->elements[0];
 		}
 
