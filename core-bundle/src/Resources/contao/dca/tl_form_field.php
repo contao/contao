@@ -834,6 +834,11 @@ class tl_form_field extends Contao\Backend
 			if ($objRow->numRows)
 			{
 				$dc->activeRecord = $objRow;
+
+				if (!$this->User->hasAccess($objRow->type, 'fields'))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify form fields of type "' . $objRow->type . '".');
+				}
 			}
 		}
 

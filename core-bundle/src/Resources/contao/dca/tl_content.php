@@ -2030,6 +2030,11 @@ class tl_content extends Contao\Backend
 			if ($objRow->numRows)
 			{
 				$dc->activeRecord = $objRow;
+
+				if (!$this->User->hasAccess($objRow->type, 'fields'))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
+				}
 			}
 		}
 
