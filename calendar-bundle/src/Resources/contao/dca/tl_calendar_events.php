@@ -259,7 +259,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('serpPreview'=>array('url'=>array('tl_calendar_events', 'getSerpUrl'), 'title'=>array('pageTitle', 'title'), 'description'=>array('description', 'teaser'))),
+			'eval'                    => array('serpUrl'=>array('tl_calendar_events', 'getSerpUrl'), 'serpTitle'=>array('pageTitle', 'title'), 'serpDescription'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'location' => array

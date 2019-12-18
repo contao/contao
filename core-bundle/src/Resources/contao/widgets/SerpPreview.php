@@ -11,7 +11,11 @@
 namespace Contao;
 
 /**
- * @property array $serpPreview
+ * @property string          $serpClass
+ * @property string|array    $serpTitle
+ * @property string|array    $serpDescription
+ * @property string|callable $serpUrl
+ * @property string|array    $serpAlias
  */
 class SerpPreview extends Widget
 {
@@ -26,7 +30,7 @@ class SerpPreview extends Widget
 	public function generate()
 	{
 		/** @var Model $class */
-		$class = $this->serpPreview['class'] ?? Model::getClassFromTable($this->strTable);
+		$class = $this->serpClass ?? Model::getClassFromTable($this->strTable);
 		$model = $class::findByPk($this->activeRecord->id);
 
 		if (!$model instanceof Model)
@@ -77,32 +81,32 @@ EOT;
 
 	private function getTitle(Model $model)
 	{
-		if (!isset($this->serpPreview['title']))
+		if (!isset($this->serpTitle))
 		{
 			return $model->title;
 		}
 
-		if (\is_array($this->serpPreview['title']))
+		if (\is_array($this->serpTitle))
 		{
-			return $model->{$this->serpPreview['title'][0]} ?: $model->{$this->serpPreview['title'][1]};
+			return $model->{$this->serpTitle[0]} ?: $model->{$this->serpTitle[1]};
 		}
 
-		return $model->{$this->serpPreview['title']};
+		return $model->{$this->serpTitle};
 	}
 
 	private function getDescription(Model $model)
 	{
-		if (!isset($this->serpPreview['description']))
+		if (!isset($this->serpDescription))
 		{
 			return $model->description;
 		}
 
-		if (\is_array($this->serpPreview['description']))
+		if (\is_array($this->serpDescription))
 		{
-			return $model->{$this->serpPreview['description'][0]} ?: $model->{$this->serpPreview['description'][1]};
+			return $model->{$this->serpDescription[0]} ?: $model->{$this->serpDescription[1]};
 		}
 
-		return $model->{$this->serpPreview['description']};
+		return $model->{$this->serpDescription};
 	}
 
 	/**
@@ -110,14 +114,14 @@ EOT;
 	 */
 	private function getUrl(Model $model)
 	{
-		if (!isset($this->serpPreview['url']))
+		if (!isset($this->serpUrl))
 		{
 			throw new \Exception('No SERP widget URL given');
 		}
 
-		if (\is_string($this->serpPreview['url']))
+		if (\is_string($this->serpUrl))
 		{
-			return $this->serpPreview['url'];
+			return $this->serpUrl;
 		}
 
 		$placeholder = bin2hex(random_bytes(10));
@@ -128,14 +132,14 @@ EOT;
 		$tempModel->alias = $placeholder;
 		$tempModel->preventSaving(false);
 
-		if (\is_array($this->serpPreview['url']))
+		if (\is_array($this->serpUrl))
 		{
-			$this->import($this->serpPreview['url'][0]);
-			$url = $this->{$this->serpPreview['url'][0]}->{$this->serpPreview['url'][1]}($tempModel);
+			$this->import($this->serpUrl[0]);
+			$url = $this->{$this->serpUrl[0]}->{$this->serpUrl[1]}($tempModel);
 		}
-		elseif (\is_callable($this->serpPreview['url']))
+		elseif (\is_callable($this->serpUrl))
 		{
-			$url = $this->serpPreview['url']($tempModel);
+			$url = \call_user_func($this->serpUrl, $tempModel);
 		}
 		else
 		{
@@ -147,61 +151,61 @@ EOT;
 
 	private function getTitleField($suffix)
 	{
-		if (!isset($this->serpPreview['title']))
+		if (!isset($this->serpTitle))
 		{
 			return 'ctrl_title' . $suffix;
 		}
 
-		if (\is_array($this->serpPreview['title']))
+		if (\is_array($this->serpTitle))
 		{
-			return 'ctrl_' . $this->serpPreview['title'][0] . $suffix;
+			return 'ctrl_' . $this->serpTitle[0] . $suffix;
 		}
 
-		return 'ctrl_' . $this->serpPreview['title'] . $suffix;
+		return 'ctrl_' . $this->serpTitle . $suffix;
 	}
 
 	private function getTitleFallbackField($suffix)
 	{
-		if (!isset($this->serpPreview['title']) || !\is_array($this->serpPreview['title']))
+		if (!isset($this->serpTitle) || !\is_array($this->serpTitle))
 		{
 			return '';
 		}
 
-		return 'ctrl_' . $this->serpPreview['title'][1] . $suffix;
+		return 'ctrl_' . $this->serpTitle[1] . $suffix;
 	}
 
 	private function getAliasField($suffix)
 	{
-		if (!isset($this->serpPreview['alias']))
+		if (!isset($this->serpAlias))
 		{
 			return 'ctrl_alias' . $suffix;
 		}
 
-		return 'ctrl_' . $this->serpPreview['alias'] . $suffix;
+		return 'ctrl_' . $this->serpAlias . $suffix;
 	}
 
 	private function getDescriptionField($suffix)
 	{
-		if (!isset($this->serpPreview['description']))
+		if (!isset($this->serpDescription))
 		{
 			return 'ctrl_description' . $suffix;
 		}
 
-		if (\is_array($this->serpPreview['description']))
+		if (\is_array($this->serpDescription))
 		{
-			return 'ctrl_' . $this->serpPreview['description'][0] . $suffix;
+			return 'ctrl_' . $this->serpDescription[0] . $suffix;
 		}
 
-		return 'ctrl_' . $this->serpPreview['description'] . $suffix;
+		return 'ctrl_' . $this->serpDescription . $suffix;
 	}
 
 	private function getDescriptionFallbackField($suffix)
 	{
-		if (!isset($this->serpPreview['description']) || !\is_array($this->serpPreview['description']))
+		if (!isset($this->serpDescription) || !\is_array($this->serpDescription))
 		{
 			return '';
 		}
 
-		return 'ctrl_' . $this->serpPreview['description'][1] . $suffix;
+		return 'ctrl_' . $this->serpDescription[1] . $suffix;
 	}
 }

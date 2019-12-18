@@ -269,7 +269,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('serpPreview'=>array('url'=>array('tl_page', 'getSerpUrl'), 'title'=>array('pageTitle', 'title'))),
+			'eval'                    => array('serpUrl'=>array('tl_page', 'getSerpUrl'), 'serpTitle'=>array('pageTitle', 'title')),
 			'sql'                     => null
 		),
 		'redirect' => array
