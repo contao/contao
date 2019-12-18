@@ -902,7 +902,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.cache.clear_internal');
 
         $this->assertSame(ContaoCacheClearer::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
+        $this->assertTrue($definition->isPublic());
         $this->assertSame('filesystem', (string) $definition->getArgument(0));
     }
 
@@ -913,7 +913,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.cache.warm_internal');
 
         $this->assertSame(ContaoCacheWarmer::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
+        $this->assertTrue($definition->isPublic());
         $this->assertSame('filesystem', (string) $definition->getArgument(0));
         $this->assertSame('contao.resource_finder', (string) $definition->getArgument(1));
         $this->assertSame('contao.resource_locator', (string) $definition->getArgument(2));
@@ -1238,16 +1238,20 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('%contao.image.target_dir%', (string) $definition->getArgument(0));
         $this->assertSame('filesystem', (string) $definition->getArgument(1));
 
-        $this->assertSame(
-            [
-                'kernel.reset' => [
-                    [
-                        'method' => 'reset',
+        if (method_exists($definition->getClass(), 'reset')) {
+            $this->assertSame(
+                [
+                    'kernel.reset' => [
+                        [
+                            'method' => 'reset',
+                        ],
                     ],
                 ],
-            ],
-            $definition->getTags()
-        );
+                $definition->getTags()
+            );
+        } else {
+            $this->assertSame([], $definition->getTags());
+        }
     }
 
     public function testRegistersTheImageImagineService(): void

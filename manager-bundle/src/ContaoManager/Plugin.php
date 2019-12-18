@@ -65,6 +65,16 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private static $autoloadModules;
 
     /**
+     * @var callable
+     */
+    private $dbalConnectionFactory;
+
+    public function __construct(callable $dbalConnectionFactory = null)
+    {
+        $this->dbalConnectionFactory = $dbalConnectionFactory ?: [DriverManager::class, 'getConnection'];
+    }
+
+    /**
      * Sets the path to enable autoloading of legacy Contao modules.
      */
     public static function autoloadModules(string $modulePath): void
@@ -311,14 +321,16 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $params = array_merge(...$params);
         }
 
+        $parameterBag = $container->getParameterBag();
+
         foreach ($params as $key => $value) {
-            $params[$key] = $container->resolveEnvPlaceholders($value, true);
+            $params[$key] = $parameterBag->unescapeValue($container->resolveEnvPlaceholders($value, true));
         }
 
         // If there are no DB credentials yet (install tool), we have to set
         // the server version to prevent a DBAL exception (see #1422)
         try {
-            $connection = DriverManager::getConnection($params);
+            $connection = \call_user_func($this->dbalConnectionFactory, $params);
             $connection->connect();
             $connection->close();
         } catch (DriverException $e) {

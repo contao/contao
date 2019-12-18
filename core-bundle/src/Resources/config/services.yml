@@ -205,8 +205,6 @@ services:
         arguments:
             - '%contao.image.target_dir%'
             - '@?filesystem'
-        tags:
-            - { name: kernel.reset, method: reset }
 
     contao.image.imagine.gd:
         class: Imagine\Gd\Imagine

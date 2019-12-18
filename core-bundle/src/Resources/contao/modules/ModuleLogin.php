@@ -65,7 +65,8 @@ class ModuleLogin extends Module
 		}
 		elseif ($this->redirectBack && ($referer = Input::get('referer', true)))
 		{
-			$this->targetPath = Environment::get('base') . base64_decode($referer, true);
+			// Decode the referer and urlencode insert tags
+			$this->targetPath = Environment::get('base') . str_replace(array('{', '}'), array('%7B', '%7D'), base64_decode($referer, true));
 		}
 
 		return parent::generate();

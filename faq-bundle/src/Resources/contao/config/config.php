@@ -9,24 +9,18 @@
  */
 
 // Add back end modules
-array_insert($GLOBALS['BE_MOD']['content'], 2, array
+$GLOBALS['BE_MOD']['content']['faq'] = array
 (
-	'faq' => array
-	(
-		'tables' => array('tl_faq_category', 'tl_faq')
-	)
-));
+	'tables' => array('tl_faq_category', 'tl_faq')
+);
 
 // Front end modules
-array_insert($GLOBALS['FE_MOD'], 3, array
+$GLOBALS['FE_MOD']['faq'] = array
 (
-	'faq' => array
-	(
-		'faqlist'   => 'Contao\ModuleFaqList',
-		'faqreader' => 'Contao\ModuleFaqReader',
-		'faqpage'   => 'Contao\ModuleFaqPage'
-	)
-));
+	'faqlist'   => 'Contao\ModuleFaqList',
+	'faqreader' => 'Contao\ModuleFaqReader',
+	'faqpage'   => 'Contao\ModuleFaqPage'
+);
 
 // Style sheet
 if (defined('TL_MODE') && TL_MODE == 'BE')

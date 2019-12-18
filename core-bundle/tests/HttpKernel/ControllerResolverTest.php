@@ -17,6 +17,7 @@ use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\HttpKernel\ControllerResolver;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 class ControllerResolverTest extends TestCase
@@ -52,5 +53,20 @@ class ControllerResolverTest extends TestCase
 
         $resolver = new ControllerResolver($decorated, new FragmentRegistry());
         $resolver->getController(new Request());
+    }
+
+    public function testIgnoresControllersThatAreNotString(): void
+    {
+        $registry = $this->createMock(FragmentRegistry::class);
+        $registry
+            ->expects($this->never())
+            ->method('get')
+        ;
+
+        $request = new Request();
+        $request->attributes->set('_controller', new ControllerReference('foo'));
+
+        $resolver = new ControllerResolver($this->createMock(ControllerResolverInterface::class), $registry);
+        $resolver->getController($request);
     }
 }
