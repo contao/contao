@@ -10,7 +10,7 @@ composer:
     require-dev:
         'contao/monorepo-tools': 'dev-master'
         'contao/phpstan': '^0.12'
-        'contao/php-cs-fixer': '^2.0'
+        'contao/php-cs-fixer': '^2.2'
         'phpstan/extension-installer': '^1.0'
 
 repositories:
