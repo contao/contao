@@ -556,7 +556,7 @@ class tl_form_field extends Contao\Backend
 			$objField = $this->Database->prepare("SELECT type FROM tl_form_field WHERE id=?")
 									   ->execute(Contao\Input::get('id'));
 
-			if ($objField->numRows && !\in_array($objField->type, $this->User->fields))
+			if ($objField->numRows && !in_array($objField->type, $this->User->fields))
 			{
 				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify form fields of type "' . $objField->type . '".');
 			}
@@ -567,7 +567,7 @@ class tl_form_field extends Contao\Backend
 		{
 			$session = $objSession->all();
 
-			if (!empty($session['CURRENT']['IDS']) && \is_array($session['CURRENT']['IDS']))
+			if (!empty($session['CURRENT']['IDS']) && is_array($session['CURRENT']['IDS']))
 			{
 				if (empty($this->User->fields))
 				{
@@ -575,7 +575,7 @@ class tl_form_field extends Contao\Backend
 				}
 				else
 				{
-					$objFields = $this->Database->prepare("SELECT id FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, \count($this->User->fields), '?')). ")")
+					$objFields = $this->Database->prepare("SELECT id FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->fields), '?')) . ")")
 												->execute(...$this->User->fields);
 
 					$session['CURRENT']['IDS'] = $objFields->fetchEach('id');
@@ -590,7 +590,7 @@ class tl_form_field extends Contao\Backend
 		{
 			$session = $objSession->all();
 
-			if (!empty($session['CLIPBOARD']['tl_form_field']['id']) && \is_array($session['CLIPBOARD']['tl_form_field']['id']))
+			if (!empty($session['CLIPBOARD']['tl_form_field']['id']) && is_array($session['CLIPBOARD']['tl_form_field']['id']))
 			{
 				if (empty($this->User->fields))
 				{
@@ -598,7 +598,7 @@ class tl_form_field extends Contao\Backend
 				}
 				else
 				{
-					$objFields = $this->Database->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, \count($this->User->fields), '?')). ")")
+					$objFields = $this->Database->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->fields), '?')) . ")")
 												->execute(...$this->User->fields);
 
 					$session['CLIPBOARD']['tl_form_field']['id'] = $objFields->fetchEach('id');
@@ -739,7 +739,7 @@ class tl_form_field extends Contao\Backend
 	 */
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess($row['type'], 'fields') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess($row['type'], 'fields') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**

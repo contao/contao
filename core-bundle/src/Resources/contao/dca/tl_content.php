@@ -1115,7 +1115,7 @@ class tl_content extends Contao\Backend
 			$objCes = $this->Database->prepare("SELECT type FROM tl_content WHERE id=?")
 									 ->execute(Contao\Input::get('id'));
 
-			if ($objCes->numRows && !\in_array($objCes->type, $this->User->elements))
+			if ($objCes->numRows && !in_array($objCes->type, $this->User->elements))
 			{
 				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objCes->type . '".');
 			}
@@ -1126,7 +1126,7 @@ class tl_content extends Contao\Backend
 		{
 			$session = $objSession->all();
 
-			if (!empty($session['CURRENT']['IDS']) && \is_array($session['CURRENT']['IDS']))
+			if (!empty($session['CURRENT']['IDS']) && is_array($session['CURRENT']['IDS']))
 			{
 				if (empty($this->User->elements))
 				{
@@ -1134,7 +1134,7 @@ class tl_content extends Contao\Backend
 				}
 				else
 				{
-					$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, \count($this->User->elements), '?')). ")")
+					$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
 											 ->execute(...$this->User->elements);
 
 					$session['CURRENT']['IDS'] = $objCes->fetchEach('id');
@@ -1149,7 +1149,7 @@ class tl_content extends Contao\Backend
 		{
 			$session = $objSession->all();
 
-			if (!empty($session['CLIPBOARD']['tl_content']['id']) && \is_array($session['CLIPBOARD']['tl_content']['id']))
+			if (!empty($session['CLIPBOARD']['tl_content']['id']) && is_array($session['CLIPBOARD']['tl_content']['id']))
 			{
 				if (empty($this->User->elements))
 				{
@@ -1157,7 +1157,7 @@ class tl_content extends Contao\Backend
 				}
 				else
 				{
-					$objCes = $this->Database->prepare("SELECT id, type FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_content']['id'])) . ") AND type IN(" . implode(',', array_fill(0, \count($this->User->elements), '?')). ")")
+					$objCes = $this->Database->prepare("SELECT id, type FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_content']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
 											 ->execute(...$this->User->elements);
 
 					$session['CLIPBOARD']['tl_content']['id'] = $objCes->fetchEach('id');
@@ -1801,7 +1801,7 @@ class tl_content extends Contao\Backend
 	 */
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess($row['type'], 'elements') ? '<a href="'.$this->addToUrl($href.'&amp;id='.$row['id']).'" title="'.Contao\StringUtil::specialchars($title).'"'.$attributes.'>'.Contao\Image::getHtml($icon, $label).'</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+		return $this->User->hasAccess($row['type'], 'elements') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
