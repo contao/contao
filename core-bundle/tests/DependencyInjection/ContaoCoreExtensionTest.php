@@ -76,7 +76,6 @@ use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
-use Contao\CoreBundle\Menu\BackendMenuRenderer;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
 use Contao\CoreBundle\OptIn\OptIn;
@@ -277,6 +276,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(BackendMenuListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('security.helper', (string) $definition->getArgument(0));
+        $this->assertSame('router', (string) $definition->getArgument(1));
 
         $this->assertSame(
             [
@@ -1379,17 +1379,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPublic());
         $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
         $this->assertSame('event_dispatcher', (string) $definition->getArgument(1));
-    }
-
-    public function testRegistersTheBackendMenuRenderer(): void
-    {
-        $this->assertTrue($this->container->has('contao.menu.backend_menu_renderer'));
-
-        $definition = $this->container->getDefinition('contao.menu.backend_menu_renderer');
-
-        $this->assertSame(BackendMenuRenderer::class, $definition->getClass());
-        $this->assertTrue($definition->isPublic());
-        $this->assertSame('twig', (string) $definition->getArgument(0));
     }
 
     public function testRegistersTheMenuMatcher(): void

@@ -21,6 +21,7 @@ services:
         class: Contao\CoreBundle\EventListener\BackendMenuListener
         arguments:
             - '@security.helper'
+            - '@router'
         tags:
             - { name: kernel.event_listener, event: contao.backend_menu_build, method: onBuild }
 

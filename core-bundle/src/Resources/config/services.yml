@@ -279,12 +279,8 @@ services:
         arguments:
             - '@knp_menu.factory'
             - '@event_dispatcher'
-        public: true
-
-    contao.menu.backend_menu_renderer:
-        class: Contao\CoreBundle\Menu\BackendMenuRenderer
-        arguments:
-            - '@twig'
+        tags:
+            - { name: knp_menu.menu_builder, method: buildMainMenu, alias: be_menu }
         public: true
 
     contao.menu.matcher:

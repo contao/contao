@@ -260,8 +260,11 @@ class BackendMain extends Backend
 		$this->Template->burger = $GLOBALS['TL_LANG']['MSC']['burgerTitle'];
 		$this->Template->learnMore = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
 		$this->Template->ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
-		$this->Template->menu = $container->get('contao.menu.backend_menu_renderer')->render($container->get('contao.menu.backend_menu_builder')->create());
 		$this->Template->headerNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['headerNavigation']);
+
+		$twig = $container->get('twig');
+
+		$this->Template->menu = $twig->render('@ContaoCore/Backend/be_menu.html.twig');
 
 		// TODO: This should be moved the the manager-bundle in Contao 4.9
 		$this->Template->canDebug = $this->User->isAdmin && System::getContainer()->has('contao_manager.jwt_manager');
