@@ -1098,6 +1098,7 @@ class tl_content extends Contao\Backend
 		if (empty($this->User->elements))
 		{
 			$GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
+			$GLOBALS['TL_DCA']['tl_content']['config']['notEditable'] = true;
 		}
 		elseif (!\in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'], $this->User->elements))
 		{

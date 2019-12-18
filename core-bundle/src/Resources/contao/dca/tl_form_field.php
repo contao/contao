@@ -539,6 +539,7 @@ class tl_form_field extends Contao\Backend
 		if (empty($this->User->fields))
 		{
 			$GLOBALS['TL_DCA']['tl_form_field']['config']['closed'] = true;
+			$GLOBALS['TL_DCA']['tl_form_field']['config']['notEditable'] = true;
 		}
 		elseif (!\in_array($GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'], $this->User->fields))
 		{
