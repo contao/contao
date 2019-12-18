@@ -284,7 +284,7 @@ fieldset.checkbox_container,fieldset.radio_container {
 .tl_imageSize_0 {
 	margin-left:1%;
 }
-input[type=search]::-webkit-search-decoration {
+input[type="search"]::-webkit-search-decoration {
 	-webkit-appearance:none;
 }
 @-moz-document url-prefix() {
@@ -299,8 +299,11 @@ input[type=search]::-webkit-search-decoration {
 	.tl_text::placeholder,.tl_text_2::placeholder,.tl_text_3::placeholder,.tl_text_4::placeholder,.tl_textarea::placeholder,.tl_text_unit::placeholder,.tl_text_trbl::placeholder,.tl_text_interval::placeholder {
 		line-height:16px;
 	}
-	input[type=search] {
+	input[type="search"] {
 		padding:2px 0 4px 6px;
+	}
+	input[type="search"]:focus {
+		outline-offset:-2px;
 	}
 }}
 @supports (display:-ms-grid) {
