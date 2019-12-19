@@ -103,8 +103,6 @@ security:
                 login_path: contao_backend_login
                 check_path: contao_backend_login
                 default_target_path: contao_backend
-                success_handler: contao.security.authentication_success_handler
-                failure_handler: contao.security.authentication_failure_handler
                 remember_me: false
 
             two_factor:
@@ -133,8 +131,6 @@ security:
                 check_path: contao_frontend_login
                 default_target_path: contao_root
                 failure_path: contao_root
-                success_handler: contao.security.authentication_success_handler
-                failure_handler: contao.security.authentication_failure_handler
                 remember_me: true
                 use_forward: true
 

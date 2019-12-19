@@ -25,10 +25,10 @@ class ContaoLoginFactory extends FormLoginFactory
 
         $this->addOption('lock_period', 300);
         $this->addOption('login_attempts', 3);
+        $this->addOption('username_parameter', 'username');
+        $this->addOption('password_parameter', 'password');
 
         unset(
-            $this->options['username_parameter'],
-            $this->options['password_parameter'],
             $this->defaultSuccessHandlerOptions['target_path_parameter'],
             $this->defaultSuccessHandlerOptions['use_referer'],
             $this->defaultFailureHandlerOptions['failure_path_parameter']
@@ -41,6 +41,21 @@ class ContaoLoginFactory extends FormLoginFactory
     public function getKey(): string
     {
         return 'contao-login';
+    }
+
+    protected function getListenerId()
+    {
+        return 'contao.security.authentication_listener';
+    }
+
+    protected function getSuccessHandlerId($id)
+    {
+        return 'contao.security.authentication_success_handler';
+    }
+
+    protected function getFailureHandlerId($id)
+    {
+        return 'contao.security.authentication_failure_handler';
     }
 
     /**
@@ -64,26 +79,5 @@ class ContaoLoginFactory extends FormLoginFactory
         ;
 
         return $provider;
-    }
-
-    /**
-     * @param ContainerBuilder $container
-     */
-    protected function createListener($container, $id, $config, $userProvider): string
-    {
-        $listenerId = parent::createListener($container, $id, $config, $userProvider);
-
-        $container
-            ->getDefinition($listenerId)
-            ->replaceArgument(
-                7,
-                array_merge(
-                    $container->getDefinition($listenerId)->getArgument(7),
-                    ['username_parameter' => 'username', 'password_parameter' => 'password']
-                )
-            )
-        ;
-
-        return $listenerId;
     }
 }
