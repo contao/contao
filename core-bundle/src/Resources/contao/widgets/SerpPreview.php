@@ -11,11 +11,10 @@
 namespace Contao;
 
 /**
- * @property string          $serpClass
- * @property string|array    $serpTitle
- * @property string|array    $serpDescription
- * @property string|callable $serpUrl
- * @property string|array    $serpAlias
+ * @property array    $titleFields
+ * @property array    $descriptionFields
+ * @property string   $aliasField
+ * @property callable $url_callback
  */
 class SerpPreview extends Widget
 {
@@ -30,7 +29,7 @@ class SerpPreview extends Widget
 	public function generate()
 	{
 		/** @var Model $class */
-		$class = $this->serpClass ?? Model::getClassFromTable($this->strTable);
+		$class = Model::getClassFromTable($this->strTable);
 		$model = $class::findByPk($this->activeRecord->id);
 
 		if (!$model instanceof Model)
@@ -41,11 +40,21 @@ class SerpPreview extends Widget
 		$id = $model->id;
 		$title = StringUtil::substr($this->getTitle($model), 64);
 		$description = StringUtil::substr($this->getDescription($model), 160);
+		$alias = $this->getAlias($model);
 
 		// Get the URL with a %s placeholder for the alias or ID
 		$url = $this->getUrl($model);
 		list($baseUrl, $urlSuffix) = explode('%s', $url);
-		$url = $model->alias == 'index' ? $baseUrl : sprintf($url, $model->alias ?: $model->id);
+
+		// Use the base URL for the index page
+		if ($model instanceof PageModel && $alias == 'index')
+		{
+			$url = $baseUrl;
+		}
+		else
+		{
+			$url = sprintf($url, $alias ?: $model->id);
+		}
 
 		// Get the input field suffix (edit multiple mode)
 		$suffix = substr($this->objDca->inputName, \strlen($this->objDca->field));
@@ -81,32 +90,32 @@ EOT;
 
 	private function getTitle(Model $model)
 	{
-		if (!isset($this->serpTitle))
+		if (!isset($this->titleFields))
 		{
 			return $model->title;
 		}
 
-		if (\is_array($this->serpTitle))
-		{
-			return $model->{$this->serpTitle[0]} ?: $model->{$this->serpTitle[1]};
-		}
-
-		return $model->{$this->serpTitle};
+		return $model->{$this->titleFields[0]} ?: $model->{$this->titleFields[1]};
 	}
 
 	private function getDescription(Model $model)
 	{
-		if (!isset($this->serpDescription))
+		if (!isset($this->descriptionFields))
 		{
 			return $model->description;
 		}
 
-		if (\is_array($this->serpDescription))
+		return $model->{$this->descriptionFields[0]} ?: $model->{$this->descriptionFields[1]};
+	}
+
+	private function getAlias(Model $model)
+	{
+		if (!isset($this->aliasField))
 		{
-			return $model->{$this->serpDescription[0]} ?: $model->{$this->serpDescription[1]};
+			return $model->alias;
 		}
 
-		return $model->{$this->serpDescription};
+		return $model->{$this->aliasField};
 	}
 
 	/**
@@ -114,14 +123,9 @@ EOT;
 	 */
 	private function getUrl(Model $model)
 	{
-		if (!isset($this->serpUrl))
+		if (!isset($this->url_callback))
 		{
-			throw new \Exception('No SERP widget URL given');
-		}
-
-		if (\is_string($this->serpUrl))
-		{
-			return $this->serpUrl;
+			throw new \LogicException('No url_callback given');
 		}
 
 		$placeholder = bin2hex(random_bytes(10));
@@ -132,18 +136,18 @@ EOT;
 		$tempModel->alias = $placeholder;
 		$tempModel->preventSaving(false);
 
-		if (\is_array($this->serpUrl))
+		if (\is_array($this->url_callback))
 		{
-			$this->import($this->serpUrl[0]);
-			$url = $this->{$this->serpUrl[0]}->{$this->serpUrl[1]}($tempModel);
+			$this->import($this->url_callback[0]);
+			$url = $this->{$this->url_callback[0]}->{$this->url_callback[1]}($tempModel);
 		}
-		elseif (\is_callable($this->serpUrl))
+		elseif (\is_callable($this->url_callback))
 		{
-			$url = \call_user_func($this->serpUrl, $tempModel);
+			$url = \call_user_func($this->url_callback, $tempModel);
 		}
 		else
 		{
-			throw new \Exception('Please provide the SERP widget URL as string or callable');
+			throw new \LogicException('Please provide the url_callback as callable');
 		}
 
 		return str_replace($placeholder, '%s', $url);
@@ -151,61 +155,51 @@ EOT;
 
 	private function getTitleField($suffix)
 	{
-		if (!isset($this->serpTitle))
+		if (!isset($this->titleFields))
 		{
 			return 'ctrl_title' . $suffix;
 		}
 
-		if (\is_array($this->serpTitle))
-		{
-			return 'ctrl_' . $this->serpTitle[0] . $suffix;
-		}
-
-		return 'ctrl_' . $this->serpTitle . $suffix;
+		return 'ctrl_' . $this->titleFields[0] . $suffix;
 	}
 
 	private function getTitleFallbackField($suffix)
 	{
-		if (!isset($this->serpTitle) || !\is_array($this->serpTitle))
+		if (!isset($this->titleFields))
 		{
 			return '';
 		}
 
-		return 'ctrl_' . $this->serpTitle[1] . $suffix;
-	}
-
-	private function getAliasField($suffix)
-	{
-		if (!isset($this->serpAlias))
-		{
-			return 'ctrl_alias' . $suffix;
-		}
-
-		return 'ctrl_' . $this->serpAlias . $suffix;
+		return 'ctrl_' . $this->titleFields[1] . $suffix;
 	}
 
 	private function getDescriptionField($suffix)
 	{
-		if (!isset($this->serpDescription))
+		if (!isset($this->descriptionFields))
 		{
 			return 'ctrl_description' . $suffix;
 		}
 
-		if (\is_array($this->serpDescription))
-		{
-			return 'ctrl_' . $this->serpDescription[0] . $suffix;
-		}
-
-		return 'ctrl_' . $this->serpDescription . $suffix;
+		return 'ctrl_' . $this->descriptionFields[0] . $suffix;
 	}
 
 	private function getDescriptionFallbackField($suffix)
 	{
-		if (!isset($this->serpDescription) || !\is_array($this->serpDescription))
+		if (!isset($this->descriptionFields))
 		{
 			return '';
 		}
 
-		return 'ctrl_' . $this->serpDescription[1] . $suffix;
+		return 'ctrl_' . $this->descriptionFields[1] . $suffix;
+	}
+
+	private function getAliasField($suffix)
+	{
+		if (!isset($this->aliasField))
+		{
+			return 'ctrl_alias' . $suffix;
+		}
+
+		return 'ctrl_' . $this->aliasField . $suffix;
 	}
 }
