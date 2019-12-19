@@ -25,36 +25,49 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * This controller handles the back end preview call and redirects to the requested front end page while ensuring the
- * /preview.php entry point is used. When requested, the front end user gets authenticated.
+ * This controller handles the back end preview call and redirects to the
+ * requested front end page while ensuring that the /preview.php entry point is
+ * used. When requested, the front end user gets authenticated.
  *
  * @Route(defaults={"_scope" = "backend"})
  */
 class BackendPreviewController
 {
-    private $contaoFramework;
+    /**
+     * @var ContaoFramework
+     */
+    private $framework;
 
+    /**
+     * @var string
+     */
     private $previewScript;
 
-    private $frontendPreviewAuthenticator;
+    /**
+     * @var FrontendPreviewAuthenticator
+     */
+    private $previewAuthenticator;
 
+    /**
+     * @var EventDispatcherInterface
+     */
     private $dispatcher;
 
+    /**
+     * @var RouterInterface
+     */
     private $router;
 
+    /**
+     * @var AuthorizationCheckerInterface
+     */
     private $authorizationChecker;
 
-    public function __construct(
-        ContaoFramework $contaoFramework,
-        string $previewScript,
-        FrontendPreviewAuthenticator $frontendPreviewAuthenticator,
-        EventDispatcherInterface $dispatcher,
-        RouterInterface $router,
-        AuthorizationCheckerInterface $authorizationChecker
-    ) {
-        $this->contaoFramework = $contaoFramework;
+    public function __construct(ContaoFramework $framework, string $previewScript, FrontendPreviewAuthenticator $previewAuthenticator, EventDispatcherInterface $dispatcher, RouterInterface $router, AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->framework = $framework;
         $this->previewScript = $previewScript;
-        $this->frontendPreviewAuthenticator = $frontendPreviewAuthenticator;
+        $this->previewAuthenticator = $previewAuthenticator;
         $this->dispatcher = $dispatcher;
         $this->router = $router;
         $this->authorizationChecker = $authorizationChecker;
@@ -69,19 +82,22 @@ class BackendPreviewController
             return new RedirectResponse($this->previewScript.$request->getRequestUri());
         }
 
-        $this->contaoFramework->initialize();
+        $this->framework->initialize();
 
         if (!$this->authorizationChecker->isGranted('ROLE_USER')) {
             return new Response('Access denied', Response::HTTP_FORBIDDEN);
         }
 
         // Switch to a particular member (see contao/core#6546)
-        if (($frontendUser = $request->query->get('user'))
-            && !$this->frontendPreviewAuthenticator->authenticateFrontendUser($frontendUser, false)) {
-            $this->frontendPreviewAuthenticator->removeFrontendAuthentication();
+        if (
+            ($frontendUser = $request->query->get('user'))
+            && !$this->previewAuthenticator->authenticateFrontendUser($frontendUser, false)
+        ) {
+            $this->previewAuthenticator->removeFrontendAuthentication();
         }
 
         $urlConvertEvent = new PreviewUrlConvertEvent($request);
+
         $this->dispatcher->dispatch($urlConvertEvent);
 
         if (null !== $targetUrl = $urlConvertEvent->getUrl()) {

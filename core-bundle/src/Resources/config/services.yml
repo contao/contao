@@ -69,6 +69,16 @@ services:
             - '%kernel.project_dir%'
         public: true
 
+    Contao\CoreBundle\Controller\BackendPreviewController:
+        arguments:
+            - '@contao.framework'
+            - '%contao.preview_script%'
+            - '@contao.security.frontend_preview_authenticator'
+            - '@event_dispatcher'
+            - '@router'
+            - '@security.authorization_checker'
+        tags:
+            - controller.service_arguments
 
     Contao\CoreBundle\Controller\BackendPreviewSwitchController:
         arguments:
@@ -81,11 +91,6 @@ services:
             - '@router'
             - '@contao.csrf.token_manager'
             - '%contao.csrf_token_name%'
-        tags:
-            - controller.service_arguments
-
-    Contao\CoreBundle\Controller\BackendPreviewController:
-        arguments: ['@contao.framework', '%contao.preview_script%', '@contao.security.frontend_preview_authenticator', '@event_dispatcher', '@router', '@security.authorization_checker']
         tags:
             - controller.service_arguments
 

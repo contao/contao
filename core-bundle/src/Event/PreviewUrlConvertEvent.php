@@ -22,6 +22,9 @@ class PreviewUrlConvertEvent extends Event
      */
     private $url;
 
+    /**
+     * @var Request
+     */
     private $request;
 
     public function __construct(Request $request)

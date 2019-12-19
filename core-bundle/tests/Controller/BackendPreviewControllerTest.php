@@ -16,6 +16,7 @@ use Contao\CoreBundle\Controller\BackendPreviewController;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,7 +32,7 @@ class BackendPreviewControllerTest extends TestCase
         $controller = new BackendPreviewController(
             $this->mockContaoFramework(),
             'preview.php',
-            $this->mockFrontendPreviewAuthenticator(),
+            $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockRouter(),
             $this->mockAuthorizationChecker()
@@ -49,7 +50,7 @@ class BackendPreviewControllerTest extends TestCase
         $controller = new BackendPreviewController(
             $this->mockContaoFramework(),
             'preview.php',
-            $this->mockFrontendPreviewAuthenticator(),
+            $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockRouter(),
             $this->mockAuthorizationChecker(false)
@@ -62,7 +63,7 @@ class BackendPreviewControllerTest extends TestCase
 
     public function testAuthenticatesWhenUserParameterGiven(): void
     {
-        $previewAuthenticator = $this->mockFrontendPreviewAuthenticator();
+        $previewAuthenticator = $this->createMock(FrontendPreviewAuthenticator::class);
         $previewAuthenticator
             ->expects($this->once())
             ->method('authenticateFrontendUser')
@@ -98,7 +99,7 @@ class BackendPreviewControllerTest extends TestCase
         $controller = new BackendPreviewController(
             $this->mockContaoFramework(),
             'preview.php',
-            $this->mockFrontendPreviewAuthenticator(),
+            $this->createMock(FrontendPreviewAuthenticator::class),
             $dispatcher,
             $this->mockRouter(),
             $this->mockAuthorizationChecker()
@@ -115,7 +116,7 @@ class BackendPreviewControllerTest extends TestCase
         $controller = new BackendPreviewController(
             $this->mockContaoFramework(),
             'preview.php',
-            $this->mockFrontendPreviewAuthenticator(),
+            $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockRouter(),
             $this->mockAuthorizationChecker()
@@ -128,11 +129,13 @@ class BackendPreviewControllerTest extends TestCase
         $this->assertSame('/index.html', $response->getTargetUrl());
     }
 
-    private function mockRequest()
+    /**
+     * @return Request&MockObject
+     */
+    private function mockRequest(): Request
     {
         $request = $this->createMock(Request::class);
-        $request
-            ->query = new ParameterBag();
+        $request->query = new ParameterBag();
 
         $request
             ->method('getScriptName')
@@ -142,7 +145,10 @@ class BackendPreviewControllerTest extends TestCase
         return $request;
     }
 
-    private function mockRouter()
+    /**
+     * @return RouterInterface&MockObject
+     */
+    private function mockRouter(): RouterInterface
     {
         $router = $this->createMock(RouterInterface::class);
         $router
@@ -154,12 +160,10 @@ class BackendPreviewControllerTest extends TestCase
         return $router;
     }
 
-    private function mockFrontendPreviewAuthenticator(bool $granted = true)
-    {
-        return $this->createMock(FrontendPreviewAuthenticator::class);
-    }
-
-    private function mockAuthorizationChecker(bool $granted = true)
+    /**
+     * @return AuthorizationCheckerInterface&MockObject
+     */
+    private function mockAuthorizationChecker(bool $granted = true): AuthorizationCheckerInterface
     {
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authorizationChecker

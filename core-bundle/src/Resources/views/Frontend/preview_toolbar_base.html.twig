@@ -9,14 +9,7 @@
             {% if canSwitchUser %}
                 <div>
                     <label for="ctrl_user">{{ 'MSC.feUser'|trans([], 'contao_default') }}:</label>
-                    <input type="text"
-                           name="user"
-                           id="ctrl_user"
-                           list="userlist"
-                           class="tl_text user"
-                           placeholder="{{ 'MSC.username'|trans([], 'contao_default') }}"
-                           value="{{ user }}"
-                           autocomplete="off">
+                    <input type="text" name="user" id="ctrl_user" list="userlist" class="tl_text user" placeholder="{{ 'MSC.username'|trans([], 'contao_default') }}" value="{{ user }}" autocomplete="off">
                     <datalist id="userlist">
                         <option value="-"></option>
                     </datalist>

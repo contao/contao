@@ -142,6 +142,13 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
+    contao.listener.preview_url_convert:
+        class: Contao\CoreBundle\EventListener\PreviewUrlConvertListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: kernel.event_listener, event: contao.preview_url_convert, method: onPreviewUrlConvert }
+
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener
         arguments:
@@ -226,10 +233,3 @@ services:
             - '@event_dispatcher'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
-    contao.listener.preview_url_convert:
-        class: Contao\CoreBundle\EventListener\PreviewUrlConvertListener
-        tags:
-            - { name: kernel.event_listener, event: contao.preview_url_convert, method: onPreviewUrlConvert }
-        arguments:
-          ['@contao.framework']

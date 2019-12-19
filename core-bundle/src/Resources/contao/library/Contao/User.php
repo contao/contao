@@ -577,7 +577,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	{
 		$data = unserialize($serialized, array('allowed_classes'=>false));
 
-		if (array_keys($data) !== array('id', 'username', 'password', 'admin', 'amg', 'disable', 'start', 'stop'))
+		if (array_keys($data) != array('id', 'username', 'password', 'admin', 'amg', 'disable', 'start', 'stop'))
 		{
 			return;
 		}

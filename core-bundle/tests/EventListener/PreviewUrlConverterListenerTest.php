@@ -54,7 +54,6 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
     public function testDoesNotConvertThePreviewUrlWithoutParameter(): void
     {
         $request = new Request();
-
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener($this->mockContaoFramework());
@@ -69,7 +68,6 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request->query->set('page', '9');
 
         $event = new PreviewUrlConvertEvent($request);
-
         $pageModel = $this->createConfiguredMock(PageModel::class, ['getPreviewUrl' => '/en/content-elements.html']);
 
         $adapters = [
@@ -88,7 +86,6 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
     public function testDoesNotConvertThePreviewUrlIfThereIsNoPage(): void
     {
         $request = new Request();
-
         $event = new PreviewUrlConvertEvent($request);
 
         $adapters = [

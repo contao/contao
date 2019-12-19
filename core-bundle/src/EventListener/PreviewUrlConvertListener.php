@@ -35,9 +35,7 @@ class PreviewUrlConvertListener
         $request = $event->getRequest();
 
         if ($request->query->get('url')) {
-            $targetUrl = $request->getBaseUrl().'/'.$request->query->get('url');
-
-            $event->setUrl($targetUrl);
+            $event->setUrl($request->getBaseUrl().'/'.$request->query->get('url'));
 
             return;
         }
@@ -45,14 +43,15 @@ class PreviewUrlConvertListener
         if ($request->query->get('page')) {
             /** @var PageModel $pageAdapter */
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
-            /** @var ArticleModel $articleAdapter */
-            $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
 
-            if (null !== $page = $pageAdapter->findWithDetails($request->query->get('page'))) {
+            if ($page = $pageAdapter->findWithDetails($request->query->get('page'))) {
                 $params = null;
 
+                /** @var ArticleModel $articleAdapter */
+                $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
+
                 // Add the /article/ fragment (see contao/core-bundle#673)
-                if (null !== ($article = $articleAdapter->findByAlias($request->query->get('article')))) {
+                if ($article = $articleAdapter->findByAlias($request->query->get('article'))) {
                     $params = sprintf(
                         '/articles/%s%s',
                         ('main' !== $article->inColumn) ? $article->inColumn.':' : '',
