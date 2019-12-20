@@ -43,17 +43,17 @@ class ContaoLoginFactory extends FormLoginFactory
         return 'contao-login';
     }
 
-    protected function getListenerId()
+    protected function getListenerId(): string
     {
         return 'contao.security.authentication_listener';
     }
 
-    protected function getSuccessHandlerId($id)
+    protected function getSuccessHandlerId($id): string
     {
         return 'contao.security.authentication_success_handler';
     }
 
-    protected function getFailureHandlerId($id)
+    protected function getFailureHandlerId($id): string
     {
         return 'contao.security.authentication_failure_handler';
     }
