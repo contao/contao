@@ -139,8 +139,7 @@ EOT;
 
 		if (\is_array($this->url_callback))
 		{
-			$this->import($this->url_callback[0]);
-			$url = $this->{$this->url_callback[0]}->{$this->url_callback[1]}($tempModel);
+			$url = System::importStatic($this->url_callback[0])->{$this->url_callback[1]}($tempModel);
 		}
 		elseif (\is_callable($this->url_callback))
 		{
