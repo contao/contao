@@ -589,18 +589,7 @@ class BackendUser extends User
 	 */
 	public function serialize()
 	{
-		$data = array
-		(
-			'id' => $this->id,
-			'username' => $this->username,
-			'password' => $this->password,
-			'admin' => $this->admin,
-			'disable' => $this->disable,
-			'start' => $this->start,
-			'stop' => $this->stop
-		);
-
-		return serialize($data);
+		return serialize(array('admin' => $this->admin, 'parent' => parent::serialize()));
 	}
 
 	/**
@@ -610,12 +599,14 @@ class BackendUser extends User
 	{
 		$data = unserialize($serialized, array('allowed_classes'=>false));
 
-		if (array_keys($data) != array('id', 'username', 'password', 'admin', 'disable', 'start', 'stop'))
+		if (array_keys($data) != array('admin', 'parent'))
 		{
 			return;
 		}
 
-		list($this->id, $this->username, $this->password, $this->admin, $this->disable, $this->start, $this->stop) = array_values($data);
+		list($this->admin, $parent) = array_values($data);
+
+		parent::unserialize($parent);
 	}
 
 	/**
