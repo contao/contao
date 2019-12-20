@@ -102,6 +102,7 @@ $GLOBALS['TL_MIME'] = array
 	'tif'   => array('image/tiff', 'iconTIF.svg'),
 	'svg'   => array('image/svg+xml', 'iconSVG.svg'),
 	'svgz'  => array('image/svg+xml', 'iconSVGZ.svg'),
+	'webp'  => array('image/webp', 'iconWEBP.svg'),
 
 	// Mailbox files
 	'eml'   => array('message/rfc822', 'iconEML.svg'),
