@@ -121,10 +121,7 @@ class ContaoNewsExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'event' => 'contao.preview_url_create',
-                        'method' => 'onPreviewUrlCreate',
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()
@@ -151,10 +148,7 @@ class ContaoNewsExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'event' => 'contao.preview_url_convert',
-                        'method' => 'onPreviewUrlConvert',
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()

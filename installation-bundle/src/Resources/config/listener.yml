@@ -4,4 +4,4 @@ services:
         calls:
             - ['setContainer', ['@service_container']]
         tags:
-            - { name: kernel.event_listener, event: contao_installation.initialize_application, method: onInitialize }
+            - { name: kernel.event_listener }

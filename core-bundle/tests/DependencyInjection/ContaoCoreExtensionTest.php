@@ -62,6 +62,7 @@ use Contao\CoreBundle\EventListener\ResponseExceptionListener;
 use Contao\CoreBundle\EventListener\RobotsTxtListener;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
+use Contao\CoreBundle\EventListener\SubrequestCacheListener;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
 use Contao\CoreBundle\EventListener\TwoFactorFrontendListener;
 use Contao\CoreBundle\EventListener\UserSessionListener as EventUserSessionListener;
@@ -265,8 +266,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'kernel.request',
-                        'method' => 'onKernelRequest',
                         'priority' => 7,
                     ],
                 ],
@@ -295,10 +294,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'event' => 'contao.backend_menu_build',
-                        'method' => 'onBuild',
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()
@@ -325,8 +321,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'kernel.request',
-                        'method' => 'onKernelRequest',
                         'priority' => 6,
                     ],
                 ],
@@ -348,8 +342,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'kernel.response',
-                        'method' => 'onKernelResponse',
                         'priority' => -768,
                     ],
                 ],
@@ -379,10 +371,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'event' => 'kernel.terminate',
-                        'method' => 'onKernelTerminate',
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()
@@ -411,12 +400,10 @@ class ContaoCoreExtensionTest extends TestCase
                 'kernel.event_listener' => [
                     [
                         'event' => 'kernel.request',
-                        'method' => 'onKernelRequest',
                         'priority' => 36,
                     ],
                     [
                         'event' => 'kernel.response',
-                        'method' => 'onKernelResponse',
                     ],
                 ],
             ],
@@ -489,8 +476,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'kernel.exception',
-                        'method' => 'onKernelException',
                         'priority' => 96,
                     ],
                 ],
@@ -511,10 +496,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'event' => 'kernel.request',
-                        'method' => 'onKernelRequest',
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()
@@ -600,7 +582,6 @@ class ContaoCoreExtensionTest extends TestCase
                 'kernel.event_listener' => [
                     [
                         'event' => 'kernel.request',
-                        'method' => 'onKernelRequest',
                         'priority' => 20,
                     ],
                     [
@@ -628,10 +609,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'event' => 'kernel.response',
-                        'method' => 'onKernelResponse',
-                    ],
+                    [],
                 ],
             ],
             $tags
@@ -668,7 +646,6 @@ class ContaoCoreExtensionTest extends TestCase
                 'kernel.event_listener' => [
                     [
                         'event' => 'kernel.response',
-                        'method' => 'onKernelResponse',
                         'priority' => 256,
                     ],
                 ],
@@ -705,8 +682,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'kernel.exception',
-                        'method' => 'onKernelException',
                         'priority' => -96,
                     ],
                 ],
@@ -736,8 +711,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'kernel.request',
-                        'method' => 'onKernelRequest',
                         'priority' => 20,
                     ],
                 ],
@@ -770,8 +743,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'kernel.request',
-                        'method' => 'onKernelRequest',
                         'priority' => 14,
                     ],
                 ],
@@ -793,8 +764,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'kernel.exception',
-                        'method' => 'onKernelException',
                         'priority' => 64,
                     ],
                 ],
@@ -822,10 +791,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'event' => 'contao.robots_txt',
-                        'method' => 'onRobotsTxt',
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()
@@ -853,10 +819,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'event' => 'kernel.terminate',
-                        'method' => 'onKernelTerminate',
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()
@@ -883,9 +846,38 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheSubrequestCacheListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.subrequest_cache'));
+
+        $definition = $this->container->getDefinition('contao.listener.subrequest_cache');
+
+        $this->assertSame(SubrequestCacheListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertEquals([], $definition->getArguments());
+
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'event' => 'kernel.request',
+                        'priority' => 255,
+                    ],
                     [
                         'event' => 'kernel.response',
-                        'method' => 'onKernelResponse',
+                        'priority' => -255,
+                    ],
+                ],
+                'kernel.reset' => [
+                    [
+                        'method' => 'reset',
                     ],
                 ],
             ],
@@ -913,10 +905,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'event' => 'security.switch_user',
-                        'method' => 'onSwitchUser',
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()
@@ -945,10 +934,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'event' => 'kernel.request',
-                        'method' => 'onKernelRequest',
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()
@@ -979,7 +965,6 @@ class ContaoCoreExtensionTest extends TestCase
                 'kernel.event_listener' => [
                     [
                         'event' => 'kernel.request',
-                        'method' => 'onKernelRequest',
                     ],
                 ],
             ],

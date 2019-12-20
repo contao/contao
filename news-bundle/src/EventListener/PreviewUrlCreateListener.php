@@ -44,7 +44,7 @@ class PreviewUrlCreateListener
      *
      * @throws \RuntimeException
      */
-    public function onPreviewUrlCreate(PreviewUrlCreateEvent $event): void
+    public function __invoke(PreviewUrlCreateEvent $event): void
     {
         if (!$this->framework->isInitialized() || 'news' !== $event->getKey()) {
             return;

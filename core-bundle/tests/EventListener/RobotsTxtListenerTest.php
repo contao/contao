@@ -61,7 +61,7 @@ class RobotsTxtListenerTest extends TestCase
         $event = new RobotsTxtEvent($file, new Request(), $rootPage);
 
         $listener = new RobotsTxtListener($framework);
-        $listener->onRobotsTxt($event);
+        $listener($event);
 
         $this->assertSame($expectedRobotsTxt, (string) $event->getFile());
     }

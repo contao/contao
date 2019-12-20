@@ -44,7 +44,7 @@ class SearchIndexListenerTest extends TestCase
         $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
 
         $listener = new SearchIndexListener($indexer, '_fragment', $features);
-        $listener->onKernelTerminate($event);
+        $listener($event);
     }
 
     public function getRequestResponse(): \Generator

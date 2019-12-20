@@ -28,8 +28,17 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\GenerateSymlinksEvent;
+use Contao\CoreBundle\Event\MenuEvent;
+use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
+use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
+use Contao\CoreBundle\Event\RobotsTxtEvent;
+use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
 use Symfony\Component\HttpKernel\DependencyInjection\FragmentRendererPass;
 
 class ContaoCoreBundleTest extends TestCase
@@ -37,6 +46,7 @@ class ContaoCoreBundleTest extends TestCase
     public function testAddsTheCompilerPaths(): void
     {
         $passes = [
+            AddEventAliasesPass::class,
             MakeServicesPublicPass::class,
             AddPackagesPass::class,
             AddAssetsPackagesPass::class,
@@ -71,8 +81,23 @@ class ContaoCoreBundleTest extends TestCase
             ->expects($this->exactly(\count($passes)))
             ->method('addCompilerPass')
             ->with(
-                $this->callback(static function ($param) use ($passes) {
-                    return \in_array(\get_class($param), $passes, true);
+                $this->callback(function (CompilerPassInterface $pass) use ($passes): bool {
+                    if ($pass instanceof AddEventAliasesPass) {
+                        $eventAliasPass = new AddEventAliasesPass([
+                            GenerateSymlinksEvent::class => ContaoCoreEvents::GENERATE_SYMLINKS,
+                            MenuEvent::class => ContaoCoreEvents::BACKEND_MENU_BUILD,
+                            PreviewUrlCreateEvent::class => ContaoCoreEvents::PREVIEW_URL_CREATE,
+                            PreviewUrlConvertEvent::class => ContaoCoreEvents::PREVIEW_URL_CONVERT,
+                            RobotsTxtEvent::class => ContaoCoreEvents::ROBOTS_TXT,
+                            SlugValidCharactersEvent::class => ContaoCoreEvents::SLUG_VALID_CHARACTERS,
+                        ]);
+
+                        $this->assertEquals($eventAliasPass, $pass);
+                    }
+
+                    $this->assertContains(\get_class($pass), $passes);
+
+                    return true;
                 })
             )
         ;

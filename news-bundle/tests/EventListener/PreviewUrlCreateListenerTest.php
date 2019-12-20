@@ -40,7 +40,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework($adapters);
         $listener = new PreviewUrlCreateListener($requestStack, $framework);
-        $listener->onPreviewUrlCreate($event);
+        $listener($event);
 
         $this->assertSame('news=1', $event->getQuery());
     }
@@ -56,7 +56,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $event = new PreviewUrlCreateEvent('news', 1);
 
         $listener = new PreviewUrlCreateListener(new RequestStack(), $framework);
-        $listener->onPreviewUrlCreate($event);
+        $listener($event);
 
         $this->assertNull($event->getQuery());
     }
@@ -67,7 +67,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
         $listener = new PreviewUrlCreateListener(new RequestStack(), $framework);
-        $listener->onPreviewUrlCreate($event);
+        $listener($event);
 
         $this->assertNull($event->getQuery());
     }
@@ -84,7 +84,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $event = new PreviewUrlCreateEvent('news', 1);
 
         $listener = new PreviewUrlCreateListener($requestStack, $framework);
-        $listener->onPreviewUrlCreate($event);
+        $listener($event);
 
         $this->assertNull($event->getQuery());
     }
@@ -111,7 +111,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $event = new PreviewUrlCreateEvent('news', 1);
 
         $listener = new PreviewUrlCreateListener($requestStack, $framework);
-        $listener->onPreviewUrlCreate($event);
+        $listener($event);
 
         $this->assertSame('news=2', $event->getQuery());
     }
@@ -129,7 +129,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $event = new PreviewUrlCreateEvent('news', 0);
 
         $listener = new PreviewUrlCreateListener($requestStack, $framework);
-        $listener->onPreviewUrlCreate($event);
+        $listener($event);
 
         $this->assertNull($event->getQuery());
     }
