@@ -111,12 +111,12 @@
         "symfony/var-dumper": "4.4.*",
         "symfony/web-profiler-bundle": "4.4.*",
         "symfony/yaml": "4.4.*",
-        "terminal42/escargot": "^0.3",
+        "terminal42/escargot": "^0.4",
         "terminal42/service-annotation-bundle": "^1.0",
         "toflar/psr6-symfony-http-cache-store": "^2.1",
         "true/punycode": "^2.1",
         "twig/twig": "^2.7",
-        "webignition/robots-txt-file": "^2.1"
+        "webignition/robots-txt-file": "^3.0"
     },
     "replace": {
         "contao/calendar-bundle": "self.version",
