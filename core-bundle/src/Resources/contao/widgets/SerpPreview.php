@@ -11,7 +11,10 @@
 namespace Contao;
 
 /**
- * @property array $serpPreview
+ * @property array    $titleFields
+ * @property array    $descriptionFields
+ * @property string   $aliasField
+ * @property callable $url_callback
  */
 class SerpPreview extends Widget
 {
@@ -26,7 +29,7 @@ class SerpPreview extends Widget
 	public function generate()
 	{
 		/** @var Model $class */
-		$class = $this->serpPreview['class'] ?? Model::getClassFromTable($this->strTable);
+		$class = Model::getClassFromTable($this->strTable);
 		$model = $class::findByPk($this->activeRecord->id);
 
 		if (!$model instanceof Model)
@@ -37,15 +40,30 @@ class SerpPreview extends Widget
 		$id = $model->id;
 		$title = StringUtil::substr($this->getTitle($model), 64);
 		$description = StringUtil::substr($this->getDescription($model), 160);
+		$alias = $this->getAlias($model);
+
+		// Get the URL with a %s placeholder for the alias or ID
 		$url = $this->getUrl($model);
-		list($baseUrl) = explode($model->alias ?: $model->id, $url);
-		$urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
+		list($baseUrl, $urlSuffix) = explode('%s', $url);
+
+		// Use the base URL for the index page
+		if ($model instanceof PageModel && $alias == 'index')
+		{
+			$url = $baseUrl;
+		}
+		else
+		{
+			$url = sprintf($url, $alias ?: $model->id);
+		}
+
+		// Get the input field suffix (edit multiple mode)
 		$suffix = substr($this->objDca->inputName, \strlen($this->objDca->field));
-		$titleField = $this->getTitleField() . $suffix;
-		$titleFallbackField = $this->getTitleFallbackField() . $suffix;
-		$aliasField = $this->getAliasField() . $suffix;
-		$descriptionField = $this->getDescriptionField() . $suffix;
-		$descriptionFallbackField = $this->getDescriptionFallbackField() . $suffix;
+
+		$titleField = $this->getTitleField($suffix);
+		$titleFallbackField = $this->getTitleFallbackField($suffix);
+		$aliasField = $this->getAliasField($suffix);
+		$descriptionField = $this->getDescriptionField($suffix);
+		$descriptionFallbackField = $this->getDescriptionFallbackField($suffix);
 
 		return <<<EOT
 <div class="serp-preview">
@@ -72,115 +90,116 @@ EOT;
 
 	private function getTitle(Model $model)
 	{
-		if (!isset($this->serpPreview['title']))
+		if (!isset($this->titleFields))
 		{
 			return $model->title;
 		}
 
-		if (\is_array($this->serpPreview['title']))
-		{
-			return $model->{$this->serpPreview['title'][0]} ?: $model->{$this->serpPreview['title'][1]};
-		}
-
-		return $model->{$this->serpPreview['title']};
+		return $model->{$this->titleFields[0]} ?: $model->{$this->titleFields[1]};
 	}
 
 	private function getDescription(Model $model)
 	{
-		if (!isset($this->serpPreview['description']))
+		if (!isset($this->descriptionFields))
 		{
 			return $model->description;
 		}
 
-		if (\is_array($this->serpPreview['description']))
-		{
-			return $model->{$this->serpPreview['description'][0]} ?: $model->{$this->serpPreview['description'][1]};
-		}
-
-		return $model->{$this->serpPreview['description']};
+		return $model->{$this->descriptionFields[0]} ?: $model->{$this->descriptionFields[1]};
 	}
 
+	private function getAlias(Model $model)
+	{
+		if (!isset($this->aliasField))
+		{
+			return $model->alias;
+		}
+
+		return $model->{$this->aliasField};
+	}
+
+	/**
+	 * @todo Use the router to generate the URL in a future version (see #831)
+	 */
 	private function getUrl(Model $model)
 	{
-		if (isset($this->serpPreview['url']))
+		if (!isset($this->url_callback))
 		{
-			return $this->serpPreview['url'];
+			throw new \LogicException('No url_callback given');
 		}
 
-		// FIXME: use the router to generate the URL (see #831)
-		switch (true)
+		$alias = $this->getAlias($model);
+		$placeholder = bin2hex(random_bytes(10));
+
+		// Pass a detached clone with the alias set to the placeholder
+		$tempModel = clone $model;
+		$tempModel->origAlias = $tempModel->$alias;
+		$tempModel->$alias = $placeholder;
+		$tempModel->preventSaving(false);
+
+		if (\is_array($this->url_callback))
 		{
-			case $model instanceof PageModel:
-				return $model->getAbsoluteUrl();
-
-			case $model instanceof NewsModel:
-				return News::generateNewsUrl($model, false, true);
-
-			case $model instanceof CalendarEventsModel:
-				return Events::generateEventUrl($model, true);
-
-			default:
-				throw new \RuntimeException(sprintf('Unsupported model class "%s"', \get_class($model)));
+			$url = System::importStatic($this->url_callback[0])->{$this->url_callback[1]}($tempModel);
 		}
+		elseif (\is_callable($this->url_callback))
+		{
+			$url = \call_user_func($this->url_callback, $tempModel);
+		}
+		else
+		{
+			throw new \LogicException('Please provide the url_callback as callable');
+		}
+
+		return str_replace($placeholder, '%s', $url);
 	}
 
-	private function getTitleField()
+	private function getTitleField($suffix)
 	{
-		if (!isset($this->serpPreview['title']))
+		if (!isset($this->titleFields[0]))
 		{
-			return 'ctrl_title';
+			return 'ctrl_title' . $suffix;
 		}
 
-		if (\is_array($this->serpPreview['title']))
-		{
-			return 'ctrl_' . $this->serpPreview['title'][0];
-		}
-
-		return 'ctrl_' . $this->serpPreview['title'];
+		return 'ctrl_' . $this->titleFields[0] . $suffix;
 	}
 
-	private function getTitleFallbackField()
+	private function getTitleFallbackField($suffix)
 	{
-		if (!isset($this->serpPreview['title']) || !\is_array($this->serpPreview['title']))
+		if (!isset($this->titleFields[1]))
 		{
 			return '';
 		}
 
-		return 'ctrl_' . $this->serpPreview['title'][1];
+		return 'ctrl_' . $this->titleFields[1] . $suffix;
 	}
 
-	private function getAliasField()
+	private function getDescriptionField($suffix)
 	{
-		if (!isset($this->serpPreview['alias']))
+		if (!isset($this->descriptionFields[0]))
 		{
-			return 'ctrl_alias';
+			return 'ctrl_description' . $suffix;
 		}
 
-		return 'ctrl_' . $this->serpPreview['alias'];
+		return 'ctrl_' . $this->descriptionFields[0] . $suffix;
 	}
 
-	private function getDescriptionField()
+	private function getDescriptionFallbackField($suffix)
 	{
-		if (!isset($this->serpPreview['description']))
-		{
-			return 'ctrl_description';
-		}
-
-		if (\is_array($this->serpPreview['description']))
-		{
-			return 'ctrl_' . $this->serpPreview['description'][0];
-		}
-
-		return 'ctrl_' . $this->serpPreview['description'];
-	}
-
-	private function getDescriptionFallbackField()
-	{
-		if (!isset($this->serpPreview['description']) || !\is_array($this->serpPreview['description']))
+		if (!isset($this->descriptionFields[1]))
 		{
 			return '';
 		}
 
-		return 'ctrl_' . $this->serpPreview['description'][1];
+		return 'ctrl_' . $this->descriptionFields[1] . $suffix;
+	}
+
+	private function getAliasField($suffix)
+	{
+		if (!isset($this->aliasField))
+		{
+			return 'ctrl_alias' . $suffix;
+		}
+
+		return 'ctrl_' . $this->aliasField . $suffix;
 	}
 }
