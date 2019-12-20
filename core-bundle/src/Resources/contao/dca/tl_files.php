@@ -528,7 +528,7 @@ class tl_files extends Contao\Backend
 
 		$arrData = Contao\StringUtil::deserialize($objData->data);
 
-		if (!\is_array($arrData))
+		if (!is_array($arrData))
 		{
 			return;
 		}
