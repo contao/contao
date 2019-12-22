@@ -150,7 +150,7 @@ class MigrateCommand extends Command
             $count = 0;
 
             foreach ($this->migrations->run() as $result) {
-                $count++;
+                ++$count;
 
                 $this->io->writeln(' * '.$result->getMessage());
 
@@ -160,7 +160,7 @@ class MigrateCommand extends Command
             }
 
             foreach ($this->getRunOnceFiles() as $file) {
-                $count++;
+                ++$count;
 
                 $this->executeRunonceFile($file);
                 $this->io->writeln(' * Executed runonce file: '.$file);
