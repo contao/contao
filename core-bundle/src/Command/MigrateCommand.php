@@ -74,7 +74,7 @@ class MigrateCommand extends Command
     {
         $this
             ->setName('contao:migrate')
-            ->addOption('complete', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
+            ->addOption('with-deletes', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
             ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Execute database schema migration only.')
             ->setDescription('Executes migrations and the database schema diff.')
         ;
@@ -88,14 +88,14 @@ class MigrateCommand extends Command
         $this->io = new SymfonyStyle($input, $output);
 
         if ($input->getOption('schema-only')) {
-            return $this->executeSchemaDiff($input->getOption('complete')) ? 0 : 1;
+            return $this->executeSchemaDiff($input->getOption('with-deletes')) ? 0 : 1;
         }
 
         if (!$this->executeMigrations()) {
             return 1;
         }
 
-        if (!$this->executeSchemaDiff($input->getOption('complete'))) {
+        if (!$this->executeSchemaDiff($input->getOption('with-deletes'))) {
             return 1;
         }
 
@@ -194,7 +194,7 @@ class MigrateCommand extends Command
         (new Filesystem())->remove($this->projectDir.'/'.$file);
     }
 
-    private function executeSchemaDiff(bool $completeOption): bool
+    private function executeSchemaDiff(bool $withDeletesOption): bool
     {
         if (null === $this->installer) {
             $this->io->error('Service contao.installer of contao/installation-bundle not found. The installation bundle needs to be installed in order to execute schema diff migrations.');
@@ -233,11 +233,11 @@ class MigrateCommand extends Command
 
             $this->io->listing($commandsByHash);
 
-            $options = ['yes', 'yes, with deletes', 'no'];
-
-            if ($completeOption) {
-                array_shift($options);
-            }
+            $options =
+                $withDeletesOption
+                ? ['yes, with deletes', 'no']
+                : ['yes', 'yes, with deletes', 'no']
+            ;
 
             $answer = $this->io->choice(
                 'Execute the listed database updates?',
