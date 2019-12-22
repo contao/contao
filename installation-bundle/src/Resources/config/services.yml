@@ -30,7 +30,7 @@ services:
             - '@database_connection'
             - '%kernel.project_dir%'
             - '@logger'
-            - '@Contao\CoreBundle\Migration\Migrations'
+            - '@Contao\CoreBundle\Migration\MigrationCollection'
         public: true
 
     contao.install_tool_twig_extension:
