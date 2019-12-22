@@ -53,6 +53,7 @@ class MigrateCommandTest extends TestCase
         $this->assertRegExp('/Migration 2/', $display);
         $this->assertRegExp('/Result 1/', $display);
         $this->assertRegExp('/Result 2/', $display);
+        $this->assertRegExp('/Executed 2 migrations/', $display);
         $this->assertRegExp('/All migrations completed/', $display);
     }
 

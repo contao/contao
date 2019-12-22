@@ -147,7 +147,11 @@ class MigrateCommand extends Command
 
             $this->io->section('Execute migrations');
 
+            $count = 0;
+
             foreach ($this->migrations->runMigrations() as $result) {
+                $count++;
+
                 $this->io->writeln(' * '.$result->getMessage());
 
                 if (!$result->isSuccessful()) {
@@ -156,11 +160,13 @@ class MigrateCommand extends Command
             }
 
             foreach ($this->getRunOnceFiles() as $file) {
+                $count++;
+
                 $this->executeRunonceFile($file);
                 $this->io->writeln(' * Executed runonce file: '.$file);
             }
 
-            $this->io->success('Executed migrations.');
+            $this->io->success('Executed '.$count.' migrations.');
         }
 
         return true;
