@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Migration;
 
-class MigrationResult
+final class MigrationResult
 {
     /**
      * @var bool
