@@ -128,6 +128,6 @@ class Version450Update extends AbstractMigration
                 externalJs BLOB DEFAULT NULL
         ');
 
-        return $this->createResult();
+        return $this->createResult(true);
     }
 }

@@ -28,7 +28,7 @@ class AbstractMigrationTest extends TestCase
 
             public function run(): MigrationResult
             {
-                return $this->createResult();
+                return $this->createResult(true);
             }
         };
 
@@ -50,7 +50,7 @@ class AbstractMigrationTest extends TestCase
 
             public function run(): MigrationResult
             {
-                return $this->createResult();
+                return $this->createResult(true);
             }
         };
 

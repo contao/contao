@@ -151,6 +151,6 @@ class Version447Update extends AbstractMigration
             );
         }
 
-        return $this->createResult();
+        return $this->createResult(true);
     }
 }

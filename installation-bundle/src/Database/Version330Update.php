@@ -99,6 +99,6 @@ class Version330Update extends AbstractMigration
                 viewport varchar(255) NOT NULL default ''
         ");
 
-        return $this->createResult();
+        return $this->createResult(true);
     }
 }

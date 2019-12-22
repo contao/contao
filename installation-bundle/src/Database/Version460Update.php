@@ -207,6 +207,6 @@ class Version460Update extends AbstractMigration
 
         $this->connection->query('UPDATE tl_content SET playerStop = youtubeStop');
 
-        return $this->createResult();
+        return $this->createResult(true);
     }
 }

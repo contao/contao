@@ -122,7 +122,7 @@ class Version440Update extends AbstractMigration
                 alt != '' OR imageTitle != '' OR imageUrl != '' OR caption != ''
         ");
 
-        return $this->createResult();
+        return $this->createResult(true);
     }
 
     private function enableOverwriteMeta(string $table): void

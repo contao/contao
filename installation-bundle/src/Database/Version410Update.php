@@ -60,7 +60,7 @@ class Version410Update extends AbstractMigration
         $crop = $GLOBALS['TL_CROP'];
 
         if (empty($crop)) {
-            return $this->createResult();
+            return $this->createResult(true);
         }
 
         $options = [];
@@ -109,6 +109,6 @@ class Version410Update extends AbstractMigration
 
         $stmt->execute([':options' => serialize($options)]);
 
-        return $this->createResult();
+        return $this->createResult(true);
     }
 }

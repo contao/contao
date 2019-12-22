@@ -262,6 +262,6 @@ class Version480Update extends AbstractMigration
             $this->connection->query('DROP TABLE tl_remember_me');
         }
 
-        return $this->createResult();
+        return $this->createResult(true);
     }
 }

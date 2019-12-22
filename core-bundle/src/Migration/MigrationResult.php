@@ -24,7 +24,7 @@ class MigrationResult
      */
     private $message;
 
-    public function __construct(bool $successful = true, string $message = '')
+    public function __construct(bool $successful, string $message)
     {
         $this->successful = $successful;
         $this->message = $message;

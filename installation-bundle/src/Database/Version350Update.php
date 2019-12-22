@@ -82,6 +82,6 @@ class Version350Update extends AbstractMigration
                 username (username)
         ');
 
-        return $this->createResult();
+        return $this->createResult(true);
     }
 }

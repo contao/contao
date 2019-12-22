@@ -19,7 +19,7 @@ abstract class AbstractMigration implements MigrationInterface
         return str_replace('\\', ' ', static::class);
     }
 
-    public function createResult(bool $successful = true, string $message = null): MigrationResult
+    protected function createResult(bool $successful, string $message = null): MigrationResult
     {
         if (null === $message) {
             $message = $this->getName().' '.(

@@ -238,6 +238,6 @@ class Version400Update extends AbstractMigration
                 type = 'headline'
         ");
 
-        return $this->createResult();
+        return $this->createResult(true);
     }
 }

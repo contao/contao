@@ -116,6 +116,6 @@ class Version430Update extends AbstractMigration
                 combineScripts = '1'
         ");
 
-        return $this->createResult();
+        return $this->createResult(true);
     }
 }

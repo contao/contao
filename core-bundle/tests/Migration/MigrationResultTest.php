@@ -19,7 +19,7 @@ class MigrationResultTest extends TestCase
 {
     public function testGetters(): void
     {
-        $result = new MigrationResult();
+        $result = new MigrationResult(true, '');
 
         $this->assertTrue($result->isSuccessful());
         $this->assertSame('', $result->getMessage());
