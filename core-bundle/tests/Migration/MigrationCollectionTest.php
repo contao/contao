@@ -13,17 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Migration;
 
 use Contao\CoreBundle\Migration\AbstractMigration;
+use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
-use Contao\CoreBundle\Migration\Migrations;
 use Contao\CoreBundle\Tests\TestCase;
 
-class MigrationsTest extends TestCase
+class MigrationCollectionTest extends TestCase
 {
-    public function testGetPendingMigrations(): void
+    public function testGetPendingNames(): void
     {
-        $migrations = new Migrations($this->getMigrationServices());
+        $migrations = new MigrationCollection($this->getMigrationServices());
 
-        $pendingMigrations = $migrations->getPendingMigrations();
+        $pendingMigrations = $migrations->getPendingNames();
 
         if (!\is_array($pendingMigrations)) {
             $pendingMigrations = iterator_to_array($pendingMigrations);
@@ -37,9 +37,9 @@ class MigrationsTest extends TestCase
 
     public function testRunMigrations(): void
     {
-        $migrations = new Migrations($this->getMigrationServices());
+        $migrations = new MigrationCollection($this->getMigrationServices());
 
-        $results = $migrations->runMigrations();
+        $results = $migrations->run();
 
         if (!\is_array($results)) {
             $results = iterator_to_array($results);

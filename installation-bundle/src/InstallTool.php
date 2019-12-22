@@ -14,7 +14,7 @@ namespace Contao\InstallationBundle;
 
 use Contao\Backend;
 use Contao\Config;
-use Contao\CoreBundle\Migration\Migrations;
+use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\File;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
@@ -41,14 +41,14 @@ class InstallTool
     private $logger;
 
     /**
-     * @var Migrations
+     * @var MigrationCollection
      */
     private $migrations;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.install_tool" service instead
      */
-    public function __construct(Connection $connection, string $rootDir, LoggerInterface $logger, Migrations $migrations)
+    public function __construct(Connection $connection, string $rootDir, LoggerInterface $logger, MigrationCollection $migrations)
     {
         $this->connection = $connection;
         $this->rootDir = $rootDir;
@@ -451,7 +451,7 @@ class InstallTool
     {
         $messages = [];
 
-        foreach ($this->migrations->runMigrations() as $migrationResult) {
+        foreach ($this->migrations->run() as $migrationResult) {
             $messages[] = $migrationResult->getMessage();
         }
 

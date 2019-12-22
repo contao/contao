@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
-use Contao\CoreBundle\Migration\Migrations;
+use Contao\CoreBundle\Migration\MigrationCollection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -25,8 +25,8 @@ class TaggedMigrationsPassTest extends TestCase
         $container = new ContainerBuilder();
 
         $container->setDefinition(
-            Migrations::class,
-            new Definition(Migrations::class)
+            MigrationCollection::class,
+            new Definition(MigrationCollection::class)
         );
 
         $migrations = [
@@ -51,7 +51,7 @@ class TaggedMigrationsPassTest extends TestCase
         $pass = new TaggedMigrationsPass();
         $pass->process($container);
 
-        $migrationServices = $container->getDefinition(Migrations::class)->getArgument(0);
+        $migrationServices = $container->getDefinition(MigrationCollection::class)->getArgument(0);
 
         $this->assertSame(
             [

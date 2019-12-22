@@ -9,7 +9,7 @@ services:
 
     Contao\CoreBundle\Command\MigrateCommand:
         arguments:
-            - '@Contao\CoreBundle\Migration\Migrations'
+            - '@Contao\CoreBundle\Migration\MigrationCollection'
             - '@contao.resource_locator'
             - '%kernel.project_dir%'
             - '@contao.framework'

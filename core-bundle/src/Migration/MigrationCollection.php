@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Migration;
 
-class Migrations
+class MigrationCollection
 {
     /**
      * @var MigrationInterface[]
@@ -28,26 +28,34 @@ class Migrations
     }
 
     /**
-     * @return string[]
+     * @return MigrationInterface[]
      */
-    public function getPendingMigrations(): iterable
+    public function getPending(): iterable
     {
         foreach ($this->migrations as $migration) {
             if ($migration->shouldRun()) {
-                yield $migration->getName();
+                yield $migration;
             }
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getPendingNames(): iterable
+    {
+        foreach ($this->getPending() as $migration) {
+            yield $migration->getName();
         }
     }
 
     /**
      * @return MigrationResult[]
      */
-    public function runMigrations(): iterable
+    public function run(): iterable
     {
-        foreach ($this->migrations as $migration) {
-            if ($migration->shouldRun()) {
-                yield $migration->run();
-            }
+        foreach ($this->getPending() as $migration) {
+            yield $migration->run();
         }
     }
 }

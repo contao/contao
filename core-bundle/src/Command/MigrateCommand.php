@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Migration\Migrations;
+use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\InstallationBundle\Database\Installer;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
@@ -27,7 +27,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class MigrateCommand extends Command
 {
     /**
-     * @var Migrations
+     * @var MigrationCollection
      */
     private $migrations;
 
@@ -56,7 +56,7 @@ class MigrateCommand extends Command
      */
     private $io;
 
-    public function __construct(Migrations $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, Installer $installer = null)
+    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, Installer $installer = null)
     {
         $this->migrations = $migrations;
         $this->fileLocator = $fileLocator;
@@ -113,7 +113,7 @@ class MigrateCommand extends Command
         while (true) {
             $first = true;
 
-            foreach ($this->migrations->getPendingMigrations() as $migration) {
+            foreach ($this->migrations->getPendingNames() as $migration) {
                 if ($first) {
                     $this->io->section('Pending migrations');
                     $first = false;
@@ -149,7 +149,7 @@ class MigrateCommand extends Command
 
             $count = 0;
 
-            foreach ($this->migrations->runMigrations() as $result) {
+            foreach ($this->migrations->run() as $result) {
                 $count++;
 
                 $this->io->writeln(' * '.$result->getMessage());

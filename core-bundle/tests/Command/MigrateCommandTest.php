@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\MigrateCommand;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
-use Contao\CoreBundle\Migration\Migrations;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InstallationBundle\Database\Installer;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -178,21 +178,21 @@ class MigrateCommandTest extends TestCase
      */
     private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], Installer $installer = null): MigrateCommand
     {
-        $migrations = $this->createMock(Migrations::class);
+        $migrations = $this->createMock(MigrationCollection::class);
 
         $pendingMigrations[] = [];
         $pendingMigrations[] = [];
         $pendingMigrations[] = [];
 
         $migrations
-            ->method('getPendingMigrations')
+            ->method('getPendingNames')
             ->willReturn(...$pendingMigrations)
         ;
 
         $migrationResults[] = [];
 
         $migrations
-            ->method('runMigrations')
+            ->method('run')
             ->willReturn(...$migrationResults)
         ;
 
