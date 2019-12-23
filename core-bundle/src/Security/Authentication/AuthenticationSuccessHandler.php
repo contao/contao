@@ -74,8 +74,8 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         }
 
         if ($token instanceof TwoFactorTokenInterface) {
-            // Reset login count and locked values
-            $user->loginCount = 0;
+            // Reset login attempts and locked values
+            $user->loginAttempts = 0;
             $user->locked = 0;
             $user->save();
 
@@ -93,8 +93,8 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         $this->user->lastLogin = $this->user->currentLogin;
         $this->user->currentLogin = time();
 
-        // Reset login count and locked values
-        $this->user->loginCount = 0;
+        // Reset login attempts and locked values
+        $this->user->loginAttempts = 0;
         $this->user->locked = 0;
 
         $this->user->save();

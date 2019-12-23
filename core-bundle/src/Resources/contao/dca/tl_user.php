@@ -440,7 +440,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
-		'loginCount' => array
+		'loginAttempts' => array
 		(
 			'eval'                    => array('doNotCopy'=>true),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 3"

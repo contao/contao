@@ -1334,7 +1334,7 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>Questo sembra essere il primo login. Benvenuto in Contao!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginCount">
+      <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
         <target>Tentativi di accesso</target>
       </trans-unit>

@@ -39,8 +39,8 @@ class AuthenticationFailureListener
             return;
         }
 
-        ++$user->loginCount;
-        $user->locked = time() + $user->loginCount * 5;
+        ++$user->loginAttempts;
+        $user->locked = time() + $user->loginAttempts * 5;
         $user->save();
     }
 }
