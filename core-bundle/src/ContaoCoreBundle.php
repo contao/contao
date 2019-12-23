@@ -31,7 +31,6 @@ use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
-use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -48,14 +47,6 @@ class ContaoCoreBundle extends Bundle
     public function getContainerExtension(): ContaoCoreExtension
     {
         return new ContaoCoreExtension();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function registerCommands(Application $application): void
-    {
-        // disable automatic command registration
     }
 
     /**

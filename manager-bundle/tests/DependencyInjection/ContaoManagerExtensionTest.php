@@ -23,6 +23,8 @@ use Contao\ManagerBundle\Routing\RouteLoader;
 use Contao\ManagerBundle\Security\Logout\LogoutHandler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 class ContaoManagerExtensionTest extends TestCase
 {
@@ -52,15 +54,27 @@ class ContaoManagerExtensionTest extends TestCase
 
         $this->assertSame(BackendMenuListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('security.helper', (string) $definition->getArgument(0));
-        $this->assertSame('%contao_manager.manager_path%', (string) $definition->getArgument(1));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('security.helper'),
+                new Reference('%contao_manager.manager_path%'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('contao.backend_menu_build', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onBuild', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(-10, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'event' => 'contao.backend_menu_build',
+                        'method' => 'onBuild',
+                        'priority' => -10,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheInitializeApplicationListener(): void
@@ -71,14 +85,26 @@ class ContaoManagerExtensionTest extends TestCase
 
         $this->assertSame(InitializeApplicationListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(0));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('%kernel.project_dir%'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('contao_installation.initialize_application', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onInitializeApplication', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(-128, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'event' => 'contao_installation.initialize_application',
+                        'method' => 'onInitializeApplication',
+                        'priority' => -128,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheInstallCommandListener(): void
@@ -89,12 +115,24 @@ class ContaoManagerExtensionTest extends TestCase
 
         $this->assertSame(InstallCommandListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(0));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('%kernel.project_dir%'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('console.terminate', $tags['kernel.event_listener'][0]['event']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'event' => 'console.terminate',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersThePreviewAuthenticationListener(): void
@@ -105,17 +143,29 @@ class ContaoManagerExtensionTest extends TestCase
 
         $this->assertSame(PreviewAuthenticationListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(0));
-        $this->assertSame('contao.security.token_checker', (string) $definition->getArgument(1));
-        $this->assertSame('router', (string) $definition->getArgument(2));
-        $this->assertSame('%contao.preview_script%', (string) $definition->getArgument(3));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.routing.scope_matcher'),
+                new Reference('contao.security.token_checker'),
+                new Reference('router'),
+                new Reference('%contao.preview_script%'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(7, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'event' => 'kernel.request',
+                        'method' => 'onKernelRequest',
+                        'priority' => 7,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheBundleCacheClearer(): void
@@ -126,7 +176,13 @@ class ContaoManagerExtensionTest extends TestCase
 
         $this->assertSame(BundleCacheClearer::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('filesystem', (string) $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                new Reference('filesystem', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheDebugController(): void
@@ -136,9 +192,15 @@ class ContaoManagerExtensionTest extends TestCase
         $definition = $this->container->getDefinition(DebugController::class);
 
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('security.helper', (string) $definition->getArgument(0));
-        $this->assertSame('request_stack', (string) $definition->getArgument(1));
-        $this->assertSame('contao_manager.jwt_manager', (string) $definition->getArgument(2));
+
+        $this->assertEquals(
+            [
+                new Reference('security.helper'),
+                new Reference('request_stack'),
+                new Reference('contao_manager.jwt_manager'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheJwtManager(): void
@@ -169,10 +231,16 @@ class ContaoManagerExtensionTest extends TestCase
 
         $this->assertSame(RouteLoader::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('routing.loader', (string) $definition->getArgument(0));
-        $this->assertSame('contao_manager.plugin_loader', (string) $definition->getArgument(1));
-        $this->assertSame('kernel', (string) $definition->getArgument(2));
-        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));
+
+        $this->assertEquals(
+            [
+                new Reference('routing.loader'),
+                new Reference('contao_manager.plugin_loader'),
+                new Reference('kernel'),
+                new Reference('%kernel.project_dir%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheLogoutHandler(): void
@@ -183,6 +251,12 @@ class ContaoManagerExtensionTest extends TestCase
 
         $this->assertSame(LogoutHandler::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao_manager.jwt_manager', (string) $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                new Reference('contao_manager.jwt_manager', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
     }
 }

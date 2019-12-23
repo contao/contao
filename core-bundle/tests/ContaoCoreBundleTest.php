@@ -29,23 +29,11 @@ use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
-use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\DependencyInjection\FragmentRendererPass;
 
 class ContaoCoreBundleTest extends TestCase
 {
-    public function testDoesNotRegisterAnyCommands(): void
-    {
-        $application = new Application();
-        $commands = $application->all();
-
-        $bundle = new ContaoCoreBundle();
-        $bundle->registerCommands($application);
-
-        $this->assertSame($commands, $application->all());
-    }
-
     public function testAddsTheCompilerPaths(): void
     {
         $passes = [

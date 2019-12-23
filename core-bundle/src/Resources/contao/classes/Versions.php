@@ -181,26 +181,6 @@ class Versions extends Controller
 			}
 		}
 
-		// Store the content if it is an editable file
-		if ($this->strTable == 'tl_files')
-		{
-			$objModel = FilesModel::findByPk($this->intPid);
-
-			if ($objModel !== null && \in_array($objModel->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
-			{
-				$objFile = new File($objModel->path);
-
-				if ($objFile->extension == 'svgz')
-				{
-					$data['content'] = gzdecode($objFile->getContent());
-				}
-				else
-				{
-					$data['content'] = $objFile->getContent();
-				}
-			}
-		}
-
 		$intVersion = 1;
 
 		$objVersion = $this->Database->prepare("SELECT MAX(version) AS version FROM tl_version WHERE pid=? AND fromTable=?")
@@ -299,28 +279,6 @@ class Versions extends Controller
 		if (!\is_array($data))
 		{
 			return;
-		}
-
-		// Restore the content if it is an editable file
-		if ($this->strTable == 'tl_files')
-		{
-			$objModel = FilesModel::findByPk($this->intPid);
-
-			if ($objModel !== null && \in_array($objModel->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
-			{
-				$objFile = new File($objModel->path);
-
-				if ($objFile->extension == 'svgz')
-				{
-					$objFile->write(gzencode($data['content']));
-				}
-				else
-				{
-					$objFile->write($data['content']);
-				}
-
-				$objFile->close();
-			}
 		}
 
 		// Get the currently available fields

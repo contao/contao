@@ -259,7 +259,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('serpPreview'=>array('title'=>array('pageTitle', 'title'), 'description'=>array('description', 'teaser'))),
+			'eval'                    => array('url_callback'=>array('tl_calendar_events', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'location' => array
@@ -735,6 +735,18 @@ class tl_calendar_events extends Contao\Backend
 		}
 
 		return $varValue;
+	}
+
+	/**
+	 * Return the SERP URL
+	 *
+	 * @param Contao\CalendarEventsModel $model
+	 *
+	 * @return string
+	 */
+	public function getSerpUrl(Contao\CalendarEventsModel $model)
+	{
+		return Contao\Events::generateEventUrl($model, true);
 	}
 
 	/**
