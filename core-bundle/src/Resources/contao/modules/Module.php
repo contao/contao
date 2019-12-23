@@ -281,7 +281,7 @@ abstract class Module extends Frontend
 		$objTemplate->type = \get_class($this);
 		$objTemplate->cssID = $this->cssID; // see #4897
 		$objTemplate->level = 'level_' . $level++;
-		$objTemplate->module = $this->objModel; // see #155
+		$objTemplate->module = $this; // see #155
 
 		/** @var PageModel $objPage */
 		global $objPage;
