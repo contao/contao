@@ -62,7 +62,7 @@ class ContaoManagerExtensionTest extends TestCase
                 new Reference('request_stack'),
                 new Reference('%kernel.debug%'),
                 new Reference('%contao_manager.manager_path%'),
-                new Reference('contao_manager.jwt_manager'),
+                new Reference('contao_manager.jwt_manager', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
         );
@@ -73,7 +73,6 @@ class ContaoManagerExtensionTest extends TestCase
                     [
                         'event' => 'contao.backend_menu_build',
                         'method' => 'onBuild',
-                        'priority' => -10,
                     ],
                 ],
             ],

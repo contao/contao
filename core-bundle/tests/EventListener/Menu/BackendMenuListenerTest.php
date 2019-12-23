@@ -10,15 +10,13 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\EventListener;
+namespace Contao\CoreBundle\Tests\EventListener\Menu;
 
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
-use Contao\CoreBundle\EventListener\BackendMenuListener;
+use Contao\CoreBundle\EventListener\Menu\BackendMenuListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\PreviewUrlGenerator;
-use Contao\CoreBundle\Security\Logout\LogoutUrlGenerator;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,8 +58,6 @@ class BackendMenuListenerTest extends ContaoTestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(PreviewUrlGenerator::class),
-            $this->createMock(LogoutUrlGenerator::class),
             $this->createMock(ContaoFramework::class)
         );
 
@@ -146,8 +142,6 @@ class BackendMenuListenerTest extends ContaoTestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(PreviewUrlGenerator::class),
-            $this->createMock(LogoutUrlGenerator::class),
             $this->createMock(ContaoFramework::class)
         );
 
@@ -180,8 +174,6 @@ class BackendMenuListenerTest extends ContaoTestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(PreviewUrlGenerator::class),
-            $this->createMock(LogoutUrlGenerator::class),
             $this->createMock(ContaoFramework::class)
         );
 
@@ -227,20 +219,6 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $logoutUrlGenerator = $this->createMock(LogoutUrlGenerator::class);
-        $logoutUrlGenerator
-            ->expects($this->once())
-            ->method('getLogoutUrl')
-            ->willReturn('/contao/logout')
-        ;
-
-        $previewUrlGenerator = $this->createMock(PreviewUrlGenerator::class);
-        $previewUrlGenerator
-            ->expects($this->once())
-            ->method('getPreviewUrl')
-            ->willReturn('/contao/preview')
-        ;
-
         $systemMessages = $this->mockAdapter(['getSystemMessages']);
         $systemMessages
             ->expects($this->once())
@@ -256,8 +234,6 @@ class BackendMenuListenerTest extends ContaoTestCase
             $router,
             $requestStack,
             $this->getTranslator(),
-            $previewUrlGenerator,
-            $logoutUrlGenerator,
             $this->mockContaoFramework([Backend::class => $systemMessages])
         );
 
@@ -269,8 +245,8 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $children = $tree->getChildren();
 
-        $this->assertCount(4, $children);
-        $this->assertSame(['alerts', 'preview', 'submenu', 'burger'], array_keys($children));
+        $this->assertCount(3, $children);
+        $this->assertSame(['alerts', 'submenu', 'burger'], array_keys($children));
 
         // Alerts
         $this->assertSame('MSC.systemMessages <sup>1</sup>', $children['alerts']->getLabel());
@@ -286,21 +262,6 @@ class BackendMenuListenerTest extends ContaoTestCase
             $children['alerts']->getLinkAttributes()
         );
 
-        // Preview
-        $this->assertSame('MSC.fePreview', $children['preview']->getLabel());
-        $this->assertSame('/contao/preview', $children['preview']->getUri());
-        $this->assertSame(['translation_domain' => 'contao_default'], $children['preview']->getExtras());
-
-        $this->assertSame(
-            [
-                'class' => 'icon-preview',
-                'title' => 'MSC.fePreviewTitle',
-                'target' => '_blank',
-                'accesskey' => 'f',
-            ],
-            $children['preview']->getLinkAttributes()
-        );
-
         // Submenu
         $this->assertSame('MSC.user foo', $children['submenu']->getLabel());
         $this->assertSame(['class' => 'submenu'], $children['submenu']->getAttributes());
@@ -309,8 +270,8 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $grandChildren = $children['submenu']->getChildren();
 
-        $this->assertCount(4, $grandChildren);
-        $this->assertSame(['info', 'login', 'security', 'logout'], array_keys($grandChildren));
+        $this->assertCount(3, $grandChildren);
+        $this->assertSame(['info', 'login', 'security'], array_keys($grandChildren));
 
         // Info
         $this->assertSame('<strong>Foo Bar</strong> foo@bar.com', $grandChildren['info']->getLabel());
@@ -328,12 +289,6 @@ class BackendMenuListenerTest extends ContaoTestCase
         $this->assertSame('/contao?do=security&ref=bar', $grandChildren['security']->getUri());
         $this->assertSame(['class' => 'icon-security'], $grandChildren['security']->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['security']->getExtras());
-
-        // Logout
-        $this->assertSame('MSC.logoutBT', $grandChildren['logout']->getLabel());
-        $this->assertSame('/contao/logout', $grandChildren['logout']->getUri());
-        $this->assertSame(['class' => 'icon-logout', 'accesskey' => 'q'], $grandChildren['logout']->getLinkAttributes());
-        $this->assertSame(['translation_domain' => false], $grandChildren['logout']->getExtras());
 
         // Burger
         $this->assertSame('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
@@ -363,8 +318,6 @@ class BackendMenuListenerTest extends ContaoTestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(PreviewUrlGenerator::class),
-            $this->createMock(LogoutUrlGenerator::class),
             $this->createMock(ContaoFramework::class)
         );
 
@@ -397,8 +350,6 @@ class BackendMenuListenerTest extends ContaoTestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(PreviewUrlGenerator::class),
-            $this->createMock(LogoutUrlGenerator::class),
             $this->createMock(ContaoFramework::class)
         );
 

@@ -10,18 +10,15 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\EventListener;
+namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\PreviewUrlGenerator;
-use Contao\CoreBundle\Security\Logout\LogoutUrlGenerator;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -51,28 +48,16 @@ class BackendMenuListener
     private $translator;
 
     /**
-     * @var PreviewUrlGenerator
-     */
-    private $previewUrlGenerator;
-
-    /**
-     * @var LogoutUrlGenerator
-     */
-    private $logoutUrlGenerator;
-
-    /**
      * @var ContaoFramework
      */
     private $framework;
 
-    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, TranslatorInterface $translator, PreviewUrlGenerator $previewUrlGenerator, LogoutUrlGenerator $logoutUrlGenerator, ContaoFramework $framework)
+    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, TranslatorInterface $translator, ContaoFramework $framework)
     {
         $this->security = $security;
         $this->router = $router;
         $this->requestStack = $requestStack;
         $this->translator = $translator;
-        $this->previewUrlGenerator = $previewUrlGenerator;
-        $this->logoutUrlGenerator = $logoutUrlGenerator;
         $this->framework = $framework;
     }
 
@@ -159,19 +144,6 @@ class BackendMenuListener
 
         $tree->addChild($alerts);
 
-        $preview = $factory
-            ->createItem('preview')
-            ->setLabel('MSC.fePreview')
-            ->setUri($this->previewUrlGenerator->getPreviewUrl())
-            ->setLinkAttribute('class', 'icon-preview')
-            ->setLinkAttribute('title', $this->trans('MSC.fePreviewTitle'))
-            ->setLinkAttribute('target', '_blank')
-            ->setLinkAttribute('accesskey', 'f')
-            ->setExtra('translation_domain', 'contao_default')
-        ;
-
-        $tree->addChild($preview);
-
         $submenu = $factory
             ->createItem('submenu')
             ->setLabel($this->trans('MSC.user').' '.$user->username)
@@ -212,17 +184,6 @@ class BackendMenuListener
 
         $submenu->addChild($security);
 
-        $logout = $factory
-            ->createItem('logout')
-            ->setLabel($this->getLogoutLabel())
-            ->setUri($this->logoutUrlGenerator->getLogoutUrl())
-            ->setLinkAttribute('class', 'icon-logout')
-            ->setLinkAttribute('accesskey', 'q')
-            ->setExtra('translation_domain', false)
-        ;
-
-        $submenu->addChild($logout);
-
         $buger = $factory
             ->createItem('burger')
             ->setLabel('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
@@ -259,17 +220,6 @@ class BackendMenuListener
         }
 
         return $request->attributes->get('_contao_referer_id');
-    }
-
-    private function getLogoutLabel(): string
-    {
-        $token = $this->security->getToken();
-
-        if ($token instanceof SwitchUserToken) {
-            return sprintf($this->trans('MSC.switchBT'), $token->getOriginalToken()->getUsername());
-        }
-
-        return $this->trans('MSC.logoutBT');
     }
 
     private function getClassFromAttributes(array $attributes): string

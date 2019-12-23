@@ -473,14 +473,6 @@ services:
         tags:
             - { name: router, priority: 20 }
 
-    contao.routing.preview_url_generator:
-        class: Contao\CoreBundle\Routing\PreviewUrlGenerator
-        arguments:
-            - '@event_dispatcher'
-            - '@router'
-            - '@request_stack'
-            - '@contao.framework'
-
     contao.routing.published_filter:
         class: Contao\CoreBundle\Routing\Matcher\PublishedFilter
         arguments:
@@ -627,13 +619,6 @@ services:
         arguments:
             - '@security.http_utils'
             - '@contao.routing.scope_matcher'
-
-    contao.security.logout_url_generator:
-        class: Contao\CoreBundle\Security\Logout\LogoutUrlGenerator
-        arguments:
-            - '@security.logout_url_generator'
-            - '@security.helper'
-            - '@router'
 
     contao.security.token_checker:
         class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker
