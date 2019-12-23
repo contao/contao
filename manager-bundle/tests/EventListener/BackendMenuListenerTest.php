@@ -36,7 +36,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $router = $this->createMock(RouterInterface::class);
 
         $listener = new BackendMenuListener($security, $router, new RequestStack(), false, null, null);
-        $listener->onBuild($event);
+        $listener($event);
     }
 
     /**
@@ -77,7 +77,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $security = $this->getSecurity();
 
         $listener = new BackendMenuListener($security, $router, $requestStack, false, null, $jwtManager);
-        $listener->onBuild($event);
+        $listener($event);
 
         $children = $event->getTree()->getChildren();
 
@@ -111,7 +111,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
 
         $listener = new BackendMenuListener($security, $router, $requestStack, false, null, null);
-        $listener->onBuild($event);
+        $listener($event);
     }
 
     public function testDoesNotAddTheDebugButtonIfNotTheHeaderMenu(): void
@@ -134,7 +134,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $jwtManager = $this->createMock(JwtManager::class);
 
         $listener = new BackendMenuListener($security, $router, $requestStack, false, null, $jwtManager);
-        $listener->onBuild($event);
+        $listener($event);
     }
 
     public function testFailsIfTheRequestStackIsEmpty(): void
@@ -156,7 +156,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('The request stack did not contain a request');
 
-        $listener->onBuild($event);
+        $listener($event);
     }
 
     public function testAddsTheManagerLink(): void
@@ -173,7 +173,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
 
         $listener = new BackendMenuListener($security, $router, $requestStack, false, 'contao-manager.phar.php', null);
-        $listener->onBuild($event);
+        $listener($event);
 
         $children = $event->getTree()->getChild('system')->getChildren();
 
@@ -201,7 +201,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
 
         $listener = new BackendMenuListener($security, $router, $requestStack, false, null, null);
-        $listener->onBuild($event);
+        $listener($event);
 
         $this->assertCount(0, $event->getTree()->getChild('system')->getChildren());
     }
@@ -220,7 +220,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
 
         $listener = new BackendMenuListener($security, $router, $requestStack, false, 'contao-manager.phar.php', null);
-        $listener->onBuild($event);
+        $listener($event);
 
         $this->assertNull($event->getTree()->getChild('system'));
     }

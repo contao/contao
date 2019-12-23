@@ -70,7 +70,7 @@ class BackendPreviewListener
         $this->framework = $framework;
     }
 
-    public function onBuild(MenuEvent $event): void
+    public function __invoke(MenuEvent $event): void
     {
         $user = $this->security->getUser();
 

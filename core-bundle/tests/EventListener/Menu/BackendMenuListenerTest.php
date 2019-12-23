@@ -61,7 +61,7 @@ class BackendMenuListenerTest extends ContaoTestCase
             $this->createMock(ContaoFramework::class)
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $tree = $event->getTree();
 
@@ -145,7 +145,7 @@ class BackendMenuListenerTest extends ContaoTestCase
             $this->createMock(ContaoFramework::class)
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $tree = $event->getTree();
 
@@ -177,7 +177,7 @@ class BackendMenuListenerTest extends ContaoTestCase
             $this->createMock(ContaoFramework::class)
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $tree = $event->getTree();
 
@@ -237,7 +237,7 @@ class BackendMenuListenerTest extends ContaoTestCase
             $this->mockContaoFramework([Backend::class => $systemMessages])
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $tree = $event->getTree();
 
@@ -321,7 +321,7 @@ class BackendMenuListenerTest extends ContaoTestCase
             $this->createMock(ContaoFramework::class)
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $tree = $event->getTree();
 
@@ -353,7 +353,7 @@ class BackendMenuListenerTest extends ContaoTestCase
             $this->createMock(ContaoFramework::class)
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $tree = $event->getTree();
 

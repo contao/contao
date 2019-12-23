@@ -91,7 +91,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             $this->getTranslator()
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $children = $event->getTree()->getChild('submenu')->getChildren();
 
@@ -139,7 +139,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             $this->getTranslator()
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $children = $event->getTree()->getChild('submenu')->getChildren();
 
@@ -168,7 +168,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             $this->getTranslator()
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $children = $event->getTree()->getChild('submenu')->getChildren();
 
@@ -194,7 +194,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             $this->getTranslator()
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $children = $event->getTree()->getChildren();
 

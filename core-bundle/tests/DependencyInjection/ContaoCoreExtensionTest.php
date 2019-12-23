@@ -300,8 +300,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'contao.backend_menu_build',
-                        'method' => 'onBuild',
                         'priority' => 10,
                     ],
                 ],
@@ -332,10 +330,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'event' => 'contao.backend_menu_build',
-                        'method' => 'onBuild',
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()

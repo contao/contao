@@ -54,7 +54,7 @@ class BackendLogoutListener
         $this->translator = $translator;
     }
 
-    public function onBuild(MenuEvent $event): void
+    public function __invoke(MenuEvent $event): void
     {
         $user = $this->security->getUser();
 

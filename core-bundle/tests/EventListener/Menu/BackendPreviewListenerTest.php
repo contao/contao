@@ -100,7 +100,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $this->mockContaoFramework([ArticleModel::class => $adapter])
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $children = $event->getTree()->getChildren();
 
@@ -182,7 +182,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $this->mockContaoFramework()
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $children = $event->getTree()->getChildren();
 
@@ -224,7 +224,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $this->createMock(ContaoFramework::class)
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $tree = $event->getTree();
 
@@ -257,7 +257,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $this->createMock(ContaoFramework::class)
         );
 
-        $listener->onBuild($event);
+        $listener($event);
 
         $tree = $event->getTree();
 

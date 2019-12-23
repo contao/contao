@@ -63,7 +63,7 @@ class BackendMenuListener
         $this->jwtManager = $jwtManager;
     }
 
-    public function onBuild(MenuEvent $event): void
+    public function __invoke(MenuEvent $event): void
     {
         if (!$this->security->isGranted('ROLE_ADMIN')) {
             return;
