@@ -1332,7 +1332,7 @@
         <source>This seems to be your first login. Welcome to Contao!</source>
         <target>Zdá se, že jste se poprvé přihlásili do Contao. Vítejte!</target>
       </trans-unit>
-      <trans-unit id="MSC.loginAttempts">
+      <trans-unit id="MSC.loginCount">
         <source>Login attempts</source>
         <target>Pokusy přihlášení</target>
       </trans-unit>
