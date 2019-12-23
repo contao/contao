@@ -399,11 +399,11 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'kernel.request',
+                        'method' => 'onKernelRequest',
                         'priority' => 36,
                     ],
                     [
-                        'event' => 'kernel.response',
+                        'method' => 'onKernelResponse',
                     ],
                 ],
             ],
@@ -581,11 +581,10 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'kernel.request',
+                        'method' => 'onKernelRequest',
                         'priority' => 20,
                     ],
                     [
-                        'event' => 'kernel.request',
                         'method' => 'setTranslatorLocale',
                         'priority' => 100,
                     ],
@@ -866,11 +865,11 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'kernel.request',
+                        'method' => 'onKernelRequest',
                         'priority' => 255,
                     ],
                     [
-                        'event' => 'kernel.response',
+                        'method' => 'onKernelResponse',
                         'priority' => -255,
                     ],
                 ],
@@ -963,7 +962,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'kernel.request',
+                        'method' => 'onKernelRequest',
                     ],
                 ],
             ],
