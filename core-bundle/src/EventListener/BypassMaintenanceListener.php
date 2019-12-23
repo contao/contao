@@ -39,7 +39,7 @@ class BypassMaintenanceListener
     /**
      * Adds the request attribute to the request.
      */
-    public function onKernelRequest(RequestEvent $event): void
+    public function __invoke(RequestEvent $event): void
     {
         if (!$this->tokenChecker->hasBackendUser()) {
             return;
