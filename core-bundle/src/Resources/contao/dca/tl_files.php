@@ -22,6 +22,14 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			array('tl_files', 'addBreadcrumb'),
 			array('tl_files', 'adjustPalettes')
 		),
+		'oncreate_version_callback' => array
+		(
+			array('tl_files', 'createVersion')
+		),
+		'onrestore_version_callback' => array
+		(
+			array('tl_files', 'restoreVersion')
+		),
 		'sql' => array
 		(
 			'keys' => array
@@ -457,6 +465,86 @@ class tl_files extends Contao\Backend
 				->applyToPalette('default', $dc->table)
 			;
 		}
+	}
+
+	/**
+	 * Store the content if it is an editable file
+	 *
+	 * @param string  $table
+	 * @param integer $pid
+	 * @param integer $version
+	 * @param array   $data
+	 */
+	public function createVersion($table, $pid, $version, $data)
+	{
+		$model = Contao\FilesModel::findByPk($pid);
+
+		if ($model === null || !in_array($model->extension, Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('editableFiles')))))
+		{
+			return;
+		}
+
+		$file = new Contao\File($model->path);
+
+		if ($file->extension == 'svgz')
+		{
+			$data['content'] = gzdecode($file->getContent());
+		}
+		else
+		{
+			$data['content'] = $file->getContent();
+		}
+
+		$this->Database->prepare("UPDATE tl_version SET data=? WHERE pid=? AND version=? AND fromTable=?")
+					   ->execute(serialize($data), $pid, $version, $table);
+	}
+
+	/**
+	 * Restore the content if it is an editable file
+	 *
+	 * @param string  $table
+	 * @param integer $pid
+	 * @param integer $version
+	 * @param array   $data
+	 */
+	public function restoreVersion($table, $pid, $version, $data)
+	{
+		$model = Contao\FilesModel::findByPk($pid);
+
+		if ($model === null || !in_array($model->extension, Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('editableFiles')))))
+		{
+			return;
+		}
+
+		// Refetch the data, because not existing field have been unset
+		$objData = $this->Database->prepare("SELECT data FROM tl_version WHERE fromTable=? AND pid=? AND version=?")
+								  ->limit(1)
+								  ->execute($table, $pid, $version);
+
+		if ($objData->numRows < 1)
+		{
+			return;
+		}
+
+		$arrData = Contao\StringUtil::deserialize($objData->data);
+
+		if (!is_array($arrData))
+		{
+			return;
+		}
+
+		$file = new Contao\File($model->path);
+
+		if ($file->extension == 'svgz')
+		{
+			$file->write(gzencode($arrData['content']));
+		}
+		else
+		{
+			$file->write($arrData['content']);
+		}
+
+		$file->close();
 	}
 
 	/**
