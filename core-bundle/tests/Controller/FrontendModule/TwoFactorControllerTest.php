@@ -529,6 +529,7 @@ class TwoFactorControllerTest extends TestCase
         $container->setParameter('kernel.project_dir', $projectDir);
         $container->setParameter('kernel.root_dir', $projectDir.'/app');
         $container->setParameter('kernel.bundles', []);
+        $container->setParameter('kernel.bundles_metadata', []);
 
         // Load the default configuration
         $extension = new ContaoCoreExtension();
