@@ -70,10 +70,7 @@ class ContaoManagerExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'event' => 'contao.backend_menu_build',
-                        'method' => 'onBuild',
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()
@@ -100,8 +97,6 @@ class ContaoManagerExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'contao_installation.initialize_application',
-                        'method' => 'onInitializeApplication',
                         'priority' => -128,
                     ],
                 ],
@@ -129,9 +124,7 @@ class ContaoManagerExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'event' => 'console.terminate',
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()
@@ -161,8 +154,6 @@ class ContaoManagerExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [
-                        'event' => 'kernel.request',
-                        'method' => 'onKernelRequest',
                         'priority' => 7,
                     ],
                 ],

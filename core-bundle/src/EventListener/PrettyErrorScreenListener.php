@@ -67,7 +67,7 @@ class PrettyErrorScreenListener
     /**
      * Map an exception to an error screen.
      */
-    public function onKernelException(ExceptionEvent $event): void
+    public function __invoke(ExceptionEvent $event): void
     {
         if (!$event->isMasterRequest()) {
             return;

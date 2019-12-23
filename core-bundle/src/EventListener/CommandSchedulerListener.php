@@ -50,7 +50,7 @@ class CommandSchedulerListener
     /**
      * Runs the command scheduler.
      */
-    public function onKernelTerminate(TerminateEvent $event): void
+    public function __invoke(TerminateEvent $event): void
     {
         if (!$this->framework->isInitialized() || !$this->canRunController($event->getRequest())) {
             return;

@@ -46,7 +46,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             [UsernamePasswordToken::class]
         );
 
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
@@ -62,7 +62,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             [UsernamePasswordToken::class]
         );
 
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
@@ -79,7 +79,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             [UsernamePasswordToken::class]
         );
 
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
@@ -96,7 +96,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             [UsernamePasswordToken::class]
         );
 
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
@@ -113,7 +113,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             [UsernamePasswordToken::class]
         );
 
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
@@ -149,7 +149,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $this->expectException(PageNotFoundException::class);
         $this->expectExceptionMessage('No two-factor authentication page found');
 
-        $listener->onKernelRequest($event);
+        $listener($event);
     }
 
     public function testReturnsIfTwoFactorAuthenticationIsEnforcedAndThePageIsTheTwoFactorPage(): void
@@ -181,7 +181,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             [UsernamePasswordToken::class]
         );
 
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
@@ -226,7 +226,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             [UsernamePasswordToken::class]
         );
 
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         /** @var RedirectResponse $response */
         $response = $event->getResponse();
@@ -261,7 +261,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             [UsernamePasswordToken::class, \get_class($token)]
         );
 
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
@@ -311,7 +311,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             [UsernamePasswordToken::class]
         );
 
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         /** @var RedirectResponse $response */
         $response = $event->getResponse();
@@ -355,7 +355,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             [UsernamePasswordToken::class]
         );
 
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
@@ -391,7 +391,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
 
         $this->expectException(UnauthorizedHttpException::class);
 
-        $listener->onKernelRequest($event);
+        $listener($event);
     }
 
     public function testReturnsIfTheCurrentPageIsTheTargetPath(): void
@@ -434,7 +434,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             [UsernamePasswordToken::class]
         );
 
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertNotInstanceOf(RedirectResponse::class, $event->hasResponse());
     }
@@ -479,7 +479,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             [UsernamePasswordToken::class]
         );
 
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         /** @var RedirectResponse $response */
         $response = $event->getResponse();

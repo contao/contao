@@ -49,7 +49,7 @@ class GeneratePageListenerTest extends ContaoTestCase
         $layoutModel->newsfeeds = 'a:1:{i:0;i:3;}';
 
         $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
-        $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
+        $listener($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertSame(
             ['<link type="application/rss+xml" rel="alternate" href="http://localhost/share/news.xml" title="Latest news">'],
@@ -66,7 +66,7 @@ class GeneratePageListenerTest extends ContaoTestCase
         $layoutModel->newsfeeds = '';
 
         $listener = new GeneratePageListener($this->mockContaoFramework());
-        $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
+        $listener($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD']);
     }
@@ -84,7 +84,7 @@ class GeneratePageListenerTest extends ContaoTestCase
         $layoutModel->newsfeeds = 'a:1:{i:0;i:3;}';
 
         $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
-        $listener->onGeneratePage($this->createMock(PageModel::class), $layoutModel);
+        $listener($this->createMock(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD']);
     }

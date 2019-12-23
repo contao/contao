@@ -43,7 +43,7 @@ class ExceptionConverterListenerTest extends TestCase
         $event = $this->getResponseEvent(new AccessDeniedException());
 
         $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $exception = $event->getThrowable();
 
@@ -56,7 +56,7 @@ class ExceptionConverterListenerTest extends TestCase
         $event = $this->getResponseEvent(new ForwardPageNotFoundException());
 
         $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $exception = $event->getThrowable();
 
@@ -69,7 +69,7 @@ class ExceptionConverterListenerTest extends TestCase
         $event = $this->getResponseEvent(new InsecureInstallationException());
 
         $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $exception = $event->getThrowable();
 
@@ -82,7 +82,7 @@ class ExceptionConverterListenerTest extends TestCase
         $event = $this->getResponseEvent(new InsufficientAuthenticationException());
 
         $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $exception = $event->getThrowable();
 
@@ -95,7 +95,7 @@ class ExceptionConverterListenerTest extends TestCase
         $event = $this->getResponseEvent(new InvalidRequestTokenException());
 
         $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $exception = $event->getThrowable();
 
@@ -108,7 +108,7 @@ class ExceptionConverterListenerTest extends TestCase
         $event = $this->getResponseEvent(new NoActivePageFoundException());
 
         $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $exception = $event->getThrowable();
 
@@ -121,7 +121,7 @@ class ExceptionConverterListenerTest extends TestCase
         $event = $this->getResponseEvent(new NoLayoutSpecifiedException());
 
         $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $exception = $event->getThrowable();
 
@@ -134,7 +134,7 @@ class ExceptionConverterListenerTest extends TestCase
         $event = $this->getResponseEvent(new NoRootPageFoundException());
 
         $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $exception = $event->getThrowable();
 
@@ -147,7 +147,7 @@ class ExceptionConverterListenerTest extends TestCase
         $event = $this->getResponseEvent(new PageNotFoundException());
 
         $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $exception = $event->getThrowable();
 
@@ -160,7 +160,7 @@ class ExceptionConverterListenerTest extends TestCase
         $event = $this->getResponseEvent(new ServiceUnavailableException());
 
         $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $exception = $event->getThrowable();
 
@@ -174,7 +174,7 @@ class ExceptionConverterListenerTest extends TestCase
         $event = $this->getResponseEvent($e);
 
         $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertSame($e, $event->getThrowable());
     }
@@ -184,7 +184,7 @@ class ExceptionConverterListenerTest extends TestCase
         $event = $this->getResponseEvent(new DerivedPageNotFoundException());
 
         $listener = new ExceptionConverterListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $exception = $event->getThrowable();
 
