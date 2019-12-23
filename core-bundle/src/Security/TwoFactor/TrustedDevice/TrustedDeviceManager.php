@@ -16,13 +16,12 @@ use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\CoreBundle\Repository\TrustedDeviceRepository;
 use Contao\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Http\Client\Exception;
-use Http\Client\HttpClient;
-use Http\Message\MessageFactory;
 use Scheb\TwoFactorBundle\Model\TrustedDeviceInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UAParser\Parser;
 
 class TrustedDeviceManager implements TrustedDeviceManagerInterface
@@ -45,21 +44,15 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
     private $entityManager;
 
     /**
-     * @var MessageFactory
-     */
-    private $messageFactory;
-
-    /**
-     * @var HttpClient
+     * @var HttpClientInterface
      */
     private $httpClient;
 
-    public function __construct(RequestStack $requestStack, TrustedDeviceTokenStorage $trustedTokenStorage, EntityManagerInterface $entityManager, MessageFactory $messageFactory, HttpClient $httpClient)
+    public function __construct(RequestStack $requestStack, TrustedDeviceTokenStorage $trustedTokenStorage, EntityManagerInterface $entityManager, HttpClientInterface $httpClient)
     {
         $this->requestStack = $requestStack;
         $this->trustedTokenStorage = $trustedTokenStorage;
         $this->entityManager = $entityManager;
-        $this->messageFactory = $messageFactory;
         $this->httpClient = $httpClient;
     }
 
@@ -145,17 +138,15 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $geolocation = [];
 
         try {
-            $response = $this->httpClient->sendRequest(
-                $this->messageFactory->createRequest('GET', 'https://ipinfo.io/geo')
-            );
-        } catch (Exception $exception) {
+            $response = $this->httpClient->request('GET', 'https://ipinfo.io/geo');
+
+            if (200 === $response->getStatusCode()) {
+                $geolocation = json_decode($response->getContent(), true);
+            }
+        } catch (ExceptionInterface $exception) {
             return $geolocation;
         } catch (\Exception $exception) {
             return $geolocation;
-        }
-
-        if (200 === $response->getStatusCode()) {
-            $geolocation = json_decode($response->getBody()->getContents(), true);
         }
 
         return $geolocation;

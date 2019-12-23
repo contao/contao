@@ -719,8 +719,8 @@ services:
             - '@request_stack'
             - '@scheb_two_factor.trusted_token_storage'
             - '@doctrine.orm.entity_manager'
-            - '@httplug.message_factory.default'
-            - '@httplug.client.default'
+            - ''
+            - '@http_client'
         public: true
 
     contao.security.user_checker:
