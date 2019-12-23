@@ -41,7 +41,7 @@ class AuthenticationAttemptListenerTest extends ContaoTestCase
         ;
 
         $listener = new AuthenticationAttemptListener();
-        $listener->onAuthenticationAttempt(new TwoFactorAuthenticationEvent(new Request(), $token));
+        $listener(new TwoFactorAuthenticationEvent(new Request(), $token));
     }
 
     public function testReturnsIfTheUserIsNotAContaoUser(): void
@@ -54,7 +54,7 @@ class AuthenticationAttemptListenerTest extends ContaoTestCase
         ;
 
         $listener = new AuthenticationAttemptListener();
-        $listener->onAuthenticationAttempt(new TwoFactorAuthenticationEvent(new Request(), $token));
+        $listener(new TwoFactorAuthenticationEvent(new Request(), $token));
     }
 
     /**
@@ -76,7 +76,7 @@ class AuthenticationAttemptListenerTest extends ContaoTestCase
         ;
 
         $listener = new AuthenticationAttemptListener();
-        $listener->onAuthenticationAttempt(new TwoFactorAuthenticationEvent(new Request(), $token));
+        $listener(new TwoFactorAuthenticationEvent(new Request(), $token));
     }
 
     /**
@@ -102,7 +102,7 @@ class AuthenticationAttemptListenerTest extends ContaoTestCase
         $this->expectExceptionMessage('User "foobar" has been locked for 300 seconds');
 
         $listener = new AuthenticationAttemptListener();
-        $listener->onAuthenticationAttempt(new TwoFactorAuthenticationEvent(new Request(), $token));
+        $listener(new TwoFactorAuthenticationEvent(new Request(), $token));
     }
 
     public function getUserData(): \Generator

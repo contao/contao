@@ -25,7 +25,7 @@ class AuthenticationFailureListener
      * then after 1 attempt, the server waits for 5 seconds, at the second
      * failed attempt, it waits for 5 * 2 = 10 seconds, etc.
      */
-    public function onAuthenticationFailure(TwoFactorAuthenticationEvent $event): void
+    public function __invoke(TwoFactorAuthenticationEvent $event): void
     {
         $token = $event->getToken();
 

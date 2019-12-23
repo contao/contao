@@ -19,7 +19,7 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 
 class AuthenticationAttemptListener
 {
-    public function onAuthenticationAttempt(TwoFactorAuthenticationEvent $event): void
+    public function __invoke(TwoFactorAuthenticationEvent $event): void
     {
         $token = $event->getToken();
 

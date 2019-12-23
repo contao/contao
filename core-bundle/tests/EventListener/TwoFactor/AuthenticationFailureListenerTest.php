@@ -40,7 +40,7 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
         ;
 
         $listener = new AuthenticationFailureListener();
-        $listener->onAuthenticationFailure(new TwoFactorAuthenticationEvent(new Request(), $token));
+        $listener(new TwoFactorAuthenticationEvent(new Request(), $token));
     }
 
     public function testReturnsIfTheUserIsNotAContaoUser(): void
@@ -53,7 +53,7 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
         ;
 
         $listener = new AuthenticationFailureListener();
-        $listener->onAuthenticationFailure(new TwoFactorAuthenticationEvent(new Request(), $token));
+        $listener(new TwoFactorAuthenticationEvent(new Request(), $token));
     }
 
     /**
@@ -73,7 +73,7 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
         ;
 
         $listener = new AuthenticationFailureListener();
-        $listener->onAuthenticationFailure(new TwoFactorAuthenticationEvent(new Request(), $token));
+        $listener(new TwoFactorAuthenticationEvent(new Request(), $token));
 
         $this->assertSame(1, $user->loginCount);
     }
@@ -97,7 +97,7 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
         ;
 
         $listener = new AuthenticationFailureListener();
-        $listener->onAuthenticationFailure(new TwoFactorAuthenticationEvent(new Request(), $token));
+        $listener(new TwoFactorAuthenticationEvent(new Request(), $token));
 
         $this->assertSame(time() + 5 * $user->loginCount, $user->locked);
         $this->assertSame(2, $user->loginCount);
