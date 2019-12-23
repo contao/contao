@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\EventListener\LocaleListener;
+use Contao\CoreBundle\EventListener\LocaleSubscriber;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
-class LocaleListenerTest extends TestCase
+class LocaleSubscriberTest extends TestCase
 {
     /**
      * @dataProvider getLocaleRequestData
@@ -36,7 +36,7 @@ class LocaleListenerTest extends TestCase
         $kernel = $this->createMock(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
-        $listener = new LocaleListener(
+        $listener = new LocaleSubscriber(
             $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
             ['en']
@@ -72,7 +72,7 @@ class LocaleListenerTest extends TestCase
             HttpKernelInterface::MASTER_REQUEST
         );
 
-        $listener = new LocaleListener(
+        $listener = new LocaleSubscriber(
             $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
             $available
@@ -108,7 +108,7 @@ class LocaleListenerTest extends TestCase
             HttpKernelInterface::MASTER_REQUEST
         );
 
-        $listener = new LocaleListener(
+        $listener = new LocaleSubscriber(
             $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
             ['en']
@@ -129,7 +129,7 @@ class LocaleListenerTest extends TestCase
             HttpKernelInterface::MASTER_REQUEST
         );
 
-        $listener = new LocaleListener(
+        $listener = new LocaleSubscriber(
             $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
             ['en']
@@ -158,7 +158,7 @@ class LocaleListenerTest extends TestCase
             ->with('de')
         ;
 
-        $listener = new LocaleListener($translator, $this->mockScopeMatcher(), ['en', 'de']);
+        $listener = new LocaleSubscriber($translator, $this->mockScopeMatcher(), ['en', 'de']);
         $listener->setTranslatorLocale($event);
     }
 }

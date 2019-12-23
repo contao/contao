@@ -13,14 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 /**
  * @internal
  */
-class LocaleListener
+class LocaleSubscriber implements EventSubscriberInterface
 {
     /**
      * @var LocaleAwareInterface
@@ -45,14 +47,6 @@ class LocaleListener
     }
 
     /**
-     * Sets the translator locale to the preferred browser language.
-     */
-    public function setTranslatorLocale(RequestEvent $event): void
-    {
-        $this->translator->setLocale($event->getRequest()->getPreferredLanguage($this->availableLocales));
-    }
-
-    /**
      * Adds the default locale as request attribute.
      */
     public function onKernelRequest(RequestEvent $event): void
@@ -63,6 +57,26 @@ class LocaleListener
 
         $request = $event->getRequest();
         $request->attributes->set('_locale', $this->getLocale($request));
+    }
+
+    /**
+     * Sets the translator locale to the preferred browser language.
+     */
+    public function setTranslatorLocale(RequestEvent $event): void
+    {
+        $this->translator->setLocale($event->getRequest()->getPreferredLanguage($this->availableLocales));
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::REQUEST => [
+                // The priority must be lower than the one of the Symfony route listener (defaults to 32)
+                // and higher than the Symfony locale listener (defaults to 16)
+                ['onKernelRequest', 20],
+                ['setTranslatorLocale', 100],
+            ],
+        ];
     }
 
     /**

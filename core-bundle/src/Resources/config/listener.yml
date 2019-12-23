@@ -49,14 +49,12 @@ services:
             - { name: kernel.event_listener }
 
     contao.listener.csrf_token_cookie:
-        class: Contao\CoreBundle\EventListener\CsrfTokenCookieListener
+        class: Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber
         arguments:
             - '@contao.csrf.token_storage'
             - '%contao.csrf_cookie_prefix%'
         tags:
-            # The priority must be higher than the one of the Symfony route listener (defaults to 32)
-            - { name: kernel.event_listener, method: onKernelRequest, priority: 36 }
-            - { name: kernel.event_listener, method: onKernelResponse }
+            - { name: kernel.event_subscriber }
 
     contao.listener.data_container_callback:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
@@ -68,7 +66,6 @@ services:
         arguments:
             - '@contao.doctrine.schema_provider'
         tags:
-            - { name: doctrine.event_listener, event: onSchemaIndexDefinition }
             - { name: doctrine.event_listener, event: postGenerateSchema }
 
     contao.listener.exception_converter:
@@ -97,16 +94,13 @@ services:
             - { name: contao.hook, hook: replaceInsertTags }
 
     contao.listener.locale:
-        class: Contao\CoreBundle\EventListener\LocaleListener
+        class: Contao\CoreBundle\EventListener\LocaleSubscriber
         arguments:
             - '@translator'
             - '@contao.routing.scope_matcher'
             - '%contao.locales%'
         tags:
-            # The priority must be lower than the one of the Symfony route listener (defaults to 32)
-            # and higher than the Symfony locale listener (defaults to 16)
-            - { name: kernel.event_listener, method: onKernelRequest, priority: 20 }
-            - { name: kernel.event_listener, method: setTranslatorLocale, priority: 100 }
+            - { name: kernel.event_subscriber }
 
     contao.listener.make_response_private:
         class: Contao\CoreBundle\EventListener\MakeResponsePrivateListener
@@ -184,10 +178,9 @@ services:
             - { name: kernel.event_listener }
 
     contao.listener.subrequest_cache:
-        class: Contao\CoreBundle\EventListener\SubrequestCacheListener
+        class: Contao\CoreBundle\EventListener\SubrequestCacheSubscriber
         tags:
-            - { name: kernel.event_listener, method: onKernelRequest, priority: 255 }
-            - { name: kernel.event_listener, method: onKernelResponse, priority: -255 }
+            - { name: kernel.event_subscriber }
             - { name: kernel.reset, method: reset }
 
     contao.listener.switch_user:
@@ -216,4 +209,4 @@ services:
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
         tags:
-            - { name: kernel.event_listener, method: onKernelRequest }
+            - { name: kernel.event_listener }
