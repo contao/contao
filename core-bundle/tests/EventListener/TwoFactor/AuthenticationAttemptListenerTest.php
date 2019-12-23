@@ -99,7 +99,7 @@ class AuthenticationAttemptListenerTest extends ContaoTestCase
         ;
 
         $this->expectException(LockedException::class);
-        $this->expectExceptionMessage('User "foobar" has been locked for 5 minutes');
+        $this->expectExceptionMessage('User "foobar" has been locked for 300 seconds');
 
         $listener = new AuthenticationAttemptListener();
         $listener->onAuthenticationAttempt(new TwoFactorAuthenticationEvent(new Request(), $token));

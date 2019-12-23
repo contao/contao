@@ -286,7 +286,21 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $request->request->set('_failure_path', 'http://localhost/failure');
         $request->setSession($this->createMock(SessionInterface::class));
 
+        /** @var FrontendUser&MockObject $user */
+        $user = $this->createPartialMock(FrontendUser::class, ['save']);
+        $user
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        /** @var TwoFactorTokenInterface&MockObject $token */
         $token = $this->createMock(TwoFactorTokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
         $response = $this->getHandler()->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/failure', $response->getTargetUrl());

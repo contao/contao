@@ -39,7 +39,7 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
             ->willReturn($this->createMock(UserInterface::class))
         ;
 
-        $listener = new AuthenticationFailureListener(300, 3);
+        $listener = new AuthenticationFailureListener();
         $listener->onAuthenticationFailure(new TwoFactorAuthenticationEvent(new Request(), $token));
     }
 
@@ -52,18 +52,18 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
             ->willReturn($this->createMock(UserInterface::class))
         ;
 
-        $listener = new AuthenticationFailureListener(300, 3);
+        $listener = new AuthenticationFailureListener();
         $listener->onAuthenticationFailure(new TwoFactorAuthenticationEvent(new Request(), $token));
     }
 
     /**
      * @dataProvider getUserData
      */
-    public function testDecreasesLoginCount(string $class): void
+    public function testIncreasesLoginCount(string $class): void
     {
         /** @var User&MockObject $user */
         $user = $this->mockClassWithProperties($class);
-        $user->loginCount = 3;
+        $user->loginCount = 0;
 
         $token = $this->createMock(TwoFactorToken::class);
         $token
@@ -72,16 +72,16 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
             ->willReturn($user)
         ;
 
-        $listener = new AuthenticationFailureListener(300, 3);
+        $listener = new AuthenticationFailureListener();
         $listener->onAuthenticationFailure(new TwoFactorAuthenticationEvent(new Request(), $token));
 
-        $this->assertSame(2, $user->loginCount);
+        $this->assertSame(1, $user->loginCount);
     }
 
     /**
      * @dataProvider getUserData
      */
-    public function testIncreasesLockTimeWithLockPeriod(string $class): void
+    public function testIncreasesLockTime(string $class): void
     {
         ClockMock::register(AuthenticationFailureListener::class);
 
@@ -96,11 +96,11 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
             ->willReturn($user)
         ;
 
-        $listener = new AuthenticationFailureListener(300, 3);
+        $listener = new AuthenticationFailureListener();
         $listener->onAuthenticationFailure(new TwoFactorAuthenticationEvent(new Request(), $token));
 
-        $this->assertSame(time() + 300, $user->locked);
-        $this->assertSame(3, $user->loginCount);
+        $this->assertSame(time() + 5 * $user->loginCount, $user->locked);
+        $this->assertSame(2, $user->loginCount);
     }
 
     public function getUserData(): \Generator

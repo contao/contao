@@ -29,8 +29,6 @@ class ContaoLoginFactoryTest extends TestCase
     {
         $config = [
             'login_path' => 'contao_frontend_login',
-            'lock_period' => 300,
-            'login_attempts' => 3,
             'remember_me' => true,
             'use_forward' => false,
         ];
@@ -48,18 +46,10 @@ class ContaoLoginFactoryTest extends TestCase
         ;
 
         $this->assertIsArray($arguments);
-        $this->assertCount(4, $arguments);
+        $this->assertCount(3, $arguments);
         $this->assertSame('contao.security.frontend_user_provider', (string) $arguments['index_0']);
         $this->assertSame('security.user_checker.contao_frontend', (string) $arguments['index_1']);
         $this->assertSame('contao_frontend', $arguments['index_2']);
-
-        $this->assertSame(
-            [
-                'lock_period' => 300,
-                'login_attempts' => 3,
-            ],
-            $arguments[0]
-        );
 
         $this->assertTrue($container->hasDefinition('security.authentication.listener.form.contao_frontend'));
 
@@ -85,8 +75,6 @@ class ContaoLoginFactoryTest extends TestCase
 
         $this->assertSame(
             [
-                'lock_period' => 300,
-                'login_attempts' => 3,
                 'use_forward' => false,
                 'username_parameter' => 'username',
                 'password_parameter' => 'password',
