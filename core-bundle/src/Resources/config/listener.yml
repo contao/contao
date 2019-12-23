@@ -27,7 +27,7 @@ services:
             - '@contao.framework'
         tags:
             # Make sure this listener comes before the other ones adding to its tree
-            - { name: kernel.event_listener, event: contao.backend_menu_build, method: onBuild, priority: -10 }
+            - { name: kernel.event_listener, event: contao.backend_menu_build, method: onBuild, priority: 10 }
 
     contao.listener.menu.backend_logout:
         class: Contao\CoreBundle\EventListener\Menu\BackendLogoutListener

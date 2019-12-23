@@ -303,7 +303,7 @@ class ContaoCoreExtensionTest extends TestCase
                     [
                         'event' => 'contao.backend_menu_build',
                         'method' => 'onBuild',
-                        'priority' => -10,
+                        'priority' => 10,
                     ],
                 ],
             ],
