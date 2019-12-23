@@ -45,7 +45,7 @@ class RefererIdListener
     /**
      * Adds the referer ID to the request.
      */
-    public function onKernelRequest(RequestEvent $event): void
+    public function __invoke(RequestEvent $event): void
     {
         if (!$this->scopeMatcher->isBackendMasterRequest($event)) {
             return;

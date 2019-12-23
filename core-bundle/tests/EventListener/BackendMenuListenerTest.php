@@ -49,7 +49,7 @@ class BackendMenuListenerTest extends TestCase
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
 
         $listener = new BackendMenuListener($security, $router);
-        $listener->onBuild($event);
+        $listener($event);
 
         $tree = $event->getTree();
 
@@ -126,7 +126,7 @@ class BackendMenuListenerTest extends TestCase
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('root'));
 
         $listener = new BackendMenuListener($security, $router);
-        $listener->onBuild($event);
+        $listener($event);
 
         $tree = $event->getTree();
 

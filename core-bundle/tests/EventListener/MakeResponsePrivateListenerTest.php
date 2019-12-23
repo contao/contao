@@ -41,7 +41,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
     }
@@ -60,7 +60,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertTrue($response->headers->getCacheControlDirective('public'));
         $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
@@ -84,7 +84,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
@@ -114,7 +114,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
@@ -135,7 +135,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
@@ -156,7 +156,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('private'));
@@ -177,7 +177,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         );
 
         $listener = new MakeResponsePrivateListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
         $this->assertTrue($response->headers->getCacheControlDirective('public'));

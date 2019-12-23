@@ -34,7 +34,7 @@ class InstallCommandListener
     /**
      * Adds the initialize.php file.
      */
-    public function onConsoleTerminate(ConsoleTerminateEvent $event): void
+    public function __invoke(ConsoleTerminateEvent $event): void
     {
         if (!$event->getCommand() instanceof InstallCommand) {
             return;

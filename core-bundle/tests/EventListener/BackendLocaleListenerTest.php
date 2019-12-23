@@ -59,7 +59,7 @@ class BackendLocaleListenerTest extends TestCase
         $GLOBALS['TL_LANGUAGE'] = 'en';
 
         $listener = new BackendLocaleListener($security, $translator);
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
 
@@ -86,7 +86,7 @@ class BackendLocaleListenerTest extends TestCase
         $translator = $this->createMock(LocaleAwareInterface::class);
 
         $listener = new BackendLocaleListener($security, $translator);
-        $listener->onKernelRequest($event);
+        $listener($event);
     }
 
     public function testDoesNotSetTheLocaleIfNoUserLanguage(): void
@@ -109,6 +109,6 @@ class BackendLocaleListenerTest extends TestCase
         $translator = $this->createMock(LocaleAwareInterface::class);
 
         $listener = new BackendLocaleListener($security, $translator);
-        $listener->onKernelRequest($event);
+        $listener($event);
     }
 }

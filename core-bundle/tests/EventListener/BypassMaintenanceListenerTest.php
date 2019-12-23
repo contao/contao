@@ -35,7 +35,7 @@ class BypassMaintenanceListenerTest extends TestCase
         ;
 
         $listener = new BypassMaintenanceListener($tokenChecker);
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertTrue($event->getRequest()->attributes->get('_bypass_maintenance'));
     }
@@ -53,7 +53,7 @@ class BypassMaintenanceListenerTest extends TestCase
         ;
 
         $listener = new BypassMaintenanceListener($tokenChecker);
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertFalse($event->getRequest()->attributes->has('_bypass_maintenance'));
     }

@@ -59,7 +59,7 @@ class TwoFactorFrontendListener
         $this->supportedTokens = $supportedTokens;
     }
 
-    public function onKernelRequest(RequestEvent $event): void
+    public function __invoke(RequestEvent $event): void
     {
         if (!$this->scopeMatcher->isFrontendMasterRequest($event)) {
             return;

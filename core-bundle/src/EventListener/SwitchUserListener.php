@@ -44,7 +44,7 @@ class SwitchUserListener
      *
      * @throws \RuntimeException
      */
-    public function onSwitchUser(SwitchUserEvent $event): void
+    public function __invoke(SwitchUserEvent $event): void
     {
         $token = $this->tokenStorage->getToken();
 

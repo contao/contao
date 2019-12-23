@@ -42,7 +42,7 @@ class StoreRefererListener
     /**
      * Stores the referer in the session.
      */
-    public function onKernelResponse(ResponseEvent $event): void
+    public function __invoke(ResponseEvent $event): void
     {
         if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
             return;
