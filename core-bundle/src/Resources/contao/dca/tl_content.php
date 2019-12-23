@@ -22,6 +22,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			array('tl_content', 'adjustDcaByType'),
 			array('tl_content', 'showJsLibraryHint'),
+			array('tl_content', 'filterContentElements'),
 			array('tl_content', 'preserveReferenced')
 		),
 		'sql' => array
@@ -59,13 +60,15 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'edit' => array
 			(
 				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
+				'icon'                => 'edit.svg',
+				'button_callback'     => array('tl_content', 'disableButton')
 			),
 			'copy' => array
 			(
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="Backend.getScrollOffset()"',
+				'button_callback'     => array('tl_content', 'disableButton')
 			),
 			'cut' => array
 			(
@@ -170,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options_callback'        => array('tl_content', 'getContentElements'),
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default 'text'"
+			'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text')
 		),
 		'headline' => array
 		(
@@ -993,7 +996,10 @@ class tl_content extends Contao\Backend
 		{
 			foreach (array_keys($v) as $kk)
 			{
-				$groups[$k][] = $kk;
+				if ($this->User->hasAccess($kk, 'elements'))
+				{
+					$groups[$k][] = $kk;
+				}
 			}
 		}
 
@@ -1076,6 +1082,88 @@ class tl_content extends Contao\Backend
 			$session = $objSession->all();
 			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objCes->fetchEach('cteAlias'));
 			$objSession->replace($session);
+		}
+	}
+
+	/**
+	 * Filter the content elements
+	 */
+	public function filterContentElements()
+	{
+		if ($this->User->isAdmin)
+		{
+			return;
+		}
+
+		if (empty($this->User->elements))
+		{
+			$GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
+			$GLOBALS['TL_DCA']['tl_content']['config']['notEditable'] = true;
+		}
+		elseif (!in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'], $this->User->elements))
+		{
+			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $this->User->elements[0];
+		}
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = Contao\System::getContainer()->get('session');
+
+		// Prevent editing content elements with not allowed types
+		if (Contao\Input::get('act') == 'edit' || Contao\Input::get('act') == 'delete' || (Contao\Input::get('act') == 'paste' && Contao\Input::get('mode') == 'copy'))
+		{
+			$objCes = $this->Database->prepare("SELECT type FROM tl_content WHERE id=?")
+									 ->execute(Contao\Input::get('id'));
+
+			if ($objCes->numRows && !in_array($objCes->type, $this->User->elements))
+			{
+				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objCes->type . '".');
+			}
+		}
+
+		// Prevent editing content elements with not allowed types
+		if (Contao\Input::get('act') == 'editAll' || Contao\Input::get('act') == 'overrideAll' || Contao\Input::get('act') == 'deleteAll')
+		{
+			$session = $objSession->all();
+
+			if (!empty($session['CURRENT']['IDS']) && is_array($session['CURRENT']['IDS']))
+			{
+				if (empty($this->User->elements))
+				{
+					$session['CURRENT']['IDS'] = array();
+				}
+				else
+				{
+					$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
+											 ->execute(...$this->User->elements);
+
+					$session['CURRENT']['IDS'] = $objCes->fetchEach('id');
+				}
+
+				$objSession->replace($session);
+			}
+		}
+
+		// Prevent copying content elements with not allowed types
+		if (Contao\Input::get('act') == 'copyAll')
+		{
+			$session = $objSession->all();
+
+			if (!empty($session['CLIPBOARD']['tl_content']['id']) && is_array($session['CLIPBOARD']['tl_content']['id']))
+			{
+				if (empty($this->User->elements))
+				{
+					$session['CLIPBOARD']['tl_content']['id'] = array();
+				}
+				else
+				{
+					$objCes = $this->Database->prepare("SELECT id, type FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_content']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
+											 ->execute(...$this->User->elements);
+
+					$session['CLIPBOARD']['tl_content']['id'] = $objCes->fetchEach('id');
+				}
+
+				$objSession->replace($session);
+			}
 		}
 	}
 
@@ -1699,6 +1787,23 @@ class tl_content extends Contao\Backend
 	}
 
 	/**
+	 * Disable the button if the element type is not allowed
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function disableButton($row, $href, $label, $title, $icon, $attributes)
+	{
+		return $this->User->hasAccess($row['type'], 'elements') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+	}
+
+	/**
 	 * Return the delete content element button
 	 *
 	 * @param array  $row
@@ -1712,6 +1817,12 @@ class tl_content extends Contao\Backend
 	 */
 	public function deleteElement($row, $href, $label, $title, $icon, $attributes)
 	{
+		// Disable the button if the element type is not allowed
+		if (!$this->User->hasAccess($row['type'], 'elements'))
+		{
+			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		}
+
 		$objElement = $this->Database->prepare("SELECT id FROM tl_content WHERE cteAlias=? AND type='alias'")
 									 ->limit(1)
 									 ->execute($row['id']);
@@ -1838,6 +1949,12 @@ class tl_content extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
+		// Disable the button if the element type is not allowed
+		if (!$this->User->hasAccess($row['type'], 'elements'))
+		{
+			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		}
+
 		if (Contao\Input::get('cid'))
 		{
 			$this->toggleVisibility(Contao\Input::get('cid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
@@ -1913,6 +2030,11 @@ class tl_content extends Contao\Backend
 			if ($objRow->numRows)
 			{
 				$dc->activeRecord = $objRow;
+
+				if (!$this->User->hasAccess($objRow->type, 'fields'))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
+				}
 			}
 		}
 
