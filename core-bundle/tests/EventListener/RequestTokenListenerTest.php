@@ -111,7 +111,7 @@ class RequestTokenListenerTest extends TestCase
         ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
-        $listener->onKernelRequest($event);
+        $listener($event);
     }
 
     public function testFailsIfTheRequestTokenIsInvalid(): void
@@ -143,7 +143,7 @@ class RequestTokenListenerTest extends TestCase
 
         $this->expectException(InvalidRequestTokenException::class);
 
-        $listener->onKernelRequest($event);
+        $listener($event);
     }
 
     public function testDoesNotValidateTheRequestTokenUponNonPostRequests(): void
@@ -170,7 +170,7 @@ class RequestTokenListenerTest extends TestCase
         ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
-        $listener->onKernelRequest($event);
+        $listener($event);
     }
 
     public function testDoesNotValidateTheRequestTokenUponAjaxRequests(): void
@@ -198,7 +198,7 @@ class RequestTokenListenerTest extends TestCase
         ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
-        $listener->onKernelRequest($event);
+        $listener($event);
     }
 
     public function testDoesNotValidateTheRequestTokenIfTheRequestAttributeIsFalse(): void
@@ -225,7 +225,7 @@ class RequestTokenListenerTest extends TestCase
         ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
-        $listener->onKernelRequest($event);
+        $listener($event);
     }
 
     public function testDoesNotValidateTheRequestTokenIfNoRequestAttributeAndNotAContaoRequest(): void
@@ -257,7 +257,7 @@ class RequestTokenListenerTest extends TestCase
         ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
-        $listener->onKernelRequest($event);
+        $listener($event);
     }
 
     private function validateRequestTokenForRequest(Request $request, bool $shouldValidate = true): void
@@ -281,6 +281,6 @@ class RequestTokenListenerTest extends TestCase
         ;
 
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
-        $listener->onKernelRequest($event);
+        $listener($event);
     }
 }

@@ -15,7 +15,7 @@ services:
             - '@translator'
         tags:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 7 }
+            - { name: kernel.event_listener, priority: 7 }
 
     contao.listener.backend_menu_listener:
         class: Contao\CoreBundle\EventListener\BackendMenuListener
@@ -23,7 +23,7 @@ services:
             - '@security.helper'
             - '@router'
         tags:
-            - { name: kernel.event_listener, event: contao.backend_menu_build, method: onBuild }
+            - { name: kernel.event_listener }
 
     contao.listener.bypass_maintenance:
         class: Contao\CoreBundle\EventListener\BypassMaintenanceListener
@@ -31,13 +31,13 @@ services:
             - '@contao.security.token_checker'
         tags:
             # The priority must be higher than the one of the Lexik maintenance bundle (defaults to 0)
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 6 }
+            - { name: kernel.event_listener, priority: 6 }
 
     contao.listener.clear_session_data:
         class: Contao\CoreBundle\EventListener\ClearSessionDataListener
         tags:
             # The priority must be higher than the one of the Symfony save session listener (defaults to -1000)
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -768 }
+            - { name: kernel.event_listener, priority: -768 }
 
     contao.listener.command_scheduler:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
@@ -46,7 +46,7 @@ services:
             - '@database_connection'
             - '%fragment.path%'
         tags:
-            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+            - { name: kernel.event_listener }
 
     contao.listener.csrf_token_cookie:
         class: Contao\CoreBundle\EventListener\CsrfTokenCookieListener
@@ -55,8 +55,8 @@ services:
             - '%contao.csrf_cookie_prefix%'
         tags:
             # The priority must be higher than the one of the Symfony route listener (defaults to 32)
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 36 }
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+            - { name: kernel.event_listener, method: onKernelRequest, priority: 36 }
+            - { name: kernel.event_listener, method: onKernelResponse }
 
     contao.listener.data_container_callback:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
@@ -75,12 +75,12 @@ services:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
         tags:
             # The priority must be higher than the one of the response exception listener (defaults to 64)
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 96 }
+            - { name: kernel.event_listener, priority: 96 }
 
     contao.listener.insecure_installation:
         class: Contao\CoreBundle\EventListener\InsecureInstallationListener
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - { name: kernel.event_listener }
 
     contao.listener.insert_tags.asset:
         class: Contao\CoreBundle\EventListener\InsertTags\AssetListener
@@ -105,21 +105,21 @@ services:
         tags:
             # The priority must be lower than the one of the Symfony route listener (defaults to 32)
             # and higher than the Symfony locale listener (defaults to 16)
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
-            - { name: kernel.event_listener, event: kernel.request, method: setTranslatorLocale, priority: 100 }
+            - { name: kernel.event_listener, method: onKernelRequest, priority: 20 }
+            - { name: kernel.event_listener, method: setTranslatorLocale, priority: 100 }
 
     contao.listener.make_response_private:
         class: Contao\CoreBundle\EventListener\MakeResponsePrivateListener
         tags:
             # The priority must be lower than the one of MergeHttpHeadersListener (defaults to 256)
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+            - { name: kernel.event_listener }
 
     contao.listener.merge_http_headers:
         class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
         arguments:
             - '@contao.framework'
         tags:
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 256 }
+            - { name: kernel.event_listener, priority: 256 }
             - { name: kernel.reset, method: reset }
 
     contao.listener.pretty_error_screens:
@@ -131,7 +131,7 @@ services:
             - '@security.helper'
         tags:
             # The priority must be higher than the one of the Twig exception listener (defaults to -128)
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: -96 }
+            - { name: kernel.event_listener, priority: -96 }
 
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener
@@ -140,7 +140,7 @@ services:
             - '@contao.routing.scope_matcher'
         tags:
             # The priority must be lower than the one of the Symfony route listener (defaults to 32)
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
+            - { name: kernel.event_listener, priority: 20 }
 
     contao.listener.request_token:
         class: Contao\CoreBundle\EventListener\RequestTokenListener
@@ -153,19 +153,19 @@ services:
         tags:
             # The priority must be lower than the one of the Symfony route listener (defaults to 32)
             # and the Symfony locale aware listener (defaults to 15)
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 14 }
+            - { name: kernel.event_listener, priority: 14 }
 
     contao.listener.response_exception:
         class: Contao\CoreBundle\EventListener\ResponseExceptionListener
         tags:
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 64 }
+            - { name: kernel.event_listener, priority: 64 }
 
     contao.listener.robots_txt:
         class: Contao\CoreBundle\EventListener\RobotsTxtListener
         arguments:
             - '@contao.framework'
         tags:
-            - { name: kernel.event_listener, event: contao.robots_txt, method: onRobotsTxt }
+            - { name: kernel.event_listener }
 
     contao.listener.search_index:
         class: Contao\CoreBundle\EventListener\SearchIndexListener
@@ -173,7 +173,7 @@ services:
             - '@contao.search.indexer'
             - '%fragment.path%'
         tags:
-            - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+            - { name: kernel.event_listener }
 
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
@@ -181,13 +181,13 @@ services:
             - '@security.helper'
             - '@contao.routing.scope_matcher'
         tags:
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+            - { name: kernel.event_listener }
 
     contao.listener.subrequest_cache:
         class: Contao\CoreBundle\EventListener\SubrequestCacheListener
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 255 }
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -255 }
+            - { name: kernel.event_listener, method: onKernelRequest, priority: 255 }
+            - { name: kernel.event_listener, method: onKernelResponse, priority: -255 }
             - { name: kernel.reset, method: reset }
 
     contao.listener.switch_user:
@@ -196,7 +196,7 @@ services:
             - '@security.token_storage'
             - '@logger'
         tags:
-            - { name: kernel.event_listener, event: security.switch_user, method: onSwitchUser }
+            - { name: kernel.event_listener }
 
     contao.listener.two_factor.frontend:
         class: Contao\CoreBundle\EventListener\TwoFactorFrontendListener
@@ -206,7 +206,7 @@ services:
             - '@security.token_storage'
             - '%scheb_two_factor.security_tokens%'
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - { name: kernel.event_listener }
 
     contao.listener.user_session:
         class: Contao\CoreBundle\EventListener\UserSessionListener
@@ -216,4 +216,4 @@ services:
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - { name: kernel.event_listener, method: onKernelRequest }

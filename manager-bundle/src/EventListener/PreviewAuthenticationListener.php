@@ -51,7 +51,7 @@ class PreviewAuthenticationListener
         $this->previewScript = $previewScript;
     }
 
-    public function onKernelRequest(RequestEvent $event): void
+    public function __invoke(RequestEvent $event): void
     {
         $request = $event->getRequest();
 

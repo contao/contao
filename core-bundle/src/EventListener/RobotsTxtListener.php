@@ -34,7 +34,7 @@ class RobotsTxtListener
         $this->contaoFramework = $contaoFramework;
     }
 
-    public function onRobotsTxt(RobotsTxtEvent $event): void
+    public function __invoke(RobotsTxtEvent $event): void
     {
         $this->contaoFramework->initialize();
 

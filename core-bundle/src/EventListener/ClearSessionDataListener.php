@@ -23,7 +23,7 @@ class ClearSessionDataListener
     /**
      * Clear the Contao session data if not a POST request.
      */
-    public function onKernelResponse(ResponseEvent $event): void
+    public function __invoke(ResponseEvent $event): void
     {
         if (!$event->isMasterRequest()) {
             return;

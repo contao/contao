@@ -24,19 +24,19 @@ class BackendMenuListenerTest extends ContaoTestCase
     public function testAddsTheContaoManagerLinkIfTheUserIsAnAdmin(): void
     {
         $listener = $this->getListener(true, 'contao-manager.phar.php');
-        $listener->onBuild($this->getMenuEvent(true));
+        $listener($this->getMenuEvent(true));
     }
 
     public function testDoesNotAddTheContaoManagerLinkIfTheUserIsNotAnAdmin(): void
     {
         $listener = $this->getListener(false, 'contao-manager.phar.php');
-        $listener->onBuild($this->getMenuEvent(false));
+        $listener($this->getMenuEvent(false));
     }
 
     public function testDoesNotAddTheContaoManagerLinkIfTheManagerPathIsNotConfigured(): void
     {
         $listener = $this->getListener(true);
-        $listener->onBuild($this->getMenuEvent(false));
+        $listener($this->getMenuEvent(false));
     }
 
     private function getMenuEvent(bool $addLink): MenuEvent

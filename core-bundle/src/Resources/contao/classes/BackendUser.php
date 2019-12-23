@@ -12,6 +12,7 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Provide methods to manage back end users.
@@ -581,6 +582,49 @@ class BackendUser extends User
 		}
 
 		return $this->roles;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function serialize()
+	{
+		return serialize(array('admin' => $this->admin, 'parent' => parent::serialize()));
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function unserialize($serialized)
+	{
+		$data = unserialize($serialized, array('allowed_classes'=>false));
+
+		if (array_keys($data) != array('admin', 'parent'))
+		{
+			return;
+		}
+
+		list($this->admin, $parent) = array_values($data);
+
+		parent::unserialize($parent);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function isEqualTo(UserInterface $user)
+	{
+		if (!$user instanceof self)
+		{
+			return false;
+		}
+
+		if ((bool) $this->admin !== (bool) $user->admin)
+		{
+			return false;
+		}
+
+		return parent::isEqualTo($user);
 	}
 }
 
