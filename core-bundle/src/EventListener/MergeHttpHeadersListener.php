@@ -58,6 +58,20 @@ class MergeHttpHeadersListener implements ResetInterface
     }
 
     /**
+     * Adds the Contao headers to the Symfony response.
+     */
+    public function __invoke(ResponseEvent $event): void
+    {
+        if (!$this->framework->isInitialized()) {
+            return;
+        }
+
+        // Fetch remaining headers and add them to the response
+        $this->fetchHttpHeaders();
+        $this->setResponseHeaders($event->getResponse());
+    }
+
+    /**
      * @return string[]
      */
     public function getMultiHeaders(): array
@@ -84,20 +98,6 @@ class MergeHttpHeadersListener implements ResetInterface
         if (false !== ($i = array_search($this->getUniqueKey($name), $this->multiHeaders, true))) {
             unset($this->multiHeaders[$i]);
         }
-    }
-
-    /**
-     * Adds the Contao headers to the Symfony response.
-     */
-    public function onKernelResponse(ResponseEvent $event): void
-    {
-        if (!$this->framework->isInitialized()) {
-            return;
-        }
-
-        // Fetch remaining headers and add them to the response
-        $this->fetchHttpHeaders();
-        $this->setResponseHeaders($event->getResponse());
     }
 
     public function reset(): void

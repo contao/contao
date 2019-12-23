@@ -119,7 +119,7 @@ services:
         arguments:
             - '@contao.framework'
         tags:
-            - { name: kernel.event_listener, event: kernel.response, priority: 256 }
+            - { name: kernel.event_listener, priority: 256 }
             - { name: kernel.reset, method: reset }
 
     contao.listener.pretty_error_screens:

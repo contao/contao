@@ -38,7 +38,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         ;
 
         $listener = new MergeHttpHeadersListener($framework, new MemoryHeaderStorage(['Content-Type: text/html']));
-        $listener->onKernelResponse($responseEvent);
+        $listener($responseEvent);
 
         $response = $responseEvent->getResponse();
 
@@ -58,7 +58,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         ;
 
         $listener = new MergeHttpHeadersListener($framework, new MemoryHeaderStorage(['Content-Type: text/html']));
-        $listener->onKernelResponse($responseEvent);
+        $listener($responseEvent);
 
         $this->assertFalse($responseEvent->getResponse()->headers->has('Content-Type'));
     }
@@ -80,7 +80,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $headers = new MemoryHeaderStorage(['set-cookie: new-content=foobar']); // lower-case key
 
         $listener = new MergeHttpHeadersListener($framework, $headers);
-        $listener->onKernelResponse($responseEvent);
+        $listener($responseEvent);
 
         $response = $responseEvent->getResponse();
 
@@ -160,7 +160,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $headerStorage = new MemoryHeaderStorage(['Content-Type: text/html']);
 
         $listener = new MergeHttpHeadersListener($framework, $headerStorage);
-        $listener->onKernelResponse($responseEvent);
+        $listener($responseEvent);
 
         $response = $responseEvent->getResponse();
 
@@ -170,7 +170,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $headerStorage->add('Content-Type: application/json');
 
         $responseEvent->setResponse(new Response());
-        $listener->onKernelResponse($responseEvent);
+        $listener($responseEvent);
 
         $response = $responseEvent->getResponse();
 
@@ -192,7 +192,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $headerStorage = new MemoryHeaderStorage(['Set-Cookie: content=foobar']);
 
         $listener = new MergeHttpHeadersListener($framework, $headerStorage);
-        $listener->onKernelResponse($responseEvent);
+        $listener($responseEvent);
 
         $response = $responseEvent->getResponse();
         $allHeaders = $response->headers->all('Set-Cookie');
@@ -204,7 +204,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $headerStorage->add('Set-Cookie: new-content=foobar');
 
         $responseEvent->setResponse(new Response());
-        $listener->onKernelResponse($responseEvent);
+        $listener($responseEvent);
 
         $response = $responseEvent->getResponse();
 
@@ -230,7 +230,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $headerStorage = new MemoryHeaderStorage(['Cache-Control: public, s-maxage=10800']);
 
         $listener = new MergeHttpHeadersListener($framework, $headerStorage);
-        $listener->onKernelResponse($responseEvent);
+        $listener($responseEvent);
 
         $response = $responseEvent->getResponse();
 
@@ -262,11 +262,11 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $this->assertInstanceOf(ResetInterface::class, $listener);
 
-        $listener->onKernelResponse($this->getResponseEvent($response));
-        $listener->onKernelResponse($this->getResponseEvent($response));
+        $listener($this->getResponseEvent($response));
+        $listener($this->getResponseEvent($response));
 
         $listener->reset();
-        $listener->onKernelResponse($this->getResponseEvent($response));
+        $listener($this->getResponseEvent($response));
     }
 
     private function getResponseEvent(Response $response = null): ResponseEvent
