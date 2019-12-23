@@ -24,19 +24,13 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendPreviewListenerTest extends ContaoTestCase
 {
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        \define('CURRENT_ID', 42);
-    }
-
     /**
      * @dataProvider getPreviewData
      */
@@ -57,6 +51,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
         ;
 
         $request = new Request();
+        $request->query->set('id', 42);
 
         if (null !== $do) {
             $request->query->set('do', $do);
@@ -154,8 +149,22 @@ class BackendPreviewListenerTest extends ContaoTestCase
             ->willReturn('/contao/preview')
         ;
 
+        $request = new Request();
+        $request->query->set('do', 'page');
+        $request->query->set('table', 'tl_page');
+
+        $session = $this->createMock(Session::class);
+        $session
+            ->expects($this->once())
+            ->method('get')
+            ->with('CURRENT_ID')
+            ->willReturn(3)
+        ;
+
+        $request->setSession($session);
+
         $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack->push($request);
 
         $factory = new MenuFactory();
 
@@ -179,6 +188,8 @@ class BackendPreviewListenerTest extends ContaoTestCase
 
         $this->assertCount(2, $children);
         $this->assertSame($expect, array_keys($children));
+
+        $this->assertSame('/contao/preview?page=3', $children['preview']->getUri());
     }
 
     public function getItemNames(): \Generator

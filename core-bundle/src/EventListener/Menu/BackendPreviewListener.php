@@ -18,6 +18,7 @@ use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
@@ -122,29 +123,29 @@ class BackendPreviewListener
             throw new \RuntimeException('The request stack did not contain a request');
         }
 
+        $id = $this->getIdFromRequest($request);
         $url = $this->router->generate('contao_backend_preview');
 
-        // FIXME: rebuild the CURRENT_ID logic
-        if (!\defined('CURRENT_ID') || !CURRENT_ID || !$do = $request->query->get('do')) {
+        if (!$id || !$do = $request->query->get('do')) {
             return $url;
         }
 
         if ('page' === $do) {
-            return $url.'?page='.CURRENT_ID;
+            return $url.'?page='.$id;
         }
 
         if ('article' === $do) {
             /** @var ArticleModel $adapter */
             $adapter = $this->framework->getAdapter(ArticleModel::class);
 
-            if (!$article = $adapter->findByPk(CURRENT_ID)) {
+            if (!$article = $adapter->findByPk($id)) {
                 return $url;
             }
 
             return $url.'?page='.$article->pid;
         }
 
-        $event = new PreviewUrlCreateEvent($do, CURRENT_ID);
+        $event = new PreviewUrlCreateEvent($do, $id);
         $this->eventDispatcher->dispatch($event, ContaoCoreEvents::PREVIEW_URL_CREATE);
 
         if ($query = $event->getQuery()) {
@@ -152,5 +153,14 @@ class BackendPreviewListener
         }
 
         return $url;
+    }
+
+    private function getIdFromRequest(Request $request): int
+    {
+        if (!$request->query->has('table')) {
+            return (int) $request->query->get('id');
+        }
+
+        return (int) $request->getSession()->get('CURRENT_ID');
     }
 }
