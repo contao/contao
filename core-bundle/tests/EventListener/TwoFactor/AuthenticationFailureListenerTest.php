@@ -63,7 +63,7 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
     {
         /** @var User&MockObject $user */
         $user = $this->mockClassWithProperties($class);
-        $user->loginCount = 0;
+        $user->loginAttempts = 0;
 
         $token = $this->createMock(TwoFactorToken::class);
         $token
@@ -75,7 +75,7 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
         $listener = new AuthenticationFailureListener();
         $listener(new TwoFactorAuthenticationEvent(new Request(), $token));
 
-        $this->assertSame(1, $user->loginCount);
+        $this->assertSame(1, $user->loginAttempts);
     }
 
     /**
@@ -87,7 +87,7 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
 
         /** @var User&MockObject $user */
         $user = $this->mockClassWithProperties($class);
-        $user->loginCount = 1;
+        $user->loginAttempts = 1;
 
         $token = $this->createMock(TwoFactorToken::class);
         $token
@@ -99,8 +99,8 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
         $listener = new AuthenticationFailureListener();
         $listener(new TwoFactorAuthenticationEvent(new Request(), $token));
 
-        $this->assertSame(time() + 5 * $user->loginCount, $user->locked);
-        $this->assertSame(2, $user->loginCount);
+        $this->assertSame(time() + 5 * $user->loginAttempts, $user->locked);
+        $this->assertSame(2, $user->loginAttempts);
     }
 
     public function getUserData(): \Generator

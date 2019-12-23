@@ -34,7 +34,7 @@ class AuthenticationProviderTest extends TestCase
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
-        $user->loginCount = 0;
+        $user->loginAttempts = 0;
 
         $user
             ->expects($this->once())
@@ -104,7 +104,7 @@ class AuthenticationProviderTest extends TestCase
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->locked = 0;
-        $user->loginCount = 1;
+        $user->loginAttempts = 1;
         $user->name = 'Admin';
         $user->firstname = 'Foo';
         $user->lastname = 'Bar';
@@ -176,7 +176,7 @@ class AuthenticationProviderTest extends TestCase
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
-        $user->loginCount = 0;
+        $user->loginAttempts = 0;
 
         $user
             ->expects($this->once())
