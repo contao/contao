@@ -371,17 +371,7 @@ class tl_user_group extends Contao\Backend
 	 */
 	public function getContentElements()
 	{
-		$groups = array();
-
-		foreach ($GLOBALS['TL_CTE'] as $k=>$v)
-		{
-			foreach (array_keys($v) as $kk)
-			{
-				$groups[$k][] = $kk;
-			}
-		}
-
-		return $groups;
+		return array_map('array_keys', $GLOBALS['TL_CTE']);
 	}
 
 	/**

@@ -173,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options_callback'        => array('tl_content', 'getContentElements'),
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default 'text'"
+			'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text')
 		),
 		'headline' => array
 		(
@@ -1100,9 +1100,8 @@ class tl_content extends Contao\Backend
 			$GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_content']['config']['notEditable'] = true;
 		}
-		else
+		elseif (!in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'], $this->User->elements))
 		{
-			// Set the first allowed content element as default value
 			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $this->User->elements[0];
 		}
 

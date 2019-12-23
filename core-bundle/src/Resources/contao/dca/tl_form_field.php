@@ -153,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'options_callback'        => array('tl_form_field', 'getFields'),
 			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
-			'sql'                     => "varchar(64) NOT NULL default 'text'"
+			'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text')
 		),
 		'label' => array
 		(
@@ -541,9 +541,8 @@ class tl_form_field extends Contao\Backend
 			$GLOBALS['TL_DCA']['tl_form_field']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_form_field']['config']['notEditable'] = true;
 		}
-		else
+		elseif (!in_array($GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['sql']['default'], $this->User->fields))
 		{
-			// Set the first allowed form field as default value
 			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $this->User->fields[0];
 		}
 
