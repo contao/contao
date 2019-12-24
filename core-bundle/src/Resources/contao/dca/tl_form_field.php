@@ -250,7 +250,8 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => "varchar(10) NOT NULL default ''",
+		),
 		'step' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['step'],
