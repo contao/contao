@@ -63,16 +63,14 @@ class FormRange extends Widget
 	{
 		switch ($strKey)
 		{
-			// Treat minlength/minval as min for number type field (#1622)
-			case 'minlength':
+			case 'min':
 			case 'minval':
-				$this->min = $varValue;
+				$this->arrAttributes['min'] = $varValue;
 				break;
 
-			// Treat maxlength/maxval as max for number type field (#1622)
-			case 'maxlength':
+			case 'max':
 			case 'maxval':
-				$this->max = $varValue;
+				$this->arrAttributes['max'] = $varValue;
 				break;
 
 			case 'mandatory':
@@ -85,20 +83,6 @@ class FormRange extends Widget
 					unset($this->arrAttributes['required']);
 				}
 				parent::__set($strKey, $varValue);
-				break;
-
-			case 'min':
-			case 'max':
-				if ($varValue > 0)
-				{
-					$this->arrAttributes[$strKey] = $varValue;
-					$this->arrConfiguration[$strKey.'val'] = $varValue;
-				}
-				else
-				{
-					unset($this->arrAttributes[$strKey], $this->arrConfiguration[$strKey.'val']);
-				}
-				unset($this->arrAttributes[$strKey.'length']);
 				break;
 
 			case 'step':
