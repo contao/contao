@@ -108,6 +108,7 @@
         "symfony/swiftmailer-bundle": "^2.6.2 || ^3.1.5",
         "symfony/translation": "4.4.*",
         "symfony/twig-bundle": "4.4.*",
+        "symfony/validator": "4.4.*",
         "symfony/var-dumper": "4.4.*",
         "symfony/web-profiler-bundle": "4.4.*",
         "symfony/yaml": "4.4.*",

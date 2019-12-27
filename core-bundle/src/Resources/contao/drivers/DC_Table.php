@@ -17,6 +17,9 @@ use Contao\CoreBundle\Picker\PickerInterface;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Validator\Constraints\Expression;
+use Symfony\Component\Validator\ConstraintViolationInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Provide methods to modify the database.
@@ -3135,6 +3138,68 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					$varValue = $callback($varValue, $this);
 				}
+			}
+		}
+
+		// Validate the value with the Symfony validator
+		$constraints = array();
+
+		if ($arrData['eval']['expression_validation'])
+		{
+			$options = array(
+				'expression' => $arrData['eval']['expression_validation'],
+				'values' => array('dc' => $this, 'field' => $this->strField, 'table' => $this->strTable),
+			);
+
+			if ($arrData['eval']['expression_validation_msg'])
+			{
+				$options['message'] = $arrData['eval']['expression_validation_msg'];
+			}
+
+			$constraints[] = new Expression($options);
+		}
+
+		if ($arrData['eval']['constraints'] && is_array($arrData['eval']['constraints']))
+		{
+			foreach ($arrData['eval']['constraints'] as $constraint)
+			{
+				$constraints[] = $constraint;
+			}
+		}
+
+		if ($arrData['eval']['constraints_callback'] && is_array($arrData['eval']['constraints_callback']))
+		{
+			foreach ($arrData['eval']['constraints_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$this->import($callback[0]);
+					$constraints[] = $this->{$callback[0]}->{$callback[1]}($varValue, $this);
+				}
+				elseif (\is_callable($callback))
+				{
+					$constraints[] = $callback($varValue, $this);;
+				}
+			}
+		}
+
+		if (!empty($constraints))
+		{
+			/** @var ValidatorInterface $validator */
+			$validator = \System::getContainer()->get('validator');
+			$violationList = $validator->validate($varValue, $constraints);
+
+			if ($violationList->count())
+			{
+				$messages = array();
+
+				/** @var ConstraintViolationInterface $violation */
+				foreach ($violationList as $violation)
+				{
+					$messages[] = $violation->getMessage();
+				}
+
+				throw new \Exception(implode(', ', $messages));
 			}
 		}
 
