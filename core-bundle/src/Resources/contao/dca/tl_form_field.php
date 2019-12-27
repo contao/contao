@@ -19,7 +19,8 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'markAsCopy'                  => 'label',
 		'onload_callback' => array
 		(
-			array('tl_form_field', 'checkPermission')
+			array('tl_form_field', 'checkPermission'),
+			array('tl_form_field', 'filterFormFields')
 		),
 		'sql' => array
 		(
@@ -56,13 +57,15 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'edit' => array
 			(
 				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
+				'icon'                => 'edit.svg',
+				'button_callback'     => array('tl_form_field', 'disableButton')
 			),
 			'copy' => array
 			(
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="Backend.getScrollOffset()"',
+				'button_callback'     => array('tl_form_field', 'disableButton')
 			),
 			'cut' => array
 			(
@@ -74,7 +77,8 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+				'button_callback'     => array('tl_form_field', 'disableButton')
 			),
 			'toggle' => array
 			(
@@ -149,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'options_callback'        => array('tl_form_field', 'getFields'),
 			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
-			'sql'                     => "varchar(64) NOT NULL default 'text'"
+			'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text')
 		),
 		'label' => array
 		(
@@ -272,7 +276,11 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'extnd', 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'extnd', 'maxlength'=>255, 'tl_class'=>'w50'),
+			'save_callback' => array
+			(
+				array('tl_form_field', 'checkExtensions')
+			),
 			'sql'                     => "varchar(255) NOT NULL default 'jpg,jpeg,gif,png,pdf,doc,docx,xls,xlsx,ppt,pptx'"
 		),
 		'storeFile' => array
@@ -409,6 +417,9 @@ class tl_form_field extends Contao\Backend
 			return;
 		}
 
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = Contao\System::getContainer()->get('session');
+
 		// Set root IDs
 		if (empty($this->User->forms) || !is_array($this->User->forms))
 		{
@@ -496,9 +507,6 @@ class tl_form_field extends Contao\Backend
 				$objForm = $this->Database->prepare("SELECT id FROM tl_form_field WHERE pid=?")
 										  ->execute($id);
 
-				/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
-				$objSession = Contao\System::getContainer()->get('session');
-
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objForm->fetchEach('id'));
 				$objSession->replace($session);
@@ -515,6 +523,88 @@ class tl_form_field extends Contao\Backend
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
 				}
 				break;
+		}
+	}
+
+	/**
+	 * Filter the form fields
+	 */
+	public function filterFormFields()
+	{
+		if ($this->User->isAdmin)
+		{
+			return;
+		}
+
+		if (empty($this->User->fields))
+		{
+			$GLOBALS['TL_DCA']['tl_form_field']['config']['closed'] = true;
+			$GLOBALS['TL_DCA']['tl_form_field']['config']['notEditable'] = true;
+		}
+		elseif (!in_array($GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['sql']['default'], $this->User->fields))
+		{
+			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $this->User->fields[0];
+		}
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = Contao\System::getContainer()->get('session');
+
+		// Prevent editing form fields with not allowed types
+		if (Contao\Input::get('act') == 'edit' || Contao\Input::get('act') == 'delete' || (Contao\Input::get('act') == 'paste' && Contao\Input::get('mode') == 'copy'))
+		{
+			$objField = $this->Database->prepare("SELECT type FROM tl_form_field WHERE id=?")
+									   ->execute(Contao\Input::get('id'));
+
+			if ($objField->numRows && !in_array($objField->type, $this->User->fields))
+			{
+				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify form fields of type "' . $objField->type . '".');
+			}
+		}
+
+		// Prevent editing content elements with not allowed types
+		if (Contao\Input::get('act') == 'editAll' || Contao\Input::get('act') == 'overrideAll' || Contao\Input::get('act') == 'deleteAll')
+		{
+			$session = $objSession->all();
+
+			if (!empty($session['CURRENT']['IDS']) && is_array($session['CURRENT']['IDS']))
+			{
+				if (empty($this->User->fields))
+				{
+					$session['CURRENT']['IDS'] = array();
+				}
+				else
+				{
+					$objFields = $this->Database->prepare("SELECT id FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->fields), '?')) . ")")
+												->execute(...$this->User->fields);
+
+					$session['CURRENT']['IDS'] = $objFields->fetchEach('id');
+				}
+
+				$objSession->replace($session);
+			}
+		}
+
+		// Prevent copying content elements with not allowed types
+		if (Contao\Input::get('act') == 'copyAll')
+		{
+			$session = $objSession->all();
+
+			if (!empty($session['CLIPBOARD']['tl_form_field']['id']) && is_array($session['CLIPBOARD']['tl_form_field']['id']))
+			{
+				if (empty($this->User->fields))
+				{
+					$session['CLIPBOARD']['tl_form_field']['id'] = array();
+				}
+				else
+				{
+					$objFields = $this->Database->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->fields), '?')) . ")")
+												->execute(...$this->User->fields);
+
+					$session['CLIPBOARD']['tl_form_field']['id'] = $objFields->fetchEach('id');
+				}
+
+				$objSession->replace($session);
+			}
 		}
 	}
 
@@ -568,21 +658,47 @@ class tl_form_field extends Contao\Backend
 	}
 
 	/**
+	 * Check the configured extensions against the upload types
+	 *
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
+	 *
+	 * @return string
+	 */
+	public function checkExtensions($varValue, Contao\DataContainer $dc)
+	{
+		// Convert the extensions to lowercase
+		$varValue = strtolower($varValue);
+		$arrExtensions = Contao\StringUtil::trimsplit(',', $varValue);
+		$arrUploadTypes = Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('uploadTypes')));
+		$arrNotAllowed = array_diff($arrExtensions, $arrUploadTypes);
+
+		if (0 !== count($arrNotAllowed))
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['forbiddenExtensions'], implode(', ', $arrNotAllowed)));
+		}
+
+		return $varValue;
+	}
+
+	/**
 	 * Return a list of form fields
 	 *
 	 * @return array
 	 */
 	public function getFields()
 	{
-		$arrFields = $GLOBALS['TL_FFL'];
+		$fields = array();
 
-		// Add the translation
-		foreach (array_keys($arrFields) as $key)
+		foreach ($GLOBALS['TL_FFL'] as $k=>$v)
 		{
-			$arrFields[$key] = $GLOBALS['TL_LANG']['FFL'][$key][0];
+			if ($this->User->hasAccess($k, 'fields'))
+			{
+				$fields[] = $k;
+			}
 		}
 
-		return $arrFields;
+		return $fields;
 	}
 
 	/**
@@ -594,13 +710,35 @@ class tl_form_field extends Contao\Backend
 	 */
 	public function getFormFieldTemplates(Contao\DataContainer $dc)
 	{
+		if (Contao\Input::get('act') == 'overrideAll')
+		{
+			return $this->getTemplateGroup('form_');
+		}
+
+		// Backwards compatibility
 		if ($dc->activeRecord->type == 'text')
 		{
-			// Backwards compatibility
 			return array_merge($this->getTemplateGroup('form_text_'), $this->getTemplateGroup('form_textfield_'));
 		}
 
 		return $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_');
+	}
+
+	/**
+	 * Disable the button if the element type is not allowed
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function disableButton($row, $href, $label, $title, $icon, $attributes)
+	{
+		return $this->User->hasAccess($row['type'], 'fields') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -617,6 +755,12 @@ class tl_form_field extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
+		// Disable the button if the element type is not allowed
+		if (!$this->User->hasAccess($row['type'], 'fields'))
+		{
+			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		}
+
 		if (Contao\Input::get('tid'))
 		{
 			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
@@ -690,6 +834,11 @@ class tl_form_field extends Contao\Backend
 			if ($objRow->numRows)
 			{
 				$dc->activeRecord = $objRow;
+
+				if (!$this->User->hasAccess($objRow->type, 'fields'))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify form fields of type "' . $objRow->type . '".');
+				}
 			}
 		}
 

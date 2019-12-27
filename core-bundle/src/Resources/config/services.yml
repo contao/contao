@@ -205,8 +205,6 @@ services:
         arguments:
             - '%contao.image.target_dir%'
             - '@?filesystem'
-        tags:
-            - { name: kernel.reset, method: reset }
 
     contao.image.imagine.gd:
         class: Imagine\Gd\Imagine
@@ -281,12 +279,8 @@ services:
         arguments:
             - '@knp_menu.factory'
             - '@event_dispatcher'
-        public: true
-
-    contao.menu.backend_menu_renderer:
-        class: Contao\CoreBundle\Menu\BackendMenuRenderer
-        arguments:
-            - '@twig'
+        tags:
+            - { name: knp_menu.menu_builder, method: buildMainMenu, alias: be_menu }
         public: true
 
     contao.menu.matcher:

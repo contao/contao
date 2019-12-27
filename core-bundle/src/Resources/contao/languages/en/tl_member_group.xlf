@@ -44,8 +44,8 @@
       <trans-unit id="tl_member_group.redirect_legend">
         <source>Auto-redirect</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.disable_legend">
-        <source>Account settings</source>
+      <trans-unit id="tl_member_group.account_legend">
+        <source>Group settings</source>
       </trans-unit>
       <trans-unit id="tl_member_group.new.0">
         <source>New</source>

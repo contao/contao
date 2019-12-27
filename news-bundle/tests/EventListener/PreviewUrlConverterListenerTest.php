@@ -44,7 +44,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $event = new PreviewUrlConvertEvent();
 
         $listener = new PreviewUrlConvertListener($requestStack, $framework);
-        $listener->onPreviewUrlConvert($event);
+        $listener($event);
 
         $this->assertSame('http://localhost/news/james-wilson-returns.html', $event->getUrl());
     }
@@ -60,7 +60,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $event = new PreviewUrlConvertEvent();
 
         $listener = new PreviewUrlConvertListener(new RequestStack(), $framework);
-        $listener->onPreviewUrlConvert($event);
+        $listener($event);
 
         $this->assertNull($event->getUrl());
     }
@@ -78,7 +78,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $event = new PreviewUrlConvertEvent();
 
         $listener = new PreviewUrlConvertListener($requestStack, $framework);
-        $listener->onPreviewUrlConvert($event);
+        $listener($event);
 
         $this->assertNull($event->getUrl());
     }
@@ -101,7 +101,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $event = new PreviewUrlConvertEvent();
 
         $listener = new PreviewUrlConvertListener($requestStack, $framework);
-        $listener->onPreviewUrlConvert($event);
+        $listener($event);
 
         $this->assertNull($event->getUrl());
     }

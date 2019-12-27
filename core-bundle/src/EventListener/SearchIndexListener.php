@@ -51,7 +51,7 @@ class SearchIndexListener
     /**
      * Checks if the request can be indexed and forwards it accordingly.
      */
-    public function onKernelTerminate(TerminateEvent $event): void
+    public function __invoke(TerminateEvent $event): void
     {
         $request = $event->getRequest();
 

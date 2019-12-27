@@ -23,6 +23,7 @@ use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
+use Doctrine\DBAL\Connection;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
@@ -550,6 +551,56 @@ class PluginTest extends ContaoTestCase
             'tls',
             'smtp://127.0.0.1:587?username=foo%40bar.com&password=foobar&encryption=tls',
         ];
+    }
+
+    public function testRetrievesTheConnectionParametersFromTheConfiguration(): void
+    {
+        $pluginLoader = $this->createMock(PluginLoader::class);
+        $container = new PluginContainerBuilder($pluginLoader, []);
+
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'url' => '%env(DATABASE_URL)%',
+                            'password' => 'foo%%bar',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('connect')
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('close')
+        ;
+
+        $dbalConnectionFactory = function ($params) use ($connection) {
+            $this->assertSame(
+                [
+                    'url' => 'mysql://root:foo%bar@localhost:3306/database',
+                    'password' => 'foo%bar',
+                ],
+                $params
+            );
+
+            return $connection;
+        };
+
+        $url = $_ENV['DATABASE_URL'] ?? null;
+        $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = 'mysql://root:foo%bar@localhost:3306/database';
+
+        $plugin = new Plugin($dbalConnectionFactory);
+        $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $_ENV['DATABASE_URL'] = $url;
     }
 
     private function getContainer(): PluginContainerBuilder

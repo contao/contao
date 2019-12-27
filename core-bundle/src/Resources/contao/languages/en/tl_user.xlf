@@ -122,6 +122,18 @@
       <trans-unit id="tl_user.themes.1">
         <source>Here you can grant access to the theme modules.</source>
       </trans-unit>
+      <trans-unit id="tl_user.elements.0">
+        <source>Content elements</source>
+      </trans-unit>
+      <trans-unit id="tl_user.elements.1">
+        <source>Here you can limit the content element types.</source>
+      </trans-unit>
+      <trans-unit id="tl_user.fields.0">
+        <source>Form fields</source>
+      </trans-unit>
+      <trans-unit id="tl_user.fields.1">
+        <source>Here you can limit the form field types.</source>
+      </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>
       </trans-unit>
@@ -208,6 +220,9 @@
       </trans-unit>
       <trans-unit id="tl_user.modules_legend">
         <source>Allowed modules</source>
+      </trans-unit>
+      <trans-unit id="tl_user.elements_legend">
+        <source>Allowed elements</source>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts_legend">
         <source>Pagemounts</source>

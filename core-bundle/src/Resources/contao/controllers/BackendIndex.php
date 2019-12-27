@@ -71,7 +71,8 @@ class BackendIndex extends Backend
 
 		if ($referer = Input::get('referer', true))
 		{
-			$queryString = '?' . base64_decode($referer);
+			// Decode the referer and urlencode insert tags
+			$queryString = '?' . str_replace(array('{', '}'), array('%7B', '%7D'), base64_decode($referer, true));
 			$arrParams['referer'] = $referer;
 		}
 

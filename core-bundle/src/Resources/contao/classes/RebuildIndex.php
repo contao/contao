@@ -81,11 +81,13 @@ class RebuildIndex extends Backend implements \executable
 		// Rebuild the index
 		if (Input::get('act') == 'index')
 		{
+			$container = System::getContainer();
+
 			// Check the request token (see #4007)
 			if (!isset($_GET['rt']) || !RequestToken::validate(Input::get('rt')))
 			{
 				/** @var Session $objSession */
-				$objSession = System::getContainer()->get('session');
+				$objSession = $container->get('session');
 
 				$objSession->set('INVALID_TOKEN_URL', Environment::get('request'));
 				$this->redirect('contao/confirm.php');
@@ -134,11 +136,19 @@ class RebuildIndex extends Backend implements \executable
 
 			$strBuffer = '';
 			$rand = mt_rand();
+			$previewScript = $container->getParameter('contao.preview_script');
 
 			// Display the pages
 			for ($i=0, $c=\count($arrPages); $i<$c; $i++)
 			{
-				$strBuffer .= '<span class="page_url" data-url="' . $arrPages[$i] . '#' . $rand . $i . '">' . StringUtil::specialchars(StringUtil::substr(rawurldecode($arrPages[$i]), 100)) . '</span><br>';
+				$page = $arrPages[$i];
+
+				if ($previewScript)
+				{
+					$page = str_replace($previewScript, '', $page);
+				}
+
+				$strBuffer .= '<span class="page_url" data-url="' . $page . '#' . $rand . $i . '">' . StringUtil::specialchars(StringUtil::substr(rawurldecode($page), 100)) . '</span><br>';
 				unset($arrPages[$i]); // see #5681
 			}
 

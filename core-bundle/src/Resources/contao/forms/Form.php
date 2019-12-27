@@ -443,14 +443,7 @@ class Form extends Hybrid
 			$email->text = StringUtil::decodeEntities(trim($message)) . $uploaded . "\n\n";
 
 			// Send the e-mail
-			try
-			{
-				$email->sendTo($recipients);
-			}
-			catch (\Swift_SwiftException $e)
-			{
-				$this->log('Form "' . $this->title . '" could not be sent: ' . $e->getMessage(), __METHOD__, TL_ERROR);
-			}
+			$email->sendTo($recipients);
 		}
 
 		// Store the values in the database

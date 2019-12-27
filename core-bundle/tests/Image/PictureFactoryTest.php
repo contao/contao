@@ -21,7 +21,6 @@ use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\PictureGeneratorInterface;
-use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\ImageSizeItemModel;
@@ -311,7 +310,7 @@ class PictureFactoryTest extends TestCase
         ;
 
         $imageMock = $this->createMock(ImageInterface::class);
-        $pictureMock = $this->createMock(PictureInterface::class);
+        $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
@@ -338,13 +337,15 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator);
         $picture = $pictureFactory->create($imageMock, $pictureConfig);
 
-        $this->assertSame($pictureMock, $picture);
+        $this->assertSame($imageMock, $picture->getImg()['src']);
     }
 
     public function testCreatesAPictureObjectInLegacyMode(): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';
-        $pictureMock = $this->createMock(PictureInterface::class);
+        $imageMock = $this->createMock(ImageInterface::class);
+        $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
+
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
             ->expects($this->once())
@@ -376,8 +377,6 @@ class PictureFactoryTest extends TestCase
             )
             ->willReturn($pictureMock)
         ;
-
-        $imageMock = $this->createMock(ImageInterface::class);
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
@@ -417,7 +416,7 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, 'left_top']);
 
-        $this->assertSame($pictureMock, $picture);
+        $this->assertSame($imageMock, $picture->getImg()['src']);
     }
 
     public function testCreatesAPictureObjectWithoutAModel(): void
@@ -425,7 +424,7 @@ class PictureFactoryTest extends TestCase
         $defaultDensities = '';
         $path = $this->getTempDir().'/images/dummy.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
-        $pictureMock = $this->createMock(PictureInterface::class);
+        $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
@@ -491,13 +490,13 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
-        $this->assertSame($pictureMock, $picture);
+        $this->assertSame($imageMock, $picture->getImg()['src']);
 
         $defaultDensities = '1x, 2x';
         $pictureFactory->setDefaultDensities($defaultDensities);
         $picture = $pictureFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
-        $this->assertSame($pictureMock, $picture);
+        $this->assertSame($imageMock, $picture->getImg()['src']);
     }
 
     public function testCreatesAPictureObjectWithEmptyConfig(): void
@@ -505,7 +504,7 @@ class PictureFactoryTest extends TestCase
         $defaultDensities = '';
         $path = $this->getTempDir().'/images/dummy.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
-        $pictureMock = $this->createMock(PictureInterface::class);
+        $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
@@ -564,13 +563,74 @@ class PictureFactoryTest extends TestCase
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, ['', '', '']);
 
-        $this->assertSame($pictureMock, $picture);
+        $this->assertSame($imageMock, $picture->getImg()['src']);
 
         $defaultDensities = '1x, 2x';
         $pictureFactory->setDefaultDensities($defaultDensities);
         $picture = $pictureFactory->create($path, [0, 0, ResizeConfiguration::MODE_BOX]);
 
-        $this->assertSame($pictureMock, $picture);
+        $this->assertSame($imageMock, $picture->getImg()['src']);
+    }
+
+    /**
+     * @dataProvider getAspectRatios
+     */
+    public function testSetHasSingleAspectRatioAttribute(bool $expected, int $imgWidth, int $imgHeight, int $sourceWidth, int $sourceHeight): void
+    {
+        $imageMock = $this->createMock(ImageInterface::class);
+        $pictureConfig = $this->createMock(PictureConfiguration::class);
+        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
+
+        $pictureGenerator
+            ->method('generate')
+            ->willReturnCallback(
+                static function (ImageInterface $image, PictureConfiguration $config) use ($imageMock, $imgWidth, $imgHeight, $sourceWidth, $sourceHeight): Picture {
+                    return new Picture(
+                        [
+                            'src' => $imageMock,
+                            'srcset' => [[$imageMock]],
+                            'width' => $imgWidth,
+                            'height' => $imgHeight,
+                        ],
+                        [[
+                            'src' => $imageMock,
+                            'srcset' => [[$imageMock]],
+                            'width' => $sourceWidth,
+                            'height' => $sourceHeight,
+                        ]]
+                    );
+                }
+            )
+        ;
+
+        $pictureFactory = $this->getPictureFactory($pictureGenerator);
+        $picture = $pictureFactory->create($imageMock, $pictureConfig);
+
+        $this->assertSame($expected, $picture->getImg()['hasSingleAspectRatio']);
+    }
+
+    public function getAspectRatios(): \Generator
+    {
+        yield [true, 100, 100, 50, 50];
+        yield [true, 100, 100, 101, 100];
+        yield [true, 100, 100, 100, 101];
+        yield [true, 100, 100, 105, 100];
+        yield [true, 100, 100, 100, 105];
+        yield [true, 100, 10, 105, 10];
+        yield [true, 10, 100, 10, 105];
+        yield [true, 100, 10, 95, 10];
+        yield [true, 10, 100, 10, 95];
+        yield [true, 100, 20, 100, 21];
+        yield [true, 20, 100, 21, 100];
+        yield [false, 100, 100, 100, 50];
+        yield [false, 100, 100, 106, 100];
+        yield [false, 100, 100, 100, 106];
+        yield [false, 100, 100, 94, 100];
+        yield [false, 100, 100, 100, 94];
+        yield [false, 100, 10, 106, 10];
+        yield [false, 10, 100, 10, 106];
+        yield [false, 100, 20, 100, 22];
+        yield [false, 20, 100, 22, 100];
     }
 
     /**

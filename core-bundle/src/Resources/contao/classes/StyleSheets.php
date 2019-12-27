@@ -1388,7 +1388,7 @@ class StyleSheets extends Backend
 			$objFile->append('@media ' . $objStyleSheet->mediaQuery . ' {');
 			$blnClose = true;
 		}
-		elseif (\is_array(($tmp = \StringUtil::deserialize($objStyleSheet->media))) && (\count($tmp) > 1 || $tmp[0] != 'all'))
+		elseif (\is_array(($tmp = StringUtil::deserialize($objStyleSheet->media))) && (\count($tmp) > 1 || $tmp[0] != 'all'))
 		{
 			$objFile->append('@media ' . implode(', ', $tmp) . ' {');
 			$blnClose = true;

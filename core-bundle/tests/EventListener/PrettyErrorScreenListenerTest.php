@@ -46,7 +46,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception);
 
         $listener = $this->getListener(true, true);
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(500, $event->getResponse()->getStatusCode());
@@ -68,7 +68,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception);
 
         $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security);
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(500, $event->getResponse()->getStatusCode());
@@ -89,7 +89,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception);
 
         $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security);
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(500, $event->getResponse()->getStatusCode());
@@ -105,7 +105,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
         $listener = $this->getListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame($type, $event->getResponse()->getStatusCode());
@@ -128,7 +128,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
         $listener = $this->getListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertTrue($event->hasResponse());
 
@@ -143,7 +143,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
         $listener = $this->getListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertFalse($event->hasResponse());
 
@@ -156,7 +156,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
         $listener = $this->getListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(503, $event->getResponse()->getStatusCode());
@@ -178,7 +178,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         ;
 
         $listener = new PrettyErrorScreenListener(false, $twig, $framework, $security);
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertFalse($event->hasResponse());
     }
@@ -199,7 +199,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception, null, true);
 
         $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security);
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertFalse($event->hasResponse());
     }
@@ -209,7 +209,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent(new ConflictHttpException(), $this->getRequest('frontend'));
 
         $listener = $this->getListener(false, true);
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(409, $event->getResponse()->getStatusCode());
@@ -232,7 +232,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         ;
 
         $listener = $this->getListener(false, true, $twig);
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(500, $event->getResponse()->getStatusCode());
@@ -254,7 +254,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend', 'json'));
 
         $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security);
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertFalse($event->hasResponse());
     }
@@ -278,7 +278,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception, $this->getRequest('backend', 'html', 'application/json'));
 
         $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security);
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertFalse($event->hasResponse());
     }
@@ -289,7 +289,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception);
 
         $listener = $this->getListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertFalse($event->hasResponse());
     }
@@ -300,7 +300,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception);
 
         $listener = $this->getListener();
-        $listener->onKernelException($event);
+        $listener($event);
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(500, $event->getResponse()->getStatusCode());

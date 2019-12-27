@@ -276,15 +276,6 @@ class ModuleArticle extends Module
 		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, Config::get('characterSet'));
 		$strArticle = $this->convertRelativeUrls($strArticle, '', true);
 
-		// Remove form elements and JavaScript links
-		$arrSearch = array
-		(
-			'@<form.*</form>@Us',
-			'@<a [^>]*href="[^"]*javascript:[^>]+>.*</a>@Us'
-		);
-
-		$strArticle = preg_replace($arrSearch, '', $strArticle);
-
 		if (empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']))
 		{
 			throw new \Exception('No PDF extension found. Did you forget to install contao/tcpdf-bundle?');

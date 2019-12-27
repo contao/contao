@@ -42,8 +42,10 @@ class Calendar extends Frontend
 		// Delete XML file
 		if (Input::get('act') == 'delete')
 		{
+			$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
+
 			$this->import(Files::class, 'Files');
-			$this->Files->delete('web/share/' . $objCalendar->feedName . '.xml');
+			$this->Files->delete($webDir . '/share/' . $objCalendar->feedName . '.xml');
 		}
 
 		// Update XML file
@@ -279,8 +281,10 @@ class Calendar extends Frontend
 			}
 		}
 
+		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
+
 		// Create the file
-		File::putContent('web/share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
+		File::putContent($webDir . '/share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
 	}
 
 	/**

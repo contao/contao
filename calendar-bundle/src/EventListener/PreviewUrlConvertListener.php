@@ -43,7 +43,7 @@ class PreviewUrlConvertListener
     /**
      * Adds the front end preview URL to the event.
      */
-    public function onPreviewUrlConvert(PreviewUrlConvertEvent $event): void
+    public function __invoke(PreviewUrlConvertEvent $event): void
     {
         if (!$this->framework->isInitialized()) {
             return;
