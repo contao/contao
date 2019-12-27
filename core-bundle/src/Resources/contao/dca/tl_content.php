@@ -832,14 +832,33 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array(
+				'rgxp' 						=> 'datim',
+				'datepicker' 				=> true,
+				'tl_class'					=> 'w50 wizard',
+				'expression_validation'		=> 'value === "" or "" === dc.activeRecord.stop or value <= dc.activeRecord.stop',
+				'expression_validation_msg' => 'The start date must be before the stop date.',
+			),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'stop' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array(
+				'rgxp'					=> 'datim',
+				'datepicker'			=> true,
+				'tl_class'				=> 'w50 wizard',
+				'constraints_callback' 	=> array(
+					function($varValue, $dc) {
+						return new \Symfony\Component\Validator\Constraints\Expression(array(
+							'expression' => 'value === "" or "" ===  dc.activeRecord.start or value >= dc.activeRecord.start',
+							'values' => array('dc' => $dc),
+							'message' => 'The stop date must be after the start date.'
+						));
+					}
+				)
+			),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		)
 	)
