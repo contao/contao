@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Event;
 final class ContaoCoreEvents
 {
     /**
-     * The contao.backend_menu_build event is triggered when the backend menu is built.
+     * The contao.backend_menu_build event is triggered when the back end menu is built.
      *
      * @see MenuEvent
      */

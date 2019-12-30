@@ -111,8 +111,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'admin'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{account_legend},disable,start,stop',
 		'default'                     => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
 		'group'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
-		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
-		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
+		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
+		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme,fullscreen;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
 	),
 
 	// Fields
@@ -284,6 +284,26 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'options'                 => array('css', 'modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
 			'eval'                    => array('multiple'=>true),
+			'sql'                     => "blob NULL"
+		),
+		'elements' => array
+		(
+			'exclude'                 => true,
+			'filter'                  => true,
+			'inputType'               => 'checkbox',
+			'options_callback'        => array('tl_user', 'getContentElements'),
+			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
+			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
+			'sql'                     => "blob NULL"
+		),
+		'fields' => array
+		(
+			'exclude'                 => true,
+			'filter'                  => true,
+			'inputType'               => 'checkbox',
+			'options'                 => array_keys($GLOBALS['TL_FFL']),
+			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
+			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'pagemounts' => array
@@ -778,6 +798,16 @@ class tl_user extends Contao\Backend
 		}
 
 		return $arrModules;
+	}
+
+	/**
+	 * Return all content elements
+	 *
+	 * @return array
+	 */
+	public function getContentElements()
+	{
+		return array_map('array_keys', $GLOBALS['TL_CTE']);
 	}
 
 	/**

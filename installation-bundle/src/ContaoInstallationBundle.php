@@ -12,7 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle;
 
-use Symfony\Component\Console\Application;
+use Contao\InstallationBundle\Event\ContaoInstallationEvents;
+use Contao\InstallationBundle\Event\InitializeApplicationEvent;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoInstallationBundle extends Bundle
@@ -20,8 +23,14 @@ class ContaoInstallationBundle extends Bundle
     /**
      * {@inheritdoc}
      */
-    public function registerCommands(Application $application): void
+    public function build(ContainerBuilder $container): void
     {
-        // disable automatic command registration
+        parent::build($container);
+
+        $container->addCompilerPass(
+            new AddEventAliasesPass([
+                InitializeApplicationEvent::class => ContaoInstallationEvents::INITIALIZE_APPLICATION,
+            ])
+        );
     }
 }

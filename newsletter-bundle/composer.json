@@ -26,7 +26,7 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
-        "php-http/guzzle6-adapter": "^1.1"
+        "symfony/http-client": "4.4.*"
     },
     "extra": {
         "branch-alias": {

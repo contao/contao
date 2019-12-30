@@ -15,14 +15,11 @@ $GLOBALS['TL_CTE']['includes']['comments'] = 'Contao\ContentComments';
 $GLOBALS['FE_MOD']['application']['comments'] = 'Contao\ModuleComments';
 
 // Back end modules
-array_insert($GLOBALS['BE_MOD']['content'], 5, array
+$GLOBALS['BE_MOD']['content']['comments'] = array
 (
-	'comments' => array
-	(
-		'tables'     => array('tl_comments'),
-		'stylesheet' => 'bundles/contaocomments/comments.min.css'
-	)
-));
+	'tables'     => array('tl_comments'),
+	'stylesheet' => 'bundles/contaocomments/comments.min.css'
+);
 
 // Cron jobs
 $GLOBALS['TL_CRON']['daily']['purgeCommentSubscriptions'] = array('Contao\Comments', 'purgeSubscriptions');

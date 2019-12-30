@@ -40,7 +40,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener($framework);
-        $listener->onPreviewUrlConvert($event);
+        $listener($event);
 
         $this->assertSame('http://localhost/events/winter-holidays.html', $event->getUrl());
     }
@@ -56,7 +56,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $event = new PreviewUrlConvertEvent(new Request());
 
         $listener = new PreviewUrlConvertListener($framework);
-        $listener->onPreviewUrlConvert($event);
+        $listener($event);
 
         $this->assertNull($event->getUrl());
     }
@@ -71,7 +71,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener($framework);
-        $listener->onPreviewUrlConvert($event);
+        $listener($event);
 
         $this->assertNull($event->getUrl());
     }
@@ -91,7 +91,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener($framework);
-        $listener->onPreviewUrlConvert($event);
+        $listener($event);
 
         $this->assertNull($event->getUrl());
     }

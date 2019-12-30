@@ -100,6 +100,21 @@ abstract class Controller extends System
 			)
 		);
 
+		// Add templates that are not directly associated with a form field
+		$arrMapper['form'][] = 'row';
+		$arrMapper['form'][] = 'row_double';
+		$arrMapper['form'][] = 'xml';
+		$arrMapper['form'][] = 'wrapper';
+		$arrMapper['form'][] = 'message';
+		$arrMapper['form'][] = 'textfield'; // TODO: remove in Contao 5.0
+
+		// Add templates that are not directly associated with a module
+		$arrMapper['mod'][] = 'article';
+		$arrMapper['mod'][] = 'message';
+		$arrMapper['mod'][] = 'password'; // TODO: remove in Contao 5.0
+		$arrMapper['mod'][] = 'comment_form'; // TODO: remove in Contao 5.0
+		$arrMapper['mod'][] = 'newsletter'; // TODO: remove in Contao 5.0
+
 		// Get the default templates
 		foreach (TemplateLoader::getPrefixedFiles($strPrefix) as $strTemplate)
 		{
@@ -131,6 +146,8 @@ abstract class Controller extends System
 		// Add the customized templates
 		if (\is_array($arrCustomized))
 		{
+			$blnIsGroupPrefix = preg_match('/^[a-z]+_$/', $strPrefix);
+
 			foreach ($arrCustomized as $strFile)
 			{
 				$strTemplate = basename($strFile, strrchr($strFile, '.'));
@@ -148,11 +165,14 @@ abstract class Controller extends System
 
 				// Also ignore custom templates belonging to a different bundle template,
 				// e.g. mod_article and mod_article_list_custom
-				foreach ($arrBundleTemplates as $strKey)
+				if (!$blnIsGroupPrefix)
 				{
-					if (strpos($strTemplate, $strKey . '_') === 0)
+					foreach ($arrBundleTemplates as $strKey)
 					{
-						continue 2;
+						if (strpos($strTemplate, $strKey . '_') === 0)
+						{
+							continue 2;
+						}
 					}
 				}
 

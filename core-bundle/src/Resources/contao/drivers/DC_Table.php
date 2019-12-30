@@ -3919,9 +3919,20 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$blnIsOpen = (!empty($arrFound) || $session[$node][$id] == 1);
 
 		// Always show selected nodes
-		if (!$blnIsOpen && !empty($this->arrPickerValue) && !empty(array_intersect($this->Database->getChildRecords(array($id), $this->strTable), $this->arrPickerValue)))
+		if (!$blnIsOpen && !empty($this->arrPickerValue) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 || $table !== $this->strTable))
 		{
-			$blnIsOpen = true;
+			$selected = $this->arrPickerValue;
+
+			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 6)
+			{
+				$selected = $this->Database->execute("SELECT pid FROM {$this->strTable} WHERE id IN (" . implode(',', array_map('\intval', $this->arrPickerValue)) . ')')
+										   ->fetchEach('pid');
+			}
+
+			if (!empty(array_intersect($this->Database->getChildRecords(array($id), $table), $selected)))
+			{
+				$blnIsOpen = true;
+			}
 		}
 
 		if (!empty($childs))

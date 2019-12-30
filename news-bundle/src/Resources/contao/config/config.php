@@ -9,27 +9,21 @@
  */
 
 // Back end modules
-array_insert($GLOBALS['BE_MOD']['content'], 1, array
+$GLOBALS['BE_MOD']['content']['news'] = array
 (
-	'news' => array
-	(
-		'tables'      => array('tl_news_archive', 'tl_news', 'tl_news_feed', 'tl_content'),
-		'table'       => array('Contao\TableWizard', 'importTable'),
-		'list'        => array('Contao\ListWizard', 'importList')
-	)
-));
+	'tables'      => array('tl_news_archive', 'tl_news', 'tl_news_feed', 'tl_content'),
+	'table'       => array('Contao\TableWizard', 'importTable'),
+	'list'        => array('Contao\ListWizard', 'importList')
+);
 
 // Front end modules
-array_insert($GLOBALS['FE_MOD'], 2, array
+$GLOBALS['FE_MOD']['news'] = array
 (
-	'news' => array
-	(
-		'newslist'    => 'Contao\ModuleNewsList',
-		'newsreader'  => 'Contao\ModuleNewsReader',
-		'newsarchive' => 'Contao\ModuleNewsArchive',
-		'newsmenu'    => 'Contao\ModuleNewsMenu'
-	)
-));
+	'newslist'    => 'Contao\ModuleNewsList',
+	'newsreader'  => 'Contao\ModuleNewsReader',
+	'newsarchive' => 'Contao\ModuleNewsArchive',
+	'newsmenu'    => 'Contao\ModuleNewsMenu'
+);
 
 // Cron jobs
 $GLOBALS['TL_CRON']['daily']['generateNewsFeeds'] = array('Contao\News', 'generateFeeds');

@@ -33,7 +33,7 @@ class SwitchUserListenerTest extends TestCase
         $event = $this->mockSwitchUserEvent('user2');
 
         $listener = new SwitchUserListener($tokenStorage, $logger);
-        $listener->onSwitchUser($event);
+        $listener($event);
     }
 
     public function testFailsIfTheTokenStorageDoesNotContainAToken(): void
@@ -51,7 +51,7 @@ class SwitchUserListenerTest extends TestCase
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('The token storage did not contain a token.');
 
-        $listener->onSwitchUser($event);
+        $listener($event);
     }
 
     /**
@@ -67,7 +67,7 @@ class SwitchUserListenerTest extends TestCase
 
         $context = [
             'contao' => new ContaoContext(
-                'Contao\CoreBundle\EventListener\SwitchUserListener::onSwitchUser',
+                'Contao\CoreBundle\EventListener\SwitchUserListener::__invoke',
                 ContaoContext::ACCESS,
                 'user1'
             ),

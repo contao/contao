@@ -33,7 +33,7 @@ class RefererIdListenerTest extends TestCase
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
         $listener = new RefererIdListener($this->mockTokenGenerator(), $this->mockScopeMatcher());
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertTrue($request->attributes->has('_contao_referer_id'));
         $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));
@@ -48,7 +48,7 @@ class RefererIdListenerTest extends TestCase
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
         $listener = new RefererIdListener($this->mockTokenGenerator(), $this->mockScopeMatcher());
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertFalse($request->attributes->has('_contao_referer_id'));
     }
@@ -62,7 +62,7 @@ class RefererIdListenerTest extends TestCase
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
 
         $listener = new RefererIdListener($this->mockTokenGenerator(), $this->mockScopeMatcher());
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertFalse($request->attributes->has('_contao_referer_id'));
     }
@@ -76,12 +76,12 @@ class RefererIdListenerTest extends TestCase
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
 
         $listener = new RefererIdListener($this->mockTokenGenerator(), $this->mockScopeMatcher());
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertTrue($request->attributes->has('_contao_referer_id'));
         $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));
 
-        $listener->onKernelRequest($event);
+        $listener($event);
 
         $this->assertTrue($request->attributes->has('_contao_referer_id'));
         $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));

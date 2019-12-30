@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
+use Psr\Log\LogLevel;
+
 /**
  * Provides the template inheritance logic
  *
@@ -92,7 +95,21 @@ trait TemplateInheritance
 
 			try
 			{
-				include $strParent;
+				if (file_exists($strParent))
+				{
+					include $strParent;
+				}
+				else
+				{
+					System::getContainer()
+						->get('monolog.logger.contao')
+						->log(
+							LogLevel::ERROR,
+							'Invalid template path: ' . StringUtil::stripRootDir($strParent),
+							array('contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR))
+						)
+					;
+				}
 
 				// Capture the output of the root template
 				if ($this->strParent === null)

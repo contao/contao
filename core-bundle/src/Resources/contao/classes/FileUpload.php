@@ -149,7 +149,7 @@ class FileUpload extends Backend
 				$strExtension = strtolower(substr($file['name'], strrpos($file['name'], '.') + 1));
 
 				// Image is too big
-				if (\in_array($strExtension, array('gif', 'jpg', 'jpeg', 'png')) && System::getContainer()->getParameter('contao.image.reject_large_uploads'))
+				if (\in_array($strExtension, array('gif', 'jpg', 'jpeg', 'png', 'webp')) && System::getContainer()->getParameter('contao.image.reject_large_uploads'))
 				{
 					$arrImageSize = getimagesize($file['tmp_name']);
 

@@ -38,7 +38,7 @@ class PaletteManipulator
 
     public static function create(): self
     {
-        return new static();
+        return new self();
     }
 
     /**

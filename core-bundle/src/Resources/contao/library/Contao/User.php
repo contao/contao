@@ -560,8 +560,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			'id' => $this->id,
 			'username' => $this->username,
 			'password' => $this->password,
-			'admin' => $this->admin,
-			'amg' => $this->amg,
 			'disable' => $this->disable,
 			'start' => $this->start,
 			'stop' => $this->stop
@@ -577,12 +575,12 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	{
 		$data = unserialize($serialized, array('allowed_classes'=>false));
 
-		if (array_keys($data) != array('id', 'username', 'password', 'admin', 'amg', 'disable', 'start', 'stop'))
+		if (array_keys($data) != array('id', 'username', 'password', 'disable', 'start', 'stop'))
 		{
 			return;
 		}
 
-		list($this->id, $this->username, $this->password, $this->admin, $this->amg, $this->disable, $this->start, $this->stop) = array_values($data);
+		list($this->id, $this->username, $this->password, $this->disable, $this->start, $this->stop) = array_values($data);
 	}
 
 	/**
@@ -608,11 +606,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		}
 
 		if ($this->password !== $user->password)
-		{
-			return false;
-		}
-
-		if ((bool) $this->admin !== (bool) $user->admin)
 		{
 			return false;
 		}

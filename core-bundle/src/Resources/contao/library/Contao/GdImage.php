@@ -70,7 +70,7 @@ class GdImage
 			$extension = 'jpeg';
 		}
 
-		if (\in_array($extension, array('gif', 'jpeg', 'png')))
+		if (\in_array($extension, array('gif', 'jpeg', 'png', 'webp')))
 		{
 			$function = 'imagecreatefrom' . $extension;
 		}
@@ -196,6 +196,10 @@ class GdImage
 					$this->convertToPaletteImage();
 				}
 				imagepng($this->gdResource, $path);
+				break;
+
+			case 'webp':
+				imagewebp($this->gdResource, $path);
 				break;
 
 			default:
