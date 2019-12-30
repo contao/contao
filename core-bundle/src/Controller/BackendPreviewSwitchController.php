@@ -42,11 +42,6 @@ use Twig\Error\Error as TwigError;
 class BackendPreviewSwitchController
 {
     /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
      * @var FrontendPreviewAuthenticator
      */
     private $previewAuthenticator;
@@ -86,9 +81,8 @@ class BackendPreviewSwitchController
      */
     private $router;
 
-    public function __construct(ContaoFramework $framework, FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, string $csrfTokenName)
+    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, string $csrfTokenName)
     {
-        $this->framework = $framework;
         $this->previewAuthenticator = $previewAuthenticator;
         $this->tokenChecker = $tokenChecker;
         $this->connection = $connection;
@@ -104,8 +98,6 @@ class BackendPreviewSwitchController
      */
     public function __invoke(Request $request): Response
     {
-        $this->framework->initialize();
-
         $user = $this->security->getUser();
 
         if (!$user instanceof BackendUser || !$request->isXmlHttpRequest()) {

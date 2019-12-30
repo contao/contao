@@ -34,11 +34,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class BackendPreviewController
 {
     /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
      * @var string
      */
     private $previewScript;
@@ -63,9 +58,8 @@ class BackendPreviewController
      */
     private $authorizationChecker;
 
-    public function __construct(ContaoFramework $framework, string $previewScript, FrontendPreviewAuthenticator $previewAuthenticator, EventDispatcherInterface $dispatcher, RouterInterface $router, AuthorizationCheckerInterface $authorizationChecker)
+    public function __construct(string $previewScript, FrontendPreviewAuthenticator $previewAuthenticator, EventDispatcherInterface $dispatcher, RouterInterface $router, AuthorizationCheckerInterface $authorizationChecker)
     {
-        $this->framework = $framework;
         $this->previewScript = $previewScript;
         $this->previewAuthenticator = $previewAuthenticator;
         $this->dispatcher = $dispatcher;
@@ -81,8 +75,6 @@ class BackendPreviewController
         if ($request->getScriptName() !== $this->previewScript) {
             return new RedirectResponse($this->previewScript.$request->getRequestUri());
         }
-
-        $this->framework->initialize();
 
         if (!$this->authorizationChecker->isGranted('ROLE_USER')) {
             return new Response('Access denied', Response::HTTP_FORBIDDEN);
