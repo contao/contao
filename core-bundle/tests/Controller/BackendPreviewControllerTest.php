@@ -44,7 +44,7 @@ class BackendPreviewControllerTest extends TestCase
         $this->assertSame('preview.php', $response->getTargetUrl());
     }
 
-    public function testThrowsAccessDenied(): void
+    public function testDeniesAccessIfNotGranted(): void
     {
         $controller = new BackendPreviewController(
             'preview.php',
