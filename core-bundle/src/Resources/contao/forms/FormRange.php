@@ -24,7 +24,6 @@ namespace Contao;
  */
 class FormRange extends Widget
 {
-
 	/**
 	 * Submit user input
 	 *
@@ -129,14 +128,16 @@ class FormRange extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf('<input type="%s" name="%s" id="ctrl_%s" class="range%s%s" value="%s"%s%s',
-						$this->type,
-						$this->strName,
-						$this->strId,
-						($this->hideInput ? ' password' : ''),
-						(('' !== $this->strClass) ? ' '.$this->strClass : ''),
-						StringUtil::specialchars($this->value),
-						$this->getAttributes(),
-						$this->strTagEnding);
+		return sprintf(
+			'<input type="%s" name="%s" id="ctrl_%s" class="range%s%s" value="%s"%s%s',
+			$this->type,
+			$this->strName,
+			$this->strId,
+			($this->hideInput ? ' password' : ''),
+			(('' !== $this->strClass) ? ' ' . $this->strClass : ''),
+			StringUtil::specialchars($this->value),
+			$this->getAttributes(),
+			$this->strTagEnding
+		);
 	}
 }
