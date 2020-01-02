@@ -20,6 +20,7 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  tools: prestissimo
                   coverage: pcov
 
             - name: Checkout
@@ -70,6 +71,7 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  tools: prestissimo
                   coverage: none
 
             - name: Checkout
@@ -105,6 +107,7 @@ jobs:
               with:
                   php-version: ${{ matrix.php }}
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  tools: prestissimo
                   coverage: none
 
             - name: Create the database
@@ -138,6 +141,7 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  tools: prestissimo
                   coverage: none
 
             - name: Create the database
@@ -171,6 +175,7 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  tools: prestissimo
                   coverage: none
 
             - name: Checkout
@@ -211,6 +216,7 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  tools: prestissimo
                   coverage: none
 
             - name: Adjust the Git autocrlf setting
@@ -239,6 +245,7 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: json, zlib
+                  tools: prestissimo
                   coverage: none
 
             - name: Checkout
