@@ -108,7 +108,7 @@
         <source>Files of this type cannot be uploaded.</source>
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
-        <source>File location: %s</source>
+        <source>Path: %s</source>
       </trans-unit>
       <trans-unit id="tl_files.syncAdded">
         <source>Added the file or folder "%s"</source>
