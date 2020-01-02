@@ -475,6 +475,7 @@ class Config
 			'encryptionKey'    => 'contao.encryption_key',
 			'urlSuffix'        => 'contao.url_suffix',
 			'uploadPath'       => 'contao.upload_path',
+			'editableFiles'    => 'contao.editable_files',
 			'debugMode'        => 'kernel.debug',
 			'enableSearch'     => 'contao.search.default_indexer.enable',
 			'indexProtected'   => 'contao.search.indexProtected',
