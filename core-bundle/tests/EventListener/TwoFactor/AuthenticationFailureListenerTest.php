@@ -59,7 +59,7 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
     /**
      * @dataProvider getUserData
      */
-    public function testIncreasesLoginCount(string $class): void
+    public function testIncreasesTheLoginCount(string $class): void
     {
         /** @var User&MockObject $user */
         $user = $this->mockClassWithProperties($class);
@@ -81,7 +81,7 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
     /**
      * @dataProvider getUserData
      */
-    public function testIncreasesLockTime(string $class): void
+    public function testIncreasesTheLockTime(string $class): void
     {
         ClockMock::register(AuthenticationFailureListener::class);
 
@@ -99,8 +99,8 @@ class AuthenticationFailureListenerTest extends ContaoTestCase
         $listener = new AuthenticationFailureListener();
         $listener(new TwoFactorAuthenticationEvent(new Request(), $token));
 
-        $this->assertSame(time() + 5 * $user->loginAttempts, $user->locked);
         $this->assertSame(2, $user->loginAttempts);
+        $this->assertSame(strtotime('+10 seconds'), $user->locked);
     }
 
     public function getUserData(): \Generator

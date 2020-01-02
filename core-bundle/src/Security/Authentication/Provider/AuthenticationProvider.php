@@ -77,7 +77,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
      */
     public function onBadCredentials(User $user, AuthenticationException $exception): AuthenticationException
     {
-        if (0 === $user->loginAttempts) {
+        if ($user->loginAttempts < 1) {
             ++$user->loginAttempts;
             $user->save();
 
@@ -92,8 +92,6 @@ class AuthenticationProvider extends DaoAuthenticationProvider
         ++$user->loginAttempts;
         $user->locked = time() + $lockedSeconds;
         $user->save();
-
-        $lockedSeconds = $user->locked - time();
 
         $exception = new LockedException(
             $lockedSeconds,

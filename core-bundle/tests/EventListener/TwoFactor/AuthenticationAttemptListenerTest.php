@@ -60,7 +60,7 @@ class AuthenticationAttemptListenerTest extends ContaoTestCase
     /**
      * @dataProvider getUserData
      */
-    public function testReturnsIfLockedPeriodPassed(string $class): void
+    public function testReturnsIfTheLockPeriodHasExpired(string $class): void
     {
         ClockMock::register(AuthenticationAttemptListener::class);
 
@@ -82,13 +82,13 @@ class AuthenticationAttemptListenerTest extends ContaoTestCase
     /**
      * @dataProvider getUserData
      */
-    public function testThrowsExceptionIfLockedPeriodStillValid(string $class): void
+    public function testThrowsAnExceptionIfTheLockPeriodIsStillActive(string $class): void
     {
         ClockMock::register(AuthenticationAttemptListener::class);
 
         /** @var User&MockObject $user */
         $user = $this->mockClassWithProperties($class);
-        $user->locked = time() + 300;
+        $user->locked = time() + 5;
         $user->username = 'foobar';
 
         $token = $this->createMock(TwoFactorToken::class);
@@ -101,7 +101,7 @@ class AuthenticationAttemptListenerTest extends ContaoTestCase
         $listener = new AuthenticationAttemptListener();
 
         $this->expectException(LockedException::class);
-        $this->expectExceptionMessage('User "foobar" has been locked for 300 seconds');
+        $this->expectExceptionMessage('User "foobar" has been locked for 5 seconds');
 
         $listener(new TwoFactorAuthenticationEvent(new Request(), $token));
     }

@@ -66,7 +66,7 @@ class UserCheckerTest extends TestCase
         $userChecker = new UserChecker($this->mockContaoFramework());
 
         $this->expectException(LockedException::class);
-        $this->expectExceptionMessage('User "foo" has been locked for 5 seconds');
+        $this->expectExceptionMessage('User "foo" is still locked for 5 seconds');
 
         $userChecker->checkPreAuth($user);
     }
