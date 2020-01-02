@@ -87,7 +87,6 @@ $GLOBALS['TL_CONFIG']['maxImageWidth']        = 0;
 $GLOBALS['TL_CONFIG']['defaultUser']          = 0;
 $GLOBALS['TL_CONFIG']['defaultGroup']         = 0;
 $GLOBALS['TL_CONFIG']['defaultChmod']         = array('u1', 'u2', 'u3', 'u4', 'u5', 'u6', 'g4', 'g5', 'g6');
-$GLOBALS['TL_CONFIG']['editableFiles']        = 'css,csv,html,ini,js,json,less,md,scss,svg,svgz,txt,xliff,xml,yml,yaml';
 $GLOBALS['TL_CONFIG']['allowedDownload']
 	= 'jpg,jpeg,gif,png,svg,svgz,webp,'
 	. 'odt,ods,odp,odg,ott,ots,otp,otg,pdf,'
