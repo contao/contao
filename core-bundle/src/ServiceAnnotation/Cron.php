@@ -43,8 +43,6 @@ final class Cron implements ServiceTagInterface
         // Replace escaped characters
         $this->value = preg_replace('#\\\\([\\\\/"])#', '$1', $this->value);
 
-        $attributes = ['interval' => $this->value];
-
-        return $attributes;
+        return ['interval' => $this->value];
     }
 }
