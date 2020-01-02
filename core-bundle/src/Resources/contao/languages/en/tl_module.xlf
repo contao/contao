@@ -201,10 +201,10 @@
         <source>Here you can select the search results template.</source>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
-        <source>Column</source>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
-        <source>Please choose the column whose articles you want to list.</source>
+        <source>Please choose the layout section whose articles you want to list.</source>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
