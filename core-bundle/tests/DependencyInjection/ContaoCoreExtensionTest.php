@@ -70,6 +70,8 @@ use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
+use Contao\CoreBundle\EventListener\TwoFactor\AuthenticationAttemptListener;
+use Contao\CoreBundle\EventListener\TwoFactor\AuthenticationFailureListener;
 use Contao\CoreBundle\EventListener\TwoFactor\FrontendListener;
 use Contao\CoreBundle\EventListener\UserSessionListener as EventUserSessionListener;
 use Contao\CoreBundle\Fragment\ForwardFragmentRenderer;
@@ -1059,6 +1061,50 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheTwoFactorAuthenticationAttemptListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.two_factor.authentication_attempt'));
+
+        $definition = $this->container->getDefinition('contao.listener.two_factor.authentication_attempt');
+
+        $this->assertSame(AuthenticationAttemptListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertEquals([], $definition->getArguments());
+
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'event' => 'scheb_two_factor.authentication.attempt',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheTwoFactorAuthenticationFailureListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.two_factor.authentication_failure'));
+
+        $definition = $this->container->getDefinition('contao.listener.two_factor.authentication_failure');
+
+        $this->assertSame(AuthenticationFailureListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertEquals([], $definition->getArguments());
+
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'event' => 'scheb_two_factor.authentication.failure',
+                    ],
                 ],
             ],
             $definition->getTags()
