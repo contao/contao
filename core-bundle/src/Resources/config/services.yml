@@ -188,7 +188,7 @@ services:
 
     Contao\CoreBundle\Cron\Cron:
         arguments:
-            - '@Contao\CoreBundle\Repository\CronRepository'
+            - '@Contao\CoreBundle\Repository\CronJobRepository'
             - '@?logger'
         public: true
 
@@ -432,10 +432,10 @@ services:
         tags:
             - { name: contao.picker_provider }
 
-    Contao\CoreBundle\Repository\CronRepository:
+    Contao\CoreBundle\Repository\CronJobRepository:
         arguments:
             - '@doctrine'
-            - 'Contao\CoreBundle\Entity\Cron'
+            - 'Contao\CoreBundle\Entity\CronJob'
 
     contao.repository.remember_me:
         class: Contao\CoreBundle\Repository\RememberMeRepository

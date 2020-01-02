@@ -17,14 +17,14 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 
 /**
  * @ORM\Table(
- *     name="tl_cron",
+ *     name="tl_cron_job",
  *     indexes={
  *         @ORM\Index(name="name", columns={"name"})
  *     }
  * )
- * @ORM\Entity(repositoryClass="Contao\CoreBundle\Repository\CronRepository")
+ * @ORM\Entity(repositoryClass="Contao\CoreBundle\Repository\CronJobRepository")
  */
-class Cron
+class CronJob
 {
     /**
      * @var int

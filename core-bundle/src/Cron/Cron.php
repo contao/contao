@@ -12,15 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
-use Contao\CoreBundle\Entity\Cron as CronEntity;
-use Contao\CoreBundle\Repository\CronRepository;
+use Contao\CoreBundle\Entity\CronJob;
+use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
 use Psr\Log\LoggerInterface;
 
 class Cron
 {
     /**
-     * @var CronRepository
+     * @var CronJobRepository
      */
     private $repository;
 
@@ -32,9 +32,9 @@ class Cron
     /**
      * @var array
      */
-    private $crons = [];
+    private $cronJobs = [];
 
-    public function __construct(CronRepository $repository, LoggerInterface $logger = null)
+    public function __construct(CronJobRepository $repository, LoggerInterface $logger = null)
     {
         $this->logger = $logger;
         $this->repository = $repository;
@@ -47,7 +47,7 @@ class Cron
      */
     public function addCronJob($service, string $method, string $interval): void
     {
-        $this->crons[] = [
+        $this->cronJobs[] = [
             'service' => $service,
             'method' => $method,
             'interval' => $interval,
@@ -60,7 +60,7 @@ class Cron
      */
     public function run(): void
     {
-        $cronsToBeRun = [];
+        $cronJobsToBeRun = [];
         $now = new \DateTime();
 
         try {
@@ -68,20 +68,20 @@ class Cron
             $this->repository->lockTable();
 
             // Go through each cron job
-            foreach ($this->crons as $cron) {
+            foreach ($this->cronJobs as $cron) {
                 $interval = $cron['interval'];
                 $name = $cron['name'];
 
                 // Determine the last run date
                 $lastRunDate = null;
 
-                /** @var CronEntity $lastRunEntity */
+                /** @var CronJob $lastRunEntity */
                 $lastRunEntity = $this->repository->findOneByName($name);
 
                 if (null !== $lastRunEntity) {
                     $lastRunDate = $lastRunEntity->getLastRun();
                 } else {
-                    $lastRunEntity = new CronEntity($name);
+                    $lastRunEntity = new CronJob($name);
                 }
 
                 // Check if the cron should be run
@@ -93,7 +93,7 @@ class Cron
                     $this->repository->persist($lastRunEntity);
 
                     // Add job to the crons to be run
-                    $cronsToBeRun[] = $cron;
+                    $cronJobsToBeRun[] = $cron;
                 }
             }
         } finally {
@@ -101,7 +101,7 @@ class Cron
         }
 
         // Execute all crons to be run
-        foreach ($cronsToBeRun as $cron) {
+        foreach ($cronJobsToBeRun as $cron) {
             if (null !== $this->logger) {
                 $this->logger->debug(sprintf('Executing cron job "%s"', $cron['name']));
             }

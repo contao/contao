@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Cron;
 
 use Contao\CoreBundle\Cron\Cron;
-use Contao\CoreBundle\Entity\Cron as CronEntity;
-use Contao\CoreBundle\Repository\CronRepository;
+use Contao\CoreBundle\Entity\CronJob;
+use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -23,7 +23,7 @@ class CronTest extends TestCase
 {
     public function testExecutesAddedCronJob(): void
     {
-        $repository = $this->createMock(CronRepository::class);
+        $repository = $this->createMock(CronJobRepository::class);
 
         $cronjob = $this->getMockBuilder(\stdClass::class)->addMethods(['onHourly'])->getMock();
         $cronjob
@@ -40,7 +40,7 @@ class CronTest extends TestCase
 
     public function testLoggingOfExecutedCronJobs(): void
     {
-        $repository = $this->createMock(CronRepository::class);
+        $repository = $this->createMock(CronJobRepository::class);
 
         $cronjob = $this->getMockBuilder(\stdClass::class)
             ->setMockClassName('TestCronJob')
@@ -78,7 +78,7 @@ class CronTest extends TestCase
 
     public function testUpdatesCronEntities(): void
     {
-        $repository = $this->createMock(CronRepository::class);
+        $repository = $this->createMock(CronJobRepository::class);
 
         $entity = $this->mockEntity('UpdateEntitiesCron::onHourly', (new \DateTime())->modify('-1 hours'));
 
@@ -106,7 +106,7 @@ class CronTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('persist')
-            ->with($this->callback(static function (CronEntity $entity) {
+            ->with($this->callback(static function (CronJob $entity) {
                 return 'UpdateEntitiesCron::onHourly' === $entity->getName() && (new \DateTime()) >= $entity->getLastRun();
             }))
         ;
@@ -119,11 +119,11 @@ class CronTest extends TestCase
     }
 
     /**
-     * @return CronEntity&MockObject
+     * @return CronJob&MockObject
      */
-    private function mockEntity(string $name, \DateTime $lastRun = null): CronEntity
+    private function mockEntity(string $name, \DateTime $lastRun = null): CronJob
     {
-        $entity = $this->createMock(CronEntity::class);
+        $entity = $this->createMock(CronJob::class);
 
         $entity
             ->method('getName')

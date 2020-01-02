@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Repository;
 
-use Contao\CoreBundle\Entity\Cron as CronEntity;
+use Contao\CoreBundle\Entity\CronJob;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Connection;
@@ -20,7 +20,7 @@ use Doctrine\DBAL\Connection;
 /**
  * @internal
  */
-class CronRepository extends ServiceEntityRepository
+class CronJobRepository extends ServiceEntityRepository
 {
     /**
      * @var Connection
@@ -29,7 +29,7 @@ class CronRepository extends ServiceEntityRepository
 
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CronEntity::class);
+        parent::__construct($registry, CronJob::class);
 
         if (($connection = $registry->getConnection()) instanceof Connection) {
             $this->connection = $connection;
@@ -48,7 +48,7 @@ class CronRepository extends ServiceEntityRepository
         $this->connection->exec('UNLOCK TABLES');
     }
 
-    public function persist(CronEntity ...$entities): void
+    public function persist(CronJob ...$entities): void
     {
         foreach ($entities as $entity) {
             $this->_em->persist($entity);
