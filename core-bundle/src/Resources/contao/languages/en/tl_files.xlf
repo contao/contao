@@ -171,7 +171,7 @@
         <source>Drag file or folder "%s"</source>
       </trans-unit>
       <trans-unit id="tl_files.source">
-        <source>Edit file "%s"</source>
+        <source>Edit the source text of file "%s"</source>
       </trans-unit>
       <trans-unit id="tl_files.upload">
         <source>Upload files to folder "%s"</source>
