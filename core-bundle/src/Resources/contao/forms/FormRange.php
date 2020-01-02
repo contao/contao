@@ -140,5 +140,3 @@ class FormRange extends Widget
 						$this->strTagEnding);
 	}
 }
-
-class_alias(FormRange::class, 'FormRange');
