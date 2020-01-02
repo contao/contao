@@ -45,14 +45,14 @@ use Contao\CoreBundle\EventListener\BackendMenuListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
-use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
+use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\EventListener\InsertTags\AssetListener;
 use Contao\CoreBundle\EventListener\InsertTags\TranslationListener;
-use Contao\CoreBundle\EventListener\LocaleListener;
+use Contao\CoreBundle\EventListener\LocaleSubscriber;
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
@@ -62,7 +62,7 @@ use Contao\CoreBundle\EventListener\ResponseExceptionListener;
 use Contao\CoreBundle\EventListener\RobotsTxtListener;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
-use Contao\CoreBundle\EventListener\SubrequestCacheListener;
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
 use Contao\CoreBundle\EventListener\TwoFactorFrontendListener;
 use Contao\CoreBundle\EventListener\UserSessionListener as EventUserSessionListener;
@@ -378,13 +378,13 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheCsrfTokenCookieListener(): void
+    public function testRegistersTheCsrfTokenCookieSubscriber(): void
     {
         $this->assertTrue($this->container->has('contao.listener.csrf_token_cookie'));
 
         $definition = $this->container->getDefinition('contao.listener.csrf_token_cookie');
 
-        $this->assertSame(CsrfTokenCookieListener::class, $definition->getClass());
+        $this->assertSame(CsrfTokenCookieSubscriber::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
         $this->assertEquals(
@@ -397,17 +397,19 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(
             [
-                'kernel.event_listener' => [
-                    [
-                        'method' => 'onKernelRequest',
-                        'priority' => 36,
-                    ],
-                    [
-                        'method' => 'onKernelResponse',
-                    ],
+                'kernel.event_subscriber' => [
+                    [],
                 ],
             ],
             $definition->getTags()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.request' => ['onKernelRequest', 36],
+                'kernel.response' => 'onKernelResponse',
+            ],
+            CsrfTokenCookieSubscriber::getSubscribedEvents()
         );
     }
 
@@ -451,9 +453,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'doctrine.event_listener' => [
-                    [
-                        'event' => 'onSchemaIndexDefinition',
-                    ],
                     [
                         'event' => 'postGenerateSchema',
                     ],
@@ -559,13 +558,13 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheLocaleListener(): void
+    public function testRegistersTheLocaleSubscriber(): void
     {
         $this->assertTrue($this->container->has('contao.listener.locale'));
 
         $definition = $this->container->getDefinition('contao.listener.locale');
 
-        $this->assertSame(LocaleListener::class, $definition->getClass());
+        $this->assertSame(LocaleSubscriber::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
         $this->assertEquals(
@@ -579,18 +578,21 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(
             [
-                'kernel.event_listener' => [
-                    [
-                        'method' => 'onKernelRequest',
-                        'priority' => 20,
-                    ],
-                    [
-                        'method' => 'setTranslatorLocale',
-                        'priority' => 100,
-                    ],
+                'kernel.event_subscriber' => [
+                    [],
                 ],
             ],
             $definition->getTags()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.request' => [
+                    ['onKernelRequest', 20],
+                    ['setTranslatorLocale', 100],
+                ],
+            ],
+            LocaleSubscriber::getSubscribedEvents()
         );
     }
 
@@ -851,27 +853,20 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheSubrequestCacheListener(): void
+    public function testRegistersTheSubrequestCacheSubscriber(): void
     {
         $this->assertTrue($this->container->has('contao.listener.subrequest_cache'));
 
         $definition = $this->container->getDefinition('contao.listener.subrequest_cache');
 
-        $this->assertSame(SubrequestCacheListener::class, $definition->getClass());
+        $this->assertSame(SubrequestCacheSubscriber::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertEquals([], $definition->getArguments());
 
         $this->assertSame(
             [
-                'kernel.event_listener' => [
-                    [
-                        'method' => 'onKernelRequest',
-                        'priority' => 255,
-                    ],
-                    [
-                        'method' => 'onKernelResponse',
-                        'priority' => -255,
-                    ],
+                'kernel.event_subscriber' => [
+                    [],
                 ],
                 'kernel.reset' => [
                     [
@@ -880,6 +875,14 @@ class ContaoCoreExtensionTest extends TestCase
                 ],
             ],
             $definition->getTags()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.request' => ['onKernelRequest', 255],
+                'kernel.response' => ['onKernelResponse', -255],
+            ],
+            SubrequestCacheSubscriber::getSubscribedEvents()
         );
     }
 
@@ -961,9 +964,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'method' => 'onKernelRequest',
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()
