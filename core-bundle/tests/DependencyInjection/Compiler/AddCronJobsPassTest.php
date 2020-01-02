@@ -152,54 +152,6 @@ class AddCronJobsPassTest extends TestCase
         $this->assertSame('customMethod', $crons[0][1]);
     }
 
-    public function testSetsTheDefaultPriorityIfNoPriorityGiven(): void
-    {
-        $definition = new Definition(TestCron::class);
-        $definition->addTag('contao.cron', ['interval' => 'minutely']);
-
-        $container = $this->getContainerBuilder();
-        $container->setDefinition(TestCron::class, $definition);
-
-        $pass = new AddCronJobsPass();
-        $pass->process($container);
-
-        $crons = $this->getCronsFromDefinition($container);
-
-        $this->assertSame(0, $crons[0][3]);
-    }
-
-    public function testSetsTheDefaultScopeIfNoScopeGiven(): void
-    {
-        $definition = new Definition(TestCron::class);
-        $definition->addTag('contao.cron', ['interval' => 'minutely']);
-
-        $container = $this->getContainerBuilder();
-        $container->setDefinition(TestCron::class, $definition);
-
-        $pass = new AddCronJobsPass();
-        $pass->process($container);
-
-        $crons = $this->getCronsFromDefinition($container);
-
-        $this->assertNull($crons[0][4]);
-    }
-
-    public function testSetsScopeIfScopeIsDefined(): void
-    {
-        $definition = new Definition(TestCron::class);
-        $definition->addTag('contao.cron', ['interval' => 'minutely', 'scope' => 'cli']);
-
-        $container = $this->getContainerBuilder();
-        $container->setDefinition(TestCron::class, $definition);
-
-        $pass = new AddCronJobsPass();
-        $pass->process($container);
-
-        $crons = $this->getCronsFromDefinition($container);
-
-        $this->assertSame('cli', $crons[0][4]);
-    }
-
     public function testHandlesMultipleTags(): void
     {
         $definition = new Definition(TestCron::class);
@@ -253,14 +205,11 @@ class AddCronJobsPassTest extends TestCase
         foreach ($methodCalls as $methodCall) {
             $this->assertSame('addCronJob', $methodCall[0]);
             $this->assertIsArray($methodCall[1]);
+
             $this->assertInstanceOf(Reference::class, $methodCall[1][0]);
             $this->assertIsString($methodCall[1][1]);
             $this->assertIsString($methodCall[1][2]);
-            $this->assertIsInt($methodCall[1][3]);
 
-            if (null !== $methodCall[1][4]) {
-                $this->assertIsString($methodCall[1][4]);
-            }
             $crons[] = $methodCall[1];
         }
 

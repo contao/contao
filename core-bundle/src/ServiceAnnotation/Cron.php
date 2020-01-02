@@ -23,9 +23,7 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  * @Annotation
  * @Target({"CLASS", "METHOD"})
  * @Attributes({
- *     @Attribute("value", type="string", required=true),
- *     @Attribute("priority", type="int"),
- *     @Attribute("scope", type="string"),
+ *     @Attribute("value", type="string", required=true)
  * })
  */
 final class Cron implements ServiceTagInterface
@@ -34,16 +32,6 @@ final class Cron implements ServiceTagInterface
      * @var string
      */
     public $value;
-
-    /**
-     * @var int
-     */
-    public $priority;
-
-    /**
-     * @var string
-     */
-    public $scope;
 
     public function getName(): string
     {
@@ -56,14 +44,6 @@ final class Cron implements ServiceTagInterface
         $this->value = preg_replace('#\\\\([\\\\/"])#', '$1', $this->value);
 
         $attributes = ['interval' => $this->value];
-
-        if ($this->priority) {
-            $attributes['priority'] = $this->priority;
-        }
-
-        if ($this->scope) {
-            $attributes['scope'] = $this->scope;
-        }
 
         return $attributes;
     }

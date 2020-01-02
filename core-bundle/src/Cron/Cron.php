@@ -20,16 +20,6 @@ use Psr\Log\LoggerInterface;
 class Cron
 {
     /**
-     * @var string
-     */
-    public const SCOPE_WEB = 'web';
-
-    /**
-     * @var string
-     */
-    public const SCOPE_CLI = 'cli';
-
-    /**
      * @var CronRepository
      */
     private $repository;
@@ -55,24 +45,20 @@ class Cron
      *
      * @param string $interval The interval as a CRON expression
      */
-    public function addCronJob($service, string $method, string $interval, int $priority = 0, string $scope = null): void
+    public function addCronJob($service, string $method, string $interval): void
     {
         $this->crons[] = [
             'service' => $service,
             'method' => $method,
             'interval' => $interval,
-            'priority' => $priority,
-            'scope' => $scope,
             'name' => \get_class($service).'::'.$method,
         ];
     }
 
     /**
      * Run the registered Contao cron jobs.
-     *
-     * @param array $scopes Scopes of cron jobs to be run
      */
-    public function run(array $scopes = []): void
+    public function run(): void
     {
         $cronsToBeRun = [];
         $now = new \DateTime();
@@ -102,14 +88,6 @@ class Cron
                 $expression = CronExpression::factory($interval);
 
                 if (null === $lastRunDate || $now >= $expression->getNextRunDate($lastRunDate)) {
-                    // Skip jobs that are not to be run in the current scopes
-                    if (!empty($scopes) && null !== $cron['scope'] && !\in_array($cron['scope'], $scopes, true)) {
-                        if (null !== $this->logger) {
-                            $this->logger->debug(sprintf('Skipping cron job "%s" for scope [%s]', $name, implode(',', $scopes)));
-                        }
-                        continue;
-                    }
-
                     // Update the cron entry
                     $lastRunEntity->setLastRun($now);
                     $this->repository->persist($lastRunEntity);
@@ -121,11 +99,6 @@ class Cron
         } finally {
             $this->repository->unlockTable();
         }
-
-        // Sort the crons by priority
-        usort($cronsToBeRun, static function ($a, $b) {
-            return $b['priority'] - $a['priority'];
-        });
 
         // Execute all crons to be run
         foreach ($cronsToBeRun as $cron) {

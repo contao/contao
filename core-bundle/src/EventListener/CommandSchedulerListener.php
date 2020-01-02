@@ -59,7 +59,7 @@ class CommandSchedulerListener
     public function __invoke(TerminateEvent $event): void
     {
         if ($this->framework->isInitialized() && $this->canRunCron($event->getRequest())) {
-            $this->cron->run([Cron::SCOPE_WEB]);
+            $this->cron->run();
         }
     }
 

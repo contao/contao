@@ -43,8 +43,6 @@ class AddCronJobsPass implements CompilerPassInterface
 
                 $method = $this->getMethod($attributes, $jobDefinition->getClass(), $serviceId);
                 $interval = $attributes['interval'];
-                $priority = (int) ($attributes['priority'] ?? 0);
-                $scope = $attributes['scope'] ?? null;
 
                 // Map interval to expression macros
                 $interval = str_replace(
@@ -58,7 +56,7 @@ class AddCronJobsPass implements CompilerPassInterface
                     throw new InvalidDefinitionException(sprintf('The contao.cron definition for service "%s" has an invalid interval expression "%s"', $serviceId, $interval));
                 }
 
-                $definition->addMethodCall('addCronJob', [new Reference($serviceId), $method, $interval, $priority, $scope]);
+                $definition->addMethodCall('addCronJob', [new Reference($serviceId), $method, $interval]);
             }
         }
     }
