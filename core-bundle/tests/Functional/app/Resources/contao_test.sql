@@ -410,6 +410,22 @@ INSERT INTO `tl_cron` VALUES (1,'lastrun','4102444799'),(2,'monthly','0'),(3,'we
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tl_cron_job`
+--
+
+DROP TABLE IF EXISTS `tl_cron_job`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tl_cron_job` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `lastRun` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tl_faq`
 --
 
