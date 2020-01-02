@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Fixtures\Cron;
 
-class TestCron
+class TestCronJob
 {
     public function onMinutely(): void
     {

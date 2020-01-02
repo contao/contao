@@ -43,13 +43,13 @@ class CronJob
     protected $name;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      *
      * @ORM\Column(type="datetime", nullable=false)
      */
     protected $lastRun;
 
-    public function __construct(string $name, \DateTime $lastRun = null)
+    public function __construct(string $name, \DateTimeInterface $lastRun = null)
     {
         $this->name = $name;
         $this->lastRun = $lastRun ?? new \DateTime();
@@ -60,14 +60,14 @@ class CronJob
         return $this->name;
     }
 
-    public function setLastRun(\DateTime $lastRun): self
+    public function setLastRun(\DateTimeInterface $lastRun): self
     {
         $this->lastRun = $lastRun;
 
         return $this;
     }
 
-    public function getLastRun(): \DateTime
+    public function getLastRun(): \DateTimeInterface
     {
         return $this->lastRun;
     }

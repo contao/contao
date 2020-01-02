@@ -90,7 +90,7 @@ class Cron
                 if (null === $lastRunDate || $now >= $expression->getNextRunDate($lastRunDate)) {
                     // Update the cron entry
                     $lastRunEntity->setLastRun($now);
-                    $this->repository->persist($lastRunEntity);
+                    $this->repository->persistAndFlush($lastRunEntity);
 
                     // Add job to the crons to be run
                     $cronJobsToBeRun[] = $cron;

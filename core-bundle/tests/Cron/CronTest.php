@@ -105,7 +105,7 @@ class CronTest extends TestCase
 
         $repository
             ->expects($this->once())
-            ->method('persist')
+            ->method('persistAndFlush')
             ->with($this->callback(static function (CronJob $entity) {
                 return 'UpdateEntitiesCron::onHourly' === $entity->getName() && (new \DateTime()) >= $entity->getLastRun();
             }))

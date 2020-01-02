@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
-use Contao\CoreBundle\Fixtures\Cron\TestCron;
+use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestInvokableCron;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
@@ -57,11 +57,11 @@ class AddCronJobsPassTest extends TestCase
 
     public function testRegistersTheCrons(): void
     {
-        $definition = new Definition(TestCron::class);
+        $definition = new Definition(TestCronJob::class);
         $definition->addTag('contao.cron', ['interval' => 'minutely']);
 
         $container = $this->getContainerBuilder();
-        $container->setDefinition(TestCron::class, $definition);
+        $container->setDefinition(TestCronJob::class, $definition);
 
         $pass = new AddCronJobsPass();
         $pass->process($container);
@@ -73,11 +73,11 @@ class AddCronJobsPassTest extends TestCase
 
     public function testFailsIfTheIntervalAttributeIsMissing(): void
     {
-        $definition = new Definition(TestCron::class);
+        $definition = new Definition(TestCronJob::class);
         $definition->addTag('contao.cron');
 
         $container = $this->getContainerBuilder();
-        $container->setDefinition(TestCron::class, $definition);
+        $container->setDefinition(TestCronJob::class, $definition);
 
         $pass = new AddCronJobsPass();
 
@@ -88,11 +88,11 @@ class AddCronJobsPassTest extends TestCase
 
     public function testFailsIfTheIntervalAttributeIsInvalid(): void
     {
-        $definition = new Definition(TestCron::class);
+        $definition = new Definition(TestCronJob::class);
         $definition->addTag('contao.cron', ['interval' => '* b * * *']);
 
         $container = $this->getContainerBuilder();
-        $container->setDefinition(TestCron::class, $definition);
+        $container->setDefinition(TestCronJob::class, $definition);
 
         $pass = new AddCronJobsPass();
 
@@ -103,11 +103,11 @@ class AddCronJobsPassTest extends TestCase
 
     public function testGeneratesMethodNameIfNoneGiven(): void
     {
-        $definition = new Definition(TestCron::class);
+        $definition = new Definition(TestCronJob::class);
         $definition->addTag('contao.cron', ['interval' => 'minutely']);
 
         $container = $this->getContainerBuilder();
-        $container->setDefinition(TestCron::class, $definition);
+        $container->setDefinition(TestCronJob::class, $definition);
 
         $pass = new AddCronJobsPass();
         $pass->process($container);
@@ -135,14 +135,14 @@ class AddCronJobsPassTest extends TestCase
 
     public function testUsesMethodNameIfMethodNameIsGiven(): void
     {
-        $definition = new Definition(TestCron::class);
+        $definition = new Definition(TestCronJob::class);
         $definition->addTag('contao.cron', [
             'interval' => 'minutely',
             'method' => 'customMethod',
         ]);
 
         $container = $this->getContainerBuilder();
-        $container->setDefinition(TestCron::class, $definition);
+        $container->setDefinition(TestCronJob::class, $definition);
 
         $pass = new AddCronJobsPass();
         $pass->process($container);
@@ -154,7 +154,7 @@ class AddCronJobsPassTest extends TestCase
 
     public function testHandlesMultipleTags(): void
     {
-        $definition = new Definition(TestCron::class);
+        $definition = new Definition(TestCronJob::class);
         $definition->addTag('contao.cron', ['interval' => 'minutely']);
         $definition->addTag('contao.cron', ['interval' => 'hourly']);
         $definition->addTag('contao.cron', ['interval' => 'daily']);
@@ -162,7 +162,7 @@ class AddCronJobsPassTest extends TestCase
         $definition->addTag('contao.cron', ['interval' => 'monthly']);
 
         $container = $this->getContainerBuilder();
-        $container->setDefinition(TestCron::class, $definition);
+        $container->setDefinition(TestCronJob::class, $definition);
 
         $pass = new AddCronJobsPass();
         $pass->process($container);
