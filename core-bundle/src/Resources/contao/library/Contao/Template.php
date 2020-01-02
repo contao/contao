@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\EventListener\SubrequestCacheListener;
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use MatthiasMullie\Minify;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
@@ -320,7 +320,7 @@ abstract class Template extends Controller
 		$response->headers->set('Content-Type', $this->strContentType . '; charset=' . Config::get('characterSet'));
 
 		// Mark this response to affect the caching of the current page but remove any default cache headers
-		$response->headers->set(SubrequestCacheListener::MERGE_CACHE_HEADER, true);
+		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
 		$response->headers->remove('Cache-Control');
 
 		return $response;

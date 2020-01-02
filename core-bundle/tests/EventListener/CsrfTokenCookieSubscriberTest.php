@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
-use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
+use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 
-class CsrfTokenCookieListenerTest extends TestCase
+class CsrfTokenCookieSubscriberTest extends TestCase
 {
     public function testInitializesTheStorage(): void
     {
@@ -49,7 +49,7 @@ class CsrfTokenCookieListenerTest extends TestCase
             ])
         ;
 
-        $listener = new CsrfTokenCookieListener($tokenStorage);
+        $listener = new CsrfTokenCookieSubscriber($tokenStorage);
         $listener->onKernelRequest($this->getRequestEvent($request));
     }
 
@@ -67,7 +67,7 @@ class CsrfTokenCookieListenerTest extends TestCase
             ->method('initialize')
         ;
 
-        $listener = new CsrfTokenCookieListener($tokenStorage);
+        $listener = new CsrfTokenCookieSubscriber($tokenStorage);
         $listener->onKernelRequest($requestEvent);
     }
 
@@ -89,7 +89,7 @@ class CsrfTokenCookieListenerTest extends TestCase
 
         $response = new Response();
 
-        $listener = new CsrfTokenCookieListener($tokenStorage);
+        $listener = new CsrfTokenCookieSubscriber($tokenStorage);
         $listener->onKernelResponse($this->getResponseEvent($request, $response));
 
         $cookies = $response->headers->getCookies();
@@ -126,7 +126,7 @@ class CsrfTokenCookieListenerTest extends TestCase
 
         $response = new Response();
 
-        $listener = new CsrfTokenCookieListener($tokenStorage);
+        $listener = new CsrfTokenCookieSubscriber($tokenStorage);
         $listener->onKernelResponse($this->getResponseEvent($request, $response));
 
         $this->assertCount(0, $response->headers->getCookies());
@@ -151,7 +151,7 @@ class CsrfTokenCookieListenerTest extends TestCase
             ['Content-Type' => 'text/html']
         );
 
-        $listener = new CsrfTokenCookieListener($tokenStorage);
+        $listener = new CsrfTokenCookieSubscriber($tokenStorage);
         $listener->onKernelResponse($this->getResponseEvent($request, $response));
 
         $this->assertSame(
@@ -193,7 +193,7 @@ class CsrfTokenCookieListenerTest extends TestCase
             ->method('getUsedTokens')
         ;
 
-        $listener = new CsrfTokenCookieListener($tokenStorage);
+        $listener = new CsrfTokenCookieSubscriber($tokenStorage);
         $listener->onKernelResponse($responseEvent);
     }
 
@@ -211,7 +211,7 @@ class CsrfTokenCookieListenerTest extends TestCase
             ['Content-Type' => 'application/octet-stream']
         );
 
-        $listener = new CsrfTokenCookieListener($tokenStorage);
+        $listener = new CsrfTokenCookieSubscriber($tokenStorage);
         $listener->onKernelResponse($this->getResponseEvent($request, $response));
 
         $this->assertSame('value="tokenValue"', $response->getContent());

@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpCache\ResponseCacheStrategy;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -35,8 +37,10 @@ use Symfony\Contracts\Service\ResetInterface;
  * the main and subrequest response. The header is automatically set for the
  * page content and classes implementing the abstract content element and
  * module controllers.
+ *
+ * @internal
  */
-class SubrequestCacheListener implements ResetInterface
+class SubrequestCacheSubscriber implements EventSubscriberInterface, ResetInterface
 {
     public const MERGE_CACHE_HEADER = 'Contao-Merge-Cache-Control';
 
@@ -85,5 +89,13 @@ class SubrequestCacheListener implements ResetInterface
     {
         $this->currentStrategy = null;
         $this->strategyStack = [];
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::REQUEST => ['onKernelRequest', 255],
+            KernelEvents::RESPONSE => ['onKernelResponse', -255],
+        ];
     }
 }
