@@ -98,7 +98,7 @@ class AuthenticationProviderTest extends TestCase
         $this->addToAssertionCount(1); // does not throw an exception
     }
 
-    public function testLocksAUserAfterFailedLoginAttempt(): void
+    public function testLocksAUserAfterAFailedLoginAttempt(): void
     {
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);

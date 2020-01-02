@@ -67,11 +67,13 @@ class AuthenticationProvider extends DaoAuthenticationProvider
     }
 
     /**
-     * Counts the login attempts and locks the user after the first try for for a specific delay scheme.
-     * After each failed attempt A, the authentication server
-     * would wait for an increased T * A number of seconds, e.g., say T = 5,
-     * then after 1 attempt, the server waits for 5 seconds, at the second
-     * failed attempt, it waits for 5 * 2 = 10 seconds, etc.
+     * Counts the login attempts and locks the user after the first try
+     * following a specific delay scheme.
+     *
+     * After each failed attempt A, the authentication server waits for an
+     * increased T * A number of seconds, e.g. say T = 5, then after 1 attempt,
+     * the server waits for 5 seconds, at the second failed attempt, it waits
+     * for 5 * 2 = 10 seconds and so on.
      */
     public function onBadCredentials(User $user, AuthenticationException $exception): AuthenticationException
     {

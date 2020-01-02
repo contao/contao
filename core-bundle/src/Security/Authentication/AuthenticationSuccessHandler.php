@@ -73,11 +73,14 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
             return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
         }
 
+        $this->user = $user;
+
+        // Reset login attempts and locked values
+        $this->user->loginAttempts = 0;
+        $this->user->locked = 0;
+
         if ($token instanceof TwoFactorTokenInterface) {
-            // Reset login attempts and locked values
-            $user->loginAttempts = 0;
-            $user->locked = 0;
-            $user->save();
+            $this->user->save();
 
             $response = $this->httpUtils->createRedirectResponse(
                 $request,
@@ -89,14 +92,8 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
             return $response;
         }
 
-        $this->user = $user;
         $this->user->lastLogin = $this->user->currentLogin;
         $this->user->currentLogin = time();
-
-        // Reset login attempts and locked values
-        $this->user->loginAttempts = 0;
-        $this->user->locked = 0;
-
         $this->user->save();
 
         $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
