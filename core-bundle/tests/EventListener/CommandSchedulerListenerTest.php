@@ -148,7 +148,7 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $this->createMock(Cron::class));
-        $listener->onKernelTerminate($this->getTerminateEvent('contao_frontend'));
+        $listener($this->getTerminateEvent('contao_frontend'));
     }
 
     public function testDoesNotRunTheCommandSchedulerIfThereIsADatabaseConnectionError(): void
