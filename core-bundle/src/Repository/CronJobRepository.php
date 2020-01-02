@@ -19,6 +19,8 @@ use Doctrine\DBAL\Connection;
 
 /**
  * @internal
+ *
+ * @method object|null findOneByName(string $name)
  */
 class CronJobRepository extends ServiceEntityRepository
 {

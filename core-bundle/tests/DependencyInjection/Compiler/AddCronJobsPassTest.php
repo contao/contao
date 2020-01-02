@@ -26,7 +26,6 @@ class AddCronJobsPassTest extends TestCase
 {
     public function testDoesNothingIfThereIsNoCron(): void
     {
-        /** @var ContainerBuilder $container */
         $container = $this->createMock(ContainerBuilder::class);
         $container
             ->method('hasDefinition')
@@ -189,7 +188,7 @@ class AddCronJobsPassTest extends TestCase
     }
 
     /**
-     * @return array<Reference,string,string,int,bool>
+     * @return array<object,string,string,int,bool>
      */
     private function getCronsFromDefinition(ContainerBuilder $container): array
     {
