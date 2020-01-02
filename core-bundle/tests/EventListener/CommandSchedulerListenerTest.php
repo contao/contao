@@ -38,7 +38,7 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $listener = new CommandSchedulerListener($this->mockContaoFramework(), $this->mockConnection(), $cron);
-        $listener->onKernelTerminate($this->getTerminateEvent('contao_frontend'));
+        $listener($this->getTerminateEvent('contao_frontend'));
     }
 
     public function testDoesNotRunTheCommandSchedulerIfTheContaoFrameworkIsNotInitialized(): void
@@ -55,7 +55,7 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $this->createMock(Cron::class));
-        $listener->onKernelTerminate($this->getTerminateEvent('contao_backend'));
+        $listener($this->getTerminateEvent('contao_backend'));
     }
 
     public function testDoesNotRunTheCommandSchedulerInTheInstallTool(): void
@@ -78,7 +78,7 @@ class CommandSchedulerListenerTest extends TestCase
         $event = new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $this->createMock(Cron::class));
-        $listener->onKernelTerminate($event);
+        $listener($event);
     }
 
     public function testDoesNotRunTheCommandSchedulerUponFragmentRequests(): void
@@ -101,7 +101,7 @@ class CommandSchedulerListenerTest extends TestCase
         $event = new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $this->createMock(Cron::class));
-        $listener->onKernelTerminate($event);
+        $listener($event);
     }
 
     public function testDoesNotRunTheCommandSchedulerIfTheInstallationIsIncomplete(): void
@@ -124,7 +124,7 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $this->createMock(Cron::class));
-        $listener->onKernelTerminate($this->getTerminateEvent('contao_backend'));
+        $listener($this->getTerminateEvent('contao_backend'));
     }
 
     public function testDoesNotRunTheCommandSchedulerIfCronjobsAreDisabled(): void
@@ -172,7 +172,7 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $listener = new CommandSchedulerListener($framework, $connection, $cron);
-        $listener->onKernelTerminate($this->getTerminateEvent('contao_backend'));
+        $listener($this->getTerminateEvent('contao_backend'));
     }
 
     /**

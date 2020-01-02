@@ -438,6 +438,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.framework'),
                 new Reference('database_connection'),
+                new Reference('Contao\CoreBundle\Cron\Cron'),
                 new Reference('%fragment.path%'),
             ],
             $definition->getArguments()
