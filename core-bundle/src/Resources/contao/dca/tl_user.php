@@ -270,7 +270,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'modules' => array
 		(
 			'exclude'                 => true,
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
@@ -289,7 +288,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'elements' => array
 		(
 			'exclude'                 => true,
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user', 'getContentElements'),
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
@@ -299,7 +297,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'fields' => array
 		(
 			'exclude'                 => true,
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'options'                 => array_keys($GLOBALS['TL_FFL']),
 			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
