@@ -102,39 +102,18 @@ class FormRange extends Widget
 	}
 
 	/**
-	 * Return a parameter.
-	 *
-	 * @param string $strKey The parameter key
-	 *
-	 * @return mixed The parameter value
-	 */
-	public function __get($strKey)
-	{
-		switch ($strKey) {
-			case 'type':
-				return 'range';
-				break;
-
-			default:
-				return parent::__get($strKey);
-				break;
-		}
-	}
-
-	/**
-	 * Generate the widget and return it as string.
+	 * Generate the widget and return it as string
 	 *
 	 * @return string The widget markup
 	 */
 	public function generate()
 	{
 		return sprintf(
-			'<input type="%s" name="%s" id="ctrl_%s" class="range%s%s" value="%s"%s%s',
+			'<input type="%s" name="%s" id="ctrl_%s" class="range%s" value="%s"%s%s',
 			$this->type,
 			$this->strName,
 			$this->strId,
-			($this->hideInput ? ' password' : ''),
-			(('' !== $this->strClass) ? ' ' . $this->strClass : ''),
+			($this->strClass ? ' ' . $this->strClass : ''),
 			StringUtil::specialchars($this->value),
 			$this->getAttributes(),
 			$this->strTagEnding

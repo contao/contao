@@ -254,7 +254,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		),
 		'step' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['step'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
