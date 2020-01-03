@@ -74,13 +74,7 @@ class BackendPreviewListener
     {
         $user = $this->security->getUser();
 
-        if (!$user instanceof BackendUser) {
-            return;
-        }
-
-        $name = $event->getTree()->getName();
-
-        if ('headerMenu' !== $name) {
+        if (!$user instanceof BackendUser || 'headerMenu' !== $event->getTree()->getName()) {
             return;
         }
 

@@ -58,13 +58,11 @@ class BackendLogoutListener
     {
         $user = $this->security->getUser();
 
-        if (!$user instanceof BackendUser) {
-            return;
-        }
-
-        $name = $event->getTree()->getName();
-
-        if ('headerMenu' !== $name || !$submenu = $event->getTree()->getChild('submenu')) {
+        if (
+            !$user instanceof BackendUser
+            || 'headerMenu' !== $event->getTree()->getName()
+            || !$submenu = $event->getTree()->getChild('submenu')
+        ) {
             return;
         }
 
@@ -86,9 +84,10 @@ class BackendLogoutListener
         $token = $this->security->getToken();
 
         if ($token instanceof SwitchUserToken) {
-            return sprintf(
-                $this->translator->trans('MSC.switchBT', [], 'contao_default'),
-                $token->getOriginalToken()->getUsername()
+            return $this->translator->trans(
+                'MSC.switchBT',
+                [$token->getOriginalToken()->getUsername()],
+                'contao_default'
             );
         }
 

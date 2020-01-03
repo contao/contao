@@ -121,6 +121,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
     {
         $security = $this->createMock(Security::class);
         $security
+            ->expects($this->once())
             ->method('getUser')
             ->willReturn(null)
         ;
@@ -150,6 +151,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
     {
         $security = $this->createMock(Security::class);
         $security
+            ->expects($this->once())
             ->method('getUser')
             ->willReturn($this->createMock(BackendUser::class))
         ;
@@ -179,6 +181,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
     {
         $security = $this->createMock(Security::class);
         $security
+            ->expects($this->once())
             ->method('getUser')
             ->willReturn($this->createMock(BackendUser::class))
         ;
