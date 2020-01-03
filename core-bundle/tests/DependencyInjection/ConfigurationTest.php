@@ -181,13 +181,13 @@ class ConfigurationTest extends TestCase
         $params = [
             'contao' => [
                 'crawl' => [
-                    'additionalURIs' => ['invalid.com'],
+                    'additional_uris' => ['invalid.com'],
                 ],
             ],
         ];
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Invalid configuration for path "contao.crawl.additionalURIs": All provided additional URIs must start with either http:// or https://.');
+        $this->expectExceptionMessage('Invalid configuration for path "contao.crawl.additional_uris": All provided additional URIs must start with either http:// or https://.');
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }

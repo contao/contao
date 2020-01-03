@@ -111,7 +111,7 @@ class ContaoCoreExtension extends Extension
 
         // Set the two parameters so they can be used in our legacy Config class for maximum BC
         $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
-        $container->setParameter('contao.search.indexProtected', $config['search']['indexProtected']);
+        $container->setParameter('contao.search.index_protected', $config['search']['index_protected']);
 
         if (!$config['search']['default_indexer']['enable']) {
             // Remove the default indexer completely if it was disabled
@@ -119,7 +119,7 @@ class ContaoCoreExtension extends Extension
         } else {
             // Configure whether to index protected pages on the default indexer
             $defaultIndexer = $container->getDefinition('contao.search.indexer.default');
-            $defaultIndexer->setArgument(2, $config['search']['indexProtected']);
+            $defaultIndexer->setArgument(2, $config['search']['index_protected']);
         }
 
         $features = SearchIndexListener::FEATURE_INDEX | SearchIndexListener::FEATURE_DELETE;
@@ -153,8 +153,8 @@ class ContaoCoreExtension extends Extension
         }
 
         $factory = $container->getDefinition('contao.search.escargot_factory');
-        $factory->setArgument(2, $config['crawl']['additionalURIs']);
-        $factory->setArgument(3, $config['crawl']['defaultHttpClientOptions']);
+        $factory->setArgument(2, $config['crawl']['additional_uris']);
+        $factory->setArgument(3, $config['crawl']['default_http_client_options']);
     }
 
     /**
