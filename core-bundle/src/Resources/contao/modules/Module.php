@@ -374,8 +374,8 @@ abstract class Module extends Frontend
 	 *
 	 * @param PageModel $objPage
 	 * @param PageModel $objSubpage
-	 * @param string $subitems
-	 * @param string $href
+	 * @param string    $subitems
+	 * @param string    $href
 	 *
 	 * @return array
 	 */
@@ -387,20 +387,20 @@ abstract class Module extends Frontend
 		// Use the path without query string to check for active pages (see #480)
 		list($path) = explode('?', Environment::get('request'), 2);
 
-				// Active page
-				if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == $path)
-				{
-					// Mark active forward pages (see #4822)
-					$strClass = (($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) ? 'forward' . ($trail ? ' trail' : '') : 'active') . (($subitems != '') ? ' submenu' : '') . ($objSubpage->protected ? ' protected' : '') . ($objSubpage->cssClass ? ' ' . $objSubpage->cssClass : '');
+		// Active page
+		if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == $path)
+		{
+			// Mark active forward pages (see #4822)
+			$strClass = (($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo) ? 'forward' . ($trail ? ' trail' : '') : 'active') . (($subitems != '') ? ' submenu' : '') . ($objSubpage->protected ? ' protected' : '') . ($objSubpage->cssClass ? ' ' . $objSubpage->cssClass : '');
 
 			$row['isActive'] = true;
 			$row['isTrail'] = false;
 		}
 
-				// Regular page
-				else
-				{
-					$strClass = (($subitems != '') ? 'submenu' : '') . ($objSubpage->protected ? ' protected' : '') . ($trail ? ' trail' : '') . ($objSubpage->cssClass ? ' ' . $objSubpage->cssClass : '');
+		// Regular page
+		else
+		{
+			$strClass = (($subitems != '') ? 'submenu' : '') . ($objSubpage->protected ? ' protected' : '') . ($trail ? ' trail' : '') . ($objSubpage->cssClass ? ' ' . $objSubpage->cssClass : '');
 
 			// Mark pages on the same level (see #2419)
 			if ($objSubpage->pid == $objPage->pid)
