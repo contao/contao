@@ -2327,9 +2327,14 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
         $this->assertSame([], $definition->getArguments());
 
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('contao.escargot_subscriber', $tags);
+        $this->assertSame(
+            [
+                'contao.escargot_subscriber' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheSearchEscargotSearchIndexSubscriber(): void
