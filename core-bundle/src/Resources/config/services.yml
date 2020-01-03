@@ -513,6 +513,11 @@ services:
             - '@contao.framework'
         public: true
 
+    contao.search.escargot_subscriber.broken_link_checker:
+        class: Contao\CoreBundle\Search\Escargot\Subscriber\BrokenLinkCheckerSubscriber
+        tags:
+            - { name: 'contao.escargot_subscriber' }
+
     contao.search.escargot_subscriber.search_index:
         class: Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber
         arguments:
