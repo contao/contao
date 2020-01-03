@@ -267,16 +267,17 @@ class PageTree extends Widget
 	 *
 	 * @return array
 	 */
-	protected function getPickerUrlExtras($values = [])
+	protected function getPickerUrlExtras($values = array())
 	{
-		$extras = [];
+		$extras = array();
 		$extras['fieldType'] = $this->fieldType;
-		$extras['source'] = $this->strTable.'.'.$this->currentRecord;
+		$extras['source'] = $this->strTable . '.' . $this->currentRecord;
 
 		if (\is_array($this->rootNodes))
 		{
 			$extras['rootNodes'] = array_values($this->rootNodes);
 		}
+
 		return $extras;
 	}
 }
