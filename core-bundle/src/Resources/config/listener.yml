@@ -17,11 +17,37 @@ services:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
             - { name: kernel.event_listener, priority: 7 }
 
-    contao.listener.backend_menu_listener:
-        class: Contao\CoreBundle\EventListener\BackendMenuListener
+    contao.listener.menu.backend_menu:
+        class: Contao\CoreBundle\EventListener\Menu\BackendMenuListener
         arguments:
             - '@security.helper'
             - '@router'
+            - '@request_stack'
+            - '@translator'
+            - '@contao.framework'
+        tags:
+            # Make sure this listener comes before the other ones adding to its tree
+            - { name: kernel.event_listener, priority: 10 }
+
+    contao.listener.menu.backend_logout:
+        class: Contao\CoreBundle\EventListener\Menu\BackendLogoutListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+            - '@security.logout_url_generator'
+            - '@translator'
+        tags:
+            - { name: kernel.event_listener }
+
+    contao.listener.menu.backend_preview:
+        class: Contao\CoreBundle\EventListener\Menu\BackendPreviewListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+            - '@request_stack'
+            - '@translator'
+            - '@event_dispatcher'
+            - '@contao.framework'
         tags:
             - { name: kernel.event_listener }
 

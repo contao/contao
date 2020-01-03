@@ -41,7 +41,6 @@ use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Entity\RememberMe;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
-use Contao\CoreBundle\EventListener\BackendMenuListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
@@ -54,6 +53,9 @@ use Contao\CoreBundle\EventListener\InsertTags\AssetListener;
 use Contao\CoreBundle\EventListener\InsertTags\TranslationListener;
 use Contao\CoreBundle\EventListener\LocaleSubscriber;
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
+use Contao\CoreBundle\EventListener\Menu\BackendLogoutListener;
+use Contao\CoreBundle\EventListener\Menu\BackendMenuListener;
+use Contao\CoreBundle\EventListener\Menu\BackendPreviewListener;
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
 use Contao\CoreBundle\EventListener\RefererIdListener;
@@ -277,9 +279,9 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersTheBackendMenuListener(): void
     {
-        $this->assertTrue($this->container->has('contao.listener.backend_menu_listener'));
+        $this->assertTrue($this->container->has('contao.listener.menu.backend_menu'));
 
-        $definition = $this->container->getDefinition('contao.listener.backend_menu_listener');
+        $definition = $this->container->getDefinition('contao.listener.menu.backend_menu');
 
         $this->assertSame(BackendMenuListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
@@ -288,6 +290,71 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('security.helper'),
                 new Reference('router'),
+                new Reference('request_stack'),
+                new Reference('translator'),
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => 10,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheBackendLogoutListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.menu.backend_logout'));
+
+        $definition = $this->container->getDefinition('contao.listener.menu.backend_logout');
+
+        $this->assertSame(BackendLogoutListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('security.helper'),
+                new Reference('router'),
+                new Reference('security.logout_url_generator'),
+                new Reference('translator'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheBackendPreviewListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.menu.backend_preview'));
+
+        $definition = $this->container->getDefinition('contao.listener.menu.backend_preview');
+
+        $this->assertSame(BackendPreviewListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('security.helper'),
+                new Reference('router'),
+                new Reference('request_stack'),
+                new Reference('translator'),
+                new Reference('event_dispatcher'),
+                new Reference('contao.framework'),
             ],
             $definition->getArguments()
         );

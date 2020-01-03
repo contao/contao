@@ -1184,9 +1184,6 @@
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
       </trans-unit>
-      <trans-unit id="MSC.burgerTitle">
-        <source>Toggle navigation</source>
-      </trans-unit>
       <trans-unit id="MSC.learnMore">
         <source>Learn more on %s</source>
       </trans-unit>

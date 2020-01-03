@@ -36,4 +36,20 @@ class BackendMenuBuilderTest extends TestCase
         $this->assertSame('mainMenu', $tree->getName());
         $this->assertSame(['class' => 'menu_level_0'], $tree->getChildrenAttributes());
     }
+
+    public function testBuildsTheHeaderMenu(): void
+    {
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->atLeastOnce())
+            ->method('dispatch')
+            ->with($this->isInstanceOf(MenuEvent::class), ContaoCoreEvents::BACKEND_MENU_BUILD)
+        ;
+
+        $builder = new BackendMenuBuilder(new MenuFactory(), $eventDispatcher);
+        $tree = $builder->buildHeaderMenu();
+
+        $this->assertSame('headerMenu', $tree->getName());
+        $this->assertSame(['id' => 'tmenu'], $tree->getChildrenAttributes());
+    }
 }

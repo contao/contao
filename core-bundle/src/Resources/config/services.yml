@@ -281,6 +281,7 @@ services:
             - '@event_dispatcher'
         tags:
             - { name: knp_menu.menu_builder, method: buildMainMenu, alias: be_menu }
+            - { name: knp_menu.menu_builder, method: buildHeaderMenu, alias: be_header_menu }
         public: true
 
     contao.menu.matcher:
