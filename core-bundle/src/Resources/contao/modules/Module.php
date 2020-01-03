@@ -379,7 +379,7 @@ abstract class Module extends Frontend
 	 *
 	 * @return array
 	 */
-	protected function compileNavigationRow($objPage, $objSubpage, $subitems, $href)
+	protected function compileNavigationRow(PageModel $objPage, PageModel $objSubpage, $subitems, $href)
 	{
 		$row = $objSubpage->row();
 		$trail = \in_array($objSubpage->id, $objPage->trail);
