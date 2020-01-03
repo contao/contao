@@ -45,6 +45,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
     {
         // Only check URIs that are part of our base collection or were found on one
         $fromBaseUriCollection = $this->escargot->getBaseUris()->containsHost($crawlUri->getUri()->getHost());
+
         $foundOnBaseUriCollection = null !== $crawlUri->getFoundOn()
             && ($originalCrawlUri = $this->escargot->getCrawlUri($crawlUri->getFoundOn()))
             && $this->escargot->getBaseUris()->containsHost($originalCrawlUri->getUri()->getHost());
@@ -53,7 +54,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
             $this->escargot->log(
                 LogLevel::DEBUG,
                 $crawlUri->createLogMessage('Did not check because it is not part of the base URI collection or was not found on one of that is.'),
-                ['source' => \get_class($this)]
+                ['source' => static::class]
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -129,11 +130,8 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
 
         $this->escargot->log(
             LogLevel::ERROR,
-            $crawlUri->createLogMessage(sprintf(
-                'Broken link! %s.',
-                $message
-            )),
-            ['source' => \get_class($this)]
+            $crawlUri->createLogMessage(sprintf('Broken link! %s.', $message)),
+            ['source' => static::class]
         );
     }
 }

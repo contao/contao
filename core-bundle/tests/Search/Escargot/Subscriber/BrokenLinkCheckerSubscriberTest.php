@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Search\Escargot\Subscriber;
 use Contao\CoreBundle\Search\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
 use Contao\CoreBundle\Search\Escargot\Subscriber\SubscriberResult;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -35,6 +36,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
     public function testName(): void
     {
         $subscriber = new BrokenLinkCheckerSubscriber();
+
         $this->assertSame('broken-link-checker', $subscriber->getName());
     }
 
@@ -204,13 +206,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         $subscriber = new BrokenLinkCheckerSubscriber();
         $subscriber->setEscargot($escargot);
-
-        $subscriber->onException(
-            new CrawlUri(new Uri('https://contao.org'), 0),
-            $exception,
-            $response,
-            $chunk
-        );
+        $subscriber->onException(new CrawlUri(new Uri('https://contao.org'), 0), $exception, $response, $chunk);
 
         $previousResult = null;
 
@@ -255,32 +251,36 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ];
     }
 
+    /**
+     * @return ResponseInterface&MockObject
+     */
     private function getResponse(int $statusCode = 200): ResponseInterface
     {
         $response = $this->createMock(ResponseInterface::class);
-
         $response
-            ->expects($this->any())
             ->method('getStatusCode')
             ->willReturn($statusCode)
         ;
 
         $response
-            ->expects($this->any())
             ->method('getInfo')
-            ->willReturnCallback(static function (string $key) use ($statusCode) {
-                if ('http_code' === $key) {
-                    return $statusCode;
-                }
+            ->willReturnCallback(
+                static function (string $key) use ($statusCode) {
+                    if ('http_code' === $key) {
+                        return $statusCode;
+                    }
 
-                if ('url' === $key) {
-                    return '';
-                }
+                    if ('url' === $key) {
+                        return '';
+                    }
 
-                if ('response_headers' === $key) {
-                    return [];
+                    if ('response_headers' === $key) {
+                        return [];
+                    }
+
+                    throw new \InvalidArgumentException('Invalid key: '.$key);
                 }
-            })
+            )
         ;
 
         return $response;

@@ -98,6 +98,7 @@ use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
 use Contao\CoreBundle\Search\Escargot\Factory;
+use Contao\CoreBundle\Search\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
 use Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint;
@@ -1580,7 +1581,22 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('contao.framework', (string) $definition->getArgument(1));
     }
 
-    public function testRegistersTheSearchEscargotSubscriber(): void
+    public function testRegistersTheSearchEscargotBrokenLinkCheckerSubscriber(): void
+    {
+        $this->assertTrue($this->container->has('contao.search.escargot_subscriber.broken_link_checker'));
+
+        $definition = $this->container->getDefinition('contao.search.escargot_subscriber.broken_link_checker');
+
+        $this->assertSame(BrokenLinkCheckerSubscriber::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame([], $definition->getArguments());
+
+        $tags = $definition->getTags();
+
+        $this->assertArrayHasKey('contao.escargot_subscriber', $tags);
+    }
+
+    public function testRegistersTheSearchEscargotSearchIndexSubscriber(): void
     {
         $this->assertTrue($this->container->has('contao.search.escargot_subscriber.search_index'));
 
