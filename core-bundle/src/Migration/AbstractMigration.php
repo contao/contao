@@ -16,7 +16,7 @@ abstract class AbstractMigration implements MigrationInterface
 {
     public function getName(): string
     {
-        return str_replace('\\', ' ', static::class);
+        return static::class;
     }
 
     protected function createResult(bool $successful, string $message = null): MigrationResult
