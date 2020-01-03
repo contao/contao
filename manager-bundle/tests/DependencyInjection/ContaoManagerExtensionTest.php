@@ -58,7 +58,11 @@ class ContaoManagerExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('security.helper'),
+                new Reference('router'),
+                new Reference('request_stack'),
+                new Reference('%kernel.debug%'),
                 new Reference('%contao_manager.manager_path%'),
+                new Reference('contao_manager.jwt_manager', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
         );
@@ -66,9 +70,7 @@ class ContaoManagerExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [
-                        'priority' => -10,
-                    ],
+                    [],
                 ],
             ],
             $definition->getTags()

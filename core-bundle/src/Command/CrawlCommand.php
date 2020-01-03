@@ -65,13 +65,14 @@ class CrawlCommand extends Command
         $this
             ->setName('contao:crawl')
             ->addArgument('job', InputArgument::OPTIONAL, 'An optional existing job ID')
-            ->addOption('subscribers', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'A list of subscribers to enable.', $this->escargotFactory->getSubscriberNames())
-            ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed.', 10)
-            ->addOption('delay', null, InputOption::VALUE_REQUIRED, 'The number of microseconds to wait between requests. (0 = throttling is disabled)', 0)
-            ->addOption('max-requests', null, InputOption::VALUE_REQUIRED, 'The maximum number of requests to execute. (0 = no limit)', 0)
-            ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for. (0 = no limit)', 0)
+            ->addOption('subscribers', 's', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'A list of subscribers to enable', $this->escargotFactory->getSubscriberNames())
+            ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed', 10)
+            ->addOption('delay', null, InputOption::VALUE_REQUIRED, 'The number of microseconds to wait between requests (0 = throttling is disabled)', 0)
+            ->addOption('max-requests', null, InputOption::VALUE_REQUIRED, 'The maximum number of requests to execute (0 = no limit)', 0)
+            ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for (0 = no limit)', 0)
             ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progess bar output')
-            ->setDescription('Crawls all Contao root pages plus additional URIs configured using (contao.search.additional_uris) and triggers the desired subscribers.')
+            ->setDescription('Crawls the Contao root pages with the desired subscribers')
+            ->setHelp('You can add additional URIs via the <info>contao.search.additional_uris</info> parameter.')
         ;
     }
 

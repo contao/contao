@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,11 +21,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * @internal
  */
-class CsrfTokenCookieListener
+class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 {
     /**
      * @var MemoryTokenStorage
@@ -72,6 +74,15 @@ class CsrfTokenCookieListener
             $this->removeCookies($request, $response);
             $this->replaceTokenOccurrences($response);
         }
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            // The priority must be higher than the one of the Symfony route listener (defaults to 32)
+            KernelEvents::REQUEST => ['onKernelRequest', 36],
+            KernelEvents::RESPONSE => 'onKernelResponse',
+        ];
     }
 
     private function requiresCsrf(Request $request, Response $response): bool

@@ -185,9 +185,21 @@ class Factory
         return $escargot;
     }
 
+    /**
+     * Creates an HttpClientInterface instance that behaves like a regular
+     * browser by default.
+     */
     private function createDefaultHttpClient(): HttpClientInterface
     {
-        return HttpClient::create($this->getDefaultHttpClientOptions());
+        return HttpClient::create(
+            array_merge_recursive(
+                [
+                    'headers' => ['accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'],
+                    'max_duration' => 20, // Ignore requests that take longer than 20 seconds
+                ],
+                $this->getDefaultHttpClientOptions()
+            )
+        );
     }
 
     private function registerDefaultSubscribers(Escargot $escargot): void

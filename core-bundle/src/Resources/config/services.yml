@@ -281,6 +281,7 @@ services:
             - '@event_dispatcher'
         tags:
             - { name: knp_menu.menu_builder, method: buildMainMenu, alias: be_menu }
+            - { name: knp_menu.menu_builder, method: buildHeaderMenu, alias: be_header_menu }
         public: true
 
     contao.menu.matcher:
@@ -514,6 +515,11 @@ services:
             - '@database_connection'
             - '@contao.framework'
         public: true
+
+    contao.search.escargot_subscriber.broken_link_checker:
+        class: Contao\CoreBundle\Search\Escargot\Subscriber\BrokenLinkCheckerSubscriber
+        tags:
+            - { name: 'contao.escargot_subscriber' }
 
     contao.search.escargot_subscriber.search_index:
         class: Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber

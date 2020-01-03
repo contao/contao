@@ -197,11 +197,11 @@ var Theme = {
 		var tmenu = $('tmenu');
 		if (!tmenu) return;
 
-		var h2 = tmenu.getElement('h2'),
-			li = tmenu.getElement('.submenu');
-		if (!h2 || !li) return;
+		var li = tmenu.getElement('.submenu'),
+			span = li.getFirst('span');
+		if (!li || !span) return;
 
-		h2.addEvent('click', function(e) {
+		span.addEvent('click', function(e) {
 			if (li.hasClass('active')) {
 				li.removeClass('active');
 			} else {

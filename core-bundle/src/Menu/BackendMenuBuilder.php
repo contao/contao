@@ -50,4 +50,16 @@ class BackendMenuBuilder
 
         return $tree;
     }
+
+    public function buildHeaderMenu(): ItemInterface
+    {
+        $tree = $this->factory
+            ->createItem('headerMenu')
+            ->setChildrenAttribute('id', 'tmenu')
+        ;
+
+        $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
+
+        return $tree;
+    }
 }

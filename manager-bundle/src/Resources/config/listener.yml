@@ -3,9 +3,13 @@ services:
         class: Contao\ManagerBundle\EventListener\BackendMenuListener
         arguments:
             - '@security.helper'
+            - '@router'
+            - '@request_stack'
+            - '%kernel.debug%'
             - '%contao_manager.manager_path%'
+            - '@?contao_manager.jwt_manager'
         tags:
-            - { name: kernel.event_listener, priority: -10 }
+            - { name: kernel.event_listener }
 
     contao_manager.listener.initialize_application:
         class: Contao\ManagerBundle\EventListener\InitializeApplicationListener
