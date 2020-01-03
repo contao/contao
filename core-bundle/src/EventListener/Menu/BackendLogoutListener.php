@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Menu;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
@@ -56,13 +55,13 @@ class BackendLogoutListener
 
     public function __invoke(MenuEvent $event): void
     {
-        $user = $this->security->getUser();
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return;
+        }
 
-        if (
-            !$user instanceof BackendUser
-            || 'headerMenu' !== $event->getTree()->getName()
-            || !$submenu = $event->getTree()->getChild('submenu')
-        ) {
+        $tree = $event->getTree();
+
+        if ('headerMenu' !== $tree->getName() || !$submenu = $tree->getChild('submenu')) {
             return;
         }
 

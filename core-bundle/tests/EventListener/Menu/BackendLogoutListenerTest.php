@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\Menu;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendLogoutListener;
 use Contao\TestCase\ContaoTestCase;
@@ -36,8 +35,9 @@ class BackendLogoutListenerTest extends ContaoTestCase
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($this->createMock(BackendUser::class))
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(true)
         ;
 
         $security
@@ -117,13 +117,14 @@ class BackendLogoutListenerTest extends ContaoTestCase
         yield [$this->createMock(SwitchUserToken::class), 'MSC.switchBT', '/contao?do=user&_switch_user=_exit'];
     }
 
-    public function testDoesNotAddTheLogoutButtonIfNoUserIsGiven(): void
+    public function testDoesNotAddTheLogoutButtonIfTheUserRoleIsNotGranted(): void
     {
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->once())
-            ->method('getUser')
-            ->willReturn(null)
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(false)
         ;
 
         $factory = new MenuFactory();
@@ -152,8 +153,9 @@ class BackendLogoutListenerTest extends ContaoTestCase
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($this->createMock(BackendUser::class))
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(true)
         ;
 
         $factory = new MenuFactory();
@@ -182,8 +184,9 @@ class BackendLogoutListenerTest extends ContaoTestCase
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($this->createMock(BackendUser::class))
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(true)
         ;
 
         $factory = new MenuFactory();

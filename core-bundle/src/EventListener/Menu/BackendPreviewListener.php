@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\ArticleModel;
-use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
@@ -72,16 +71,17 @@ class BackendPreviewListener
 
     public function __invoke(MenuEvent $event): void
     {
-        $user = $this->security->getUser();
-
-        if (!$user instanceof BackendUser || 'headerMenu' !== $event->getTree()->getName()) {
+        if (!$this->security->isGranted('ROLE_USER')) {
             return;
         }
 
-        $factory = $event->getFactory();
         $tree = $event->getTree();
 
-        $preview = $factory
+        if ('headerMenu' !== $tree->getName()) {
+            return;
+        }
+
+        $preview = $event->getFactory()
             ->createItem('preview')
             ->setLabel('MSC.fePreview')
             ->setUri($this->getPreviewUrl())

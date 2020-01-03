@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\Menu;
 
 use Contao\ArticleModel;
-use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendPreviewListener;
@@ -39,8 +38,9 @@ class BackendPreviewListenerTest extends ContaoTestCase
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($this->createMock(BackendUser::class))
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(true)
         ;
 
         $router = $this->createMock(RouterInterface::class);
@@ -138,8 +138,9 @@ class BackendPreviewListenerTest extends ContaoTestCase
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($this->createMock(BackendUser::class))
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(true)
         ;
 
         $router = $this->createMock(RouterInterface::class);
@@ -198,12 +199,14 @@ class BackendPreviewListenerTest extends ContaoTestCase
         yield ['debug', ['preview', 'debug']];
     }
 
-    public function testDoesNotAddThePreviewButtonIfNoUserIsGiven(): void
+    public function testDoesNotAddThePreviewButtonIfTheUserRoleIsNotGranted(): void
     {
         $security = $this->createMock(Security::class);
         $security
-            ->method('getUser')
-            ->willReturn(null)
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(false)
         ;
 
         $router = $this->createMock(RouterInterface::class);
@@ -235,8 +238,10 @@ class BackendPreviewListenerTest extends ContaoTestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->method('getUser')
-            ->willReturn(null)
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(true)
         ;
 
         $router = $this->createMock(RouterInterface::class);
