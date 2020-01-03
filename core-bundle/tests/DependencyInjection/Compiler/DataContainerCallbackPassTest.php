@@ -14,8 +14,10 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
+use Contao\CoreBundle\Fixtures\EventListener\InvokableListener;
+use Contao\CoreBundle\Fixtures\EventListener\TestListener;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
@@ -30,7 +32,7 @@ class DataContainerCallbackPassTest extends TestCase
             'priority' => 10,
         ];
 
-        $definition = new Definition('Test\CallbackListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', $attributes);
 
         $container = $this->getContainerBuilder();
@@ -62,7 +64,7 @@ class DataContainerCallbackPassTest extends TestCase
             'priority' => 10,
         ];
 
-        $definition = new Definition('Test\CallbackListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', $attributes);
         $definition->setPublic(false);
 
@@ -85,7 +87,7 @@ class DataContainerCallbackPassTest extends TestCase
             'priority' => 10,
         ];
 
-        $definition = new Definition('Test\CallbackListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', $attributes);
 
         $container = $this->getContainerBuilder();
@@ -108,6 +110,37 @@ class DataContainerCallbackPassTest extends TestCase
         );
     }
 
+    public function testUsesInvokeMethodIfNoneGiven(): void
+    {
+        $attributes = [
+            'table' => 'tl_page',
+            'target' => 'config.onload_callback',
+            'priority' => 10,
+        ];
+
+        $definition = new Definition(InvokableListener::class);
+        $definition->addTag('contao.callback', $attributes);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.callback_listener', $definition);
+
+        $pass = new DataContainerCallbackPass();
+        $pass->process($container);
+
+        $this->assertSame(
+            [
+                'tl_page' => [
+                    'config.onload_callback' => [
+                        10 => [
+                            ['test.callback_listener', '__invoke'],
+                        ],
+                    ],
+                ],
+            ],
+            $this->getCallbacksFromDefinition($container)[0]
+        );
+    }
+
     public function testSetsTheDefaultPriorityIfNoPriorityGiven(): void
     {
         $attributes = [
@@ -116,7 +149,7 @@ class DataContainerCallbackPassTest extends TestCase
             'method' => 'onLoadPage',
         ];
 
-        $definition = new Definition('Test\CallbackListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', $attributes);
 
         $container = $this->getContainerBuilder();
@@ -148,7 +181,7 @@ class DataContainerCallbackPassTest extends TestCase
             'method' => 'onLoadPage',
         ];
 
-        $definition = new Definition('Test\CallbackListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', $attributes);
 
         $container = $this->getContainerBuilder();
@@ -180,7 +213,7 @@ class DataContainerCallbackPassTest extends TestCase
             'method' => 'onArticleWizard',
         ];
 
-        $definition = new Definition('Test\CallbackListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', $attributes);
 
         $container = $this->getContainerBuilder();
@@ -212,7 +245,7 @@ class DataContainerCallbackPassTest extends TestCase
             'method' => 'onListitemsXlabel',
         ];
 
-        $definition = new Definition('Test\CallbackListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', $attributes);
 
         $container = $this->getContainerBuilder();
@@ -243,7 +276,7 @@ class DataContainerCallbackPassTest extends TestCase
             'method' => 'onFoobarCallback',
         ];
 
-        $definition = new Definition('Test\CallbackListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', $attributes);
 
         $container = $this->getContainerBuilder();
@@ -268,7 +301,7 @@ class DataContainerCallbackPassTest extends TestCase
 
     public function testHandlesMultipleCallbacks(): void
     {
-        $definition = new Definition('Test\CallbackListener');
+        $definition = new Definition(TestListener::class);
 
         $definition->addTag(
             'contao.callback',
@@ -354,7 +387,7 @@ class DataContainerCallbackPassTest extends TestCase
 
     public function testAddsTheCallbacksByPriority(): void
     {
-        $definitionA = new Definition('Test\CallbackListenerA');
+        $definitionA = new Definition(TestListener::class);
 
         $definitionA->addTag(
             'contao.callback',
@@ -365,7 +398,7 @@ class DataContainerCallbackPassTest extends TestCase
             ]
         );
 
-        $definitionB = new Definition('Test\CallbackListenerB');
+        $definitionB = new Definition(TestListener::class);
 
         $definitionB->addTag(
             'contao.callback',
@@ -444,7 +477,7 @@ class DataContainerCallbackPassTest extends TestCase
 
     public function testFailsIfTheTableAttributeIsMissing(): void
     {
-        $definition = new Definition('Test\CallbackListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', ['target' => 'config.onload']);
 
         $container = $this->getContainerBuilder();
@@ -452,14 +485,14 @@ class DataContainerCallbackPassTest extends TestCase
 
         $pass = new DataContainerCallbackPass();
 
-        $this->expectException(InvalidConfigurationException::class);
+        $this->expectException(InvalidDefinitionException::class);
 
         $pass->process($container);
     }
 
     public function testFailsIfTheTargetAttributeIsMissing(): void
     {
-        $definition = new Definition('Test\CallbackListener');
+        $definition = new Definition(TestListener::class);
         $definition->addTag('contao.callback', ['table' => 'tl_page']);
 
         $container = $this->getContainerBuilder();
@@ -467,7 +500,87 @@ class DataContainerCallbackPassTest extends TestCase
 
         $pass = new DataContainerCallbackPass();
 
-        $this->expectException(InvalidConfigurationException::class);
+        $this->expectException(InvalidDefinitionException::class);
+
+        $pass->process($container);
+    }
+
+    public function testThrowsExceptionIfConfiguredMethodDoesNotExist(): void
+    {
+        $definition = new Definition(TestListener::class);
+
+        $definition->addTag(
+            'contao.callback',
+            [
+                'table' => 'tl_page',
+                'target' => 'tl_page.config.foo',
+                'method' => 'onFooCallback',
+            ]
+        );
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.callback_listener', $definition);
+
+        $pass = new DataContainerCallbackPass();
+
+        $this->expectException(InvalidDefinitionException::class);
+        $this->expectDeprecationMessage('The class "Contao\CoreBundle\Fixtures\EventListener\TestListener" does not have a method "onFooCallback".');
+
+        $pass->process($container);
+    }
+
+    public function testThrowsExceptionIfConfiguredMethodIsPrivate(): void
+    {
+        $definition = new Definition(TestListener::class);
+
+        $definition->addTag(
+            'contao.callback',
+            [
+                'table' => 'tl_page',
+                'target' => 'tl_page.config.foo',
+                'method' => 'onPrivateCallback',
+            ]
+        );
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.callback_listener', $definition);
+
+        $pass = new DataContainerCallbackPass();
+
+        $this->expectException(InvalidDefinitionException::class);
+        $this->expectDeprecationMessage('The "Contao\CoreBundle\Fixtures\EventListener\TestListener::onPrivateCallback" method exists but is not public.');
+
+        $pass->process($container);
+    }
+
+    public function testThrowsExceptionIfGeneratedMethodIsPrivate(): void
+    {
+        $definition = new Definition(TestListener::class);
+        $definition->addTag('contao.callback', ['table' => 'tl_page', 'target' => 'tl_page.config.private']);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.callback_listener', $definition);
+
+        $pass = new DataContainerCallbackPass();
+
+        $this->expectException(InvalidDefinitionException::class);
+        $this->expectDeprecationMessage('The "Contao\CoreBundle\Fixtures\EventListener\TestListener::onPrivateCallback" method exists but is not public.');
+
+        $pass->process($container);
+    }
+
+    public function testThrowsExceptionIfNoValidMethodExists(): void
+    {
+        $definition = new Definition(TestListener::class);
+        $definition->addTag('contao.callback', ['table' => 'tl_page', 'target' => 'tl_page.config.foo']);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('test.callback_listener', $definition);
+
+        $pass = new DataContainerCallbackPass();
+
+        $this->expectException(InvalidDefinitionException::class);
+        $this->expectDeprecationMessage('Either specify a method name or implement the "onFooCallback" or __invoke method.');
 
         $pass->process($container);
     }

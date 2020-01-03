@@ -81,6 +81,7 @@ class Ajax extends Backend
 				$bemod = $objSessionBag->get('backend_modules');
 				$bemod[Input::post('id')] = (int) Input::post('state');
 				$objSessionBag->set('backend_modules', $bemod);
+
 				throw new NoContentResponseException();
 
 			// Load a navigation menu group
@@ -95,6 +96,7 @@ class Ajax extends Backend
 
 				$objTemplate = new BackendTemplate('be_navigation');
 				$objTemplate->modules = $navigation[Input::post('id')]['modules'];
+
 				throw new ResponseException($objTemplate->getResponse());
 
 			// Toggle nodes of the file or page tree
@@ -114,6 +116,7 @@ class Ajax extends Backend
 				$nodes = $objSessionBag->get($this->strAjaxKey);
 				$nodes[$this->strAjaxId] = (int) Input::post('state');
 				$objSessionBag->set($this->strAjaxKey, $nodes);
+
 				throw new NoContentResponseException();
 
 			// Load nodes of the file or page tree
@@ -140,6 +143,7 @@ class Ajax extends Backend
 				$fs = $objSessionBag->get('fieldset_states');
 				$fs[Input::post('table')][Input::post('id')] = (int) Input::post('state');
 				$objSessionBag->set('fieldset_states', $fs);
+
 				throw new NoContentResponseException();
 
 			// Toggle checkbox groups
@@ -180,6 +184,7 @@ class Ajax extends Backend
 		if (!$dc instanceof DC_File && !$dc instanceof DC_Folder && !$dc instanceof DC_Table)
 		{
 			$this->executePostActionsHook($dc);
+
 			throw new NoContentResponseException();
 		}
 
@@ -262,6 +267,7 @@ class Ajax extends Backend
 			// Reload the page/file picker
 			case 'reloadPagetree':
 			case 'reloadFiletree':
+			case 'reloadPicker':
 				$intId = Input::get('id');
 				$strField = $dc->inputName = Input::post('name');
 
@@ -278,6 +284,7 @@ class Ajax extends Backend
 				if (!isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]))
 				{
 					$this->log('Field "' . $strField . '" does not exist in DCA "' . $dc->table . '"', __METHOD__, TL_ERROR);
+
 					throw new BadRequestHttpException('Bad request');
 				}
 
@@ -300,6 +307,7 @@ class Ajax extends Backend
 						if ($objRow->numRows < 1)
 						{
 							$this->log('A record with the ID "' . $intId . '" does not exist in table "' . $dc->table . '"', __METHOD__, TL_ERROR);
+
 							throw new BadRequestHttpException('Bad request');
 						}
 
@@ -327,7 +335,20 @@ class Ajax extends Backend
 
 				// Set the new value
 				$varValue = Input::post('value', true);
-				$strKey = ($this->strAction == 'reloadPagetree') ? 'pageTree' : 'fileTree';
+
+				switch ($this->strAction)
+				{
+					case 'reloadPicker':
+						$strKey = 'picker';
+						break;
+
+					case 'reloadPagetree':
+						$strKey = 'pageTree';
+						break;
+
+					default:
+						$strKey = 'fileTree';
+				}
 
 				// Convert the selected values
 				if ($varValue != '')
@@ -358,10 +379,10 @@ class Ajax extends Backend
 					$varValue = serialize($varValue);
 				}
 
-				/** @var FileTree|PageTree $strClass */
+				/** @var FileTree|PageTree|Picker $strClass */
 				$strClass = $GLOBALS['BE_FFL'][$strKey];
 
-				/** @var FileTree|PageTree $objWidget */
+				/** @var FileTree|PageTree|Picker $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->inputName, $varValue, $strField, $dc->table, $dc));
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
@@ -388,6 +409,7 @@ class Ajax extends Backend
 				if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || ($GLOBALS['TL_DCA'][$dc->table]['fields'][Input::post('field')]['exclude'] && !$this->User->hasAccess($dc->table . '::' . Input::post('field'), 'alexf')))
 				{
 					$this->log('Field "' . Input::post('field') . '" is not an allowed selector field (possible SQL injection attempt)', __METHOD__, TL_ERROR);
+
 					throw new BadRequestHttpException('Bad request');
 				}
 
@@ -431,11 +453,13 @@ class Ajax extends Backend
 			// DropZone file upload
 			case 'fileupload':
 				$dc->move(true);
+
 				throw new InternalServerErrorHttpException();
 
 			// HOOK: pass unknown actions to callback functions
 			default:
 				$this->executePostActionsHook($dc);
+
 				throw new NoContentResponseException();
 		}
 	}

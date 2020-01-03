@@ -107,15 +107,12 @@ class FormCaptcha extends Widget
 		{
 			case 'name':
 				return $this->strCaptchaKey;
-				break;
 
 			case 'question':
 				return $this->getQuestion();
-				break;
 
 			default:
 				return parent::__get($strKey);
-				break;
 		}
 	}
 

@@ -99,6 +99,9 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('%s')
                     ->end()
                 ->end()
+                ->scalarNode('editable_files')
+                    ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,txt,xliff,xml,yml,yaml')
+                ->end()
                 ->scalarNode('url_suffix')
                     ->defaultValue('.html')
                 ->end()
@@ -184,31 +187,15 @@ class Configuration implements ConfigurationInterface
 
                                 foreach ($value as $name => $config) {
                                     if (preg_match('/^\d+$/', (string) $name)) {
-                                        throw new \InvalidArgumentException(
-                                            sprintf(
-                                                'The image size name "%s" cannot contain only digits',
-                                                $name
-                                            )
-                                        );
+                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" cannot contain only digits', $name));
                                     }
 
                                     if (\in_array($name, $reservedImageSizeNames, true)) {
-                                        throw new \InvalidArgumentException(
-                                            sprintf(
-                                                '"%s" is a reserved image size name (reserved names: %s)',
-                                                $name,
-                                                implode(', ', $reservedImageSizeNames)
-                                            )
-                                        );
+                                        throw new \InvalidArgumentException(sprintf('"%s" is a reserved image size name (reserved names: %s)', $name, implode(', ', $reservedImageSizeNames)));
                                     }
 
                                     if (preg_match('/[^a-z0-9_]/', (string) $name)) {
-                                        throw new \InvalidArgumentException(
-                                            sprintf(
-                                                'The image size name "%s" must consist of lowercase letters, digits and underscores only',
-                                                $name
-                                            )
-                                        );
+                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" must consist of lowercase letters, digits and underscores only', $name));
                                     }
                                 }
 
@@ -373,9 +360,9 @@ class Configuration implements ConfigurationInterface
                                 if (!preg_match('@^https?://@', $uri)) {
                                     return true;
                                 }
-
-                                return false;
                             }
+
+                            return false;
                         }
                     )
                     ->thenInvalid('All provided additional URIs must start with either http:// or https://.')

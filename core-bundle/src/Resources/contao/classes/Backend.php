@@ -153,45 +153,36 @@ abstract class Backend extends Controller
 			case 'xml':
 			case 'yaml':
 				return $ext;
-				break;
 
 			case 'js':
 			case 'javascript':
 				return 'javascript';
-				break;
 
 			case 'md':
 			case 'markdown':
 				return 'markdown';
-				break;
 
 			case 'cgi':
 			case 'pl':
 				return 'perl';
-				break;
 
 			case 'py':
 				return 'python';
-				break;
 
 			case 'c': case 'cc': case 'cpp': case 'c++':
 			case 'h': case 'hh': case 'hpp': case 'h++':
 				return 'c_cpp';
-				break;
 
 			case 'html5':
 			case 'xhtml':
 				return 'php';
-				break;
 
 			case 'svg':
 			case 'svgz':
 				return 'xml';
-				break;
 
 			default:
 				return 'text';
-				break;
 		}
 	}
 
@@ -882,6 +873,7 @@ abstract class Backend extends Controller
 		if (!$objUser->hasAccess($arrIds, 'pagemounts'))
 		{
 			$objSession->set($strKey, 0);
+
 			throw new AccessDeniedException('Page ID ' . $intNode . ' is not mounted.');
 		}
 
@@ -1059,6 +1051,7 @@ abstract class Backend extends Controller
 		if (!$objUser->hasAccess($strNode, 'filemounts'))
 		{
 			$objSession->set($strKey, '');
+
 			throw new AccessDeniedException('Folder ID "' . $strNode . '" is not mounted');
 		}
 

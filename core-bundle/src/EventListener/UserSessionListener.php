@@ -60,7 +60,7 @@ class UserSessionListener
     /**
      * Replaces the current session data with the stored session data.
      */
-    public function onKernelRequest(RequestEvent $event): void
+    public function __invoke(RequestEvent $event): void
     {
         if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
             return;
@@ -81,13 +81,13 @@ class UserSessionListener
         }
 
         // Dynamically register the kernel.response listener (see #1293)
-        $this->eventDispatcher->addListener(KernelEvents::RESPONSE, [$this, 'onKernelResponse']);
+        $this->eventDispatcher->addListener(KernelEvents::RESPONSE, [$this, 'write']);
     }
 
     /**
      * Writes the current session data to the database.
      */
-    public function onKernelResponse(ResponseEvent $event): void
+    public function write(ResponseEvent $event): void
     {
         if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
             return;
@@ -113,7 +113,7 @@ class UserSessionListener
      */
     private function getSessionBag(Request $request): SessionBagInterface
     {
-        if (!$request->hasSession() || null === ($session = $request->getSession())) {
+        if (!$request->hasSession()) {
             throw new \RuntimeException('The request did not contain a session.');
         }
 
@@ -123,6 +123,6 @@ class UserSessionListener
             $name = 'contao_backend';
         }
 
-        return $session->getBag($name);
+        return $request->getSession()->getBag($name);
     }
 }

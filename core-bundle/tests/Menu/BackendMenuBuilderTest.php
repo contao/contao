@@ -16,46 +16,24 @@ use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Knp\Menu\MenuFactory;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class BackendMenuBuilderTest extends TestCase
 {
-    /**
-     * @var EventDispatcherInterface&MockObject
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var BackendMenuBuilder
-     */
-    private $builder;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
+    public function testBuildsTheMainMenu(): void
     {
-        parent::setUp();
-
-        $this->eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $this->builder = new BackendMenuBuilder(new MenuFactory(), $this->eventDispatcher);
-    }
-
-    public function testCreatesTheRootNode(): void
-    {
-        $this->assertSame('root', $this->builder->create()->getName());
-    }
-
-    public function testDispatchesTheMenuBuildEvent(): void
-    {
-        $this->eventDispatcher
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
             ->expects($this->atLeastOnce())
             ->method('dispatch')
             ->with($this->isInstanceOf(MenuEvent::class), ContaoCoreEvents::BACKEND_MENU_BUILD)
         ;
 
-        $this->builder->create();
+        $builder = new BackendMenuBuilder(new MenuFactory(), $eventDispatcher);
+        $tree = $builder->buildMainMenu();
+
+        $this->assertSame('mainMenu', $tree->getName());
+        $this->assertSame(['class' => 'menu_level_0'], $tree->getChildrenAttributes());
     }
 }

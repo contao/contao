@@ -52,7 +52,7 @@ class PageLogout extends Frontend
 		$query = new Query($uri->getQuery());
 		$query = $query->merge('redirect=' . $strRedirect);
 
-		return new RedirectResponse((string) $uri->withQuery((string) $query));
+		return new RedirectResponse((string) $uri->withQuery((string) $query), 307);
 	}
 }
 

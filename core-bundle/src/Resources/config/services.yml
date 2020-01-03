@@ -145,6 +145,8 @@ services:
 
     contao.csrf.token_storage:
         class: Contao\CoreBundle\Csrf\MemoryTokenStorage
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
@@ -195,6 +197,8 @@ services:
             - '%kernel.project_dir%'
             - '%contao.error_level%'
         public: true
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
@@ -250,6 +254,8 @@ services:
             - '@contao.framework'
             - '@contao.translation.translator'
         public: true
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory
@@ -273,12 +279,8 @@ services:
         arguments:
             - '@knp_menu.factory'
             - '@event_dispatcher'
-        public: true
-
-    contao.menu.backend_menu_renderer:
-        class: Contao\CoreBundle\Menu\BackendMenuRenderer
-        arguments:
-            - '@twig'
+        tags:
+            - { name: knp_menu.menu_builder, method: buildMainMenu, alias: be_menu }
         public: true
 
     contao.menu.matcher:
@@ -355,6 +357,17 @@ services:
             - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 192 }
+
+    contao.picker.table_provider:
+        class: Contao\CoreBundle\Picker\TablePickerProvider
+        arguments:
+            - '@contao.framework'
+            - '@knp_menu.factory'
+            - '@router'
+            - '@translator'
+            - '@database_connection'
+        tags:
+            - { name: contao.picker_provider }
 
     contao.repository.remember_me:
         class: Contao\CoreBundle\Repository\RememberMeRepository
@@ -689,6 +702,8 @@ services:
         arguments:
             - '@contao.translation.translator.data_collector.inner'
         autoconfigure: false
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.twig.template_extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension

@@ -71,6 +71,7 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.encryption_key', $config['encryption_key']);
         $container->setParameter('contao.url_suffix', $config['url_suffix']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
+        $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
         $container->setParameter('contao.csrf_cookie_prefix', $config['csrf_cookie_prefix']);
         $container->setParameter('contao.csrf_token_name', $config['csrf_token_name']);
@@ -93,6 +94,7 @@ class ContaoCoreExtension extends Extension
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
+        $this->resetDeferredImageStorage($container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -232,5 +234,18 @@ class ContaoCoreExtension extends Extension
         );
 
         @trigger_error('Using the "contao.image.target_path" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.target_dir" parameter instead.', E_USER_DEPRECATED);
+    }
+
+    private function resetDeferredImageStorage(ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.image.deferred_image_storage')) {
+            return;
+        }
+
+        $definition = $container->findDefinition('contao.image.deferred_image_storage');
+
+        if (method_exists($definition->getClass(), 'reset')) {
+            $definition->addTag('kernel.reset', ['method' => 'reset']);
+        }
     }
 }

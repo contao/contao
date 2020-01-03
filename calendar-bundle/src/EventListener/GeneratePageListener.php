@@ -39,7 +39,7 @@ class GeneratePageListener
     /**
      * Adds the feeds to the page header.
      */
-    public function onGeneratePage(PageModel $pageModel, LayoutModel $layoutModel): void
+    public function __invoke(PageModel $pageModel, LayoutModel $layoutModel): void
     {
         $calendarfeeds = StringUtil::deserialize($layoutModel->calendarfeeds);
 

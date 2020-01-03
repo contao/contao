@@ -52,7 +52,7 @@ class ClearSessionDataListenerTest extends TestCase
         $_SESSION['FORM_DATA'] = ['foo' => 'bar', 'SUBMITTED_AT' => $submittedAt];
 
         $listener = new ClearSessionDataListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         if ($shouldClear) {
             $this->assertArrayNotHasKey('FORM_DATA', $_SESSION);
@@ -119,7 +119,7 @@ class ClearSessionDataListenerTest extends TestCase
         );
 
         $listener = new ClearSessionDataListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
     }
 
     public function testDoesNotClearTheFormDataUponPostRequests(): void
@@ -142,7 +142,7 @@ class ClearSessionDataListenerTest extends TestCase
         );
 
         $listener = new ClearSessionDataListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
     }
 
     public function testDoesNotClearTheFormDataIfTheSessionIsNotStarted(): void
@@ -167,7 +167,7 @@ class ClearSessionDataListenerTest extends TestCase
         $_SESSION['FORM_DATA'] = ['foo' => 'bar'];
 
         $listener = new ClearSessionDataListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertSame(['foo' => 'bar'], $_SESSION['FORM_DATA']);
     }
@@ -196,7 +196,7 @@ class ClearSessionDataListenerTest extends TestCase
         $_SESSION['FE_DATA']->set('foo', 'bar');
 
         $listener = new ClearSessionDataListener();
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertArrayNotHasKey('BE_DATA', $_SESSION);
         $this->assertArrayHasKey('FE_DATA', $_SESSION);

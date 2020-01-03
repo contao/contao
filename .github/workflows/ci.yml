@@ -16,10 +16,11 @@ jobs:
         if: github.event_name != 'schedule'
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@master
+              uses: shivammathur/setup-php@v1
               with:
                   php-version: 7.3
-                  extension-csv: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  tools: prestissimo
                   coverage: pcov
 
             - name: Checkout
@@ -38,8 +39,27 @@ jobs:
             - name: Upload the coverage report
               uses: codecov/codecov-action@v1
               with:
-                  token: ${{ secrets.CODECOV_TOKEN }}
+                  # Yes, this is our upload token in plain text and yes, we should
+                  # set it as a secret instead. However, this is currently the
+                  # only way to allow coverage uploads from fork repository PRs:
+                  #
+                  # https://github.com/codecov/codecov-node/issues/118
+                  # https://github.community/t5/GitHub-Actions/Make-secrets-available-to-builds-of-forks/m-p/33885#M1696
+                  #
+                  # If you stumble across this, here is what you should do:
+                  #
+                  # * If the problems mentioned above have been solved and we did
+                  #   not notice, please give us a heads-up.
+                  #
+                  # * If you think about doing the same, make sure to be aware of
+                  #   the implications. This is a trial and error shot on our end
+                  #   and the odds are that the outcome is error.
+                  #
+                  # * If you have an idea how to solve this in a better way, please
+                  #   let us know.
+                  token: e129b38e-acf2-484c-97bc-1cde6b4a0693
                   file: ./clover.xml
+                  fail_ci_if_error: true
 
     coding-style:
         name: Coding Style
@@ -47,10 +67,11 @@ jobs:
         if: github.event_name == 'pull_request'
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@master
+              uses: shivammathur/setup-php@v1
               with:
                   php-version: 7.3
-                  extension-csv: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  tools: prestissimo
                   coverage: none
 
             - name: Checkout
@@ -82,10 +103,11 @@ jobs:
                 php: [7.2, 7.3, 7.4]
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@master
+              uses: shivammathur/setup-php@v1
               with:
                   php-version: ${{ matrix.php }}
-                  extension-csv: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  tools: prestissimo
                   coverage: none
 
             - name: Create the database
@@ -115,10 +137,11 @@ jobs:
         if: github.event_name != 'push'
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@master
+              uses: shivammathur/setup-php@v1
               with:
                   php-version: 7.3
-                  extension-csv: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  tools: prestissimo
                   coverage: none
 
             - name: Create the database
@@ -148,10 +171,11 @@ jobs:
         if: github.event_name != 'push'
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@master
+              uses: shivammathur/setup-php@v1
               with:
                   php-version: 7.3
-                  extension-csv: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  tools: prestissimo
                   coverage: none
 
             - name: Checkout
@@ -188,10 +212,11 @@ jobs:
         if: github.event_name != 'push'
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@master
+              uses: shivammathur/setup-php@v1
               with:
                   php-version: 7.3
-                  extension-csv: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  tools: prestissimo
                   coverage: none
 
             - name: Adjust the Git autocrlf setting
@@ -216,10 +241,11 @@ jobs:
         if: github.event_name == 'push'
         steps:
             - name: Setup PHP
-              uses: shivammathur/setup-php@master
+              uses: shivammathur/setup-php@v1
               with:
                   php-version: 7.3
-                  extension-csv: json, zlib
+                  extensions: json, zlib
+                  tools: prestissimo
                   coverage: none
 
             - name: Checkout

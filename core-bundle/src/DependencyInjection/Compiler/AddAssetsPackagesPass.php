@@ -57,7 +57,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         $meta = $container->getParameter('kernel.bundles_metadata');
 
         foreach ($bundles as $name => $class) {
-            if (!is_dir($meta[$name]['path'].'/Resources/public')) {
+            if (null === ($path = $this->findBundlePath($meta, $name))) {
                 continue;
             }
 
@@ -66,9 +66,9 @@ class AddAssetsPackagesPass implements CompilerPassInterface
             $serviceId = 'assets._package_'.$packageName;
             $basePath = 'bundles/'.preg_replace('/bundle$/', '', strtolower($name));
 
-            if (is_file($meta[$name]['path'].'/Resources/public/manifest.json')) {
+            if (is_file($path.'/manifest.json')) {
                 $def = new ChildDefinition('assets.json_manifest_version_strategy');
-                $def->replaceArgument(0, $meta[$name]['path'].'/Resources/public/manifest.json');
+                $def->replaceArgument(0, $path.'/manifest.json');
 
                 $container->setDefinition('assets._version_'.$packageName, $def);
                 $packageVersion = new Reference('assets._version_'.$packageName);
@@ -135,5 +135,18 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         }
 
         return Container::underscore($className);
+    }
+
+    private function findBundlePath(array $meta, string $name): ?string
+    {
+        if (is_dir($path = $meta[$name]['path'].'/Resources/public')) {
+            return $path;
+        }
+
+        if (is_dir($path = $meta[$name]['path'].'/public')) {
+            return $path;
+        }
+
+        return null;
     }
 }

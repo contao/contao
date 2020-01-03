@@ -39,7 +39,7 @@ class BackendMenuListener
     /**
      * Adds a link to the Contao Manager in the back end navigation.
      */
-    public function onBuild(MenuEvent $event): void
+    public function __invoke(MenuEvent $event): void
     {
         if (null === $this->managerPath || !$this->security->isGranted('ROLE_ADMIN')) {
             return;

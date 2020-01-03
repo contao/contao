@@ -5,15 +5,13 @@ composer:
     require:
         'contao/manager-plugin': '^2.6.2'
     conflict:
+        'doctrine/persistence': '1.3.2'
         'zendframework/zend-code': '<3.3.1'
     require-dev:
         'contao/monorepo-tools': 'dev-master'
-        'contao/phpstan': '^0.8.1'
-        'contao/php-cs-fixer': '^2.0'
-        'phpstan/phpstan': '^0.11'
+        'contao/phpstan': '^0.12'
+        'contao/php-cs-fixer': '^2.2'
         'phpstan/extension-installer': '^1.0'
-        'phpstan/phpstan-phpunit': '^0.11.2'
-        'phpstan/phpstan-symfony': '^0.11.6'
 
 repositories:
     core-bundle:

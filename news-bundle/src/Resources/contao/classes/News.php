@@ -244,8 +244,10 @@ class News extends Frontend
 			}
 		}
 
+		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
+
 		// Create the file
-		File::putContent('web/share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
+		File::putContent($webDir . '/share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
 	}
 
 	/**
@@ -442,7 +444,6 @@ class News extends Frontend
 			// Link to an external page
 			case 'external':
 				return $objItem->url;
-				break;
 
 			// Link to an internal page
 			case 'internal':

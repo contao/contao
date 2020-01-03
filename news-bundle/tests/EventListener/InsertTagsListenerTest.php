@@ -35,7 +35,7 @@ class InsertTagsListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework($adapters);
 
         $listener = new InsertTagsListener($framework);
-        $url = $listener->onReplaceInsertTags('news_feed::2', false, null, []);
+        $url = $listener('news_feed::2', false, null, []);
 
         $this->assertSame('http://localhost/share/news.xml', $url);
     }
@@ -70,32 +70,32 @@ class InsertTagsListenerTest extends ContaoTestCase
 
         $this->assertSame(
             '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;">"Foo" is not "bar"</a>',
-            $listener->onReplaceInsertTags('news::2', false, null, [])
+            $listener('news::2', false, null, [])
         );
 
         $this->assertSame(
             '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;">',
-            $listener->onReplaceInsertTags('news_open::2', false, null, [])
+            $listener('news_open::2', false, null, [])
         );
 
         $this->assertSame(
             'news/foo-is-not-bar.html',
-            $listener->onReplaceInsertTags('news_url::2', false, null, [])
+            $listener('news_url::2', false, null, [])
         );
 
         $this->assertSame(
             'http://domain.tld/news/foo-is-not-bar.html',
-            $listener->onReplaceInsertTags('news_url::2', false, null, ['absolute'])
+            $listener('news_url::2', false, null, ['absolute'])
         );
 
         $this->assertSame(
             '&quot;Foo&quot; is not &quot;bar&quot;',
-            $listener->onReplaceInsertTags('news_title::2', false, null, [])
+            $listener('news_title::2', false, null, [])
         );
 
         $this->assertSame(
             '<p>Foo does not equal bar.</p>',
-            $listener->onReplaceInsertTags('news_teaser::2', false, null, [])
+            $listener('news_teaser::2', false, null, [])
         );
     }
 
@@ -103,7 +103,7 @@ class InsertTagsListenerTest extends ContaoTestCase
     {
         $listener = new InsertTagsListener($this->mockContaoFramework());
 
-        $this->assertFalse($listener->onReplaceInsertTags('link_url::2', false, null, []));
+        $this->assertFalse($listener('link_url::2', false, null, []));
     }
 
     public function testReturnsAnEmptyStringIfThereIsNoModel(): void
@@ -115,7 +115,7 @@ class InsertTagsListenerTest extends ContaoTestCase
 
         $listener = new InsertTagsListener($this->mockContaoFramework($adapters));
 
-        $this->assertSame('', $listener->onReplaceInsertTags('news_feed::3', false, null, []));
-        $this->assertSame('', $listener->onReplaceInsertTags('news_url::3', false, null, []));
+        $this->assertSame('', $listener('news_feed::3', false, null, []));
+        $this->assertSame('', $listener('news_url::3', false, null, []));
     }
 }

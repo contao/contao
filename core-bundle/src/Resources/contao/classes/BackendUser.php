@@ -12,12 +12,15 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Provide methods to manage back end users.
  *
  * @property boolean $isAdmin
  * @property array   $groups
+ * @property array   $elements
+ * @property array   $fields
  * @property array   $pagemounts
  * @property array   $filemounts
  * @property array   $filemountIds
@@ -165,31 +168,24 @@ class BackendUser extends User
 		{
 			case 'isAdmin':
 				return $this->arrData['admin'] ? true : false;
-				break;
 
 			case 'groups':
 				return \is_array($this->arrData['groups']) ? $this->arrData['groups'] : (($this->arrData['groups'] != '') ? array($this->arrData['groups']) : array());
-				break;
 
 			case 'pagemounts':
 				return \is_array($this->arrData['pagemounts']) ? $this->arrData['pagemounts'] : (($this->arrData['pagemounts'] != '') ? array($this->arrData['pagemounts']) : false);
-				break;
 
 			case 'filemounts':
 				return \is_array($this->arrData['filemounts']) ? $this->arrData['filemounts'] : (($this->arrData['filemounts'] != '') ? array($this->arrData['filemounts']) : false);
-				break;
 
 			case 'filemountIds':
 				return $this->arrFilemountIds;
-				break;
 
 			case 'fop':
 				return \is_array($this->arrData['fop']) ? $this->arrData['fop'] : (($this->arrData['fop'] != '') ? array($this->arrData['fop']) : false);
-				break;
 
 			case 'alexf':
 				return $this->alexf;
-				break;
 		}
 
 		return parent::__get($strKey);
@@ -397,7 +393,7 @@ class BackendUser extends User
 
 		// Inherit permissions
 		$always = array('alexf');
-		$depends = array('modules', 'themes', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg');
+		$depends = array('modules', 'themes', 'elements', 'fields', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg');
 
 		// HOOK: Take custom permissions
 		if (!empty($GLOBALS['TL_PERMISSIONS']) && \is_array($GLOBALS['TL_PERMISSIONS']))
@@ -512,7 +508,7 @@ class BackendUser extends User
 		{
 			if (!empty($arrGroupModules) && ($strGroupName == 'system' || $this->hasAccess(array_keys($arrGroupModules), 'modules')))
 			{
-				$arrModules[$strGroupName]['class'] = ' node-expanded';
+				$arrModules[$strGroupName]['class'] = 'group-' . $strGroupName . ' node-expanded';
 				$arrModules[$strGroupName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
 				$arrModules[$strGroupName]['label'] = (($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName]) ? $GLOBALS['TL_LANG']['MOD'][$strGroupName][0] : $GLOBALS['TL_LANG']['MOD'][$strGroupName]) != false) ? $label : $strGroupName;
 				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>Input::get('do'), 'mtg'=>$strGroupName, 'ref'=>$strRefererId));
@@ -588,6 +584,49 @@ class BackendUser extends User
 		}
 
 		return $this->roles;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function serialize()
+	{
+		return serialize(array('admin' => $this->admin, 'parent' => parent::serialize()));
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function unserialize($serialized)
+	{
+		$data = unserialize($serialized, array('allowed_classes'=>false));
+
+		if (array_keys($data) != array('admin', 'parent'))
+		{
+			return;
+		}
+
+		list($this->admin, $parent) = array_values($data);
+
+		parent::unserialize($parent);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function isEqualTo(UserInterface $user)
+	{
+		if (!$user instanceof self)
+		{
+			return false;
+		}
+
+		if ((bool) $this->admin !== (bool) $user->admin)
+		{
+			return false;
+		}
+
+		return parent::isEqualTo($user);
 	}
 }
 

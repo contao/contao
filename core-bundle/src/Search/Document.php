@@ -121,7 +121,7 @@ class Document
             new Uri($request->getUri()),
             $response->getStatusCode(),
             $response->headers->all(),
-            $response->getContent()
+            (string) $response->getContent()
         );
     }
 

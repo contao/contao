@@ -17,7 +17,9 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\PackageUtil;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
+use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
 use Symfony\Component\Asset\VersionStrategy\StaticVersionStrategy;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Filesystem\Filesystem;
@@ -34,6 +36,11 @@ class AddAssetsPackagesPassTest extends TestCase
         $fs = new Filesystem();
         $fs->mkdir(static::getTempDir().'/FooBarBundle/Resources/public');
         $fs->mkdir(static::getTempDir().'/FooBarPackage/Resources/public');
+
+        $fs->mkdir(static::getTempDir().'/ManifestJsonBundle/Resources/public');
+        $fs->touch(static::getTempDir().'/ManifestJsonBundle/Resources/public/manifest.json');
+
+        $fs->mkdir(static::getTempDir().'/RootPublicBundle/public');
     }
 
     public function testAbortsIfTheAssetsPackagesServiceDoesNotExist(): void
@@ -120,6 +127,46 @@ class AddAssetsPackagesPassTest extends TestCase
         $this->assertSame('assets._version_default', (string) $service->getArgument(1));
     }
 
+    public function testUsesTheJsonManifestVersionStrategyForBundles(): void
+    {
+        $bundlePath = static::getTempDir().'/ManifestJsonBundle';
+        $container = $this->getContainerWithAssets('ManifestJsonBundle', 'Foo\Bar\ManifestJsonBundle', $bundlePath);
+
+        $pass = new AddAssetsPackagesPass();
+        $pass->process($container);
+
+        $this->assertTrue($container->hasDefinition('assets._package_manifest_json'));
+
+        $service = $container->getDefinition('assets._package_manifest_json');
+
+        $this->assertSame('bundles/manifestjson', $service->getArgument(0));
+        $this->assertSame('assets._version_manifest_json', (string) $service->getArgument(1));
+        $this->assertTrue($container->hasDefinition('assets._version_manifest_json'));
+
+        $definition = $container->getDefinition('assets._version_manifest_json');
+
+        $this->assertInstanceOf(ChildDefinition::class, $definition);
+        $this->assertSame('assets.json_manifest_version_strategy', $definition->getParent());
+        $this->assertSame($bundlePath.'/Resources/public/manifest.json', $definition->getArgument(0));
+    }
+
+    public function testSupportsBundlesWithPublicInRoot(): void
+    {
+        $bundlePath = static::getTempDir().'/RootPublicBundle';
+
+        $container = $this->getContainerWithAssets('RootPublicBundle', 'Foo\Bar\RootPublicBundle', $bundlePath);
+        $container->setDefinition('assets._version_default', new Definition(StaticVersionStrategy::class));
+
+        $pass = new AddAssetsPackagesPass();
+        $pass->process($container);
+
+        $this->assertTrue($container->hasDefinition('assets._package_root_public'));
+
+        $service = $container->getDefinition('assets._package_root_public');
+
+        $this->assertSame('bundles/rootpublic', $service->getArgument(0));
+    }
+
     public function testSupportsBundlesWithWrongSuffix(): void
     {
         $bundlePath = static::getTempDir().'/FooBarPackage';
@@ -165,6 +212,7 @@ class AddAssetsPackagesPassTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->setDefinition('assets.packages', new Definition(Packages::class));
         $container->setDefinition('assets.empty_version_strategy', new Definition(EmptyVersionStrategy::class));
+        $container->setDefinition('assets.json_manifest_version_strategy', new Definition(JsonManifestVersionStrategy::class));
         $container->setParameter('kernel.bundles', [$name => $class]);
         $container->setParameter('kernel.bundles_metadata', [$name => ['path' => $path]]);
 

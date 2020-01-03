@@ -138,11 +138,9 @@ class FrontendUser extends User
 		{
 			case 'allGroups':
 				return $this->arrGroups;
-				break;
 
 			case 'loginPage':
 				return $this->strLoginPage;
-				break;
 		}
 
 		return parent::__get($strKey);

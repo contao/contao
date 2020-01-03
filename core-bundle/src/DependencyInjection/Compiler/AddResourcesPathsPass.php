@@ -37,10 +37,15 @@ class AddResourcesPathsPass implements CompilerPassInterface
         $paths = [];
         $rootDir = $container->getParameter('kernel.project_dir');
 
-        foreach ($container->getParameter('kernel.bundles') as $name => $class) {
+        $bundles = $container->getParameter('kernel.bundles');
+        $meta = $container->getParameter('kernel.bundles_metadata');
+
+        foreach ($bundles as $name => $class) {
             if (ContaoModuleBundle::class === $class) {
-                $paths[] = sprintf('%s/system/modules/%s', $rootDir, $name);
-            } elseif (null !== ($path = $this->getResourcesPathFromClassName($class))) {
+                $paths[] = $meta[$name]['path'];
+            } elseif (is_dir($path = $meta[$name]['path'].'/Resources/contao')) {
+                $paths[] = $path;
+            } elseif (is_dir($path = $meta[$name]['path'].'/contao')) {
                 $paths[] = $path;
             }
         }
@@ -60,16 +65,5 @@ class AddResourcesPathsPass implements CompilerPassInterface
         }
 
         return $paths;
-    }
-
-    private function getResourcesPathFromClassName(string $class): ?string
-    {
-        $reflection = new \ReflectionClass($class);
-
-        if (is_dir($dir = \dirname($reflection->getFileName()).'/Resources/contao')) {
-            return $dir;
-        }
-
-        return null;
     }
 }

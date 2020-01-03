@@ -220,6 +220,7 @@ $GLOBALS['BE_FFL'] = array
 	'inputUnit'      => 'Contao\InputUnit',
 	'trbl'           => 'Contao\TrblField',
 	'chmod'          => 'Contao\ChmodTable',
+	'picker'         => 'Contao\Picker',
 	'pageTree'       => 'Contao\PageTree',
 	'pageSelector'   => 'Contao\PageSelector',
 	'fileTree'       => 'Contao\FileTree',
