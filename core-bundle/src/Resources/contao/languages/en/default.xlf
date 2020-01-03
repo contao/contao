@@ -921,7 +921,7 @@
         <source>Module</source>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
-        <source>Column</source>
+        <source>Layout section</source>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
