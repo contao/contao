@@ -407,9 +407,9 @@ class FileTree extends Widget
 	 *
 	 * @return array
 	 */
-	protected function getPickerUrlExtras($values = [])
+	protected function getPickerUrlExtras($values = array())
 	{
-		$extras = [];
+		$extras = array();
 		$extras['fieldType'] = $this->fieldType;
 
 		if ($this->files)
