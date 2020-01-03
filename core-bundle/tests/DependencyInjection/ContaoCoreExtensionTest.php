@@ -111,6 +111,7 @@ use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint;
 use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler;
+use Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices;
@@ -2536,6 +2537,43 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheSecurityAuthenticationListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.security.authentication_listener'));
+
+        $definition = $this->container->getDefinition('contao.security.authentication_listener');
+
+        $this->assertSame(ContaoLoginAuthenticationListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('security.token_storage'),
+                new Reference('security.authentication.manager'),
+                new Reference('security.authentication.session_strategy'),
+                new Reference('security.http_utils'),
+                null,
+                new Reference('contao.security.authentication_success_handler'),
+                new Reference('contao.security.authentication_failure_handler'),
+                [],
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+                new Reference('event_dispatcher', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'monolog.logger' => [
+                    [
+                        'channel' => 'security',
+                    ],
+                ],
+            ],
+            $definition->getTags()
         );
     }
 

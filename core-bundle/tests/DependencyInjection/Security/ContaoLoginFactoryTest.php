@@ -20,9 +20,7 @@ class ContaoLoginFactoryTest extends TestCase
 {
     public function testReturnsTheCorrectKey(): void
     {
-        $factory = new ContaoLoginFactory();
-
-        $this->assertSame('contao-login', $factory->getKey());
+        $this->assertSame('contao-login', (new ContaoLoginFactory())->getKey());
     }
 
     public function testConfiguresTheContainerServices(): void
@@ -52,14 +50,7 @@ class ContaoLoginFactoryTest extends TestCase
         $this->assertSame('contao.security.frontend_user_provider', (string) $arguments['index_0']);
         $this->assertSame('security.user_checker.contao_frontend', (string) $arguments['index_1']);
         $this->assertSame('contao_frontend', $arguments['index_2']);
-
-        $this->assertSame(
-            [
-                'lock_period' => 300,
-                'login_attempts' => 3,
-            ],
-            $arguments[0]
-        );
+        $this->assertSame(['lock_period' => 300, 'login_attempts' => 3], $arguments[0]);
 
         $this->assertTrue($container->hasDefinition('security.authentication.listener.form.contao_frontend'));
 
@@ -70,7 +61,6 @@ class ContaoLoginFactoryTest extends TestCase
 
         $this->assertIsArray($arguments);
         $this->assertCount(5, $arguments);
-
         $this->assertSame('contao_frontend', $arguments['index_4']);
 
         $this->assertSame(
