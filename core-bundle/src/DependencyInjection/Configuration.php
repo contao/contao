@@ -90,7 +90,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('upload_path')
                     ->cannotBeEmpty()
                     ->defaultValue('files')
-                    ->info('Folder used by the file manager.')
+                    ->info('The folder used by the file manager.')
                     ->validate()
                         ->ifTrue(
                             static function (string $v): int {
@@ -139,7 +139,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->booleanNode('bypass_cache')
                     ->defaultValue(false)
-                    ->info('Enables pretty error screens, for which custom templates can be created.')
+                    ->info('Show customizable, pretty error screens instead of the default PHP error messages.')
                 ->end()
                 ->arrayNode('imagine_options')
                     ->addDefaultsIfNotSet()
