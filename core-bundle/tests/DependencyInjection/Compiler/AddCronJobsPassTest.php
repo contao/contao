@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
-use Contao\CoreBundle\Fixtures\Cron\TestInvokableCron;
+use Contao\CoreBundle\Fixtures\Cron\TestInvokableScopedCronJob;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -118,11 +118,11 @@ class AddCronJobsPassTest extends TestCase
 
     public function testUsesInvokeMethodIfNoneGiven(): void
     {
-        $definition = new Definition(TestInvokableCron::class);
+        $definition = new Definition(TestInvokableScopedCronJob::class);
         $definition->addTag('contao.cron', ['interval' => 'minutely']);
 
         $container = $this->getContainerBuilder();
-        $container->setDefinition(TestInvokableCron::class, $definition);
+        $container->setDefinition(TestInvokableScopedCronJob::class, $definition);
 
         $pass = new AddCronJobsPass();
         $pass->process($container);

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Cron;
 
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Entity\CronJob;
+use Contao\CoreBundle\Fixtures\Cron\TestInvokableScopedCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -116,6 +117,39 @@ class CronTest extends TestCase
         $cron->addCronJob($cronjob, 'onHourly', '@hourly');
 
         $cron->run();
+    }
+
+    public function testDoesNotSetScope(): void
+    {
+        $cronjob = $this->createMock(TestInvokableScopedCronJob::class);
+
+        $cronjob
+            ->expects($this->never())
+            ->method('setScope')
+        ;
+
+        $cron = new Cron($this->createMock(CronJobRepository::class));
+
+        $cron->addCronJob($cronjob, '__invoke', '@hourly');
+
+        $cron->run();
+    }
+
+    public function testSetsScope(): void
+    {
+        $cronjob = $this->createMock(TestInvokableScopedCronJob::class);
+
+        $cronjob
+            ->expects($this->once())
+            ->method('setScope')
+            ->with(Cron::SCOPE_CLI)
+        ;
+
+        $cron = new Cron($this->createMock(CronJobRepository::class));
+
+        $cron->addCronJob($cronjob, '__invoke', '@hourly');
+
+        $cron->run(Cron::SCOPE_CLI);
     }
 
     /**

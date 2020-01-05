@@ -12,13 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
-use Contao\CoreBundle\Entity\CronJob;
+use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 
 class Cron
 {
+    public const SCOPE_WEB = 'SCOPE_WEB';
+    public const SCOPE_CLI = 'SCOPE_CLI';
+
     /**
      * @var CronJobRepository
      */
@@ -30,7 +34,7 @@ class Cron
     private $logger;
 
     /**
-     * @var array
+     * @var array<CronJob>
      */
     private $cronJobs = [];
 
@@ -41,25 +45,24 @@ class Cron
     }
 
     /**
-     * Add a cron service.
-     *
-     * @param string $interval The interval as a CRON expression
+     * Add a cron job service.
      */
-    public function addCronJob($service, string $method, string $interval): void
+    public function addCronJob(object $service, string $method, string $interval): void
     {
-        $this->cronJobs[] = [
-            'service' => $service,
-            'method' => $method,
-            'interval' => $interval,
-            'name' => \get_class($service).'::'.$method,
-        ];
+        $this->cronJobs[] = new CronJob($service, $method, $interval);
     }
 
     /**
-     * Run the registered Contao cron jobs.
+     * Run all the registered Contao cron jobs.
      */
-    public function run(): void
+    public function run(string $scope = null): void
     {
+        // Validate scope
+        if (null !== $scope && self::SCOPE_WEB !== $scope && self::SCOPE_CLI !== $scope) {
+            throw new InvalidArgumentException('Invalid scope "'.$scope.'"');
+        }
+
+        /** @var array<CronJob> */
         $cronJobsToBeRun = [];
         $now = new \DateTime();
 
@@ -69,19 +72,19 @@ class Cron
 
             // Go through each cron job
             foreach ($this->cronJobs as $cron) {
-                $interval = $cron['interval'];
-                $name = $cron['name'];
+                $interval = $cron->getInterval();
+                $name = $cron->getName();
 
                 // Determine the last run date
                 $lastRunDate = null;
 
-                /** @var CronJob $lastRunEntity */
+                /** @var CronJobEntity $lastRunEntity */
                 $lastRunEntity = $this->repository->findOneByName($name);
 
                 if (null !== $lastRunEntity) {
                     $lastRunDate = $lastRunEntity->getLastRun();
                 } else {
-                    $lastRunEntity = new CronJob($name);
+                    $lastRunEntity = new CronJobEntity($name);
                 }
 
                 // Check if the cron should be run
@@ -103,10 +106,14 @@ class Cron
         // Execute all crons to be run
         foreach ($cronJobsToBeRun as $cron) {
             if (null !== $this->logger) {
-                $this->logger->debug(sprintf('Executing cron job "%s"', $cron['name']));
+                $this->logger->debug(sprintf('Executing cron job "%s"', $cron->getName()));
             }
 
-            $cron['service']->{$cron['method']}();
+            if (null !== $scope) {
+                $cron->setScope($scope);
+            }
+
+            $cron();
         }
     }
 }
