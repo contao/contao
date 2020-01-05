@@ -242,22 +242,22 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'maxval' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'step' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'eval'                    => array('rgxp'=>'digit', 'tl_class'=>'w50'),
+			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'size' => array
 		(
