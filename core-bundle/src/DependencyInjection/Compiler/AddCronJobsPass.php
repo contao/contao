@@ -30,7 +30,7 @@ class AddCronJobsPass implements CompilerPassInterface
             return;
         }
 
-        $serviceIds = $container->findTaggedServiceIds('contao.cron');
+        $serviceIds = $container->findTaggedServiceIds('contao.cronjob');
         $definition = $container->findDefinition(Cron::class);
 
         foreach ($serviceIds as $serviceId => $tags) {
@@ -53,7 +53,7 @@ class AddCronJobsPass implements CompilerPassInterface
 
                 // Validate the cron expression
                 if (!CronExpression::isValidExpression($interval)) {
-                    throw new InvalidDefinitionException(sprintf('The contao.cron definition for service "%s" has an invalid interval expression "%s"', $serviceId, $interval));
+                    throw new InvalidDefinitionException(sprintf('The contao.cronjob definition for service "%s" has an invalid interval expression "%s"', $serviceId, $interval));
                 }
 
                 $definition->addMethodCall('addCronJob', [new Reference($serviceId), $method, $interval]);
@@ -67,7 +67,7 @@ class AddCronJobsPass implements CompilerPassInterface
     private function getMethod(array $attributes, string $class, string $serviceId): string
     {
         $ref = new \ReflectionClass($class);
-        $invalid = sprintf('The contao.cron definition for service "%s" is invalid. ', $serviceId);
+        $invalid = sprintf('The contao.cronjob definition for service "%s" is invalid. ', $serviceId);
 
         if (isset($attributes['method'])) {
             if (!$ref->hasMethod($attributes['method'])) {

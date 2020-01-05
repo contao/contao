@@ -26,7 +26,7 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  *     @Attribute("value", type="string", required=true)
  * })
  */
-final class Cron implements ServiceTagInterface
+final class CronJob implements ServiceTagInterface
 {
     /**
      * @var string
@@ -35,7 +35,7 @@ final class Cron implements ServiceTagInterface
 
     public function getName(): string
     {
-        return 'contao.cron';
+        return 'contao.cronjob';
     }
 
     public function getAttributes(): array

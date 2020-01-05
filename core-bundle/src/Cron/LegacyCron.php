@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cron;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Cron;
+use Contao\CoreBundle\ServiceAnnotation\CronJob;
 use Contao\System;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
@@ -42,7 +42,7 @@ class LegacyCron implements ServiceAnnotationInterface
     }
 
     /**
-     * @Cron("minutely")
+     * @CronJob("minutely")
      */
     public function onMinutely(): void
     {
@@ -50,7 +50,7 @@ class LegacyCron implements ServiceAnnotationInterface
     }
 
     /**
-     * @Cron("hourly")
+     * @CronJob("hourly")
      */
     public function onHourly(): void
     {
@@ -58,7 +58,7 @@ class LegacyCron implements ServiceAnnotationInterface
     }
 
     /**
-     * @Cron("daily")
+     * @CronJob("daily")
      */
     public function onDaily(): void
     {
@@ -66,7 +66,7 @@ class LegacyCron implements ServiceAnnotationInterface
     }
 
     /**
-     * @Cron("weekly")
+     * @CronJob("weekly")
      */
     public function onWeekly(): void
     {
@@ -74,7 +74,7 @@ class LegacyCron implements ServiceAnnotationInterface
     }
 
     /**
-     * @Cron("monthly")
+     * @CronJob("monthly")
      */
     public function onMonthly(): void
     {
@@ -94,7 +94,7 @@ class LegacyCron implements ServiceAnnotationInterface
 
             foreach ($GLOBALS['TL_CRON'][$interval] as $name => $cron) {
                 if (!\in_array($name, self::ALLOWED_CRONS, true)) {
-                    @trigger_error('Using $GLOBALS[\'TL_CRON\'] has been deprecated and will be removed in Contao 5.0. Use the "contao.cron" service tag instead.', E_USER_DEPRECATED);
+                    @trigger_error('Using $GLOBALS[\'TL_CRON\'] has been deprecated and will be removed in Contao 5.0. Use the "contao.cronjob" service tag instead.', E_USER_DEPRECATED);
                 }
 
                 $system->importStatic($cron[0])->{$cron[1]}();

@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Cron;
 
+use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Cron\LegacyCron;
+use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 
@@ -66,13 +68,18 @@ class LegacyCronTest extends TestCase
             System::class => $systemAdapter,
         ]);
 
-        // Create a LegacyCron instance and execute all interval functions
+        // Create a LegacyCron instance and add cron jobs to the cron service
         $legacyCron = new LegacyCron($framework);
-        $legacyCron->onMinutely();
-        $legacyCron->onHourly();
-        $legacyCron->onDaily();
-        $legacyCron->onWeekly();
-        $legacyCron->onMonthly();
+
+        $cron = new Cron($this->createMock(CronJobRepository::class));
+
+        $cron->addCronJob($legacyCron, 'onMinutely', '* * * * *');
+        $cron->addCronJob($legacyCron, 'onHourly', '@hourly');
+        $cron->addCronJob($legacyCron, 'onDaily', '@daily');
+        $cron->addCronJob($legacyCron, 'onWeekly', '@weekly');
+        $cron->addCronJob($legacyCron, 'onMonthly', '@monthly');
+
+        $cron->run();
 
         unset($GLOBALS['TL_CRON']);
     }

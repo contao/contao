@@ -57,7 +57,7 @@ class AddCronJobsPassTest extends TestCase
     public function testRegistersTheCrons(): void
     {
         $definition = new Definition(TestCronJob::class);
-        $definition->addTag('contao.cron', ['interval' => 'minutely']);
+        $definition->addTag('contao.cronjob', ['interval' => 'minutely']);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition(TestCronJob::class, $definition);
@@ -73,7 +73,7 @@ class AddCronJobsPassTest extends TestCase
     public function testFailsIfTheIntervalAttributeIsMissing(): void
     {
         $definition = new Definition(TestCronJob::class);
-        $definition->addTag('contao.cron');
+        $definition->addTag('contao.cronjob');
 
         $container = $this->getContainerBuilder();
         $container->setDefinition(TestCronJob::class, $definition);
@@ -88,7 +88,7 @@ class AddCronJobsPassTest extends TestCase
     public function testFailsIfTheIntervalAttributeIsInvalid(): void
     {
         $definition = new Definition(TestCronJob::class);
-        $definition->addTag('contao.cron', ['interval' => '* b * * *']);
+        $definition->addTag('contao.cronjob', ['interval' => '* b * * *']);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition(TestCronJob::class, $definition);
@@ -103,7 +103,7 @@ class AddCronJobsPassTest extends TestCase
     public function testGeneratesMethodNameIfNoneGiven(): void
     {
         $definition = new Definition(TestCronJob::class);
-        $definition->addTag('contao.cron', ['interval' => 'minutely']);
+        $definition->addTag('contao.cronjob', ['interval' => 'minutely']);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition(TestCronJob::class, $definition);
@@ -119,7 +119,7 @@ class AddCronJobsPassTest extends TestCase
     public function testUsesInvokeMethodIfNoneGiven(): void
     {
         $definition = new Definition(TestInvokableScopedCronJob::class);
-        $definition->addTag('contao.cron', ['interval' => 'minutely']);
+        $definition->addTag('contao.cronjob', ['interval' => 'minutely']);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition(TestInvokableScopedCronJob::class, $definition);
@@ -135,7 +135,7 @@ class AddCronJobsPassTest extends TestCase
     public function testUsesMethodNameIfMethodNameIsGiven(): void
     {
         $definition = new Definition(TestCronJob::class);
-        $definition->addTag('contao.cron', [
+        $definition->addTag('contao.cronjob', [
             'interval' => 'minutely',
             'method' => 'customMethod',
         ]);
@@ -154,11 +154,11 @@ class AddCronJobsPassTest extends TestCase
     public function testHandlesMultipleTags(): void
     {
         $definition = new Definition(TestCronJob::class);
-        $definition->addTag('contao.cron', ['interval' => 'minutely']);
-        $definition->addTag('contao.cron', ['interval' => 'hourly']);
-        $definition->addTag('contao.cron', ['interval' => 'daily']);
-        $definition->addTag('contao.cron', ['interval' => 'weekly']);
-        $definition->addTag('contao.cron', ['interval' => 'monthly']);
+        $definition->addTag('contao.cronjob', ['interval' => 'minutely']);
+        $definition->addTag('contao.cronjob', ['interval' => 'hourly']);
+        $definition->addTag('contao.cronjob', ['interval' => 'daily']);
+        $definition->addTag('contao.cronjob', ['interval' => 'weekly']);
+        $definition->addTag('contao.cronjob', ['interval' => 'monthly']);
 
         $container = $this->getContainerBuilder();
         $container->setDefinition(TestCronJob::class, $definition);
