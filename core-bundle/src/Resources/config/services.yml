@@ -293,6 +293,8 @@ services:
             - '@contao.menu.matcher'
         public: true
 
+    Contao\CoreBundle\Migration\MigrationCollection: ~
+
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
         arguments:

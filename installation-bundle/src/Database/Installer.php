@@ -79,7 +79,7 @@ class Installer
     /**
      * Compiles the command required to update the database.
      */
-    private function compileCommands(): void
+    public function compileCommands(): void
     {
         $return = [
             'CREATE' => [],

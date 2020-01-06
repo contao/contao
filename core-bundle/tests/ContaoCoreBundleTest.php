@@ -26,6 +26,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
@@ -52,6 +53,7 @@ class ContaoCoreBundleTest extends TestCase
             AddAssetsPackagesPass::class,
             AddSessionBagsPass::class,
             AddResourcesPathsPass::class,
+            TaggedMigrationsPass::class,
             PickerProviderPass::class,
             RegisterFragmentsPass::class,
             RegisterFragmentsPass::class,
