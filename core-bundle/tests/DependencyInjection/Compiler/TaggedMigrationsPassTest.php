@@ -23,11 +23,7 @@ class TaggedMigrationsPassTest extends TestCase
     public function testAddsTheMigrations(): void
     {
         $container = new ContainerBuilder();
-
-        $container->setDefinition(
-            MigrationCollection::class,
-            new Definition(MigrationCollection::class)
-        );
+        $container->setDefinition(MigrationCollection::class, new Definition(MigrationCollection::class));
 
         $migrations = [
             'Test\Migration1' => [],

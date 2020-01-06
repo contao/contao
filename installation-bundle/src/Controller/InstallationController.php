@@ -362,10 +362,7 @@ class InstallationController implements ContainerAwareInterface
     {
         $this->context['sql_message'] = implode(
             '<br>',
-            array_map(
-                'htmlspecialchars',
-                $this->container->get('contao.install_tool')->runMigrations()
-            )
+            array_map('htmlspecialchars', $this->container->get('contao.install_tool')->runMigrations())
         );
     }
 

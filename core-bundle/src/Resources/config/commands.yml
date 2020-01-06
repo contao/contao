@@ -7,14 +7,6 @@ services:
             calls:
                 - ['setFramework', ['@contao.framework']]
 
-    Contao\CoreBundle\Command\MigrateCommand:
-        arguments:
-            - '@Contao\CoreBundle\Migration\MigrationCollection'
-            - '@contao.resource_locator'
-            - '%kernel.project_dir%'
-            - '@contao.framework'
-            - '@?contao.installer'
-
     contao.command.automator:
         class: Contao\CoreBundle\Command\AutomatorCommand
         arguments:
@@ -43,6 +35,14 @@ services:
             - '%contao.upload_path%'
             - '%contao.image.target_dir%'
         public: true
+
+    Contao\CoreBundle\Command\MigrateCommand:
+        arguments:
+            - '@Contao\CoreBundle\Migration\MigrationCollection'
+            - '@contao.resource_locator'
+            - '%kernel.project_dir%'
+            - '@contao.framework'
+            - '@?contao.installer'
 
     contao.command.resize_images:
         class: Contao\CoreBundle\Command\ResizeImagesCommand

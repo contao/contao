@@ -136,18 +136,12 @@ class Version447Update extends AbstractMigration
             $messages[] = $duplicate->email;
         }
 
-        $this->connection->query('
-            CREATE UNIQUE INDEX pid_email 
-            ON tl_newsletter_recipients 
-            (pid, email)
-        ');
+        $this->connection->query('CREATE UNIQUE INDEX pid_email ON tl_newsletter_recipients (pid, email)');
 
         if ($messages) {
             return $this->createResult(
                 true,
-                $this->translator->trans('duplicate_subscriptions')
-                ."\n\n * ".implode("\n * ", $messages)."\n\n"
-                .$this->translator->trans('duplicates_purged')
+                $this->translator->trans('duplicate_subscriptions')."\n\n * ".implode("\n * ", $messages)."\n\n".$this->translator->trans('duplicates_purged')
             );
         }
 

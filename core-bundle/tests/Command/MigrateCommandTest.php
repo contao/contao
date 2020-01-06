@@ -60,13 +60,13 @@ class MigrateCommandTest extends TestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Using runonce files has been deprecated %s.
+     * @expectedDeprecation Using runonce.php files has been deprecated %s.
      */
     public function testExecutesRunOnceFiles(): void
     {
         $runOnceFile = $this->getFixturesDir().'/runonceFile.php';
 
-        file_put_contents($runOnceFile, '<?php $GLOBALS["test_'.__CLASS__.'"] = "executed";');
+        file_put_contents($runOnceFile, '<?php $GLOBALS["test_'.self::class.'"] = "executed";');
 
         $command = $this->getCommand([], [], [[$runOnceFile]]);
 
@@ -76,9 +76,9 @@ class MigrateCommandTest extends TestCase
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
 
-        $this->assertSame('executed', $GLOBALS['test_'.__CLASS__]);
+        $this->assertSame('executed', $GLOBALS['test_'.self::class]);
 
-        unset($GLOBALS['test_'.__CLASS__]);
+        unset($GLOBALS['test_'.self::class]);
 
         $this->assertSame(0, $code);
         $this->assertRegExp('/runonceFile.php/', $display);
@@ -88,7 +88,6 @@ class MigrateCommandTest extends TestCase
     public function testExecutesSchemaDiff(): void
     {
         $installer = $this->createMock(Installer::class);
-
         $installer
             ->expects($this->atLeastOnce())
             ->method('compileCommands')
@@ -216,7 +215,7 @@ class MigrateCommandTest extends TestCase
             $migrations,
             $fileLocator,
             $this->getFixturesDir(),
-            $framework ?? $this->createMock(ContaoFramework::class),
+            $this->createMock(ContaoFramework::class),
             $installer ?? $this->createMock(Installer::class)
         );
     }

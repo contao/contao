@@ -17,7 +17,7 @@ class MigrationCollection
     /**
      * @var MigrationInterface[]
      */
-    private $migrations = [];
+    private $migrations;
 
     /**
      * @param MigrationInterface[] $migrations

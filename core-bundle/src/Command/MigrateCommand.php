@@ -125,7 +125,7 @@ class MigrateCommand extends Command
             $runOnceFiles = $this->getRunOnceFiles();
 
             if ($runOnceFiles) {
-                @trigger_error('Using runonce files has been deprecated and will no longer work in Contao 5.0. Use the migration framework instead.', E_USER_DEPRECATED);
+                @trigger_error('Using runonce.php files has been deprecated and will no longer work in Contao 5.0. Use the migration framework instead.', E_USER_DEPRECATED);
             }
 
             foreach ($runOnceFiles as $file) {
@@ -180,9 +180,12 @@ class MigrateCommand extends Command
             return [];
         }
 
-        return array_map(function ($path) {
-            return rtrim((new Filesystem())->makePathRelative($path, $this->projectDir), '/');
-        }, $files);
+        return array_map(
+            function ($path) {
+                return rtrim((new Filesystem())->makePathRelative($path, $this->projectDir), '/');
+            },
+            $files
+        );
     }
 
     private function executeRunonceFile(string $file): void
@@ -197,7 +200,7 @@ class MigrateCommand extends Command
     private function executeSchemaDiff(bool $withDeletesOption): bool
     {
         if (null === $this->installer) {
-            $this->io->error('Service contao.installer of contao/installation-bundle not found. The installation bundle needs to be installed in order to execute schema diff migrations.');
+            $this->io->error('Service "contao.installer" not found. The installation bundle needs to be installed in order to execute schema diff migrations.');
 
             return false;
         }
@@ -206,17 +209,14 @@ class MigrateCommand extends Command
 
         while (true) {
             $this->installer->compileCommands();
-            $commands = $this->installer->getCommands();
 
-            if (!$commands) {
+            if (!$commands = $this->installer->getCommands()) {
                 return true;
             }
 
             $hasNewCommands = \count(
                 array_filter(
-                    array_keys(
-                        array_merge(...array_values($commands))
-                    ),
+                    array_keys(array_merge(...array_values($commands))),
                     static function ($hash) use ($commandsByHash) {
                         return !isset($commandsByHash[$hash]);
                     }
@@ -233,17 +233,12 @@ class MigrateCommand extends Command
 
             $this->io->listing($commandsByHash);
 
-            $options =
-                $withDeletesOption
+            $options = $withDeletesOption
                 ? ['yes, with deletes', 'no']
                 : ['yes', 'yes, with deletes', 'no']
             ;
 
-            $answer = $this->io->choice(
-                'Execute the listed database updates?',
-                $options,
-                $options[0]
-            );
+            $answer = $this->io->choice('Execute the listed database updates?', $options, $options[0]);
 
             if ('no' === $answer) {
                 return false;

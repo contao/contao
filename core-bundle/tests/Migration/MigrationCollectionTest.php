@@ -22,23 +22,18 @@ class MigrationCollectionTest extends TestCase
     public function testGetPendingNames(): void
     {
         $migrations = new MigrationCollection($this->getMigrationServices());
-
         $pendingMigrations = $migrations->getPendingNames();
 
         if (!\is_array($pendingMigrations)) {
             $pendingMigrations = iterator_to_array($pendingMigrations);
         }
 
-        $this->assertSame(
-            ['Successful Migration', 'Failing Migration'],
-            $pendingMigrations
-        );
+        $this->assertSame(['Successful Migration', 'Failing Migration'], $pendingMigrations);
     }
 
     public function testRunMigrations(): void
     {
         $migrations = new MigrationCollection($this->getMigrationServices());
-
         $results = $migrations->run();
 
         if (!\is_array($results)) {
@@ -102,7 +97,7 @@ class MigrationCollectionTest extends TestCase
 
                 public function run(): MigrationResult
                 {
-                    throw new \Exception('Should never be executed');
+                    throw new \LogicException('Should never be executed');
                 }
             },
         ];
