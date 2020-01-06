@@ -478,7 +478,7 @@ class Config
 			'editableFiles'    => 'contao.editable_files',
 			'debugMode'        => 'kernel.debug',
 			'enableSearch'     => 'contao.search.default_indexer.enable',
-			'indexProtected'   => 'contao.search.indexProtected',
+			'indexProtected'   => 'contao.search.index_protected',
 		);
 
 		foreach ($arrMap as $strKey=>$strParam)
