@@ -108,7 +108,7 @@ to `core-bundle/phpunit.xml` and adjust the following line:
 Then run the functional tests via the `run` command:
 
 ```bash
-./run functional [--show-deprecations]
+composer run functional-tests
 ```
 
 ## License
