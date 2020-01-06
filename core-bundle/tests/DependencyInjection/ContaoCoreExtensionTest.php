@@ -2966,10 +2966,10 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'contao' => [
                     'crawl' => [
-                        'additionalURIs' => [
+                        'additional_uris' => [
                             'https://example.com',
                         ],
-                        'defaultHttpClientOptions' => [
+                        'default_http_client_options' => [
                             'proxy' => 'http://localhost:7080',
                         ],
                     ],
@@ -3003,7 +3003,7 @@ class ContaoCoreExtensionTest extends TestCase
                         'default_indexer' => [
                             'enable' => true,
                         ],
-                        'indexProtected' => true,
+                        'index_protected' => true,
                     ],
                 ],
             ],
