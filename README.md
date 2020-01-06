@@ -1,8 +1,8 @@
 <p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg"></p>
 
 <p align="center">
-<a href="https://travis-ci.com/contao/contao/"><img src="https://img.shields.io/travis/com/contao/contao.svg" alt="Travis"></a>
-<a href="https://coveralls.io/github/contao/contao"><img src="https://img.shields.io/coveralls/github/contao/contao.svg" alt="Coveralls"></a>
+<a href="https://github.com/contao/contao/actions"><img src="https://img.shields.io/github/workflow/status/contao/contao/CI/master.svg" alt="GitHub"></a>
+<a href="https://codecov.io/gh/contao/contao"><img src="https://img.shields.io/codecov/c/gh/contao/contao/master.svg" alt="Codecov"></a>
 <a href="https://packagist.org/packages/contao/contao"><img src="https://img.shields.io/packagist/v/contao/contao.svg" alt="Packagist"></a>
 <a href="https://pullreminders.com?ref=badge"><img src="https://pullreminders.com/badge.svg" alt="Pullreminders"></a>
 </p>
