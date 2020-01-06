@@ -1,6 +1,9 @@
 <style>
     .cto-toolbar {
-        font: 400 .875rem/1 -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+        font-family: -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+        font-weight: 400;
+        font-size: .875rem;
+        line-height: 1;
         color: #444;
         background: #f2f2f2;
         overflow: hidden;
@@ -8,13 +11,25 @@
         position: sticky;
         top: 0;
         z-index: 99999;
-        border-bottom: 1px solid #ffffff;
+        border-bottom: 1px solid #ccc;
+    }
+
+    @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+        .cto-toolbar {
+            color: #222;
+            font-weight: 300;
+        }
+    }
+
+    .cto-toolbar input, .cto-toolbar select, .cto-toolbar button {
+        font: inherit;
+        color: inherit;
+        line-height: 18px;
     }
 
     .cto-toolbar__inside {
         display: grid;
         grid-template: auto / 1fr auto;
-        border-bottom: 1px solid #cccccc;
     }
 
     .cto-toolbar--hidden {
@@ -29,14 +44,14 @@
 
     .cto-toolbar.ajax-loading .formbody {
         pointer-events: none;
-        opacity: 0.5;
+        opacity: .5;
     }
 
     .cto-toolbar .formbody {
         display: flex;
         align-items: baseline;
         justify-content: flex-end;
-        padding: .33em 0;
+        padding: 5px 0;
         margin-right: .5em;
     }
 
@@ -46,28 +61,28 @@
         margin-left: 1em;
     }
 
-
     @media only screen and (max-width: 676px) {
         .cto-toolbar .formbody {
             display: block;
+            text-align: right;
         }
 
         .cto-toolbar .formbody > div {
-            justify-content: space-between;
+            justify-content: flex-end;
             padding: 3px 0;
         }
     }
 
     .cto-toolbar label {
         width: auto;
-        margin: 0 .25em 0 0;
-        font-weight: 500;
+        margin: 0 3px 0 0;
     }
 
     .cto-toolbar input[type="text"] {
         margin: 0;
+        width: auto;
         box-sizing: border-box;
-        padding: 5px 6px 6px;
+        padding: 4px 6px 5px;
         border: 1px solid #aaa;
         border-radius: 2px;
         background-color: #fff;
@@ -77,9 +92,10 @@
 
     .cto-toolbar .tl_select {
         margin: 0;
+        width: auto;
         box-sizing: border-box;
         border: 1px solid #aaa;
-        padding: 5px 22px 6px 6px;
+        padding: 4px 22px 5px 6px;
         border-radius: 2px;
         background: #fff url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDUwMCA1MDAiPjxsaW5lYXJHcmFkaWVudCBpZD0iYSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIxMzEuNTIzIiB5MT0iNDIuNjMiIHgyPSIzNjguNDc4IiB5Mj0iMjc5LjU4NCI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYjNiM2IzIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOTk5Ii8+PC9saW5lYXJHcmFkaWVudD48cGF0aCBmaWxsPSJ1cmwoI2EpIiBkPSJNMjUwIDM5Ni42NjZjLTEuMTU1IDAtNC4xMS0xLjgzMi03LjExMy02Ljc1bC0xNjkuNi0yNzcuNDU1Yy0yLjUxNy00LjExNC0zLjE5LTYuOTgtMy4yOC04LjMxNC44MjctLjMzIDIuNTY1LS44MTIgNS42MjctLjgxMmgzNDguNzMzYzMuMDYzIDAgNC43OTguNDgyIDUuNjI3LjgxMi0uMDkgMS4zMzQtLjc2NiA0LjItMy4yOCA4LjMxNWwtMTY5LjYgMjc3LjQ1N2MtMy4wMDUgNC45MTctNS45NiA2Ljc1LTcuMTE0IDYuNzV6Ii8+PC9zdmc+) right -16px center no-repeat;
         background-origin: content-box;
@@ -90,7 +106,8 @@
     }
 
     .cto-toolbar .tl_submit {
-        padding: .175em 1em;
+        margin: 0 0 0 6px;
+        padding: 4px 10px 5px;
         border: 1px solid #aaa;
         border-radius: 2px;
         box-sizing: border-box;
@@ -98,8 +115,14 @@
         background: #eee;
         transition: background .2s ease;
         font-family: inherit;
-        font-size: 1em;
-        margin-left: 1em;
+        font-size: inherit;
+    }
+
+    @media only screen and (max-width: 676px) {
+        .cto-toolbar .tl_submit {
+            margin-top: 3px;
+            margin-bottom: 1px;
+        }
     }
 
     .cto-toolbar .tl_submit:hover {
@@ -113,10 +136,9 @@
 
     .cto-toolbar__open {
         display: none;
-        width: 40px;
-        height: 35px;
+        width: 36px;
+        height: 36px;
         background: #222;
-        border-radius: 0 0 0 2px;
     }
 
     .cto-toolbar__open a {
@@ -127,13 +149,8 @@
         opacity: .7;
     }
 
-    .cto-toolbar__open a:hover {
-        opacity: .9;
-    }
-
     .cto-toolbar--hidden {
         border-radius: 0 0 0 4px;
-
     }
 
     .cto-toolbar--hidden .cto-toolbar__open {
@@ -141,27 +158,21 @@
     }
 
     .cto-toolbar__close {
-        border-left: 1px solid #dddddd;
+        border-left: 1px solid #ccc;
     }
 
     .cto-toolbar__close a {
-        width: 1.5em;
         font-weight: 600;
-        font-size: 2em;
-        color: #444444;
+        font-size: 29px;
+        color: #444;
         text-decoration: none;
         display: block;
-        text-align: center;
-        height: 1.5em;
-        line-height: 1.45em;
+        padding: 3px 8px 7px 9px;
     }
 
     .cto-toolbar__close a:hover {
+        color: #666;
         background: rgba(0, 0, 0, 0.03);
-    }
-
-    .cto-toolbar__close a:hover {
-        color: #666666;
     }
 </style>
 <script>
