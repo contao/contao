@@ -91,7 +91,7 @@ class BackendPreviewController
 
         $this->dispatcher->dispatch($urlConvertEvent);
 
-        if (null !== $targetUrl = $urlConvertEvent->getUrl()) {
+        if ($targetUrl = $urlConvertEvent->getUrl()) {
             return new RedirectResponse($targetUrl);
         }
 

@@ -17,8 +17,14 @@ use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 
+/**
+ * @internal
+ */
 class PreviewUrlConvertListener
 {
+    /**
+     * @var ContaoFramework
+     */
     private $framework;
 
     public function __construct(ContaoFramework $framework)
