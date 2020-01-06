@@ -102,6 +102,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $request = $this->createMock(Request::class);
         $request->request = new ParameterBag(['FORM_SUBMIT' => 'tl_switch']);
+
         $request
             ->method('isXmlHttpRequest')
             ->willReturn(true)
@@ -132,6 +133,8 @@ class BackendPreviewSwitchControllerTest extends TestCase
         );
 
         $request = $this->createMock(Request::class);
+        $request->request = new ParameterBag(['FORM_SUBMIT' => 'datalist_members']);
+
         $request
             ->method('isXmlHttpRequest')
             ->willReturn(true)
@@ -142,8 +145,6 @@ class BackendPreviewSwitchControllerTest extends TestCase
             ->with('GET')
             ->willReturn(false)
         ;
-
-        $request->request = new ParameterBag(['FORM_SUBMIT' => 'datalist_members']);
 
         $response = $controller($request);
 
@@ -177,6 +178,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
             ->method('getFrontendUsername')
             ->willReturn($frontendUsername)
         ;
+
         $tokenChecker
             ->method('isPreviewMode')
             ->willReturn($previewMode)

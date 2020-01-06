@@ -32,7 +32,7 @@ class PreviewToolbarListenerTest extends TestCase
     /**
      * @dataProvider getInjectToolbarData
      */
-    public function testInjectToolbar($content, $expected): void
+    public function testInjectsTheToolbarBeforeTheClosingBodyTag($content, $expected): void
     {
         $listener = new PreviewToolbarListener(
             'preview.php',
@@ -64,7 +64,7 @@ class PreviewToolbarListenerTest extends TestCase
         ];
     }
 
-    public function testToolbarIsInjected(): void
+    public function testInjectsTheToolbarIntoTheResponse(): void
     {
         $response = new Response('<html><head></head><body></body></html>');
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
@@ -88,7 +88,7 @@ class PreviewToolbarListenerTest extends TestCase
         $this->assertSame("<html><head></head><body>\nCONTAO\n</body></html>", $response->getContent());
     }
 
-    public function testToolbarIsNotInjectedWhenNoPreviewEntrypoint(): void
+    public function testDoesNotInjectTheToolbarIfThereIsNoPreviewEntrypoint(): void
     {
         $response = new Response('<html><head></head><body></body></html>');
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
@@ -112,7 +112,7 @@ class PreviewToolbarListenerTest extends TestCase
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    public function testToolbarIsNotInjectedOnNonHtmlContentType(): void
+    public function testDoesNotInjectTheToolbarIfTheContentTypeIsNotHtml(): void
     {
         $response = new Response('<html><head></head><body></body></html>');
         $response->headers->set('Content-Type', 'text/xml');
@@ -136,7 +136,7 @@ class PreviewToolbarListenerTest extends TestCase
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    public function testToolbarIsNotInjectedOnContentDispositionAttachment(): void
+    public function testDoesNotInjectTheToolbarOnContentDispositionAttachment(): void
     {
         $response = new Response('<html><head></head><body></body></html>');
         $response->headers->set('Content-Disposition', 'attachment; filename=test.html');
@@ -163,7 +163,7 @@ class PreviewToolbarListenerTest extends TestCase
     /**
      * @dataProvider getRedirects
      */
-    public function testToolbarIsNotInjectedOnRedirection(int $statusCode, bool $hasSession): void
+    public function testDoesNotInjectTheToolbarIntoARedirectResponse(int $statusCode, bool $hasSession): void
     {
         $response = new Response('<html><head></head><body></body></html>', $statusCode);
 
@@ -194,7 +194,7 @@ class PreviewToolbarListenerTest extends TestCase
         yield [302, false];
     }
 
-    public function testToolbarIsNotInjectedOnIncompleteHtmlResponses(): void
+    public function testDoesNotInjectTheToolbarIntoAnIncompleteHtmlResponse(): void
     {
         $response = new Response('<div>Some content</div>');
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
@@ -218,7 +218,7 @@ class PreviewToolbarListenerTest extends TestCase
         $this->assertSame('<div>Some content</div>', $response->getContent());
     }
 
-    public function testToolbarIsNotInjectedOnXmlHttpRequests(): void
+    public function testDoesNotInjectTheToolbarUponXmlHttpRequests(): void
     {
         $response = new Response('<html><head></head><body></body></html>');
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
@@ -242,7 +242,7 @@ class PreviewToolbarListenerTest extends TestCase
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    public function testToolbarIsNotInjectedOnNonHtmlRequests(): void
+    public function testDoesNotInjectTheToolbarUponNonHtmlRequests(): void
     {
         $response = new Response('<html><head></head><body></body></html>');
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
