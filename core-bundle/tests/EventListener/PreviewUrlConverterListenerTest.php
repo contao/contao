@@ -30,7 +30,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener($this->mockContaoFramework());
-        $listener->onPreviewUrlConvert($event);
+        $listener($event);
 
         $this->assertSame('/en/content-elements.html', $event->getUrl());
     }
@@ -46,7 +46,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $event = new PreviewUrlConvertEvent(new Request());
 
         $listener = new PreviewUrlConvertListener($framework);
-        $listener->onPreviewUrlConvert($event);
+        $listener($event);
 
         $this->assertNull($event->getUrl());
     }
@@ -57,7 +57,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener($this->mockContaoFramework());
-        $listener->onPreviewUrlConvert($event);
+        $listener($event);
 
         $this->assertNull($event->getUrl());
     }
@@ -78,7 +78,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework($adapters);
 
         $listener = new PreviewUrlConvertListener($framework);
-        $listener->onPreviewUrlConvert($event);
+        $listener($event);
 
         $this->assertSame('/en/content-elements.html', $event->getUrl());
     }
@@ -95,7 +95,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework($adapters);
 
         $listener = new PreviewUrlConvertListener($framework);
-        $listener->onPreviewUrlConvert($event);
+        $listener($event);
 
         $this->assertNull($event->getUrl());
     }

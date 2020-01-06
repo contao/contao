@@ -32,7 +32,7 @@ class PreviewUrlConvertListener
         $this->framework = $framework;
     }
 
-    public function onPreviewUrlConvert(PreviewUrlConvertEvent $event): void
+    public function __invoke(PreviewUrlConvertEvent $event): void
     {
         if (!$this->framework->isInitialized()) {
             return;

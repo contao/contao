@@ -59,7 +59,7 @@ class PreviewToolbarListener
         $this->router = $router;
     }
 
-    public function onKernelResponse(ResponseEvent $event): void
+    public function __invoke(ResponseEvent $event): void
     {
         if (!$this->scopeMatcher->isFrontendMasterRequest($event)) {
             return;

@@ -141,14 +141,14 @@ services:
             - '@twig'
             - '@router'
         tags:
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+            - { name: kernel.event_listener }
 
     contao.listener.preview_url_convert:
         class: Contao\CoreBundle\EventListener\PreviewUrlConvertListener
         arguments:
             - '@contao.framework'
         tags:
-            - { name: kernel.event_listener, event: contao.preview_url_convert, method: onPreviewUrlConvert }
+            - { name: kernel.event_listener }
 
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener

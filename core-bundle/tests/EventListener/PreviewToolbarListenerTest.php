@@ -83,7 +83,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockRouterWithContext()
         );
 
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertSame("<html><head></head><body>\nCONTAO\n</body></html>", $response->getContent());
     }
@@ -107,7 +107,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockRouterWithContext()
         );
 
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
@@ -131,7 +131,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockRouterWithContext()
         );
 
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
@@ -155,7 +155,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockRouterWithContext()
         );
 
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
@@ -181,7 +181,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockRouterWithContext()
         );
 
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
@@ -213,7 +213,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockRouterWithContext()
         );
 
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertSame('<div>Some content</div>', $response->getContent());
     }
@@ -237,7 +237,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockRouterWithContext()
         );
 
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
@@ -261,7 +261,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockRouterWithContext()
         );
 
-        $listener->onKernelResponse($event);
+        $listener($event);
 
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
