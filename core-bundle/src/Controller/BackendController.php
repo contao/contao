@@ -21,8 +21,6 @@ use Contao\BackendMain;
 use Contao\BackendPage;
 use Contao\BackendPassword;
 use Contao\BackendPopup;
-use Contao\BackendPreview;
-use Contao\BackendSwitch;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -95,24 +93,6 @@ class BackendController extends AbstractController
     }
 
     /**
-     * @Route("/contao/preview", name="contao_backend_preview")
-     */
-    public function previewAction(Request $request): Response
-    {
-        $previewScript = $this->getParameter('contao.preview_script');
-
-        if ($request->getScriptName() !== $previewScript) {
-            return $this->redirect($previewScript.$request->getRequestUri());
-        }
-
-        $this->initializeContaoFramework();
-
-        $controller = new BackendPreview();
-
-        return $controller->run();
-    }
-
-    /**
      * @Route("/contao/confirm", name="contao_backend_confirm")
      */
     public function confirmAction(): Response
@@ -168,18 +148,6 @@ class BackendController extends AbstractController
         $this->initializeContaoFramework();
 
         $controller = new BackendPopup();
-
-        return $controller->run();
-    }
-
-    /**
-     * @Route("/contao/switch", name="contao_backend_switch")
-     */
-    public function switchAction(): Response
-    {
-        $this->initializeContaoFramework();
-
-        $controller = new BackendSwitch();
 
         return $controller->run();
     }

@@ -153,6 +153,23 @@ services:
             # The priority must be higher than the one of the Twig exception listener (defaults to -128)
             - { name: kernel.event_listener, priority: -96 }
 
+    contao.listener.preview_bar:
+        class: Contao\CoreBundle\EventListener\PreviewToolbarListener
+        arguments:
+            - '%contao.preview_script%'
+            - '@contao.routing.scope_matcher'
+            - '@twig'
+            - '@router'
+        tags:
+            - { name: kernel.event_listener }
+
+    contao.listener.preview_url_convert:
+        class: Contao\CoreBundle\EventListener\PreviewUrlConvertListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: kernel.event_listener }
+
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener
         arguments:

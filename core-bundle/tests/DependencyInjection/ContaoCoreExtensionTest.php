@@ -28,6 +28,8 @@ use Contao\CoreBundle\Command\VersionCommand;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendController;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
+use Contao\CoreBundle\Controller\BackendPreviewController;
+use Contao\CoreBundle\Controller\BackendPreviewSwitchController;
 use Contao\CoreBundle\Controller\FaviconController;
 use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
@@ -58,6 +60,8 @@ use Contao\CoreBundle\EventListener\Menu\BackendMenuListener;
 use Contao\CoreBundle\EventListener\Menu\BackendPreviewListener;
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
+use Contao\CoreBundle\EventListener\PreviewToolbarListener;
+use Contao\CoreBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CoreBundle\EventListener\RefererIdListener;
 use Contao\CoreBundle\EventListener\RequestTokenListener;
 use Contao\CoreBundle\EventListener\ResponseExceptionListener;
@@ -755,6 +759,86 @@ class ContaoCoreExtensionTest extends TestCase
                 ],
             ],
             $definition->getTags()
+        );
+    }
+
+    public function testRegistersThePreviewBarListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.preview_bar'));
+
+        $definition = $this->container->getDefinition('contao.listener.preview_bar');
+
+        $this->assertSame(PreviewToolbarListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('%contao.preview_script%'),
+                new Reference('contao.routing.scope_matcher'),
+                new Reference('twig'),
+                new Reference('router'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersThePreviewUrlConvertListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.preview_url_convert'));
+
+        $definition = $this->container->getDefinition('contao.listener.preview_url_convert');
+
+        $this->assertSame(PreviewUrlConvertListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheBackendPreviewController(): void
+    {
+        $this->assertTrue($this->container->has(BackendPreviewController::class));
+
+        $definition = $this->container->getDefinition(BackendPreviewController::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('%contao.preview_script%'),
+                new Reference('contao.security.frontend_preview_authenticator'),
+                new Reference('event_dispatcher'),
+                new Reference('router'),
+                new Reference('security.authorization_checker'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheBackendPreviewSwitchController(): void
+    {
+        $this->assertTrue($this->container->has(BackendPreviewSwitchController::class));
+
+        $definition = $this->container->getDefinition(BackendPreviewSwitchController::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.security.frontend_preview_authenticator'),
+                new Reference('contao.security.token_checker'),
+                new Reference('database_connection'),
+                new Reference('security.helper'),
+                new Reference('twig'),
+                new Reference('router'),
+                new Reference('contao.csrf.token_manager'),
+                new Reference('%contao.csrf_token_name%'),
+            ],
+            $definition->getArguments()
         );
     }
 

@@ -69,6 +69,29 @@ services:
             - '%kernel.project_dir%'
         public: true
 
+    Contao\CoreBundle\Controller\BackendPreviewController:
+        arguments:
+            - '%contao.preview_script%'
+            - '@contao.security.frontend_preview_authenticator'
+            - '@event_dispatcher'
+            - '@router'
+            - '@security.authorization_checker'
+        tags:
+            - controller.service_arguments
+
+    Contao\CoreBundle\Controller\BackendPreviewSwitchController:
+        arguments:
+            - '@contao.security.frontend_preview_authenticator'
+            - '@contao.security.token_checker'
+            - '@database_connection'
+            - '@security.helper'
+            - '@twig'
+            - '@router'
+            - '@contao.csrf.token_manager'
+            - '%contao.csrf_token_name%'
+        tags:
+            - controller.service_arguments
+
     # Backwards compatibility
     contao.controller.backend_csv_import:
         alias: Contao\CoreBundle\Controller\BackendCsvImportController

@@ -139,7 +139,6 @@ class ContaoNewsExtensionTest extends TestCase
 
         $this->assertEquals(
             [
-                new Reference('request_stack'),
                 new Reference('contao.framework'),
             ],
             $definition->getArguments()

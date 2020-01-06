@@ -823,24 +823,6 @@ abstract class Controller extends System
 			}
 		}
 
-		// FE preview support
-		if (System::getContainer()->get('contao.security.token_checker')->hasBackendUser())
-		{
-			$strScripts .= "
-<script>
-  (function(win) {
-    if (!win.parent || typeof(win.parent.postMessage) !== 'function') {
-      return;
-    }
-    win.parent.postMessage({
-      'contao.preview': {
-        'title': win.document.title,
-        'uri': win.location.href
-      }}, win.location.origin);
-  })(window);
-</script>";
-		}
-
 		global $objPage;
 
 		$objLayout = LayoutModel::findByPk($objPage->layoutId);
@@ -1142,7 +1124,6 @@ abstract class Controller extends System
 			'contao/password.php'  => $generate('contao_backend_password'),
 			'contao/popup.php'     => $generate('contao_backend_popup'),
 			'contao/preview.php'   => $generate('contao_backend_preview'),
-			'contao/switch.php'    => $generate('contao_backend_switch')
 		);
 
 		return str_replace(array_keys($arrMapper), $arrMapper, $strContext);

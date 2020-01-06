@@ -26,7 +26,6 @@ services:
     contao_calendar.listener.preview_url_convert:
         class: Contao\CalendarBundle\EventListener\PreviewUrlConvertListener
         arguments:
-            - '@request_stack'
             - '@contao.framework'
         tags:
             - { name: kernel.event_listener }

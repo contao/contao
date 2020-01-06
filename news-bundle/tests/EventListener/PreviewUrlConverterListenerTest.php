@@ -19,7 +19,6 @@ use Contao\NewsBundle\EventListener\PreviewUrlConvertListener;
 use Contao\NewsModel;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class PreviewUrlConverterListenerTest extends ContaoTestCase
 {
@@ -30,9 +29,6 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request->server->set('SERVER_NAME', 'localhost');
         $request->server->set('SERVER_PORT', 80);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
         $newsModel = $this->createMock(NewsModel::class);
 
         $adapters = [
@@ -41,9 +37,9 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         ];
 
         $framework = $this->mockContaoFramework($adapters);
-        $event = new PreviewUrlConvertEvent();
+        $event = new PreviewUrlConvertEvent($request);
 
-        $listener = new PreviewUrlConvertListener($requestStack, $framework);
+        $listener = new PreviewUrlConvertListener($framework);
         $listener($event);
 
         $this->assertSame('http://localhost/news/james-wilson-returns.html', $event->getUrl());
@@ -57,9 +53,9 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
             ->willReturn(false)
         ;
 
-        $event = new PreviewUrlConvertEvent();
+        $event = new PreviewUrlConvertEvent(new Request());
 
-        $listener = new PreviewUrlConvertListener(new RequestStack(), $framework);
+        $listener = new PreviewUrlConvertListener($framework);
         $listener($event);
 
         $this->assertNull($event->getUrl());
@@ -71,13 +67,10 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request->server->set('SERVER_NAME', 'localhost');
         $request->server->set('SERVER_PORT', 80);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
         $framework = $this->mockContaoFramework();
-        $event = new PreviewUrlConvertEvent();
+        $event = new PreviewUrlConvertEvent($request);
 
-        $listener = new PreviewUrlConvertListener($requestStack, $framework);
+        $listener = new PreviewUrlConvertListener($framework);
         $listener($event);
 
         $this->assertNull($event->getUrl());
@@ -90,17 +83,14 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request->server->set('SERVER_NAME', 'localhost');
         $request->server->set('SERVER_PORT', 80);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
-        $event = new PreviewUrlConvertEvent();
+        $event = new PreviewUrlConvertEvent($request);
 
-        $listener = new PreviewUrlConvertListener($requestStack, $framework);
+        $listener = new PreviewUrlConvertListener($framework);
         $listener($event);
 
         $this->assertNull($event->getUrl());
