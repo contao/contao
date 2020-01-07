@@ -140,11 +140,7 @@ class Picker extends Widget
 		}
 		else
 		{
-			$extras = array
-			(
-				'fieldType' => $this->multiple ? 'checkbox' : 'radio',
-				'source' => $this->strTable . '.' . $this->currentRecord,
-			);
+			$extras = $this->getPickerUrlExtras($arrValues);
 
 			$return .= '
     <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl($strContext, $extras)) . '" class="tl_submit" id="picker_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
@@ -288,5 +284,21 @@ class Picker extends Widget
 		$arrRelations = DcaExtractor::getInstance($this->strTable)->getRelations();
 
 		return (string) $arrRelations[$this->strField]['table'];
+	}
+
+	/**
+	 * Return the extra parameters for the picker URL
+	 *
+	 * @param array $values
+	 *
+	 * @return array
+	 */
+	protected function getPickerUrlExtras($values = array())
+	{
+		$extras = array();
+		$extras['fieldType'] = $this->multiple ? 'checkbox' : 'radio';
+		$extras['source'] = $this->strTable . '.' . $this->currentRecord;
+
+		return $extras;
 	}
 }
