@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -68,6 +69,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['security.token_storage'] = TokenStorageInterface::class;
         $services['translator'] = TranslatorInterface::class;
         $services['contao.security.two_factor.backup_code_manager'] = BackupCodeManager::class;
+        $services['security.helper'] = Security::class;
 
         return $services;
     }
@@ -84,6 +86,10 @@ class TwoFactorController extends AbstractFrontendModuleController
         $user = $token->getUser();
 
         if (!$user instanceof FrontendUser) {
+            return new Response('', Response::HTTP_NO_CONTENT);
+        }
+
+        if (!$this->get('security.helper')->isGranted('IS_AUTHENTICATED_FULLY')) {
             return new Response('', Response::HTTP_NO_CONTENT);
         }
 

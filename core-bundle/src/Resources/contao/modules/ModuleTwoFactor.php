@@ -59,12 +59,12 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->action = Environment::get('indexFreeRequest');
 		$this->Template->messages = Message::generateUnwrapped();
 
-		if (Input::get('act') == 'enable')
+		if (Input::get('act') == 'enable' && $security->isGranted('IS_AUTHENTICATED_FULLY'))
 		{
 			$this->enableTwoFactor($user, $return);
 		}
 
-		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_disable')
+		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_disable' && $security->isGranted('IS_AUTHENTICATED_FULLY'))
 		{
 			$this->disableTwoFactor($user, $return);
 		}
