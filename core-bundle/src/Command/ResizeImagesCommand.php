@@ -20,7 +20,6 @@ use Contao\Image\ResizerInterface;
 use Patchwork\Utf8;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -87,11 +86,9 @@ class ResizeImagesCommand extends Command
     {
         $this
             ->setName('contao:resize-images')
-            ->setDefinition([
-                new InputOption('time-limit', 'l', InputArgument::OPTIONAL, 'Time limit in seconds', '0'),
-                new InputOption('concurrent', 'c', InputArgument::OPTIONAL, 'Run multiple processes concurrently', '1'),
-                new InputOption('throttle', 't', InputArgument::OPTIONAL, 'Pause between resizes to limit CPU utilization, 0.1 relates to 10% CPU usage', '1'),
-            ])
+            ->addOption('time-limit', 'l', InputOption::VALUE_OPTIONAL, 'Time limit in seconds', '0')
+            ->addOption('concurrent', 'c', InputOption::VALUE_OPTIONAL, 'Run multiple processes concurrently', '1')
+            ->addOption('throttle', 't', InputOption::VALUE_OPTIONAL, 'Pause between resizes to limit CPU utilization, 0.1 relates to 10% CPU usage', '1')
             ->setDescription('Resizes deferred images that have not been processed yet.')
         ;
     }

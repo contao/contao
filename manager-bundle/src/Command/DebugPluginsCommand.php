@@ -64,15 +64,8 @@ class DebugPluginsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDefinition([
-                new InputArgument('name', InputArgument::OPTIONAL, 'The plugin class or package name'),
-            ])
-            ->addOption(
-                'bundles',
-                null,
-                InputOption::VALUE_NONE,
-                'List all bundles or the bundle configuration of the given plugin'
-            )
+            ->addArgument('name', InputArgument::OPTIONAL, 'The plugin class or package name')
+            ->addOption('bundles', null, InputOption::VALUE_NONE, 'List all bundles or the bundle configuration of the given plugin')
             ->setDescription('Displays the Contao Manager plugin configurations')
         ;
     }
