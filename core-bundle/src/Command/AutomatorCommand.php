@@ -52,13 +52,7 @@ class AutomatorCommand extends Command
     {
         $this
             ->setName('contao:automator')
-            ->setDefinition([
-                new InputArgument(
-                    'task',
-                    InputArgument::OPTIONAL,
-                    sprintf("The name of the task:\n  - %s", implode("\n  - ", $this->getCommands()))
-                ),
-            ])
+            ->addArgument('task', InputArgument::OPTIONAL, "The name of the task:\n  - ".implode("\n  - ", $this->getCommands()))
             ->setDescription('Runs automator tasks on the command line.')
         ;
     }

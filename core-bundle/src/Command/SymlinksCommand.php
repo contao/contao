@@ -97,9 +97,7 @@ class SymlinksCommand extends Command
     {
         $this
             ->setName('contao:symlinks')
-            ->setDefinition([
-                new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web'),
-            ])
+            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
             ->setDescription('Symlinks the public resources into the web directory.')
         ;
     }
