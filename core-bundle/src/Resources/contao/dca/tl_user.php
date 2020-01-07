@@ -450,7 +450,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
-		'backupCodes' => array(
+		'backupCodes' => array
+		(
 			'sql'                     => "text NULL"
 		)
 	)

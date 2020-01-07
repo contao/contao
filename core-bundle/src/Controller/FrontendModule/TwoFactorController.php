@@ -209,9 +209,9 @@ class TwoFactorController extends AbstractFrontendModuleController
             return null;
         }
 
-        $user->backupCodes = null;
         $user->secret = null;
         $user->useTwoFactor = '';
+        $user->backupCodes = null;
         $user->save();
 
         return new RedirectResponse($this->page->getAbsoluteUrl());

@@ -24,23 +24,19 @@ class BackupCodeManagerTest extends TestCase
     public function testDoesNotHandleNonContaoUsers(): void
     {
         $backupCodeManager = new BackupCodeManager();
-
         $user = $this->createMock(UserInterface::class);
 
         $this->assertFalse($backupCodeManager->isBackupCode($user, '123456'));
+
         $backupCodeManager->invalidateBackupCode($user, '123456');
     }
 
     public function testHandlesContaoUsers(): void
     {
         $backupCodes = json_encode(['123456', '234567']);
-        $backupCodeManager = new BackupCodeManager();
 
         $frontendUser = $this->mockClassWithProperties(FrontendUser::class, ['backupCodes']);
         $frontendUser->backupCodes = $backupCodes;
-
-        $backendUser = $this->mockClassWithProperties(BackendUser::class, ['backupCodes']);
-        $backendUser->backupCodes = $backupCodes;
 
         $frontendUser
             ->expects($this->once())
@@ -49,12 +45,17 @@ class BackupCodeManagerTest extends TestCase
             ->willReturn(true)
         ;
 
+        $backendUser = $this->mockClassWithProperties(BackendUser::class);
+        $backendUser->backupCodes = $backupCodes;
+
         $backendUser
             ->expects($this->once())
             ->method('isBackupCode')
             ->with('234567')
             ->willReturn(true)
         ;
+
+        $backupCodeManager = new BackupCodeManager();
 
         $this->assertTrue($backupCodeManager->isBackupCode($frontendUser, '123456'));
         $this->assertTrue($backupCodeManager->isBackupCode($backendUser, '234567'));
@@ -63,10 +64,9 @@ class BackupCodeManagerTest extends TestCase
     public function testInvalidatesBackupCode(): void
     {
         $backupCodes = json_encode(['123456', '234567']);
-        $backupCodeManager = new BackupCodeManager();
 
         /** @var BackendUser&MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, ['backupCodes']);
+        $user = $this->mockClassWithProperties(BackendUser::class);
         $user->backupCodes = $backupCodes;
 
         $user
@@ -85,7 +85,9 @@ class BackupCodeManagerTest extends TestCase
             ->method('isBackupCode')
         ;
 
+        $backupCodeManager = new BackupCodeManager();
         $backupCodeManager->invalidateBackupCode($user, '123456');
+
         $this->assertFalse($backupCodeManager->isBackupCode($user, '123456'));
     }
 
@@ -94,8 +96,7 @@ class BackupCodeManagerTest extends TestCase
         $backupCodeManager = new BackupCodeManager();
 
         /** @var BackendUser&MockObject $user */
-        $user = $this->mockClassWithProperties(BackendUser::class, ['backupCodes']);
-
+        $user = $this->mockClassWithProperties(BackendUser::class);
         $user
             ->expects($this->once())
             ->method('save')

@@ -43,7 +43,6 @@
         </div>
       </div>
     </form>
-
     <div class="tl_recovery_codes">
       <h2 class="sub_headline"><?= $this->backupCodesLabel ?></h2>
       <p><?= $this->backupCodesExplain ?></p>

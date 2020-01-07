@@ -646,7 +646,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	public function invalidateBackupCode(string $code): void
 	{
 		$backupCodes = json_decode($this->backupCodes, true);
-
 		$key = array_search($code, $backupCodes);
 
 		if ($key !== false)
