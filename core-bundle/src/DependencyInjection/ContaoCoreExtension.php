@@ -20,6 +20,7 @@ use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -175,7 +176,7 @@ class ContaoCoreExtension extends Extension
         $imageSizes = [];
 
         foreach ($config['image']['sizes'] as $name => $value) {
-            $imageSizes['_'.$name] = $value;
+            $imageSizes['_'.$name] = $this->camelizeKeys($value);
         }
 
         $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
@@ -185,6 +186,28 @@ class ContaoCoreExtension extends Extension
                 $container->getDefinition($service)->addMethodCall('setPredefinedSizes', [$imageSizes]);
             }
         }
+    }
+
+    /**
+     * Camelizes keys so "resize_mode" becomes "resizeMode".
+     */
+    private function camelizeKeys(array $config): array
+    {
+        $keys = array_keys($config);
+
+        foreach ($keys as &$key) {
+            if (\is_array($config[$key])) {
+                $config[$key] = $this->camelizeKeys($config[$key]);
+            }
+
+            if (\is_string($key)) {
+                $key = lcfirst(Container::camelize($key));
+            }
+        }
+
+        unset($key);
+
+        return array_combine($keys, $config);
     }
 
     /**

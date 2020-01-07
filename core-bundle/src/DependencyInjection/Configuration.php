@@ -209,7 +209,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                             ->integerNode('height')
                             ->end()
-                            ->enumNode('resizeMode')
+                            ->enumNode('resize_mode')
                                 ->values([
                                     ResizeConfiguration::MODE_CROP,
                                     ResizeConfiguration::MODE_BOX,
@@ -220,15 +220,15 @@ class Configuration implements ConfigurationInterface
                                 ->min(0)
                                 ->max(100)
                             ->end()
-                            ->scalarNode('cssClass')
+                            ->scalarNode('css_class')
                             ->end()
-                            ->booleanNode('lazyLoading')
+                            ->booleanNode('lazy_loading')
                             ->end()
                             ->scalarNode('densities')
                             ->end()
                             ->scalarNode('sizes')
                             ->end()
-                            ->booleanNode('skipIfDimensionsMatch')
+                            ->booleanNode('skip_if_dimensions_match')
                             ->end()
                             ->arrayNode('formats')
                                 ->useAttributeAsKey('source')
@@ -244,7 +244,7 @@ class Configuration implements ConfigurationInterface
                                         ->end()
                                         ->integerNode('height')
                                         ->end()
-                                        ->enumNode('resizeMode')
+                                        ->enumNode('resize_mode')
                                             ->values([
                                                 ResizeConfiguration::MODE_CROP,
                                                 ResizeConfiguration::MODE_BOX,
@@ -261,8 +261,33 @@ class Configuration implements ConfigurationInterface
                                         ->end()
                                         ->scalarNode('sizes')
                                         ->end()
+                                        ->enumNode('resizeMode')
+                                            ->setDeprecated('Using contao.image.sizes.*.items.resizeMode is deprecated. Please use contao.image.sizes.*.items.resize_mode instead.')
+                                            ->values([
+                                                ResizeConfiguration::MODE_CROP,
+                                                ResizeConfiguration::MODE_BOX,
+                                                ResizeConfiguration::MODE_PROPORTIONAL,
+                                            ])
+                                        ->end()
                                     ->end()
                                 ->end()
+                            ->end()
+                            ->enumNode('resizeMode')
+                                ->setDeprecated('Using contao.image.sizes.*.resizeMode is deprecated. Please use contao.image.sizes.*.resize_mode instead.')
+                                ->values([
+                                    ResizeConfiguration::MODE_CROP,
+                                    ResizeConfiguration::MODE_BOX,
+                                    ResizeConfiguration::MODE_PROPORTIONAL,
+                                ])
+                            ->end()
+                            ->scalarNode('cssClass')
+                                ->setDeprecated('Using contao.image.sizes.*.cssClass is deprecated. Please use contao.image.sizes.*.css_class instead.')
+                            ->end()
+                            ->booleanNode('lazyLoading')
+                                ->setDeprecated('Using contao.image.sizes.*.lazyLoading is deprecated. Please use contao.image.sizes.*.lazy_loading instead.')
+                            ->end()
+                            ->booleanNode('skipIfDimensionsMatch')
+                                ->setDeprecated('Using contao.image.sizes.*.skipIfDimensionsMatch is deprecated. Please use contao.image.sizes.*.skip_if_dimensions_match instead.')
                             ->end()
                         ->end()
                     ->end()
