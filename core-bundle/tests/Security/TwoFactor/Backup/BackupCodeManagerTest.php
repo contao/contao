@@ -106,6 +106,6 @@ class BackupCodeManagerTest extends TestCase
 
         $this->assertCount(10, $backupCodes);
         $this->assertCount(10, json_decode($user->backupCodes, true));
-        $this->assertRegExp('/[a-f0-9]{5}-[a-f0-9]{5}/', $backupCodes[0]);
+        $this->assertRegExp('/[a-f0-9]{6}-[a-f0-9]{6}/', $backupCodes[0]);
     }
 }

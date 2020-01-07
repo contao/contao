@@ -58,10 +58,6 @@ class BackupCodeManager implements BackupCodeManagerInterface
 
     private function generateCode(): string
     {
-        return sprintf(
-            '%s-%s',
-            substr(uniqid(bin2hex(random_bytes(128)), true), 0, 5),
-            substr(uniqid(bin2hex(random_bytes(128)), true), 0, 5)
-        );
+        return bin2hex(random_bytes(3)).'-'.bin2hex(random_bytes(3));
     }
 }
