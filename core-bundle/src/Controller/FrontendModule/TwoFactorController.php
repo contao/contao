@@ -139,12 +139,11 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->enableButton = $translator->trans('MSC.enable', [], 'contao_default');
         $template->disableButton = $translator->trans('MSC.disable', [], 'contao_default');
         $template->backupCodesLabel = $translator->trans('MSC.twoFactorBackupCodesLabel', [], 'contao_default');
-        $template->showBackupCodesLabel = $translator->trans('MSC.twoFactorShowBackupCodesLabel', [], 'contao_default');
-        $template->backupCodesExplain = $translator->trans('MSC.twoFactorShowBackupCodesExplain', [], 'contao_default');
-        $template->backupCodesTreat = $translator->trans('MSC.twoFactorShowBackupCodesTreat', [], 'contao_default');
-        $template->backupCodesInfo = $translator->trans('MSC.twoFactorShowBackupCodesInfo', [], 'contao_default');
-        $template->backupCodesGenerateLabel = $translator->trans('MSC.twoFactorShowBackupCodesGenerateLabel', [], 'contao_default');
-        $template->backupCodesGenerateInfo = $translator->trans('MSC.twoFactorShowBackupCodesGenerateInfo', [], 'contao_default');
+        $template->backupCodesShow = $translator->trans('MSC.twoFactorBackupCodesShow', [], 'contao_default');
+        $template->backupCodesExplain = $translator->trans('MSC.twoFactorBackupCodesExplain', [], 'contao_default');
+        $template->backupCodesInfo = $translator->trans('MSC.twoFactorBackupCodesInfo', [], 'contao_default');
+        $template->backupCodesGenerate = $translator->trans('MSC.twoFactorBackupCodesGenerate', [], 'contao_default');
+        $template->backupCodesGenerateInfo = $translator->trans('MSC.twoFactorBackupCodesGenerateInfo', [], 'contao_default');
         $template->showBackupCodes = $showBackupCodes;
         $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
 

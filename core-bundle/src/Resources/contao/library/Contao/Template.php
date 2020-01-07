@@ -53,11 +53,10 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property string       $verify
  * @property string       $verifyHelp
  * @property string       $backupCodesLabel
- * @property string       $showBackupCodesLabel
+ * @property string       $backupCodesShow
  * @property string       $backupCodesExplain
- * @property string       $backupCodesTreat
  * @property string       $backupCodesInfo
- * @property string       $backupCodesGenerateLabel
+ * @property string       $backupCodesGenerate
  * @property string       $backupCodesGenerateInfo
  * @property boolean      $showBackupCodes
  * @property array        $backupCodes

@@ -630,22 +630,19 @@ h2.sub_headline {
 	background-color:transparent;
 	background-position-y:center;
 }
-.two-factor .tl_recovery_codes {
-	width: 50%;
-}
 .two-factor .tl_recovery_codes > p {
 	margin:0 15px 12px;
 	line-height:1.3;
 }
 .two-factor .recovery-codes {
-	font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace  !important;
+	max-width:224px;
+	margin:15px 15px 24px;
+	display:grid;
+	grid-template-columns:repeat(2,1fr);
 }
-.two-factor .recovery-codes .recovery-code {
-	display:inline-block;
-	line-height:1.6;
-	text-align:center;
-	width:48%;
-	margin-left:0;
+.two-factor .recovery-codes li {
+	margin:0;
+	list-style:none;
 }
 
 /* Picker search */
@@ -2181,10 +2178,6 @@ fieldset.collapsed > legend {
 	}
 	.tl_file_list .ellipsis {
 		padding-right:10px;
-	}
-
-	.two-factor .tl_recovery_codes {
-		width: 100%;
 	}
 }
 

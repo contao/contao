@@ -387,6 +387,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'backupCodes' => array
 		(
+			'eval'                    => array('doNotCopy'=>true),
 			'sql'                     => "text NULL"
 		)
 	)

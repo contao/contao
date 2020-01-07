@@ -90,12 +90,11 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->disableButton = $GLOBALS['TL_LANG']['MSC']['disable'];
 		$this->Template->showBackupCodes = $showBackupCodes;
 		$this->Template->backupCodesLabel = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesLabel'];
-		$this->Template->showBackupCodesLabel = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesLabel'];
-		$this->Template->backupCodesExplain = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesExplain'];
-		$this->Template->backupCodesTreat = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesTreat'];
-		$this->Template->backupCodesInfo = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesInfo'];
-		$this->Template->backupCodesGenerateLabel = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesGenerateLabel'];
-		$this->Template->backupCodesGenerateInfo = $GLOBALS['TL_LANG']['MSC']['twoFactorShowBackupCodesGenerateInfo'];
+		$this->Template->backupCodesShow = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesShow'];
+		$this->Template->backupCodesExplain = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesExplain'];
+		$this->Template->backupCodesInfo = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesInfo'];
+		$this->Template->backupCodesGenerate = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesGenerate'];
+		$this->Template->backupCodesGenerateInfo = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesGenerateInfo'];
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 	}
 
@@ -175,9 +174,9 @@ class ModuleTwoFactor extends BackendModule
 			return;
 		}
 
-		$user->backupCodes = null;
 		$user->secret = null;
 		$user->useTwoFactor = '';
+		$user->backupCodes = null;
 		$user->save();
 
 		throw new RedirectResponseException($return);

@@ -48,35 +48,33 @@
       </form>
     <?php endif; ?>
     <div class="recovery_codes">
-      <h2><?= $this->backupCodesLabel ?></h2>
+      <h3><?= $this->backupCodesLabel ?></h3>
       <p><?= $this->backupCodesExplain ?></p>
       <?php if (!$this->showBackupCodes): ?>
         <form action="<?= $this->action ?>" class="tl_two_factor_form" method="post">
           <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_show_backup_codes">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
           <div class="submit_container cf">
-            <button type="submit" class="submit"><?= $this->showBackupCodesLabel ?></button>
+            <button type="submit" class="submit"><?= $this->backupCodesShow ?></button>
           </div>
         </form>
       <?php else: ?>
-        <p><?= $this->backupCodesTreat ?></p>
         <div class="message">
           <p class="info"><?= $this->backupCodesInfo ?></p>
         </div>
         <ul class="recovery-codes">
           <?php foreach ($this->backupCodes as $backupCode): ?>
-            <li class="recovery-code"><?= $backupCode ?></li>
+            <li><code><?= $backupCode ?></code></li>
           <?php endforeach; ?>
         </ul>
-        <h2><?= $this->backupCodesGenerateLabel ?></h2>
-        <p><?= $this->backupCodesGenerateInfo ?></p>
         <form action="<?= $this->action ?>" class="tl_two_factor_form" method="post">
           <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_generate_backup_codes">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
           <div class="submit_container cf">
-            <button type="submit" class="submit"><?= $this->backupCodesGenerateLabel ?></button>
+            <button type="submit" class="submit"><?= $this->backupCodesGenerate ?></button>
           </div>
         </form>
+        <p><?= $this->backupCodesGenerateInfo ?></p>
       <?php endif; ?>
     </div>
   <?php else: ?>
