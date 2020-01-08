@@ -333,7 +333,7 @@ class Configuration implements ConfigurationInterface
                                     ->defaultValue(true)
                                 ->end()
                                 ->booleanNode('request_geolocation')
-                                    ->defaultValue(true)
+                                    ->defaultValue(false)
                                 ->end()
                             ->end()
                         ->end()
