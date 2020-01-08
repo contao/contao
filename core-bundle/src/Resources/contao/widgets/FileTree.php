@@ -401,7 +401,7 @@ class FileTree extends Widget
 	}
 
 	/**
-	 * Return the extra parameters for picker url
+	 * Return the extra parameters for the picker URL
 	 *
 	 * @param array $values
 	 *
