@@ -488,6 +488,12 @@
       <trans-unit id="FFL.upload.1">
         <source>A single-line input field to upload a local file to the server.</source>
       </trans-unit>
+      <trans-unit id="FFL.range.0">
+        <source>Range slider</source>
+      </trans-unit>
+      <trans-unit id="FFL.range.1">
+        <source>A range slider to select a value or range of values between a specified min and max.</source>
+      </trans-unit>
       <trans-unit id="FFL.hidden.0">
         <source>Hidden field</source>
       </trans-unit>

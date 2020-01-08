@@ -140,6 +140,12 @@
       <trans-unit id="tl_form_field.maxval.1">
         <source>Here you can set the maximum value for numeric fields.</source>
       </trans-unit>
+      <trans-unit id="tl_form_field.step.0">
+        <source>Step</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.step.1">
+        <source>Here you can set the discrete step size of the field.</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>
       </trans-unit>

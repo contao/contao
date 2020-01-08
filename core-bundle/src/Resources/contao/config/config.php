@@ -252,6 +252,7 @@ $GLOBALS['TL_FFL'] = array
 	'radio'         => 'Contao\FormRadioButton',
 	'checkbox'      => 'Contao\FormCheckBox',
 	'upload'        => 'Contao\FormFileUpload',
+	'range'         => 'Contao\FormRange',
 	'hidden'        => 'Contao\FormHidden',
 	'captcha'       => 'Contao\FormCaptcha',
 	'submit'        => 'Contao\FormSubmit',
