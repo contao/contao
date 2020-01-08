@@ -2617,6 +2617,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('security.http_utils'),
                 new Reference('router'),
+                new Reference('uri_signer'),
             ],
             $definition->getArguments()
         );

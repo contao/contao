@@ -30,6 +30,7 @@ class MakeServicesPublicPass implements CompilerPassInterface
         'security.authentication.trust_resolver',
         'security.firewall.map',
         'security.logout_url_generator',
+        'uri_signer',
     ];
 
     private const ALIASES = [
