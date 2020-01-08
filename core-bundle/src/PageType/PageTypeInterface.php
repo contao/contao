@@ -19,9 +19,24 @@ interface PageTypeInterface
 {
     public function getName(): string;
 
+    /**
+     * Get available parameters which might be used in the page alias
+     */
     public function getAvailableParameters(): array;
 
-    public function createRoute(PageModel $pageModel, bool $prependLocale, string $urlSuffix): Route;
+    /**
+     * Get list of required parameters which has to be used in the page alias
+     *
+     * @return array
+     */
+    public function getRequiredParameters(): array;
+
+    /**
+     * Get map of routes created for the current page
+     *
+     * @return iterable|Route[]
+     */
+    public function getRoutes(PageModel $pageModel, bool $prependLocale, string $urlSuffix): iterable;
 
     public function createPageTypeConfig(PageModel $pageModel): PageTypeConfigInterface;
 }

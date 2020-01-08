@@ -55,9 +55,9 @@ abstract class AbstractPageType implements PageTypeInterface
         );
     }
 
-    public function createRoute(PageModel $pageModel, bool $prependLocale, string $urlSuffix): Route
+    public function getRoutes(PageModel $pageModel, bool $prependLocale, string $urlSuffix): iterable
     {
-        return new Route(
+        yield 'tl_page.'.$pageModel->id => new Route(
             $this->getRoutePath($pageModel, $prependLocale, $urlSuffix),
             $this->getRouteDefaults($pageModel),
             $this->getRouteRequirements($pageModel),

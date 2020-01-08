@@ -266,7 +266,9 @@ class RouteProvider implements RouteProviderInterface
         $page->loadDetails();
         $pageType = $this->pageTypeRegistry->get($page->type);
 
-        $routes['tl_page.'.$page->id] = $pageType->createRoute($page, $this->prependLocale, $this->urlSuffix);
+        foreach ($pageType->getRoutes($page, $this->prependLocale, $this->urlSuffix) as $name => $route) {
+            $routes[$name] = $route;
+        }
 
         $this->addRoutesForRootPage($page, $routes);
     }
@@ -556,10 +558,5 @@ class RouteProvider implements RouteProviderInterface
         }
 
         return array_merge($rootPages, $indexPages);
-    }
-
-    private function getAdditionalParameters(PageModel $page): array
-    {
-        // TODO: Implement
     }
 }
