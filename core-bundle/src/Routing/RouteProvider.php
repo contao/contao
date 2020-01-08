@@ -323,15 +323,13 @@ class RouteProvider implements RouteProviderInterface
      */
     private function getRouteDefaults(PageModel $page): array
     {
-        $pageType = $this->pageTypeRegistry->get($page->type);
-
         return [
             '_token_check' => true,
             '_controller' => 'Contao\FrontendIndex::renderPage',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
             '_locale' => $page->rootLanguage,
             'pageModel' => $page,
-            'pageTypeConfig' => $pageType->createPageTypeConfig($page)
+            'pageTypeConfig' => $this->pageTypeRegistry->createPageTypeConfig($page)
         ];
     }
 
