@@ -38,14 +38,19 @@ abstract class AbstractPageType implements PageTypeInterface
         return lcfirst(substr(strrchr(static::class, '\\'), 1, -8));
     }
 
-    public function getControllerInformation()
+    public function createPageTypeConfig(PageModel $pageModel): PageTypeConfigInterface
     {
-        return 'Contao\FrontendIndex::renderPage';
+        return new PageTypeConfig($this, $pageModel);
     }
 
     public function getAvailableParameters(): array
     {
         return array_keys(static::$parameters);
+    }
+
+    public function getRequiredParameters(): array
+    {
+        return [];
     }
 
     public function getRequirements(array $parameters): array

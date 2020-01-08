@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\PageType;
 
 use Contao\PageModel;
 
-abstract class AbstractPageTypeConfig implements PageTypeConfigInterface
+class PageTypeConfig implements PageTypeConfigInterface
 {
     /** @var PageTypeInterface */
     private $pageType;

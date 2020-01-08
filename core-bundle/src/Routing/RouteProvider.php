@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\Config;
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\PageType\PageTypeRegistry;
 use Contao\Model;
@@ -280,59 +279,11 @@ class RouteProvider implements RouteProviderInterface
         }
 
         $page->loadDetails();
+        $rootPageType = $this->pageTypeRegistry->get('root');
 
-        $path = '/';
-        $requirements = [];
-        $defaults = $this->getRouteDefaults($page);
-
-        if ($this->prependLocale) {
-            $path = '/{_locale}'.$path;
-            $requirements['_locale'] = $page->rootLanguage;
+        foreach ($rootPageType->getRoutes($page, $this->prependLocale, $this->urlSuffix) as $name => $route) {
+            $routes[$name] = $route;
         }
-
-        $routes['tl_page.'.$page->id.'.root'] = new Route(
-            $path,
-            $defaults,
-            $requirements,
-            [],
-            $page->domain,
-            $page->rootUseSSL ? 'https' : null,
-            []
-        );
-
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-
-        if (!$config->get('doNotRedirectEmpty')) {
-            $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
-            $defaults['path'] = '/'.$page->language.'/';
-            $defaults['permanent'] = true;
-        }
-
-        $routes['tl_page.'.$page->id.'.fallback'] = new Route(
-            '/',
-            $defaults,
-            [],
-            [],
-            $page->domain,
-            $page->rootUseSSL ? 'https' : null,
-            []
-        );
-    }
-
-    /**
-     * @return array<string,PageModel|bool|string>
-     */
-    private function getRouteDefaults(PageModel $page): array
-    {
-        return [
-            '_token_check' => true,
-            '_controller' => 'Contao\FrontendIndex::renderPage',
-            '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-            '_locale' => $page->rootLanguage,
-            'pageModel' => $page,
-            'pageTypeConfig' => $this->pageTypeRegistry->createPageTypeConfig($page)
-        ];
     }
 
     /**

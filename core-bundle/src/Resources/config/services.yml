@@ -124,6 +124,12 @@ services:
         arguments:
             - '@event_dispatcher'
 
+    Contao\CoreBundle\PageType\RootPageType:
+        arguments:
+            - '@contao.framework'
+        tags:
+            - contao.page_type
+
     # Backwards compatibility
     contao.controller.images:
         alias: Contao\CoreBundle\Controller\ImagesController

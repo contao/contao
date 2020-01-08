@@ -1,0 +1,67 @@
+<?php
+
+
+namespace Contao\CoreBundle\PageType;
+
+use Contao\Config;
+use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\PageModel;
+use Symfony\Component\Routing\Route;
+
+class RootPageType extends AbstractPageType
+{
+    /**
+     * @var ContaoFrameworkInterface
+     */
+    private $framework;
+
+    public function __construct(ContaoFrameworkInterface $framework)
+    {
+        $this->framework = $framework;
+    }
+
+    public function getRoutes(PageModel $pageModel, bool $prependLocale, string $urlSuffix): iterable
+    {
+        if ('root' !== $pageModel->type && 'index' !== $pageModel->alias && '/' !== $pageModel->alias) {
+            return [];
+        }
+
+        $path = '/';
+        $requirements = [];
+        $defaults = $this->getRouteDefaults($pageModel);
+
+        if ($prependLocale) {
+            $path = '/{_locale}'.$path;
+            $requirements['_locale'] = $pageModel->rootLanguage;
+        }
+
+        yield 'tl_page.'.$pageModel->id.'.root' => new Route(
+            $path,
+            $defaults,
+            $requirements,
+            [],
+            $pageModel->domain,
+            $pageModel->rootUseSSL ? 'https' : null,
+            []
+        );
+
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
+
+        if (!$config->get('doNotRedirectEmpty')) {
+            $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
+            $defaults['path'] = '/'.$pageModel->language.'/';
+            $defaults['permanent'] = true;
+        }
+
+        yield 'tl_page.'.$pageModel->id.'.fallback' => new Route(
+            '/',
+            $defaults,
+            [],
+            [],
+            $pageModel->domain,
+            $pageModel->rootUseSSL ? 'https' : null,
+            []
+        );
+    }
+}
