@@ -187,10 +187,7 @@ class Factory
 
     private function createHttpClient(array $options = []): HttpClientInterface
     {
-        return HttpClient::create(array_merge_recursive(
-            $this->getDefaultHttpClientOptions(),
-            $options
-        ));
+        return HttpClient::create(array_merge_recursive($this->getDefaultHttpClientOptions(), $options));
     }
 
     private function registerDefaultSubscribers(Escargot $escargot): void

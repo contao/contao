@@ -60,9 +60,7 @@ class Crawl extends Backend implements \executable
 
 		/** @var Factory $factory */
 		$factory = System::getContainer()->get('contao.search.escargot_factory');
-
 		$subscriberNames = $factory->getSubscriberNames();
-
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
 		$memberWidget = $this->generateMemberWidget();
 
@@ -103,8 +101,6 @@ class Crawl extends Backend implements \executable
 			throw new ResponseException($response);
 		}
 
-		$clientOptions = array();
-
 		/** @var FrontendPreviewAuthenticator $objAuthenticator */
 		$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 
@@ -138,8 +134,11 @@ class Crawl extends Backend implements \executable
 		{
 			$baseUris = $factory->getSearchUriCollection();
 			$escargot = $factory->create($baseUris, $queue, $activeSubscribers, $clientOptions);
+
 			Controller::redirect(\Controller::addToUrl('&jobId=' . $escargot->getJobId()));
 		}
+
+		$escargot = null;
 
 		try
 		{
@@ -177,13 +176,15 @@ class Crawl extends Backend implements \executable
 			foreach ($factory->getSubscribers($activeSubscribers) as $subscriber)
 			{
 				$previousResult = null;
+				$name = $subscriber->getName();
 
-				if (isset($existingResults[$subscriber->getName()]))
+				if (isset($existingResults[$name]))
 				{
-					$previousResult = SubscriberResult::fromArray($existingResults[$subscriber->getName()]);
+					$previousResult = SubscriberResult::fromArray($existingResults[$name]);
 				}
-				$results[$subscriber->getName()] = $subscriber->getResult($previousResult)->toArray();
-				$results[$subscriber->getName()]['hasLog'] = file_exists($this->getSubscriberLogFilePath($subscriber->getName(), $jobId));
+
+				$results[$name] = $subscriber->getResult($previousResult)->toArray();
+				$results[$name]['hasLog'] = file_exists($this->getSubscriberLogFilePath($name, $jobId));
 			}
 
 			file_put_contents($resultCache, json_encode($results));
@@ -215,7 +216,8 @@ class Crawl extends Backend implements \executable
 
 		foreach ($factory->getSubscribers($activeSubscribers) as $subscriber)
 		{
-			$subscriberLogHrefs[$subscriber->getName()] = \Controller::addToUrl('&jobId=' . $escargot->getJobId() . '&downloadLog=' . $subscriber->getName());
+			$name = $subscriber->getName();
+			$subscriberLogHrefs[$name] = \Controller::addToUrl('&jobId=' . $escargot->getJobId() . '&downloadLog=' . $name);
 		}
 
 		$template->subscriberLogHrefs = $subscriberLogHrefs;
@@ -225,8 +227,8 @@ class Crawl extends Backend implements \executable
 
 	/**
 	 * Creates a logger that logs everything on debug level in a general debug
-	 * log file and everything above info level into a subscriber specific
-	 * log file.
+	 * log file and everything above info level into a subscriber specific log
+	 * file.
 	 */
 	private function createLogger(Factory $factory, array $activeSubscribers, string $jobId, string $debugLogPath): LoggerInterface
 	{
@@ -235,6 +237,7 @@ class Crawl extends Backend implements \executable
 		// Create the general debug handler
 		$debugHandler = new StreamHandler($debugLogPath, Logger::DEBUG);
 		$debugHandler->setFormatter(new LineFormatter("[%context.source%] %message%\n"));
+
 		$handlers[] = $debugHandler;
 
 		// Create the subscriber specific info handlers
@@ -242,6 +245,7 @@ class Crawl extends Backend implements \executable
 		{
 			$subscriberHandler = new StreamHandler($this->getSubscriberLogFilePath($subscriber->getName(), $jobId), Logger::INFO);
 			$subscriberHandler->setFormatter(new LineFormatter("%message%\n"));
+
 			$handlers[] = $subscriberHandler;
 		}
 
@@ -303,14 +307,16 @@ class Crawl extends Backend implements \executable
 	private function generateMemberWidget(): Widget
 	{
 		$name = 'crawl_member';
+
 		$widget = new SelectMenu();
 		$widget->id = $name;
 		$widget->name = $name;
 		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['memberLabel'][0];
 		$widget->setInputCallback($this->getInputCallback($name));
-		$time = time();
 
+		$time = time();
 		$options = array(array('value' => '', 'label' => '-', 'default' => true));
+		$objMembers = null;
 
 		// Get the active front end users
 		if (BackendUser::getInstance()->isAdmin)
