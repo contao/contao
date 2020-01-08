@@ -19,6 +19,9 @@ class FileExtensionFilterIterator implements \IteratorAggregate
      */
     private $iterator;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao_manager.twig.file_extension_filter_iterator" service instead
+     */
     public function __construct(\IteratorAggregate $templateIterator)
     {
         $this->iterator = $templateIterator->getIterator();

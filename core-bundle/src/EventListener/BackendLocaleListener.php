@@ -17,6 +17,9 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
+/**
+ * @internal
+ */
 class BackendLocaleListener
 {
     /**
@@ -38,7 +41,7 @@ class BackendLocaleListener
     /**
      * Sets the default locale based on the user language.
      */
-    public function onKernelRequest(RequestEvent $event): void
+    public function __invoke(RequestEvent $event): void
     {
         $user = $this->security->getUser();
 

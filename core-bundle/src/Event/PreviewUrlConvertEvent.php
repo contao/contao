@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Event;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class PreviewUrlConvertEvent extends Event
@@ -21,6 +22,16 @@ class PreviewUrlConvertEvent extends Event
      */
     private $url;
 
+    /**
+     * @var Request
+     */
+    private $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     public function getUrl(): ?string
     {
         return $this->url;
@@ -29,5 +40,10 @@ class PreviewUrlConvertEvent extends Event
     public function setUrl(string $url): void
     {
         $this->url = $url;
+    }
+
+    public function getRequest(): Request
+    {
+        return $this->request;
     }
 }

@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
+/**
+ * @internal
+ */
 class BypassMaintenanceListener
 {
     /**
@@ -36,7 +39,7 @@ class BypassMaintenanceListener
     /**
      * Adds the request attribute to the request.
      */
-    public function onKernelRequest(RequestEvent $event): void
+    public function __invoke(RequestEvent $event): void
     {
         if (!$this->tokenChecker->hasBackendUser()) {
             return;

@@ -12,8 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\EventListener;
 
+use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * @internal
+ */
 class InitializeApplicationListener
 {
     /**
@@ -29,7 +33,7 @@ class InitializeApplicationListener
     /**
      * Adds the initialize.php file.
      */
-    public function onInitializeApplication(): void
+    public function __invoke(InitializeApplicationEvent $event): void
     {
         if (file_exists($this->projectDir.'/system/initialize.php')) {
             return;

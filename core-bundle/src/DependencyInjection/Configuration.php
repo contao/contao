@@ -99,6 +99,9 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('%s')
                     ->end()
                 ->end()
+                ->scalarNode('editable_files')
+                    ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,txt,xliff,xml,yml,yaml')
+                ->end()
                 ->scalarNode('url_suffix')
                     ->defaultValue('.html')
                 ->end()
@@ -184,31 +187,15 @@ class Configuration implements ConfigurationInterface
 
                                 foreach ($value as $name => $config) {
                                     if (preg_match('/^\d+$/', (string) $name)) {
-                                        throw new \InvalidArgumentException(
-                                            sprintf(
-                                                'The image size name "%s" cannot contain only digits',
-                                                $name
-                                            )
-                                        );
+                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" cannot contain only digits', $name));
                                     }
 
                                     if (\in_array($name, $reservedImageSizeNames, true)) {
-                                        throw new \InvalidArgumentException(
-                                            sprintf(
-                                                '"%s" is a reserved image size name (reserved names: %s)',
-                                                $name,
-                                                implode(', ', $reservedImageSizeNames)
-                                            )
-                                        );
+                                        throw new \InvalidArgumentException(sprintf('"%s" is a reserved image size name (reserved names: %s)', $name, implode(', ', $reservedImageSizeNames)));
                                     }
 
                                     if (preg_match('/[^a-z0-9_]/', (string) $name)) {
-                                        throw new \InvalidArgumentException(
-                                            sprintf(
-                                                'The image size name "%s" must consist of lowercase letters, digits and underscores only',
-                                                $name
-                                            )
-                                        );
+                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" must consist of lowercase letters, digits and underscores only', $name));
                                     }
                                 }
 
@@ -222,7 +209,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                             ->integerNode('height')
                             ->end()
-                            ->enumNode('resizeMode')
+                            ->enumNode('resize_mode')
                                 ->values([
                                     ResizeConfiguration::MODE_CROP,
                                     ResizeConfiguration::MODE_BOX,
@@ -233,15 +220,15 @@ class Configuration implements ConfigurationInterface
                                 ->min(0)
                                 ->max(100)
                             ->end()
-                            ->scalarNode('cssClass')
+                            ->scalarNode('css_class')
                             ->end()
-                            ->booleanNode('lazyLoading')
+                            ->booleanNode('lazy_loading')
                             ->end()
                             ->scalarNode('densities')
                             ->end()
                             ->scalarNode('sizes')
                             ->end()
-                            ->booleanNode('skipIfDimensionsMatch')
+                            ->booleanNode('skip_if_dimensions_match')
                             ->end()
                             ->arrayNode('formats')
                                 ->useAttributeAsKey('source')
@@ -257,7 +244,7 @@ class Configuration implements ConfigurationInterface
                                         ->end()
                                         ->integerNode('height')
                                         ->end()
-                                        ->enumNode('resizeMode')
+                                        ->enumNode('resize_mode')
                                             ->values([
                                                 ResizeConfiguration::MODE_CROP,
                                                 ResizeConfiguration::MODE_BOX,
@@ -274,8 +261,33 @@ class Configuration implements ConfigurationInterface
                                         ->end()
                                         ->scalarNode('sizes')
                                         ->end()
+                                        ->enumNode('resizeMode')
+                                            ->setDeprecated('Using contao.image.sizes.*.items.resizeMode is deprecated. Please use contao.image.sizes.*.items.resize_mode instead.')
+                                            ->values([
+                                                ResizeConfiguration::MODE_CROP,
+                                                ResizeConfiguration::MODE_BOX,
+                                                ResizeConfiguration::MODE_PROPORTIONAL,
+                                            ])
+                                        ->end()
                                     ->end()
                                 ->end()
+                            ->end()
+                            ->enumNode('resizeMode')
+                                ->setDeprecated('Using contao.image.sizes.*.resizeMode is deprecated. Please use contao.image.sizes.*.resize_mode instead.')
+                                ->values([
+                                    ResizeConfiguration::MODE_CROP,
+                                    ResizeConfiguration::MODE_BOX,
+                                    ResizeConfiguration::MODE_PROPORTIONAL,
+                                ])
+                            ->end()
+                            ->scalarNode('cssClass')
+                                ->setDeprecated('Using contao.image.sizes.*.cssClass is deprecated. Please use contao.image.sizes.*.css_class instead.')
+                            ->end()
+                            ->booleanNode('lazyLoading')
+                                ->setDeprecated('Using contao.image.sizes.*.lazyLoading is deprecated. Please use contao.image.sizes.*.lazy_loading instead.')
+                            ->end()
+                            ->booleanNode('skipIfDimensionsMatch')
+                                ->setDeprecated('Using contao.image.sizes.*.skipIfDimensionsMatch is deprecated. Please use contao.image.sizes.*.skip_if_dimensions_match instead.')
                             ->end()
                         ->end()
                     ->end()
@@ -327,29 +339,28 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->arrayNode('default_indexer')
-                    ->info('The default search indexer, which indexes pages in the database')
+                    ->info('The default search indexer, which indexes pages in the database.')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('enable')
-                            ->info('Enables the default search indexer')
                             ->defaultTrue()
                         ->end()
                     ->end()
                 ->end()
-                ->scalarNode('indexProtected')
-                    ->info('Enables indexing of protected pages')
+                ->scalarNode('index_protected')
+                    ->info('Enables indexing of protected pages.')
                     ->defaultFalse()
                 ->end()
                 ->arrayNode('listener')
-                    ->info('Configures how the search index listener behaves. It can index valid and delete invalid responses on every request. You may limit it to one of the features or disable it completely.')
+                    ->info('The search index listener can index valid and delete invalid responses upon every request. You may limit it to one of the features or disable it completely.')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('index')
-                            ->info('Enables indexing successful responses')
+                            ->info('Enables indexing successful responses.')
                             ->defaultTrue()
                         ->end()
                         ->scalarNode('delete')
-                            ->info('Enables deleting unsuccessful responses from the index')
+                            ->info('Enables deleting unsuccessful responses from the index.')
                             ->defaultTrue()
                         ->end()
                     ->end()
@@ -364,8 +375,8 @@ class Configuration implements ConfigurationInterface
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
-                ->arrayNode('additionalURIs')
-                    ->info('Additional URIs to crawl (by default, only the ones defined in the root pages are crawled).')
+                ->arrayNode('additional_uris')
+                    ->info('Additional URIs to crawl. By default, only the ones defined in the root pages are crawled.')
                     ->validate()
                     ->ifTrue(
                         static function (array $uris): bool {
@@ -373,9 +384,9 @@ class Configuration implements ConfigurationInterface
                                 if (!preg_match('@^https?://@', $uri)) {
                                     return true;
                                 }
-
-                                return false;
                             }
+
+                            return false;
                         }
                     )
                     ->thenInvalid('All provided additional URIs must start with either http:// or https://.')
@@ -383,7 +394,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')->end()
                     ->defaultValue([])
                 ->end()
-                ->arrayNode('defaultHttpClientOptions')
+                ->arrayNode('default_http_client_options')
                     ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
                     ->prototype('scalar')->end()
                     ->defaultValue([])

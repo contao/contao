@@ -59,6 +59,9 @@ class ContaoCacheWarmer implements CacheWarmerInterface
      */
     private $framework;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.cache.warm_internal" service instead
+     */
     public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $rootDir, Connection $connection, ContaoFramework $framework)
     {
         $this->filesystem = $filesystem;
@@ -251,7 +254,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
         $statement->execute();
 
-        $languages = [];
+        // Always load the English language (see #1040)
+        $languages = ['en'];
 
         while (false !== ($language = $statement->fetch(\PDO::FETCH_OBJ))) {
             if ('' === $language->language) {

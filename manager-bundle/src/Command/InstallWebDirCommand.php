@@ -21,6 +21,9 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
+/**
+ * @internal
+ */
 class InstallWebDirCommand extends Command
 {
     /**
@@ -52,9 +55,7 @@ class InstallWebDirCommand extends Command
     {
         $this
             ->setName('contao:install-web-dir')
-            ->setDefinition([
-                new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web'),
-            ])
+            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
             ->setDescription('Installs the files in the "web" directory')
         ;
     }

@@ -15,12 +15,15 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
+/**
+ * @internal
+ */
 class ResponseExceptionListener
 {
     /**
      * Sets the response from the exception.
      */
-    public function onKernelException(ExceptionEvent $event): void
+    public function __invoke(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
 

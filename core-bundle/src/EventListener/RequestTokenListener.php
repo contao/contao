@@ -22,6 +22,8 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Validates the request token if the request is a Contao request.
+ *
+ * @internal
  */
 class RequestTokenListener
 {
@@ -62,7 +64,7 @@ class RequestTokenListener
     /**
      * @throws InvalidRequestTokenException
      */
-    public function onKernelRequest(RequestEvent $event): void
+    public function __invoke(RequestEvent $event): void
     {
         $request = $event->getRequest();
 

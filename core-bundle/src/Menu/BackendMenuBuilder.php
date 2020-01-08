@@ -30,18 +30,33 @@ class BackendMenuBuilder
      */
     private $eventDispatcher;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.menu.backend_menu_builder" service instead
+     */
     public function __construct(FactoryInterface $factory, EventDispatcherInterface $eventDispatcher)
     {
         $this->factory = $factory;
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * Creates a new root node and dispatches an event to fill it with child nodes.
-     */
-    public function create(): ItemInterface
+    public function buildMainMenu(): ItemInterface
     {
-        $tree = $this->factory->createItem('root');
+        $tree = $this->factory
+            ->createItem('mainMenu')
+            ->setChildrenAttribute('class', 'menu_level_0')
+        ;
+
+        $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
+
+        return $tree;
+    }
+
+    public function buildHeaderMenu(): ItemInterface
+    {
+        $tree = $this->factory
+            ->createItem('headerMenu')
+            ->setChildrenAttribute('id', 'tmenu')
+        ;
 
         $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
 

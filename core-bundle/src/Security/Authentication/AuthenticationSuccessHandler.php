@@ -49,6 +49,9 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     private $user;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.security.authentication_success_handler" service instead
+     */
     public function __construct(HttpUtils $httpUtils, ContaoFramework $framework, LoggerInterface $logger = null)
     {
         parent::__construct($httpUtils);

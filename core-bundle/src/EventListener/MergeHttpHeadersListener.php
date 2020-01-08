@@ -18,8 +18,12 @@ use Contao\CoreBundle\HttpKernel\Header\NativeHeaderStorage;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Contracts\Service\ResetInterface;
 
-class MergeHttpHeadersListener
+/**
+ * @internal
+ */
+class MergeHttpHeadersListener implements ResetInterface
 {
     /**
      * @var ContaoFramework
@@ -54,6 +58,20 @@ class MergeHttpHeadersListener
     }
 
     /**
+     * Adds the Contao headers to the Symfony response.
+     */
+    public function __invoke(ResponseEvent $event): void
+    {
+        if (!$this->framework->isInitialized()) {
+            return;
+        }
+
+        // Fetch remaining headers and add them to the response
+        $this->fetchHttpHeaders();
+        $this->setResponseHeaders($event->getResponse());
+    }
+
+    /**
      * @return string[]
      */
     public function getMultiHeaders(): array
@@ -82,18 +100,9 @@ class MergeHttpHeadersListener
         }
     }
 
-    /**
-     * Adds the Contao headers to the Symfony response.
-     */
-    public function onKernelResponse(ResponseEvent $event): void
+    public function reset(): void
     {
-        if (!$this->framework->isInitialized()) {
-            return;
-        }
-
-        // Fetch remaining headers and add them to the response
-        $this->fetchHttpHeaders();
-        $this->setResponseHeaders($event->getResponse());
+        $this->headers = [];
     }
 
     /**

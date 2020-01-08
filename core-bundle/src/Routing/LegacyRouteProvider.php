@@ -29,6 +29,9 @@ class LegacyRouteProvider implements RouteProviderInterface
      */
     private $routeProvider;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.legacy_route_provider" service instead
+     */
     public function __construct(FrontendLoader $frontendLoader, RouteProviderInterface $routeProvider)
     {
         $this->frontendLoader = $frontendLoader;

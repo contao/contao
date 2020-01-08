@@ -12,10 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\CoreBundle\Migration\AbstractMigration;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
+@trigger_error(sprintf('Using the "%s" class has been deprecated and will no longer work in Contao 5.0. Use the "%s" class instead.', AbstractVersionUpdate::class, AbstractMigration::class), E_USER_DEPRECATED);
+
+/**
+ * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0; use the
+ *             Contao\CoreBundle\Migration\AbstractMigration class instead
+ */
 abstract class AbstractVersionUpdate implements ContainerAwareInterface
 {
     use ContainerAwareTrait;

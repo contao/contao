@@ -48,6 +48,9 @@ class RouteProvider implements RouteProviderInterface
      */
     private $prependLocale;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
+     */
     public function __construct(ContaoFramework $framework, Connection $database, string $urlSuffix, bool $prependLocale)
     {
         $this->framework = $framework;
@@ -194,6 +197,13 @@ class RouteProvider implements RouteProviderInterface
 
         if (false === $pos) {
             return [$pathInfo];
+        }
+
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
+
+        if (!$config->get('folderUrl')) {
+            return [substr($pathInfo, 0, $pos)];
         }
 
         $candidates = [$pathInfo];

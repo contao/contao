@@ -119,7 +119,6 @@ class Folder extends System
 		{
 			case 'hash':
 				return $this->getHash();
-				break;
 
 			case 'name':
 			case 'basename':
@@ -129,7 +128,6 @@ class Folder extends System
 				}
 
 				return $this->arrPathinfo['basename'];
-				break;
 
 			case 'dirname':
 			case 'filename':
@@ -139,32 +137,25 @@ class Folder extends System
 				}
 
 				return $this->arrPathinfo[$strKey];
-				break;
 
 			case 'path':
 			case 'value':
 				return $this->strFolder;
-				break;
 
 			case 'size':
 				return $this->getSize();
-				break;
 
 			case 'ctime':
 				return filectime($this->strRootDir . '/' . $this->strFolder);
-				break;
 
 			case 'mtime':
 				return filemtime($this->strRootDir . '/' . $this->strFolder);
-				break;
 
 			case 'atime':
 				return fileatime($this->strRootDir . '/' . $this->strFolder);
-				break;
 
 			default:
 				return parent::__get($strKey);
-				break;
 		}
 	}
 

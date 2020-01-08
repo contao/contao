@@ -33,6 +33,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
+/**
+ * @internal
+ */
 class ExceptionConverterListener
 {
     private const MAPPER = [
@@ -53,7 +56,7 @@ class ExceptionConverterListener
     /**
      * Maps known exceptions to HTTP exceptions.
      */
-    public function onKernelException(ExceptionEvent $event): void
+    public function __invoke(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
         $class = $this->getTargetClass($exception);

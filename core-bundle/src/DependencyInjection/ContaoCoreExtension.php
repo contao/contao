@@ -13,12 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\EventListener\SearchIndexListener;
+use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -71,6 +73,7 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.encryption_key', $config['encryption_key']);
         $container->setParameter('contao.url_suffix', $config['url_suffix']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
+        $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
         $container->setParameter('contao.csrf_cookie_prefix', $config['csrf_cookie_prefix']);
         $container->setParameter('contao.csrf_token_name', $config['csrf_token_name']);
@@ -93,10 +96,16 @@ class ContaoCoreExtension extends Extension
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
         $this->overwriteImageTargetDir($config, $container);
+        $this->resetDeferredImageStorage($container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
             ->addTag('contao.picker_provider')
+        ;
+
+        $container
+            ->registerForAutoconfiguration(MigrationInterface::class)
+            ->addTag('contao.migration')
         ;
     }
 
@@ -109,7 +118,7 @@ class ContaoCoreExtension extends Extension
 
         // Set the two parameters so they can be used in our legacy Config class for maximum BC
         $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
-        $container->setParameter('contao.search.indexProtected', $config['search']['indexProtected']);
+        $container->setParameter('contao.search.index_protected', $config['search']['index_protected']);
 
         if (!$config['search']['default_indexer']['enable']) {
             // Remove the default indexer completely if it was disabled
@@ -117,7 +126,7 @@ class ContaoCoreExtension extends Extension
         } else {
             // Configure whether to index protected pages on the default indexer
             $defaultIndexer = $container->getDefinition('contao.search.indexer.default');
-            $defaultIndexer->setArgument(2, $config['search']['indexProtected']);
+            $defaultIndexer->setArgument(2, $config['search']['index_protected']);
         }
 
         $features = SearchIndexListener::FEATURE_INDEX | SearchIndexListener::FEATURE_DELETE;
@@ -151,8 +160,8 @@ class ContaoCoreExtension extends Extension
         }
 
         $factory = $container->getDefinition('contao.search.escargot_factory');
-        $factory->setArgument(2, $config['crawl']['additionalURIs']);
-        $factory->setArgument(3, $config['crawl']['defaultHttpClientOptions']);
+        $factory->setArgument(2, $config['crawl']['additional_uris']);
+        $factory->setArgument(3, $config['crawl']['default_http_client_options']);
     }
 
     /**
@@ -167,7 +176,7 @@ class ContaoCoreExtension extends Extension
         $imageSizes = [];
 
         foreach ($config['image']['sizes'] as $name => $value) {
-            $imageSizes['_'.$name] = $value;
+            $imageSizes['_'.$name] = $this->camelizeKeys($value);
         }
 
         $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
@@ -177,6 +186,28 @@ class ContaoCoreExtension extends Extension
                 $container->getDefinition($service)->addMethodCall('setPredefinedSizes', [$imageSizes]);
             }
         }
+    }
+
+    /**
+     * Camelizes keys so "resize_mode" becomes "resizeMode".
+     */
+    private function camelizeKeys(array $config): array
+    {
+        $keys = array_keys($config);
+
+        foreach ($keys as &$key) {
+            if (\is_array($config[$key])) {
+                $config[$key] = $this->camelizeKeys($config[$key]);
+            }
+
+            if (\is_string($key)) {
+                $key = lcfirst(Container::camelize($key));
+            }
+        }
+
+        unset($key);
+
+        return array_combine($keys, $config);
     }
 
     /**
@@ -232,5 +263,18 @@ class ContaoCoreExtension extends Extension
         );
 
         @trigger_error('Using the "contao.image.target_path" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.target_dir" parameter instead.', E_USER_DEPRECATED);
+    }
+
+    private function resetDeferredImageStorage(ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.image.deferred_image_storage')) {
+            return;
+        }
+
+        $definition = $container->findDefinition('contao.image.deferred_image_storage');
+
+        if (method_exists($definition->getClass(), 'reset')) {
+            $definition->addTag('kernel.reset', ['method' => 'reset']);
+        }
     }
 }

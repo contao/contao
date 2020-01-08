@@ -21,6 +21,9 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
 
+/**
+ * @internal
+ */
 class GeneratePageListener
 {
     /**
@@ -36,7 +39,7 @@ class GeneratePageListener
     /**
      * Adds the feeds to the page header.
      */
-    public function onGeneratePage(PageModel $pageModel, LayoutModel $layoutModel): void
+    public function __invoke(PageModel $pageModel, LayoutModel $layoutModel): void
     {
         $newsfeeds = StringUtil::deserialize($layoutModel->newsfeeds);
 

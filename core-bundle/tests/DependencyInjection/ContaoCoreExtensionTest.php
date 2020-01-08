@@ -28,6 +28,8 @@ use Contao\CoreBundle\Command\VersionCommand;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendController;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
+use Contao\CoreBundle\Controller\BackendPreviewController;
+use Contao\CoreBundle\Controller\BackendPreviewSwitchController;
 use Contao\CoreBundle\Controller\FaviconController;
 use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
@@ -41,27 +43,32 @@ use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\CoreBundle\Entity\RememberMe;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
-use Contao\CoreBundle\EventListener\BackendMenuListener;
 use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
-use Contao\CoreBundle\EventListener\CsrfTokenCookieListener;
+use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
 use Contao\CoreBundle\EventListener\InsecureInstallationListener;
 use Contao\CoreBundle\EventListener\InsertTags\AssetListener;
 use Contao\CoreBundle\EventListener\InsertTags\TranslationListener;
-use Contao\CoreBundle\EventListener\LocaleListener;
+use Contao\CoreBundle\EventListener\LocaleSubscriber;
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
+use Contao\CoreBundle\EventListener\Menu\BackendLogoutListener;
+use Contao\CoreBundle\EventListener\Menu\BackendMenuListener;
+use Contao\CoreBundle\EventListener\Menu\BackendPreviewListener;
 use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
+use Contao\CoreBundle\EventListener\PreviewToolbarListener;
+use Contao\CoreBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CoreBundle\EventListener\RefererIdListener;
 use Contao\CoreBundle\EventListener\RequestTokenListener;
 use Contao\CoreBundle\EventListener\ResponseExceptionListener;
 use Contao\CoreBundle\EventListener\RobotsTxtListener;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
 use Contao\CoreBundle\EventListener\TwoFactorFrontendListener;
 use Contao\CoreBundle\EventListener\UserSessionListener as EventUserSessionListener;
@@ -76,7 +83,6 @@ use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
-use Contao\CoreBundle\Menu\BackendMenuRenderer;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
 use Contao\CoreBundle\OptIn\OptIn;
@@ -84,6 +90,7 @@ use Contao\CoreBundle\Picker\ArticlePickerProvider;
 use Contao\CoreBundle\Picker\FilePickerProvider;
 use Contao\CoreBundle\Picker\PagePickerProvider;
 use Contao\CoreBundle\Picker\PickerBuilder;
+use Contao\CoreBundle\Picker\TablePickerProvider;
 use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Routing\FrontendLoader;
@@ -98,6 +105,7 @@ use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
 use Contao\CoreBundle\Search\Escargot\Factory;
+use Contao\CoreBundle\Search\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
 use Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint;
@@ -132,7 +140,9 @@ use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
@@ -250,32 +260,117 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(BackendLocaleListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('security.helper', (string) $definition->getArgument(0));
-        $this->assertSame('translator', (string) $definition->getArgument(1));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('security.helper'),
+                new Reference('translator'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(7, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => 7,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheBackendMenuListener(): void
     {
-        $this->assertTrue($this->container->has('contao.listener.backend_menu_listener'));
+        $this->assertTrue($this->container->has('contao.listener.menu.backend_menu'));
 
-        $definition = $this->container->getDefinition('contao.listener.backend_menu_listener');
+        $definition = $this->container->getDefinition('contao.listener.menu.backend_menu');
 
         $this->assertSame(BackendMenuListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('security.helper', (string) $definition->getArgument(0));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('security.helper'),
+                new Reference('router'),
+                new Reference('request_stack'),
+                new Reference('translator'),
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('contao.backend_menu_build', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onBuild', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => 10,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheBackendLogoutListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.menu.backend_logout'));
+
+        $definition = $this->container->getDefinition('contao.listener.menu.backend_logout');
+
+        $this->assertSame(BackendLogoutListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('security.helper'),
+                new Reference('router'),
+                new Reference('security.logout_url_generator'),
+                new Reference('translator'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheBackendPreviewListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.menu.backend_preview'));
+
+        $definition = $this->container->getDefinition('contao.listener.menu.backend_preview');
+
+        $this->assertSame(BackendPreviewListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('security.helper'),
+                new Reference('router'),
+                new Reference('request_stack'),
+                new Reference('translator'),
+                new Reference('event_dispatcher'),
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheBypassMaintenanceListener(): void
@@ -286,14 +381,24 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(BypassMaintenanceListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.security.token_checker', (string) $definition->getArgument(0));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.security.token_checker'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(6, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => 6,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheClearSessionDataListener(): void
@@ -305,12 +410,16 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(ClearSessionDataListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(-768, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => -768,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheCommandSchedulerListener(): void
@@ -321,35 +430,59 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(CommandSchedulerListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('database_connection', (string) $definition->getArgument(1));
-        $this->assertSame('%fragment.path%', (string) $definition->getArgument(2));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('database_connection'),
+                new Reference('%fragment.path%'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.terminate', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelTerminate', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
-    public function testRegistersTheCsrfTokenCookieListener(): void
+    public function testRegistersTheCsrfTokenCookieSubscriber(): void
     {
         $this->assertTrue($this->container->has('contao.listener.csrf_token_cookie'));
 
         $definition = $this->container->getDefinition('contao.listener.csrf_token_cookie');
 
-        $this->assertSame(CsrfTokenCookieListener::class, $definition->getClass());
+        $this->assertSame(CsrfTokenCookieSubscriber::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.csrf.token_storage', (string) $definition->getArgument(0));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.csrf.token_storage'),
+                new Reference('%contao.csrf_cookie_prefix%'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(36, $tags['kernel.event_listener'][0]['priority']);
-        $this->assertSame('kernel.response', $tags['kernel.event_listener'][1]['event']);
-        $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][1]['method']);
+        $this->assertSame(
+            [
+                'kernel.event_subscriber' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.request' => ['onKernelRequest', 36],
+                'kernel.response' => 'onKernelResponse',
+            ],
+            CsrfTokenCookieSubscriber::getSubscribedEvents()
+        );
     }
 
     public function testRegistersTheDataContainerCallbackListener(): void
@@ -361,10 +494,16 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(DataContainerCallbackListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('contao.hook', $tags);
-        $this->assertSame('loadDataContainer', $tags['contao.hook'][0]['hook']);
+        $this->assertSame(
+            [
+                'contao.hook' => [
+                    [
+                        'hook' => 'loadDataContainer',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheDoctrineSchemaListener(): void
@@ -375,13 +514,24 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(DoctrineSchemaListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.doctrine.schema_provider', (string) $definition->getArgument(0));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.doctrine.schema_provider'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('doctrine.event_listener', $tags);
-        $this->assertSame('onSchemaIndexDefinition', $tags['doctrine.event_listener'][0]['event']);
-        $this->assertSame('postGenerateSchema', $tags['doctrine.event_listener'][1]['event']);
+        $this->assertSame(
+            [
+                'doctrine.event_listener' => [
+                    [
+                        'event' => 'postGenerateSchema',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheExceptionConverterListener(): void
@@ -393,12 +543,16 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(ExceptionConverterListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.exception', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelException', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(96, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => 96,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheInsecureInstallationListener(): void
@@ -410,11 +564,14 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(InsecureInstallationListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheAssetInsertTagListener(): void
@@ -425,12 +582,24 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(AssetListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('assets.packages', (string) $definition->getArgument(0));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('assets.packages'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('contao.hook', $tags);
-        $this->assertSame('replaceInsertTags', $tags['contao.hook'][0]['hook']);
+        $this->assertSame(
+            [
+                'contao.hook' => [
+                    [
+                        'hook' => 'replaceInsertTags',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheTranslationInsertTagListener(): void
@@ -441,35 +610,62 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(TranslationListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('translator', (string) $definition->getArgument(0));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('translator'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('contao.hook', $tags);
-        $this->assertSame('replaceInsertTags', $tags['contao.hook'][0]['hook']);
+        $this->assertSame(
+            [
+                'contao.hook' => [
+                    [
+                        'hook' => 'replaceInsertTags',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
-    public function testRegistersTheLocaleListener(): void
+    public function testRegistersTheLocaleSubscriber(): void
     {
         $this->assertTrue($this->container->has('contao.listener.locale'));
 
         $definition = $this->container->getDefinition('contao.listener.locale');
 
-        $this->assertSame(LocaleListener::class, $definition->getClass());
+        $this->assertSame(LocaleSubscriber::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('translator', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
-        $this->assertSame('%contao.locales%', (string) $definition->getArgument(2));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('translator'),
+                new Reference('contao.routing.scope_matcher'),
+                new Reference('%contao.locales%'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(20, $tags['kernel.event_listener'][0]['priority']);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][1]['event']);
-        $this->assertSame('setTranslatorLocale', $tags['kernel.event_listener'][1]['method']);
-        $this->assertSame(100, $tags['kernel.event_listener'][1]['priority']);
+        $this->assertSame(
+            [
+                'kernel.event_subscriber' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.request' => [
+                    ['onKernelRequest', 20],
+                    ['setTranslatorLocale', 100],
+                ],
+            ],
+            LocaleSubscriber::getSubscribedEvents()
+        );
     }
 
     public function testRegistersTheMakeResponsePrivateListener(): void
@@ -483,9 +679,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $tags = $definition->getTags();
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [],
+                ],
+            ],
+            $tags
+        );
 
         $priority = $tags['kernel.event_listener'][0]['priority'] ?? 0;
 
@@ -505,14 +706,29 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(MergeHttpHeadersListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(256, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => 256,
+                    ],
+                ],
+                'kernel.reset' => [
+                    [
+                        'method' => 'reset',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersThePrettyErrorScreensListener(): void
@@ -523,18 +739,107 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(PrettyErrorScreenListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('%contao.pretty_error_screens%', (string) $definition->getArgument(0));
-        $this->assertSame('twig', (string) $definition->getArgument(1));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(2));
-        $this->assertSame('security.helper', (string) $definition->getArgument(3));
-        $this->assertSame('logger', (string) $definition->getArgument(4));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('%contao.pretty_error_screens%'),
+                new Reference('twig'),
+                new Reference('contao.framework'),
+                new Reference('security.helper'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.exception', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelException', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(-96, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => -96,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersThePreviewBarListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.preview_bar'));
+
+        $definition = $this->container->getDefinition('contao.listener.preview_bar');
+
+        $this->assertSame(PreviewToolbarListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('%contao.preview_script%'),
+                new Reference('contao.routing.scope_matcher'),
+                new Reference('twig'),
+                new Reference('router'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersThePreviewUrlConvertListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.preview_url_convert'));
+
+        $definition = $this->container->getDefinition('contao.listener.preview_url_convert');
+
+        $this->assertSame(PreviewUrlConvertListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheBackendPreviewController(): void
+    {
+        $this->assertTrue($this->container->has(BackendPreviewController::class));
+
+        $definition = $this->container->getDefinition(BackendPreviewController::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('%contao.preview_script%'),
+                new Reference('contao.security.frontend_preview_authenticator'),
+                new Reference('event_dispatcher'),
+                new Reference('router'),
+                new Reference('security.authorization_checker'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheBackendPreviewSwitchController(): void
+    {
+        $this->assertTrue($this->container->has(BackendPreviewSwitchController::class));
+
+        $definition = $this->container->getDefinition(BackendPreviewSwitchController::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.security.frontend_preview_authenticator'),
+                new Reference('contao.security.token_checker'),
+                new Reference('database_connection'),
+                new Reference('security.helper'),
+                new Reference('twig'),
+                new Reference('router'),
+                new Reference('contao.csrf.token_manager'),
+                new Reference('%contao.csrf_token_name%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheRefererIdListener(): void
@@ -545,15 +850,25 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(RefererIdListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.token_generator', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.token_generator'),
+                new Reference('contao.routing.scope_matcher'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(20, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => 20,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheRequestTokenListener(): void
@@ -564,18 +879,28 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(RequestTokenListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
-        $this->assertSame('contao.csrf.token_manager', (string) $definition->getArgument(2));
-        $this->assertSame('%contao.csrf_token_name%', (string) $definition->getArgument(3));
-        $this->assertSame('%contao.csrf_cookie_prefix%', (string) $definition->getArgument(4));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('contao.routing.scope_matcher'),
+                new Reference('contao.csrf.token_manager'),
+                new Reference('%contao.csrf_token_name%'),
+                new Reference('%contao.csrf_cookie_prefix%'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(14, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => 14,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheResponseExceptionListener(): void
@@ -587,12 +912,16 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(ResponseExceptionListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.exception', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelException', $tags['kernel.event_listener'][0]['method']);
-        $this->assertSame(64, $tags['kernel.event_listener'][0]['priority']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [
+                        'priority' => 64,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheRobotsTxtListener(): void
@@ -603,13 +932,22 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(RobotsTxtListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('contao.robots_txt', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onRobotsTxt', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheSearchIndexListener(): void
@@ -620,14 +958,24 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(SearchIndexListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.search.indexer', (string) $definition->getArgument(0));
-        $this->assertSame('%fragment.path%', (string) $definition->getArgument(1));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.search.indexer'),
+                new Reference('%fragment.path%'),
+                SearchIndexListener::FEATURE_INDEX | SearchIndexListener::FEATURE_DELETE,
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.terminate', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelTerminate', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheStoreRefererListener(): void
@@ -638,14 +986,56 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(StoreRefererListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('security.helper', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('security.helper'),
+                new Reference('contao.routing.scope_matcher'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.response', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelResponse', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheSubrequestCacheSubscriber(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.subrequest_cache'));
+
+        $definition = $this->container->getDefinition('contao.listener.subrequest_cache');
+
+        $this->assertSame(SubrequestCacheSubscriber::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertEquals([], $definition->getArguments());
+
+        $this->assertSame(
+            [
+                'kernel.event_subscriber' => [
+                    [],
+                ],
+                'kernel.reset' => [
+                    [
+                        'method' => 'reset',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.request' => ['onKernelRequest', 255],
+                'kernel.response' => ['onKernelResponse', -255],
+            ],
+            SubrequestCacheSubscriber::getSubscribedEvents()
+        );
     }
 
     public function testRegistersTheSwitchUserListener(): void
@@ -656,14 +1046,23 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(SwitchUserListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(0));
-        $this->assertSame('logger', (string) $definition->getArgument(1));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('security.token_storage'),
+                new Reference('logger'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('security.switch_user', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onSwitchUser', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheTwoFactorFrontendListener(): void
@@ -674,16 +1073,25 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(TwoFactorFrontendListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
-        $this->assertSame('%scheb_two_factor.security_tokens%', (string) $definition->getArgument(3));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('contao.routing.scope_matcher'),
+                new Reference('security.token_storage'),
+                new Reference('%scheb_two_factor.security_tokens%'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheUserSessionListener(): void
@@ -694,16 +1102,25 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(EventUserSessionListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('database_connection', (string) $definition->getArgument(0));
-        $this->assertSame('security.helper', (string) $definition->getArgument(1));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(2));
-        $this->assertSame('event_dispatcher', (string) $definition->getArgument(3));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('database_connection'),
+                new Reference('security.helper'),
+                new Reference('contao.routing.scope_matcher'),
+                new Reference('event_dispatcher'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('kernel.event_listener', $tags);
-        $this->assertSame('kernel.request', $tags['kernel.event_listener'][0]['event']);
-        $this->assertSame('onKernelRequest', $tags['kernel.event_listener'][0]['method']);
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheAssetPluginContext(): void
@@ -714,9 +1131,15 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoContext::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('request_stack', (string) $definition->getArgument(0));
-        $this->assertSame('staticPlugins', $definition->getArgument(1));
-        $this->assertSame('%kernel.debug%', $definition->getArgument(2));
+
+        $this->assertEquals(
+            [
+                new Reference('request_stack'),
+                new Reference('staticPlugins'),
+                new Reference('%kernel.debug%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheAssetFilesContext(): void
@@ -727,9 +1150,15 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoContext::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('request_stack', (string) $definition->getArgument(0));
-        $this->assertSame('staticFiles', $definition->getArgument(1));
-        $this->assertSame('%kernel.debug%', $definition->getArgument(2));
+
+        $this->assertEquals(
+            [
+                new Reference('request_stack'),
+                new Reference('staticFiles'),
+                new Reference('%kernel.debug%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheContaoCacheClearer(): void
@@ -739,8 +1168,14 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.cache.clear_internal');
 
         $this->assertSame(ContaoCacheClearer::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('filesystem', (string) $definition->getArgument(0));
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference('filesystem'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheContaoCacheWarmer(): void
@@ -750,13 +1185,19 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.cache.warm_internal');
 
         $this->assertSame(ContaoCacheWarmer::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertSame('filesystem', (string) $definition->getArgument(0));
-        $this->assertSame('contao.resource_finder', (string) $definition->getArgument(1));
-        $this->assertSame('contao.resource_locator', (string) $definition->getArgument(2));
-        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));
-        $this->assertSame('database_connection', (string) $definition->getArgument(4));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(5));
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference('filesystem'),
+                new Reference('contao.resource_finder'),
+                new Reference('contao.resource_locator'),
+                new Reference('%kernel.project_dir%'),
+                new Reference('database_connection'),
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheBackendController(): void
@@ -775,11 +1216,17 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition(BackendCsvImportController::class);
 
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('database_connection', (string) $definition->getArgument(1));
-        $this->assertSame('request_stack', (string) $definition->getArgument(2));
-        $this->assertSame('translator', (string) $definition->getArgument(3));
-        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(4));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('database_connection'),
+                new Reference('request_stack'),
+                new Reference('translator'),
+                new Reference('%kernel.project_dir%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheFaviconController(): void
@@ -789,12 +1236,23 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition(FaviconController::class);
 
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('fos_http_cache.http.symfony_response_tagger', (string) $definition->getArgument(1));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('fos_http_cache.http.symfony_response_tagger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('controller.service_arguments', $tags);
+        $this->assertSame(
+            [
+                'controller.service_arguments' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheFrontendController(): void
@@ -814,10 +1272,16 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertTrue($definition->isPrivate());
 
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('contao.frontend_module', $tags);
-        $this->assertSame('user', $tags['contao.frontend_module'][0]['category']);
+        $this->assertSame(
+            [
+                'contao.frontend_module' => [
+                    [
+                        'category' => 'user',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function tesRegistersTheImagesController(): void
@@ -827,10 +1291,16 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition(ImagesController::class);
 
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.image.image_factory', (string) $definition->getArgument(0));
-        $this->assertSame('contao.image.resizer', (string) $definition->getArgument(1));
-        $this->assertSame('%contao.image.target_dir%', (string) $definition->getArgument(2));
-        $this->assertSame('filesystem', (string) $definition->getArgument(3));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.image.image_factory'),
+                new Reference('contao.image.resizer'),
+                new Reference('%contao.image.target_dir%'),
+                new Reference('filesystem'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function tesRegistersTheInsertTagsController(): void
@@ -840,7 +1310,13 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition(InsertTagsController::class);
 
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheRobotsTxtController(): void
@@ -850,12 +1326,23 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition(RobotsTxtController::class);
 
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('event_dispatcher', (string) $definition->getArgument(1));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('event_dispatcher'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('controller.service_arguments', $tags);
+        $this->assertSame(
+            [
+                'controller.service_arguments' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheControllerResolver(): void
@@ -866,8 +1353,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ControllerResolver::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.controller_resolver.inner', (string) $definition->getArgument(0));
-        $this->assertSame('contao.fragment.registry', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.controller_resolver.inner'),
+                new Reference('contao.fragment.registry'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheCorsWebsiteRootsConfigProvider(): void
@@ -878,11 +1371,22 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(WebsiteRootsConfigProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('database_connection', (string) $definition->getArgument(0));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('database_connection'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('nelmio_cors.options_provider', $tags);
+        $this->assertSame(
+            [
+                'nelmio_cors.options_provider' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheCsrfTokenManager(): void
@@ -893,8 +1397,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(CsrfTokenManager::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('security.csrf.token_generator', (string) $definition->getArgument(0));
-        $this->assertSame('contao.csrf.token_storage', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('security.csrf.token_generator'),
+                new Reference('contao.csrf.token_storage'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheCsrfTokenStorage(): void
@@ -905,6 +1415,17 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(MemoryTokenStorage::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
+
+        $this->assertSame(
+            [
+                'kernel.reset' => [
+                    [
+                        'method' => 'reset',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheDataCollector(): void
@@ -916,11 +1437,17 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(ContaoDataCollector::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('data_collector', $tags);
-        $this->assertSame('@ContaoCore/Collector/contao.html.twig', $tags['data_collector'][0]['template']);
-        $this->assertSame('contao', $tags['data_collector'][0]['id']);
+        $this->assertSame(
+            [
+                'data_collector' => [
+                    [
+                        'template' => '@ContaoCore/Collector/contao.html.twig',
+                        'id' => 'contao',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheDoctrineSchemaProvider(): void
@@ -931,8 +1458,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(DcaSchemaProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('doctrine', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('doctrine'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheFragmentHandler(): void
@@ -944,12 +1477,18 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(FragmentHandler::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('fragment.handler', $definition->getDecoratedService()[0]);
-        $this->assertNull($definition->getArgument(0));
-        $this->assertSame('contao.fragment.handler.inner', (string) $definition->getArgument(1));
-        $this->assertSame('request_stack', (string) $definition->getArgument(2));
-        $this->assertSame('contao.fragment.registry', (string) $definition->getArgument(3));
-        $this->assertSame('contao.fragment.pre_handlers', (string) $definition->getArgument(4));
-        $this->assertSame('%kernel.debug%', $definition->getArgument(5));
+
+        $this->assertEquals(
+            [
+                null,
+                new Reference('contao.fragment.handler.inner'),
+                new Reference('request_stack'),
+                new Reference('contao.fragment.registry'),
+                new Reference('contao.fragment.pre_handlers'),
+                new Reference('%kernel.debug%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheFragmentPreHandlers(): void
@@ -960,7 +1499,13 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ServiceLocator::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame([], $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                [],
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheFragmentRegistry(): void
@@ -981,18 +1526,35 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ForwardFragmentRenderer::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('http_kernel', (string) $definition->getArgument(0));
-        $this->assertSame('event_dispatcher', (string) $definition->getArgument(1));
 
-        $calls = $definition->getMethodCalls();
+        $this->assertEquals(
+            [
+                new Reference('http_kernel'),
+                new Reference('event_dispatcher'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertSame('setFragmentPath', $calls[0][0]);
-        $this->assertSame('%fragment.path%', (string) $calls[0][1][0]);
+        $this->assertEquals(
+            [
+                [
+                    'setFragmentPath',
+                    ['%fragment.path%'],
+                ],
+            ],
+            $definition->getMethodCalls()
+        );
 
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('kernel.fragment_renderer', $tags);
-        $this->assertSame('forward', $tags['kernel.fragment_renderer'][0]['alias']);
+        $this->assertSame(
+            [
+                'kernel.fragment_renderer' => [
+                    [
+                        'alias' => 'forward',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheContaoFramework(): void
@@ -1003,11 +1565,28 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoFramework::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('request_stack', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
-        $this->assertSame('contao.security.token_checker', (string) $definition->getArgument(2));
-        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(3));
-        $this->assertSame('%contao.error_level%', (string) $definition->getArgument(4));
+
+        $this->assertEquals(
+            [
+                new Reference('request_stack'),
+                new Reference('contao.routing.scope_matcher'),
+                new Reference('contao.security.token_checker'),
+                new Reference('%kernel.project_dir%'),
+                new Reference('%contao.error_level%'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.reset' => [
+                    [
+                        'method' => 'reset',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheDeferredImageStorage(): void
@@ -1017,8 +1596,29 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->findDefinition('contao.image.deferred_image_storage');
 
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('%contao.image.target_dir%', (string) $definition->getArgument(0));
-        $this->assertSame('filesystem', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('%contao.image.target_dir%'),
+                new Reference('filesystem', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
+
+        if (method_exists($definition->getClass(), 'reset')) {
+            $this->assertSame(
+                [
+                    'kernel.reset' => [
+                        [
+                            'method' => 'reset',
+                        ],
+                    ],
+                ],
+                $definition->getTags()
+            );
+        } else {
+            $this->assertSame([], $definition->getTags());
+        }
     }
 
     public function testRegistersTheImageImagineService(): void
@@ -1058,10 +1658,16 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(LegacyResizer::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('%contao.image.target_dir%', (string) $definition->getArgument(0));
-        $this->assertSame('contao.image.resize_calculator', (string) $definition->getArgument(1));
-        $this->assertSame('filesystem', (string) $definition->getArgument(2));
-        $this->assertSame('contao.image.deferred_image_storage', (string) $definition->getArgument(3));
+
+        $this->assertEquals(
+            [
+                new Reference('%contao.image.target_dir%'),
+                new Reference('contao.image.resize_calculator'),
+                new Reference('filesystem'),
+                new Reference('contao.image.deferred_image_storage'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheImageFactory(): void
@@ -1072,16 +1678,22 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ImageFactory::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.image.resizer', (string) $definition->getArgument(0));
-        $this->assertSame('contao.image.imagine', (string) $definition->getArgument(1));
-        $this->assertSame('contao.image.imagine_svg', (string) $definition->getArgument(2));
-        $this->assertSame('filesystem', (string) $definition->getArgument(3));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(4));
-        $this->assertSame('%contao.image.bypass_cache%', (string) $definition->getArgument(5));
-        $this->assertSame('%contao.image.imagine_options%', (string) $definition->getArgument(6));
-        $this->assertSame('%contao.image.valid_extensions%', (string) $definition->getArgument(7));
-        $this->assertSame('%kernel.project_dir%/%contao.upload_path%', (string) $definition->getArgument(8));
-        $this->assertSame('logger', (string) $definition->getArgument(9));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.image.resizer'),
+                new Reference('contao.image.imagine'),
+                new Reference('contao.image.imagine_svg'),
+                new Reference('filesystem'),
+                new Reference('contao.framework'),
+                new Reference('%contao.image.bypass_cache%'),
+                new Reference('%contao.image.imagine_options%'),
+                new Reference('%contao.image.valid_extensions%'),
+                new Reference('%kernel.project_dir%/%contao.upload_path%'),
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheImageSizesService(): void
@@ -1092,10 +1704,27 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ImageSizes::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('database_connection', (string) $definition->getArgument(0));
-        $this->assertSame('event_dispatcher', (string) $definition->getArgument(1));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(2));
-        $this->assertSame('contao.translation.translator', (string) $definition->getArgument(3));
+
+        $this->assertEquals(
+            [
+                new Reference('database_connection'),
+                new Reference('event_dispatcher'),
+                new Reference('contao.framework'),
+                new Reference('contao.translation.translator'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.reset' => [
+                    [
+                        'method' => 'reset',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheImagePictureFactory(): void
@@ -1106,11 +1735,17 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(PictureFactory::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.image.picture_generator', (string) $definition->getArgument(0));
-        $this->assertSame('contao.image.image_factory', (string) $definition->getArgument(1));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(2));
-        $this->assertSame('%contao.image.bypass_cache%', (string) $definition->getArgument(3));
-        $this->assertSame('%contao.image.imagine_options%', (string) $definition->getArgument(4));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.image.picture_generator'),
+                new Reference('contao.image.image_factory'),
+                new Reference('contao.framework'),
+                new Reference('%contao.image.bypass_cache%'),
+                new Reference('%contao.image.imagine_options%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheImagePictureGenerator(): void
@@ -1121,8 +1756,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(PictureGenerator::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.image.resizer', (string) $definition->getArgument(0));
-        $this->assertSame('contao.image.resize_calculator', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.image.resizer'),
+                new Reference('contao.image.resize_calculator', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheBackendMenuBuilder(): void
@@ -1133,19 +1774,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(BackendMenuBuilder::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('event_dispatcher', (string) $definition->getArgument(1));
-    }
 
-    public function testRegistersTheBackendMenuRenderer(): void
-    {
-        $this->assertTrue($this->container->has('contao.menu.backend_menu_renderer'));
-
-        $definition = $this->container->getDefinition('contao.menu.backend_menu_renderer');
-
-        $this->assertSame(BackendMenuRenderer::class, $definition->getClass());
-        $this->assertTrue($definition->isPublic());
-        $this->assertSame('twig', (string) $definition->getArgument(0));
+        $this->assertEquals(
+            [
+                new Reference('knp_menu.factory'),
+                new Reference('event_dispatcher'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheMenuMatcher(): void
@@ -1166,7 +1802,13 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ListRenderer::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.menu.matcher', (string) $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.menu.matcher'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheModelArgumentResolver(): void
@@ -1177,13 +1819,25 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ModelArgumentResolver::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('contao.routing.scope_matcher'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('controller.argument_value_resolver', $tags);
-        $this->assertSame(101, $tags['controller.argument_value_resolver'][0]['priority']);
+        $this->assertSame(
+            [
+                'controller.argument_value_resolver' => [
+                    [
+                        'priority' => 101,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheMonologHandler(): void
@@ -1194,13 +1848,25 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoTableHandler::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('debug', (string) $definition->getArgument(0));
-        $this->assertFalse($definition->getArgument(1));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('debug'),
+                false,
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('monolog.logger', $tags);
-        $this->assertSame('contao', $tags['monolog.logger'][0]['channel']);
+        $this->assertSame(
+            [
+                'monolog.logger' => [
+                    [
+                        'channel' => 'contao',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheMonologProcessor(): void
@@ -1211,9 +1877,15 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoTableProcessor::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('request_stack', (string) $definition->getArgument(0));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(1));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(2));
+
+        $this->assertEquals(
+            [
+                new Reference('request_stack'),
+                new Reference('security.token_storage'),
+                new Reference('contao.routing.scope_matcher'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheOptInService(): void
@@ -1224,7 +1896,13 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(OptIn::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheArticlePickerProvider(): void
@@ -1235,10 +1913,16 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ArticlePickerProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('router', (string) $definition->getArgument(1));
-        $this->assertSame('translator', (string) $definition->getArgument(2));
-        $this->assertSame('security.helper', (string) $definition->getArgument(3));
+
+        $this->assertEquals(
+            [
+                new Reference('knp_menu.factory'),
+                new Reference('router'),
+                new Reference('translator', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+                new Reference('security.helper'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersThePickerBuilder(): void
@@ -1249,8 +1933,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(PickerBuilder::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('router', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('knp_menu.factory'),
+                new Reference('router'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheFilePickerProvider(): void
@@ -1261,16 +1951,28 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(FilePickerProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('router', (string) $definition->getArgument(1));
-        $this->assertSame('translator', (string) $definition->getArgument(2));
-        $this->assertSame('security.helper', (string) $definition->getArgument(3));
-        $this->assertSame('%contao.upload_path%', (string) $definition->getArgument(4));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('knp_menu.factory'),
+                new Reference('router'),
+                new Reference('translator'),
+                new Reference('security.helper'),
+                new Reference('%contao.upload_path%'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('contao.picker_provider', $tags);
-        $this->assertSame(160, $tags['contao.picker_provider'][0]['priority']);
+        $this->assertSame(
+            [
+                'contao.picker_provider' => [
+                    [
+                        'priority' => 160,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersThePagePickerProvider(): void
@@ -1281,15 +1983,57 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(PagePickerProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('knp_menu.factory', (string) $definition->getArgument(0));
-        $this->assertSame('router', (string) $definition->getArgument(1));
-        $this->assertSame('translator', (string) $definition->getArgument(2));
-        $this->assertSame('security.helper', (string) $definition->getArgument(3));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('knp_menu.factory'),
+                new Reference('router'),
+                new Reference('translator', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+                new Reference('security.helper'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('contao.picker_provider', $tags);
-        $this->assertSame(192, $tags['contao.picker_provider'][0]['priority']);
+        $this->assertSame(
+            [
+                'contao.picker_provider' => [
+                    [
+                        'priority' => 192,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheTablePickerProvider(): void
+    {
+        $this->assertTrue($this->container->has('contao.picker.table_provider'));
+
+        $definition = $this->container->getDefinition('contao.picker.table_provider');
+
+        $this->assertSame(TablePickerProvider::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('knp_menu.factory'),
+                new Reference('router'),
+                new Reference('translator'),
+                new Reference('database_connection'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'contao.picker_provider' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheRememberMeRepository(): void
@@ -1300,8 +2044,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(RememberMeRepository::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('doctrine', (string) $definition->getArgument(0));
-        $this->assertSame(RememberMe::class, (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('doctrine'),
+                new Reference(RememberMe::class),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheResourceFinder(): void
@@ -1312,7 +2062,13 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ResourceFinder::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('%contao.resources_paths%', $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                new Reference('%contao.resources_paths%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheResourceLocator(): void
@@ -1323,7 +2079,13 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(FileLocator::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('%contao.resources_paths%', $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                new Reference('%contao.resources_paths%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheRoutingBackendMatcher(): void
@@ -1335,10 +2097,15 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(RequestMatcher::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $methodCalls = $definition->getMethodCalls();
-
-        $this->assertSame('matchAttribute', $methodCalls[0][0]);
-        $this->assertSame(['_scope', 'backend'], $methodCalls[0][1]);
+        $this->assertEquals(
+            [
+                [
+                    'matchAttribute',
+                    ['_scope', 'backend'],
+                ],
+            ],
+            $definition->getMethodCalls()
+        );
     }
 
     public function testRegistersTheRoutingDomainFilter(): void
@@ -1369,12 +2136,23 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(FrontendLoader::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('%contao.prepend_locale%', (string) $definition->getArgument(0));
-        $this->assertSame('%contao.url_suffix%', (string) $definition->getArgument(1));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('%contao.prepend_locale%'),
+                new Reference('%contao.url_suffix%'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('routing.loader', $tags);
+        $this->assertSame(
+            [
+                'routing.loader' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheRoutingFrontendMatcher(): void
@@ -1386,10 +2164,15 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(RequestMatcher::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
-        $methodCalls = $definition->getMethodCalls();
-
-        $this->assertSame('matchAttribute', $methodCalls[0][0]);
-        $this->assertSame(['_scope', 'frontend'], $methodCalls[0][1]);
+        $this->assertEquals(
+            [
+                [
+                    'matchAttribute',
+                    ['_scope', 'frontend'],
+                ],
+            ],
+            $definition->getMethodCalls()
+        );
     }
 
     public function testRegistersTheRoutingImagesLoader(): void
@@ -1400,13 +2183,24 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ImagesLoader::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('%kernel.project_dir%', (string) $definition->getArgument(0));
-        $this->assertSame('%contao.image.target_dir%', (string) $definition->getArgument(1));
-        $this->assertSame('filesystem', (string) $definition->getArgument(2));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('%kernel.project_dir%'),
+                new Reference('%contao.image.target_dir%'),
+                new Reference('filesystem'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('routing.loader', $tags);
+        $this->assertSame(
+            [
+                'routing.loader' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheRoutingInputEnhancer(): void
@@ -1417,8 +2211,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(InputEnhancer::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('%contao.prepend_locale%', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('%contao.prepend_locale%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheRoutingLanguageFilter(): void
@@ -1429,7 +2229,13 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(LanguageFilter::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('%contao.prepend_locale%', (string) $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                new Reference('%contao.prepend_locale%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheRoutingLegacyMatcher(): void
@@ -1441,10 +2247,16 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(LegacyMatcher::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('contao.routing.nested_matcher', $definition->getDecoratedService()[0]);
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.legacy_matcher.inner', (string) $definition->getArgument(1));
-        $this->assertSame('%contao.url_suffix%', (string) $definition->getArgument(2));
-        $this->assertSame('%contao.prepend_locale%', (string) $definition->getArgument(3));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('contao.routing.legacy_matcher.inner'),
+                new Reference('%contao.url_suffix%'),
+                new Reference('%contao.prepend_locale%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheRoutingLegacyRouteProvider(): void
@@ -1455,8 +2267,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(LegacyRouteProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.routing.frontend_loader', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.legacy_route_provider.inner', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.routing.frontend_loader'),
+                new Reference('contao.routing.legacy_route_provider.inner'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheRoutingNestedMatcher(): void
@@ -1467,17 +2285,32 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(NestedMatcher::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.routing.route_provider', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.final_matcher', (string) $definition->getArgument(1));
 
-        $methodCalls = $definition->getMethodCalls();
+        $this->assertEquals(
+            [
+                new Reference('contao.routing.route_provider'),
+                new Reference('contao.routing.final_matcher'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertSame('addRouteFilter', $methodCalls[0][0]);
-        $this->assertSame('contao.routing.domain_filter', (string) $methodCalls[0][1][0]);
-        $this->assertSame('addRouteFilter', $methodCalls[1][0]);
-        $this->assertSame('contao.routing.published_filter', (string) $methodCalls[1][1][0]);
-        $this->assertSame('addRouteFilter', $methodCalls[2][0]);
-        $this->assertSame('contao.routing.language_filter', (string) $methodCalls[2][1][0]);
+        $this->assertEquals(
+            [
+                [
+                    'addRouteFilter',
+                    ['contao.routing.domain_filter'],
+                ],
+                [
+                    'addRouteFilter',
+                    ['contao.routing.published_filter'],
+                ],
+                [
+                    'addRouteFilter',
+                    ['contao.routing.language_filter'],
+                ],
+            ],
+            $definition->getMethodCalls()
+        );
     }
 
     public function testRegistersTheRoutingPageRouter(): void
@@ -1488,22 +2321,39 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(DynamicRouter::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('router.request_context', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.nested_matcher', (string) $definition->getArgument(1));
-        $this->assertSame('contao.routing.route_generator', (string) $definition->getArgument(2));
-        $this->assertSame('', (string) $definition->getArgument(3));
-        $this->assertSame('event_dispatcher', (string) $definition->getArgument(4));
-        $this->assertSame('contao.routing.route_provider', (string) $definition->getArgument(5));
 
-        $methodCalls = $definition->getMethodCalls();
+        $this->assertEquals(
+            [
+                new Reference('router.request_context'),
+                new Reference('contao.routing.nested_matcher'),
+                new Reference('contao.routing.route_generator'),
+                '',
+                new Reference('event_dispatcher'),
+                new Reference('contao.routing.route_provider'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertSame('addRouteEnhancer', $methodCalls[0][0]);
-        $this->assertSame('contao.routing.input_enhancer', (string) $methodCalls[0][1][0]);
+        $this->assertEquals(
+            [
+                [
+                    'addRouteEnhancer',
+                    ['contao.routing.input_enhancer'],
+                ],
+            ],
+            $definition->getMethodCalls()
+        );
 
-        $tags = $definition->getTags();
-
-        $this->assertArrayHasKey('router', $tags);
-        $this->assertSame(20, $tags['router'][0]['priority']);
+        $this->assertSame(
+            [
+                'router' => [
+                    [
+                        'priority' => 20,
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheRoutingPublishedFilter(): void
@@ -1514,7 +2364,13 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(PublishedFilter::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.security.token_checker', (string) $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.security.token_checker'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheRoutingRouteGenerator(): void
@@ -1525,8 +2381,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ProviderBasedGenerator::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.routing.route_provider', (string) $definition->getArgument(0));
-        $this->assertSame('logger', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.routing.route_provider'),
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheRoutingRouteProvider(): void
@@ -1537,10 +2399,16 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(RouteProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('database_connection', (string) $definition->getArgument(1));
-        $this->assertSame('%contao.url_suffix%', (string) $definition->getArgument(2));
-        $this->assertSame('%contao.prepend_locale%', (string) $definition->getArgument(3));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('database_connection'),
+                new Reference('%contao.url_suffix%'),
+                new Reference('%contao.prepend_locale%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheRoutingScopeMatcher(): void
@@ -1551,8 +2419,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ScopeMatcher::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.routing.backend_matcher', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.frontend_matcher', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.routing.backend_matcher'),
+                new Reference('contao.routing.frontend_matcher'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheRoutingUrlGenerator(): void
@@ -1563,9 +2437,15 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(UrlGenerator::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('router', (string) $definition->getArgument(0));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
-        $this->assertSame('%contao.prepend_locale%', (string) $definition->getArgument(2));
+
+        $this->assertEquals(
+            [
+                new Reference('router'),
+                new Reference('contao.framework'),
+                new Reference('%contao.prepend_locale%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheSearchEscargotFactory(): void
@@ -1576,11 +2456,39 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(Factory::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('database_connection', (string) $definition->getArgument(0));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('database_connection'),
+                new Reference('contao.framework'),
+                [],
+                [],
+            ],
+            $definition->getArguments()
+        );
     }
 
-    public function testRegistersTheSearchEscargotSubscriber(): void
+    public function testRegistersTheSearchEscargotBrokenLinkCheckerSubscriber(): void
+    {
+        $this->assertTrue($this->container->has('contao.search.escargot_subscriber.broken_link_checker'));
+
+        $definition = $this->container->getDefinition('contao.search.escargot_subscriber.broken_link_checker');
+
+        $this->assertSame(BrokenLinkCheckerSubscriber::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertSame([], $definition->getArguments());
+
+        $this->assertSame(
+            [
+                'contao.escargot_subscriber' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheSearchEscargotSearchIndexSubscriber(): void
     {
         $this->assertTrue($this->container->has('contao.search.escargot_subscriber.search_index'));
 
@@ -1588,11 +2496,22 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(SearchIndexSubscriber::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.search.indexer', (string) $definition->getArgument(0));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.search.indexer'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('contao.escargot_subscriber', $tags);
+        $this->assertSame(
+            [
+                'contao.escargot_subscriber' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheSecurityAuthenticationFailureHandler(): void
@@ -1603,10 +2522,16 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(AuthenticationFailureHandler::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('http_kernel', (string) $definition->getArgument(0));
-        $this->assertSame('security.http_utils', (string) $definition->getArgument(1));
-        $this->assertSame([], $definition->getArgument(2));
-        $this->assertSame('logger', (string) $definition->getArgument(3));
+
+        $this->assertEquals(
+            [
+                new Reference('http_kernel'),
+                new Reference('security.http_utils'),
+                [],
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheSecurityAuthenticationProvider(): void
@@ -1617,11 +2542,17 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(AuthenticationProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertNull($definition->getArgument(0));
-        $this->assertNull($definition->getArgument(1));
-        $this->assertNull($definition->getArgument(2));
-        $this->assertSame('security.encoder_factory', (string) $definition->getArgument(3));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(4));
+
+        $this->assertEquals(
+            [
+                null,
+                null,
+                null,
+                new Reference('security.encoder_factory'),
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheSecurityAuthenticationSuccessHandler(): void
@@ -1632,9 +2563,15 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(AuthenticationSuccessHandler::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
-        $this->assertSame('logger', (string) $definition->getArgument(2));
+
+        $this->assertEquals(
+            [
+                new Reference('security.http_utils'),
+                new Reference('contao.framework'),
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheSecurityBackendAccessVoter(): void
@@ -1655,10 +2592,16 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoUserProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('session', (string) $definition->getArgument(1));
-        $this->assertSame(BackendUser::class, (string) $definition->getArgument(2));
-        $this->assertSame('logger', (string) $definition->getArgument(3));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('session'),
+                BackendUser::class,
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheSecurityEntryPoint(): void
@@ -1669,8 +2612,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(AuthenticationEntryPoint::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
-        $this->assertSame('router', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('security.http_utils'),
+                new Reference('router'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheSecurityExpiringTokenBasedRemembermeServices(): void
@@ -1681,17 +2630,29 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ExpiringTokenBasedRememberMeServices::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.repository.remember_me', (string) $definition->getArgument(0));
-        $this->assertNull($definition->getArgument(1));
-        $this->assertNull($definition->getArgument(2));
-        $this->assertNull($definition->getArgument(3));
-        $this->assertNull($definition->getArgument(4));
-        $this->assertSame('logger', (string) $definition->getArgument(5));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.repository.remember_me'),
+                null,
+                null,
+                null,
+                null,
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('monolog.logger', $tags);
-        $this->assertSame('security', $tags['monolog.logger'][0]['channel']);
+        $this->assertSame(
+            [
+                'monolog.logger' => [
+                    [
+                        'channel' => 'security',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheSecurityFrontendPreviewAuthenticator(): void
@@ -1702,10 +2663,16 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(FrontendPreviewAuthenticator::class, $definition->getClass());
         $this->assertFalse($definition->isPrivate());
-        $this->assertSame('security.helper', (string) $definition->getArgument(0));
-        $this->assertSame('session', (string) $definition->getArgument(1));
-        $this->assertSame('contao.security.frontend_user_provider', (string) $definition->getArgument(2));
-        $this->assertSame('logger', (string) $definition->getArgument(3));
+
+        $this->assertEquals(
+            [
+                new Reference('security.helper'),
+                new Reference('session'),
+                new Reference('contao.security.frontend_user_provider'),
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheSecurityFrontendUserProvider(): void
@@ -1716,10 +2683,16 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoUserProvider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('session', (string) $definition->getArgument(1));
-        $this->assertSame(FrontendUser::class, (string) $definition->getArgument(2));
-        $this->assertSame('logger', (string) $definition->getArgument(3));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('session'),
+                FrontendUser::class,
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheSecurityLogoutHandler(): void
@@ -1730,8 +2703,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(LogoutHandler::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
-        $this->assertSame('logger', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheSecurityLogoutSuccessHandler(): void
@@ -1742,8 +2721,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(LogoutSuccessHandler::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('security.http_utils', (string) $definition->getArgument(0));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('security.http_utils'),
+                new Reference('contao.routing.scope_matcher'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheSecurityTokenChecker(): void
@@ -1754,12 +2739,18 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(TokenChecker::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('request_stack', (string) $definition->getArgument(0));
-        $this->assertSame('security.firewall.map', (string) $definition->getArgument(1));
-        $this->assertSame('security.token_storage', (string) $definition->getArgument(2));
-        $this->assertSame('session', (string) $definition->getArgument(3));
-        $this->assertSame('security.authentication.trust_resolver', (string) $definition->getArgument(4));
-        $this->assertSame('%contao.preview_script%', (string) $definition->getArgument(5));
+
+        $this->assertEquals(
+            [
+                new Reference('request_stack'),
+                new Reference('security.firewall.map'),
+                new Reference('security.token_storage'),
+                new Reference('session'),
+                new Reference('security.authentication.trust_resolver'),
+                new Reference('%contao.preview_script%'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheSecurityTwoFactorAuthenticator(): void
@@ -1780,12 +2771,24 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(Provider::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.security.two_factor.authenticator', (string) $definition->getArgument(0));
 
-        $tags = $definition->getTags();
+        $this->assertEquals(
+            [
+                new Reference('contao.security.two_factor.authenticator'),
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertArrayHasKey('scheb_two_factor.provider', $tags);
-        $this->assertSame('contao', $tags['scheb_two_factor.provider'][0]['alias']);
+        $this->assertSame(
+            [
+                'scheb_two_factor.provider' => [
+                    [
+                        'alias' => 'contao',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheSecurityUserChecker(): void
@@ -1796,7 +2799,13 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(UserChecker::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('contao.framework', (string) $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheContaoBackendSession(): void
@@ -1807,12 +2816,23 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ArrayAttributeBag::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('_contao_be_attributes', (string) $definition->getArgument(0));
 
-        $methodCalls = $definition->getMethodCalls();
+        $this->assertEquals(
+            [
+                '_contao_be_attributes',
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertSame('setName', $methodCalls[0][0]);
-        $this->assertSame(['contao_backend'], $methodCalls[0][1]);
+        $this->assertEquals(
+            [
+                [
+                    'setName',
+                    ['contao_backend'],
+                ],
+            ],
+            $definition->getMethodCalls()
+        );
     }
 
     public function testRegistersTheContaoFrontendSession(): void
@@ -1823,12 +2843,23 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ArrayAttributeBag::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('_contao_fe_attributes', (string) $definition->getArgument(0));
 
-        $methodCalls = $definition->getMethodCalls();
+        $this->assertEquals(
+            [
+                '_contao_fe_attributes',
+            ],
+            $definition->getArguments()
+        );
 
-        $this->assertSame('setName', $methodCalls[0][0]);
-        $this->assertSame(['contao_frontend'], $methodCalls[0][1]);
+        $this->assertEquals(
+            [
+                [
+                    'setName',
+                    ['contao_frontend'],
+                ],
+            ],
+            $definition->getMethodCalls()
+        );
     }
 
     public function testRegistersTheSlugService(): void
@@ -1839,8 +2870,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(Slug::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('contao.slug.generator', (string) $definition->getArgument(0));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.slug.generator'),
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheSlugGenerator(): void
@@ -1851,7 +2888,13 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(SlugGenerator::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame(['validChars' => '0-9a-z'], $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                ['validChars' => '0-9a-z'],
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheSlugValidCharactersService(): void
@@ -1862,8 +2905,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ValidCharacters::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
-        $this->assertSame('event_dispatcher', (string) $definition->getArgument(0));
-        $this->assertSame('translator', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('event_dispatcher'),
+                new Reference('translator'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheTokenGenerator(): void
@@ -1874,7 +2923,13 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(UriSafeTokenGenerator::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame(48, (int) $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                48,
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheContaoTranslator(): void
@@ -1886,8 +2941,14 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(Translator::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
         $this->assertSame('translator', $definition->getDecoratedService()[0]);
-        $this->assertSame('contao.translation.translator.inner', (string) $definition->getArgument(0));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.translation.translator.inner'),
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheContaoTranslatorDataCollector(): void
@@ -1898,8 +2959,24 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(DataCollectorTranslator::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertNull($definition->getDecoratedService());
-        $this->assertSame('contao.translation.translator.data_collector.inner', (string) $definition->getArgument(0));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.translation.translator.data_collector.inner'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'kernel.reset' => [
+                    [
+                        'method' => 'reset',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheTwigTemplateExtension(): void
@@ -1910,9 +2987,15 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoTemplateExtension::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame('request_stack', (string) $definition->getArgument(0));
-        $this->assertSame('contao.framework', (string) $definition->getArgument(1));
-        $this->assertSame('contao.routing.scope_matcher', (string) $definition->getArgument(2));
+
+        $this->assertEquals(
+            [
+                new Reference('request_stack'),
+                new Reference('contao.framework'),
+                new Reference('contao.routing.scope_matcher'),
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersThePredefinedImageSizes(): void
@@ -1931,7 +3014,26 @@ class ContaoCoreExtensionTest extends TestCase
                 'contao' => [
                     'image' => [
                         'sizes' => [
-                            'foobar' => ['width' => 100, 'height' => 200],
+                            'foobar' => [
+                                'width' => 100,
+                                'height' => 200,
+                                'resize_mode' => 'box',
+                                'zoom' => 100,
+                                'css_class' => 'foobar-image',
+                                'lazy_loading' => true,
+                                'densities' => '1x, 2x',
+                                'sizes' => '100vw',
+                                'skip_if_dimensions_match' => false,
+                                'items' => [[
+                                    'width' => 50,
+                                    'height' => 50,
+                                    'resize_mode' => 'box',
+                                    'zoom' => 100,
+                                    'densities' => '0.5x, 2x',
+                                    'sizes' => '50vw',
+                                    'media' => '(max-width: 900px)',
+                                ]],
+                            ],
                         ],
                     ],
                 ],
@@ -1942,6 +3044,37 @@ class ContaoCoreExtensionTest extends TestCase
         foreach ($services as $service) {
             $this->assertTrue($this->container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
         }
+
+        $methodCalls = $this->container->getDefinition('contao.image.image_sizes')->getMethodCalls();
+
+        $this->assertSame('setPredefinedSizes', $methodCalls[0][0]);
+
+        $this->assertSame(
+            [[
+                '_foobar' => [
+                    'width' => 100,
+                    'height' => 200,
+                    'resizeMode' => 'box',
+                    'zoom' => 100,
+                    'cssClass' => 'foobar-image',
+                    'lazyLoading' => true,
+                    'densities' => '1x, 2x',
+                    'sizes' => '100vw',
+                    'skipIfDimensionsMatch' => false,
+                    'items' => [[
+                        'width' => 50,
+                        'height' => 50,
+                        'resizeMode' => 'box',
+                        'zoom' => 100,
+                        'densities' => '0.5x, 2x',
+                        'sizes' => '50vw',
+                        'media' => '(max-width: 900px)',
+                    ]],
+                    'formats' => [],
+                ],
+            ]],
+            $methodCalls[0][1]
+        );
     }
 
     public function testSetsTheCrawlOptionsOnTheEscargotFactory(): void
@@ -1951,19 +3084,26 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertTrue($this->container->has('contao.search.escargot_factory'));
 
-        $factory = $this->container->getDefinition('contao.search.escargot_factory');
+        $definition = $this->container->getDefinition('contao.search.escargot_factory');
 
-        $this->assertSame([], $factory->getArgument(2));
-        $this->assertSame([], $factory->getArgument(3));
+        $this->assertEquals(
+            [
+                new Reference('database_connection'),
+                new Reference('contao.framework'),
+                [],
+                [],
+            ],
+            $definition->getArguments()
+        );
 
         $extension->load(
             [
                 'contao' => [
                     'crawl' => [
-                        'additionalURIs' => [
-                            'https://examle.com',
+                        'additional_uris' => [
+                            'https://example.com',
                         ],
-                        'defaultHttpClientOptions' => [
+                        'default_http_client_options' => [
                             'proxy' => 'http://localhost:7080',
                         ],
                     ],
@@ -1972,10 +3112,17 @@ class ContaoCoreExtensionTest extends TestCase
             $this->container
         );
 
-        $factory = $this->container->getDefinition('contao.search.escargot_factory');
+        $definition = $this->container->getDefinition('contao.search.escargot_factory');
 
-        $this->assertSame(['https://examle.com'], $factory->getArgument(2));
-        $this->assertSame(['proxy' => 'http://localhost:7080'], $factory->getArgument(3));
+        $this->assertEquals(
+            [
+                new Reference('database_connection'),
+                new Reference('contao.framework'),
+                ['https://example.com'],
+                ['proxy' => 'http://localhost:7080'],
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRegistersTheDefaultSearchIndexer(): void
@@ -1990,7 +3137,7 @@ class ContaoCoreExtensionTest extends TestCase
                         'default_indexer' => [
                             'enable' => true,
                         ],
-                        'indexProtected' => true,
+                        'index_protected' => true,
                     ],
                 ],
             ],
@@ -2002,7 +3149,14 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition('contao.search.indexer.default');
 
-        $this->assertTrue($definition->getArgument(2));
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('database_connection'),
+                true,
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testDoesNotRegisterTheDefaultSearchIndexerIfItIsDisabled(): void
@@ -2049,7 +3203,15 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.listener.search_index');
 
         $this->assertSame(SearchIndexListener::class, $definition->getClass());
-        $this->assertSame(SearchIndexListener::FEATURE_INDEX, $definition->getArgument(2));
+
+        $this->assertEquals(
+            [
+                new Reference('contao.search.indexer'),
+                new Reference('%fragment.path%'),
+                SearchIndexListener::FEATURE_INDEX,
+            ],
+            $definition->getArguments()
+        );
     }
 
     public function testRemovesTheSearchIndexListenerIfItIsDisabled(): void

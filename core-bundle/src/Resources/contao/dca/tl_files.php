@@ -20,7 +20,15 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			array('tl_files', 'checkPermission'),
 			array('tl_files', 'addBreadcrumb'),
-			array('tl_files', 'checkImportantPart')
+			array('tl_files', 'adjustPalettes')
+		),
+		'oncreate_version_callback' => array
+		(
+			array('tl_files', 'createVersion')
+		),
+		'onrestore_version_callback' => array
+		(
+			array('tl_files', 'restoreVersion')
 		),
 		'sql' => array
 		(
@@ -426,11 +434,11 @@ class tl_files extends Contao\Backend
 	}
 
 	/**
-	 * Only show the important part fields for images
+	 * Adjust the palettes
 	 *
 	 * @param Contao\DataContainer $dc
 	 */
-	public function checkImportantPart(Contao\DataContainer $dc)
+	public function adjustPalettes(Contao\DataContainer $dc)
 	{
 		if (!$dc->id)
 		{
@@ -438,11 +446,105 @@ class tl_files extends Contao\Backend
 		}
 
 		$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
+		$blnIsFolder = is_dir($rootDir . '/' . $dc->id);
 
-		if (is_dir($rootDir . '/' . $dc->id) || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('validImageTypes')))))
+		// Remove the meta data when editing folders
+		if ($blnIsFolder)
 		{
-			$GLOBALS['TL_DCA'][$dc->table]['palettes'] = str_replace(',importantPartX,importantPartY,importantPartWidth,importantPartHeight', '', $GLOBALS['TL_DCA'][$dc->table]['palettes']);
+			Contao\CoreBundle\DataContainer\PaletteManipulator::create()
+				->removeField('meta')
+				->applyToPalette('default', $dc->table)
+			;
 		}
+
+		// Only show the important part fields for images
+		if ($blnIsFolder || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('validImageTypes')))))
+		{
+			Contao\CoreBundle\DataContainer\PaletteManipulator::create()
+				->removeField(array('importantPartX', 'importantPartY', 'importantPartWidth', 'importantPartHeight'))
+				->applyToPalette('default', $dc->table)
+			;
+		}
+	}
+
+	/**
+	 * Store the content if it is an editable file
+	 *
+	 * @param string  $table
+	 * @param integer $pid
+	 * @param integer $version
+	 * @param array   $data
+	 */
+	public function createVersion($table, $pid, $version, $data)
+	{
+		$model = Contao\FilesModel::findByPk($pid);
+
+		if ($model === null || !in_array($model->extension, Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('editableFiles')))))
+		{
+			return;
+		}
+
+		$file = new Contao\File($model->path);
+
+		if ($file->extension == 'svgz')
+		{
+			$data['content'] = gzdecode($file->getContent());
+		}
+		else
+		{
+			$data['content'] = $file->getContent();
+		}
+
+		$this->Database->prepare("UPDATE tl_version SET data=? WHERE pid=? AND version=? AND fromTable=?")
+					   ->execute(serialize($data), $pid, $version, $table);
+	}
+
+	/**
+	 * Restore the content if it is an editable file
+	 *
+	 * @param string  $table
+	 * @param integer $pid
+	 * @param integer $version
+	 * @param array   $data
+	 */
+	public function restoreVersion($table, $pid, $version, $data)
+	{
+		$model = Contao\FilesModel::findByPk($pid);
+
+		if ($model === null || !in_array($model->extension, Contao\StringUtil::trimsplit(',', strtolower(Contao\Config::get('editableFiles')))))
+		{
+			return;
+		}
+
+		// Refetch the data, because not existing field have been unset
+		$objData = $this->Database->prepare("SELECT data FROM tl_version WHERE fromTable=? AND pid=? AND version=?")
+								  ->limit(1)
+								  ->execute($table, $pid, $version);
+
+		if ($objData->numRows < 1)
+		{
+			return;
+		}
+
+		$arrData = Contao\StringUtil::deserialize($objData->data);
+
+		if (!is_array($arrData))
+		{
+			return;
+		}
+
+		$file = new Contao\File($model->path);
+
+		if ($file->extension == 'svgz')
+		{
+			$file->write(gzencode($arrData['content']));
+		}
+		else
+		{
+			$file->write($arrData['content']);
+		}
+
+		$file->close();
 	}
 
 	/**

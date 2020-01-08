@@ -18,6 +18,9 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Events;
 use Contao\StringUtil;
 
+/**
+ * @internal
+ */
 class InsertTagsListener
 {
     private const SUPPORTED_TAGS = [
@@ -41,7 +44,7 @@ class InsertTagsListener
     /**
      * @return string|false
      */
-    public function onReplaceInsertTags(string $tag, bool $useCache, $cacheValue, array $flags)
+    public function __invoke(string $tag, bool $useCache, $cacheValue, array $flags)
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);

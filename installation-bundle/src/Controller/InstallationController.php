@@ -14,7 +14,6 @@ namespace Contao\InstallationBundle\Controller;
 
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
-use Contao\InstallationBundle\Database\AbstractVersionUpdate;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
@@ -32,6 +31,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
+ *
+ * @internal
  */
 class InstallationController implements ContainerAwareInterface
 {
@@ -359,40 +360,10 @@ class InstallationController implements ContainerAwareInterface
 
     private function runDatabaseUpdates(): void
     {
-        if ($this->container->get('contao.install_tool')->isFreshInstallation()) {
-            return;
-        }
-
-        /** @var SplFileInfo[] $finder */
-        $finder = Finder::create()
-            ->files()
-            ->name('Version*Update.php')
-            ->sortByName()
-            ->in(__DIR__.'/../Database')
-        ;
-
-        $messages = [];
-
-        foreach ($finder as $file) {
-            $class = 'Contao\InstallationBundle\Database\\'.$file->getBasename('.php');
-
-            /** @var AbstractVersionUpdate $update */
-            $update = new $class($this->container->get('database_connection'));
-
-            if ($update instanceof AbstractVersionUpdate) {
-                $update->setContainer($this->container);
-
-                if ($update->shouldBeRun()) {
-                    $update->run();
-                }
-
-                if ($message = $update->getMessage()) {
-                    $messages[] = $message;
-                }
-            }
-        }
-
-        $this->context['sql_message'] = implode('', $messages);
+        $this->context['sql_message'] = implode(
+            '<br>',
+            array_map('htmlspecialchars', $this->container->get('contao.install_tool')->runMigrations())
+        );
     }
 
     /**

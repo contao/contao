@@ -34,6 +34,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * @internal
+ */
 class DebugPluginsCommand extends Command
 {
     protected static $defaultName = 'debug:plugins';
@@ -61,15 +64,8 @@ class DebugPluginsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDefinition([
-                new InputArgument('name', InputArgument::OPTIONAL, 'The plugin class or package name'),
-            ])
-            ->addOption(
-                'bundles',
-                null,
-                InputOption::VALUE_NONE,
-                'List all bundles or the bundle configuration of the given plugin'
-            )
+            ->addArgument('name', InputArgument::OPTIONAL, 'The plugin class or package name')
+            ->addOption('bundles', null, InputOption::VALUE_NONE, 'List all bundles or the bundle configuration of the given plugin')
             ->setDescription('Displays the Contao Manager plugin configurations')
         ;
     }

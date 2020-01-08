@@ -52,7 +52,6 @@ switch ($_SERVER['PHP_CS_CONFIG'] ?? null) {
         $config
             ->getFinder()
             ->exclude('Resources')
-            ->exclude('Fixtures')
             ->notPath('var/cache')
             ->in([
                 'calendar-bundle/src',

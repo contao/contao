@@ -116,6 +116,7 @@ class PageError401 extends Frontend
 			if (null === $objNextPage)
 			{
 				$this->log('Forward page ID "' . $obj401->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
+
 				throw new ForwardPageNotFoundException('Forward page not found');
 			}
 

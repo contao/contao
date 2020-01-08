@@ -24,6 +24,9 @@ class WebsiteRootsConfigProvider implements ProviderInterface
      */
     private $connection;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.cors.website_roots_config_provider" service instead
+     */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;

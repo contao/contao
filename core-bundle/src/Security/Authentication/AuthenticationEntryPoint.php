@@ -31,6 +31,9 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
      */
     private $router;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.security.entry_point" service instead
+     */
     public function __construct(HttpUtils $httpUtils, RouterInterface $router)
     {
         $this->httpUtils = $httpUtils;

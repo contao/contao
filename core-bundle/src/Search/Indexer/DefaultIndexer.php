@@ -34,6 +34,9 @@ class DefaultIndexer implements IndexerInterface
      */
     private $indexProtected;
 
+    /**
+     * @internal Do not inherit from this class; decorate the "contao.search.indexer.default" service instead
+     */
     public function __construct(ContaoFramework $framework, Connection $connection, bool $indexProtected = false)
     {
         $this->framework = $framework;

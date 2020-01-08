@@ -12,14 +12,35 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Database;
 
+use Contao\CoreBundle\Migration\AbstractMigration;
+use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
+use Doctrine\DBAL\Connection;
 
-class Version430Update extends AbstractVersionUpdate
+/**
+ * @internal
+ */
+class Version430Update extends AbstractMigration
 {
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    public function getName(): string
+    {
+        return 'Contao 4.3.0 Update';
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function shouldBeRun(): bool
+    public function shouldRun(): bool
     {
         $schemaManager = $this->connection->getSchemaManager();
 
@@ -35,10 +56,10 @@ class Version430Update extends AbstractVersionUpdate
     /**
      * {@inheritdoc}
      */
-    public function run(): void
+    public function run(): MigrationResult
     {
         $this->connection->query('
-            ALTER TABLE 
+            ALTER TABLE
                 tl_layout
             CHANGE
                 sections sections blob NULL
@@ -94,5 +115,7 @@ class Version430Update extends AbstractVersionUpdate
             SET
                 combineScripts = '1'
         ");
+
+        return $this->createResult(true);
     }
 }

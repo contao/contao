@@ -36,6 +36,14 @@ services:
             - '%contao.image.target_dir%'
         public: true
 
+    Contao\CoreBundle\Command\MigrateCommand:
+        arguments:
+            - '@Contao\CoreBundle\Migration\MigrationCollection'
+            - '@contao.resource_locator'
+            - '%kernel.project_dir%'
+            - '@contao.framework'
+            - '@?contao.installer'
+
     contao.command.resize_images:
         class: Contao\CoreBundle\Command\ResizeImagesCommand
         arguments:

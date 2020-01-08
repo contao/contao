@@ -459,9 +459,10 @@ class ImageFactoryTest extends TestCase
         $path = $this->getFixturesDir().'/images/none.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
 
+        /** @var Filesystem&MockObject $filesystem */
         $filesystem = $this
             ->getMockBuilder(Filesystem::class)
-            ->setMethods(['exists'])
+            ->onlyMethods(['exists'])
             ->getMock()
         ;
 
@@ -521,7 +522,10 @@ class ImageFactoryTest extends TestCase
     }
 
     /**
+     * @group legacy
      * @dataProvider getInvalidImportantParts
+     *
+     * @expectedDeprecation Defining the important part in absolute pixels has been deprecated %s.
      */
     public function testCreatesAnImageObjectFromAnImagePathWithInvalidImportantPart($invalid, $expected): void
     {

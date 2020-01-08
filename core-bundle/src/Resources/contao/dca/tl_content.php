@@ -22,6 +22,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			array('tl_content', 'adjustDcaByType'),
 			array('tl_content', 'showJsLibraryHint'),
+			array('tl_content', 'filterContentElements'),
 			array('tl_content', 'preserveReferenced')
 		),
 		'sql' => array
@@ -59,13 +60,15 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'edit' => array
 			(
 				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
+				'icon'                => 'edit.svg',
+				'button_callback'     => array('tl_content', 'disableButton')
 			),
 			'copy' => array
 			(
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="Backend.getScrollOffset()"',
+				'button_callback'     => array('tl_content', 'disableButton')
 			),
 			'cut' => array
 			(
@@ -170,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options_callback'        => array('tl_content', 'getContentElements'),
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default 'text'"
+			'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text')
 		),
 		'headline' => array
 		(
@@ -730,38 +733,36 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'cteAlias' => array
 		(
 			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getAlias'),
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
-			'wizard' => array
+			'inputType'               => 'picker',
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr'),
+			'save_callback' => array
 			(
-				array('tl_content', 'editAlias')
+				array('tl_content', 'saveAlias'),
 			),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy', 'table'=>'tl_content')
 		),
 		'articleAlias' => array
 		(
 			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getArticleAlias'),
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
-			'wizard' => array
+			'inputType'               => 'picker',
+			'foreignKey'              => 'tl_article.title',
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr'),
+			'save_callback' => array
 			(
-				array('tl_content', 'editArticleAlias')
+				array('tl_content', 'saveArticleAlias'),
 			),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'article' => array
 		(
 			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getArticles'),
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
-			'wizard' => array
-			(
-				array('tl_content', 'editArticle')
-			),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'inputType'               => 'picker',
+			'foreignKey'              => 'tl_article.title',
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'clr'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'form' => array
 		(
@@ -995,7 +996,10 @@ class tl_content extends Contao\Backend
 		{
 			foreach (array_keys($v) as $kk)
 			{
-				$groups[$k][] = $kk;
+				if ($this->User->hasAccess($kk, 'elements'))
+				{
+					$groups[$k][] = $kk;
+				}
 			}
 		}
 
@@ -1078,6 +1082,88 @@ class tl_content extends Contao\Backend
 			$session = $objSession->all();
 			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objCes->fetchEach('cteAlias'));
 			$objSession->replace($session);
+		}
+	}
+
+	/**
+	 * Filter the content elements
+	 */
+	public function filterContentElements()
+	{
+		if ($this->User->isAdmin)
+		{
+			return;
+		}
+
+		if (empty($this->User->elements))
+		{
+			$GLOBALS['TL_DCA']['tl_content']['config']['closed'] = true;
+			$GLOBALS['TL_DCA']['tl_content']['config']['notEditable'] = true;
+		}
+		elseif (!in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'], $this->User->elements))
+		{
+			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $this->User->elements[0];
+		}
+
+		/** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+		$objSession = Contao\System::getContainer()->get('session');
+
+		// Prevent editing content elements with not allowed types
+		if (Contao\Input::get('act') == 'edit' || Contao\Input::get('act') == 'delete' || (Contao\Input::get('act') == 'paste' && Contao\Input::get('mode') == 'copy'))
+		{
+			$objCes = $this->Database->prepare("SELECT type FROM tl_content WHERE id=?")
+									 ->execute(Contao\Input::get('id'));
+
+			if ($objCes->numRows && !in_array($objCes->type, $this->User->elements))
+			{
+				throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objCes->type . '".');
+			}
+		}
+
+		// Prevent editing content elements with not allowed types
+		if (Contao\Input::get('act') == 'editAll' || Contao\Input::get('act') == 'overrideAll' || Contao\Input::get('act') == 'deleteAll')
+		{
+			$session = $objSession->all();
+
+			if (!empty($session['CURRENT']['IDS']) && is_array($session['CURRENT']['IDS']))
+			{
+				if (empty($this->User->elements))
+				{
+					$session['CURRENT']['IDS'] = array();
+				}
+				else
+				{
+					$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
+											 ->execute(...$this->User->elements);
+
+					$session['CURRENT']['IDS'] = $objCes->fetchEach('id');
+				}
+
+				$objSession->replace($session);
+			}
+		}
+
+		// Prevent copying content elements with not allowed types
+		if (Contao\Input::get('act') == 'copyAll')
+		{
+			$session = $objSession->all();
+
+			if (!empty($session['CLIPBOARD']['tl_content']['id']) && is_array($session['CLIPBOARD']['tl_content']['id']))
+			{
+				if (empty($this->User->elements))
+				{
+					$session['CLIPBOARD']['tl_content']['id'] = array();
+				}
+				else
+				{
+					$objCes = $this->Database->prepare("SELECT id, type FROM tl_content WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_content']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->elements), '?')) . ")")
+											 ->execute(...$this->User->elements);
+
+					$session['CLIPBOARD']['tl_content']['id'] = $objCes->fetchEach('id');
+				}
+
+				$objSession->replace($session);
+			}
 		}
 	}
 
@@ -1213,9 +1299,13 @@ class tl_content extends Contao\Backend
 	 * @param Contao\DataContainer $dc
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function editArticleAlias(Contao\DataContainer $dc)
 	{
+		@trigger_error('Using tl_content::editArticleAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		if ($dc->value < 1)
 		{
 			return '';
@@ -1232,9 +1322,13 @@ class tl_content extends Contao\Backend
 	 * @param Contao\DataContainer $dc
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function getArticleAlias(Contao\DataContainer $dc)
 	{
+		@trigger_error('Using tl_content::getArticleAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		$arrPids = array();
 		$arrAlias = array();
 
@@ -1279,14 +1373,36 @@ class tl_content extends Contao\Backend
 	}
 
 	/**
+	 * Throw an exception if the current article is selected (circular reference))
+	 *
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
+	 *
+	 * @return mixed
+	 */
+	public function saveArticleAlias($varValue, DataContainer $dc)
+	{
+		if ($dc->activeRecord && $dc->activeRecord->pid == $varValue)
+		{
+			throw new \RuntimeException($GLOBALS['TL_LANG']['ERR']['circularPicker']);
+		}
+
+		return $varValue;
+	}
+
+	/**
 	 * Return the edit alias wizard
 	 *
 	 * @param Contao\DataContainer $dc
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function editAlias(Contao\DataContainer $dc)
 	{
+		@trigger_error('Using tl_content::editAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		if ($dc->value < 1)
 		{
 			return '';
@@ -1301,9 +1417,13 @@ class tl_content extends Contao\Backend
 	 * Get all content elements and return them as array (content element alias)
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function getAlias()
 	{
+		@trigger_error('Using tl_content::getAlias() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		$arrPids = array();
 		$arrAlias = array();
 
@@ -1363,6 +1483,24 @@ class tl_content extends Contao\Backend
 		}
 
 		return $arrAlias;
+	}
+
+	/**
+	 * Throw an exception if the current content element is selected (circular reference)
+	 *
+	 * @param mixed         $varValue
+	 * @param DataContainer $dc
+	 *
+	 * @return mixed
+	 */
+	public function saveAlias($varValue, DataContainer $dc)
+	{
+		if ($dc->activeRecord && $dc->activeRecord->id == $varValue)
+		{
+			throw new \RuntimeException($GLOBALS['TL_LANG']['ERR']['circularPicker']);
+		}
+
+		return $varValue;
 	}
 
 	/**
@@ -1453,9 +1591,13 @@ class tl_content extends Contao\Backend
 	 * @param Contao\DataContainer $dc
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function editArticle(Contao\DataContainer $dc)
 	{
+		@trigger_error('Using tl_content::editArticle() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		if ($dc->value < 1)
 		{
 			return '';
@@ -1472,9 +1614,13 @@ class tl_content extends Contao\Backend
 	 * @param Contao\DataContainer $dc
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public function getArticles(Contao\DataContainer $dc)
 	{
+		@trigger_error('Using tl_content::getArticles() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 		$arrPids = array();
 		$arrArticle = array();
 		$arrRoot = array();
@@ -1641,6 +1787,23 @@ class tl_content extends Contao\Backend
 	}
 
 	/**
+	 * Disable the button if the element type is not allowed
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function disableButton($row, $href, $label, $title, $icon, $attributes)
+	{
+		return $this->User->hasAccess($row['type'], 'elements') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label) . '</a> ' : Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+	}
+
+	/**
 	 * Return the delete content element button
 	 *
 	 * @param array  $row
@@ -1654,6 +1817,12 @@ class tl_content extends Contao\Backend
 	 */
 	public function deleteElement($row, $href, $label, $title, $icon, $attributes)
 	{
+		// Disable the button if the element type is not allowed
+		if (!$this->User->hasAccess($row['type'], 'elements'))
+		{
+			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		}
+
 		$objElement = $this->Database->prepare("SELECT id FROM tl_content WHERE cteAlias=? AND type='alias'")
 									 ->limit(1)
 									 ->execute($row['id']);
@@ -1780,6 +1949,12 @@ class tl_content extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
+		// Disable the button if the element type is not allowed
+		if (!$this->User->hasAccess($row['type'], 'elements'))
+		{
+			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		}
+
 		if (Contao\Input::get('cid'))
 		{
 			$this->toggleVisibility(Contao\Input::get('cid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
@@ -1855,6 +2030,11 @@ class tl_content extends Contao\Backend
 			if ($objRow->numRows)
 			{
 				$dc->activeRecord = $objRow;
+
+				if (!$this->User->hasAccess($objRow->type, 'fields'))
+				{
+					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
+				}
 			}
 		}
 

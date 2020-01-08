@@ -21,6 +21,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Installs the required Contao directories.
+ *
+ * @internal
  */
 class InstallCommand extends Command
 {
@@ -75,9 +77,7 @@ class InstallCommand extends Command
     {
         $this
             ->setName('contao:install')
-            ->setDefinition([
-                new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web'),
-            ])
+            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
             ->setDescription('Installs the required Contao directories')
         ;
     }

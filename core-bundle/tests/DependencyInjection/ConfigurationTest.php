@@ -15,8 +15,11 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
+use Symfony\Component\Config\Definition\ArrayNode;
+use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\Definition\PrototypedArrayNode;
 
 class ConfigurationTest extends TestCase
 {
@@ -134,7 +137,7 @@ class ConfigurationTest extends TestCase
         ];
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessageRegExp('/The image size name "123" cannot contain only digits/');
+        $this->expectExceptionMessageMatches('/The image size name "123" cannot contain only digits/');
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }
@@ -155,7 +158,7 @@ class ConfigurationTest extends TestCase
         ];
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessageRegExp('/"'.$name.'" is a reserved image size name/');
+        $this->expectExceptionMessageMatches('/"'.$name.'" is a reserved image size name/');
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }
@@ -181,14 +184,45 @@ class ConfigurationTest extends TestCase
         $params = [
             'contao' => [
                 'crawl' => [
-                    'additionalURIs' => ['invalid.com'],
+                    'additional_uris' => ['invalid.com'],
                 ],
             ],
         ];
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Invalid configuration for path "contao.crawl.additionalURIs": All provided additional URIs must start with either http:// or https://.');
+        $this->expectExceptionMessage('Invalid configuration for path "contao.crawl.additional_uris": All provided additional URIs must start with either http:// or https://.');
 
         (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    public function testAllowsOnlySnakeCaseKeys(): void
+    {
+        $tree = $this->configuration->getConfigTreeBuilder()->buildTree();
+
+        $this->assertInstanceOf(ArrayNode::class, $tree);
+
+        $this->checkKeys($tree->getChildren());
+    }
+
+    /**
+     * Ensure that all non-deprecated configuration keys are in lower case and
+     * separated by underscores (aka snake_case).
+     */
+    private function checkKeys(array $configuration): void
+    {
+        /** @var BaseNode $value */
+        foreach ($configuration as $key => $value) {
+            if ($value instanceof ArrayNode) {
+                $this->checkKeys($value->getChildren());
+            }
+
+            if ($value instanceof PrototypedArrayNode && ($prototype = $value->getPrototype()) instanceof ArrayNode) {
+                $this->checkKeys($prototype->getChildren());
+            }
+
+            if (\is_string($key) && !$value->isDeprecated()) {
+                $this->assertRegExp('/^[a-z][a-z_]+[a-z]$/', $key);
+            }
+        }
     }
 }

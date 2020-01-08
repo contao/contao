@@ -109,6 +109,7 @@ class ModuleCustomnav extends Module
 		$objTemplate->type = \get_class($this);
 		$objTemplate->cssID = $this->cssID; // see #4897 and 6129
 		$objTemplate->level = 'level_1';
+		$objTemplate->module = $this; // see #155
 
 		/** @var PageModel[] $arrPages */
 		foreach ($arrPages as $objModel)

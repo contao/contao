@@ -22,6 +22,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
+/**
+ * @internal
+ */
 class ContaoDataCollector extends DataCollector implements FrameworkAwareInterface
 {
     use FrameworkAwareTrait;

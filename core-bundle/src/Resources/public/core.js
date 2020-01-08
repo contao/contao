@@ -35,14 +35,12 @@ var AjaxRequest =
 			parent = $(el).getParent('li');
 
 		if (item) {
-			if (parent.hasClass('node-collapsed')) {
-				item.setStyle('display', null);
-				parent.removeClass('node-collapsed').addClass('node-expanded');
+			if (parent.hasClass('collapsed')) {
+				parent.removeClass('collapsed');
 				$(el).store('tip:title', Contao.lang.collapse);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
-				item.setStyle('display', 'none');
-				parent.removeClass('node-expanded').addClass('node-collapsed');
+				parent.addClass('collapsed');
 				$(el).store('tip:title', Contao.lang.expand);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
@@ -2257,7 +2255,7 @@ var Backend =
 	/**
 	 * Meta wizard
 	 *
-	 * @param {object} el The select element
+	 * @param {object} el The submit button
 	 * @param {string} ul The DOM element
 	 */
 	metaWizard: function(el, ul) {
@@ -2304,10 +2302,9 @@ var Backend =
 		// Disable the "add language" button
 		el.getParent('div').getElement('input[type="button"]').setProperty('disabled', true);
 
-		// Disable the option and update chosen
+		// Disable the option
 		opt.options[opt.selectedIndex].setProperty('disabled', true);
 		opt.value = '';
-		opt.fireEvent('liszt:updated');
 	},
 
 	/**

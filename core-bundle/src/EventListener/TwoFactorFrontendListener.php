@@ -24,6 +24,9 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
+/**
+ * @internal
+ */
 class TwoFactorFrontendListener
 {
     use TargetPathTrait;
@@ -56,7 +59,7 @@ class TwoFactorFrontendListener
         $this->supportedTokens = $supportedTokens;
     }
 
-    public function onKernelRequest(RequestEvent $event): void
+    public function __invoke(RequestEvent $event): void
     {
         if (!$this->scopeMatcher->isFrontendMasterRequest($event)) {
             return;
