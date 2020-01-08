@@ -111,7 +111,7 @@ class Factory
                 static function (): string {
                     return Uuid::uuid4()->toString();
                 },
-                'tl_search_index_queue'
+                'tl_crawl_queue'
             )
         );
     }
