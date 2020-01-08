@@ -3014,7 +3014,26 @@ class ContaoCoreExtensionTest extends TestCase
                 'contao' => [
                     'image' => [
                         'sizes' => [
-                            'foobar' => ['width' => 100, 'height' => 200],
+                            'foobar' => [
+                                'width' => 100,
+                                'height' => 200,
+                                'resize_mode' => 'box',
+                                'zoom' => 100,
+                                'css_class' => 'foobar-image',
+                                'lazy_loading' => true,
+                                'densities' => '1x, 2x',
+                                'sizes' => '100vw',
+                                'skip_if_dimensions_match' => false,
+                                'items' => [[
+                                    'width' => 50,
+                                    'height' => 50,
+                                    'resize_mode' => 'box',
+                                    'zoom' => 100,
+                                    'densities' => '0.5x, 2x',
+                                    'sizes' => '50vw',
+                                    'media' => '(max-width: 900px)',
+                                ]],
+                            ],
                         ],
                     ],
                 ],
@@ -3025,6 +3044,37 @@ class ContaoCoreExtensionTest extends TestCase
         foreach ($services as $service) {
             $this->assertTrue($this->container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
         }
+
+        $methodCalls = $this->container->getDefinition('contao.image.image_sizes')->getMethodCalls();
+
+        $this->assertSame('setPredefinedSizes', $methodCalls[0][0]);
+
+        $this->assertSame(
+            [[
+                '_foobar' => [
+                    'width' => 100,
+                    'height' => 200,
+                    'resizeMode' => 'box',
+                    'zoom' => 100,
+                    'cssClass' => 'foobar-image',
+                    'lazyLoading' => true,
+                    'densities' => '1x, 2x',
+                    'sizes' => '100vw',
+                    'skipIfDimensionsMatch' => false,
+                    'items' => [[
+                        'width' => 50,
+                        'height' => 50,
+                        'resizeMode' => 'box',
+                        'zoom' => 100,
+                        'densities' => '0.5x, 2x',
+                        'sizes' => '50vw',
+                        'media' => '(max-width: 900px)',
+                    ]],
+                    'formats' => [],
+                ],
+            ]],
+            $methodCalls[0][1]
+        );
     }
 
     public function testSetsTheCrawlOptionsOnTheEscargotFactory(): void
