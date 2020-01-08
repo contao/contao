@@ -89,7 +89,7 @@
 <div id="tl_crawl" class="tl_box maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
   <h2 class="sub_headline sub_headline_index">
     Crawler
-    <a href="<?= $this->debugLogHref ?>" title="<?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['debugLogFileTitle'] ?>" class="debugLog" style="display: none; float: right;"><img src="system/themes/flexible/icons/show.svg" alt="" width="16" height="16" role="presentation"></a>
+    <a href="<?= $this->debugLogHref ?>" title="<?= $GLOBALS['TL_LANG']['tl_maintenance']['crawlDebugLogFileTitle'] ?>" class="debugLog" style="display: none; float: right;"><img src="system/themes/flexible/icons/show.svg" alt="" width="16" height="16" role="presentation"></a>
   </h2>
   <?php if ($this->isRunning): ?>
     <div class="inner">
@@ -100,11 +100,11 @@
 
       <div class="results running">
         <?php foreach ($this->activeSubscribers as $subscriber): ?>
-          <h3><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscriberNames'][$subscriber->getName()] ?></h3>
+          <h3><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscriberNames'][$subscriber->getName()] ?></h3>
           <div data-subscriber="<?= $subscriber->getName() ?>" class="result">
               <span class="spinner show-when-running"></span>
-              <p class="show-when-running"><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['waitToBeFinished'] ?></p>
-              <a class="show-when-finished log" style="display: none" href="<?= $this->subscriberLogHrefs[$subscriber->getName()] ?>" title="<?= specialchars(sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscriberLogFileTitle'], $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscriberNames'][$subscriber->getName()])) ?>">
+              <p class="show-when-running"><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawlWaitToBeFinished'] ?></p>
+              <a class="show-when-finished log" style="display: none" href="<?= $this->subscriberLogHrefs[$subscriber->getName()] ?>" title="<?= specialchars(sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscriberLogFileTitle'], $GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscriberNames'][$subscriber->getName()])) ?>">
                 <img src="system/themes/flexible/icons/show.svg" alt="" width="16" height="16" role="presentation">
               </a>
               <p class="summary show-when-finished"></p>
@@ -191,11 +191,11 @@
         <input type="hidden" name="rt" value="<?= REQUEST_TOKEN ?>">
         <div class="widget w50 autoheight">
           <?= $this->subscribersWidget->parse() ?>
-          <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscribersLabel'][1] ?></p>
+          <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscribersLabel'][1] ?></p>
         </div>
         <div class="widget w50">
           <?= $this->memberWidget->parse() ?>
-          <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['memberLabel'][1] ?></p>
+          <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawlMemberLabel'][1] ?></p>
         </div>
       </div>
       <div class="tl_submit_container clr">

@@ -268,7 +268,7 @@ class Crawl extends Backend implements \executable
 		$widget = new CheckBox();
 		$widget->id = $name;
 		$widget->name = $name;
-		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscribersLabel'][0];
+		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscribersLabel'][0];
 		$widget->mandatory = true;
 		$widget->multiple = true;
 		$widget->setInputCallback($this->getInputCallback($name));
@@ -279,7 +279,7 @@ class Crawl extends Backend implements \executable
 		{
 			$options[] = array(
 				'value' => $subscriberName,
-				'label' => $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['subscriberNames'][$subscriberName],
+				'label' => $GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscriberNames'][$subscriberName],
 				'default' => false,
 			);
 		}
@@ -311,7 +311,7 @@ class Crawl extends Backend implements \executable
 		$widget = new SelectMenu();
 		$widget->id = $name;
 		$widget->name = $name;
-		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawl']['memberLabel'][0];
+		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlMemberLabel'][0];
 		$widget->setInputCallback($this->getInputCallback($name));
 
 		$time = time();
