@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
+use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
@@ -25,8 +26,6 @@ use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCode
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -43,6 +42,10 @@ class TwoFactorController extends AbstractFrontendModuleController
 
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $page = null): Response
     {
+        if (!$this->get('security.helper')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new InsufficientAuthenticationException('User is not fully authenticated');
+        }
+
         $this->page = $page;
 
         if (
@@ -66,7 +69,6 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
         $services['contao.security.two_factor.authenticator'] = Authenticator::class;
         $services['security.authentication_utils'] = AuthenticationUtils::class;
-        $services['security.token_storage'] = TokenStorageInterface::class;
         $services['translator'] = TranslatorInterface::class;
         $services['contao.security.two_factor.backup_code_manager'] = BackupCodeManager::class;
         $services['security.helper'] = Security::class;
@@ -76,20 +78,9 @@ class TwoFactorController extends AbstractFrontendModuleController
 
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
-        $showBackupCodes = false;
-        $token = $this->get('security.token_storage')->getToken();
-
-        if (!$token instanceof TokenInterface) {
-            return new Response('', Response::HTTP_NO_CONTENT);
-        }
-
-        $user = $token->getUser();
+        $user = $this->get('security.helper')->getUser();
 
         if (!$user instanceof FrontendUser) {
-            return new Response('', Response::HTTP_NO_CONTENT);
-        }
-
-        if (!$this->get('security.helper')->isGranted('IS_AUTHENTICATED_FULLY')) {
             return new Response('', Response::HTTP_NO_CONTENT);
         }
 
@@ -125,6 +116,8 @@ class TwoFactorController extends AbstractFrontendModuleController
                 return $response;
             }
         }
+
+        $showBackupCodes = false;
 
         if ('tl_two_factor_show_backup_codes' === $request->request->get('FORM_SUBMIT')) {
             $showBackupCodes = true;
