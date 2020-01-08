@@ -121,13 +121,15 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         if ('tl_two_factor_show_backup_codes' === $request->request->get('FORM_SUBMIT')) {
             $showBackupCodes = true;
+
+            if (!$user->backupCodes || !\count(json_decode($user->backupCodes, true))) {
+                $this->generateBackupCodes($user);
+            }
         }
 
         if ('tl_two_factor_generate_backup_codes' === $request->request->get('FORM_SUBMIT')) {
-            /** @var BackupCodeManager $backupCodeManager */
-            $backupCodeManager = $this->get('contao.security.two_factor.backup_code_manager');
-            $backupCodeManager->generateBackupCodes($user);
             $showBackupCodes = true;
+            $this->generateBackupCodes($user);
         }
 
         $template->isEnabled = (bool) $user->useTwoFactor;
@@ -183,12 +185,6 @@ class TwoFactorController extends AbstractFrontendModuleController
             $user->save();
         }
 
-        if (!$user->backupCodes || !\count(json_decode($user->backupCodes, true))) {
-            /** @var BackupCodeManager $backupCodeManager */
-            $backupCodeManager = $this->get('contao.security.two_factor.backup_code_manager');
-            $backupCodeManager->generateBackupCodes($user);
-        }
-
         $template->enable = true;
         $template->secret = Base32::encodeUpperUnpadded($user->secret);
         $template->textCode = $translator->trans('MSC.twoFactorTextCode', [], 'contao_default');
@@ -213,5 +209,12 @@ class TwoFactorController extends AbstractFrontendModuleController
         $user->save();
 
         return new RedirectResponse($this->page->getAbsoluteUrl());
+    }
+
+    private function generateBackupCodes(FrontendUser $user): void
+    {
+        /** @var BackupCodeManager $backupCodeManager */
+        $backupCodeManager = $this->get('contao.security.two_factor.backup_code_manager');
+        $backupCodeManager->generateBackupCodes($user);
     }
 }

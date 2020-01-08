@@ -79,14 +79,17 @@ class ModuleTwoFactor extends BackendModule
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_show_backup_codes')
 		{
 			$showBackupCodes = true;
+
+			if (!$user->backupCodes || !\count(json_decode($user->backupCodes, true)))
+			{
+				$this->generateBackupCodes($user);
+			}
 		}
 
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_generate_backup_codes')
 		{
-			/** @var BackupCodeManager $backupCodeManager */
-			$backupCodeManager = $container->get('contao.security.two_factor.backup_code_manager');
-			$backupCodeManager->generateBackupCodes($user);
 			$showBackupCodes = true;
+			$this->generateBackupCodes($user);
 		}
 
 		$this->Template->isEnabled = (bool) $user->useTwoFactor;
@@ -148,13 +151,6 @@ class ModuleTwoFactor extends BackendModule
 			$user->save();
 		}
 
-		if (!$user->backupCodes || !\count(json_decode($user->backupCodes, true)))
-		{
-			/** @var BackupCodeManager $backupCodeManager */
-			$backupCodeManager = $container->get('contao.security.two_factor.backup_code_manager');
-			$backupCodeManager->generateBackupCodes($user);
-		}
-
 		/** @var Request $request */
 		$request = $container->get('request_stack')->getCurrentRequest();
 
@@ -187,5 +183,19 @@ class ModuleTwoFactor extends BackendModule
 		$user->save();
 
 		throw new RedirectResponseException($return);
+	}
+
+	/**
+	 * Generate backup codes for two-factor authentication
+	 *
+	 * @param BackendUser $user
+	 */
+	private function generateBackupCodes(BackendUser $user): void
+	{
+		$container = System::getContainer();
+
+		/** @var BackupCodeManager $backupCodeManager */
+		$backupCodeManager = $container->get('contao.security.two_factor.backup_code_manager');
+		$backupCodeManager->generateBackupCodes($user);
 	}
 }
