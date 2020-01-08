@@ -69,4 +69,11 @@ final class ContaoCoreEvents
      * @see SlugValidCharactersEvent
      */
     public const SLUG_VALID_CHARACTERS = 'contao.slug_valid_characters';
+
+    /**
+     * The contao.page_type_config event is triggered when the page type config is created.
+     *
+     * @see PageTypeConfigEvent
+     */
+    public const PAGE_TYOE_CONFIG = 'contao.page_type_config';
 }

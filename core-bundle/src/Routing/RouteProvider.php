@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Routing;
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\PageType\PageTypeRegistry;
 use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
@@ -49,14 +50,20 @@ class RouteProvider implements RouteProviderInterface
     private $prependLocale;
 
     /**
+     * @var PageTypeRegistry
+     */
+    private $pageTypeRegistry;
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $database, string $urlSuffix, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, Connection $database, string $urlSuffix, bool $prependLocale, PageTypeRegistry $pageTypeRegistry)
     {
         $this->framework = $framework;
         $this->database = $database;
         $this->urlSuffix = $urlSuffix;
         $this->prependLocale = $prependLocale;
+        $this->pageTypeRegistry = $pageTypeRegistry;
     }
 
     /**
@@ -251,27 +258,15 @@ class RouteProvider implements RouteProviderInterface
 
     private function addRoutesForPage(PageModel $page, array &$routes): void
     {
-        $page->loadDetails();
-
-        $defaults = $this->getRouteDefaults($page);
-        $defaults['parameters'] = '';
-
-        $requirements = ['parameters' => '(/.+)?'];
-        $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->urlSuffix);
-
-        if ($this->prependLocale) {
-            $path = '/{_locale}'.$path;
-            $requirements['_locale'] = $page->rootLanguage;
+        // TODO: Should we throw an error instead?
+        if ($this->pageTypeRegistry->has($page->type)) {
+            return;
         }
 
-        $routes['tl_page.'.$page->id] = new Route(
-            $path,
-            $defaults,
-            $requirements,
-            ['utf8' => true],
-            $page->domain,
-            $page->rootUseSSL ? 'https' : null
-        );
+        $page->loadDetails();
+        $pageType = $this->pageTypeRegistry->get($page->type);
+
+        $routes['tl_page.'.$page->id] = $pageType->createRoute($page, $this->prependLocale, $this->urlSuffix);
 
         $this->addRoutesForRootPage($page, $routes);
     }
@@ -328,12 +323,15 @@ class RouteProvider implements RouteProviderInterface
      */
     private function getRouteDefaults(PageModel $page): array
     {
+        $pageType = $this->pageTypeRegistry->get($page->type);
+
         return [
             '_token_check' => true,
             '_controller' => 'Contao\FrontendIndex::renderPage',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
             '_locale' => $page->rootLanguage,
             'pageModel' => $page,
+            'pageTypeConfig' => $pageType->createPageTypeConfig($page)
         ];
     }
 
@@ -560,5 +558,10 @@ class RouteProvider implements RouteProviderInterface
         }
 
         return array_merge($rootPages, $indexPages);
+    }
+
+    private function getAdditionalParameters(PageModel $page): array
+    {
+        // TODO: Implement
     }
 }

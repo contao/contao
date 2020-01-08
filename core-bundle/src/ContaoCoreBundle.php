@@ -23,6 +23,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\MapFragmentsToGlobalsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPageTypesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -89,6 +90,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new PickerProviderPass());
         $container->addCompilerPass(new RegisterFragmentsPass(FrontendModuleReference::TAG_NAME));
         $container->addCompilerPass(new RegisterFragmentsPass(ContentElementReference::TAG_NAME));
+        $container->addCompilerPass(new RegisterPageTypesPass());
         $container->addCompilerPass(new FragmentRendererPass('contao.fragment.handler'));
         $container->addCompilerPass(new RemembermeServicesPass('contao_frontend'));
         $container->addCompilerPass(new MapFragmentsToGlobalsPass());

@@ -120,6 +120,10 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\PageType\PageTypeRegistry:
+        arguments:
+            - '@event_dispatcher'
+
     # Backwards compatibility
     contao.controller.images:
         alias: Contao\CoreBundle\Controller\ImagesController
@@ -516,6 +520,7 @@ services:
             - '@database_connection'
             - '%contao.url_suffix%'
             - '%contao.prepend_locale%'
+            - '@Contao\CoreBundle\PageType\PageTypeRegistry'
 
     contao.routing.scope_matcher:
         class: Contao\CoreBundle\Routing\ScopeMatcher
