@@ -117,10 +117,11 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->deviceLabel = $GLOBALS['TL_LANG']['MSC']['device'];
 		$this->Template->browserLabel = $GLOBALS['TL_LANG']['MSC']['browser'];
 		$this->Template->operatingSystemLabel = $GLOBALS['TL_LANG']['MSC']['operatingSystem'];
+		$this->Template->cityLabel = $GLOBALS['TL_LANG']['MSC']['city'];
 		$this->Template->countryLabel = $GLOBALS['TL_LANG']['MSC']['country'];
 		$this->Template->createdLabel = $GLOBALS['TL_LANG']['MSC']['createdOn'];
 		$this->Template->clearTrustedDevicesButton = $GLOBALS['TL_LANG']['MSC']['clearTrustedDevices'];
-		$this->Template->trustedDevices = $trustedDeviceRepository->findForBackendUser($user);
+		$this->Template->trustedDevices = $trustedDeviceRepository->findForUser($user);
 		$this->Template->countries = System::getCountries();
 		$this->Template->currentDevice = $request->cookies->get($container->getParameter('scheb_two_factor.trusted_device.cookie_name'));
 	}

@@ -719,8 +719,8 @@ services:
             - '@request_stack'
             - '@scheb_two_factor.trusted_token_storage'
             - '@doctrine.orm.entity_manager'
-            - ''
             - '@http_client'
+            - '%contao.security.two_factor.trusted_device.request_geolocation%'
         public: true
 
     contao.security.user_checker:

@@ -52,6 +52,7 @@
               <th class="tl_folder_tlist"><?= $this->deviceLabel ?></th>
               <th class="tl_folder_tlist"><?= $this->browserLabel ?></th>
               <th class="tl_folder_tlist"><?= $this->operatingSystemLabel ?></th>
+              <th class="tl_folder_tlist"><?= $this->cityLabel ?></th>
               <th class="tl_folder_tlist"><?= $this->countryLabel ?></th>
               <th class="tl_folder_tlist"><?= $this->createdLabel ?></th>
             </tr>
@@ -61,6 +62,7 @@
                 <td colspan="1" class="tl_file_list"><?= $trustedDevice->getDeviceFamily() ?> <?php if ($this->currentDevice === $trustedDevice->getCookieValue()): ?>(This device) <?php endif; ?></td>
                 <td colspan="1" class="tl_file_list"><?= $trustedDevice->getUaFamily() ?></td>
                 <td colspan="1" class="tl_file_list"><?= $trustedDevice->getOsFamily() ?></td>
+                <td colspan="1" class="tl_file_list"><?php if ($trustedDevice->getCity()): ?><?= $this->countries[$trustedDevice->getCity()] ?><?php endif; ?></td>
                 <td colspan="1" class="tl_file_list"><?php if ($trustedDevice->getCountry()): ?><?= $this->countries[$trustedDevice->getCountry()] ?><?php endif; ?></td>
                 <td colspan="1" class="tl_file_list"><?= $trustedDevice->getCreated()->format(\Config::get('datimFormat')) ?></td>
               </tr>

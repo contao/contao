@@ -19,6 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Scheb\TwoFactorBundle\Model\TrustedDeviceInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -48,12 +49,18 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
      */
     private $httpClient;
 
-    public function __construct(RequestStack $requestStack, TrustedDeviceTokenStorage $trustedTokenStorage, EntityManagerInterface $entityManager, HttpClientInterface $httpClient)
+    /**
+     * @string
+     */
+    private $requestGeolocation;
+
+    public function __construct(RequestStack $requestStack, TrustedDeviceTokenStorage $trustedTokenStorage, EntityManagerInterface $entityManager, HttpClientInterface $httpClient, bool $requestGeolocation)
     {
         $this->requestStack = $requestStack;
         $this->trustedTokenStorage = $trustedTokenStorage;
         $this->entityManager = $entityManager;
         $this->httpClient = $httpClient;
+        $this->requestGeolocation = $requestGeolocation;
     }
 
     public function addTrustedDevice($user, string $firewallName): void
@@ -71,9 +78,14 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
         $geolocation = $this->getGeoLocation();
         $country = null;
+        $city = null;
 
         if (\array_key_exists('country', $geolocation)) {
-            $country = $geolocation['country'];
+            $country = strtolower($geolocation['country']);
+        }
+
+        if (\array_key_exists('city', $geolocation)) {
+            $city = $geolocation['city'];
         }
 
         $this->trustedTokenStorage->addTrustedToken($username, $firewallName, $version);
@@ -89,7 +101,8 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->setOsFamily($parsedUserAgent->os->family)
             ->setDeviceFamily($parsedUserAgent->device->family)
             ->setVersion($version)
-            ->setCountry(strtolower($country))
+            ->setCountry($country)
+            ->setCity($city)
         ;
 
         $this->entityManager->persist($trustedDevice);
@@ -137,8 +150,18 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
     {
         $geolocation = [];
 
+        if (false === $this->requestGeolocation) {
+            return $geolocation;
+        }
+
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$request instanceof Request) {
+            return $geolocation;
+        }
+
         try {
-            $response = $this->httpClient->request('GET', 'https://ipinfo.io/geo');
+            $response = $this->httpClient->request('GET', sprintf('https://ipinfo.io/%s/json', $request->getClientIp()));
 
             if (200 === $response->getStatusCode()) {
                 $geolocation = json_decode($response->getContent(), true);

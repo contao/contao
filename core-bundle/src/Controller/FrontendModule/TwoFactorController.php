@@ -165,6 +165,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->deviceLabel = $translator->trans('MSC.device', [], 'contao_default');
         $template->browserLabel = $translator->trans('MSC.browser', [], 'contao_default');
         $template->operatingSystemLabel = $translator->trans('MSC.operatingSystem', [], 'contao_default');
+        $template->cityLabel = $translator->trans('MSC.city', [], 'contao_default');
         $template->countryLabel = $translator->trans('MSC.country', [], 'contao_default');
         $template->createdLabel = $translator->trans('MSC.createdOn', [], 'contao_default');
         $template->clearTrustedDevicesButton = $translator->trans('MSC.clearTrustedDevices', [], 'contao_default');

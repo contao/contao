@@ -60,6 +60,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property string       $browserLabel
  * @property string       $operatingSystemLabel
  * @property string       $countryLabel
+ * @property string       $cityLabel
  * @property string       $createdLabel
  * @property string       $clearTrustedDevicesButton
  * @property array        $trustedDevices

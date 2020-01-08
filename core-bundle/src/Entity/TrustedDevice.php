@@ -99,6 +99,13 @@ class TrustedDevice
      */
     protected $country;
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $city;
+
     public function getId(): int
     {
         return $this->id;
@@ -227,6 +234,18 @@ class TrustedDevice
     public function setCountry(?string $country): self
     {
         $this->country = $country;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }

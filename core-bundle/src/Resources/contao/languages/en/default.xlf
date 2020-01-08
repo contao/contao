@@ -1985,6 +1985,9 @@
       <trans-unit id="MSC.operatingSystem">
         <source>Operating System</source>
       </trans-unit>
+      <trans-unit id="MSC.city">
+        <source>City of origin</source>
+      </trans-unit>
       <trans-unit id="MSC.country">
         <source>Country of origin</source>
       </trans-unit>
