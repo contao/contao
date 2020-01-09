@@ -192,7 +192,6 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $stats['error'] += $previousResult->getInfo('stats')['error'];
         }
 
-
         $result = new SubscriberResult(
             0 === $stats['error'],
             $this->translator->trans('CRAWL.searchIndex.summary', [$stats['ok'], $stats['error']], 'contao_crawl')
