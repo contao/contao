@@ -25,10 +25,6 @@ return static function(ContainerConfigurator $configurator) use ($container) {
     $config->defaults()->autoconfigure(true);
     $servicesDir = $container->getParameter('kernel.project_dir').'/src';
 
-    if (!is_dir($servicesDir)) {
-        return;
-    }
-
     try {
         $config
             ->load('App\\', $servicesDir.'/*')
@@ -44,6 +40,10 @@ return static function(ContainerConfigurator $configurator) use ($container) {
     $errors = [];
     $services = array_diff_key($container->getDefinitions(), $originalDefinitions);
 
+    if (0 === ($serviceCount = \count($services))) {
+        return;
+    }
+
     foreach ($services as $id => $definition) {
         if ($definition->hasErrors()) {
             $errors[] = $id;
@@ -51,7 +51,7 @@ return static function(ContainerConfigurator $configurator) use ($container) {
     }
 
     // If all services fail to register, there's probably another namespace in use
-    if (\count($errors) === \count($services)) {
+    if ($serviceCount === \count($errors)) {
         foreach ($errors as $id) {
             $container->removeDefinition($id);
         }
