@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Search\Escargot\Subscriber;
+namespace Contao\CoreBundle\Tests\Crawl\Escargot\Subscriber;
 
-use Contao\CoreBundle\Search\Escargot\Subscriber\SubscriberResult;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use PHPUnit\Framework\TestCase;
 
 class SubscriberResultTest extends TestCase

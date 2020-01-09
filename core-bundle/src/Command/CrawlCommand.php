@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Search\Escargot\Factory;
+use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -72,7 +72,7 @@ class CrawlCommand extends Command
             ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for (0 = no limit)', 0)
             ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progess bar output')
             ->setDescription('Crawls the Contao root pages with the desired subscribers')
-            ->setHelp('You can add additional URIs via the <info>contao.search.additional_uris</info> parameter.')
+            ->setHelp('You can add additional URIs via the <info>contao.crawl.additional_uris</info> parameter.')
         ;
     }
 
@@ -86,7 +86,7 @@ class CrawlCommand extends Command
 
         $subscribers = $input->getOption('subscribers');
         $queue = new InMemoryQueue();
-        $baseUris = $this->escargotFactory->getSearchUriCollection();
+        $baseUris = $this->escargotFactory->getCrawlUriCollection();
 
         try {
             if ($jobId = $input->getArgument('job')) {

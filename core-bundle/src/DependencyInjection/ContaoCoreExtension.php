@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
-use Contao\CoreBundle\Search\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
@@ -155,11 +155,11 @@ class ContaoCoreExtension extends Extension
             ->addTag('contao.escargot_subscriber')
         ;
 
-        if (!$container->hasDefinition('contao.search.escargot_factory')) {
+        if (!$container->hasDefinition('contao.crawl.escargot_factory')) {
             return;
         }
 
-        $factory = $container->getDefinition('contao.search.escargot_factory');
+        $factory = $container->getDefinition('contao.crawl.escargot_factory');
         $factory->setArgument(2, $config['crawl']['additional_uris']);
         $factory->setArgument(3, $config['crawl']['default_http_client_options']);
     }

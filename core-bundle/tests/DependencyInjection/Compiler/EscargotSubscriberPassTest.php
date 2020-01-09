@@ -23,7 +23,7 @@ class EscargotSubscriberPassTest extends TestCase
     public function testAddsTheSubscribers(): void
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('contao.search.escargot_factory', new Definition());
+        $container->setDefinition('contao.crawl.escargot_factory', new Definition());
 
         $definition = new Definition();
         $definition->addTag('contao.escargot_subscriber');
@@ -32,7 +32,7 @@ class EscargotSubscriberPassTest extends TestCase
         $pass = new EscargotSubscriberPass();
         $pass->process($container);
 
-        $methodCalls = $container->findDefinition('contao.search.escargot_factory')->getMethodCalls();
+        $methodCalls = $container->findDefinition('contao.crawl.escargot_factory')->getMethodCalls();
 
         $this->assertCount(1, $methodCalls);
         $this->assertSame('addSubscriber', $methodCalls[0][0]);

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\CrawlCommand;
-use Contao\CoreBundle\Search\Escargot\Factory;
+use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

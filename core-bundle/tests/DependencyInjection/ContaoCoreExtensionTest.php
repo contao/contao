@@ -37,6 +37,9 @@ use Contao\CoreBundle\Controller\ImagesController;
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Controller\RobotsTxtController;
 use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
+use Contao\CoreBundle\Crawl\Escargot\Factory;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
@@ -104,9 +107,6 @@ use Contao\CoreBundle\Routing\Matcher\UrlMatcher;
 use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Routing\UrlGenerator;
-use Contao\CoreBundle\Search\Escargot\Factory;
-use Contao\CoreBundle\Search\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
-use Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint;
 use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
@@ -2448,11 +2448,11 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheSearchEscargotFactory(): void
+    public function testRegistersTheEscargotFactory(): void
     {
-        $this->assertTrue($this->container->has('contao.search.escargot_factory'));
+        $this->assertTrue($this->container->has('contao.crawl.escargot_factory'));
 
-        $definition = $this->container->getDefinition('contao.search.escargot_factory');
+        $definition = $this->container->getDefinition('contao.crawl.escargot_factory');
 
         $this->assertSame(Factory::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
@@ -2468,11 +2468,11 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheSearchEscargotBrokenLinkCheckerSubscriber(): void
+    public function testRegistersTheEscargotBrokenLinkCheckerSubscriber(): void
     {
-        $this->assertTrue($this->container->has('contao.search.escargot_subscriber.broken_link_checker'));
+        $this->assertTrue($this->container->has('contao.crawl.escargot_subscriber.broken_link_checker'));
 
-        $definition = $this->container->getDefinition('contao.search.escargot_subscriber.broken_link_checker');
+        $definition = $this->container->getDefinition('contao.crawl.escargot_subscriber.broken_link_checker');
 
         $this->assertSame(BrokenLinkCheckerSubscriber::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
@@ -2492,11 +2492,11 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheSearchEscargotSearchIndexSubscriber(): void
+    public function testRegistersTheEscargotSearchIndexSubscriber(): void
     {
-        $this->assertTrue($this->container->has('contao.search.escargot_subscriber.search_index'));
+        $this->assertTrue($this->container->has('contao.crawl.escargot_subscriber.search_index'));
 
-        $definition = $this->container->getDefinition('contao.search.escargot_subscriber.search_index');
+        $definition = $this->container->getDefinition('contao.crawl.escargot_subscriber.search_index');
 
         $this->assertSame(SearchIndexSubscriber::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
@@ -3087,9 +3087,9 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load([], $this->container);
 
-        $this->assertTrue($this->container->has('contao.search.escargot_factory'));
+        $this->assertTrue($this->container->has('contao.crawl.escargot_factory'));
 
-        $definition = $this->container->getDefinition('contao.search.escargot_factory');
+        $definition = $this->container->getDefinition('contao.crawl.escargot_factory');
 
         $this->assertEquals(
             [
@@ -3117,7 +3117,7 @@ class ContaoCoreExtensionTest extends TestCase
             $this->container
         );
 
-        $definition = $this->container->getDefinition('contao.search.escargot_factory');
+        $definition = $this->container->getDefinition('contao.crawl.escargot_factory');
 
         $this->assertEquals(
             [

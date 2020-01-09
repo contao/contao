@@ -11,8 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Search\Escargot\Factory;
-use Contao\CoreBundle\Search\Escargot\Subscriber\SubscriberResult;
+use Contao\CoreBundle\Crawl\Escargot\Factory;
+use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\GroupHandler;
@@ -55,7 +55,7 @@ class Crawl extends Backend implements \executable
 	public function run()
 	{
 		/** @var Factory $factory */
-		$factory = System::getContainer()->get('contao.search.escargot_factory');
+		$factory = System::getContainer()->get('contao.crawl.escargot_factory');
 		$subscriberNames = $factory->getSubscriberNames();
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
 		$memberWidget = $this->generateMemberWidget();
@@ -133,7 +133,7 @@ class Crawl extends Backend implements \executable
 
 		if (!$jobId)
 		{
-			$baseUris = $factory->getSearchUriCollection();
+			$baseUris = $factory->getCrawlUriCollection();
 			$escargot = $factory->create($baseUris, $queue, $activeSubscribers, $clientOptions);
 
 			Controller::redirect(Controller::addToUrl('&jobId=' . $escargot->getJobId()));
