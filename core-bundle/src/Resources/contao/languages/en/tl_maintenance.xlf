@@ -8,12 +8,6 @@
       <trans-unit id="tl_maintenance.cacheTables.1">
         <source>Please select the data you want to purge or rebuild.</source>
       </trans-unit>
-      <trans-unit id="tl_maintenance.frontendUser.0">
-        <source>Front end user</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.frontendUser.1">
-        <source>Automatically log in a front end user to index protected pages.</source>
-      </trans-unit>
       <trans-unit id="tl_maintenance.job">
         <source>Job</source>
       </trans-unit>
@@ -28,24 +22,6 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.cacheCleared">
         <source>The data has been purged</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.searchIndex">
-        <source>Rebuild the search index</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexSubmit">
-        <source>Rebuild index</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.noSearchable">
-        <source>No searchable pages found</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexNote">
-        <source>Please wait for the page to load completely before you proceed!</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexLoading">
-        <source>Please wait while the search index is being rebuilt.</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.indexComplete">
-        <source>The search index has been rebuilt. You can now proceed.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.updateHelp">
         <source>Please enter your %s here.</source>
@@ -115,6 +91,39 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
         <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawler">
+        <source>Crawler</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.startCrawling">
+        <source>Start crawling</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.0">
+        <source>Enabled features</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.1">
+        <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.0">
+        <source>Front end member</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.1">
+        <source>Automatically log in a front end member to index protected pages.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
+        <source>The crawler is currently working, please wait for it to finish to see the results.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
+        <source>Download the debug log</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
+        <source>Download the log</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
+        <source>Update the search index</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
+        <source>Check for broken links</source>
       </trans-unit>
     </body>
   </file>

@@ -111,7 +111,7 @@ class Factory
                 static function (): string {
                     return Uuid::uuid4()->toString();
                 },
-                'tl_search_index_queue'
+                'tl_crawl_queue'
             )
         );
     }
@@ -161,9 +161,9 @@ class Factory
     /**
      * @throws \InvalidArgumentException
      */
-    public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, ?HttpClientInterface $client = null): Escargot
+    public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
-        $escargot = Escargot::create($baseUris, $queue, $client ?? $this->createDefaultHttpClient());
+        $escargot = Escargot::create($baseUris, $queue, $this->createHttpClient($clientOptions));
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));
@@ -175,9 +175,9 @@ class Factory
      * @throws \InvalidArgumentException
      * @throws InvalidJobIdException
      */
-    public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, ?HttpClientInterface $client = null): Escargot
+    public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
-        $escargot = Escargot::createFromJobId($jobId, $queue, $client ?? $this->createDefaultHttpClient());
+        $escargot = Escargot::createFromJobId($jobId, $queue, $this->createHttpClient($clientOptions));
 
         $this->registerDefaultSubscribers($escargot);
         $this->registerSubscribers($escargot, $this->validateSubscribers($selectedSubscribers));
@@ -185,21 +185,9 @@ class Factory
         return $escargot;
     }
 
-    /**
-     * Creates an HttpClientInterface instance that behaves like a regular
-     * browser by default.
-     */
-    private function createDefaultHttpClient(): HttpClientInterface
+    private function createHttpClient(array $options = []): HttpClientInterface
     {
-        return HttpClient::create(
-            array_merge_recursive(
-                [
-                    'headers' => ['accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'],
-                    'max_duration' => 20, // Ignore requests that take longer than 20 seconds
-                ],
-                $this->getDefaultHttpClientOptions()
-            )
-        );
+        return HttpClient::create(array_merge_recursive($this->getDefaultHttpClientOptions(), $options));
     }
 
     private function registerDefaultSubscribers(Escargot $escargot): void

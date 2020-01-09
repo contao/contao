@@ -18,6 +18,7 @@ use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Contracts\HttpClient\ChunkInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\Escargot\CrawlUri;
 use Terminal42\Escargot\EscargotAwareInterface;
 use Terminal42\Escargot\EscargotAwareTrait;
@@ -36,13 +37,19 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
     private $indexer;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var array
      */
     private $stats = ['ok' => 0, 'warning' => 0, 'error' => 0];
 
-    public function __construct(IndexerInterface $indexer)
+    public function __construct(IndexerInterface $indexer, TranslatorInterface $translator)
     {
         $this->indexer = $indexer;
+        $this->translator = $translator;
     }
 
     /**
@@ -187,11 +194,11 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
         $result = new SubscriberResult(
             0 === $stats['error'],
-            sprintf('Indexed %d URI(s) successfully. %d failed.', $stats['ok'], $stats['error'])
+            $this->translator->trans('CRAWL.searchIndex.summary', [$stats['ok'], $stats['error']], 'contao_default')
         );
 
         if (0 !== $stats['warning']) {
-            $result->setWarning(sprintf('%d URI(s) were skipped (if you are missing one, checkout the debug logs).', $stats['warning']));
+            $result->setWarning($this->translator->trans('CRAWL.searchIndex.warning', [$stats['warning']], 'contao_default'));
         }
 
         $result->addInfo('stats', $stats);

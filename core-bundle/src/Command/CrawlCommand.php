@@ -106,11 +106,13 @@ class CrawlCommand extends Command
 
         $logOutput = $output instanceof ConsoleOutput ? $output->section() : $output;
 
-        $this->escargot = $this->escargot->withLogger($this->createSourceProvidingConsoleLogger($logOutput));
-        $this->escargot = $this->escargot->withConcurrency((int) $input->getOption('concurrency'));
-        $this->escargot = $this->escargot->withRequestDelay((int) $input->getOption('delay'));
-        $this->escargot = $this->escargot->withMaxRequests((int) $input->getOption('max-requests'));
-        $this->escargot = $this->escargot->withMaxDepth((int) $input->getOption('max-depth'));
+        $this->escargot = $this->escargot
+            ->withLogger($this->createSourceProvidingConsoleLogger($logOutput))
+            ->withConcurrency((int) $input->getOption('concurrency'))
+            ->withRequestDelay((int) $input->getOption('delay'))
+            ->withMaxRequests((int) $input->getOption('max-requests'))
+            ->withMaxDepth((int) $input->getOption('max-depth'))
+        ;
 
         $io->comment('Started crawling...');
 

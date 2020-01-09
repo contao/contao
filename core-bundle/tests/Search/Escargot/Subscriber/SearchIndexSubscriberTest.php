@@ -17,11 +17,13 @@ use Contao\CoreBundle\Search\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Contracts\HttpClient\ChunkInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\CrawlUri;
 use Terminal42\Escargot\Escargot;
@@ -34,7 +36,7 @@ class SearchIndexSubscriberTest extends TestCase
 {
     public function testName(): void
     {
-        $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class));
+        $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class), $this->getTranslator());
         $this->assertSame('search-index', $subscriber->getName());
     }
 
@@ -66,7 +68,7 @@ class SearchIndexSubscriberTest extends TestCase
             $queue->add($escargot->getJobId(), $foundOnUri);
         }
 
-        $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class));
+        $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class), $this->getTranslator());
         $subscriber->setEscargot($escargot);
 
         $decision = $subscriber->shouldRequest($crawlUri);
@@ -134,7 +136,7 @@ class SearchIndexSubscriberTest extends TestCase
         $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
         $escargot = $escargot->withLogger($logger);
 
-        $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class));
+        $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class), $this->getTranslator());
         $subscriber->setEscargot($escargot);
 
         $decision = $subscriber->needsContent(
@@ -198,7 +200,7 @@ class SearchIndexSubscriberTest extends TestCase
         $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
         $escargot = $escargot->withLogger($logger);
 
-        $subscriber = new SearchIndexSubscriber($indexer);
+        $subscriber = new SearchIndexSubscriber($indexer, $this->getTranslator());
         $subscriber->setEscargot($escargot);
 
         $subscriber->onLastChunk(
@@ -282,5 +284,19 @@ class SearchIndexSubscriberTest extends TestCase
         ;
 
         return $response;
+    }
+
+    /**
+     * @return TranslatorInterface&MockObject
+     */
+    private function getTranslator(): TranslatorInterface
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturn('Foobar')
+        ;
+
+        return $translator;
     }
 }

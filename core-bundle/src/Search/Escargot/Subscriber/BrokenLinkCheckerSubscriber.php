@@ -18,6 +18,7 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\Escargot\CrawlUri;
 use Terminal42\Escargot\EscargotAwareInterface;
 use Terminal42\Escargot\EscargotAwareTrait;
@@ -29,9 +30,19 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
     use EscargotAwareTrait;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var array
      */
     private $stats = ['ok' => 0, 'error' => 0];
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
 
     /**
      * {@inheritdoc}
@@ -91,7 +102,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
 
         $result = new SubscriberResult(
             0 === $stats['error'],
-            sprintf('Checked %d link(s) successfully. %d were broken!', $stats['ok'], $stats['error'])
+            $this->translator->trans('CRAWL.brokenLinkChecker.summary', [$stats['ok'], $stats['error']], 'contao_default')
         );
 
         $result->addInfo('stats', $stats);

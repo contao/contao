@@ -541,6 +541,8 @@ services:
 
     contao.search.escargot_subscriber.broken_link_checker:
         class: Contao\CoreBundle\Search\Escargot\Subscriber\BrokenLinkCheckerSubscriber
+        arguments:
+            - '@translator'
         tags:
             - { name: 'contao.escargot_subscriber' }
 
@@ -548,6 +550,7 @@ services:
         class: Contao\CoreBundle\Search\Escargot\Subscriber\SearchIndexSubscriber
         arguments:
             - '@contao.search.indexer'
+            - '@translator'
         tags:
             - { name: 'contao.escargot_subscriber' }
 

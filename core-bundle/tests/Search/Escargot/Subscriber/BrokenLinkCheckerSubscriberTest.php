@@ -25,6 +25,7 @@ use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Contracts\HttpClient\ChunkInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\CrawlUri;
 use Terminal42\Escargot\Escargot;
@@ -35,7 +36,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 {
     public function testName(): void
     {
-        $subscriber = new BrokenLinkCheckerSubscriber();
+        $subscriber = new BrokenLinkCheckerSubscriber($this->getTranslator());
 
         $this->assertSame('broken-link-checker', $subscriber->getName());
     }
@@ -68,7 +69,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             $queue->add($escargot->getJobId(), $foundOnUri);
         }
 
-        $subscriber = new BrokenLinkCheckerSubscriber();
+        $subscriber = new BrokenLinkCheckerSubscriber($this->getTranslator());
         $subscriber->setEscargot($escargot);
 
         $decision = $subscriber->shouldRequest($crawlUri);
@@ -122,7 +123,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
         $escargot = $escargot->withLogger($logger);
 
-        $subscriber = new BrokenLinkCheckerSubscriber();
+        $subscriber = new BrokenLinkCheckerSubscriber($this->getTranslator());
         $subscriber->setEscargot($escargot);
 
         $decision = $subscriber->needsContent(
@@ -204,7 +205,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
         $escargot = $escargot->withLogger($logger);
 
-        $subscriber = new BrokenLinkCheckerSubscriber();
+        $subscriber = new BrokenLinkCheckerSubscriber($this->getTranslator());
         $subscriber->setEscargot($escargot);
         $subscriber->onException(new CrawlUri(new Uri('https://contao.org'), 0), $exception, $response, $chunk);
 
@@ -284,5 +285,19 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ;
 
         return $response;
+    }
+
+    /**
+     * @return TranslatorInterface&MockObject
+     */
+    private function getTranslator(): TranslatorInterface
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturn('Foobar')
+        ;
+
+        return $translator;
     }
 }
