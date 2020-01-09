@@ -2476,8 +2476,12 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(BrokenLinkCheckerSubscriber::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
-        $this->assertSame([], $definition->getArguments());
-
+        $this->assertEquals(
+            [
+                new Reference('translator'),
+            ],
+            $definition->getArguments()
+        );
         $this->assertSame(
             [
                 'contao.escargot_subscriber' => [
@@ -2500,6 +2504,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.search.indexer'),
+                new Reference('translator'),
             ],
             $definition->getArguments()
         );
