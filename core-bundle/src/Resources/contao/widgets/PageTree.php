@@ -228,16 +228,7 @@ class PageTree extends Widget
 		}
 		else
 		{
-			$extras = array
-			(
-				'fieldType' => $this->fieldType,
-				'source' => $this->strTable . '.' . $this->currentRecord,
-			);
-
-			if (\is_array($this->rootNodes))
-			{
-				$extras['rootNodes'] = array_values($this->rootNodes);
-			}
+			$extras = $this->getPickerUrlExtras($arrValues);
 
 			$return .= '
     <p><a href="' . ampersand(System::getContainer()->get('contao.picker.builder')->getUrl('page', $extras)) . '" class="tl_submit" id="pt_' . $this->strName . '">' . $GLOBALS['TL_LANG']['MSC']['changeSelection'] . '</a></p>
@@ -267,6 +258,27 @@ class PageTree extends Widget
 		$return = '<div>' . $return . '</div></div>';
 
 		return $return;
+	}
+
+	/**
+	 * Return the extra parameters for the picker URL
+	 *
+	 * @param array $values
+	 *
+	 * @return array
+	 */
+	protected function getPickerUrlExtras($values = array())
+	{
+		$extras = array();
+		$extras['fieldType'] = $this->fieldType;
+		$extras['source'] = $this->strTable . '.' . $this->currentRecord;
+
+		if (\is_array($this->rootNodes))
+		{
+			$extras['rootNodes'] = array_values($this->rootNodes);
+		}
+
+		return $extras;
 	}
 }
 
