@@ -133,18 +133,6 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $template->isEnabled = (bool) $user->useTwoFactor;
         $template->href = $this->page->getAbsoluteUrl().'?2fa=enable';
-        $template->twoFactor = $translator->trans('MSC.twoFactorAuthentication', [], 'contao_default');
-        $template->explain = $translator->trans('MSC.twoFactorExplain', [], 'contao_default');
-        $template->active = $translator->trans('MSC.twoFactorActive', [], 'contao_default');
-        $template->enableButton = $translator->trans('MSC.enable', [], 'contao_default');
-        $template->disableButton = $translator->trans('MSC.disable', [], 'contao_default');
-        $template->backupCodesLabel = $translator->trans('MSC.twoFactorBackupCodesLabel', [], 'contao_default');
-        $template->backupCodesShow = $translator->trans('MSC.twoFactorBackupCodesShow', [], 'contao_default');
-        $template->backupCodesExplain = $translator->trans('MSC.twoFactorBackupCodesExplain', [], 'contao_default');
-        $template->backupCodesInfo = $translator->trans('MSC.twoFactorBackupCodesInfo', [], 'contao_default');
-        $template->backupCodesGenerate = $translator->trans('MSC.twoFactorBackupCodesGenerate', [], 'contao_default');
-        $template->backupCodesRegenerate = $translator->trans('MSC.twoFactorBackupCodesRegenerate', [], 'contao_default');
-        $template->backupCodesRegenerateInfo = $translator->trans('MSC.twoFactorBackupCodesRegenerateInfo', [], 'contao_default');
         $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
 
         return new Response($template->parse());
@@ -186,11 +174,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $template->enable = true;
         $template->secret = Base32::encodeUpperUnpadded($user->secret);
-        $template->textCode = $translator->trans('MSC.twoFactorTextCode', [], 'contao_default');
         $template->qrCode = base64_encode($authenticator->getQrCode($user, $request));
-        $template->scan = $translator->trans('MSC.twoFactorScan', [], 'contao_default');
-        $template->verify = $translator->trans('MSC.twoFactorVerification', [], 'contao_default');
-        $template->verifyHelp = $translator->trans('MSC.twoFactorVerificationHelp', [], 'contao_default');
 
         return null;
     }

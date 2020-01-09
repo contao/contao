@@ -58,8 +58,6 @@ class ModuleTwoFactor extends BackendModule
 		$return = $container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref));
 
 		$this->Template->href = $this->getReferer(true);
-		$this->Template->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
-		$this->Template->button = $GLOBALS['TL_LANG']['MSC']['backBT'];
 		$this->Template->ref = $ref;
 		$this->Template->action = Environment::get('indexFreeRequest');
 		$this->Template->messages = Message::generateUnwrapped();
@@ -92,18 +90,6 @@ class ModuleTwoFactor extends BackendModule
 		}
 
 		$this->Template->isEnabled = (bool) $user->useTwoFactor;
-		$this->Template->twoFactor = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
-		$this->Template->explain = $GLOBALS['TL_LANG']['MSC']['twoFactorExplain'];
-		$this->Template->active = $GLOBALS['TL_LANG']['MSC']['twoFactorActive'];
-		$this->Template->enableButton = $GLOBALS['TL_LANG']['MSC']['enable'];
-		$this->Template->disableButton = $GLOBALS['TL_LANG']['MSC']['disable'];
-		$this->Template->backupCodesLabel = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesLabel'];
-		$this->Template->backupCodesShow = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesShow'];
-		$this->Template->backupCodesExplain = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesExplain'];
-		$this->Template->backupCodesInfo = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesInfo'];
-		$this->Template->backupCodesGenerate = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesGenerate'];
-		$this->Template->backupCodesRegenerate = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesRegenerate'];
-		$this->Template->backupCodesRegenerateInfo = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesRegenerateInfo'];
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 	}
 
@@ -155,10 +141,7 @@ class ModuleTwoFactor extends BackendModule
 
 		$this->Template->enable = true;
 		$this->Template->secret = Base32::encodeUpperUnpadded($user->secret);
-		$this->Template->textCode = $GLOBALS['TL_LANG']['MSC']['twoFactorTextCode'];
 		$this->Template->qrCode = base64_encode($authenticator->getQrCode($user, $request));
-		$this->Template->scan = $GLOBALS['TL_LANG']['MSC']['twoFactorScan'];
-		$this->Template->verify = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
 		$this->Template->verifyHelp = $verifyHelp;
 	}
 
