@@ -14,13 +14,13 @@
           <h3><?= $this->trans('tl_maintenance.crawlSubscriberNames.'.$subscriber->getName()) ?></h3>
           <div class="result" data-subscriber="<?= $subscriber->getName() ?>">
             <p class="spinner show-when-running"></p>
-            <p class="subscriber-log"><a href="<?= $this->subscriberLogHrefs[$subscriber->getName()] ?>" class="tl_submit"><?= $this->trans('tl_maintenance.crawlDownloadSubscriberLog') ?></a></p>
             <p class="summary show-when-finished"></p>
             <p class="warning show-when-finished"></p>
-            <p class="show-when-finished"><a href="<?= $this->debugLogHref ?>" class="tl_submit"><?= $this->trans('tl_maintenance.crawlDownloadDebugLog') ?></a></p>
+            <p class="subscriber-log"><a href="<?= $this->subscriberLogHrefs[$subscriber->getName()] ?>" class="tl_submit"><?= $this->trans('tl_maintenance.crawlDownloadSubscriberLog') ?></a></p>
           </div>
         <?php endforeach; ?>
-        <p class="wait"><?= $this->trans('tl_maintenance.crawlWaitToBeFinished') ?></p>
+        <p class="wait show-when-running"><?= $this->trans('tl_maintenance.crawlWaitToBeFinished') ?></p>
+        <p class="debug-log show-when-finished"><a href="<?= $this->debugLogHref ?>" title="<?= Contao\StringUtil::specialchars($this->trans('tl_maintenance.crawlDownloadDebugLog')) ?>"><?= Contao\Image::getHtml('theme_import.svg') ?></a></p>
       </div>
       <script>Backend.crawl()</script>
     </div>

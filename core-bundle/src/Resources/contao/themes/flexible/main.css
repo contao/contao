@@ -598,6 +598,7 @@ h2.sub_headline {
 	margin-top:9px;
 }
 #tl_crawl .inner {
+	position:relative;
 	margin:0 18px 24px;
 }
 #tl_crawl .progress {
@@ -605,6 +606,7 @@ h2.sub_headline {
 	height:20px;
 	overflow:hidden;
 	background-color:#f0f0f2;
+	margin-right:20px;
 	border-radius:2px;
 }
 #tl_crawl .progress-bar {
@@ -625,11 +627,14 @@ h2.sub_headline {
 	background-color:#589b0e;
 }
 #tl_crawl .progress-count {
-	margin-top:6px;
+	margin:6px 0 24px;
 }
 #tl_crawl .results h3 {
 	font-size:.9rem;
-	margin:24px 0 0;
+	margin:18px 0 9px;
+}
+#tl_crawl .results p {
+	margin-bottom:6px;
 }
 #tl_crawl .results .spinner {
 	margin:0;
@@ -639,13 +644,18 @@ h2.sub_headline {
 }
 #tl_crawl .subscriber-log {
 	display:none;
-	padding:6px 0;
+	padding:5px 0;
 	margin-bottom:0;
 }
 #tl_crawl .wait {
-	margin-top:24px;
+	margin-top:18px;
 }
-#tl_crawl .results.running .show-when-finished,#tl_crawl .results.finished .show-when-running,#tl_crawl .results.finished .wait {
+#tl_crawl .debug-log {
+	position:absolute;
+	top:2px;
+	right:0;
+}
+#tl_crawl .results.running .show-when-finished,#tl_crawl .results.finished .show-when-running {
 	display:none;
 }
 #tl_crawl .results.running .show-when-running,#tl_crawl .results.finished .show-when-finished {
