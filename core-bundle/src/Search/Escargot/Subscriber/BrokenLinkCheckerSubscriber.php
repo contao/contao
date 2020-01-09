@@ -102,7 +102,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
 
         $result = new SubscriberResult(
             0 === $stats['error'],
-            $this->translator->trans('CRAWL.brokenLinkChecker.summary', [$stats['ok'], $stats['error']], 'contao_crawl')
+            $this->translator->trans('CRAWL.brokenLinkChecker.summary', [$stats['ok'], $stats['error']], 'contao_default')
         );
 
         $result->addInfo('stats', $stats);

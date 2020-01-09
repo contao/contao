@@ -194,11 +194,11 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
         $result = new SubscriberResult(
             0 === $stats['error'],
-            $this->translator->trans('CRAWL.searchIndex.summary', [$stats['ok'], $stats['error']], 'contao_crawl')
+            $this->translator->trans('CRAWL.searchIndex.summary', [$stats['ok'], $stats['error']], 'contao_default')
         );
 
         if (0 !== $stats['warning']) {
-            $result->setWarning($this->translator->trans('CRAWL.searchIndex.warning', [$stats['warning']], 'contao_crawl'));
+            $result->setWarning($this->translator->trans('CRAWL.searchIndex.warning', [$stats['warning']], 'contao_default'));
         }
 
         $result->addInfo('stats', $stats);
