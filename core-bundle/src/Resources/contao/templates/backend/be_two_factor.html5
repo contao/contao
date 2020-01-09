@@ -51,7 +51,7 @@
           <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_show_backup_codes">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
           <div class="submit_container cf">
-            <button type="submit" class="tl_submit"><?= $this->backupCodesShow ?></button>
+            <button type="submit" class="tl_submit"><?= empty($this->backupCodes) ? $this->backupCodesGenerate : $this->backupCodesShow ?></button>
           </div>
         </form>
       <?php else: ?>
@@ -67,10 +67,10 @@
           <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_generate_backup_codes">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
           <div class="submit_container cf">
-            <button type="submit" class="tl_submit"><?= $this->backupCodesGenerate ?></button>
+            <button type="submit" class="tl_submit"><?= $this->backupCodesRegenerate ?></button>
           </div>
         </form>
-        <p><?= $this->backupCodesGenerateInfo ?></p>
+        <p><?= $this->backupCodesRegenerateInfo ?></p>
       <?php endif; ?>
     </div>
   <?php else: ?>

@@ -117,19 +117,18 @@ class TwoFactorController extends AbstractFrontendModuleController
             }
         }
 
-        $showBackupCodes = false;
-
         if ('tl_two_factor_show_backup_codes' === $request->request->get('FORM_SUBMIT')) {
-            $showBackupCodes = true;
-
             if (!$user->backupCodes || !\count(json_decode($user->backupCodes, true))) {
                 $this->generateBackupCodes($user);
             }
+
+            $template->showBackupCodes = true;
         }
 
         if ('tl_two_factor_generate_backup_codes' === $request->request->get('FORM_SUBMIT')) {
-            $showBackupCodes = true;
             $this->generateBackupCodes($user);
+
+            $template->showBackupCodes = true;
         }
 
         $template->isEnabled = (bool) $user->useTwoFactor;
@@ -144,8 +143,8 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->backupCodesExplain = $translator->trans('MSC.twoFactorBackupCodesExplain', [], 'contao_default');
         $template->backupCodesInfo = $translator->trans('MSC.twoFactorBackupCodesInfo', [], 'contao_default');
         $template->backupCodesGenerate = $translator->trans('MSC.twoFactorBackupCodesGenerate', [], 'contao_default');
-        $template->backupCodesGenerateInfo = $translator->trans('MSC.twoFactorBackupCodesGenerateInfo', [], 'contao_default');
-        $template->showBackupCodes = $showBackupCodes;
+        $template->backupCodesRegenerate = $translator->trans('MSC.twoFactorBackupCodesRegenerate', [], 'contao_default');
+        $template->backupCodesRegenerateInfo = $translator->trans('MSC.twoFactorBackupCodesRegenerateInfo', [], 'contao_default');
         $template->backupCodes = json_decode((string) $user->backupCodes, true) ?? [];
 
         return new Response($template->parse());

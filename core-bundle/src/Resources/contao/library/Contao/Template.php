@@ -57,7 +57,8 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property string       $backupCodesExplain
  * @property string       $backupCodesInfo
  * @property string       $backupCodesGenerate
- * @property string       $backupCodesGenerateInfo
+ * @property string       $backupCodesRegenerate
+ * @property string       $backupCodesRegenerateInfo
  * @property boolean      $showBackupCodes
  * @property array        $backupCodes
  *

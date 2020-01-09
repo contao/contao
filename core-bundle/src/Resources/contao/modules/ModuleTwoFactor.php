@@ -74,22 +74,21 @@ class ModuleTwoFactor extends BackendModule
 			$this->disableTwoFactor($user, $return);
 		}
 
-		$showBackupCodes = false;
-
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_show_backup_codes')
 		{
-			$showBackupCodes = true;
-
 			if (!$user->backupCodes || !\count(json_decode($user->backupCodes, true)))
 			{
 				$this->generateBackupCodes($user);
 			}
+
+			$this->Template->showBackupCodes = true;
 		}
 
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_generate_backup_codes')
 		{
-			$showBackupCodes = true;
 			$this->generateBackupCodes($user);
+
+			$this->Template->showBackupCodes = true;
 		}
 
 		$this->Template->isEnabled = (bool) $user->useTwoFactor;
@@ -98,13 +97,13 @@ class ModuleTwoFactor extends BackendModule
 		$this->Template->active = $GLOBALS['TL_LANG']['MSC']['twoFactorActive'];
 		$this->Template->enableButton = $GLOBALS['TL_LANG']['MSC']['enable'];
 		$this->Template->disableButton = $GLOBALS['TL_LANG']['MSC']['disable'];
-		$this->Template->showBackupCodes = $showBackupCodes;
 		$this->Template->backupCodesLabel = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesLabel'];
 		$this->Template->backupCodesShow = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesShow'];
 		$this->Template->backupCodesExplain = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesExplain'];
 		$this->Template->backupCodesInfo = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesInfo'];
 		$this->Template->backupCodesGenerate = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesGenerate'];
-		$this->Template->backupCodesGenerateInfo = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesGenerateInfo'];
+		$this->Template->backupCodesRegenerate = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesRegenerate'];
+		$this->Template->backupCodesRegenerateInfo = $GLOBALS['TL_LANG']['MSC']['twoFactorBackupCodesRegenerateInfo'];
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 	}
 
@@ -190,12 +189,10 @@ class ModuleTwoFactor extends BackendModule
 	 *
 	 * @param BackendUser $user
 	 */
-	private function generateBackupCodes(BackendUser $user): void
+	private function generateBackupCodes(BackendUser $user)
 	{
-		$container = System::getContainer();
-
 		/** @var BackupCodeManager $backupCodeManager */
-		$backupCodeManager = $container->get('contao.security.two_factor.backup_code_manager');
+		$backupCodeManager = System::getContainer()->get('contao.security.two_factor.backup_code_manager');
 		$backupCodeManager->generateBackupCodes($user);
 	}
 }

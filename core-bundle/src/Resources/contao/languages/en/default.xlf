@@ -1932,10 +1932,13 @@
         <source>Put these in a safe spot. If you lose your device and do not have backup codes, you cannot access your account anymore!</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
-        <source>Generate new backup codes</source>
+        <source>Generate backup codes</source>
       </trans-unit>
-      <trans-unit id="MSC.twoFactorBackupCodesGenerateInfo">
-        <source>When you generate new backup codes, your old codes will not work anymore.</source>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
+        <source>Regenerate backup codes</source>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
+        <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
