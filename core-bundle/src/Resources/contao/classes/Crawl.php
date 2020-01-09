@@ -54,16 +54,15 @@ class Crawl extends Backend implements \executable
 	 */
 	public function run()
 	{
-		$template = new BackendTemplate('be_crawl');
-		$template->action = ampersand(Environment::get('request'));
-		$template->isActive = $this->isActive();
-
 		/** @var Factory $factory */
 		$factory = System::getContainer()->get('contao.search.escargot_factory');
 		$subscriberNames = $factory->getSubscriberNames();
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
 		$memberWidget = $this->generateMemberWidget();
 
+		$template = new BackendTemplate('be_crawl');
+		$template->action = ampersand(Environment::get('request'));
+		$template->isActive = $this->isActive();
 		$template->subscribersWidget = $subscribersWidget;
 		$template->memberWidget = $memberWidget;
 
@@ -73,15 +72,16 @@ class Crawl extends Backend implements \executable
 		}
 
 		$activeSubscribers = $subscribersWidget->value;
+
 		$template->isRunning = true;
 		$template->activeSubscribers = $factory->getSubscribers($activeSubscribers);
 
-		$jobId = \Input::get('jobId');
+		$jobId = Input::get('jobId');
 		$queue = $factory->createLazyQueue();
 		$debugLogPath = sys_get_temp_dir() . '/contao-crawl/' . $jobId . '.log';
 		$resultCache = sys_get_temp_dir() . '/contao-crawl/' . $jobId . '.result-cache';
 
-		if ($downloadLog = \Input::get('downloadLog'))
+		if ($downloadLog = Input::get('downloadLog'))
 		{
 			if ('debug' === $downloadLog)
 			{
@@ -106,7 +106,8 @@ class Crawl extends Backend implements \executable
 
 		if ($memberWidget->value)
 		{
-			$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')->execute((int) $memberWidget->value);
+			$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')
+												->execute((int) $memberWidget->value);
 
 			if (!$objAuthenticator->authenticateFrontendUser($objMember->username, false))
 			{
@@ -119,7 +120,7 @@ class Crawl extends Backend implements \executable
 				$session = System::getContainer()->get('session');
 				$clientOptions = array('headers' => array('Cookie' => sprintf('%s=%s', $session->getName(), $session->getId())));
 
-				// Closing the session is necessary here as otherwise we run into our own session lock.
+				// Closing the session is necessary here as otherwise we run into our own session lock
 				// TODO: we need a way to authenticate with a token instead of our own cookie
 				$session->save();
 			}
@@ -135,7 +136,7 @@ class Crawl extends Backend implements \executable
 			$baseUris = $factory->getSearchUriCollection();
 			$escargot = $factory->create($baseUris, $queue, $activeSubscribers, $clientOptions);
 
-			Controller::redirect(\Controller::addToUrl('&jobId=' . $escargot->getJobId()));
+			Controller::redirect(Controller::addToUrl('&jobId=' . $escargot->getJobId()));
 		}
 
 		$escargot = null;
@@ -149,7 +150,7 @@ class Crawl extends Backend implements \executable
 			Controller::redirect(str_replace('&jobId=' . $jobId, '', Environment::get('request')));
 		}
 
-		// Configure with sane defaults for the back end. Maybe we should make this configurable one day.
+		// Configure with sane defaults for the back end (maybe we should make this configurable one day)
 		$escargot = $escargot
 			->withConcurrency(5)
 			->withMaxDepth(32)
@@ -210,14 +211,14 @@ class Crawl extends Backend implements \executable
 			throw new ResponseException($response);
 		}
 
-		$template->debugLogHref = \Controller::addToUrl('&jobId=' . $escargot->getJobId() . '&downloadLog=debug');
+		$template->debugLogHref = Controller::addToUrl('&jobId=' . $escargot->getJobId() . '&downloadLog=debug');
 
 		$subscriberLogHrefs = array();
 
 		foreach ($factory->getSubscribers($activeSubscribers) as $subscriber)
 		{
 			$name = $subscriber->getName();
-			$subscriberLogHrefs[$name] = \Controller::addToUrl('&jobId=' . $escargot->getJobId() . '&downloadLog=' . $name);
+			$subscriberLogHrefs[$name] = Controller::addToUrl('&jobId=' . $escargot->getJobId() . '&downloadLog=' . $name);
 		}
 
 		$template->subscriberLogHrefs = $subscriberLogHrefs;
@@ -268,7 +269,7 @@ class Crawl extends Backend implements \executable
 		$widget = new CheckBox();
 		$widget->id = $name;
 		$widget->name = $name;
-		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscribersLabel'][0];
+		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscribers'][0];
 		$widget->mandatory = true;
 		$widget->multiple = true;
 		$widget->setInputCallback($this->getInputCallback($name));
@@ -311,7 +312,7 @@ class Crawl extends Backend implements \executable
 		$widget = new SelectMenu();
 		$widget->id = $name;
 		$widget->name = $name;
-		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlMemberLabel'][0];
+		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlMember'][0];
 		$widget->setInputCallback($this->getInputCallback($name));
 
 		$time = time();
@@ -363,7 +364,7 @@ class Crawl extends Backend implements \executable
 	{
 		return static function () use ($name)
 		{
-			return \Input::get($name);
+			return Input::get($name);
 		};
 	}
 }

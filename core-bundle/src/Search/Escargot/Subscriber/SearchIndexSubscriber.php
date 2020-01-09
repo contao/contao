@@ -191,7 +191,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
         );
 
         if (0 !== $stats['warning']) {
-            $result->setWarning(sprintf('%d URI(s) were skipped (if you are missing one, checkout the debug logs).', $stats['warning']));
+            $result->setWarning(sprintf('%d URI(s) were skipped (if you are missing one, checkout the debug log).', $stats['warning']));
         }
 
         $result->addInfo('stats', $stats);

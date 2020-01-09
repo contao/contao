@@ -1,205 +1,52 @@
-<style>
-  @keyframes crawl-progress-bar-stripes {
-    0% {
-      background-position-x: 1rem;
-    }
-  }
 
-  #tl_crawl .inner {
-    margin: 15px;
-  }
+<div id="tl_crawl" class="maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
 
-  #tl_crawl .progress {
-    display: flex;
-    height: 20px;
-    overflow: hidden;
-    background-color: #f0f0f2;
-  }
+  <h2 class="sub_headline sub_headline_index"><?= $this->trans('tl_maintenance.crawler') ?></h2>
 
-  #tl_crawl .progress-bar {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: white;
-    text-align: center;
-    white-space: nowrap;
-    background-size: 10px 10px;
-  }
-
-  #tl_crawl .progress-bar.running {
-    background-color: #f47c00;
-    background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
-    animation: crawl-progress-bar-stripes 1s linear infinite;
-  }
-
-  #tl_crawl .progress-bar.finished {
-    background-color: #589b0e;
-  }
-
-  #tl_crawl .progress-count {
-    margin-top: 5px;
-  }
-
-  #tl_crawl .results {
-    margin-top: 15px;
-  }
-
-  #tl_crawl .results h3 {
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-  }
-
-  #tl_crawl .results .spinner {
-    margin: 0;
-    padding: 12px;
-    background: url(../../system/themes/flexible/icons/loading.svg) no-repeat left center;
-    background-size: 16px;
-  }
-
-  #tl_crawl .results.running .show-when-running {
-    display: inherit;
-  }
-
-  #tl_crawl .results.finished .show-when-running {
-    display: none;
-  }
-
-  #tl_crawl .results.running .show-when-finished {
-    display: none;
-  }
-
-  #tl_crawl .results.finished .show-when-finished {
-    display: inherit;
-  }
-
-  #tl_crawl .result .summary.success {
-    color: green;
-  }
-
-  #tl_crawl .result .summary.failure {
-    color: red;
-  }
-
-  #tl_crawl .result .warning {
-    display: none;
-    color: orange;
-  }
-</style>
-
-<div id="tl_crawl" class="tl_box maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
-  <h2 class="sub_headline sub_headline_index">
-    Crawler
-    <a href="<?= $this->debugLogHref ?>" title="<?= $GLOBALS['TL_LANG']['tl_maintenance']['crawlDebugLogFileTitle'] ?>" class="debugLog" style="display: none; float: right;"><img src="system/themes/flexible/icons/show.svg" alt="" width="16" height="16" role="presentation"></a>
-  </h2>
   <?php if ($this->isRunning): ?>
     <div class="inner">
       <div class="progress">
-        <div class="progress-bar running" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+        <div class="progress-bar running" role="progressbar" style="width:0" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
       </div>
-      <div class="progress-count">0 / 0</div>
-
+      <p class="progress-count">0 / 0</p>
       <div class="results running">
         <?php foreach ($this->activeSubscribers as $subscriber): ?>
-          <h3><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscriberNames'][$subscriber->getName()] ?></h3>
-          <div data-subscriber="<?= $subscriber->getName() ?>" class="result">
-              <span class="spinner show-when-running"></span>
-              <p class="show-when-running"><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawlWaitToBeFinished'] ?></p>
-              <a class="show-when-finished log" style="display: none" href="<?= $this->subscriberLogHrefs[$subscriber->getName()] ?>" title="<?= specialchars(sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscriberLogFileTitle'], $GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscriberNames'][$subscriber->getName()])) ?>">
-                <img src="system/themes/flexible/icons/show.svg" alt="" width="16" height="16" role="presentation">
-              </a>
-              <p class="summary show-when-finished"></p>
-              <p class="warning show-when-finished"></p>
+          <h3><?= $this->trans('tl_maintenance.crawlSubscriberNames.'.$subscriber->getName()) ?></h3>
+          <div class="result" data-subscriber="<?= $subscriber->getName() ?>">
+            <p class="spinner show-when-running"></p>
+            <p class="subscriber-log"><a href="<?= $this->subscriberLogHrefs[$subscriber->getName()] ?>" class="tl_submit"><?= $this->trans('tl_maintenance.crawlDownloadSubscriberLog') ?></a></p>
+            <p class="summary show-when-finished"></p>
+            <p class="warning show-when-finished"></p>
+            <p class="show-when-finished"><a href="<?= $this->debugLogHref ?>" class="tl_submit"><?= $this->trans('tl_maintenance.crawlDownloadDebugLog') ?></a></p>
           </div>
         <?php endforeach; ?>
+        <p class="wait"><?= $this->trans('tl_maintenance.crawlWaitToBeFinished') ?></p>
       </div>
-
-      <script>
-          (function(){
-              var timeout = 2000;
-              var progressBar = $$('#tl_crawl .progress-bar')[0];
-              var progressCount = $$('#tl_crawl .progress-count')[0];
-              var resultsBox = $$('#tl_crawl .results')[0];
-              var debugLog = $$('#tl_crawl .debugLog')[0];
-
-              function updateData(response) {
-                  var done = response.total - response.pending;
-                  var percentage = parseInt(100 / response.total * done, 10);
-
-                  progressBar.setStyle('width', percentage + '%');
-                  progressBar.set('html', percentage + '%');
-                  progressBar.setAttribute('aria-valuenow', percentage);
-                  progressCount.set('html', done + ' / ' + response.total);
-
-                  if (!response.finished) {
-                      return;
-                  }
-
-                  progressBar.removeClass('running').addClass('finished');
-                  resultsBox.removeClass('running').addClass('finished');
-
-                  if (response.hasDebugLog) {
-                      debugLog.setStyle('display', 'block');
-                  }
-
-                  for (result in response.results) {
-                      if (response.results.hasOwnProperty(result)) {
-                          var summaryEl = $$('#tl_crawl .results .result[data-subscriber="' + result + '"] p.summary')[0];
-                          var warningEl = $$('#tl_crawl .results .result[data-subscriber="' + result + '"] p.warning')[0];
-                          var logEl = $$('#tl_crawl .results .result[data-subscriber="' + result + '"] a.log')[0];
-                          var subscriberResults = response.results[result];
-                          var summary = subscriberResults.summary;
-
-                          if (subscriberResults.warning) {
-                              warningEl.set('html', subscriberResults.warning);
-                          }
-
-                          if (subscriberResults.hasLog) {
-                              logEl.setStyle('display', 'inline');
-                          }
-
-                          summaryEl.addClass(subscriberResults.wasSuccessful ? 'success' : 'failure');
-                          summaryEl.set('html', summary);
-                      }
-                  }
-              }
-
-              function execRequest() {
-                  new Request({
-                      url: window.location.href,
-                      onSuccess: function(responseText) {
-                          var response = JSON.decode(responseText);
-
-                          updateData(response);
-
-                          if (!response.finished) {
-                              setTimeout(execRequest, timeout);
-                          }
-                      }
-                  }).send();
-              }
-
-              execRequest();
-          })()
-      </script>
+      <script>Backend.crawl()</script>
     </div>
-
   <?php else: ?>
     <form action="<?= $this->action ?>" class="tl_form" method="get">
       <div class="tl_formbody_edit">
         <input type="hidden" name="do" value="maintenance">
         <input type="hidden" name="act" value="crawl">
         <input type="hidden" name="rt" value="<?= REQUEST_TOKEN ?>">
-        <div class="widget w50 autoheight">
-          <?= $this->subscribersWidget->parse() ?>
-          <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscribersLabel'][1] ?></p>
-        </div>
-        <div class="widget w50">
-          <?= $this->memberWidget->parse() ?>
-          <p class="tl_help tl_tip" title=""><?= $GLOBALS['TL_LANG']['tl_maintenance']['crawlMemberLabel'][1] ?></p>
+        <div class="tl_tbox">
+          <div>
+            <?= $this->subscribersWidget->parse() ?>
+            <?php if (!$this->subscribersWidget->hasErrors()): ?>
+              <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlSubscribers.1') ?></p>
+            <?php endif; ?>
+          </div>
+          <div>
+            <?= $this->memberWidget->parse() ?>
+            <?php if (!$this->memberWidget->hasErrors()): ?>
+              <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlMember.1') ?></p>
+            <?php endif; ?>
+          </div>
         </div>
       </div>
-      <div class="tl_submit_container clr">
-        <button type="submit" id="index" class="tl_submit">Start crawling</button>
+      <div class="tl_submit_container">
+        <button type="submit" class="tl_submit"><?= $this->trans('tl_maintenance.startCrawling') ?></button>
       </div>
     </form>
   <?php endif; ?>
