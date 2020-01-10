@@ -92,12 +92,6 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\Base64EncodedRedirectController:
-        arguments:
-            - '@uri_signer'
-        tags:
-            - controller.service_arguments
-
     # Backwards compatibility
     contao.controller.backend_csv_import:
         alias: Contao\CoreBundle\Controller\BackendCsvImportController
@@ -578,9 +572,6 @@ services:
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:
-            - '@http_kernel'
-            - '@security.http_utils'
-            - []
             - '@?logger'
 
     contao.security.authentication_listener:
@@ -612,7 +603,6 @@ services:
     contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
         arguments:
-            - '@security.http_utils'
             - '@contao.framework'
             - '@?logger'
 

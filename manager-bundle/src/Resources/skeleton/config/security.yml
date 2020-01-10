@@ -27,9 +27,6 @@ security:
             switch_user: true
 
             contao_login:
-                login_path: contao_backend_login
-                check_path: contao_backend_login
-                default_target_path: contao_backend
                 remember_me: false
 
             two_factor:
@@ -54,8 +51,6 @@ security:
             switch_user: false
 
             contao_login:
-                default_target_path: contao_root
-                failure_path: contao_root
                 remember_me: true
 
             two_factor:
