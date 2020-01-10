@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Patchwork\Utf8;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
+use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
@@ -59,14 +60,25 @@ class ModuleLogin extends Module
 			return $objTemplate->parse();
 		}
 
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
+
+		// If the form was submitted and the credentials were wrong, take the target path from the submitted data
+		// as otherwise it would take the current page
 		if ($_POST)
 		{
 			$this->targetPath = (string) Input::post('_target_path');
 		}
-		elseif ($this->redirectBack && ($referer = Input::get('referer', true)))
+		elseif ($this->redirectBack && $request && $request->query->has('redirect'))
 		{
-			// Decode the referer and urlencode insert tags
-			$this->targetPath = Environment::get('base') . str_replace(array('{', '}'), array('%7B', '%7D'), base64_decode($referer, true));
+			/** @var UriSigner $uriSigner */
+			$uriSigner = $container->get('uri_signer');
+
+			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+			if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
+			{
+				$this->targetPath = base64_decode($request->query->get('redirect'));
+			}
 		}
 
 		return parent::generate();
@@ -84,6 +96,9 @@ class ModuleLogin extends Module
 
 		/** @var Router $router */
 		$router = $container->get('router');
+
+		/** @var UriSigner $uriSigner */
+		$uriSigner = $container->get('uri_signer');
 
 		/** @var AuthenticationException|null $exception */
 		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
@@ -172,6 +187,12 @@ class ModuleLogin extends Module
 			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 
+		$request = $container->get('request_stack')->getCurrentRequest();
+
+		// Ensure we do not output any possible dangerous data (redirect back to previous URL allows for URL param injection)
+		$targetPath = $uriSigner->sign($router->generate('contao_base64_redirect', array('redirect' => base64_encode($strRedirect)), Router::ABSOLUTE_URL));
+		$failurePath = $uriSigner->sign($router->generate('contao_base64_redirect', array('redirect' => base64_encode($request->getUri())), Router::ABSOLUTE_URL));
+
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->action = $router->generate('contao_frontend_login');
@@ -181,8 +202,8 @@ class ModuleLogin extends Module
 		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 		$this->Template->forceTargetPath = (int) $blnRedirectBack;
-		$this->Template->targetPath = StringUtil::specialchars($strRedirect);
-		$this->Template->failurePath = StringUtil::specialchars(Environment::get('base') . Environment::get('request'));
+		$this->Template->targetPath = StringUtil::specialchars($targetPath);
+		$this->Template->failurePath = StringUtil::specialchars($failurePath);
 	}
 }
 

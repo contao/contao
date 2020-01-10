@@ -30,6 +30,7 @@ use Contao\CoreBundle\Controller\BackendController;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Controller\BackendPreviewController;
 use Contao\CoreBundle\Controller\BackendPreviewSwitchController;
+use Contao\CoreBundle\Controller\Base64EncodedRedirectController;
 use Contao\CoreBundle\Controller\FaviconController;
 use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
@@ -839,6 +840,31 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('%contao.csrf_token_name%'),
             ],
             $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheBase64EncodedRedirectController(): void
+    {
+        $this->assertTrue($this->container->has(Base64EncodedRedirectController::class));
+
+        $definition = $this->container->getDefinition(Base64EncodedRedirectController::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('uri_signer'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'controller.service_arguments' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
         );
     }
 
@@ -2622,6 +2648,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('security.http_utils'),
                 new Reference('router'),
+                new Reference('uri_signer'),
             ],
             $definition->getArguments()
         );

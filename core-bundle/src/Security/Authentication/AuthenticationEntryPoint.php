@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Authentication;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -32,12 +33,18 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
     private $router;
 
     /**
+     * @var UriSigner
+     */
+    private $uriSigner;
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.security.entry_point" service instead
      */
-    public function __construct(HttpUtils $httpUtils, RouterInterface $router)
+    public function __construct(HttpUtils $httpUtils, RouterInterface $router, UriSigner $uriSigner)
     {
         $this->httpUtils = $httpUtils;
         $this->router = $router;
+        $this->uriSigner = $uriSigner;
     }
 
     /**
@@ -51,10 +58,10 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 
         $url = $this->router->generate(
             'contao_backend_login',
-            ['referer' => base64_encode($request->getQueryString())],
+            ['redirect' => $request->getUri()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return $this->httpUtils->createRedirectResponse($request, $url);
+        return $this->httpUtils->createRedirectResponse($request, $this->uriSigner->sign($url));
     }
 }

@@ -92,6 +92,12 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\Base64EncodedRedirectController:
+        arguments:
+            - '@uri_signer'
+        tags:
+            - controller.service_arguments
+
     # Backwards compatibility
     contao.controller.backend_csv_import:
         alias: Contao\CoreBundle\Controller\BackendCsvImportController
@@ -610,6 +616,7 @@ services:
         arguments:
             - '@security.http_utils'
             - '@router'
+            - '@uri_signer'
 
     contao.security.expiring_token_based_remember_me_services:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
