@@ -22,14 +22,8 @@ class ContaoLoginAuthenticationListener extends UsernamePasswordFormAuthenticati
      */
     protected function requiresAuthentication(Request $request): bool
     {
-        if (
-            !$request->isMethod('POST')
-            || !$request->request->has('FORM_SUBMIT')
-            || 0 !== strncmp($request->request->get('FORM_SUBMIT'), 'tl_login', 8)
-        ) {
-            return false;
-        }
-
-        return parent::requiresAuthentication($request);
+        return $request->isMethod('POST')
+            && $request->request->has('FORM_SUBMIT')
+            && 0 === strncmp($request->request->get('FORM_SUBMIT'), 'tl_login', 8);
     }
 }

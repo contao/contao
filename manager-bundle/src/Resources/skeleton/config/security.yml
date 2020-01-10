@@ -20,7 +20,6 @@ security:
             security: false
 
         contao_backend:
-            entry_point: contao.security.entry_point
             request_matcher: contao.routing.backend_matcher
             provider: contao.security.backend_user_provider
             user_checker: contao.security.user_checker
@@ -55,12 +54,9 @@ security:
             switch_user: false
 
             contao_login:
-                login_path: contao_frontend_login
-                check_path: contao_frontend_login
                 default_target_path: contao_root
                 failure_path: contao_root
                 remember_me: true
-                use_forward: true
 
             two_factor:
                 auth_form_path: contao_frontend_two_factor

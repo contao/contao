@@ -80,4 +80,9 @@ class ContaoLoginFactory extends FormLoginFactory
 
         return $provider;
     }
+
+    protected function createEntryPoint($container, $id, $config, $defaultEntryPoint)
+    {
+        return 'contao.security.entry_point';
+    }
 }

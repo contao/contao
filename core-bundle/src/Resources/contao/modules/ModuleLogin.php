@@ -174,7 +174,7 @@ class ModuleLogin extends Module
 
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
-		$this->Template->action = $router->generate('contao_frontend_login');
+		$this->Template->action = ampersand(\Environment::get('indexFreeRequest'));
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
 		$this->Template->value = StringUtil::specialchars($container->get('security.authentication_utils')->getLastUsername());
 		$this->Template->formId = 'tl_login_' . $this->id;

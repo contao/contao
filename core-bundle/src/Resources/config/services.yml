@@ -626,6 +626,8 @@ services:
         arguments:
             - '@security.http_utils'
             - '@router'
+            - '@contao.framework'
+            - '@contao.routing.scope_matcher'
 
     contao.security.expiring_token_based_remember_me_services:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
