@@ -187,7 +187,15 @@ class Factory
 
     private function createHttpClient(array $options = []): HttpClientInterface
     {
-        return HttpClient::create(array_merge_recursive($this->getDefaultHttpClientOptions(), $options));
+        return HttpClient::create(
+            array_merge_recursive(
+                [
+                    'headers' => ['accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'],
+                    'max_duration' => 10, // Ignore requests that take longer than 10 seconds
+                ],
+                array_merge_recursive($this->getDefaultHttpClientOptions(), $options)
+            )
+        );
     }
 
     private function registerDefaultSubscribers(Escargot $escargot): void
