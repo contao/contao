@@ -132,8 +132,7 @@ EOT;
 		$placeholder = bin2hex(random_bytes(10));
 
 		// Pass a detached clone with the alias set to the placeholder
-		$tempModel = clone $model;
-		$tempModel->{$tempModel::getPk()} = $model->{$model::getPk()};
+		$tempModel = $model->cloneOriginal();
 		$tempModel->origAlias = $tempModel->$aliasField;
 		$tempModel->$aliasField = $placeholder;
 		$tempModel->preventSaving(false);
