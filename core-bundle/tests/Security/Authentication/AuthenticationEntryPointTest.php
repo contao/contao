@@ -16,16 +16,15 @@ use Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\HttpUtils;
 
 class AuthenticationEntryPointTest extends TestCase
 {
-    public function testAddsTheRefererToTheRedirectUrl(): void
+    public function testSignsTheRedirectUrl(): void
     {
-        $request = new Request();
-        $request->server->set('QUERY_STRING', 'do=page');
-        $request->query->add(['do' => 'page']);
+        $request = Request::create('http://localhost/contao/login?redirect=https%3A%2F%2Fcontao.org%2Fpreview.php%2Fabout-contao.html');
 
         $httpUtils = $this->createMock(HttpUtils::class);
         $httpUtils
@@ -38,21 +37,19 @@ class AuthenticationEntryPointTest extends TestCase
             )
         ;
 
-        $url = 'http://localhost/contao/login?referer='.base64_encode('do=page');
-
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->once())
             ->method('generate')
-            ->with('contao_backend_login', ['referer' => base64_encode('do=page')])
-            ->willReturn($url)
+            ->with('contao_backend_login', ['redirect' => $request->getUri()])
+            ->willReturn('http://localhost/contao/login?redirect=https%3A%2F%2Fcontao.org%2Fpreview.php%2Fabout-contao.html')
         ;
 
-        $entryPoint = new AuthenticationEntryPoint($httpUtils, $router);
+        $entryPoint = new AuthenticationEntryPoint($httpUtils, $router, new UriSigner('secret'));
         $response = $entryPoint->start($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame($url, $response->getTargetUrl());
+        $this->assertSame('http://localhost/contao/login?_hash=%2FxSCw6cwMlws5DEhBCvs0%2F75oQA8q%2FgMkZEnYCf6QSE%3D&redirect=https%3A%2F%2Fcontao.org%2Fpreview.php%2Fabout-contao.html', $response->getTargetUrl());
     }
 
     public function testDoesNotAddARefererToTheRedirectUrlIfTheQueryIsEmpty(): void
@@ -73,7 +70,7 @@ class AuthenticationEntryPointTest extends TestCase
             ->method('generate')
         ;
 
-        $entryPoint = new AuthenticationEntryPoint($httpUtils, $router);
+        $entryPoint = new AuthenticationEntryPoint($httpUtils, $router, new UriSigner('secret'));
         $response = $entryPoint->start($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);

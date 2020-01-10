@@ -19,6 +19,7 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageError401;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -38,6 +39,11 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
     private $router;
 
     /**
+     * @var UriSigner
+     */
+    private $uriSigner;
+
+    /**
      * @var ContaoFramework
      */
     private $framework;
@@ -50,10 +56,11 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.entry_point" service instead
      */
-    public function __construct(HttpUtils $httpUtils, RouterInterface $router, ContaoFramework $framework, ScopeMatcher $scopeMatcher)
+    public function __construct(HttpUtils $httpUtils, RouterInterface $router, UriSigner $uriSigner, ContaoFramework $framework, ScopeMatcher $scopeMatcher)
     {
         $this->httpUtils = $httpUtils;
         $this->router = $router;
+        $this->uriSigner = $uriSigner;
         $this->framework = $framework;
         $this->scopeMatcher = $scopeMatcher;
     }
@@ -93,10 +100,10 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 
         $url = $this->router->generate(
             'contao_backend_login',
-            ['referer' => base64_encode($request->getQueryString())],
+            ['redirect' => $request->getUri()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return $this->httpUtils->createRedirectResponse($request, $url);
+        return $this->httpUtils->createRedirectResponse($request, $this->uriSigner->sign($url));
     }
 }
