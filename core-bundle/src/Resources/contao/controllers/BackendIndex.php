@@ -68,10 +68,8 @@ class BackendIndex extends Backend
 		}
 
 		$router = $container->get('router');
-
 		$targetPath = $router->generate('contao_backend', array(), Router::ABSOLUTE_URL);
 		$failurePath = $router->generate('contao_backend_login', array(), Router::ABSOLUTE_URL);
-
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		if ($request && $request->query->has('redirect'))
@@ -79,25 +77,12 @@ class BackendIndex extends Backend
 			/** @var UriSigner $uriSigner */
 			$uriSigner = $container->get('uri_signer');
 
-			// we cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
 			if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
 			{
 				$redirectParams = array('redirect' => base64_encode($request->query->get('redirect')));
-
-				$targetPath =  $uriSigner->sign(
-					$router->generate(
-						'contao_base64_redirect',
-						$redirectParams,
-						Router::ABSOLUTE_URL
-					)
-				);
-				$failurePath = $uriSigner->sign(
-					$router->generate(
-						'contao_base64_redirect',
-						array('redirect' => $router->generate('contao_backend_login', $redirectParams, Router::ABSOLUTE_URL)),
-						Router::ABSOLUTE_URL
-					)
-				);
+				$targetPath = $uriSigner->sign($router->generate('contao_base64_redirect', $redirectParams, Router::ABSOLUTE_URL));
+				$failurePath = $uriSigner->sign($router->generate('contao_base64_redirect', array('redirect' => $router->generate('contao_backend_login', $redirectParams, Router::ABSOLUTE_URL)), Router::ABSOLUTE_URL));
 			}
 		}
 

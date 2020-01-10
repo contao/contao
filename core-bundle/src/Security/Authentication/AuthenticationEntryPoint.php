@@ -56,12 +56,12 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
             return $this->httpUtils->createRedirectResponse($request, 'contao_backend_login');
         }
 
-        $url = $this->uriSigner->sign($this->router->generate(
+        $url = $this->router->generate(
             'contao_backend_login',
             ['redirect' => $request->getUri()],
             UrlGeneratorInterface::ABSOLUTE_URL
-        ));
+        );
 
-        return $this->httpUtils->createRedirectResponse($request, $url);
+        return $this->httpUtils->createRedirectResponse($request, $this->uriSigner->sign($url));
     }
 }

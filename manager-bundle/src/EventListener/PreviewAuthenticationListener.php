@@ -71,10 +71,12 @@ class PreviewAuthenticationListener
             return;
         }
 
-        $event->setResponse(
-            new RedirectResponse($this->uriSigner->sign($this->router->generate('contao_backend_login', [
-                'redirect' => $request->getUri(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL)))
+        $url = $this->router->generate(
+            'contao_backend_login',
+            ['redirect' => $request->getUri()],
+            UrlGeneratorInterface::ABSOLUTE_URL
         );
+
+        $event->setResponse(new RedirectResponse($this->uriSigner->sign($url)));
     }
 }

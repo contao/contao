@@ -23,35 +23,36 @@ class Base64EncodedRedirectControllerTest extends TestCase
 {
     public function testReturnsBadRequestIfNoRedirectQueryParameterWasProvided(): void
     {
+        $request = Request::create('https://contao.org/_contao/base64_redirect?foobar=nonsense');
+        $controller = new Base64EncodedRedirectController(new UriSigner('secret'));
+
         $this->expectException(BadRequestHttpException::class);
 
-        $request = Request::create('https://contao.org/_contao/base64_redirect?foobar=nonsense');
-
-        $controller = new Base64EncodedRedirectController(new UriSigner('secret'));
         $controller->renderAction($request);
     }
 
     public function testReturnsBadRequestIfUrlSigningWasIncorrect(): void
     {
-        $this->expectException(BadRequestHttpException::class);
-
         $redirect = base64_encode('https://contao.org/preview.php/about-contao.html');
         $request = Request::create('https://contao.org/_contao/base64_redirect?_hash=nonsense&redirect='.$redirect);
-
         $controller = new Base64EncodedRedirectController(new UriSigner('secret'));
+
+        $this->expectException(BadRequestHttpException::class);
+
         $controller->renderAction($request);
     }
 
     public function testRedirectsToCorrectUrlSigningMatches(): void
     {
-        $uriSigner = new UriSigner('secret');
         $redirectUrl = 'https://contao.org/preview.php/about-contao.html';
+
+        $uriSigner = new UriSigner('secret');
         $signedUri = $uriSigner->sign('https://contao.org/_contao/base64_redirect?redirect='.base64_encode($redirectUrl));
 
-        $request = Request::create($signedUri);
-
         $controller = new Base64EncodedRedirectController($uriSigner);
-        $response = $controller->renderAction($request);
+
+        /** @var RedirectResponse $response */
+        $response = $controller->renderAction(Request::create($signedUri));
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame($redirectUrl, $response->getTargetUrl());

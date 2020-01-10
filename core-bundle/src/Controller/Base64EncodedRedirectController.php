@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @internal Do not use this controller in your code
+ * @internal
  */
 class Base64EncodedRedirectController
 {
@@ -43,7 +43,7 @@ class Base64EncodedRedirectController
             throw new BadRequestHttpException();
         }
 
-        // we cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+        // We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
         if (!$this->uriSigner->check($request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : ''))) {
             throw new BadRequestHttpException();
         }

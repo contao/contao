@@ -127,9 +127,7 @@ class PageError401 extends Frontend
 			/** @var UriSigner $uriSigner */
 			$uriSigner = System::getContainer()->get('uri_signer');
 
-			$url = $uriSigner->sign($url);
-
-			$this->redirect($url, (($obj401->redirect == 'temporary') ? 302 : 301));
+			$this->redirect($uriSigner->sign($url), (($obj401->redirect == 'temporary') ? 302 : 301));
 		}
 
 		return $obj401;

@@ -74,7 +74,7 @@ class ModuleLogin extends Module
 			/** @var UriSigner $uriSigner */
 			$uriSigner = $container->get('uri_signer');
 
-			// we cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
+			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
 			if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
 			{
 				$this->targetPath = base64_decode($request->query->get('redirect'));
@@ -188,20 +188,8 @@ class ModuleLogin extends Module
 		}
 
 		// Ensure we do not output any possible dangerous data (redirect back to previous URL allows for URL param injection)
-		$targetPath = $uriSigner->sign(
-			$router->generate(
-				'contao_base64_redirect',
-				array('redirect' => base64_encode($strRedirect)),
-				Router::ABSOLUTE_URL
-			)
-		);
-		$failurePath = $uriSigner->sign(
-			$router->generate(
-				'contao_base64_redirect',
-				array('redirect' => base64_encode($objPage->getAbsoluteUrl())),
-				Router::ABSOLUTE_URL
-			)
-		);
+		$targetPath = $uriSigner->sign($router->generate('contao_base64_redirect', array('redirect' => base64_encode($strRedirect)), Router::ABSOLUTE_URL));
+		$failurePath = $uriSigner->sign($router->generate('contao_base64_redirect', array('redirect' => base64_encode($objPage->getAbsoluteUrl())), Router::ABSOLUTE_URL));
 
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
