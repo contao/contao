@@ -10,9 +10,9 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\GroupHandler;
