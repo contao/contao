@@ -107,14 +107,12 @@ class CrawlCommand extends Command
         $logOutput = $output instanceof ConsoleOutput ? $output->section() : $output;
 
         $this->escargot = $this->escargot
-            ->withLogger($this->createSourceProvidingConsoleLogger($logOutput))
+            ->withLogger($this->createLogger($logOutput))
             ->withConcurrency((int) $input->getOption('concurrency'))
             ->withRequestDelay((int) $input->getOption('delay'))
             ->withMaxRequests((int) $input->getOption('max-requests'))
             ->withMaxDepth((int) $input->getOption('max-depth'))
         ;
-
-        $io->comment('Started crawling...');
 
         if (!$input->getOption('no-progress')) {
             $this->addProgressBar($output);
@@ -147,12 +145,20 @@ class CrawlCommand extends Command
         return (int) $errored;
     }
 
-    private function createSourceProvidingConsoleLogger(OutputInterface $output): ConsoleLogger
+    private function createLogger(OutputInterface $output): ConsoleLogger
     {
         return new class($output) extends ConsoleLogger {
             public function log($level, $message, array $context = []): void
             {
-                parent::log($level, '[{source}] '.$message, $context);
+                if (isset($context['crawlUri'])) {
+                    $message = sprintf('[%s] %s', (string) $context['crawlUri'], $message);
+                }
+
+                if (isset($context['source'])) {
+                    $message = sprintf('[%s] %s', $context['source'], $message);
+                }
+
+                parent::log($level, $message, $context);
             }
         };
     }

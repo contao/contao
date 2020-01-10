@@ -97,7 +97,7 @@ class CrawlCommandTest extends TestCase
         $escargotFactory = $this->createMock(Factory::class);
         $escargotFactory
             ->expects($this->once())
-            ->method('getSearchUriCollection')
+            ->method('getCrawlUriCollection')
             ->willReturn($this->createBaseUriCollection())
         ;
 

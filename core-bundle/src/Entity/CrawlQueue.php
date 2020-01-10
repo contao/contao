@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
  *     name="tl_crawl_queue",
  *     indexes={
  *         @ORM\Index(name="job_id", columns={"job_id"}),
- *         @ORM\Index(name="uri", columns={"uri"}),
+ *         @ORM\Index(name="uri_hash", columns={"uri_hash"}),
  *         @ORM\Index(name="processed", columns={"processed"}),
  *     }
  * )
@@ -47,14 +47,21 @@ class CrawlQueue
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=255, options={"fixed"=true})
+     * @ORM\Column(type="text")
      */
     public $uri;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="found_on", type="string", nullable=true, length=255, options={"fixed"=true})
+     * @ORM\Column(name="uri_hash", type="string", length=40, options={"fixed"=true})
+     */
+    public $uriHash;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="found_on", type="text", nullable=true)
      */
     public $foundOn;
 
