@@ -4997,7 +4997,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']))
 				{
 					// add the associative keys 
-					$args = array_combine($GLOBALS['TL_DCA'][$this->table]['list']['label']['fields'], $args);
+					$args = array_combine($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'], $args);
 					
 					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']))
 					{
