@@ -282,7 +282,6 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $subscriber = new BrokenLinkCheckerSubscriber($this->getTranslator());
         $subscriber->setEscargot($escargot);
         $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
-
         $subscriber->onHttpException(new CrawlUri(new Uri('https://contao.org'), 0), $exception, $response, $chunk);
 
         $previousResult = null;

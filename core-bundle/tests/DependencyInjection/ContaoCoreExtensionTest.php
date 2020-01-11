@@ -1389,6 +1389,77 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
+    public function testRegistersTheEscargotFactory(): void
+    {
+        $this->assertTrue($this->container->has('contao.crawl.escargot_factory'));
+
+        $definition = $this->container->getDefinition('contao.crawl.escargot_factory');
+
+        $this->assertSame(Factory::class, $definition->getClass());
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference('database_connection'),
+                new Reference('contao.framework'),
+                [],
+                [],
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheEscargotBrokenLinkCheckerSubscriber(): void
+    {
+        $this->assertTrue($this->container->has('contao.crawl.escargot_subscriber.broken_link_checker'));
+
+        $definition = $this->container->getDefinition('contao.crawl.escargot_subscriber.broken_link_checker');
+
+        $this->assertSame(BrokenLinkCheckerSubscriber::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+        $this->assertEquals(
+            [
+                new Reference('translator'),
+            ],
+            $definition->getArguments()
+        );
+        $this->assertSame(
+            [
+                'contao.escargot_subscriber' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheEscargotSearchIndexSubscriber(): void
+    {
+        $this->assertTrue($this->container->has('contao.crawl.escargot_subscriber.search_index'));
+
+        $definition = $this->container->getDefinition('contao.crawl.escargot_subscriber.search_index');
+
+        $this->assertSame(SearchIndexSubscriber::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.search.indexer'),
+                new Reference('translator'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'contao.escargot_subscriber' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
     public function testRegistersTheCsrfTokenManager(): void
     {
         $this->assertTrue($this->container->has('contao.csrf.token_manager'));
@@ -2445,77 +2516,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('%contao.prepend_locale%'),
             ],
             $definition->getArguments()
-        );
-    }
-
-    public function testRegistersTheEscargotFactory(): void
-    {
-        $this->assertTrue($this->container->has('contao.crawl.escargot_factory'));
-
-        $definition = $this->container->getDefinition('contao.crawl.escargot_factory');
-
-        $this->assertSame(Factory::class, $definition->getClass());
-        $this->assertTrue($definition->isPublic());
-
-        $this->assertEquals(
-            [
-                new Reference('database_connection'),
-                new Reference('contao.framework'),
-                [],
-                [],
-            ],
-            $definition->getArguments()
-        );
-    }
-
-    public function testRegistersTheEscargotBrokenLinkCheckerSubscriber(): void
-    {
-        $this->assertTrue($this->container->has('contao.crawl.escargot_subscriber.broken_link_checker'));
-
-        $definition = $this->container->getDefinition('contao.crawl.escargot_subscriber.broken_link_checker');
-
-        $this->assertSame(BrokenLinkCheckerSubscriber::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-        $this->assertEquals(
-            [
-                new Reference('translator'),
-            ],
-            $definition->getArguments()
-        );
-        $this->assertSame(
-            [
-                'contao.escargot_subscriber' => [
-                    [],
-                ],
-            ],
-            $definition->getTags()
-        );
-    }
-
-    public function testRegistersTheEscargotSearchIndexSubscriber(): void
-    {
-        $this->assertTrue($this->container->has('contao.crawl.escargot_subscriber.search_index'));
-
-        $definition = $this->container->getDefinition('contao.crawl.escargot_subscriber.search_index');
-
-        $this->assertSame(SearchIndexSubscriber::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
-
-        $this->assertEquals(
-            [
-                new Reference('contao.search.indexer'),
-                new Reference('translator'),
-            ],
-            $definition->getArguments()
-        );
-
-        $this->assertSame(
-            [
-                'contao.escargot_subscriber' => [
-                    [],
-                ],
-            ],
-            $definition->getTags()
         );
     }
 

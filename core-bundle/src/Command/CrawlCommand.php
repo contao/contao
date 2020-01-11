@@ -76,8 +76,8 @@ class CrawlCommand extends Command
             ->addOption('max-requests', null, InputOption::VALUE_REQUIRED, 'The maximum number of requests to execute (0 = no limit)', 0)
             ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for (0 = no limit)', 0)
             ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progress bar output')
-            ->addOption('enable-debug-csv', null, InputOption::VALUE_NONE, 'Writes the whole crawl process debug log into a separate CSV file')
-            ->addOption('debug-csv-path', null, InputOption::VALUE_REQUIRED, 'Provide the path where to log the debug log CSV data', getcwd().'/crawl_debug_log.csv')
+            ->addOption('enable-debug-csv', null, InputOption::VALUE_NONE, 'Writes the crawl debug log into a separate CSV file')
+            ->addOption('debug-csv-path', null, InputOption::VALUE_REQUIRED, 'The path of the debug log CSV file', getcwd().'/crawl_debug_log.csv')
             ->setDescription('Crawls the Contao root pages with the desired subscribers')
             ->setHelp('You can add additional URIs via the <info>contao.crawl.additional_uris</info> parameter.')
         ;
