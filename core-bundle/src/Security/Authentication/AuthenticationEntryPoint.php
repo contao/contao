@@ -17,6 +17,7 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageError401;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\UriSigner;
@@ -92,7 +93,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
         }
     }
 
-    private function redirectToBackend(Request $request)
+    private function redirectToBackend(Request $request): RedirectResponse
     {
         if ($request->query->count() < 1) {
             return $this->httpUtils->createRedirectResponse($request, 'contao_backend_login');

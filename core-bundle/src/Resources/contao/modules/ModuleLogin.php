@@ -63,8 +63,8 @@ class ModuleLogin extends Module
 		$container = System::getContainer();
 		$request = $container->get('request_stack')->getCurrentRequest();
 
-		// If the form was submitted and the credentials were wrong, take the target path from the submitted data
-		// as otherwise it would take the current page
+		// If the form was submitted and the credentials were wrong, take the target
+		// path from the submitted data as otherwise it would take the current page
 		if ($request->isMethod('POST'))
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));

@@ -48,7 +48,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
         return new RedirectResponse($request->getUri());
     }
 
-    private function logException(Request $request, AuthenticationException $exception)
+    private function logException(Request $request, AuthenticationException $exception): void
     {
         if ($exception instanceof AccountStatusException && ($user = $exception->getUser()) instanceof UserInterface) {
             $username = $user->getUsername();

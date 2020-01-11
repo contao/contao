@@ -26,7 +26,7 @@ class ContaoLoginFactory extends AbstractFactory
         $this->defaultFailureHandlerOptions = [];
     }
 
-    public function getPosition()
+    public function getPosition(): string
     {
         return 'form';
     }
@@ -55,17 +55,17 @@ class ContaoLoginFactory extends AbstractFactory
         return 'contao.security.authentication_listener';
     }
 
-    protected function createEntryPoint($container, $id, $config, $defaultEntryPoint)
+    protected function createEntryPoint($container, $id, $config, $defaultEntryPoint): string
     {
         return 'contao.security.entry_point';
     }
 
-    protected function createAuthenticationSuccessHandler($container, $id, $config)
+    protected function createAuthenticationSuccessHandler($container, $id, $config): string
     {
         return 'contao.security.authentication_success_handler';
     }
 
-    protected function createAuthenticationFailureHandler($container, $id, $config)
+    protected function createAuthenticationFailureHandler($container, $id, $config): string
     {
         return 'contao.security.authentication_failure_handler';
     }
