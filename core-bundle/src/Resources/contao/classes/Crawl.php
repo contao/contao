@@ -77,7 +77,7 @@ class Crawl extends Backend implements \executable
 
 		$jobId = Input::get('jobId');
 		$queue = $factory->createLazyQueue();
-		$debugLogPath = sys_get_temp_dir() . '/contao-crawl/' . $jobId . '.log.csv';
+		$debugLogPath = sys_get_temp_dir() . '/contao-crawl/' . $jobId . '_log.csv';
 		$resultCache = sys_get_temp_dir() . '/contao-crawl/' . $jobId . '.result-cache';
 
 		if ($downloadLog = Input::get('downloadLog'))
@@ -85,12 +85,12 @@ class Crawl extends Backend implements \executable
 			if ('debug' === $downloadLog)
 			{
 				$filePath = $debugLogPath;
-				$fileName = 'crawl_debug.log.csv';
+				$fileName = 'crawl_debug_log.csv';
 			}
 			else
 			{
 				$filePath = $this->getSubscriberLogFilePath($downloadLog, $jobId);
-				$fileName = 'crawl_' . $downloadLog . '.log.csv';
+				$fileName = 'crawl_' . $downloadLog . '_log.csv';
 			}
 
 			$response = new BinaryFileResponse($filePath);
@@ -255,7 +255,7 @@ class Crawl extends Backend implements \executable
 
 	private function getSubscriberLogFilePath(string $subscriberName, string $jobId): string
 	{
-		return sys_get_temp_dir() . '/contao-crawl/' . $jobId . '_' . $subscriberName . '.log.csv';
+		return sys_get_temp_dir() . '/contao-crawl/' . $jobId . '_' . $subscriberName . '_log.csv';
 	}
 
 	private function generateSubscribersWidget(array $subscriberNames): Widget
