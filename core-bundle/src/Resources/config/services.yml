@@ -620,7 +620,6 @@ services:
     contao.security.entry_point:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint
         arguments:
-            - '@security.http_utils'
             - '@router'
             - '@uri_signer'
             - '@contao.framework'

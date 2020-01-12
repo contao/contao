@@ -2654,7 +2654,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(
             [
-                new Reference('security.http_utils'),
                 new Reference('router'),
                 new Reference('uri_signer'),
                 new Reference('contao.framework'),
