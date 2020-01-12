@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
@@ -29,7 +30,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
      */
     private $logger;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
     }
@@ -44,6 +45,8 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
         if (null !== $this->logger) {
             $this->logException($request, $exception);
         }
+
+        $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
 
         return new RedirectResponse($request->getUri());
     }
