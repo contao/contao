@@ -43,7 +43,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $request->request = new ParameterBag(
             [
                 '_always_use_target_path' => '0',
-                '_target_path' => base64_encode('http://localhost/target')
+                '_target_path' => base64_encode('http://localhost/target'),
             ]
         );
 
@@ -77,7 +77,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $request->request = new ParameterBag(
             [
                 '_always_use_target_path' => '1',
-                '_target_path' => base64_encode('http://localhost/target')
+                '_target_path' => base64_encode('http://localhost/target'),
             ]
         );
 
@@ -112,7 +112,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $request->request = new ParameterBag(
             [
                 '_always_use_target_path' => '0',
-                '_target_path' => base64_encode('http://localhost/target')
+                '_target_path' => base64_encode('http://localhost/target'),
             ]
         );
 
@@ -219,7 +219,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $request->request = new ParameterBag(
             [
                 '_always_use_target_path' => '0',
-                '_target_path' => base64_encode('http://localhost/target')
+                '_target_path' => base64_encode('http://localhost/target'),
             ]
         );
 
@@ -260,7 +260,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $request->request = new ParameterBag(
             [
                 '_always_use_target_path' => '1',
-                '_target_path' => base64_encode('http://localhost/target')
+                '_target_path' => base64_encode('http://localhost/target'),
             ]
         );
 

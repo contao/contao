@@ -36,7 +36,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
     /**
      * @dataProvider requiresAuthenticationProvider
      */
-    public function testRequiresAuthentication(bool $isPost, ?string $formSubmit, bool $requiresAuthentication)
+    public function testRequiresAuthentication(bool $isPost, ?string $formSubmit, bool $requiresAuthentication): void
     {
         $request = $this->mockRequest($isPost);
 
@@ -65,7 +65,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         yield 'no authentication with invalid form submit' => [true, 'tl_foobar', false];
     }
 
-    public function testThrowsExceptionIfUsernameIsNotAString()
+    public function testThrowsExceptionIfUsernameIsNotAString(): void
     {
         $this->expectException(BadRequestHttpException::class);
 
@@ -80,7 +80,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $listener($this->mockRequestEvent($request));
     }
 
-    public function testTrimsTheUsername()
+    public function testTrimsTheUsername(): void
     {
         $request = $this->mockRequest();
         $request->request->set('FORM_SUBMIT', 'tl_login');
@@ -93,11 +93,11 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $listener($this->mockRequestEvent($request));
     }
 
-    public function testFailsAuthenticationIfUsernameIsTooLong()
+    public function testFailsAuthenticationIfUsernameIsTooLong(): void
     {
         $request = $this->mockRequest();
         $request->request->set('FORM_SUBMIT', 'tl_login');
-        $request->request->set('username', implode(array_fill(0, 4097, 'a')));
+        $request->request->set('username', implode('', array_fill(0, 4097, 'a')));
         $request->request->set('password', 'foobar');
 
         $authenticationManager = $this->mockAuthenticationListener(null);
@@ -106,7 +106,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $listener($this->mockRequestEvent($request));
     }
 
-    public function testStoresLastUsernameInSession()
+    public function testStoresLastUsernameInSession(): void
     {
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -134,7 +134,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             ->willReturn(new Response())
         ;
 
-        $listener = new ContaoLoginAuthenticationListener(
+        return new ContaoLoginAuthenticationListener(
             $this->createMock(TokenStorageInterface::class),
             $authenticationManager,
             $this->createMock(SessionAuthenticationStrategyInterface::class),
@@ -146,8 +146,6 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             null, // Logger
             null // Event Dispatcher
         );
-
-        return $listener;
     }
 
     /**
@@ -203,8 +201,8 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $authenticationManager
             ->expects(null === $username ? $this->never() : $this->once())
             ->method('authenticate')
-            ->with($this->callback(function($token) use ($username, $password) {
-                /** @var UsernamePasswordToken $token */
+            ->with($this->callback(function ($token) use ($username, $password) {
+                /* @var UsernamePasswordToken $token */
                 $this->assertInstanceOf(UsernamePasswordToken::class, $token);
                 $this->assertSame($username, $token->getUser());
                 $this->assertSame($password, $token->getCredentials());

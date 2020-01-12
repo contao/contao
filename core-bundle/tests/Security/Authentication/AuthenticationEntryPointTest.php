@@ -33,7 +33,7 @@ class AuthenticationEntryPointTest extends TestCase
         unset($GLOBALS['TL_PTY']);
     }
 
-    public function testGeneratesThe401PageInTheFrontend()
+    public function testGeneratesThe401PageInTheFrontend(): void
     {
         $request = Request::create('http://localhost/login');
 
@@ -59,7 +59,7 @@ class AuthenticationEntryPointTest extends TestCase
         $this->assertSame('foo', $response->getContent());
     }
 
-    public function testReturnsResponseFromResponseException()
+    public function testReturnsResponseFromResponseException(): void
     {
         $request = Request::create('http://localhost/login');
 
@@ -85,7 +85,7 @@ class AuthenticationEntryPointTest extends TestCase
         $this->assertSame('bar', $response->getContent());
     }
 
-    public function testThrowsExceptionIfError401PageIsNotSet()
+    public function testThrowsExceptionIfError401PageIsNotSet(): void
     {
         $this->expectException(UnauthorizedHttpException::class);
 
@@ -108,7 +108,7 @@ class AuthenticationEntryPointTest extends TestCase
         $entryPoint->start($request);
     }
 
-    public function testThrowsExceptionIfError401PageClassDoesNotExit()
+    public function testThrowsExceptionIfError401PageClassDoesNotExit(): void
     {
         $this->expectException(UnauthorizedHttpException::class);
 
@@ -133,7 +133,7 @@ class AuthenticationEntryPointTest extends TestCase
         $entryPoint->start($request);
     }
 
-    public function testConvertsInsufficientAuthenticationException()
+    public function testConvertsInsufficientAuthenticationException(): void
     {
         $this->expectException(UnauthorizedHttpException::class);
 
@@ -239,4 +239,3 @@ class PageError401
         return new Response('foo');
     }
 }
-
