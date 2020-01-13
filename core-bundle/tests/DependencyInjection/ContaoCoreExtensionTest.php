@@ -87,7 +87,7 @@ use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\CoreBundle\Migration\MigrationCollection;
-use Contao\CoreBundle\Migration\Version40900\CeAccessMigration;
+use Contao\CoreBundle\Migration\Version409\CeAccessMigration;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
 use Contao\CoreBundle\OptIn\OptIn;
@@ -3050,7 +3050,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($definition->isPrivate());
     }
 
-    public function testRegistersTheVersion40900CeAccessMigration(): void
+    public function testRegistersTheVersion409CeAccessMigration(): void
     {
         $this->assertTrue($this->container->has(CeAccessMigration::class));
 
@@ -3061,6 +3061,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('database_connection'),
+                new Reference('contao.framework'),
             ],
             $definition->getArguments()
         );

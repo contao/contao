@@ -4,8 +4,9 @@ services:
 
     Contao\CoreBundle\Migration\MigrationCollection: ~
 
-    Contao\CoreBundle\Migration\Version40900\CeAccessMigration:
+    Contao\CoreBundle\Migration\Version409\CeAccessMigration:
         arguments:
             - '@database_connection'
+            - '@contao.framework'
         tags:
             - { name: contao.migration }

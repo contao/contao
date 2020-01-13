@@ -10,8 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Migration\Version40900;
+namespace Contao\CoreBundle\Migration\Version409;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
@@ -23,9 +24,15 @@ class CeAccessMigration extends AbstractMigration
      */
     private $connection;
 
-    public function __construct(Connection $connection)
+    /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
+    public function __construct(Connection $connection, ContaoFramework $framework)
     {
         $this->connection = $connection;
+        $this->framework = $framework;
     }
 
     public function shouldRun(): bool
@@ -43,6 +50,8 @@ class CeAccessMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
+        $this->framework->initialize();
+
         $this->connection->query('
             ALTER TABLE
                 tl_user_group

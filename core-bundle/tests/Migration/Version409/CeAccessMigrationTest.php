@@ -10,15 +10,17 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Migration\Version40900;
+namespace Contao\CoreBundle\Tests\Migration\Version409;
 
 use Contao\ContentText;
-use Contao\CoreBundle\Migration\Version40900\CeAccessMigration;
+use Contao\CoreBundle\Migration\Version409\CeAccessMigration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FormTextField;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Types\Type;
 
 class CeAccessMigrationTest extends TestCase
 {
@@ -85,7 +87,7 @@ class CeAccessMigrationTest extends TestCase
             ->willReturn($stmt)
         ;
 
-        $migration = new CeAccessMigration($connection);
+        $migration = new CeAccessMigration($connection, $this->mockContaoFramework());
 
         $this->assertTrue($migration->shouldRun());
         $this->assertTrue($migration->run()->isSuccessful());
@@ -113,7 +115,13 @@ class CeAccessMigrationTest extends TestCase
             ->willReturn($schemaManager)
         ;
 
-        $migration = new CeAccessMigration($connection);
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->expects($this->never())
+            ->method('initialize')
+        ;
+
+        $migration = new CeAccessMigration($connection, $framework);
 
         $this->assertFalse($migration->shouldRun());
     }
@@ -131,7 +139,7 @@ class CeAccessMigrationTest extends TestCase
         $schemaManager
             ->expects($this->once())
             ->method('listTableColumns')
-            ->willReturn(['elements'])
+            ->willReturn(['elements' => new Column('elements', Type::getType('string'))])
         ;
 
         $connection = $this->createMock(Connection::class);
@@ -141,12 +149,13 @@ class CeAccessMigrationTest extends TestCase
             ->willReturn($schemaManager)
         ;
 
-        $connection
+        $framework = $this->mockContaoFramework();
+        $framework
             ->expects($this->never())
-            ->method('query')
+            ->method('initialize')
         ;
 
-        $migration = new CeAccessMigration($connection);
+        $migration = new CeAccessMigration($connection, $framework);
 
         $this->assertFalse($migration->shouldRun());
     }
