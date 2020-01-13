@@ -1942,6 +1942,8 @@ fieldset.tl_tbox > legend,fieldset.tl_box > legend {
 	color:#6a6a6c;
 	padding:14px 0 0 28px;
 	background:url("icons/navcol.svg") 13px 16px no-repeat;
+}
+fieldset.tl_tbox > legend,fieldset.tl_box > legend span {
 	cursor:pointer;
 }
 fieldset.collapsed {
