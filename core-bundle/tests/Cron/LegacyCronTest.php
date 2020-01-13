@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Cron;
 
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Cron\LegacyCron;
+use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
@@ -23,11 +24,7 @@ class LegacyCronTest extends TestCase
     public function testLegacyCronJobsAreExecuted(): void
     {
         // Mock a simple object to be used for TL_CRON
-        $legacyCronObject = $this
-            ->getMockBuilder(\stdClass::class)
-            ->addMethods(['onMinutely', 'onHourly', 'onDaily', 'onWeekly', 'onMonthly'])
-            ->getMock()
-        ;
+        $legacyCronObject = $this->createMock(TestCronJob::class);
 
         $legacyCronObject
             ->expects($this->once())

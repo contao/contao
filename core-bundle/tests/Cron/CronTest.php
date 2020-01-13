@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Cron;
 
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Entity\CronJob;
+use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestInvokableScopeAwareCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
@@ -26,11 +27,7 @@ class CronTest extends TestCase
     {
         $repository = $this->createMock(CronJobRepository::class);
 
-        $cronjob = $this
-            ->getMockBuilder(\stdClass::class)
-            ->addMethods(['onHourly'])
-            ->getMock()
-        ;
+        $cronjob = $this->createMock(TestCronJob::class);
 
         $cronjob
             ->expects($this->once())
@@ -47,9 +44,8 @@ class CronTest extends TestCase
         $repository = $this->createMock(CronJobRepository::class);
 
         $cronjob = $this
-            ->getMockBuilder(\stdClass::class)
+            ->getMockBuilder(TestCronJob::class)
             ->setMockClassName('TestCronJob')
-            ->addMethods(['onMinutely', 'onHourly'])
             ->getMock()
         ;
 
@@ -95,9 +91,8 @@ class CronTest extends TestCase
         ;
 
         $cronjob = $this
-            ->getMockBuilder(\stdClass::class)
+            ->getMockBuilder(TestCronJob::class)
             ->setMockClassName('UpdateEntitiesCron')
-            ->addMethods(['onHourly'])
             ->getMock()
         ;
 
