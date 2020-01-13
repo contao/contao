@@ -113,10 +113,10 @@ class AddCronJobsPassTest extends TestCase
 
         $crons = $this->getCronsFromDefinition($container);
 
-        $this->assertSame('onMinutely', $crons[0][1]);
+        $this->assertSame('onMinutely', $crons[0][2]);
     }
 
-    public function testUsesInvokeMethodIfNoneGiven(): void
+    public function testUsesNoMethodIfNoneGiven(): void
     {
         $definition = new Definition(TestInvokableScopedCronJob::class);
         $definition->addTag('contao.cronjob', ['interval' => 'minutely']);
@@ -129,7 +129,7 @@ class AddCronJobsPassTest extends TestCase
 
         $crons = $this->getCronsFromDefinition($container);
 
-        $this->assertSame('__invoke', $crons[0][1]);
+        $this->assertSame(null, $crons[0][2]);
     }
 
     public function testUsesMethodNameIfMethodNameIsGiven(): void
@@ -152,7 +152,7 @@ class AddCronJobsPassTest extends TestCase
 
         $crons = $this->getCronsFromDefinition($container);
 
-        $this->assertSame('customMethod', $crons[0][1]);
+        $this->assertSame('customMethod', $crons[0][2]);
     }
 
     public function testHandlesMultipleTags(): void
@@ -173,11 +173,11 @@ class AddCronJobsPassTest extends TestCase
         $crons = $this->getCronsFromDefinition($container);
 
         $this->assertCount(5, $crons);
-        $this->assertSame('* * * * *', $crons[0][2]);
-        $this->assertSame('@hourly', $crons[1][2]);
-        $this->assertSame('@daily', $crons[2][2]);
-        $this->assertSame('@weekly', $crons[3][2]);
-        $this->assertSame('@monthly', $crons[4][2]);
+        $this->assertSame('* * * * *', $crons[0][1]);
+        $this->assertSame('@hourly', $crons[1][1]);
+        $this->assertSame('@daily', $crons[2][1]);
+        $this->assertSame('@weekly', $crons[3][1]);
+        $this->assertSame('@monthly', $crons[4][1]);
     }
 
     /**
@@ -210,7 +210,10 @@ class AddCronJobsPassTest extends TestCase
             $this->assertIsArray($methodCall[1]);
             $this->assertInstanceOf(Reference::class, $methodCall[1][0]);
             $this->assertIsString($methodCall[1][1]);
-            $this->assertIsString($methodCall[1][2]);
+
+            if (null !== $methodCall[1][2]) {
+                $this->assertIsString($methodCall[1][2]);
+            }
 
             $crons[] = $methodCall[1];
         }

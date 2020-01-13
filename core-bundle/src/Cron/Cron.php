@@ -44,9 +44,9 @@ class Cron
         $this->repository = $repository;
     }
 
-    public function addCronJob(object $service, string $method, string $interval): void
+    public function addCronJob(object $service, string $interval, string $method = null): void
     {
-        $this->cronJobs[] = new CronJob($service, $method, $interval);
+        $this->cronJobs[] = new CronJob($service, $interval, $method);
     }
 
     /**

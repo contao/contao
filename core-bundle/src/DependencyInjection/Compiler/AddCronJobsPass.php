@@ -55,7 +55,7 @@ class AddCronJobsPass implements CompilerPassInterface
                     throw new InvalidDefinitionException(sprintf('The contao.cronjob definition for service "%s" has an invalid interval expression "%s"', $serviceId, $interval));
                 }
 
-                $definition->addMethodCall('addCronJob', [new Reference($serviceId), $method, $interval]);
+                $definition->addMethodCall('addCronJob', [new Reference($serviceId), $interval, $method]);
             }
         }
     }
@@ -63,7 +63,7 @@ class AddCronJobsPass implements CompilerPassInterface
     /**
      * @throws InvalidDefinitionException
      */
-    private function getMethod(array $attributes, string $class, string $serviceId): string
+    private function getMethod(array $attributes, string $class, string $serviceId): ?string
     {
         $ref = new \ReflectionClass($class);
         $invalid = sprintf('The contao.cronjob definition for service "%s" is invalid. ', $serviceId);
@@ -85,7 +85,7 @@ class AddCronJobsPass implements CompilerPassInterface
         }
 
         if ($ref->hasMethod('__invoke')) {
-            return '__invoke';
+            return null;
         }
 
         $interval = str_replace('@', '', $attributes['interval']);

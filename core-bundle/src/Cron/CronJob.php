@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
+use InvalidArgumentException;
+
 final class CronJob
 {
     /**
@@ -34,7 +36,7 @@ final class CronJob
      */
     private $name;
 
-    public function __construct(object $service, string $method, string $interval)
+    public function __construct(object $service, string $interval, string $method = null)
     {
         $this->service = $service;
         $this->method = $method;
@@ -42,6 +44,10 @@ final class CronJob
         $this->name = \get_class($service);
 
         if (!\is_callable($service)) {
+            if (null === $this->method) {
+                throw new InvalidArgumentException('Service must be a callable when no method name is defined.');
+            }
+
             $this->name .= '::'.$method;
         }
     }

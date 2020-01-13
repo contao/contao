@@ -38,7 +38,7 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron($repository);
-        $cron->addCronJob($cronjob, 'onHourly', '@hourly');
+        $cron->addCronJob($cronjob, '@hourly', 'onHourly');
         $cron->run();
     }
 
@@ -74,8 +74,8 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron($repository, $logger);
-        $cron->addCronJob($cronjob, 'onMinutely', '* * * * *');
-        $cron->addCronJob($cronjob, 'onHourly', '0 * * * *');
+        $cron->addCronJob($cronjob, '* * * * *', 'onMinutely');
+        $cron->addCronJob($cronjob, '0 * * * *', 'onHourly');
         $cron->run();
     }
 
@@ -120,7 +120,7 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron($repository);
-        $cron->addCronJob($cronjob, 'onHourly', '@hourly');
+        $cron->addCronJob($cronjob, '@hourly', 'onHourly');
         $cron->run();
     }
 
@@ -133,7 +133,7 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron($this->createMock(CronJobRepository::class));
-        $cron->addCronJob($cronjob, '__invoke', '@hourly');
+        $cron->addCronJob($cronjob, '@hourly');
         $cron->run();
     }
 
@@ -147,7 +147,7 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron($this->createMock(CronJobRepository::class));
-        $cron->addCronJob($cronjob, '__invoke', '@hourly');
+        $cron->addCronJob($cronjob, '@hourly');
         $cron->run(Cron::SCOPE_CLI);
     }
 

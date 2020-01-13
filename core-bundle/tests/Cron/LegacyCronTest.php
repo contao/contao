@@ -79,11 +79,11 @@ class LegacyCronTest extends TestCase
         $legacyCron = new LegacyCron($framework);
 
         $cron = new Cron($this->createMock(CronJobRepository::class));
-        $cron->addCronJob($legacyCron, 'onMinutely', '* * * * *');
-        $cron->addCronJob($legacyCron, 'onHourly', '@hourly');
-        $cron->addCronJob($legacyCron, 'onDaily', '@daily');
-        $cron->addCronJob($legacyCron, 'onWeekly', '@weekly');
-        $cron->addCronJob($legacyCron, 'onMonthly', '@monthly');
+        $cron->addCronJob($legacyCron, '* * * * *', 'onMinutely');
+        $cron->addCronJob($legacyCron, '@hourly', 'onHourly');
+        $cron->addCronJob($legacyCron, '@daily', 'onDaily');
+        $cron->addCronJob($legacyCron, '@weekly', 'onWeekly');
+        $cron->addCronJob($legacyCron, '@monthly', 'onMonthly');
         $cron->run();
 
         unset($GLOBALS['TL_CRON']);
