@@ -23,23 +23,32 @@ class LegacyCronTest extends TestCase
     public function testLegacyCronJobsAreExecuted(): void
     {
         // Mock a simple object to be used for TL_CRON
-        $legacyCronObject = $this->getMockBuilder(\stdClass::class)->addMethods(['onMinutely', 'onHourly', 'onDaily', 'onWeekly', 'onMonthly'])->getMock();
+        $legacyCronObject = $this
+            ->getMockBuilder(\stdClass::class)
+            ->addMethods(['onMinutely', 'onHourly', 'onDaily', 'onWeekly', 'onMonthly'])
+            ->getMock()
+        ;
+
         $legacyCronObject
             ->expects($this->once())
             ->method('onMinutely')
         ;
+
         $legacyCronObject
             ->expects($this->once())
             ->method('onHourly')
         ;
+
         $legacyCronObject
             ->expects($this->once())
             ->method('onDaily')
         ;
+
         $legacyCronObject
             ->expects($this->once())
             ->method('onWeekly')
         ;
+
         $legacyCronObject
             ->expects($this->once())
             ->method('onMonthly')
@@ -64,21 +73,17 @@ class LegacyCronTest extends TestCase
         ;
 
         // Mock the Contao framework with the System adapter
-        $framework = $this->mockContaoFramework([
-            System::class => $systemAdapter,
-        ]);
+        $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
 
         // Create a LegacyCron instance and add cron jobs to the cron service
         $legacyCron = new LegacyCron($framework);
 
         $cron = new Cron($this->createMock(CronJobRepository::class));
-
         $cron->addCronJob($legacyCron, 'onMinutely', '* * * * *');
         $cron->addCronJob($legacyCron, 'onHourly', '@hourly');
         $cron->addCronJob($legacyCron, 'onDaily', '@daily');
         $cron->addCronJob($legacyCron, 'onWeekly', '@weekly');
         $cron->addCronJob($legacyCron, 'onMonthly', '@monthly');
-
         $cron->run();
 
         unset($GLOBALS['TL_CRON']);

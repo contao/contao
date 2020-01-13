@@ -44,9 +44,6 @@ class Cron
         $this->repository = $repository;
     }
 
-    /**
-     * Add a cron job service.
-     */
     public function addCronJob(object $service, string $method, string $interval): void
     {
         $this->cronJobs[] = new CronJob($service, $method, $interval);

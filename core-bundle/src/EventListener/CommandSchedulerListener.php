@@ -84,7 +84,8 @@ class CommandSchedulerListener
     private function canRunDbQuery(): bool
     {
         try {
-            return $this->connection->isConnected() && $this->connection->getSchemaManager()->tablesExist(['tl_cron_job']);
+            return $this->connection->isConnected()
+                && $this->connection->getSchemaManager()->tablesExist(['tl_cron_job']);
         } catch (DriverException $e) {
             return false;
         }

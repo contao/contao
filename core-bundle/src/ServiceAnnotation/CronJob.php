@@ -18,7 +18,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
 use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 
 /**
- * Annotation to register a Contao cron.
+ * Annotation to register a Contao cron job.
  *
  * @Annotation
  * @Target({"CLASS", "METHOD"})

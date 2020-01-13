@@ -135,10 +135,14 @@ class AddCronJobsPassTest extends TestCase
     public function testUsesMethodNameIfMethodNameIsGiven(): void
     {
         $definition = new Definition(TestCronJob::class);
-        $definition->addTag('contao.cronjob', [
-            'interval' => 'minutely',
-            'method' => 'customMethod',
-        ]);
+
+        $definition->addTag(
+            'contao.cronjob',
+            [
+                'interval' => 'minutely',
+                'method' => 'customMethod',
+            ]
+        );
 
         $container = $this->getContainerBuilder();
         $container->setDefinition(TestCronJob::class, $definition);
@@ -204,7 +208,6 @@ class AddCronJobsPassTest extends TestCase
         foreach ($methodCalls as $methodCall) {
             $this->assertSame('addCronJob', $methodCall[0]);
             $this->assertIsArray($methodCall[1]);
-
             $this->assertInstanceOf(Reference::class, $methodCall[1][0]);
             $this->assertIsString($methodCall[1][1]);
             $this->assertIsString($methodCall[1][2]);

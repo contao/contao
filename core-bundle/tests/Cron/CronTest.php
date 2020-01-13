@@ -26,16 +26,19 @@ class CronTest extends TestCase
     {
         $repository = $this->createMock(CronJobRepository::class);
 
-        $cronjob = $this->getMockBuilder(\stdClass::class)->addMethods(['onHourly'])->getMock();
+        $cronjob = $this
+            ->getMockBuilder(\stdClass::class)
+            ->addMethods(['onHourly'])
+            ->getMock()
+        ;
+
         $cronjob
             ->expects($this->once())
             ->method('onHourly')
         ;
 
         $cron = new Cron($repository);
-
         $cron->addCronJob($cronjob, 'onHourly', '@hourly');
-
         $cron->run();
     }
 
@@ -43,7 +46,8 @@ class CronTest extends TestCase
     {
         $repository = $this->createMock(CronJobRepository::class);
 
-        $cronjob = $this->getMockBuilder(\stdClass::class)
+        $cronjob = $this
+            ->getMockBuilder(\stdClass::class)
             ->setMockClassName('TestCronJob')
             ->addMethods(['onMinutely', 'onHourly'])
             ->getMock()
@@ -70,19 +74,16 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron($repository, $logger);
-
         $cron->addCronJob($cronjob, 'onMinutely', '* * * * *');
         $cron->addCronJob($cronjob, 'onHourly', '0 * * * *');
-
         $cron->run();
     }
 
     public function testUpdatesCronEntities(): void
     {
-        $repository = $this->createMock(CronJobRepository::class);
-
         $entity = $this->mockEntity('UpdateEntitiesCron::onHourly', (new \DateTime())->modify('-1 hours'));
 
+        $repository = $this->createMock(CronJobRepository::class);
         $repository
             ->expects($this->once())
             ->method('__call')
@@ -93,7 +94,8 @@ class CronTest extends TestCase
             ->willReturn($entity)
         ;
 
-        $cronjob = $this->getMockBuilder(\stdClass::class)
+        $cronjob = $this
+            ->getMockBuilder(\stdClass::class)
             ->setMockClassName('UpdateEntitiesCron')
             ->addMethods(['onHourly'])
             ->getMock()
@@ -107,38 +109,37 @@ class CronTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('persistAndFlush')
-            ->with($this->callback(static function (CronJob $entity) {
-                return 'UpdateEntitiesCron::onHourly' === $entity->getName() && (new \DateTime()) >= $entity->getLastRun();
-            }))
+            ->with(
+                $this->callback(
+                    static function (CronJob $entity) {
+                        return 'UpdateEntitiesCron::onHourly' === $entity->getName()
+                            && (new \DateTime()) >= $entity->getLastRun();
+                    }
+                )
+            )
         ;
 
         $cron = new Cron($repository);
-
         $cron->addCronJob($cronjob, 'onHourly', '@hourly');
-
         $cron->run();
     }
 
     public function testDoesNotSetScope(): void
     {
         $cronjob = $this->createMock(TestInvokableScopedCronJob::class);
-
         $cronjob
             ->expects($this->never())
             ->method('setScope')
         ;
 
         $cron = new Cron($this->createMock(CronJobRepository::class));
-
         $cron->addCronJob($cronjob, '__invoke', '@hourly');
-
         $cron->run();
     }
 
     public function testSetsScope(): void
     {
         $cronjob = $this->createMock(TestInvokableScopedCronJob::class);
-
         $cronjob
             ->expects($this->once())
             ->method('setScope')
@@ -146,9 +147,7 @@ class CronTest extends TestCase
         ;
 
         $cron = new Cron($this->createMock(CronJobRepository::class));
-
         $cron->addCronJob($cronjob, '__invoke', '@hourly');
-
         $cron->run(Cron::SCOPE_CLI);
     }
 
@@ -158,7 +157,6 @@ class CronTest extends TestCase
     private function mockEntity(string $name, \DateTime $lastRun = null): CronJob
     {
         $entity = $this->createMock(CronJob::class);
-
         $entity
             ->method('getName')
             ->willReturn($name)

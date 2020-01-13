@@ -40,7 +40,6 @@ class AddCronJobsPass implements CompilerPassInterface
                 }
 
                 $jobDefinition = $container->findDefinition($serviceId);
-
                 $method = $this->getMethod($attributes, $jobDefinition->getClass(), $serviceId);
                 $interval = $attributes['interval'];
 
