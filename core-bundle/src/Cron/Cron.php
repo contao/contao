@@ -21,8 +21,8 @@ use Psr\Log\LoggerInterface;
 
 class Cron
 {
-    public const SCOPE_WEB = 'SCOPE_WEB';
-    public const SCOPE_CLI = 'SCOPE_CLI';
+    public const SCOPE_WEB = 'web';
+    public const SCOPE_CLI = 'cli';
 
     /**
      * @var CronJobRepository
