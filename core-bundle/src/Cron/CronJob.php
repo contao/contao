@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Cron;
 
 use InvalidArgumentException;
 
-final class CronJob
+class CronJob
 {
     /**
      * @var object
