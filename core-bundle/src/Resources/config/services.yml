@@ -338,14 +338,6 @@ services:
             - '@contao.menu.matcher'
         public: true
 
-    Contao\CoreBundle\Migration\MigrationCollection: ~
-
-    Contao\CoreBundle\Migration\Version40900\CeAccessMigration:
-        arguments:
-            - '@database_connection'
-        tags:
-            - { name: contao.migration }
-
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
         arguments:

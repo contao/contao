@@ -67,6 +67,7 @@ class ContaoCoreExtension extends Extension
         $loader->load('commands.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
+        $loader->load('migrations.yml');
 
         $container->setParameter('contao.web_dir', $config['web_dir']);
         $container->setParameter('contao.prepend_locale', $config['prepend_locale']);

@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    Contao\CoreBundle\Migration\MigrationCollection: ~
+
+    Contao\CoreBundle\Migration\Version40900\CeAccessMigration:
+        arguments:
+            - '@database_connection'
+        tags:
+            - { name: contao.migration }

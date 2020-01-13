@@ -1885,40 +1885,6 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    public function testRegistersTheMigrationCollection(): void
-    {
-        $this->assertTrue($this->container->has(MigrationCollection::class));
-
-        $definition = $this->container->getDefinition(MigrationCollection::class);
-
-        $this->assertTrue($definition->isPrivate());
-    }
-
-    public function testRegistersTheVersion40900CeAccessMigration(): void
-    {
-        $this->assertTrue($this->container->has(CeAccessMigration::class));
-
-        $definition = $this->container->getDefinition(CeAccessMigration::class);
-
-        $this->assertTrue($definition->isPrivate());
-
-        $this->assertEquals(
-            [
-                new Reference('database_connection'),
-            ],
-            $definition->getArguments()
-        );
-
-        $this->assertSame(
-            [
-                'contao.migration' => [
-                    [],
-                ],
-            ],
-            $definition->getTags()
-        );
-    }
-
     public function testRegistersTheModelArgumentResolver(): void
     {
         $this->assertTrue($this->container->has('contao.model_argument_resolver'));
@@ -3072,6 +3038,40 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.routing.scope_matcher'),
             ],
             $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheMigrationCollection(): void
+    {
+        $this->assertTrue($this->container->has(MigrationCollection::class));
+
+        $definition = $this->container->getDefinition(MigrationCollection::class);
+
+        $this->assertTrue($definition->isPrivate());
+    }
+
+    public function testRegistersTheVersion40900CeAccessMigration(): void
+    {
+        $this->assertTrue($this->container->has(CeAccessMigration::class));
+
+        $definition = $this->container->getDefinition(CeAccessMigration::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('database_connection'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'contao.migration' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
         );
     }
 
