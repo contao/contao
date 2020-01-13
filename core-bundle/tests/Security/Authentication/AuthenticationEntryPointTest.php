@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Fixtures\Page\PageError401;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint;
 use Contao\CoreBundle\Tests\TestCase;
@@ -55,6 +56,7 @@ class AuthenticationEntryPointTest extends TestCase
         $GLOBALS['TL_PTY']['error_401'] = PageError401::class;
 
         $response = $entryPoint->start($request);
+
         $this->assertInstanceOf(Response::class, $response);
         $this->assertSame('foo', $response->getContent());
     }
@@ -81,14 +83,13 @@ class AuthenticationEntryPointTest extends TestCase
         $GLOBALS['TL_PTY']['error_401'] = PageError401::class;
 
         $response = $entryPoint->start($request);
+
         $this->assertInstanceOf(Response::class, $response);
         $this->assertSame('bar', $response->getContent());
     }
 
     public function testThrowsExceptionIfError401PageIsNotSet(): void
     {
-        $this->expectException(UnauthorizedHttpException::class);
-
         $request = Request::create('http://localhost/login');
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -105,13 +106,13 @@ class AuthenticationEntryPointTest extends TestCase
             $scopeMatcher
         );
 
+        $this->expectException(UnauthorizedHttpException::class);
+
         $entryPoint->start($request);
     }
 
     public function testThrowsExceptionIfError401PageClassDoesNotExit(): void
     {
-        $this->expectException(UnauthorizedHttpException::class);
-
         $request = Request::create('http://localhost/login');
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -130,13 +131,13 @@ class AuthenticationEntryPointTest extends TestCase
 
         $GLOBALS['TL_PTY']['error_401'] = 'Foo\Bar';
 
+        $this->expectException(UnauthorizedHttpException::class);
+
         $entryPoint->start($request);
     }
 
     public function testConvertsInsufficientAuthenticationException(): void
     {
-        $this->expectException(UnauthorizedHttpException::class);
-
         $request = Request::create('http://localhost/login');
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -155,6 +156,8 @@ class AuthenticationEntryPointTest extends TestCase
 
         PageError401::$exception = new InsufficientAuthenticationException();
         $GLOBALS['TL_PTY']['error_401'] = PageError401::class;
+
+        $this->expectException(UnauthorizedHttpException::class);
 
         $entryPoint->start($request);
     }
@@ -223,19 +226,5 @@ class AuthenticationEntryPointTest extends TestCase
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost/contao/login', $response->getTargetUrl());
-    }
-}
-
-class PageError401
-{
-    public static $exception;
-
-    public function getResponse()
-    {
-        if (self::$exception) {
-            throw self::$exception;
-        }
-
-        return new Response('foo');
     }
 }

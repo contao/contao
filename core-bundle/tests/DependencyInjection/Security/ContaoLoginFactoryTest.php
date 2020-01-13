@@ -25,17 +25,13 @@ class ContaoLoginFactoryTest extends TestCase
 
     public function testConfiguresTheContainerServices(): void
     {
-        $config = [
-            'remember_me' => true,
-        ];
-
         $container = new ContainerBuilder();
-
         $factory = new ContaoLoginFactory();
+
         [$authProviderId, $listenerId, $defaultEntryPoint] = $factory->create(
             $container,
             'contao_frontend',
-            $config,
+            ['remember_me' => true],
             'contao.security.frontend_user_provider',
             null
         );
@@ -43,7 +39,6 @@ class ContaoLoginFactoryTest extends TestCase
         $this->assertSame('contao.security.authentication_provider.contao_frontend', $authProviderId);
         $this->assertSame('contao.security.authentication_listener.contao_frontend', $listenerId);
         $this->assertSame('contao.security.entry_point', $defaultEntryPoint);
-
         $this->assertTrue($container->hasDefinition('contao.security.authentication_provider.contao_frontend'));
 
         $arguments = $container

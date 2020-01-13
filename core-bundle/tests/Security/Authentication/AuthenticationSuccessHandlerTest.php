@@ -39,13 +39,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->with('User "foobar" has logged in')
         ;
 
+        $parameters = [
+            '_always_use_target_path' => '0',
+            '_target_path' => base64_encode('http://localhost/target'),
+        ];
+
         $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag(
-            [
-                '_always_use_target_path' => '0',
-                '_target_path' => base64_encode('http://localhost/target'),
-            ]
-        );
+        $request->request = new ParameterBag($parameters);
 
         /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -73,13 +73,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     public function testDoesNotUpdateTheUserIfNotAContaoUser(): void
     {
+        $parameters = [
+            '_always_use_target_path' => '1',
+            '_target_path' => base64_encode('http://localhost/target'),
+        ];
+
         $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag(
-            [
-                '_always_use_target_path' => '1',
-                '_target_path' => base64_encode('http://localhost/target'),
-            ]
-        );
+        $request->request = new ParameterBag($parameters);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -108,13 +108,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->with('User "foobar" has logged in')
         ;
 
+        $parameters = [
+            '_always_use_target_path' => '0',
+            '_target_path' => base64_encode('http://localhost/target'),
+        ];
+
         $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag(
-            [
-                '_always_use_target_path' => '0',
-                '_target_path' => base64_encode('http://localhost/target'),
-            ]
-        );
+        $request->request = new ParameterBag($parameters);
 
         /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -215,13 +215,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
+        $parameters = [
+            '_always_use_target_path' => '0',
+            '_target_path' => base64_encode('http://localhost/target'),
+        ];
+
         $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag(
-            [
-                '_always_use_target_path' => '0',
-                '_target_path' => base64_encode('http://localhost/target'),
-            ]
-        );
+        $request->request = new ParameterBag($parameters);
 
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
@@ -256,13 +256,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
+        $parameters = [
+            '_always_use_target_path' => '1',
+            '_target_path' => base64_encode('http://localhost/target'),
+        ];
+
         $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag(
-            [
-                '_always_use_target_path' => '1',
-                '_target_path' => base64_encode('http://localhost/target'),
-            ]
-        );
+        $request->request = new ParameterBag($parameters);
 
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);

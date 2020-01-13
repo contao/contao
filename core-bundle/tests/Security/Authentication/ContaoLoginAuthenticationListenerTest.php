@@ -55,28 +55,24 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
     public function requiresAuthenticationProvider(): \Generator
     {
         yield 'authentication in backend' => [true, 'tl_login', true];
-
         yield 'authentication in frontend' => [true, 'tl_login_8', true];
-
         yield 'no authentication without POST' => [false, 'tl_login', false];
-
         yield 'no authentication without form submit' => [true, null, false];
-
         yield 'no authentication with invalid form submit' => [true, 'tl_foobar', false];
     }
 
     public function testThrowsExceptionIfUsernameIsNotAString(): void
     {
-        $this->expectException(BadRequestHttpException::class);
-
         $request = $this->mockRequest();
         $request->request->set('FORM_SUBMIT', 'tl_login');
         $request->request->set('username', ['foo']);
         $request->request->set('password', 'foobar');
 
         $authenticationManager = $this->mockAuthenticationListener(null);
-
         $listener = $this->createListener($authenticationManager);
+
+        $this->expectException(BadRequestHttpException::class);
+
         $listener($this->mockRequestEvent($request));
     }
 
@@ -187,11 +183,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
 
     private function mockRequestEvent(Request $request): RequestEvent
     {
-        return new RequestEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            KernelInterface::MASTER_REQUEST
-        );
+        return new RequestEvent($this->createMock(KernelInterface::class), $request, KernelInterface::MASTER_REQUEST);
     }
 
     private function mockAuthenticationListener(?string $username, string $password = null): AuthenticationManagerInterface
@@ -201,14 +193,18 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $authenticationManager
             ->expects(null === $username ? $this->never() : $this->once())
             ->method('authenticate')
-            ->with($this->callback(function ($token) use ($username, $password) {
-                /* @var UsernamePasswordToken $token */
-                $this->assertInstanceOf(UsernamePasswordToken::class, $token);
-                $this->assertSame($username, $token->getUser());
-                $this->assertSame($password, $token->getCredentials());
+            ->with(
+                $this->callback(
+                    function ($token) use ($username, $password) {
+                        /* @var UsernamePasswordToken $token */
+                        $this->assertInstanceOf(UsernamePasswordToken::class, $token);
+                        $this->assertSame($username, $token->getUser());
+                        $this->assertSame($password, $token->getCredentials());
 
-                return true;
-            }))
+                        return true;
+                    }
+                )
+            )
             ->willReturn(null)
         ;
 

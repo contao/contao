@@ -34,6 +34,8 @@ class AuthenticationFailureHandlerTest extends TestCase
         ;
 
         $handler = new AuthenticationFailureHandler();
+
+        /** @var RedirectResponse $response */
         $response = $handler->onAuthenticationFailure($this->getRequest(), $exception);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
@@ -70,6 +72,8 @@ class AuthenticationFailureHandlerTest extends TestCase
         ;
 
         $handler = new AuthenticationFailureHandler($logger);
+
+        /** @var RedirectResponse $response */
         $response = $handler->onAuthenticationFailure($this->getRequest(), $exception);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
