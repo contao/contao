@@ -26,11 +26,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
-use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
+class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     use TargetPathTrait;
 
@@ -52,10 +51,8 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_success_handler" service instead
      */
-    public function __construct(HttpUtils $httpUtils, ContaoFramework $framework, LoggerInterface $logger = null)
+    public function __construct(ContaoFramework $framework, LoggerInterface $logger = null)
     {
-        parent::__construct($httpUtils);
-
         $this->framework = $framework;
         $this->logger = $logger;
     }
@@ -68,10 +65,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
         if ($token instanceof TwoFactorTokenInterface) {
-            $response = $this->httpUtils->createRedirectResponse(
-                $request,
-                $request->request->get('_failure_path') ?: 'contao_root'
-            );
+            $response = new RedirectResponse($request->getUri());
 
             $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $response->getTargetUrl());
 
@@ -81,7 +75,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         $user = $token->getUser();
 
         if (!$user instanceof User) {
-            return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
+            return new RedirectResponse($this->determineTargetUrl($request));
         }
 
         $this->user = $user;
@@ -89,7 +83,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         $this->user->currentLogin = time();
         $this->user->save();
 
-        $response = $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
+        $response = new RedirectResponse($this->determineTargetUrl($request));
 
         if (null !== $this->logger) {
             $this->logger->info(
@@ -108,12 +102,8 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     protected function determineTargetUrl(Request $request): string
     {
-        if (!$this->user instanceof FrontendUser) {
-            return parent::determineTargetUrl($request);
-        }
-
-        if ($targetUrl = $this->getFixedTargetPath($request)) {
-            return $targetUrl;
+        if (!$this->user instanceof FrontendUser || $request->request->get('_always_use_target_path')) {
+            return base64_decode($request->request->get('_target_path'), true);
         }
 
         /** @var PageModel $pageModelAdapter */
@@ -125,7 +115,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
             return $groupPage->getAbsoluteUrl();
         }
 
-        return parent::determineTargetUrl($request);
+        return base64_decode($request->request->get('_target_path'), true);
     }
 
     private function triggerPostLoginHook(): void
@@ -144,14 +134,5 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback) {
             $system->importStatic($callback[0])->{$callback[1]}($this->user);
         }
-    }
-
-    private function getFixedTargetPath(Request $request): ?string
-    {
-        if (!$request->request->get('_always_use_target_path')) {
-            return null;
-        }
-
-        return $request->request->get('_target_path');
     }
 }

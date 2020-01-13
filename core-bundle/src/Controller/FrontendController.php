@@ -66,33 +66,6 @@ class FrontendController extends AbstractController
     }
 
     /**
-     * Symfony will authenticate the user automatically by calling this route.
-     *
-     * @return RedirectResponse|Response
-     *
-     * @Route("/_contao/login", name="contao_frontend_login")
-     */
-    public function loginAction(): Response
-    {
-        $this->initializeContaoFramework();
-
-        if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
-            throw new UnauthorizedHttpException('', 'Not authorized');
-        }
-
-        /** @var PageError401 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY']['error_401']();
-
-        try {
-            return $pageHandler->getResponse();
-        } catch (ResponseException $e) {
-            return $e->getResponse();
-        } catch (InsufficientAuthenticationException $e) {
-            throw new UnauthorizedHttpException('', $e->getMessage());
-        }
-    }
-
-    /**
      * Symfony will un-authenticate the user automatically by calling this route.
      *
      * @throws LogoutException

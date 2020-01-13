@@ -12,21 +12,22 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
+use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
+use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\PageError401;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
-use Symfony\Component\Security\Http\HttpUtils;
 
 class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {
-    /**
-     * @var HttpUtils
-     */
-    private $httpUtils;
-
     /**
      * @var RouterInterface
      */
@@ -38,13 +39,24 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
     private $uriSigner;
 
     /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
+    /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.security.entry_point" service instead
      */
-    public function __construct(HttpUtils $httpUtils, RouterInterface $router, UriSigner $uriSigner)
+    public function __construct(RouterInterface $router, UriSigner $uriSigner, ContaoFramework $framework, ScopeMatcher $scopeMatcher)
     {
-        $this->httpUtils = $httpUtils;
         $this->router = $router;
         $this->uriSigner = $uriSigner;
+        $this->framework = $framework;
+        $this->scopeMatcher = $scopeMatcher;
     }
 
     /**
@@ -52,8 +64,32 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
+        if ($this->scopeMatcher->isBackendRequest($request)) {
+            return $this->redirectToBackend($request);
+        }
+
+        $this->framework->initialize();
+
+        if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
+            throw new UnauthorizedHttpException('', 'Not authorized');
+        }
+
+        /** @var PageError401 $pageHandler */
+        $pageHandler = new $GLOBALS['TL_PTY']['error_401']();
+
+        try {
+            return $pageHandler->getResponse();
+        } catch (ResponseException $e) {
+            return $e->getResponse();
+        } catch (InsufficientAuthenticationException $e) {
+            throw new UnauthorizedHttpException('', $e->getMessage());
+        }
+    }
+
+    private function redirectToBackend(Request $request): RedirectResponse
+    {
         if ($request->query->count() < 1) {
-            return $this->httpUtils->createRedirectResponse($request, 'contao_backend_login');
+            return new RedirectResponse($this->router->generate('contao_backend_login'));
         }
 
         $url = $this->router->generate(
@@ -62,6 +98,6 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return $this->httpUtils->createRedirectResponse($request, $this->uriSigner->sign($url));
+        return new RedirectResponse($this->uriSigner->sign($url));
     }
 }

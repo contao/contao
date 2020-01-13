@@ -16,13 +16,12 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\HttpUtils;
 
 class AuthenticationFailureHandlerTest extends TestCase
 {
@@ -34,17 +33,13 @@ class AuthenticationFailureHandlerTest extends TestCase
             ->method('getUser')
         ;
 
-        $kernel = $this->createMock(HttpKernel::class);
+        $handler = new AuthenticationFailureHandler();
 
-        $utils = $this->createMock(HttpUtils::class);
-        $utils
-            ->expects($this->once())
-            ->method('createRedirectResponse')
-            ->willReturn(new RedirectResponse('http://localhost'))
-        ;
+        /** @var RedirectResponse $response */
+        $response = $handler->onAuthenticationFailure($this->getRequest(), $exception);
 
-        $handler = new AuthenticationFailureHandler($kernel, $utils);
-        $handler->onAuthenticationFailure($this->getRequest(), $exception);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('https://localhost', $response->getTargetUrl());
     }
 
     public function testReadsTheUsernameFromTheException(): void
@@ -63,17 +58,8 @@ class AuthenticationFailureHandlerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $kernel = $this->createMock(HttpKernel::class);
-
-        $utils = $this->createMock(HttpUtils::class);
-        $utils
-            ->expects($this->once())
-            ->method('createRedirectResponse')
-            ->willReturn(new RedirectResponse('http://localhost'))
-        ;
-
         $context = new ContaoContext(
-            'Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler::onAuthenticationFailure',
+            'Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler::logException',
             ContaoContext::ACCESS,
             'foobar'
         );
@@ -85,8 +71,13 @@ class AuthenticationFailureHandlerTest extends TestCase
             ->with('', ['contao' => $context])
         ;
 
-        $handler = new AuthenticationFailureHandler($kernel, $utils, [], $logger);
-        $handler->onAuthenticationFailure($this->getRequest(), $exception);
+        $handler = new AuthenticationFailureHandler($logger);
+
+        /** @var RedirectResponse $response */
+        $response = $handler->onAuthenticationFailure($this->getRequest(), $exception);
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('https://localhost', $response->getTargetUrl());
     }
 
     public function testReadsTheUsernameFromTheRequest(): void
@@ -98,17 +89,8 @@ class AuthenticationFailureHandlerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $kernel = $this->createMock(HttpKernel::class);
-
-        $utils = $this->createMock(HttpUtils::class);
-        $utils
-            ->expects($this->once())
-            ->method('createRedirectResponse')
-            ->willReturn(new RedirectResponse('http://localhost'))
-        ;
-
         $context = new ContaoContext(
-            'Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler::onAuthenticationFailure',
+            'Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler::logException',
             ContaoContext::ACCESS,
             'barfoo'
         );
@@ -120,14 +102,14 @@ class AuthenticationFailureHandlerTest extends TestCase
             ->with('', ['contao' => $context])
         ;
 
-        $handler = new AuthenticationFailureHandler($kernel, $utils, [], $logger);
-        $handler->onAuthenticationFailure($this->getRequest(), $exception);
+        $handler = new AuthenticationFailureHandler($logger);
+        $handler->onAuthenticationFailure($this->getRequest('barfoo'), $exception);
     }
 
     /**
      * Returns a request object with session.
      */
-    private function getRequest(): Request
+    private function getRequest(string $username = null): Request
     {
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -135,9 +117,26 @@ class AuthenticationFailureHandlerTest extends TestCase
             ->method('set')
         ;
 
-        $request = new Request();
-        $request->request->set('username', 'barfoo');
-        $request->setSession($session);
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getUri')
+            ->willReturn('https://localhost')
+        ;
+
+        $request
+            ->expects($this->once())
+            ->method('getSession')
+            ->willReturn($session)
+        ;
+
+        $request->request = $this->createMock(ParameterBag::class);
+        $request->request
+            ->expects(null === $username ? $this->never() : $this->once())
+            ->method('get')
+            ->with('username')
+            ->willReturn($username)
+        ;
 
         return $request;
     }

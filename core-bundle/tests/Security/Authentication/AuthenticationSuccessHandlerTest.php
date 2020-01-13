@@ -25,14 +25,12 @@ use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\HttpUtils;
 
 class AuthenticationSuccessHandlerTest extends TestCase
 {
-    public function testUpdatesTheUser(): void
+    public function testUpdatesTheUserAndAlwaysRedirectsToTargetPathInBackend(): void
     {
         $logger = $this->createMock(LoggerInterface::class);
         $logger
@@ -41,13 +39,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->with('User "foobar" has logged in')
         ;
 
-        $request = $this->createMock(Request::class);
-        $request
-            ->method('getUriForPath')
-            ->willReturn('http://localhost/target')
-        ;
+        $parameters = [
+            '_always_use_target_path' => '0',
+            '_target_path' => base64_encode('http://localhost/target'),
+        ];
 
-        $request->attributes = new ParameterBag();
+        $request = $this->createMock(Request::class);
+        $request->request = new ParameterBag($parameters);
 
         /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -75,13 +73,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     public function testDoesNotUpdateTheUserIfNotAContaoUser(): void
     {
-        $request = $this->createMock(Request::class);
-        $request
-            ->method('getUriForPath')
-            ->willReturn('http://localhost/target')
-        ;
+        $parameters = [
+            '_always_use_target_path' => '1',
+            '_target_path' => base64_encode('http://localhost/target'),
+        ];
 
-        $request->attributes = new ParameterBag();
+        $request = $this->createMock(Request::class);
+        $request->request = new ParameterBag($parameters);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -110,13 +108,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->with('User "foobar" has logged in')
         ;
 
-        $request = $this->createMock(Request::class);
-        $request
-            ->method('getUriForPath')
-            ->willReturn('http://localhost/target')
-        ;
+        $parameters = [
+            '_always_use_target_path' => '0',
+            '_target_path' => base64_encode('http://localhost/target'),
+        ];
 
-        $request->attributes = new ParameterBag();
+        $request = $this->createMock(Request::class);
+        $request->request = new ParameterBag($parameters);
 
         /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -217,8 +215,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
-        $request = new Request();
-        $request->attributes->set('_target_path', 'http://localhost/target');
+        $parameters = [
+            '_always_use_target_path' => '0',
+            '_target_path' => base64_encode('http://localhost/target'),
+        ];
+
+        $request = $this->createMock(Request::class);
+        $request->request = new ParameterBag($parameters);
 
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
@@ -253,9 +256,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
-        $request = new Request();
-        $request->request->set('_target_path', 'http://localhost/target');
-        $request->request->set('_always_use_target_path', '1');
+        $parameters = [
+            '_always_use_target_path' => '1',
+            '_target_path' => base64_encode('http://localhost/target'),
+        ];
+
+        $request = $this->createMock(Request::class);
+        $request->request = new ParameterBag($parameters);
 
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
@@ -280,13 +287,34 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $this->assertSame('http://localhost/target', $response->getTargetUrl());
     }
 
-    public function testRedirectsIfTwoFactorAuthenticationIsEnabled(): void
+    public function testReloadsIfTwoFactorAuthenticationIsEnabled(): void
     {
-        $request = new Request();
-        $request->request->set('_failure_path', 'http://localhost/failure');
-        $request->setSession($this->createMock(SessionInterface::class));
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->once())
+            ->method('set')
+            ->with('_security.contao_frontend.target_path', 'http://localhost/failure')
+        ;
+
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getUri')
+            ->willReturn('http://localhost/failure')
+        ;
+
+        $request
+            ->method('getSession')
+            ->willReturn($session)
+        ;
 
         $token = $this->createMock(TwoFactorTokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getProviderKey')
+            ->willReturn('contao_frontend')
+        ;
+
         $response = $this->getHandler()->onAuthenticationSuccess($request, $token);
 
         $this->assertSame('http://localhost/failure', $response->getTargetUrl());
@@ -298,14 +326,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
      */
     private function getHandler(ContaoFramework $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
     {
-        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-        $urlGenerator
-            ->method('generate')
-            ->willReturn('http://localhost')
-        ;
-
-        $utils = new HttpUtils($urlGenerator);
-
         if (null === $framework) {
             $framework = $this->mockContaoFramework();
         }
@@ -314,6 +334,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
             $logger = $this->createMock(LoggerInterface::class);
         }
 
-        return new AuthenticationSuccessHandler($utils, $framework, $logger);
+        return new AuthenticationSuccessHandler($framework, $logger);
     }
 }

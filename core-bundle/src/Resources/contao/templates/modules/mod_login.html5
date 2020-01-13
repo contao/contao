@@ -23,7 +23,6 @@
           <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="off" required>
         </div>
       <?php else: ?>
-        <input type="hidden" name="_failure_path" value="<?= $this->failurePath ?>">
         <input type="hidden" name="_always_use_target_path" value="<?= $this->forceTargetPath ?>">
         <div class="widget widget-text">
           <label for="username"><?= $this->username ?></label>

@@ -92,12 +92,6 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\Base64EncodedRedirectController:
-        arguments:
-            - '@uri_signer'
-        tags:
-            - controller.service_arguments
-
     # Backwards compatibility
     contao.controller.backend_csv_import:
         alias: Contao\CoreBundle\Controller\BackendCsvImportController
@@ -578,10 +572,23 @@ services:
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:
-            - '@http_kernel'
+            - '@?logger'
+
+    contao.security.authentication_listener:
+        class: Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener
+        arguments:
+            - '@security.token_storage'
+            - '@security.authentication.manager'
+            - '@security.authentication.session_strategy'
             - '@security.http_utils'
+            - ~
+            - '@contao.security.authentication_success_handler'
+            - '@contao.security.authentication_failure_handler'
             - []
             - '@?logger'
+            - '@?event_dispatcher'
+        tags:
+            - { name: monolog.logger, channel: security }
 
     contao.security.authentication_provider:
         class: Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider
@@ -596,7 +603,6 @@ services:
     contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
         arguments:
-            - '@security.http_utils'
             - '@contao.framework'
             - '@?logger'
 
@@ -614,9 +620,10 @@ services:
     contao.security.entry_point:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint
         arguments:
-            - '@security.http_utils'
             - '@router'
             - '@uri_signer'
+            - '@contao.framework'
+            - '@contao.routing.scope_matcher'
 
     contao.security.expiring_token_based_remember_me_services:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices

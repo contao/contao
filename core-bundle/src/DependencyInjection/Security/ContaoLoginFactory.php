@@ -12,40 +12,30 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Security;
 
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\FormLoginFactory;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class ContaoLoginFactory extends FormLoginFactory
+class ContaoLoginFactory extends AbstractFactory
 {
     public function __construct()
     {
-        parent::__construct();
-
-        $this->addOption('lock_period', 300);
-        $this->addOption('login_attempts', 3);
-
-        unset(
-            $this->options['username_parameter'],
-            $this->options['password_parameter'],
-            $this->defaultSuccessHandlerOptions['target_path_parameter'],
-            $this->defaultSuccessHandlerOptions['use_referer'],
-            $this->defaultFailureHandlerOptions['failure_path_parameter']
-        );
+        $this->options = ['require_previous_session' => false];
+        $this->defaultSuccessHandlerOptions = [];
+        $this->defaultFailureHandlerOptions = [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function getPosition(): string
+    {
+        return 'form';
+    }
+
     public function getKey(): string
     {
         return 'contao-login';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId): string
     {
         $provider = 'contao.security.authentication_provider.'.$id;
@@ -55,35 +45,28 @@ class ContaoLoginFactory extends FormLoginFactory
             ->replaceArgument(0, new Reference($userProviderId))
             ->replaceArgument(1, new Reference('security.user_checker.'.$id))
             ->replaceArgument(2, $id)
-            ->addArgument(
-                [
-                    'lock_period' => $config['lock_period'],
-                    'login_attempts' => $config['login_attempts'],
-                ]
-            )
         ;
 
         return $provider;
     }
 
-    /**
-     * @param ContainerBuilder $container
-     */
-    protected function createListener($container, $id, $config, $userProvider): string
+    protected function getListenerId(): string
     {
-        $listenerId = parent::createListener($container, $id, $config, $userProvider);
+        return 'contao.security.authentication_listener';
+    }
 
-        $container
-            ->getDefinition($listenerId)
-            ->replaceArgument(
-                7,
-                array_merge(
-                    $container->getDefinition($listenerId)->getArgument(7),
-                    ['username_parameter' => 'username', 'password_parameter' => 'password']
-                )
-            )
-        ;
+    protected function createEntryPoint($container, $id, $config, $defaultEntryPoint): string
+    {
+        return 'contao.security.entry_point';
+    }
 
-        return $listenerId;
+    protected function createAuthenticationSuccessHandler($container, $id, $config): string
+    {
+        return 'contao.security.authentication_success_handler';
+    }
+
+    protected function createAuthenticationFailureHandler($container, $id, $config): string
+    {
+        return 'contao.security.authentication_failure_handler';
     }
 }
