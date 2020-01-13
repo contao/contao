@@ -38,7 +38,7 @@ class FrontendCron extends Frontend
 			System::getContainer()->get(Cron::class)->run(Cron::SCOPE_WEB);
 		}
 
-		return new Response('', 204);
+		return new Response('', Response::HTTP_NO_CONTENT);
 	}
 
 	/**
