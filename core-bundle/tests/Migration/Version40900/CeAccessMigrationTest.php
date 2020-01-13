@@ -1,0 +1,108 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Tests\Migration\Version40900;
+
+use Contao\ContentText;
+use Contao\CoreBundle\Migration\Version40900\CeAccessMigration;
+use Contao\CoreBundle\Tests\TestCase;
+use Contao\FormTextField;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use Doctrine\DBAL\Statement;
+
+class CeAccessMigrationTest extends TestCase
+{
+    public function testActivatesTheFieldsInAllUserGroups(): void
+    {
+        $GLOBALS['TL_CTE'] = [
+            'texts' => [
+                'text' => ContentText::class,
+            ],
+        ];
+
+        $GLOBALS['TL_FFL'] = [
+            'text' => FormTextField::class,
+        ];
+
+        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager
+            ->expects($this->once())
+            ->method('tablesExist')
+            ->with(['tl_user_group'])
+            ->willReturn(true)
+        ;
+
+        $schemaManager
+            ->expects($this->once())
+            ->method('listTableColumns')
+            ->willReturn([])
+        ;
+
+        $stmt = $this->createMock(Statement::class);
+        $stmt
+            ->expects($this->once())
+            ->method('execute')
+            ->with([':elements' => 'a:1:{i:0;s:4:"text";}', ':fields' => 'a:1:{i:0;s:4:"text";}'])
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('getSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('query')
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('prepare')
+            ->willReturn($stmt)
+        ;
+
+        $migration = new CeAccessMigration($connection);
+
+        $this->assertTrue($migration->shouldRun());
+        $this->assertTrue($migration->run()->isSuccessful());
+    }
+
+    public function testDoesNothingIfTheElementsColumnExists(): void
+    {
+        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager
+            ->expects($this->once())
+            ->method('tablesExist')
+            ->with(['tl_user_group'])
+            ->willReturn(false)
+        ;
+
+        $schemaManager
+            ->expects($this->never())
+            ->method('listTableColumns')
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('getSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
+        $migration = new CeAccessMigration($connection);
+
+        $this->assertFalse($migration->shouldRun());
+    }
+}
