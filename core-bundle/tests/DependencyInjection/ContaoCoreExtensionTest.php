@@ -678,6 +678,13 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(MakeResponsePrivateListener::class, $definition->getClass());
         $this->assertTrue($definition->isPrivate());
 
+        $this->assertEquals(
+            [
+                new Reference('contao.routing.scope_matcher'),
+            ],
+            $definition->getArguments()
+        );
+
         $tags = $definition->getTags();
 
         $this->assertSame(
