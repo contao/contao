@@ -130,6 +130,8 @@ services:
 
     contao.listener.make_response_private:
         class: Contao\CoreBundle\EventListener\MakeResponsePrivateListener
+        arguments:
+            - '@contao.routing.scope_matcher'
         tags:
             # The priority must be lower than the one of MergeHttpHeadersListener (defaults to 256)
             - { name: kernel.event_listener }
