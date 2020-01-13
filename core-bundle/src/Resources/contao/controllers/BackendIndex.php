@@ -13,6 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Router;
@@ -56,7 +58,7 @@ class BackendIndex extends Backend
 
 		if ($exception instanceof LockedException)
 		{
-			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedSeconds()));
+			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedMinutes()));
 		}
 		elseif ($exception instanceof InvalidTwoFactorCodeException)
 		{
@@ -92,9 +94,12 @@ class BackendIndex extends Backend
 
 		if ($token instanceof TwoFactorToken)
 		{
+			// Dispatch 2FA form event to prepare 2FA providers
+			$event = new TwoFactorAuthenticationEvent($request, $token);
+			$container->get('event_dispatcher')->dispatch($event, TwoFactorAuthenticationEvents::FORM);
+
 			$objTemplate = new BackendTemplate('be_login_two_factor');
 			$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
-			$objTemplate->action = $router->generate('contao_backend_two_factor');
 			$objTemplate->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
 			$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
 		}

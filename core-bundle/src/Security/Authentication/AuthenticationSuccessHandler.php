@@ -90,6 +90,9 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         $this->user->currentLogin = time();
         $this->user->save();
 
+        // TODO: implement 2FA trusted device here
+        // $this->trustedDeviceManager->addTrustedDevice($user, $this->firewallName);
+
         $response = new RedirectResponse($this->determineTargetUrl($request));
 
         if (null !== $this->logger) {

@@ -236,18 +236,8 @@ services:
         tags:
             - { name: kernel.event_listener }
 
-    contao.listener.two_factor.authentication_attempt:
-        class: Contao\CoreBundle\EventListener\TwoFactor\AuthenticationAttemptListener
-        tags:
-            - { name: kernel.event_listener, event: scheb_two_factor.authentication.attempt }
-
-    contao.listener.two_factor.authentication_failure:
-        class: Contao\CoreBundle\EventListener\TwoFactor\AuthenticationFailureListener
-        tags:
-            - { name: kernel.event_listener, event: scheb_two_factor.authentication.failure }
-
     contao.listener.two_factor.frontend:
-        class: Contao\CoreBundle\EventListener\TwoFactor\FrontendListener
+        class: Contao\CoreBundle\EventListener\TwoFactorFrontendListener
         arguments:
             - '@contao.framework'
             - '@contao.routing.scope_matcher'

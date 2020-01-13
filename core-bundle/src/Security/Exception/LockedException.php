@@ -51,14 +51,8 @@ class LockedException extends BaseLockedException
         return $this->lockedSeconds;
     }
 
-    /**
-     * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0; use
-     *             LockedException::getLockedSeconds instead
-     */
     public function getLockedMinutes(): int
     {
-        @trigger_error('Using LockedException::getLockedMinutes() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
-
         return (int) ceil($this->lockedSeconds / 60);
     }
 }
