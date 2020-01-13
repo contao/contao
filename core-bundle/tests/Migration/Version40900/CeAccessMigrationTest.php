@@ -91,7 +91,7 @@ class CeAccessMigrationTest extends TestCase
         $this->assertTrue($migration->run()->isSuccessful());
     }
 
-    public function testDoesNothingIfTheElementsColumnExists(): void
+    public function testDoesNothingIfTheUserGroupTableDoesNotExist(): void
     {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
         $schemaManager
@@ -111,6 +111,39 @@ class CeAccessMigrationTest extends TestCase
             ->expects($this->once())
             ->method('getSchemaManager')
             ->willReturn($schemaManager)
+        ;
+
+        $migration = new CeAccessMigration($connection);
+
+        $this->assertFalse($migration->shouldRun());
+    }
+
+    public function testDoesNothingIfTheElementsColumnDoesNotExist(): void
+    {
+        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager
+            ->expects($this->once())
+            ->method('tablesExist')
+            ->with(['tl_user_group'])
+            ->willReturn(true)
+        ;
+
+        $schemaManager
+            ->expects($this->once())
+            ->method('listTableColumns')
+            ->willReturn(['elements'])
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('getSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
+        $connection
+            ->expects($this->never())
+            ->method('query')
         ;
 
         $migration = new CeAccessMigration($connection);
