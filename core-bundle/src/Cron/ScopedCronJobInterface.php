@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
-interface ScopedCronJobInterface
+interface ScopeAwareCronJobInterface 
 {
     /**
      * Sets the scope for the cron job.
