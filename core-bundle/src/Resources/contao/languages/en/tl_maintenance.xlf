@@ -69,7 +69,7 @@
         <source>Removes the cached versions of the front end pages.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.0">
-        <source>Purge the search cache</source>
+        <source>Purge the search results cache</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.1">
         <source>Removes the cached versions of the search results.</source>
