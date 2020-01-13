@@ -86,6 +86,8 @@ use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Menu\BackendMenuBuilder;
+use Contao\CoreBundle\Migration\MigrationCollection;
+use Contao\CoreBundle\Migration\Version409\CeAccessMigration;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
 use Contao\CoreBundle\OptIn\OptIn;
@@ -3043,6 +3045,41 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.routing.scope_matcher'),
             ],
             $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheMigrationCollection(): void
+    {
+        $this->assertTrue($this->container->has(MigrationCollection::class));
+
+        $definition = $this->container->getDefinition(MigrationCollection::class);
+
+        $this->assertTrue($definition->isPrivate());
+    }
+
+    public function testRegistersTheVersion409CeAccessMigration(): void
+    {
+        $this->assertTrue($this->container->has(CeAccessMigration::class));
+
+        $definition = $this->container->getDefinition(CeAccessMigration::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('database_connection'),
+                new Reference('contao.framework'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'contao.migration' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
         );
     }
 
