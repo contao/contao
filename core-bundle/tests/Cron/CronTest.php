@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Cron;
 
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Entity\CronJob;
-use Contao\CoreBundle\Fixtures\Cron\TestInvokableScopedCronJob;
+use Contao\CoreBundle\Fixtures\Cron\TestInvokableScopeAwareCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -126,7 +126,7 @@ class CronTest extends TestCase
 
     public function testDoesNotSetScope(): void
     {
-        $cronjob = $this->createMock(TestInvokableScopedCronJob::class);
+        $cronjob = $this->createMock(TestInvokableScopeAwareCronJob::class);
         $cronjob
             ->expects($this->never())
             ->method('setScope')
@@ -139,7 +139,7 @@ class CronTest extends TestCase
 
     public function testSetsScope(): void
     {
-        $cronjob = $this->createMock(TestInvokableScopedCronJob::class);
+        $cronjob = $this->createMock(TestInvokableScopeAwareCronJob::class);
         $cronjob
             ->expects($this->once())
             ->method('setScope')
