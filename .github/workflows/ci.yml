@@ -206,6 +206,7 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysql, pcre, pdo, zlib
+                  ini-values: memory_limit=1G
                   tools: prestissimo
                   coverage: none
 

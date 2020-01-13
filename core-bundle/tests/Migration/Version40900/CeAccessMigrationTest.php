@@ -22,8 +22,10 @@ use Doctrine\DBAL\Statement;
 
 class CeAccessMigrationTest extends TestCase
 {
-    public function testActivatesTheFieldsInAllUserGroups(): void
+    public static function setUpBeforeClass(): void
     {
+        parent::setUpBeforeClass();
+
         $GLOBALS['TL_CTE'] = [
             'texts' => [
                 'text' => ContentText::class,
@@ -33,7 +35,17 @@ class CeAccessMigrationTest extends TestCase
         $GLOBALS['TL_FFL'] = [
             'text' => FormTextField::class,
         ];
+    }
 
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        unset($GLOBALS['TL_CTE'], $GLOBALS['TL_FFL']);
+    }
+
+    public function testActivatesTheFieldsInAllUserGroups(): void
+    {
         $schemaManager = $this->createMock(MySqlSchemaManager::class);
         $schemaManager
             ->expects($this->once())
