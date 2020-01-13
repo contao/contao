@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Cron;
 use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
+use DateTimeImmutable;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 
@@ -61,7 +62,7 @@ class Cron
 
         /** @var array<CronJob> */
         $cronJobsToBeRun = [];
-        $now = new \DateTime();
+        $now = new DateTimeImmutable();
 
         try {
             // Lock cron table
