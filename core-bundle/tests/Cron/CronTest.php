@@ -18,6 +18,7 @@ use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestInvokableScopeAwareCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
+use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
@@ -145,6 +146,22 @@ class CronTest extends TestCase
         $cron->addCronJob($cronjob, '@hourly');
         $cron->run(Cron::SCOPE_CLI);
     }
+
+    public function testInvalidArgumentExceptionForScope(): void
+    {
+        $cron = new Cron($this->createMock(CronJobRepository::class));
+
+        try {
+            $cron->run();
+            $cron->run(Cron::SCOPE_CLI);
+            $cron->run(Cron::SCOPE_WEB);
+        } catch (InvalidArgumentException $e) {
+            $this->fail();
+        }
+
+        $this->expectException(InvalidArgumentException::class);
+        $cron->run('invalid_scope');
+     }
 
     /**
      * @return CronJob&MockObject
